@@ -1,6 +1,5 @@
 {
   "name": "ink-writer-marketplace",
-  "description": "Marketplace for the ink-writer Claude Code plugin.",
   "metadata": {
     "description": "Marketplace for installing the ink-writer plugin."
   },
