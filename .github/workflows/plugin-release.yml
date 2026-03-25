@@ -1,4 +1,4 @@
-﻿name: Plugin Release
+name: Plugin Release
 
 on:
   workflow_dispatch:
@@ -34,9 +34,7 @@ jobs:
 
       - name: Validate release metadata
         run: |
-          python webnovel-writer/scripts/sync_plugin_version.py \
-            --check \
-            --expected-version "$RELEASE_VERSION"
+          python ink-writer/scripts/sync_plugin_version.py             --check             --expected-version "$RELEASE_VERSION"
 
       - name: Create and push tag
         run: |
