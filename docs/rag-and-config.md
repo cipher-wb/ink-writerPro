@@ -16,7 +16,7 @@
 
 1. 进程环境变量（最高优先级）
 2. 书项目根目录下的 `.env`
-3. 用户级全局：`~/.claude/webnovel-writer/.env`
+3. 用户级全局：`~/.claude/ink-writer/.env`
 
 ## `.env` 最小配置
 

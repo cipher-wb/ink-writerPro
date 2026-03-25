@@ -1,23 +1,23 @@
 {
-  "name": "webnovel-writer-marketplace",
-  "description": "Marketplace for the webnovel-writer Claude Code plugin.",
+  "name": "ink-writer-marketplace",
+  "description": "Marketplace for the ink-writer Claude Code plugin.",
   "metadata": {
-    "description": "Marketplace for installing the webnovel-writer plugin."
+    "description": "Marketplace for installing the ink-writer plugin."
   },
   "owner": {
-    "name": "lingfengQAQ"
+    "name": "cipher-wb"
   },
   "plugins": [
     {
-      "name": "webnovel-writer",
+      "name": "ink-writer",
       "description": "长篇网文创作系统（skills + agents + data chain + RAG）",
       "version": "5.5.4",
       "author": {
-        "name": "lingfengQAQ"
+        "name": "cipher-wb"
       },
-      "source": "./webnovel-writer",
+      "source": "./ink-writer",
       "category": "productivity",
-      "homepage": "https://github.com/lingfengQAQ/webnovel-writer"
+      "homepage": "https://github.com/cipher-wb/ink-writer"
     }
   ]
 }

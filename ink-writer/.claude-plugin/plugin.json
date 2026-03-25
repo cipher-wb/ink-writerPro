@@ -1,0 +1,18 @@
+{
+  "name": "ink-writer",
+  "version": "5.5.4",
+  "description": "长篇网文创作系统（skills + agents + data chain + RAG）",
+  "author": {
+    "name": "cipher-wb"
+  },
+  "homepage": "https://github.com/cipher-wb/ink-writer",
+  "repository": "https://github.com/cipher-wb/ink-writer",
+  "license": "GPL-3.0",
+  "keywords": [
+    "ink",
+    "claude-code",
+    "skills",
+    "agents",
+    "rag"
+  ]
+}
