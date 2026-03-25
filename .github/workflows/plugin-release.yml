@@ -34,7 +34,7 @@ jobs:
 
       - name: Validate release metadata
         run: |
-          python ink-writer/scripts/sync_plugin_version.py             --check             --expected-version "$RELEASE_VERSION"
+          python ink-writer/scripts/sync_plugin_version.py --check --expected-version "$RELEASE_VERSION"
 
       - name: Create and push tag
         run: |
