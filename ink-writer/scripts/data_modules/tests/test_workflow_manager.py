@@ -7,6 +7,14 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+from data_modules.config import DataModulesConfig
+from data_modules.index_manager import (
+    ChapterMemoryCardMeta,
+    ChapterReadingPowerMeta,
+    IndexManager,
+    SceneMeta,
+)
+
 
 def _load_module():
     scripts_dir = Path(__file__).resolve().parents[2]
@@ -15,6 +23,72 @@ def _load_module():
     import workflow_manager
 
     return workflow_manager
+
+
+def _prepare_step5_outputs(tmp_path: Path, chapter: int, *, include_structured: bool) -> None:
+    cfg = DataModulesConfig.from_project_root(tmp_path)
+    cfg.ensure_dirs()
+    (tmp_path / ".ink" / "state.json").write_text("{}", encoding="utf-8")
+    summaries_dir = tmp_path / ".ink" / "summaries"
+    summaries_dir.mkdir(parents=True, exist_ok=True)
+    (summaries_dir / f"ch{chapter:04d}.md").write_text("summary", encoding="utf-8")
+
+    idx = IndexManager(cfg)
+    if not include_structured:
+        return
+
+    idx.save_chapter_memory_card(
+        ChapterMemoryCardMeta(
+            chapter=chapter,
+            summary="本章摘要",
+            goal="立触发",
+            conflict="退婚羞辱",
+            result="系统觉醒",
+            next_chapter_bridge="准备收账",
+            unresolved_questions=["第一笔账怎么收"],
+            key_facts=["黑账天书激活"],
+            involved_entities=["luchen"],
+            plot_progress=["债务线开启"],
+            payload_json={"summary": "本章摘要"},
+        )
+    )
+    idx.save_chapter_reading_power(
+        ChapterReadingPowerMeta(
+            chapter=chapter,
+            hook_type="退婚羞辱钩",
+            hook_strength="strong",
+            coolpoint_patterns=["系统觉醒"],
+            micropayoffs=[],
+            hard_violations=[],
+            soft_suggestions=[],
+            is_transition=False,
+            override_count=0,
+            debt_balance=0.0,
+            notes="",
+            payload_json={
+                "golden_three_role": "立触发",
+                "opening_trigger_type": "退婚羞辱",
+                "opening_trigger_position": "第1行",
+                "reader_promise": "因果清算",
+                "visible_change": "获得系统",
+                "next_chapter_drive": "开始收账",
+            },
+        )
+    )
+    idx.add_scenes(
+        chapter,
+        [
+            SceneMeta(
+                chapter=chapter,
+                scene_index=1,
+                start_line=1,
+                end_line=40,
+                location="外门广场",
+                summary="退婚与觉醒",
+                characters=["luchen", "linqingxue"],
+            )
+        ],
+    )
 
 
 def test_workflow_lifecycle_and_trace(tmp_path, monkeypatch):
@@ -77,6 +151,85 @@ def test_complete_step_rejects_mismatch_step_id(tmp_path, monkeypatch):
     assert current_step is not None
     assert current_step["id"] == "Step 2A"
     assert current_step["status"] == module.STEP_STATUS_RUNNING
+
+
+def test_step5_complete_rejects_missing_structured_outputs(tmp_path, monkeypatch):
+    module = _load_module()
+    monkeypatch.setattr(module, "find_project_root", lambda: tmp_path)
+    _prepare_step5_outputs(tmp_path, 1, include_structured=False)
+
+    module.start_task("ink-write", {"chapter_num": 1})
+    module.start_step("Step 5", "Data Agent")
+    module.complete_step("Step 5", json.dumps({"ok": True}, ensure_ascii=False))
+
+    state = module.load_state()
+    task = state["current_task"]
+    assert task["current_step"]["id"] == "Step 5"
+    assert task["current_step"]["status"] == module.STEP_STATUS_RUNNING
+    assert not any(step["id"] == "Step 5" for step in task["completed_steps"])
+
+    trace_path = module.get_call_trace_path()
+    events = [json.loads(line)["event"] for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert "step_completion_validation_failed" in events
+
+
+def test_step5_complete_accepts_structured_outputs(tmp_path, monkeypatch):
+    module = _load_module()
+    monkeypatch.setattr(module, "find_project_root", lambda: tmp_path)
+    _prepare_step5_outputs(tmp_path, 1, include_structured=True)
+
+    module.start_task("ink-write", {"chapter_num": 1})
+    module.start_step("Step 5", "Data Agent")
+    module.complete_step("Step 5", json.dumps({"ok": True}, ensure_ascii=False))
+
+    state = module.load_state()
+    task = state["current_task"]
+    assert task["current_step"] is None
+    assert any(step["id"] == "Step 5" for step in task["completed_steps"])
+
+
+def test_start_step_same_step_reentry_preserves_active_step(tmp_path, monkeypatch):
+    module = _load_module()
+    monkeypatch.setattr(module, "find_project_root", lambda: tmp_path)
+
+    ink_dir = tmp_path / ".ink"
+    ink_dir.mkdir(parents=True, exist_ok=True)
+
+    module.start_task("ink-write", {"chapter_num": 10})
+    module.start_step("Step 3", "Review")
+    module.start_step("Step 3", "Review")
+
+    state = module.load_state()
+    task = state["current_task"]
+    assert task["current_step"]["id"] == "Step 3"
+    assert task["current_step"]["status"] == module.STEP_STATUS_RUNNING
+    assert task["failed_steps"] == []
+
+    trace_path = module.get_call_trace_path()
+    events = [json.loads(line)["event"] for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert "step_reentered" in events
+
+
+def test_start_step_rejects_active_conflict_without_overwrite(tmp_path, monkeypatch):
+    module = _load_module()
+    monkeypatch.setattr(module, "find_project_root", lambda: tmp_path)
+
+    ink_dir = tmp_path / ".ink"
+    ink_dir.mkdir(parents=True, exist_ok=True)
+
+    module.start_task("ink-write", {"chapter_num": 11})
+    module.start_step("Step 3", "Review")
+    module.start_step("Step 4", "Polish")
+
+    state = module.load_state()
+    task = state["current_task"]
+    assert task["current_step"]["id"] == "Step 3"
+    assert task["current_step"]["status"] == module.STEP_STATUS_RUNNING
+    assert task["failed_steps"] == []
+
+    trace_path = module.get_call_trace_path()
+    events = [json.loads(line)["event"] for line in trace_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert "step_start_rejected_active_conflict" in events
 
 
 def test_workflow_step_owner_and_order_violation_trace(tmp_path, monkeypatch):

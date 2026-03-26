@@ -71,8 +71,8 @@ model: inherit
 
 ```bash
 export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/scripts"
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" preflight
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" preflight
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 ```
 
 ### Step A: 加载上下文（SQL 查询）
@@ -82,10 +82,10 @@ python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 
 使用 Bash 工具从 index.db 查询已有实体:
  ```bash
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-entities
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-aliases --entity "xiaoyan"
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index recent-appearances --limit 20
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-by-alias --alias "萧炎"
+  python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-entities
+  python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-aliases --entity "xiaoyan"
+  python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index recent-appearances --limit 20
+  python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-by-alias --alias "萧炎"
   ```
 
 ### Step B: AI 实体提取
@@ -104,18 +104,35 @@ python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 
 ### Step D: 写入存储
 
- **写入 index.db (实体/别名/状态变化/关系)**:
- ```bash
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index upsert-entity --data '{...}'
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index register-alias --alias "红衣女子" --entity "hongyi_girl" --type "角色"
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index record-state-change --data '{...}'
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index upsert-relationship --data '{...}'
- ```
+**禁止手工整体重写 `.ink/state.json` 来冒充完成 Step D。**
 
- **更新精简版 state.json**:
- ```bash
-  python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" state process-chapter --chapter 100 --data '{...}'
- ```
+你可以先用 `index upsert-entity / register-alias / record-state-change / upsert-relationship` 做细粒度写入，
+但章节级结构化数据必须统一通过 `state process-chapter` 落库。
+
+推荐做法：
+```bash
+cat > "{project_root}/.ink/tmp/data_agent_payload_ch{chapter_padded}.json" <<'EOF'
+{
+  "entities_appeared": [...],
+  "entities_new": [...],
+  "state_changes": [...],
+  "relationships_new": [...],
+  "scenes": [...],
+  "chapter_meta": {...},
+  "chapter_memory_card": {...},
+  "timeline_anchor": {...},
+  "plot_thread_updates": [...],
+  "reading_power": {...},
+  "candidate_facts": [...]
+}
+EOF
+
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" \
+  --project-root "{project_root}" \
+  state process-chapter \
+  --chapter {chapter} \
+  --data @"{project_root}/.ink/tmp/data_agent_payload_ch{chapter_padded}.json"
+```
 
 写入内容：
 - 更新 `progress.current_chapter`
@@ -123,6 +140,16 @@ python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - 更新 `strand_tracker`
 - 更新 `disambiguation_warnings/pending`
 - **新增 `chapter_meta`**（钩子/模式/结束状态）
+- **新增 `chapter_memory_cards / chapter_reading_power / plot_thread_registry / timeline_anchors / candidate_facts / scenes`**
+
+Step D 完成后必须验证：
+```bash
+sqlite3 "{project_root}/.ink/index.db" "SELECT COUNT(*) FROM chapter_memory_cards WHERE chapter = {chapter};"
+sqlite3 "{project_root}/.ink/index.db" "SELECT COUNT(*) FROM chapter_reading_power WHERE chapter = {chapter};"
+sqlite3 "{project_root}/.ink/index.db" "SELECT COUNT(*) FROM scenes WHERE chapter = {chapter};"
+```
+
+若任一结果为 `0`，说明结构化主链未写成功，不能宣称 Data Agent 完成。
 
 ### Step E: 生成章节摘要文件（新增）
 
@@ -161,7 +188,7 @@ hook_strength: "strong"
 ### Step G: 向量嵌入
 
 ```bash
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" rag index-chapter \
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" rag index-chapter \
   --chapter 100 \
   --scenes '[...]' \
   --summary "本章摘要文本"
@@ -182,14 +209,14 @@ if review_score >= 80:
 ```
 
 ```bash
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style extract --chapter 100 --score 85 --scenes '[...]'
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style extract --chapter 100 --score 85 --scenes '[...]'
 ```
 
 ### Step I: 债务利息计算
 
 **默认不自动触发**。仅在“开启债务追踪”或用户明确要求时执行：
  ```bash
- python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index accrue-interest --current-chapter {chapter}
+ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index accrue-interest --current-chapter {chapter}
  ```
 
 此步骤会：
@@ -220,6 +247,16 @@ python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style ext
 - `call_trace.jsonl`：外层流程调用链（agent 启动、排队、环境探测等系统开销）。
 - `data_agent_timing.jsonl`：Data Agent 内部各子步骤耗时。
 - 当外层总耗时远大于内层 timing 之和时，默认先归因为 agent 启动与环境探测开销，不误判为正文或数据处理慢。
+
+第 1-3 章额外要求：
+- `chapter_reading_power.payload_json` 必须含：
+  - `golden_three_role`
+  - `opening_trigger_type`
+  - `opening_trigger_position`
+  - `reader_promise`
+  - `visible_change`
+  - `next_chapter_drive`
+- 若这些字段缺失，必须继续补写，不能把结果上报为“已完成”。
 
 ```json
 {
@@ -296,4 +333,5 @@ python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style ext
 5. ✅ 向量成功存入数据库
 6. ✅ 章节摘要文件生成成功
 7. ✅ chapter_meta 写入 state.json
-8. ✅ 输出格式为有效 JSON
+8. ✅ 当前章节在 `chapter_memory_cards / chapter_reading_power / scenes` 三张表中均有记录
+9. ✅ 输出格式为有效 JSON

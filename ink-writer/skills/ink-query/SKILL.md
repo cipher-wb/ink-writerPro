@@ -14,7 +14,18 @@ allowed-tools: Read Grep Bash AskUserQuestion
 
 环境设置（bash 命令执行前）：
 ```bash
-export WORKSPACE_ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
+
+if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
+  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$PWD"
+  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
+  else
+    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
+    exit 1
+  fi
+fi
 
 if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/skills/ink-query" ]; then
   echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT 或缺少目录: ${CLAUDE_PLUGIN_ROOT}/skills/ink-query" >&2
@@ -28,7 +39,7 @@ if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; t
 fi
 export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
 
-export PROJECT_ROOT="$(python "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+export PROJECT_ROOT="$(python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
 ```
 
 ## Workflow Checklist
@@ -143,7 +154,7 @@ cat "$PROJECT_ROOT/.ink/state.json"
 
 **快速分析**：
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" status -- --focus urgency
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" status -- --focus urgency
 ```
 
 ### 金手指状态
@@ -160,7 +171,7 @@ python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" status -- --focus 
 
 **快速分析**：
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" status -- --focus strand
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" status -- --focus strand
 ```
 
 **检查警告**：

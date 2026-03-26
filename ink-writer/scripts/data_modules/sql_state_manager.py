@@ -22,7 +22,9 @@ from pathlib import Path
 
 from .index_manager import (
     IndexManager,
+    ChapterMeta,
     EntityMeta,
+    SceneMeta,
     StateChangeMeta,
     RelationshipMeta,
     RelationshipEventMeta,
@@ -325,6 +327,8 @@ class SQLStateManager:
         返回: 写入统计
         """
         stats = {
+            "chapters": 0,
+            "scenes": 0,
             "entities_updated": 0,
             "entities_created": 0,
             "state_changes": 0,
@@ -472,6 +476,59 @@ class SQLStateManager:
             entity_id = row.get("suggested_id") or row.get("id")
             if entity_id and entity_id not in related_entities:
                 related_entities.append(entity_id)
+
+        chapter_characters: List[str] = []
+        for row in [*entities_appeared, *entities_new]:
+            entity_id = row.get("id") or row.get("suggested_id")
+            entity_type = str(row.get("type", "") or "")
+            if entity_id and entity_type == "角色" and entity_id not in chapter_characters:
+                chapter_characters.append(entity_id)
+
+        chapter_summary = str(
+            chapter_memory_card.get("summary")
+            or chapter_meta.get("summary")
+            or ""
+        )
+        chapter_location = str(
+            timeline_anchor.get("to_location")
+            or timeline_anchor.get("location")
+            or (scenes[0].get("location") if scenes else "")
+            or ""
+        )
+        chapter_title = str(chapter_meta.get("title", "") or "")
+        chapter_word_count = int(chapter_meta.get("word_count", 0) or 0)
+
+        self._index_manager.add_chapter(
+            ChapterMeta(
+                chapter=chapter,
+                title=chapter_title,
+                location=chapter_location,
+                word_count=chapter_word_count,
+                characters=chapter_characters,
+                summary=chapter_summary,
+            )
+        )
+        stats["chapters"] += 1
+
+        if scenes:
+            scene_metas: List[SceneMeta] = []
+            for idx, scene in enumerate(scenes, start=1):
+                if not isinstance(scene, dict):
+                    continue
+                scene_metas.append(
+                    SceneMeta(
+                        chapter=chapter,
+                        scene_index=int(scene.get("scene_index") or scene.get("index") or idx),
+                        start_line=int(scene.get("start_line", 0) or 0),
+                        end_line=int(scene.get("end_line", 0) or 0),
+                        location=str(scene.get("location", "") or ""),
+                        summary=str(scene.get("summary", "") or ""),
+                        characters=list(scene.get("characters", []) or []),
+                    )
+                )
+            if scene_metas:
+                self._index_manager.add_scenes(chapter, scene_metas)
+                stats["scenes"] += len(scene_metas)
 
         if chapter_memory_card:
             self._index_manager.save_chapter_memory_card(

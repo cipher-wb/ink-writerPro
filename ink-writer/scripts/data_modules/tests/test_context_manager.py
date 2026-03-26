@@ -179,7 +179,7 @@ def test_context_manager_applies_ranker_and_contract_meta(temp_project):
     manager = ContextManager(temp_project)
     payload = manager.build_context(4, use_snapshot=False, save_snapshot=False)
 
-    assert payload["meta"].get("context_contract_version") == "v2"
+    assert payload["meta"].get("context_contract_version") == "v3"
     recent_meta = payload["sections"]["core"]["content"]["recent_meta"]
     if recent_meta:
         assert recent_meta[0]["chapter"] == 3
@@ -233,6 +233,59 @@ def test_context_manager_includes_reader_signal_and_genre_profile(temp_project):
     assert genre_profile.get("genre") == "xuanhuan"
     assert "profile_excerpt" in genre_profile
     assert "taxonomy_excerpt" in genre_profile
+
+
+def test_context_manager_includes_golden_three_contract_for_opening_chapters(temp_project):
+    state = {
+        "project_info": {
+            "title": "测试书",
+            "genre": "xuanhuan",
+            "target_reader": "男频",
+            "platform": "番茄",
+            "core_selling_points": "退婚反杀,系统加点",
+        },
+        "protagonist_state": {"name": "萧炎"},
+        "chapter_meta": {},
+        "disambiguation_warnings": [],
+        "disambiguation_pending": [],
+    }
+    temp_project.state_file.write_text(json.dumps(state, ensure_ascii=False), encoding="utf-8")
+    (temp_project.ink_dir / "preferences.json").write_text(json.dumps({"tone": "热血"}, ensure_ascii=False), encoding="utf-8")
+    (temp_project.ink_dir / "golden_three_plan.json").write_text(
+        json.dumps(
+            {
+                "enabled": True,
+                "chapters": {
+                    "1": {
+                        "chapter": 1,
+                        "golden_three_role": "立触发",
+                        "opening_window_chars": 300,
+                        "opening_trigger": "前300字必须出现压制或利益冲突",
+                        "reader_promise": "退婚反杀 + 系统加点",
+                        "must_deliver": ["前300字强触发", "本章出现可见变化"],
+                        "micro_payoffs": ["系统露面"],
+                        "end_hook_requirement": "留下一个必须追更的问题",
+                        "forbidden_slow_zones": ["景物空镜"],
+                    }
+                },
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    manager = ContextManager(temp_project)
+    payload = manager.build_context(1, use_snapshot=False, save_snapshot=False)
+
+    contract = payload["sections"]["golden_three_contract"]["content"]
+    assert contract["enabled"] is True
+    assert contract["golden_three_role"] == "立触发"
+    assert contract["opening_window_chars"] == 300
+
+    writing_guidance = payload["sections"]["writing_guidance"]["content"]
+    assert writing_guidance["golden_three_mode"] is True
+    assert any("黄金三章模式" in item for item in writing_guidance["guidance_items"])
+    assert any(str(row.get("source", "")).startswith("golden_three.") for row in writing_guidance["checklist"])
 
 
 def test_context_manager_includes_structured_memory_sections(temp_project):

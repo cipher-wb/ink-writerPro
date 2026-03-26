@@ -256,6 +256,13 @@ def test_process_chapter_result_persists_narrative_memory(temp_project):
             "hook_type": "悬念钩",
             "hook_strength": "strong",
             "coolpoint_patterns": ["身份真相"],
+            "golden_three_role": "小闭环",
+            "opening_trigger_type": "异常触发",
+            "opening_trigger_position": 128,
+            "reader_promise": "尽快兑现戒指秘密",
+            "visible_change": "戒指出现裂纹",
+            "next_chapter_drive": "必须查出戒指异动来源",
+            "golden_three_metrics": {"score": 0.91, "trigger_detected": True},
         },
         "candidate_facts": [
             {
@@ -289,6 +296,7 @@ def test_process_chapter_result_persists_narrative_memory(temp_project):
     state = json.loads(temp_project.state_file.read_text(encoding="utf-8"))
     assert state["plot_threads"]["foreshadowing"][0]["content"].startswith("戒指忽然发热")
     assert state["chapter_meta"]["0003"]["chapter_memory_card"]["goal"] == "查明戒指异动"
+    assert state["chapter_meta"]["0003"]["golden_three"]["opening_trigger_type"] == "异常触发"
 
 
 def test_export_context_and_protagonist_alias(temp_project):

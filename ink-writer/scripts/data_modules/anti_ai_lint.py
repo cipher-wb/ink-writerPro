@@ -14,6 +14,11 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
+try:
+    from .golden_three import analyze_golden_three_opening
+except ImportError:  # pragma: no cover
+    from golden_three import analyze_golden_three_opening
+
 
 TEMPLATE_PHRASES = (
     "不由得",
@@ -89,7 +94,13 @@ def _stddev(values: List[float]) -> float:
     return math.sqrt(variance)
 
 
-def anti_ai_lint_text(text: str) -> Dict[str, Any]:
+def anti_ai_lint_text(
+    text: str,
+    *,
+    chapter: int = 0,
+    genre_profile_key: str = "",
+    golden_three_contract: Dict[str, Any] | None = None,
+) -> Dict[str, Any]:
     text = str(text or "")
     compact = re.sub(r"\s+", "", text)
     length = len(compact)
@@ -203,8 +214,24 @@ def anti_ai_lint_text(text: str) -> Dict[str, Any]:
         )
         penalty += min(0.12, 0.04 * hook_count)
 
+    golden_three_result = analyze_golden_three_opening(
+        text=text,
+        chapter=chapter,
+        genre_profile_key=genre_profile_key,
+        contract=golden_three_contract,
+    )
+    if golden_three_result.get("applied"):
+        issues.extend(golden_three_result.get("issues") or [])
+        if not golden_three_result.get("passed", True):
+            golden_score = float((golden_three_result.get("metrics") or {}).get("score") or 0.0)
+            penalty += max(0.0, 1.0 - golden_score) * 0.35
+
     score = round(max(0.0, 1.0 - penalty), 4)
-    passed = score >= 0.72 and not any(issue["severity"] == "high" for issue in issues)
+    passed = (
+        score >= 0.72
+        and not any(issue["severity"] == "high" for issue in issues)
+        and (not golden_three_result.get("applied") or bool(golden_three_result.get("passed")))
+    )
     return {
         "passed": passed,
         "score": score,
@@ -220,6 +247,12 @@ def anti_ai_lint_text(text: str) -> Dict[str, Any]:
             "expository_dialogue_count": len(exposition_dialogue),
             "cliche_count": cliche_count,
             "hook_count": hook_count,
+            "chapter": int(chapter or 0),
+            "golden_three_applied": bool(golden_three_result.get("applied")),
+            "golden_three_score": round(float((golden_three_result.get("metrics") or {}).get("score") or 0.0), 4),
+            "golden_three_trigger_detected": bool(
+                (golden_three_result.get("metrics") or {}).get("trigger_detected", False)
+            ),
         },
     }
 
@@ -228,13 +261,25 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Anti-AI lint")
     parser.add_argument("--text", help="直接传入文本")
     parser.add_argument("--file", help="从文件读取文本")
+    parser.add_argument("--chapter", type=int, default=0, help="章节号，用于黄金三章检测")
+    parser.add_argument("--genre-profile-key", default="", help="题材 profile key")
     args = parser.parse_args()
 
     text = args.text or ""
     if args.file:
         text = Path(args.file).read_text(encoding="utf-8")
 
-    print(json.dumps(anti_ai_lint_text(text), ensure_ascii=False, indent=2))
+    print(
+        json.dumps(
+            anti_ai_lint_text(
+                text,
+                chapter=args.chapter,
+                genre_profile_key=args.genre_profile_key,
+            ),
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

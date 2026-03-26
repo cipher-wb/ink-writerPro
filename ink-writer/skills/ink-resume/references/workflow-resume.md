@@ -27,7 +27,7 @@ purpose: 任务恢复时加载，指导中断恢复流程
 ### Phase 1: 检测中断状态
 
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow detect
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow detect
 ```
 
 ### Phase 2: 询问用户
@@ -42,15 +42,15 @@ python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow detect
 
 **选项 A（推荐）**: 删除半成品重新开始
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow cleanup --chapter {N} --confirm
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow clear
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow cleanup --chapter {N} --confirm
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow clear
 /ink-write {N}
 ```
 
 **选项 B**: 回滚到上一章
 ```bash
 git reset --hard ch{N-1:04d}
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow clear
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow clear
 ```
 
 ## 为什么删除而不续写？

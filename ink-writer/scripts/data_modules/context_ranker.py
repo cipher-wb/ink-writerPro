@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Context ranker for Context Contract v2.
+Context ranker for Context Contract v3.
 
 Goals:
 - Prefer recency while keeping frequent entities stable.
@@ -45,7 +45,7 @@ class ContextRanker:
         ranked["alerts"] = alerts
 
         meta = dict(ranked.get("meta") or {})
-        meta.setdefault("context_contract_version", "v2")
+        meta.setdefault("context_contract_version", "v3")
         meta["ranker"] = {
             "enabled": True,
             "recency_weight": float(self.config.context_ranker_recency_weight),
@@ -207,4 +207,3 @@ def json_safe(value: Any) -> str:
         return json.dumps(value, ensure_ascii=False)
     except Exception:
         return str(value)
-

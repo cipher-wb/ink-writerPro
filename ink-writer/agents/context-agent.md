@@ -7,8 +7,8 @@ model: inherit
 
 # context-agent (上下文搜集Agent)
 
-> **Role**: 创作执行包生成器。目标是“能直接开写”，不堆信息。
-> **Philosophy**: 按需召回 + 推断补全，确保接住上章、场景清晰、留出钩子。
+> **Role**: Step 1 兜底执行包生成器。默认脚本路径失败时，补齐缺口并保证“能直接开写”。
+> **Philosophy**: 先复用脚本产物，再最小化补全；禁止重复读取大上下文导致卡顿。
 
 ## 核心参考
 
@@ -114,24 +114,33 @@ fi
 SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
 
 # 建议先确认解析出的 project_root，避免写到错误目录
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 ```
 
 ### Step 0: ContextManager 快照优先
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" context -- --chapter {NNNN}
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" context -- --chapter {NNNN}
 ```
 
-### Step 0.5: Context Contract 上下文包（内置）
+### Step 0.5: 优先读取脚本执行包（必做）
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context --chapter {NNNN} --format json
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context --chapter {NNNN} --format pack-json
 ```
 
-- 必须读取：`writing_guidance.guidance_items`
-- 推荐读取：`reader_signal` 与 `genre_profile.reference_hints`
+- 必须先把 `pack-json` 当作主输入。
+- 若 `pack-json` 已包含任务书 / Context Contract / Step 2A 直写提示的全部字段，直接整理输出，禁止继续读取 `extract-context --format json`。
+- 只在 `pack-json` 缺字段时，才允许做增量读取。
+
+### Step 0.6: Context Contract 全量上下文包（按需）
+```bash
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context --chapter {NNNN} --format json
+```
+
+- 仅当 `pack-json` 缺字段时才允许读取。
+- 读取后必须只补缺口，禁止把整份大 JSON 原样抄回输出。
 - 条件读取：`rag_assist`（当 `invoked=true` 且 `hits` 非空时，必须提炼成可执行约束，禁止只贴检索命中）
 
-### Step 0.6: 时间线读取（新增，必做）
+### Step 0.7: 时间线读取（新增，必做）
 
 先确定 `{volume_id}`：
 - 优先读取 `state.json` 中当前卷信息（如有）
@@ -168,23 +177,23 @@ cat "{project_root}/大纲/第{volume_id}卷-时间线.md"
 - 若存在倒计时事件，必须校验推进是否正确（D-N 只能变为 D-(N-1)，不可跳跃）
 - 时间锚点不得回跳（除非明确标注为闪回章节）
 
-### Step 1: 读取大纲与状态
+### Step 1: 增量读取大纲与状态
 - 大纲：`大纲/卷N/第XXX章.md` 或 `大纲/第{卷}卷-详细大纲.md`
-  - 必须优先提取并写入任务书：目标/阻力/代价/反派层级/本章变化/章末未闭合问题/钩子（若存在）
+  - 只有当 `pack-json` 未提炼出目标/阻力/代价/本章变化/章末未闭合问题时，才补读并写入任务书
 - `state.json`：progress / protagonist_state / chapter_meta / project.genre
 
-### Step 2: 追读力与债务（按需）
+### Step 2: 追读力与债务（按需增量）
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-recent-reading-power --limit 5
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-pattern-usage-stats --last-n 20
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-hook-type-stats --last-n 20
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-debt-summary
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-recent-reading-power --limit 5
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-pattern-usage-stats --last-n 20
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-hook-type-stats --last-n 20
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-debt-summary
 ```
 
 ### Step 3: 实体与最近出场 + 伏笔读取
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-entities
-python "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index recent-appearances --limit 20
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-entities
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index recent-appearances --limit 20
 ```
 
 - 从 `state.json` 读取：

@@ -1181,13 +1181,31 @@ class StateManager:
         """构建兼容 state.json 的 chapter_meta 条目。"""
         base_meta = result.get("chapter_meta") if isinstance(result.get("chapter_meta"), dict) else {}
         payload = dict(base_meta)
+        existing_golden_three = payload.get("golden_three") if isinstance(payload.get("golden_three"), dict) else {}
 
         if isinstance(result.get("chapter_memory_card"), dict) and result.get("chapter_memory_card"):
             payload["chapter_memory_card"] = dict(result.get("chapter_memory_card"))
         if isinstance(result.get("timeline_anchor"), dict) and result.get("timeline_anchor"):
             payload["timeline_anchor"] = dict(result.get("timeline_anchor"))
         if isinstance(result.get("reading_power"), dict) and result.get("reading_power"):
-            payload["reading_power"] = dict(result.get("reading_power"))
+            reading_power = dict(result.get("reading_power"))
+            payload["reading_power"] = reading_power
+            if 1 <= int(chapter) <= 3:
+                derived_golden_three = {
+                    "golden_three_role": reading_power.get("golden_three_role", ""),
+                    "opening_trigger_type": reading_power.get("opening_trigger_type", ""),
+                    "opening_trigger_position": reading_power.get("opening_trigger_position", 0),
+                    "reader_promise": reading_power.get("reader_promise", ""),
+                    "visible_change": reading_power.get("visible_change", ""),
+                    "next_chapter_drive": reading_power.get("next_chapter_drive", ""),
+                    "golden_three_metrics": reading_power.get("golden_three_metrics", {}),
+                }
+                merged_golden_three = dict(existing_golden_three)
+                for key, value in derived_golden_three.items():
+                    if value not in ("", 0, {}, [], None):
+                        merged_golden_three[key] = value
+                if merged_golden_three:
+                    payload["golden_three"] = merged_golden_three
         if isinstance(result.get("plot_thread_updates"), list) and result.get("plot_thread_updates"):
             payload["plot_thread_updates"] = [
                 {

@@ -14,7 +14,18 @@ Setting policy: 先基于 init 产出的总纲+世界观补齐设定集基线；
 
 环境设置（bash 命令执行前）：
 ```bash
-export WORKSPACE_ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
+
+if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
+  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$PWD"
+  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
+  else
+    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
+    exit 1
+  fi
+fi
 
 if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/skills/ink-plan" ]; then
   echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT 或缺少目录: ${CLAUDE_PLUGIN_ROOT}/skills/ink-plan" >&2
@@ -28,7 +39,7 @@ if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; t
 fi
 export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
 
-export PROJECT_ROOT="$(python "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+export PROJECT_ROOT="$(python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
 ```
 
 ## References（按步骤导航）
@@ -336,6 +347,13 @@ Chapter format (include 反派层级 for context-agent):
 - 钩子: {类型} - {30字以内}
 ```
 
+黄金三章附加规则（第 1-3 章必须额外写出）：
+- 本章职责：立触发 / 接钩升级 / 小闭环（按章号选择）
+- 读者承诺：本章要让读者清楚感知的价值
+- 兑现项：本章必须兑现的 1-3 个项目
+- 禁止拖沓区：本章开头不能出现的慢区
+- 第 1 章不允许只写“铺垫”；第 2 章不允许“重新起头”；第 3 章不允许“只铺不收”
+
 **时间字段说明**：
 - **时间锚点**：本章发生的具体时间点，必须与时间线表一致
 - **章内时间跨度**：本章内容覆盖的时间长度
@@ -423,6 +441,7 @@ Every chapter must have:
 - 本章变化（30 字以内）
 - 章末未闭合问题（30 字以内）
 - 钩子（类型 + 30 字描述）
+- 第 1-3 章额外必须有：本章职责 / 读者承诺 / 兑现项 / 禁止拖沓区
 
 **6. 时间线一致性检查（新增）**
 - 时间线表文件存在：`大纲/第{volume_id}卷-时间线.md`
@@ -438,7 +457,7 @@ Every chapter must have:
 
 Update state (include chapters range):
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" update-state -- \
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" update-state -- \
   --volume-planned {volume_id} \
   --chapters-range "{start}-{end}"
 ```
@@ -458,6 +477,7 @@ Final check:
 - **时间线表文件不存在或为空**
 - 章纲文件不存在或为空
 - 任一章节缺少：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子
+- 第 1-3 章缺少：本章职责/读者承诺/兑现项/禁止拖沓区
 - **任一章节时间字段（时间锚点/章内时间跨度/与上章时间差）缺失**
 - **时间回跳且未标注为闪回**
 - **倒计时算术冲突（如 D-5 直接跳到 D-2）**

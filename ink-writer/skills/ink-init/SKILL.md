@@ -9,7 +9,7 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 ## 目标
 
 - 通过结构化交互收集足够信息，避免“先生成再返工”。
-- 产出可落地项目骨架：`.ink/state.json`、`设定集/*`、`大纲/总纲.md`、`.ink/idea_bank.json`。
+- 产出可落地项目骨架：`.ink/state.json`、`.ink/preferences.json`、`.ink/golden_three_plan.json`、`设定集/*`、`大纲/总纲.md`、`.ink/idea_bank.json`。
 - 保证后续 `/ink-plan` 与 `/ink-write` 可直接运行。
 
 ## 执行原则
@@ -127,7 +127,18 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 
 环境设置（bash 命令执行前）：
 ```bash
-export WORKSPACE_ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
+
+if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
+  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$PWD"
+  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
+  else
+    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
+    exit 1
+  fi
+fi
 
 if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
   echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT 或缺少目录: ${CLAUDE_PLUGIN_ROOT}/scripts" >&2
@@ -142,7 +153,7 @@ export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
   - 固定路径：`${CLAUDE_PLUGIN_ROOT}/scripts`
   - 入口脚本：`${SCRIPTS_DIR}/ink.py`
 - 建议先打印解析结果，避免写到错误目录：
-  - `python "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where`
+  - `python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where`
 - 加载最小参考：
   - `references/system-data-flow.md`（用于校对 init 产物与 plan/write 输入链路）
   - `references/genre-tropes.md`
@@ -159,6 +170,7 @@ export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
 - 目标规模（总字数或总章数）
 - 一句话故事
 - 核心冲突
+- 开篇钩子（尤其第 1 章前 300 字的触发点）
 - 目标读者/平台
 
 题材集合（用于归一化与映射）：
@@ -332,7 +344,7 @@ export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
 ### 1) 运行初始化脚本
 
 ```bash
-python "${SCRIPTS_DIR}/ink.py" init \
+python3 "${SCRIPTS_DIR}/ink.py" init \
   "{project_root}" \
   "{title}" \
   "{genre}" \
@@ -367,7 +379,8 @@ python "${SCRIPTS_DIR}/ink.py" init \
   --protagonist-archetype "{protagonist_archetype}" \
   --antagonist-level "{antagonist_level}" \
   --target-reader "{target_reader}" \
-  --platform "{platform}"
+  --platform "{platform}" \
+  --opening-hook "{opening_hook}"
 ```
 
 ### 2) 写入 `idea_bank.json`
@@ -407,6 +420,8 @@ python "${SCRIPTS_DIR}/ink.py" init \
 
 ```bash
 test -f "{project_root}/.ink/state.json"
+test -f "{project_root}/.ink/preferences.json"
+test -f "{project_root}/.ink/golden_three_plan.json"
 find "{project_root}/设定集" -maxdepth 1 -type f -name "*.md"
 test -f "{project_root}/大纲/总纲.md"
 test -f "{project_root}/.ink/idea_bank.json"
@@ -414,6 +429,8 @@ test -f "{project_root}/.ink/idea_bank.json"
 
 成功标准：
 - `state.json` 存在且关键字段不为空（title/genre/target_words/target_chapters）。
+- `preferences.json` 已开启 `opening_strategy.golden_three_enabled=true`。
+- `golden_three_plan.json` 已生成第 1-3 章承诺卡。
 - 设定集核心文件存在：`世界观.md`、`力量体系.md`、`主角卡.md`、`金手指设计.md`。
 - `总纲.md` 已填核心主线与约束字段。
 - `idea_bank.json` 已写入且与最终选定方案一致。

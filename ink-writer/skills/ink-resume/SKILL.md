@@ -13,7 +13,18 @@ allowed-tools: Read Bash AskUserQuestion
 
 环境设置（bash 命令执行前）：
 ```bash
-export WORKSPACE_ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
+
+if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
+  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$PWD"
+  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
+  else
+    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
+    exit 1
+  fi
+fi
 
 if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/skills/ink-resume" ]; then
   echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT 或缺少目录: ${CLAUDE_PLUGIN_ROOT}/skills/ink-resume" >&2
@@ -27,7 +38,7 @@ if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; t
 fi
 export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
 
-export PROJECT_ROOT="$(python "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+export PROJECT_ROOT="$(python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
 ```
 
 ## Workflow Checklist
@@ -102,7 +113,7 @@ cat "${SKILL_ROOT}/references/system-data-flow.md"
 ## Step 4: 检测中断状态
 
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow detect
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow detect
 ```
 
 **输出情况**：
@@ -145,14 +156,14 @@ B) 回滚到Ch6，放弃Ch7所有进度
 
 **选项 A - 删除重来**（推荐）：
 ```bash
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow cleanup --chapter {N} --confirm
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow clear
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow cleanup --chapter {N} --confirm
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow clear
 ```
 
 **选项 B - Git 回滚**：
 ```bash
 git -C "$PROJECT_ROOT" reset --hard ch{N-1:04d}
-python "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow clear
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow clear
 ```
 
 ## Step 7: 继续任务（可选）

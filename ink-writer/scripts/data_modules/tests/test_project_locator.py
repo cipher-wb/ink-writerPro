@@ -104,3 +104,41 @@ def test_resolve_project_root_ignores_stale_pointer_and_fallbacks(tmp_path):
     resolved = resolve_project_root(cwd=workspace)
     assert resolved == default_project.resolve()
 
+
+def test_resolve_project_root_uses_global_registry_prefix_on_posix(tmp_path, monkeypatch):
+    _ensure_scripts_on_path()
+
+    from project_locator import resolve_project_root
+
+    workspace = tmp_path / "workspace"
+    project_root = workspace / "books" / "凡人资本论"
+    plugin_root = workspace / "tools" / "ink-writer" / "ink-writer"
+
+    (project_root / ".ink").mkdir(parents=True, exist_ok=True)
+    (project_root / ".ink" / "state.json").write_text("{}", encoding="utf-8")
+    plugin_root.mkdir(parents=True, exist_ok=True)
+
+    fake_claude_home = tmp_path / "fake-claude-home"
+    registry_dir = fake_claude_home / "ink-writer"
+    registry_dir.mkdir(parents=True, exist_ok=True)
+    (registry_dir / "workspaces.json").write_text(
+        (
+            "{\n"
+            '  "schema_version": 1,\n'
+            '  "workspaces": {\n'
+            f'    "{workspace.resolve()}": {{\n'
+            f'      "workspace_root": "{workspace.resolve()}",\n'
+            f'      "current_project_root": "{project_root.resolve()}",\n'
+            '      "updated_at": "2026-03-25T00:00:00"\n'
+            "    }\n"
+            "  },\n"
+            f'  "last_used_project_root": "{project_root.resolve()}",\n'
+            '  "updated_at": "2026-03-25T00:00:00"\n'
+            "}\n"
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("CLAUDE_HOME", str(fake_claude_home))
+
+    resolved = resolve_project_root(str(plugin_root))
+    assert resolved == project_root.resolve()

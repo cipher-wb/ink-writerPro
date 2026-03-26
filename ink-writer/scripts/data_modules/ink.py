@@ -15,6 +15,7 @@ ink 统一入口（面向 skills / agents 的稳定 CLI）
   python "<SCRIPTS_DIR>/ink.py" --project-root D:\\wk\\xiaoshuo index stats
   python "<SCRIPTS_DIR>/ink.py" --project-root D:\\wk\\xiaoshuo state process-chapter --chapter 100 --data @payload.json
   python "<SCRIPTS_DIR>/ink.py" --project-root D:\\wk\\xiaoshuo extract-context --chapter 100 --format json
+  python "<SCRIPTS_DIR>/ink.py" --project-root D:\\wk\\xiaoshuo extract-context --chapter 100 --format pack
 
 也支持（不推荐，容易踩 PYTHONPATH/cd/参数顺序坑）：
   python -m data_modules.ink where
@@ -247,7 +248,12 @@ def main() -> None:
 
     p_extract_context = sub.add_parser("extract-context", help="转发到 extract_chapter_context.py")
     p_extract_context.add_argument("--chapter", type=int, required=True, help="目标章节号")
-    p_extract_context.add_argument("--format", choices=["text", "json"], default="text", help="输出格式")
+    p_extract_context.add_argument(
+        "--format",
+        choices=["text", "json", "pack", "pack-json"],
+        default="text",
+        help="输出格式",
+    )
 
     # 兼容：允许 `--project-root` 出现在任意位置（减少 agents/skills 拼命令的出错率）
     from .cli_args import normalize_global_project_root

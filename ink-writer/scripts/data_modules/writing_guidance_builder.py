@@ -280,6 +280,7 @@ def build_writing_checklist(
     guidance_items: List[str],
     reader_signal: Dict[str, Any],
     genre_profile: Dict[str, Any],
+    golden_three_contract: Dict[str, Any] | None = None,
     strategy_card: Dict[str, Any] | None = None,
     min_items: int,
     max_items: int,
@@ -315,6 +316,49 @@ def build_writing_checklist(
                 "verify_hint": verify_hint,
             }
         )
+
+    if isinstance(golden_three_contract, dict) and golden_three_contract.get("enabled"):
+        chapter = int(golden_three_contract.get("chapter") or 0)
+        opening_window_chars = int(golden_three_contract.get("opening_window_chars") or 300)
+        _add_item(
+            f"golden_three_opening_ch{chapter}",
+            f"黄金三章：前{opening_window_chars}字内交付强触发",
+            weight=max(default_weight, 1.8),
+            required=True,
+            source="golden_three.opening",
+            verify_hint=str(
+                golden_three_contract.get("opening_trigger") or "开头窗口内必须出现明确冲突触发。"
+            ),
+        )
+        _add_item(
+            f"golden_three_promise_ch{chapter}",
+            "黄金三章：本章读者承诺必须可复述",
+            weight=max(default_weight, 1.6),
+            required=True,
+            source="golden_three.promise",
+            verify_hint=str(
+                golden_three_contract.get("reader_promise") or "正文中必须显性感知本章承诺。"
+            ),
+        )
+        _add_item(
+            f"golden_three_hook_ch{chapter}",
+            "黄金三章：章末强驱动力必须直接推向下一章",
+            weight=max(default_weight, 1.6),
+            required=True,
+            source="golden_three.hook",
+            verify_hint=str(
+                golden_three_contract.get("end_hook_requirement") or "章末必须留下强未闭合问题。"
+            ),
+        )
+        for idx, deliverable in enumerate(golden_three_contract.get("must_deliver_this_chapter", []) or [], start=1):
+            _add_item(
+                f"golden_three_deliver_{chapter}_{idx}",
+                f"黄金三章兑现项：{deliverable}",
+                weight=max(default_weight, 1.2 if idx <= 2 else 1.0),
+                required=idx <= 2,
+                source="golden_three.deliver",
+                verify_hint="正文中应能定位对应兑现段落。",
+            )
 
     low_ranges = reader_signal.get("low_score_ranges") or []
     if low_ranges:
@@ -474,5 +518,8 @@ def is_checklist_item_completed(item: Dict[str, Any], reader_signal: Dict[str, A
     if source.startswith("methodology."):
         # 方法论条目当前作为软提示，仅做观察与引导，不参与扣分。
         return True
+
+    if source.startswith("golden_three."):
+        return False
 
     return False

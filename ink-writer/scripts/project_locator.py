@@ -59,6 +59,26 @@ def _normcase_path_key(p: Path) -> str:
     return os.path.normcase(str(resolved))
 
 
+def _path_key_is_same_or_child(path_key: str, ancestor_key: str) -> bool:
+    """
+    Return True when `path_key` is the same as `ancestor_key` or is nested under it.
+
+    Keys are already normalized strings, but path separators may still be either `/` or `\\`
+    depending on the source environment. Accept both so registry prefix matching works on macOS,
+    Linux and Windows.
+    """
+    if not path_key or not ancestor_key:
+        return False
+    if path_key == ancestor_key:
+        return True
+
+    trimmed = ancestor_key.rstrip("\\/")
+    if not trimmed:
+        return False
+
+    return path_key.startswith(trimmed + os.sep) or path_key.startswith(trimmed + "/") or path_key.startswith(trimmed + "\\")
+
+
 def _get_user_claude_root() -> Path:
     raw = os.environ.get(ENV_INK_CLAUDE_HOME) or os.environ.get(ENV_CLAUDE_HOME)
     if raw:
@@ -164,7 +184,7 @@ def _resolve_project_root_from_global_registry(
             if not isinstance(ws_key, str) or not ws_key:
                 continue
             ws_key_norm = os.path.normcase(ws_key)
-            if hint_key == ws_key_norm or hint_key.startswith(ws_key_norm.rstrip("\\") + "\\"):
+            if _path_key_is_same_or_child(hint_key, ws_key_norm):
                 if len(ws_key_norm) > best_len:
                     best_key = ws_key
                     best_len = len(ws_key_norm)

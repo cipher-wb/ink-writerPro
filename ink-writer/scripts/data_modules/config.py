@@ -103,6 +103,18 @@ class DataModulesConfig:
         return self.ink_dir / "state.json"
 
     @property
+    def preferences_file(self) -> Path:
+        return self.ink_dir / "preferences.json"
+
+    @property
+    def project_memory_file(self) -> Path:
+        return self.ink_dir / "project_memory.json"
+
+    @property
+    def golden_three_plan_file(self) -> Path:
+        return self.ink_dir / "golden_three_plan.json"
+
+    @property
     def index_db(self) -> Path:
         return self.ink_dir / "index.db"
 

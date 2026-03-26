@@ -22,7 +22,18 @@ allowed-tools: Bash Read
 ### Step 0：环境确认
 
 ```bash
-export WORKSPACE_ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
+
+if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/dashboard" ]; then
+  if [ -d "$PWD/dashboard" ] && [ -d "$PWD/skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$PWD"
+  elif [ -d "$PWD/../dashboard" ] && [ -d "$PWD/../skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
+  else
+    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
+    exit 1
+  fi
+fi
 
 if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/dashboard" ]; then
   echo "ERROR: 未找到 dashboard 模块: ${CLAUDE_PLUGIN_ROOT}/dashboard" >&2
@@ -34,17 +45,17 @@ export DASHBOARD_DIR="${CLAUDE_PLUGIN_ROOT}/dashboard"
 ### Step 1：安装依赖（首次）
 
 ```bash
-python -m pip install -r "${DASHBOARD_DIR}/requirements.txt" --quiet
+python3 -m pip install -r "${DASHBOARD_DIR}/requirements.txt" --quiet
 ```
 
 ### Step 2：解析项目根目录并准备 Python 模块路径
 
 ```bash
 export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
-export PROJECT_ROOT="$(python "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+export PROJECT_ROOT="$(python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
 echo "项目路径: ${PROJECT_ROOT}"
 
-# 确保 `python -m dashboard.server` 可在任意工作目录下找到插件模块
+# 确保 `python3 -m dashboard.server` 可在任意工作目录下找到插件模块
 if [ -n "${PYTHONPATH:-}" ]; then
   export PYTHONPATH="${CLAUDE_PLUGIN_ROOT}:${PYTHONPATH}"
 else
@@ -62,7 +73,7 @@ fi
 ### Step 3：启动 Dashboard
 
 ```bash
-python -m dashboard.server --project-root "${PROJECT_ROOT}"
+python3 -m dashboard.server --project-root "${PROJECT_ROOT}"
 ```
 
 启动后会自动打开浏览器访问 `http://127.0.0.1:8765`。
@@ -70,7 +81,7 @@ python -m dashboard.server --project-root "${PROJECT_ROOT}"
 如不需要自动打开浏览器，使用：
 
 ```bash
-python -m dashboard.server --project-root "${PROJECT_ROOT}" --no-browser
+python3 -m dashboard.server --project-root "${PROJECT_ROOT}" --no-browser
 ```
 
 ## 注意事项

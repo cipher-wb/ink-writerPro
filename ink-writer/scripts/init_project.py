@@ -29,6 +29,10 @@ import re
 # 安全修复：导入安全工具函数
 from security_utils import sanitize_commit_message, atomic_write_json, is_git_available
 from project_locator import write_current_project_pointer
+try:
+    from data_modules.golden_three import build_default_preferences, build_golden_three_plan
+except ImportError:  # pragma: no cover
+    from scripts.data_modules.golden_three import build_default_preferences, build_golden_three_plan
 
 
 # Windows 编码兼容性修复
@@ -256,6 +260,7 @@ def init_project(
     antagonist_level: str = "",
     target_reader: str = "",
     platform: str = "",
+    opening_hook: str = "",
     currency_system: str = "",
     currency_exchange: str = "",
     sect_hierarchy: str = "",
@@ -325,6 +330,7 @@ def init_project(
             "gf_irreversible_cost": gf_irreversible_cost,
             "target_reader": target_reader,
             "platform": platform,
+            "opening_hook": opening_hook,
             "currency_system": currency_system,
             "currency_exchange": currency_exchange,
             "sect_hierarchy": sect_hierarchy,
@@ -352,6 +358,36 @@ def init_project(
     state_path.parent.mkdir(parents=True, exist_ok=True)
     # 使用原子化写入（初始化不需要备份旧文件）
     atomic_write_json(state_path, state, use_lock=True, backup=False)
+
+    preferences_path = project_path / ".ink" / "preferences.json"
+    if preferences_path.exists():
+        try:
+            preferences = json.loads(preferences_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            preferences = {}
+    else:
+        preferences = {}
+    preferences = build_default_preferences(preferences)
+    atomic_write_json(preferences_path, preferences, use_lock=False, backup=False)
+
+    golden_three_plan_path = project_path / ".ink" / "golden_three_plan.json"
+    if golden_three_plan_path.exists():
+        try:
+            existing_golden_three_plan = json.loads(golden_three_plan_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            existing_golden_three_plan = {}
+    else:
+        existing_golden_three_plan = {}
+    golden_three_plan = build_golden_three_plan(
+        title=title,
+        genre=genre,
+        target_reader=target_reader,
+        platform=platform,
+        opening_hook=opening_hook,
+        core_selling_points=core_selling_points,
+        existing=existing_golden_three_plan,
+    )
+    atomic_write_json(golden_three_plan_path, golden_three_plan, use_lock=False, backup=False)
 
     # 读取内置模板（可选）
     script_dir = Path(__file__).resolve().parent
@@ -746,6 +782,8 @@ __pycache__/
     print(f"\nProject initialized at: {project_path}")
     print("Key files:")
     print(" - .ink/state.json")
+    print(" - .ink/preferences.json")
+    print(" - .ink/golden_three_plan.json")
     print(" - 设定集/世界观.md")
     print(" - 设定集/力量体系.md")
     print(" - 设定集/主角卡.md")
@@ -798,6 +836,7 @@ def main() -> None:
     parser.add_argument("--antagonist-level", default="", help="反派等级（深度模式）")
     parser.add_argument("--target-reader", default="", help="目标读者（深度模式）")
     parser.add_argument("--platform", default="", help="发布平台（深度模式）")
+    parser.add_argument("--opening-hook", default="", help="开篇钩子/首章触发点（深度模式）")
 
     args = parser.parse_args()
 
@@ -832,6 +871,7 @@ def main() -> None:
         antagonist_level=args.antagonist_level,
         target_reader=args.target_reader,
         platform=args.platform,
+        opening_hook=args.opening_hook,
         currency_system=args.currency_system,
         currency_exchange=args.currency_exchange,
         sect_hierarchy=args.sect_hierarchy,

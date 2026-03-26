@@ -102,11 +102,47 @@ def test_sql_state_manager_process_chapter_entities_and_exports(temp_project):
         relationships_new=[
             {"from": "xiaoyan", "to": "yaolao", "type": "师徒", "description": "收徒"}
         ],
+        scenes=[
+            {
+                "scene_index": 1,
+                "start_line": 1,
+                "end_line": 30,
+                "location": "山洞",
+                "summary": "药老现身",
+                "characters": ["xiaoyan", "yaolao"],
+            }
+        ],
+        chapter_meta={"title": "药老登场", "word_count": 1888},
+        chapter_memory_card={
+            "summary": "药老首次登场",
+            "goal": "建立师徒线",
+            "conflict": "主角迷茫",
+            "result": "获得指引",
+            "next_chapter_bridge": "准备修炼",
+        },
+        timeline_anchor={"anchor_time": "深夜", "to_location": "山洞"},
+        reading_power={
+            "hook_type": "悬念钩",
+            "hook_strength": "strong",
+            "golden_three_role": "小闭环",
+            "opening_trigger_type": "异象",
+            "reader_promise": "药老现身改变命运",
+            "visible_change": "主角获得老师",
+            "next_chapter_drive": "正式修炼",
+        },
     )
     assert stats["entities_created"] >= 1
     assert stats["relationships"] == 1
+    assert stats["chapters"] == 1
+    assert stats["scenes"] == 1
+    assert stats["memory_cards"] == 1
+    assert stats["reading_power"] == 1
     rel_events = manager._index_manager.get_relationship_events("xiaoyan", direction="both")
     assert len(rel_events) >= 1
+    assert manager._index_manager.get_chapter(10)["title"] == "药老登场"
+    assert len(manager._index_manager.get_scenes(10)) == 1
+    assert manager._index_manager.get_chapter_memory_card(10)["goal"] == "建立师徒线"
+    assert manager._index_manager.get_chapter_reading_power(10)["hook_type"] == "悬念钩"
 
     entities_v3 = manager.export_to_entities_v3_format()
     assert "角色" in entities_v3

@@ -35,6 +35,11 @@ from .genre_profile_builder import (
     extract_markdown_refs,
     parse_genre_tokens,
 )
+from .golden_three import (
+    build_default_preferences,
+    build_golden_three_guidance,
+    resolve_golden_three_contract,
+)
 from .writing_guidance_builder import (
     build_methodology_guidance_items,
     build_methodology_strategy_card,
@@ -59,6 +64,7 @@ class ContextManager:
         "reader_signal",
         "genre_profile",
         "writing_guidance",
+        "golden_three_contract",
     }
     SECTION_ORDER = [
         "core",
@@ -66,6 +72,7 @@ class ContextManager:
         "global",
         "reader_signal",
         "genre_profile",
+        "golden_three_contract",
         "writing_guidance",
         "story_skeleton",
         "memory",
@@ -218,14 +225,26 @@ class ContextManager:
             "style_contract_ref": self._load_setting("风格契约"),
         }
 
-        preferences = self._load_json_optional(self.config.ink_dir / "preferences.json")
-        memory = self._load_json_optional(self.config.ink_dir / "project_memory.json")
+        genre_profile = self._load_genre_profile(state)
+        preferences = build_default_preferences(self._load_json_optional(self.config.preferences_file))
+        golden_three_plan = self._load_json_optional(self.config.golden_three_plan_file)
+        golden_three_contract = resolve_golden_three_contract(
+            chapter=chapter,
+            preferences=preferences,
+            golden_three_plan=golden_three_plan,
+            genre_profile=genre_profile,
+        )
+        memory = self._load_json_optional(self.config.project_memory_file)
         memory.update(self._load_structured_memory(chapter, state))
         story_skeleton = self._load_story_skeleton(chapter)
         alert_slice = max(0, int(self.config.context_alerts_slice))
         reader_signal = self._load_reader_signal(chapter)
-        genre_profile = self._load_genre_profile(state)
-        writing_guidance = self._build_writing_guidance(chapter, reader_signal, genre_profile)
+        writing_guidance = self._build_writing_guidance(
+            chapter,
+            reader_signal,
+            genre_profile,
+            golden_three_contract=golden_three_contract,
+        )
 
         return {
             "meta": {"chapter": chapter},
@@ -234,6 +253,7 @@ class ContextManager:
             "global": global_ctx,
             "reader_signal": reader_signal,
             "genre_profile": genre_profile,
+            "golden_three_contract": golden_three_contract,
             "writing_guidance": writing_guidance,
             "story_skeleton": story_skeleton,
             "preferences": preferences,
@@ -530,6 +550,8 @@ class ContextManager:
         chapter: int,
         reader_signal: Dict[str, Any],
         genre_profile: Dict[str, Any],
+        *,
+        golden_three_contract: Dict[str, Any] | None = None,
     ) -> Dict[str, Any]:
         if not getattr(self.config, "context_writing_guidance_enabled", True):
             return {}
@@ -550,6 +572,9 @@ class ContextManager:
         )
 
         guidance = list(guidance_bundle.get("guidance") or [])
+        golden_three_guidance = build_golden_three_guidance(golden_three_contract or {})
+        if golden_three_guidance:
+            guidance = golden_three_guidance + guidance
         methodology_strategy: Dict[str, Any] = {}
 
         if self._is_methodology_enabled_for_genre(genre_profile):
@@ -566,6 +591,7 @@ class ContextManager:
             guidance_items=guidance,
             reader_signal=reader_signal,
             genre_profile=genre_profile,
+            golden_three_contract=golden_three_contract,
             strategy_card=methodology_strategy,
         )
 
@@ -596,12 +622,15 @@ class ContextManager:
             "checklist": checklist,
             "checklist_score": checklist_score,
             "methodology": methodology_strategy,
+            "golden_three_mode": bool((golden_three_contract or {}).get("enabled")),
+            "golden_three_contract": golden_three_contract or {},
             "signals_used": {
                 "has_low_score_ranges": bool(low_ranges),
                 "hook_types": hook_types,
                 "top_patterns": top_patterns,
                 "genre": genre,
                 "methodology_enabled": bool(methodology_strategy.get("enabled")),
+                "golden_three_enabled": bool((golden_three_contract or {}).get("enabled")),
             },
         }
 
@@ -772,6 +801,7 @@ class ContextManager:
         guidance_items: List[str],
         reader_signal: Dict[str, Any],
         genre_profile: Dict[str, Any],
+        golden_three_contract: Dict[str, Any] | None = None,
         strategy_card: Dict[str, Any] | None = None,
     ) -> List[Dict[str, Any]]:
         _ = chapter
@@ -788,6 +818,7 @@ class ContextManager:
             guidance_items=guidance_items,
             reader_signal=reader_signal,
             genre_profile=genre_profile,
+            golden_three_contract=golden_three_contract,
             strategy_card=strategy_card,
             min_items=min_items,
             max_items=max_items,

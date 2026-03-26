@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import shutil
+import sqlite3
 import subprocess
 import sys
 from datetime import datetime
@@ -79,6 +80,120 @@ def get_workflow_state_path() -> Path:
 def get_call_trace_path() -> Path:
     project_root = _get_active_project_root()
     return project_root / ".ink" / "observability" / "call_trace.jsonl"
+
+
+def _chapter_summary_path(project_root: Path, chapter_num: int) -> Path:
+    return project_root / ".ink" / "summaries" / f"ch{int(chapter_num):04d}.md"
+
+
+def _sqlite_scalar(db_path: Path, query: str, params: tuple[Any, ...] = ()) -> Any:
+    with sqlite3.connect(db_path) as conn:
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        row = cursor.fetchone()
+        return row[0] if row else None
+
+
+def _validate_step5_outputs(task: Dict[str, Any]) -> Optional[str]:
+    """Validate structured Data Agent outputs before Step 5 can complete."""
+    if str(task.get("command") or "") != "ink-write":
+        return None
+
+    chapter_num = (task.get("args") or {}).get("chapter_num")
+    if not chapter_num:
+        return "缺少章节号，无法校验 Step 5 产物"
+
+    try:
+        chapter_num = int(chapter_num)
+    except (TypeError, ValueError):
+        return f"章节号无效: {chapter_num}"
+
+    project_root = _get_active_project_root()
+    state_path = project_root / ".ink" / "state.json"
+    index_db = project_root / ".ink" / "index.db"
+    summary_path = _chapter_summary_path(project_root, chapter_num)
+
+    failures: list[str] = []
+    if not state_path.is_file():
+        failures.append("缺少 .ink/state.json")
+    if not index_db.is_file():
+        failures.append("缺少 .ink/index.db")
+    if not summary_path.is_file():
+        failures.append(f"缺少 {summary_path.relative_to(project_root)}")
+
+    if failures or not index_db.is_file():
+        return "；".join(failures) if failures else None
+
+    try:
+        memory_count = int(
+            _sqlite_scalar(
+                index_db,
+                "SELECT COUNT(*) FROM chapter_memory_cards WHERE chapter = ?",
+                (chapter_num,),
+            )
+            or 0
+        )
+        reading_count = int(
+            _sqlite_scalar(
+                index_db,
+                "SELECT COUNT(*) FROM chapter_reading_power WHERE chapter = ?",
+                (chapter_num,),
+            )
+            or 0
+        )
+        scene_count = int(
+            _sqlite_scalar(
+                index_db,
+                "SELECT COUNT(*) FROM scenes WHERE chapter = ?",
+                (chapter_num,),
+            )
+            or 0
+        )
+    except sqlite3.Error as exc:
+        return f"Step 5 校验无法读取 index.db: {exc}"
+
+    if memory_count <= 0:
+        failures.append("chapter_memory_cards 未写入")
+    if reading_count <= 0:
+        failures.append("chapter_reading_power 未写入")
+    if scene_count <= 0:
+        failures.append("scenes 未写入")
+
+    if chapter_num <= 3 and reading_count > 0:
+        try:
+            payload_raw = _sqlite_scalar(
+                index_db,
+                "SELECT payload_json FROM chapter_reading_power WHERE chapter = ?",
+                (chapter_num,),
+            )
+            reading_payload = json.loads(payload_raw) if payload_raw else {}
+            missing_fields = [
+                field
+                for field in (
+                    "golden_three_role",
+                    "opening_trigger_type",
+                    "reader_promise",
+                    "visible_change",
+                    "next_chapter_drive",
+                )
+                if not reading_payload.get(field)
+            ]
+            if missing_fields:
+                failures.append(
+                    "黄金三章 reading_power 缺少字段: " + ", ".join(missing_fields)
+                )
+        except (sqlite3.Error, json.JSONDecodeError) as exc:
+            failures.append(f"黄金三章 reading_power 校验失败: {exc}")
+
+    if failures:
+        return "；".join(failures)
+    return None
+
+
+def _validate_step_completion(task: Dict[str, Any], step_id: str) -> Optional[str]:
+    if step_id == "Step 5":
+        return _validate_step5_outputs(task)
+    return None
 
 
 def append_call_trace(event: str, payload: Optional[Dict[str, Any]] = None):
@@ -198,15 +313,24 @@ def start_task(command, args):
         current["last_heartbeat"] = now_iso()
         state["current_task"] = current
         save_state(state)
+        active_step = current.get("current_step") or {}
         safe_append_call_trace(
             "task_reentered",
             {
                 "command": current.get("command"),
                 "chapter": current.get("args", {}).get("chapter_num"),
                 "retry_count": current["retry_count"],
+                "current_step": active_step.get("id"),
             },
         )
-        print(f"ℹ️ 任务已在运行，执行重入标记: {current.get('command')}")
+        if active_step:
+            print(
+                "ℹ️ 任务已在运行，执行重入标记: "
+                f"{current.get('command')} "
+                f"(当前 Step: {active_step.get('id')} {active_step.get('name')})"
+            )
+        else:
+            print(f"ℹ️ 任务已在运行，执行重入标记: {current.get('command')}")
         return
 
     state["current_task"] = _new_task(command, args)
@@ -236,7 +360,43 @@ def start_step(step_id, step_name, progress_note=None):
 
     owner = expected_step_owner(command, step_id)
 
-    _finalize_current_step_as_failed(task, reason="step_replaced_before_completion")
+    active_step = task.get("current_step")
+    if active_step and active_step.get("status") not in {STEP_STATUS_COMPLETED, STEP_STATUS_FAILED}:
+        active_id = active_step.get("id")
+        if active_id == step_id:
+            active_step["running_at"] = now_iso()
+            task["last_heartbeat"] = now_iso()
+            save_state(state)
+            safe_append_call_trace(
+                "step_reentered",
+                {
+                    "step_id": step_id,
+                    "command": task.get("command"),
+                    "chapter": task.get("args", {}).get("chapter_num"),
+                    "attempt": active_step.get("attempt"),
+                    "expected_owner": owner,
+                },
+            )
+            print(f"ℹ️ {step_id} 已在运行，继续当前 Step")
+            return
+
+        task["last_heartbeat"] = now_iso()
+        save_state(state)
+        safe_append_call_trace(
+            "step_start_rejected_active_conflict",
+            {
+                "requested_step_id": step_id,
+                "active_step_id": active_id,
+                "command": task.get("command"),
+                "chapter": task.get("args", {}).get("chapter_num"),
+                "expected_owner": owner,
+            },
+        )
+        print(
+            f"⚠️ 当前已有活跃 Step {active_id}，拒绝启动 {step_id}。"
+            "请先完成或清理当前 Step。"
+        )
+        return
 
     started_at = now_iso()
     task["current_step"] = {
@@ -284,6 +444,20 @@ def complete_step(step_id, artifacts_json=None):
                 "requested_step_id": step_id,
                 "active_step_id": current_step.get("id"),
                 "command": task.get("command"),
+            },
+        )
+        return
+
+    validation_error = _validate_step_completion(task, step_id)
+    if validation_error:
+        print(f"⚠️ {step_id} 完成校验失败: {validation_error}")
+        safe_append_call_trace(
+            "step_completion_validation_failed",
+            {
+                "step_id": step_id,
+                "command": task.get("command"),
+                "chapter": task.get("args", {}).get("chapter_num"),
+                "reason": validation_error,
             },
         )
         return

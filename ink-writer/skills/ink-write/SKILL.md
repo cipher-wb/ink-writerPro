@@ -104,7 +104,7 @@ allowed-tools: Read Write Edit Grep Bash Task
 
 - `Read/Grep`：读取 `state.json`、大纲、章节正文与参考文件。
 - `Bash`：运行 `extract_chapter_context.py`、`index_manager`、`workflow_manager`。
-- `Task`：调用 `context-agent`、审查 subagent、`data-agent` 并行执行。
+- `Task`：调用审查 subagent、`data-agent`；`context-agent` 仅在 Step 1 脚本构建失败时兜底。
 
 ## 交互流程
 
@@ -123,12 +123,24 @@ allowed-tools: Read Write Edit Grep Bash Task
 
 环境设置（bash 命令执行前）：
 ```bash
-export WORKSPACE_ROOT="${CLAUDE_PROJECT_DIR:-$PWD}"
+export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
+
+if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
+  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$PWD"
+  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
+    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
+  else
+    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
+    exit 1
+  fi
+fi
+
 export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/scripts"
 export SKILL_ROOT="${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/skills/ink-write"
 
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" preflight
-export PROJECT_ROOT="$(python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" preflight
+export PROJECT_ROOT="$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
 ```
 
 **硬门槛**：`preflight` 必须成功。它统一校验 `CLAUDE_PLUGIN_ROOT` 派生出的 `SKILL_ROOT` / `SCRIPTS_DIR`、`ink.py`、`extract_chapter_context.py` 和解析出的 `PROJECT_ROOT`。任一失败都立即阻断。
@@ -139,10 +151,10 @@ export PROJECT_ROOT="$(python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${
 ### Step 0.5：工作流断点记录（best-effort，不阻断）
 
 ```bash
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow start-task --command ink-write --chapter {chapter_num} || true
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow start-step --step-id "Step 1" --step-name "Context Agent" || true
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-step --step-id "Step 1" --artifacts '{"ok":true}' || true
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-task --artifacts '{"ok":true}' || true
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow start-task --command ink-write --chapter {chapter_num} || true
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow start-step --step-id "Step 1" --step-name "Context Build" || true
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-step --step-id "Step 1" --artifacts '{"ok":true}' || true
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-task --artifacts '{"ok":true}' || true
 ```
 
 要求：
@@ -150,21 +162,60 @@ python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow
 - 任何记录失败只记警告，不阻断写作。
 - 每个 Step 执行结束后，同样需要 `complete-step`（失败不阻断）。
 
-### Step 1：Context Agent（内置 Context Contract，生成直写执行包）
+### Step 0.6：重入续跑规则（当 `start-task` 提示“任务已在运行”时必须执行）
 
-使用 Task 调用 `context-agent`，参数：
-- `chapter`
-- `project_root`
-- `storage_path=.ink/`
-- `state_file=.ink/state.json`
+```bash
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow detect
+```
+
+硬规则：
+- 若 `workflow detect` 显示当前运行任务与本次请求的 `command/chapter` 一致，必须从 `current_step` 继续，不得重新从 Step 1 开始。
+- 已完成 Step 只允许复用其产物，不得再次 `start-step` 覆盖；活跃 Step 未完成前，禁止启动不同 Step。
+- 若 `current_step` 为 `Step 3`，必须先完成审查并落库 `review_metrics`，然后才能进入 Step 4/5。
+- 若 `current_step` 为 `Step 5`，只允许重跑 Data Agent；Step 1-4 视为已通过，禁止回滚整个写作链。
+- 若 `workflow detect` 显示活跃 Step 与当前文件状态明显冲突，先执行 `workflow fail-task` 或显式改走 `/ink-resume`，不得私自覆盖当前 Step。
+
+按 `current_step.id` 的续跑映射：
+- `Step 1`：只完成脚本执行包构建（失败时才走 `context-agent` 兜底），然后进入 `Step 2A`
+- `Step 2A`：只继续/重写正文，不得重复 `Step 1`
+- `Step 2B`：只继续风格适配，不得跳去 `Step 4/5`
+- `Step 3`：只完成审查、汇总、`save-review-metrics`
+- `Step 4`：只基于现有审查结论润色，随后进入 `Step 5`
+- `Step 5`：只重跑 Data Agent 并校验 `state/index/summary`
+- `Step 6`：只处理 Git 备份与收尾验证
+
+### Step 1：脚本执行包构建（默认）/ Context Agent（兜底）
+
+默认路径：
+```bash
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract-context --chapter {chapter_num} --format pack
+```
+
+兜底路径（仅当默认路径失败、超时、或输出缺关键字段时才允许）：
+- 使用 `Task` 调用 `context-agent`
+- 参数：
+  - `chapter`
+  - `project_root`
+  - `storage_path=.ink/`
+  - `state_file=.ink/state.json`
+
+兜底前置要求：
+- 先执行一次：
+```bash
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract-context --chapter {chapter_num} --format pack-json
+```
+- `context-agent` 必须优先消费这份 `pack-json`，只补它缺失的字段，禁止重新把 `state.json`、`summaries`、`index`、`extract-context --format json` 全量重复读一遍。
 
 硬要求：
 - 若 `state` 或大纲不可用，立即阻断并返回缺失项。
+- 当 `chapter <= 3` 时，必须额外读取 `.ink/golden_three_plan.json` 与 `.ink/preferences.json`，进入黄金三章模式。
 - 输出必须同时包含：
-  - 7 板块任务书（目标/冲突/承接/角色/场景约束/伏笔/追读力）；
+  - 8 板块任务书（本章核心任务/接住上章/角色/场景与力量约束/时间约束/风格指导/连续性与伏笔/追读力策略）；
   - Context Contract 全字段（目标/阻力/代价/本章变化/未闭合问题/开头类型/情绪节奏/信息密度/过渡章判定/追读力设计）；
+  - 若 `chapter <= 3`：额外包含 `golden_three_role / opening_window_chars / reader_promise / must_deliver_this_chapter / end_hook_requirement`；
   - Step 2A 可直接消费的“写作执行包”（章节节拍、不可变事实清单、禁止事项、终检清单）。
 - 合同与任务书出现冲突时，以“大纲与设定约束更严格者”为准。
+- 默认应直接复用脚本产出的 execution pack，不再起子代理做二次整理。
 
 输出：
 - 单一“创作执行包”（任务书 + Context Contract + 直写提示词），供 Step 2A 直接消费，不再拆分独立 Step 1.5。
@@ -201,6 +252,8 @@ cat "${SKILL_ROOT}/references/style-adapter.md"
 硬要求：
 - 只做表达层转译，不改剧情事实、事件顺序、角色行为结果、设定规则。
 - 对“模板腔、说明腔、机械腔”做定向改写，为 Step 4 留出问题修复空间。
+- 必须优先读取本地高分 `style_samples`；若 `chapter <= 3`，优先选择更能匹配开头窗口、对白密度、句长节奏的样本。
+- 若 Anti-AI 检查未通过，不得把该版正文交给 Step 3。
 
 输出：
 - 风格化正文（覆盖原章节文件）。
@@ -223,6 +276,7 @@ cat "${SKILL_ROOT}/references/step-3-review-gate.md"
 - `ooc-checker`
 
 条件审查器（`auto` 命中时执行）：
+- `golden-three-checker`
 - `reader-pull-checker`
 - `high-point-checker`
 - `pacing-checker`
@@ -233,7 +287,14 @@ cat "${SKILL_ROOT}/references/step-3-review-gate.md"
 
 审查指标落库（必做）：
 ```bash
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index save-review-metrics --data "@${PROJECT_ROOT}/.ink/tmp/review_metrics.json"
+mkdir -p "${PROJECT_ROOT}/.ink/tmp"
+# 生成 review_metrics.json 时，优先使用 Bash heredoc 写入；
+# 不要用 Write 直接创建一个尚未读取过的新文件，避免工具链拒绝创建。
+# 例如：
+# cat > "${PROJECT_ROOT}/.ink/tmp/review_metrics.json" <<'JSON'
+# {...}
+# JSON
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index save-review-metrics --data "@${PROJECT_ROOT}/.ink/tmp/review_metrics.json"
 ```
 
 review_metrics 字段约束（当前工作流约定只传以下字段）：
@@ -246,14 +307,21 @@ review_metrics 字段约束（当前工作流约定只传以下字段）：
   "severity_counts": {"critical": 0, "high": 1, "medium": 2, "low": 0},
   "critical_issues": ["问题描述"],
   "report_file": "审查报告/第100-100章审查报告.md",
-  "notes": "单个字符串；selected_checkers / timeline_gate / anti_ai_force_check 等扩展信息压成单行文本写入此字段"
+  "notes": "单个字符串；摘要给人读",
+  "review_payload_json": {
+    "selected_checkers": ["consistency-checker", "continuity-checker"],
+    "timeline_gate": "pass",
+    "anti_ai_force_check": "pass",
+    "golden_three_metrics": {}
+  }
 }
 ```
 - `notes` 在当前执行契约中必须是单个字符串，不得传入对象或数组。
-- 当前工作流不额外传入其它顶层字段；脚本侧未在此处做新增硬校验。
+- `review_payload_json` 用于结构化扩展信息；黄金三章指标必须写入 `golden_three_metrics`。
 
 硬要求：
 - `--minimal` 也必须产出 `overall_score`。
+- 当 `chapter <= 3` 时，`golden-three-checker` 未通过不得放行。
 - 未落库 `review_metrics` 不得进入 Step 5。
 
 ### Step 4：润色（问题修复优先）
@@ -269,6 +337,12 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 2. 修复 `high`（不能修复则记录 deviation）
 3. 处理 `medium/low`（按收益择优）
 4. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
+
+黄金三章定向修复（当 `chapter <= 3` 时必须执行）：
+- 前移触发点，禁止把强事件压到开头窗口之后。
+- 压缩背景说明、长回忆、空景描写。
+- 强化主角差异点与本章可见回报。
+- 增强章末动机句，确保读者必须点下一章。
 
 输出：
 - 润色后正文（覆盖章节文件）
@@ -288,17 +362,61 @@ Data Agent 默认子步骤（全部执行）：
 - A. 加载上下文
 - B. AI 实体提取
 - C. 实体消歧
-- D. 写入 state/index
+- D. 统一走 `state process-chapter` 写入 state/index
 - E. 写入章节摘要
 - F. AI 场景切片
 - G. RAG 向量索引（`rag index-chapter --scenes ...`）
 - H. 风格样本评估（`style extract --scenes ...`，仅 `review_score >= 80` 时）
 - I. 债务利息（默认跳过）
 
+黄金三章回写要求（当 `chapter <= 3` 时）：
+- `reading_power` 必须尽量补全：
+  - `golden_three_role`
+  - `opening_trigger_type`
+  - `opening_trigger_position`
+  - `reader_promise`
+  - `visible_change`
+  - `next_chapter_drive`
+  - `golden_three_metrics`
+- `chapter_meta.golden_three` 作为兼容镜像同步写入。
+
 `--scenes` 来源优先级（G/H 步骤共用）：
 1. 优先从 `index.db` 的 scenes 记录获取（Step F 写入的结果）
 2. 其次按 `start_line` / `end_line` 从正文切片构造
 3. 最后允许单场景退化（整章作为一个 scene）
+
+Step 5 强约束：
+- 禁止用手工整体重写 `.ink/state.json` 代替 `state process-chapter`。
+- 必须先生成完整 Data Agent payload，再执行：
+
+```bash
+cat > "${PROJECT_ROOT}/.ink/tmp/data_agent_payload_ch${chapter_padded}.json" <<'EOF'
+{...完整 JSON...}
+EOF
+
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" \
+  --project-root "${PROJECT_ROOT}" \
+  state process-chapter \
+  --chapter {chapter_num} \
+  --data @"${PROJECT_ROOT}/.ink/tmp/data_agent_payload_ch${chapter_padded}.json"
+```
+
+- 上述 payload 必须包含并显式落库这些字段：
+  - `scenes`
+  - `chapter_meta`
+  - `chapter_memory_card`
+  - `timeline_anchor`
+  - `plot_thread_updates`
+  - `reading_power`
+  - `candidate_facts`
+- `chapter <= 3` 时，`reading_power` 必须包含：
+  - `golden_three_role`
+  - `opening_trigger_type`
+  - `opening_trigger_position`
+  - `reader_promise`
+  - `visible_change`
+  - `next_chapter_drive`
+- 若缺这些字段，不得宣称 Step 5 完成。
 
 Step 5 失败隔离规则：
 - 若 G/H 失败原因是 `--scenes` 缺失、scene 为空、scene JSON 格式错误：只补跑 G/H 子步骤，不回滚或重跑 Step 1-4。
@@ -310,6 +428,24 @@ Step 5 失败隔离规则：
 - `.ink/index.db`
 - `.ink/summaries/ch{chapter_padded}.md`
 - `.ink/observability/data_agent_timing.jsonl`（观测日志）
+- `chapter_memory_cards.chapter={chapter_num}`
+- `chapter_reading_power.chapter={chapter_num}`
+- `scenes.chapter={chapter_num}`
+
+Step 5 收尾动作必须按这个顺序执行：
+1. 先验证上述文件和结构化表记录全部存在。
+2. 验证通过后再执行：
+
+```bash
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-step \
+  --step-id "Step 5" \
+  --artifacts '{"ok":true,"state_updated":true,"index_updated":true,"summary_created":true}'
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow start-step \
+  --step-id "Step 6" \
+  --step-name "Git备份"
+```
+
+3. 若结构化表缺失，禁止执行 `workflow complete-step --step-id "Step 5"`，必须继续修复 Step 5。
 
 性能要求：
 - 读取 timing 日志最近一条；
@@ -334,6 +470,25 @@ git -c i18n.commitEncoding=UTF-8 commit -m "第{chapter_num}章: {title}"
 - 提交时机：验证、回写、清理全部完成后最后执行。
 - 提交信息默认中文，格式：`第{chapter_num}章: {title}`。
 - 若 commit 失败，必须给出失败原因与未提交文件范围。
+- Step 6 收尾必须显式执行：
+
+```bash
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-step \
+  --step-id "Step 6" \
+  --artifacts '{"ok":true,"git_backup":true}'
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-task \
+  --artifacts '{"ok":true,"git_backup":true}'
+```
+
+- 若 Git 因 `user.name / user.email` 未配置而跳过，也必须显式完成 Step 6 与任务：
+
+```bash
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-step \
+  --step-id "Step 6" \
+  --artifacts '{"ok":true,"git_backup":false,"reason":"git_author_identity_unknown"}'
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow complete-task \
+  --artifacts '{"ok":true,"git_backup":false,"reason":"git_author_identity_unknown"}'
+```
 
 ## 充分性闸门（必须通过）
 
@@ -354,14 +509,18 @@ git -c i18n.commitEncoding=UTF-8 commit -m "第{chapter_num}章: {title}"
 test -f "${PROJECT_ROOT}/.ink/state.json"
 test -f "${PROJECT_ROOT}/正文/第${chapter_padded}章.md"
 test -f "${PROJECT_ROOT}/.ink/summaries/ch${chapter_padded}.md"
-python -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index get-recent-review-metrics --limit 1
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index get-recent-review-metrics --limit 1
 tail -n 1 "${PROJECT_ROOT}/.ink/observability/data_agent_timing.jsonl" || true
+sqlite3 "${PROJECT_ROOT}/.ink/index.db" "SELECT COUNT(*) FROM chapter_memory_cards WHERE chapter=${chapter_num};"
+sqlite3 "${PROJECT_ROOT}/.ink/index.db" "SELECT COUNT(*) FROM chapter_reading_power WHERE chapter=${chapter_num};"
+sqlite3 "${PROJECT_ROOT}/.ink/index.db" "SELECT COUNT(*) FROM scenes WHERE chapter=${chapter_num};"
 ```
 
 成功标准：
 - 章节文件、摘要文件、状态文件齐全且内容可读。
 - 审查分数可追溯，`overall_score` 与 Step 5 输入一致。
 - 润色后未破坏大纲与设定约束。
+- `chapter_memory_cards / chapter_reading_power / scenes` 对当前章节均非空。
 
 ## 失败处理（最小回滚）
 

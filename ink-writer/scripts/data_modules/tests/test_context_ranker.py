@@ -50,6 +50,5 @@ def test_rank_pack_adds_context_contract_meta(tmp_path):
     }
 
     ranked = ranker.rank_pack(pack, chapter=12)
-    assert ranked["meta"]["context_contract_version"] == "v2"
+    assert ranked["meta"]["context_contract_version"] == "v3"
     assert ranked["meta"]["ranker"]["enabled"] is True
-

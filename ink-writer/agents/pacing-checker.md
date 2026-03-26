@@ -40,7 +40,7 @@ model: inherit
 
 **可选: 使用 status_reporter 进行自动化分析**:
 ```bash
-python -X utf8 "${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/scripts/ink.py" --project-root "${PROJECT_ROOT}" status -- --focus strand
+python3 -X utf8 "${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/scripts/ink.py" --project-root "${PROJECT_ROOT}" status -- --focus strand
 ```
 
 ### 第二步: 章节情节线分类

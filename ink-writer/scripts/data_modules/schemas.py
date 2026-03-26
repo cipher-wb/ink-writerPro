@@ -134,6 +134,13 @@ class ReadingPowerPayload(BaseModel):
     is_transition: bool = False
     override_count: int = 0
     debt_balance: float = 0.0
+    golden_three_role: str = ""
+    opening_trigger_type: str = ""
+    opening_trigger_position: int = 0
+    reader_promise: str = ""
+    visible_change: str = ""
+    next_chapter_drive: str = ""
+    golden_three_metrics: Dict[str, Any] = Field(default_factory=dict)
     notes: str = ""
 
 
@@ -156,6 +163,7 @@ class ChapterMetaPayload(BaseModel):
     hook: Dict[str, Any] = Field(default_factory=dict)
     pattern: Dict[str, Any] = Field(default_factory=dict)
     ending: Dict[str, Any] = Field(default_factory=dict)
+    golden_three: Dict[str, Any] = Field(default_factory=dict)
     warnings: List[str] = Field(default_factory=list)
 
 
