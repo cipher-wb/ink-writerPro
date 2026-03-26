@@ -3,9 +3,27 @@
 ## 调用约束（硬规则）
 
 - 必须使用 `Task` 调用审查 subagent，禁止主流程直接内联“自审结论”。
-- 审查任务可并行发起，必须在全部返回后统一聚合。
+- Step 3 开始前，必须先生成 `review_bundle_file`，并把该绝对路径传给所有 checker。
+- 审查任务不得无上限并发；最大并发数为 2，条件审查器默认顺序执行。
 - `overall_score` 必须来自聚合结果，不可主观估分。
-- 单章写作场景下，统一传入：`{chapter, chapter_file, project_root}`。
+- 单章写作场景下，统一传入：`{chapter, chapter_file, project_root, review_bundle_file}`。
+- `chapter_file` 与 `review_bundle_file` 必须是绝对路径，禁止把目录路径或相对路径交给 checker。
+
+## 审查包（新增，必做）
+
+先生成结构化审查包，供所有 checker 复用：
+
+```bash
+mkdir -p "${PROJECT_ROOT}/.ink/tmp"
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+  extract-context --chapter {chapter_num} --format review-pack-json \
+  > "${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"
+```
+
+审查包职责：
+- 内嵌当前章节正文、前序章节摘要、黄金三章契约、写作 guidance、记忆卡、设定快照。
+- 提供 `allowed_read_files` 绝对路径白名单。
+- 明确禁止读取 `.db` 文件、目录路径和白名单外的相对路径。
 
 ## 审查路由模式
 
@@ -59,7 +77,12 @@ if mode != "minimal":
   if trigger_high_point: selected.append("high-point-checker")
   if trigger_pacing: selected.append("pacing-checker")
 
-parallel Task(agent, {chapter, chapter_file, project_root}) for agent in selected
+core_stage = ["consistency-checker", "continuity-checker"]
+run Task in parallel(core_stage, max_concurrency=2)
+run Task("ooc-checker", {chapter, chapter_file, project_root, review_bundle_file})
+
+for agent in conditional_selected:
+  run Task(agent, {chapter, chapter_file, project_root, review_bundle_file})
 ```
 
 ## 输出契约（统一）

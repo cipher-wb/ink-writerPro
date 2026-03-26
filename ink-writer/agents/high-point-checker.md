@@ -1,7 +1,7 @@
 ---
 name: high-point-checker
 description: 爽点密度检查，支持迪化误解/身份掉马模式，输出结构化报告
-tools: Read, Grep, Bash
+tools: Read
 model: inherit
 ---
 
@@ -10,6 +10,13 @@ model: inherit
 > **职责**: 读者满足感机制的质量保障专家（爽点设计）。
 
 > **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+
+## 输入硬规则
+
+- 必须先读取 `review_bundle_file`。
+- 默认只使用审查包中的正文、题材画像、最近章节摘要与 guidance。
+- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
+- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
 
 ## 核心参考
 
@@ -26,7 +33,7 @@ model: inherit
 
 ### 第一步: 加载目标章节
 
-读取指定范围内 `正文/` 目录下的所有章节。
+先读取 `review_bundle_file` 中的当前章节正文和前序摘要；只有 bundle 缺字段时才允许补读白名单内的绝对路径文件。
 
 ### 第二步: 识别爽点
 

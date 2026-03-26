@@ -567,6 +567,69 @@ def test_execution_pack_json_is_more_compact_than_full_payload():
     assert len(json.dumps(pack, ensure_ascii=False)) < len(json.dumps(payload, ensure_ascii=False))
 
 
+def test_build_review_pack_payload_embeds_absolute_paths_and_whitelist(tmp_path):
+    scripts_dir = Path(__file__).resolve().parents[2]
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+
+    from extract_chapter_context import build_chapter_context_payload, build_review_pack_payload
+    from data_modules.config import DataModulesConfig
+
+    cfg = DataModulesConfig.from_project_root(tmp_path)
+    cfg.ensure_dirs()
+
+    state = {
+        "project": {"genre": "xianxia"},
+        "project_info": {"title": "测试书", "genre": "xianxia"},
+        "progress": {"current_chapter": 2, "total_words": 5000},
+        "protagonist_state": {
+            "name": "林渡",
+            "power": {"realm": "炼气", "layer": 9},
+            "location": "外门演武场",
+        },
+        "chapter_meta": {},
+        "plot_threads": {"foreshadowing": []},
+        "disambiguation_warnings": [],
+        "disambiguation_pending": [],
+    }
+    (cfg.ink_dir / "state.json").write_text(json.dumps(state, ensure_ascii=False), encoding="utf-8")
+    (cfg.ink_dir / "preferences.json").write_text(json.dumps({"opening_strategy": {"golden_three_enabled": True}}, ensure_ascii=False), encoding="utf-8")
+    (cfg.ink_dir / "golden_three_plan.json").write_text(
+        json.dumps({"enabled": True, "chapters": {"2": {"chapter": 2, "golden_three_role": "接住首章钩子"}}}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    chapter_dir = tmp_path / "正文"
+    chapter_dir.mkdir(parents=True, exist_ok=True)
+    (chapter_dir / "第0002章-灵碑亮起.md").write_text("# 第2章\n林渡站在演武场中央。", encoding="utf-8")
+    (chapter_dir / "第0001章-退婚广场，黑账初醒.md").write_text("# 第1章\n上一章正文。", encoding="utf-8")
+
+    outline_dir = tmp_path / "大纲"
+    outline_dir.mkdir(parents=True, exist_ok=True)
+    (outline_dir / "第1卷 详细大纲.md").write_text("### 第2章：灵碑亮起\n本章必须接住上章钩子。", encoding="utf-8")
+
+    settings_dir = tmp_path / "设定集" / "角色卡"
+    settings_dir.mkdir(parents=True, exist_ok=True)
+    (settings_dir / "林渡.md").write_text("林渡：隐忍冷静，不会无故失控。", encoding="utf-8")
+
+    summaries_dir = cfg.ink_dir / "summaries"
+    summaries_dir.mkdir(parents=True, exist_ok=True)
+    (summaries_dir / "ch0001.md").write_text("## 剧情摘要\n上一章总结", encoding="utf-8")
+
+    payload = build_chapter_context_payload(tmp_path, 2)
+    review_pack = build_review_pack_payload(tmp_path, 2, payload)
+
+    assert review_pack["project_root"] == str(tmp_path.resolve())
+    assert review_pack["chapter_file"].startswith(str(tmp_path.resolve()))
+    assert review_pack["chapter_text"].startswith("# 第2章")
+    assert review_pack["previous_chapters"][0]["chapter_file"].startswith(str(tmp_path.resolve()))
+    assert review_pack["setting_snapshots"][0]["path"].startswith(str(tmp_path.resolve()))
+    assert review_pack["allowed_read_files"]
+    assert review_pack["chapter_file"] in review_pack["allowed_read_files"]
+    assert str((cfg.ink_dir / "state.json").resolve()) in review_pack["allowed_read_files"]
+    assert all(not path.endswith(".db") for path in review_pack["allowed_read_files"])
+
+
 def test_render_text_contains_writing_guidance_section(tmp_path):
     scripts_dir = Path(__file__).resolve().parents[2]
     if str(scripts_dir) not in sys.path:

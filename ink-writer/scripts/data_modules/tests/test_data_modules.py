@@ -886,6 +886,11 @@ class TestIndexManager:
                 severity_counts={"critical": 1, "high": 0, "medium": 1, "low": 2},
                 critical_issues=["设定自相矛盾"],
                 report_file="审查报告/第2-2章审查报告.md",
+                review_payload_json={
+                    "selected_checkers": ["reader-pull-checker", "golden-three-checker"],
+                    "golden_three_metrics": {"hook_reply": "pass", "micro_payoff_count": 2},
+                    "anti_ai_force_check": "pass",
+                },
             )
         )
 
@@ -896,6 +901,12 @@ class TestIndexManager:
         assert trends["count"] == 2
         assert trends["overall_avg"] > 0
         assert "爽点密度" in trends["dimension_avg"]
+
+        report_file = temp_project.project_root / "审查报告" / "第2-2章审查报告.md"
+        assert report_file.exists()
+        report_text = report_file.read_text(encoding="utf-8")
+        assert "黄金三章指标" in report_text
+        assert "设定自相矛盾" in report_text
 
     def test_writing_checklist_score_persistence_and_trend(self, temp_project):
         manager = IndexManager(temp_project)

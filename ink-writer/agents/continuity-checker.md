@@ -1,7 +1,7 @@
 ---
 name: continuity-checker
 description: 连贯性检查，输出结构化报告供润色步骤参考
-tools: Read, Grep
+tools: Read
 model: inherit
 ---
 
@@ -10,6 +10,13 @@ model: inherit
 > **职责**: 叙事流守卫者，确保场景过渡顺畅、情节线连贯、逻辑一致。
 
 > **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+
+## 输入硬规则
+
+- 必须先读取 `review_bundle_file`。
+- 默认只使用审查包中的正文、前序摘要、记忆卡、时间锚点、活跃线程。
+- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
+- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
 
 ## 检查范围
 
@@ -25,19 +32,12 @@ model: inherit
 ```json
 {
   "project_root": "{PROJECT_ROOT}",
-  "storage_path": ".ink/",
-  "state_file": ".ink/state.json",
-  "chapter_file": "正文/第{NNNN}章-{title_safe}.md"
+  "chapter_file": "{ABSOLUTE_CHAPTER_FILE}",
+  "review_bundle_file": "{ABSOLUTE_REVIEW_BUNDLE_FILE}"
 }
 ```
 
-`chapter_file` 应传实际章节文件路径；若当前项目仍使用旧格式 `正文/第{NNNN}章.md`，同样允许。
-
-**并行读取**:
-1. `正文/` 下的目标章节
-2. 前 2-3 章（过渡上下文）
-3. `大纲/`（对照大纲 - 大纲即法律）
-4. `{project_root}/.ink/state.json`（情节线追踪器，若存在）
+先读取 `review_bundle_file`。只有 bundle 缺字段时才允许补读白名单内的绝对路径文件。
 
 ### 第二步: 四层连贯性检查
 

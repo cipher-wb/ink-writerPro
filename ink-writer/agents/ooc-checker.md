@@ -1,7 +1,7 @@
 ---
 name: ooc-checker
 description: 人物OOC检查，输出结构化报告供润色步骤参考
-tools: Read, Grep
+tools: Read
 model: inherit
 ---
 
@@ -10,6 +10,13 @@ model: inherit
 > **职责**: 角色完整性守卫者，防止 OOC（Out-Of-Character）违规。
 
 > **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+
+## 输入硬规则
+
+- 必须先读取 `review_bundle_file`。
+- 默认只使用审查包中的正文、角色快照、前序章节摘要和设定快照。
+- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
+- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
 
 ## 检查范围
 
@@ -21,10 +28,10 @@ model: inherit
 
 ### 第一步: 加载角色档案
 
-**并行读取**:
-1. `正文/` 下的目标章节
-2. `设定集/角色卡/`（所有角色档案）
-3. 前序章节作为行为基线（若审查章节 > 10）
+先读取 `review_bundle_file`，从中提取：
+1. 当前章节正文
+2. 设定快照中的角色信息
+3. 前序章节摘要/片段作为行为基线
 
 ### 第二步: 提取角色档案
 

@@ -110,11 +110,24 @@ cat "${SKILL_ROOT}/references/pacing-control.md"
 cat "$PROJECT_ROOT/.ink/state.json"
 ```
 
-## Step 3: 并行调用检查员（Task）
+## Step 3: 调用检查员（Task）
 
 **调用约束**:
 - 必须通过 `Task` 工具调用审查 subagent，禁止主流程直接内联审查结论。
+- 先生成 `review_bundle_file`，再把这份绝对路径传给所有 checker。
+- 最大并发数为 2；核心 checker 可两两并发，条件 checker 默认顺序执行。
 - 各 subagent 结果全部返回后再生成总评与优先级。
+
+```bash
+mkdir -p "${PROJECT_ROOT}/.ink/tmp"
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+  extract-context --chapter {start} --format review-pack-json \
+  > "${PROJECT_ROOT}/.ink/tmp/review_bundle_ch$(printf '%04d' {start}).json"
+```
+
+硬规则：
+- 必须把 `review_bundle_file` 和 `chapter_file` 的绝对路径传给 checker
+- checker 不得自行读取 `.db` 文件或项目目录
 
 **Core**:
 - `consistency-checker`

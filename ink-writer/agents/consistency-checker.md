@@ -1,7 +1,7 @@
 ---
 name: consistency-checker
 description: 设定一致性检查，输出结构化报告供润色步骤参考
-tools: Read, Grep, Bash
+tools: Read
 model: inherit
 ---
 
@@ -10,6 +10,14 @@ model: inherit
 > **职责**: 设定守卫者，执行第二防幻觉定律（设定即物理）。
 
 > **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+
+## 输入硬规则
+
+- 必须先读取 `review_bundle_file`。
+- 若 `review_bundle_file` 缺失，直接返回 `pass=false`，并说明 `REVIEW_BUNDLE_MISSING`；禁止自行扫描项目目录补救。
+- 默认只使用审查包内嵌的正文、上下文、设定快照。
+- 仅当审查包明确缺字段时，才允许补充读取 `allowed_read_files` 中列出的绝对路径文件。
+- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
 
 ## 检查范围
 
@@ -25,19 +33,12 @@ model: inherit
 ```json
 {
   "project_root": "{PROJECT_ROOT}",
-  "storage_path": ".ink/",
-  "state_file": ".ink/state.json",
-  "chapter_file": "正文/第{NNNN}章-{title_safe}.md"
+  "chapter_file": "{ABSOLUTE_CHAPTER_FILE}",
+  "review_bundle_file": "{ABSOLUTE_REVIEW_BUNDLE_FILE}"
 }
 ```
 
-`chapter_file` 应传实际章节文件路径；若当前项目仍使用旧格式 `正文/第{NNNN}章.md`，同样允许。
-
-**并行读取**:
-1. `正文/` 下的目标章节
-2. `{project_root}/.ink/state.json`（主角当前状态）
-3. `设定集/`（世界观圣经）
-4. `大纲/`（对照上下文）
+先读取 `review_bundle_file`。只有当审查包没有给出必要字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
 
 ### 第二步: 三层一致性检查
 
@@ -196,20 +197,9 @@ model: inherit
 **轻微问题**: {count}（建议修复）
 ```
 
-### 第五步: 标记无效事实（新增）
+### 第五步: 输出无效事实候选（新增）
 
-对于发现的严重级别（`critical`）问题，自动标记到 `invalid_facts`（状态为 `pending`）：
-
-```bash
-python3 -X utf8 "${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/scripts/ink.py" --project-root "{PROJECT_ROOT}" index mark-invalid \
-  --source-type entity \
-  --source-id {entity_id} \
-  --reason "{问题描述}" \
-  --marked-by consistency-checker \
-  --chapter {current_chapter}
-```
-
-> 注意：自动标记仅为 `pending`，需用户确认后才生效。
+对于发现的严重级别（`critical`）问题，在 `issues` 或扩展字段中输出可供主流程消费的 invalid 候选说明，由主流程统一决定是否写入 `invalid_facts`。
 
 ## 禁止事项
 

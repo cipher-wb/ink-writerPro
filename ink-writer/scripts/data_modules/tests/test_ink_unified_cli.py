@@ -138,6 +138,52 @@ def test_extract_context_pack_forwards_with_resolved_project_root(monkeypatch, t
     ]
 
 
+def test_extract_context_review_pack_json_forwards_with_resolved_project_root(monkeypatch, tmp_path):
+    module = _load_ink_module()
+
+    book_root = (tmp_path / "book").resolve()
+    called = {}
+
+    def _fake_resolve(explicit_project_root=None):
+        return book_root
+
+    def _fake_run_script(script_name, argv):
+        called["script_name"] = script_name
+        called["argv"] = list(argv)
+        return 0
+
+    monkeypatch.setattr(module, "_resolve_root", _fake_resolve)
+    monkeypatch.setattr(module, "_run_script", _fake_run_script)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "ink",
+            "--project-root",
+            str(tmp_path),
+            "extract-context",
+            "--chapter",
+            "2",
+            "--format",
+            "review-pack-json",
+        ],
+    )
+
+    with pytest.raises(SystemExit) as exc:
+        module.main()
+
+    assert int(exc.value.code or 0) == 0
+    assert called["script_name"] == "extract_chapter_context.py"
+    assert called["argv"] == [
+        "--project-root",
+        str(book_root),
+        "--chapter",
+        "2",
+        "--format",
+        "review-pack-json",
+    ]
+
+
 def test_preflight_succeeds_for_valid_project_root(monkeypatch, tmp_path, capsys):
     module = _load_ink_module()
 

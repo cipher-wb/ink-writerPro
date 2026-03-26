@@ -1,13 +1,20 @@
 ---
 name: golden-three-checker
 description: 黄金三章检查器，专门审查第1-3章的开头抓取力、承诺兑现和章末驱动力。
-tools: Read, Grep, Bash
+tools: Read
 model: inherit
 ---
 
 # golden-three-checker
 
 > 仅用于第 1-3 章。若章节号大于 3，直接返回 `pass=true` 与说明“not_applicable”。
+
+## 输入硬规则
+
+- 必须先读取 `review_bundle_file`。
+- 默认只使用审查包中的正文、golden_three_contract、chapter_memory_card、writing_guidance。
+- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
+- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
 
 ## 核心职责
 

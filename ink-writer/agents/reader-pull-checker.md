@@ -1,13 +1,20 @@
 ---
 name: reader-pull-checker
 description: 追读力检查器，评估钩子/微兑现/约束分层，支持 Override Contract
-tools: Read, Grep, Bash
+tools: Read
 model: inherit
 ---
 
 # reader-pull-checker (追读力检查器)
 
 > **职责**: 审查"读者为什么会点下一章"，执行 Hard/Soft 约束分层。
+
+## 输入硬规则
+
+- 必须先读取 `review_bundle_file`。
+- 默认只使用审查包中的正文、上章摘要、chapter_memory_card、golden_three_contract、writing_guidance。
+- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
+- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
 
 ## 核心参考
 
@@ -18,6 +25,7 @@ model: inherit
 
 ## 输入
 - 章节正文（实际章节文件路径，优先 `正文/第{NNNN}章-{title_safe}.md`，旧格式 `正文/第{NNNN}章.md` 仍兼容）
+- `review_bundle_file`（绝对路径，一级输入源）
 - 上章钩子与模式（从 `state.json → chapter_meta` 或 `index.db`）
 - 题材 Profile（从 `state.json → project.genre`）
 - 是否为过渡章标记

@@ -9,10 +9,108 @@ from __future__ import annotations
 import json
 import sys
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 
 class IndexReadingMixin:
+    def _review_span_label(self, metrics: ReviewMetrics) -> str:
+        if metrics.start_chapter == metrics.end_chapter:
+            return f"第{metrics.start_chapter}章"
+        return f"第{metrics.start_chapter}-{metrics.end_chapter}章"
+
+    def _review_grade_label(self, score: float) -> str:
+        if score >= 90:
+            return "S"
+        if score >= 80:
+            return "A"
+        if score >= 70:
+            return "B"
+        if score >= 60:
+            return "C"
+        return "D"
+
+    def _render_review_report(self, metrics: ReviewMetrics) -> str:
+        span_label = self._review_span_label(metrics)
+        severity_counts = metrics.severity_counts or {}
+        payload = metrics.review_payload_json or {}
+        lines = [f"# {span_label}审查报告", ""]
+        lines.extend(
+            [
+                "## 综合评分",
+                f"- 总分：{metrics.overall_score}",
+                f"- 等级：{self._review_grade_label(metrics.overall_score)}",
+                "",
+            ]
+        )
+
+        if metrics.dimension_scores:
+            lines.append("## 维度评分")
+            for key, value in metrics.dimension_scores.items():
+                lines.append(f"- {key}：{value}")
+            lines.append("")
+
+        lines.extend(
+            [
+                "## 修改优先级",
+                f"- critical：{severity_counts.get('critical', 0)}",
+                f"- high：{severity_counts.get('high', 0)}",
+                f"- medium：{severity_counts.get('medium', 0)}",
+                f"- low：{severity_counts.get('low', 0)}",
+                "",
+            ]
+        )
+
+        lines.append("## 关键问题")
+        if metrics.critical_issues:
+            for issue in metrics.critical_issues:
+                lines.append(f"- {issue}")
+        else:
+            lines.append("- 无 critical 问题")
+        lines.append("")
+
+        golden_three = payload.get("golden_three_metrics")
+        if isinstance(golden_three, dict) and golden_three:
+            lines.append("## 黄金三章指标")
+            for key, value in golden_three.items():
+                lines.append(f"- {key}：{value}")
+            lines.append("")
+
+        selected_checkers = payload.get("selected_checkers")
+        if isinstance(selected_checkers, list) and selected_checkers:
+            lines.append("## 审查器")
+            for checker in selected_checkers:
+                lines.append(f"- {checker}")
+            lines.append("")
+
+        anti_ai_force_check = payload.get("anti_ai_force_check")
+        timeline_gate = payload.get("timeline_gate")
+        if anti_ai_force_check or timeline_gate is not None:
+            lines.append("## 审查门槛")
+            if anti_ai_force_check:
+                lines.append(f"- anti_ai_force_check：{anti_ai_force_check}")
+            if timeline_gate is not None:
+                lines.append(f"- timeline_gate：{timeline_gate}")
+            lines.append("")
+
+        lines.append("## 备注")
+        lines.append(metrics.notes.strip() or "- 无")
+        lines.append("")
+        lines.append(f"_自动生成于 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}_")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _ensure_review_report_file(self, metrics: ReviewMetrics) -> None:
+        if not metrics.report_file:
+            return
+        report_path = Path(metrics.report_file)
+        if not report_path.is_absolute():
+            report_path = Path(self.config.project_root) / report_path
+        if report_path.exists():
+            return
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(self._render_review_report(metrics), encoding="utf-8")
+
     def save_chapter_reading_power(self, meta: ChapterReadingPowerMeta):
         """保存章节追读力元数据"""
         with self._get_conn() as conn:
@@ -519,6 +617,7 @@ class IndexReadingMixin:
 
     def save_review_metrics(self, metrics: ReviewMetrics) -> None:
         """保存审查指标记录"""
+        self._ensure_review_report_file(metrics)
         with self._get_conn() as conn:
             cursor = conn.cursor()
             cursor.execute(

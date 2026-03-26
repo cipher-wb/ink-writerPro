@@ -267,8 +267,22 @@ cat "${SKILL_ROOT}/references/step-3-review-gate.md"
 
 调用约束：
 - 必须用 `Task` 调用审查 subagent，禁止主流程伪造审查结论。
-- 可并行发起审查，统一汇总 `issues/severity/overall_score`。
+- Step 3 开始前必须先生成 `review_bundle_file`，所有 checker 统一消费这份审查包。
+- 最大并发数为 2；核心 checker 可两两并发，条件 checker 顺序执行，统一汇总 `issues/severity/overall_score`。
 - 默认使用 `auto` 路由：根据“本章执行合同 + 正文信号 + 大纲标签”动态选择审查器。
+
+先生成审查包（必做）：
+```bash
+mkdir -p "${PROJECT_ROOT}/.ink/tmp"
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+  extract-context --chapter {chapter_num} --format review-pack-json \
+  > "${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"
+```
+
+Task 传参硬约束：
+- 必须传 `review_bundle_file="${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"`
+- 必须传绝对路径 `chapter_file`
+- checker 不得自行扫描 `正文/`、`设定集/`、`.ink/` 目录，不得读取 `.db`
 
 核心审查器（始终执行）：
 - `consistency-checker`
@@ -284,6 +298,11 @@ cat "${SKILL_ROOT}/references/step-3-review-gate.md"
 模式说明：
 - 标准/`--fast`：核心 3 个 + auto 命中的条件审查器
 - `--minimal`：只跑核心 3 个（忽略条件审查器）
+
+推荐调度顺序：
+1. `consistency-checker` + `continuity-checker` 并发（最多 2 个）
+2. `ooc-checker`
+3. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker`
 
 审查指标落库（必做）：
 ```bash

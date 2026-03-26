@@ -250,7 +250,7 @@ def main() -> None:
     p_extract_context.add_argument("--chapter", type=int, required=True, help="目标章节号")
     p_extract_context.add_argument(
         "--format",
-        choices=["text", "json", "pack", "pack-json"],
+        choices=["text", "json", "pack", "pack-json", "review-pack", "review-pack-json"],
         default="text",
         help="输出格式",
     )

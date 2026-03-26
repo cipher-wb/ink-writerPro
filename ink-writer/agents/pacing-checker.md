@@ -1,7 +1,7 @@
 ---
 name: pacing-checker
 description: Strand Weave 节奏检查，输出结构化报告供润色步骤参考
-tools: Read, Grep, Bash
+tools: Read
 model: inherit
 ---
 
@@ -10,6 +10,13 @@ model: inherit
 > **职责**: 节奏分析师，执行 Strand Weave 平衡检查，防止读者疲劳。
 
 > **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+
+## 输入硬规则
+
+- 必须先读取 `review_bundle_file`。
+- 默认只使用审查包中的正文、前序摘要、reader_signal、memory_context、outline。
+- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
+- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
 
 ## 检查范围
 
@@ -25,23 +32,14 @@ model: inherit
 ```json
 {
   "project_root": "{PROJECT_ROOT}",
-  "storage_path": ".ink/",
-  "state_file": ".ink/state.json",
-  "chapter_file": "正文/第{NNNN}章-{title_safe}.md"
+  "chapter_file": "{ABSOLUTE_CHAPTER_FILE}",
+  "review_bundle_file": "{ABSOLUTE_REVIEW_BUNDLE_FILE}"
 }
 ```
 
-`chapter_file` 应传实际章节文件路径；若当前项目仍使用旧格式 `正文/第{NNNN}章.md`，同样允许。
+先读取 `review_bundle_file`。只有 bundle 缺字段时才允许补读白名单内的绝对路径文件。
 
-**并行读取**:
-1. `正文/` 下的目标章节
-2. `{project_root}/.ink/state.json`（strand_tracker 历史）
-3. `大纲/`（理解预期弧线结构）
-
-**可选: 使用 status_reporter 进行自动化分析**:
-```bash
-python3 -X utf8 "${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/scripts/ink.py" --project-root "${PROJECT_ROOT}" status -- --focus strand
-```
+**禁止**: 通过脚本或目录扫描自行读取 `state.json/index.db/正文/大纲`
 
 ### 第二步: 章节情节线分类
 

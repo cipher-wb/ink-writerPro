@@ -39,6 +39,10 @@ OUTLINE_FIELD_ALIASES: Dict[str, List[str]] = {
     "transition": ["是否过渡章", "过渡章判定", "过渡章"],
 }
 
+REVIEW_SETTINGS_FILE_LIMIT = 8
+REVIEW_SETTINGS_SNIPPET_CHARS = 700
+REVIEW_CHAPTER_SNIPPET_CHARS = 900
+
 
 def _ensure_scripts_path():
     scripts_dir = Path(__file__).resolve().parent
@@ -506,6 +510,129 @@ def build_chapter_context_payload(project_root: Path, chapter_num: int) -> Dict[
         "golden_three_contract": contract_context.get("golden_three_contract", {}),
         "writing_guidance": contract_context.get("writing_guidance", {}),
         "rag_assist": rag_assist,
+    }
+
+
+def _setting_priority(path: Path) -> tuple[int, str]:
+    name = path.name.lower()
+    priority = 50
+    if "角色" in path.as_posix() or "character" in name:
+        priority = 10
+    elif "规则" in path.as_posix() or "world" in name or "设定" in name:
+        priority = 20
+    elif "修炼" in path.as_posix() or "力量" in path.as_posix() or "realm" in name:
+        priority = 30
+    elif "势力" in path.as_posix() or "地图" in path.as_posix():
+        priority = 40
+    return (priority, path.as_posix())
+
+
+def _collect_setting_snapshots(project_root: Path) -> List[Dict[str, Any]]:
+    settings_dir = project_root / "设定集"
+    if not settings_dir.exists():
+        return []
+
+    candidates: List[Path] = []
+    for pattern in ("**/*.md", "**/*.txt", "**/*.json"):
+        candidates.extend(path for path in settings_dir.glob(pattern) if path.is_file())
+
+    snapshots: List[Dict[str, Any]] = []
+    for path in sorted(set(candidates), key=_setting_priority):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except Exception:
+            continue
+        snippet = _compact_text(text, REVIEW_SETTINGS_SNIPPET_CHARS)
+        if not snippet:
+            continue
+        snapshots.append(
+            {
+                "path": str(path.resolve()),
+                "relative_path": str(path.relative_to(project_root)),
+                "snippet": snippet,
+            }
+        )
+        if len(snapshots) >= REVIEW_SETTINGS_FILE_LIMIT:
+            break
+    return snapshots
+
+
+def build_review_pack_payload(project_root: Path, chapter_num: int, payload: Dict[str, Any] | None = None) -> Dict[str, Any]:
+    payload = payload or build_chapter_context_payload(project_root, chapter_num)
+
+    chapter_file = find_chapter_file(project_root, chapter_num)
+    chapter_path = chapter_file.resolve() if chapter_file and chapter_file.exists() else None
+    chapter_text = chapter_path.read_text(encoding="utf-8") if chapter_path else ""
+
+    previous_chapters: List[Dict[str, Any]] = []
+    for prev_ch in range(max(1, chapter_num - 2), chapter_num):
+        prev_file = find_chapter_file(project_root, prev_ch)
+        prev_path = prev_file.resolve() if prev_file and prev_file.exists() else None
+        previous_chapters.append(
+            {
+                "chapter": prev_ch,
+                "chapter_file": str(prev_path) if prev_path else "",
+                "summary": extract_chapter_summary(project_root, prev_ch),
+                "text_snippet": _compact_text(
+                    prev_path.read_text(encoding="utf-8") if prev_path else "",
+                    REVIEW_CHAPTER_SNIPPET_CHARS,
+                ),
+            }
+        )
+
+    settings_snapshots = _collect_setting_snapshots(project_root)
+
+    absolute_paths = {
+        "project_root": str(project_root.resolve()),
+        "chapter_file": str(chapter_path) if chapter_path else "",
+        "state_file": str((project_root / ".ink" / "state.json").resolve()),
+        "preferences_file": str((project_root / ".ink" / "preferences.json").resolve()),
+        "golden_three_plan_file": str((project_root / ".ink" / "golden_three_plan.json").resolve()),
+        "setting_files": [row["path"] for row in settings_snapshots],
+        "previous_chapter_files": [row["chapter_file"] for row in previous_chapters if row.get("chapter_file")],
+    }
+    allowed_read_files = _dedupe_preserve(
+        [
+            path
+            for path in [
+                absolute_paths["chapter_file"],
+                absolute_paths["state_file"],
+                absolute_paths["preferences_file"],
+                absolute_paths["golden_three_plan_file"],
+                *absolute_paths["setting_files"],
+                *absolute_paths["previous_chapter_files"],
+            ]
+            if path and Path(path).exists()
+        ]
+    )
+
+    return {
+        "chapter": chapter_num,
+        "project_root": absolute_paths["project_root"],
+        "chapter_file": absolute_paths["chapter_file"],
+        "chapter_file_name": chapter_path.name if chapter_path else "",
+        "chapter_char_count": len(chapter_text),
+        "chapter_text": chapter_text,
+        "outline": payload.get("outline", ""),
+        "previous_chapters": previous_chapters,
+        "state_summary": payload.get("state_summary", ""),
+        "core_context": payload.get("core_context", {}),
+        "scene_context": payload.get("scene_context", {}),
+        "memory_context": payload.get("memory_context", {}),
+        "reader_signal": payload.get("reader_signal", {}),
+        "genre_profile": payload.get("genre_profile", {}),
+        "golden_three_contract": payload.get("golden_three_contract", {}),
+        "writing_guidance": payload.get("writing_guidance", {}),
+        "setting_snapshots": settings_snapshots,
+        "absolute_paths": absolute_paths,
+        "allowed_read_files": allowed_read_files,
+        "review_policy": {
+            "primary_source": "review_bundle_file",
+            "forbid_binary_db": True,
+            "forbid_directory_read": True,
+            "forbid_non_whitelisted_relative_paths": True,
+            "note": "优先使用 bundle 内嵌内容；仅当 bundle 缺字段时，允许读取 allowed_read_files 中的绝对路径文件。",
+        },
     }
 
 
@@ -1165,6 +1292,60 @@ def _render_execution_pack_text(pack: Dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+def _render_review_pack_text(pack: Dict[str, Any]) -> str:
+    lines: List[str] = []
+    lines.append(f"# 第 {pack.get('chapter', '?')} 章审查包")
+    lines.append("")
+    lines.append(f"- project_root: {pack.get('project_root', '')}")
+    lines.append(f"- chapter_file: {pack.get('chapter_file', '')}")
+    lines.append(f"- 正文字数: {pack.get('chapter_char_count', 0)}")
+    lines.append("")
+
+    policy = pack.get("review_policy") or {}
+    lines.append("## 审查策略")
+    lines.append("")
+    for key in ["primary_source", "forbid_binary_db", "forbid_directory_read", "forbid_non_whitelisted_relative_paths", "note"]:
+        value = policy.get(key)
+        if value in ("", None):
+            continue
+        lines.append(f"- {key}: {value}")
+    lines.append("")
+
+    lines.append("## 章节正文")
+    lines.append("")
+    lines.append(str(pack.get("chapter_text", "")))
+    lines.append("")
+
+    previous = pack.get("previous_chapters") or []
+    if previous:
+        lines.append("## 前序章节")
+        lines.append("")
+        for row in previous:
+            lines.append(f"### 第{row.get('chapter')}章")
+            if row.get("chapter_file"):
+                lines.append(f"- 文件: {row.get('chapter_file')}")
+            if row.get("summary"):
+                lines.append(f"- 摘要: {row.get('summary')}")
+            if row.get("text_snippet"):
+                lines.append(f"- 片段: {row.get('text_snippet')}")
+            lines.append("")
+
+    snapshots = pack.get("setting_snapshots") or []
+    if snapshots:
+        lines.append("## 设定快照")
+        lines.append("")
+        for row in snapshots:
+            lines.append(f"- {row.get('relative_path')}: {row.get('snippet')}")
+        lines.append("")
+
+    lines.append("## 允许补充读取的绝对路径")
+    lines.append("")
+    for path in pack.get("allowed_read_files") or []:
+        lines.append(f"- {path}")
+    lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def _render_text(payload: Dict[str, Any]) -> str:
     chapter_num = payload.get("chapter")
     lines: List[str] = []
@@ -1393,7 +1574,7 @@ def main():
     parser.add_argument("--project-root", type=str, help="项目根目录")
     parser.add_argument(
         "--format",
-        choices=["text", "json", "pack", "pack-json"],
+        choices=["text", "json", "pack", "pack-json", "review-pack", "review-pack-json"],
         default="text",
         help="输出格式",
     )
@@ -1408,6 +1589,7 @@ def main():
         )
         payload = build_chapter_context_payload(project_root, args.chapter)
         execution_pack = build_execution_pack_payload(payload)
+        review_pack = build_review_pack_payload(project_root, args.chapter, payload)
 
         if args.format == "json":
             print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -1415,6 +1597,10 @@ def main():
             print(json.dumps(execution_pack, ensure_ascii=False, indent=2))
         elif args.format == "pack":
             print(_render_execution_pack_text(execution_pack), end="")
+        elif args.format == "review-pack-json":
+            print(json.dumps(review_pack, ensure_ascii=False, indent=2))
+        elif args.format == "review-pack":
+            print(_render_review_pack_text(review_pack), end="")
         else:
             print(_render_text(payload), end="")
 
