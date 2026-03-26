@@ -77,8 +77,57 @@ tools: [Read, Grep]
 }
 ```
 
+### 第5层：跨章文风一致性检测（章号 ≥ 10 时启用）
+
+> 检测当前章节文风是否与近期章节一致，防止长篇写作中文风渐变漂移。
+
+**前提数据**：
+- 从 `review_bundle_file` 中获取 `memory_context.recent_patterns` 和 `reader_signal`
+- 从 `project_memory.json → style_fingerprint` 获取历史基线（若有）
+
+**检查项**：
+
+| 指标 | 计算方式 | 偏差阈值 | 严重度 |
+|------|---------|---------|--------|
+| 平均句长 | 本章所有句子字数平均值 | 与近5章均值偏差 > 30% | `medium` |
+| 短句占比 | <15字的句子占比 | 偏差 > 15个百分点 | `low` |
+| 对话占比 | 对话行数/总行数 | 偏差 > 20个百分点 | `medium` |
+| 段落均长 | 本章所有段落字数平均值 | 与近5章均值偏差 > 40% | `low` |
+| 感叹号密度 | 感叹号数/千字 | 本章密度 > 历史均值 2 倍 | `low` |
+
+**偏差处理**：
+- 若 2+ 指标同时偏离 → 汇总为一条 `medium` 问题："文风偏移警告：本章 {指标列表} 与近期风格差异显著"
+- 输出风格对比表供润色参考
+
+**降级处理**：
+- 若缺少历史数据（<10 章）→ 跳过本层，不输出任何问题
+- 若 `project_memory.json` 不存在 → 跳过本层
+
+**输出（追加到 dimensions）**：
+```json
+{
+  "style_consistency": {
+    "score": 82,
+    "issues": [...],
+    "current_fingerprint": {
+      "avg_sentence_length": 22,
+      "short_sentence_ratio": 0.28,
+      "dialogue_ratio": 0.35,
+      "paragraph_avg_length": 72,
+      "exclamation_density": 1.2
+    },
+    "baseline_fingerprint": { ... },
+    "deviation_summary": "对话占比偏高（+18%），其他指标正常"
+  }
+}
+```
+
 ## 触发条件
 
-- 在 `/ink-review` 的 Step 3 中作为**可选检查器**
-- 触发条件：`--depth full` 或用户明确要求文笔检查
-- 不在 `--depth core` 时触发（避免增加审查耗时）
+- 在 `/ink-write` Step 3 和 `/ink-review` Step 3 中作为**条件审查器**
+- 触发条件：
+  - `chapter > 3`（前3章由 golden-three-checker 覆盖）
+  - 非过渡章
+  - 题材涉及古代/仙侠/历史背景时优先触发（文化禁忌检测价值更高）
+  - 用户显式要求"文笔审查"或"校对"
+- `--minimal` 模式不触发

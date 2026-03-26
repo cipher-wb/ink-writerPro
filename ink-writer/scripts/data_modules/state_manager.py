@@ -364,7 +364,11 @@ class StateManager:
                     disk_state["latest_warnings"] = list(self._pending_latest_warnings[-20:])
 
                 # 原子写入（锁已持有，不再二次加锁）
-                atomic_write_json(self.config.state_file, disk_state, use_lock=False, backup=True)
+                try:
+                    atomic_write_json(self.config.state_file, disk_state, use_lock=False, backup=True)
+                except Exception as exc:
+                    logger.error("Failed to write state.json: %s", exc)
+                    raise
 
                 # v5.1 引入: 同步到 SQLite（失败时保留 pending 以便重试）
                 sqlite_pending_snapshot = self._snapshot_sqlite_pending()

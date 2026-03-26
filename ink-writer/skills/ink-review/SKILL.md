@@ -41,6 +41,38 @@ export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
 export PROJECT_ROOT="$(python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
 ```
 
+## Step 0: 充分性闸门（Sufficiency Gate）
+
+> 本步骤强制执行。未通过闸门的审查请求直接终止并报告原因。
+
+**检查清单**：
+
+1. **章节文件存在性**：确认待审查章节文件存在且字数 > 500
+2. **写作完成标记**：确认 workflow_state.json 中 current_step ≥ "Step 2A completed"（若 workflow_state 不存在，仅检查章节文件是否存在且完整）
+3. **大纲可用性**：确认对应章节的章纲文件存在（卷纲目录下的对应章节条目）
+4. **index.db 可用性**：确认 index.db 存在且可读
+
+```bash
+# 充分性检查
+CHAPTER_FILE=$(find "${PROJECT_ROOT}" -name "*${CHAPTER_NUM}*" -path "*/chapters/*" 2>/dev/null | head -1)
+if [ -z "$CHAPTER_FILE" ] || [ ! -s "$CHAPTER_FILE" ]; then
+  echo "GATE FAIL: 章节文件不存在或为空" >&2; exit 1
+fi
+WORD_COUNT=$(wc -m < "$CHAPTER_FILE" 2>/dev/null || echo 0)
+if [ "$WORD_COUNT" -lt 500 ]; then
+  echo "GATE FAIL: 章节字数 ${WORD_COUNT} < 500，可能未完成写作" >&2; exit 1
+fi
+if [ ! -f "${PROJECT_ROOT}/.ink/index.db" ]; then
+  echo "GATE FAIL: index.db 不存在" >&2; exit 1
+fi
+```
+
+**失败处理**：
+- 任一检查未通过 → 输出具体失败原因 → 建议用户先完成对应步骤 → 终止审查流程
+- 不尝试降级执行，不跳过检查
+
+---
+
 ## 0.5 工作流断点（best-effort，不得阻断主流程）
 
 > 目标：让 `/ink-resume` 能基于真实断点恢复。即使 workflow_manager 出错，也**只记录警告**，审查继续。
@@ -69,7 +101,8 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow comple
 ## Review depth
 
 - **Core (default)**: consistency / continuity / ooc / reader-pull
-- **Full (关键章/用户要求)**: core + high-point + pacing
+- **Full (关键章/用户要求)**: core + high-point + pacing + proofreading
+- **Full+ (卷首章/卷末章/用户要求)**: full + reader-simulator
 
 ## Step 1: 加载参考（按需）
 
@@ -139,6 +172,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 - `golden-three-checker`（仅第 1-3 章强制）
 - `high-point-checker`
 - `pacing-checker`
+- `proofreading-checker`（文笔质量：修辞重复/段落结构/代称混乱/文化禁忌）
 
 ## Step 4: 生成审查报告
 

@@ -34,6 +34,34 @@
 - 代价
 - 结果
 
+### Override Contract 规范
+
+每个 Override 必须记录为以下格式并写入 index.db 的 override_contracts 表：
+
+```json
+{
+  "override_id": "OVR-{chapter}-{sequence}",
+  "chapter": 30,
+  "type": "hook_repeat | micropayoff_deficit | strand_imbalance | coolpoint_deficit",
+  "severity_overridden": "high",
+  "rationale": "TRANSITIONAL_SETUP | CHARACTER_CREDIBILITY | PLOT_NECESSITY",
+  "description": "具体描述被覆盖的约束",
+  "repayment_plan": "在第 35 章前补偿 2 个微兑现",
+  "due_chapter": 35,
+  "status": "active | repaid | overdue"
+}
+```
+
+#### 到期与清算机制
+
+1. **到期预警**：当 current_chapter >= due_chapter - 10 时，Context Agent 必须在上下文中标注 `[债务预警] Override OVR-{id} 将在第 {due_chapter} 章到期`
+2. **逾期升级**：当 current_chapter > due_chapter 且 status 仍为 active：
+   - 债务自动升级为 `overdue`
+   - severity 提升一级（medium -> high, high -> critical）
+   - 下一章的 reader-pull-checker 将此作为硬约束检查
+3. **强制清算**：每 25 章执行一次债务审计，列出所有 active/overdue 债务
+4. **利息上限**：任何单条债务的利息不超过原始值的 3 倍（防止爆炸性增长）
+
 ## 题材快速调用（仅命中时）
 
 命中题材：`esports` / `livestream` / `cosmic-horror`

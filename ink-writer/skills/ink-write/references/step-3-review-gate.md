@@ -40,6 +40,8 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 - `reader-pull-checker`
 - `high-point-checker`
 - `pacing-checker`
+- `proofreading-checker`
+- `reader-simulator`
 
 ## Auto 路由判定信号
 
@@ -52,30 +54,41 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 路由规则：
 - `golden-three-checker`：当满足任一条件时启用
   - `chapter <= 3`；
-  - 用户显式要求“黄金三章审查”；
+  - 用户显式要求”黄金三章审查”；
   - `.ink/golden_three_plan.json` 明确开启且当前章在 1-3 范围内。
 - `reader-pull-checker`：当满足任一条件时启用
   - 非过渡章；
   - 有明确未闭合问题/期待锚点；
-  - 用户显式要求“追读力审查”。
+  - 用户显式要求”追读力审查”。
 - `high-point-checker`：当满足任一条件时启用
   - 关键章/高潮章/卷末章；
   - 正文出现战斗、反杀、打脸、身份揭露、大反转等高光信号。
 - `pacing-checker`：当满足任一条件时启用
   - 章号 >= 10；
   - 最近章节存在明显节奏失衡风险；
-  - 用户显式要求“节奏审查”。
+  - 用户显式要求”节奏审查”。
+- `proofreading-checker`：当满足任一条件时启用
+  - `chapter > 3`（前 3 章由 golden-three-checker 覆盖文笔层面）；
+  - 非过渡章（过渡章文笔要求较低，可跳过）；
+  - 题材涉及古代/仙侠/历史背景（文化禁忌检测价值更高）；
+  - 用户显式要求”文笔审查”或”校对”。
+- `reader-simulator`：当满足任一条件时启用
+  - 关键章/高潮章/卷末章/卷首章；
+  - 用户显式要求”读者体验审查”或”模拟读者”；
+  - 最近 3 章审查分数持续下降（连续递减 ≥ 5 分/章）。
 
 ## Task 调用模板（示意）
 
 ```text
-selected = ["consistency-checker", "continuity-checker", "ooc-checker"]
+selected = [“consistency-checker”, “continuity-checker”, “ooc-checker”]
 
-if mode != "minimal":
-  if chapter <= 3: selected.append("golden-three-checker")
-  if trigger_reader_pull: selected.append("reader-pull-checker")
-  if trigger_high_point: selected.append("high-point-checker")
-  if trigger_pacing: selected.append("pacing-checker")
+if mode != “minimal”:
+  if chapter <= 3: selected.append(“golden-three-checker”)
+  if trigger_reader_pull: selected.append(“reader-pull-checker”)
+  if trigger_high_point: selected.append(“high-point-checker”)
+  if trigger_pacing: selected.append(“pacing-checker”)
+  if trigger_proofreading: selected.append(“proofreading-checker”)
+  if trigger_reader_sim: selected.append(“reader-simulator”)
 
 core_stage = ["consistency-checker", "continuity-checker"]
 run Task in parallel(core_stage, max_concurrency=2)
@@ -91,15 +104,59 @@ for agent in conditional_selected:
 - 必含：`agent`、`chapter`、`overall_score`、`pass`、`issues`、`metrics`、`summary`
 - 允许扩展字段（如 `hard_violations`、`soft_suggestions`），但不得替代必填字段
 
+## 总分聚合规则（必须按此公式计算，禁止主观估分）
+
+### Checker 权重表
+
+| Checker | 权重 | 对应 dimension_scores 键 | 说明 |
+|---------|------|------------------------|------|
+| `consistency-checker` | 25% | 设定一致性 | 核心——战力/地点/时间线一致 |
+| `continuity-checker` | 20% | 连贯性 | 核心——场景衔接/伏笔/逻辑 |
+| `ooc-checker` | 20% | 人物塑造 | 核心——角色行为/对话一致 |
+| `reader-pull-checker` | 15% | 追读力 | 条件——钩子/微兑现/下章动机 |
+| `high-point-checker` | 10% | 爽点密度 | 条件——爽点密度/类型/质量 |
+| `pacing-checker` | 5% | 节奏控制 | 条件——Strand 平衡 |
+| `proofreading-checker` | 5% | 文笔质量 | 条件——修辞/段落/代称/禁忌 |
+| `golden-three-checker` | 特殊 | 黄金三章 | 仅ch1-3，替代 reader-pull 的 15% 权重 |
+| `reader-simulator` | 特殊 | 阅读体验 | 仅关键章启用，不参与总分计算，独立输出沉浸度/弃读风险 |
+
+### 计算公式
+
+```
+overall_score = Σ(checker_score × weight) / Σ(active_weights)
+```
+
+- 只对实际启用的 checker 计算，权重自动归一化
+- 例：minimal 模式只启用 3 个核心 checker（权重 25+20+20=65），则 `overall_score = (c×25 + t×20 + o×20) / 65 × 100`
+- 若任一 checker 存在 `critical` 问题，`overall_score` 上限为 60（无论加权分多高）
+- `golden-three-checker` 仅在 ch1-3 启用时替代 `reader-pull-checker` 的 15% 权重
+
+### dimension_scores 计算
+
+`dimension_scores` 的每个键直接取对应 checker 的 `overall_score`，不做二次加权：
+```json
+{
+  "设定一致性": 85,
+  "连贯性": 90,
+  "人物塑造": 82,
+  "追读力": 78,
+  "爽点密度": 88,
+  "节奏控制": 75,
+  "文笔质量": 80
+}
+```
+
+未启用的 checker 对应维度不写入 `dimension_scores`（不要填 0 或默认值）。
+
 聚合输出最小字段：
 - `chapter`（单章）
 - `start_chapter`、`end_chapter`（单章时二者都等于 `chapter`）
 - `selected_checkers`
-- `overall_score`
+- `overall_score`（按上方公式计算）
 - `severity_counts`
 - `critical_issues`
 - `issues`（扁平化聚合）
-- `dimension_scores`（按已启用 checker 计算）
+- `dimension_scores`（按上方规则填充）
 - `review_payload_json`（可选；结构化扩展字段，黄金三章指标写这里）
 
 ## 汇总输出模板

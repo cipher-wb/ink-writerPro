@@ -123,7 +123,7 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
         except sqlite3.OperationalError as exc:
             if "no such table" in str(exc).lower():
                 return []
-            raise HTTPException(status_code=500, detail=f"数据库查询失败: {exc}") from exc
+            raise HTTPException(status_code=500, detail="数据库查询失败") from exc
 
     VALID_ENTITY_TYPES = {"角色", "地点", "物品", "势力", "技能", "阵营", "种族", "功法", "灵药", "秘境", "其他"}
 
@@ -160,6 +160,7 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
 
     @app.get("/api/relationships")
     def list_relationships(entity: Optional[str] = None, limit: int = 200):
+        limit = max(1, min(limit, 10000))
         with closing(_get_db()) as conn:
             if entity:
                 rows = conn.execute(
@@ -180,6 +181,9 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
         to_chapter: Optional[int] = None,
         limit: int = 200,
     ):
+        limit = max(1, min(limit, 10000))
+        if from_chapter is not None and to_chapter is not None and from_chapter > to_chapter:
+            raise HTTPException(400, "from_chapter 不能大于 to_chapter")
         with closing(_get_db()) as conn:
             q = "SELECT * FROM relationship_events"
             params: list = []

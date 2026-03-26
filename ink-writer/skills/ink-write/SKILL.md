@@ -23,9 +23,94 @@ allowed-tools: Read Write Edit Grep Bash Task
 
 ## 模式定义
 
-- `/ink-write`：Step 1 → 2A → 2B → 3 → 4 → 5 → 6
-- `/ink-write --fast`：Step 1 → 2A → 3 → 4 → 5 → 6（跳过 2B）
-- `/ink-write --minimal`：Step 1 → 2A → 3（仅3个基础审查）→ 4 → 5 → 6
+- `/ink-write`：Step 1 → 2A → 2A.5 → 2B → 3 → 4 → 4.5 → 5 → 6
+- `/ink-write --fast`：Step 1 → 2A → 2A.5 → 3 → 4 → 4.5 → 5 → 6（跳过 2B）
+- `/ink-write --minimal`：Step 1 → 2A → 2A.5 → 3（仅3个基础审查）→ 4 → 4.5 → 5 → 6
+
+### 审查智能降级（Adaptive Review）
+
+> 长篇写作中，若连续多章质量稳定，自动降低审查强度以节省时间和API成本。
+
+**降级规则**：
+- 读取最近 3 章的 `review_metrics.overall_score`（从 `index.db` 查询）
+- 若最近 3 章 `overall_score` 均 ≥ 85 且 `critical_issues` 均为空：
+  - 标准模式自动降级为 `--fast` 模式的审查强度（跳过 Step 2B，条件审查器仍按 auto 路由）
+  - 输出提示：`"📊 连续3章高分（{s1}/{s2}/{s3}），审查自动降级为 fast 模式"`
+- 若最近 3 章 `overall_score` 均 ≥ 90 且无 `high` 以上问题：
+  - 标准模式自动降级为 `--minimal` 模式的审查强度（仅核心 3 个 checker）
+  - 输出提示：`"📊 连续3章优秀（{s1}/{s2}/{s3}），审查自动降级为 minimal 模式"`
+
+**恢复规则**：
+- 任一章 `overall_score` < 80 或出现 `critical` 问题 → 立即恢复为标准模式
+- 用户可随时通过 `--no-adaptive` 禁用智能降级
+
+**降级不影响的步骤**：
+- Step 2A.5（字数校验）始终执行
+- Step 5（Data Agent）始终完整执行
+- Step 6（Git 备份）始终执行
+
+**查询最近审查分数**：
+```bash
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index get-recent-review-metrics --limit 3
+```
+
+### Agent 调用成本控制策略
+
+> 长篇写作的 Agent 调用量线性增长（每章 5-9 个子 Agent），需要系统性控制成本。
+
+#### 单章成本预算
+
+| 模式 | 预估 Agent 调用数 | 适用场景 |
+|------|-------------------|---------|
+| `--minimal` | 5 个（context/writer/3 checker/data） | 连续高分章节、过渡章 |
+| `--fast` | 6-8 个（+条件 checker） | 普通章节 |
+| 标准 | 7-10 个（+2B 风格适配+全量 checker） | 关键章/卷首章/低分后恢复 |
+
+#### 成本观测（每章结束后输出）
+
+在 Step 6 收尾时，统计并输出本章 Agent 调用摘要：
+
+```text
+本章 Agent 调用统计：
+- 总调用数: {N} 个
+- 实际启用 checker: {list}
+- 审查模式: {standard/fast/minimal}（{原因}）
+- 耗时最长环节: {step} ({ms}ms)
+```
+
+数据来源：`.ink/observability/call_trace.jsonl` + `data_agent_timing.jsonl`
+
+#### 批量写作成本优化（连续写多章时）
+
+当用户请求连续写作多章（如 `/ink-write 10-15`）时，启用批量优化策略：
+
+| 优化项 | 规则 | 节省 |
+|--------|------|------|
+| context 复用 | 若相邻两章在同一场景/时间段，Step 1 增量更新而非全量重建 | ~20% context 成本 |
+| checker 结果缓存 | pacing-checker 的 strand 历史数据在批次内缓存，不重复查 DB | ~5% 查询成本 |
+| 审查降级加速 | 批量模式中，连续 2 章（而非 3 章）高分即触发降级 | ~30% 审查成本 |
+| Data Agent 批合并 | 连续 2 章的实体提取结果合并一次写入（仅 index 操作） | ~10% 写入成本 |
+
+**批量模式限制**：
+- 每章仍然独立执行 Step 2A（正文生成不可合并）
+- Step 3 审查不可跳过（即使降级到 minimal）
+- 每 5 章强制执行一次标准模式审查（防止质量漂移）
+
+#### 项目级成本仪表盘
+
+```bash
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status -- --focus cost
+```
+
+输出：
+```text
+项目成本概览：
+- 总章节: {N} 章
+- 总 Agent 调用: {total} 次
+- 平均每章调用: {avg} 次
+- 审查降级节省: ~{percent}%（{saved} 次调用）
+- 最高成本章节: 第 {ch} 章（{count} 次调用，原因：{reason}）
+```
 
 最小产物（所有模式）：
 - `正文/第{NNNN}章-{title_safe}.md` 或 `正文/第{NNNN}章.md`
@@ -41,6 +126,7 @@ allowed-tools: Read Write Edit Grep Bash Task
 - **禁止自创模式**：`--fast` / `--minimal` 只允许按上方定义裁剪步骤，不允许自创混合模式、"半步"或"简化版"。
 - **禁止自审替代**：Step 3 审查必须由 Task 子代理执行，主流程不得内联伪造审查结论。
 - **禁止源码探测**：脚本调用方式以本文档与 data-agent 文档中的命令示例为准，命令失败时查日志定位问题，不去翻源码学习调用方式。
+- **禁止直写 state.json**：所有对 `.ink/state.json` 的写入必须通过 `ink.py` CLI 命令（`state process-chapter`、`update-state`、`workflow *`），禁止用 `Write`/`Edit` 工具直接修改。Step 5 Data Agent 执行期间，主流程不得调用任何写入 state.json 的命令。
 
 ## 引用加载等级（strict, lazy）
 
@@ -210,6 +296,43 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflo
 
 **违规处理**：若 Agent 跳过本协议直接执行 Step 内容，该 Step 的所有产出视为无效，必须回退重做。
 
+### Step 0.8: 设定权限校验（防幻觉前置执行）
+
+> 本步骤强制执行，不可跳过，不可兜底。
+
+**执行流程**：
+
+1. **读取 index.db 实体快照**：查询当前章节相关的所有实体状态
+   ```bash
+   cd "$PROJECT_ROOT" && python -c "
+   from scripts.data_modules.index_manager import IndexManager
+   im = IndexManager('index.db')
+   # 获取主角当前状态
+   print(im.get_entity_current_state('protagonist'))
+   # 获取所有活跃实体的能力上限
+   print(im.list_entities_by_type('能力', limit=50))
+   "
+   ```
+
+2. **生成权限边界清单**：
+   - 主角当前境界/等级及可用技能上限
+   - 已解锁的地点列表（不可出现未解锁地点）
+   - 已建立的关系网络（不可出现未引入角色的深度互动）
+   - 已确立的世界规则（不可违反已设定的物理/魔法法则）
+
+3. **输出"写作权限卡"**：
+   ```
+   === 第 N 章写作权限卡 ===
+   【可用能力】: [从 index.db 读取]
+   【禁止能力】: [高于当前境界的所有技能]
+   【可达地点】: [已解锁地点列表]
+   【禁止地点】: [未解锁地点]
+   【活跃角色】: [最近 5 章出场 + 本章大纲提及的角色]
+   【世界规则红线】: [不可违反的已确立设定]
+   ```
+
+4. **Step 2A Writer 必须在写作权限卡范围内创作**。任何超出权限卡的内容，在 Step 3 审查中将被判定为 `critical`。
+
 ### Step 1：脚本执行包构建（默认）/ Context Agent（兜底）
 
 默认路径：
@@ -266,20 +389,67 @@ cat "${SKILL_ROOT}/../../references/shared/core-constraints.md"
 - **英文仅限机器标识**：CLI flag（`--fast`）、checker id（`consistency-checker`）、DB 字段名（`anti_ai_force_check`）、JSON 键名等不可改的接口名保持英文，其余一律使用简体中文。
 
 输出：
-- 章节草稿（可进入 Step 2B 或 Step 3）。
+- 章节草稿（可进入 Step 2A.5 字数校验）。
+
+### Step 2A.5：字数校验（必做，不可跳过）
+
+> 正文写入章节文件后，立即执行字数校验，确保章节字数在可控范围内。
+
+**字数检测**：
+```bash
+WORD_COUNT=$(wc -m < "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" 2>/dev/null || echo 0)
+echo "当前章节字数: ${WORD_COUNT}"
+```
+
+**判定规则**：
+
+| 字数范围 | 判定 | 处理方式 |
+|---------|------|---------|
+| < 1500 字 | 严重不足 | **必须补写**：回到 Step 2A 在现有正文基础上扩写至 ≥ 1800 字。补写时只允许：展开已有场景细节、补充角色互动/反应、增加感官描写。禁止新增大纲之外的剧情事件 |
+| 1500-1799 字 | 偏短 | **建议补写**：输出提示"当前 {WORD_COUNT} 字，建议补充至 1800+ 字"。若大纲明确标注为过渡章或用户指定短章，可放行 |
+| 1800-3200 字 | 合格 | 直接进入下一步 |
+| 3201-4000 字 | 偏长 | **建议精简**：输出提示"当前 {WORD_COUNT} 字，建议压缩至 3200 字以内"。若大纲标注为关键战斗章/高潮章/卷末章，可放行 |
+| > 4000 字 | 严重超标 | **必须精简**：回到 Step 2A 对现有正文做减法，压缩至 ≤ 3500 字。精简时只允许：删除冗余描写、合并重复信息、压缩过渡段落。禁止删除大纲要求的关键剧情点 |
+
+**豁免条件**（满足任一则跳过强制补写/精简）：
+- 大纲或用户明确指定了非默认字数目标（如"本章 4000 字"）
+- 大纲标注为特殊章型（关键战斗章/高潮章/卷末章允许上浮 50%；过渡章允许下浮 20%）
+
+**补写/精简后必须再次检测字数**，确认进入合格范围后才可继续。最多执行 1 轮补写/精简，避免无限循环。
+
+输出：
+- 字数合格的章节草稿（可进入 Step 2B 或 Step 3）。
+
+### Step 2A / 2B / 4 职责边界（铁律，三步不可互相越权）
+
+> 三个步骤各有严格的职责范围，任何步骤不得侵入其他步骤的领域。
+
+| 维度 | Step 2A（内容层） | Step 2B（表达层） | Step 4（质量层） |
+|------|-----------------|-----------------|----------------|
+| **核心职责** | 生成符合大纲的剧情内容 | 将粗稿转为网文风格 | 修复审查问题 + Anti-AI |
+| **可改范围** | 剧情事件、角色行为、因果关系、信息传递 | 句式/词序/修辞/感官细节/对话标签 | 审查报告指出的具体问题段落 |
+| **禁止范围** | 风格转换、Anti-AI 改写 | 剧情事实、角色行为结果、因果、数字 | 改动未被审查标记的正常段落 |
+| **输入** | 创作执行包（Step 1 产出） | Step 2A 的纯内容正文 | Step 3 审查报告 + Step 2B 正文 |
+| **输出** | 内容完整但可能有AI味的草稿 | 风格化正文（内容与2A完全一致） | 问题修复后的终稿 |
+
+**交叉校验规则**：
+- Step 2B 完成后，剧情事实必须与 Step 2A 输出完全一致（人名、地名、数字、行为结果、因果、时间线零偏差）
+- Step 4 的修改范围必须限定在审查报告 `issues` 列表涉及的段落，加上 Anti-AI 终检标记的段落
+- 任何步骤发现前序步骤的输出有大纲/设定违规，必须回报而非自行修复
 
 ### Step 2B：风格适配（`--fast` / `--minimal` 跳过）
 
 执行前加载：
 ```bash
-cat "${SKILL_ROOT}/references/style-adapter.md"
+cat “${SKILL_ROOT}/references/style-adapter.md”
 ```
 
 硬要求：
 - 只做表达层转译，不改剧情事实、事件顺序、角色行为结果、设定规则。
-- 对“模板腔、说明腔、机械腔”做定向改写，为 Step 4 留出问题修复空间。
+- 对”模板腔、说明腔、机械腔”做定向改写，为 Step 4 留出问题修复空间。
 - 必须优先读取本地高分 `style_samples`；若 `chapter <= 3`，优先选择更能匹配开头窗口、对白密度、句长节奏的样本。
 - 若 Anti-AI 检查未通过，不得把该版正文交给 Step 3。
+- **Step 2B 完成后必须自检**：对比 2A 输出与 2B 输出，确认所有人名、地名、数字、行为结果、因果关系零偏差。若发现偏差，恢复对应段落为 2A 版本并仅做表达层调整。
 
 输出：
 - 风格化正文（覆盖原章节文件）。
@@ -320,6 +490,8 @@ Task 传参硬约束：
 - `reader-pull-checker`
 - `high-point-checker`
 - `pacing-checker`
+- `proofreading-checker`
+- `reader-simulator`
 
 模式说明：
 - 标准/`--fast`：核心 3 个 + auto 命中的条件审查器
@@ -328,7 +500,7 @@ Task 传参硬约束：
 推荐调度顺序：
 1. `consistency-checker` + `continuity-checker` 并发（最多 2 个）
 2. `ooc-checker`
-3. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker`
+3. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker` → `reader-simulator`
 
 审查指标落库（必做）：
 ```bash
@@ -389,9 +561,43 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 - 强化主角差异点与本章可见回报。
 - 增强章末动机句，确保读者必须点下一章。
 
+### Step 4.5：改写安全校验（润色后必做，不可跳过）
+
+> 防止润色过程中"修A破B"——修复 Anti-AI 问题时意外引入设定违规、OOC 或大纲偏离。
+
+**执行流程**：
+
+1. **保存润色前快照**（在 Step 4 开始前执行）：
+   ```bash
+   cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
+      "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"
+   ```
+
+2. **润色完成后，执行 diff 校验**：
+   - 对比润色前后正文，提取所有变更段落
+   - 对每个变更段落执行以下检查：
+
+   | 检查项 | 判定规则 | 违规处理 |
+   |--------|---------|---------|
+   | 剧情事实变更 | 角色行为结果、因果关系、数字/数量是否改变 | `critical`：必须恢复原文该段 |
+   | 设定违规引入 | 变更后出现原文没有的能力/地点/角色名 | `critical`：必须恢复原文该段 |
+   | OOC 引入 | 角色语气/决策风格与角色档案明显偏离 | `high`：恢复或重新改写该段 |
+   | 大纲偏离 | 变更后偏离大纲要求的事件/结果 | `critical`：必须恢复原文该段 |
+   | 过度删减 | 单次润色删除超过原文 20% 内容 | `high`：检查是否误删关键信息 |
+
+3. **违规处理**：
+   - 若发现 `critical` 违规：从 `pre_polish` 快照恢复对应段落，仅保留非违规的改写
+   - 若发现 `high` 违规但无 `critical`：记录到变更摘要的 deviation 中
+   - 最多执行 1 轮修正，避免无限循环
+
+4. **清理快照**（Step 5 开始前）：
+   ```bash
+   rm -f "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"
+   ```
+
 输出：
-- 润色后正文（覆盖章节文件）
-- 变更摘要（至少含：修复项、保留项、deviation、`anti_ai_force_check`）
+- 安全校验后的润色正文（覆盖章节文件）
+- 变更摘要（至少含：修复项、保留项、deviation、`anti_ai_force_check`、diff 校验结果）
 
 ### Step 5：Data Agent（状态与索引回写）
 
@@ -507,11 +713,18 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflo
 ### Step 6：Git 备份（可失败但需说明）
 
 ```bash
-git add .
-git -c i18n.commitEncoding=UTF-8 commit -m "第{chapter_num}章: {title}"
+git add \
+  "${PROJECT_ROOT}/正文/第${chapter_padded}章"*.md \
+  "${PROJECT_ROOT}/.ink/state.json" \
+  "${PROJECT_ROOT}/.ink/index.db" \
+  "${PROJECT_ROOT}/.ink/summaries/ch${chapter_padded}.md" \
+  "${PROJECT_ROOT}/.ink/observability/" \
+  "${PROJECT_ROOT}/审查报告/" 2>/dev/null
+git -c i18n.commitEncoding=UTF-8 commit -m "第${chapter_num}章: ${title}"
 ```
 
 规则：
+- **精确指定文件**：只添加章节正文、state.json、index.db、摘要、观测日志、审查报告。禁止使用 `git add .` 或 `git add -A`，避免将 `.ink/tmp/` 下的临时文件（review_bundle、payload、pre_polish 快照等）加入版本库。
 - 提交时机：验证、回写、清理全部完成后最后执行。
 - 提交信息默认中文，格式：`第{chapter_num}章: {title}`。
 - 若 commit 失败，必须给出失败原因与未提交文件范围。

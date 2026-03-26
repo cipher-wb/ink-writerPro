@@ -140,6 +140,18 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 你可以先用 `index upsert-entity / register-alias / record-state-change / upsert-relationship` 做细粒度写入，
 但章节级结构化数据必须统一通过 `state process-chapter` 落库。
 
+### state.json 并发写入保护（铁律）
+
+> `state.json` 是全局共享状态文件，多个 Step/Agent 可能在同一流程中读写它，必须防止并发写入导致数据损坏。
+
+**写入串行化规则**：
+1. **唯一写入入口**：所有对 `state.json` 的写入必须通过 `ink.py` CLI 命令（`state process-chapter`、`update-state`、`workflow *`），禁止用 `Write`/`Edit` 工具直接修改 `state.json`
+2. **写入时序约束**：在同一章的写作流程中，各 Step 对 state.json 的写入严格按流程顺序执行，禁止并行写入：
+   - Step 0.5（workflow start-task）→ Step 3（save-review-metrics，写 index.db 不写 state）→ Step 5（state process-chapter，主写入）→ Step 6（workflow complete-task）
+3. **Data Agent 独占写入**：Step 5 期间，Data Agent 是 state.json 的唯一写入者。主流程在 Step 5 执行期间不得调用任何 `update-state` 或 `workflow` 命令
+4. **写入前读取验证**：`state process-chapter` 执行前，先读取 `state.json` 的 `progress.current_chapter`，确认与预期章号一致。若不一致（说明被其他进程修改），立即阻断并报错
+5. **写入后完整性检查**：`state process-chapter` 执行后，立即验证 `state.json` 的关键字段（`progress.current_chapter`、`chapter_meta` 对应条目）已正确更新
+
 推荐做法：
 ```bash
 cat > "{project_root}/.ink/tmp/data_agent_payload_ch{chapter_padded}.json" <<'EOF'
@@ -353,9 +365,42 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style ex
 }
 ```
 
+#### chapter_meta 存储规范
+
+**规则**：chapter_meta 数据的唯一真源为 **index.db 的 chapter_metadata 表**。
+
+state.json 中的 chapter_meta 字段仅作为**写入缓冲**：
+1. Data Agent 写入 chapter_meta 时，同时写入 state.json（缓冲）和 index.db（持久）
+2. 读取 chapter_meta 时，始终从 index.db 读取
+3. state.json 中的 chapter_meta 在每次成功同步到 index.db 后可清空
+4. 当 state.json 中 chapter_meta 条目超过 20 条时，触发批量同步并清空缓冲
+
+**目的**：防止 state.json 在长篇（100+章）中膨胀超标（设计目标 <5KB）。
+
+#### 伏笔数据一致性规范
+
+**规则**：伏笔数据的唯一真源为 **index.db 的 plot_thread_registry 表**。
+
+state.json 中的 `plot_threads.foreshadowing` 字段为**只读快照**：
+1. Data Agent 更新伏笔时，写入 index.db 后，同步生成快照写入 state.json
+2. Context Agent 读取伏笔时，优先从 index.db 读取（保证最新）；若 index.db 不可用，降级读取 state.json 快照（标注"可能过期"）
+3. 每章写作完成后（Step 5），Data Agent 刷新 state.json 中的伏笔快照
+4. 快照一致性由 hash 校验保证：`state.json.foreshadowing_hash = sha256(序列化数据)`
+
+#### 主线存在感追踪
+
+Data Agent 在 Step B（实体提取）中，额外记录：
+
+1. **主线推进标记**：每章标注是否有主线推进（`quest_advanced: true/false`）
+2. **主线沉默计数**：连续多少章没有主线推进
+3. **预警规则**：
+   - 连续 5 章无主线推进 → medium 警告
+   - 连续 10 章无主线推进 → high 警告
+   - 连续 15 章无主线推进 → critical 警告
+
 #### chapter_meta 版本化规范
 
-chapter_meta 写入 `state.json` 时，必须包含以下版本控制字段：
+chapter_meta 写入时，必须包含以下版本控制字段：
 
 ```json
 {

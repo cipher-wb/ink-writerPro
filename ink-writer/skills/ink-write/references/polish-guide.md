@@ -89,6 +89,26 @@ purpose: 章节生成后的润色阶段加载，基于审查报告修复问题 +
 - 若结果为 `fail`，必须继续留在 Step 4 重写，不得进入 Step 5。
 - 若命中高风险表达但因剧情必要保留，必须写入 `deviation`（位置 + 原因 + 代价）。
 
+### Anti-AI 二次验证流程（改写后必执行）
+
+Step 4 的 Anti-AI 改写完成后，**必须执行二次验证**：
+
+1. **运行扫描**：
+   ```bash
+   cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "待审章节路径" --format json
+   ```
+
+2. **判定标准**：
+   - risk_score < 30 → `anti_ai_force_check: pass`
+   - risk_score 30-50 → 针对 high 风险段落二次改写，然后重新扫描（最多 1 轮）
+   - risk_score > 50 → `anti_ai_force_check: fail`，必须大幅重写对话和情感描写段落
+
+3. **重点关注**：
+   - L5 对话质量分 < 60% → 必须改写对话（添加人物特征、潜台词、打断）
+   - L3 情感评分 < 60% → 必须改写情感描写（直述 → 行为表现）
+
+4. **迭代上限**：最多 2 轮扫描-改写循环。2 轮后仍 fail，记录问题清单交由用户决定。
+
 ### 全文检查范围（必查）
 
 - 全文章节逐段检查

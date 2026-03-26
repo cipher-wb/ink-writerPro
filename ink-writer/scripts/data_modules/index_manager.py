@@ -418,7 +418,9 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                     description TEXT,
                     chapter INTEGER NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    UNIQUE(from_entity, to_entity, type)
+                    UNIQUE(from_entity, to_entity, type),
+                    FOREIGN KEY (from_entity) REFERENCES entities(id) ON DELETE CASCADE,
+                    FOREIGN KEY (to_entity) REFERENCES entities(id) ON DELETE CASCADE
                 )
             """)
 
@@ -804,6 +806,7 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
         """获取数据库连接"""
         conn = sqlite3.connect(str(self.config.index_db))
         conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys = ON")
         try:
             yield conn
         finally:

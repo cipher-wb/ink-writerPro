@@ -30,11 +30,14 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                      Claude Code                           │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills (7个): init / plan / write / review / query / ... │
+│  Skills (8个): init / plan / write / review / query /      │
+│                resume / learn / dashboard                   │
 ├─────────────────────────────────────────────────────────────┤
-│  Agents (8个): Context / Data / 多维 Checker               │
+│  Agents (11个): Context / Data / 多维 Checker (7)          │
+│                 Proofreading / Reader-Simulator             │
 ├─────────────────────────────────────────────────────────────┤
-│  Data Layer: state.json / index.db / vectors.db            │
+│  Data Layer: state.json → index.db (渐进迁移中)            │
+│              vectors.db / review_library.jsonl              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -48,13 +51,16 @@
 
 职责：从正文提取实体与状态变化，更新 `state.json`、`index.db`、`vectors.db`，保证数据链闭环。
 
-## 六维并行审查
+## 多维审查体系
 
-| Checker | 检查重点 |
-|---------|---------|
-| High-point Checker | 爽点密度与质量 |
-| Consistency Checker | 设定一致性（战力/地点/时间线） |
-| Pacing Checker | Strand 比例与断档 |
-| OOC Checker | 人物行为是否偏离人设 |
-| Continuity Checker | 场景与叙事连贯性 |
-| Reader-pull Checker | 钩子强度、期待管理、追读力 |
+| Checker | 检查重点 | 类型 |
+|---------|---------|------|
+| Consistency Checker | 设定一致性（战力/地点/时间线） | 核心 |
+| Continuity Checker | 场景与叙事连贯性 | 核心 |
+| OOC Checker | 人物行为是否偏离人设 | 核心 |
+| Reader-pull Checker | 钩子强度、期待管理、追读力 | 条件 |
+| High-point Checker | 爽点密度与质量 | 条件 |
+| Pacing Checker | Strand 比例与断档 | 条件 |
+| Golden-three Checker | 前三章抓取力与承诺兑现 | 条件 |
+| Proofreading Checker | 修辞重复、段落结构、代称混乱、文化禁忌、文风一致性 | 条件 |
+| Reader Simulator | 读者沉浸度、情绪曲线、弃读风险 | 条件 |

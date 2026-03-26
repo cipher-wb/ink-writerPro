@@ -84,6 +84,7 @@ Do not load two or more L2 files unless the user request clearly spans multiple 
 | 金手指/系统 | 金手指状态 | system-data-flow.md |
 | 节奏/Strand | 节奏分析 | strand-weave-pattern.md |
 | 标签/实体格式 | 格式查询 | tag-specification.md |
+| 健康度/全局/总览 | 全局健康度 | system-data-flow.md + foreshadowing.md |
 
 ## Step 2: 加载对应参考文件
 
@@ -179,17 +180,92 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" status -- --focus
 - Fire >10 章未出现
 - Constellation >15 章未出现
 
+### 全局健康度查询（关键词：健康度/全局/总览）
+
+> 一键查看项目整体状态，适用于长时间未操作后快速恢复上下文。
+
+**执行命令**：
+```bash
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" status -- --focus all
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" index get-recent-review-metrics --limit 10
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" index get-debt-summary
+```
+
+**输出结构**：
+
+```markdown
+# 项目全局健康度报告
+
+## 创作进度
+- 当前章节: 第 {N} 章 / 目标 {total} 章（{percent}%）
+- 当前卷: 第 {V} 卷
+- 最近写作时间: {date}
+
+## 审查质量趋势
+- 最近 10 章平均分: {avg_score}
+- 最近 10 章分数走势: {trend}（上升/稳定/下降）
+- 未解决 critical 问题: {count} 个
+
+## Strand 三线平衡
+- Quest 占比: {q}%（最近出现: 第 {ch} 章）
+- Fire 占比: {f}%（最近出现: 第 {ch} 章）
+- Constellation 占比: {c}%（最近出现: 第 {ch} 章）
+- 平衡状态: {健康/预警/失衡}
+
+## 伏笔健康度
+- 活跃伏笔: {total} 条
+- 紧急伏笔（即将到期）: {urgent} 条
+- 逾期伏笔（已超目标章）: {overdue} 条
+- 跨卷伏笔（跨越 2 卷以上）: {cross_volume} 条
+
+## 债务状态
+- 活跃 Override 债务: {count} 条
+- 逾期债务: {overdue_count} 条
+
+## 风险预警
+{按严重度排序的风险项列表}
+```
+
+### 跨卷伏笔追踪（伏笔查询增强）
+
+> 长篇项目中跨越多卷的伏笔最容易遗忘。本查询专门追踪跨卷伏笔状态。
+
+**触发条件**：伏笔查询时自动附加，或用户明确查询"跨卷伏笔"。
+
+**执行逻辑**：
+1. 从 `state.json → plot_threads.foreshadowing` 读取全部伏笔
+2. 对每条伏笔，判断 `planted_chapter` 和 `target_chapter` 是否跨卷（对照 `总纲.md` 的卷次范围）
+3. 按风险等级排序输出
+
+**跨卷伏笔风险等级**：
+
+| 等级 | 条件 | 建议 |
+|------|------|------|
+| 极高 | 核心伏笔 + 已跨 2 卷以上未回收 | 当前卷内必须回收或显式提及 |
+| 高 | 支线伏笔 + 已跨 2 卷以上未回收 | 本卷内安排提及或部分回收 |
+| 中 | 核心伏笔 + 跨 1 卷未回收但在目标范围内 | 持续追踪，确保按计划回收 |
+| 低 | 装饰伏笔 + 跨卷 | 可选回收，不回收也不影响主线 |
+
+**输出格式**：
+```markdown
+## 跨卷伏笔追踪
+
+| 伏笔内容 | 层级 | 埋设 | 目标 | 跨卷数 | 风险 | 建议 |
+|---------|------|------|------|--------|------|------|
+| {content} | 核心 | 第1卷·第5章 | 第3卷·第80章 | 2卷 | 极高 | 第2卷内需显式提及 |
+```
+
 ## Step 6: 格式化输出
 
 ```markdown
 # 查询结果：{关键词}
 
-## 📊 概要
+## 概要
 - **匹配类型**: {type}
 - **数据源**: state.json + 设定集 + 大纲
 - **匹配数量**: X 条
 
-## 🔍 详细信息
+## 详细信息
 
 ### 1. Runtime State (state.json)
 {结构化数据}
@@ -198,6 +274,6 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" status -- --focus
 ### 2. 设定集匹配结果
 {匹配内容，含文件路径和行号}
 
-## ⚠️ 数据一致性检查
+## 数据一致性检查
 {state.json 与静态文件的差异}
 ```

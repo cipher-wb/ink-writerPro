@@ -174,25 +174,72 @@ class ChapterMeta(BaseModel):
 # ---------------------------------------------------------------------------
 
 
+class GoldenFingerInfo(BaseModel):
+    """金手指相关信息"""
+    model_config = ConfigDict(extra="allow")
+    name: Optional[str] = Field(default=None)
+    type: Optional[str] = Field(default=None)
+    style: Optional[str] = Field(default=None)
+    visibility: Optional[str] = Field(default=None)
+    irreversible_cost: Optional[str] = Field(default=None)
+
+
+class HeroineCharacterInfo(BaseModel):
+    """女主/情感线相关信息"""
+    model_config = ConfigDict(extra="allow")
+    config: Optional[str] = Field(default=None)
+    names: Optional[str] = Field(default=None)
+    role: Optional[str] = Field(default=None)
+
+
+class WorldBuildingInfo(BaseModel):
+    """世界观设定相关信息"""
+    model_config = ConfigDict(extra="allow")
+    scale: Optional[str] = Field(default=None)
+    factions: Optional[str] = Field(default=None)
+    power_system_type: Optional[str] = Field(default=None)
+    social_class: Optional[str] = Field(default=None)
+    resource_distribution: Optional[str] = Field(default=None)
+    currency_system: Optional[str] = Field(default=None)
+    currency_exchange: Optional[str] = Field(default=None)
+    sect_hierarchy: Optional[str] = Field(default=None)
+    cultivation_chain: Optional[str] = Field(default=None)
+    cultivation_subtiers: Optional[str] = Field(default=None)
+
+
 class ProjectInfo(BaseModel):
+    """项目信息（v2: 子模型分组，保持向后兼容）"""
     model_config = ConfigDict(extra="allow")
 
+    # 基础信息
     title: Optional[str] = Field(default=None)
     genre: Optional[str] = Field(default=None)
     created_at: Optional[str] = Field(default=None)
     target_words: Optional[int] = Field(default=None)
     target_chapters: Optional[int] = Field(default=None)
-    golden_finger_name: Optional[str] = Field(default=None)
-    golden_finger_type: Optional[str] = Field(default=None)
-    golden_finger_style: Optional[str] = Field(default=None)
     core_selling_points: Optional[str] = Field(default=None)
+    target_reader: Optional[str] = Field(default=None)
+    platform: Optional[str] = Field(default=None)
+    opening_hook: Optional[str] = Field(default=None)
+
+    # 角色信息
     protagonist_structure: Optional[str] = Field(default=None)
-    heroine_config: Optional[str] = Field(default=None)
-    heroine_names: Optional[str] = Field(default=None)
-    heroine_role: Optional[str] = Field(default=None)
     co_protagonists: Optional[str] = Field(default=None)
     co_protagonist_roles: Optional[str] = Field(default=None)
     antagonist_tiers: Optional[str] = Field(default=None)
+
+    # 子模型（新增，向后兼容：extra="allow" 确保旧字段不报错）
+    golden_finger: GoldenFingerInfo = Field(default_factory=GoldenFingerInfo)
+    heroine: HeroineCharacterInfo = Field(default_factory=HeroineCharacterInfo)
+    world_building: WorldBuildingInfo = Field(default_factory=WorldBuildingInfo)
+
+    # 保留旧字段以向后兼容（已迁移到子模型，但旧数据可能仍有这些平铺字段）
+    golden_finger_name: Optional[str] = Field(default=None)
+    golden_finger_type: Optional[str] = Field(default=None)
+    golden_finger_style: Optional[str] = Field(default=None)
+    heroine_config: Optional[str] = Field(default=None)
+    heroine_names: Optional[str] = Field(default=None)
+    heroine_role: Optional[str] = Field(default=None)
     world_scale: Optional[str] = Field(default=None)
     factions: Optional[str] = Field(default=None)
     power_system_type: Optional[str] = Field(default=None)
@@ -200,9 +247,6 @@ class ProjectInfo(BaseModel):
     resource_distribution: Optional[str] = Field(default=None)
     gf_visibility: Optional[str] = Field(default=None)
     gf_irreversible_cost: Optional[str] = Field(default=None)
-    target_reader: Optional[str] = Field(default=None)
-    platform: Optional[str] = Field(default=None)
-    opening_hook: Optional[str] = Field(default=None)
     currency_system: Optional[str] = Field(default=None)
     currency_exchange: Optional[str] = Field(default=None)
     sect_hierarchy: Optional[str] = Field(default=None)

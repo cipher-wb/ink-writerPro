@@ -96,16 +96,31 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
   - 用途：时间敏感市场趋势参考。
   - 触发：仅用户明确要求“参考当下趋势”时加载。
 - `references/creativity/anti-trope-xianxia.md`
-  - 用途：反套路库（修仙/玄幻/高武/西幻）。
+  - 用途：反套路库（修仙/玄幻/高武/西幻/无限流）。
   - 触发：题材命中对应映射时加载。
 - `references/creativity/anti-trope-urban.md`
-  - 用途：反套路库（都市/历史）。
+  - 用途：反套路库（都市异能/都市日常/都市脑洞/电竞/直播文）。
   - 触发：题材命中对应映射时加载。
 - `references/creativity/anti-trope-game.md`
-  - 用途：反套路库（游戏/科幻/末世）。
+  - 用途：反套路库（游戏体育/科幻/系统流）。
   - 触发：题材命中对应映射时加载。
 - `references/creativity/anti-trope-rules-mystery.md`
-  - 用途：反套路库（规则/悬疑/灵异/克苏鲁）。
+  - 用途：反套路库（规则怪谈/克苏鲁）。
+  - 触发：题材命中对应映射时加载。
+- `references/creativity/anti-trope-romance.md`
+  - 用途：反套路库（言情/婚恋/霸总/替身/豪门/宫斗言情/青春甜宠/民国言情/多子多福/种田/狗血言情）。
+  - 触发：题材命中对应映射时加载。
+- `references/creativity/anti-trope-history.md`
+  - 用途：反套路库（历史古代/历史脑洞/抗战谍战/年代/历史穿越）。
+  - 触发：题材命中对应映射时加载。
+- `references/creativity/anti-trope-apocalypse.md`
+  - 用途：反套路库（末世/废土/灾变）。
+  - 触发：题材命中对应映射时加载。
+- `references/creativity/anti-trope-suspense.md`
+  - 用途：反套路库（悬疑脑洞/悬疑灵异/女频悬疑）。
+  - 触发：题材命中对应映射时加载。
+- `references/creativity/anti-trope-realistic.md`
+  - 用途：反套路库（现实题材/黑暗题材/职场婚恋）。
   - 触发：题材命中对应映射时加载。
 
 ## 工具策略（按需）
