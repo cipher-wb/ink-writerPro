@@ -112,6 +112,13 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - 最高成本章节: 第 {ch} 章（{count} 次调用，原因：{reason}）
 ```
 
+批量模式（可与上述模式组合）：
+- `/ink-write --batch N`：连续写 N 章，每章完整执行上述对应模式的全流程
+- `/ink-write --batch N --fast`：连续写 N 章，每章走 fast 模式
+- `/ink-write --batch N --minimal`：连续写 N 章，每章走 minimal 模式
+- 未指定 N 时默认 5 章
+- `--batch` 不改变任何单章内部流程，仅在 Step 6 完成后自动开始下一章的 Step 0
+
 最小产物（所有模式）：
 - `正文/第{NNNN}章-{title_safe}.md` 或 `正文/第{NNNN}章.md`
 - `index.db.review_metrics` 新纪录（含 `overall_score`）
@@ -127,6 +134,8 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - **禁止自审替代**：Step 3 审查必须由 Task 子代理执行，主流程不得内联伪造审查结论。
 - **禁止源码探测**：脚本调用方式以本文档与 data-agent 文档中的命令示例为准，命令失败时查日志定位问题，不去翻源码学习调用方式。
 - **禁止直写 state.json**：所有对 `.ink/state.json` 的写入必须通过 `ink.py` CLI 命令（`state process-chapter`、`update-state`、`workflow *`），禁止用 `Write`/`Edit` 工具直接修改。Step 5 Data Agent 执行期间，主流程不得调用任何写入 state.json 的命令。
+- **禁止批量偷懒**：`--batch` 模式下，每一章必须完整执行 Step 0 → Step 6 的全部步骤，不得因"已是第 N 章"而简化、合并或跳过任何环节。第 5 章的流程严格程度必须与第 1 章完全一致。
+- **禁止批量并行**：多章必须严格串行执行。第 i 章的充分性闸门和验证全部通过后，才能开始第 i+1 章的 Step 0。
 
 ## 引用加载等级（strict, lazy）
 
@@ -794,4 +803,97 @@ sqlite3 "${PROJECT_ROOT}/.ink/index.db" "SELECT COUNT(*) FROM scenes WHERE chapt
    - 审查缺失：只重跑 Step 3 并落库；
    - 润色失真：恢复 Step 2A 输出并重做 Step 4；
    - 摘要/状态缺失：只重跑 Step 5；
-3. 重新执行“验证与交付”全部检查，通过后结束。
+3. 重新执行”验证与交付”全部检查，通过后结束。
+
+---
+
+> ⛔ **以下区域仅在 `--batch N` 模式下生效。单章模式（无 `--batch` 参数）执行到上方”失败处理”即结束，必须完全忽略以下全部内容。**
+
+## 批量模式编排（仅 `--batch N` 时生效）
+
+当用户指定 `--batch N` 时，进入批量编排模式。核心原则：**每章完整走一遍 Step 0 到 Step 6，与手动执行 `/ink-write` 完全一致，没有任何区别**。
+
+### 批量预检（在第一章 Step 0 之前执行）
+
+1. 完成环境设置（与 Step 0 相同的 env setup 块），解析 `PROJECT_ROOT`、`SCRIPTS_DIR`、`SKILL_ROOT`。
+2. 读取 `state.json` 获取 `progress.current_chapter`，计算：
+   - `batch_start = current_chapter + 1`
+   - `batch_end = batch_start + N - 1`
+3. 向用户输出批次计划：
+   ```
+   📋 批量写作计划：第{batch_start}章 → 第{batch_end}章（共{N}章，{mode}模式）
+   ```
+4. 不做额外预检，直接进入第一章的 Step 0（第一章的 Step 0 自带完整预检）。
+
+### 章节循环
+
+```
+FOR i = 1 TO N:
+
+    ─── 批量进度 [{i}/{N}] 开始第{chapter_num}章 ───
+
+    # 章号确定（每次循环必做）
+    从 state.json 重新读取 progress.current_chapter
+    chapter_num = current_chapter + 1
+    chapter_padded = 四位补零(chapter_num)
+    若 chapter_num 与预期值(batch_start + i - 1)不一致 → 暂停并报告差异，等待用户指示
+
+    # 清理上一章残留 workflow 状态（第一章跳过此步）
+    若 i > 1:
+        执行 workflow detect
+        执行 workflow fail-task --reason “batch_inter_chapter_cleanup” || true
+
+    # ====== 以下为标准单章流程，与手动 /ink-write 完全一致 ======
+    执行 Step 0（预检与上下文最小加载）
+    执行 Step 0.5（工作流断点记录）
+    执行 Step 0.6（重入续跑规则 — 若无残留任务则自动跳过）
+    执行 Step 1（脚本执行包构建）
+    执行 Step 2A（正文起草）
+    执行 Step 2B（风格适配 — --fast/--minimal 跳过）
+    执行 Step 3（审查 — 必须由 Task 子代理执行）
+    执行 Step 4（润色）
+    执行 Step 5（Data Agent）
+    执行 Step 6（Git 备份）
+    通过 充分性闸门（上方”充分性闸门”章节的全部条件）
+    通过 验证与交付（上方”验证与交付”章节的全部检查命令）
+    # ====== 标准单章流程结束 ======
+
+    # 章节完成确认
+    输出：✅ [{i}/{N}] 第{chapter_num}章完成 · {字数}字 · 评分{overall_score}
+
+    # 若验证失败：按上方”失败处理”做最小回滚和重跑
+    # 重跑后仍失败：输出 ❌ 第{chapter_num}章失败，暂停批量并询问用户是否跳过继续
+
+END FOR
+```
+
+### 章间衔接（每章 Step 6 完成后、下一章 Step 0 开始前）
+
+在进入下一章之前，必须逐项确认：
+
+1. `workflow_state.json` 中当前任务状态为 `completed`（非 `running`/`failed`）
+   - 若为 `running`/`failed`：执行 `workflow fail-task --reason “batch_inter_chapter_cleanup”` 清理
+2. `state.json` 的 `progress.current_chapter` 已更新为刚完成的章号
+   - 若未更新：说明 Step 5 未正确执行，尝试重跑 Step 5
+3. 上一章的充分性闸门全部通过
+
+任一项修复后仍不满足 → 暂停批量并询问用户。
+
+### 批量完成报告
+
+全部章节完成后（或因失败中止后），输出汇总：
+
+```
+═══════════════════════════════════════
+批量写作完成报告
+═══════════════════════════════════════
+范围：第{batch_start}章 → 第{实际最后完成章}章
+完成：{done}/{N}章
+总字数：约{total_words}字
+平均评分：{avg_score}
+───────────────────────────────────────
+各章概览：
+  ✅ 第X章 · {标题} — {字数}字 · 评分{score}
+  ...
+═══════════════════════════════════════
+```
