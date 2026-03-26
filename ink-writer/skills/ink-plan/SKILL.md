@@ -215,6 +215,35 @@ For 电竞/直播文/克苏鲁, apply dedicated volume pacing template:
 cat "${SKILL_ROOT}/references/outlining/genre-volume-pacing.md"
 ```
 
+### Strand 阈值自动校验
+
+> 在生成卷级 Strand 规划表时，必须根据题材 Profile 自动校验阈值，不允许用户在不知情的情况下偏离题材推荐值。
+
+**执行流程**：
+1. 从 `state.json.project_info.genre` 读取当前题材
+2. 从 `genre-profiles.md` 查出对应题材的 pacing_config：
+   - `quest_max_consecutive`：Quest 最大连续章数
+   - `fire_max_gap`：Fire 最大断档章数
+   - `constellation_max_gap`：Constellation 最大断档章数
+3. 在规划表中，对每个卷的 Strand 分布进行检查：
+   - 若 Quest 连续章数 > `quest_max_consecutive` → 输出警告：`"⚠️ 第{X}-{Y}章连续 Quest {N} 章，超过题材建议的 {max} 章"`
+   - 若 Fire 断档 > `fire_max_gap` → 输出警告：`"⚠️ 第{X}章后 Fire 断档 {N} 章，超过题材建议的 {max} 章"`
+   - 若 Constellation 断档 > `constellation_max_gap` → 同上
+4. 若存在警告，使用 AskUserQuestion 确认：`"以上 Strand 分布偏离题材推荐值，是否确认？(Y/调整)"`
+5. 若用户确认，记录为 Override（带理由）；若用户选择调整，重新规划对应章节
+
+**各题材参考阈值**：
+
+| 题材 | Quest最大连续 | Fire最大断档 | Constellation最大断档 |
+|------|-------------|-------------|---------------------|
+| 爽文 | 5章 | 8章 | 12章 |
+| 修仙 | 6章 | 12章 | 15章 |
+| 言情 | 4章 | 5章 | 15章 |
+| 悬疑 | 5章 | 10章 | 10章 |
+| 都市 | 4章 | 6章 | 10章 |
+| 规则怪谈 | 5章 | 10章 | 8章 |
+| 知乎短篇 | 3章 | 3章 | 5章 |
+
 ### 爽点密度规划策略
 Based on genre profile:
 - **常规章节**: 1-2 个小爽点（强度 2-3）

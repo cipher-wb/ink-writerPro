@@ -114,6 +114,18 @@ except ImportError:
         to_positive_int,
     )
 
+# 伏笔字段标准化映射 —— 统一为规范字段名
+FORESHADOWING_FIELD_ALIASES = {
+    "added_chapter": "planted_chapter",
+    "source_chapter": "planted_chapter",
+    "start_chapter": "planted_chapter",
+    "due_chapter": "target_chapter",
+    "deadline_chapter": "target_chapter",
+    "resolve_chapter": "target_chapter",
+    "payoff_chapter": "target_chapter",
+}
+
+
 def _is_resolved_foreshadowing_status(raw_status: Any) -> bool:
     """判断伏笔是否已回收（兼容历史字段与同义词）。"""
     return is_resolved_foreshadowing_status(raw_status)
@@ -125,6 +137,8 @@ def _enable_windows_utf8_stdio() -> None:
 
 class StatusReporter:
     """状态报告生成器"""
+
+    _CACHE_MAX_SIZE = 200
 
     def __init__(self, project_root: str):
         self.project_root = Path(project_root)
@@ -138,6 +152,14 @@ class StatusReporter:
 
         # v5.1 引入: 使用 IndexManager 读取实体
         self._index_manager = IndexManager(self.config)
+
+    def _cache_reading_power(self, chapter: int, data: Optional[Dict[str, Any]]) -> None:
+        """缓存追读力数据，超过上限时清除最早一半的条目。"""
+        if len(self._reading_power_cache) >= self._CACHE_MAX_SIZE:
+            sorted_keys = sorted(self._reading_power_cache.keys())
+            for k in sorted_keys[: len(sorted_keys) // 2]:
+                del self._reading_power_cache[k]
+        self._reading_power_cache[chapter] = data
 
     def _extract_stats_field(self, content: str, field_name: str) -> str:
         """
@@ -180,7 +202,10 @@ class StatusReporter:
         return "支线", self.config.foreshadowing_tier_weight_sub
 
     def _resolve_chapter_field(self, item: Dict[str, Any], keys: List[str]) -> Optional[int]:
-        """按候选键顺序读取章节号。"""
+        """按候选键顺序读取章节号。
+        注意：字段名已通过 FORESHADOWING_FIELD_ALIASES 标准化，
+        此处保留多候选键兼容旧数据。
+        """
         return resolve_chapter_field(item, keys)
 
     def _collect_foreshadowing_records(self) -> List[Dict[str, Any]]:
@@ -198,6 +223,12 @@ class StatusReporter:
         for item in foreshadowing:
             if not isinstance(item, dict):
                 continue
+
+            # 标准化字段名
+            for old_key, new_key in FORESHADOWING_FIELD_ALIASES.items():
+                if old_key in item and new_key not in item:
+                    item[new_key] = item.pop(old_key)
+
             if _is_resolved_foreshadowing_status(item.get("status")):
                 continue
 
@@ -316,7 +347,7 @@ class StatusReporter:
         except Exception:
             record = None
 
-        self._reading_power_cache[chapter] = record
+        self._cache_reading_power(chapter, record)
         return record
 
     def _get_chapter_cool_points(self, chapter: int, chapter_data: Dict[str, Any]) -> Tuple[Optional[int], str]:

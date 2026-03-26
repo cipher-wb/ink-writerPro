@@ -110,6 +110,21 @@ cat "${SKILL_ROOT}/references/system-data-flow.md"
 | Step 5 | ⭐⭐ | 重新运行（幂等） |
 | Step 6 | ⭐⭐⭐ | 检查暂存区，决定提交/回滚 |
 
+#### 选项 B：跳审恢复（仅当审查已部分完成时可用）
+
+**适用条件**：
+- `.ink/review_metrics.json` 已存在且包含当前章节的审查记录
+- 或 `index.db` 的 `review_metrics` 表中已有当前章节的数据
+
+**执行流程**：
+1. 读取已有的审查指标
+2. 检查 `critical_count`：
+   - 若 `critical_count == 0`：直接跳入 Step 4（润色），使用已有审查结果
+   - 若 `critical_count > 0`：提示用户"审查发现 critical 问题，建议选择选项 A 重新审查"
+3. 在 `workflow_state.json` 中标记 `step3_recovery: "skip_review"`
+
+**优势**：避免重复消耗审查 Agent 的调用成本（每次审查需要 2-4 个 checker 并行调用）
+
 ## Step 4: 检测中断状态
 
 ```bash

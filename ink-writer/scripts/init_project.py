@@ -131,6 +131,7 @@ def _ensure_state_schema(state: Dict[str, Any]) -> Dict[str, Any]:
     - structured_relationships 已迁移到 index.db relationships 表
     - state.json 保持精简 (< 5KB)
     """
+    state.setdefault("schema_version", 6)
     state.setdefault("project_info", {})
     state.setdefault("progress", {})
     state.setdefault("protagonist_state", {})

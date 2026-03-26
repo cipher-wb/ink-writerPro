@@ -230,6 +230,42 @@ def generate_entity_id(entity_type: str, name: str, existing_ids: set) -> str:
 
 ---
 
+## 四B、角色语言档案（Language Profile）
+
+> 对于 B 级及以上角色（主角、核心配角、重要反派），必须在实体数据中维护语言档案，用于对话去AI化和OOC检查。
+
+**字段定义**（存储在 `index.db` 的 `entities` 表的 `attributes` JSON 字段中）：
+
+```json
+{
+  "language_profile": {
+    "signature_expressions": ["哼", "你这蝼蚁"],
+    "forbidden_expressions": ["总之", "由此可见", "客观来说"],
+    "sentence_tendency": "短句偏好，命令式语气",
+    "vocabulary_level": "古典文言色彩",
+    "speech_rhythm": "快节奏，少停顿",
+    "口头禅": "有趣",
+    "情绪表达方式": "冷淡克制，偶尔爆发"
+  }
+}
+```
+
+**字段说明**：
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `signature_expressions` | 是 | 角色标志性用语，1-3个 |
+| `forbidden_expressions` | 否 | 该角色绝不会说的话 |
+| `sentence_tendency` | 是 | 句式偏好（长句/短句/倒装/省略） |
+| `vocabulary_level` | 否 | 用词层次（口语/书面/文言/现代） |
+| `口头禅` | 否 | 高频口头禅 |
+
+**维护时机**：
+- `/ink-init` Step 2（角色骨架）时初始化主角和核心角色的语言档案
+- `/ink-write` Step 5（data-agent）在提取对话时，若发现角色语言特征变化，更新档案
+- `/ink-review`（ooc-checker）在检查对话时，参照语言档案判定是否OOC
+
+---
+
 ## 五、错误处理
 
 ### 5.1 别名冲突

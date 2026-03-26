@@ -184,6 +184,32 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflo
 - `Step 5`：只重跑 Data Agent 并校验 `state/index/summary`
 - `Step 6`：只处理 Git 备份与收尾验证
 
+### Step 前置验证协议（每个 Step 启动前强制执行）
+
+> **本协议为铁律，不可跳过、不可裁剪、不可合并到其他 Step。**
+
+每个 Step（1/2A/2B/3/4/5/6）启动前，必须执行以下验证：
+
+1. **前置 Step 完成检查**：
+   - 调用 `workflow detect` 读取 `.ink/workflow_state.json`
+   - 验证 `current_step` 是否为本 Step 的前一步且状态为 `completed`
+   - 若前置 Step 未完成 → **阻断**，输出错误：`"❌ 前置 Step {N} 未完成，禁止进入 Step {N+1}"`
+   - **唯一例外**：Step 1 的前置检查为 Step 0 完成（环境验证通过）
+
+2. **Step 开始标记**：
+   - 调用 `workflow start-step --step {当前Step号}`
+   - 写入 `workflow_state.json`：`{"current_step": "Step {N}", "status": "in_progress", "started_at": "{ISO时间}"}`
+
+3. **Step 完成标记**（在每个 Step 末尾执行）：
+   - 调用 `workflow complete-step --step {当前Step号}`
+   - 写入 `workflow_state.json`：`{"current_step": "Step {N}", "status": "completed", "completed_at": "{ISO时间}"}`
+
+4. **并步检测**：
+   - 若 `workflow_state.json` 中存在 `status: "in_progress"` 的 Step 且不是当前 Step → **阻断**
+   - 输出错误：`"❌ 检测到 Step {X} 仍在执行中，禁止并行启动 Step {Y}"`
+
+**违规处理**：若 Agent 跳过本协议直接执行 Step 内容，该 Step 的所有产出视为无效，必须回退重做。
+
 ### Step 1：脚本执行包构建（默认）/ Context Agent（兜底）
 
 默认路径：

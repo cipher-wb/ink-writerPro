@@ -92,6 +92,37 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 
 **Data Agent 直接执行** (无需调用外部 LLM)。
 
+### Step B.5：代称追踪（Pronoun Tracking）
+
+> 在实体提取完成后，对章节正文中的代称（他/她/他们/它）进行追踪，记录每个代称的指代对象。
+
+**执行流程**：
+
+1. **分段扫描**：逐段落扫描正文，维护"当前段落主语栈"
+2. **代称归属**：对每个代称（他/她/他们），根据上下文确定指代的角色
+   - 规则 1：段落内最近出现的同性别角色
+   - 规则 2：上一句的主语
+   - 规则 3：对话引语后的"他说/她说"指代说话者
+3. **混乱标记**：若同一段落出现 2+ 同性别角色且代称无法明确归属 → 标记 `pronoun_ambiguity`
+4. **输出**：将代称追踪结果写入 chapter_meta：
+
+```json
+{
+  "pronoun_tracking": {
+    "ambiguous_segments": [
+      {"paragraph": 5, "pronoun": "他", "candidates": ["萧炎", "药老"], "context": "..."}
+    ],
+    "total_pronouns": 45,
+    "ambiguous_count": 2,
+    "clarity_score": 95.6
+  }
+}
+```
+
+**与 proofreading-checker 的协作**：
+- Data Agent 在 Step B.5 生成代称追踪数据
+- proofreading-checker 在第3层（代称混乱检测）直接读取此数据，避免重复分析
+
 ### Step C: 实体消歧处理
 
 **置信度策略**:
@@ -321,6 +352,40 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style ex
   }
 }
 ```
+
+#### chapter_meta 版本化规范
+
+chapter_meta 写入 `state.json` 时，必须包含以下版本控制字段：
+
+```json
+{
+  "chapter_meta": {
+    "0099": {
+      "version": 1,
+      "updated_at": "2026-03-26T14:30:00Z",
+      "hook": { ... },
+      "pattern": { ... },
+      "ending": { ... }
+    }
+  }
+}
+```
+
+**版本规则**：
+- 首次写入：`version: 1`
+- 重写/更新时：`version` 自动 +1，`updated_at` 更新为当前时间
+- 读取时：始终读取最新版本（最大 version）
+- **历史保留**：若需要保留修改历史，将旧版本存入 `index.db` 的 `chapter_meta_history` 表：
+  ```sql
+  CREATE TABLE IF NOT EXISTS chapter_meta_history (
+    chapter INTEGER,
+    version INTEGER,
+    meta_json TEXT,
+    created_at TEXT,
+    PRIMARY KEY (chapter, version)
+  );
+  ```
+- Data Agent 在 Step D 写入 chapter_meta 时，若检测到已有记录，先将旧记录插入 history 表，再覆盖
 
 ---
 

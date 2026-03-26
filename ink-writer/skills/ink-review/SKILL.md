@@ -214,6 +214,21 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" update-state --
 若用户选择 B：
 - 不做正文修改，仅保留审查报告与指标记录，结束本次审查
 
+#### Step 7A：自动重审验证（仅在用户选择"立即修复"后触发）
+
+> **本步骤在 Step 7 修复完成后自动执行，不需要用户额外操作。**
+
+1. **触发条件**：用户选择了选项 A（立即修复），且 Agent 已完成正文修改
+2. **执行内容**：
+   - 仅调用核心 3 个 checker（consistency-checker、continuity-checker、ooc-checker）
+   - 使用与 Step 3 相同的 review_bundle 生成流程
+   - 最大并发数 = 2
+3. **结果判定**：
+   - 若 `critical_count == 0`：输出 `"✅ 重审通过，所有 critical 问题已消除"` → 进入 Step 8
+   - 若 `critical_count > 0`：输出 `"⚠️ 仍有 {N} 个 critical 问题未消除"`，列出剩余问题 → 交由用户决定是否继续修复
+4. **循环限制**：自动重审**最多执行 1 轮**，防止无限循环。第 2 轮起必须由用户手动触发 `/ink-review`
+5. **指标更新**：重审结果覆盖 Step 5 的 review_metrics（保留原始审查记录作为 `review_v1`，重审记录为 `review_v2`）
+
 ## Step 8: 收尾（完成任务）
 
 ```bash

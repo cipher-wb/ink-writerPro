@@ -19,6 +19,13 @@ from fastapi.staticfiles import StaticFiles
 from .path_guard import safe_resolve
 from .watcher import FileWatcher
 
+import os
+
+# ---------------------------------------------------------------------------
+# 可选认证：设置环境变量 INK_DASHBOARD_TOKEN 启用 Bearer Token 认证
+# ---------------------------------------------------------------------------
+_AUTH_TOKEN = os.environ.get("INK_DASHBOARD_TOKEN")
+
 # ---------------------------------------------------------------------------
 # 全局状态
 # ---------------------------------------------------------------------------
@@ -67,6 +74,23 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
         allow_headers=["*"],
     )
 
+    if _AUTH_TOKEN:
+        from starlette.middleware.base import BaseHTTPMiddleware
+        from starlette.requests import Request
+        from starlette.responses import JSONResponse
+
+        class TokenAuthMiddleware(BaseHTTPMiddleware):
+            async def dispatch(self, request: Request, call_next):
+                # 放行静态资源和SSE事件流
+                if request.url.path.startswith("/assets") or request.url.path == "/":
+                    return await call_next(request)
+                auth = request.headers.get("Authorization", "")
+                if not auth.startswith("Bearer ") or auth[7:] != _AUTH_TOKEN:
+                    return JSONResponse({"detail": "未授权访问"}, status_code=401)
+                return await call_next(request)
+
+        app.add_middleware(TokenAuthMiddleware)
+
     # ===========================================================
     # API：项目元信息
     # ===========================================================
@@ -101,6 +125,8 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
                 return []
             raise HTTPException(status_code=500, detail=f"数据库查询失败: {exc}") from exc
 
+    VALID_ENTITY_TYPES = {"角色", "地点", "物品", "势力", "技能", "阵营", "种族", "功法", "灵药", "秘境", "其他"}
+
     @app.get("/api/entities")
     def list_entities(
         entity_type: Optional[str] = Query(None, alias="type"),
@@ -112,6 +138,8 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
             params: list = []
             clauses: list[str] = []
             if entity_type:
+                if entity_type not in VALID_ENTITY_TYPES:
+                    raise HTTPException(400, f"无效的实体类型: {entity_type}")
                 clauses.append("type = ?")
                 params.append(entity_type)
             if not include_archived:

@@ -60,6 +60,30 @@ model: inherit
 
 ---
 
+### 新项目初期化降级（chapter ≤ 3）
+
+> 新项目前 3 章缺乏历史数据，多个数据源会返回空值。以下表格定义了各数据源的降级行为，**禁止因数据缺失而静默跳过任何板块**。
+
+当 `state.json.progress.current_chapter <= 3` 时，自动激活 `early_stage_degradation: true` 模式：
+
+| 数据源 | 正常读取 | 降级行为 | 降级默认值 |
+|--------|---------|---------|-----------|
+| `chapter_meta[N-1].hook` | 上章钩子 | 第1章无上章 → 使用开篇触发 | `{type: "开篇触发", strength: "strong", content: "从大纲第1章核心冲突推导"}` |
+| 最近模式统计 | 最近3-5章的 pattern_usage | 不足3章 → 跳过重复检测 | `skip_pattern_repeat_check: true` |
+| reading_power | 追读力趋势 | 无历史 → 仅基于题材 profile 的基线 | 读取 `genre_profiles.md` 对应题材的默认值 |
+| entity 出场记录 | 角色掉线检测 | 无历史 → 全部角色视为"首次出场" | `all_characters_fresh: true` |
+| strand_tracker | 三线平衡 | 无历史 → 不做平衡警告 | `skip_strand_balance_check: true` |
+| 伏笔追踪 | 未回收伏笔 | 无历史 → 空列表 | `foreshadowing: []` |
+| 债务追踪 | Override 债务 | 无历史 → 零债务 | `debt_balance: 0` |
+
+**执行规则**：
+1. 在 Step 0.5（环境检查）中读取 `current_chapter`，若 ≤ 3 则设置 `early_stage_degradation: true`
+2. 任务书的每个板块在引用上述数据源时，检查降级标记
+3. 降级时在对应板块标注 `[初期模式：{原因}]`，确保下游 Step 知晓数据精度有限
+4. **特殊处理**：第 1 章的"接住上章"板块改为"开篇触发"板块，内容从大纲第 1 章的核心冲突推导
+
+---
+
 ## 读取优先级与默认值
 
 | 字段 | 读取来源 | 缺失时默认值 |
@@ -130,6 +154,30 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 - 必须先把 `pack-json` 当作主输入。
 - 若 `pack-json` 已包含任务书 / Context Contract / Step 2A 直写提示的全部字段，直接整理输出，禁止继续读取 `extract-context --format json`。
 - 只在 `pack-json` 缺字段时，才允许做增量读取。
+
+### Context Token 动态预算
+
+> 根据章节阶段自动调整 Context Contract 的 token 预算，防止早期章节上下文过载，后期章节上下文不足。
+
+**预算分档表**：
+
+| 章节阶段 | 章节范围 | Context 总预算 | 说明 |
+|---------|---------|---------------|------|
+| 黄金三章 | 1-3 | 4000 tokens | 聚焦触发力，减少历史负担 |
+| 开篇期 | 4-30 | 6000 tokens | 世界观铺展，适量历史 |
+| 展开期 | 31-100 | 8000 tokens | 标准预算，三线交织 |
+| 长线期 | 101+ | 10000 tokens | 大量历史与伏笔追踪 |
+
+**预算执行规则**：
+1. 在 Step 0.5 中读取 `state.json.progress.current_chapter` 确定当前阶段
+2. 若 `preferences.json` 中存在 `context_dynamic_budget_*` 配置，以用户配置为准
+3. 超预算时按以下优先级截断（低优先级先截断）：
+   - P1（最后截断）：本章任务书核心字段（目标/阻力/代价/变化）
+   - P2：出场角色状态与红线
+   - P3：时间约束与伏笔追踪
+   - P4：追读力策略与风格指导
+   - P5（最先截断）：历史章节摘要（保留最近3章，截断更早的）
+4. 截断时在被截断 section 末尾标注 `…[TRUNCATED: 超出预算 {N} tokens]`
 
 ### Step 0.6: Context Contract 全量上下文包（按需）
 ```bash
