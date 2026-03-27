@@ -16,7 +16,7 @@ allowed-tools: Read Write Edit Grep Bash Task
 ## 执行原则
 
 1. 先校验输入完整性，再进入写作流程；缺关键输入时立即阻断。
-2. 审查与数据回写是硬步骤，`--fast`/`--minimal` 只允许降级可选环节。
+2. 审查与数据回写是硬步骤，不可跳过或降级。
 3. 参考资料严格按步骤按需加载，不一次性灌入全部文档。
 4. Step 2B 与 Step 4 职责分离：2B 只做风格转译，4 只做问题修复与质控。
 5. 任一步失败优先做最小回滚，不重跑全流程。
@@ -24,35 +24,6 @@ allowed-tools: Read Write Edit Grep Bash Task
 ## 模式定义
 
 - `/ink-write`：Step 1 → 2A → 2A.5 → 2B → 3 → 4 → 4.5 → 5 → 6
-- `/ink-write --fast`：Step 1 → 2A → 2A.5 → 3 → 4 → 4.5 → 5 → 6（跳过 2B）
-- `/ink-write --minimal`：Step 1 → 2A → 2A.5 → 3（仅3个基础审查）→ 4 → 4.5 → 5 → 6
-
-### 审查智能降级（Adaptive Review）
-
-> 长篇写作中，若连续多章质量稳定，自动降低审查强度以节省时间和API成本。
-
-**降级规则**：
-- 读取最近 3 章的 `review_metrics.overall_score`（从 `index.db` 查询）
-- 若最近 3 章 `overall_score` 均 ≥ 85 且 `critical_issues` 均为空：
-  - 标准模式自动降级为 `--fast` 模式的审查强度（跳过 Step 2B，条件审查器仍按 auto 路由）
-  - 输出提示：`"📊 连续3章高分（{s1}/{s2}/{s3}），审查自动降级为 fast 模式"`
-- 若最近 3 章 `overall_score` 均 ≥ 90 且无 `high` 以上问题：
-  - 标准模式自动降级为 `--minimal` 模式的审查强度（仅核心 3 个 checker）
-  - 输出提示：`"📊 连续3章优秀（{s1}/{s2}/{s3}），审查自动降级为 minimal 模式"`
-
-**恢复规则**：
-- 任一章 `overall_score` < 80 或出现 `critical` 问题 → 立即恢复为标准模式
-- 用户可随时通过 `--no-adaptive` 禁用智能降级
-
-**降级不影响的步骤**：
-- Step 2A.5（字数校验）始终执行
-- Step 5（Data Agent）始终完整执行
-- Step 6（Git 备份）始终执行
-
-**查询最近审查分数**：
-```bash
-python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index get-recent-review-metrics --limit 3
-```
 
 ### Agent 调用成本控制策略
 
@@ -60,11 +31,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index g
 
 #### 单章成本预算
 
-| 模式 | 预估 Agent 调用数 | 适用场景 |
-|------|-------------------|---------|
-| `--minimal` | 5 个（context/writer/3 checker/data） | 连续高分章节、过渡章 |
-| `--fast` | 6-8 个（+条件 checker） | 普通章节 |
-| 标准 | 7-10 个（+2B 风格适配+全量 checker） | 关键章/卷首章/低分后恢复 |
+每章预估 Agent 调用数：7-10 个（context + writer + 2B 风格适配 + 全量 checker + data）
 
 #### 成本观测（每章结束后输出）
 
@@ -74,7 +41,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index g
 本章 Agent 调用统计：
 - 总调用数: {N} 个
 - 实际启用 checker: {list}
-- 审查模式: {standard/fast/minimal}（{原因}）
+- 审查模式: standard
 - 耗时最长环节: {step} ({ms}ms)
 ```
 
@@ -82,9 +49,8 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index g
 
 #### 批量写作说明（`--batch N`）
 
-`--batch N` 的每章流程与单章 `/ink-write` 完全一致，不做任何成本优化或降级：
+`--batch N` 的每章流程与单章 `/ink-write` 完全一致：
 - 每章独立执行完整的 Step 0 → Step 6，不复用上一章的 context、checker 缓存或 Data Agent 结果
-- 审查降级仅遵循上方"审查智能降级"规则，不因批量模式额外加速降级
 - 详细编排逻辑见文件末尾"批量模式编排"区域
 
 #### 项目级成本仪表盘
@@ -99,16 +65,12 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - 总章节: {N} 章
 - 总 Agent 调用: {total} 次
 - 平均每章调用: {avg} 次
-- 审查降级节省: ~{percent}%（{saved} 次调用）
 - 最高成本章节: 第 {ch} 章（{count} 次调用，原因：{reason}）
 ```
 
-批量模式（可与上述模式组合）：
-- `/ink-write --batch N`：连续写 N 章，每章完整执行**标准模式**（最高规格）的全流程
-- `/ink-write --batch N --fast`：连续写 N 章，每章走 fast 模式
-- `/ink-write --batch N --minimal`：连续写 N 章，每章走 minimal 模式
+批量模式：
+- `/ink-write --batch N`：连续写 N 章，每章完整执行标准流程
 - 未指定 N 时默认 5 章
-- **`--batch` 不指定 `--fast`/`--minimal` 时，默认走标准模式（最高规格），禁止自动降级为 fast 或 minimal**
 - `--batch` 不改变任何单章内部流程，仅在 Step 6 完成后自动开始下一章的 Step 0
 
 最小产物（所有模式）：
@@ -120,9 +82,9 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 ### 流程硬约束（禁止事项）
 
 - **禁止并步**：不得将两个 Step 合并为一个动作执行（如同时做 2A 和 3）。
-- **禁止跳步**：不得跳过未被模式定义标记为可跳过的 Step。
+- **禁止跳步**：不得跳过任何 Step。
 - **禁止临时改名**：不得将 Step 的输出产物改写为非标准文件名或格式。
-- **禁止自创模式**：`--fast` / `--minimal` 只允许按上方定义裁剪步骤，不允许自创混合模式、"半步"或"简化版"。
+- **禁止自创模式**：不允许自创"简化版"、"快速版"或跳过任何标准流程步骤。
 - **禁止自审替代**：Step 3 审查必须由 Task 子代理执行，主流程不得内联伪造审查结论。
 - **禁止源码探测**：脚本调用方式以本文档与 data-agent 文档中的命令示例为准，命令失败时查日志定位问题，不去翻源码学习调用方式。
 - **禁止直写 state.json**：所有对 `.ink/state.json` 的写入必须通过 `ink.py` CLI 命令（`state process-chapter`、`update-state`、`workflow *`），禁止用 `Write`/`Edit` 工具直接修改。Step 5 Data Agent 执行期间，主流程不得调用任何写入 state.json 的命令。
@@ -160,7 +122,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
   - 触发：Step 4 必读。
 - `references/style-adapter.md`
   - 用途：Step 2B 风格转译规则，不改剧情事实。
-  - 触发：Step 2B 执行时必读（`--fast`/`--minimal` 跳过）。
+  - 触发：Step 2B 执行时必读。
 - `references/style-variants.md`
   - 用途：Step 1（内置 Contract）开头/钩子/节奏变体与重复风险控制。
   - 触发：Step 1 当需要做差异化设计时加载。
@@ -387,7 +349,7 @@ cat "${SKILL_ROOT}/../../references/shared/core-constraints.md"
 - **禁止"先英后中"**：不得先用英文工程化骨架（如 ABCDE 分段、Summary/Conclusion 框架）组织内容，再翻译成中文。
 - **中文叙事单元优先**：以"动作、反应、代价、情绪、场景、关系位移"为基本叙事单元，不使用英文结构标签驱动正文生成。
 - **禁止英文结论话术**：正文、审查说明、润色说明、变更摘要、最终报告中不得出现 Overall / PASS / FAIL / Summary / Conclusion 等英文结论标题。
-- **英文仅限机器标识**：CLI flag（`--fast`）、checker id（`consistency-checker`）、DB 字段名（`anti_ai_force_check`）、JSON 键名等不可改的接口名保持英文，其余一律使用简体中文。
+- **英文仅限机器标识**：CLI flag（`--batch`）、checker id（`consistency-checker`）、DB 字段名（`anti_ai_force_check`）、JSON 键名等不可改的接口名保持英文，其余一律使用简体中文。
 
 输出：
 - 章节草稿（可进入 Step 2A.5 字数校验）。
@@ -438,7 +400,7 @@ echo "当前章节字数: ${WORD_COUNT}"
 - Step 4 的修改范围必须限定在审查报告 `issues` 列表涉及的段落，加上 Anti-AI 终检标记的段落
 - 任何步骤发现前序步骤的输出有大纲/设定违规，必须回报而非自行修复
 
-### Step 2B：风格适配（`--fast` / `--minimal` 跳过）
+### Step 2B：风格适配
 
 执行前加载：
 ```bash
@@ -494,9 +456,7 @@ Task 传参硬约束：
 - `proofreading-checker`
 - `reader-simulator`
 
-模式说明：
-- 标准/`--fast`：核心 3 个 + auto 命中的条件审查器
-- `--minimal`：只跑核心 3 个（忽略条件审查器）
+审查范围：核心 3 个 + auto 命中的条件审查器（始终全量执行）。
 
 推荐调度顺序：
 1. `consistency-checker` + `continuity-checker` 并发（最多 2 个）
@@ -538,7 +498,6 @@ review_metrics 字段约束（当前工作流约定只传以下字段）：
 - `review_payload_json` 用于结构化扩展信息；黄金三章指标必须写入 `golden_three_metrics`。
 
 硬要求：
-- `--minimal` 也必须产出 `overall_score`。
 - 当 `chapter <= 3` 时，`golden-three-checker` 未通过不得放行。
 - 未落库 `review_metrics` 不得进入 Step 5。
 
@@ -841,7 +800,7 @@ FOR i = 1 TO N:
     执行 Step 0.6（重入续跑规则 — 若无残留任务则自动跳过）
     执行 Step 1（脚本执行包构建）
     执行 Step 2A（正文起草）
-    执行 Step 2B（风格适配 — --fast/--minimal 跳过）
+    执行 Step 2B（风格适配）
     执行 Step 3（审查 — 必须由 Task 子代理执行）
     执行 Step 4（润色）
     执行 Step 5（Data Agent）
