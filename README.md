@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-purple.svg)](https://claude.ai/claude-code)
-[![Version](https://img.shields.io/badge/Version-6.1.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-6.2.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 
 ## 项目简介
 
@@ -15,7 +15,7 @@
 - **6 道去AI味防线**（源头约束 → 风格转译 → 多维审查 → 终检修复 → 安全校验 → 长线监控）
 - **Strand Weave 三线编织**（Quest/Fire/Constellation 节奏系统）+ 25 章自动检查点
 - **38 种题材支持** + 9 个反套路库全覆盖
-- **智能审查降级** + 成本控制策略（长篇写作节省 30-50% Agent 调用）
+- **统一标准模式**：所有章节始终以最高规格执行完整 9 Step 流程，不降级不简化
 - **批量连写模式** `--batch N`：一次连写多章，每章严格执行完整 9 Step 流程，质量与单章一致
 
 ### 系统架构
@@ -110,19 +110,10 @@ RERANK_API_KEY=your_rerank_api_key
 
 ```bash
 /ink-plan 1           # 生成第 1 卷大纲
-/ink-write            # 写一章（标准模式）
-/ink-write --fast     # 写一章（快速模式，跳过风格适配）
-/ink-write --minimal  # 写一章（最简模式，仅 3 个基础审查）
+/ink-write            # 写一章（完整 9 Step 标准流程）
+/ink-write --batch 5  # 连续写 5 章（每章完整执行标准流程）
+/ink-write --batch    # 默认连续写 5 章
 /ink-review 1-5       # 审查第 1-5 章
-```
-
-#### 批量连写（`--batch`）
-
-```bash
-/ink-write --batch 5            # 连续写 5 章（标准模式）
-/ink-write --batch 5 --fast     # 连续写 5 章（快速模式）
-/ink-write --batch 5 --minimal  # 连续写 5 章（最简模式）
-/ink-write --batch              # 默认连续写 5 章
 ```
 
 `--batch N` 会自动从 `state.json` 读取当前进度，依次写第 `current + 1` 到 `current + N` 章。每章严格执行完整的 Step 0 → Step 6 流程，与手动逐章执行 `/ink-write` 完全一致。
@@ -177,7 +168,8 @@ model: sonnet
 
 | 版本 | 说明 |
 |------|------|
-| **v6.1.0 (当前)** | 新增 `--batch N` 批量连写模式，支持一次连续写多章，每章完整执行 9 Step 流程。 |
+| **v6.2.0 (当前)** | 删除 `--fast`/`--minimal` 模式，统一为标准模式（最高规格）；所有章节始终执行完整 9 Step 流程。 |
+| **v6.1.0** | 新增 `--batch N` 批量连写模式，支持一次连续写多章，每章完整执行 9 Step 流程。 |
 | **v6.0.0** | **大版本升级 — 22 项深度优化**。详见下方 v6.0.0 更新详情。 |
 | **v5.5.4** | 补齐写作链提示词强约束（流程硬约束、中文思维写作约束、Step 职责边界）；统一中文化审查/润色/Agent 报告文案。 |
 | **v5.5.3** | 新增统一 `preflight` 预检命令；写作链 CLI 示例统一为 UTF-8 运行方式。 |
@@ -206,7 +198,7 @@ model: sonnet
 | 6 | Token 预算 | 黄金三章（ch1-3）从 5000 → 8000 tokens |
 | 7 | 职责边界铁律 | Step 2A/2B/4 职责矩阵表 + 2B 自检零偏差 |
 | 8 | 改写安全校验 | 新增 Step 4.5（快照 + diff + 5 项检查 + 违规恢复） |
-| 9 | 审查智能降级 | 连续 3 章 ≥85 分自动降级，<80 分恢复，节省 30-50% 成本 |
+| 9 | ~~审查智能降级~~ | ~~已在 v6.2.0 移除~~ — 统一为标准模式，不再降级 |
 | 10 | 续写上下文 | ink-resume 所有续写路径强制先执行 Step 1 |
 
 #### P2 体验优化（8 项）
