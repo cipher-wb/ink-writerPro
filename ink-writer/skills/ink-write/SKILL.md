@@ -135,6 +135,9 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - `references/writing/genre-hook-payoff-library.md`
   - 用途：电竞/直播文/克苏鲁的钩子与微兑现快速库。
   - 触发：Step 1 题材命中 `esports/livestream/cosmic-horror` 时必读。
+- `references/anti-detection-writing.md`
+  - 用途：Step 2A 防AI检测源头写作指南（句长突发度/信息密度波动/逻辑跳跃/对话人类化/词汇意外性/段落碎片化/视角限制）。
+  - 触发：Step 2A 必读。
 
 ### writing（问题定向加读）
 
@@ -337,6 +340,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 执行前必须加载：
 ```bash
 cat "${SKILL_ROOT}/../../references/shared/core-constraints.md"
+cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 ```
 
 硬要求：
@@ -350,6 +354,13 @@ cat "${SKILL_ROOT}/../../references/shared/core-constraints.md"
 - **中文叙事单元优先**：以"动作、反应、代价、情绪、场景、关系位移"为基本叙事单元，不使用英文结构标签驱动正文生成。
 - **禁止英文结论话术**：正文、审查说明、润色说明、变更摘要、最终报告中不得出现 Overall / PASS / FAIL / Summary / Conclusion 等英文结论标题。
 - **英文仅限机器标识**：CLI flag（`--batch`）、checker id（`consistency-checker`）、DB 字段名（`anti_ai_force_check`）、JSON 键名等不可改的接口名保持英文，其余一律使用简体中文。
+
+防检测自检（交出草稿前必须完成）：
+- 检查是否存在连续 4+ 句长度在 15-25 字的"平坦区"，若有则插入碎句或长流句打破。
+- 检查是否有连续 500 字全部在推进情节，若有则插入无功能感官细节。
+- 检查对话是否所有角色风格和长度趋同，若有则差异化处理。
+- 检查单句段占比是否 ≥ 25%，不足则拆分或增加碎片段。
+- 以上自检发现问题时直接修复，不另起步骤。
 
 输出：
 - 章节草稿（可进入 Step 2A.5 字数校验）。
