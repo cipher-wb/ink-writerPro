@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-purple.svg)](https://claude.ai/claude-code)
-[![Version](https://img.shields.io/badge/Version-6.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-6.1.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 
 ## 项目简介
 
@@ -16,11 +16,12 @@
 - **Strand Weave 三线编织**（Quest/Fire/Constellation 节奏系统）+ 25 章自动检查点
 - **38 种题材支持** + 9 个反套路库全覆盖
 - **智能审查降级** + 成本控制策略（长篇写作节省 30-50% Agent 调用）
+- **批量连写模式** `--batch N`：一次连写多章，每章严格执行完整 9 Step 流程，质量与单章一致
 
 ### 系统架构
 
 ```
-Skills (8)     ink-init → ink-plan → ink-write → ink-review
+Skills (8)     ink-init → ink-plan → ink-write (支持 --batch 连写) → ink-review
                ink-query / ink-resume / ink-learn / ink-dashboard
 
 Agents (11)    context-agent / data-agent
@@ -44,6 +45,8 @@ Step 2A   正文起草              Step 3     多Agent审查（3+6 checker）
 Step 4    润色 + Anti-AI        Step 4.5   改写安全校验
 Step 5    Data Agent 回写       Step 6     Git 精确备份
 ```
+
+批量模式下，以上 9 Step 会严格串行重复 N 次，每章独立走完全流程。
 
 详细文档：
 
@@ -106,10 +109,30 @@ RERANK_API_KEY=your_rerank_api_key
 ### 5) 开始使用
 
 ```bash
-/ink-plan 1
-/ink-write 1
-/ink-review 1-5
+/ink-plan 1           # 生成第 1 卷大纲
+/ink-write            # 写一章（标准模式）
+/ink-write --fast     # 写一章（快速模式，跳过风格适配）
+/ink-write --minimal  # 写一章（最简模式，仅 3 个基础审查）
+/ink-review 1-5       # 审查第 1-5 章
 ```
+
+#### 批量连写（`--batch`）
+
+```bash
+/ink-write --batch 5            # 连续写 5 章（标准模式）
+/ink-write --batch 5 --fast     # 连续写 5 章（快速模式）
+/ink-write --batch 5 --minimal  # 连续写 5 章（最简模式）
+/ink-write --batch              # 默认连续写 5 章
+```
+
+`--batch N` 会自动从 `state.json` 读取当前进度，依次写第 `current + 1` 到 `current + N` 章。每章严格执行完整的 Step 0 → Step 6 流程，与手动逐章执行 `/ink-write` 完全一致。
+
+**批量模式保障机制**：
+- **串行执行**：第 i 章完整通过充分性闸门和验证后，才开始第 i+1 章
+- **章号交叉验证**：每章开始前从 `state.json` 重新读取进度，与预期章号比对，不一致则暂停
+- **章间清理**：自动清理上一章的 workflow 残留状态，确保每章干净启动
+- **失败处理**：单章失败时按回滚规则重试，重试仍失败则暂停并询问用户
+- **完成报告**：全部写完后输出汇总（完成数/总字数/平均评分/各章概览）
 
 如需排查本地 CLI / 插件目录 / 项目根解析问题，可直接运行统一预检：
 
@@ -154,7 +177,8 @@ model: sonnet
 
 | 版本 | 说明 |
 |------|------|
-| **v6.0.0 (当前)** | **大版本升级 — 22 项深度优化**。详见下方 v6.0.0 更新详情。 |
+| **v6.1.0 (当前)** | 新增 `--batch N` 批量连写模式，支持一次连续写多章，每章完整执行 9 Step 流程。 |
+| **v6.0.0** | **大版本升级 — 22 项深度优化**。详见下方 v6.0.0 更新详情。 |
 | **v5.5.4** | 补齐写作链提示词强约束（流程硬约束、中文思维写作约束、Step 职责边界）；统一中文化审查/润色/Agent 报告文案。 |
 | **v5.5.3** | 新增统一 `preflight` 预检命令；写作链 CLI 示例统一为 UTF-8 运行方式。 |
 | **v5.5.0** | 新增只读可视化 Dashboard Skill（`/ink-dashboard`）与实时刷新能力。 |
