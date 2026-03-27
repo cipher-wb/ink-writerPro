@@ -90,6 +90,42 @@ Optional (only if they exist):
 
 If 总纲.md lacks volume ranges / core conflict / climax, ask the user to fill those before proceeding.
 
+### 已写正文回顾（当 `progress.current_chapter > 0` 时必须执行）
+
+> 当项目已有已写正文时，大纲规划必须参考实际写作成果，避免新卷大纲与已写内容脱节。
+
+**触发条件**：`state.json` 中 `progress.current_chapter > 0`（即至少写过1章正文）。第1卷首次规划时跳过此步。
+
+**必须加载的已写成果**：
+
+1. **章节摘要**（了解已发生的所有事件）：
+   ```bash
+   # 读取最近 10 章摘要（或全部摘要，取较少者）
+   ls "$PROJECT_ROOT/.ink/summaries/" | tail -10 | while read f; do cat "$PROJECT_ROOT/.ink/summaries/$f"; echo "---"; done
+   ```
+
+2. **角色当前状态**（了解角色在正文中的实际发展）：
+   ```bash
+   python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index query-entities --type character --limit 20
+   ```
+
+3. **未闭合伏笔与钩子**（了解哪些线索必须在后续卷中回收）：
+   ```bash
+   python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" state get-open-threads
+   ```
+
+4. **上一卷末章摘要**（了解衔接点）：
+   ```bash
+   # 读取上一卷最后一章的摘要
+   cat "$PROJECT_ROOT/.ink/summaries/ch$(printf '%04d' ${last_volume_end_chapter}).md"
+   ```
+
+**以上数据的使用规则**：
+- 新卷大纲必须**承接**已写正文中的角色状态、关系变化、未闭合伏笔，不得与之矛盾。
+- 若总纲中对本卷的设想与已写正文发展出现冲突，以**已写正文为准**——列出冲突项并提示用户，建议更新总纲后再继续。
+- 未闭合伏笔中标记为 P0（紧迫）的线索，必须在新卷大纲中安排回收章节。
+- 角色状态查询结果中的能力/关系/认知，作为新卷角色行为的**起点约束**。
+
 ## 2) Build setting baseline from 总纲 + 世界观
 目标：在不推翻现有内容的前提下，让设定集从“骨架模板”进入“可规划可写作”的基线状态。
 
@@ -127,7 +163,8 @@ cat "${SKILL_ROOT}/../../templates/output/大纲-卷节拍表.md"
 Must satisfy (hard requirements):
 - **中段反转（必填）**：不得留空；若无，写 `无（理由：...）`
 - **危机链**：至少 3 次递增（表格 1-3 行不得空）
-- **卷末新钩子**：必须能落到“最后一章的章末未闭合问题”
+- **卷末新钩子**：必须能落到”最后一章的章末未闭合问题”
+- **已写成果承接**（当有已写正文时）：节拍表的起始状态必须与上一卷末章摘要中的角色状态、场景位置、未闭合问题一致；P0 伏笔必须在节拍表中标注回收位置
 
 Write output:
 ```bash
