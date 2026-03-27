@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-purple.svg)](https://claude.ai/claude-code)
-[![Version](https://img.shields.io/badge/Version-6.2.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-6.3.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 
 ## 项目简介
 
@@ -12,7 +12,7 @@
 **核心能力**：
 - **防幻觉三定律**（大纲即法律 / 设定即物理 / 发明需识别）+ 写作权限卡
 - **9 维审查体系**（3 核心 + 6 条件审查器，含读者模拟器）+ 统一评分权重
-- **6 道去AI味防线**（源头约束 → 风格转译 → 多维审查 → 终检修复 → 安全校验 → 长线监控）
+- **7 道去AI味防线**（防检测源头写作 → 风格转译 → anti-detection-checker 统计检测 → 终检修复 → 安全校验 → 长线监控 → 充分性闸门拦截）
 - **Strand Weave 三线编织**（Quest/Fire/Constellation 节奏系统）+ 25 章自动检查点
 - **38 种题材支持** + 9 个反套路库全覆盖
 - **统一标准模式**：所有章节始终以最高规格执行完整 9 Step 流程，不降级不简化
@@ -24,8 +24,8 @@
 Skills (8)     ink-init → ink-plan → ink-write (支持 --batch 连写) → ink-review
                ink-query / ink-resume / ink-learn / ink-dashboard
 
-Agents (11)    context-agent / data-agent
-               consistency / continuity / ooc (核心 3)
+Agents (12)    context-agent / data-agent
+               consistency / continuity / ooc / anti-detection (核心 4)
                reader-pull / high-point / pacing / golden-three
                proofreading / reader-simulator (条件 6)
 
@@ -168,7 +168,8 @@ model: sonnet
 
 | 版本 | 说明 |
 |------|------|
-| **v6.2.0 (当前)** | 删除 `--fast`/`--minimal` 模式，统一为标准模式（最高规格）；所有章节始终执行完整 9 Step 流程。 |
+| **v6.3.0 (当前)** | 新增防AI检测体系：Step 2A 源头防检测写作指南 + `anti-detection-checker` 核心审查器（6层统计特征检测）+ Step 4 AI味定向修复 + 充分性闸门拦截。 |
+| **v6.2.0** | 删除 `--fast`/`--minimal` 模式，统一为标准模式（最高规格）；所有章节始终执行完整 9 Step 流程。 |
 | **v6.1.0** | 新增 `--batch N` 批量连写模式，支持一次连续写多章，每章完整执行 9 Step 流程。 |
 | **v6.0.0** | **大版本升级 — 22 项深度优化**。详见下方 v6.0.0 更新详情。 |
 | **v5.5.4** | 补齐写作链提示词强约束（流程硬约束、中文思维写作约束、Step 职责边界）；统一中文化审查/润色/Agent 报告文案。 |
