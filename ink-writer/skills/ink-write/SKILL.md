@@ -80,21 +80,12 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index g
 
 数据来源：`.ink/observability/call_trace.jsonl` + `data_agent_timing.jsonl`
 
-#### 批量写作成本优化（连续写多章时）
+#### 批量写作说明（`--batch N`）
 
-当用户请求连续写作多章（如 `/ink-write 10-15`）时，启用批量优化策略：
-
-| 优化项 | 规则 | 节省 |
-|--------|------|------|
-| context 复用 | 若相邻两章在同一场景/时间段，Step 1 增量更新而非全量重建 | ~20% context 成本 |
-| checker 结果缓存 | pacing-checker 的 strand 历史数据在批次内缓存，不重复查 DB | ~5% 查询成本 |
-| 审查降级加速 | 批量模式中，连续 2 章（而非 3 章）高分即触发降级 | ~30% 审查成本 |
-| Data Agent 批合并 | 连续 2 章的实体提取结果合并一次写入（仅 index 操作） | ~10% 写入成本 |
-
-**批量模式限制**：
-- 每章仍然独立执行 Step 2A（正文生成不可合并）
-- Step 3 审查不可跳过（即使降级到 minimal）
-- 每 5 章强制执行一次标准模式审查（防止质量漂移）
+`--batch N` 的每章流程与单章 `/ink-write` 完全一致，不做任何成本优化或降级：
+- 每章独立执行完整的 Step 0 → Step 6，不复用上一章的 context、checker 缓存或 Data Agent 结果
+- 审查降级仅遵循上方"审查智能降级"规则，不因批量模式额外加速降级
+- 详细编排逻辑见文件末尾"批量模式编排"区域
 
 #### 项目级成本仪表盘
 
@@ -113,10 +104,11 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 ```
 
 批量模式（可与上述模式组合）：
-- `/ink-write --batch N`：连续写 N 章，每章完整执行上述对应模式的全流程
+- `/ink-write --batch N`：连续写 N 章，每章完整执行**标准模式**（最高规格）的全流程
 - `/ink-write --batch N --fast`：连续写 N 章，每章走 fast 模式
 - `/ink-write --batch N --minimal`：连续写 N 章，每章走 minimal 模式
 - 未指定 N 时默认 5 章
+- **`--batch` 不指定 `--fast`/`--minimal` 时，默认走标准模式（最高规格），禁止自动降级为 fast 或 minimal**
 - `--batch` 不改变任何单章内部流程，仅在 Step 6 完成后自动开始下一章的 Step 0
 
 最小产物（所有模式）：
