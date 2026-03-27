@@ -27,13 +27,13 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 
 ## 审查路由模式
 
-- 标准/`--fast`：`auto` 路由（核心 3 个 + 条件命中）。
-- `--minimal`：固定核心 3 个（不启用条件审查器）。
+`auto` 路由：核心 4 个始终执行 + 条件审查器按命中执行。
 
 核心审查器（始终执行）：
 - `consistency-checker`
 - `continuity-checker`
 - `ooc-checker`
+- `anti-detection-checker`
 
 条件审查器（仅 `auto` 命中时执行）：
 - `golden-three-checker`
