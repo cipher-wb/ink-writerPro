@@ -197,8 +197,25 @@ export PROJECT_ROOT="$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "$
 
 **硬门槛**：`preflight` 必须成功。它统一校验 `CLAUDE_PLUGIN_ROOT` 派生出的 `SKILL_ROOT` / `SCRIPTS_DIR`、`ink.py`、`extract_chapter_context.py` 和解析出的 `PROJECT_ROOT`。任一失败都立即阻断。
 
+**大纲覆盖硬检查**（preflight 通过后、进入 Step 0.5 之前必须执行）：
+
+```bash
+python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}” extract-context --chapter {chapter_num} --format pack 2>&1 | head -5
+```
+
+检查输出前5行是否包含 `⚠️` 或 `未找到` 或 `不存在`。若包含，说明第 `{chapter_num}` 章没有详细大纲覆盖。
+
+**处理规则**：
+- 若输出包含”大纲文件不存在”或”未找到第X章的大纲” → **立即阻断**，输出：
+  ```
+  ❌ 第{chapter_num}章没有详细大纲，禁止写作。
+  请先执行 /ink-plan 生成对应卷的详细大纲，再重新执行 /ink-write。
+  ```
+- 禁止在无大纲时自行编造章节内容，禁止用总纲替代详细大纲。
+- 此检查不可跳过、不可兜底、不可降级。
+
 输出：
-- “已就绪输入”与“缺失输入”清单；缺失则阻断并提示先补齐。
+- “已就绪输入”与”缺失输入”清单；缺失则阻断并提示先补齐。
 
 ### Step 0.5：工作流断点记录（best-effort，不阻断）
 
@@ -791,11 +808,23 @@ sqlite3 "${PROJECT_ROOT}/.ink/index.db" "SELECT COUNT(*) FROM scenes WHERE chapt
 2. 读取 `state.json` 获取 `progress.current_chapter`，计算：
    - `batch_start = current_chapter + 1`
    - `batch_end = batch_start + N - 1`
-3. 向用户输出批次计划：
+3. **大纲覆盖批量验证**（必做）：对范围内每一章执行大纲覆盖检查：
+   ```bash
+   for ch in $(seq {batch_start} {batch_end}); do
+     python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract-context --chapter $ch --format pack 2>&1 | head -3
+   done
    ```
-   📋 批量写作计划：第{batch_start}章 → 第{batch_end}章（共{N}章，{mode}模式）
+   若任一章输出包含 `⚠️` 或 `未找到` 或 `不存在`，立即阻断并输出：
    ```
-4. 不做额外预检，直接进入第一章的 Step 0（第一章的 Step 0 自带完整预检）。
+   ❌ 第{ch}章没有详细大纲，批量写作中止。
+   当前大纲覆盖范围不足以支持第{batch_start}-{batch_end}章。
+   请先执行 /ink-plan 生成缺失卷的详细大纲。
+   ```
+4. 向用户输出批次计划：
+   ```
+   📋 批量写作计划：第{batch_start}章 → 第{batch_end}章（共{N}章）
+   ✅ 大纲覆盖验证通过
+   ```
 
 ### 章节循环
 
