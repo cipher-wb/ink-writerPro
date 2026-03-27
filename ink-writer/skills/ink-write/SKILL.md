@@ -458,6 +458,7 @@ Task 传参硬约束：
 - `consistency-checker`
 - `continuity-checker`
 - `ooc-checker`
+- `anti-detection-checker`
 
 条件审查器（`auto` 命中时执行）：
 - `golden-three-checker`
@@ -471,7 +472,7 @@ Task 传参硬约束：
 
 推荐调度顺序：
 1. `consistency-checker` + `continuity-checker` 并发（最多 2 个）
-2. `ooc-checker`
+2. `ooc-checker` + `anti-detection-checker` 并发（最多 2 个）
 3. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker` → `reader-simulator`
 
 审查指标落库（必做）：
@@ -492,7 +493,7 @@ review_metrics 字段约束（当前工作流约定只传以下字段）：
   "start_chapter": 100,
   "end_chapter": 100,
   "overall_score": 85.0,
-  "dimension_scores": {"爽点密度": 8.5, "设定一致性": 8.0, "节奏控制": 7.8, "人物塑造": 8.2, "连贯性": 9.0, "追读力": 8.7},
+  "dimension_scores": {"爽点密度": 8.5, "设定一致性": 8.0, "节奏控制": 7.8, "人物塑造": 8.2, "连贯性": 9.0, "追读力": 8.7, "AI味检测": 7.2},
   "severity_counts": {"critical": 0, "high": 1, "medium": 2, "low": 0},
   "critical_issues": ["问题描述"],
   "report_file": "审查报告/第100-100章审查报告.md",
@@ -501,6 +502,7 @@ review_metrics 字段约束（当前工作流约定只传以下字段）：
     "selected_checkers": ["consistency-checker", "continuity-checker"],
     "timeline_gate": "pass",
     "anti_ai_force_check": "pass",
+    "anti_detection_score": 72,
     "golden_three_metrics": {}
   }
 }
@@ -524,7 +526,14 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 1. 修复 `critical`（必须）
 2. 修复 `high`（不能修复则记录 deviation）
 3. 处理 `medium/low`（按收益择优）
-4. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
+4. **AI味定向修复**（根据 `anti-detection-checker` 的 `fix_priority` 列表逐项修复）：
+   - 句长平坦区：在指定位置插入碎句（≤8字）或合并为长流句（≥35字）
+   - 信息密度无波动：在指定位置插入无功能感官句（环境/声音/温度/气味细节）
+   - 因果链过密：删除指定位置的中间因果环节，让读者自行推断
+   - 对话同质：按指定角色差异化对话长度和风格（加入省略/打断/反问/语气词）
+   - 段落过于工整：拆分指定长段为碎片段，增加单句段
+   - 视角泄露：改写为POV角色的有限感知（猜测/推断/不确定）
+5. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
 
 黄金三章定向修复（当 `chapter <= 3` 时必须执行）：
 - 前移触发点，禁止把强事件压到开头窗口之后。
@@ -727,6 +736,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflo
 2. Step 3 已产出 `overall_score` 且 `review_metrics` 成功落库
 3. Step 4 已处理全部 `critical`，`high` 未修项有 deviation 记录
 4. Step 4 的 `anti_ai_force_check=pass`（基于全文检查；fail 时不得进入 Step 5）
+4b. Step 4 已处理 `anti-detection-checker` 的全部 `high` 问题（AI味评分 ≥ 60 后方可放行）
 5. Step 5 已回写 `state.json`、`index.db`、`summaries/ch{chapter_padded}.md`
 6. 若开启性能观测，已读取最新 timing 记录并输出结论
 
