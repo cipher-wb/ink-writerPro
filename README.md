@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Compatible-purple.svg)](https://claude.ai/claude-code)
-[![Version](https://img.shields.io/badge/Version-6.3.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-6.3.1-green.svg)](ink-writer/.claude-plugin/plugin.json)
 
 ## 项目简介
 
@@ -168,7 +168,8 @@ model: sonnet
 
 | 版本 | 说明 |
 |------|------|
-| **v6.3.0 (当前)** | 新增防AI检测体系：Step 2A 源头防检测写作指南 + `anti-detection-checker` 核心审查器（6层统计特征检测）+ Step 4 AI味定向修复 + 充分性闸门拦截。 |
+| **v6.3.1 (当前)** | 修复批量连写中途停止问题（每章循环注入防压缩提醒）；字数硬下限提升至 2200 字无豁免；大纲覆盖硬检查（无大纲禁止写作）；ink-plan 生成后续卷大纲时参考已写正文。 |
+| **v6.3.0** | 新增防AI检测体系：Step 2A 源头防检测写作指南 + `anti-detection-checker` 核心审查器（6层统计特征检测）+ Step 4 AI味定向修复 + 充分性闸门拦截。 |
 | **v6.2.0** | 删除 `--fast`/`--minimal` 模式，统一为标准模式（最高规格）；所有章节始终执行完整 9 Step 流程。 |
 | **v6.1.0** | 新增 `--batch N` 批量连写模式，支持一次连续写多章，每章完整执行 9 Step 流程。 |
 | **v6.0.0** | **大版本升级 — 22 项深度优化**。详见下方 v6.0.0 更新详情。 |
