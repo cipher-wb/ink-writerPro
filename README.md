@@ -6,18 +6,74 @@
 
 基于 Claude Code 的**工业化长篇网文创作系统**。支持 200 万字（600+ 章）连续创作，每章自动执行 9 步标准流程（上下文→写作→审查→润色→数据回写），跨会话状态持久化，防幻觉三定律 + 11 Agent 审查 + 去 AI 味 + 节奏控制。
 
-## 安装
+---
+
+## 安装（详细步骤）
+
+### 前置条件
+
+在安装之前，请确保你的电脑上已经安装了以下工具：
+
+- **Claude Code**（Anthropic 官方 CLI）— [安装指南](https://docs.anthropic.com/en/docs/claude-code/overview)
+- **Python 3.10+** — [下载地址](https://www.python.org/downloads/)
+- **Git** — [下载地址](https://git-scm.com/downloads)
+
+### 第一步：克隆本仓库到本地
+
+打开终端（Mac 上叫"终端"，Windows 上叫"命令提示符"或"PowerShell"），输入：
 
 ```bash
-# 1. 添加插件源并安装
-claude plugin marketplace add cipher-wb/ink-writerPro --scope user
-claude plugin install ink-writer@ink-writer-marketplace --scope user
-
-# 2. 安装 Python 依赖
-pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/requirements.txt
+git clone https://github.com/cipher-wb/ink-writerPro.git
 ```
 
+> 如果仓库是私有的，需要先配置 GitHub 账号权限。可以用 HTTPS + Personal Access Token，或 SSH Key。
+
+这会在当前目录下创建一个 `ink-writerPro` 文件夹。
+
+### 第二步：安装为 Claude Code 插件
+
+```bash
+claude plugin install --path /你的完整路径/ink-writerPro/ink-writer --scope user
+```
+
+**注意**：把 `/你的完整路径/` 替换成你实际的路径。举例：
+
+- Mac: `claude plugin install --path /Users/张三/projects/ink-writerPro/ink-writer --scope user`
+- Windows: `claude plugin install --path C:\Users\张三\projects\ink-writerPro\ink-writer --scope user`
+
+> 路径必须指向 `ink-writerPro/ink-writer` 这个子目录（不是根目录）。
+
+### 第三步：安装 Python 依赖
+
+```bash
+cd ink-writerPro
+pip install -r requirements.txt
+```
+
+> 如果提示 `pip` 找不到，试试 `pip3 install -r requirements.txt`。
+
+### 安装完成！
+
+打开 Claude Code，输入 `/ink-init` 如果看到初始化引导，说明安装成功。
+
+### 后续更新
+
+当有新版本发布时，只需两步：
+
+```bash
+# 1. 进入之前克隆的目录，拉取最新代码
+cd ink-writerPro
+git pull
+
+# 2. 重新安装插件（会自动覆盖旧版本）
+claude plugin install --path ./ink-writer --scope user
+```
+
+---
+
 ## 使用
+
+在 Claude Code 中输入以下命令：
 
 ```bash
 /ink-init              # 初始化小说项目（交互式收集设定）
