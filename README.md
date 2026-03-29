@@ -8,66 +8,52 @@
 
 ---
 
-## 安装（详细步骤）
+## 安装
 
 ### 前置条件
 
-在安装之前，请确保你的电脑上已经安装了以下工具：
-
 - **Claude Code**（Anthropic 官方 CLI）— [安装指南](https://docs.anthropic.com/en/docs/claude-code/overview)
 - **Python 3.10+** — [下载地址](https://www.python.org/downloads/)
-- **Git** — [下载地址](https://git-scm.com/downloads)
 
-### 第一步：克隆本仓库到本地
+### 第一步：从插件市场安装
 
-打开终端（Mac 上叫"终端"，Windows 上叫"命令提示符"或"PowerShell"），输入：
-
-```bash
-git clone https://github.com/cipher-wb/ink-writerPro.git
-```
-
-> 如果仓库是私有的，需要先配置 GitHub 账号权限。可以用 HTTPS + Personal Access Token，或 SSH Key。
-
-这会在当前目录下创建一个 `ink-writerPro` 文件夹。
-
-### 第二步：安装为 Claude Code 插件
+打开终端，依次运行以下两条命令：
 
 ```bash
-claude plugin install --path /你的完整路径/ink-writerPro/ink-writer --scope user
+# 添加插件源
+claude plugin marketplace add cipher-wb/ink-writerPro --scope user
+
+# 安装插件
+claude plugin install ink-writer@ink-writer-marketplace --scope user
 ```
 
-**注意**：把 `/你的完整路径/` 替换成你实际的路径。举例：
-
-- Mac: `claude plugin install --path /Users/张三/projects/ink-writerPro/ink-writer --scope user`
-- Windows: `claude plugin install --path C:\Users\张三\projects\ink-writerPro\ink-writer --scope user`
-
-> 路径必须指向 `ink-writerPro/ink-writer` 这个子目录（不是根目录）。
-
-### 第三步：安装 Python 依赖
+### 第二步：安装 Python 依赖
 
 ```bash
-cd ink-writerPro
-pip install -r requirements.txt
+pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/requirements.txt
 ```
 
-> 如果提示 `pip` 找不到，试试 `pip3 install -r requirements.txt`。
+> 如果提示 `pip` 找不到，试试 `pip3`。
 
 ### 安装完成！
 
-打开 Claude Code，输入 `/ink-init` 如果看到初始化引导，说明安装成功。
+打开 Claude Code，输入 `/ink-init`，如果看到初始化引导，说明安装成功。
 
 ### 后续更新
 
-当有新版本发布时，只需两步：
+当有新版本发布时，在 Claude Code 中运行：
+
+```
+/plugin update
+```
+
+或在终端运行：
 
 ```bash
-# 1. 进入之前克隆的目录，拉取最新代码
-cd ink-writerPro
-git pull
-
-# 2. 重新安装插件（会自动覆盖旧版本）
-claude plugin install --path ./ink-writer --scope user
+claude plugin install ink-writer@ink-writer-marketplace --scope user
 ```
+
+即可自动拉取最新版本。
 
 ---
 
