@@ -218,6 +218,46 @@ python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}”
 输出：
 - “已就绪输入”与”缺失输入”清单；缺失则阻断并提示先补齐。
 
+**写作前里程碑检查点**（大纲检查通过后、逾期伏笔检查之前执行）：
+
+读取 `progress.current_chapter`，计算 `next_chapter = current_chapter + 1`。按以下优先级检测（**只触发最高级别的一条**，不重复弹窗）：
+
+1. 若 `next_chapter % 200 == 0`（200章里程碑）：
+   使用 AskUserQuestion 询问用户：
+   ```
+   🏆 第{next_chapter}章是 200 章里程碑。
+   建议在写作前运行以下审查（确保长篇数据完整性与叙事质量）：
+     1. /ink-audit deep   — 全量数据对账（~30分钟）
+     2. /ink-macro-review Tier3 — 跨卷叙事审查（需要单独会话执行）
+   是否先运行审查？输入 yes 暂停写作去审查，输入 skip 跳过直接写作。
+   ```
+   - 用户回答 yes → 输出”请在新会话中运行上述命令，完成后重新执行 /ink-write”，然后**终止本次 ink-write**。
+   - 用户回答 skip → 继续执行后续步骤。
+
+2. 否则，若 `next_chapter % 50 == 0`（50章检查点）：
+   使用 AskUserQuestion 询问用户：
+   ```
+   📋 第{next_chapter}章是 50 章检查点。
+   建议在写作前运行以下审查（及时发现数据漂移与结构问题）：
+     1. /ink-audit standard — 标准数据对账（~10分钟）
+     2. /ink-macro-review Tier2 — 宏观叙事审查（需要单独会话执行）
+   是否先运行审查？输入 yes 暂停写作去审查，输入 skip 跳过直接写作。
+   ```
+   - 处理逻辑同上。
+
+3. 否则，若 `next_chapter % 25 == 0`（25章快检点）：
+   使用 AskUserQuestion 询问用户：
+   ```
+   🔍 第{next_chapter}章是 25 章快检点。
+   建议运行 /ink-audit quick 进行快速数据健康检查（~2分钟）。
+   是否先运行？输入 yes 暂停写作去审查，输入 skip 跳过直接写作。
+   ```
+   - 处理逻辑同上。
+
+4. 否则 → 无提示，直接继续。
+
+**注意**：此检查为友好提醒，用户可随时 skip。不阻断写作流程。
+
 **逾期伏笔检查**（大纲检查通过后、进入 Step 0.5 之前执行）：
 
 ```bash

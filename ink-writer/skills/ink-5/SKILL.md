@@ -70,6 +70,46 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" state g
 - `batch_start = current_chapter + 1`
 - `batch_end = batch_start + 4`
 
+### 1.1.5 批次前里程碑检查点
+
+检查本批次 `[batch_start, batch_end]` 范围内是否包含里程碑章节。按以下优先级检测（**只触发最高级别的一条**，不重复弹窗）：
+
+1. 若范围内包含200的整数倍（计算: `(batch_start - 1) // 200 < batch_end // 200`）：
+   使用 AskUserQuestion 询问用户：
+   ```
+   🏆 本批次将跨越 200 章里程碑。
+   建议在写作前运行以下审查（确保长篇数据完整性与叙事质量）：
+     1. /ink-audit deep   — 全量数据对账（~30分钟）
+     2. /ink-macro-review Tier3 — 跨卷叙事审查（需要单独会话执行）
+   是否先运行审查？输入 yes 暂停去审查，输入 skip 跳过直接开始批量写作。
+   ```
+   - 用户回答 yes → 输出"请在新会话中运行上述命令，完成后重新执行 /ink-5"，然后**终止本次 ink-5**。
+   - 用户回答 skip → 继续执行后续步骤。
+
+2. 否则，若范围内包含50的整数倍（计算: `(batch_start - 1) // 50 < batch_end // 50`）：
+   使用 AskUserQuestion 询问用户：
+   ```
+   📋 本批次将跨越 50 章检查点。
+   建议在写作前运行以下审查（及时发现数据漂移与结构问题）：
+     1. /ink-audit standard — 标准数据对账（~10分钟）
+     2. /ink-macro-review Tier2 — 宏观叙事审查（需要单独会话执行）
+   是否先运行审查？输入 yes 暂停去审查，输入 skip 跳过直接开始批量写作。
+   ```
+   - 处理逻辑同上。
+
+3. 否则，若范围内包含25的整数倍（计算: `(batch_start - 1) // 25 < batch_end // 25`）：
+   使用 AskUserQuestion 询问用户：
+   ```
+   🔍 本批次将跨越 25 章快检点。
+   建议运行 /ink-audit quick 进行快速数据健康检查（~2分钟）。
+   是否先运行？输入 yes 暂停去审查，输入 skip 跳过直接开始批量写作。
+   ```
+   - 处理逻辑同上。
+
+4. 否则 → 无提示，直接继续。
+
+**注意**：此检查为友好提醒，用户可随时 skip。不阻断写作流程。
+
 ### 1.2 大纲覆盖验证
 
 对 `batch_start` 到 `batch_end` 每一章检查大纲覆盖：
