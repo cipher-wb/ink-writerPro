@@ -1020,12 +1020,62 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
             return [dict(row) for row in rows]
 
     def get_characters_evolution_summary(self, entity_ids: list, max_entries_per_char: int = 10) -> Dict[str, list]:
-        """批量获取多个角色的演变摘要"""
+        """批量获取多个角色的演变摘要（单次SQL查询，避免N+1）"""
+        if not entity_ids:
+            return {}
         result: Dict[str, list] = {}
-        for eid in entity_ids:
-            entries = self.get_character_evolution(eid, limit=max_entries_per_char)
-            if entries:
-                result[eid] = entries
+        try:
+            with self._get_conn() as conn:
+                placeholders = ",".join("?" for _ in entity_ids)
+                rows = conn.execute(
+                    f"""SELECT entity_id, chapter, arc_phase, personality_delta,
+                               voice_sample, motivation_shift, relationship_shifts
+                        FROM character_evolution_ledger
+                        WHERE entity_id IN ({placeholders})
+                        ORDER BY entity_id, chapter ASC""",
+                    entity_ids,
+                ).fetchall()
+                for row in rows:
+                    row_dict = dict(row)
+                    eid = row_dict.get("entity_id")
+                    if eid:
+                        result.setdefault(eid, [])
+                        if len(result[eid]) < max_entries_per_char:
+                            result[eid].append(row_dict)
+        except Exception:
+            # 回退到逐个查询
+            for eid in entity_ids:
+                entries = self.get_character_evolution(eid, limit=max_entries_per_char)
+                if entries:
+                    result[eid] = entries
+        return result
+
+    def get_relationship_events_batch(self, entity_ids: list, limit_per_entity: int = 20) -> Dict[str, list]:
+        """批量获取多个角色的关系事件（单次SQL查询，避免N+1）"""
+        if not entity_ids:
+            return {}
+        result: Dict[str, list] = {}
+        try:
+            with self._get_conn() as conn:
+                placeholders = ",".join("?" for _ in entity_ids)
+                params = entity_ids + entity_ids  # for from_entity IN + to_entity IN
+                rows = conn.execute(
+                    f"""SELECT from_entity, to_entity, type, polarity, chapter
+                        FROM relationship_events
+                        WHERE from_entity IN ({placeholders}) OR to_entity IN ({placeholders})
+                        ORDER BY chapter DESC
+                        LIMIT ?""",
+                    params + [limit_per_entity * len(entity_ids)],
+                ).fetchall()
+                for row in rows:
+                    row_dict = dict(row)
+                    from_e = row_dict.get("from_entity", "")
+                    to_e = row_dict.get("to_entity", "")
+                    for eid in entity_ids:
+                        if eid == from_e or eid == to_e:
+                            result.setdefault(eid, []).append(row_dict)
+        except Exception:
+            pass
         return result
 
     # ==================== 冲突结构指纹 ====================

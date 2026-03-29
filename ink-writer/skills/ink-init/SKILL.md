@@ -291,7 +291,8 @@ export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
     "one_liner": "",
     "core_conflict": "",
     "target_reader": "",
-    "platform": ""
+    "platform": "",
+    "themes": []
   },
   "protagonist": {
     "name": "",

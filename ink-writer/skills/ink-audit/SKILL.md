@@ -37,14 +37,35 @@ export PROJECT_ROOT="$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "$
 
 1. **state.json ↔ index.db 主角状态比对**：
    ```bash
+   python3 -X utf8 -c "
+   import json, sqlite3
+   from pathlib import Path
+   project_root = '${PROJECT_ROOT}'
    # 读取 state.json 中的 protagonist_state
-   python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" state export-context 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(json.dumps(d.get('progress',{}), ensure_ascii=False))"
-   ```
-   ```bash
+   state = json.loads(Path(f'{project_root}/.ink/state.json').read_text())
+   protag = state.get('protagonist_state', {})
+   print(f'state.json 主角: {protag.get(\"name\",\"?\")} | realm={protag.get(\"power\",{}).get(\"realm\",\"?\")} | location={protag.get(\"location\",{}).get(\"current\",\"?\")}')
    # 读取 index.db 中的主角实体
-   python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" index get-protagonist 2>/dev/null
+   try:
+       conn = sqlite3.connect(f'{project_root}/.ink/index.db')
+       row = conn.execute('SELECT id, canonical_name, current_json FROM entities WHERE is_protagonist = 1 LIMIT 1').fetchone()
+       if row:
+           current = json.loads(row[2] or '{}')
+           print(f'index.db 主角: {row[1]} | realm={current.get(\"realm\",\"?\")} | location={current.get(\"location\",\"?\")}')
+           # 比对
+           s_realm = protag.get('power',{}).get('realm','')
+           d_realm = current.get('realm','')
+           if s_realm and d_realm and s_realm != d_realm:
+               print(f'⚠️ 主角状态不一致: state.json={s_realm} vs index.db={d_realm}')
+           else:
+               print('✅ 主角状态一致')
+       else:
+           print('⚠️ index.db 中未找到主角实体（is_protagonist=1）')
+       conn.close()
+   except Exception as e:
+       print(f'⚠️ index.db 查询失败: {e}')
+   "
    ```
-   比对两者的 realm/location 是否一致。
 
 2. **chapter_meta 条数 vs current_chapter**：
    ```bash

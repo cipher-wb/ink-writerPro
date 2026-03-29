@@ -967,32 +967,33 @@ class ContextManager:
         return enriched
 
     def _enrich_with_relationship_trajectories(self, characters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """为出场角色注入关系演变轨迹（从relationship_events表读取）"""
+        """为出场角色注入关系演变轨迹（批量SQL查询，从relationship_events表读取）"""
         if not characters:
             return characters
         entity_ids = [c.get("entity_id") or c.get("id") for c in characters if c.get("entity_id") or c.get("id")]
         if not entity_ids:
             return characters
         try:
+            # 单次批量查询所有角色的关系事件
+            all_events = self.index_manager.get_relationship_events_batch(entity_ids, limit_per_entity=20)
+            if not all_events:
+                return characters
+            # 为每个角色构建轨迹摘要
             trajectories: Dict[str, list] = {}
-            for eid in entity_ids:
-                events = self.index_manager.get_relationship_events(eid, direction="both", limit=20)
-                if events:
-                    # 按 (from_entity, to_entity) 分组，构建轨迹
-                    pairs: Dict[str, list] = {}
-                    for evt in events:
-                        pair_key = f"{evt.get('from_entity', '')}↔{evt.get('to_entity', '')}"
-                        pairs.setdefault(pair_key, []).append(evt)
-                    # 压缩为轨迹摘要
-                    summaries = []
-                    for pair_key, evts in pairs.items():
-                        trajectory = " → ".join(
-                            f"ch{e.get('chapter', '?')} {e.get('type', '?')}({e.get('polarity', 0):+.1f})"
-                            for e in sorted(evts, key=lambda x: x.get("chapter", 0))
-                        )
-                        summaries.append(f"{pair_key}: {trajectory}")
-                    if summaries:
-                        trajectories[eid] = summaries
+            for eid, events in all_events.items():
+                pairs: Dict[str, list] = {}
+                for evt in events:
+                    pair_key = f"{evt.get('from_entity', '')}↔{evt.get('to_entity', '')}"
+                    pairs.setdefault(pair_key, []).append(evt)
+                summaries = []
+                for pair_key, evts in pairs.items():
+                    trajectory = " → ".join(
+                        f"ch{e.get('chapter', '?')} {e.get('type', '?')}({e.get('polarity', 0):+.1f})"
+                        for e in sorted(evts, key=lambda x: x.get("chapter", 0))
+                    )
+                    summaries.append(f"{pair_key}: {trajectory}")
+                if summaries:
+                    trajectories[eid] = summaries
         except Exception:
             return characters
         if not trajectories:
@@ -1002,7 +1003,7 @@ class ContextManager:
             c = dict(c)
             eid = c.get("entity_id") or c.get("id")
             if eid and eid in trajectories:
-                c["relationship_trajectory"] = "; ".join(trajectories[eid][:5])  # 最多5条
+                c["relationship_trajectory"] = "; ".join(trajectories[eid][:5])
             enriched.append(c)
         return enriched
 

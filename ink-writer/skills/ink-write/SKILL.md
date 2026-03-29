@@ -221,12 +221,32 @@ python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}”
 **逾期伏笔检查**（大纲检查通过后、进入 Step 0.5 之前执行）：
 
 ```bash
-python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}” index get-active-plot-threads --overdue-only --grace 10 2>&1
-```
-
-如果命令不存在或失败，回退为手动查询：
-```bash
-sqlite3 “${PROJECT_ROOT}/.ink/index.db” “SELECT thread_id, title, content, target_payoff_chapter FROM plot_thread_registry WHERE status = 'active' AND target_payoff_chapter IS NOT NULL AND target_payoff_chapter < ($(python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}” where --field current_chapter 2>/dev/null || echo 0) - 10);”
+python3 -X utf8 -c “
+import json, sqlite3
+from pathlib import Path
+project_root = '${PROJECT_ROOT}'
+state = json.loads(Path(f'{project_root}/.ink/state.json').read_text())
+current = state.get('progress', {}).get('current_chapter', 0)
+grace = 10
+db_path = f'{project_root}/.ink/index.db'
+try:
+    conn = sqlite3.connect(db_path)
+    rows = conn.execute(
+        'SELECT thread_id, title, content, target_payoff_chapter FROM plot_thread_registry '
+        'WHERE status = ? AND target_payoff_chapter IS NOT NULL AND target_payoff_chapter < ?',
+        ('active', current - grace)
+    ).fetchall()
+    conn.close()
+    if rows:
+        print(f'⚠️ 发现 {len(rows)} 条逾期伏笔（超过目标章节{grace}章以上仍未解决）：')
+        for r in rows:
+            overdue = current - r[3]
+            print(f'  - [{r[0]}] {r[1]}: 目标ch{r[3]}, 已逾期{overdue}章')
+    else:
+        print('✅ 无逾期伏笔')
+except Exception as e:
+    print(f'⚠️ 伏笔检查跳过（数据库不可用）: {e}')
+“
 ```
 
 **处理规则**：
