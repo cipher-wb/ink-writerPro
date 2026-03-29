@@ -62,7 +62,7 @@ Step 5    Data Agent 回写       Step 6     Git 精确备份
 ### 1) 安装插件（官方 Marketplace）
 
 ```bash
-claude plugin marketplace add cipher-wb/ink-writer --scope user
+claude plugin marketplace add cipher-wb/ink-writerPro --scope user
 claude plugin install ink-writer@ink-writer-marketplace --scope user
 ```
 
@@ -71,7 +71,7 @@ claude plugin install ink-writer@ink-writer-marketplace --scope user
 ### 2) 安装 Python 依赖
 
 ```bash
-python -m pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writer/HEAD/requirements.txt
+python -m pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/requirements.txt
 ```
 
 说明：该入口会同时安装核心写作链路与 Dashboard 依赖。
@@ -249,7 +249,7 @@ model: sonnet
 
 ## Star 历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=cipher-wb/ink-writer&type=Date)](https://star-history.com/#cipher-wb/ink-writer&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=cipher-wb/ink-writerPro&type=Date)](https://star-history.com/#cipher-wb/ink-writerPro&Date)
 
 ## 致谢
 

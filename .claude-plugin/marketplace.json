@@ -10,13 +10,13 @@
     {
       "name": "ink-writer",
       "description": "长篇网文创作系统（skills + agents + data chain + RAG）",
-      "version": "6.3.1",
+      "version": "7.0.1",
       "author": {
         "name": "cipher-wb"
       },
       "source": "./ink-writer",
       "category": "productivity",
-      "homepage": "https://github.com/cipher-wb/ink-writer"
+      "homepage": "https://github.com/cipher-wb/ink-writerPro"
     }
   ]
 }
