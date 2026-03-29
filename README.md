@@ -6,6 +6,8 @@
 
 基于 Claude Code 的**工业化长篇网文创作系统**。支持 200 万字（600+ 章）连续创作，每章自动执行 9 步标准流程（上下文→写作→审查→润色→数据回写），跨会话状态持久化，防幻觉三定律 + 11 Agent 审查 + 去 AI 味 + 节奏控制。
 
+**当前版本：v7.0.1**
+
 ---
 
 ## 安装
@@ -15,51 +17,53 @@
 - **Claude Code**（Anthropic 官方 CLI）— [安装指南](https://docs.anthropic.com/en/docs/claude-code/overview)
 - **Python 3.10+** — [下载地址](https://www.python.org/downloads/)
 
-### 第一步：从插件市场安装
-
-打开终端，依次运行以下两条命令：
+### Mac / Linux
 
 ```bash
-# 添加插件源
+# 1. 添加插件源
 claude plugin marketplace add cipher-wb/ink-writerPro --scope user
 
-# 安装插件
+# 2. 安装插件
 claude plugin install ink-writer@ink-writer-marketplace --scope user
-```
 
-### 第二步：安装 Python 依赖
-
-```bash
+# 3. 安装 Python 依赖
 pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/requirements.txt
 ```
 
-> 如果提示 `pip` 找不到，试试 `pip3`。
+### Windows
 
-### 安装完成！
+```powershell
+# 1. 添加插件源
+claude plugin marketplace add cipher-wb/ink-writerPro
 
-打开 Claude Code，输入 `/ink-init`，如果看到初始化引导，说明安装成功。
+# 2. 安装插件
+claude plugin install ink-writer@ink-writer-marketplace
+
+# 3. 安装 Python 依赖
+pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/requirements.txt
+```
+
+> Windows 不需要加 `--scope user`。如果 `pip` 提示找不到，试试 `pip3`。
+
+### 验证安装
+
+打开 Claude Code，输入 `/ink-init`，看到初始化引导说明安装成功。
 
 ### 后续更新
 
-当有新版本发布时，在 Claude Code 中运行：
-
-```
-/plugin update
-```
-
-或在终端运行：
-
+**Mac / Linux：**
 ```bash
 claude plugin install ink-writer@ink-writer-marketplace --scope user
 ```
 
-即可自动拉取最新版本。
+**Windows：**
+```powershell
+claude plugin install ink-writer@ink-writer-marketplace
+```
 
 ---
 
 ## 使用
-
-在 Claude Code 中输入以下命令：
 
 ```bash
 /ink-init              # 初始化小说项目（交互式收集设定）
