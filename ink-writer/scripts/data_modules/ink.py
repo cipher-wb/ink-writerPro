@@ -101,6 +101,86 @@ def _run_script(script_name: str, argv: list[str]) -> int:
     return int(proc.returncode or 0)
 
 
+def _cmd_db(args: argparse.Namespace) -> int:
+    """index.db 完整性检查/备份/恢复/重建"""
+    from data_modules.config import DataModulesConfig
+    from data_modules.index_manager import IndexManager
+
+    project_root = _resolve_root(args.project_root)
+    cfg = DataModulesConfig.from_project_root(project_root)
+    mgr = IndexManager(cfg)
+    action = args.action
+    use_json = getattr(args, "format", "text") == "json"
+
+    if action == "check":
+        result = mgr.check_integrity()
+        if use_json:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            status = "OK" if result["ok"] else "ERROR"
+            print(f"{status} index.db integrity: {result['detail']} ({result['table_count']} tables)")
+        return 0 if result["ok"] else 1
+
+    if action == "backup":
+        reason = getattr(args, "reason", "manual") or "manual"
+        path = mgr.backup_db(reason=reason)
+        if path:
+            result = {"ok": True, "path": str(path)}
+        else:
+            result = {"ok": False, "path": ""}
+        if use_json:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            if path:
+                print(f"OK backup created: {path}")
+            else:
+                print("ERROR backup failed (index.db may not exist)")
+        return 0 if path else 1
+
+    if action == "rebuild":
+        result = mgr.rebuild_db()
+        if use_json:
+            print(json.dumps(result, ensure_ascii=False, indent=2))
+        else:
+            status = "OK" if result["ok"] else "ERROR"
+            print(f"{status} rebuild: {result['detail']}")
+        return 0 if result["ok"] else 1
+
+    if action == "restore":
+        backup_file = getattr(args, "backup_file", None)
+        if not backup_file:
+            # 如果未指定，尝试使用最新的备份
+            backups = IndexManager.list_backups(cfg.ink_dir)
+            if not backups:
+                print("ERROR no backup files found")
+                return 1
+            backup_file = backups[0]["path"]
+            print(f"Using latest backup: {backup_file}")
+        from pathlib import Path as _P
+        ok = mgr.restore_from_backup(_P(backup_file))
+        if use_json:
+            print(json.dumps({"ok": ok, "backup_file": backup_file}, ensure_ascii=False, indent=2))
+        else:
+            print(f"{'OK' if ok else 'ERROR'} restore from {backup_file}")
+        return 0 if ok else 1
+
+    if action == "list-backups":
+        backups = IndexManager.list_backups(cfg.ink_dir)
+        if use_json:
+            print(json.dumps(backups, ensure_ascii=False, indent=2))
+        else:
+            if not backups:
+                print("No backups found")
+            else:
+                for b in backups:
+                    size_kb = b["size"] / 1024
+                    print(f"  {b['name']}  ({size_kb:.1f} KB)")
+                print(f"\nTotal: {len(backups)} backups")
+        return 0
+
+    return 2
+
+
 def cmd_where(args: argparse.Namespace) -> int:
     root = _resolve_root(args.project_root)
     print(str(root))
@@ -130,6 +210,33 @@ def _build_preflight_report(explicit_project_root: Optional[str]) -> dict:
     except Exception as exc:
         project_root_error = str(exc)
         checks.append({"name": "project_root", "ok": False, "path": explicit_project_root or "", "error": project_root_error})
+
+    # index.db 完整性检查（仅当 project_root 解析成功时）
+    if project_root:
+        try:
+            from data_modules.config import DataModulesConfig
+            from data_modules.index_manager import IndexManager
+
+            cfg = DataModulesConfig.from_project_root(project_root)
+            db_path = cfg.index_db
+
+            if not db_path.exists():
+                # index.db 不存在不算错误（可能是新项目）
+                checks.append({"name": "index_db", "ok": True, "path": str(db_path), "detail": "not_created_yet"})
+            else:
+                mgr = IndexManager(cfg)
+                integrity = mgr.check_integrity()
+                checks.append({
+                    "name": "index_db",
+                    "ok": integrity["ok"],
+                    "path": str(db_path),
+                    "detail": integrity["detail"],
+                    "table_count": integrity["table_count"],
+                })
+                if not integrity["ok"]:
+                    checks[-1]["error"] = f"index.db integrity check failed: {integrity['detail']}"
+        except Exception as exc:
+            checks.append({"name": "index_db", "ok": False, "path": "", "error": str(exc)})
 
     return {
         "ok": all(bool(item["ok"]) for item in checks),
@@ -239,6 +346,14 @@ def main() -> None:
 
     p_update_state = sub.add_parser("update-state", help="转发到 update_state.py")
     p_update_state.add_argument("args", nargs=argparse.REMAINDER)
+
+    p_db = sub.add_parser("db", help="index.db 完整性检查/备份/恢复/重建")
+    p_db.add_argument("action", choices=["check", "backup", "rebuild", "restore", "list-backups"],
+                       help="check=完整性检查, backup=备份, rebuild=重建, restore=从备份恢复, list-backups=列出备份")
+    p_db.add_argument("--reason", default="manual", help="备份原因标记（默认: manual）")
+    p_db.add_argument("--backup-file", help="restore 时指定备份文件路径")
+    p_db.add_argument("--format", choices=["text", "json"], default="text", help="输出格式")
+    p_db.set_defaults(func=lambda args: _cmd_db(args))
 
     p_backup = sub.add_parser("backup", help="转发到 backup_manager.py")
     p_backup.add_argument("args", nargs=argparse.REMAINDER)

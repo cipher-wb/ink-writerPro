@@ -305,6 +305,196 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
         self.config = config or get_config()
         self._init_db()
 
+    # ==================== 数据库完整性与备份 ====================
+
+    def check_integrity(self) -> dict:
+        """
+        检查 index.db 完整性。
+
+        返回:
+            {"ok": bool, "detail": str, "table_count": int}
+        """
+        db_path = self.config.index_db
+        if not db_path.exists():
+            return {"ok": False, "detail": "index.db not found", "table_count": 0}
+
+        try:
+            conn = sqlite3.connect(str(db_path))
+            try:
+                result = conn.execute("PRAGMA integrity_check").fetchone()
+                integrity_ok = result is not None and str(result[0]).lower() == "ok"
+
+                tables = conn.execute(
+                    "SELECT count(*) FROM sqlite_master WHERE type='table'"
+                ).fetchone()
+                table_count = int(tables[0]) if tables else 0
+
+                detail = str(result[0]) if result else "no result"
+                return {
+                    "ok": integrity_ok,
+                    "detail": detail,
+                    "table_count": table_count,
+                }
+            finally:
+                conn.close()
+        except sqlite3.DatabaseError as exc:
+            return {"ok": False, "detail": str(exc), "table_count": 0}
+
+    def backup_db(self, reason: str = "manual") -> Optional[Path]:
+        """
+        备份 index.db 到 .ink/ 目录。
+
+        返回备份文件路径，失败返回 None。
+        """
+        db_path = self.config.index_db
+        if not db_path.exists():
+            return None
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_name = f"index.db.{reason}.{timestamp}.bak"
+        backup_path = self.config.ink_dir / backup_name
+
+        try:
+            # 使用 SQLite 的 backup API 确保一致性
+            src = sqlite3.connect(str(db_path))
+            dst = sqlite3.connect(str(backup_path))
+            try:
+                src.backup(dst)
+            finally:
+                dst.close()
+                src.close()
+            return backup_path
+        except (sqlite3.Error, OSError):
+            # 降级到文件复制
+            try:
+                import shutil
+                shutil.copy2(str(db_path), str(backup_path))
+                return backup_path
+            except OSError:
+                return None
+
+    def rebuild_db(self) -> dict:
+        """
+        从章节文件和 state.json 重建 index.db（灾难恢复）。
+
+        仅重建 chapters 表和基础元数据。实体/关系/审查等需要后续
+        通过 Data Agent 重新提取来恢复。
+
+        返回: {"ok": bool, "chapters_recovered": int, "detail": str}
+        """
+        db_path = self.config.index_db
+        chapters_dir = self.config.chapters_dir
+        summaries_dir = self.config.ink_dir / "summaries"
+
+        # 如果旧库存在，先备份
+        if db_path.exists():
+            self.backup_db(reason="pre_rebuild")
+            db_path.unlink()
+
+        # 重新初始化空库
+        self._init_db()
+
+        recovered = 0
+        errors = []
+
+        if not chapters_dir.exists():
+            return {
+                "ok": True,
+                "chapters_recovered": 0,
+                "detail": "chapters dir not found, empty db created",
+            }
+
+        # 扫描章节文件，重建 chapters 表
+        import re
+        chapter_pattern = re.compile(r"第(\d+)章")
+
+        for md_file in sorted(chapters_dir.glob("第*章*.md")):
+            try:
+                match = chapter_pattern.search(md_file.name)
+                if not match:
+                    continue
+                chapter_num = int(match.group(1))
+
+                content = md_file.read_text(encoding="utf-8")
+                word_count = len(content)
+
+                # 提取标题（文件名中 "章" 后面的部分）
+                title = ""
+                title_match = re.search(r"第\d+章[-.—]?(.*?)\.md$", md_file.name)
+                if title_match:
+                    title = title_match.group(1).strip()
+
+                # 尝试加载对应摘要
+                summary = ""
+                summary_file = summaries_dir / f"ch{chapter_num:04d}.md"
+                if summary_file.exists():
+                    try:
+                        summary = summary_file.read_text(encoding="utf-8")[:2000]
+                    except OSError:
+                        pass
+
+                meta = ChapterMeta(
+                    chapter=chapter_num,
+                    title=title,
+                    location="",
+                    word_count=word_count,
+                    characters=[],
+                    summary=summary,
+                )
+                self.add_chapter(meta)
+                recovered += 1
+
+            except Exception as exc:
+                errors.append(f"ch{md_file.name}: {exc}")
+
+        detail = f"recovered {recovered} chapters"
+        if errors:
+            detail += f", {len(errors)} errors: {'; '.join(errors[:5])}"
+
+        return {
+            "ok": recovered > 0 or not list(chapters_dir.glob("第*章*.md")),
+            "chapters_recovered": recovered,
+            "detail": detail,
+        }
+
+    @staticmethod
+    def list_backups(ink_dir: Path) -> list:
+        """列出所有 index.db 备份文件。"""
+        if not ink_dir.exists():
+            return []
+        backups = sorted(ink_dir.glob("index.db.*.bak"), key=lambda p: p.stat().st_mtime, reverse=True)
+        return [{"path": str(p), "size": p.stat().st_size, "name": p.name} for p in backups]
+
+    def restore_from_backup(self, backup_path: Path) -> bool:
+        """
+        从备份文件恢复 index.db。
+
+        先备份当前损坏的库（如果存在），再用备份替换。
+        """
+        if not backup_path.exists():
+            return False
+
+        db_path = self.config.index_db
+
+        # 备份当前损坏的文件
+        if db_path.exists():
+            corrupted_path = self.config.ink_dir / f"index.db.corrupted.{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            try:
+                import shutil
+                shutil.move(str(db_path), str(corrupted_path))
+            except OSError:
+                pass
+
+        # 复制备份到 index.db
+        try:
+            import shutil
+            shutil.copy2(str(backup_path), str(db_path))
+            # 验证恢复后的完整性
+            check = self.check_integrity()
+            return check["ok"]
+        except (OSError, sqlite3.Error):
+            return False
+
     def _init_db(self):
         """初始化数据库表"""
         self.config.ensure_dirs()

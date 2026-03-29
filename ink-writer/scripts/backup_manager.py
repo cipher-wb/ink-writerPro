@@ -189,6 +189,22 @@ __pycache__/
             print(f"❌ 本地备份失败: {e}")
             return False
 
+    def _backup_index_db(self, chapter_num: int) -> None:
+        """每章备份 index.db（使用 SQLite backup API 保证一致性）"""
+        try:
+            from data_modules.config import DataModulesConfig
+            from data_modules.index_manager import IndexManager
+
+            cfg = DataModulesConfig.from_project_root(str(self.project_root))
+            if cfg.index_db.exists():
+                mgr = IndexManager(cfg)
+                path = mgr.backup_db(reason=f"ch{chapter_num:04d}")
+                if path:
+                    print(f"  index.db backup: {path.name}")
+        except Exception:
+            # best-effort: 不阻断主流程
+            pass
+
     def backup(self, chapter_num: int, chapter_title: str = "") -> bool:
         """
         备份当前状态（Git commit + tag，或本地备份）
@@ -198,6 +214,9 @@ __pycache__/
             chapter_title: 章节标题（可选）
         """
         print(f"📝 正在备份第 {chapter_num} 章...")
+
+        # 每章备份 index.db（独立于 Git，使用 SQLite backup API）
+        self._backup_index_db(chapter_num)
 
         # 如果 Git 不可用，使用本地备份
         if not self.git_available:
