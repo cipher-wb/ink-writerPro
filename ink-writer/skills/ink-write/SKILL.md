@@ -218,6 +218,26 @@ python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}”
 输出：
 - “已就绪输入”与”缺失输入”清单；缺失则阻断并提示先补齐。
 
+**逾期伏笔检查**（大纲检查通过后、进入 Step 0.5 之前执行）：
+
+```bash
+python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}” index get-active-plot-threads --overdue-only --grace 10 2>&1
+```
+
+如果命令不存在或失败，回退为手动查询：
+```bash
+sqlite3 “${PROJECT_ROOT}/.ink/index.db” “SELECT thread_id, title, content, target_payoff_chapter FROM plot_thread_registry WHERE status = 'active' AND target_payoff_chapter IS NOT NULL AND target_payoff_chapter < ($(python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}” where --field current_chapter 2>/dev/null || echo 0) - 10);”
+```
+
+**处理规则**：
+- 若存在逾期超过10章的活跃伏笔 → 输出警告列表：
+  ```
+  ⚠️ 发现 {N} 条逾期伏笔（超过目标章节10章以上仍未解决）：
+  - [{thread_id}] {title}: 目标ch{target}, 当前已逾期{overdue}章
+  建议：在本章解决，或通过 /ink-plan 显式延期目标章节。
+  ```
+- 此检查为**警告模式**（不强制阻断），但会在 Context Agent Board 7 中强制置顶逾期伏笔。
+
 ### Step 0.5：工作流断点记录（best-effort，不阻断）
 
 ```bash

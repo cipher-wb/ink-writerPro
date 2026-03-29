@@ -606,7 +606,7 @@ def build_review_pack_payload(project_root: Path, chapter_num: int, payload: Dic
         ]
     )
 
-    return {
+    bundle = {
         "chapter": chapter_num,
         "project_root": absolute_paths["project_root"],
         "chapter_file": absolute_paths["chapter_file"],
@@ -634,6 +634,30 @@ def build_review_pack_payload(project_root: Path, chapter_num: int, payload: Dic
             "note": "优先使用 bundle 内嵌内容；仅当 bundle 缺字段时，允许读取 allowed_read_files 中的绝对路径文件。",
         },
     }
+
+    # Inject narrative commitments + plot structure fingerprints from index.db
+    try:
+        from data_modules.index_manager import IndexManager
+        from data_modules.config import get_config
+        idx_config = get_config(str(project_root))
+        idx = IndexManager(idx_config)
+
+        # Active narrative commitments for appearing characters
+        entity_ids = []
+        if payload and isinstance(payload.get("scene_context"), dict):
+            chars = payload["scene_context"].get("appearing_characters", [])
+            entity_ids = [c.get("id") for c in chars if isinstance(c, dict) and c.get("id")]
+        active_commitments = idx.get_active_commitments(entity_ids=entity_ids if entity_ids else None)
+        bundle["narrative_commitments"] = active_commitments[:20]
+
+        # Plot structure fingerprint stats for repetition detection
+        pattern_counts = idx.get_fingerprint_pattern_counts(limit=50, before_chapter=chapter_num)
+        bundle["plot_structure_fingerprints"] = pattern_counts
+    except Exception:
+        bundle.setdefault("narrative_commitments", [])
+        bundle.setdefault("plot_structure_fingerprints", [])
+
+    return bundle
 
 
 def _compact_text(text: Any, limit: int = 80) -> str:

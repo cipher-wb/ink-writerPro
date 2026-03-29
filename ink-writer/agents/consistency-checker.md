@@ -130,6 +130,19 @@ model: inherit
    → VIOLATION: Time regression without flashback marker
 ```
 
+### Layer 4: 叙事承诺一致性
+
+检查 `review_bundle.narrative_commitments`（如果存在）：
+
+1. 读取本章出场角色的活跃承诺列表
+2. 检查本章行为是否违反任何活跃承诺
+3. 分级：
+   - **critical**: 违反核心誓言（oath类型），且无任何文内解释或铺垫
+   - **high**: 违反承诺（promise类型），或行为与角色准则矛盾
+   - **medium**: 行为处于承诺的灰色地带，需要更明确的文内交代
+
+如果 `review_bundle` 中不存在 `narrative_commitments` 字段，跳过此检测层。
+
 ### 第三步: 实体一致性检查
 
 **对所有章节中检测到的新实体**:

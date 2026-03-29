@@ -234,6 +234,9 @@ def main() -> None:
     p_status = sub.add_parser("status", help="转发到 status_reporter.py")
     p_status.add_argument("args", nargs=argparse.REMAINDER)
 
+    p_health = sub.add_parser("health", help="健康报告（status 别名，用法同 status）")
+    p_health.add_argument("args", nargs=argparse.REMAINDER)
+
     p_update_state = sub.add_parser("update-state", help="转发到 update_state.py")
     p_update_state.add_argument("args", nargs=argparse.REMAINDER)
 
@@ -298,7 +301,7 @@ def main() -> None:
 
     if tool == "workflow":
         raise SystemExit(_run_script("workflow_manager.py", [*forward_args, *rest]))
-    if tool == "status":
+    if tool in ("status", "health"):
         raise SystemExit(_run_script("status_reporter.py", [*forward_args, *rest]))
     if tool == "update-state":
         raise SystemExit(_run_script("update_state.py", [*forward_args, *rest]))

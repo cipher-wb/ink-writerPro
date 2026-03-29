@@ -92,6 +92,38 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 
 **Data Agent 直接执行** (无需调用外部 LLM)。
 
+> **Step B 子步骤编号说明**：B.5（代称追踪）为历史编号，新增步骤按功能插入（B.1闪回检测、B.6-B.9为v6.4扩展），编号不连续但不影响执行顺序。
+
+### Step B.1: 闪回检测（防状态回退）
+
+在提取实体和状态变化之前，先判断本章是否包含闪回（flashback）内容。
+
+**检测规则**：
+1. 扫描章节文本中的时间倒退标记：
+   - 明确标记："回忆起"、"当年"、"那一年"、"想起了"、"记忆中"、"往事"、"曾经"
+   - 结构标记：`---回忆---`、`（回忆）`、`【flashback】`
+   - 时间倒退描写：明确提到过去时间点且与当前时间线不一致
+2. 判断闪回范围：
+   - **全章闪回**：整章为回忆/过去视角 → 所有state_changes标记`scope: "flashback"`
+   - **部分闪回**：章节中有闪回段落但主线仍在推进 → 仅闪回段落内的state_changes标记`scope: "flashback"`
+   - **无闪回**：正常处理
+
+**处理方式**：
+- `scope: "flashback"` 的 state_changes **不写入 `protagonist_state`**（避免功力回退）
+- 仍写入 `state_changes` 表但附带 `reason: "闪回内容，非当前状态"`
+- 闪回中出现的新实体仍正常提取（角色可能在闪回中首次出场）
+
+输出到 payload 顶层：
+```json
+{
+  "flashback_detected": true,
+  "flashback_scope": "partial",
+  "flashback_segments": ["段落3-5为回忆片段"]
+}
+```
+
+若未检测到闪回：`"flashback_detected": false`，后续步骤正常处理。
+
 ### Step B.5：代称追踪（Pronoun Tracking）
 
 > 在实体提取完成后，对章节正文中的代称（他/她/他们/它）进行追踪，记录每个代称的指代对象。
@@ -122,6 +154,125 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 **与 proofreading-checker 的协作**：
 - Data Agent 在 Step B.5 生成代称追踪数据
 - proofreading-checker 在第3层（代称混乱检测）直接读取此数据，避免重复分析
+
+### Step B.6: 叙事承诺提取
+
+扫描章节文本，识别以下类型的叙事承诺：
+- **oath**: 角色发誓/立誓（"我发誓..."、"绝不..."、"以...之名起誓"）
+- **promise**: 角色承诺（"我一定会..."、"等我回来..."）
+- **prophecy**: 预言/预示（"传说当...便会..."、"古籍记载..."）
+- **world_law**: 世界规则（"在这个世界，没有人能..."、"突破此境需要..."）
+- **character_principle**: 角色行为准则（"他从不对女人出手"、"师父的教诲是..."）
+- **prohibition**: 禁忌/禁令（"此地禁止..."、"绝对不能触碰..."）
+
+同时检查是否有已有承诺被解决或打破。
+
+输出到 payload：
+```json
+{
+  "narrative_commitments_new": [
+    {
+      "commitment_type": "oath",
+      "entity_id": "xiaoyan",
+      "content": "萧炎发誓不再使用异火伤害无辜",
+      "context_snippet": "（原文200字左右的上下文片段）",
+      "scope": "permanent",
+      "condition": null
+    }
+  ],
+  "narrative_commitments_resolved": [
+    {
+      "commitment_id": 5,
+      "resolution_type": "fulfilled",
+      "chapter": 100
+    }
+  ]
+}
+```
+
+### Step B.7: 角色演变提取
+
+仅对 tier 为`核心`或`重要`的出场角色执行（从 Step A 的 `get-core-entities` 结果中筛选）。
+
+对每个符合条件的角色，评估本章中是否有以下变化：
+- **arc_phase**: 性格阶段标签（如"怯懦期"、"成长期"、"独立期"、"堕落期"等），若无明显变化可沿用上一阶段
+- **personality_delta**: 本章中性格的具体变化描述（如"经历战斗后变得果断"），无变化则为 null
+- **voice_sample**: 本章中最有代表性的1-2句台词原文（直接引用，非概括），无台词则为 null
+- **motivation_shift**: 动机是否有转变（如"从复仇转为保护"），无变化则为 null
+- **relationship_shifts**: JSON字符串，记录关系变化（如 `[{"target":"萧薰儿","change":"从冷漠到关注"}]`），无变化则为 null
+
+**判断规则**：
+- 若角色本章仅路过/背景出场（无台词、无互动、无心理描写） → 跳过，不生成记录
+- 若角色有实质性互动但无性格变化 → 仍可生成记录，voice_sample 填入代表性台词，其余为 null
+- 每章每角色**最多1条**记录
+
+输出到 payload：
+```json
+{
+  "character_evolution_entries": [
+    {
+      "entity_id": "lixue",
+      "chapter": 250,
+      "arc_phase": "独立期",
+      "personality_delta": "重逢后展现独立一面，主动承担战斗任务",
+      "voice_sample": "这次换我来保护你。",
+      "motivation_shift": null,
+      "relationship_shifts": "[{\"target\":\"protagonist\",\"change\":\"从被保护者到平等伙伴\"}]"
+    }
+  ]
+}
+```
+
+### Step B.8: 主题呈现提取
+
+读取 `state.json.project_info.themes` 获取核心主题列表（如 `["力量的代价", "救赎"]`）。
+
+若 themes 为空或不存在 → 跳过此步骤。
+
+若 themes 非空，对本章内容评估每个主题的呈现情况：
+
+| 字段 | 说明 |
+|------|------|
+| `theme` | 主题名称（与 themes 列表完全一致） |
+| `expressed` | 是否在本章中有所呈现（true/false） |
+| `how` | 具体呈现方式（30字以内描述，如"主角升级付出寿命代价"） |
+
+输出写入 `chapter_memory_card.theme_presence` 字段（JSON数组）：
+
+```json
+{
+  "chapter_memory_card": {
+    "theme_presence": [
+      {"theme": "力量的代价", "expressed": true, "how": "主角修炼异火时承受剧痛"},
+      {"theme": "救赎", "expressed": false, "how": null}
+    ]
+  }
+}
+```
+
+### Step B.9: 冲突结构指纹提取
+
+对本章的冲突结构进行分类标记（用于跨50章的模式去重检测）。
+
+| 字段 | 可选值 | 说明 |
+|------|-------|------|
+| `conflict_type` | tournament, survival, investigation, relationship, upgrade, escape, negotiation | 本章主要冲突类型 |
+| `resolution_mechanism` | power_up, strategy, sacrifice, alliance, luck, retreat, diplomacy | 冲突解决方式 |
+| `twist_type` | betrayal, revelation, reversal, escalation, none | 是否有反转 |
+| `emotional_arc` | triumph, loss, growth, ambiguous, bittersweet | 情感弧线 |
+
+输出到 payload：
+```json
+{
+  "plot_structure_fingerprint": {
+    "chapter": 100,
+    "conflict_type": "tournament",
+    "resolution_mechanism": "power_up",
+    "twist_type": "reversal",
+    "emotional_arc": "triumph"
+  }
+}
+```
 
 ### Step C: 实体消歧处理
 
@@ -166,7 +317,10 @@ cat > "{project_root}/.ink/tmp/data_agent_payload_ch{chapter_padded}.json" <<'EO
   "timeline_anchor": {...},
   "plot_thread_updates": [...],
   "reading_power": {...},
-  "candidate_facts": [...]
+  "candidate_facts": [...],
+  "character_evolution_entries": [...],
+  "narrative_commitments_new": [...],
+  "narrative_commitments_resolved": [...]
 }
 EOF
 
@@ -380,6 +534,8 @@ state.json 中的 chapter_meta 字段仅作为**写入缓冲**：
 #### 伏笔数据一致性规范
 
 **规则**：伏笔数据的唯一真源为 **index.db 的 plot_thread_registry 表**。
+
+**atmospheric_snapshot 规则**：当 Data Agent 在本章中**新埋设**伏笔时，必须同时截取伏笔种植点周围200-300字的原文片段，存入 `plot_thread_updates` 条目的 `atmospheric_snapshot` 字段。此快照用于未来伏笔解决时提供共鸣性回调上下文。已有伏笔的推进/解决不需要重新截取快照。
 
 state.json 中的 `plot_threads.foreshadowing` 字段为**只读快照**：
 1. Data Agent 更新伏笔时，写入 index.db 后，同步生成快照写入 state.json

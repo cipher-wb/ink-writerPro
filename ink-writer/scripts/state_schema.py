@@ -228,6 +228,9 @@ class ProjectInfo(BaseModel):
     co_protagonist_roles: Optional[str] = Field(default=None)
     antagonist_tiers: Optional[str] = Field(default=None)
 
+    # 核心主题（v6.4 引入）
+    themes: List[str] = Field(default_factory=list)
+
     # 子模型（新增，向后兼容：extra="allow" 确保旧字段不报错）
     golden_finger: GoldenFingerInfo = Field(default_factory=GoldenFingerInfo)
     heroine: HeroineCharacterInfo = Field(default_factory=HeroineCharacterInfo)

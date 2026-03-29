@@ -218,12 +218,19 @@ class ContextManager:
         scene["appearing_characters"] = self.filter_invalid_items(
             scene["appearing_characters"], source_type="entity", id_key="entity_id"
         )
+        # 注入角色演变轨迹（如果有）
+        scene["appearing_characters"] = self._enrich_with_evolution(scene["appearing_characters"])
+        # 注入关系演变轨迹（从relationship_events表读取）
+        scene["appearing_characters"] = self._enrich_with_relationship_trajectories(scene["appearing_characters"])
 
         global_ctx = {
             "worldview_skeleton": self._load_setting("世界观"),
             "power_system_skeleton": self._load_setting("力量体系"),
             "style_contract_ref": self._load_setting("风格契约"),
         }
+        # 加载总纲核心段落（全局故事走向感知）
+        if getattr(self.config, "context_master_outline_enabled", True):
+            global_ctx["master_outline_core"] = self._load_master_outline_core()
 
         genre_profile = self._load_genre_profile(state)
         preferences = build_default_preferences(self._load_json_optional(self.config.preferences_file))
@@ -433,14 +440,30 @@ class ContextManager:
         return fallback
 
     def _load_active_plot_threads(self, chapter: int, state: Dict[str, Any]) -> List[Dict[str, Any]]:
-        limit = max(1, int(getattr(self.config, "context_max_urgent_foreshadowing", 5)))
+        limit = max(1, int(getattr(self.config, "context_max_urgent_foreshadowing", 10)))
         rows = self.index_manager.get_active_plot_threads(
             limit=limit,
             before_chapter=chapter,
             min_priority=0,
         )
         if rows:
-            return rows
+            # 对临近解决的伏笔（remaining <= 5），加载种植章摘要以增强共鸣性
+            enriched = []
+            for row in rows:
+                row = dict(row)  # 浅拷贝避免污染原数据
+                target = row.get("target_payoff_chapter")
+                planted = row.get("planted_chapter")
+                if target and planted:
+                    remaining = int(target) - chapter
+                    row["remaining_chapters"] = remaining
+                    if remaining <= 5 and planted:
+                        # 加载种植章摘要（如果没有atmospheric_snapshot）
+                        if not row.get("atmospheric_snapshot"):
+                            planted_summary = self._load_summary_text(int(planted), snippet_chars=300)
+                            if planted_summary and planted_summary.get("summary"):
+                                row["planted_chapter_summary"] = planted_summary["summary"]
+                enriched.append(row)
+            return enriched
 
         plot_threads = state.get("plot_threads", {}) if isinstance(state.get("plot_threads"), dict) else {}
         foreshadowing = plot_threads.get("foreshadowing", [])
@@ -902,6 +925,87 @@ class ContextManager:
         appearances = self.index_manager.get_recent_appearances(limit=limit)
         return appearances or []
 
+    def _enrich_with_evolution(self, characters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """为出场角色注入演变轨迹摘要（仅核心/重要角色）"""
+        if not characters:
+            return characters
+        entity_ids = [
+            c.get("entity_id") or c.get("id")
+            for c in characters
+            if (c.get("entity_id") or c.get("id"))
+            and c.get("tier") in ("核心", "重要", None)  # None = 未标注，也尝试查询
+        ]
+        if not entity_ids:
+            return characters
+        try:
+            evolution_map = self.index_manager.get_characters_evolution_summary(
+                entity_ids, max_entries_per_char=8
+            )
+        except Exception:
+            return characters
+        if not evolution_map:
+            return characters
+        enriched = []
+        for c in characters:
+            c = dict(c)  # 浅拷贝避免污染原数据
+            eid = c.get("entity_id") or c.get("id")
+            if eid and eid in evolution_map:
+                entries = evolution_map[eid]
+                # 压缩为弧线概述
+                arc_summary = " → ".join(
+                    f"ch{e['chapter']} {e.get('arc_phase', '?')}"
+                    for e in entries
+                    if e.get("arc_phase")
+                )
+                c["evolution_arc"] = arc_summary or None
+                # 附最近一条台词样本
+                for e in reversed(entries):
+                    if e.get("voice_sample"):
+                        c["recent_voice_sample"] = e["voice_sample"]
+                        break
+            enriched.append(c)
+        return enriched
+
+    def _enrich_with_relationship_trajectories(self, characters: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """为出场角色注入关系演变轨迹（从relationship_events表读取）"""
+        if not characters:
+            return characters
+        entity_ids = [c.get("entity_id") or c.get("id") for c in characters if c.get("entity_id") or c.get("id")]
+        if not entity_ids:
+            return characters
+        try:
+            trajectories: Dict[str, list] = {}
+            for eid in entity_ids:
+                events = self.index_manager.get_relationship_events(eid, direction="both", limit=20)
+                if events:
+                    # 按 (from_entity, to_entity) 分组，构建轨迹
+                    pairs: Dict[str, list] = {}
+                    for evt in events:
+                        pair_key = f"{evt.get('from_entity', '')}↔{evt.get('to_entity', '')}"
+                        pairs.setdefault(pair_key, []).append(evt)
+                    # 压缩为轨迹摘要
+                    summaries = []
+                    for pair_key, evts in pairs.items():
+                        trajectory = " → ".join(
+                            f"ch{e.get('chapter', '?')} {e.get('type', '?')}({e.get('polarity', 0):+.1f})"
+                            for e in sorted(evts, key=lambda x: x.get("chapter", 0))
+                        )
+                        summaries.append(f"{pair_key}: {trajectory}")
+                    if summaries:
+                        trajectories[eid] = summaries
+        except Exception:
+            return characters
+        if not trajectories:
+            return characters
+        enriched = []
+        for c in characters:
+            c = dict(c)
+            eid = c.get("entity_id") or c.get("id")
+            if eid and eid in trajectories:
+                c["relationship_trajectory"] = "; ".join(trajectories[eid][:5])  # 最多5条
+            enriched.append(c)
+        return enriched
+
     def _load_setting(self, keyword: str) -> str:
         settings_dir = self.config.settings_dir
         candidates = [
@@ -936,23 +1040,76 @@ class ContextManager:
             summary_text = text
         return {"chapter": chapter, "summary": summary_text}
 
+    def _load_master_outline_core(self) -> str:
+        """加载总纲核心段落（故事内核/主线脉络）"""
+        max_chars = int(getattr(self.config, "context_master_outline_max_chars", 500))
+        outline_dir = self.config.outline_dir
+        candidates = [
+            outline_dir / "总纲.md",
+            outline_dir / "总大纲.md",
+            outline_dir / "master_outline.md",
+        ]
+        for path in candidates:
+            try:
+                if path.exists():
+                    text = path.read_text(encoding="utf-8")
+                    if len(text) > max_chars:
+                        return text[:max_chars].rstrip() + "…"
+                    return text
+            except Exception:
+                continue
+        return ""
+
     def _load_story_skeleton(self, chapter: int) -> List[Dict[str, Any]]:
-        interval = max(1, int(self.config.context_story_skeleton_interval))
         max_samples = max(0, int(self.config.context_story_skeleton_max_samples))
         snippet_chars = int(self.config.context_story_skeleton_snippet_chars)
 
-        if max_samples <= 0 or chapter <= interval:
+        if max_samples <= 0 or chapter <= 3:
             return []
 
         samples: List[Dict[str, Any]] = []
-        cursor = chapter - interval
-        while cursor >= 1 and len(samples) < max_samples:
-            summary = self._load_summary_text(cursor, snippet_chars=snippet_chars)
-            if summary and summary.get("summary"):
-                samples.append(summary)
-            cursor -= interval
+        used_chapters: set = set()
 
-        samples.reverse()
+        # Slot 1: 第1章摘要（故事起点，始终包含）
+        s1 = self._load_summary_text(1, snippet_chars=snippet_chars)
+        if s1 and s1.get("summary"):
+            samples.append(s1)
+            used_chapters.add(1)
+
+        # Slot 2: 尝试按chapter_reading_power加载高分关键章（转折点）
+        try:
+            top_chapters = self.index_manager.get_top_reading_power_chapters(
+                limit=max_samples - 2,  # 留2个slot给起点和最近
+                before_chapter=chapter,
+            )
+            for tc in top_chapters:
+                ch_num = tc.get("chapter")
+                if ch_num and ch_num not in used_chapters and len(samples) < max_samples - 1:
+                    s = self._load_summary_text(int(ch_num), snippet_chars=snippet_chars)
+                    if s and s.get("summary"):
+                        samples.append(s)
+                        used_chapters.add(int(ch_num))
+        except Exception:
+            # 回退到固定间隔采样
+            interval = max(1, int(self.config.context_story_skeleton_interval))
+            cursor = chapter - interval
+            while cursor >= 1 and len(samples) < max_samples - 1:
+                if cursor not in used_chapters:
+                    s = self._load_summary_text(cursor, snippet_chars=snippet_chars)
+                    if s and s.get("summary"):
+                        samples.append(s)
+                        used_chapters.add(cursor)
+                cursor -= interval
+
+        # Slot N: 最近1章摘要（紧邻上下文）
+        recent = chapter - 1
+        if recent >= 1 and recent not in used_chapters and len(samples) < max_samples:
+            s = self._load_summary_text(recent, snippet_chars=snippet_chars)
+            if s and s.get("summary"):
+                samples.append(s)
+
+        # 按章节号排序
+        samples.sort(key=lambda x: x.get("chapter", 0))
         return samples
 
     def _load_json_optional(self, path: Path) -> Dict[str, Any]:

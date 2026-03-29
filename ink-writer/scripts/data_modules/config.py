@@ -195,16 +195,21 @@ class DataModulesConfig:
     max_disambiguation_warnings: int = 500
     max_disambiguation_pending: int = 1000
     max_state_changes: int = 2000
+    max_chapter_meta_in_state: int = 20       # chapter_meta超过此数触发flush
+    chapter_meta_keep_recent: int = 10        # flush后保留最近N条
+    max_strand_tracker_history: int = 100     # strand_tracker.history最多保留N条
 
     context_recent_summaries_window: int = 3
     context_recent_meta_window: int = 3
     context_alerts_slice: int = 10
     context_max_appearing_characters: int = 10
-    context_max_urgent_foreshadowing: int = 5
+    context_max_urgent_foreshadowing: int = 10
     context_story_skeleton_interval: int = 20
-    context_story_skeleton_max_samples: int = 5
+    context_story_skeleton_max_samples: int = 7
     context_story_skeleton_snippet_chars: int = 400
     context_extra_section_budget: int = 800
+    context_master_outline_enabled: bool = True
+    context_master_outline_max_chars: int = 500
     context_ranker_enabled: bool = True
     context_ranker_recency_weight: float = 0.7
     context_ranker_frequency_weight: float = 0.3
@@ -291,6 +296,8 @@ class DataModulesConfig:
     foreshadowing_tier_weight_core: float = 3.0
     foreshadowing_tier_weight_sub: float = 2.0
     foreshadowing_tier_weight_decor: float = 1.0
+    foreshadowing_overdue_hard_block: bool = True  # 逾期伏笔硬阻断
+    foreshadowing_overdue_grace_chapters: int = 10  # 逾期容忍章数
 
     # ================= 角色活跃度 =================
     character_absence_warning: int = 30

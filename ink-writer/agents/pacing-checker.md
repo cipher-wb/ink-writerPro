@@ -211,3 +211,22 @@ Constellation: ░░░░░░░░░░░░░░░░░░░░   0%
 - 所有情节线在各自阈值内至少出现一次
 - 报告提供可执行的下一章建议
 - 趋势分析显示分布均衡（若有足够历史数据）
+
+## 主题一致性检测（v6.4 扩展）
+
+若 `review_bundle.writing_guidance` 或 `review_bundle.memory_context` 中包含 `project_info.themes`（核心主题列表），且列表非空，则额外执行主题检测：
+
+### 检测逻辑
+
+1. 从 `memory_context.chapter_memory_cards` 或 `review_bundle` 中的历史数据，提取最近章节的 `theme_presence` 字段
+2. 对每个核心主题，统计最近连续缺席章数：
+   - 连续15章缺席 → severity: **medium**，message: "核心主题'{theme}'已连续{N}章未出现，建议在近期章节中回归"
+   - 连续30章缺席 → severity: **high**，message: "核心主题'{theme}'已连续{N}章缺失，存在主题漂移风险"
+3. 如果某主题在最近10章内的呈现方式发生了根本性变化（如从"有代价"变成"无代价"），标记为主题矛盾：
+   - severity: **critical**，message: "核心主题'{theme}'的呈现方式发生了矛盾性转变"
+
+### 降级规则
+
+- 若 `themes` 为空或不存在 → 完全跳过主题检测，不报错
+- 若 `theme_presence` 历史数据不足（<10章） → 仅检测是否有theme完全未呈现，不检测连续缺席
+- 主题检测结果作为**独立section**追加到报告的 `issues` 数组中，`type` 字段为 `"theme_drift"`

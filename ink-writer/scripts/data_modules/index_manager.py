@@ -795,9 +795,88 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 "CREATE INDEX IF NOT EXISTS idx_checklist_score_value ON writing_checklist_scores(score)"
             )
 
+            # 叙事承诺表（P0-3 引入）
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS narrative_commitments (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    chapter INTEGER NOT NULL,
+                    commitment_type TEXT NOT NULL,
+                    entity_id TEXT,
+                    content TEXT NOT NULL,
+                    context_snippet TEXT,
+                    scope TEXT DEFAULT 'permanent',
+                    condition TEXT,
+                    resolved_chapter INTEGER,
+                    resolution_type TEXT,
+                    created_at TEXT DEFAULT (datetime('now'))
+                )
+            """)
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_nc_entity ON narrative_commitments(entity_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_nc_active ON narrative_commitments(resolved_chapter) WHERE resolved_chapter IS NULL"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_nc_chapter ON narrative_commitments(chapter)"
+            )
+
+            # v6.4 引入: 角色演变账本
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS character_evolution_ledger (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    entity_id TEXT NOT NULL,
+                    chapter INTEGER NOT NULL,
+                    arc_phase TEXT,
+                    personality_delta TEXT,
+                    voice_sample TEXT,
+                    motivation_shift TEXT,
+                    relationship_shifts TEXT,
+                    created_at TEXT DEFAULT (datetime('now')),
+                    UNIQUE(entity_id, chapter)
+                )
+            """)
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_cel_entity ON character_evolution_ledger(entity_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_cel_chapter ON character_evolution_ledger(chapter)"
+            )
+
             self._ensure_column(cursor, "chapter_reading_power", "notes", "TEXT")
             self._ensure_column(cursor, "chapter_reading_power", "payload_json", "TEXT")
             self._ensure_column(cursor, "review_metrics", "review_payload_json", "TEXT")
+            # v6.4 引入: 伏笔氛围快照
+            self._ensure_column(cursor, "plot_thread_registry", "atmospheric_snapshot", "TEXT")
+            # v6.4 引入: 主题呈现追踪
+            self._ensure_column(cursor, "chapter_memory_cards", "theme_presence", "TEXT DEFAULT '[]'")
+
+            # v6.4 引入: 冲突结构指纹
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS plot_structure_fingerprints (
+                    chapter INTEGER PRIMARY KEY,
+                    conflict_type TEXT,
+                    resolution_mechanism TEXT,
+                    twist_type TEXT,
+                    emotional_arc TEXT,
+                    created_at TEXT DEFAULT (datetime('now'))
+                )
+            """)
+
+            # v6.4 引入: 卷元数据
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS volume_metadata (
+                    volume_id INTEGER PRIMARY KEY,
+                    title TEXT,
+                    start_chapter INTEGER NOT NULL,
+                    end_chapter INTEGER,
+                    arc_summary TEXT,
+                    themes TEXT DEFAULT '[]',
+                    resolution_status TEXT DEFAULT 'in_progress',
+                    created_at TEXT DEFAULT (datetime('now')),
+                    updated_at TEXT DEFAULT (datetime('now'))
+                )
+            """)
 
             conn.commit()
 
@@ -826,6 +905,258 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
         cursor.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_def}")
 
     # ==================== 章节操作 ====================
+
+    # ==================== 叙事承诺操作 ====================
+
+    def save_narrative_commitment(self, data: Dict[str, Any]) -> int:
+        """Save a narrative commitment record."""
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """INSERT INTO narrative_commitments
+                   (chapter, commitment_type, entity_id, content, context_snippet, scope, condition)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    data.get("chapter"),
+                    data.get("commitment_type", "promise"),
+                    data.get("entity_id"),
+                    data.get("content", ""),
+                    data.get("context_snippet"),
+                    data.get("scope", "permanent"),
+                    data.get("condition"),
+                ),
+            )
+            conn.commit()
+            return int(cursor.lastrowid or 0)
+
+    def resolve_narrative_commitment(self, commitment_id: int, chapter: int, resolution_type: str = "fulfilled"):
+        """Mark a narrative commitment as resolved."""
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """UPDATE narrative_commitments
+                   SET resolved_chapter = ?, resolution_type = ?
+                   WHERE id = ?""",
+                (chapter, resolution_type, commitment_id),
+            )
+            conn.commit()
+
+    def get_active_commitments(self, entity_ids: list = None) -> list:
+        """Get all active (unresolved) narrative commitments, optionally filtered by entity."""
+        with self._get_conn() as conn:
+            if entity_ids:
+                placeholders = ",".join("?" for _ in entity_ids)
+                rows = conn.execute(
+                    f"""SELECT id, chapter, commitment_type, entity_id, content,
+                               context_snippet, scope, condition
+                        FROM narrative_commitments
+                        WHERE resolved_chapter IS NULL
+                          AND (entity_id IN ({placeholders}) OR entity_id IS NULL)
+                        ORDER BY chapter ASC""",
+                    entity_ids,
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    """SELECT id, chapter, commitment_type, entity_id, content,
+                              context_snippet, scope, condition
+                       FROM narrative_commitments
+                       WHERE resolved_chapter IS NULL
+                       ORDER BY chapter ASC""",
+                ).fetchall()
+            columns = ["id", "chapter", "commitment_type", "entity_id", "content",
+                        "context_snippet", "scope", "condition"]
+            return [dict(zip(columns, row)) for row in rows]
+
+    def get_all_commitments(self, include_resolved: bool = True) -> list:
+        """Get all narrative commitments."""
+        with self._get_conn() as conn:
+            if include_resolved:
+                rows = conn.execute("SELECT * FROM narrative_commitments ORDER BY chapter ASC").fetchall()
+            else:
+                rows = conn.execute("SELECT * FROM narrative_commitments WHERE resolved_chapter IS NULL ORDER BY chapter ASC").fetchall()
+            return [dict(row) for row in rows]
+
+    # ==================== 角色演变账本 ====================
+
+    def save_character_evolution(self, data: Dict[str, Any]) -> int:
+        """保存角色演变记录（UPSERT: 同entity同chapter覆盖）"""
+        with self._get_conn() as conn:
+            cursor = conn.execute(
+                """INSERT INTO character_evolution_ledger
+                   (entity_id, chapter, arc_phase, personality_delta,
+                    voice_sample, motivation_shift, relationship_shifts)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)
+                   ON CONFLICT(entity_id, chapter) DO UPDATE SET
+                    arc_phase = excluded.arc_phase,
+                    personality_delta = excluded.personality_delta,
+                    voice_sample = excluded.voice_sample,
+                    motivation_shift = excluded.motivation_shift,
+                    relationship_shifts = excluded.relationship_shifts""",
+                (
+                    data.get("entity_id"),
+                    data.get("chapter"),
+                    data.get("arc_phase"),
+                    data.get("personality_delta"),
+                    data.get("voice_sample"),
+                    data.get("motivation_shift"),
+                    data.get("relationship_shifts"),
+                ),
+            )
+            conn.commit()
+            return cursor.lastrowid
+
+    def get_character_evolution(self, entity_id: str, limit: int = 50) -> list:
+        """获取角色的演变轨迹，按章节升序"""
+        with self._get_conn() as conn:
+            rows = conn.execute(
+                """SELECT chapter, arc_phase, personality_delta,
+                          voice_sample, motivation_shift, relationship_shifts
+                   FROM character_evolution_ledger
+                   WHERE entity_id = ?
+                   ORDER BY chapter ASC
+                   LIMIT ?""",
+                (entity_id, limit),
+            ).fetchall()
+            return [dict(row) for row in rows]
+
+    def get_characters_evolution_summary(self, entity_ids: list, max_entries_per_char: int = 10) -> Dict[str, list]:
+        """批量获取多个角色的演变摘要"""
+        result: Dict[str, list] = {}
+        for eid in entity_ids:
+            entries = self.get_character_evolution(eid, limit=max_entries_per_char)
+            if entries:
+                result[eid] = entries
+        return result
+
+    # ==================== 冲突结构指纹 ====================
+
+    def save_plot_structure_fingerprint(self, data: Dict[str, Any]):
+        """保存章节冲突结构指纹（UPSERT）"""
+        with self._get_conn() as conn:
+            conn.execute(
+                """INSERT INTO plot_structure_fingerprints
+                   (chapter, conflict_type, resolution_mechanism, twist_type, emotional_arc)
+                   VALUES (?, ?, ?, ?, ?)
+                   ON CONFLICT(chapter) DO UPDATE SET
+                    conflict_type = excluded.conflict_type,
+                    resolution_mechanism = excluded.resolution_mechanism,
+                    twist_type = excluded.twist_type,
+                    emotional_arc = excluded.emotional_arc""",
+                (
+                    data.get("chapter"),
+                    data.get("conflict_type"),
+                    data.get("resolution_mechanism"),
+                    data.get("twist_type"),
+                    data.get("emotional_arc"),
+                ),
+            )
+            conn.commit()
+
+    def get_recent_fingerprints(self, limit: int = 50, before_chapter: int = 9999) -> list:
+        """获取最近的结构指纹用于去重检测"""
+        with self._get_conn() as conn:
+            rows = conn.execute(
+                """SELECT chapter, conflict_type, resolution_mechanism, twist_type, emotional_arc
+                   FROM plot_structure_fingerprints
+                   WHERE chapter < ?
+                   ORDER BY chapter DESC
+                   LIMIT ?""",
+                (before_chapter, limit),
+            ).fetchall()
+            return [dict(row) for row in rows]
+
+    def get_fingerprint_pattern_counts(self, limit: int = 50, before_chapter: int = 9999) -> list:
+        """统计最近N章中各冲突模式组合的出现次数"""
+        with self._get_conn() as conn:
+            rows = conn.execute(
+                """SELECT conflict_type, resolution_mechanism, COUNT(*) as count
+                   FROM plot_structure_fingerprints
+                   WHERE chapter < ? AND chapter >= ? - ?
+                   GROUP BY conflict_type, resolution_mechanism
+                   HAVING COUNT(*) >= 3
+                   ORDER BY count DESC""",
+                (before_chapter, before_chapter, limit),
+            ).fetchall()
+            return [dict(row) for row in rows]
+
+    # ==================== 卷元数据 ====================
+
+    def save_volume_metadata(self, data: Dict[str, Any]):
+        """保存卷元数据（UPSERT）"""
+        with self._get_conn() as conn:
+            conn.execute(
+                """INSERT INTO volume_metadata
+                   (volume_id, title, start_chapter, end_chapter, arc_summary, themes, resolution_status)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)
+                   ON CONFLICT(volume_id) DO UPDATE SET
+                    title = excluded.title,
+                    end_chapter = excluded.end_chapter,
+                    arc_summary = excluded.arc_summary,
+                    themes = excluded.themes,
+                    resolution_status = excluded.resolution_status,
+                    updated_at = datetime('now')""",
+                (
+                    data.get("volume_id"),
+                    data.get("title"),
+                    data.get("start_chapter"),
+                    data.get("end_chapter"),
+                    data.get("arc_summary"),
+                    data.get("themes", "[]"),
+                    data.get("resolution_status", "in_progress"),
+                ),
+            )
+            conn.commit()
+
+    def get_volume_metadata(self, volume_id: int = None) -> list:
+        """获取卷元数据"""
+        with self._get_conn() as conn:
+            if volume_id is not None:
+                rows = conn.execute(
+                    "SELECT * FROM volume_metadata WHERE volume_id = ?", (volume_id,)
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    "SELECT * FROM volume_metadata ORDER BY volume_id ASC"
+                ).fetchall()
+            return [dict(row) for row in rows]
+
+    def get_volume_for_chapter(self, chapter: int) -> Optional[Dict[str, Any]]:
+        """获取某章节所属的卷"""
+        with self._get_conn() as conn:
+            row = conn.execute(
+                """SELECT * FROM volume_metadata
+                   WHERE start_chapter <= ? AND (end_chapter IS NULL OR end_chapter >= ?)
+                   ORDER BY volume_id DESC LIMIT 1""",
+                (chapter, chapter),
+            ).fetchone()
+            return dict(row) if row else None
+
+    # ==================== 故事骨架采样 ====================
+
+    def get_top_reading_power_chapters(self, limit: int = 5, before_chapter: int = 9999) -> list:
+        """获取reading_power评分最高的章节（用于故事骨架智能采样）"""
+        with self._get_conn() as conn:
+            rows = conn.execute(
+                """SELECT chapter, hook_type, hook_strength
+                   FROM chapter_reading_power
+                   WHERE chapter < ?
+                     AND hook_strength = 'strong'
+                   ORDER BY chapter DESC
+                   LIMIT ?""",
+                (before_chapter, limit),
+            ).fetchall()
+            if rows:
+                return [dict(row) for row in rows]
+            # 回退: 如果没有strong hook的章，取最近的
+            rows = conn.execute(
+                """SELECT chapter, hook_type, hook_strength
+                   FROM chapter_reading_power
+                   WHERE chapter < ?
+                   ORDER BY chapter DESC
+                   LIMIT ?""",
+                (before_chapter, limit),
+            ).fetchall()
+            return [dict(row) for row in rows]
 
 # ==================== CLI 接口 ====================
 

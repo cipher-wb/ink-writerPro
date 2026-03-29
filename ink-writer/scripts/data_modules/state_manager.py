@@ -147,6 +147,10 @@ class StateManager:
             "plot_thread_updates": [],
             "reading_power": {},
             "candidate_facts": [],
+            "narrative_commitments_new": [],
+            "narrative_commitments_resolved": [],
+            "character_evolution_entries": [],
+            "plot_structure_fingerprint": {},
             "chapter": None,
         }
 
@@ -357,6 +361,27 @@ class StateManager:
                         disk_state["chapter_meta"] = chapter_meta
                     chapter_meta.update(self._pending_chapter_meta)
 
+                # chapter_meta buffer flush: 超过阈值时保留最近N条，避免state.json膨胀
+                max_in_state = getattr(self.config, "max_chapter_meta_in_state", 20)
+                keep_recent = getattr(self.config, "chapter_meta_keep_recent", 10)
+                chapter_meta = disk_state.get("chapter_meta")
+                if isinstance(chapter_meta, dict) and len(chapter_meta) > max_in_state:
+                    sorted_keys = sorted(chapter_meta.keys(), key=lambda k: int(k) if k.isdigit() else 0)
+                    keys_to_keep = sorted_keys[-keep_recent:]
+                    disk_state["chapter_meta"] = {k: chapter_meta[k] for k in keys_to_keep}
+                    logger.info(
+                        "chapter_meta buffer flush: %d → %d entries (kept recent %d)",
+                        len(chapter_meta), len(keys_to_keep), keep_recent,
+                    )
+
+                # strand_tracker.history 裁剪: 保留最近N条
+                max_strand_history = getattr(self.config, "max_strand_tracker_history", 100)
+                strand_tracker = disk_state.get("strand_tracker")
+                if isinstance(strand_tracker, dict):
+                    history = strand_tracker.get("history")
+                    if isinstance(history, list) and len(history) > max_strand_history:
+                        strand_tracker["history"] = history[-max_strand_history:]
+
                 if self._pending_plot_threads is not None:
                     disk_state["plot_threads"] = deepcopy(self._pending_plot_threads)
 
@@ -438,6 +463,65 @@ class StateManager:
             except Exception as exc:
                 logger.warning("SQLite sync failed (process_chapter_entities): %s", exc)
                 return False
+
+            # 同步叙事承诺 + 角色演变 + 冲突指纹（共享同一个 IndexManager 实例）
+            try:
+                from .index_manager import IndexManager
+                idx = IndexManager(self.config)
+
+                # 叙事承诺（新增）
+                for item in sqlite_data.get("narrative_commitments_new", []):
+                    if not isinstance(item, dict):
+                        continue
+                    content = str(item.get("content", "")).strip()
+                    if not content:
+                        continue
+                    idx.save_narrative_commitment({
+                        "chapter": chapter,
+                        "commitment_type": item.get("commitment_type", "promise"),
+                        "entity_id": item.get("entity_id"),
+                        "content": content,
+                        "context_snippet": item.get("context_snippet"),
+                        "scope": item.get("scope", "permanent"),
+                        "condition": item.get("condition"),
+                    })
+
+                # 叙事承诺（解决）
+                for item in sqlite_data.get("narrative_commitments_resolved", []):
+                    if not isinstance(item, dict):
+                        continue
+                    cid = item.get("commitment_id")
+                    if cid is not None:
+                        idx.resolve_narrative_commitment(
+                            commitment_id=int(cid),
+                            chapter=item.get("chapter", chapter),
+                            resolution_type=item.get("resolution_type", "fulfilled"),
+                        )
+
+                # 角色演变记录
+                for item in sqlite_data.get("character_evolution_entries", []):
+                    if not isinstance(item, dict):
+                        continue
+                    eid = item.get("entity_id")
+                    if not eid:
+                        continue
+                    idx.save_character_evolution({
+                        "entity_id": eid,
+                        "chapter": item.get("chapter", chapter),
+                        "arc_phase": item.get("arc_phase"),
+                        "personality_delta": item.get("personality_delta"),
+                        "voice_sample": item.get("voice_sample"),
+                        "motivation_shift": item.get("motivation_shift"),
+                        "relationship_shifts": item.get("relationship_shifts"),
+                    })
+
+                # 冲突结构指纹
+                fingerprint = sqlite_data.get("plot_structure_fingerprint")
+                if isinstance(fingerprint, dict) and "chapter" in fingerprint:
+                    idx.save_plot_structure_fingerprint(fingerprint)
+
+            except Exception as exc:
+                logger.warning("SQLite sync failed (index extensions): %s", exc)
 
         # 方式2: 使用 add_entity/update_entity 收集的增量数据。
         # 数据缓存在 _pending_entity_patches 等变量中。
@@ -624,6 +708,10 @@ class StateManager:
             "plot_thread_updates": [],
             "reading_power": {},
             "candidate_facts": [],
+            "narrative_commitments_new": [],
+            "narrative_commitments_resolved": [],
+            "character_evolution_entries": [],
+            "plot_structure_fingerprint": {},
             "chapter": None,
         })
 
@@ -641,6 +729,10 @@ class StateManager:
             "plot_thread_updates": [],
             "reading_power": {},
             "candidate_facts": [],
+            "narrative_commitments_new": [],
+            "narrative_commitments_resolved": [],
+            "character_evolution_entries": [],
+            "plot_structure_fingerprint": {},
             "chapter": None,
         }
 
@@ -1333,6 +1425,21 @@ class StateManager:
 
         if isinstance(result.get("candidate_facts"), list):
             self._pending_sqlite_data["candidate_facts"] = list(result.get("candidate_facts"))
+
+        # 处理叙事承诺
+        if isinstance(result.get("narrative_commitments_new"), list):
+            self._pending_sqlite_data["narrative_commitments_new"] = list(result.get("narrative_commitments_new"))
+
+        if isinstance(result.get("narrative_commitments_resolved"), list):
+            self._pending_sqlite_data["narrative_commitments_resolved"] = list(result.get("narrative_commitments_resolved"))
+
+        # 处理角色演变记录
+        if isinstance(result.get("character_evolution_entries"), list):
+            self._pending_sqlite_data["character_evolution_entries"] = list(result.get("character_evolution_entries"))
+
+        # 处理冲突结构指纹
+        if isinstance(result.get("plot_structure_fingerprint"), dict):
+            self._pending_sqlite_data["plot_structure_fingerprint"] = dict(result.get("plot_structure_fingerprint"))
 
         # 写入 chapter_meta（兼容快照，附带轻量结构化信息）
         chapter_meta = self._build_chapter_meta_payload(chapter, result, warnings)

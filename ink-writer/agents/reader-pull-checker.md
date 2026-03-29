@@ -323,3 +323,15 @@ model: inherit
 - [ ] 微兑现数量达标（或有 `Override`）
 - [ ] 无连续3章以上同型
 - [ ] 输出清晰的"下章动机"
+
+## 十、冲突结构去重检测（v6.4 扩展）
+
+若 `review_bundle` 中包含 `plot_structure_fingerprints`（最近50章的冲突指纹统计），执行以下检测：
+
+1. 读取指纹统计中 `conflict_type + resolution_mechanism` 的出现次数
+2. 分级：
+   - 同一组合在最近50章出现 ≥ 3次 → severity: **medium**，message: "冲突模式'{type}+{mechanism}'在最近50章已出现{N}次，建议变换冲突类型或解决方式"
+   - 同一组合出现 ≥ 5次 → severity: **high**，message: "冲突模式高度重复，读者可能产生审美疲劳"
+3. 输出到 `issues` 数组中，`type` 字段为 `"structure_repetition"`
+
+**降级规则**：若 `plot_structure_fingerprints` 不存在或数据不足（<10章） → 跳过此检测

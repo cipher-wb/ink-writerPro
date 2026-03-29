@@ -207,8 +207,10 @@ cat "${REVIEW_SKILL_ROOT}/SKILL.md"
    - 根据问题描述和修复建议，对正文做定向修改
    - 修改后重新验证字数 ≥ 2200
    - 保存修改后的章节文件
-3. 修复后对涉及的章节重跑核心 3 checker 验证（最多 1 轮）
-4. 若修复引入新的 critical 问题 → 输出警告，不做二次修复（避免无限循环）
+3. **修复互斥检测**：若 fix A 和 fix B 作用于同一段落（50字符范围内），先合并修改意图再统一应用，避免互相覆盖
+4. 修复后对涉及的章节重跑核心 3 checker 验证（最多 1 轮）
+5. **增强规则**：若单章 critical+high 问题总数 ≥ 5，允许第2轮修复，第2轮 re-verify 使用全部 8 个 checker（非仅 core 3 个）
+6. 若修复引入新的 critical 问题 → 输出警告，不做三次修复（避免无限循环）
 5. Git 提交修复：
    ```bash
    git add "${PROJECT_ROOT}/正文/" "${PROJECT_ROOT}/审查报告/" "${PROJECT_ROOT}/.ink/"
@@ -249,6 +251,19 @@ ink-5 全流程完成报告
 📎 审查报告：审查报告/第{batch_start}-{batch_end}章审查报告.md
 ═══════════════════════════════════════
 ```
+
+**里程碑提醒**（在报告末尾追加）：
+
+检查本批次是否跨越了里程碑（即 `batch_start` 到 `batch_end` 的范围内包含50或200的整数倍）：
+- 若范围内包含50的整数倍（计算: `(batch_start - 1) // 50 < batch_end // 50`）：
+  ```
+  📋 已跨越50章检查点（第{batch_end}章），建议运行 /ink-audit standard 进行数据对账
+  ```
+- 若范围内包含200的整数倍（计算: `(batch_start - 1) // 200 < batch_end // 200`）：
+  ```
+  🏆 已跨越200章里程碑（第{batch_end}章），建议运行 /ink-audit deep 进行全量数据对账
+  建议同时运行 /ink-macro-review Tier3 进行跨卷叙事审查（需要单独会话执行）
+  ```
 
 ## 章间衔接（与 ink-write --batch 一致）
 
