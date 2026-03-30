@@ -307,6 +307,275 @@ except Exception as e:
   ```
 - 此检查为**警告模式**（不强制阻断），但会在 Context Agent Board 7 中强制置顶逾期伏笔。
 
+### Step 0.7：金丝雀健康扫描（Canary Health Scan）
+
+> **设计目的**：将 ink-macro-review 和 ink-audit 的核心检查能力前移到每章写作前执行，做到"写一章就保证一章正确"。所有检查为轻量 SQL 查询 + JSON 比对，零额外子代理开销。
+>
+> **兼容性保证**：所有查询均包裹 `try...except`，表不存在或数据为空时返回空结果（检查通过）。第 1 章写作时所有表为空，所有检查自动通过。任何金丝雀脚本执行异常只输出 `⚠️ canary_skipped`，不阻断写作。
+
+**执行时机**：逾期伏笔检查通过后、进入 Step 0.5 之前。
+
+#### A.1 主角状态同步检查（CRITICAL + 自动修复 + 复检闸门）
+
+> 来源：ink-audit Quick #1。以 index.db 为权威数据源（因为它是 `state process-chapter` 写入的结果），检测 state.json 是否与之一致。
+
+```bash
+python3 -X utf8 -c "
+import json, sqlite3, sys
+from pathlib import Path
+project_root = '${PROJECT_ROOT}'
+state_path = Path(f'{project_root}/.ink/state.json')
+db_path = f'{project_root}/.ink/index.db'
+
+state = json.loads(state_path.read_text())
+protag = state.get('protagonist_state', {})
+
+try:
+    conn = sqlite3.connect(db_path)
+    row = conn.execute(
+        'SELECT canonical_name, current_json FROM entities WHERE is_protagonist = 1 LIMIT 1'
+    ).fetchone()
+    conn.close()
+except Exception as e:
+    print(f'⚠️ canary_skipped: 主角状态检查跳过（数据库不可用）: {e}')
+    sys.exit(0)
+
+if not row:
+    print('✅ 主角状态检查跳过（index.db 无主角记录，可能是新项目）')
+    sys.exit(0)
+
+current = json.loads(row[1] or '{}')
+s_realm = protag.get('power', {}).get('realm', '')
+d_realm = current.get('realm', '')
+s_loc = protag.get('location', {}).get('current', '')
+d_loc = current.get('location', '')
+
+issues = []
+if s_realm and d_realm and s_realm != d_realm:
+    issues.append(('realm', s_realm, d_realm))
+if s_loc and d_loc and s_loc != d_loc:
+    issues.append(('location', s_loc, d_loc))
+
+if issues:
+    details = '; '.join(f'{k}: state.json={sv} vs index.db={dv}' for k, sv, dv in issues)
+    print(f'⚠️ 主角状态不一致: {details}')
+    print('CANARY_PROTAGONIST_SYNC=fail')
+    for k, sv, dv in issues:
+        print(f'CANARY_FIX_{k.upper()}={dv}')
+else:
+    print('✅ 主角状态同步')
+    print('CANARY_PROTAGONIST_SYNC=pass')
+"
+```
+
+**自动修复流程**（当输出 `CANARY_PROTAGONIST_SYNC=fail` 时执行）：
+
+1. 以 index.db 为准同步 state.json：
+```bash
+# 若 realm 不一致：
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+  update-state --protagonist-power "${CANARY_FIX_REALM}" \
+  "$(python3 -c "import json; s=json.loads(open('${PROJECT_ROOT}/.ink/state.json').read()); print(s.get('protagonist_state',{}).get('power',{}).get('layer','1'))")" \
+  "$(python3 -c "import json; s=json.loads(open('${PROJECT_ROOT}/.ink/state.json').read()); print(s.get('protagonist_state',{}).get('power',{}).get('bottleneck','无'))")"
+
+# 若 location 不一致：
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+  update-state --protagonist-location "${CANARY_FIX_LOCATION}" "${chapter_num}"
+```
+
+2. **复检**：修复后重新执行上方 A.1 检测脚本。
+3. **闸门**：复检输出 `CANARY_PROTAGONIST_SYNC=pass` → 继续；仍为 `fail` → 输出 `❌ 主角状态同步失败（自动修复后仍不一致），请手动检查 .ink/state.json 和 .ink/index.db`，**阻断写作**。
+4. **最多重试 1 次**，不无限循环。
+
+#### A.2 角色发展停滞检测（WARNING → 注入执行包）
+
+> 来源：ink-macro-review 2.2。检测核心/重要角色是否长期无演变记录。
+
+```bash
+python3 -X utf8 -c "
+import sqlite3, sys
+db_path = '${PROJECT_ROOT}/.ink/index.db'
+try:
+    conn = sqlite3.connect(db_path)
+    rows = conn.execute('''
+        SELECT e.canonical_name, e.tier,
+               (SELECT MAX(chapter) FROM chapters) - COALESCE(MAX(cel.chapter), 0) as stagnant_chapters
+        FROM entities e
+        LEFT JOIN character_evolution_ledger cel ON e.id = cel.entity_id
+        WHERE e.type = '角色' AND e.tier IN ('核心', '重要') AND e.is_archived = 0
+        GROUP BY e.id
+        HAVING stagnant_chapters > 40
+        ORDER BY stagnant_chapters DESC LIMIT 5
+    ''').fetchall()
+    conn.close()
+    if rows:
+        print('⚠️ 角色发展停滞警告：')
+        for name, tier, stagnant in rows:
+            print(f'  CANARY_STAGNANT: {name}（{tier}）已 {stagnant} 章无角色发展记录')
+    else:
+        print('✅ 无角色发展停滞')
+except Exception as e:
+    print(f'⚠️ canary_skipped: 角色停滞检查跳过: {e}')
+"
+```
+
+**处理规则**：
+- 非阻断，输出结果保存为 `canary_stagnant_characters` 列表，在 Step 1 注入到创作执行包。
+- 注入文本格式：`"角色 {name}（{tier}）已 {N} 章无角色发展记录，本章若出场必须展现变化（行为/态度/能力/关系至少一项）"`
+
+#### A.3 冲突模式重复检测（WARNING → 注入执行包）
+
+> 来源：ink-macro-review 2.3。检测最近 30 章内是否有重复 3+ 次的冲突模式。
+
+```bash
+python3 -X utf8 -c "
+import sqlite3, sys
+db_path = '${PROJECT_ROOT}/.ink/index.db'
+try:
+    conn = sqlite3.connect(db_path)
+    rows = conn.execute('''
+        SELECT conflict_type, resolution_mechanism, COUNT(*) as count,
+               GROUP_CONCAT(chapter) as chapters
+        FROM plot_structure_fingerprints
+        WHERE chapter >= (SELECT MAX(chapter) FROM chapters) - 30
+        GROUP BY conflict_type, resolution_mechanism
+        HAVING COUNT(*) >= 3
+        ORDER BY count DESC
+    ''').fetchall()
+    conn.close()
+    if rows:
+        print('⚠️ 冲突模式重复警告：')
+        for ctype, rmech, count, chs in rows:
+            print(f'  CANARY_CONFLICT_REPEAT: {ctype}+{rmech} 在最近30章出现{count}次 (ch{chs})')
+    else:
+        print('✅ 无冲突模式重复')
+except Exception as e:
+    print(f'⚠️ canary_skipped: 冲突模式检查跳过: {e}')
+"
+```
+
+**处理规则**：
+- 非阻断，输出结果保存为 `canary_conflict_repetitions` 列表，在 Step 1 注入到创作执行包。
+- 注入文本格式：`"本章禁止使用 {conflict_type}+{resolution_mechanism} 冲突模式（最近30章已用{count}次）"`
+
+#### A.4 消歧积压警告（ADVISORY）
+
+> 来源：ink-audit Quick #4。
+
+```bash
+python3 -X utf8 -c "
+import json
+from pathlib import Path
+state = json.loads(Path('${PROJECT_ROOT}/.ink/state.json').read_text())
+pending = state.get('disambiguation_pending', [])
+count = len(pending)
+if count > 50:
+    print(f'⚠️ 消歧积压严重: {count}条，强烈建议运行 /ink-resolve')
+elif count > 30:
+    print(f'⚠️ 消歧积压: {count}条，建议运行 /ink-resolve')
+else:
+    print(f'✅ 消歧积压正常（{count}条）')
+"
+```
+
+**处理规则**：仅提醒，不阻断，不注入执行包。
+
+#### A.5 时间线链条验证（WARNING → 注入执行包）
+
+> 来源：ink-audit Standard #7。检查最近 10 章时间线锚点的逻辑一致性。
+
+```bash
+python3 -X utf8 -c "
+import sqlite3, json, sys
+db_path = '${PROJECT_ROOT}/.ink/index.db'
+try:
+    conn = sqlite3.connect(db_path)
+    rows = conn.execute('''
+        SELECT chapter, anchor_time, countdown, relative_to_previous
+        FROM timeline_anchors
+        WHERE chapter >= (SELECT MAX(chapter) FROM chapters) - 10
+        ORDER BY chapter ASC
+    ''').fetchall()
+    conn.close()
+    if not rows:
+        print('✅ 时间线检查跳过（无锚点数据）')
+        sys.exit(0)
+    issues = []
+    prev_time = None
+    prev_chapter = None
+    for chapter, anchor_time, countdown, rel in rows:
+        if prev_time and anchor_time and rel:
+            # 检查是否存在无闪回标记的时间倒退
+            if '倒退' in str(rel) or '之前' in str(rel):
+                issues.append(f'ch{prev_chapter}→ch{chapter}: 时间倒退（{rel}），请确认是否为闪回')
+        prev_time = anchor_time
+        prev_chapter = chapter
+    if issues:
+        print('⚠️ 时间线一致性警告：')
+        for issue in issues:
+            print(f'  CANARY_TIMELINE: {issue}')
+    else:
+        print('✅ 时间线链条一致')
+except Exception as e:
+    print(f'⚠️ canary_skipped: 时间线检查跳过: {e}')
+"
+```
+
+**处理规则**：
+- 非阻断，输出结果在 Step 1 注入执行包的时间约束板块。
+
+#### A.6 遗忘伏笔补充检测（WARNING → 注入执行包）
+
+> 来源：ink-macro-review 2.4。与 Step 0 的逾期伏笔检查互补——逾期检查看 `target_payoff_chapter`（有明确目标的伏笔），本检查看 `last_touched_chapter`（所有活跃但已沉默 30+ 章的伏笔）。
+
+```bash
+python3 -X utf8 -c "
+import sqlite3, sys
+db_path = '${PROJECT_ROOT}/.ink/index.db'
+try:
+    conn = sqlite3.connect(db_path)
+    rows = conn.execute('''
+        SELECT thread_id, title, content, last_touched_chapter,
+               (SELECT MAX(chapter) FROM chapters) - last_touched_chapter as silent_chapters
+        FROM plot_thread_registry
+        WHERE status = 'active'
+          AND last_touched_chapter < (SELECT MAX(chapter) FROM chapters) - 30
+        ORDER BY silent_chapters DESC LIMIT 5
+    ''').fetchall()
+    conn.close()
+    if rows:
+        print('⚠️ 遗忘伏笔提醒（沉默30+章）：')
+        for tid, title, content, last_ch, silent in rows:
+            print(f'  CANARY_FORGOTTEN: [{tid}] {title}: 最后触及ch{last_ch}, 已沉默{silent}章')
+    else:
+        print('✅ 无遗忘伏笔')
+except Exception as e:
+    print(f'⚠️ canary_skipped: 遗忘伏笔检查跳过: {e}')
+"
+```
+
+**处理规则**：
+- 非阻断，输出结果在 Step 1 注入到执行包的伏笔推进建议板块。
+- 注入文本格式：`"伏笔 [{thread_id}] {title} 已沉默 {N} 章，本章建议推进或提及"`
+
+#### Step 0.7 输出汇总
+
+金丝雀扫描完成后，必须输出汇总：
+
+```
+=== 金丝雀健康扫描结果 ===
+主角状态同步: pass / fixed / fail
+角色停滞: {N}个角色停滞
+冲突模式重复: {N}个模式重复
+消歧积压: {N}条
+时间线问题: {N}个
+遗忘伏笔: {N}条
+阻断: 是/否
+注入约束数: {N}条
+```
+
+**保留金丝雀结果供 Step 1 消费**：将所有 WARNING 级结果的注入文本收集为 `canary_injections` 列表，在 Step 1 追加到创作执行包中。
+
 ### Step 0.5：工作流断点记录（best-effort，不阻断）
 
 ```bash
@@ -440,7 +709,34 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 - 默认应直接复用脚本产出的 execution pack，不再起子代理做二次整理。
 
 输出：
-- 单一“创作执行包”（任务书 + Context Contract + 直写提示词），供 Step 2A 直接消费，不再拆分独立 Step 1.5。
+- 单一”创作执行包”（任务书 + Context Contract + 直写提示词），供 Step 2A 直接消费，不再拆分独立 Step 1.5。
+
+**金丝雀写作约束注入**（Step 0.7 产出非空时必须执行）：
+
+若 Step 0.7 的金丝雀扫描产出了 WARNING 级结果（`canary_injections` 非空），**必须**将金丝雀注入文本追加到创作执行包末尾，作为独立板块”金丝雀写作约束”。此板块中的每条约束具有与”不可变事实清单”**同等优先级**——Step 2A Writer 必须遵守，Step 3 Checker 会验证。
+
+注入板块格式（追加到执行包末尾）：
+
+```markdown
+## 金丝雀写作约束（自动注入，优先级等同不可变事实）
+
+### 角色发展要求（来自 A.2）
+- 角色 “{name}”（{tier}）已 {N} 章无演变，本章若出场**必须**展现变化（行为/态度/能力/关系至少一项）
+
+### 禁用冲突模式（来自 A.3）
+- 本章**禁止**使用 “{conflict_type}+{resolution_mechanism}” 冲突模式（最近30章已用{count}次）
+
+### 伏笔推进建议（来自 A.6）
+- 伏笔 [{thread_id}] “{title}” 已沉默 {N} 章，本章**建议**推进或提及
+
+### 时间线约束（来自 A.5）
+- {时间线警告内容}
+```
+
+注入规则：
+- 若 Step 0.7 某项检查返回空结果，对应子板块不生成（不输出空板块）。
+- 若所有检查均为空，则不追加”金丝雀写作约束”板块（执行包保持原样）。
+- 注入完成后，执行包的最终版本即为 Step 2A 消费的输入。
 
 ### Step 2A：正文起草
 
@@ -578,6 +874,27 @@ Task 传参硬约束：
 - `reader-simulator`
 
 审查范围：核心 3 个 + auto 命中的条件审查器（始终全量执行）。
+
+**金丝雀约束传递**（若 Step 0.7 产出了金丝雀写作约束）：
+
+生成 review_bundle 后，若创作执行包中包含"金丝雀写作约束"板块，必须将约束信息传递给对应 checker：
+
+| 金丝雀约束类型 | 传递给 Checker | 检查维度 | 未遵守严重度 |
+|--------------|---------------|---------|------------|
+| 角色发展要求 | `ooc-checker` | 本章出场的停滞角色是否展现了变化（行为/态度/能力/关系） | `medium` |
+| 禁用冲突模式 | `pacing-checker` | 本章冲突模式是否命中禁用列表 | `high` |
+| 时间线约束 | `continuity-checker` | 本章时间线是否满足约束（不倒退/不矛盾） | `critical` |
+| 伏笔推进建议 | `continuity-checker` | 建议性——不强制检查，但 checker 可在报告中标注是否推进了遗忘伏笔 | — |
+
+传递方式：在 Task 调用每个 checker 时，将金丝雀约束作为额外 prompt 内容传入。格式：
+```
+[金丝雀约束 - 请额外检查以下项目]
+- 角色发展: {约束内容}
+- 禁用冲突: {约束内容}
+- 时间线: {约束内容}
+```
+
+审查汇总时，金丝雀约束违规的 issue 标记来源为 `canary_constraint`，与常规审查 issue 合并计入 `severity_counts`。
 
 推荐调度顺序：
 1. `consistency-checker` + `continuity-checker` 并发（最多 2 个）
@@ -798,6 +1115,129 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflo
 
 债务利息：
 - 默认关闭，仅在用户明确要求或开启追踪时执行（见 `step-5-debt-switch.md`）。
+
+#### Step 5 数据回写验证（Mini-Audit）
+
+> **设计目的**：在 Step 5 回写完成后立即验证数据一致性，防止回写引入新问题。所有检查为轻量 SQL 查询，零额外子代理。
+>
+> **执行时机**：Step 5 收尾动作（`workflow complete-step --step-id "Step 5"`）执行**之前**。Mini-Audit 全部通过后才允许 complete-step。
+
+##### C.1 回写后主角状态同步（CRITICAL + 自动重试）
+
+> 复用 Step 0.7 A.1 的比对逻辑，验证 `state process-chapter` 执行后 state.json 与 index.db 的主角状态是否一致。
+
+```bash
+python3 -X utf8 -c "
+import json, sqlite3, sys
+from pathlib import Path
+project_root = '${PROJECT_ROOT}'
+state = json.loads(Path(f'{project_root}/.ink/state.json').read_text())
+protag = state.get('protagonist_state', {})
+try:
+    conn = sqlite3.connect(f'{project_root}/.ink/index.db')
+    row = conn.execute(
+        'SELECT canonical_name, current_json FROM entities WHERE is_protagonist = 1 LIMIT 1'
+    ).fetchone()
+    conn.close()
+except Exception as e:
+    print(f'⚠️ mini_audit_skipped: {e}')
+    sys.exit(0)
+
+if not row:
+    print('✅ Mini-Audit C.1 跳过（无主角记录）')
+    sys.exit(0)
+
+current = json.loads(row[1] or '{}')
+s_realm = protag.get('power', {}).get('realm', '')
+d_realm = current.get('realm', '')
+s_loc = protag.get('location', {}).get('current', '')
+d_loc = current.get('location', '')
+
+issues = []
+if s_realm and d_realm and s_realm != d_realm:
+    issues.append(f'realm: state.json={s_realm} vs index.db={d_realm}')
+if s_loc and d_loc and s_loc != d_loc:
+    issues.append(f'location: state.json={s_loc} vs index.db={d_loc}')
+
+if issues:
+    print(f'⚠️ Mini-Audit C.1 FAIL: 回写后主角状态不一致: {\"; \".join(issues)}')
+    print('MINI_AUDIT_C1=fail')
+else:
+    print('✅ Mini-Audit C.1 PASS: 回写后主角状态一致')
+    print('MINI_AUDIT_C1=pass')
+"
+```
+
+**处理规则**：
+- 若 `MINI_AUDIT_C1=fail`：
+  1. 重跑一次 `state process-chapter`（使用与 Step 5 相同的 payload）
+  2. 重新执行 C.1 检测
+  3. 复检通过 → 继续；仍不通过 → 输出 `❌ Step 5 回写后主角状态不一致（重试后仍失败），请手动检查`，**阻断 Step 5 完成**（不影响已保存的正文文件）
+- 最多重试 **1 次**，不无限循环
+
+##### C.2 实体提取数量验证（WARNING）
+
+```bash
+python3 -X utf8 -c "
+import sqlite3, sys
+db_path = '${PROJECT_ROOT}/.ink/index.db'
+chapter = ${chapter_num}
+try:
+    conn = sqlite3.connect(db_path)
+    count = conn.execute('SELECT COUNT(*) FROM appearances WHERE chapter = ?', (chapter,)).fetchone()[0]
+    conn.close()
+    if count == 0:
+        print(f'⚠️ Mini-Audit C.2 WARNING: 第{chapter}章 appearances 表记录为0，可能实体提取失败')
+    else:
+        print(f'✅ Mini-Audit C.2 PASS: 第{chapter}章 appearances 记录 {count} 条')
+except Exception as e:
+    print(f'⚠️ mini_audit_skipped: {e}')
+"
+```
+
+**处理规则**：WARNING 级，记录但不阻断。0 条记录在有角色互动的章节中为异常，建议检查 Data Agent 提取日志。
+
+##### C.3 时间线锚点验证（WARNING）
+
+```bash
+python3 -X utf8 -c "
+import sqlite3, json, sys
+db_path = '${PROJECT_ROOT}/.ink/index.db'
+chapter = ${chapter_num}
+try:
+    conn = sqlite3.connect(db_path)
+    rows = conn.execute(
+        'SELECT chapter, anchor_time, countdown FROM timeline_anchors WHERE chapter IN (?, ?) ORDER BY chapter',
+        (chapter - 1, chapter)
+    ).fetchall()
+    conn.close()
+    if len(rows) < 2:
+        print('✅ Mini-Audit C.3 跳过（锚点数据不足）')
+        sys.exit(0)
+    prev_time = rows[0][1]
+    curr_time = rows[1][1]
+    if prev_time and curr_time and prev_time > curr_time:
+        print(f'⚠️ Mini-Audit C.3 WARNING: 时间可能倒退 ch{chapter-1}={prev_time} → ch{chapter}={curr_time}')
+    else:
+        print(f'✅ Mini-Audit C.3 PASS: 时间锚点一致')
+except Exception as e:
+    print(f'⚠️ mini_audit_skipped: {e}')
+"
+```
+
+**处理规则**：WARNING 级，记录但不阻断。时间倒退可能是闪回章节的正常行为。
+
+##### Mini-Audit 汇总
+
+```
+=== Step 5 Mini-Audit 结果 ===
+C.1 主角状态同步: PASS / FAIL / SKIPPED
+C.2 实体提取数量: PASS / WARNING / SKIPPED
+C.3 时间线锚点: PASS / WARNING / SKIPPED
+阻断: 是/否
+```
+
+仅当 C.1 为 FAIL（重试后仍失败）时阻断 Step 5 完成。其余 WARNING 记录到审查报告但不阻断。
 
 ### Step 6：Git 备份（可失败但需说明）
 

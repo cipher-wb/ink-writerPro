@@ -10,6 +10,11 @@ allowed-tools: Read Grep Bash AskUserQuestion
 
 长篇连续创作中，AI 提取的数据（实体、状态、伏笔等）会产生累积误差。本工具定期扫描并报告数据不一致问题，防止错误复利增长。
 
+> **与每章金丝雀检查的关系**：ink-write Step 0.7 和 Step 5 Mini-Audit 已覆盖 Quick 模式中的"主角状态同步"（A.1/C.1）和"消歧积压"（A.4）检查，每章自动执行。但以下检查仍需通过本 skill 定期运行：
+> - **Standard 模式**：全量实体出场校验（重读最近20章原文）、时间线算术一致性、strand_tracker 一致性
+> - **Deep 模式**：全量实体校验、state_changes 逻辑链、伏笔孤儿检测、关系图一致性
+> - Quick 模式仍可用于综合一览，但不再是第一道防线。
+
 ## Project Root Guard（必须先确认）
 
 ```bash

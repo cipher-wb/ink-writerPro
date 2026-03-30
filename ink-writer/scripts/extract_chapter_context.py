@@ -477,6 +477,7 @@ def _load_contract_context(project_root: Path, chapter_num: int) -> Dict[str, An
         "golden_three_contract": (sections.get("golden_three_contract") or {}).get("content", {}),
         "writing_guidance": (sections.get("writing_guidance") or {}).get("content", {}),
         "memory": (sections.get("memory") or {}).get("content", {}),
+        "alerts": (sections.get("alerts") or {}).get("content", {}),
     }
 
 
@@ -510,6 +511,7 @@ def build_chapter_context_payload(project_root: Path, chapter_num: int) -> Dict[
         "golden_three_contract": contract_context.get("golden_three_contract", {}),
         "writing_guidance": contract_context.get("writing_guidance", {}),
         "rag_assist": rag_assist,
+        "alerts": contract_context.get("alerts", {}),
     }
 
 
@@ -1233,6 +1235,15 @@ def build_execution_pack_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         "fail_conditions": fail_conditions,
     }
 
+    # 提取金丝雀健康提醒数据
+    alerts = payload.get("alerts") or {}
+    canary_alerts = {
+        "stagnant_characters": alerts.get("canary_stagnant_characters") or [],
+        "conflict_repetitions": alerts.get("canary_conflict_repetitions") or [],
+        "forgotten_threads": alerts.get("canary_forgotten_threads") or [],
+        "timeline_issues": alerts.get("canary_timeline_issues") or [],
+    }
+
     return {
         "chapter": chapter_num,
         "title": title,
@@ -1240,6 +1251,7 @@ def build_execution_pack_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         "taskbook": taskbook,
         "context_contract": contract_payload,
         "step_2a_prompt": step_2a_prompt,
+        "canary_alerts": canary_alerts,
     }
 
 
@@ -1312,6 +1324,57 @@ def _render_execution_pack_text(pack: Dict[str, Any]) -> str:
         for row in rows:
             lines.append(f"- {row}")
         lines.append("")
+
+    # 金丝雀写作约束板块（仅在有 WARNING 级结果时渲染）
+    canary = pack.get("canary_alerts") or {}
+    canary_lines: List[str] = []
+
+    stagnant = canary.get("stagnant_characters") or []
+    if stagnant:
+        canary_lines.append("### 角色发展要求")
+        canary_lines.append("")
+        for c in stagnant:
+            canary_lines.append(
+                f"- 角色 \"{c.get('name', '?')}\"（{c.get('tier', '?')}）"
+                f"已 {c.get('chapters_stagnant', '?')} 章无演变，"
+                f"本章若出场**必须**展现变化（行为/态度/能力/关系至少一项）"
+            )
+        canary_lines.append("")
+
+    conflicts = canary.get("conflict_repetitions") or []
+    if conflicts:
+        canary_lines.append("### 禁用冲突模式")
+        canary_lines.append("")
+        for c in conflicts:
+            canary_lines.append(
+                f"- 本章**禁止**使用 \"{c.get('pattern', '?')}\" 冲突模式"
+                f"（最近30章已用{c.get('count', '?')}次，出现于ch{c.get('chapters', '?')}）"
+            )
+        canary_lines.append("")
+
+    forgotten = canary.get("forgotten_threads") or []
+    if forgotten:
+        canary_lines.append("### 伏笔推进建议")
+        canary_lines.append("")
+        for t in forgotten:
+            canary_lines.append(
+                f"- 伏笔 [{t.get('id', '?')}] \"{t.get('title', '?')}\" "
+                f"已沉默 {t.get('silent_chapters', '?')} 章，本章**建议**推进或提及"
+            )
+        canary_lines.append("")
+
+    timeline = canary.get("timeline_issues") or []
+    if timeline:
+        canary_lines.append("### 时间线约束")
+        canary_lines.append("")
+        for issue in timeline:
+            canary_lines.append(f"- {issue}")
+        canary_lines.append("")
+
+    if canary_lines:
+        lines.append("## 金丝雀写作约束（自动注入，优先级等同不可变事实）")
+        lines.append("")
+        lines.extend(canary_lines)
 
     return "\n".join(lines).rstrip() + "\n"
 

@@ -272,8 +272,132 @@ class ContextManager:
                 "disambiguation_pending": (
                     state.get("disambiguation_pending", [])[-alert_slice:] if alert_slice else []
                 ),
+                **self._build_canary_alerts(chapter),
             },
         }
+
+    def _build_canary_alerts(self, chapter: int) -> Dict[str, Any]:
+        """构建金丝雀健康提醒数据，集成到 alerts 字段中。
+
+        所有查询包裹 try/except，表不存在或数据为空时返回空列表（检查通过）。
+        """
+        result: Dict[str, Any] = {
+            "canary_stagnant_characters": [],
+            "canary_conflict_repetitions": [],
+            "canary_forgotten_threads": [],
+            "canary_timeline_issues": [],
+        }
+        db_path = self.config.index_db
+        if not db_path or not db_path.exists():
+            return result
+
+        import sqlite3
+
+        try:
+            conn = sqlite3.connect(str(db_path))
+            conn.row_factory = sqlite3.Row
+        except Exception:
+            return result
+
+        try:
+            # A.2 角色发展停滞检测（40+章无演变记录）
+            try:
+                rows = conn.execute(
+                    """
+                    SELECT e.canonical_name, e.tier,
+                           (SELECT MAX(chapter) FROM chapters) - COALESCE(MAX(cel.chapter), 0) as stagnant_chapters
+                    FROM entities e
+                    LEFT JOIN character_evolution_ledger cel ON e.id = cel.entity_id
+                    WHERE e.type = '角色' AND e.tier IN ('核心', '重要') AND e.is_archived = 0
+                    GROUP BY e.id
+                    HAVING stagnant_chapters > 40
+                    ORDER BY stagnant_chapters DESC LIMIT 5
+                    """
+                ).fetchall()
+                result["canary_stagnant_characters"] = [
+                    {"name": r["canonical_name"], "tier": r["tier"], "chapters_stagnant": r["stagnant_chapters"]}
+                    for r in rows
+                ]
+            except Exception:
+                pass
+
+            # A.3 冲突模式重复检测（最近30章内重复3+次）
+            try:
+                rows = conn.execute(
+                    """
+                    SELECT conflict_type, resolution_mechanism, COUNT(*) as count,
+                           GROUP_CONCAT(chapter) as chapters
+                    FROM plot_structure_fingerprints
+                    WHERE chapter >= (SELECT MAX(chapter) FROM chapters) - 30
+                    GROUP BY conflict_type, resolution_mechanism
+                    HAVING COUNT(*) >= 3
+                    ORDER BY count DESC
+                    """
+                ).fetchall()
+                result["canary_conflict_repetitions"] = [
+                    {
+                        "pattern": f"{r['conflict_type']}+{r['resolution_mechanism']}",
+                        "count": r["count"],
+                        "chapters": r["chapters"],
+                    }
+                    for r in rows
+                ]
+            except Exception:
+                pass
+
+            # A.6 遗忘伏笔补充检测（活跃但已沉默30+章）
+            try:
+                rows = conn.execute(
+                    """
+                    SELECT thread_id, title, content, last_touched_chapter,
+                           (SELECT MAX(chapter) FROM chapters) - last_touched_chapter as silent_chapters
+                    FROM plot_thread_registry
+                    WHERE status = 'active'
+                      AND last_touched_chapter < (SELECT MAX(chapter) FROM chapters) - 30
+                    ORDER BY silent_chapters DESC LIMIT 5
+                    """
+                ).fetchall()
+                result["canary_forgotten_threads"] = [
+                    {
+                        "id": r["thread_id"],
+                        "title": r["title"],
+                        "last_touched": r["last_touched_chapter"],
+                        "silent_chapters": r["silent_chapters"],
+                    }
+                    for r in rows
+                ]
+            except Exception:
+                pass
+
+            # A.5 时间线链条验证（最近10章锚点）
+            try:
+                rows = conn.execute(
+                    """
+                    SELECT chapter, anchor_time, countdown, relative_to_previous
+                    FROM timeline_anchors
+                    WHERE chapter >= (SELECT MAX(chapter) FROM chapters) - 10
+                    ORDER BY chapter ASC
+                    """
+                ).fetchall()
+                issues = []
+                prev_time = None
+                prev_chapter = None
+                for r in rows:
+                    if prev_time and r["anchor_time"] and r["relative_to_previous"]:
+                        rel = str(r["relative_to_previous"])
+                        if "倒退" in rel or "之前" in rel:
+                            issues.append(
+                                f"ch{prev_chapter}→ch{r['chapter']}: 时间倒退（{rel}）"
+                            )
+                    prev_time = r["anchor_time"]
+                    prev_chapter = r["chapter"]
+                result["canary_timeline_issues"] = issues
+            except Exception:
+                pass
+        finally:
+            conn.close()
+
+        return result
 
     def _load_reader_signal(self, chapter: int) -> Dict[str, Any]:
         if not getattr(self.config, "context_reader_signal_enabled", True):
