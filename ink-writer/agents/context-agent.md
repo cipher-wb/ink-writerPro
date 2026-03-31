@@ -261,11 +261,19 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-e
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index recent-appearances --limit 20
 ```
 
-- 从 `state.json` 读取：
+- **伏笔读取优先级**（v7.0.4 修正）：
+  1. **优先从 index.db 读取**（权威数据源）：
+     ```bash
+     python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index list-active-threads
+     ```
+  2. **index.db 不可用时降级读 state.json**：
+     - 从 `state.json → plot_threads.foreshadowing` 读取
+     - 打标 `foreshadowing_source=state_json_fallback`（标注"可能过期"）
+  3. **均不可用时**：
+     - 置为空数组并打标 `foreshadowing_data_missing=true`
+
+- 从 `state.json` 读取（非伏笔字段）：
   - `progress.current_chapter`
-  - `plot_threads.foreshadowing`（主路径）
-- 缺失降级：
-  - 若 `plot_threads.foreshadowing` 不存在或类型错误，置为空数组并打标 `foreshadowing_data_missing=true`
 - 对每条伏笔至少提取：
   - `content`
   - `planted_chapter`

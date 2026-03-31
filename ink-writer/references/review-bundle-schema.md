@@ -126,6 +126,18 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 | `style_guidance` | object | 风格指导 |
 | `constraint_triggers` | array | 本章触发的约束（反套路/硬约束） |
 
+### projected_strand（可选，pacing-checker 使用）
+
+本章的预判 Strand 分类（object），用于解决 strand_tracker 在 Step 3 时尚未更新（Step 5 才写入）导致的滞后问题：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `dominant` | string | 预判的主导 Strand：quest / fire / constellation |
+| `confidence` | string | 置信度：high / medium / low |
+| `secondary` | string/null | 次要底色 Strand（可选） |
+
+来源：由 review bundle 生成脚本根据章节正文内容预判。若生成脚本不支持此字段，可省略，pacing-checker 回退到使用 `memory_context.strand_tracker`（反映上一章数据）。
+
 ### narrative_commitments（可选，consistency-checker Layer 4 使用）
 
 活跃叙事承诺列表（array of object）：

@@ -145,7 +145,20 @@ class ContextManager:
     ) -> Dict[str, Any]:
         chapter = int((pack.get("meta") or {}).get("chapter") or 0)
         weights = self._resolve_template_weights(template=template, chapter=chapter)
-        max_chars = max_chars or 8000
+        # v7.0.4: 动态分层预算，对齐 context-agent.md 规范
+        # 基础预算按章节阶段分层，但保底不低于 8000（兼容性保证）
+        if max_chars is None:
+            if chapter <= 3:
+                base_budget = 8000   # 黄金三章：密集加载世界观/角色
+            elif chapter <= 30:
+                base_budget = 8000   # 开篇期：规范为7000，保底取8000
+            elif chapter <= 100:
+                base_budget = 9000   # 展开期
+            else:
+                base_budget = 11000  # 长线期
+            max_chars = max(base_budget, 8000)
+        else:
+            max_chars = max_chars
         extra_budget = int(self.config.context_extra_section_budget or 0)
 
         sections = {}

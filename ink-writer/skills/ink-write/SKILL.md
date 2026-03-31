@@ -315,6 +315,13 @@ except Exception as e:
 
 **执行时机**：逾期伏笔检查通过后、进入 Step 0.5 之前。
 
+**增量模式（可选）**：
+- 标志：`--canary-mode incremental`
+- 启用时跳过 A.2（角色发展停滞检测）和 A.3（冲突模式重复检测），仅执行 A.1、A.4、A.5、A.6
+- **适用场景**：快速批量写作（如 ink-5）中，连续章之间 A.2/A.3 的30-40章窗口查询结果几乎不变，可安全跳过
+- **不跳过 A.1 的原因**：A.1 是唯一带自动修复的检查（主角状态同步），跳过可能导致后续章节在错误状态上继续
+- **默认行为**：不传此标志时执行全部 A.1-A.6（行为不变）
+
 #### A.1 主角状态同步检查（CRITICAL + 自动修复 + 复检闸门）
 
 > 来源：ink-audit Quick #1。以 index.db 为权威数据源（因为它是 `state process-chapter` 写入的结果），检测 state.json 是否与之一致。
@@ -1227,13 +1234,49 @@ except Exception as e:
 
 **处理规则**：WARNING 级，记录但不阻断。时间倒退可能是闪回章节的正常行为。
 
-##### Mini-Audit 汇总
+##### C.4 审查分数趋势检查（WARNING，非阻断）
+
+> 来源：桌面评审"25章 Quick Audit 间隔是最大叙事质量盲区"。通过查询最近5章的 review_metrics 分数趋势，在每章级别捕获质量下滑。
+
+```bash
+python3 -X utf8 -c "
+import sqlite3, sys
+db_path = '${PROJECT_ROOT}/.ink/index.db'
+chapter = ${chapter_num}
+try:
+    conn = sqlite3.connect(db_path)
+    rows = conn.execute(
+        'SELECT end_chapter, overall_score FROM review_metrics WHERE end_chapter <= ? ORDER BY end_chapter DESC LIMIT 5',
+        (chapter,)
+    ).fetchall()
+    conn.close()
+    if len(rows) < 3:
+        print('✅ Mini-Audit C.4 跳过（历史数据不足3章）')
+        sys.exit(0)
+    scores = [r[1] for r in reversed(rows)]
+    declining = all(scores[i] > scores[i+1] for i in range(len(scores)-1))
+    if declining and len(scores) >= 3:
+        trend = ' → '.join(f'{s:.0f}' for s in scores)
+        print(f'⚠️ Mini-Audit C.4 WARNING: 最近{len(scores)}章审查分数持续下降: {trend}')
+        print(f'   建议关注质量趋势，考虑运行 /ink-review 进行详细审查')
+    else:
+        avg = sum(scores) / len(scores)
+        print(f'✅ Mini-Audit C.4 PASS: 最近{len(scores)}章平均分 {avg:.1f}，趋势正常')
+except Exception as e:
+    print(f'⚠️ mini_audit_skipped: {e}')
+"
+```
+
+**处理规则**：WARNING 级，记录但不阻断。连续3章以上分数持续下降时输出趋势警告，提醒关注质量。
+
+##### Mini-Audit 汇总输出
 
 ```
 === Step 5 Mini-Audit 结果 ===
 C.1 主角状态同步: PASS / FAIL / SKIPPED
 C.2 实体提取数量: PASS / WARNING / SKIPPED
 C.3 时间线锚点: PASS / WARNING / SKIPPED
+C.4 审查分数趋势: PASS / WARNING / SKIPPED
 阻断: 是/否
 ```
 

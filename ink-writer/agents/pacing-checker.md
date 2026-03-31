@@ -43,6 +43,11 @@ model: inherit
 
 ### 第二步: 章节情节线分类
 
+**当前章 Strand 数据来源**：
+- 优先使用 `review_bundle.projected_strand`（若存在），这是基于当前章正文内容的预判
+- 若 `projected_strand` 不存在，使用 `review_bundle.memory_context.strand_tracker`（反映截至上一章的历史数据）
+- **注意**：`strand_tracker` 在 Step 5 由 Data Agent 写入，Step 3 审查时尚未更新，因此始终反映上一章状态。`projected_strand` 弥补了这一滞后
+
 **对每章，识别主导情节线**：
 
 | Strand | Indicators | Examples |
