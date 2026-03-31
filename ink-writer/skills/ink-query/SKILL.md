@@ -6,6 +6,8 @@ allowed-tools: Read Grep Bash AskUserQuestion
 
 # Information Query Skill
 
+> **架构定位**：ink-query 是 Skill（非 Agent）。它通过 Skill 直接执行查询路由，使用 Bash/Read/Grep 工具查询 index.db 和 state.json，无独立 Agent 定义文件。这与 Checker Agent（通过 Task 调用）和 Context/Data Agent（有独立 agent 定义）的架构不同。
+
 ## Project Root Guard（必须先确认）
 
 - Claude Code 的“工作区根目录”不一定等于“书项目根目录”。常见结构：工作区为 `D:\wk\xiaoshuo`，书项目为 `D:\wk\xiaoshuo\凡人资本论`。

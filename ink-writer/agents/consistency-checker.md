@@ -94,8 +94,8 @@ model: inherit
 - Flashbacks are clearly marked
 - Chapter time anchors match volume timeline
 
-**Severity Classification** (时间问题分级):
-| 问题类型 | Severity | 说明 |
+**时间问题分级** (severity 必须使用小写枚举 `critical|high|medium|low`):
+| 问题类型 | 严重度 | 说明 |
 |---------|----------|------|
 | 倒计时算术错误 | **critical** | D-5 直接跳到 D-2，必须修复 |
 | 事件先后矛盾 | **high** | 先发生的事情后写，逻辑混乱 |
@@ -136,10 +136,20 @@ model: inherit
 
 1. 读取本章出场角色的活跃承诺列表
 2. 检查本章行为是否违反任何活跃承诺
-3. 分级：
-   - **critical**: 违反核心誓言（oath类型），且无任何文内解释或铺垫
-   - **high**: 违反承诺（promise类型），或行为与角色准则矛盾
+3. 分级规则与判定示例：
+
+   - **critical**: 违反核心誓言（oath 类型），且无任何文内解释或铺垫
+     - 示例：角色在第10章立下"绝不伤害无辜"誓言 → 本章无缘无故屠杀平民，且正文无任何解释/被控制/迫不得已的描写
+     - 判定要点：oath 类型承诺是角色核心人设锚点，无解释违反 = critical
+
+   - **high**: 违反承诺（promise 类型），或行为与角色准则（character_principle）矛盾，且无解释
+     - 示例：角色承诺"三日内带回解药" → 第四日仍在原地且无任何提及
+     - 示例：角色原则为"不欠人情" → 本章无条件接受他人重大恩惠且无内心挣扎
+     - 判定要点：promise/principle 违反但未提供合理解释 = high
+
    - **medium**: 行为处于承诺的灰色地带，需要更明确的文内交代
+     - 示例：角色誓言"保护宗门" → 本章为救同伴暂时离开宗门（可解释为权衡但未明确交代）
+     - 判定要点：行为可能违反也可能符合承诺精神，但文内未给出足够上下文让读者判断 = medium
 
 如果 `review_bundle` 中不存在 `narrative_commitments` 字段，跳过此检测层。
 

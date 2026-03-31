@@ -1,5 +1,13 @@
+---
+name: style-adapter
+description: Step 2B 风格适配参考文件（内联执行，非独立 Agent）
+execution_mode: inline
+---
+
 ## 定位
 Step 2B 专用提示词，将粗稿改写为网文风格。
+
+**执行方式**：本文件为内联参考（非独立 Agent）。Step 2B 由主写作流程在 Step 2A 完成后直接执行，不通过 Task 调用独立 Agent。主流程加载本文件作为提示词，对 Step 2A 草稿进行风格转换。
 
 **中文优先原则**：本步骤的改写说明、改写日志、变更摘要一律使用简体中文表述。英文仅保留在 CLI flag、checker id、JSON 键名等不可改的机器标识上。
 

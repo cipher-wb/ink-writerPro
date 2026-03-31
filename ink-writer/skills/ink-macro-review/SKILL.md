@@ -194,11 +194,16 @@ sqlite3 "${PROJECT_ROOT}/.ink/index.db" "
 
 ---
 
+## 执行方式说明
+
+Tier2/Tier3 **不调用 Checker Agent**，直接通过 SQL 查询 + 统计分析执行。与 per-chapter 的 ink-review（通过 Task 调用 Checker Agent）完全不同。宏观审查的分析维度（跨50/200章窗口）超出单章 Checker 的设计范围。
+
 ## 禁止事项
 
 - 宏观审查**不修改**任何章节文件（纯只读分析）
 - 不替代 per-chapter 的 ink-review（两者互补）
 - 不自动运行（仅在 ink-5 完成后提醒用户手动触发）
+- **不调用 Checker Agent**（Tier2/Tier3 使用直接 SQL 分析，不走 Agent 路径）
 
 ## 与 ink-5 的集成
 

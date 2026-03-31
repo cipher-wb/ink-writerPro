@@ -126,7 +126,8 @@ tools: [Read, Grep]
 
 - 在 `/ink-write` Step 3 和 `/ink-review` Step 3 中作为**条件审查器**
 - 触发条件：
-  - `chapter > 3`（前3章由 golden-three-checker 覆盖）
+  - `chapter >= 1`（所有章节均可启用文笔检查；前3章同时由 golden-three-checker 覆盖叙事质量，两者维度不同不互斥）
   - 非过渡章
   - 题材涉及古代/仙侠/历史背景时优先触发（文化禁忌检测价值更高）
   - 用户显式要求"文笔审查"或"校对"
+  - 注：style_consistency 风格漂移检测仅在 ch ≥ 10 时激活，ch < 10 自动跳过

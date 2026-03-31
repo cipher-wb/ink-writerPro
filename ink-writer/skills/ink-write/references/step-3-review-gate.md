@@ -68,10 +68,12 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
   - 最近章节存在明显节奏失衡风险；
   - 用户显式要求”节奏审查”。
 - `proofreading-checker`：当满足任一条件时启用
-  - `chapter > 3`（前 3 章由 golden-three-checker 覆盖文笔层面）；
+  - `chapter >= 1`（所有章节均可启用文笔检查）；
   - 非过渡章（过渡章文笔要求较低，可跳过）；
   - 题材涉及古代/仙侠/历史背景（文化禁忌检测价值更高）；
   - 用户显式要求”文笔审查”或”校对”。
+
+  > **与 golden-three-checker 的覆盖关系**：前 3 章（ch1-3）golden-three-checker 覆盖**叙事质量**（开篇抓取力、读者承诺兑现、章末驱动力），proofreading-checker 覆盖**文笔质量**（修辞重复、段落结构、代称混乱、文化禁忌）。两者维度不同，不互斥。前 3 章应同时启用两个 checker。style_consistency 风格漂移检测仅在 ch ≥ 10 时激活。
 - `reader-simulator`：当满足任一条件时启用
   - 关键章/高潮章/卷末章/卷首章；
   - 用户显式要求”读者体验审查”或”模拟读者”；

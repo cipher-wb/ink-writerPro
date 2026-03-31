@@ -126,6 +126,21 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 | `style_guidance` | object | 风格指导 |
 | `constraint_triggers` | array | 本章触发的约束（反套路/硬约束） |
 
+### narrative_commitments（可选，consistency-checker Layer 4 使用）
+
+活跃叙事承诺列表（array of object）：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | string | 承诺 ID |
+| `chapter` | int | 承诺发起章节 |
+| `commitment_type` | string | 类型：oath / promise / prophecy / world_law / character_principle / prohibition |
+| `entity_id` | string | 承诺关联角色 ID |
+| `content` | string | 承诺内容描述 |
+| `scope` | string | 作用范围 |
+
+来源：`index.db.narrative_commitments WHERE resolved_chapter IS NULL`。若数据不可用，此字段可省略，checker 会跳过 Layer 4 检测。
+
 ### allowed_read_files（必填）
 
 允许 checker 补充读取的文件绝对路径白名单（array of string）。仅当审查包缺字段时，checker 才可读取此列表中的文件。
