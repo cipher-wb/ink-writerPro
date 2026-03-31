@@ -10,7 +10,6 @@ Style Anchor - 风格锚定模块
 """
 
 import json
-import math
 import re
 import statistics
 from pathlib import Path
