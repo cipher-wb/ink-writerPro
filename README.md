@@ -3,6 +3,8 @@
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-8.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://claude.ai/claude-code)
+[![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-Extension-4285F4.svg)](https://github.com/google-gemini/gemini-cli)
+[![Codex CLI](https://img.shields.io/badge/Codex%20CLI-Skills-74AA9C.svg)](https://github.com/openai/codex)
 [![Agents](https://img.shields.io/badge/Agents-14%E4%B8%AA-orange.svg)](#agent-天团14-位卷王为你打工)
 [![Tables](https://img.shields.io/badge/SQLite-25%E5%BC%A0%E8%A1%A8-blue.svg)](#数据层一个比你还操心的记忆系统)
 
@@ -44,36 +46,67 @@
 
 ## 安装（3 步，比泡面还简单）
 
+支持三个平台：**Claude Code**（推荐，完整体验）、**Gemini CLI**、**Codex CLI**。
+
 ### 你需要先有
 
-- **Claude Code**（Anthropic 官方 CLI）— [装这个](https://docs.anthropic.com/en/docs/claude-code/overview)
 - **Python 3.10+** — [装这个](https://www.python.org/downloads/)
+- 以及下面三个 CLI 任选其一（或全都要）
 
-### Mac / Linux
+### 方式一：Claude Code（推荐，完整体验）
 
 ```bash
-# 1. 加插件源（告诉 Claude Code 去哪找我们）
+# 1. 加插件源
 claude plugin marketplace add cipher-wb/ink-writerPro --scope user
 
-# 2. 装插件（下载血汗工厂全套设备）
+# 2. 装插件
 claude plugin install ink-writer@ink-writer-marketplace --scope user
 
-# 3. 装 Python 依赖（给工厂通水电）
+# 3. 装 Python 依赖
 pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/requirements.txt
 ```
 
-### Windows
+Windows 同上，去掉 `--scope user`。
 
-```powershell
-# 跟上面一样，就是不用加 --scope user
-claude plugin marketplace add cipher-wb/ink-writerPro
-claude plugin install ink-writer@ink-writer-marketplace
-pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/requirements.txt
+验证：打开 Claude Code，输入 `/ink-init`。看到引导界面 = 装好了。
+
+### 方式二：Gemini CLI
+
+```bash
+# 1. 安装扩展
+cd /path/to/ink-writerPro   # 克隆本仓库
+gemini extensions install .
+
+# 2. 装 Python 依赖
+pip install -r requirements.txt
 ```
 
-### 验证安装
+Gemini CLI 通过 `gemini-extension.json` 自动发现扩展，加载 `GEMINI.md` 作为上下文。
 
-打开 Claude Code，输入 `/ink-init`。看到引导界面 = 装好了。看到报错 = 回去检查 Python。
+> **限制**：Gemini CLI 不支持子 Agent，审查步骤串行执行。详见 `ink-writer/references/gemini-tools.md`。
+
+### 方式三：Codex CLI
+
+```bash
+# 1. 克隆到 Codex 目录
+git clone https://github.com/cipher-wb/ink-writerPro.git ~/.codex/ink-writer
+
+# 2. 创建 skills 符号链接
+mkdir -p ~/.agents/skills
+ln -s ~/.codex/ink-writer/ink-writer/skills ~/.agents/skills/ink-writer
+
+# 3. 装 Python 依赖
+pip install -r ~/.codex/ink-writer/requirements.txt
+
+# 4. 设置环境变量（加到 .bashrc / .zshrc）
+export CLAUDE_PLUGIN_ROOT="$HOME/.codex/ink-writer/ink-writer"
+
+# 5. 重启 Codex CLI
+```
+
+需要子 Agent 支持时，在 `~/.codex/config.toml` 中添加 `[features] multi_agent = true`。
+
+详细说明见 `.codex/INSTALL.md`。
 
 ### 可选加装：jieba 分词（推荐）
 
@@ -82,6 +115,17 @@ pip install jieba
 ```
 
 装了 jieba 后 BM25 检索精度大幅提升（"萧炎"作为整词匹配 vs 拆成"萧"+"炎"两个字盲猜）。不装也行，系统自动回退到基础模式，不影响任何功能。
+
+### 平台功能对比
+
+| 功能 | Claude Code | Gemini CLI | Codex CLI |
+|------|:-----------:|:----------:|:---------:|
+| 12 个 Skills | 全部 | 全部 | 全部 |
+| 子 Agent 并发 | 原生支持 | 不支持（串行） | spawn_agent |
+| 10 Agent 审查 | 并发 | 串行 | 并发 |
+| 风格锚定 | 支持 | 支持 | 支持 |
+| RAG 检索 | 支持 | 支持 | 支持 |
+| Dashboard | 支持 | 支持 | 支持 |
 
 ---
 
