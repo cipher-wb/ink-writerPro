@@ -213,7 +213,27 @@ model: inherit
 | GENRE_CONVENTION | 题材惯例 | 标准 |
 | EDITORIAL_INTENT | 作者主观意图 | 增加 |
 
-### 5.3 债务与利息
+### 5.3 软约束可覆盖性矩阵
+
+> 本矩阵定义每个软约束是否支持 Override Contract 及允许的申诉理由类型。
+
+| 软约束 ID | 可覆盖 | 允许的 rationale_type | 说明 |
+|-----------|--------|----------------------|------|
+| SOFT_NEXT_REASON | ✓ | TRANSITIONAL_SETUP, ARC_TIMING | 铺垫章可暂缓下章动机 |
+| SOFT_HOOK_ANCHOR | ✓ | TRANSITIONAL_SETUP, ARC_TIMING, GENRE_CONVENTION | 部分题材允许平缓收尾 |
+| SOFT_HOOK_STRENGTH | ✓ | TRANSITIONAL_SETUP, ARC_TIMING, CHARACTER_CREDIBILITY | 过渡章允许 weak 钩子 |
+| SOFT_HOOK_TYPE | ✓ | GENRE_CONVENTION, EDITORIAL_INTENT | 允许突破题材偏好 |
+| SOFT_MICROPAYOFF | ✓ | TRANSITIONAL_SETUP, ARC_TIMING, LOGIC_INTEGRITY | 铺垫章可零微兑现 |
+| SOFT_PATTERN_REPEAT | ✗ | — | **不可覆盖**：连续3章同型是硬性结构问题，无法通过债务补偿 |
+| SOFT_EXPECTATION_OVERLOAD | ✓ | LOGIC_INTEGRITY, WORLD_RULE_CONSTRAINT | 复杂剧情可允许多期待 |
+| SOFT_RHYTHM_NATURALNESS | ✓ | GENRE_CONVENTION, EDITORIAL_INTENT | 允许按题材调整节奏 |
+
+**使用规则**：
+- 标记为"✗ 不可覆盖"的约束违反时，必须在 Step 4 修复，不接受 Override Contract
+- 标记为"✓ 可覆盖"的约束，只允许使用表中列出的 rationale_type，其他理由类型不予接受
+- 每章最多提交 2 个 Override Contract，避免过度使用
+
+### 5.4 债务与利息
 
 - 每个 `Override` 产生债务（量由题材 profile 的 `debt_multiplier` 决定）
 - 每章债务累积利息（默认10%/章）
