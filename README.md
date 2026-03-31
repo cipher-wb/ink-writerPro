@@ -1,12 +1,15 @@
 # Ink Writer Pro
 
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-7.0.1-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-7.0.5-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://claude.ai/claude-code)
 
 基于 Claude Code 的**工业化长篇网文创作系统**。支持 200 万字（600+ 章）连续创作，每章自动执行 9 步标准流程（上下文→写作→审查→润色→数据回写），跨会话状态持久化，防幻觉三定律 + 11 Agent 审查 + 去 AI 味 + 节奏控制。
 
-**当前版本：v7.0.1**
+| 版本 | 说明 |
+|------|------|
+| **v7.0.5 (当前)** | B0-B3 综合优化：补全 Agent 定义、权重校准、预算分层、批量恢复、风格锚定、情感层增强 |
+| **v7.0.1** | 金丝雀健康扫描、里程碑强制审查、index.db 完整性检查 |
 
 ---
 
