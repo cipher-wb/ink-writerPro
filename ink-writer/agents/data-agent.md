@@ -281,6 +281,36 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 }
 ```
 
+### Step B.10: 潜台词检测（情感层增强）
+
+对本章正文中的关键对话和行为场景，检测角色"说了但没说"的情感潜台词。
+
+**检测范围**：
+- 对话中的言外之意（说了A但其实想表达B）
+- 行为替代表达（不说话但做了一个暗示性动作）
+- 沉默/回避/转移话题的潜台词
+
+**输出到 payload**：
+```json
+{
+  "subtext_markers": [
+    {
+      "location": "第12段",
+      "surface": "她说'你随便吧'",
+      "subtext": "对主角的选择感到失望但不愿直说",
+      "emotion_layer": "压抑的失望",
+      "confidence": "high"
+    }
+  ]
+}
+```
+
+**判断规则**：
+- 仅标记 confidence ≥ medium 的潜台词（避免过度解读）
+- 每章不超过 5 条标记（取最显著的）
+- 若全章无明显潜台词场景 → `subtext_markers: []`（正常，不是问题）
+- 此数据供 Step 4.5 情感差分使用，不写入 index.db（非持久化数据）
+
 ### Step C: 实体消歧处理
 
 **置信度策略**:

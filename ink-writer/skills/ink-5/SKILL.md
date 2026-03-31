@@ -56,6 +56,11 @@ export PROJECT_ROOT="$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "$
 - **禁止省略修复步骤**：审查发现的 critical/high 问题必须修复，不得跳过。
 - **禁止降低字数标准**：每章 ≥ 2200 字硬下限，无豁免。
 - **禁止中途询问**：用户执行 `/ink-5` 即为授权完整的"5章写作 + 审查修复"流程，中途不得询问是否继续。唯一允许暂停：写作失败且重试仍失败、大纲缺失。
+- **批量失败处理规则**（v7.0.5 新增）：
+  - **已完成章节保留**：若第 N 章（N < 5）失败，前 N-1 章的正文、数据回写、Git 提交均已完成，**不回滚**
+  - **失败章节标记**：在 `workflow_state.json` 中记录 `batch_meta.failed_chapter` 和 `batch_meta.failure_reason`
+  - **Phase 2 审查范围**：若批次仅完成 N-1 章，Phase 2 的 ink-review 范围缩小为已完成的 N-1 章（不审查未写的章节）
+  - **恢复方式**：用户可通过 `/ink-resume` 检测批量上下文，从失败章节继续（见 ink-resume 批量恢复协议）
 - **禁止合并审查**：不得将 Step 3 的每章内审查与最终的 ink-review 合并或互相替代——两者都必须执行。
 
 ## Phase 1：连续写作 5 章
@@ -201,6 +206,17 @@ FOR i = 1 TO 5:
     # 输出进度后立即继续下一章
     输出：✅ [写作 {i}/5] 第{chapter_num}章完成 · {字数}字 · 评分{overall_score}
     # ⚠️ 输出后立即回到 FOR 循环顶部，禁止等待用户回复
+
+    # 批量元数据更新（每章完成后）
+    # 在 workflow_state.json 中记录批量进度（供 ink-resume 使用）
+    # batch_meta: { batch_size: 5, batch_start, completed_chapters: [已完成章号], current_index: i }
+
+    # 章节失败处理
+    # 若本章在 Step 0-6 任一步骤失败且重试仍失败：
+    #   1. 记录 batch_meta.failed_chapter = chapter_num, batch_meta.failure_reason = "..."
+    #   2. 输出：❌ [写作 {i}/5] 第{chapter_num}章写作失败: {原因}
+    #   3. 跳出 FOR 循环，进入 Phase 2（审查范围缩小为已完成章节）
+    #   4. 已完成的前 i-1 章不回滚
 
 END FOR
 ```

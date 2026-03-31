@@ -1003,6 +1003,13 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
    - 若发现 `high` 违规但无 `critical`：记录到变更摘要的 deviation 中
    - 最多执行 1 轮修正，避免无限循环
 
+4. **情感扁平化差分检测**（v7.0.5 新增，轻量级）：
+   - 对比润色前快照与润色后正文的情感密度：
+     - 统计润色前后的感叹句数量、感官描写句数量、短句（≤8字）占比
+     - 若润色后感叹句减少 ≥ 50% 或感官描写句减少 ≥ 40% → 输出 `⚠️ 润色后情感密度下降，建议检查是否过度修改情感段落`
+   - 此检查为 WARNING 级，不阻断流程，仅提示
+   - 若 Data Agent 在 Step B.10 产出了 `subtext_markers`，额外检查：润色是否删除或弱化了标记的潜台词段落
+
 4. **清理快照**（Step 5 开始前）：
    ```bash
    rm -f "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"

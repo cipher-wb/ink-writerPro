@@ -138,6 +138,47 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 
 整合 status_reporter 的角色掉线、伏笔逾期、节奏分析数据。
 
+#### 2.7 风格漂移检测（v7.0.5 新增）
+
+> 对比最近10章的风格指标与前10章的风格锚点，检测写作风格是否发生显著漂移。
+
+```bash
+python3 -X utf8 -c "
+import sys, json
+sys.path.insert(0, '${SCRIPTS_DIR}/data_modules')
+try:
+    from style_anchor import save_anchor, check_drift
+    from pathlib import Path
+    project_root = '${PROJECT_ROOT}'
+    anchor_path = Path(project_root) / '.ink' / 'style_anchor.json'
+
+    # 若锚点不存在且已有 ≥10 章，自动生成
+    if not anchor_path.exists():
+        result = save_anchor(project_root)
+        print(f'📌 {result}')
+
+    # 执行漂移检测
+    report = check_drift(project_root)
+    if report['status'] == 'skip':
+        print(f'⏭️ 风格漂移检测跳过: {report[\"reason\"]}')
+    elif report['drift_count'] == 0:
+        print(f'✅ 风格漂移检测通过: 最近10章风格与锚点一致')
+    else:
+        print(f'⚠️ 检测到 {report[\"drift_count\"]} 项风格漂移:')
+        for w in report['warnings']:
+            print(f'  - {w[\"metric\"]}: 锚点={w[\"anchor_mean\"]}, 当前={w[\"current_mean\"]}, '
+                  f'偏离={w[\"deviation_pct\"]}% ({w[\"severity\"]})')
+except Exception as e:
+    print(f'⚠️ 风格漂移检测跳过（模块不可用）: {e}')
+"
+```
+
+**处理规则**：
+- WARNING 级，不阻断审查
+- 首次运行时若锚点不存在且已有 ≥10 章，自动生成锚点
+- 偏离 > 2σ 标记 medium，> 3σ 标记 high
+- 进行中项目需运行一次 Tier2 自动生成锚点（只读操作，不修改已有数据）
+
 #### Tier 2 输出
 
 ```
