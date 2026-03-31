@@ -34,6 +34,14 @@ from .index_manager import IndexManager
 from .query_router import QueryRouter
 from .observability import safe_append_perf_timing, safe_log_tool_call
 
+# v7.0.5: jieba 分词（可选依赖，未安装时回退到单字分词）
+try:
+    import jieba
+    jieba.setLogLevel(logging.WARNING)  # 抑制 jieba 加载日志
+    _HAS_JIEBA = True
+except ImportError:
+    _HAS_JIEBA = False
+
 
 logger = logging.getLogger(__name__)
 
@@ -517,16 +525,38 @@ class RAGAdapter:
 
     # ==================== BM25 索引 ====================
 
+    # ---- BM25 停用词表（单字高频虚词，过滤后提升检索精度） ----
+    _STOPWORDS: set = {
+        "的", "了", "在", "是", "我", "有", "和", "就", "不", "人",
+        "都", "一", "个", "上", "也", "很", "到", "说", "要", "去",
+        "你", "会", "着", "没", "看", "好", "自", "这", "他", "她",
+        "它", "们", "那", "被", "从", "把", "让", "用", "过", "得",
+        "对", "以", "而", "能", "下", "来", "与", "为", "所", "之",
+    }
+
     def _tokenize(self, text: str) -> List[str]:
-        """简单分词（中文按字符，英文按单词）"""
-        # 中文字符
-        chinese = re.findall(r'[\u4e00-\u9fff]+', text)
-        chinese_chars = list("".join(chinese))
-
-        # 英文单词
-        english = re.findall(r'[a-zA-Z]+', text.lower())
-
-        return chinese_chars + english
+        """中文分词 + 英文分词（jieba 可用时用词级分词，否则回退到单字）"""
+        if _HAS_JIEBA:
+            # jieba 词级分词：保留 ≥2 字的中文词 + 英文单词，过滤停用词
+            tokens = []
+            for word in jieba.cut(text):
+                word = word.strip()
+                if not word:
+                    continue
+                if re.match(r'[a-zA-Z]+$', word):
+                    tokens.append(word.lower())
+                elif re.match(r'[\u4e00-\u9fff]+$', word) and len(word) >= 2:
+                    if word not in self._STOPWORDS:
+                        tokens.append(word)
+                elif re.match(r'[\u4e00-\u9fff]$', word) and word not in self._STOPWORDS:
+                    tokens.append(word)  # 保留有意义的单字（如人名姓氏）
+            return tokens
+        else:
+            # 回退：单字分词（原始逻辑，兼容无 jieba 环境）
+            chinese = re.findall(r'[\u4e00-\u9fff]+', text)
+            chinese_chars = list("".join(chinese))
+            english = re.findall(r'[a-zA-Z]+', text.lower())
+            return chinese_chars + english
 
     def _update_bm25_index(self, cursor, chunk_id: str, content: str):
         """更新 BM25 索引"""
