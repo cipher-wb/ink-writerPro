@@ -364,6 +364,10 @@ def main() -> None:
     p_init = sub.add_parser("init", help="转发到 init_project.py（初始化项目）")
     p_init.add_argument("args", nargs=argparse.REMAINDER)
 
+    p_check_outline = sub.add_parser("check-outline", help="检查指定章节的大纲是否存在")
+    p_check_outline.add_argument("--chapter", type=int, required=True, help="目标章节号")
+    p_check_outline.add_argument("--batch-end", type=int, default=0, help="批量检查结束章节号（含）")
+
     p_extract_context = sub.add_parser("extract-context", help="转发到 extract_chapter_context.py")
     p_extract_context.add_argument("--chapter", type=int, required=True, help="目标章节号")
     p_extract_context.add_argument(
@@ -424,6 +428,25 @@ def main() -> None:
         raise SystemExit(_run_script("backup_manager.py", [*forward_args, *rest]))
     if tool == "archive":
         raise SystemExit(_run_script("archive_manager.py", [*forward_args, *rest]))
+    if tool == "check-outline":
+        from chapter_outline_loader import load_chapter_outline
+
+        start_ch = args.chapter
+        end_ch = args.batch_end if args.batch_end >= start_ch else start_ch
+        missing = []
+        for ch in range(start_ch, end_ch + 1):
+            result = load_chapter_outline(Path(project_root), ch, max_chars=100)
+            if result.startswith("⚠️"):
+                missing.append(ch)
+                print(f"❌ 第{ch}章没有详细大纲，禁止写作。")
+        if missing:
+            print(f"\n大纲缺失章节: {missing}")
+            raise SystemExit(1)
+        else:
+            total = end_ch - start_ch + 1
+            print(f"✅ 大纲覆盖检查通过（第{start_ch}章→第{end_ch}章，共{total}章）")
+            raise SystemExit(0)
+
     if tool == "extract-context":
         return_args = [*forward_args, "--chapter", str(args.chapter), "--format", str(args.format)]
         raise SystemExit(_run_script("extract_chapter_context.py", return_args))

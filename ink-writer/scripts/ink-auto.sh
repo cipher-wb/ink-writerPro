@@ -98,22 +98,13 @@ if [[ -z "$CURRENT_CH" || "$CURRENT_CH" == "0" ]]; then
     CURRENT_CH=${CURRENT_CH:-0}
 fi
 
-echo "🔍 正在检查第$((CURRENT_CH + 1))章到第$((CURRENT_CH + N))章的大纲覆盖..."
+BATCH_START=$((CURRENT_CH + 1))
+BATCH_END=$((CURRENT_CH + N))
 
-OUTLINE_MISSING=0
-for ch_offset in $(seq 1 "$N"); do
-    CHECK_CH=$((CURRENT_CH + ch_offset))
-    OUTLINE_OUTPUT=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
-        --project-root "$PROJECT_ROOT" extract-context \
-        --chapter "$CHECK_CH" --format pack 2>&1 | head -5) || true
+echo "🔍 正在检查第${BATCH_START}章到第${BATCH_END}章的大纲覆盖..."
 
-    if echo "$OUTLINE_OUTPUT" | grep -qE '⚠️|未找到|不存在'; then
-        echo "❌ 第${CHECK_CH}章没有详细大纲，禁止写作。"
-        OUTLINE_MISSING=1
-    fi
-done
-
-if (( OUTLINE_MISSING )); then
+if ! python3 -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
+    check-outline --chapter "$BATCH_START" --batch-end "$BATCH_END"; then
     echo ""
     echo "═══════════════════════════════════════"
     echo "  ❌ 大纲预检失败 — 批量写作已中止"
@@ -121,8 +112,6 @@ if (( OUTLINE_MISSING )); then
     echo "═══════════════════════════════════════"
     exit 1
 fi
-
-echo "✅ 大纲覆盖检查通过，所有 $N 章大纲就绪"
 
 # ═══════════════════════════════════════════
 # 信号处理
@@ -325,11 +314,8 @@ for i in $(seq 1 "$N"); do
     NEXT_CH=$((CURRENT + 1))
 
     # 逐章大纲二次检查（防御性：防止批次预检后大纲被删除等极端情况）
-    OUTLINE_CHECK=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
-        --project-root "$PROJECT_ROOT" extract-context \
-        --chapter "$NEXT_CH" --format pack 2>&1 | head -5) || true
-
-    if echo "$OUTLINE_CHECK" | grep -qE '⚠️|未找到|不存在'; then
+    if ! python3 -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
+        check-outline --chapter "$NEXT_CH" >/dev/null 2>&1; then
         echo ""
         echo "[$i/$N] ❌ 第${NEXT_CH}章大纲缺失，中止批量写作"
         echo "    请先执行 /ink-plan 生成大纲后再重试"

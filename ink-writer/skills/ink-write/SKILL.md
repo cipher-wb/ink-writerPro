@@ -201,13 +201,15 @@ export PROJECT_ROOT="$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "$
 **大纲覆盖硬检查**（preflight 通过后、进入 Step 0.5 之前必须执行）：
 
 ```bash
-python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}” extract-context --chapter {chapter_num} --format pack 2>&1 | head -5
+python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}” check-outline --chapter {chapter_num}
 ```
 
-检查输出前5行是否包含 `⚠️` 或 `未找到` 或 `不存在`。若包含，说明第 `{chapter_num}` 章没有详细大纲覆盖。
+> **⚠️ 关键**：必须使用 `check-outline` 子命令，**禁止使用 `extract-context --format pack`** 检查大纲（pack 格式会吞掉 ⚠️ 标记，导致漏检）。
+
+若 `check-outline` 退出码非零，说明第 `{chapter_num}` 章没有详细大纲覆盖。
 
 **处理规则**：
-- 若输出包含”大纲文件不存在”或”未找到第X章的大纲” → **立即阻断**，输出：
+- 若检查失败 → **立即阻断**，输出：
   ```
   ❌ 第{chapter_num}章没有详细大纲，禁止写作。
   请先执行 /ink-plan 生成对应卷的详细大纲，再重新执行 /ink-write。
@@ -1390,15 +1392,16 @@ sqlite3 "${PROJECT_ROOT}/.ink/index.db" "SELECT COUNT(*) FROM scenes WHERE chapt
 2. 读取 `state.json` 获取 `progress.current_chapter`，计算：
    - `batch_start = current_chapter + 1`
    - `batch_end = batch_start + N - 1`
-3. **大纲覆盖批量验证**（必做）：对范围内每一章执行大纲覆盖检查：
+3. **大纲覆盖批量验证**（必做）：一次性检查范围内所有章节的大纲覆盖：
    ```bash
-   for ch in $(seq {batch_start} {batch_end}); do
-     python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract-context --chapter $ch --format pack 2>&1 | head -3
-   done
+   python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+     check-outline --chapter {batch_start} --batch-end {batch_end}
    ```
-   若任一章输出包含 `⚠️` 或 `未找到` 或 `不存在`，立即阻断并输出：
+   > **⚠️ 关键**：必须使用 `check-outline` 子命令，禁止使用 `extract-context --format pack`（pack 格式会吞掉 ⚠️ 标记）。
+
+   若 `check-outline` 退出码非零，立即阻断并输出：
    ```
-   ❌ 第{ch}章没有详细大纲，批量写作中止。
+   ❌ 大纲覆盖验证失败，批量写作中止。
    当前大纲覆盖范围不足以支持第{batch_start}-{batch_end}章。
    请先执行 /ink-plan 生成缺失卷的详细大纲。
    ```

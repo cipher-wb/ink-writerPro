@@ -129,20 +129,16 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" state g
 > **⛔ 这是写作前的最后一道安全门。没有大纲 = 禁止写作，无任何例外。**
 > **禁止用总纲替代详细大纲，禁止自行编造章节内容，禁止以"先写后补"为由跳过。**
 
-对 `batch_start` 到 `batch_end` **每一章逐一检查**大纲覆盖：
+对 `batch_start` 到 `batch_end` **所有章节一次性检查**大纲覆盖：
 ```bash
-OUTLINE_MISSING=0
-for ch in $(seq {batch_start} {batch_end}); do
-  OUTPUT=$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract-context --chapter $ch --format pack 2>&1 | head -5)
-  if echo "$OUTPUT" | grep -qE '⚠️|未找到|不存在'; then
-    echo "❌ 第${ch}章没有详细大纲，禁止写作。"
-    OUTLINE_MISSING=1
-  fi
-done
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+  check-outline --chapter {batch_start} --batch-end {batch_end}
 ```
 
+> **⚠️ 关键**：必须使用 `check-outline` 子命令，**禁止使用 `extract-context --format pack`** 检查大纲（pack 格式会吞掉 ⚠️ 标记，导致漏检）。
+
 **处理规则**：
-- 若 `OUTLINE_MISSING=1`（任意一章缺失大纲）→ **立即终止整个 ink-5 流程**，输出：
+- 若 `check-outline` 返回非零退出码（任意一章缺失大纲）→ **立即终止整个 ink-5 流程**，输出：
   ```
   ❌ 大纲覆盖验证失败，以下章节缺少详细大纲：
   - 第{ch}章
