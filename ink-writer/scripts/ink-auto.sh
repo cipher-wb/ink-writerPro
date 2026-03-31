@@ -68,6 +68,63 @@ if ! python3 -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" prefli
 fi
 
 # ═══════════════════════════════════════════
+# 读取当前章节号（提前定义，供预检使用）
+# ═══════════════════════════════════════════
+
+get_current_chapter() {
+    python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
+        --project-root "$PROJECT_ROOT" state get-progress 2>/dev/null \
+        | python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    print(d.get('data', {}).get('current_chapter', 0))
+except:
+    print(0)
+" 2>/dev/null || echo 0
+}
+
+# ═══════════════════════════════════════════
+# 大纲覆盖预检（批量启动前检查所有章节）
+# ═══════════════════════════════════════════
+
+CURRENT_CH=$(get_current_chapter)
+if [[ -z "$CURRENT_CH" || "$CURRENT_CH" == "0" ]]; then
+    # current_chapter=0 表示尚未开始写作，属正常；但若读取失败则需检查
+    if ! python3 -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" state get-progress 2>/dev/null | python3 -c "import sys,json; json.load(sys.stdin)" 2>/dev/null; then
+        echo "❌ 无法读取 state.json 进度信息，请检查项目状态"
+        exit 1
+    fi
+    CURRENT_CH=${CURRENT_CH:-0}
+fi
+
+echo "🔍 正在检查第$((CURRENT_CH + 1))章到第$((CURRENT_CH + N))章的大纲覆盖..."
+
+OUTLINE_MISSING=0
+for ch_offset in $(seq 1 "$N"); do
+    CHECK_CH=$((CURRENT_CH + ch_offset))
+    OUTLINE_OUTPUT=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
+        --project-root "$PROJECT_ROOT" extract-context \
+        --chapter "$CHECK_CH" --format pack 2>&1 | head -5) || true
+
+    if echo "$OUTLINE_OUTPUT" | grep -qE '⚠️|未找到|不存在'; then
+        echo "❌ 第${CHECK_CH}章没有详细大纲，禁止写作。"
+        OUTLINE_MISSING=1
+    fi
+done
+
+if (( OUTLINE_MISSING )); then
+    echo ""
+    echo "═══════════════════════════════════════"
+    echo "  ❌ 大纲预检失败 — 批量写作已中止"
+    echo "  请先执行 /ink-plan 生成缺失的大纲"
+    echo "═══════════════════════════════════════"
+    exit 1
+fi
+
+echo "✅ 大纲覆盖检查通过，所有 $N 章大纲就绪"
+
+# ═══════════════════════════════════════════
 # 信号处理
 # ═══════════════════════════════════════════
 
@@ -89,23 +146,6 @@ on_signal() {
 trap on_signal INT TERM
 
 # ═══════════════════════════════════════════
-# 读取当前章节号
-# ═══════════════════════════════════════════
-
-get_current_chapter() {
-    python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
-        --project-root "$PROJECT_ROOT" state get-progress 2>/dev/null \
-        | python3 -c "
-import sys, json
-try:
-    d = json.load(sys.stdin)
-    print(d.get('data', {}).get('current_chapter', 0))
-except:
-    print(0)
-" 2>/dev/null || echo 0
-}
-
-# ═══════════════════════════════════════════
 # 验证章节产出
 # ═══════════════════════════════════════════
 
@@ -114,9 +154,13 @@ verify_chapter() {
     local padded
     padded=$(printf "%04d" "$ch")
 
-    # 1. 章节文件存在且非空
+    # 1. 章节文件存在且非空（支持平铺和卷目录两种布局）
     local file
     file=$(ls "$PROJECT_ROOT/正文/第${padded}章"*.md 2>/dev/null | head -1)
+    if [[ -z "$file" || ! -s "$file" ]]; then
+        # 尝试卷目录布局: 正文/第N卷/第XXX章*.md
+        file=$(find "$PROJECT_ROOT/正文" -name "第${padded}章*.md" -o -name "第$((ch))章*.md" 2>/dev/null | head -1)
+    fi
     if [[ -z "$file" || ! -s "$file" ]]; then
         return 1
     fi
@@ -170,6 +214,7 @@ run_chapter() {
     padded=$(printf "%04d" "$ch")
     local log_file="$LOG_DIR/ch${padded}-$(date +%Y%m%d-%H%M%S).log"
     local prompt="使用 Skill 工具加载 \"ink-write\" 并完整执行所有步骤（Step 0 到 Step 6）。项目目录: ${PROJECT_ROOT}。禁止省略任何步骤，禁止提问，全程自主执行。完成后输出 INK_DONE。失败则输出 INK_FAILED。"
+    local exit_code=0
 
     case $PLATFORM in
         claude)
@@ -178,24 +223,35 @@ run_chapter() {
                 --no-session-persistence \
                 2>&1 | tee "$log_file" &
             CHILD_PID=$!
-            wait $CHILD_PID 2>/dev/null || true
+            wait $CHILD_PID 2>/dev/null
+            exit_code=$?
             CHILD_PID=""
             ;;
         gemini)
             echo "$prompt" | gemini --yolo \
                 2>&1 | tee "$log_file" &
             CHILD_PID=$!
-            wait $CHILD_PID 2>/dev/null || true
+            wait $CHILD_PID 2>/dev/null
+            exit_code=$?
             CHILD_PID=""
             ;;
         codex)
             codex --approval-mode full-auto "$prompt" \
                 2>&1 | tee "$log_file" &
             CHILD_PID=$!
-            wait $CHILD_PID 2>/dev/null || true
+            wait $CHILD_PID 2>/dev/null
+            exit_code=$?
             CHILD_PID=""
             ;;
     esac
+
+    # 检查进程退出码（非零可能是网络错误、超时、崩溃等）
+    if (( exit_code != 0 )); then
+        echo "⚠️  CLI 进程异常退出 (exit code: $exit_code)"
+        echo "    可能原因：网络中断、API 超时、进程崩溃"
+        echo "    日志文件：$log_file"
+    fi
+    return $exit_code
 }
 
 # ═══════════════════════════════════════════
@@ -208,6 +264,7 @@ retry_chapter() {
     padded=$(printf "%04d" "$ch")
     local log_file="$LOG_DIR/ch${padded}-retry-$(date +%Y%m%d-%H%M%S).log"
     local prompt="使用 Skill 工具加载 \"ink-resume\"，恢复第${ch}章的写作并完成所有剩余步骤。项目目录: ${PROJECT_ROOT}。禁止提问，全程自主执行。完成后输出 INK_DONE。"
+    local exit_code=0
 
     case $PLATFORM in
         claude)
@@ -216,24 +273,33 @@ retry_chapter() {
                 --no-session-persistence \
                 2>&1 | tee "$log_file" &
             CHILD_PID=$!
-            wait $CHILD_PID 2>/dev/null || true
+            wait $CHILD_PID 2>/dev/null
+            exit_code=$?
             CHILD_PID=""
             ;;
         gemini)
             echo "$prompt" | gemini --yolo \
                 2>&1 | tee "$log_file" &
             CHILD_PID=$!
-            wait $CHILD_PID 2>/dev/null || true
+            wait $CHILD_PID 2>/dev/null
+            exit_code=$?
             CHILD_PID=""
             ;;
         codex)
             codex --approval-mode full-auto "$prompt" \
                 2>&1 | tee "$log_file" &
             CHILD_PID=$!
-            wait $CHILD_PID 2>/dev/null || true
+            wait $CHILD_PID 2>/dev/null
+            exit_code=$?
             CHILD_PID=""
             ;;
     esac
+
+    if (( exit_code != 0 )); then
+        echo "⚠️  重试进程异常退出 (exit code: $exit_code)"
+        echo "    日志文件：$log_file"
+    fi
+    return $exit_code
 }
 
 # ═══════════════════════════════════════════
@@ -258,6 +324,20 @@ for i in $(seq 1 "$N"); do
     CURRENT=$(get_current_chapter)
     NEXT_CH=$((CURRENT + 1))
 
+    # 逐章大纲二次检查（防御性：防止批次预检后大纲被删除等极端情况）
+    OUTLINE_CHECK=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
+        --project-root "$PROJECT_ROOT" extract-context \
+        --chapter "$NEXT_CH" --format pack 2>&1 | head -5) || true
+
+    if echo "$OUTLINE_CHECK" | grep -qE '⚠️|未找到|不存在'; then
+        echo ""
+        echo "[$i/$N] ❌ 第${NEXT_CH}章大纲缺失，中止批量写作"
+        echo "    请先执行 /ink-plan 生成大纲后再重试"
+        echo ""
+        echo "已完成 $COMPLETED 章，未写章节不受影响"
+        exit 1
+    fi
+
     # 清理上一轮的 workflow 残留状态
     python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
         --project-root "$PROJECT_ROOT" workflow clear 2>/dev/null || true
@@ -267,7 +347,9 @@ for i in $(seq 1 "$N"); do
     echo "───────────────────────────────────"
 
     # 执行写作
-    run_chapter "$NEXT_CH"
+    if ! run_chapter "$NEXT_CH"; then
+        echo "[$i/$N] ⚠️  第${NEXT_CH}章 CLI 进程异常，尝试验证产出..."
+    fi
 
     # 冷却：确保 git commit / index 更新等异步操作完成
     sleep "$COOLDOWN"
@@ -275,22 +357,31 @@ for i in $(seq 1 "$N"); do
     # 验证
     if verify_chapter "$NEXT_CH"; then
         WC=$(get_chapter_wordcount "$NEXT_CH")
-        echo "[$i/$N] 第${NEXT_CH}章完成 | ${WC}字"
+        echo "[$i/$N] ✅ 第${NEXT_CH}章完成 | ${WC}字"
         COMPLETED=$((COMPLETED + 1))
     else
-        echo "[$i/$N] 验证失败，重试中..."
+        echo "[$i/$N] ⚠️  验证失败，重试中..."
 
-        retry_chapter "$NEXT_CH"
+        if ! retry_chapter "$NEXT_CH"; then
+            echo "[$i/$N] ⚠️  重试进程也异常退出"
+        fi
         sleep "$COOLDOWN"
 
         if verify_chapter "$NEXT_CH"; then
             WC=$(get_chapter_wordcount "$NEXT_CH")
-            echo "[$i/$N] 第${NEXT_CH}章完成（重试成功）| ${WC}字"
+            echo "[$i/$N] ✅ 第${NEXT_CH}章完成（重试成功）| ${WC}字"
             COMPLETED=$((COMPLETED + 1))
         else
-            echo "[$i/$N] 第${NEXT_CH}章失败，中止批次"
             echo ""
-            echo "已完成 $COMPLETED 章，失败章节可通过 /ink-resume 手动恢复"
+            echo "═══════════════════════════════════════"
+            echo "  ❌ 第${NEXT_CH}章写作失败，批量写作中止"
+            echo "═══════════════════════════════════════"
+            echo "  已完成：$COMPLETED 章"
+            echo "  失败章节：第${NEXT_CH}章"
+            echo "  可能原因：网络中断、API 限流、上下文溢出"
+            echo "  日志目录：$LOG_DIR"
+            echo "  恢复方式：/ink-resume 或重新执行 /ink-auto"
+            echo "═══════════════════════════════════════"
             exit 1
         fi
     fi
