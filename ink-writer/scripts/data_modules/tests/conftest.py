@@ -4,23 +4,9 @@ Extracted fixtures:
 - temp_project: 创建临时项目目录（含 .ink 子目录及标准子文件夹）
 """
 
-import warnings
-
 import pytest
 
 from data_modules.config import DataModulesConfig
-
-
-# ---------------------------------------------------------------------------
-# Warning filters
-# ---------------------------------------------------------------------------
-
-def pytest_configure(config):
-    """Suppress known noisy warnings that leak from third-party / stdlib code."""
-    config.addinivalue_line(
-        "filterwarnings",
-        "ignore:unclosed database:ResourceWarning",
-    )
 
 
 # ---------------------------------------------------------------------------

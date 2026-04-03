@@ -258,3 +258,260 @@ def test_quality_trend_report_writes_to_book_root_when_input_is_workspace_root(t
     assert output_path.is_file()
     assert (book_root / ".ink" / "index.db").is_file()
     assert not (workspace_root / ".ink" / "index.db").exists()
+
+
+# ---------------------------------------------------------------------------
+# 辅助工具函数测试
+# ---------------------------------------------------------------------------
+
+
+class TestStripProjectRootArgs:
+    """_strip_project_root_args 的边界测试。"""
+
+    def test_strips_flag_with_value(self):
+        module = _load_ink_module()
+        result = module._strip_project_root_args(["--project-root", "/foo", "stats"])
+        assert result == ["stats"]
+
+    def test_strips_equals_form(self):
+        module = _load_ink_module()
+        result = module._strip_project_root_args(["--project-root=/foo", "stats"])
+        assert result == ["stats"]
+
+    def test_preserves_other_args(self):
+        module = _load_ink_module()
+        result = module._strip_project_root_args(["--format", "json", "--chapter", "5"])
+        assert result == ["--format", "json", "--chapter", "5"]
+
+    def test_empty_list(self):
+        module = _load_ink_module()
+        result = module._strip_project_root_args([])
+        assert result == []
+
+
+class TestRunDataModule:
+    """_run_data_module 的行为测试。"""
+
+    def test_missing_main_raises(self, monkeypatch):
+        module = _load_ink_module()
+        import types
+
+        fake_mod = types.ModuleType("data_modules.no_main")
+        monkeypatch.setattr(
+            "importlib.import_module",
+            lambda name: fake_mod if name == "data_modules.no_main" else __import__(name),
+        )
+        with pytest.raises(RuntimeError, match="缺少可调用的 main"):
+            module._run_data_module("no_main", [])
+
+    def test_successful_main_returns_zero(self, monkeypatch):
+        module = _load_ink_module()
+        import types
+
+        fake_mod = types.ModuleType("data_modules.ok_mod")
+        fake_mod.main = lambda: None
+        monkeypatch.setattr(
+            "importlib.import_module",
+            lambda name: fake_mod if name == "data_modules.ok_mod" else __import__(name),
+        )
+        assert module._run_data_module("ok_mod", ["--flag"]) == 0
+
+    def test_system_exit_returns_code(self, monkeypatch):
+        module = _load_ink_module()
+        import types
+
+        fake_mod = types.ModuleType("data_modules.exit_mod")
+        def _exit_main():
+            raise SystemExit(42)
+        fake_mod.main = _exit_main
+        monkeypatch.setattr(
+            "importlib.import_module",
+            lambda name: fake_mod if name == "data_modules.exit_mod" else __import__(name),
+        )
+        assert module._run_data_module("exit_mod", []) == 42
+
+
+class TestRunScript:
+    """_run_script 的行为测试。"""
+
+    def test_missing_script_raises(self, monkeypatch, tmp_path):
+        module = _load_ink_module()
+        monkeypatch.setattr(module, "_scripts_dir", lambda: tmp_path)
+        with pytest.raises(FileNotFoundError, match="未找到脚本"):
+            module._run_script("nonexistent.py", [])
+
+
+# ---------------------------------------------------------------------------
+# 子命令路由测试
+# ---------------------------------------------------------------------------
+
+
+class TestCmdWhere:
+    """where 子命令测试。"""
+
+    def test_where_prints_project_root(self, monkeypatch, tmp_path, capsys):
+        module = _load_ink_module()
+        monkeypatch.setattr(module, "_resolve_root", lambda _: tmp_path)
+        monkeypatch.setattr(sys, "argv", ["ink", "where"])
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+        assert int(exc.value.code or 0) == 0
+        assert str(tmp_path) in capsys.readouterr().out
+
+
+class TestCmdUse:
+    """use 子命令测试。"""
+
+    def test_use_writes_pointer(self, monkeypatch, tmp_path, capsys):
+        module = _load_ink_module()
+        project = tmp_path / "book"
+        (project / ".ink").mkdir(parents=True)
+        (project / ".ink" / "state.json").write_text("{}", encoding="utf-8")
+
+        monkeypatch.setattr(sys, "argv", ["ink", "use", str(project)])
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+        assert int(exc.value.code or 0) == 0
+        out = capsys.readouterr().out
+        assert "pointer" in out or "registry" in out
+
+
+class TestPassthroughRoutes:
+    """转发类子命令路由正确性。"""
+
+    @pytest.mark.parametrize("tool,expected_module", [
+        ("index", "index_manager"),
+        ("state", "state_manager"),
+        ("rag", "rag_adapter"),
+        ("style", "style_sampler"),
+        ("entity", "entity_linker"),
+        ("context", "context_manager"),
+        ("migrate", "migrate_state_to_sqlite"),
+    ])
+    def test_data_module_routes(self, monkeypatch, tmp_path, tool, expected_module):
+        module = _load_ink_module()
+        book_root = tmp_path / "book"
+        called = {}
+
+        monkeypatch.setattr(module, "_resolve_root", lambda _: book_root)
+        monkeypatch.setattr(
+            module,
+            "_run_data_module",
+            lambda mod, argv: (called.update(module=mod, argv=argv), 0)[1],
+        )
+        monkeypatch.setattr(sys, "argv", ["ink", tool, "sub-arg"])
+
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+
+        assert int(exc.value.code or 0) == 0
+        assert called["module"] == expected_module
+        assert "--project-root" in called["argv"]
+
+    @pytest.mark.parametrize("tool,expected_script", [
+        ("workflow", "workflow_manager.py"),
+        ("status", "status_reporter.py"),
+        ("health", "status_reporter.py"),
+        ("update-state", "update_state.py"),
+        ("backup", "backup_manager.py"),
+        ("archive", "archive_manager.py"),
+    ])
+    def test_script_routes(self, monkeypatch, tmp_path, tool, expected_script):
+        module = _load_ink_module()
+        book_root = tmp_path / "book"
+        called = {}
+
+        monkeypatch.setattr(module, "_resolve_root", lambda _: book_root)
+        monkeypatch.setattr(
+            module,
+            "_run_script",
+            lambda script, argv: (called.update(script=script, argv=argv), 0)[1],
+        )
+        monkeypatch.setattr(sys, "argv", ["ink", tool])
+
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+
+        assert int(exc.value.code or 0) == 0
+        assert called["script"] == expected_script
+
+
+class TestCmdDb:
+    """db 子命令测试。"""
+
+    def test_db_check_on_valid_project(self, monkeypatch, tmp_path, capsys):
+        module = _load_ink_module()
+        project = tmp_path / "book"
+        (project / ".ink").mkdir(parents=True)
+        (project / ".ink" / "state.json").write_text("{}", encoding="utf-8")
+
+        monkeypatch.setattr(sys, "argv", [
+            "ink", "--project-root", str(project), "db", "check",
+        ])
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+        assert int(exc.value.code or 0) == 0
+        out = capsys.readouterr().out
+        assert "OK" in out
+
+    def test_db_check_json_format(self, monkeypatch, tmp_path, capsys):
+        module = _load_ink_module()
+        project = tmp_path / "book"
+        (project / ".ink").mkdir(parents=True)
+        (project / ".ink" / "state.json").write_text("{}", encoding="utf-8")
+
+        monkeypatch.setattr(sys, "argv", [
+            "ink", "--project-root", str(project), "db", "check", "--format", "json",
+        ])
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+        import json
+        out = capsys.readouterr().out
+        result = json.loads(out)
+        assert "ok" in result
+
+    def test_db_list_backups_empty(self, monkeypatch, tmp_path, capsys):
+        module = _load_ink_module()
+        project = tmp_path / "book"
+        (project / ".ink").mkdir(parents=True)
+        (project / ".ink" / "state.json").write_text("{}", encoding="utf-8")
+
+        monkeypatch.setattr(sys, "argv", [
+            "ink", "--project-root", str(project), "db", "list-backups",
+        ])
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+        assert int(exc.value.code or 0) == 0
+        assert "No backups" in capsys.readouterr().out
+
+
+class TestCheckpointCommands:
+    """checkpoint-level / report-check / disambig-check 子命令。"""
+
+    def test_checkpoint_level(self, monkeypatch, tmp_path, capsys):
+        module = _load_ink_module()
+        project = tmp_path / "book"
+        (project / ".ink").mkdir(parents=True)
+        (project / ".ink" / "state.json").write_text("{}", encoding="utf-8")
+
+        monkeypatch.setattr(sys, "argv", [
+            "ink", "--project-root", str(project), "checkpoint-level", "--chapter", "10",
+        ])
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+        assert int(exc.value.code or 0) == 0
+
+    def test_report_check_nonexistent_file(self, monkeypatch, tmp_path, capsys):
+        module = _load_ink_module()
+        project = tmp_path / "book"
+        (project / ".ink").mkdir(parents=True)
+        (project / ".ink" / "state.json").write_text("{}", encoding="utf-8")
+
+        monkeypatch.setattr(sys, "argv", [
+            "ink", "--project-root", str(project),
+            "report-check", "--report", str(tmp_path / "nope.md"),
+        ])
+        with pytest.raises(SystemExit) as exc:
+            module.main()
+        # Should exit 0 (no issues found in nonexistent report)
+        assert int(exc.value.code or 0) == 0
