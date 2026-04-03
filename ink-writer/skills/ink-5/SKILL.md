@@ -35,26 +35,11 @@ allowed-tools: Read Write Edit Grep Bash Task
 ## Project Root Guard（必须先确认）
 
 ```bash
-export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
-
-if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
-  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$PWD"
-  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
-  else
-    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
-    exit 1
-  fi
-fi
-
-export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/scripts"
-export SKILL_ROOT="${CLAUDE_PLUGIN_ROOT:?CLAUDE_PLUGIN_ROOT is required}/skills/ink-5"
+export INK_SKILL_NAME="ink-5"
+export INK_PREFLIGHT=1
+source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 export WRITE_SKILL_ROOT="${CLAUDE_PLUGIN_ROOT}/skills/ink-write"
 export REVIEW_SKILL_ROOT="${CLAUDE_PLUGIN_ROOT}/skills/ink-review"
-
-python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" preflight
-export PROJECT_ROOT="$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
 ```
 
 ## 流程硬约束（禁止事项）

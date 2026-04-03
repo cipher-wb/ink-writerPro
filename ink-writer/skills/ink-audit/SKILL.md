@@ -18,18 +18,7 @@ allowed-tools: Read Grep Bash AskUserQuestion
 ## Project Root Guard（必须先确认）
 
 ```bash
-export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
-
-if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
-  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$PWD"
-  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
-  fi
-fi
-
-export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
-export PROJECT_ROOT="$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
 
 ## 审计深度（3级）

@@ -20,8 +20,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
-from .index_manager import (
-    IndexManager,
+from .index_manager import IndexManager
+from .index_types import (
     ChapterMeta,
     EntityMeta,
     SceneMeta,

@@ -22,8 +22,6 @@ Thumbs.db
 node_modules/
 .npm-cache/
 dist/
-!ink-writer/dashboard/frontend/dist/
-!ink-writer/dashboard/frontend/dist/**
 nul
 .tmp/
 .tmp_*

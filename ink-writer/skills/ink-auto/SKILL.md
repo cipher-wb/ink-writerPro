@@ -33,20 +33,7 @@ allowed-tools: Bash Read
 调用 `ink-auto.sh` shell 脚本。脚本自动检测项目路径和 CLI 平台。
 
 ```bash
-export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
-
-if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
-  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$PWD"
-  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
-  else
-    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT" >&2
-    exit 1
-  fi
-fi
-
-export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
+source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
 
 解析用户参数（章数），然后执行：

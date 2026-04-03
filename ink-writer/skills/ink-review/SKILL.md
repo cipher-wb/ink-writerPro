@@ -13,32 +13,8 @@ allowed-tools: Read Grep Write Edit Bash Task AskUserQuestion
 
 环境设置（bash 命令执行前）：
 ```bash
-export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
-
-if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
-  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$PWD"
-  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
-  else
-    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
-    exit 1
-  fi
-fi
-
-if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/skills/ink-review" ]; then
-  echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT 或缺少目录: ${CLAUDE_PLUGIN_ROOT}/skills/ink-review" >&2
-  exit 1
-fi
-export SKILL_ROOT="${CLAUDE_PLUGIN_ROOT}/skills/ink-review"
-
-if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
-  echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT 或缺少目录: ${CLAUDE_PLUGIN_ROOT}/scripts" >&2
-  exit 1
-fi
-export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
-
-export PROJECT_ROOT="$(python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+export INK_SKILL_NAME="ink-review"
+source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
 
 ## Step 0: 充分性闸门（Sufficiency Gate）

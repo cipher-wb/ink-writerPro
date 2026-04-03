@@ -7,6 +7,7 @@ on:
       - 'pytest.ini'
       - '.coveragerc'
       - 'requirements.txt'
+      - 'ink-writer/scripts/requirements.lock'
       - '.github/workflows/ci-test.yml'
   pull_request:
     paths:
@@ -14,6 +15,7 @@ on:
       - 'pytest.ini'
       - '.coveragerc'
       - 'requirements.txt'
+      - 'ink-writer/scripts/requirements.lock'
       - '.github/workflows/ci-test.yml'
 
 jobs:
@@ -28,8 +30,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Install dependencies (locked versions)
+        run: pip install -r ink-writer/scripts/requirements.lock
 
       - name: Run tests
         run: pytest

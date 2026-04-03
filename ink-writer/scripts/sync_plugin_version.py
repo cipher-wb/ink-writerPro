@@ -145,6 +145,34 @@ def sync_versions(version: str | None = None, release_notes: str | None = None) 
     return previous_version, target_version, changed
 
 
+def _get_schema_versions() -> dict[str, str]:
+    """收集 state.json 和 index_manager 的 schema 版本号"""
+    versions: dict[str, str] = {}
+    # state.json schema_version (来自 state_schema.py 的默认值)
+    try:
+        import sys, importlib.util
+        schema_path = ROOT / "ink-writer" / "scripts" / "state_schema.py"
+        if schema_path.exists():
+            spec = importlib.util.spec_from_file_location("state_schema", schema_path)
+            mod = importlib.util.module_from_spec(spec)
+            sys.modules["state_schema"] = mod
+            spec.loader.exec_module(mod)
+            versions["state_schema"] = str(getattr(mod.StateModel.model_fields["schema_version"], "default", "?"))
+    except Exception:
+        pass
+    # index.db SCHEMA_VERSION (来自 index_manager.py 的类属性)
+    try:
+        idx_path = ROOT / "ink-writer" / "scripts" / "data_modules" / "index_manager.py"
+        if idx_path.exists():
+            for line in idx_path.read_text().splitlines():
+                if "SCHEMA_VERSION" in line and "=" in line and "class" not in line.lower():
+                    versions["index_schema"] = line.split("=")[1].strip()
+                    break
+    except Exception:
+        pass
+    return versions
+
+
 def check_versions(expected_version: str | None = None) -> int:
     plugin_payload = load_json(PLUGIN_JSON_PATH)
     marketplace_payload = load_json(MARKETPLACE_JSON_PATH)
@@ -179,7 +207,10 @@ def check_versions(expected_version: str | None = None) -> int:
             print(f"- {mismatch}")
         return 1
 
-    print(f"Versions are in sync: {plugin_version}")
+    # 报告 schema 版本（仅信息性，不阻断）
+    schema_vers = _get_schema_versions()
+    schema_info = ", ".join(f"{k}={v}" for k, v in schema_vers.items()) if schema_vers else "N/A"
+    print(f"Versions are in sync: {plugin_version} (schema: {schema_info})")
     return 0
 
 

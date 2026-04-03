@@ -22,24 +22,8 @@ allowed-tools: Bash Read
 ### Step 0：环境确认
 
 ```bash
-export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
-
-if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/dashboard" ]; then
-  if [ -d "$PWD/dashboard" ] && [ -d "$PWD/skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$PWD"
-  elif [ -d "$PWD/../dashboard" ] && [ -d "$PWD/../skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
-  else
-    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
-    exit 1
-  fi
-fi
-
-if [ -z "${CLAUDE_PLUGIN_ROOT}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/dashboard" ]; then
-  echo "ERROR: 未找到 dashboard 模块: ${CLAUDE_PLUGIN_ROOT}/dashboard" >&2
-  exit 1
-fi
-export DASHBOARD_DIR="${CLAUDE_PLUGIN_ROOT}/dashboard"
+export INK_DASHBOARD=1
+source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
 
 ### Step 1：安装依赖（首次）
@@ -51,8 +35,7 @@ python3 -m pip install -r "${DASHBOARD_DIR}/requirements.txt" --quiet
 ### Step 2：解析项目根目录并准备 Python 模块路径
 
 ```bash
-export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
-export PROJECT_ROOT="$(python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+# SCRIPTS_DIR, PROJECT_ROOT 已由 env-setup.sh 导出
 echo "项目路径: ${PROJECT_ROOT}"
 
 # 确保 `python3 -m dashboard.server` 可在任意工作目录下找到插件模块
@@ -62,11 +45,10 @@ else
   export PYTHONPATH="${CLAUDE_PLUGIN_ROOT}"
 fi
 
-# 前端 dist 已随插件发布；若缺失说明安装包异常
+# 前端 dist 不再提交到 Git，首次使用时自动构建
 if [ ! -f "${DASHBOARD_DIR}/frontend/dist/index.html" ]; then
-  echo "ERROR: 缺少前端构建产物 ${DASHBOARD_DIR}/frontend/dist/index.html" >&2
-  echo "请重新安装插件或联系维护者修复发布包。" >&2
-  exit 1
+  echo "首次启动，构建前端..."
+  (cd "${DASHBOARD_DIR}/frontend" && npm install --silent && npm run build)
 fi
 ```
 

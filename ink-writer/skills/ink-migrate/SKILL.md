@@ -19,21 +19,7 @@ allowed-tools: Read Write Bash AskUserQuestion
 ## 环境设置
 
 ```bash
-export WORKSPACE_ROOT="${INK_PROJECT_ROOT:-${CLAUDE_PROJECT_DIR:-$PWD}}"
-
-if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ]; then
-  if [ -d "$PWD/scripts" ] && [ -d "$PWD/skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$PWD"
-  elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
-    export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
-  else
-    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT" >&2
-    exit 1
-  fi
-fi
-
-export SCRIPTS_DIR="${CLAUDE_PLUGIN_ROOT}/scripts"
-export PROJECT_ROOT="$(python3 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
 
 ## 三阶段执行流程

@@ -247,7 +247,7 @@ class IndexChapterMixin:
 
         返回写入统计
         """
-        from .index_manager import ChapterMeta, SceneMeta
+        from .index_types import ChapterMeta, SceneMeta
 
         stats = {"chapters": 0, "scenes": 0, "appearances": 0}
 
