@@ -1,6 +1,6 @@
 {
   "name": "ink-writer",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "description": "长篇网文创作系统（skills + agents + data chain + RAG）",
   "author": {
     "name": "cipher-wb"

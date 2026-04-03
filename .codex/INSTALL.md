@@ -5,7 +5,7 @@
 ## 前置条件
 
 - Git
-- Python 3.8+
+- Python 3.10+
 - Codex CLI（启用 multi_agent 特性）
 
 ## 安装步骤
@@ -65,16 +65,18 @@ ls -la ~/.agents/skills/ink-writer
 可用 skills：
 - `ink-init` — 初始化新项目
 - `ink-plan` — 规划卷/章大纲
+- `ink-auto` — **主力命令**——批量写 N 章 + 自动审查修复 + 自动规划
 - `ink-write` — 写作单章
-- `ink-5` — 连续写 5 章
+- ~~`ink-5`~~ — ⚠️ 已弃用，请使用 `ink-auto 5` 替代
 - `ink-review` — 质量审查
+- `ink-macro-review` — 宏观审查
 - `ink-query` — 查询项目状态
 - `ink-audit` — 数据审计
 - `ink-resolve` — 实体消歧
 - `ink-resume` — 中断恢复
 - `ink-learn` — 模式提取
 - `ink-dashboard` — 可视化面板
-- `ink-macro-review` — 宏观审查
+- `ink-migrate` — 旧项目迁移（v8.x → v9.0）
 
 工具映射参考：`ink-writer/references/codex-tools.md`
 

@@ -10,6 +10,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent.parent
 PLUGIN_JSON_PATH = ROOT / "ink-writer" / ".claude-plugin" / "plugin.json"
 MARKETPLACE_JSON_PATH = ROOT / ".claude-plugin" / "marketplace.json"
+GEMINI_EXTENSION_PATH = ROOT / "gemini-extension.json"
 README_PATH = ROOT / "README.md"
 PLUGIN_NAME = "ink-writer"
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+$")
@@ -110,6 +111,7 @@ def update_readme_release(content: str, version: str, release_notes: str | None)
 def sync_versions(version: str | None = None, release_notes: str | None = None) -> tuple[str, str, bool]:
     plugin_payload = load_json(PLUGIN_JSON_PATH)
     marketplace_payload = load_json(MARKETPLACE_JSON_PATH)
+    gemini_payload = load_json(GEMINI_EXTENSION_PATH) if GEMINI_EXTENSION_PATH.exists() else None
     readme_content = load_text(README_PATH)
     marketplace_plugin = get_marketplace_plugin(marketplace_payload)
 
@@ -125,6 +127,10 @@ def sync_versions(version: str | None = None, release_notes: str | None = None) 
         marketplace_plugin["version"] = target_version
         changed = True
 
+    if gemini_payload is not None and gemini_payload.get("version") != target_version:
+        gemini_payload["version"] = target_version
+        changed = True
+
     updated_readme = update_readme_release(readme_content, target_version, release_notes)
     if updated_readme != readme_content:
         save_text(README_PATH, updated_readme)
@@ -133,6 +139,8 @@ def sync_versions(version: str | None = None, release_notes: str | None = None) 
     if changed:
         save_json(PLUGIN_JSON_PATH, plugin_payload)
         save_json(MARKETPLACE_JSON_PATH, marketplace_payload)
+        if gemini_payload is not None:
+            save_json(GEMINI_EXTENSION_PATH, gemini_payload)
 
     return previous_version, target_version, changed
 
@@ -140,17 +148,23 @@ def sync_versions(version: str | None = None, release_notes: str | None = None) 
 def check_versions(expected_version: str | None = None) -> int:
     plugin_payload = load_json(PLUGIN_JSON_PATH)
     marketplace_payload = load_json(MARKETPLACE_JSON_PATH)
+    gemini_payload = load_json(GEMINI_EXTENSION_PATH) if GEMINI_EXTENSION_PATH.exists() else None
     readme_content = load_text(README_PATH)
     marketplace_plugin = get_marketplace_plugin(marketplace_payload)
 
     plugin_version = str(plugin_payload.get("version", ""))
     marketplace_version = str(marketplace_plugin.get("version", ""))
+    gemini_version = str(gemini_payload.get("version", "")) if gemini_payload else plugin_version
     readme_version = get_readme_current_version(readme_content)
 
     mismatches: list[str] = []
     if plugin_version != marketplace_version:
         mismatches.append(
             f"plugin.json={plugin_version}, marketplace.json={marketplace_version}"
+        )
+    if plugin_version != gemini_version:
+        mismatches.append(
+            f"plugin.json={plugin_version}, gemini-extension.json={gemini_version}"
         )
     if plugin_version != readme_version:
         mismatches.append(f"plugin.json={plugin_version}, README.md={readme_version}")

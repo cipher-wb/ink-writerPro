@@ -33,8 +33,9 @@ export INK_PLUGIN_ROOT="$HOME/.gemini/extensions/ink-writer/ink-writer"
 |-------|------|----------|
 | `ink-init` | 深度初始化网文项目 | 新建项目时 |
 | `ink-plan` | 构建卷/章大纲 | 需要规划时 |
+| `ink-auto` | **主力命令**——批量写 N 章 + 自动审查修复 + 自动规划 | 日常批量创作 |
 | `ink-write` | 写作单章（最低 2200 字） | 写章节时 |
-| `ink-5` | 连续写 5 章 + 全量审查 | 日常批量创作 |
+| ~~`ink-5`~~ | ⚠️ **已弃用**，请使用 `ink-auto 5` 替代 | — |
 
 ### 质量保障
 
@@ -53,6 +54,15 @@ export INK_PLUGIN_ROOT="$HOME/.gemini/extensions/ink-writer/ink-writer"
 | `ink-resume` | 中断恢复 | 恢复中断任务 |
 | `ink-learn` | 提取写作模式 | 学习成功经验 |
 | `ink-dashboard` | 可视化管理面板 | 查看项目全局 |
+| `ink-migrate` | 旧项目迁移（v8.x → v9.0） | 升级旧项目时 |
+
+## v9.0 新特性
+
+- **Harness-First 架构**：用约束、检测、状态和评估把 Agent 变成可控系统
+- **计算型闸门（Step 2C）**：在昂贵的 LLM 审查之前，加确定性检查（字数、命名、伏笔逾期、契约完整性），硬失败直接退回重写
+- **Reader Agent 升格为核心裁判**：每章必跑，输出 7 维结构化评分（总分 ≥32 通过，<25 退回重写）
+- **ink-auto 智能检查点**：每 5 章审查修复、每 10 章数据审计、每 20 章深度宏观审查
+- **ink-migrate**：旧项目一条命令迁移到 v9.0
 
 ## 使用方式
 
@@ -64,7 +74,7 @@ export INK_PLUGIN_ROOT="$HOME/.gemini/extensions/ink-writer/ink-writer"
 
 - Gemini CLI **不支持子 Agent**（无 `Task` 工具等价物）。依赖子 Agent 的步骤（如 ink-write 中的 checker 并发调用）需要在单会话中串行执行。
 - 审查步骤中的 10 个 checker 需逐个执行，而非并发派发。
-- `ink-5` 的批量模式同样以串行方式运行每章的完整流程。
+- `ink-auto` 的批量模式同样以串行方式运行每章的完整流程。
 
 ## Python 后端
 
