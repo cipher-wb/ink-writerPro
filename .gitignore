@@ -12,6 +12,9 @@ venv/
 # Local runtime data
 .ink/
 
+# Test artifacts (leaked MagicMock file names)
+<MagicMock*
+
 # OS / editor
 .DS_Store
 Thumbs.db
