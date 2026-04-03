@@ -5,6 +5,8 @@ on:
     paths:
       - 'ink-writer/scripts/**'
       - 'ink-writer/dashboard/**'
+      - 'ink-writer/agents/**'
+      - 'ink-writer/skills/**'
       - 'pytest.ini'
       - '.coveragerc'
       - 'requirements.txt'
@@ -15,6 +17,8 @@ on:
     paths:
       - 'ink-writer/scripts/**'
       - 'ink-writer/dashboard/**'
+      - 'ink-writer/agents/**'
+      - 'ink-writer/skills/**'
       - 'pytest.ini'
       - '.coveragerc'
       - 'requirements.txt'
@@ -32,7 +36,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.14'
 
       - name: Install dependencies (locked versions)
         run: pip install -r ink-writer/scripts/requirements.lock

@@ -21,15 +21,15 @@ def enable_windows_utf8_stdio(*, skip_in_pytest: bool = False) -> bool:
     """
     if sys.platform != "win32":
         return False
-    if skip_in_pytest and os.environ.get("PYTEST_CURRENT_TEST"):
+    if skip_in_pytest and os.environ.get("PYTEST_CURRENT_TEST"):  # pragma: no cover
         return False
 
-    stdout_encoding = str(getattr(sys.stdout, "encoding", "") or "").lower()
-    stderr_encoding = str(getattr(sys.stderr, "encoding", "") or "").lower()
-    if stdout_encoding == "utf-8" and stderr_encoding == "utf-8":
+    stdout_encoding = str(getattr(sys.stdout, "encoding", "") or "").lower()  # pragma: no cover
+    stderr_encoding = str(getattr(sys.stderr, "encoding", "") or "").lower()  # pragma: no cover
+    if stdout_encoding == "utf-8" and stderr_encoding == "utf-8":  # pragma: no cover
         return False
 
-    try:
+    try:  # pragma: no cover
         import io
 
         if hasattr(sys.stdout, "buffer"):
@@ -58,21 +58,21 @@ def normalize_windows_path(value: Union[str, Path]) -> Path:
     if sys.platform != "win32":
         return Path(value)
 
-    raw = str(value).strip()
-    if not raw:
+    raw = str(value).strip()  # pragma: no cover
+    if not raw:  # pragma: no cover
         return Path(raw)
 
-    m = _WIN_WSL_MNT_DRIVE_RE.match(raw)
-    if m:
+    m = _WIN_WSL_MNT_DRIVE_RE.match(raw)  # pragma: no cover
+    if m:  # pragma: no cover
         drive = m.group("drive").upper()
         rest = m.group("rest")
         return Path(f"{drive}:/{rest}")
 
-    m = _WIN_POSIX_DRIVE_RE.match(raw)
-    if m:
+    m = _WIN_POSIX_DRIVE_RE.match(raw)  # pragma: no cover
+    if m:  # pragma: no cover
         drive = m.group("drive").upper()
         rest = m.group("rest")
         return Path(f"{drive}:/{rest}")
 
-    return Path(value)
+    return Path(value)  # pragma: no cover
 

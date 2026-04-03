@@ -510,7 +510,7 @@ def restore_from_backup(file_path: Union[str, Path]) -> bool:
 # 单元测试（内置自检）
 # ============================================================================
 
-def _run_self_tests():
+def _run_self_tests():  # pragma: no cover
     """运行内置安全测试"""
     print("🔍 运行安全工具函数自检...")
 
@@ -580,7 +580,7 @@ def _run_self_tests():
     print("\n✅ 所有安全工具函数测试通过！")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Windows UTF-8 编码修复（必须在打印前执行）
     if sys.platform == "win32":
         enable_windows_utf8_stdio()

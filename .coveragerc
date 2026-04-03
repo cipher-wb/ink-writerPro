@@ -1,9 +1,11 @@
 [run]
 source =
     ink-writer/scripts
+    ink-writer/dashboard
 omit =
     */tests/*
     */__pycache__/*
+    */frontend/*
 
 [report]
 show_missing = True
