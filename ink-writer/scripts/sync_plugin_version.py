@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 PLUGIN_JSON_PATH = ROOT / "ink-writer" / ".claude-plugin" / "plugin.json"
 MARKETPLACE_JSON_PATH = ROOT / ".claude-plugin" / "marketplace.json"
 GEMINI_EXTENSION_PATH = ROOT / "gemini-extension.json"
+SCRIPTS_INIT_PATH = ROOT / "ink-writer" / "scripts" / "__init__.py"
 README_PATH = ROOT / "README.md"
 PLUGIN_NAME = "ink-writer"
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+$")
@@ -131,6 +132,20 @@ def sync_versions(version: str | None = None, release_notes: str | None = None) 
         gemini_payload["version"] = target_version
         changed = True
 
+    # scripts/__init__.py __version__
+    if SCRIPTS_INIT_PATH.exists():
+        init_text = SCRIPTS_INIT_PATH.read_text(encoding="utf-8")
+        new_init = re.sub(
+            r'^__version__\s*=\s*["\'].*?["\']',
+            f'__version__ = "{target_version}"',
+            init_text,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        if new_init != init_text:
+            save_text(SCRIPTS_INIT_PATH, new_init)
+            changed = True
+
     updated_readme = update_readme_release(readme_content, target_version, release_notes)
     if updated_readme != readme_content:
         save_text(README_PATH, updated_readme)
@@ -185,6 +200,14 @@ def check_versions(expected_version: str | None = None) -> int:
     gemini_version = str(gemini_payload.get("version", "")) if gemini_payload else plugin_version
     readme_version = get_readme_current_version(readme_content)
 
+    # scripts/__init__.py __version__
+    scripts_init_version = plugin_version  # default match
+    if SCRIPTS_INIT_PATH.exists():
+        for line in SCRIPTS_INIT_PATH.read_text(encoding="utf-8").splitlines():
+            if line.startswith("__version__"):
+                scripts_init_version = line.split("=")[1].strip().strip('"').strip("'")
+                break
+
     mismatches: list[str] = []
     if plugin_version != marketplace_version:
         mismatches.append(
@@ -196,6 +219,10 @@ def check_versions(expected_version: str | None = None) -> int:
         )
     if plugin_version != readme_version:
         mismatches.append(f"plugin.json={plugin_version}, README.md={readme_version}")
+    if plugin_version != scripts_init_version:
+        mismatches.append(
+            f"plugin.json={plugin_version}, scripts/__init__.py={scripts_init_version}"
+        )
     if expected_version and plugin_version != expected_version:
         mismatches.append(
             f"expected={expected_version}, current release metadata={plugin_version}"

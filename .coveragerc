@@ -1,6 +1,6 @@
 [run]
 source =
-    ink-writer/scripts/data_modules
+    ink-writer/scripts
 omit =
     */tests/*
     */__pycache__/*

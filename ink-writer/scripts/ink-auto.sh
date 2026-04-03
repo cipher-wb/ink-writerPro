@@ -186,7 +186,7 @@ import sys, json
 try:
     d = json.load(sys.stdin)
     print(d.get('data', {}).get('current_chapter', 0))
-except:
+except Exception:
     print(0)
 " 2>/dev/null || echo 0
 }
@@ -211,7 +211,7 @@ try:
             print(vid)
             sys.exit(0)
     print('')
-except:
+except Exception:
     print('')
 " 2>/dev/null
 }
@@ -593,21 +593,18 @@ run_macro_review() {
 # ═══════════════════════════════════════════
 
 check_disambiguation_backlog() {
-    local count
-    count=$(python3 -X utf8 -c "
-import json
-try:
-    with open('${PROJECT_ROOT}/.ink/state.json') as f:
-        s = json.load(f)
-    print(len(s.get('disambiguation_pending', [])))
-except:
-    print(0)
-" 2>/dev/null || echo 0)
+    local dj
+    dj=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
+        --project-root "$PROJECT_ROOT" disambig-check 2>/dev/null) || { echo "    ✅ 消歧检查跳过"; return 0; }
 
-    if (( count > 100 )); then
+    local count urgency
+    count=$(echo "$dj" | python3 -c "import sys,json; print(json.load(sys.stdin).get('count',0))" 2>/dev/null || echo 0)
+    urgency=$(echo "$dj" | python3 -c "import sys,json; print(json.load(sys.stdin).get('urgency','normal'))" 2>/dev/null || echo "normal")
+
+    if [[ "$urgency" == "critical" ]]; then
         echo "    ⚠️⚠️ 消歧积压 ${count} 条！强烈建议暂停批量写作，手动执行 /ink-resolve"
         report_event "⚠️" "消歧积压" "${count}条 — 建议手动处理"
-    elif (( count > 20 )); then
+    elif [[ "$urgency" == "warning" ]]; then
         echo "    ⚠️  消歧积压 ${count} 条，建议择机执行 /ink-resolve"
         report_event "⚠️" "消歧积压" "${count}条"
     else
@@ -623,19 +620,14 @@ except:
 run_checkpoint() {
     local ch="$1"
 
-    # 使用 Python checkpoint_utils 判断检查点级别（比 Bash 算术更可维护、可测试）
+    # 使用统一 CLI 判断检查点级别（可测试、无内联 Python）
     local cp_json
-    cp_json=$(PYTHONPATH="$SCRIPTS_DIR" python3 -X utf8 -c "
-from data_modules.checkpoint_utils import determine_checkpoint, review_range
-import json
-level = determine_checkpoint($ch)
-rng = list(review_range($ch)) if level.review else None
-print(json.dumps({'review': level.review, 'audit': level.audit, 'macro': level.macro, 'disambig': level.disambig, 'range': rng}))
-" 2>/dev/null) || return 0
+    cp_json=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
+        --project-root "$PROJECT_ROOT" checkpoint-level --chapter "$ch" 2>/dev/null) || return 0
 
     local do_review audit_depth macro_tier do_disambig review_start review_end
-    do_review=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review'])")
-    if [[ "$do_review" != "True" ]]; then
+    do_review=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review'])" 2>/dev/null)
+    if [[ "$do_review" != "True" && "$do_review" != "true" ]]; then
         return 0
     fi
 

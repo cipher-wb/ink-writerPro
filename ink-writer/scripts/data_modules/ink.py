@@ -373,6 +373,16 @@ def main() -> None:
     p_comp_gate.add_argument("--chapter-file", required=True, help="章节文件路径")
     p_comp_gate.add_argument("--format", choices=["text", "json"], default="json", help="输出格式")
 
+    # ── checkpoint 子命令（供 ink-auto.sh 调用，消除内联 Python）──
+    p_cp_level = sub.add_parser("checkpoint-level", help="输出指定章节的检查点级别（JSON）")
+    p_cp_level.add_argument("--chapter", type=int, required=True, help="章节号")
+
+    p_cp_report = sub.add_parser("report-check", help="检查报告是否含需修复问题")
+    p_cp_report.add_argument("--report", required=True, help="报告文件路径")
+    p_cp_report.add_argument("--count", action="store_true", help="输出各级别计数")
+
+    p_cp_disambig = sub.add_parser("disambig-check", help="检查消歧积压数量和紧急程度")
+
     p_extract_context = sub.add_parser("extract-context", help="转发到 extract_chapter_context.py")
     p_extract_context.add_argument("--chapter", type=int, required=True, help="目标章节号")
     p_extract_context.add_argument(
@@ -460,6 +470,22 @@ def main() -> None:
             "--format", str(args.format),
         ]
         raise SystemExit(_run_script("computational_checks.py", gate_args))
+
+    if tool == "checkpoint-level":
+        from .checkpoint_utils import cli_checkpoint_level
+        cli_checkpoint_level(args)
+        raise SystemExit(0)
+
+    if tool == "report-check":
+        from .checkpoint_utils import cli_report_check
+        cli_report_check(args)
+        raise SystemExit(0)
+
+    if tool == "disambig-check":
+        args.project_root = str(project_root)
+        from .checkpoint_utils import cli_disambig_check
+        cli_disambig_check(args)
+        raise SystemExit(0)
 
     if tool == "extract-context":
         return_args = [*forward_args, "--chapter", str(args.chapter), "--format", str(args.format)]

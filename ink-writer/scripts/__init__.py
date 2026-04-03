@@ -4,7 +4,7 @@ ink-writer scripts package
 This package contains all Python scripts for the ink-writer plugin.
 """
 
-__version__ = "5.5.4"
+__version__ = "9.4.0"
 __author__ = "lcy"
 
 # Expose main modules

@@ -30,14 +30,17 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                      Claude Code                           │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills (8个): init / plan / write / review / query /      │
-│                resume / learn / dashboard                   │
+│  Skills (14个): init / plan / write / review / query /      │
+│    resume / learn / dashboard / auto / audit / resolve /    │
+│    macro-review / migrate / 5(弃用桩)                      │
 ├─────────────────────────────────────────────────────────────┤
-│  Agents (11个): Context / Data / 多维 Checker (7)          │
-│                 Proofreading / Reader-Simulator             │
+│  Agents (14个): Context / Writer / Polish / Data            │
+│    + 10 Checkers (Consistency / Continuity / OOC /          │
+│    Anti-detection / Reader-pull / High-point / Pacing /     │
+│    Proofreading / Golden-three / Reader-Simulator)          │
 ├─────────────────────────────────────────────────────────────┤
-│  Data Layer: state.json → index.db (渐进迁移中)            │
-│              vectors.db / review_library.jsonl              │
+│  Data Layer: state.json + index.db (25 表, v9.0 迁移完成)  │
+│              vectors.db (RAG) / style_samples.db            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
