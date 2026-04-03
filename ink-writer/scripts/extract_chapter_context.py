@@ -1141,10 +1141,10 @@ def build_execution_pack_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         "场景与力量约束": _dedupe_preserve(
             [
                 f"地点：{location}" if location else "",
-                f"主角实力：{_compact_text(f'{power.get('realm', '')} {power.get('layer', '')}'.strip(), 24)}"
+                f"主角实力：{_compact_text('{} {}'.format(power.get('realm', ''), power.get('layer', '')).strip(), 24)}"
                 if isinstance(power, dict) and (power.get("realm") or power.get("layer"))
                 else "",
-                f"金手指：{_compact_text(f'{golden_finger.get('name', '')} Lv.{golden_finger.get('level', '')}'.strip(), 24)}"
+                f"金手指：{_compact_text('{} Lv.{}'.format(golden_finger.get('name', ''), golden_finger.get('level', '')).strip(), 24)}"
                 if isinstance(golden_finger, dict) and (golden_finger.get("name") or golden_finger.get("level"))
                 else "",
                 *(f"状态变化：{item}" for item in state_change_lines[:2]),
