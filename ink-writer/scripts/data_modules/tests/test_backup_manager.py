@@ -263,8 +263,12 @@ class TestBackupIndexDb:
 
     def test_backup_index_db_exception_is_swallowed(self, manager_git):
         """Errors in _backup_index_db must not propagate."""
+        broken = MagicMock()
+        broken.DataModulesConfig.from_project_root.side_effect = RuntimeError("boom")
         with patch.dict("sys.modules", {
-            "data_modules.config": MagicMock(side_effect=ImportError("no module")),
+            "data_modules": MagicMock(),
+            "data_modules.config": broken,
+            "data_modules.index_manager": MagicMock(),
         }):
             # Should not raise
             manager_git._backup_index_db(99)
