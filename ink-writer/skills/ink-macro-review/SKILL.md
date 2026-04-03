@@ -232,11 +232,11 @@ Tier2/Tier3 **不调用 Checker Agent**，直接通过 SQL 查询 + 统计分析
 
 - 宏观审查**不修改**任何章节文件（纯只读分析）
 - 不替代 per-chapter 的 ink-review（两者互补）
-- 不自动运行（仅在 ink-5 完成后提醒用户手动触发）
+- 不自动运行（仅在 ink-auto 完成后提醒用户手动触发）
 - **不调用 Checker Agent**（Tier2/Tier3 使用直接 SQL 分析，不走 Agent 路径）
 
-## 与 ink-5 的集成
+## 与 ink-auto 的集成
 
-ink-5 Phase 3 完成后，若当前章节触发里程碑：
+ink-auto 完成后，若当前章节触发里程碑：
 - `% 50 == 0` → 提醒运行 `/ink-macro-review Tier2`
 - `% 200 == 0` → 提醒运行 `/ink-macro-review Tier3`

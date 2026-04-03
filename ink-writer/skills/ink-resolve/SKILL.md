@@ -76,7 +76,7 @@ D) 删除（误提取，忽略）
 
 ## 自动提醒
 
-在 ink-5 完成后，若 `current_chapter % 100 == 0` 且 `disambiguation_pending` 积压超过20条，输出：
+在 ink-auto 完成后，若 `current_chapter % 100 == 0` 且 `disambiguation_pending` 积压超过20条，输出：
 ```
 📋 消歧积压提醒：{count}条待处理消歧项，建议运行 /ink-resolve
 ```

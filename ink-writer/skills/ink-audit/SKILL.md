@@ -169,7 +169,7 @@ Standard 全部 + 全量校验：
 
 ## 自动提醒机制
 
-本 skill 不自动执行。但在 `/ink-5` 完成后，若 `current_chapter % 50 == 0`，ink-5 会输出提醒：
+本 skill 不自动执行。但在 `/ink-auto` 完成后，若 `current_chapter % 50 == 0`，ink-auto 会输出提醒：
 ```
 📋 已达到50章检查点，建议运行 /ink-audit standard 进行数据对账
 ```

@@ -237,7 +237,7 @@ B) 回滚到上一章（安全）
 
 ## 批量恢复协议（v7.0.5 新增）
 
-> 当 `workflow detect` 输出包含 `batch_meta` 字段时，说明中断发生在 `ink-5` 或 `ink-write --batch N` 的批量执行过程中。
+> 当 `workflow detect` 输出包含 `batch_meta` 字段时，说明中断发生在 `ink-auto` 或 `ink-write --batch N` 的批量执行过程中。
 
 ### 批量中断检测
 
@@ -266,7 +266,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow detect
 ```
 🔴 检测到批量写作中断：
 
-批次：ink-5 第{batch_start}章 → 第{batch_end}章
+批次：ink-auto 第{batch_start}章 → 第{batch_end}章
 已完成：{completed_chapters} ({len}章)
 失败章节：第{failed_chapter}章
 失败原因：{failure_reason}
@@ -274,7 +274,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "$PROJECT_ROOT" workflow detect
 恢复选项：
 A) 从第{failed_chapter}章继续批量写作（完成剩余{remaining}章 + 审查）
 B) 跳过失败章节，对已完成的{len}章执行 Full 审查
-C) 放弃本批次，从第{failed_chapter}章开始新的 /ink-5
+C) 放弃本批次，从第{failed_chapter}章开始新的 /ink-auto
 D) 仅恢复第{failed_chapter}章（单章 /ink-write 模式）
 
 请选择（A/B/C/D）：
@@ -284,7 +284,7 @@ D) 仅恢复第{failed_chapter}章（单章 /ink-write 模式）
 
 - **选项 A**：清理失败章节的 workflow state → 从 failed_chapter 开始 → 继续原批次循环 → 完成后执行 Phase 2 审查（范围=全部已完成章节）
 - **选项 B**：标记 batch 为完成（缩小范围）→ 执行 `ink-review {completed_start}-{completed_end}` Full 审查
-- **选项 C**：清理全部 workflow state → 提示用户执行 `/ink-5`
+- **选项 C**：清理全部 workflow state → 提示用户执行 `/ink-auto`
 - **选项 D**：清理失败章节 workflow state → 提示用户执行 `/ink-write {failed_chapter}`
 
 ### 兼容性

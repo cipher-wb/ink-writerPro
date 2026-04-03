@@ -65,7 +65,7 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
         finally:
             _watcher.stop()
 
-    app = FastAPI(title="Ink Dashboard", version="0.1.0", lifespan=_lifespan)
+    app = FastAPI(title="Ink Dashboard", version="9.5.0", lifespan=_lifespan)
 
     # CORS：默认仅允许本地访问，可通过 INK_DASHBOARD_CORS_ORIGINS 环境变量覆盖
     _cors_origins = os.environ.get("INK_DASHBOARD_CORS_ORIGINS", "").strip()
