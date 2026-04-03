@@ -1,2 +1,6 @@
+# Ink Writer Pro — 推荐使用锁定版本安装：
+#   pip install -r ink-writer/scripts/requirements.lock -r ink-writer/dashboard/requirements.lock
+#
+# 以下为宽松版本约束（用于开发 / 无 lock 文件场景）：
 -r ink-writer/scripts/requirements.txt
 -r ink-writer/dashboard/requirements.txt

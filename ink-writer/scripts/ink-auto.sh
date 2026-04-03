@@ -462,8 +462,8 @@ run_auto_fix() {
         return 0
     fi
 
-    # 检查报告中是否有需要修复的问题
-    if ! grep -qiE "critical|high|严重|错误|不一致|漂移|失衡|逾期" "$report_path" 2>/dev/null; then
+    # 检查报告中是否有需要修复的问题（委托 Python 模块，比 Bash 正则更可靠）
+    if ! python3 -X utf8 -c "from data_modules.checkpoint_utils import report_has_issues; exit(0 if report_has_issues('$report_path') else 1)" 2>/dev/null; then
         echo "    ✅ 报告无需修复的问题"
         report_event "✅" "${fix_type}修复" "${scope} — 无需修复"
         return 0
@@ -623,8 +623,19 @@ except:
 run_checkpoint() {
     local ch="$1"
 
-    # 不是5的倍数，跳过
-    if (( ch % 5 != 0 )); then
+    # 使用 Python checkpoint_utils 判断检查点级别（比 Bash 算术更可维护、可测试）
+    local cp_json
+    cp_json=$(PYTHONPATH="$SCRIPTS_DIR" python3 -X utf8 -c "
+from data_modules.checkpoint_utils import determine_checkpoint, review_range
+import json
+level = determine_checkpoint($ch)
+rng = list(review_range($ch)) if level.review else None
+print(json.dumps({'review': level.review, 'audit': level.audit, 'macro': level.macro, 'disambig': level.disambig, 'range': rng}))
+" 2>/dev/null) || return 0
+
+    local do_review audit_depth macro_tier do_disambig review_start review_end
+    do_review=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review'])")
+    if [[ "$do_review" != "True" ]]; then
         return 0
     fi
 
@@ -632,19 +643,25 @@ run_checkpoint() {
     echo "───────── 📋 检查点：第${ch}章 ─────────"
     report_event "📋" "检查点触发" "第${ch}章"
 
+    audit_depth=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['audit'] or '')")
+    macro_tier=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['macro'] or '')")
+    do_disambig=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['disambig'])")
+
     # 从高到低执行审计（高层级先行，结果可被后续审查利用）
-    if (( ch % 20 == 0 )); then
-        run_audit "standard"
-        run_macro_review "Tier2"
+    if [[ -n "$audit_depth" ]]; then
+        run_audit "$audit_depth"
+    fi
+    if [[ -n "$macro_tier" ]]; then
+        run_macro_review "$macro_tier"
+    fi
+    if [[ "$do_disambig" == "True" ]]; then
         check_disambiguation_backlog
-    elif (( ch % 10 == 0 )); then
-        run_audit "quick"
     fi
 
-    # 每5章：审查最近5章 + 自动修复（始终执行）
-    local review_start=$((ch - 4))
-    if (( review_start < 1 )); then review_start=1; fi
-    run_review_and_fix "$review_start" "$ch"
+    # 审查最近5章 + 自动修复（始终执行）
+    review_start=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['range'][0])")
+    review_end=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['range'][1])")
+    run_review_and_fix "$review_start" "$review_end"
 
     echo "───────── 检查点完成 ─────────"
     echo ""

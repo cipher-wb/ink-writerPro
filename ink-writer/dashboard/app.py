@@ -67,9 +67,16 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
 
     app = FastAPI(title="Ink Dashboard", version="0.1.0", lifespan=_lifespan)
 
+    # CORS：默认仅允许本地访问，可通过 INK_DASHBOARD_CORS_ORIGINS 环境变量覆盖
+    _cors_origins = os.environ.get("INK_DASHBOARD_CORS_ORIGINS", "").strip()
+    _allowed_origins = (
+        [o.strip() for o in _cors_origins.split(",") if o.strip()]
+        if _cors_origins
+        else ["http://localhost:*", "http://127.0.0.1:*"]
+    )
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=_allowed_origins,
         allow_methods=["GET"],
         allow_headers=["*"],
     )
