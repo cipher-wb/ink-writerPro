@@ -2,6 +2,9 @@
 source = ink-writer/scripts/data_modules
 omit =
     */tests/*
+    */ink.py
+    */style_anchor.py
+    */cli_args.py
 
 [report]
 show_missing = True

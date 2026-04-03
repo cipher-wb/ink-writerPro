@@ -423,6 +423,16 @@ class IndexEntityMixin:
                 conn.commit()
                 return False
             else:
+                # 自动补建引用实体的存根记录，避免 FK 约束失败
+                for eid in (rel.from_entity, rel.to_entity):
+                    cursor.execute("SELECT id FROM entities WHERE id = ?", (eid,))
+                    if not cursor.fetchone():
+                        cursor.execute(
+                            "INSERT INTO entities (id, type, canonical_name, tier)"
+                            " VALUES (?, '角色', ?, '装饰')",
+                            (eid, eid),
+                        )
+
                 cursor.execute(
                     """
                     INSERT INTO relationships

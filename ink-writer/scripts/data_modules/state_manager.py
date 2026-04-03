@@ -429,7 +429,11 @@ class StateManager:
         if not self._sql_state_manager:
             return True
 
-        # 方式1: 通过 process_chapter_result 收集的数据
+        # 先同步 add_entity/update_entity 产生的 pending patches 到 SQLite，
+        # 确保后续 process_chapter_entities 引用的实体已存在于 index.db。
+        patches_ok = self._sync_pending_patches_to_sqlite()
+
+        # 通过 process_chapter_result 收集的数据
         sqlite_data = self._pending_sqlite_data
         chapter = sqlite_data.get("chapter")
 
@@ -523,9 +527,7 @@ class StateManager:
             except Exception as exc:
                 logger.warning("SQLite sync failed (index extensions): %s", exc)
 
-        # 方式2: 使用 add_entity/update_entity 收集的增量数据。
-        # 数据缓存在 _pending_entity_patches 等变量中。
-        return self._sync_pending_patches_to_sqlite(processed_appearances)
+        return patches_ok
 
     def _sync_pending_patches_to_sqlite(self, processed_appearances: set = None) -> bool:
         """同步 _pending_entity_patches 等到 SQLite（v5.1 引入，v5.4 沿用）

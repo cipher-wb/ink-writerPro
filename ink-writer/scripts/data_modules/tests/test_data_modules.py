@@ -1415,8 +1415,9 @@ class TestRAGAdapter:
         adapter = RAGAdapter(temp_project)
 
         tokens = adapter._tokenize("萧炎hello世界world")
-        assert "萧" in tokens
-        assert "炎" in tokens
+        # jieba 环境下为词级分词 ["萧炎", ...]，无 jieba 时为字级 ["萧", "炎", ...]
+        assert any("萧" in t for t in tokens)
+        assert any("炎" in t for t in tokens)
         assert "hello" in tokens
         assert "world" in tokens
 
