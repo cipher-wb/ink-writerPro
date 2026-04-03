@@ -4,18 +4,22 @@ on:
   push:
     paths:
       - 'ink-writer/scripts/**'
+      - 'ink-writer/dashboard/**'
       - 'pytest.ini'
       - '.coveragerc'
       - 'requirements.txt'
       - 'ink-writer/scripts/requirements.lock'
+      - 'ink-writer/dashboard/requirements.lock'
       - '.github/workflows/ci-test.yml'
   pull_request:
     paths:
       - 'ink-writer/scripts/**'
+      - 'ink-writer/dashboard/**'
       - 'pytest.ini'
       - '.coveragerc'
       - 'requirements.txt'
       - 'ink-writer/scripts/requirements.lock'
+      - 'ink-writer/dashboard/requirements.lock'
       - '.github/workflows/ci-test.yml'
 
 jobs:
