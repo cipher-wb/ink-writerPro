@@ -32,9 +32,20 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Validate release metadata
         run: |
           python ink-writer/scripts/sync_plugin_version.py --check --expected-version "$RELEASE_VERSION"
+
+      - name: Build frontend
+        working-directory: ink-writer/dashboard/frontend
+        run: |
+          npm ci
+          npm run build
 
       - name: Create and push tag
         run: |

@@ -69,6 +69,30 @@ def _make_init_py(path: Path, version: str = "1.0.0") -> None:
     path.write_text(f'__version__ = "{version}"\n', encoding="utf-8")
 
 
+def _make_package_json(path: Path, version: str = "1.0.0") -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {"name": "ink-dashboard", "private": True, "version": version}
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _make_package_lock(path: Path, version: str = "1.0.0") -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "name": "ink-dashboard",
+        "version": version,
+        "lockfileVersion": 3,
+        "requires": True,
+        "packages": {"": {"name": "ink-dashboard", "version": version}},
+    }
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
 def _make_readme(path: Path, content: str | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content or README_TEMPLATE, encoding="utf-8")
@@ -81,12 +105,16 @@ def env(tmp_path, monkeypatch):
     marketplace_json = tmp_path / ".claude-plugin" / "marketplace.json"
     gemini_json = tmp_path / "gemini-extension.json"
     scripts_init = tmp_path / "ink-writer" / "scripts" / "__init__.py"
+    package_json = tmp_path / "ink-writer" / "dashboard" / "frontend" / "package.json"
+    package_lock = tmp_path / "ink-writer" / "dashboard" / "frontend" / "package-lock.json"
     readme = tmp_path / "README.md"
 
     _make_plugin_json(plugin_json)
     _make_marketplace_json(marketplace_json)
     _make_gemini_json(gemini_json)
     _make_init_py(scripts_init)
+    _make_package_json(package_json)
+    _make_package_lock(package_lock)
     _make_readme(readme)
 
     monkeypatch.setattr(spv, "ROOT", tmp_path)
@@ -94,6 +122,8 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setattr(spv, "MARKETPLACE_JSON_PATH", marketplace_json)
     monkeypatch.setattr(spv, "GEMINI_EXTENSION_PATH", gemini_json)
     monkeypatch.setattr(spv, "SCRIPTS_INIT_PATH", scripts_init)
+    monkeypatch.setattr(spv, "PACKAGE_JSON_PATH", package_json)
+    monkeypatch.setattr(spv, "PACKAGE_LOCK_PATH", package_lock)
     monkeypatch.setattr(spv, "README_PATH", readme)
 
     return {
@@ -102,6 +132,8 @@ def env(tmp_path, monkeypatch):
         "marketplace_json": marketplace_json,
         "gemini_json": gemini_json,
         "scripts_init": scripts_init,
+        "package_json": package_json,
+        "package_lock": package_lock,
         "readme": readme,
     }
 
@@ -341,6 +373,23 @@ class TestSyncVersions:
         init_text = spv.load_text(env["scripts_init"])
         assert '__version__ = "1.0.0"' in init_text
 
+    def test_sync_updates_package_json_and_lock(self, env):
+        prev, target, changed = spv.sync_versions(version="2.0.0", release_notes="Update")
+        assert changed is True
+        assert spv.load_json(env["package_json"])["version"] == "2.0.0"
+        lock = spv.load_json(env["package_lock"])
+        assert lock["version"] == "2.0.0"
+        assert lock["packages"][""]["version"] == "2.0.0"
+
+    def test_sync_without_package_files(self, env, monkeypatch):
+        env["package_json"].unlink()
+        env["package_lock"].unlink()
+        monkeypatch.setattr(spv, "PACKAGE_JSON_PATH", env["root"] / "no" / "package.json")
+        monkeypatch.setattr(spv, "PACKAGE_LOCK_PATH", env["root"] / "no" / "package-lock.json")
+        prev, target, changed = spv.sync_versions(version="2.0.0", release_notes="Update")
+        assert changed is True
+        assert target == "2.0.0"
+
     def test_sync_with_mismatched_files(self, env):
         # Create a scenario where files have different versions
         _make_plugin_json(env["plugin_json"], "1.0.0")
@@ -411,6 +460,28 @@ class TestCheckVersions:
     def test_without_init_file(self, env, monkeypatch, capsys):
         env["scripts_init"].unlink()
         monkeypatch.setattr(spv, "SCRIPTS_INIT_PATH", env["root"] / "gone.py")
+        result = spv.check_versions()
+        assert result == 0
+
+    def test_mismatch_package_json(self, env, capsys):
+        _make_package_json(env["package_json"], "0.1.0")
+        result = spv.check_versions()
+        assert result == 1
+        captured = capsys.readouterr()
+        assert "package.json" in captured.out
+
+    def test_mismatch_package_lock(self, env, capsys):
+        _make_package_lock(env["package_lock"], "0.2.0")
+        result = spv.check_versions()
+        assert result == 1
+        captured = capsys.readouterr()
+        assert "package-lock.json" in captured.out
+
+    def test_without_package_files(self, env, monkeypatch, capsys):
+        env["package_json"].unlink()
+        env["package_lock"].unlink()
+        monkeypatch.setattr(spv, "PACKAGE_JSON_PATH", env["root"] / "no" / "package.json")
+        monkeypatch.setattr(spv, "PACKAGE_LOCK_PATH", env["root"] / "no" / "package-lock.json")
         result = spv.check_versions()
         assert result == 0
 

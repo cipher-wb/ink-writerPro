@@ -7,6 +7,8 @@ on:
       - 'ink-writer/.claude-plugin/plugin.json'
       - 'gemini-extension.json'
       - 'ink-writer/scripts/sync_plugin_version.py'
+      - 'ink-writer/dashboard/frontend/package.json'
+      - 'ink-writer/dashboard/frontend/package-lock.json'
       - 'README.md'
       - '.github/workflows/plugin-version.yml'
   pull_request:
@@ -15,6 +17,8 @@ on:
       - 'ink-writer/.claude-plugin/plugin.json'
       - 'gemini-extension.json'
       - 'ink-writer/scripts/sync_plugin_version.py'
+      - 'ink-writer/dashboard/frontend/package.json'
+      - 'ink-writer/dashboard/frontend/package-lock.json'
       - 'README.md'
       - '.github/workflows/plugin-version.yml'
 

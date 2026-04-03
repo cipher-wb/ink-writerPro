@@ -12,6 +12,8 @@ PLUGIN_JSON_PATH = ROOT / "ink-writer" / ".claude-plugin" / "plugin.json"
 MARKETPLACE_JSON_PATH = ROOT / ".claude-plugin" / "marketplace.json"
 GEMINI_EXTENSION_PATH = ROOT / "gemini-extension.json"
 SCRIPTS_INIT_PATH = ROOT / "ink-writer" / "scripts" / "__init__.py"
+PACKAGE_JSON_PATH = ROOT / "ink-writer" / "dashboard" / "frontend" / "package.json"
+PACKAGE_LOCK_PATH = ROOT / "ink-writer" / "dashboard" / "frontend" / "package-lock.json"
 README_PATH = ROOT / "README.md"
 PLUGIN_NAME = "ink-writer"
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+$")
@@ -146,6 +148,29 @@ def sync_versions(version: str | None = None, release_notes: str | None = None) 
             save_text(SCRIPTS_INIT_PATH, new_init)
             changed = True
 
+    # dashboard frontend package.json & package-lock.json
+    if PACKAGE_JSON_PATH.exists():
+        pkg_payload = load_json(PACKAGE_JSON_PATH)
+        if pkg_payload.get("version") != target_version:
+            pkg_payload["version"] = target_version
+            save_json(PACKAGE_JSON_PATH, pkg_payload)
+            changed = True
+
+    if PACKAGE_LOCK_PATH.exists():
+        lock_payload = load_json(PACKAGE_LOCK_PATH)
+        lock_changed = False
+        if lock_payload.get("version") != target_version:
+            lock_payload["version"] = target_version
+            lock_changed = True
+        # Also update the root entry in "packages"
+        root_pkg = lock_payload.get("packages", {}).get("")
+        if root_pkg and root_pkg.get("version") != target_version:
+            root_pkg["version"] = target_version
+            lock_changed = True
+        if lock_changed:
+            save_json(PACKAGE_LOCK_PATH, lock_payload)
+            changed = True
+
     updated_readme = update_readme_release(readme_content, target_version, release_notes)
     if updated_readme != readme_content:
         save_text(README_PATH, updated_readme)
@@ -223,6 +248,20 @@ def check_versions(expected_version: str | None = None) -> int:
         mismatches.append(
             f"plugin.json={plugin_version}, scripts/__init__.py={scripts_init_version}"
         )
+    # dashboard frontend package.json & package-lock.json
+    if PACKAGE_JSON_PATH.exists():
+        pkg_version = str(load_json(PACKAGE_JSON_PATH).get("version", ""))
+        if plugin_version != pkg_version:
+            mismatches.append(
+                f"plugin.json={plugin_version}, package.json={pkg_version}"
+            )
+    if PACKAGE_LOCK_PATH.exists():
+        lock_version = str(load_json(PACKAGE_LOCK_PATH).get("version", ""))
+        if plugin_version != lock_version:
+            mismatches.append(
+                f"plugin.json={plugin_version}, package-lock.json={lock_version}"
+            )
+
     if expected_version and plugin_version != expected_version:
         mismatches.append(
             f"expected={expected_version}, current release metadata={plugin_version}"
