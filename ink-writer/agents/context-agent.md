@@ -32,15 +32,17 @@ model: inherit
 
 输出必须是单一执行包，包含 3 层：
 
-1. **任务书（8板块）**
+1. **任务书（10板块）**
 - 本章核心任务（目标/阻力/代价、冲突一句话、必须完成、绝对不能、反派层级、**核心主题**）
 - 接住上章（上章钩子、读者期待、开头建议）
 - 出场角色（状态、动机、情绪底色、说话风格、红线、**演变轨迹**、最近台词样本）
 - 场景与力量约束（地点、可用能力、禁用能力）
-- **时间约束（新增）**（上章时间锚点、本章时间锚点、允许推进跨度、时间过渡要求、倒计时状态）
+- **时间约束**（上章时间锚点、本章时间锚点、允许推进跨度、时间过渡要求、倒计时状态）
 - 风格指导（本章类型、参考样本、最近模式、本章建议）
 - 连续性与伏笔（时间/位置/情绪连贯；必须处理/可选伏笔）
 - 追读力策略（未闭合问题 + 钩子类型/强度、微兑现建议、差异化提示）
+- **知识盲区（Knowledge Gate）**（本章出场实体的主角知情状态，驱动第四定律约束）
+- **爽点布局（Cool-Point Layout）**（本章类型/推荐模式/三段位置规划/债务状态）
 
 2. **Context Contract（内置 Step 1.5）**
 - 目标、阻力、代价、本章变化、未闭合问题、核心冲突一句话
@@ -255,11 +257,22 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-hook-t
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-debt-summary
 ```
 
-### Step 3: 实体与最近出场 + 伏笔读取
+### Step 3: 实体与最近出场 + 伏笔读取 + 知识盲区
 ```bash
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-entities
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index recent-appearances --limit 20
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-protagonist-knowledge --chapter {NNNN}
 ```
+
+`get-protagonist-knowledge` 返回本章出场实体的知情状态，格式如下：
+```json
+[
+  {"entity_id": "ye_li", "canonical_name": "夜璃", "chapter_learned": null, "known_descriptor": "猫女刺客", "is_known": false},
+  {"entity_id": "elder_qin", "canonical_name": "秦长老", "chapter_learned": 5, "known_descriptor": null, "is_known": true}
+]
+```
+
+将此结果整理为"知识盲区清单"写入任务书第9板块，并注入 Context Contract 的 `protagonist_knowledge_gate` 字段（供 consistency-checker 的 Layer 5 使用）。
 
 - **伏笔读取优先级**（v7.0.4 修正）：
   1. **优先从 index.db 读取**（权威数据源）：
@@ -312,12 +325,44 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index recent-app
   - 若 `可选伏笔` 超过 5 条：展示前 5 条并标注”其余 N 条可选伏笔已省略”
   - 若 `foreshadowing_data_missing=true`：明确输出”结构化伏笔数据缺失，当前清单仅供占位”
 
+**第9板块：知识盲区（Knowledge Gate）** 必须包含：
+```
+### 9. 知识盲区（Knowledge Gate）
+| 实体 | 类型 | 主角已知 | 可用称呼 | 禁用名称 |
+|------|------|---------|---------|---------|
+| 夜璃 | 角色 | ❌ 未知 | "猫女刺客" | 夜璃（禁用）|
+| 万族盟印 | 物品 | ❌ 未知 | "手上的神秘印记" | 万族盟印（禁用）|
+| 秦长老 | 角色 | ✅ ch5习得 | "秦长老" | 可正常使用 |
+
+写作约束：
+- ❌ 未知实体 → 主角视角叙述/内心独白/对话中严禁使用"禁用名称"
+- ✅ 已知实体 → 可正常使用 canonical_name
+- 全知旁白（视角切换段落）例外
+```
+
+若 `get-protagonist-knowledge` 返回空（新项目或尚未初始化）→ 输出"[初期模式：知识盲区数据尚未建立，请 writer-agent 谨慎推断]"，不可静默跳过此板块。
+
+**第10板块：爽点布局（Cool-Point Layout）** 必须包含：
+```
+### 10. 爽点布局（Cool-Point Layout）
+- 本章类型：[高潮章 / 推进章 / 过渡章]（依据大纲判定）
+- 推荐爽点模式：[根据前N章分布 + genre_profile 推荐，如"越级反杀"或"迪化误解"]
+- 前1/3建议（前~700字）：[具体建议，如"以上章危机钩的兑现开场，读者立刻进入状态"]
+- 中段核心爽点位置：[具体触发场景，如"对决高潮在约1200字处，主角爆发反转"]
+- 后1/3：[余波+章末钩子类型/强度]
+- 当前爽点债务：[X章，到期章: N+Y；无债务]
+- 章内节奏模板：[高潮章: 触发→压迫→爆发→反转→余波 / 推进章: 小赢→阻力→突破→钩子 / 过渡章: 信息爽→轻推进→悬念]
+```
+
+（数据来源：`index get-recent-reading-power`、`index get-pattern-usage-stats`、`index get-debt-summary`、genre_profile）
+
 Context Contract 必须字段（不可缺）：
 - `目标` / `阻力` / `代价` / `本章变化` / `未闭合问题`
 - `核心冲突一句话`
 - `开头类型` / `情绪节奏` / `信息密度`
 - `是否过渡章`
 - `追读力设计`
+- `protagonist_knowledge_gate`（知识盲区清单，供 consistency-checker Layer 5 使用）
 
 ### Step 6: 逻辑红线校验（输出前强制）
 对执行包做一致性自检，任一 fail 则回到 Step 5 重组：
@@ -339,14 +384,16 @@ Context Contract 必须字段（不可缺）：
 ## 成功标准
 
 1. ✅ 创作执行包可直接驱动 Step 2A（无需补问）
-2. ✅ 任务书包含 8 个板块（含时间约束）
+2. ✅ 任务书包含 10 个板块（含时间约束、知识盲区、爽点布局）
 3. ✅ 上章钩子与读者期待明确（若存在）
 4. ✅ 角色动机/情绪为推断结果（非空）
 5. ✅ 最近模式已对比，给出差异化建议
 6. ✅ 章末钩子建议类型明确
 7. ✅ 反派层级已注明（若大纲提供）
 8. ✅ 第 7 板块已基于 `plot_threads.foreshadowing` 按紧急度排序输出
-9. ✅ Context Contract 字段完整且与任务书一致
+9. ✅ Context Contract 字段完整且与任务书一致（含 `protagonist_knowledge_gate`）
 10. ✅ 逻辑红线校验通过（fail=0）
 11. ✅ **时间约束板块完整**（上章时间锚点、本章时间锚点、允许推进跨度、过渡要求、倒计时状态）
 12. ✅ **时间逻辑红线通过**（无回跳、无倒计时跳跃、大跨度有过渡要求）
+13. ✅ **第9板块（知识盲区）完整**：本章出场实体均有知情状态标注，`protagonist_knowledge_gate` 已注入 Context Contract
+14. ✅ **第10板块（爽点布局）完整**：三段位置规划明确，债务状态已列出

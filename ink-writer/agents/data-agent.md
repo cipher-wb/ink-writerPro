@@ -311,6 +311,61 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - 若全章无明显潜台词场景 → `subtext_markers: []`（正常，不是问题）
 - 此数据供 Step 4.5 情感差分使用，不写入 index.db（非持久化数据）
 
+### Step B.11: 主角知识获取提取（Knowledge Gate）
+
+扫描本章正文，识别主角视角中"首次得知某实体真实名字/身份"的事件。
+
+**提取目标**：
+- 某角色/物品/势力被正式介绍给主角（直接引介）
+- 主角偷听到他人提及某实体的真名
+- 主角被告知某实体的真实身份
+- 主角自行推断并在内心明确确认了某实体的真名
+
+**`how_learned` 枚举**：
+| 值 | 说明 |
+|----|------|
+| `direct_introduction` | 被人当面介绍（"这位是夜璃姑娘"） |
+| `overheard` | 主角偷听到他人使用真名 |
+| `told_by` | 他人直接告知主角 |
+| `self_inferred` | 主角内心推断并明确确认（"原来她就是夜璃"） |
+| `narration_only` | 全知旁白提及，主角本人仍不知道 |
+
+**若主角仍以描述符称呼实体**：记录 `known_descriptor`（如"那个猫女"、"手上的神秘印记"），`chapter_learned = null`。
+
+**若本章主角首次习得某名字/身份**：记录 `chapter_learned = 当前章号`。
+
+**输出到 payload**：
+
+```json
+{
+  "protagonist_knowledge_events": [
+    {
+      "entity_id": "ye_li",
+      "knowledge_type": "name",
+      "knowledge_value": "夜璃",
+      "chapter_learned": 7,
+      "how_learned": "direct_introduction",
+      "known_descriptor": "猫女刺客"
+    },
+    {
+      "entity_id": "wanzhu_seal",
+      "knowledge_type": "name",
+      "knowledge_value": "万族盟印",
+      "chapter_learned": null,
+      "how_learned": "narration_only",
+      "known_descriptor": "手上的神秘印记"
+    }
+  ]
+}
+```
+
+此数据写入 `protagonist_knowledge` 表（`state process-chapter` 统一落库）。
+
+**执行规则**：
+- 若全章没有任何知识获取事件 → `"protagonist_knowledge_events": []`（正常，不是问题）
+- `narration_only` 类型仅记录 index.db，不影响写作约束（全知旁白合法使用真名）
+- 每个实体的同一 `knowledge_type` 只记录首次习得，后续章节重复出现不重复写入
+
 ### Step C: 实体消歧处理
 
 **置信度策略**:

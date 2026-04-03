@@ -1068,6 +1068,28 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 )
             """)
 
+            # v8.2 引入: 主角视角知识管理（Knowledge Gate）
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS protagonist_knowledge (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    entity_id TEXT NOT NULL,
+                    knowledge_type TEXT NOT NULL,
+                    knowledge_value TEXT NOT NULL,
+                    chapter_learned INTEGER,
+                    how_learned TEXT,
+                    known_descriptor TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE,
+                    UNIQUE (entity_id, knowledge_type)
+                )
+            """)
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_protagonist_knowledge_entity ON protagonist_knowledge(entity_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_protagonist_knowledge_learned ON protagonist_knowledge(chapter_learned)"
+            )
+
             conn.commit()
 
     @contextmanager
