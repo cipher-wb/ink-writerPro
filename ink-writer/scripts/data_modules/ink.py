@@ -368,6 +368,11 @@ def main() -> None:
     p_check_outline.add_argument("--chapter", type=int, required=True, help="目标章节号")
     p_check_outline.add_argument("--batch-end", type=int, default=0, help="批量检查结束章节号（含）")
 
+    p_comp_gate = sub.add_parser("comp-gate", help="计算型闸门 (Step 2C)")
+    p_comp_gate.add_argument("--chapter", type=int, required=True, help="章节号")
+    p_comp_gate.add_argument("--chapter-file", required=True, help="章节文件路径")
+    p_comp_gate.add_argument("--format", choices=["text", "json"], default="json", help="输出格式")
+
     p_extract_context = sub.add_parser("extract-context", help="转发到 extract_chapter_context.py")
     p_extract_context.add_argument("--chapter", type=int, required=True, help="目标章节号")
     p_extract_context.add_argument(
@@ -446,6 +451,15 @@ def main() -> None:
             total = end_ch - start_ch + 1
             print(f"✅ 大纲覆盖检查通过（第{start_ch}章→第{end_ch}章，共{total}章）")
             raise SystemExit(0)
+
+    if tool == "comp-gate":
+        gate_args = [
+            *forward_args,
+            "--chapter", str(args.chapter),
+            "--chapter-file", str(args.chapter_file),
+            "--format", str(args.format),
+        ]
+        raise SystemExit(_run_script("computational_checks.py", gate_args))
 
     if tool == "extract-context":
         return_args = [*forward_args, "--chapter", str(args.chapter), "--format", str(args.format)]

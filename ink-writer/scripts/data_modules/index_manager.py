@@ -1090,6 +1090,47 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 "CREATE INDEX IF NOT EXISTS idx_protagonist_knowledge_learned ON protagonist_knowledge(chapter_learned)"
             )
 
+            # ==================== v9.0 引入表：Harness Engineering ====================
+
+            # Reader Verdict 评分历史
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS harness_evaluations (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    chapter INTEGER NOT NULL,
+                    hook_strength REAL,
+                    curiosity_continuation REAL,
+                    emotional_reward REAL,
+                    protagonist_pull REAL,
+                    cliffhanger_drive REAL,
+                    filler_risk REAL,
+                    repetition_risk REAL,
+                    total REAL,
+                    verdict TEXT,
+                    review_depth TEXT DEFAULT 'core',
+                    created_at TEXT DEFAULT (datetime('now'))
+                )
+            """)
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_harness_eval_chapter ON harness_evaluations(chapter)"
+            )
+
+            # 计算型闸门日志
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS computational_gate_log (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    chapter INTEGER NOT NULL,
+                    gate_pass INTEGER NOT NULL DEFAULT 1,
+                    checks_run INTEGER,
+                    checks_passed INTEGER,
+                    hard_failures TEXT,
+                    soft_warnings TEXT,
+                    created_at TEXT DEFAULT (datetime('now'))
+                )
+            """)
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_comp_gate_chapter ON computational_gate_log(chapter)"
+            )
+
             conn.commit()
 
     @contextmanager
@@ -1577,6 +1618,16 @@ def main():
     review_trend_parser = subparsers.add_parser("get-review-trend-stats")
     review_trend_parser.add_argument("--last-n", type=int, default=5)
 
+    # v9.0: harness evaluation (reader_verdict) 写入
+    harness_eval_parser = subparsers.add_parser("save-harness-evaluation")
+    harness_eval_parser.add_argument("--data", required=True, help="JSON: reader_verdict + chapter + review_depth")
+
+    # v9.0: ink-auto 增强输出用
+    review_trends_parser = subparsers.add_parser("get-review-trends")
+    review_trends_parser.add_argument("--start", type=int, required=True, help="起始章节号")
+    review_trends_parser.add_argument("--end", type=int, required=True, help="结束章节号")
+    review_trends_parser.add_argument("--format", choices=["text", "markdown", "json"], default="text")
+
     checklist_score_save_parser = subparsers.add_parser("save-writing-checklist-score")
     checklist_score_save_parser.add_argument("--data", required=True, help="JSON 格式的写作清单评分数据")
 
@@ -1949,6 +2000,90 @@ def main():
     elif args.command == "get-review-trend-stats":
         stats = manager.get_review_trend_stats(args.last_n)
         emit_success(stats, message="review_trend_stats")
+
+    elif args.command == "save-harness-evaluation":
+        # v9.0: 保存 reader_verdict 到 harness_evaluations 表
+        data = load_json_arg(args.data)
+        chapter = data.get("chapter", 0)
+        verdict = data.get("reader_verdict", data)
+        review_depth = data.get("review_depth", "core")
+        try:
+            with manager._get_conn() as conn:
+                conn.execute(
+                    """INSERT INTO harness_evaluations
+                       (chapter, hook_strength, curiosity_continuation, emotional_reward,
+                        protagonist_pull, cliffhanger_drive, filler_risk, repetition_risk,
+                        total, verdict, review_depth)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (
+                        chapter,
+                        verdict.get("hook_strength"),
+                        verdict.get("curiosity_continuation"),
+                        verdict.get("emotional_reward"),
+                        verdict.get("protagonist_pull"),
+                        verdict.get("cliffhanger_drive"),
+                        verdict.get("filler_risk"),
+                        verdict.get("repetition_risk"),
+                        verdict.get("total"),
+                        verdict.get("verdict"),
+                        review_depth,
+                    ),
+                )
+                conn.commit()
+            emit_success({"chapter": chapter, "verdict": verdict.get("verdict")}, message="harness_evaluation_saved")
+        except Exception as e:
+            emit_error("SAVE_FAILED", f"保存 harness evaluation 失败: {e}")
+
+    elif args.command == "get-review-trends":
+        # v9.0: ink-auto 增强输出用
+        start_ch = args.start
+        end_ch = args.end
+        fmt = args.format
+
+        # 查询审查分数
+        records = manager.get_recent_review_metrics(end_ch - start_ch + 1)
+        in_range = [r for r in records if start_ch <= r.get("end_chapter", 0) <= end_ch]
+
+        # 查询伏笔债务
+        try:
+            active_threads = manager.get_active_plot_threads(limit=100)
+            overdue = [t for t in active_threads if t.get("status") == "overdue"]
+        except Exception:
+            active_threads = []
+            overdue = []
+
+        if fmt == "json":
+            result = {
+                "review_scores": [{"chapter": r.get("end_chapter"), "score": r.get("overall_score")} for r in in_range],
+                "avg_score": sum(r.get("overall_score", 0) for r in in_range) / max(len(in_range), 1),
+                "active_threads": len(active_threads),
+                "overdue_threads": len(overdue),
+            }
+            emit_success(result, message="review_trends")
+        elif fmt == "markdown":
+            lines = []
+            if in_range:
+                scores = [r.get("overall_score", 0) for r in in_range]
+                avg = sum(scores) / len(scores)
+                trend = "↑" if len(scores) > 1 and scores[-1] > scores[0] else ("↓" if len(scores) > 1 and scores[-1] < scores[0] else "→")
+                lines.append(f"- 平均审查分：{avg:.1f}/100 {trend}")
+            if active_threads:
+                lines.append(f"- 活跃伏笔：{len(active_threads)} 条")
+            if overdue:
+                lines.append(f"- 逾期伏笔：{len(overdue)} 条")
+            print("\n".join(lines) if lines else "暂无趋势数据")
+        else:
+            # text format for terminal
+            if in_range:
+                scores = [r.get("overall_score", 0) for r in in_range]
+                avg = sum(scores) / len(scores)
+                trend = "↑" if len(scores) > 1 and scores[-1] > scores[0] else ("↓" if len(scores) > 1 and scores[-1] < scores[0] else "→")
+                print(f"  追读力信号：")
+                print(f"  ├─ 平均审查分：{avg:.1f}/100 {trend}")
+            if active_threads:
+                print(f"  ├─ 活跃伏笔：{len(active_threads)} 条")
+            if overdue:
+                print(f"  └─ 逾期伏笔：{len(overdue)} 条 ⚠️")
 
     elif args.command == "save-writing-checklist-score":
         data = load_json_arg(args.data)

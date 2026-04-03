@@ -175,14 +175,81 @@ model: inherit
 }
 ```
 
-## 触发条件
+## 运行模式（v9.0 升格）
 
-- 在 `/ink-write` Step 3 中作为**条件审查器**（非默认启用）
-- 触发条件：
+> **reader-simulator 已从 Full+ 条件审查器升格为 Core 核心裁判。**
+
+### 快速模式（Core 级别，每章必跑）
+
+当 `review_depth` 为 `core` 或 `standard` 时使用快速模式：
+- **执行**：第一步（确定读者身份）→ 跳过逐段阅读模拟 → 直接进行 7 维评分 + 弃读风险热点检测
+- **跳过**：第二步（逐段阅读模拟）、第三步（完整情绪曲线）、第五步（读者内心独白）
+- **输出**：标准 checker JSON + `reader_verdict` 块（见下方 schema）
+- **耗时**：约 1-2 分钟
+
+### 完整模式（Full+ 级别，重要节点）
+
+当 `review_depth` 为 `full+` 时使用完整模式：
+- **执行**：全部六步（读者身份 → 逐段阅读 → 情绪曲线 → 弃读风险 → 读者独白 → 报告）
+- **输出**：完整报告（含 emotion_curve、reader_monologue）+ `reader_verdict` 块
+- **耗时**：约 3-5 分钟
+
+### 触发条件
+
+- **Core 级别（快速模式）**：每章必跑（v9.0 默认）
+- **Full+ 级别（完整模式）**：
   - 关键章/高潮章/卷末章/卷首章
   - 用户显式要求"读者体验审查"或"模拟读者"
   - 最近 3 章审查分数持续下降（趋势恶化预警）
-- 在 `/ink-review` 中作为 **Full+** 模式审查器（Core/Full/Full+ 三档）
+
+## reader_verdict（7 维结构化评分）
+
+> 这是 reader-simulator 作为核心裁判的关键输出。每次运行（无论快速/完整模式）都必须输出。
+
+```json
+{
+  "reader_verdict": {
+    "hook_strength": 8,
+    "curiosity_continuation": 7,
+    "emotional_reward": 9,
+    "protagonist_pull": 8,
+    "cliffhanger_drive": 9,
+    "filler_risk": 2,
+    "repetition_risk": 1,
+    "total": 48,
+    "verdict": "pass"
+  }
+}
+```
+
+### 维度定义
+
+| 维度 | 范围 | 评估要点 |
+|------|------|---------|
+| `hook_strength` | 0-10 | 开头 300 字的抓取力——好奇心是否在 300 字内建立 |
+| `curiosity_continuation` | 0-10 | 中段好奇心维持——800-1200 字区间读者是否想继续 |
+| `emotional_reward` | 0-10 | 情绪回报——是否有至少一次"值了"的感觉 |
+| `protagonist_pull` | 0-10 | 主角吸引力——读者能否代入主角，主角行为是否有魅力 |
+| `cliffhanger_drive` | 0-10 | 章末追更驱动——读完最后 300 字，想不想点下一章 |
+| `filler_risk` | 0-10 | 注水风险（**反向**，越低越好）——有多少段落是凑字数 |
+| `repetition_risk` | 0-10 | 套路重复风险（**反向**，越低越好）——与最近 10 章的套路重复度 |
+
+### 总分计算
+
+```
+total = (hook_strength + curiosity_continuation + emotional_reward + protagonist_pull + cliffhanger_drive)
+        - (filler_risk + repetition_risk)
+```
+
+范围：-20 ~ 50
+
+### 判定阈值
+
+| 总分 | verdict | 后续动作 |
+|------|---------|---------|
+| ≥ 32 | `pass` | 正常流转到 Step 4 |
+| 25-31 | `enhance` | Step 4 加入"追读力增强"修复指令 |
+| < 25 | `rewrite` | 退回 Step 2A，附带具体问题清单 |
 
 ## 与其他 Checker 的协作
 
@@ -202,8 +269,10 @@ model: inherit
 
 ## 成功标准
 
-- 情绪曲线有明确的起伏（非平坦线）
-- 弃读风险极高区域 = 0
-- 弃读风险高区域 ≤ 1
+- `reader_verdict.verdict` 为 `pass` 或 `enhance`（`rewrite` 视为失败）
+- `reader_verdict.total` ≥ 25
+- `filler_risk` ≤ 5
+- `repetition_risk` ≤ 5
+- 弃读风险极高区域 = 0（完整模式下检查）
 - 章末下章动机 ≥ medium
-- 读者内心独白可信且与题材读者画像匹配
+- 读者内心独白可信且与题材读者画像匹配（完整模式下检查）

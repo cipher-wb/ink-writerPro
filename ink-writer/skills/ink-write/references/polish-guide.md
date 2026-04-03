@@ -38,12 +38,35 @@ purpose: 章节生成后的润色阶段加载，基于审查报告修复问题 +
 ## 2. 执行顺序（必须按序）
 
 1. 修复审查报告中的问题（先 `critical/high`）
-2. 校验网文化 Hard/Soft/Style 规则
-3. 执行 Phase 1 Anti-AI 终检并改写
-4. 执行 No-Poison 毒点规避检查
-5. 输出润色结果与 deviation（若有）
+2. **追读力增强**（当 `reader_verdict.verdict == "enhance"` 时执行，见下方 §1B）
+3. 校验网文化 Hard/Soft/Style 规则
+4. 执行 Phase 1 Anti-AI 终检并改写
+5. 执行 No-Poison 毒点规避检查
+6. 输出润色结果与 deviation（若有）
 
-## 2A. Anti-AI 检测细则（对应执行顺序第 3 步）
+## 1B. 追读力增强（reader_verdict == "enhance" 时执行）
+
+> 当 reader-simulator 的 `reader_verdict.total` 在 25-31 之间时触发。目标：将追读力提升到及格线（≥32）。
+
+**优先修复维度**（按 reader_verdict 中分数最低的维度优先）：
+
+| 弱项维度 | 修复策略 |
+|---------|---------|
+| `hook_strength < 6` | 前 300 字加入冲突/悬念/危机感，删除平淡的环境描写开头 |
+| `curiosity_continuation < 6` | 800-1200 字区间插入微反转或新信息揭示，打断平坦节奏 |
+| `emotional_reward < 6` | 增加至少一处情绪释放点（角色胜利/认可/逆袭/温情） |
+| `protagonist_pull < 6` | 强化主角主动性——让主角做选择而非被推着走 |
+| `cliffhanger_drive < 6` | 章末 300 字加入钩子（悬念/危机/反转/新信息） |
+| `filler_risk > 5` | 删减注水段落（纯描写/重复信息/无推进的对话） |
+| `repetition_risk > 5` | 对比最近 10 章模式，替换重复套路（换一种冲突类型/解决方式） |
+
+**修复约束**：
+- 不改变剧情事实和事件结果
+- 修改量控制在总字数的 15% 以内
+- 每个弱项维度最多修改 2 处
+- 修复后不需要重跑 reader-simulator，直接继续后续步骤
+
+## 2A. Anti-AI 检测细则（对应执行顺序第 4 步）
 
 > 词频统计**仅作为提醒**，不再作为硬性门槛。若明显超标，需修复并简要说明。  
 > 说明：即使词频仅作提醒，若最终文本仍有明显 AI 模板痕迹，`anti_ai_force_check` 仍应判定为 `fail`。

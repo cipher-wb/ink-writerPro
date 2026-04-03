@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Tuple
 
-CURRENT_SCHEMA_VERSION = 6
+CURRENT_SCHEMA_VERSION = 7
 
 # 迁移注册表: List[(from_version, migration_func)]
 _migrations: List[Tuple[int, Callable[[Dict[str, Any]], Dict[str, Any]]]] = []
@@ -97,6 +97,26 @@ def run_migrations(state_path: Path) -> Dict[str, Any]:
 def _migrate_v5_to_v6(state: Dict[str, Any]) -> Dict[str, Any]:
     """v5 → v6: 添加 schema_version 字段。"""
     state["schema_version"] = 6
+    return state
+
+
+@migration(6)
+def _migrate_v6_to_v7(state: Dict[str, Any]) -> Dict[str, Any]:
+    """v6 → v7: Harness-First 架构（v9.0）。
+
+    新增:
+    - harness_config: 计算型闸门开关、Reader Verdict 模式和阈值
+    """
+    state["schema_version"] = 7
+    state["harness_config"] = {
+        "computational_gate_enabled": True,
+        "reader_verdict_mode": "core",
+        "reader_verdict_thresholds": {
+            "pass": 32,
+            "enhance": 25,
+            "rewrite_min": 0,
+        },
+    }
     return state
 
 

@@ -1,10 +1,12 @@
 ---
 name: ink-5
-description: 连续写5章 + 全量审查修复。每章完整执行 ink-write 标准流程，5章写完后执行 ink-review Full 审查并自动修复问题。日常创作主力指令。
+description: ⚠️ 已由 ink-auto 5 取代。连续写5章 + 全量审查修复。每章完整执行 ink-write 标准流程，5章写完后执行 ink-review Full 审查并自动修复问题。
 allowed-tools: Read Write Edit Grep Bash Task
 ---
 
 # 连续创作5章 + 审查修复（ink-5）
+
+> **⚠️ 弃用提示**：此命令已由 `/ink-auto 5` 取代。`ink-auto` 提供更智能的检查点、自动大纲生成和自动修复能力。建议使用 `/ink-auto 5` 代替本命令。本命令仍可使用，但不再作为主推命令。
 
 ## 核心原则
 

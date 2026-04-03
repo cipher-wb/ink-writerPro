@@ -131,6 +131,21 @@ ${REPORT_EVENTS}
 - 章节文件: \`正文/\` 目录
 REPORT_EOF
 
+    # v9.0 增强：追加质量趋势和追读力信号到报告
+    local CURRENT_END
+    CURRENT_END=$(get_current_chapter 2>/dev/null || echo "?")
+    local TRENDS_MD
+    TRENDS_MD=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
+        index get-review-trends --start "${BATCH_START}" --end "${CURRENT_END}" --format markdown 2>/dev/null) || true
+    if [ -n "$TRENDS_MD" ]; then
+        cat >> "$REPORT_FILE" << TRENDS_EOF
+
+## 质量趋势（v9.0 增强）
+
+${TRENDS_MD}
+TRENDS_EOF
+    fi
+
     echo "📄 运行报告: ${REPORT_FILE}"
 }
 
@@ -640,27 +655,53 @@ run_checkpoint() {
 # ═══════════════════════════════════════════
 
 print_summary() {
+    local CURRENT_END
+    CURRENT_END=$(get_current_chapter 2>/dev/null || echo "?")
+
     echo ""
     echo "═══════════════════════════════════════"
     echo "  ink-auto 完成报告"
     echo "═══════════════════════════════════════"
-    echo "  📝 写作：$COMPLETED 章"
+    echo "  生成章节：第${BATCH_START}-${CURRENT_END}章（${COMPLETED}/${N} 成功）"
+
+    local END_TIME_NOW
+    END_TIME_NOW=$(date +%s)
+    local ELAPSED=$(( END_TIME_NOW - START_TIME ))
+    local H=$(( ELAPSED / 3600 ))
+    local M=$(( (ELAPSED % 3600) / 60 ))
+    echo "  总耗时：${H}小时${M}分钟"
+    echo ""
+
+    # 质量概览
+    echo "  质量概览："
     if (( REVIEW_COUNT > 0 )); then
-        echo "  🔍 审查：${REVIEW_COUNT} 次"
+        echo "  ├─ 审查：${REVIEW_COUNT} 次"
     fi
     if (( FIX_COUNT > 0 )); then
-        echo "  🔧 自动修复：${FIX_COUNT} 次"
+        echo "  ├─ 自动修复：${FIX_COUNT} 次"
     fi
     if (( AUDIT_COUNT > 0 )); then
-        echo "  📊 审计：${AUDIT_COUNT} 次"
+        echo "  ├─ 数据审计：${AUDIT_COUNT} 次"
     fi
     if (( MACRO_COUNT > 0 )); then
-        echo "  🔭 宏观审查：${MACRO_COUNT} 次"
+        echo "  ├─ 宏观审查：${MACRO_COUNT} 次"
     fi
     if (( PLAN_COUNT > 0 )); then
-        echo "  📋 自动规划：${PLAN_COUNT} 卷"
+        echo "  ├─ 自动规划：${PLAN_COUNT} 卷"
     fi
+
+    # v9.0 增强：追读力和伏笔信号（查询 index.db，失败时静默跳过）
+    local TRENDS
+    TRENDS=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
+        index get-review-trends --start "${BATCH_START}" --end "${CURRENT_END}" --format text 2>/dev/null) || true
+    if [ -n "$TRENDS" ]; then
+        echo ""
+        echo "$TRENDS"
+    fi
+
+    echo ""
     echo "  📂 日志：$LOG_DIR"
+    echo "  推荐下一步：ink-auto ${N}"
     echo "═══════════════════════════════════════"
 }
 

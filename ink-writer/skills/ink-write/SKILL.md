@@ -23,7 +23,7 @@ allowed-tools: Read Write Edit Grep Bash Task
 
 ## 模式定义
 
-- `/ink-write`：Step 1 → 2A → 2A.5 → 2B → 3 → 4 → 4.5 → 5 → 6
+- `/ink-write`：Step 1 → 2A → 2A.5 → 2B → 2C → 3 → 4 → 4.5 → 5 → 6
 
 ### Agent 调用成本控制策略
 
@@ -595,7 +595,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflo
 ```
 
 要求：
-- `--step-id` 仅允许：`Step 1` / `Step 2A` / `Step 2B` / `Step 3` / `Step 4` / `Step 5` / `Step 6`。
+- `--step-id` 仅允许：`Step 1` / `Step 2A` / `Step 2B` / `Step 2C` / `Step 3` / `Step 4` / `Step 5` / `Step 6`。
 - 任何记录失败只记警告，不阻断写作。
 - 每个 Step 执行结束后，同样需要 `complete-step`（失败不阻断）。
 
@@ -842,6 +842,38 @@ cat “${SKILL_ROOT}/references/style-adapter.md”
 输出：
 - 风格化正文（覆盖原章节文件）。
 
+### Step 2C：计算型闸门 (Computational Gate)
+
+> **目的**：在昂贵的 LLM checker (Step 3) 之前，用确定性规则快速拦截明显问题。
+
+执行前加载：
+```bash
+cat "${SKILL_ROOT}/references/step-2c-comp-gate.md"
+```
+
+调用：
+```bash
+COMP_GATE_RESULT=$(python3 "${SCRIPTS_DIR}/computational_checks.py" \
+  --project-root "${PROJECT_ROOT}" \
+  --chapter ${CHAPTER_NUM} \
+  --chapter-file "${CHAPTER_FILE}" \
+  --format json 2>/dev/null) || true
+```
+
+判定逻辑：
+- **脚本不存在或 exit 2**（内部错误）→ 静默跳过，直接进入 Step 3。
+- **exit 1**（硬失败）→ 读取 `hard_failures` 列表，退回 Step 2A 重写。不进入 Step 3。
+- **exit 0 + 有 soft_warnings** → 将 `soft_warnings` 记录到日志，附加到 review_bundle 的 `computational_warnings` 字段，进入 Step 3。
+- **exit 0 + 全部通过** → 正常进入 Step 3。
+
+检查项（6 项确定性检查）：
+- 章节字数区间 [2200, 5000]
+- 章节文件命名规范
+- 角色名基础冲突
+- 伏笔生命周期一致性
+- 主角能力等级基础检查
+- 前章契约字段完整性
+
 ### Step 3：审查（auto 路由，必须由 Task 子代理执行）
 
 执行前加载：
@@ -873,6 +905,7 @@ Task 传参硬约束：
 - `continuity-checker`
 - `ooc-checker`
 - `anti-detection-checker`
+- `reader-simulator`（**快速模式**，v9.0 升格为核心裁判。输出 `reader_verdict` 7 维评分，驱动 Step 4 自动返修）
 
 条件审查器（`auto` 命中时执行）：
 - `golden-three-checker`
@@ -880,9 +913,13 @@ Task 传参硬约束：
 - `high-point-checker`
 - `pacing-checker`
 - `proofreading-checker`
-- `reader-simulator`
 
-审查范围：核心 3 个 + auto 命中的条件审查器（始终全量执行）。
+审查范围：核心 5 个 + auto 命中的条件审查器（始终全量执行）。
+
+**reader_verdict 联动逻辑**（Step 3 完成后判定）：
+- `reader_verdict.verdict == "pass"` → 正常进入 Step 4
+- `reader_verdict.verdict == "enhance"` → 进入 Step 4，但追加"追读力增强"修复指令
+- `reader_verdict.verdict == "rewrite"` → **退回 Step 2A 重写**（附带 reader-simulator 的 issues 列表作为修改指引，最多重写 1 次）
 
 **金丝雀约束传递**（若 Step 0.7 产出了金丝雀写作约束）：
 
@@ -908,7 +945,8 @@ Task 传参硬约束：
 推荐调度顺序：
 1. `consistency-checker` + `continuity-checker` 并发（最多 2 个）
 2. `ooc-checker` + `anti-detection-checker` 并发（最多 2 个）
-3. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker` → `reader-simulator`
+3. `reader-simulator`（快速模式，核心裁判）
+4. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker`
 
 审查指标落库（必做）：
 ```bash
@@ -934,16 +972,25 @@ review_metrics 字段约束（当前工作流约定只传以下字段）：
   "report_file": "审查报告/第100-100章审查报告.md",
   "notes": "单个字符串；摘要给人读",
   "review_payload_json": {
-    "selected_checkers": ["consistency-checker", "continuity-checker"],
+    "selected_checkers": ["consistency-checker", "continuity-checker", "reader-simulator"],
     "timeline_gate": "pass",
     "anti_ai_force_check": "pass",
     "anti_detection_score": 72,
-    "golden_three_metrics": {}
+    "golden_three_metrics": {},
+    "reader_verdict": {"hook_strength": 8, "curiosity_continuation": 7, "emotional_reward": 9, "protagonist_pull": 8, "cliffhanger_drive": 9, "filler_risk": 2, "repetition_risk": 1, "total": 48, "verdict": "pass"}
   }
 }
 ```
 - `notes` 在当前执行契约中必须是单个字符串，不得传入对象或数组。
 - `review_payload_json` 用于结构化扩展信息；黄金三章指标必须写入 `golden_three_metrics`。
+
+reader_verdict 落库（必做，紧随 review_metrics 之后）：
+```bash
+# 将 reader-simulator 的 reader_verdict 写入 harness_evaluations 表（v9.0）
+# reader_verdict JSON 从 review_payload_json.reader_verdict 中提取
+python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+  index save-harness-evaluation --data '{"chapter": ${CHAPTER_NUM}, "reader_verdict": ${READER_VERDICT_JSON}, "review_depth": "core"}'
+```
 
 硬要求：
 - 当 `chapter <= 3` 时，`golden-three-checker` 未通过不得放行。

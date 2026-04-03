@@ -142,6 +142,38 @@
 }
 ```
 
+### reader-simulator
+```json
+{
+  "metrics": {
+    "immersion_score": 78,
+    "emotion_curve_health": "有波动但中段偏平",
+    "dropout_risk_zones": ["600-900字"],
+    "highest_emotion_point": "第1500字（反转揭示）",
+    "lowest_emotion_point": "第700字（解释段）",
+    "next_chapter_drive": "strong",
+    "reader_persona": "修仙长线读者",
+    "info_overload_segments": 1,
+    "empathy_score": 80
+  },
+  "reader_verdict": {
+    "hook_strength": 8,
+    "curiosity_continuation": 7,
+    "emotional_reward": 9,
+    "protagonist_pull": 8,
+    "cliffhanger_drive": 9,
+    "filler_risk": 2,
+    "repetition_risk": 1,
+    "total": 48,
+    "verdict": "pass"
+  }
+}
+```
+
+> **reader_verdict 为必填扩展字段**（v9.0 起）。所有模式（快速/完整）都必须输出。
+> - `total` = 正向5维之和 - 反向2维之和，范围 -20~50
+> - `verdict`: `pass`(≥32) / `enhance`(25-31) / `rewrite`(<25)
+
 ## 汇总格式
 
 Step 3 完成后，输出汇总 JSON：

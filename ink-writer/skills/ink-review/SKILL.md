@@ -100,9 +100,11 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow comple
 
 ## Review depth
 
-- **Core (default)**: consistency / continuity / ooc / reader-pull
-- **Full (关键章/用户要求)**: core + high-point + pacing + proofreading
-- **Full+ (卷首章/卷末章/用户要求)**: full + reader-simulator
+- **Core (default)**: consistency / continuity / ooc / reader-pull / **reader-simulator（快速模式）**
+- **Full (关键章/用户要求)**: core + high-point + pacing + proofreading + golden-three(前3章)
+- **Full+ (卷首章/卷末章/用户要求)**: full + **reader-simulator（完整模式，替换快速模式）** + anti-detection-checker
+
+> **v9.0 变更**: reader-simulator 从 Full+ 升格为 Core 级别（快速模式）。每章必跑，输出 `reader_verdict` 7 维评分驱动自动返修。Full+ 级别运行完整模式（含情绪曲线和读者独白）。
 
 ## Step 1: 加载参考（按需）
 
@@ -167,12 +169,17 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 - `continuity-checker`
 - `ooc-checker`
 - `reader-pull-checker`
+- `reader-simulator`（快速模式：仅 7 维评分 + 弃读风险热点，跳过逐段模拟和读者独白）
 
 **Full 追加**:
 - `golden-three-checker`（仅第 1-3 章强制）
 - `high-point-checker`
 - `pacing-checker`
 - `proofreading-checker`（文笔质量：修辞重复/段落结构/代称混乱/文化禁忌）
+
+**Full+ 追加**:
+- `reader-simulator`（完整模式：替换 Core 的快速模式，含情绪曲线+读者独白）
+- `anti-detection-checker`
 
 ## Step 4: 生成审查报告
 
