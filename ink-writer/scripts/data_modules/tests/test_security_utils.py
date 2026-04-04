@@ -4,19 +4,16 @@
 
 import json
 import os
-import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 import pytest
 
+import security_utils
+
 
 def _load_module():
-    """Import security_utils after injecting scripts/ into sys.path."""
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-    import security_utils
+    """Import security_utils."""
     return security_utils
 
 

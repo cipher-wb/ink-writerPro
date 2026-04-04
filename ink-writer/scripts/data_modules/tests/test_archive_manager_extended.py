@@ -1,15 +1,8 @@
 """archive_manager.py 补充测试 — 覆盖核心归档流程。"""
 
 import json
-import sys
-from pathlib import Path
 
 import pytest
-
-# archive_manager 在 scripts/ 目录
-scripts_dir = str(Path(__file__).resolve().parents[2])
-if scripts_dir not in sys.path:
-    sys.path.insert(0, scripts_dir)
 
 from data_modules.config import DataModulesConfig
 from data_modules.index_manager import IndexManager, EntityMeta

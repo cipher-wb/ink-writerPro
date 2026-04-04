@@ -1,15 +1,9 @@
 """Tests for init_project.py — targeting untested lines to raise coverage ≥70%."""
 
 import json
-import sys
-from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 import pytest
-
-scripts_dir = str(Path(__file__).resolve().parents[2])
-if scripts_dir not in sys.path:
-    sys.path.insert(0, scripts_dir)
 
 from init_project import (
     _read_text_if_exists,

@@ -4,19 +4,10 @@
 
 import json
 import sys
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
-
-def _inject_path():
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-
-
-_inject_path()
 import update_state as us_mod
 
 

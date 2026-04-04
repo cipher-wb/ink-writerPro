@@ -17,6 +17,11 @@ PACKAGE_LOCK_PATH = ROOT / "ink-writer" / "dashboard" / "frontend" / "package-lo
 README_PATH = ROOT / "README.md"
 PLUGIN_NAME = "ink-writer"
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+$")
+README_BADGE_PATTERN = re.compile(
+    r"(\[!\[Version\]\(https://img\.shields\.io/badge/Version-)"
+    r"[\d.]+"
+    r"(-green\.svg\)\])"
+)
 README_ROW_PATTERN = re.compile(
     r"^\| \*\*v(?P<version>[^\s*]+)(?P<current> \(当前\))?\*\* \| (?P<notes>.*) \|$"
 )
@@ -172,6 +177,7 @@ def sync_versions(version: str | None = None, release_notes: str | None = None) 
             changed = True
 
     updated_readme = update_readme_release(readme_content, target_version, release_notes)
+    updated_readme = README_BADGE_PATTERN.sub(rf"\g<1>{target_version}\g<2>", updated_readme)
     if updated_readme != readme_content:
         save_text(README_PATH, updated_readme)
         changed = True
@@ -233,7 +239,19 @@ def check_versions(expected_version: str | None = None) -> int:
                 scripts_init_version = line.split("=")[1].strip().strip('"').strip("'")
                 break
 
+    # README badge version
+    badge_match = README_BADGE_PATTERN.search(readme_content)
+    badge_version = ""
+    if badge_match:
+        badge_version = readme_content[badge_match.start(0):badge_match.end(0)]
+        badge_version = re.search(r"Version-(\d+\.\d+\.\d+)-", badge_version)
+        badge_version = badge_version.group(1) if badge_version else ""
+
     mismatches: list[str] = []
+    if badge_version and plugin_version != badge_version:
+        mismatches.append(
+            f"plugin.json={plugin_version}, README badge={badge_version}"
+        )
     if plugin_version != marketplace_version:
         mismatches.append(
             f"plugin.json={plugin_version}, marketplace.json={marketplace_version}"

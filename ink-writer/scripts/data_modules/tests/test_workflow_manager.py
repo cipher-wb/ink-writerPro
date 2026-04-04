@@ -3,7 +3,6 @@
 
 import json
 import logging
-import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -15,13 +14,10 @@ from data_modules.index_manager import (
     SceneMeta,
 )
 
+import workflow_manager
+
 
 def _load_module():
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-    import workflow_manager
-
     return workflow_manager
 
 

@@ -6,18 +6,14 @@ and CLI __main__ paths that were previously untested.
 """
 
 import json
-import sys
-from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
+import workflow_manager
+
 
 def _load_module():
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-    import workflow_manager
     return workflow_manager
 
 

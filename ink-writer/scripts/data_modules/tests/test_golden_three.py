@@ -2,19 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import json
-import sys
-from pathlib import Path
-
-
-def _ensure_scripts_on_path() -> None:
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
 
 def test_build_golden_three_plan_from_init_inputs():
-    _ensure_scripts_on_path()
-
     from data_modules.golden_three import build_golden_three_plan
 
     plan = build_golden_three_plan(
@@ -36,8 +26,6 @@ def test_build_golden_three_plan_from_init_inputs():
 
 
 def test_anti_ai_lint_blocks_bad_first_chapter_opening():
-    _ensure_scripts_on_path()
-
     from data_modules.anti_ai_lint import anti_ai_lint_text
 
     text = (
@@ -53,8 +41,6 @@ def test_anti_ai_lint_blocks_bad_first_chapter_opening():
 
 
 def test_anti_ai_lint_allows_mystery_triggered_opening():
-    _ensure_scripts_on_path()
-
     from data_modules.anti_ai_lint import anti_ai_lint_text
 
     text = (
@@ -69,8 +55,6 @@ def test_anti_ai_lint_allows_mystery_triggered_opening():
 
 
 def test_init_project_writes_golden_three_files(tmp_path, monkeypatch):
-    _ensure_scripts_on_path()
-
     import init_project as init_project_module
 
     project_root = tmp_path / "book"

@@ -8,15 +8,8 @@ Covers: all Pydantic sub-models, StateModel top-level, defaults,
 """
 
 import json
-import sys
-from pathlib import Path
 
 import pytest
-
-# Ensure scripts dir is importable
-_scripts_dir = Path(__file__).resolve().parents[2]
-if str(_scripts_dir) not in sys.path:
-    sys.path.insert(0, str(_scripts_dir))
 
 from state_schema import (
     ChapterMeta,

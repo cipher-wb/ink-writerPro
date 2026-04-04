@@ -2,15 +2,9 @@
 
 import asyncio
 import json
-import sys
-from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
-_dashboard_parent = str(Path(__file__).resolve().parents[3])
-if _dashboard_parent not in sys.path:
-    sys.path.insert(0, _dashboard_parent)
 
 pytest.importorskip("watchdog")
 

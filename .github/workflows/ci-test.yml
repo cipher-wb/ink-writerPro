@@ -11,6 +11,7 @@ on:
       - '.coveragerc'
       - 'requirements.txt'
       - 'ink-writer/scripts/requirements.lock'
+      - 'ink-writer/scripts/requirements-dev.lock'
       - 'ink-writer/dashboard/requirements.lock'
       - '.github/workflows/ci-test.yml'
   pull_request:
@@ -23,6 +24,7 @@ on:
       - '.coveragerc'
       - 'requirements.txt'
       - 'ink-writer/scripts/requirements.lock'
+      - 'ink-writer/scripts/requirements-dev.lock'
       - 'ink-writer/dashboard/requirements.lock'
       - '.github/workflows/ci-test.yml'
 
@@ -45,7 +47,7 @@ jobs:
       - name: Install dependencies (locked versions, 3.14)
         if: matrix.python-version == '3.14'
         run: |
-          pip install -r ink-writer/scripts/requirements.lock
+          pip install -r ink-writer/scripts/requirements-dev.lock
           pip install -r ink-writer/dashboard/requirements.lock
 
       - name: Install dependencies (loose versions, 3.12)

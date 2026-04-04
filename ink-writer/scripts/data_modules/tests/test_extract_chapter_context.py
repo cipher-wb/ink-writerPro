@@ -2,14 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import json
-import sys
-from pathlib import Path
 
 
 def test_extract_state_summary_accepts_dominant_key(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import extract_state_summary
 
@@ -38,9 +33,6 @@ def test_extract_state_summary_accepts_dominant_key(tmp_path):
 
 
 def test_extract_chapter_outline_supports_hyphen_filename(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import extract_chapter_outline
 
@@ -54,9 +46,6 @@ def test_extract_chapter_outline_supports_hyphen_filename(tmp_path):
 
 
 def test_extract_chapter_outline_prefers_state_volume_mapping(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import extract_chapter_outline
 
@@ -82,9 +71,6 @@ def test_extract_chapter_outline_prefers_state_volume_mapping(tmp_path):
 
 
 def test_extract_chapter_outline_falls_back_when_state_has_no_match(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import extract_chapter_outline
 
@@ -103,9 +89,6 @@ def test_extract_chapter_outline_falls_back_when_state_has_no_match(tmp_path):
 
 
 def test_build_chapter_context_payload_includes_contract_sections(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import build_chapter_context_payload
     from data_modules.config import DataModulesConfig
@@ -194,9 +177,6 @@ def test_build_chapter_context_payload_includes_contract_sections(tmp_path):
 
 
 def test_build_chapter_context_payload_uses_memory_card_local_rag_fallback(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import build_chapter_context_payload
     from data_modules.config import DataModulesConfig
@@ -242,9 +222,6 @@ def test_build_chapter_context_payload_uses_memory_card_local_rag_fallback(tmp_p
 
 
 def test_build_execution_pack_payload_contains_golden_three_prompt_sections(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import build_chapter_context_payload, build_execution_pack_payload
     from data_modules.config import DataModulesConfig
@@ -388,9 +365,6 @@ def test_build_execution_pack_payload_contains_golden_three_prompt_sections(tmp_
 
 
 def test_build_execution_pack_payload_preserves_chapter_two_continuity(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import build_chapter_context_payload, build_execution_pack_payload
     from data_modules.config import DataModulesConfig
@@ -500,9 +474,6 @@ def test_build_execution_pack_payload_preserves_chapter_two_continuity(tmp_path)
 
 
 def test_execution_pack_json_is_more_compact_than_full_payload():
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import build_execution_pack_payload
 
@@ -568,9 +539,6 @@ def test_execution_pack_json_is_more_compact_than_full_payload():
 
 
 def test_build_review_pack_payload_embeds_absolute_paths_and_whitelist(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import build_chapter_context_payload, build_review_pack_payload
     from data_modules.config import DataModulesConfig
@@ -631,9 +599,6 @@ def test_build_review_pack_payload_embeds_absolute_paths_and_whitelist(tmp_path)
 
 
 def test_render_text_contains_writing_guidance_section(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import _render_text
 
@@ -713,9 +678,6 @@ def test_render_text_contains_writing_guidance_section(tmp_path):
 
 
 def test_render_execution_pack_text_contains_core_sections():
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import _render_execution_pack_text
 
@@ -763,9 +725,6 @@ def test_render_execution_pack_text_contains_core_sections():
 
 
 def test_render_text_contains_rag_assist_section_when_hits_exist(tmp_path):
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
 
     from extract_chapter_context import _render_text
 

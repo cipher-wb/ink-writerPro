@@ -16,7 +16,34 @@ permissions:
   contents: write
 
 jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+
+      - name: Install dependencies (locked versions)
+        run: |
+          pip install -r ink-writer/scripts/requirements-dev.lock
+          pip install -r ink-writer/dashboard/requirements.lock
+
+      - name: Validate release metadata
+        run: |
+          python ink-writer/scripts/sync_plugin_version.py --check --expected-version "${{ inputs.version }}"
+
+      - name: Run tests
+        run: pytest
+
   release:
+    needs: [test]
     runs-on: ubuntu-latest
     env:
       RELEASE_VERSION: ${{ inputs.version }}
@@ -27,27 +54,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.14'
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Install dependencies (locked versions)
-        run: |
-          pip install -r ink-writer/scripts/requirements.lock
-          pip install -r ink-writer/dashboard/requirements.lock
-
-      - name: Validate release metadata
-        run: |
-          python ink-writer/scripts/sync_plugin_version.py --check --expected-version "$RELEASE_VERSION"
-
-      - name: Run tests
-        run: pytest
 
       - name: Build frontend
         working-directory: ink-writer/dashboard/frontend

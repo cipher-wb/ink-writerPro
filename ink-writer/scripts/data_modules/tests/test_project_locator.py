@@ -1,19 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import sys
-from pathlib import Path
-
-
-def _ensure_scripts_on_path() -> None:
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-
-
 def test_resolve_project_root_prefers_cwd_project(tmp_path):
-    _ensure_scripts_on_path()
-
     from project_locator import resolve_project_root
 
     project_root = tmp_path / "workspace"
@@ -25,7 +13,6 @@ def test_resolve_project_root_prefers_cwd_project(tmp_path):
 
 
 def test_resolve_project_root_stops_at_git_root(tmp_path):
-    _ensure_scripts_on_path()
 
     from project_locator import resolve_project_root
 
@@ -47,7 +34,6 @@ def test_resolve_project_root_stops_at_git_root(tmp_path):
 
 
 def test_resolve_project_root_finds_default_subdir_within_git_root(tmp_path):
-    _ensure_scripts_on_path()
 
     from project_locator import resolve_project_root
 
@@ -66,7 +52,6 @@ def test_resolve_project_root_finds_default_subdir_within_git_root(tmp_path):
 
 
 def test_resolve_project_root_uses_workspace_pointer(tmp_path):
-    _ensure_scripts_on_path()
 
     from project_locator import resolve_project_root, write_current_project_pointer
 
@@ -86,7 +71,6 @@ def test_resolve_project_root_uses_workspace_pointer(tmp_path):
 
 
 def test_resolve_project_root_ignores_stale_pointer_and_fallbacks(tmp_path):
-    _ensure_scripts_on_path()
 
     from project_locator import resolve_project_root
 
@@ -106,7 +90,6 @@ def test_resolve_project_root_ignores_stale_pointer_and_fallbacks(tmp_path):
 
 
 def test_resolve_project_root_uses_global_registry_prefix_on_posix(tmp_path, monkeypatch):
-    _ensure_scripts_on_path()
 
     from project_locator import resolve_project_root
 

@@ -1,14 +1,5 @@
 """Tests for dashboard/path_guard.py — safe_resolve path traversal guard."""
 
-import sys
-from pathlib import Path
-
-# ---------------------------------------------------------------------------
-# Import Setup
-# ---------------------------------------------------------------------------
-# path_guard lives under dashboard/, which is not on sys.path by default.
-sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "dashboard"))
-
 import pytest
 
 fastapi = pytest.importorskip("fastapi")

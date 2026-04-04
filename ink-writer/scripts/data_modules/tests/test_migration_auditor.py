@@ -4,18 +4,15 @@
 
 import json
 import sqlite3
-import sys
 from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
+import migration_auditor
+
 
 def _load_module():
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-    import migration_auditor
     return migration_auditor
 
 

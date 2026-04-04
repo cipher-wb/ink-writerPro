@@ -9,15 +9,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+import backup_manager
+
 
 def _load_module():
-    """Import backup_manager after injecting scripts/ into sys.path."""
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-
-    import backup_manager
-
+    """Import backup_manager."""
     return backup_manager
 
 

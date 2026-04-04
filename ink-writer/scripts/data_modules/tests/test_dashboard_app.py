@@ -3,15 +3,9 @@
 import importlib
 import json
 import sqlite3
-import sys
 from pathlib import Path
 
 import pytest
-
-# Dashboard 作为包导入（需要父目录在 sys.path 上）
-_dashboard_parent = str(Path(__file__).resolve().parents[3])
-if _dashboard_parent not in sys.path:
-    sys.path.insert(0, _dashboard_parent)
 
 fastapi = pytest.importorskip("fastapi")
 httpx = pytest.importorskip("httpx")

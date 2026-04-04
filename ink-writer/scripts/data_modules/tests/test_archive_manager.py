@@ -1,20 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from pathlib import Path
-
 import pytest
+
+import archive_manager
 
 
 def _load_archive_module():
-    import sys
-
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-
-    import archive_manager
-
     return archive_manager
 
 

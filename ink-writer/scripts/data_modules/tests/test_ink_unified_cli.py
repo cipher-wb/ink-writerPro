@@ -2,19 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from pathlib import Path
 
 import pytest
 
 
-def _ensure_scripts_on_path() -> None:
-    scripts_dir = Path(__file__).resolve().parents[2]
-    if str(scripts_dir) not in sys.path:
-        sys.path.insert(0, str(scripts_dir))
-
-
 def _load_ink_module():
-    _ensure_scripts_on_path()
     import data_modules.ink as ink_module
 
     return ink_module
@@ -225,7 +217,6 @@ def test_preflight_fails_when_required_scripts_are_missing(monkeypatch, tmp_path
 
 
 def test_quality_trend_report_writes_to_book_root_when_input_is_workspace_root(tmp_path, monkeypatch):
-    _ensure_scripts_on_path()
     import quality_trend_report as quality_trend_report_module
 
     workspace_root = (tmp_path / "workspace").resolve()
