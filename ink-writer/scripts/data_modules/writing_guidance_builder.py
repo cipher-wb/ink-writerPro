@@ -11,6 +11,36 @@ from typing import Any, Dict, List
 from .genre_aliases import to_profile_key
 
 
+# === 场景类型检测关键词 ===
+SCENE_TYPE_KEYWORDS: dict[str, list[str]] = {
+    "combat": ["战斗", "打斗", "交战", "对战", "交手", "反杀", "出手", "激战",
+               "厮杀", "围攻", "伏击", "追杀", "拼命", "搏斗", "决斗", "攻击"],
+    "dialogue": ["对话", "谈话", "交谈", "商议", "谈判", "拜师", "问询", "说服",
+                 "请求", "质问", "劝说", "辩论", "讨论", "审问", "密谈"],
+    "emotion": ["离别", "重逢", "悲伤", "感动", "回忆", "思念", "牺牲", "告白",
+                "哀悼", "团聚", "温情", "煽情", "生死", "诀别", "泪"],
+    "suspense": ["悬念", "秘密", "发现", "揭秘", "线索", "陷阱", "谜团",
+                 "密谋", "暗中", "潜入", "调查", "试探", "窥探", "隐藏"],
+    "climax": ["高潮", "决战", "逆转", "爆发", "觉醒", "突破", "翻盘",
+               "总攻", "终极", "巅峰", "对决", "最终", "关键一击"],
+}
+
+
+def detect_scene_types(outline_text: str) -> list[str]:
+    """从章节大纲/梗概中检测主要场景类型，返回按相关度排序的类型列表。"""
+    if not outline_text:
+        return []
+
+    scores: dict[str, int] = {}
+    for scene_type, keywords in SCENE_TYPE_KEYWORDS.items():
+        score = sum(1 for kw in keywords if kw in outline_text)
+        if score > 0:
+            scores[scene_type] = score
+
+    # 按分数降序排列
+    return [t for t, _ in sorted(scores.items(), key=lambda x: -x[1])]
+
+
 GENRE_GUIDANCE_TEXT: dict[str, str] = {
     "xianxia": "题材加权：强化升级/对抗结果的可见反馈，术语解释后置。",
     "shuangwen": "题材加权：维持高爽点密度，主爽点外叠加一个副轴反差。",
@@ -210,8 +240,32 @@ def build_guidance_items(
     genre_profile: Dict[str, Any],
     low_score_threshold: float,
     hook_diversify_enabled: bool,
+    chapter_outline: str = "",
 ) -> Dict[str, Any]:
     guidance: List[str] = []
+
+    # --- 场景类型检测 & Craft 提示注入 ---
+    scene_types = detect_scene_types(chapter_outline)
+    scene_craft_hints: List[str] = []
+    if scene_types:
+        type_labels = {"combat": "战斗", "dialogue": "对话", "emotion": "情感",
+                       "suspense": "悬念", "climax": "高潮"}
+        detected = "、".join(type_labels.get(t, t) for t in scene_types[:2])
+        guidance.append(f"场景类型检测：{detected}。请参考 references/scene-craft/ 下对应文件的写作原则。")
+
+        # 注入关键Craft提示（不加载完整文件，只给核心提醒）
+        craft_tips = {
+            "combat": "战斗Craft：快慢交替节奏、近战用触觉+嗅觉、战后清算身体。",
+            "dialogue": "对话Craft：角色用词差异化、潜台词揭一层留一层、用动作打断对话。",
+            "emotion": "情感Craft：高潮前放日常对比、用小物件承载情感、沉默+行动胜过抒情。",
+            "suspense": "悬念Craft：解释信息1/3法则、设定寄生于行为、章末留倒计时或新变量。",
+            "climax": "高潮Craft：安静→爆发的反差、长句末尾接冲击短句、高潮后留余韵段。",
+        }
+        for st in scene_types[:2]:
+            tip = craft_tips.get(st)
+            if tip:
+                scene_craft_hints.append(tip)
+                guidance.append(tip)
 
     low_ranges = reader_signal.get("low_score_ranges") or []
     if low_ranges:
@@ -272,6 +326,8 @@ def build_guidance_items(
         "hook_usage": hook_usage,
         "pattern_usage": pattern_usage,
         "genre": genre,
+        "scene_types": scene_types,
+        "scene_craft_hints": scene_craft_hints,
     }
 
 

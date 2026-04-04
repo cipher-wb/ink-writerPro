@@ -325,6 +325,25 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-protag
   - 若 `可选伏笔` 超过 5 条：展示前 5 条并标注”其余 N 条可选伏笔已省略”
   - 若 `foreshadowing_data_missing=true`：明确输出”结构化伏笔数据缺失，当前清单仅供占位”
 
+**第8.5板块：角色视角与场景类型（Character POV & Scene Craft）** ：
+
+从大纲和上章摘要中推导以下信息，帮助 writer-agent 进入角色视角写作：
+
+```
+### 8.5 角色视角与场景类型
+**视角角色**: {protagonist_name}
+**上章经历**: {上一章结尾事件的一句话概括}
+**此刻状态**: {身体状态：受伤/疲惫/正常} | {情绪状态：紧张/愤怒/平静/悲伤}
+**不知道什么**: {本章主角不知道但读者可能好奇的信息}
+**最担心什么**: {基于上章事件推断的主角当前忧虑}
+**想要什么**: {本章主角的immediate目标}
+**什么挡在面前**: {本章的主要障碍}
+**场景类型**: {战斗/对话/情感/悬念/高潮/日常} — 参考 references/scene-craft/ 对应文件
+```
+
+数据来源：大纲本章梗概 + `state.json` protagonist_state + 上章摘要。
+若数据不足，基于大纲合理推断，标注"[推断]"。
+
 **第9板块：知识盲区（Knowledge Gate）** 必须包含：
 ```
 ### 9. 知识盲区（Knowledge Gate）
