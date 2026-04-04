@@ -29,11 +29,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import re
 import sqlite3
 import sys
+from contextlib import closing
 from pathlib import Path
 from typing import Any, Dict, List
+
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -156,25 +160,23 @@ def check_foreshadowing_consistency(project_root: Path, chapter_num: int) -> Che
         return CheckResult("foreshadowing", True, "soft", "index.db 不存在，跳过伏笔检查")
 
     try:
-        conn = sqlite3.connect(str(db_path))
-        cursor = conn.cursor()
+        with closing(sqlite3.connect(str(db_path))) as conn:
+            cursor = conn.cursor()
 
-        # 检查是否有严重逾期的伏笔
-        overdue_threads: list[str] = []
-        try:
-            cursor.execute(
-                "SELECT thread_id, planted_chapter, expected_payoff_chapter "
-                "FROM plot_threads WHERE status = 'active' AND expected_payoff_chapter < ?",
-                (chapter_num,)
-            )
-            for row in cursor.fetchall():
-                delay = chapter_num - row[2]
-                if delay > 20:  # 超期 20 章以上
-                    overdue_threads.append(f"伏笔 '{row[0]}' (第{row[1]}章埋) 预期第{row[2]}章回收，已逾期 {delay} 章")
-        except sqlite3.OperationalError:
-            pass
-
-        conn.close()
+            # 检查是否有严重逾期的伏笔
+            overdue_threads: list[str] = []
+            try:
+                cursor.execute(
+                    "SELECT thread_id, planted_chapter, expected_payoff_chapter "
+                    "FROM plot_threads WHERE status = 'active' AND expected_payoff_chapter < ?",
+                    (chapter_num,)
+                )
+                for row in cursor.fetchall():
+                    delay = chapter_num - row[2]
+                    if delay > 20:  # 超期 20 章以上
+                        overdue_threads.append(f"伏笔 '{row[0]}' (第{row[1]}章埋) 预期第{row[2]}章回收，已逾期 {delay} 章")
+            except sqlite3.OperationalError:
+                pass
 
         if overdue_threads:
             return CheckResult(

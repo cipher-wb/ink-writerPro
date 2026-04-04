@@ -484,10 +484,9 @@ class StateManager:
                 self._sqlite_sync_stale = True
                 return False
 
-            # 同步叙事承诺 + 角色演变 + 冲突指纹（共享同一个 IndexManager 实例）
+            # 同步叙事承诺 + 角色演变 + 冲突指纹（复用 SQLStateManager 的 IndexManager）
             try:
-                from .index_manager import IndexManager
-                idx = IndexManager(self.config)
+                idx = self._sql_state_manager._index_manager
 
                 # 叙事承诺（新增）
                 for item in sqlite_data.get("narrative_commitments_new", []):

@@ -87,11 +87,14 @@ def _chapter_summary_path(project_root: Path, chapter_num: int) -> Path:
 
 
 def _sqlite_scalar(db_path: Path, query: str, params: tuple[Any, ...] = ()) -> Any:
-    with sqlite3.connect(db_path) as conn:
+    conn = sqlite3.connect(db_path)
+    try:
         cursor = conn.cursor()
         cursor.execute(query, params)
         row = cursor.fetchone()
         return row[0] if row else None
+    finally:
+        conn.close()
 
 
 def _validate_step5_outputs(task: Dict[str, Any]) -> Optional[str]:

@@ -15,10 +15,13 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import logging
 import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
+
+logger = logging.getLogger(__name__)
 
 from chapter_outline_loader import load_chapter_outline
 
@@ -445,6 +448,7 @@ def _load_rag_assist(
             local_payload["reason"] = f"rag_error:{exc.__class__.__name__}"
             return local_payload
         except Exception:
+            logger.debug("failed to build RAG local payload", exc_info=True)
             base_payload["reason"] = f"rag_error:{exc.__class__.__name__}"
             return base_payload
 
@@ -543,6 +547,7 @@ def _collect_setting_snapshots(project_root: Path) -> List[Dict[str, Any]]:
         try:
             text = path.read_text(encoding="utf-8")
         except Exception:
+            logger.debug("failed to read setting file %s", path, exc_info=True)
             continue
         snippet = _compact_text(text, REVIEW_SETTINGS_SNIPPET_CHARS)
         if not snippet:
@@ -656,6 +661,7 @@ def build_review_pack_payload(project_root: Path, chapter_num: int, payload: Dic
         pattern_counts = idx.get_fingerprint_pattern_counts(limit=50, before_chapter=chapter_num)
         bundle["plot_structure_fingerprints"] = pattern_counts
     except Exception:
+        logger.debug("failed to load narrative commitments or fingerprints", exc_info=True)
         bundle.setdefault("narrative_commitments", [])
         bundle.setdefault("plot_structure_fingerprints", [])
 

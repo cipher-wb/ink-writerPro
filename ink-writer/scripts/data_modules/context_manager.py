@@ -578,7 +578,7 @@ class ContextManager:
                     )
                 )
             except Exception:
-                pass
+                logger.debug("failed to persist memory card for chapter %s", previous_chapter, exc_info=True)
         return fallback
 
     def _load_active_plot_threads(self, chapter: int, state: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -1084,6 +1084,7 @@ class ContextManager:
                 entity_ids, max_entries_per_char=8
             )
         except Exception:
+            logger.debug("failed to load character evolution summary", exc_info=True)
             return characters
         if not evolution_map:
             return characters
@@ -1137,6 +1138,7 @@ class ContextManager:
                 if summaries:
                     trajectories[eid] = summaries
         except Exception:
+            logger.debug("failed to load relationship trajectories", exc_info=True)
             return characters
         if not trajectories:
             return characters
@@ -1200,6 +1202,7 @@ class ContextManager:
                         return text[:max_chars].rstrip() + "…"
                     return text
             except Exception:
+                logger.debug("failed to read outline file %s", path, exc_info=True)
                 continue
         return ""
 
@@ -1233,6 +1236,7 @@ class ContextManager:
                         samples.append(s)
                         used_chapters.add(int(ch_num))
         except Exception:
+            logger.debug("failed to load top reading power chapters, falling back to interval sampling", exc_info=True)
             # 回退到固定间隔采样
             interval = max(1, int(self.config.context_story_skeleton_interval))
             cursor = chapter - interval
