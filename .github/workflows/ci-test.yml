@@ -29,6 +29,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.14']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,7 +39,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
+          python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies (locked versions)
         run: pip install -r ink-writer/scripts/requirements.lock

@@ -54,7 +54,7 @@ def _normcase_path_key(p: Path) -> str:
     """
     try:
         resolved = p.expanduser().resolve()
-    except Exception:
+    except (OSError, ValueError):
         resolved = p.expanduser()
     return os.path.normcase(str(resolved))
 

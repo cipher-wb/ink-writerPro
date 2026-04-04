@@ -1250,6 +1250,460 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
             ).fetchall()
             return [dict(row) for row in rows]
 
+# ==================== CLI 命令处理函数 ====================
+
+
+def _handle_stats(manager, args, emit_success, emit_error):
+    emit_success(manager.get_stats(), message="stats")
+
+
+def _handle_get_chapter(manager, args, emit_success, emit_error):
+    chapter = manager.get_chapter(args.chapter)
+    if chapter:
+        emit_success(chapter, message="chapter")
+    else:
+        emit_error("NOT_FOUND", f"未找到章节: {args.chapter}")
+
+
+def _handle_recent_appearances(manager, args, emit_success, emit_error):
+    emit_success(manager.get_recent_appearances(args.limit), message="recent_appearances")
+
+
+def _handle_entity_appearances(manager, args, emit_success, emit_error):
+    appearances = manager.get_entity_appearances(args.entity, args.limit)
+    emit_success({"entity": args.entity, "appearances": appearances}, message="entity_appearances")
+
+
+def _handle_search_scenes(manager, args, emit_success, emit_error):
+    scenes = manager.search_scenes_by_location(args.location, args.limit)
+    emit_success(scenes, message="scenes")
+
+
+def _handle_process_chapter(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    entities = load_json_arg(args.entities)
+    scenes = load_json_arg(args.scenes)
+    stats = manager.process_chapter_data(
+        chapter=args.chapter, title=args.title, location=args.location,
+        word_count=args.word_count, entities=entities, scenes=scenes,
+    )
+    emit_success(stats, message="chapter_processed", chapter=args.chapter)
+
+
+def _handle_get_entity(manager, args, emit_success, emit_error):
+    entity = manager.get_entity(args.id)
+    if entity:
+        emit_success(entity, message="entity")
+    else:
+        emit_error("NOT_FOUND", f"未找到实体: {args.id}")
+
+
+def _handle_get_core_entities(manager, args, emit_success, emit_error):
+    emit_success(manager.get_core_entities(), message="core_entities")
+
+
+def _handle_get_protagonist(manager, args, emit_success, emit_error):
+    protagonist = manager.get_protagonist()
+    if protagonist:
+        emit_success(protagonist, message="protagonist")
+    else:
+        emit_error("NOT_FOUND", "未设置主角")
+
+
+def _handle_get_entities_by_type(manager, args, emit_success, emit_error):
+    emit_success(manager.get_entities_by_type(args.type, args.include_archived), message="entities_by_type")
+
+
+def _handle_get_by_alias(manager, args, emit_success, emit_error):
+    entities = manager.get_entities_by_alias(args.alias)
+    if entities:
+        emit_success(entities, message="entities_by_alias")
+    else:
+        emit_error("NOT_FOUND", f"未找到别名: {args.alias}")
+
+
+def _handle_get_aliases(manager, args, emit_success, emit_error):
+    aliases = manager.get_entity_aliases(args.entity)
+    if aliases:
+        emit_success({"entity": args.entity, "aliases": aliases}, message="aliases")
+    else:
+        emit_error("NOT_FOUND", f"{args.entity} 没有别名")
+
+
+def _handle_register_alias(manager, args, emit_success, emit_error):
+    success = manager.register_alias(args.alias, args.entity, args.type)
+    if success:
+        emit_success({"alias": args.alias, "entity": args.entity, "type": args.type}, message="alias_registered")
+    else:
+        emit_error("ALIAS_EXISTS", f"别名已存在或注册失败: {args.alias}")
+
+
+def _handle_get_relationships(manager, args, emit_success, emit_error):
+    rels = manager.get_entity_relationships(args.entity, args.direction)
+    emit_success(rels, message="relationships")
+
+
+def _handle_get_relationship_events(manager, args, emit_success, emit_error):
+    events = manager.get_relationship_events(
+        entity_id=args.entity, direction=args.direction,
+        from_chapter=args.from_chapter, to_chapter=args.to_chapter, limit=args.limit,
+    )
+    emit_success(events, message="relationship_events")
+
+
+def _handle_get_relationship_graph(manager, args, emit_success, emit_error):
+    graph = manager.build_relationship_subgraph(
+        center_entity=args.center, depth=args.depth,
+        chapter=args.chapter, top_edges=args.top_edges,
+    )
+    if args.format == "mermaid":
+        emit_success({"mermaid": manager.render_relationship_subgraph_mermaid(graph)}, message="relationship_graph")
+    else:
+        emit_success(graph, message="relationship_graph")
+
+
+def _handle_get_relationship_timeline(manager, args, emit_success, emit_error):
+    timeline = manager.get_relationship_timeline(
+        entity1=args.a, entity2=args.b,
+        from_chapter=args.from_chapter, to_chapter=args.to_chapter, limit=args.limit,
+    )
+    emit_success(timeline, message="relationship_timeline")
+
+
+def _handle_get_state_changes(manager, args, emit_success, emit_error):
+    emit_success(manager.get_entity_state_changes(args.entity, args.limit), message="state_changes")
+
+
+def _handle_record_relationship_event(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    try:
+        data = load_json_arg(args.data)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        emit_error("INVALID_RELATIONSHIP_EVENT", "关系事件 JSON 无效")
+        return
+    event = RelationshipEventMeta(
+        from_entity=data.get("from_entity", ""), to_entity=data.get("to_entity", ""),
+        type=data.get("type", ""), chapter=data.get("chapter", 0),
+        action=data.get("action", "update"), polarity=data.get("polarity", 0),
+        strength=data.get("strength", 0.5), description=data.get("description", ""),
+        scene_index=data.get("scene_index", 0), evidence=data.get("evidence", ""),
+        confidence=data.get("confidence", 1.0),
+    )
+    event_id = manager.record_relationship_event(event)
+    if event_id > 0:
+        emit_success({"id": event_id}, message="relationship_event_recorded")
+    else:
+        emit_error("INVALID_RELATIONSHIP_EVENT", "关系事件参数无效，未写入")
+
+
+def _handle_upsert_entity(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    entity = EntityMeta(
+        id=data["id"], type=data["type"], canonical_name=data["canonical_name"],
+        tier=data.get("tier", "装饰"), desc=data.get("desc", ""),
+        current=data.get("current", {}),
+        first_appearance=data.get("first_appearance", 0),
+        last_appearance=data.get("last_appearance", 0),
+        is_protagonist=data.get("is_protagonist", False),
+        is_archived=data.get("is_archived", False),
+    )
+    is_new = manager.upsert_entity(entity)
+    emit_success({"id": entity.id, "created": is_new}, message="entity_upserted")
+
+
+def _handle_upsert_relationship(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    rel = RelationshipMeta(
+        from_entity=data["from_entity"], to_entity=data["to_entity"],
+        type=data["type"], description=data.get("description", ""), chapter=data["chapter"],
+    )
+    is_new = manager.upsert_relationship(rel)
+    emit_success(
+        {"from": rel.from_entity, "to": rel.to_entity, "type": rel.type, "created": is_new},
+        message="relationship_upserted",
+    )
+
+
+def _handle_record_state_change(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    change = StateChangeMeta(
+        entity_id=data["entity_id"], field=data["field"],
+        old_value=data.get("old_value", ""), new_value=data["new_value"],
+        reason=data.get("reason", ""), chapter=data["chapter"],
+    )
+    record_id = manager.record_state_change(change)
+    emit_success({"id": record_id, "entity": change.entity_id, "field": change.field}, message="state_change_recorded")
+
+
+def _handle_mark_invalid(manager, args, emit_success, emit_error):
+    invalid_id = manager.mark_invalid_fact(
+        args.source_type, args.source_id, args.reason,
+        marked_by=args.marked_by, chapter_discovered=args.chapter,
+    )
+    emit_success({"id": invalid_id}, message="invalid_marked")
+
+
+def _handle_resolve_invalid(manager, args, emit_success, emit_error):
+    ok = manager.resolve_invalid_fact(args.id, args.action)
+    if ok:
+        emit_success({"id": args.id, "action": args.action}, message="invalid_resolved")
+    else:
+        emit_error("INVALID_ACTION", f"无法处理 action: {args.action}")
+
+
+def _handle_list_invalid(manager, args, emit_success, emit_error):
+    emit_success(manager.list_invalid_facts(args.status), message="invalid_list")
+
+
+def _handle_save_review_metrics(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    metrics = ReviewMetrics(
+        start_chapter=data["start_chapter"], end_chapter=data["end_chapter"],
+        overall_score=data.get("overall_score", 0.0),
+        dimension_scores=data.get("dimension_scores", {}),
+        severity_counts=data.get("severity_counts", {}),
+        critical_issues=data.get("critical_issues", []),
+        report_file=data.get("report_file", ""),
+        notes=data.get("notes", ""),
+        review_payload_json=data.get("review_payload_json", {}),
+    )
+    manager.save_review_metrics(metrics)
+    emit_success(
+        {"start_chapter": metrics.start_chapter, "end_chapter": metrics.end_chapter},
+        message="review_metrics_saved",
+    )
+
+
+def _handle_get_recent_review_metrics(manager, args, emit_success, emit_error):
+    emit_success(manager.get_recent_review_metrics(args.limit), message="recent_review_metrics")
+
+
+def _handle_get_review_trend_stats(manager, args, emit_success, emit_error):
+    emit_success(manager.get_review_trend_stats(args.last_n), message="review_trend_stats")
+
+
+def _handle_save_harness_evaluation(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    chapter = data.get("chapter", 0)
+    verdict = data.get("reader_verdict", data)
+    review_depth = data.get("review_depth", "core")
+    try:
+        with manager._get_conn() as conn:
+            conn.execute(
+                """INSERT INTO harness_evaluations
+                   (chapter, hook_strength, curiosity_continuation, emotional_reward,
+                    protagonist_pull, cliffhanger_drive, filler_risk, repetition_risk,
+                    total, verdict, review_depth)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (
+                    chapter, verdict.get("hook_strength"), verdict.get("curiosity_continuation"),
+                    verdict.get("emotional_reward"), verdict.get("protagonist_pull"),
+                    verdict.get("cliffhanger_drive"), verdict.get("filler_risk"),
+                    verdict.get("repetition_risk"), verdict.get("total"),
+                    verdict.get("verdict"), review_depth,
+                ),
+            )
+            conn.commit()
+        emit_success({"chapter": chapter, "verdict": verdict.get("verdict")}, message="harness_evaluation_saved")
+    except sqlite3.Error as e:
+        emit_error("SAVE_FAILED", f"保存 harness evaluation 失败: {e}")
+
+
+def _handle_get_review_trends(manager, args, emit_success, emit_error):
+    start_ch, end_ch, fmt = args.start, args.end, args.format
+    records = manager.get_recent_review_metrics(end_ch - start_ch + 1)
+    in_range = [r for r in records if start_ch <= r.get("end_chapter", 0) <= end_ch]
+
+    try:
+        active_threads = manager.get_active_plot_threads(limit=100)
+        overdue = [t for t in active_threads if t.get("status") == "overdue"]
+    except (sqlite3.Error, KeyError, TypeError):
+        active_threads = []
+        overdue = []
+
+    if fmt == "json":
+        result = {
+            "review_scores": [{"chapter": r.get("end_chapter"), "score": r.get("overall_score")} for r in in_range],
+            "avg_score": sum(r.get("overall_score", 0) for r in in_range) / max(len(in_range), 1),
+            "active_threads": len(active_threads),
+            "overdue_threads": len(overdue),
+        }
+        emit_success(result, message="review_trends")
+    elif fmt == "markdown":
+        lines = []
+        if in_range:
+            scores = [r.get("overall_score", 0) for r in in_range]
+            avg = sum(scores) / len(scores)
+            trend = "↑" if len(scores) > 1 and scores[-1] > scores[0] else ("↓" if len(scores) > 1 and scores[-1] < scores[0] else "→")
+            lines.append(f"- 平均审查分：{avg:.1f}/100 {trend}")
+        if active_threads:
+            lines.append(f"- 活跃伏笔：{len(active_threads)} 条")
+        if overdue:
+            lines.append(f"- 逾期伏笔：{len(overdue)} 条")
+        print("\n".join(lines) if lines else "暂无趋势数据")
+    else:
+        if in_range:
+            scores = [r.get("overall_score", 0) for r in in_range]
+            avg = sum(scores) / len(scores)
+            trend = "↑" if len(scores) > 1 and scores[-1] > scores[0] else ("↓" if len(scores) > 1 and scores[-1] < scores[0] else "→")
+            print(f"  追读力信号：")
+            print(f"  ├─ 平均审查分：{avg:.1f}/100 {trend}")
+        if active_threads:
+            print(f"  ├─ 活跃伏笔：{len(active_threads)} 条")
+        if overdue:
+            print(f"  └─ 逾期伏笔：{len(overdue)} 条 ⚠️")
+
+
+def _handle_save_writing_checklist_score(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    metrics = WritingChecklistScoreMeta(
+        chapter=data["chapter"], template=data.get("template", "plot"),
+        total_items=data.get("total_items", 0), required_items=data.get("required_items", 0),
+        completed_items=data.get("completed_items", 0),
+        completed_required=data.get("completed_required", 0),
+        total_weight=data.get("total_weight", 0.0),
+        completed_weight=data.get("completed_weight", 0.0),
+        completion_rate=data.get("completion_rate", 0.0),
+        score=data.get("score", 0.0),
+        score_breakdown=data.get("score_breakdown", {}),
+        pending_items=data.get("pending_items", []),
+        source=data.get("source", "context_manager"),
+        notes=data.get("notes", ""),
+    )
+    manager.save_writing_checklist_score(metrics)
+    emit_success({"chapter": metrics.chapter, "score": metrics.score}, message="writing_checklist_score_saved")
+
+
+def _handle_get_writing_checklist_score(manager, args, emit_success, emit_error):
+    score = manager.get_writing_checklist_score(args.chapter)
+    if score:
+        emit_success(score, message="writing_checklist_score")
+    else:
+        emit_error("NOT_FOUND", f"未找到第 {args.chapter} 章的写作清单评分")
+
+
+def _handle_get_recent_writing_checklist_scores(manager, args, emit_success, emit_error):
+    emit_success(manager.get_recent_writing_checklist_scores(args.limit), message="recent_writing_checklist_scores")
+
+
+def _handle_get_writing_checklist_score_trend(manager, args, emit_success, emit_error):
+    emit_success(manager.get_writing_checklist_score_trend(args.last_n), message="writing_checklist_score_trend")
+
+
+def _handle_get_debt_summary(manager, args, emit_success, emit_error):
+    emit_success(manager.get_debt_summary(), message="debt_summary")
+
+
+def _handle_get_recent_reading_power(manager, args, emit_success, emit_error):
+    emit_success(manager.get_recent_reading_power(args.limit), message="recent_reading_power")
+
+
+def _handle_get_chapter_reading_power(manager, args, emit_success, emit_error):
+    record = manager.get_chapter_reading_power(args.chapter)
+    if record:
+        emit_success(record, message="chapter_reading_power")
+    else:
+        emit_error("NOT_FOUND", f"未找到第 {args.chapter} 章的追读力元数据")
+
+
+def _handle_get_pattern_usage_stats(manager, args, emit_success, emit_error):
+    emit_success(manager.get_pattern_usage_stats(args.last_n), message="pattern_usage_stats")
+
+
+def _handle_get_hook_type_stats(manager, args, emit_success, emit_error):
+    emit_success(manager.get_hook_type_stats(args.last_n), message="hook_type_stats")
+
+
+def _handle_get_pending_overrides(manager, args, emit_success, emit_error):
+    emit_success(manager.get_pending_overrides(args.before_chapter), message="pending_overrides")
+
+
+def _handle_get_overdue_overrides(manager, args, emit_success, emit_error):
+    emit_success(manager.get_overdue_overrides(args.current_chapter), message="overdue_overrides")
+
+
+def _handle_get_active_debts(manager, args, emit_success, emit_error):
+    emit_success(manager.get_active_debts(), message="active_debts")
+
+
+def _handle_get_overdue_debts(manager, args, emit_success, emit_error):
+    emit_success(manager.get_overdue_debts(args.current_chapter), message="overdue_debts")
+
+
+def _handle_accrue_interest(manager, args, emit_success, emit_error):
+    result = manager.accrue_interest(args.current_chapter)
+    emit_success(result, message="interest_accrued", chapter=args.current_chapter)
+
+
+def _handle_pay_debt(manager, args, emit_success, emit_error):
+    result = manager.pay_debt(args.debt_id, args.amount, args.chapter)
+    if "error" in result:
+        emit_error("PAY_DEBT_FAILED", result["error"], chapter=args.chapter)
+    else:
+        emit_success(result, message="debt_payment", chapter=args.chapter)
+
+
+def _handle_create_override_contract(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    contract = OverrideContractMeta(
+        chapter=data["chapter"], constraint_type=data["constraint_type"],
+        constraint_id=data["constraint_id"], rationale_type=data["rationale_type"],
+        rationale_text=data.get("rationale_text", ""),
+        payback_plan=data.get("payback_plan", ""),
+        due_chapter=data["due_chapter"], status=data.get("status", "pending"),
+    )
+    emit_success({"id": manager.create_override_contract(contract)}, message="override_contract_created")
+
+
+def _handle_create_debt(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    debt = ChaseDebtMeta(
+        debt_type=data["debt_type"],
+        original_amount=data.get("original_amount", 1.0),
+        current_amount=data.get("current_amount", data.get("original_amount", 1.0)),
+        interest_rate=data.get("interest_rate", 0.1),
+        source_chapter=data["source_chapter"], due_chapter=data["due_chapter"],
+        override_contract_id=data.get("override_contract_id", 0),
+        status=data.get("status", "active"),
+    )
+    emit_success({"id": manager.create_debt(debt), "debt_type": debt.debt_type}, message="debt_created")
+
+
+def _handle_fulfill_override(manager, args, emit_success, emit_error):
+    success = manager.fulfill_override(args.contract_id)
+    if success:
+        emit_success({"id": args.contract_id}, message="override_fulfilled")
+    else:
+        emit_error("NOT_FOUND", f"未找到 Override Contract #{args.contract_id}")
+
+
+def _handle_save_chapter_reading_power(manager, args, emit_success, emit_error):
+    from .cli_args import load_json_arg
+    data = load_json_arg(args.data)
+    meta = ChapterReadingPowerMeta(
+        chapter=data["chapter"], hook_type=data.get("hook_type", ""),
+        hook_strength=data.get("hook_strength", "medium"),
+        coolpoint_patterns=data.get("coolpoint_patterns", []),
+        micropayoffs=data.get("micropayoffs", []),
+        hard_violations=data.get("hard_violations", []),
+        soft_suggestions=data.get("soft_suggestions", []),
+        is_transition=data.get("is_transition", False),
+        override_count=data.get("override_count", 0),
+        debt_balance=data.get("debt_balance", 0.0),
+        notes=data.get("notes", ""), payload_json=data.get("payload_json", {}),
+    )
+    manager.save_chapter_reading_power(meta)
+    emit_success({"chapter": meta.chapter}, message="reading_power_saved")
+
+
 # ==================== CLI 接口 ====================
 
 
@@ -1257,7 +1711,7 @@ def main():
     import argparse
     import sys
     from .cli_output import print_success, print_error
-    from .cli_args import normalize_global_project_root, load_json_arg
+    from .cli_args import normalize_global_project_root
 
     parser = argparse.ArgumentParser(description="Index Manager CLI (v5.4)")
     parser.add_argument("--project-root", type=str, help="项目根目录")
@@ -1547,477 +2001,62 @@ def main():
         )
         _append_timing(False, error_code=code, error_message=message, chapter=chapter)
 
-    if args.command == "stats":
-        emit_success(manager.get_stats(), message="stats")
+    # 命令分发表：将 if/elif 链拆分为独立处理函数
+    _COMMAND_HANDLERS = {
+        "stats": _handle_stats,
+        "get-chapter": _handle_get_chapter,
+        "recent-appearances": _handle_recent_appearances,
+        "entity-appearances": _handle_entity_appearances,
+        "search-scenes": _handle_search_scenes,
+        "process-chapter": _handle_process_chapter,
+        "get-entity": _handle_get_entity,
+        "get-core-entities": _handle_get_core_entities,
+        "get-protagonist": _handle_get_protagonist,
+        "get-entities-by-type": _handle_get_entities_by_type,
+        "get-by-alias": _handle_get_by_alias,
+        "get-aliases": _handle_get_aliases,
+        "register-alias": _handle_register_alias,
+        "get-relationships": _handle_get_relationships,
+        "get-relationship-events": _handle_get_relationship_events,
+        "get-relationship-graph": _handle_get_relationship_graph,
+        "get-relationship-timeline": _handle_get_relationship_timeline,
+        "get-state-changes": _handle_get_state_changes,
+        "record-relationship-event": _handle_record_relationship_event,
+        "upsert-entity": _handle_upsert_entity,
+        "upsert-relationship": _handle_upsert_relationship,
+        "record-state-change": _handle_record_state_change,
+        "mark-invalid": _handle_mark_invalid,
+        "resolve-invalid": _handle_resolve_invalid,
+        "list-invalid": _handle_list_invalid,
+        "save-review-metrics": _handle_save_review_metrics,
+        "get-recent-review-metrics": _handle_get_recent_review_metrics,
+        "get-review-trend-stats": _handle_get_review_trend_stats,
+        "save-harness-evaluation": _handle_save_harness_evaluation,
+        "get-review-trends": _handle_get_review_trends,
+        "save-writing-checklist-score": _handle_save_writing_checklist_score,
+        "get-writing-checklist-score": _handle_get_writing_checklist_score,
+        "get-recent-writing-checklist-scores": _handle_get_recent_writing_checklist_scores,
+        "get-writing-checklist-score-trend": _handle_get_writing_checklist_score_trend,
+        "get-debt-summary": _handle_get_debt_summary,
+        "get-recent-reading-power": _handle_get_recent_reading_power,
+        "get-chapter-reading-power": _handle_get_chapter_reading_power,
+        "get-pattern-usage-stats": _handle_get_pattern_usage_stats,
+        "get-hook-type-stats": _handle_get_hook_type_stats,
+        "get-pending-overrides": _handle_get_pending_overrides,
+        "get-overdue-overrides": _handle_get_overdue_overrides,
+        "get-active-debts": _handle_get_active_debts,
+        "get-overdue-debts": _handle_get_overdue_debts,
+        "accrue-interest": _handle_accrue_interest,
+        "pay-debt": _handle_pay_debt,
+        "create-override-contract": _handle_create_override_contract,
+        "create-debt": _handle_create_debt,
+        "fulfill-override": _handle_fulfill_override,
+        "save-chapter-reading-power": _handle_save_chapter_reading_power,
+    }
 
-    elif args.command == "get-chapter":
-        chapter = manager.get_chapter(args.chapter)
-        if chapter:
-            emit_success(chapter, message="chapter")
-        else:
-            emit_error("NOT_FOUND", f"未找到章节: {args.chapter}")
-
-    elif args.command == "recent-appearances":
-        appearances = manager.get_recent_appearances(args.limit)
-        emit_success(appearances, message="recent_appearances")
-
-    elif args.command == "entity-appearances":
-        appearances = manager.get_entity_appearances(args.entity, args.limit)
-        emit_success({"entity": args.entity, "appearances": appearances}, message="entity_appearances")
-
-    elif args.command == "search-scenes":
-        scenes = manager.search_scenes_by_location(args.location, args.limit)
-        emit_success(scenes, message="scenes")
-
-    elif args.command == "process-chapter":
-        entities = load_json_arg(args.entities)
-        scenes = load_json_arg(args.scenes)
-        stats = manager.process_chapter_data(
-            chapter=args.chapter,
-            title=args.title,
-            location=args.location,
-            word_count=args.word_count,
-            entities=entities,
-            scenes=scenes,
-        )
-        emit_success(stats, message="chapter_processed", chapter=args.chapter)
-
-    # ==================== v5.1 引入命令处理 ====================
-
-    elif args.command == "get-entity":
-        entity = manager.get_entity(args.id)
-        if entity:
-            emit_success(entity, message="entity")
-        else:
-            emit_error("NOT_FOUND", f"未找到实体: {args.id}")
-
-    elif args.command == "get-core-entities":
-        entities = manager.get_core_entities()
-        emit_success(entities, message="core_entities")
-
-    elif args.command == "get-protagonist":
-        protagonist = manager.get_protagonist()
-        if protagonist:
-            emit_success(protagonist, message="protagonist")
-        else:
-            emit_error("NOT_FOUND", "未设置主角")
-
-    elif args.command == "get-entities-by-type":
-        entities = manager.get_entities_by_type(args.type, args.include_archived)
-        emit_success(entities, message="entities_by_type")
-
-    elif args.command == "get-by-alias":
-        entities = manager.get_entities_by_alias(args.alias)
-        if entities:
-            emit_success(entities, message="entities_by_alias")
-        else:
-            emit_error("NOT_FOUND", f"未找到别名: {args.alias}")
-
-    elif args.command == "get-aliases":
-        aliases = manager.get_entity_aliases(args.entity)
-        if aliases:
-            emit_success({"entity": args.entity, "aliases": aliases}, message="aliases")
-        else:
-            emit_error("NOT_FOUND", f"{args.entity} 没有别名")
-
-    elif args.command == "register-alias":
-        success = manager.register_alias(args.alias, args.entity, args.type)
-        if success:
-            emit_success(
-                {"alias": args.alias, "entity": args.entity, "type": args.type},
-                message="alias_registered",
-            )
-        else:
-            emit_error("ALIAS_EXISTS", f"别名已存在或注册失败: {args.alias}")
-
-    elif args.command == "get-relationships":
-        rels = manager.get_entity_relationships(args.entity, args.direction)
-        emit_success(rels, message="relationships")
-
-    elif args.command == "get-relationship-events":
-        events = manager.get_relationship_events(
-            entity_id=args.entity,
-            direction=args.direction,
-            from_chapter=args.from_chapter,
-            to_chapter=args.to_chapter,
-            limit=args.limit,
-        )
-        emit_success(events, message="relationship_events")
-
-    elif args.command == "get-relationship-graph":
-        graph = manager.build_relationship_subgraph(
-            center_entity=args.center,
-            depth=args.depth,
-            chapter=args.chapter,
-            top_edges=args.top_edges,
-        )
-        if args.format == "mermaid":
-            emit_success({"mermaid": manager.render_relationship_subgraph_mermaid(graph)}, message="relationship_graph")
-        else:
-            emit_success(graph, message="relationship_graph")
-
-    elif args.command == "get-relationship-timeline":
-        timeline = manager.get_relationship_timeline(
-            entity1=args.a,
-            entity2=args.b,
-            from_chapter=args.from_chapter,
-            to_chapter=args.to_chapter,
-            limit=args.limit,
-        )
-        emit_success(timeline, message="relationship_timeline")
-
-    elif args.command == "get-state-changes":
-        changes = manager.get_entity_state_changes(args.entity, args.limit)
-        emit_success(changes, message="state_changes")
-
-    elif args.command == "record-relationship-event":
-        try:
-            data = load_json_arg(args.data)
-        except (TypeError, ValueError, json.JSONDecodeError):
-            emit_error("INVALID_RELATIONSHIP_EVENT", "关系事件 JSON 无效")
-        else:
-            event = RelationshipEventMeta(
-                from_entity=data.get("from_entity", ""),
-                to_entity=data.get("to_entity", ""),
-                type=data.get("type", ""),
-                chapter=data.get("chapter", 0),
-                action=data.get("action", "update"),
-                polarity=data.get("polarity", 0),
-                strength=data.get("strength", 0.5),
-                description=data.get("description", ""),
-                scene_index=data.get("scene_index", 0),
-                evidence=data.get("evidence", ""),
-                confidence=data.get("confidence", 1.0),
-            )
-            event_id = manager.record_relationship_event(event)
-            if event_id > 0:
-                emit_success({"id": event_id}, message="relationship_event_recorded")
-            else:
-                emit_error("INVALID_RELATIONSHIP_EVENT", "关系事件参数无效，未写入")
-
-    elif args.command == "upsert-entity":
-        data = load_json_arg(args.data)
-        entity = EntityMeta(
-            id=data["id"],
-            type=data["type"],
-            canonical_name=data["canonical_name"],
-            tier=data.get("tier", "装饰"),
-            desc=data.get("desc", ""),
-            current=data.get("current", {}),
-            first_appearance=data.get("first_appearance", 0),
-            last_appearance=data.get("last_appearance", 0),
-            is_protagonist=data.get("is_protagonist", False),
-            is_archived=data.get("is_archived", False),
-        )
-        is_new = manager.upsert_entity(entity)
-        emit_success({"id": entity.id, "created": is_new}, message="entity_upserted")
-
-    elif args.command == "upsert-relationship":
-        data = load_json_arg(args.data)
-        rel = RelationshipMeta(
-            from_entity=data["from_entity"],
-            to_entity=data["to_entity"],
-            type=data["type"],
-            description=data.get("description", ""),
-            chapter=data["chapter"],
-        )
-        is_new = manager.upsert_relationship(rel)
-        emit_success(
-            {"from": rel.from_entity, "to": rel.to_entity, "type": rel.type, "created": is_new},
-            message="relationship_upserted",
-        )
-
-    elif args.command == "record-state-change":
-        data = load_json_arg(args.data)
-        change = StateChangeMeta(
-            entity_id=data["entity_id"],
-            field=data["field"],
-            old_value=data.get("old_value", ""),
-            new_value=data["new_value"],
-            reason=data.get("reason", ""),
-            chapter=data["chapter"],
-        )
-        record_id = manager.record_state_change(change)
-        emit_success({"id": record_id, "entity": change.entity_id, "field": change.field}, message="state_change_recorded")
-
-    # ==================== v5.4 无效事实命令处理 ====================
-
-    elif args.command == "mark-invalid":
-        invalid_id = manager.mark_invalid_fact(
-            args.source_type,
-            args.source_id,
-            args.reason,
-            marked_by=args.marked_by,
-            chapter_discovered=args.chapter,
-        )
-        emit_success({"id": invalid_id}, message="invalid_marked")
-
-    elif args.command == "resolve-invalid":
-        ok = manager.resolve_invalid_fact(args.id, args.action)
-        if ok:
-            emit_success({"id": args.id, "action": args.action}, message="invalid_resolved")
-        else:
-            emit_error("INVALID_ACTION", f"无法处理 action: {args.action}")
-
-    elif args.command == "list-invalid":
-        rows = manager.list_invalid_facts(args.status)
-        emit_success(rows, message="invalid_list")
-
-    elif args.command == "save-review-metrics":
-        data = load_json_arg(args.data)
-        metrics = ReviewMetrics(
-            start_chapter=data["start_chapter"],
-            end_chapter=data["end_chapter"],
-            overall_score=data.get("overall_score", 0.0),
-            dimension_scores=data.get("dimension_scores", {}),
-            severity_counts=data.get("severity_counts", {}),
-            critical_issues=data.get("critical_issues", []),
-            report_file=data.get("report_file", ""),
-            notes=data.get("notes", ""),
-            review_payload_json=data.get("review_payload_json", {}),
-        )
-        manager.save_review_metrics(metrics)
-        emit_success(
-            {"start_chapter": metrics.start_chapter, "end_chapter": metrics.end_chapter},
-            message="review_metrics_saved",
-        )
-
-    elif args.command == "get-recent-review-metrics":
-        records = manager.get_recent_review_metrics(args.limit)
-        emit_success(records, message="recent_review_metrics")
-
-    elif args.command == "get-review-trend-stats":
-        stats = manager.get_review_trend_stats(args.last_n)
-        emit_success(stats, message="review_trend_stats")
-
-    elif args.command == "save-harness-evaluation":
-        # v9.0: 保存 reader_verdict 到 harness_evaluations 表
-        data = load_json_arg(args.data)
-        chapter = data.get("chapter", 0)
-        verdict = data.get("reader_verdict", data)
-        review_depth = data.get("review_depth", "core")
-        try:
-            with manager._get_conn() as conn:
-                conn.execute(
-                    """INSERT INTO harness_evaluations
-                       (chapter, hook_strength, curiosity_continuation, emotional_reward,
-                        protagonist_pull, cliffhanger_drive, filler_risk, repetition_risk,
-                        total, verdict, review_depth)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                    (
-                        chapter,
-                        verdict.get("hook_strength"),
-                        verdict.get("curiosity_continuation"),
-                        verdict.get("emotional_reward"),
-                        verdict.get("protagonist_pull"),
-                        verdict.get("cliffhanger_drive"),
-                        verdict.get("filler_risk"),
-                        verdict.get("repetition_risk"),
-                        verdict.get("total"),
-                        verdict.get("verdict"),
-                        review_depth,
-                    ),
-                )
-                conn.commit()
-            emit_success({"chapter": chapter, "verdict": verdict.get("verdict")}, message="harness_evaluation_saved")
-        except Exception as e:
-            emit_error("SAVE_FAILED", f"保存 harness evaluation 失败: {e}")
-
-    elif args.command == "get-review-trends":
-        # v9.0: ink-auto 增强输出用
-        start_ch = args.start
-        end_ch = args.end
-        fmt = args.format
-
-        # 查询审查分数
-        records = manager.get_recent_review_metrics(end_ch - start_ch + 1)
-        in_range = [r for r in records if start_ch <= r.get("end_chapter", 0) <= end_ch]
-
-        # 查询伏笔债务
-        try:
-            active_threads = manager.get_active_plot_threads(limit=100)
-            overdue = [t for t in active_threads if t.get("status") == "overdue"]
-        except Exception:
-            active_threads = []
-            overdue = []
-
-        if fmt == "json":
-            result = {
-                "review_scores": [{"chapter": r.get("end_chapter"), "score": r.get("overall_score")} for r in in_range],
-                "avg_score": sum(r.get("overall_score", 0) for r in in_range) / max(len(in_range), 1),
-                "active_threads": len(active_threads),
-                "overdue_threads": len(overdue),
-            }
-            emit_success(result, message="review_trends")
-        elif fmt == "markdown":
-            lines = []
-            if in_range:
-                scores = [r.get("overall_score", 0) for r in in_range]
-                avg = sum(scores) / len(scores)
-                trend = "↑" if len(scores) > 1 and scores[-1] > scores[0] else ("↓" if len(scores) > 1 and scores[-1] < scores[0] else "→")
-                lines.append(f"- 平均审查分：{avg:.1f}/100 {trend}")
-            if active_threads:
-                lines.append(f"- 活跃伏笔：{len(active_threads)} 条")
-            if overdue:
-                lines.append(f"- 逾期伏笔：{len(overdue)} 条")
-            print("\n".join(lines) if lines else "暂无趋势数据")
-        else:
-            # text format for terminal
-            if in_range:
-                scores = [r.get("overall_score", 0) for r in in_range]
-                avg = sum(scores) / len(scores)
-                trend = "↑" if len(scores) > 1 and scores[-1] > scores[0] else ("↓" if len(scores) > 1 and scores[-1] < scores[0] else "→")
-                print(f"  追读力信号：")
-                print(f"  ├─ 平均审查分：{avg:.1f}/100 {trend}")
-            if active_threads:
-                print(f"  ├─ 活跃伏笔：{len(active_threads)} 条")
-            if overdue:
-                print(f"  └─ 逾期伏笔：{len(overdue)} 条 ⚠️")
-
-    elif args.command == "save-writing-checklist-score":
-        data = load_json_arg(args.data)
-        metrics = WritingChecklistScoreMeta(
-            chapter=data["chapter"],
-            template=data.get("template", "plot"),
-            total_items=data.get("total_items", 0),
-            required_items=data.get("required_items", 0),
-            completed_items=data.get("completed_items", 0),
-            completed_required=data.get("completed_required", 0),
-            total_weight=data.get("total_weight", 0.0),
-            completed_weight=data.get("completed_weight", 0.0),
-            completion_rate=data.get("completion_rate", 0.0),
-            score=data.get("score", 0.0),
-            score_breakdown=data.get("score_breakdown", {}),
-            pending_items=data.get("pending_items", []),
-            source=data.get("source", "context_manager"),
-            notes=data.get("notes", ""),
-        )
-        manager.save_writing_checklist_score(metrics)
-        emit_success({"chapter": metrics.chapter, "score": metrics.score}, message="writing_checklist_score_saved")
-
-    elif args.command == "get-writing-checklist-score":
-        score = manager.get_writing_checklist_score(args.chapter)
-        if score:
-            emit_success(score, message="writing_checklist_score")
-        else:
-            emit_error("NOT_FOUND", f"未找到第 {args.chapter} 章的写作清单评分")
-
-    elif args.command == "get-recent-writing-checklist-scores":
-        scores = manager.get_recent_writing_checklist_scores(args.limit)
-        emit_success(scores, message="recent_writing_checklist_scores")
-
-    elif args.command == "get-writing-checklist-score-trend":
-        trend = manager.get_writing_checklist_score_trend(args.last_n)
-        emit_success(trend, message="writing_checklist_score_trend")
-
-    # ==================== v5.3 引入命令处理 ====================
-
-    elif args.command == "get-debt-summary":
-        summary = manager.get_debt_summary()
-        emit_success(summary, message="debt_summary")
-
-    elif args.command == "get-recent-reading-power":
-        records = manager.get_recent_reading_power(args.limit)
-        emit_success(records, message="recent_reading_power")
-
-    elif args.command == "get-chapter-reading-power":
-        record = manager.get_chapter_reading_power(args.chapter)
-        if record:
-            emit_success(record, message="chapter_reading_power")
-        else:
-            emit_error("NOT_FOUND", f"未找到第 {args.chapter} 章的追读力元数据")
-
-    elif args.command == "get-pattern-usage-stats":
-        stats = manager.get_pattern_usage_stats(args.last_n)
-        emit_success(stats, message="pattern_usage_stats")
-
-    elif args.command == "get-hook-type-stats":
-        stats = manager.get_hook_type_stats(args.last_n)
-        emit_success(stats, message="hook_type_stats")
-
-    elif args.command == "get-pending-overrides":
-        overrides = manager.get_pending_overrides(args.before_chapter)
-        emit_success(overrides, message="pending_overrides")
-
-    elif args.command == "get-overdue-overrides":
-        overrides = manager.get_overdue_overrides(args.current_chapter)
-        emit_success(overrides, message="overdue_overrides")
-
-    elif args.command == "get-active-debts":
-        debts = manager.get_active_debts()
-        emit_success(debts, message="active_debts")
-
-    elif args.command == "get-overdue-debts":
-        debts = manager.get_overdue_debts(args.current_chapter)
-        emit_success(debts, message="overdue_debts")
-
-    elif args.command == "accrue-interest":
-        result = manager.accrue_interest(args.current_chapter)
-        emit_success(result, message="interest_accrued", chapter=args.current_chapter)
-
-    elif args.command == "pay-debt":
-        result = manager.pay_debt(args.debt_id, args.amount, args.chapter)
-        if "error" in result:
-            emit_error("PAY_DEBT_FAILED", result["error"], chapter=args.chapter)
-        else:
-            emit_success(result, message="debt_payment", chapter=args.chapter)
-
-    elif args.command == "create-override-contract":
-        data = load_json_arg(args.data)
-        contract = OverrideContractMeta(
-            chapter=data["chapter"],
-            constraint_type=data["constraint_type"],
-            constraint_id=data["constraint_id"],
-            rationale_type=data["rationale_type"],
-            rationale_text=data.get("rationale_text", ""),
-            payback_plan=data.get("payback_plan", ""),
-            due_chapter=data["due_chapter"],
-            status=data.get("status", "pending"),
-        )
-        contract_id = manager.create_override_contract(contract)
-        emit_success({"id": contract_id}, message="override_contract_created")
-
-    elif args.command == "create-debt":
-        data = load_json_arg(args.data)
-        debt = ChaseDebtMeta(
-            debt_type=data["debt_type"],
-            original_amount=data.get("original_amount", 1.0),
-            current_amount=data.get("current_amount", data.get("original_amount", 1.0)),
-            interest_rate=data.get("interest_rate", 0.1),
-            source_chapter=data["source_chapter"],
-            due_chapter=data["due_chapter"],
-            override_contract_id=data.get("override_contract_id", 0),
-            status=data.get("status", "active"),
-        )
-        debt_id = manager.create_debt(debt)
-        emit_success({"id": debt_id, "debt_type": debt.debt_type}, message="debt_created")
-
-    elif args.command == "fulfill-override":
-        success = manager.fulfill_override(args.contract_id)
-        if success:
-            emit_success({"id": args.contract_id}, message="override_fulfilled")
-        else:
-            emit_error("NOT_FOUND", f"未找到 Override Contract #{args.contract_id}")
-
-    elif args.command == "save-chapter-reading-power":
-        data = load_json_arg(args.data)
-        meta = ChapterReadingPowerMeta(
-            chapter=data["chapter"],
-            hook_type=data.get("hook_type", ""),
-            hook_strength=data.get("hook_strength", "medium"),
-            coolpoint_patterns=data.get("coolpoint_patterns", []),
-            micropayoffs=data.get("micropayoffs", []),
-            hard_violations=data.get("hard_violations", []),
-            soft_suggestions=data.get("soft_suggestions", []),
-            is_transition=data.get("is_transition", False),
-            override_count=data.get("override_count", 0),
-            debt_balance=data.get("debt_balance", 0.0),
-            notes=data.get("notes", ""),
-            payload_json=data.get("payload_json", {}),
-        )
-        manager.save_chapter_reading_power(meta)
-        emit_success({"chapter": meta.chapter}, message="reading_power_saved")
-
+    handler = _COMMAND_HANDLERS.get(args.command)
+    if handler:
+        handler(manager, args, emit_success, emit_error)
     else:
         emit_error("UNKNOWN_COMMAND", "未指定有效命令", suggestion="请查看 --help")
 

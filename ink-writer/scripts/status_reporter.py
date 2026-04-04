@@ -79,12 +79,16 @@
 """
 
 import json
+import logging
 import os
 import re
+import sqlite3
 import sys
 from pathlib import Path
 from typing import Dict, List, Any, Tuple, Optional
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 from collections import defaultdict
 from project_locator import resolve_project_root
 from chapter_paths import extract_chapter_num_from_filename
@@ -344,7 +348,8 @@ class StatusReporter:
 
         try:
             record = self._index_manager.get_chapter_reading_power(chapter)
-        except Exception:
+        except (sqlite3.Error, KeyError, TypeError) as exc:
+            logger.debug("get_chapter_reading_power(%d) failed: %s", chapter, exc)
             record = None
 
         self._cache_reading_power(chapter, record)
@@ -395,7 +400,8 @@ class StatusReporter:
                 for c in characters_from_db
                 if c.get("canonical_name")
             ]
-        except Exception:
+        except (sqlite3.Error, KeyError, TypeError) as exc:
+            logger.warning("从 SQLite 加载角色列表失败: %s", exc)
             known_character_names = []
 
         for chapter_file in chapter_files:
@@ -434,7 +440,8 @@ class StatusReporter:
                             entity = self._index_manager.get_entity(entity_id)
                             name = entity.get("canonical_name", entity_id) if entity else entity_id
                             characters.append(name)
-            except Exception:
+            except (sqlite3.Error, KeyError, TypeError, json.JSONDecodeError) as exc:
+                logger.warning("第 %d 章角色提取失败: %s", chapter_num, exc)
                 characters = []
 
             if not characters and (protagonist_name or known_character_names):
@@ -471,7 +478,8 @@ class StatusReporter:
         # v5.1 引入: 从 SQLite 获取所有角色
         try:
             characters_list = self._index_manager.get_entities_by_type("角色")
-        except Exception:
+        except (sqlite3.Error, KeyError, TypeError) as exc:
+            logger.warning("角色活跃度分析：从 SQLite 加载角色失败: %s", exc)
             characters_list = []
 
         # 统计每个角色的最后出场章节
@@ -816,8 +824,8 @@ class StatusReporter:
                 graph = self._generate_relationship_graph_from_index()
                 if graph:
                     return graph
-            except Exception:
-                # 回退老逻辑，避免报告生成中断
+            except (sqlite3.Error, KeyError, TypeError, ValueError) as exc:
+                logger.warning("从 index.db 生成关系图谱失败，回退旧逻辑: %s", exc)
                 pass
 
         # 兼容旧版 state.json relationships 结构
