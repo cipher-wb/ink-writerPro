@@ -1,0 +1,9 @@
+# Ink Writer - Dev/Test Dependencies
+# 仅开发和测试环境需要，生产部署不需要安装
+
+-r requirements.txt
+
+pytest>=7.0.0           # 单元测试
+pytest-cov>=4.1.0       # 覆盖率统计
+pytest-asyncio>=0.23.0  # 异步测试支持
+pytest-timeout>=2.3.0   # 测试超时保护

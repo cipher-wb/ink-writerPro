@@ -1,5 +1,5 @@
 # Ink Writer - Python Dependencies
-# Python >= 3.10 required
+# Python >= 3.12 required
 
 # 核心依赖
 aiohttp>=3.8.0          # 异步 HTTP 客户端（API 调用）
@@ -8,9 +8,3 @@ pydantic>=2.0.0         # Schema 校验
 
 # 可选依赖（提升 RAG 中文分词质量，未安装时回退到单字分词）
 # jieba>=0.42.0         # 中文分词（取消注释以启用）
-
-# 可选依赖（开发/测试）
-pytest>=7.0.0           # 单元测试
-pytest-cov>=4.1.0       # 覆盖率统计
-pytest-asyncio>=0.23.0  # 异步测试支持
-pytest-timeout>=2.3.0   # 测试超时保护

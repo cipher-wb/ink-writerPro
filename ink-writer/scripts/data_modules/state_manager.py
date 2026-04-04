@@ -15,6 +15,7 @@ v5.1 变更（v5.4 沿用）:
 
 import json
 import logging
+import sqlite3
 import sys
 import time
 from copy import deepcopy
@@ -134,6 +135,9 @@ class StateManager:
         self._pending_plot_threads: Optional[Dict[str, Any]] = None
         self._pending_latest_warnings: List[str] = []
 
+        # SQLite 同步状态标记：当同步失败时置为 True，供 ink-audit 检测
+        self._sqlite_sync_stale: bool = False
+
         # v5.1 引入: 缓存待同步到 SQLite 的数据
         self._pending_sqlite_data: Dict[str, Any] = {
             "entities_appeared": [],
@@ -155,6 +159,11 @@ class StateManager:
         }
 
         self._load_state()
+
+    @property
+    def is_sqlite_sync_stale(self) -> bool:
+        """SQLite 同步是否出现过失败。供 ink-audit 等工具检测数据一致性。"""
+        return self._sqlite_sync_stale
 
     def _now_progress_timestamp(self) -> str:
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -464,8 +473,15 @@ class StateManager:
                     eid = entity.get("suggested_id") or entity.get("id")
                     if eid:
                         processed_appearances.add((eid, chapter))
+            except (OSError, sqlite3.OperationalError) as exc:
+                # 可恢复：文件锁冲突、磁盘临时不可用
+                logger.warning("SQLite sync recoverable failure (process_chapter_entities): %s", exc)
+                self._sqlite_sync_stale = True
+                return False
             except Exception as exc:
-                logger.warning("SQLite sync failed (process_chapter_entities): %s", exc)
+                # 不可恢复：schema 不匹配等
+                logger.error("SQLite sync failed (process_chapter_entities): %s", exc, exc_info=True)
+                self._sqlite_sync_stale = True
                 return False
 
             # 同步叙事承诺 + 角色演变 + 冲突指纹（共享同一个 IndexManager 实例）
@@ -524,8 +540,12 @@ class StateManager:
                 if isinstance(fingerprint, dict) and "chapter" in fingerprint:
                     idx.save_plot_structure_fingerprint(fingerprint)
 
+            except (OSError, sqlite3.OperationalError) as exc:
+                logger.warning("SQLite sync recoverable failure (index extensions): %s", exc)
+                self._sqlite_sync_stale = True
             except Exception as exc:
-                logger.warning("SQLite sync failed (index extensions): %s", exc)
+                logger.error("SQLite sync failed (index extensions): %s", exc, exc_info=True)
+                self._sqlite_sync_stale = True
 
         return patches_ok
 
