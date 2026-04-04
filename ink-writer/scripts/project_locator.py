@@ -88,7 +88,7 @@ def _get_user_claude_root() -> Path:
         try:
             return normalize_windows_path(raw).expanduser().resolve()
         except Exception:
-            logger.debug("failed to resolve claude home path %s", raw, exc_info=True)
+            logger.warning("failed to resolve claude home path %s", raw, exc_info=True)
             return normalize_windows_path(raw).expanduser()
     return (Path.home() / ".claude").resolve()
 
@@ -112,7 +112,7 @@ def _load_global_registry(path: Path) -> dict:
     try:
         data = json.loads(path.read_text(encoding="utf-8") or "{}")
     except Exception:
-        logger.debug("failed to load global registry %s", path, exc_info=True)
+        logger.warning("failed to load global registry %s", path, exc_info=True)
         return _default_registry()
     if not isinstance(data, dict):
         return _default_registry()
@@ -136,7 +136,7 @@ def _save_global_registry(path: Path, data: dict) -> None:
         data["updated_at"] = _now_iso()
         atomic_write_json(path, data, backup=False)
     except Exception:
-        logger.debug("failed to save global registry %s", path, exc_info=True)
+        logger.warning("failed to save global registry %s", path, exc_info=True)
         return
 
 
@@ -227,7 +227,7 @@ def update_global_registry_current_project(
     try:
         root = root.resolve()
     except Exception:
-        logger.debug("failed to resolve project root %s", root, exc_info=True)
+        logger.warning("failed to resolve project root %s", root, exc_info=True)
     if not _is_project_root(root):
         raise FileNotFoundError(f"Not an ink project root (missing .ink/state.json): {root}")
 
@@ -242,7 +242,7 @@ def update_global_registry_current_project(
     try:
         ws = ws.expanduser().resolve()
     except Exception:
-        logger.debug("failed to resolve workspace root %s", ws, exc_info=True)
+        logger.warning("failed to resolve workspace root %s", ws, exc_info=True)
         ws = ws.expanduser()
 
     reg_path = _global_registry_path()
@@ -345,14 +345,14 @@ def write_current_project_pointer(project_root: Path, *, workspace_root: Optiona
                 pointer_file = ws_root / CURRENT_PROJECT_POINTER_REL
                 pointer_file.write_text(str(root), encoding="utf-8")
             except Exception:
-                logger.debug("failed to write project pointer file", exc_info=True)
+                logger.warning("failed to write project pointer file", exc_info=True)
                 pointer_file = None
 
     # best-effort 更新用户级 registry（不阻断）
     try:
         update_global_registry_current_project(workspace_root=ws_root, project_root=root)
     except Exception:
-        logger.debug("failed to update global registry", exc_info=True)
+        logger.warning("failed to update global registry", exc_info=True)
 
     return pointer_file
 

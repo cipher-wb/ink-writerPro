@@ -94,6 +94,7 @@ class ContextManager:
         """获取 index.db 连接（确保关闭，避免资源泄漏）"""
         conn = sqlite3.connect(str(self.config.index_db))
         conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode = WAL")
         try:
             yield conn
         finally:
@@ -336,8 +337,8 @@ class ContextManager:
                         {"name": r["canonical_name"], "tier": r["tier"], "chapters_stagnant": r["stagnant_chapters"]}
                         for r in rows
                     ]
-                except Exception:
-                    pass
+                except (sqlite3.OperationalError, sqlite3.DatabaseError) as exc:
+                    logger.warning("canary: stagnant characters query failed: %s", exc)
 
                 # A.3 冲突模式重复检测（最近30章内重复3+次）
                 try:
@@ -360,8 +361,8 @@ class ContextManager:
                         }
                         for r in rows
                     ]
-                except Exception:
-                    pass
+                except (sqlite3.OperationalError, sqlite3.DatabaseError) as exc:
+                    logger.warning("canary: conflict repetition query failed: %s", exc)
 
                 # A.6 遗忘伏笔补充检测（活跃但已沉默30+章）
                 try:
@@ -384,8 +385,8 @@ class ContextManager:
                         }
                         for r in rows
                     ]
-                except Exception:
-                    pass
+                except (sqlite3.OperationalError, sqlite3.DatabaseError) as exc:
+                    logger.warning("canary: forgotten threads query failed: %s", exc)
 
                 # A.5 时间线链条验证（最近10章锚点）
                 try:
@@ -410,10 +411,10 @@ class ContextManager:
                         prev_time = r["anchor_time"]
                         prev_chapter = r["chapter"]
                     result["canary_timeline_issues"] = issues
-                except Exception:
-                    pass
-        except Exception:
-            pass
+                except (sqlite3.OperationalError, sqlite3.DatabaseError) as exc:
+                    logger.warning("canary: timeline anchor query failed: %s", exc)
+        except sqlite3.Error as exc:
+            logger.warning("canary: index.db connection failed: %s", exc)
 
         return result
 
@@ -1084,7 +1085,7 @@ class ContextManager:
                 entity_ids, max_entries_per_char=8
             )
         except Exception:
-            logger.debug("failed to load character evolution summary", exc_info=True)
+            logger.warning("failed to load character evolution summary", exc_info=True)
             return characters
         if not evolution_map:
             return characters
@@ -1138,7 +1139,7 @@ class ContextManager:
                 if summaries:
                     trajectories[eid] = summaries
         except Exception:
-            logger.debug("failed to load relationship trajectories", exc_info=True)
+            logger.warning("failed to load relationship trajectories", exc_info=True)
             return characters
         if not trajectories:
             return characters
@@ -1201,8 +1202,8 @@ class ContextManager:
                     if len(text) > max_chars:
                         return text[:max_chars].rstrip() + "…"
                     return text
-            except Exception:
-                logger.debug("failed to read outline file %s", path, exc_info=True)
+            except OSError:
+                logger.warning("failed to read outline file %s", path, exc_info=True)
                 continue
         return ""
 
@@ -1236,7 +1237,7 @@ class ContextManager:
                         samples.append(s)
                         used_chapters.add(int(ch_num))
         except Exception:
-            logger.debug("failed to load top reading power chapters, falling back to interval sampling", exc_info=True)
+            logger.warning("failed to load top reading power chapters, falling back to interval sampling", exc_info=True)
             # 回退到固定间隔采样
             interval = max(1, int(self.config.context_story_skeleton_interval))
             cursor = chapter - interval

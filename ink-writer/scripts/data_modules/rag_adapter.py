@@ -255,6 +255,7 @@ class RAGAdapter:
     def _get_conn(self):
         """获取数据库连接（确保关闭，避免 Windows 下文件句柄泄漏）"""
         conn = sqlite3.connect(str(self.config.vector_db))
+        conn.execute("PRAGMA journal_mode = WAL")
         try:
             yield conn
         finally:

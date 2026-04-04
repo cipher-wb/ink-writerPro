@@ -927,6 +927,7 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
         """获取数据库连接"""
         conn = sqlite3.connect(str(self.config.index_db))
         conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode = WAL")
         conn.execute("PRAGMA foreign_keys = ON")
         try:
             yield conn

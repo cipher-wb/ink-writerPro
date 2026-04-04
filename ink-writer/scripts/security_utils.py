@@ -25,6 +25,13 @@ try:
 except ImportError:
     HAS_FILELOCK = False
 
+# ============================================================================
+# 安全相关超时常量（秒）
+# ============================================================================
+GIT_VERSION_CHECK_TIMEOUT = 5     # git --version 探测超时
+GIT_COMMAND_TIMEOUT = 60          # 普通 git 操作超时
+FILELOCK_ACQUIRE_TIMEOUT = 10     # 文件锁等待超时
+
 
 def sanitize_filename(name: str, max_length: int = 100) -> str:
     """
@@ -254,7 +261,7 @@ def is_git_available() -> bool:
             ["git", "--version"],
             capture_output=True,
             text=True,
-            timeout=5
+            timeout=GIT_VERSION_CHECK_TIMEOUT
         )
         _git_available = result.returncode == 0
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
@@ -321,7 +328,7 @@ def git_graceful_operation(
             capture_output=True,
             text=True,
             encoding='utf-8',
-            timeout=60
+            timeout=GIT_COMMAND_TIMEOUT
         )
         return result.returncode == 0, result.stdout, False
     except subprocess.TimeoutExpired:
@@ -411,7 +418,7 @@ def atomic_write_json(
         # Step 2: 获取锁（如果可用且启用）
         lock = None
         if use_lock and HAS_FILELOCK:
-            lock = FileLock(str(lock_path), timeout=10)
+            lock = FileLock(str(lock_path), timeout=FILELOCK_ACQUIRE_TIMEOUT)
             lock.acquire()
 
         try:

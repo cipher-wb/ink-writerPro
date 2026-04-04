@@ -89,6 +89,7 @@ class StyleSampler:
         """获取数据库连接（确保关闭，避免 Windows 下文件句柄泄漏导致无法清理临时目录）"""
         db_path = self.config.ink_dir / "style_samples.db"
         conn = sqlite3.connect(str(db_path))
+        conn.execute("PRAGMA journal_mode = WAL")
         try:
             yield conn
         finally:

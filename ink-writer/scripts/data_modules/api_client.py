@@ -56,7 +56,10 @@ class EmbeddingAPIClient:
 
     async def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None or self._session.closed:
-            connector = aiohttp.TCPConnector(limit=200, limit_per_host=100)
+            connector = aiohttp.TCPConnector(
+                limit=self.config.http_connector_limit,
+                limit_per_host=self.config.http_connector_limit_per_host,
+            )
             self._session = aiohttp.ClientSession(connector=connector)
         return self._session
 
@@ -252,7 +255,10 @@ class RerankAPIClient:
 
     async def _get_session(self) -> aiohttp.ClientSession:
         if self._session is None or self._session.closed:
-            connector = aiohttp.TCPConnector(limit=200, limit_per_host=100)
+            connector = aiohttp.TCPConnector(
+                limit=self.config.http_connector_limit,
+                limit_per_host=self.config.http_connector_limit_per_host,
+            )
             self._session = aiohttp.ClientSession(connector=connector)
         return self._session
 

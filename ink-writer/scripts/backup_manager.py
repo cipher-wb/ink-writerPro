@@ -60,7 +60,7 @@ from typing import Optional, List, Tuple
 # ============================================================================
 # 安全修复：导入安全工具函数（P1 MEDIUM）
 # ============================================================================
-from security_utils import sanitize_commit_message, is_git_available, is_git_repo, git_graceful_operation
+from security_utils import sanitize_commit_message, is_git_available, is_git_repo, git_graceful_operation, GIT_COMMAND_TIMEOUT
 from project_locator import resolve_project_root
 
 # Windows 编码兼容性修复
@@ -155,7 +155,7 @@ __pycache__/
                 capture_output=True,
                 text=True,
                 encoding='utf-8',
-                timeout=60
+                timeout=GIT_COMMAND_TIMEOUT
             )
 
             return True, result.stdout

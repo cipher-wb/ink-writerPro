@@ -158,6 +158,10 @@ class DataModulesConfig:
     rerank_concurrency: int = 32
     embed_batch_size: int = 64
 
+    # ================= TCP 连接池配置 =================
+    http_connector_limit: int = 200           # aiohttp TCPConnector 总连接数上限
+    http_connector_limit_per_host: int = 100  # aiohttp TCPConnector 单主机连接数上限
+
     # ================= 超时配置 =================
     cold_start_timeout: int = 300
     normal_timeout: int = 180

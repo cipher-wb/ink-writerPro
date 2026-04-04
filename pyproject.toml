@@ -1,0 +1,35 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+src = ["ink-writer/scripts", "ink-writer/dashboard"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "E501",   # line-too-long (由 line-length 控制，已放宽到 120)
+    "E741",   # ambiguous variable name (中文项目允许短变量)
+    "B905",   # zip-without-strict (兼容 3.12)
+    "SIM108", # ternary operator (三元表达式不强制)
+    "UP007",  # X | Y union syntax (保持 Optional 兼容写法)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"ink-writer/scripts/data_modules/tests/*" = [
+    "E501",  # 测试中允许长行
+    "B011",  # assert False
+    "F811",  # fixture redefinition
+]
+"ink-writer/scripts/data_modules/__init__.py" = [
+    "F401",  # unused imports (lazy re-exports)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["data_modules"]

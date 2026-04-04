@@ -20,6 +20,8 @@ _CHAPTER_NUM_RE = re.compile(r"第(?P<num>\d+)章")
 _OUTLINE_HEADING_RE = re.compile(r"^#{1,6}\s*第\s*(?P<num>\d+)\s*章[：:]\s*(?P<title>.+?)\s*$", re.MULTILINE)
 _SPLIT_OUTLINE_FILENAME_RE = re.compile(r"^第0*(?P<num>\d+)章[-—_ ]+(?P<title>.+?)\.md$")
 
+CHAPTER_TITLE_MAX_LENGTH = 60  # 章节标题在文件名中的最大字符数
+
 
 def volume_num_for_chapter(chapter_num: int, *, chapters_per_volume: int = 50) -> int:
     if chapter_num <= 0:
@@ -47,7 +49,7 @@ def _safe_title_for_filename(title: str) -> str:
     except ImportError:  # pragma: no cover
         from scripts.security_utils import sanitize_filename
 
-    safe_title = sanitize_filename(cleaned, max_length=60)
+    safe_title = sanitize_filename(cleaned, max_length=CHAPTER_TITLE_MAX_LENGTH)
     return "" if safe_title == "unnamed_entity" else safe_title
 
 
