@@ -463,7 +463,7 @@ run_auto_fix() {
     fi
 
     # 检查报告中是否有需要修复的问题（委托 Python 模块，比 Bash 正则更可靠）
-    if ! python3 -X utf8 -c "from data_modules.checkpoint_utils import report_has_issues; exit(0 if report_has_issues('$report_path') else 1)" 2>/dev/null; then
+    if ! python3 -X utf8 -c "import sys; sys.path.insert(0, '$SCRIPTS_DIR'); from data_modules.checkpoint_utils import report_has_issues; exit(0 if report_has_issues('$report_path') else 1)" 2>/dev/null; then
         echo "    ✅ 报告无需修复的问题"
         report_event "✅" "${fix_type}修复" "${scope} — 无需修复"
         return 0
@@ -641,8 +641,8 @@ run_checkpoint() {
     fi
 
     # 审查最近5章 + 自动修复（始终执行）
-    review_start=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['range'][0])")
-    review_end=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['range'][1])")
+    review_start=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review_range'][0])")
+    review_end=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review_range'][1])")
     run_review_and_fix "$review_start" "$review_end"
 
     echo "───────── 检查点完成 ─────────"

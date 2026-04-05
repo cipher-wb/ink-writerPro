@@ -136,7 +136,7 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 审计报告会列出逾期伏笔的 ID 和描述。用 `ink.py index mark-invalid` 标记：
 ```bash
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  index mark-invalid --entity-id "${entity_id}" --reason "伏笔逾期未兑现，审计自动标记"
+  index mark-invalid --source-type "entity" --source-id "${entity_id}" --reason "伏笔逾期未兑现，审计自动标记"
 ```
 
 #### 1B.3 幽灵实体（index.db 中有记录但正文从未提及）
@@ -144,7 +144,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 审计报告会列出幽灵实体名称和 ID。用 `ink.py index mark-invalid` 标记：
 ```bash
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  index mark-invalid --entity-id "${entity_id}" --reason "幽灵实体，正文无出现"
+  index mark-invalid --source-type "entity" --source-id "${entity_id}" --reason "幽灵实体，正文无出现"
 ```
 
 #### 1B.4 chapter_meta 膨胀
