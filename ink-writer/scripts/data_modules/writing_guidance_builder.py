@@ -6,9 +6,33 @@ Writing guidance and checklist builders.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Dict, List
 
 from .genre_aliases import to_profile_key
+
+
+# === Craft Lessons 动态加载 ===
+CRAFT_LESSON_FILES: dict[str, str] = {
+    "combat": "combat_craft.md",
+    "dialogue": "dialogue_craft.md",
+    "emotion": "emotion_craft.md",
+}
+
+
+def _load_craft_lesson_summary(scene_type: str, craft_dir: Path) -> str | None:
+    """从 craft_lessons 目录动态加载场景对应的写作技巧摘要（前500字）。"""
+    filename = CRAFT_LESSON_FILES.get(scene_type)
+    if not filename:
+        return None
+    filepath = craft_dir / filename
+    if not filepath.exists():
+        return None
+    text = filepath.read_text(encoding="utf-8")
+    # 截取前500字，在换行处截断避免截断句子
+    truncated = text[:500]
+    last_newline = truncated.rfind("\n")
+    return truncated[:last_newline] if last_newline > 0 else truncated
 
 
 # === 场景类型检测关键词 ===
@@ -241,6 +265,7 @@ def build_guidance_items(
     low_score_threshold: float,
     hook_diversify_enabled: bool,
     chapter_outline: str = "",
+    craft_lessons_dir: str = "",
 ) -> Dict[str, Any]:
     guidance: List[str] = []
 
@@ -253,19 +278,26 @@ def build_guidance_items(
         detected = "、".join(type_labels.get(t, t) for t in scene_types[:2])
         guidance.append(f"场景类型检测：{detected}。请参考 references/scene-craft/ 下对应文件的写作原则。")
 
-        # 注入关键Craft提示（不加载完整文件，只给核心提醒）
-        craft_tips = {
+        # 动态加载 craft_lessons（优先），回退到硬编码 tips
+        craft_tips_fallback = {
             "combat": "战斗Craft：快慢交替节奏、近战用触觉+嗅觉、战后清算身体。",
             "dialogue": "对话Craft：角色用词差异化、潜台词揭一层留一层、用动作打断对话。",
             "emotion": "情感Craft：高潮前放日常对比、用小物件承载情感、沉默+行动胜过抒情。",
             "suspense": "悬念Craft：解释信息1/3法则、设定寄生于行为、章末留倒计时或新变量。",
             "climax": "高潮Craft：安静→爆发的反差、长句末尾接冲击短句、高潮后留余韵段。",
         }
+        craft_dir = Path(craft_lessons_dir) if craft_lessons_dir else None
         for st in scene_types[:2]:
-            tip = craft_tips.get(st)
-            if tip:
-                scene_craft_hints.append(tip)
-                guidance.append(tip)
+            hint: str | None = None
+            if craft_dir and craft_dir.is_dir():
+                dynamic_tip = _load_craft_lesson_summary(st, craft_dir)
+                if dynamic_tip:
+                    hint = f"{type_labels.get(st, st)}场景参考（语料分析）：\n{dynamic_tip}"
+            if not hint:
+                hint = craft_tips_fallback.get(st)
+            if hint:
+                scene_craft_hints.append(hint)
+                guidance.append(hint)
 
     low_ranges = reader_signal.get("low_score_ranges") or []
     if low_ranges:

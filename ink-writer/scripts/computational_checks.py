@@ -253,6 +253,30 @@ def check_contract_completeness(project_root: Path, chapter_num: int) -> CheckRe
 
 
 # ---------------------------------------------------------------------------
+# Metadata leakage check
+# ---------------------------------------------------------------------------
+
+METADATA_PATTERNS = [
+    r'（本章完）', r'（全文完）',
+    r'\*\*本章字数[：:]', r'\*\*章末钩子[：:]',
+    r'\*\*本章小结', r'---\s*\n\s*\*\*',
+]
+
+
+def check_metadata_leakage(chapter_text: str) -> CheckResult:
+    """检测正文末尾是否混入元数据。"""
+    tail = chapter_text[-500:] if len(chapter_text) > 500 else chapter_text
+    hits = [p for p in METADATA_PATTERNS if re.search(p, tail)]
+    if hits:
+        return CheckResult(
+            "metadata_leakage", True, "soft",
+            f"正文末尾检测到元数据泄漏: {', '.join(hits)}",
+            "建议在润色步骤中清理这些元数据行",
+        )
+    return CheckResult("metadata_leakage", True, "soft", "无元数据泄漏")
+
+
+# ---------------------------------------------------------------------------
 # Main orchestrator
 # ---------------------------------------------------------------------------
 
@@ -271,6 +295,7 @@ def run_all_checks(
         check_foreshadowing_consistency(project_root, chapter_num),
         check_power_level(chapter_text, project_root),
         check_contract_completeness(project_root, chapter_num),
+        check_metadata_leakage(chapter_text),
     ]
 
     hard_failures = [r for r in results if not r.passed and r.severity == "hard"]

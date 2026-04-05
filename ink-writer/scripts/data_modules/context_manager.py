@@ -727,6 +727,9 @@ class ContextManager:
             getattr(self.config, "context_writing_guidance_low_score_threshold", 75.0)
         )
 
+        # 解析 craft_lessons 目录：ink-writer repo 根目录下的 benchmark/craft_lessons/
+        _repo_root = Path(__file__).resolve().parents[3]
+        _craft_dir = _repo_root / "benchmark" / "craft_lessons"
         guidance_bundle = build_guidance_items(
             chapter=chapter,
             reader_signal=reader_signal,
@@ -735,6 +738,7 @@ class ContextManager:
             hook_diversify_enabled=bool(
                 getattr(self.config, "context_writing_guidance_hook_diversify", True)
             ),
+            craft_lessons_dir=str(_craft_dir) if _craft_dir.is_dir() else "",
         )
 
         guidance = list(guidance_bundle.get("guidance") or [])
