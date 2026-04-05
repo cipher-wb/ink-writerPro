@@ -764,9 +764,30 @@ cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 输出：
 - 章节草稿（可进入 Step 2A.5 字数校验）。
 
-### Step 2A.5：字数校验（必做，不可跳过）
+### Step 2A.5：编码校验 + 字数校验（必做，不可跳过）
 
-> 正文写入章节文件后，立即执行字数校验，确保章节字数在可控范围内。
+> 正文写入章节文件后，先执行编码校验（检测 U+FFFD 乱码），再执行字数校验。
+
+#### 2A.5.1 编码校验（乱码检测与自动修复）
+
+LLM 流式输出时，多字节 UTF-8 字符偶尔在 chunk 边界被截断，导致文件中出现 U+FFFD 替换字符（显示为 `���`）。此步骤检测并自动修复。
+
+**检测**：
+```bash
+cd "${PROJECT_ROOT}" && python "${SCRIPTS_DIR}/encoding_validator.py" \
+  --file "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md"
+```
+
+**修复流程**（退出码 = 1 时执行）：
+1. 读取 JSON 输出中每处乱码的 `context_before`、`context_after` 和 `line` 信息
+2. 根据前后文语义推断被损坏的正确字符（通常是 1 个常用中文字符）
+3. 使用 Edit 工具将 `U+FFFD` 序列替换为推断出的正确字符
+4. 再次运行 `encoding_validator.py` 确认修复成功
+5. 最多执行 **2 轮**修复，避免无限循环；2 轮后仍有乱码则阻断并报告
+
+**退出码说明**：`0` = 无乱码，直接进入字数检测；`1` = 有乱码，执行修复流程；`2` = 参数/文件错误，阻断。
+
+#### 2A.5.2 字数检测
 
 **字数检测**：
 ```bash
@@ -1037,14 +1058,22 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
    - 若发现 `high` 违规但无 `critical`：记录到变更摘要的 deviation 中
    - 最多执行 1 轮修正，避免无限循环
 
-4. **情感扁平化差分检测**（v7.0.5 新增，轻量级）：
+4. **编码校验（乱码检测与自动修复）**（v10.1.0 新增）：
+   ```bash
+   cd "${PROJECT_ROOT}" && python "${SCRIPTS_DIR}/encoding_validator.py" \
+     --file "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md"
+   ```
+   - 若退出码 = 1（检测到 U+FFFD 乱码）：读取 JSON 输出，根据 `context_before` / `context_after` 推断正确字符，用 Edit 替换，再次检测确认。最多 2 轮。
+   - 此检查为 `critical` 级：润色引入的乱码必须修复后才能进入 Step 5。
+
+5. **情感扁平化差分检测**（v7.0.5 新增，轻量级）：
    - 对比润色前快照与润色后正文的情感密度：
      - 统计润色前后的感叹句数量、感官描写句数量、短句（≤8字）占比
      - 若润色后感叹句减少 ≥ 50% 或感官描写句减少 ≥ 40% → 输出 `⚠️ 润色后情感密度下降，建议检查是否过度修改情感段落`
    - 此检查为 WARNING 级，不阻断流程，仅提示
    - 若 Data Agent 在 Step B.10 产出了 `subtext_markers`，额外检查：润色是否删除或弱化了标记的潜台词段落
 
-4. **清理快照**（Step 5 开始前）：
+6. **清理快照**（Step 5 开始前）：
    ```bash
    rm -f "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"
    ```
