@@ -230,13 +230,18 @@ Tier2/Tier3 **不调用 Checker Agent**，直接通过 SQL 查询 + 统计分析
 
 ## 禁止事项
 
-- 宏观审查**不修改**任何章节文件（纯只读分析）
+- 宏观审查本身**不修改**任何章节文件（纯只读分析）
 - 不替代 per-chapter 的 ink-review（两者互补）
-- 不自动运行（仅在 ink-auto 完成后提醒用户手动触发）
 - **不调用 Checker Agent**（Tier2/Tier3 使用直接 SQL 分析，不走 Agent 路径）
+
+> 注：宏观审查产出的报告会由 `ink-fix` skill 消费，`ink-fix` 负责根据报告内容执行正文修复和数据库修复。宏观审查自身保持只读。
 
 ## 与 ink-auto 的集成
 
-ink-auto 完成后，若当前章节触发里程碑：
-- `% 50 == 0` → 提醒运行 `/ink-macro-review Tier2`
-- `% 200 == 0` → 提醒运行 `/ink-macro-review Tier3`
+ink-auto 在检查点自动触发宏观审查：
+- `% 20 == 0` → 自动运行 Tier2 + ink-fix 修复
+- `% 200 == 0` → 自动运行 Tier3 + ink-fix 修复
+
+也可手动运行：
+- `/ink-macro-review Tier2`
+- `/ink-macro-review Tier3`

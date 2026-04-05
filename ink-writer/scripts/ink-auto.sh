@@ -475,17 +475,7 @@ run_auto_fix() {
     local log_file="$LOG_DIR/fix-${fix_type}-$(date +%Y%m%d-%H%M%S).log"
     local prompt=""
 
-    case $fix_type in
-        review)
-            prompt="项目目录: ${PROJECT_ROOT}。请读取审查报告文件 ${report_path}，对其中所有 critical 和 high 级别问题执行修复。对每个问题：1) 定位对应章节文件（在 正文/ 目录下），2) 用 Edit 工具做最小修复，3) 验证修复后字数仍 >= 2200字。修复完成后执行 git add 正文/ .ink/ && git commit -m 'ink-auto: 自动修复审查问题'。禁止提问，全程自主执行。完成后输出 INK_FIX_DONE。"
-            ;;
-        audit)
-            prompt="项目目录: ${PROJECT_ROOT}。请读取审计报告文件 ${report_path}，对其中发现的数据不一致问题执行修复。可能的问题包括：state.json与index.db状态不同步、过期伏笔未处理、chapter_meta膨胀、实体幽灵记录。使用 python3 ${SCRIPTS_DIR}/ink.py --project-root ${PROJECT_ROOT} 的相关子命令修复数据问题。修复完成后执行 git add .ink/ && git commit -m 'ink-auto: 自动修复审计问题'。禁止提问，全程自主执行。完成后输出 INK_FIX_DONE。"
-            ;;
-        macro)
-            prompt="项目目录: ${PROJECT_ROOT}。请读取宏观审查报告文件 ${report_path}，对其中发现的结构性问题执行修复。可能的问题包括：支线剧情停滞、角色弧光断裂、冲突模式重复、叙事承诺未兑现、风格漂移。对于可直接修复的问题（如过期伏笔标记、承诺追踪更新），使用 python3 ${SCRIPTS_DIR}/ink.py --project-root ${PROJECT_ROOT} 的相关子命令执行修复。对于需要修改章节内容的问题，用 Edit 工具做最小修复。修复完成后执行 git add 正文/ .ink/ && git commit -m 'ink-auto: 自动修复宏观审查问题'。禁止提问，全程自主执行。完成后输出 INK_FIX_DONE。"
-            ;;
-    esac
+    prompt="使用 Skill 工具加载 \"ink-fix\"。修复类型: ${fix_type}。报告路径: ${report_path}。项目目录: ${PROJECT_ROOT}。全程自主执行，禁止提问。完成后输出 INK_FIX_DONE。"
 
     run_cli_process "$prompt" "$log_file" || true
 
