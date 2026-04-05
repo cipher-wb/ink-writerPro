@@ -60,7 +60,7 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 2. 查询 `index.db` 确认正确设定：
    ```bash
    python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-     index query-entity --name "角色名" --field "属性名"
+     index get-entity --name "角色名"
    ```
 3. 读取出错章节文件，定位矛盾段落
 4. 用 Edit 工具修正为正确设定，保持上下文通顺
@@ -125,43 +125,41 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 
 #### 1B.1 state.json 与 index.db 不同步
 
-```bash
-python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  state sync-from-db
-```
+审计报告会列出具体的不同步字段。手动修复：
+1. 用 `ink.py state get-progress` 查看 state.json 当前状态
+2. 用 `ink.py index stats` 查看 index.db 当前状态
+3. 根据审计报告的差异说明，用 Edit 工具修正 `.ink/state.json` 中的不一致字段
+4. 修改 state.json 时注意保持 JSON 格式合法
 
 #### 1B.2 过期伏笔未处理
 
+审计报告会列出逾期伏笔的 ID 和描述。用 `ink.py index mark-invalid` 标记：
 ```bash
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  index expire-foreshadowing --chapter ${current_chapter}
+  index mark-invalid --entity-id "${entity_id}" --reason "伏笔逾期未兑现，审计自动标记"
 ```
 
 #### 1B.3 幽灵实体（index.db 中有记录但正文从未提及）
 
+审计报告会列出幽灵实体名称和 ID。用 `ink.py index mark-invalid` 标记：
 ```bash
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  index remove-ghost-entities --dry-run
+  index mark-invalid --entity-id "${entity_id}" --reason "幽灵实体，正文无出现"
 ```
-确认无误后去掉 `--dry-run` 执行。
 
 #### 1B.4 chapter_meta 膨胀
 
-```bash
-python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  state compact-chapter-meta
-```
+审计报告会列出膨胀的 chapter_meta 条目。用 Edit 工具直接编辑 `.ink/state.json`：
+1. 读取 state.json
+2. 定位 `chapter_meta` 中冗余条目（如过期的临时标记、重复字段）
+3. 用 Edit 删除冗余内容，保持 JSON 格式合法
 
 #### 1B.5 摘要文件缺失
 
 若报告指出某章节缺少摘要文件 `.ink/summaries/ch{NNNN}.md`：
 1. 读取对应章节正文
-2. 生成摘要并写入：
-   ```bash
-   python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-     state regenerate-summary --chapter ${ch}
-   ```
-   若命令不存在，手动生成：读取章节 → 提炼 200 字摘要 → 写入 `.ink/summaries/ch{NNNN}.md`
+2. 提炼 200 字摘要，包含：核心事件、角色变化、伏笔推进
+3. 用 Write 工具写入 `.ink/summaries/ch{NNNN}.md`
 
 ---
 
@@ -178,32 +176,30 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 4. 示例：角色内心独白中提及未解决的事、某个物件触发回忆、路人闲聊提到相关信息
 
 **约束注入**（对后续章节的写作施加约束）：
-```bash
-python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  state add-writing-constraint "支线'{subplot_name}'已停滞{N}章，近5章内必须推进"
+追加一行到 `.ink/pending_constraints.md`（若不存在则创建）：
+```
+- [subplot_dormant] 支线'{subplot_name}'已停滞{N}章，近5章内必须推进 (added@ch{current_chapter})
 ```
 
 #### 1C.2 角色弧光停滞
 
 **直接修复**（对最近 3 章中有该角色出场的 1 章操作）：
-1. 读取角色当前状态和演化记录
+1. 用 `ink.py index get-entity --name "角色名"` 读取角色当前状态
 2. 在角色对话或心理活动中补入一处微小的态度/认知变化（不超过 30 字）
 3. 变化方向须符合角色设定中的成长轨迹
 
-**约束注入**：
-```bash
-python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  state add-writing-constraint "角色'{char_name}'弧光停滞，下次出场需展现态度/能力变化"
+**约束注入**：追加到 `.ink/pending_constraints.md`：
+```
+- [arc_stagnation] 角色'{char_name}'弧光停滞，下次出场需展现态度/能力变化 (added@ch{current_chapter})
 ```
 
 #### 1C.3 冲突模式重复（同类型冲突出现 ≥ 3 次）
 
 **不直接修改旧章节**（修改冲突需要重写场景，风险过高）。
 
-**约束注入**：
-```bash
-python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  state add-writing-constraint "近50章'{conflict_pattern}'冲突模式出现{N}次，后续禁止复用，改用其他冲突类型"
+**约束注入**：追加到 `.ink/pending_constraints.md`：
+```
+- [conflict_repetition] 近50章'{conflict_pattern}'冲突模式出现{N}次，后续禁止复用 (added@ch{current_chapter})
 ```
 
 #### 1C.4 叙事承诺未兑现（overdue > 50 章）
@@ -211,12 +207,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 **直接修复**（对最近 3 章中最合适的 1 章操作）：
 1. 从报告中提取未兑现的承诺内容
 2. 在最近章节中补入一处微小推进（角色提及、线索浮现、伏笔回响），不超过 50 字
-3. 更新承诺的追踪状态：
-   ```bash
-   python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-     index update-commitment --id ${commitment_id} --status "partially_addressed" \
-     --note "ch${ch} 补入微推进"
-   ```
+3. 记录推进：用 `ink.py index record-state-change` 记录承诺的部分兑现状态
 
 #### 1C.5 风格漂移
 
@@ -231,10 +222,9 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 
 #### 1C.6 主题呈现缺席
 
-**约束注入**：
-```bash
-python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-  state add-writing-constraint "主题'{theme}'已缺席{N}章，近3章内需自然呈现"
+**约束注入**：追加到 `.ink/pending_constraints.md`：
+```
+- [theme_absence] 主题'{theme}'已缺席{N}章，近3章内需自然呈现 (added@ch{current_chapter})
 ```
 
 ---
@@ -265,8 +255,9 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 1. **数据一致性验证**（若执行了数据库修复）：
    ```bash
    python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
-     audit quick --silent
+     index stats
    ```
+   确认 index.db 统计数据正常（实体数、章节数等无异常跳变）。
 2. **正文完整性验证**（若执行了正文修复）：
    - 确认所有修改的章节文件存在且字数 ≥ 2200
    - 运行编码校验确认无乱码

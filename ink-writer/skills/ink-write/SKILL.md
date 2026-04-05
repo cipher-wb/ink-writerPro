@@ -568,7 +568,18 @@ except Exception as e:
 注入约束数: {N}条
 ```
 
-**保留金丝雀结果供 Step 1 消费**：将所有 WARNING 级结果的注入文本收集为 `canary_injections` 列表，在 Step 1 追加到创作执行包中。
+**ink-fix 约束消费**（v10.3.0 新增）：若 `.ink/pending_constraints.md` 存在且非空，读取全部约束条目，追加到 `canary_injections` 列表中（与金丝雀约束同等优先级）。消费后清空该文件：
+```bash
+if [[ -s "${PROJECT_ROOT}/.ink/pending_constraints.md" ]]; then
+    echo "📋 发现 ink-fix 待消费约束："
+    cat "${PROJECT_ROOT}/.ink/pending_constraints.md"
+    # 约束内容追加到 canary_injections 列表
+    # 消费后清空文件
+    : > "${PROJECT_ROOT}/.ink/pending_constraints.md"
+fi
+```
+
+**保留金丝雀结果供 Step 1 消费**：将所有 WARNING 级结果的注入文本（含 ink-fix 约束）收集为 `canary_injections` 列表，在 Step 1 追加到创作执行包中。
 
 ### Step 0.5：工作流断点记录（best-effort，不阻断）
 
