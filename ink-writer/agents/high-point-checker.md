@@ -57,6 +57,33 @@ model: inherit
 
 此分布数据将在第三步密度检查时使用。
 
+### Step 1.6: 压扬标记一致性校验
+
+读取章纲中的 `压扬标记` 字段（压/平/扬），与正文实际内容做一致性检查：
+
+- 若标记为 **"扬"** 但正文中无明确爽点爆发（逆袭/打脸/碾压/揭示等强情绪释放段落）：
+  - → `suppression_release_mismatch: "yang_no_payoff"`, severity: **high**
+  - 说明：大纲规划了爆发但写作未执行，爽点链断裂
+
+- 若标记为 **"压"** 但正文中出现大爽点释放（非微兑现级别的爽点爆发）：
+  - → `suppression_release_mismatch: "ya_has_big_payoff"`, severity: **medium**
+  - 说明：提前释放可能打乱多章压扬节奏规划
+
+- 若 `压扬标记` 字段缺失（旧大纲兼容）：
+  - → skip 此步骤，不报告
+
+输出字段追加：
+```json
+{
+  "suppression_release": {
+    "outline_mark": "扬|压|平|missing",
+    "actual_match": true|false,
+    "mismatch_type": "yang_no_payoff|ya_has_big_payoff|null",
+    "severity": "high|medium|null"
+  }
+}
+```
+
 ### 第二步: 识别爽点
 
 扫描 **8 种标准执行模式**：

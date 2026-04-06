@@ -131,7 +131,7 @@ def _ensure_state_schema(state: Dict[str, Any]) -> Dict[str, Any]:
     - structured_relationships 已迁移到 index.db relationships 表
     - state.json 保持精简 (< 5KB)
     """
-    state.setdefault("schema_version", 6)
+    state.setdefault("schema_version", 7)
     state.setdefault("project_info", {})
     state.setdefault("progress", {})
     state.setdefault("protagonist_state", {})
@@ -163,6 +163,7 @@ def _ensure_state_schema(state: Dict[str, Any]) -> Dict[str, Any]:
     state["progress"].setdefault("volumes_completed", [])
     state["progress"].setdefault("current_volume", 1)
     state["progress"].setdefault("volumes_planned", [])
+    state["progress"].setdefault("is_completed", False)
 
     # protagonist schema evolution
     ps = state["protagonist_state"]
@@ -339,6 +340,20 @@ def init_project(
             "cultivation_subtiers": cultivation_subtiers,
         }
     )
+
+    # v10.5: 构建 volumes 数组（含 is_final 完结标记）
+    chapters_per_volume = 50
+    num_volumes = (int(target_chapters) - 1) // chapters_per_volume + 1 if int(target_chapters) > 0 else 1
+    volumes_list = []
+    for v in range(1, num_volumes + 1):
+        start = (v - 1) * chapters_per_volume + 1
+        end = min(v * chapters_per_volume, int(target_chapters))
+        volumes_list.append({
+            "volume_id": v,
+            "chapter_range": f"{start}-{end}",
+            "is_final": v == num_volumes,
+        })
+    state["project_info"]["volumes"] = volumes_list
 
     if protagonist_name:
         state["protagonist_state"]["name"] = protagonist_name

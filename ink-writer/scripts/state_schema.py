@@ -90,6 +90,7 @@ class ProgressState(BaseModel):
     volumes_completed: List[Any] = Field(default_factory=list)
     current_volume: int = Field(default=1)
     volumes_planned: List[Any] = Field(default_factory=list)
+    is_completed: bool = Field(default=False)
 
 
 # ---------------------------------------------------------------------------
@@ -170,6 +171,21 @@ class ChapterMeta(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Sub-models: Volume Info
+# ---------------------------------------------------------------------------
+
+
+class VolumeInfo(BaseModel):
+    """卷信息（v10.5: 支持 is_final 完结标记）"""
+    model_config = ConfigDict(extra="allow")
+
+    volume_id: Optional[int] = Field(default=None)
+    name: Optional[str] = Field(default=None)
+    chapter_range: Optional[str] = Field(default=None)
+    is_final: bool = Field(default=False)
+
+
+# ---------------------------------------------------------------------------
 # Sub-models: Project Info
 # ---------------------------------------------------------------------------
 
@@ -231,6 +247,9 @@ class ProjectInfo(BaseModel):
     # 核心主题（v6.4 引入）
     themes: List[str] = Field(default_factory=list)
 
+    # 卷结构（v10.5 引入：typed VolumeInfo，支持 is_final 完结标记）
+    volumes: List[VolumeInfo] = Field(default_factory=list)
+
     # 子模型（新增，向后兼容：extra="allow" 确保旧字段不报错）
     golden_finger: GoldenFingerInfo = Field(default_factory=GoldenFingerInfo)
     heroine: HeroineCharacterInfo = Field(default_factory=HeroineCharacterInfo)
@@ -263,11 +282,11 @@ class ProjectInfo(BaseModel):
 
 
 class StateModel(BaseModel):
-    """state.json 顶层模型 (schema_version 6)"""
+    """state.json 顶层模型 (schema_version 7)"""
 
     model_config = ConfigDict(extra="allow")
 
-    schema_version: int = Field(default=6)
+    schema_version: int = Field(default=7)
     project_info: ProjectInfo = Field(default_factory=ProjectInfo)
     progress: ProgressState = Field(default_factory=ProgressState)
     protagonist_state: ProtagonistState = Field(default_factory=ProtagonistState)

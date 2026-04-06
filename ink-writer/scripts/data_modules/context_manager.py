@@ -711,6 +711,31 @@ class ContextManager:
             candidates = self.index_manager.get_candidate_facts(limit=6)
         return candidates[:8]
 
+    def _load_genre_baseline(self, genre: str) -> Dict[str, Any]:
+        """从 style_benchmark.json 读取题材的统计基线数据。"""
+        _repo_root = Path(__file__).resolve().parents[3]
+        benchmark_path = _repo_root / "benchmark" / "style_benchmark.json"
+        if not benchmark_path.exists():
+            return {}
+        try:
+            import json as _json
+            data = _json.loads(benchmark_path.read_text(encoding="utf-8"))
+        except (ValueError, OSError):
+            return {}
+        by_genre = data.get("by_genre", {})
+        # 尝试精确匹配
+        if genre in by_genre:
+            return {"source": "exact", "genre": genre, **by_genre[genre]}
+        # 尝试模糊匹配（题材名包含关系）
+        for key, val in by_genre.items():
+            if genre and (genre in key or key in genre):
+                return {"source": "fuzzy", "genre": key, **val}
+        # 回退到 overall
+        overall = data.get("overall", {})
+        if overall:
+            return {"source": "overall_fallback", "genre": "总体", **overall}
+        return {}
+
     def _build_writing_guidance(
         self,
         chapter: int,
@@ -745,6 +770,28 @@ class ContextManager:
         golden_three_guidance = build_golden_three_guidance(golden_three_contract or {})
         if golden_three_guidance:
             guidance = golden_three_guidance + guidance
+
+        # v10.5: 注入题材风格基线（来自 benchmark 114本小说统计）
+        genre_baseline = self._load_genre_baseline(
+            str(genre_profile.get("genre") or "")
+        )
+        if genre_baseline:
+            baseline_hints = []
+            sl = genre_baseline.get("sentence_length_mean")
+            dr = genre_baseline.get("dialogue_ratio")
+            ed = genre_baseline.get("exclamation_density")
+            if sl:
+                baseline_hints.append(f"句长目标≈{sl:.0f}字")
+            if dr:
+                baseline_hints.append(f"对话占比≈{dr * 100:.0f}%")
+            if ed:
+                baseline_hints.append(f"感叹号密度≈{ed:.1f}/千字")
+            if baseline_hints:
+                guidance.append(
+                    f"题材风格基线（{genre_baseline.get('genre', '总体')}，114本统计）："
+                    + "、".join(baseline_hints)
+                )
+
         methodology_strategy: Dict[str, Any] = {}
 
         if self._is_methodology_enabled_for_genre(genre_profile):

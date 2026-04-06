@@ -217,6 +217,81 @@ except Exception:
 }
 
 # ═══════════════════════════════════════════
+# 完结检测（v10.5）
+# ═══════════════════════════════════════════
+
+is_project_completed() {
+    python3 -X utf8 -c "
+import json, re, sys
+try:
+    with open('${PROJECT_ROOT}/.ink/state.json') as f:
+        state = json.load(f)
+    # 检查显式完结标记
+    if state.get('progress', {}).get('is_completed', False):
+        print('completed')
+        sys.exit(0)
+    # 检查是否已写到最后一卷最后一章
+    volumes = state.get('project_info', {}).get('volumes', [])
+    if not volumes:
+        print('unknown')
+        sys.exit(0)
+    last_vol = volumes[-1]
+    r = last_vol.get('chapter_range', '')
+    m = re.match(r'(\d+)-(\d+)', r)
+    if m:
+        final_chapter = int(m.group(2))
+        current = state.get('progress', {}).get('current_chapter', 0)
+        if current >= final_chapter:
+            print('completed')
+            sys.exit(0)
+    print('in_progress')
+except Exception:
+    print('unknown')
+" 2>/dev/null
+}
+
+get_final_chapter() {
+    python3 -X utf8 -c "
+import json, re
+try:
+    with open('${PROJECT_ROOT}/.ink/state.json') as f:
+        state = json.load(f)
+    volumes = state.get('project_info', {}).get('volumes', [])
+    if volumes:
+        r = volumes[-1].get('chapter_range', '')
+        m = re.match(r'(\d+)-(\d+)', r)
+        if m:
+            print(m.group(2))
+        else:
+            print(0)
+    else:
+        print(0)
+except Exception:
+    print(0)
+" 2>/dev/null
+}
+
+get_total_volumes() {
+    python3 -X utf8 -c "
+import json
+try:
+    with open('${PROJECT_ROOT}/.ink/state.json') as f:
+        state = json.load(f)
+    print(len(state.get('project_info', {}).get('volumes', [])))
+except Exception:
+    print(0)
+" 2>/dev/null
+}
+
+# 完结检测 preflight
+PROJECT_STATUS=$(is_project_completed)
+if [[ "$PROJECT_STATUS" == "completed" ]]; then
+    echo "🎉 本书已完结！所有卷章均已写完。"
+    echo "   如需继续创作，请手动修改 .ink/state.json 中的 is_completed 字段。"
+    exit 0
+fi
+
+# ═══════════════════════════════════════════
 # 大纲覆盖预检（预报模式）
 # ═══════════════════════════════════════════
 
@@ -413,6 +488,14 @@ auto_generate_outline() {
     vol=$(get_volume_for_chapter "$ch")
 
     if [[ -z "$vol" ]]; then
+        # v10.5: 检查是否超出总纲定义的卷数（全书完结）
+        local total_volumes
+        total_volumes=$(get_total_volumes)
+        if [[ "$total_volumes" != "0" ]] && (( total_volumes > 0 )); then
+            echo "    🎉 第${ch}章已超出总纲定义的${total_volumes}卷范围，全书完结"
+            report_event "🎉" "全书完结" "无需为第${ch}章生成大纲，已超出总纲卷数"
+            return 1
+        fi
         echo "    ❌ 无法确定第${ch}章所属卷号，中止"
         report_event "❌" "自动大纲" "无法确定第${ch}章所属卷号"
         return 1
@@ -763,6 +846,28 @@ for i in $(seq 1 "$N"); do
         report_event "✅" "写作完成" "第${NEXT_CH}章 ${WC}字"
 
         run_checkpoint "$NEXT_CH"
+
+        # v10.5: 完结检测——检查是否达到最终章
+        FINAL_CH=$(get_final_chapter)
+        if [[ "$FINAL_CH" != "0" ]] && (( NEXT_CH >= FINAL_CH )); then
+            echo ""
+            echo "═══════════════════════════════════════"
+            echo "  🎉 全书完结！第${NEXT_CH}章是最终章。"
+            echo "═══════════════════════════════════════"
+            python3 -X utf8 -c "
+import json
+with open('${PROJECT_ROOT}/.ink/state.json', 'r') as f:
+    state = json.load(f)
+state.setdefault('progress', {})['is_completed'] = True
+with open('${PROJECT_ROOT}/.ink/state.json', 'w') as f:
+    json.dump(state, f, ensure_ascii=False, indent=2)
+" 2>/dev/null || true
+            EXIT_REASON="全书完结"
+            report_event "🎉" "全书完结" "第${NEXT_CH}章为最终章"
+            print_summary
+            write_report
+            exit 0
+        fi
     else
         echo "[$i/$N] ⚠️  验证失败，重试中..."
         report_event "⚠️" "写作验证失败" "第${NEXT_CH}章，启动重试"

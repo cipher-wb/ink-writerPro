@@ -17,11 +17,14 @@ CRAFT_LESSON_FILES: dict[str, str] = {
     "combat": "combat_craft.md",
     "dialogue": "dialogue_craft.md",
     "emotion": "emotion_craft.md",
+    "suspense": "pacing_craft.md",
+    "climax": "pacing_craft.md",
+    "opening": "opening_patterns.md",
 }
 
 
 def _load_craft_lesson_summary(scene_type: str, craft_dir: Path) -> str | None:
-    """从 craft_lessons 目录动态加载场景对应的写作技巧摘要（前500字）。"""
+    """从 craft_lessons 目录动态加载场景对应的写作技巧摘要。"""
     filename = CRAFT_LESSON_FILES.get(scene_type)
     if not filename:
         return None
@@ -29,8 +32,9 @@ def _load_craft_lesson_summary(scene_type: str, craft_dir: Path) -> str | None:
     if not filepath.exists():
         return None
     text = filepath.read_text(encoding="utf-8")
-    # 截取前500字，在换行处截断避免截断句子
-    truncated = text[:500]
+    # 动态截断：min(文件长度, 1500)，在换行处截断避免截断句子
+    max_chars = min(len(text), 1500)
+    truncated = text[:max_chars]
     last_newline = truncated.rfind("\n")
     return truncated[:last_newline] if last_newline > 0 else truncated
 
@@ -47,11 +51,18 @@ SCENE_TYPE_KEYWORDS: dict[str, list[str]] = {
                  "密谋", "暗中", "潜入", "调查", "试探", "窥探", "隐藏"],
     "climax": ["高潮", "决战", "逆转", "爆发", "觉醒", "突破", "翻盘",
                "总攻", "终极", "巅峰", "对决", "最终", "关键一击"],
+    "opening": ["开篇", "初入", "首次", "第一次", "新手", "入门", "踏入", "来到",
+                "抵达", "初见", "初遇", "初到", "始"],
 }
 
 
-def detect_scene_types(outline_text: str) -> list[str]:
-    """从章节大纲/梗概中检测主要场景类型，返回按相关度排序的类型列表。"""
+def detect_scene_types(outline_text: str, *, chapter_num: int = 0) -> list[str]:
+    """从章节大纲/梗概中检测主要场景类型，返回按相关度排序的类型列表。
+
+    Args:
+        outline_text: 章节大纲文本
+        chapter_num: 章节号（前3章自动标记 opening 场景）
+    """
     if not outline_text:
         return []
 
@@ -60,6 +71,10 @@ def detect_scene_types(outline_text: str) -> list[str]:
         score = sum(1 for kw in keywords if kw in outline_text)
         if score > 0:
             scores[scene_type] = score
+
+    # 前3章自动标记 opening 场景（不依赖关键词匹配）
+    if 1 <= chapter_num <= 3 and "opening" not in scores:
+        scores["opening"] = 2  # 中等优先级，确保不覆盖更强的场景类型
 
     # 按分数降序排列
     return [t for t, _ in sorted(scores.items(), key=lambda x: -x[1])]
@@ -270,11 +285,11 @@ def build_guidance_items(
     guidance: List[str] = []
 
     # --- 场景类型检测 & Craft 提示注入 ---
-    scene_types = detect_scene_types(chapter_outline)
+    scene_types = detect_scene_types(chapter_outline, chapter_num=chapter)
     scene_craft_hints: List[str] = []
     if scene_types:
         type_labels = {"combat": "战斗", "dialogue": "对话", "emotion": "情感",
-                       "suspense": "悬念", "climax": "高潮"}
+                       "suspense": "悬念", "climax": "高潮", "opening": "开篇"}
         detected = "、".join(type_labels.get(t, t) for t in scene_types[:2])
         guidance.append(f"场景类型检测：{detected}。请参考 references/scene-craft/ 下对应文件的写作原则。")
 
@@ -479,11 +494,31 @@ def build_writing_checklist(
         _add_item(
             "coolpoint_combo",
             f"主爽点+副爽点组合（主爽点：{top_pattern}）",
-            weight=default_weight,
-            required=False,
+            weight=max(default_weight, 1.3),
+            required=True,
             source="reader_signal.pattern_usage",
             verify_hint="新增至少1个副爽点，并与主爽点形成因果链。",
         )
+
+    # v10.5: 代入感三要素
+    _add_item(
+        "reader_immersion",
+        "代入感三要素（读者视角代入、情绪共鸣、信息差利用）",
+        weight=max(default_weight, 1.2),
+        required=True,
+        source="cool_points.immersion",
+        verify_hint="至少1处让读者与主角同步感知信息差，1处情绪共鸣锚点。",
+    )
+
+    # v10.5: 压扬节奏一致性
+    _add_item(
+        "suppression_release",
+        "压扬节奏（本章的压/扬标记是否与大纲一致，压后必有释放）",
+        weight=max(default_weight, 1.2),
+        required=True,
+        source="cool_points.rhythm",
+        verify_hint="若大纲标记为'扬'，正文中必须有明确的爽点爆发段落。",
+    )
 
     review_trend = reader_signal.get("review_trend") or {}
     overall_avg = review_trend.get("overall_avg")
@@ -595,6 +630,10 @@ def is_checklist_item_completed(item: Dict[str, Any], reader_signal: Dict[str, A
     if item_id == "coolpoint_combo":
         pattern_usage = reader_signal.get("pattern_usage") or {}
         return len(pattern_usage) >= 2
+
+    if item_id in ("reader_immersion", "suppression_release"):
+        # 需要正文级别验证，预检阶段保持未完成状态交给审查
+        return False
 
     if item_id == "genre_anchor_consistency":
         return True
