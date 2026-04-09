@@ -417,7 +417,7 @@ class TestRunAllChecks:
         result = run_all_checks(tmp_path, 1, chapter_file, text)
 
         assert result["pass"] is True
-        assert result["checks_run"] == 7
+        assert result["checks_run"] == 9  # v10.6: +opening_pattern +dialogue_ratio
         assert result["hard_failures"] == []
         assert isinstance(result["all_results"], list)
 
@@ -471,7 +471,7 @@ class TestMain:
         out = capsys.readouterr().out
         data = json.loads(out)
         assert data["pass"] is True
-        assert data["checks_run"] == 7
+        assert data["checks_run"] == 9  # v10.6: +opening_pattern +dialogue_ratio
 
     def test_text_output_pass(self, tmp_path, capsys):
         chapter_file = tmp_path / "第0001章.md"

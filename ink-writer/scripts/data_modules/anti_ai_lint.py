@@ -224,7 +224,7 @@ def anti_ai_lint_text(
     question_density = question_count / k_chars
     emotional_total_density = exclamation_density + ellipsis_density + question_density
 
-    if exclamation_density < 1.5:
+    if exclamation_density < 1.5 and len(sentence_lengths) >= 10:
         issues.append(
             {
                 "id": "emotion_exclamation_low",
@@ -235,7 +235,7 @@ def anti_ai_lint_text(
         )
         penalty += 0.10 if exclamation_density < 0.5 else 0.05
 
-    if emotional_total_density < 5.0:
+    if emotional_total_density < 5.0 and len(sentence_lengths) >= 10:
         issues.append(
             {
                 "id": "emotion_total_low",

@@ -698,7 +698,7 @@ def test_context_manager_persist_writing_checklist_score_logs_failure(temp_proje
     manager = ContextManager(temp_project)
 
     def _raise_save_error(_meta):
-        raise RuntimeError("simulated save failure")
+        raise OSError("simulated save failure")
 
     monkeypatch.setattr(manager.index_manager, "save_writing_checklist_score", _raise_save_error)
 
