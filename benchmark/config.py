@@ -104,9 +104,9 @@ MIN_CHAPTER_WORDS = 500   # 章节最少字数（过滤太短的）
 
 # === Style RAG 配置 ===
 STYLE_RAG_DB = BENCHMARK_DIR / "style_rag.db"
-STYLE_RAG_MIN_FRAGMENT_WORDS = 200   # 片段最少字数
-STYLE_RAG_MAX_FRAGMENT_WORDS = 800   # 片段最大字数
-STYLE_RAG_MIN_QUALITY_SCORE = 0.5    # 最低质量分（过滤异常差的片段）
+STYLE_RAG_MIN_FRAGMENT_WORDS = 150   # 片段最少字数（v10.6.3: 200→150，增加片段覆盖）
+STYLE_RAG_MAX_FRAGMENT_WORDS = 1000  # 片段最大字数（v10.6.3: 800→1000，保留更完整的场景）
+STYLE_RAG_MIN_QUALITY_SCORE = 0.4    # 最低质量分（v10.6.3: 0.5→0.4，纳入更多样的片段）
 
 # === 优先爬取书单（头部标杆，手动指定） ===
 # 这些书在各题材排行榜长期稳居前列，爬虫优先处理
