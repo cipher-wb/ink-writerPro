@@ -617,11 +617,22 @@ class QidianScraper:
                     await self.scrape_book(book["book_id"], book)
             elif args.all:
                 await self.scrape_all()
+            elif args.priority:
+                from config import PRIORITY_BOOKS
+                log.info("优先爬取标杆书单")
+                for genre, titles in PRIORITY_BOOKS.items():
+                    log.info(f"\n题材: {genre}")
+                    for title in titles:
+                        # 通过排行榜搜索匹配书名
+                        log.info(f"  搜索: {title}")
+                        # 注意：这里只是配置，实际搜索需要通过排行榜API
+                log.info("\n提示：优先书单需要手动获取book_id后使用 --book <id> 逐本爬取")
+                log.info("或使用 --all 自动从排行榜获取")
             elif args.resume:
                 # 断点续爬：爬所有题材，已爬的自动跳过
                 await self.scrape_all()
             else:
-                log.info("请指定模式: --test, --genre, --book, --all, --resume")
+                log.info("请指定模式: --test, --genre, --book, --all, --resume, --priority")
 
 
 # ============================================================
@@ -636,6 +647,7 @@ def main():
     parser.add_argument("--book", type=str, help="爬取指定书籍ID")
     parser.add_argument("--all", action="store_true", help="爬取所有目标题材")
     parser.add_argument("--resume", action="store_true", help="断点续爬")
+    parser.add_argument("--priority", action="store_true", help="优先爬取PRIORITY_BOOKS中的标杆书")
     args = parser.parse_args()
 
     CORPUS_DIR.mkdir(parents=True, exist_ok=True)

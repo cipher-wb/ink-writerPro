@@ -20,6 +20,9 @@ CRAFT_LESSON_FILES: dict[str, str] = {
     "suspense": "pacing_craft.md",
     "climax": "pacing_craft.md",
     "opening": "opening_patterns.md",
+    "empathy": "empathy_craft.md",
+    "character": "character_craft.md",
+    "immersion": "immersion_craft.md",
 }
 
 
@@ -37,6 +40,74 @@ def _load_craft_lesson_summary(scene_type: str, craft_dir: Path) -> str | None:
     truncated = text[:max_chars]
     last_newline = truncated.rfind("\n")
     return truncated[:last_newline] if last_newline > 0 else truncated
+
+
+# scene-craft-index 路径（相对于 CLAUDE_PLUGIN_ROOT）
+_SCENE_CRAFT_INDEX_RELATIVE = "references/shared/scene-craft-index.md"
+
+
+def load_scene_craft_checklist(scene_type: str, plugin_root: Path | None = None) -> str | None:
+    """从 scene-craft-index.md 提取指定场景类型的技法清单。
+
+    Args:
+        scene_type: 场景类型，如 "emotion", "dialogue", "combat" 等
+        plugin_root: 插件根目录路径
+
+    Returns:
+        对应场景类型的技法清单文本（必做+禁止），或 None
+    """
+    if plugin_root is None:
+        # 从当前文件推导插件根目录
+        plugin_root = Path(__file__).parent.parent.parent
+
+    index_path = plugin_root / _SCENE_CRAFT_INDEX_RELATIVE
+    if not index_path.exists():
+        return None
+
+    text = index_path.read_text(encoding="utf-8")
+
+    # 场景类型到 section 标题的映射
+    section_map = {
+        "emotion": "## 1. 情感场景",
+        "dialogue": "## 2. 对话场景",
+        "combat": "## 3. 战斗/紧张场景",
+        "suspense": "## 4. 悬念/钩子场景",
+        "daily": "## 5. 日常/过渡场景",
+        "climax": "## 6. 高潮/逆转场景",
+        "opening": "## 7. 开篇场景",
+    }
+
+    header = section_map.get(scene_type)
+    if not header:
+        return None
+
+    # 提取对应 section
+    start = text.find(header)
+    if start < 0:
+        return None
+
+    # 找下一个 ## 作为结束（或文件末尾）
+    next_section = text.find("\n## ", start + len(header))
+    if next_section < 0:
+        section_text = text[start:]
+    else:
+        section_text = text[start:next_section]
+
+    # 截取必做清单+禁止清单（不含范例和感官配置，减少token）
+    lines = section_text.split("\n")
+    result_lines = []
+    in_checklist = False
+    for line in lines:
+        if line.startswith("### 必做清单") or line.startswith("### 禁止"):
+            in_checklist = True
+        elif line.startswith("### 范例") or line.startswith("### 感官"):
+            in_checklist = False
+
+        if in_checklist or line.startswith("## "):
+            result_lines.append(line)
+
+    result = "\n".join(result_lines).strip()
+    return result if result else None
 
 
 # === 场景类型检测关键词 ===
@@ -313,6 +384,12 @@ def build_guidance_items(
             if hint:
                 scene_craft_hints.append(hint)
                 guidance.append(hint)
+
+    # v10.6.2: 加载 scene-craft-index 的技法清单
+    for st in scene_types[:2]:  # 最多加载前2种场景类型
+        checklist = load_scene_craft_checklist(st)
+        if checklist:
+            guidance.append(checklist)
 
     low_ranges = reader_signal.get("low_score_ranges") or []
     if low_ranges:
