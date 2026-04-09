@@ -409,13 +409,15 @@ def _load_rag_assist(
     vector_db = config.vector_db
     has_embed_key = bool(str(getattr(config, "embed_api_key", "") or "").strip())
 
-    # v10.6.1: RAG 为必填项，无 API Key 直接报错阻断
+    # v11.0: RAG 为必填项。无 API Key 时返回错误信息（由 preflight 硬门控阻断写作流程）
     if not has_embed_key:
-        raise RuntimeError(
-            "❌ EMBED_API_KEY 未配置！RAG 向量检索是必填项，不允许降级到 BM25。\n"
-            "   请在 ~/.claude/ink-writer/.env 中配置 EMBED_API_KEY。\n"
-            "   参考: ink-writer/references/shared/rag-guide.md"
+        base_payload["reason"] = "EMBED_API_KEY_MISSING"
+        base_payload["error"] = (
+            "EMBED_API_KEY 未配置。RAG 向量检索是必填项。"
+            "请在 ~/.claude/ink-writer/.env 中配置。"
         )
+        logger.warning("RAG: EMBED_API_KEY 未配置，跳过向量检索（preflight 应已阻断此情况）")
+        return base_payload
 
     # 向量数据库为空是正常的（第1章时还没写过），此时走本地内存卡检索
     if not vector_db.exists() or vector_db.stat().st_size <= 0:
@@ -446,13 +448,21 @@ def _load_rag_assist(
         local_payload["reason"] = "vector_no_hits_supplemented_local"
         return local_payload
     except Exception as exc:
-        # v10.6.1: RAG API 调用失败直接报错，不再静默降级
-        raise RuntimeError(
-            f"❌ RAG Embedding API 调用失败: {exc}\n"
-            f"   URL: {getattr(config, 'embed_base_url', '?')}\n"
-            f"   模型: {getattr(config, 'embed_model', '?')}\n"
-            f"   请检查: 1) API Key 是否正确 2) 服务地址是否可达 3) 网络连接是否正常"
-        ) from exc
+        # v11.0: RAG API 调用失败，记录错误并回退到本地检索（preflight 应已验证 API 可达）
+        logger.warning("RAG API 调用失败: %s，回退到本地内存卡检索", exc)
+        try:
+            local_payload = _search_memory_cards_and_summaries(
+                project_root=project_root,
+                chapter_num=chapter_num,
+                query=query,
+                top_k=top_k,
+            )
+            local_payload["enabled"] = True
+            local_payload["reason"] = f"rag_api_error:{exc.__class__.__name__}"
+            return local_payload
+        except Exception:
+            base_payload["reason"] = f"rag_api_error:{exc.__class__.__name__}"
+            return base_payload
 
 
 def _load_contract_context(project_root: Path, chapter_num: int) -> Dict[str, Any]:
