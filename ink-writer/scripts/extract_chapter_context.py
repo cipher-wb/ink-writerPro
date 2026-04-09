@@ -336,26 +336,17 @@ def _search_with_rag(
     results = []
     mode = "auto"
     fallback_reason = ""
-    has_embed_key = bool(str(getattr(config, "embed_api_key", "") or "").strip())
-    if has_embed_key:
-        try:
-            results = asyncio.run(
-                adapter.search(
-                    query=query,
-                    top_k=top_k,
-                    strategy="auto",
-                    chapter=chapter_num,
-                    center_entities=center_entities,
-                )
-            )
-        except Exception as exc:
-            fallback_reason = f"auto_failed:{exc.__class__.__name__}"
-            mode = "bm25_fallback"
-            results = adapter.bm25_search(query=query, top_k=top_k, chapter=chapter_num)
-    else:
-        mode = "bm25_fallback"
-        fallback_reason = "missing_embed_api_key"
-        results = adapter.bm25_search(query=query, top_k=top_k, chapter=chapter_num)
+
+    # v10.6.1: RAG 必填，不再静默降级到 BM25
+    results = asyncio.run(
+        adapter.search(
+            query=query,
+            top_k=top_k,
+            strategy="auto",
+            chapter=chapter_num,
+            center_entities=center_entities,
+        )
+    )
 
     hits: List[Dict[str, Any]] = []
     for row in results:
@@ -418,12 +409,16 @@ def _load_rag_assist(
     vector_db = config.vector_db
     has_embed_key = bool(str(getattr(config, "embed_api_key", "") or "").strip())
 
-    try:
-        if has_embed_key and vector_db.exists() and vector_db.stat().st_size > 0:
-            rag_payload = _search_with_rag(project_root=project_root, chapter_num=chapter_num, query=query, top_k=top_k)
-            rag_payload["enabled"] = True
-            if rag_payload.get("hits"):
-                return rag_payload
+    # v10.6.1: RAG 为必填项，无 API Key 直接报错阻断
+    if not has_embed_key:
+        raise RuntimeError(
+            "❌ EMBED_API_KEY 未配置！RAG 向量检索是必填项，不允许降级到 BM25。\n"
+            "   请在 ~/.claude/ink-writer/.env 中配置 EMBED_API_KEY。\n"
+            "   参考: ink-writer/references/shared/rag-guide.md"
+        )
+
+    # 向量数据库为空是正常的（第1章时还没写过），此时走本地内存卡检索
+    if not vector_db.exists() or vector_db.stat().st_size <= 0:
         local_payload = _search_memory_cards_and_summaries(
             project_root=project_root,
             chapter_num=chapter_num,
@@ -431,26 +426,33 @@ def _load_rag_assist(
             top_k=top_k,
         )
         local_payload["enabled"] = True
-        if not has_embed_key:
-            local_payload["reason"] = "missing_embed_api_key"
-        elif not vector_db.exists() or vector_db.stat().st_size <= 0:
-            local_payload["reason"] = "vector_db_missing_or_empty"
+        local_payload["reason"] = "vector_db_empty_first_chapters"
+        return local_payload
+
+    # 正常向量RAG检索
+    try:
+        rag_payload = _search_with_rag(project_root=project_root, chapter_num=chapter_num, query=query, top_k=top_k)
+        rag_payload["enabled"] = True
+        if rag_payload.get("hits"):
+            return rag_payload
+        # 向量检索无命中，补充本地内存卡检索
+        local_payload = _search_memory_cards_and_summaries(
+            project_root=project_root,
+            chapter_num=chapter_num,
+            query=query,
+            top_k=top_k,
+        )
+        local_payload["enabled"] = True
+        local_payload["reason"] = "vector_no_hits_supplemented_local"
         return local_payload
     except Exception as exc:
-        try:
-            local_payload = _search_memory_cards_and_summaries(
-                project_root=project_root,
-                chapter_num=chapter_num,
-                query=query,
-                top_k=top_k,
-            )
-            local_payload["enabled"] = True
-            local_payload["reason"] = f"rag_error:{exc.__class__.__name__}"
-            return local_payload
-        except Exception:
-            logger.debug("failed to build RAG local payload", exc_info=True)
-            base_payload["reason"] = f"rag_error:{exc.__class__.__name__}"
-            return base_payload
+        # v10.6.1: RAG API 调用失败直接报错，不再静默降级
+        raise RuntimeError(
+            f"❌ RAG Embedding API 调用失败: {exc}\n"
+            f"   URL: {getattr(config, 'embed_base_url', '?')}\n"
+            f"   模型: {getattr(config, 'embed_model', '?')}\n"
+            f"   请检查: 1) API Key 是否正确 2) 服务地址是否可达 3) 网络连接是否正常"
+        ) from exc
 
 
 def _load_contract_context(project_root: Path, chapter_num: int) -> Dict[str, Any]:

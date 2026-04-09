@@ -238,6 +238,62 @@ def _build_preflight_report(explicit_project_root: Optional[str]) -> dict:
         except Exception as exc:
             checks.append({"name": "index_db", "ok": False, "path": "", "error": str(exc)})
 
+    # v10.6.1: RAG Embedding API 连通性检查（硬门控）
+    if project_root:
+        try:
+            from data_modules.config import DataModulesConfig
+            import asyncio
+
+            cfg = DataModulesConfig.from_project_root(project_root)
+            embed_key = str(getattr(cfg, "embed_api_key", "") or "").strip()
+            embed_url = str(getattr(cfg, "embed_base_url", "") or "").strip()
+            embed_model = str(getattr(cfg, "embed_model", "") or "").strip()
+
+            if not embed_key:
+                checks.append({
+                    "name": "rag_embedding_api",
+                    "ok": False,
+                    "path": "",
+                    "error": "EMBED_API_KEY 未配置。RAG 向量检索是必填项，请在 ~/.claude/ink-writer/.env 中配置 EMBED_API_KEY。"
+                           "\n  参考: ink-writer/references/shared/rag-guide.md",
+                })
+            else:
+                # 实际调用API验证连通性（发送一个测试文本）
+                try:
+                    from data_modules.api_client import APIClient
+                    api = APIClient(cfg)
+                    test_result = asyncio.run(api.embed(["RAG连通性测试"]))
+                    if test_result and len(test_result) > 0 and len(test_result[0]) > 0:
+                        dim = len(test_result[0])
+                        checks.append({
+                            "name": "rag_embedding_api",
+                            "ok": True,
+                            "path": embed_url,
+                            "detail": f"连通，模型={embed_model}，维度={dim}",
+                        })
+                    else:
+                        checks.append({
+                            "name": "rag_embedding_api",
+                            "ok": False,
+                            "path": embed_url,
+                            "error": f"Embedding API 返回空结果。URL={embed_url}，模型={embed_model}。请检查 API Key 和服务地址是否正确。",
+                        })
+                except Exception as api_exc:
+                    checks.append({
+                        "name": "rag_embedding_api",
+                        "ok": False,
+                        "path": embed_url,
+                        "error": f"Embedding API 连接失败: {api_exc}。URL={embed_url}，模型={embed_model}。"
+                               "\n  请检查: 1) API Key是否正确 2) 服务地址是否可达 3) 模型名称是否匹配",
+                    })
+        except Exception as exc:
+            checks.append({
+                "name": "rag_embedding_api",
+                "ok": False,
+                "path": "",
+                "error": f"RAG 配置加载失败: {exc}",
+            })
+
     return {
         "ok": all(bool(item["ok"]) for item in checks),
         "project_root": project_root,

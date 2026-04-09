@@ -181,7 +181,9 @@ export INK_PREFLIGHT=1
 source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
 
-**硬门槛**：`preflight` 必须成功。它统一校验 `CLAUDE_PLUGIN_ROOT` 派生出的 `SKILL_ROOT` / `SCRIPTS_DIR`、`ink.py`、`extract_chapter_context.py` 和解析出的 `PROJECT_ROOT`。任一失败都立即阻断。
+**硬门槛**：`preflight` 必须成功。它统一校验 `CLAUDE_PLUGIN_ROOT` 派生出的 `SKILL_ROOT` / `SCRIPTS_DIR`、`ink.py`、`extract_chapter_context.py`、解析出的 `PROJECT_ROOT`、以及 **RAG Embedding API 连通性**（v10.6.1 新增，必填项）。任一失败都立即阻断。
+
+**RAG 硬门控**（v10.6.1）：`preflight` 会实际调用 Embedding API 发送测试文本。若 `EMBED_API_KEY` 未配置或 API 不可达，`preflight` 直接失败，**阻断写作流程**。配置方法参见 `references/shared/rag-guide.md`。
 
 **大纲覆盖硬检查**（preflight 通过后、进入 Step 0.5 之前必须执行）：
 
