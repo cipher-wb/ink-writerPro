@@ -407,7 +407,7 @@ class TestProjectInfo:
 class TestStateModel:
     def test_defaults(self):
         sm = StateModel()
-        assert sm.schema_version == 6
+        assert sm.schema_version == 7
         assert isinstance(sm.project_info, ProjectInfo)
         assert isinstance(sm.progress, ProgressState)
         assert isinstance(sm.protagonist_state, ProtagonistState)
@@ -422,7 +422,7 @@ class TestStateModel:
 
     def test_model_validate_empty(self):
         sm = StateModel.model_validate({})
-        assert sm.schema_version == 6
+        assert sm.schema_version == 7
 
     def test_model_validate_full(self):
         data = {
@@ -495,7 +495,7 @@ class TestLoadState:
         """When state.json doesn't exist, return a default StateModel."""
         state = load_state(tmp_path)
         assert isinstance(state, StateModel)
-        assert state.schema_version == 6
+        assert state.schema_version == 7
 
     def test_load_existing_file(self, tmp_path):
         ink_dir = tmp_path / ".ink"
@@ -530,7 +530,7 @@ class TestLoadState:
         ink_dir.mkdir()
         (ink_dir / "state.json").write_text("{}", encoding="utf-8")
         state = load_state(tmp_path)
-        assert state.schema_version == 6
+        assert state.schema_version == 7
 
 
 class TestSaveState:
@@ -556,7 +556,7 @@ class TestSaveState:
         save_state(tmp_path, state)
         loaded = load_state(tmp_path)
 
-        assert loaded.schema_version == 6
+        assert loaded.schema_version == 7
         assert loaded.progress.current_chapter == 7
         assert loaded.protagonist_state.name == "萧尘"
         assert loaded.protagonist_state.power.realm == "金丹"

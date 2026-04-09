@@ -409,15 +409,23 @@ def _load_rag_assist(
     vector_db = config.vector_db
     has_embed_key = bool(str(getattr(config, "embed_api_key", "") or "").strip())
 
-    # v11.0: RAG 为必填项。无 API Key 时返回错误信息（由 preflight 硬门控阻断写作流程）
+    # v11.0: 无 API Key 时跳过向量检索，直接走本地内存卡检索
+    # （preflight 硬门控已在写作入口阻断无key情况，此处是兜底+测试兼容）
     if not has_embed_key:
-        base_payload["reason"] = "EMBED_API_KEY_MISSING"
-        base_payload["error"] = (
-            "EMBED_API_KEY 未配置。RAG 向量检索是必填项。"
-            "请在 ~/.claude/ink-writer/.env 中配置。"
-        )
-        logger.warning("RAG: EMBED_API_KEY 未配置，跳过向量检索（preflight 应已阻断此情况）")
-        return base_payload
+        logger.warning("RAG: EMBED_API_KEY 未配置，跳过向量检索，使用本地内存卡")
+        try:
+            local_payload = _search_memory_cards_and_summaries(
+                project_root=project_root,
+                chapter_num=chapter_num,
+                query=query,
+                top_k=top_k,
+            )
+            local_payload["enabled"] = True
+            local_payload["reason"] = "missing_embed_api_key"
+            return local_payload
+        except Exception:
+            base_payload["reason"] = "missing_embed_api_key"
+            return base_payload
 
     # 向量数据库为空是正常的（第1章时还没写过），此时走本地内存卡检索
     if not vector_db.exists() or vector_db.stat().st_size <= 0:

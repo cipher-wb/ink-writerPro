@@ -146,7 +146,7 @@ class TestRenderTeamRows:
 class TestEnsureStateSchema:
     def test_fills_defaults_on_empty_dict(self):
         state = _ensure_state_schema({})
-        assert state["schema_version"] == 6
+        assert state["schema_version"] == 7
         assert "progress" in state
         assert state["progress"]["current_chapter"] == 0
         assert state["protagonist_state"]["name"] == ""
@@ -281,7 +281,7 @@ class TestInitProjectExistingState:
         (ink_dir / "state.json").write_text("{invalid json", encoding="utf-8")
         init_project(str(proj), "测试书", "修仙")
         state = json.loads((ink_dir / "state.json").read_text(encoding="utf-8"))
-        assert state["schema_version"] == 6
+        assert state["schema_version"] == 7
 
     def test_existing_preferences_corrupt_recovered(self, tmp_path, _mock_externals):
         proj = tmp_path / "proj"
