@@ -191,6 +191,33 @@ model: inherit
    → 视角切换明确，非 POV 叙述，不违规
 ```
 
+### Layer 6: 伏笔逾期检查（v10.6 新增）
+
+从 `review_bundle.foreshadowing_queue` 或 `review_bundle.memory_context` 中读取活跃伏笔列表。
+
+**检查规则**：
+
+| 逾期程度 | 严重度 | 说明 |
+|---------|--------|------|
+| remaining < -20（逾期超20章） | `critical` | 伏笔严重逾期，必须本章处理或标记放弃 |
+| remaining < -10（逾期超10章） | `high` | 伏笔逾期，本章应推进 |
+| remaining < 0（已过目标章节） | `medium` | 伏笔轻度逾期，近期应处理 |
+
+**与 context-agent 的协作**：
+- context-agent Step 5 的第7板块已按逾期程度排序伏笔
+- consistency-checker 作为第二道防线，确保逾期伏笔不被静默忽略
+- 若伏笔数据不存在（`foreshadowing_queue` 为空），跳过此层检测
+
+**输出格式**：
+```json
+{
+  "type": "FORESHADOWING_OVERDUE",
+  "severity": "high",
+  "description": "伏笔'三年之约'已逾期15章（planted: ch5, target: ch85, current: ch100）",
+  "suggestion": "在本章或近期章节中推进或解决此伏笔"
+}
+```
+
 ### 第三步: 实体一致性检查
 
 **对所有章节中检测到的新实体**:

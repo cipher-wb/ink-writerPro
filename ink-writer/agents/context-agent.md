@@ -48,6 +48,7 @@ model: inherit
 - 目标、阻力、代价、本章变化、未闭合问题、核心冲突一句话
 - 开头类型、情绪节奏、信息密度
 - **开头类型多样化（硬约束）**：本章开头类型必须与最近2章不同。若最近2章均以时间过渡/环境描写开头，本章必须选择非时间类型（对话、行动、感官、内心等）。
+- **开头类型禁忌（铁律）**：严禁以下开头类型 → `["时间标记", "日期陈述", "X天后", "次日", "第N天", "第N日", "那天早上", "时间来到了"]`。无论大纲如何描述，章节第一句必须从 golden-opening-patterns.md 的5种模式中选择（行动切入/对话切入/感官切入/悬念切入/内心切入），时间锚点在前3段通过角色感知自然带出。
 - 是否过渡章（必须按大纲判定，禁止按字数判定）
 - 追读力设计（钩子类型/强度、微兑现清单、爽点模式）
 
@@ -158,7 +159,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 - 若 `pack-json` 已包含任务书 / Context Contract / Step 2A 直写提示的全部字段，直接整理输出，禁止继续读取 `extract-context --format json`。
 - 只在 `pack-json` 缺字段时，才允许做增量读取。
 
-### Context Token 动态预算 v2
+### Context Token 动态预算 v3
 
 #### 基础预算表
 
@@ -167,7 +168,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 | 黄金三章 | ch1-3 | 8000 tokens | 前3章需密集加载世界观/角色/金手指/创意约束，5000不够用 |
 | 开篇期 | ch4-30 | 7000 tokens | |
 | 展开期 | ch31-100 | 9000 tokens | |
-| 长线期 | ch101+ | 11000 tokens | |
+| 长线期 | ch101+ | 13000 tokens | v10.6: 11000→13000，充分利用现代模型上下文窗口 |
 
 #### 动态加分项
 
@@ -179,6 +180,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 | 每个本章出场角色 | +50 tokens | +500 |
 | 每条未清算债务 | +100 tokens | +500 |
 | 大纲标注为"关键章节" | +2000 tokens | +2000 |
+| 出场角色关联伏笔/历史事件 | +80 tokens | +800 |
 
 最终预算 = min(基础 + 加分, 15000)
 
@@ -197,7 +199,24 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 - P2: 伏笔前 10 条 + 上章钩子
 - P3: 角色状态与红线
 - P4: 追读力策略
+- P4.5: 卷级mega-summary（优先于逐章摘要，ch>50时启用）
 - P5: 历史章节摘要（优先截断）
+
+### 卷级 Mega-Summary（v10.6 新增）
+
+当 `current_chapter > 50` 时，对于远距离历史章节启用mega-summary压缩：
+
+- **触发条件**：ch > 50，且本章与目标摘要间距 > 30章
+- **压缩策略**：将一个卷（约50章）的所有逐章摘要压缩为500字的mega-summary
+- **存储位置**：`.ink/summaries/vol{N}_mega.md`
+- **加载优先级**：context-agent 在长线期优先加载 mega-summary 而非逐章摘要，释放 token 给更关键的近期上下文
+- **生成方式**：由 `memory_compressor.py` 在新卷第1章时自动触发（参见 ink-write SKILL.md Step 0）
+
+Mega-summary 必须保留：
+1. 每个卷的关键剧情转折（2-3个）
+2. 角色状态变化（主角+核心角色）
+3. 未解决的伏笔列表
+4. 已消亡/退场角色列表
 
 ### Step 0.6: Context Contract 全量上下文包（按需）
 ```bash
@@ -257,6 +276,28 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-patter
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-hook-type-stats --last-n 20
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-debt-summary
 ```
+
+### Step 2.5: 风格参考样本检索（Style RAG）
+
+```bash
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style benchmark --outline "{本章大纲概要}" --genre "{genre}" --max 3
+```
+
+将返回的标杆片段写入执行包新板块（第11板块）：
+
+```markdown
+### 11. 风格参考样本（Style Reference）
+
+以下是同题材同场景类型的标杆小说片段，参考其句式节奏、对话比例和情感密度（不要逐字模仿，内化其"呼吸感"）：
+
+**样本1**（《{book_title}》, {scene_type}/{emotion}）：
+> {content_excerpt}
+风格指标：句长{avg_sentence_length}字, 对话{dialogue_ratio}%, 感叹号{exclamation_density}/千字
+
+**样本2** ...
+```
+
+若 style_rag.db 不存在或返回为空，跳过此板块（不阻断流程）。
 
 ### Step 3: 实体与最近出场 + 伏笔读取 + 知识盲区
 ```bash
@@ -340,10 +381,34 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-protag
 **想要什么**: {本章主角的immediate目标}
 **什么挡在面前**: {本章的主要障碍}
 **场景类型**: {战斗/对话/情感/悬念/高潮/日常} — 参考 references/scene-craft/ 对应文件
+
+**本章推荐对话场景**: [基于出场角色和冲突，推荐至少1-2个需要对话展开的情节点]
+**对话角色组合**: [{角色A} vs {角色B}: {目的/冲突点}]（除纯独处场景外，必须推荐至少1组对话组合）
 ```
 
 数据来源：大纲本章梗概 + `state.json` protagonist_state + 上章摘要。
 若数据不足，基于大纲合理推断，标注"[推断]"。
+
+**第8.7板块：出场角色状态快照（v10.6 新增）**：
+
+从 index.db 读取本章出场角色的最新状态：
+```bash
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-entities --with-status
+```
+
+整理为状态快照表：
+
+```
+### 8.7 出场角色状态快照
+| 角色 | 上次出场 | 距今N章 | 位置 | 目标 | 情绪 | 与主角关系 |
+|------|---------|--------|------|------|------|-----------|
+| 李雪 | ch95 | 5章 | 天云宗 | 寻找解药 | 焦急 | 盟友/恋人 |
+| 药老 | ch88 | ⚠️12章 | 未知 | 恢复实力 | 沉默 | 师父 |
+```
+
+**久未出场警告**：
+- 距上次出场 >10章：标注 "⚠️{N}章"，提示 writer-agent 再次出场需回忆性过渡
+- 距上次出场 >20章：标注 "🔴{N}章"，提示可能需要重新介绍角色
 
 **第9板块：知识盲区（Knowledge Gate）** 必须包含：
 ```

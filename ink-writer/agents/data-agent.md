@@ -230,6 +230,34 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 }
 ```
 
+### Step B.7.5: 出场角色状态更新（v10.6 新增）
+
+对本章所有出场角色（不限于核心/重要tier），更新以下状态字段到 payload：
+
+```json
+{
+  "character_status_updates": [
+    {
+      "entity_id": "lixue",
+      "last_seen_chapter": 100,
+      "current_location": "天云宗大殿",
+      "current_goal": "寻找解药",
+      "current_emotion": "焦急",
+      "relationship_to_protagonist": "盟友/恋人"
+    }
+  ]
+}
+```
+
+**提取规则**：
+- `last_seen_chapter`: 始终更新为当前章号
+- `current_location`: 从正文推断角色在本章结束时的位置
+- `current_goal`: 从对话/行为推断角色当前目标（若不明确可沿用上一章）
+- `current_emotion`: 从正文推断角色在本章结束时的情绪状态
+- `relationship_to_protagonist`: 本章中与主角的关系定位（若无变化可沿用上一章）
+
+**写入**: 通过 `state process-chapter` 统一落库到 entities 表的扩展字段。
+
 ### Step B.8: 主题呈现提取
 
 读取 `state.json.project_info.themes` 获取核心主题列表（如 `["力量的代价", "救赎"]`）。
@@ -412,7 +440,8 @@ cat > "{project_root}/.ink/tmp/data_agent_payload_ch{chapter_padded}.json" <<'EO
   "candidate_facts": [...],
   "character_evolution_entries": [...],
   "narrative_commitments_new": [...],
-  "narrative_commitments_resolved": [...]
+  "narrative_commitments_resolved": [...],
+  "character_status_updates": [...]
 }
 EOF
 

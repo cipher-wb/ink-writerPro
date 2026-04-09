@@ -214,6 +214,77 @@ def anti_ai_lint_text(
         )
         penalty += min(0.12, 0.04 * hook_count)
 
+    # --- v10.6: 情感标点密度检测 ---
+    k_chars = max(1, length / 1000)
+    exclamation_count = text.count("！") + text.count("!")
+    ellipsis_count = text.count("……") + text.count("...") + text.count("…")
+    question_count = text.count("？") + text.count("?")
+    exclamation_density = exclamation_count / k_chars
+    ellipsis_density = ellipsis_count / k_chars
+    question_density = question_count / k_chars
+    emotional_total_density = exclamation_density + ellipsis_density + question_density
+
+    if exclamation_density < 1.5:
+        issues.append(
+            {
+                "id": "emotion_exclamation_low",
+                "severity": "high" if exclamation_density < 0.5 else "medium",
+                "message": f"感叹号密度 {exclamation_density:.1f}/千字，标杆 3.8/千字，情感表达匮乏。",
+                "count": exclamation_count,
+            }
+        )
+        penalty += 0.10 if exclamation_density < 0.5 else 0.05
+
+    if emotional_total_density < 5.0:
+        issues.append(
+            {
+                "id": "emotion_total_low",
+                "severity": "high" if emotional_total_density < 3.0 else "medium",
+                "message": f"情感标点总密度 {emotional_total_density:.1f}/千字，标杆 10.8/千字，整体情感外化不足。",
+                "count": exclamation_count + ellipsis_count + question_count,
+            }
+        )
+        penalty += 0.12 if emotional_total_density < 3.0 else 0.06
+
+    # --- v10.6: 对话存在性检测 ---
+    dialogue_matches = re.findall(r"\u201c[^\u201d]*\u201d", text)
+    dialogue_char_count = sum(len(m) - 2 for m in dialogue_matches)  # exclude quotes
+    dialogue_ratio = dialogue_char_count / max(1, length)
+    if dialogue_ratio < 0.05 and len(sentences) >= 10:
+        issues.append(
+            {
+                "id": "dialogue_missing",
+                "severity": "high" if dialogue_ratio == 0 else "medium",
+                "message": f"对话占比 {dialogue_ratio:.1%}，标杆 34.5%，角色互动严重不足。",
+                "count": len(dialogue_matches),
+            }
+        )
+        penalty += 0.15 if dialogue_ratio == 0 else 0.08
+
+    # --- v10.6: 句长碎片化检测 ---
+    if sentence_lengths and avg_sentence_len < 18 and len(sentence_lengths) >= 10:
+        issues.append(
+            {
+                "id": "sentence_fragmentation",
+                "severity": "high",
+                "message": f"句长均值 {avg_sentence_len:.1f} 字，标杆 28 字，句子碎片化严重。",
+                "count": round(avg_sentence_len, 1),
+            }
+        )
+        penalty += 0.15
+
+    short_ratio = sum(1 for sl in sentence_lengths if sl <= 8) / max(1, len(sentence_lengths))
+    if short_ratio > 0.25 and len(sentence_lengths) >= 10:
+        issues.append(
+            {
+                "id": "short_sentence_excess",
+                "severity": "high",
+                "message": f"短句占比 {short_ratio:.0%}，标杆 13%，短句过多导致碎片化。",
+                "count": round(short_ratio, 2),
+            }
+        )
+        penalty += 0.10
+
     golden_three_result = analyze_golden_three_opening(
         text=text,
         chapter=chapter,
@@ -247,6 +318,13 @@ def anti_ai_lint_text(
             "expository_dialogue_count": len(exposition_dialogue),
             "cliche_count": cliche_count,
             "hook_count": hook_count,
+            "exclamation_density": round(exclamation_density, 2),
+            "ellipsis_density": round(ellipsis_density, 2),
+            "question_density": round(question_density, 2),
+            "emotional_total_density": round(emotional_total_density, 2),
+            "dialogue_ratio": round(dialogue_ratio, 4),
+            "dialogue_count": len(dialogue_matches),
+            "short_sentence_ratio": round(short_ratio, 4) if sentence_lengths else 0.0,
             "chapter": int(chapter or 0),
             "golden_three_applied": bool(golden_three_result.get("applied")),
             "golden_three_score": round(float((golden_three_result.get("metrics") or {}).get("score") or 0.0), 4),

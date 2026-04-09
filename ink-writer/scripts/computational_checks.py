@@ -253,6 +253,66 @@ def check_contract_completeness(project_root: Path, chapter_num: int) -> CheckRe
 
 
 # ---------------------------------------------------------------------------
+# v10.6: Dialogue ratio check
+# ---------------------------------------------------------------------------
+
+def check_dialogue_ratio(chapter_text: str) -> CheckResult:
+    """检查对话占比是否达到最低要求（标杆34.5%，最低5%）"""
+    compact = re.sub(r'\s+', '', chapter_text)
+    total_len = len(compact)
+    if total_len < 500:
+        return CheckResult("dialogue_ratio", True, "soft", "正文过短，跳过对话检查")
+
+    dialogue_matches = re.findall(r'\u201c[^\u201d]*\u201d', chapter_text)
+    dialogue_chars = sum(len(re.sub(r'\s+', '', m)) - 2 for m in dialogue_matches)
+    ratio = dialogue_chars / max(1, total_len)
+
+    if ratio < 0.05:
+        return CheckResult(
+            "dialogue_ratio", False, "soft",
+            f"对话占比 {ratio:.1%}（标杆34.5%），角色互动严重不足",
+            "建议回到 Step 2A 补充对话场景。仅纯独处/逃亡/修炼章可豁免。"
+        )
+    return CheckResult("dialogue_ratio", True, "soft", f"对话占比 {ratio:.1%}")
+
+
+# ---------------------------------------------------------------------------
+# v10.6: Opening pattern check
+# ---------------------------------------------------------------------------
+
+_OPENING_TIME_PATTERNS = [
+    r'^第[一二三四五六七八九十\d]+[天日]',
+    r'^[次翌]日',
+    r'^[一二三四五六七八九十\d]+天[后前]',
+    r'^[一二三四五六七八九十\d]+个?[月年周]后',
+    r'^那天[早晚]',
+    r'^时间[来到了过了]',
+    r'^[这那]一[天日年]',
+]
+
+
+def check_opening_pattern(chapter_text: str) -> CheckResult:
+    """检查章节第一句是否为时间标记开头"""
+    lines = [line.strip() for line in chapter_text.split('\n') if line.strip() and not line.strip().startswith('#')]
+    if not lines:
+        return CheckResult("opening_pattern", True, "soft", "正文为空")
+
+    first_line = lines[0]
+    # Extract first sentence
+    first_sentence_match = re.match(r'^[^。！？!?\n]+', first_line)
+    first_sentence = first_sentence_match.group(0).strip() if first_sentence_match else first_line[:50]
+
+    for pattern in _OPENING_TIME_PATTERNS:
+        if re.search(pattern, first_sentence):
+            return CheckResult(
+                "opening_pattern", False, "hard",
+                f"章节以时间标记开头：「{first_sentence[:30]}」",
+                "违反第五定律（开头即钩子）。须以行动/对话/感官/悬念切入，时间锚点通过角色感知带出。"
+            )
+    return CheckResult("opening_pattern", True, "soft", "开头非时间标记")
+
+
+# ---------------------------------------------------------------------------
 # Metadata leakage check
 # ---------------------------------------------------------------------------
 
@@ -291,6 +351,8 @@ def run_all_checks(
     results: List[CheckResult] = [
         check_word_count(chapter_text),
         check_file_naming(chapter_file, chapter_num),
+        check_opening_pattern(chapter_text),       # v10.6: 开头时间标记检测
+        check_dialogue_ratio(chapter_text),         # v10.6: 对话占比检测
         check_character_conflicts(chapter_text, project_root),
         check_foreshadowing_consistency(project_root, chapter_num),
         check_power_level(chapter_text, project_root),

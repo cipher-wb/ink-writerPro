@@ -415,6 +415,127 @@ class StyleSampler:
         score += float(lint.get("score", 0.0)) * 0.15
         return score
 
+    # ==================== Benchmark Style RAG ====================
+
+    def get_benchmark_samples(
+        self,
+        genre: str = "",
+        scene_type: str = "",
+        emotion: str = "",
+        max_samples: int = 3,
+    ) -> List[Dict[str, Any]]:
+        """从 benchmark/style_rag.db 检索标杆风格样本"""
+        # 定位 style_rag.db
+        rag_db_path = Path(__file__).parent.parent.parent.parent / "benchmark" / "style_rag.db"
+        if not rag_db_path.exists():
+            return []
+
+        try:
+            conn = sqlite3.connect(str(rag_db_path))
+            where_clauses = []
+            params: list = []
+
+            if genre:
+                where_clauses.append("book_genre LIKE ?")
+                params.append(f"%{genre}%")
+            if scene_type:
+                where_clauses.append("scene_type = ?")
+                params.append(scene_type)
+            if emotion:
+                where_clauses.append("emotion = ?")
+                params.append(emotion)
+
+            where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
+            params.append(max_samples)
+
+            rows = conn.execute(f"""
+                SELECT book_title, book_genre, scene_type, emotion,
+                       content, word_count, avg_sentence_length,
+                       dialogue_ratio, exclamation_density, quality_score
+                FROM style_fragments
+                WHERE {where_sql}
+                ORDER BY quality_score DESC
+                LIMIT ?
+            """, params).fetchall()
+
+            conn.close()
+
+            results = []
+            for row in rows:
+                # 截取前300字作为参考（避免执行包过大）
+                content_excerpt = row[4][:300]
+                if len(row[4]) > 300:
+                    # 找到最近的句号截断
+                    last_period = content_excerpt.rfind('。')
+                    if last_period > 100:
+                        content_excerpt = content_excerpt[:last_period + 1]
+                    content_excerpt += "……"
+
+                results.append({
+                    "book_title": row[0],
+                    "book_genre": row[1],
+                    "scene_type": row[2],
+                    "emotion": row[3],
+                    "content_excerpt": content_excerpt,
+                    "word_count": row[5],
+                    "avg_sentence_length": row[6],
+                    "dialogue_ratio": round(row[7], 3),
+                    "exclamation_density": row[8],
+                    "quality_score": row[9],
+                })
+
+            return results
+
+        except Exception:
+            return []
+
+    def select_benchmark_for_chapter(
+        self,
+        chapter_outline: str,
+        genre: str = "",
+        max_samples: int = 3,
+    ) -> List[Dict[str, Any]]:
+        """为章节写作选择标杆风格参考样本"""
+        # 推断场景类型和情绪
+        scene_types = self._infer_scene_types(chapter_outline)
+        scene_type = scene_types[0] if scene_types else ""
+
+        # 推断情绪
+        emotion = ""
+        emotion_keywords = {
+            "紧张": ["危险", "战斗", "死", "逃", "追"],
+            "热血": ["突破", "爆发", "觉醒", "逆转", "反击"],
+            "悲伤": ["死", "离别", "失去", "牺牲"],
+            "温馨": ["温暖", "关心", "陪伴", "家"],
+        }
+        for emo, keywords in emotion_keywords.items():
+            if any(kw in chapter_outline for kw in keywords):
+                emotion = emo
+                break
+
+        samples = self.get_benchmark_samples(
+            genre=genre,
+            scene_type=scene_type,
+            emotion=emotion,
+            max_samples=max_samples,
+        )
+
+        # 如果精确匹配不足，放宽条件
+        if len(samples) < max_samples:
+            fallback = self.get_benchmark_samples(
+                genre=genre,
+                scene_type=scene_type,
+                max_samples=max_samples - len(samples),
+            )
+            existing_titles = {s["book_title"] for s in samples}
+            for s in fallback:
+                if s["book_title"] not in existing_titles:
+                    samples.append(s)
+                    if len(samples) >= max_samples:
+                        break
+
+        return samples
+
     # ==================== 统计 ====================
 
     def get_stats(self) -> Dict[str, Any]:
@@ -483,10 +604,16 @@ def main():
     extract_parser.add_argument("--score", type=float, required=True)
     extract_parser.add_argument("--scenes", required=True, help="JSON 格式的场景列表")
 
-    # 选择样本
+    # 选择样本（自身产出）
     select_parser = subparsers.add_parser("select")
     select_parser.add_argument("--outline", required=True, help="章节大纲")
     select_parser.add_argument("--max", type=int, default=3)
+
+    # 选择标杆样本（Style RAG）
+    bench_parser = subparsers.add_parser("benchmark")
+    bench_parser.add_argument("--outline", required=True, help="章节大纲")
+    bench_parser.add_argument("--genre", default="", help="题材过滤")
+    bench_parser.add_argument("--max", type=int, default=3)
 
     argv = normalize_global_project_root(sys.argv[1:])
     args = parser.parse_args(argv)
@@ -569,6 +696,14 @@ def main():
     elif args.command == "select":
         samples = sampler.select_samples_for_chapter(args.outline, max_samples=args.max)
         emit_success([s.__dict__ for s in samples], message="selected")
+
+    elif args.command == "benchmark":
+        samples = sampler.select_benchmark_for_chapter(
+            chapter_outline=args.outline,
+            genre=args.genre,
+            max_samples=args.max,
+        )
+        emit_success(samples, message="benchmark_selected")
 
     else:
         emit_error("UNKNOWN_COMMAND", "未指定有效命令", suggestion="请查看 --help")
