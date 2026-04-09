@@ -262,6 +262,36 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 - 用户未明确确认，不执行生成。
 - 若用户仅改局部，回到对应 Step 最小重采集。
 
+### RAG 配置引导（v10.6 新增）
+
+项目初始化成功后，提示用户配置 Embedding API 以启用向量检索增强：
+
+**提示文案**：
+> 推荐配置向量检索（RAG）：ink-writer 内置了完整的语义检索系统，可以在写作时自动召回相关章节片段，大幅提升长篇小说的记忆一致性。
+>
+> 配置方式（选一个）：
+> 1. **ModelScope（免费）**：
+>    ```
+>    echo "EMBED_API_KEY=你的ModelScope密钥" >> ~/.claude/ink-writer/.env
+>    ```
+>    获取密钥：https://modelscope.cn/my/myaccesstoken
+>
+> 2. **OpenAI**：
+>    ```
+>    echo "EMBED_BASE_URL=https://api.openai.com/v1" >> ~/.claude/ink-writer/.env
+>    echo "EMBED_MODEL=text-embedding-3-small" >> ~/.claude/ink-writer/.env
+>    echo "EMBED_API_KEY=你的OpenAI密钥" >> ~/.claude/ink-writer/.env
+>    ```
+>
+> 3. **跳过**：不影响写作，系统自动使用BM25关键词检索（精度略低但完全可用）。
+>
+> 配置后运行 `python ink.py rag stats` 验证。
+
+**执行规则**：
+- 仅在项目初始化成功后显示此提示
+- 不阻断任何流程（纯建议性质）
+- 用户选择跳过时不再提醒
+
 ## 内部数据模型（初始化收集对象）
 
 ```json

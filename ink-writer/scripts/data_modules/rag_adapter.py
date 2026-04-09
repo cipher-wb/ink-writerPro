@@ -610,32 +610,58 @@ class RAGAdapter:
 
         query_embedding = query_embeddings[0]
 
-        # 从数据库读取所有向量并计算相似度
+        # 从数据库读取向量并计算相似度
+        # v10.6 优化：当chapter较大时，仅检索最近200章的向量（避免全表扫描）
+        _VECTOR_WINDOW = 200
+        chapter_lower_bound = None
+        if chapter is not None and int(chapter) > _VECTOR_WINDOW:
+            chapter_lower_bound = int(chapter) - _VECTOR_WINDOW
+
         with self._get_conn() as conn:
             cursor = conn.cursor()
             if chunk_type and chapter is not None:
-                cursor.execute(
-                    """
-                    SELECT chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file
-                    FROM vectors
-                    WHERE chunk_type = ? AND chapter <= ?
-                """,
-                    (chunk_type, int(chapter)),
-                )
+                if chapter_lower_bound is not None:
+                    cursor.execute(
+                        """
+                        SELECT chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file
+                        FROM vectors
+                        WHERE chunk_type = ? AND chapter <= ? AND chapter >= ?
+                    """,
+                        (chunk_type, int(chapter), chapter_lower_bound),
+                    )
+                else:
+                    cursor.execute(
+                        """
+                        SELECT chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file
+                        FROM vectors
+                        WHERE chunk_type = ? AND chapter <= ?
+                    """,
+                        (chunk_type, int(chapter)),
+                    )
             elif chunk_type:
                 cursor.execute(
                     "SELECT chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file FROM vectors WHERE chunk_type = ?",
                     (chunk_type,),
                 )
             elif chapter is not None:
-                cursor.execute(
-                    """
-                    SELECT chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file
-                    FROM vectors
-                    WHERE chapter <= ?
-                """,
-                    (int(chapter),),
-                )
+                if chapter_lower_bound is not None:
+                    cursor.execute(
+                        """
+                        SELECT chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file
+                        FROM vectors
+                        WHERE chapter <= ? AND chapter >= ?
+                    """,
+                        (int(chapter), chapter_lower_bound),
+                    )
+                else:
+                    cursor.execute(
+                        """
+                        SELECT chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file
+                        FROM vectors
+                        WHERE chapter <= ?
+                    """,
+                        (int(chapter),),
+                    )
             else:
                 cursor.execute(
                     "SELECT chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file FROM vectors"

@@ -33,7 +33,7 @@
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | `preferred_patterns` | string[] | 偏好爽点模式（按优先级排序） |
-| `density_per_chapter` | string | 每章爽点密度：high(2+)/medium(1)/low(0-1) |
+| `density_per_chapter` | string | 每章爽点密度：very_high(3+)/high(2+)/medium(1)/low(0-1) |
 | `combo_interval` | number | combo爽点建议间隔（每N章参考1个） |
 | `milestone_interval` | number | 阶段性胜利建议间隔（每N章参考1个） |
 
@@ -367,7 +367,8 @@ pacing_config:
   transition_max_consecutive: 0
 
 override_config:
-  allowed_rationale_types: []
+  # v10.6: 允许最少两种申诉理由（大弧线安排+人物可信度），完全禁止会过度限制短篇创作
+  allowed_rationale_types: [ARC_TIMING, CHARACTER_CREDIBILITY]
   debt_multiplier: 2.0
   payback_window_default: 1
 ```
@@ -615,7 +616,7 @@ hook_config:
 
 coolpoint_config:
   preferred_patterns: [越级反杀, 装逼打脸, 扮猪吃虎, 反派翻车]
-  density_per_chapter: high
+  density_per_chapter: very_high  # v10.6: 游戏文需要3+爽点/章，区分于普通high
   combo_interval: 3
   milestone_interval: 10
 

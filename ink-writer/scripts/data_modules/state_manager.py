@@ -137,6 +137,8 @@ class StateManager:
 
         # SQLite 同步状态标记：当同步失败时置为 True，供 ink-audit 检测
         self._sqlite_sync_stale: bool = False
+        self._sqlite_sync_retry_count: int = 0
+        self._SQLITE_SYNC_MAX_RETRIES: int = 2
 
         # v5.1 引入: 缓存待同步到 SQLite 的数据
         self._pending_sqlite_data: Dict[str, Any] = {
@@ -263,6 +265,9 @@ class StateManager:
         )
         if not has_pending:
             return
+
+        # v5.5: 如果上次SQLite同步失败（stale），在本次写入前尝试恢复
+        self._attempt_stale_recovery()
 
         self.config.ensure_dirs()
 
@@ -434,7 +439,7 @@ class StateManager:
             raise RuntimeError("无法获取 state.json 文件锁，请稍后重试")
 
     def _sync_to_sqlite(self) -> bool:
-        """同步待处理数据到 SQLite（v5.1 引入，v5.4 沿用）"""
+        """同步待处理数据到 SQLite（v5.1 引入，v5.4 沿用，v5.5 增加重试机制）"""
         if not self._sql_state_manager:
             return True
 
@@ -450,103 +455,173 @@ class StateManager:
         processed_appearances = set()
 
         if chapter is not None:
-            try:
-                self._sql_state_manager.process_chapter_entities(
-                    chapter=chapter,
-                    entities_appeared=sqlite_data.get("entities_appeared", []),
-                    entities_new=sqlite_data.get("entities_new", []),
-                    state_changes=sqlite_data.get("state_changes", []),
-                    relationships_new=sqlite_data.get("relationships_new", []),
-                    scenes=sqlite_data.get("scenes", []),
-                    chapter_meta=sqlite_data.get("chapter_meta", {}),
-                    chapter_memory_card=sqlite_data.get("chapter_memory_card", {}),
-                    timeline_anchor=sqlite_data.get("timeline_anchor", {}),
-                    plot_thread_updates=sqlite_data.get("plot_thread_updates", []),
-                    reading_power=sqlite_data.get("reading_power", {}),
-                    candidate_facts=sqlite_data.get("candidate_facts", []),
-                )
-                # 标记已处理的出场记录
-                for entity in sqlite_data.get("entities_appeared", []):
-                    if entity.get("id"):
-                        processed_appearances.add((entity.get("id"), chapter))
-                for entity in sqlite_data.get("entities_new", []):
-                    eid = entity.get("suggested_id") or entity.get("id")
-                    if eid:
-                        processed_appearances.add((eid, chapter))
-            except (OSError, sqlite3.OperationalError) as exc:
-                # 可恢复：文件锁冲突、磁盘临时不可用
-                logger.warning("SQLite sync recoverable failure (process_chapter_entities): %s", exc)
-                self._sqlite_sync_stale = True
-                return False
-            except Exception as exc:
-                # 不可恢复：schema 不匹配等
-                logger.error("SQLite sync failed (process_chapter_entities): %s", exc, exc_info=True)
-                self._sqlite_sync_stale = True
+            # process_chapter_entities 带重试
+            chapter_entities_ok = self._try_sync_with_retry(
+                lambda: self._sync_chapter_entities(sqlite_data, chapter, processed_appearances),
+                label="process_chapter_entities",
+            )
+            if not chapter_entities_ok:
                 return False
 
-            # 同步叙事承诺 + 角色演变 + 冲突指纹（复用 SQLStateManager 的 IndexManager）
-            try:
-                idx = self._sql_state_manager._index_manager
-
-                # 叙事承诺（新增）
-                for item in sqlite_data.get("narrative_commitments_new", []):
-                    if not isinstance(item, dict):
-                        continue
-                    content = str(item.get("content", "")).strip()
-                    if not content:
-                        continue
-                    idx.save_narrative_commitment({
-                        "chapter": chapter,
-                        "commitment_type": item.get("commitment_type", "promise"),
-                        "entity_id": item.get("entity_id"),
-                        "content": content,
-                        "context_snippet": item.get("context_snippet"),
-                        "scope": item.get("scope", "permanent"),
-                        "condition": item.get("condition"),
-                    })
-
-                # 叙事承诺（解决）
-                for item in sqlite_data.get("narrative_commitments_resolved", []):
-                    if not isinstance(item, dict):
-                        continue
-                    cid = item.get("commitment_id")
-                    if cid is not None:
-                        idx.resolve_narrative_commitment(
-                            commitment_id=int(cid),
-                            chapter=item.get("chapter", chapter),
-                            resolution_type=item.get("resolution_type", "fulfilled"),
-                        )
-
-                # 角色演变记录
-                for item in sqlite_data.get("character_evolution_entries", []):
-                    if not isinstance(item, dict):
-                        continue
-                    eid = item.get("entity_id")
-                    if not eid:
-                        continue
-                    idx.save_character_evolution({
-                        "entity_id": eid,
-                        "chapter": item.get("chapter", chapter),
-                        "arc_phase": item.get("arc_phase"),
-                        "personality_delta": item.get("personality_delta"),
-                        "voice_sample": item.get("voice_sample"),
-                        "motivation_shift": item.get("motivation_shift"),
-                        "relationship_shifts": item.get("relationship_shifts"),
-                    })
-
-                # 冲突结构指纹
-                fingerprint = sqlite_data.get("plot_structure_fingerprint")
-                if isinstance(fingerprint, dict) and "chapter" in fingerprint:
-                    idx.save_plot_structure_fingerprint(fingerprint)
-
-            except (OSError, sqlite3.OperationalError) as exc:
-                logger.warning("SQLite sync recoverable failure (index extensions): %s", exc)
-                self._sqlite_sync_stale = True
-            except Exception as exc:
-                logger.error("SQLite sync failed (index extensions): %s", exc, exc_info=True)
-                self._sqlite_sync_stale = True
+            # 同步叙事承诺 + 角色演变 + 冲突指纹（带重试）
+            self._try_sync_with_retry(
+                lambda: self._sync_index_extensions(sqlite_data, chapter),
+                label="index_extensions",
+            )
 
         return patches_ok
+
+    def _try_sync_with_retry(self, sync_fn, label: str = "sqlite_sync") -> bool:
+        """带重试的 SQLite 同步包装器。
+
+        最多尝试 _SQLITE_SYNC_MAX_RETRIES + 1 次（首次 + 重试）。
+        全部失败后标记 stale。
+
+        Args:
+            sync_fn: 无参可调用对象，执行实际同步逻辑。成功无返回值，失败抛异常。
+            label: 用于日志的标签。
+
+        Returns:
+            True 表示同步成功，False 表示全部重试耗尽。
+        """
+        for attempt in range(self._SQLITE_SYNC_MAX_RETRIES + 1):
+            try:
+                sync_fn()
+                # 成功：重置计数器和 stale 标记
+                self._sqlite_sync_retry_count = 0
+                if self._sqlite_sync_stale:
+                    logger.info("SQLite同步恢复成功（%s），stale标记已清除", label)
+                    self._sqlite_sync_stale = False
+                return True
+            except (OSError, sqlite3.OperationalError) as exc:
+                # 可恢复：文件锁冲突、磁盘临时不可用
+                logger.warning(
+                    "SQLite同步可恢复失败（%s，第%d/%d次）: %s",
+                    label, attempt + 1, self._SQLITE_SYNC_MAX_RETRIES + 1, exc,
+                )
+                if attempt < self._SQLITE_SYNC_MAX_RETRIES:
+                    time.sleep(0.5)
+            except Exception as exc:
+                # 不可恢复：schema 不匹配等，直接标记 stale 不再重试
+                logger.error(
+                    "SQLite同步不可恢复失败（%s）: %s", label, exc, exc_info=True,
+                )
+                self._sqlite_sync_stale = True
+                self._sqlite_sync_retry_count = 0
+                return False
+
+        # 全部重试耗尽
+        self._sqlite_sync_stale = True
+        self._sqlite_sync_retry_count += 1
+        logger.error(
+            "SQLite同步失败，已标记stale（%s，%d次尝试均失败）",
+            label, self._SQLITE_SYNC_MAX_RETRIES + 1,
+        )
+        return False
+
+    def _sync_chapter_entities(
+        self,
+        sqlite_data: Dict[str, Any],
+        chapter: int,
+        processed_appearances: set,
+    ) -> None:
+        """同步 process_chapter_entities 数据（供 _try_sync_with_retry 调用）。"""
+        self._sql_state_manager.process_chapter_entities(
+            chapter=chapter,
+            entities_appeared=sqlite_data.get("entities_appeared", []),
+            entities_new=sqlite_data.get("entities_new", []),
+            state_changes=sqlite_data.get("state_changes", []),
+            relationships_new=sqlite_data.get("relationships_new", []),
+            scenes=sqlite_data.get("scenes", []),
+            chapter_meta=sqlite_data.get("chapter_meta", {}),
+            chapter_memory_card=sqlite_data.get("chapter_memory_card", {}),
+            timeline_anchor=sqlite_data.get("timeline_anchor", {}),
+            plot_thread_updates=sqlite_data.get("plot_thread_updates", []),
+            reading_power=sqlite_data.get("reading_power", {}),
+            candidate_facts=sqlite_data.get("candidate_facts", []),
+        )
+        # 标记已处理的出场记录
+        for entity in sqlite_data.get("entities_appeared", []):
+            if entity.get("id"):
+                processed_appearances.add((entity.get("id"), chapter))
+        for entity in sqlite_data.get("entities_new", []):
+            eid = entity.get("suggested_id") or entity.get("id")
+            if eid:
+                processed_appearances.add((eid, chapter))
+
+    def _sync_index_extensions(self, sqlite_data: Dict[str, Any], chapter: int) -> None:
+        """同步叙事承诺 + 角色演变 + 冲突指纹（供 _try_sync_with_retry 调用）。"""
+        idx = self._sql_state_manager._index_manager
+
+        # 叙事承诺（新增）
+        for item in sqlite_data.get("narrative_commitments_new", []):
+            if not isinstance(item, dict):
+                continue
+            content = str(item.get("content", "")).strip()
+            if not content:
+                continue
+            idx.save_narrative_commitment({
+                "chapter": chapter,
+                "commitment_type": item.get("commitment_type", "promise"),
+                "entity_id": item.get("entity_id"),
+                "content": content,
+                "context_snippet": item.get("context_snippet"),
+                "scope": item.get("scope", "permanent"),
+                "condition": item.get("condition"),
+            })
+
+        # 叙事承诺（解决）
+        for item in sqlite_data.get("narrative_commitments_resolved", []):
+            if not isinstance(item, dict):
+                continue
+            cid = item.get("commitment_id")
+            if cid is not None:
+                idx.resolve_narrative_commitment(
+                    commitment_id=int(cid),
+                    chapter=item.get("chapter", chapter),
+                    resolution_type=item.get("resolution_type", "fulfilled"),
+                )
+
+        # 角色演变记录
+        for item in sqlite_data.get("character_evolution_entries", []):
+            if not isinstance(item, dict):
+                continue
+            eid = item.get("entity_id")
+            if not eid:
+                continue
+            idx.save_character_evolution({
+                "entity_id": eid,
+                "chapter": item.get("chapter", chapter),
+                "arc_phase": item.get("arc_phase"),
+                "personality_delta": item.get("personality_delta"),
+                "voice_sample": item.get("voice_sample"),
+                "motivation_shift": item.get("motivation_shift"),
+                "relationship_shifts": item.get("relationship_shifts"),
+            })
+
+        # 冲突结构指纹
+        fingerprint = sqlite_data.get("plot_structure_fingerprint")
+        if isinstance(fingerprint, dict) and "chapter" in fingerprint:
+            idx.save_plot_structure_fingerprint(fingerprint)
+
+    def _attempt_stale_recovery(self) -> None:
+        """当 _sqlite_sync_stale 为 True 时，在 save_state 开头尝试一次恢复性同步。
+
+        通过执行轻量级 SQL 查询验证 SQLite 连接是否可用。
+        如果连接恢复正常，清除 stale 标记，让后续 _sync_to_sqlite 正常执行。
+        """
+        if not self._sqlite_sync_stale or not self._sql_state_manager:
+            return
+        logger.info("SQLite同步处于stale状态，尝试恢复性同步...")
+        try:
+            # 轻量级连接验证：执行简单查询确认 SQLite 可用
+            conn = self._sql_state_manager._index_manager._get_conn()
+            conn.execute("SELECT 1").fetchone()
+            self._sqlite_sync_stale = False
+            self._sqlite_sync_retry_count = 0
+            logger.info("SQLite连接恢复正常，stale标记已清除")
+        except Exception as exc:
+            logger.warning("SQLite恢复性同步失败，保持stale状态: %s", exc)
 
     def _sync_pending_patches_to_sqlite(self, processed_appearances: set = None) -> bool:
         """同步 _pending_entity_patches 等到 SQLite（v5.1 引入，v5.4 沿用）

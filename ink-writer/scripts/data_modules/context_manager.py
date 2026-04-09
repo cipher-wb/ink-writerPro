@@ -578,8 +578,8 @@ class ContextManager:
                         payload_json=fallback["payload_json"],
                     )
                 )
-            except Exception:
-                logger.debug("failed to persist memory card for chapter %s", previous_chapter, exc_info=True)
+            except (sqlite3.Error, OSError) as e:
+                logger.warning("failed to persist memory card for chapter %s: %s", previous_chapter, e)
         return fallback
 
     def _load_active_plot_threads(self, chapter: int, state: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -942,7 +942,7 @@ class ContextManager:
                     source="context_manager",
                 )
             )
-        except Exception as exc:
+        except (sqlite3.Error, OSError, ValueError, TypeError) as exc:
             logger.warning("failed to persist writing checklist score: %s", exc)
 
     def _resolve_context_stage(self, chapter: int) -> str:
@@ -1135,8 +1135,8 @@ class ContextManager:
             evolution_map = self.index_manager.get_characters_evolution_summary(
                 entity_ids, max_entries_per_char=8
             )
-        except Exception:
-            logger.warning("failed to load character evolution summary", exc_info=True)
+        except (sqlite3.Error, KeyError, TypeError, ValueError) as e:
+            logger.warning("failed to load character evolution summary: %s", e)
             return characters
         if not evolution_map:
             return characters
@@ -1189,8 +1189,8 @@ class ContextManager:
                     summaries.append(f"{pair_key}: {trajectory}")
                 if summaries:
                     trajectories[eid] = summaries
-        except Exception:
-            logger.warning("failed to load relationship trajectories", exc_info=True)
+        except (sqlite3.Error, KeyError, TypeError, ValueError) as e:
+            logger.warning("failed to load relationship trajectories: %s", e)
             return characters
         if not trajectories:
             return characters
@@ -1287,8 +1287,8 @@ class ContextManager:
                     if s and s.get("summary"):
                         samples.append(s)
                         used_chapters.add(int(ch_num))
-        except Exception:
-            logger.warning("failed to load top reading power chapters, falling back to interval sampling", exc_info=True)
+        except (sqlite3.Error, KeyError, TypeError, ValueError) as e:
+            logger.warning("failed to load top reading power chapters, falling back to interval sampling: %s", e)
             # 回退到固定间隔采样
             interval = max(1, int(self.config.context_story_skeleton_interval))
             cursor = chapter - interval
@@ -1354,7 +1354,7 @@ def main():
         print_success(payload, message="context_built")
         try:
             manager.index_manager.log_tool_call("context_manager:build", True, chapter=args.chapter)
-        except Exception as exc:
+        except (sqlite3.Error, OSError) as exc:
             logger.warning("failed to log successful tool call: %s", exc)
     except Exception as exc:
         print_error("CONTEXT_BUILD_FAILED", str(exc), suggestion="请检查项目结构与依赖文件")
@@ -1362,7 +1362,7 @@ def main():
             manager.index_manager.log_tool_call(
                 "context_manager:build", False, error_code="CONTEXT_BUILD_FAILED", error_message=str(exc), chapter=args.chapter
             )
-        except Exception as log_exc:
+        except (sqlite3.Error, OSError) as log_exc:
             logger.warning("failed to log failed tool call: %s", log_exc)
 
 

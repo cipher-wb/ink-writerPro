@@ -14,6 +14,7 @@ model: inherit
 
 - **Taxonomy**: `${CLAUDE_PLUGIN_ROOT}/references/reading-power-taxonomy.md`
 - **Genre Profile**: `${CLAUDE_PLUGIN_ROOT}/references/genre-profiles.md`
+  - **Genre Profile 条件加载规则**（v10.6 新增）：只加载项目对应题材 + 最多1个最相近复合题材的 profile section，不加载全部13个题材。通过 `state.json.project_info.genre` 确定主题材，通过 `genre-profiles.md` 中的 `复合题材处理规则` 确定近似题材。预估节省 ~60% 的 genre-profiles token。
 - **Context Contract**: `${CLAUDE_PLUGIN_ROOT}/skills/ink-write/references/step-1.5-contract.md`
 - **Shared References**: `${CLAUDE_PLUGIN_ROOT}/references/shared/` 为单一事实源；如需枚举/扫描参考文件，遇到 `<!-- DEPRECATED:` 的文件一律跳过。
 
