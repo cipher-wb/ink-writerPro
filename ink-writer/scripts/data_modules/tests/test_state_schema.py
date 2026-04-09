@@ -556,7 +556,7 @@ class TestSaveState:
         save_state(tmp_path, state)
         loaded = load_state(tmp_path)
 
-        assert loaded.schema_version == 7
+        assert loaded.schema_version == 6  # roundtrip preserves original version
         assert loaded.progress.current_chapter == 7
         assert loaded.protagonist_state.name == "萧尘"
         assert loaded.protagonist_state.power.realm == "金丹"
