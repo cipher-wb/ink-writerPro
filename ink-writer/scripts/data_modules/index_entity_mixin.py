@@ -28,7 +28,7 @@ class IndexEntityMixin:
 
         返回是否为新实体
         """
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
 
             # 检查是否存在
@@ -325,7 +325,7 @@ class IndexEntityMixin:
 
         返回记录 ID
         """
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -397,7 +397,7 @@ class IndexEntityMixin:
         相同 (from, to, type) 会更新 description 和 chapter
         返回是否为新关系
         """
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
 
             # 检查是否存在

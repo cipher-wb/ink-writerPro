@@ -68,6 +68,31 @@ from data_modules.state_validator import (
 if sys.platform == "win32":
     enable_windows_utf8_stdio()
 
+def _try_sync_foreshadowing_to_index(project_root: Path, content: str, status: str,
+                                      planted_chapter: int, target_chapter: int):
+    """尝试同步伏笔到 index.db 的 plot_thread_registry 表"""
+    try:
+        import sqlite3
+        from contextlib import closing
+        db_path = project_root / ".ink" / "index.db"
+        if not db_path.exists():
+            return
+        # 生成 thread_id
+        thread_id = f"foreshadow_{planted_chapter}_{hash(content) % 10000:04d}"
+        with closing(sqlite3.connect(str(db_path))) as conn:
+            conn.execute("PRAGMA busy_timeout = 5000")
+            conn.execute("""
+                INSERT OR IGNORE INTO plot_thread_registry
+                (thread_id, content, thread_type, status, planted_chapter,
+                 target_payoff_chapter, created_at)
+                VALUES (?, ?, 'foreshadowing', ?, ?, ?, datetime('now'))
+            """, (thread_id, content, status, planted_chapter, target_chapter))
+            conn.commit()
+        print(f"  ↳ 已同步到 index.db plot_thread_registry: {thread_id}")
+    except Exception as e:
+        print(f"  ↳ 同步到 index.db 失败（非致命）: {e}")
+
+
 class StateUpdater:
     """state.json 安全更新器"""
 
@@ -284,6 +309,13 @@ class StateUpdater:
             "tier": "支线"
         })
         print(f"📝 添加伏笔: {content}（{status}）")
+
+        # 同步到 index.db
+        project_root = Path(self.state_file).parent.parent if self.state_file else None
+        if project_root and (project_root / ".ink" / "index.db").exists():
+            _try_sync_foreshadowing_to_index(
+                project_root, content, status, planted_chapter, target_chapter
+            )
 
     def resolve_foreshadowing(self, content: str, chapter: int):
         """回收伏笔"""
@@ -537,6 +569,13 @@ def main():
         help='标记项目为已完结（设置 progress.is_completed = true）'
     )
 
+    # 同步主角状态到 index.db
+    parser.add_argument(
+        '--sync-index',
+        action='store_true',
+        help='保存后同步主角状态到 index.db（推荐在手动修改后使用）'
+    )
+
     args = parser.parse_args()
 
     # 如果没有任何更新参数，显示帮助并退出
@@ -551,7 +590,8 @@ def main():
         args.volume_planned,
         args.add_review,
         args.strand_dominant,
-        args.mark_completed
+        args.mark_completed,
+        args.sync_index
     ]):
         parser.print_help()
         sys.exit(1)
@@ -632,6 +672,30 @@ def main():
             sys.exit(1)
 
         print("\n✅ 更新完成！")
+
+        if args.sync_index:
+            try:
+                import sqlite3
+                from contextlib import closing
+                db_path = Path(args.project_root or '.') / '.ink' / 'index.db'
+                if db_path.exists():
+                    protagonist = updater.state.get('protagonist_state', {})
+                    power = protagonist.get('power', {})
+                    realm = power.get('realm', '')
+                    location = protagonist.get('location', '')
+                    with closing(sqlite3.connect(str(db_path))) as conn:
+                        conn.execute("PRAGMA busy_timeout = 5000")
+                        # 更新主角实体的 current_json
+                        conn.execute(
+                            "UPDATE entities SET current_json = ? WHERE is_protagonist = 1",
+                            (json.dumps(protagonist, ensure_ascii=False),)
+                        )
+                        conn.commit()
+                    print(f"✅ 已同步主角状态到 index.db (realm={realm}, location={location})")
+                else:
+                    print("⚠️  index.db 不存在，跳过同步")
+            except Exception as e:
+                print(f"⚠️  同步 index.db 失败（非致命）: {e}")
 
         if not args.dry_run:
             print(f"\n💡 提示:")

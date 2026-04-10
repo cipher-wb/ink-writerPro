@@ -14,15 +14,60 @@ from computational_checks import (
     check_character_conflicts,
     check_contract_completeness,
     check_dialogue_ratio,
+    check_emotion_punctuation,
     check_file_naming,
     check_foreshadowing_consistency,
     check_metadata_leakage,
     check_opening_pattern,
     check_power_level,
+    check_sentence_length,
     check_word_count,
     main,
     run_all_checks,
 )
+
+
+# ---------------------------------------------------------------------------
+# Helpers — real schema fixtures
+# ---------------------------------------------------------------------------
+
+def _create_real_schema(db_path, *, with_state_changes=True):
+    """Create tables matching the real index_manager.py schema."""
+    conn = sqlite3.connect(str(db_path))
+    conn.execute(
+        "CREATE TABLE entities ("
+        "  id TEXT PRIMARY KEY, type TEXT NOT NULL, canonical_name TEXT NOT NULL,"
+        "  tier TEXT DEFAULT '装饰', desc TEXT, current_json TEXT,"
+        "  first_appearance INTEGER, last_appearance INTEGER,"
+        "  is_protagonist INTEGER, is_archived INTEGER,"
+        "  created_at TIMESTAMP, updated_at TIMESTAMP"
+        ")"
+    )
+    conn.execute(
+        "CREATE TABLE aliases ("
+        "  alias TEXT NOT NULL, entity_id TEXT NOT NULL, entity_type TEXT NOT NULL,"
+        "  created_at TIMESTAMP, PRIMARY KEY(alias, entity_id, entity_type)"
+        ")"
+    )
+    if with_state_changes:
+        conn.execute(
+            "CREATE TABLE state_changes ("
+            "  id INTEGER PRIMARY KEY AUTOINCREMENT, entity_id TEXT NOT NULL,"
+            "  field TEXT NOT NULL, old_value TEXT, new_value TEXT,"
+            "  reason TEXT, chapter INTEGER NOT NULL, created_at TIMESTAMP"
+            ")"
+        )
+    conn.execute(
+        "CREATE TABLE plot_thread_registry ("
+        "  thread_id TEXT PRIMARY KEY, title TEXT, content TEXT, thread_type TEXT,"
+        "  status TEXT, priority TEXT, planted_chapter INTEGER,"
+        "  last_touched_chapter INTEGER, target_payoff_chapter INTEGER,"
+        "  resolved_chapter INTEGER, related_entities TEXT, notes TEXT,"
+        "  confidence REAL, payload_json TEXT, created_at TIMESTAMP, updated_at TIMESTAMP"
+        ")"
+    )
+    conn.commit()
+    return conn
 
 
 # ---------------------------------------------------------------------------
@@ -69,14 +114,13 @@ class TestCheckWordCount:
         assert "6000" in r.message
 
     def test_markdown_headings_stripped(self):
-        # Markdown headings should not count toward word count
         heading = "# 第一章 标题\n## 小节\n"
         body = "字" * 2500
         r = check_word_count(heading + body)
         assert r.passed is True
 
     def test_whitespace_stripped(self):
-        text = " 字 " * 2500  # whitespace should be removed
+        text = " 字 " * 2500
         r = check_word_count(text)
         assert r.passed is True
 
@@ -112,7 +156,6 @@ class TestCheckFileNaming:
         assert r.severity == "hard"
 
     def test_fail_wrong_extension(self):
-        # Name matches pattern but extension is not .md
         r = check_file_naming(Path("第0005章.txt"), 5)
         assert r.passed is False
         assert r.severity == "hard"
@@ -137,11 +180,7 @@ class TestCheckCharacterConflicts:
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
-        conn = sqlite3.connect(str(db_path))
-        # create entities table but leave it empty
-        conn.execute("CREATE TABLE entities (name TEXT, type TEXT)")
-        conn.execute("CREATE TABLE aliases (alias TEXT)")
-        conn.commit()
+        conn = _create_real_schema(db_path)
         conn.close()
 
         r = check_character_conflicts("some text", tmp_path)
@@ -152,13 +191,10 @@ class TestCheckCharacterConflicts:
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
-        conn = sqlite3.connect(str(db_path))
-        conn.execute("CREATE TABLE entities (id TEXT, name TEXT, type TEXT, is_protagonist INT DEFAULT 0)")
-        conn.execute("INSERT INTO entities VALUES ('zs', '张三', 'character', 0)")
-        conn.execute("INSERT INTO entities VALUES ('ls', '李四', 'character', 0)")
-        conn.execute("CREATE TABLE aliases (alias TEXT)")
-        conn.execute("INSERT INTO aliases VALUES ('老张')")
-        conn.execute("CREATE TABLE state_changes (entity_id TEXT, field TEXT, old_value TEXT, new_value TEXT, reason TEXT, chapter INT)")
+        conn = _create_real_schema(db_path)
+        conn.execute("INSERT INTO entities (id, type, canonical_name, is_protagonist) VALUES ('zs', '角色', '张三', 0)")
+        conn.execute("INSERT INTO entities (id, type, canonical_name, is_protagonist) VALUES ('ls', '角色', '李四', 0)")
+        conn.execute("INSERT INTO aliases (alias, entity_id, entity_type) VALUES ('老张', 'zs', '角色')")
         conn.commit()
         conn.close()
 
@@ -170,13 +206,10 @@ class TestCheckCharacterConflicts:
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
-        conn = sqlite3.connect(str(db_path))
-        conn.execute("CREATE TABLE entities (id TEXT, name TEXT, type TEXT, is_protagonist INT DEFAULT 0)")
-        conn.execute("INSERT INTO entities VALUES ('zs', '张三', 'character', 0)")
-        conn.execute("INSERT INTO entities VALUES ('ls', '李四', 'character', 0)")
-        conn.execute("CREATE TABLE aliases (alias TEXT)")
-        conn.execute("CREATE TABLE state_changes (entity_id TEXT, field TEXT, old_value TEXT, new_value TEXT, reason TEXT, chapter INT)")
-        conn.execute("INSERT INTO state_changes VALUES ('ls', 'status', 'alive', 'dead', '战死', 10)")
+        conn = _create_real_schema(db_path)
+        conn.execute("INSERT INTO entities (id, type, canonical_name, is_protagonist) VALUES ('zs', '角色', '张三', 0)")
+        conn.execute("INSERT INTO entities (id, type, canonical_name, is_protagonist) VALUES ('ls', '角色', '李四', 0)")
+        conn.execute("INSERT INTO state_changes (entity_id, field, old_value, new_value, reason, chapter) VALUES ('ls', 'status', 'alive', 'dead', '战死', 10)")
         conn.commit()
         conn.close()
 
@@ -189,17 +222,30 @@ class TestCheckCharacterConflicts:
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
-        conn = sqlite3.connect(str(db_path))
-        conn.execute("CREATE TABLE entities (id TEXT, name TEXT, type TEXT, is_protagonist INT DEFAULT 0)")
-        conn.execute("INSERT INTO entities VALUES ('ls', '李四', 'character', 0)")
-        conn.execute("CREATE TABLE aliases (alias TEXT)")
-        conn.execute("CREATE TABLE state_changes (entity_id TEXT, field TEXT, old_value TEXT, new_value TEXT, reason TEXT, chapter INT)")
-        conn.execute("INSERT INTO state_changes VALUES ('ls', 'status', 'alive', 'dead', '战死', 10)")
+        conn = _create_real_schema(db_path)
+        conn.execute("INSERT INTO entities (id, type, canonical_name, is_protagonist) VALUES ('ls', '角色', '李四', 0)")
+        conn.execute("INSERT INTO state_changes (entity_id, field, old_value, new_value, reason, chapter) VALUES ('ls', 'status', 'alive', 'dead', '战死', 10)")
         conn.commit()
         conn.close()
 
         r = check_character_conflicts("张三回忆起李四当年的音容笑貌", tmp_path)
         assert r.passed is True
+
+    def test_dead_character_war_death(self, tmp_path):
+        """Test expanded death status matching with '战死' value."""
+        ink_dir = tmp_path / ".ink"
+        ink_dir.mkdir()
+        db_path = ink_dir / "index.db"
+        conn = _create_real_schema(db_path)
+        conn.execute("INSERT INTO entities (id, type, canonical_name, is_protagonist) VALUES ('ww', '角色', '王五', 0)")
+        conn.execute("INSERT INTO state_changes (entity_id, field, old_value, new_value, reason, chapter) VALUES ('ww', 'status', 'alive', '战死', '城破之战', 15)")
+        conn.commit()
+        conn.close()
+
+        r = check_character_conflicts("王五拔剑杀向敌阵", tmp_path)
+        assert r.passed is False
+        assert r.severity == "hard"
+        assert "王五" in r.detail
 
     def test_missing_entities_table(self, tmp_path):
         ink_dir = tmp_path / ".ink"
@@ -217,8 +263,13 @@ class TestCheckCharacterConflicts:
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
         conn = sqlite3.connect(str(db_path))
-        conn.execute("CREATE TABLE entities (id TEXT, name TEXT, type TEXT, is_protagonist INT DEFAULT 0)")
-        conn.execute("INSERT INTO entities VALUES ('zs', '张三', 'character', 0)")
+        conn.execute(
+            "CREATE TABLE entities ("
+            "  id TEXT PRIMARY KEY, type TEXT NOT NULL, canonical_name TEXT NOT NULL,"
+            "  is_protagonist INTEGER"
+            ")"
+        )
+        conn.execute("INSERT INTO entities (id, type, canonical_name, is_protagonist) VALUES ('zs', '角色', '张三', 0)")
         # no aliases table — should still work gracefully
         conn.commit()
         conn.close()
@@ -252,14 +303,11 @@ class TestCheckForeshadowing:
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
-        conn = sqlite3.connect(str(db_path))
+        conn = _create_real_schema(db_path)
+        # active but not overdue (target chapter 45, current 50, delay=5 < 20)
         conn.execute(
-            "CREATE TABLE plot_threads "
-            "(thread_id TEXT, planted_chapter INT, expected_payoff_chapter INT, status TEXT)"
-        )
-        # active but not overdue (expected chapter 45, current 50, delay=5 < 20)
-        conn.execute(
-            "INSERT INTO plot_threads VALUES ('thread_a', 10, 45, 'active')"
+            "INSERT INTO plot_thread_registry (thread_id, planted_chapter, target_payoff_chapter, status) "
+            "VALUES ('thread_a', 10, 45, 'active')"
         )
         conn.commit()
         conn.close()
@@ -272,17 +320,15 @@ class TestCheckForeshadowing:
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
-        conn = sqlite3.connect(str(db_path))
+        conn = _create_real_schema(db_path)
+        # severely overdue: target 10, current 50, delay=40 > 20
         conn.execute(
-            "CREATE TABLE plot_threads "
-            "(thread_id TEXT, planted_chapter INT, expected_payoff_chapter INT, status TEXT)"
-        )
-        # severely overdue: expected 10, current 50, delay=40 > 20
-        conn.execute(
-            "INSERT INTO plot_threads VALUES ('ancient_secret', 5, 10, 'active')"
+            "INSERT INTO plot_thread_registry (thread_id, planted_chapter, target_payoff_chapter, status) "
+            "VALUES ('ancient_secret', 5, 10, 'active')"
         )
         conn.execute(
-            "INSERT INTO plot_threads VALUES ('lost_sword', 3, 8, 'active')"
+            "INSERT INTO plot_thread_registry (thread_id, planted_chapter, target_payoff_chapter, status) "
+            "VALUES ('lost_sword', 3, 8, 'active')"
         )
         conn.commit()
         conn.close()
@@ -393,6 +439,26 @@ class TestCheckPowerLevel:
         assert r.passed is True
         assert "异常" in r.message
 
+    def test_power_level_broader_field_match(self, tmp_path):
+        """Test that broader field LIKE matching catches Chinese field names."""
+        ink_dir = tmp_path / ".ink"
+        ink_dir.mkdir()
+        state = {"protagonist": {"power": {"realm": "金丹期"}}}
+        (ink_dir / "state.json").write_text(json.dumps(state), encoding="utf-8")
+        db_path = ink_dir / "index.db"
+        conn = _create_real_schema(db_path)
+        conn.execute("INSERT INTO entities (id, type, canonical_name, is_protagonist) VALUES ('mc', '角色', '主角', 1)")
+        conn.execute(
+            "INSERT INTO state_changes (entity_id, field, old_value, new_value, reason, chapter) "
+            "VALUES ('mc', '封印能力', '破天掌', '已封印', '被长老封印', 20)"
+        )
+        conn.commit()
+        conn.close()
+
+        r = check_power_level("主角运起破天掌，掌风呼啸", tmp_path)
+        assert r.passed is False
+        assert "破天掌" in r.detail
+
 
 # ---------------------------------------------------------------------------
 # check_contract_completeness
@@ -492,13 +558,13 @@ class TestRunAllChecks:
         result = run_all_checks(tmp_path, 1, chapter_file, text)
 
         assert result["pass"] is True
-        assert result["checks_run"] == 9  # v10.6: +opening_pattern +dialogue_ratio
+        assert result["checks_run"] == 11  # 9 original + sentence_length + emotion_punctuation
         assert result["hard_failures"] == []
         assert isinstance(result["all_results"], list)
 
     def test_hard_failure_propagates(self, tmp_path):
         chapter_file = Path("第0001章.md")
-        text = "字" * 10  # too short → hard failure
+        text = "字" * 10  # too short -> hard failure
         result = run_all_checks(tmp_path, 1, chapter_file, text)
 
         assert result["pass"] is False
@@ -549,7 +615,7 @@ class TestMain:
         out = capsys.readouterr().out
         data = json.loads(out)
         assert data["pass"] is True
-        assert data["checks_run"] == 9  # v10.6: +opening_pattern +dialogue_ratio
+        assert data["checks_run"] == 11  # updated count
 
     def test_text_output_pass(self, tmp_path, capsys):
         chapter_file = tmp_path / "第0001章.md"
@@ -645,7 +711,7 @@ class TestCheckDialogueRatio:
         dialogue = "\u201c对话内容对话内容对话内容\u201d" * 10  # ~120 chars dialogue
         text = narrative + dialogue
         r = check_dialogue_ratio(text)
-        # ratio ~5-15% → soft warning
+        # ratio ~5-15% -> soft warning
         assert r.severity == "soft"
 
     def test_adequate_dialogue_pass(self):
@@ -653,6 +719,23 @@ class TestCheckDialogueRatio:
         narrative = "叙述文字" * 200  # 800 chars
         dialogue = "\u201c这是一段对话这是一段对话\u201d" * 80  # ~1200 chars dialogue
         text = narrative + dialogue
+        r = check_dialogue_ratio(text)
+        assert r.passed is True
+
+    def test_dialogue_with_book_quotes(self):
+        """Test that 「」 quotes are also counted as dialogue."""
+        narrative = "叙述文字" * 200  # 800 chars
+        dialogue = "\u300c这是一段对话这是一段对话\u300d" * 80  # ~1200 chars using 「」
+        text = narrative + dialogue
+        r = check_dialogue_ratio(text)
+        assert r.passed is True
+
+    def test_dialogue_mixed_quotes(self):
+        """Test mixed "" and 「」 quotes are both counted."""
+        narrative = "叙述文字" * 200  # 800 chars
+        dialogue_cn = "\u201c这是一段中文引号对话\u201d" * 40
+        dialogue_jp = "\u300c这是一段书名号对话内容\u300d" * 40
+        text = narrative + dialogue_cn + dialogue_jp
         r = check_dialogue_ratio(text)
         assert r.passed is True
 
@@ -674,6 +757,25 @@ class TestCheckMetadataLeakage:
 
     def test_chapter_summary_leakage(self):
         text = "正文内容" * 200 + "\n\n**本章字数：3000**"
+        r = check_metadata_leakage(text)
+        assert r.passed is False
+
+    def test_metadata_in_middle(self):
+        """Test that metadata in the middle of text is also detected (full-text scan)."""
+        text = "正文内容" * 100 + "\n\n（作者按）这里有批注\n\n" + "正文内容" * 100
+        r = check_metadata_leakage(text)
+        assert r.passed is False
+        assert r.severity == "soft"
+
+    def test_summary_heading_detected(self):
+        """Test that ## Summary heading is detected as metadata."""
+        text = "正文内容" * 100 + "\n## Summary\n这是总结\n" + "正文内容" * 100
+        r = check_metadata_leakage(text)
+        assert r.passed is False
+
+    def test_todo_comment_detected(self):
+        """Test that // TODO is detected as metadata."""
+        text = "正文内容" * 100 + "\n// TODO fix this\n" + "正文内容" * 100
         r = check_metadata_leakage(text)
         assert r.passed is False
 
@@ -699,3 +801,73 @@ class TestCheckOpeningPattern:
     def test_dialogue_opening_pass(self):
         r = check_opening_pattern("\u201c你来了。\u201d老人抬起头。")
         assert r.passed is True
+
+
+# ---------------------------------------------------------------------------
+# check_sentence_length
+# ---------------------------------------------------------------------------
+
+class TestCheckSentenceLength:
+    def test_sentence_length_fragmented(self):
+        """Sentences too short (avg < 15 chars)."""
+        # Generate many short sentences: "短句子。" = 3 chars per sentence
+        text = "短句子。" * 50
+        r = check_sentence_length(text)
+        assert r.passed is False
+        assert r.severity == "soft"
+        assert "碎片化" in r.message
+
+    def test_sentence_length_normal(self):
+        """Sentences within normal range."""
+        # Each sentence ~25 chars
+        sentence = "这是一个正常长度的句子用来测试句长均值是否在合理范围内"  # ~25 chars
+        text = (sentence + "。") * 30
+        r = check_sentence_length(text)
+        assert r.passed is True
+
+    def test_sentence_length_too_long(self):
+        """Sentences too long (avg > 45 chars)."""
+        long_sentence = "这" * 50
+        text = (long_sentence + "。") * 15
+        r = check_sentence_length(text)
+        assert r.passed is False
+        assert "过长" in r.message
+
+    def test_sentence_length_too_few_sentences(self):
+        """Less than 10 sentences should be skipped."""
+        text = "短句。" * 5
+        r = check_sentence_length(text)
+        assert r.passed is True
+        assert "不足" in r.message
+
+
+# ---------------------------------------------------------------------------
+# check_emotion_punctuation
+# ---------------------------------------------------------------------------
+
+class TestCheckEmotionPunctuation:
+    def test_emotion_punctuation_low(self):
+        """No punctuation at all -> low density."""
+        text = "这是一段没有任何感叹号问号省略号的正文内容" * 100  # ~2000 chars, no ! or ?
+        r = check_emotion_punctuation(text)
+        assert r.passed is False
+        assert r.severity == "soft"
+        assert "偏低" in r.message
+
+    def test_emotion_punctuation_normal(self):
+        """Adequate punctuation density."""
+        base = "叙述内容" * 50  # ~200 chars
+        excl = "太好了！" * 5   # 5 exclamation marks
+        ques = "真的吗？" * 5   # 5 question marks
+        text = base + excl + ques
+        # total ~250 chars; need >= 1000 chars
+        text = text * 5  # ~1250 chars, 25 ! and 25 ?
+        r = check_emotion_punctuation(text)
+        assert r.passed is True
+
+    def test_emotion_punctuation_short_text(self):
+        """Text < 1000 chars should be skipped."""
+        text = "短文"
+        r = check_emotion_punctuation(text)
+        assert r.passed is True
+        assert "过短" in r.message

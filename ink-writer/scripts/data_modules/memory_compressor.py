@@ -14,15 +14,18 @@ Memory Compressor — 跨卷记忆压缩模块
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+
+DEFAULT_CHAPTERS_PER_VOLUME = int(os.environ.get("INK_CHAPTERS_PER_VOLUME", "50"))
 
 
 def check_compression_needed(
     project_root: Path,
     current_chapter: int,
-    chapters_per_volume: int = 50,
+    chapters_per_volume: int = DEFAULT_CHAPTERS_PER_VOLUME,
 ) -> Dict[str, Any]:
     """检查是否需要执行卷级记忆压缩。
 
@@ -76,7 +79,7 @@ def check_compression_needed(
 def load_volume_summaries(
     project_root: Path,
     volume_num: int,
-    chapters_per_volume: int = 50,
+    chapters_per_volume: int = DEFAULT_CHAPTERS_PER_VOLUME,
 ) -> List[Dict[str, Any]]:
     """加载一个卷的所有章节摘要。"""
     summaries_dir = project_root / ".ink" / "summaries"

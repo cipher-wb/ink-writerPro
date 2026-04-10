@@ -127,7 +127,7 @@ def check_character_conflicts(chapter_text: str, project_root: Path) -> CheckRes
             # 获取所有已知角色名称和别名
             known_names: set[str] = set()
             try:
-                cursor.execute("SELECT name FROM entities WHERE type = 'character'")
+                cursor.execute("SELECT canonical_name FROM entities WHERE type = '角色'")
                 for row in cursor.fetchall():
                     known_names.add(row[0])
             except sqlite3.OperationalError:
@@ -149,10 +149,10 @@ def check_character_conflicts(chapter_text: str, project_root: Path) -> CheckRes
             dead_names: list[str] = []
             try:
                 cursor.execute(
-                    "SELECT e.name FROM entities e "
+                    "SELECT e.canonical_name FROM entities e "
                     "JOIN state_changes sc ON e.id = sc.entity_id "
-                    "WHERE sc.field = 'status' AND sc.new_value IN ('dead', '死亡', '已死', '阵亡') "
-                    "AND e.type = 'character'"
+                    "WHERE sc.field = 'status' AND sc.new_value IN ('dead', '死亡', '已死', '阵亡', '战死', '牺牲', '身亡', '殒命', '消亡') "
+                    "AND e.type = '角色'"
                 )
                 dead_names = [row[0] for row in cursor.fetchall()]
             except sqlite3.OperationalError:
@@ -176,10 +176,10 @@ def check_character_conflicts(chapter_text: str, project_root: Path) -> CheckRes
             departed_names: list[str] = []
             try:
                 cursor.execute(
-                    "SELECT e.name FROM entities e "
+                    "SELECT e.canonical_name FROM entities e "
                     "JOIN state_changes sc ON e.id = sc.entity_id "
-                    "WHERE sc.field = 'status' AND sc.new_value IN ('departed', '离场', '已离开', '失踪') "
-                    "AND e.type = 'character'"
+                    "WHERE sc.field = 'status' AND sc.new_value IN ('departed', '离场', '已离开', '失踪', '远行', '出走', '被囚', '流放') "
+                    "AND e.type = '角色'"
                 )
                 departed_names = [row[0] for row in cursor.fetchall()]
             except sqlite3.OperationalError:
@@ -218,8 +218,8 @@ def check_foreshadowing_consistency(project_root: Path, chapter_num: int) -> Che
             overdue_threads: list[str] = []
             try:
                 cursor.execute(
-                    "SELECT thread_id, planted_chapter, expected_payoff_chapter "
-                    "FROM plot_threads WHERE status = 'active' AND expected_payoff_chapter < ?",
+                    "SELECT thread_id, planted_chapter, target_payoff_chapter "
+                    "FROM plot_thread_registry WHERE status = 'active' AND target_payoff_chapter < ?",
                     (chapter_num,)
                 )
                 for row in cursor.fetchall():
@@ -287,7 +287,9 @@ def check_power_level(chapter_text: str, project_root: Path) -> CheckResult:
                     cursor.execute(
                         "SELECT field, old_value, new_value, reason FROM state_changes "
                         "WHERE entity_id IN (SELECT id FROM entities WHERE is_protagonist = 1) "
-                        "AND field IN ('ability_lost', 'sealed_ability', 'disabled_skill') "
+                        "AND (field LIKE '%ability%' OR field LIKE '%seal%' OR field LIKE '%skill%' "
+                        "     OR field LIKE '%能力%' OR field LIKE '%封印%' OR field LIKE '%技能%' "
+                        "     OR field IN ('ability_lost', 'sealed_ability', 'disabled_skill')) "
                         "ORDER BY chapter DESC LIMIT 10"
                     )
                     for row in cursor.fetchall():
@@ -365,7 +367,7 @@ def check_dialogue_ratio(chapter_text: str) -> CheckResult:
     if total_len < 500:
         return CheckResult("dialogue_ratio", True, "soft", "正文过短，跳过对话检查")
 
-    dialogue_matches = re.findall(r'\u201c[^\u201d]*\u201d', chapter_text)
+    dialogue_matches = re.findall(r'[\u201c\u300c][^\u201d\u300d]*[\u201d\u300d]', chapter_text)
     dialogue_chars = sum(len(re.sub(r'\s+', '', m)) - 2 for m in dialogue_matches)
     ratio = dialogue_chars / max(1, total_len)
 
@@ -428,13 +430,14 @@ METADATA_PATTERNS = [
     r'（本章完）', r'（全文完）',
     r'\*\*本章字数[：:]', r'\*\*章末钩子[：:]',
     r'\*\*本章小结', r'---\s*\n\s*\*\*',
+    r'（作者[按注]）', r'【[注按]】',
+    r'^## Summary', r'\*\*Note:?\*\*', r'// ?TODO',
 ]
 
 
 def check_metadata_leakage(chapter_text: str) -> CheckResult:
-    """检测正文末尾是否混入元数据。"""
-    tail = chapter_text[-500:] if len(chapter_text) > 500 else chapter_text
-    hits = [p for p in METADATA_PATTERNS if re.search(p, tail)]
+    """检测正文中是否混入元数据（全文扫描）。"""
+    hits = [p for p in METADATA_PATTERNS if re.search(p, chapter_text, re.MULTILINE)]
     if hits:
         return CheckResult(
             "metadata_leakage", False, "soft",
@@ -442,6 +445,56 @@ def check_metadata_leakage(chapter_text: str) -> CheckResult:
             "建议在润色步骤中清理这些元数据行",
         )
     return CheckResult("metadata_leakage", True, "soft", "无元数据泄漏")
+
+
+# ---------------------------------------------------------------------------
+# Sentence length check
+# ---------------------------------------------------------------------------
+
+def check_sentence_length(chapter_text: str) -> CheckResult:
+    """检查句长均值是否偏离标杆（标杆28.6字，下限15字，上限45字）"""
+    sentences = re.split(r'[。！？…]+', chapter_text)
+    sentences = [s.strip() for s in sentences if len(s.strip()) > 2]
+    if len(sentences) < 10:
+        return CheckResult("sentence_length", True, "soft", "句子数不足，跳过句长检查")
+    avg_len = sum(len(s) for s in sentences) / len(sentences)
+    if avg_len < 15:
+        return CheckResult("sentence_length", False, "soft",
+            f"句长均值 {avg_len:.1f} 字（标杆28.6字），句子过于碎片化",
+            "建议合并连续短句，增加复合句。")
+    if avg_len > 45:
+        return CheckResult("sentence_length", False, "soft",
+            f"句长均值 {avg_len:.1f} 字（标杆28.6字），句子过长",
+            "建议拆分长句，增加节奏变化。")
+    return CheckResult("sentence_length", True, "soft", f"句长均值 {avg_len:.1f} 字")
+
+
+# ---------------------------------------------------------------------------
+# Emotion punctuation density check
+# ---------------------------------------------------------------------------
+
+def check_emotion_punctuation(chapter_text: str) -> CheckResult:
+    """检查情感标点密度（标杆：感叹号3.8/千字，问号4.2/千字，省略号2.8/千字）"""
+    total_chars = len(re.sub(r'\s+', '', chapter_text))
+    if total_chars < 1000:
+        return CheckResult("emotion_punctuation", True, "soft", "正文过短，跳过标点检查")
+    k = total_chars / 1000
+    excl_count = chapter_text.count('\uff01') + chapter_text.count('!')
+    ques_count = chapter_text.count('\uff1f') + chapter_text.count('?')
+    ellipsis_count = len(re.findall(r'[\u2026\u22ef]+|\.{3,}|\u3002{2,}', chapter_text))
+    excl_per_k = excl_count / k
+    ques_per_k = ques_count / k
+    elli_per_k = ellipsis_count / k
+    issues = []
+    if excl_per_k < 0.5:
+        issues.append(f"感叹号 {excl_per_k:.1f}/千字（标杆3.8），情感表达不足")
+    if ques_per_k < 0.5:
+        issues.append(f"问号 {ques_per_k:.1f}/千字（标杆4.2），互动/疑问不足")
+    if issues:
+        return CheckResult("emotion_punctuation", False, "soft",
+            f"情感标点密度偏低", "\n".join(issues))
+    return CheckResult("emotion_punctuation", True, "soft",
+        f"标点密度: !{excl_per_k:.1f} ?{ques_per_k:.1f} \u2026{elli_per_k:.1f}/千字")
 
 
 # ---------------------------------------------------------------------------
@@ -466,6 +519,8 @@ def run_all_checks(
         check_power_level(chapter_text, project_root),
         check_contract_completeness(project_root, chapter_num),
         check_metadata_leakage(chapter_text),
+        check_sentence_length(chapter_text),
+        check_emotion_punctuation(chapter_text),
     ]
 
     hard_failures = [r for r in results if not r.passed and r.severity == "hard"]

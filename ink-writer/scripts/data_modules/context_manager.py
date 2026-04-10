@@ -232,6 +232,22 @@ class ContextManager:
                     estimated_tokens, hard_token_limit,
                 )
 
+        # 裁剪通知：让 writer-agent 知道上下文被截断了
+        if assembled.get("meta", {}).get("budget_trimmed"):
+            trimmed_sections = [
+                name for name, sec in assembled.get("sections", {}).items()
+                if sec.get("budget_trimmed")
+            ]
+            warning_text = (
+                f"⚠️ 上下文 Token 预算超限，以下板块被截断: {', '.join(trimmed_sections)}。"
+                "涉及这些板块的角色/设定信息可能不完整，请通过 RAG 查询补充关键信息。"
+            )
+            assembled.setdefault("sections", {})["budget_trim_warning"] = {
+                "text": warning_text,
+                "priority": "high",
+                "budget_trimmed": False,  # 不要裁剪这个警告本身
+            }
+
         return assembled
 
     def filter_invalid_items(self, items: List[Dict[str, Any]], source_type: str, id_key: str) -> List[Dict[str, Any]]:
@@ -1139,12 +1155,14 @@ class ContextManager:
         return load_chapter_outline(self.config.project_root, chapter, max_chars=1500)
 
     def _load_volume_summaries(
-        self, chapter: int, window: int = 3, chapters_per_volume: int = 50
+        self, chapter: int, window: int = 3, chapters_per_volume: int = 0
     ) -> List[Dict[str, Any]]:
         """加载当前章节之前所有已完成卷的 mega-summary。
 
         只返回在 recent_summaries 窗口之前的卷，避免重复加载。
         """
+        if chapters_per_volume <= 0:
+            chapters_per_volume = int(getattr(self.config, "chapters_per_volume", 50))
         if chapter <= chapters_per_volume:
             return []
 

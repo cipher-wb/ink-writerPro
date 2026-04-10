@@ -57,10 +57,14 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 - **硬失败 (exit 1)** → 退回 Step 2A 重写。不进入 Step 3。
 - **仅软警告 (exit 0)** → 将 `soft_warnings` 附加到 review_bundle，提供给 Step 3 checkers 参考。
 - **全部通过 (exit 0)** → 正常进入 Step 3。
-- **脚本错误 (exit 2)** → **静默跳过**，直接进入 Step 3。不阻断流程。
+- **脚本错误 (exit 2)**：
+  - 首次遇到：输出 WARNING 日志 `"⚠️ Step 2C 计算型闸门脚本异常，本次跳过。请检查 Python 环境。"`
+  - 记录到 observability 日志（`tool_call_stats` 表，`tool_name='computational_checks'`, `success=false`）
+  - 继续进入 Step 3（不阻断），但在 review_bundle 中附加 `comp_gate_skipped: true` 标记
+  - 连续 3 次 exit 2 → 升级为 WARNING 并建议用户检查环境
 
 ## 容错
 
 - 脚本不存在 → 跳过 Step 2C
 - 脚本执行超时 → 跳过 Step 2C
-- 脚本内部异常 → exit 2 + fallthrough，跳过 Step 2C
+- 脚本内部异常 → exit 2 + 按上述分级处理

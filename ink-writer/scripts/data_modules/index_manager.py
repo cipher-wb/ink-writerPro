@@ -923,15 +923,26 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
             conn.commit()
 
     @contextmanager
-    def _get_conn(self):
-        """获取数据库连接"""
+    def _get_conn(self, immediate: bool = False):
+        """获取数据库连接。immediate=True 时使用 BEGIN IMMEDIATE 事务。"""
         conn = sqlite3.connect(str(self.config.index_db))
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA journal_mode = WAL")
         conn.execute("PRAGMA foreign_keys = ON")
         conn.execute("PRAGMA busy_timeout = 5000")
+        if immediate:
+            conn.execute("BEGIN IMMEDIATE")
         try:
             yield conn
+            if immediate:
+                conn.commit()
+        except Exception:
+            if immediate:
+                try:
+                    conn.rollback()
+                except Exception:
+                    pass
+            raise
         finally:
             conn.close()
 

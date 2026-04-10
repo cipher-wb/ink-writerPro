@@ -27,17 +27,17 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 
 ## 审查路由模式
 
-`auto` 路由：核心 4 个始终执行 + 条件审查器按命中执行。
+`auto` 路由：核心 5 个始终执行 + 条件审查器按命中执行。
 
 核心审查器（始终执行）：
 - `consistency-checker`
 - `continuity-checker`
 - `ooc-checker`
 - `anti-detection-checker`
+- `reader-pull-checker`
 
 条件审查器（仅 `auto` 命中时执行）：
 - `golden-three-checker`
-- `reader-pull-checker`
 - `high-point-checker`
 - `pacing-checker`
 - `proofreading-checker`
@@ -56,10 +56,10 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
   - `chapter <= 3`；
   - 用户显式要求”黄金三章审查”；
   - `.ink/golden_three_plan.json` 明确开启且当前章在 1-3 范围内。
-- `reader-pull-checker`：当满足任一条件时启用
-  - 非过渡章；
-  - 有明确未闭合问题/期待锚点；
-  - 用户显式要求”追读力审查”。
+- `reader-pull-checker`：**始终启用**
+  - 硬约束 5 条检查始终执行（可读性底线/承诺违背/节奏灾难/冲突真空/开篇空洞）
+  - 过渡章仅降级软评分要求（权重减半），不跳过硬约束
+  - 确保每章都有 chapter_reading_power 数据写入，保障下章差异化检查的数据连续性
 - `high-point-checker`：当满足任一条件时启用
   - 关键章/高潮章/卷末章；
   - 正文出现战斗、反杀、打脸、身份揭露、大反转等高光信号。

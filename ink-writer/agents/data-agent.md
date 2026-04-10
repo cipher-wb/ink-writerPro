@@ -62,6 +62,23 @@ model: inherit
 }
 ```
 
+##### StateChange 标准化枚举（必须严格遵守）
+
+以下场景的 `field` 和 `new` 值必须使用标准化格式，不得自由发挥：
+
+| 场景 | field | new（标准值） | 示例 |
+|------|-------|--------------|------|
+| 角色死亡 | `status` | `dead` | `{"field": "status", "old": "alive", "new": "dead", "reason": "战斗中被杀"}` |
+| 角色离场 | `status` | `departed` | `{"field": "status", "new": "departed", "reason": "远行修炼"}` |
+| 角色失踪 | `status` | `missing` | `{"field": "status", "new": "missing"}` |
+| 角色被囚 | `status` | `imprisoned` | `{"field": "status", "new": "imprisoned"}` |
+| 技能封印 | `ability_sealed` | 被封印的技能名 | `{"field": "ability_sealed", "new": "天火莲花", "reason": "被长老封印"}` |
+| 技能丧失 | `ability_lost` | 丧失的技能名 | `{"field": "ability_lost", "new": "灵魂之力", "reason": "代价交换"}` |
+| 境界变化 | `realm` | 新境界名 | `{"field": "realm", "old": "斗者", "new": "斗师"}` |
+| 位置变化 | `location` | 新位置名 | `{"field": "location", "old": "萧家", "new": "魔兽山脉"}` |
+
+**禁止**使用 `"战死"`, `"牺牲"`, `"身亡"` 等非标准值作为 `new` 字段。死亡原因写在 `reason` 字段中。
+
 ## 执行流程
 
 ### Step -1: CLI 入口与脚本目录校验（必做）

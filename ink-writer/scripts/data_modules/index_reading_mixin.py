@@ -113,7 +113,7 @@ class IndexReadingMixin:
 
     def save_chapter_reading_power(self, meta: ChapterReadingPowerMeta):
         """保存章节追读力元数据"""
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -249,7 +249,7 @@ class IndexReadingMixin:
             "involved_entities": meta.involved_entities,
             "plot_progress": meta.plot_progress,
         }
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -363,7 +363,7 @@ class IndexReadingMixin:
             "notes": meta.notes,
             "confidence": meta.confidence,
         }
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """

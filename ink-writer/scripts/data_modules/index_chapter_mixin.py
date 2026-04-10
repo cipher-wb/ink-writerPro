@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional
 class IndexChapterMixin:
     def add_chapter(self, meta: ChapterMeta):
         """添加/更新章节元数据"""
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -66,7 +66,7 @@ class IndexChapterMixin:
 
     def add_scenes(self, chapter: int, scenes: List[SceneMeta]):
         """添加章节场景"""
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
 
             # 先删除该章节旧场景
@@ -149,7 +149,7 @@ class IndexChapterMixin:
             confidence: 置信度
             skip_if_exists: 如果为True，当记录已存在时跳过（避免覆盖已有mentions）
         """
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
 
             if skip_if_exists:

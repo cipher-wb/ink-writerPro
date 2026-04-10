@@ -207,6 +207,42 @@ python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}”
 输出：
 - “已就绪输入”与”缺失输入”清单；缺失则阻断并提示先补齐。
 
+#### Step 0.2: 黄金三章契约检查（ch <= 3 时）
+
+当 chapter <= 3 时，检查 `$PROJECT_ROOT/.ink/golden_three_plan.json` 是否存在：
+- **存在**：加载到执行包中供 golden-three-checker 使用
+- **不存在**：输出 WARNING：
+  ```
+  ⚠️  golden_three_plan.json 不存在。黄金三章审查将使用通用标准而非项目特定契约。
+  建议运行 /ink-init 补充黄金三章计划（金手指定义、核心卖点、前三章节拍表）。
+  ```
+  **不阻断写作**，但在 Step 3 审查时 golden-three-checker 的精度会降低。
+
+#### Step 0.3: 跨卷记忆压缩检查
+
+当 chapter > 50 时自动检查是否需要卷级记忆压缩：
+
+```bash
+COMPRESS_RESULT=$(python3 -X utf8 “$SCRIPTS_DIR/ink.py” --project-root “$PROJECT_ROOT” memory auto-compress --chapter {chapter_num} --format json)
+```
+
+**若 `needed=true`**：
+1. 从 COMPRESS_RESULT 中提取 `prompt` 字段
+2. 调用 LLM 生成 mega-summary（提示词已在 prompt 中，直接发送即可）
+3. 将 LLM 生成的摘要保存：
+   ```bash
+   python3 -X utf8 “$SCRIPTS_DIR/ink.py” --project-root “$PROJECT_ROOT” memory save-mega --volume {volume} --content “{mega_summary_text}”
+   ```
+   若 `save-mega` 子命令不存在，直接写文件：
+   ```bash
+   echo “{mega_summary_text}” > “$PROJECT_ROOT/.ink/summaries/vol{volume}_mega.md”
+   ```
+4. 记录日志：`📦 已生成第{volume}卷 mega-summary`
+
+**若 `needed=false`**：跳过，无操作。
+
+**重要**：此步骤是自动化的，不需要用户确认。压缩仅在新卷首章触发（如 ch51, ch101 等）。
+
 **写作前里程碑强制审查**（大纲检查通过后、逾期伏笔检查之前执行）：
 
 读取 `progress.current_chapter`，计算 `next_chapter = current_chapter + 1`。按以下优先级检测（**只触发最高级别的一条**，执行完审查后自动继续写作）：
@@ -858,6 +894,14 @@ cat “${SKILL_ROOT}/references/style-adapter.md”
 - 若 Anti-AI 检查未通过，不得把该版正文交给 Step 3。
 - **Step 2B 完成后必须自检**：对比 2A 输出与 2B 输出，确认所有人名、地名、数字、行为结果、因果关系零偏差。若发现偏差，恢复对应段落为 2A 版本并仅做表达层调整。
 
+##### 风格样本 Fallback（新项目前 10 章）
+
+当本地 `style_samples` 表为空或匹配结果不足 2 条时（新项目常见情况）：
+1. 从 `scene-craft-index.md` 的对应场景类型范例中提取 2-3 个参考片段
+2. 若项目配置了 `genre`，从 benchmark `style_rag.db`（如果存在）按 genre + scene_type 检索 3 个标杆片段
+3. 将这些 fallback 样本注入执行包第 11 板块，标记为 `source: "benchmark_fallback"`
+4. 从第 11 章起，本地高分章节应已积累足够样本，不再触发 fallback
+
 输出：
 - 风格化正文（覆盖原章节文件）。
 
@@ -880,7 +924,8 @@ COMP_GATE_RESULT=$(python3 "${SCRIPTS_DIR}/computational_checks.py" \
 ```
 
 判定逻辑：
-- **脚本不存在或 exit 2**（内部错误）→ 静默跳过，直接进入 Step 3。
+- **脚本不存在** → 跳过，直接进入 Step 3。
+- **exit 2**（内部错误）→ 输出 WARNING 日志，在 review_bundle 中附加 `comp_gate_skipped: true`，进入 Step 3（详见 `step-2c-comp-gate.md`）。
 - **exit 1**（硬失败）→ 读取 `hard_failures` 列表，退回 Step 2A 重写。不进入 Step 3。
 - **exit 0 + 有 soft_warnings** → 将 `soft_warnings` 记录到日志，附加到 review_bundle 的 `computational_warnings` 字段，进入 Step 3。
 - **exit 0 + 全部通过** → 正常进入 Step 3。

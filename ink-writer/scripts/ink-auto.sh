@@ -567,6 +567,25 @@ run_auto_fix() {
     FIX_COUNT=$((FIX_COUNT + 1))
     sleep "$CHECKPOINT_COOLDOWN"
 
+    # 检查修复后是否仍有 critical 问题
+    if [ "$fix_type" = "audit" ]; then
+        STILL_HAS_CRITICAL=$(python3 -X utf8 -c "
+import json, sys
+try:
+    with open('$report_path', 'r') as f:
+        data = json.load(f)
+    issues = data.get('issues', [])
+    critical = [i for i in issues if i.get('severity') == 'critical']
+    print('True' if critical else 'False')
+except:
+    print('False')
+" 2>/dev/null || echo "False")
+        if [ "$STILL_HAS_CRITICAL" = "True" ]; then
+            echo "    ⚠️  WARNING: audit critical 问题修复后仍存在，继续写作可能在错误状态上累积"
+            report_event "⚠️" "修复不完全" "audit critical 问题仍存在"
+        fi
+    fi
+
     echo "    ✅ 自动修复完成"
     report_event "✅" "${fix_type}修复完成" "${scope}，日志: $(basename "$log_file")"
 }
