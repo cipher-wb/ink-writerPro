@@ -214,8 +214,10 @@ def check_foreshadowing_consistency(project_root: Path, chapter_num: int) -> Che
         with closing(sqlite3.connect(str(db_path))) as conn:
             cursor = conn.cursor()
 
-            # 检查是否有严重逾期的伏笔
-            overdue_threads: list[str] = []
+            # 检查逾期伏笔（分级）
+            issues: list[str] = []
+            info_items: list[str] = []
+            severity = "soft"
             try:
                 cursor.execute(
                     "SELECT thread_id, planted_chapter, target_payoff_chapter "
@@ -223,17 +225,35 @@ def check_foreshadowing_consistency(project_root: Path, chapter_num: int) -> Che
                     (chapter_num,)
                 )
                 for row in cursor.fetchall():
-                    delay = chapter_num - row[2]
-                    if delay > 20:  # 超期 20 章以上
-                        overdue_threads.append(f"伏笔 '{row[0]}' (第{row[1]}章埋) 预期第{row[2]}章回收，已逾期 {delay} 章")
+                    tid, planted, expected = row[0], row[1], row[2]
+                    delay = chapter_num - expected
+                    if delay > 30:
+                        issues.append(f"伏笔「{tid}」严重逾期 {delay} 章（planted={planted}, target={expected}）")
+                        severity = "hard"
+                    elif delay > 20:
+                        issues.append(f"伏笔「{tid}」逾期 {delay} 章（planted={planted}, target={expected}）")
+                    elif delay > 10:
+                        info_items.append(f"伏笔「{tid}」接近逾期 {delay} 章（planted={planted}, target={expected}）")
             except sqlite3.OperationalError:
                 pass
 
-        if overdue_threads:
+        if issues and severity == "hard":
+            return CheckResult(
+                "foreshadowing", False, "hard",
+                f"{len(issues)} 条伏笔逾期（含严重逾期>30章）",
+                "\n".join(issues[:5])
+            )
+        if issues:
             return CheckResult(
                 "foreshadowing", False, "soft",
-                f"{len(overdue_threads)} 条伏笔严重逾期（>20章）",
-                "\n".join(overdue_threads[:5])
+                f"{len(issues)} 条伏笔逾期（>20章）",
+                "\n".join(issues[:5])
+            )
+        if info_items:
+            return CheckResult(
+                "foreshadowing", True, "soft",
+                f"{len(info_items)} 条伏笔接近逾期（>10章）",
+                "\n".join(info_items[:5])
             )
 
         return CheckResult("foreshadowing", True, "soft", "伏笔生命周期检查通过")
@@ -486,15 +506,114 @@ def check_emotion_punctuation(chapter_text: str) -> CheckResult:
     ques_per_k = ques_count / k
     elli_per_k = ellipsis_count / k
     issues = []
-    if excl_per_k < 0.5:
+    if excl_per_k < 1.0:
         issues.append(f"感叹号 {excl_per_k:.1f}/千字（标杆3.8），情感表达不足")
-    if ques_per_k < 0.5:
+    if ques_per_k < 1.0:
         issues.append(f"问号 {ques_per_k:.1f}/千字（标杆4.2），互动/疑问不足")
     if issues:
         return CheckResult("emotion_punctuation", False, "soft",
             f"情感标点密度偏低", "\n".join(issues))
     return CheckResult("emotion_punctuation", True, "soft",
         f"标点密度: !{excl_per_k:.1f} ?{ques_per_k:.1f} \u2026{elli_per_k:.1f}/千字")
+
+
+# ---------------------------------------------------------------------------
+# Vocabulary diversity (TTR) check
+# ---------------------------------------------------------------------------
+
+def check_vocabulary_diversity(chapter_text: str) -> CheckResult:
+    """检查词汇多样性（TTR），AI文本的TTR显著低于人类文本。
+
+    标杆TTR约0.45-0.55（去停用词后），AI文本通常0.30-0.40。
+    """
+    # 去除标点和空白，提取中文字符序列
+    chars = re.findall(r'[\u4e00-\u9fff]', chapter_text)
+    if len(chars) < 500:
+        return CheckResult("vocabulary_diversity", True, "soft", "正文过短，跳过词汇多样性检查")
+
+    # 简单的字级TTR（不依赖分词库）
+    # 用2-gram作为"词"的近似
+    bigrams = [chars[i] + chars[i+1] for i in range(len(chars) - 1)]
+    if not bigrams:
+        return CheckResult("vocabulary_diversity", True, "soft", "无法计算TTR")
+
+    unique_bigrams = len(set(bigrams))
+    total_bigrams = len(bigrams)
+    ttr = unique_bigrams / total_bigrams
+
+    # 阈值：标杆约0.45-0.55，AI约0.30-0.40
+    if ttr < 0.35:
+        return CheckResult(
+            "vocabulary_diversity", False, "soft",
+            f"词汇多样性 TTR={ttr:.3f}（标杆≥0.45），用词重复度过高",
+            "建议：增加同义词替换，减少高频词重复使用，丰富描写角度。"
+        )
+    if ttr < 0.40:
+        return CheckResult(
+            "vocabulary_diversity", False, "soft",
+            f"词汇多样性 TTR={ttr:.3f}（标杆≥0.45），用词偏单一",
+            "建议：注意关键名词/动词的多样化表达。"
+        )
+    return CheckResult("vocabulary_diversity", True, "soft", f"词汇多样性 TTR={ttr:.3f}")
+
+
+# ---------------------------------------------------------------------------
+# First sentence hook check
+# ---------------------------------------------------------------------------
+
+def check_first_sentence_hook(chapter_text: str) -> CheckResult:
+    """检查第一句是否具有钩子特征（对话/行动/感官/冲突 vs 说明性/描写性）。
+
+    起点编辑的第一眼聚焦于开篇第一句。好的第一句应该制造悬念、冲突或行动感。
+    """
+    # 提取第一句（到第一个句号/问号/感叹号）
+    text = chapter_text.strip()
+    if not text:
+        return CheckResult("first_sentence_hook", True, "soft", "正文为空")
+
+    # 分句
+    match = re.search(r'[。！？…]', text)
+    first_sentence = text[:match.end()] if match else text[:100]
+    first_sentence = first_sentence.strip()
+
+    if len(first_sentence) < 5:
+        return CheckResult("first_sentence_hook", True, "soft", "第一句过短，跳过检查")
+
+    # 好的开头模式（对话/行动/感官/冲突）
+    good_patterns = [
+        r'^[""「『]',           # 对话开头
+        r'^[他她它我你].*[了着过]',  # 行动描写
+        r'[血火光暗冷热痛]',     # 感官冲击
+        r'[砰轰嗖咔嚓啪]',      # 拟声词
+        r'[！？]',              # 强烈情感
+        r'[死杀逃跑冲撞]',      # 冲突动作
+    ]
+
+    # 差的开头模式（说明性/抽象/总结）
+    bad_patterns = [
+        r'^[这那此]是一个',      # "这是一个..."
+        r'^在[^""「]*的[^""「]*[里中上下]', # "在...的...里"
+        r'^众所周知',
+        r'^据说',
+        r'^自从.*以来',
+        r'^作为一[个名位]',      # "作为一个..."
+    ]
+
+    has_good = any(re.search(p, first_sentence) for p in good_patterns)
+    has_bad = any(re.search(p, first_sentence) for p in bad_patterns)
+
+    if has_bad:
+        return CheckResult(
+            "first_sentence_hook", False, "soft",
+            f"第一句使用了说明性/总结性开头",
+            f"当前: 「{first_sentence[:50]}」\n建议：用对话、行动或感官冲击开头。"
+        )
+    if not has_good and len(first_sentence) > 20:
+        return CheckResult(
+            "first_sentence_hook", True, "soft",
+            f"第一句无明显钩子特征（非阻断）: 「{first_sentence[:50]}」"
+        )
+    return CheckResult("first_sentence_hook", True, "soft", f"第一句有钩子特征")
 
 
 # ---------------------------------------------------------------------------
@@ -521,6 +640,8 @@ def run_all_checks(
         check_metadata_leakage(chapter_text),
         check_sentence_length(chapter_text),
         check_emotion_punctuation(chapter_text),
+        check_vocabulary_diversity(chapter_text),       # v11: 词汇多样性检测
+        check_first_sentence_hook(chapter_text),        # v11: 第一句钩子检测
     ]
 
     hard_failures = [r for r in results if not r.passed and r.severity == "hard"]

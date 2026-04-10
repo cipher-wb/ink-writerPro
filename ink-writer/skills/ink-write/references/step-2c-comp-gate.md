@@ -36,8 +36,8 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
       "message": "2 条伏笔严重逾期（>20章）"
     }
   ],
-  "checks_run": 11,
-  "checks_passed": 10
+  "checks_run": 13,
+  "checks_passed": 12
 }
 ```
 
@@ -56,6 +56,8 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 | `metadata_leakage` | 软 | 元数据泄漏全文扫描（作者按/注/Summary等） |
 | `sentence_length` | 软 | 句长均值（<15 碎片化, >45 过长, 标杆28.6） |
 | `emotion_punctuation` | 软 | 情感标点密度（感叹号/问号, 标杆3.8/4.2千字） |
+| `vocabulary_diversity` | 软 | 词汇多样性 TTR（<0.35 报警，标杆≥0.45） |
+| `first_sentence_hook` | 软 | 第一句钩子特征检测（说明性/总结性开头报警） |
 
 ## 判定逻辑
 

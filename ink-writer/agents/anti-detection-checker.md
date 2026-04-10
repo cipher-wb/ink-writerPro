@@ -218,6 +218,32 @@ tools: [Read, Grep]
 | 描写非POV角色内心活动 | 视角越权 | `medium`（每处） |
 | 使用"与此同时"切换场景 | 上帝视角转场 | `low`（每处） |
 
+### 第 8.5 层：风格契约对比（v11.4 新增）
+
+当执行包中包含风格参考样本（`style_contract_ref` 或 `style_samples`）时，对比实际产出与参考的偏差：
+
+| 指标 | 来源 | 偏差阈值 | severity |
+|------|------|---------|----------|
+| 句长均值 | style_contract_ref.avg_sentence_length | ±30% | info |
+| 对话占比 | style_contract_ref.dialogue_ratio | ±40% | info |
+| 情感标点密度 | style_contract_ref.emotion_density | ±50% | info |
+
+此层不计入综合评分（权重 0%），仅输出偏差报告供 polish-agent 参考。目的是验证 Style RAG 注入的风格是否被 writer-agent 采纳。
+
+输出格式：
+```json
+{
+  "style_adoption": {
+    "sentence_length_deviation": "+15%",
+    "dialogue_ratio_deviation": "-22%",
+    "emotion_density_deviation": "+8%",
+    "adopted": true
+  }
+}
+```
+
+`adopted = true` 当所有偏差在阈值内。
+
 ## 综合评分
 
 各层检查完毕后，计算 AI味综合评分（0-100，100为完全无AI味）：

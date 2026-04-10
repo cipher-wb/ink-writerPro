@@ -203,7 +203,7 @@ class DataModulesConfig:
     chapter_meta_keep_recent: int = 10        # flush后保留最近N条
     max_strand_tracker_history: int = 100     # strand_tracker.history最多保留N条
 
-    context_recent_summaries_window: int = 3
+    context_recent_summaries_window: int = 5
     context_recent_meta_window: int = 3
     context_alerts_slice: int = 10
     context_max_appearing_characters: int = 10

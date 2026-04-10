@@ -16,11 +16,13 @@ from computational_checks import (
     check_dialogue_ratio,
     check_emotion_punctuation,
     check_file_naming,
+    check_first_sentence_hook,
     check_foreshadowing_consistency,
     check_metadata_leakage,
     check_opening_pattern,
     check_power_level,
     check_sentence_length,
+    check_vocabulary_diversity,
     check_word_count,
     main,
     run_all_checks,
@@ -335,7 +337,7 @@ class TestCheckForeshadowing:
 
         r = check_foreshadowing_consistency(tmp_path, 50)
         assert r.passed is False
-        assert r.severity == "soft"
+        assert r.severity == "hard"  # delay 40/42 > 30 → hard
         assert "2" in r.message
         assert "ancient_secret" in r.detail
 
@@ -558,7 +560,7 @@ class TestRunAllChecks:
         result = run_all_checks(tmp_path, 1, chapter_file, text)
 
         assert result["pass"] is True
-        assert result["checks_run"] == 11  # 9 original + sentence_length + emotion_punctuation
+        assert result["checks_run"] == 13  # 11 original + vocabulary_diversity + first_sentence_hook
         assert result["hard_failures"] == []
         assert isinstance(result["all_results"], list)
 
@@ -615,7 +617,7 @@ class TestMain:
         out = capsys.readouterr().out
         data = json.loads(out)
         assert data["pass"] is True
-        assert data["checks_run"] == 11  # updated count
+        assert data["checks_run"] == 13  # updated count
 
     def test_text_output_pass(self, tmp_path, capsys):
         chapter_file = tmp_path / "第0001章.md"
@@ -871,3 +873,148 @@ class TestCheckEmotionPunctuation:
         r = check_emotion_punctuation(text)
         assert r.passed is True
         assert "过短" in r.message
+
+
+# ---------------------------------------------------------------------------
+# check_vocabulary_diversity
+# ---------------------------------------------------------------------------
+
+class TestCheckVocabularyDiversity:
+    def test_diverse_text_pass(self):
+        """Diverse text with many unique bigrams should pass."""
+        # Use a wide variety of characters to ensure high TTR
+        import random
+        random.seed(42)
+        # Generate 600 distinct characters from CJK range
+        chars = [chr(c) for c in range(0x4e00, 0x4e00 + 800)]
+        random.shuffle(chars)
+        text = "".join(chars)
+        r = check_vocabulary_diversity(text)
+        assert r.passed is True
+        assert "TTR=" in r.message
+
+    def test_repetitive_text_fail(self):
+        """Highly repetitive text should fail TTR check."""
+        # "叙述" repeated 500 times = 1000 chars, only 1 unique bigram "叙述"
+        text = "叙述" * 500
+        r = check_vocabulary_diversity(text)
+        assert r.passed is False
+        assert r.severity == "soft"
+        assert "重复" in r.message
+
+    def test_short_text_skip(self):
+        """Text with < 500 Chinese chars should be skipped."""
+        text = "短文" * 10  # 20 chars
+        r = check_vocabulary_diversity(text)
+        assert r.passed is True
+        assert "过短" in r.message
+
+
+# ---------------------------------------------------------------------------
+# check_first_sentence_hook
+# ---------------------------------------------------------------------------
+
+class TestCheckFirstSentenceHook:
+    def test_dialogue_opening_pass(self):
+        r = check_first_sentence_hook("\u201c你是谁？\u201d他警惕地后退一步。")
+        assert r.passed is True
+        assert "钩子特征" in r.message
+
+    def test_action_opening_pass(self):
+        r = check_first_sentence_hook("他猛地从床上跳起来。")
+        assert r.passed is True
+
+    def test_explanatory_opening_fail(self):
+        r = check_first_sentence_hook("这是一个普通的早晨。")
+        assert r.passed is False
+        assert r.severity == "soft"
+        assert "说明性" in r.message
+
+    def test_empty_text(self):
+        r = check_first_sentence_hook("")
+        assert r.passed is True
+        assert "为空" in r.message
+
+    def test_sensory_opening_pass(self):
+        r = check_first_sentence_hook("血光冲天而起，照亮了半边夜空。")
+        assert r.passed is True
+
+
+# ---------------------------------------------------------------------------
+# check_foreshadowing_consistency (tiered)
+# ---------------------------------------------------------------------------
+
+class TestCheckForeshadowingTiered:
+    def test_overdue_10_info(self, tmp_path):
+        """Delay 11 chapters -> info level (passed=True)."""
+        ink_dir = tmp_path / ".ink"
+        ink_dir.mkdir()
+        db_path = ink_dir / "index.db"
+        conn = _create_real_schema(db_path)
+        # target=39, current=50, delay=11 > 10
+        conn.execute(
+            "INSERT INTO plot_thread_registry (thread_id, planted_chapter, target_payoff_chapter, status) "
+            "VALUES ('thread_info', 10, 39, 'active')"
+        )
+        conn.commit()
+        conn.close()
+
+        r = check_foreshadowing_consistency(tmp_path, 50)
+        assert r.passed is True
+        assert r.severity == "soft"
+        assert "接近逾期" in r.message
+
+    def test_overdue_20_soft(self, tmp_path):
+        """Delay 21 chapters -> soft warning (passed=False, severity=soft)."""
+        ink_dir = tmp_path / ".ink"
+        ink_dir.mkdir()
+        db_path = ink_dir / "index.db"
+        conn = _create_real_schema(db_path)
+        # target=29, current=50, delay=21 > 20
+        conn.execute(
+            "INSERT INTO plot_thread_registry (thread_id, planted_chapter, target_payoff_chapter, status) "
+            "VALUES ('thread_soft', 5, 29, 'active')"
+        )
+        conn.commit()
+        conn.close()
+
+        r = check_foreshadowing_consistency(tmp_path, 50)
+        assert r.passed is False
+        assert r.severity == "soft"
+        assert "逾期" in r.message
+
+    def test_overdue_30_hard(self, tmp_path):
+        """Delay 31 chapters -> hard failure (passed=False, severity=hard)."""
+        ink_dir = tmp_path / ".ink"
+        ink_dir.mkdir()
+        db_path = ink_dir / "index.db"
+        conn = _create_real_schema(db_path)
+        # target=19, current=50, delay=31 > 30
+        conn.execute(
+            "INSERT INTO plot_thread_registry (thread_id, planted_chapter, target_payoff_chapter, status) "
+            "VALUES ('thread_hard', 3, 19, 'active')"
+        )
+        conn.commit()
+        conn.close()
+
+        r = check_foreshadowing_consistency(tmp_path, 50)
+        assert r.passed is False
+        assert r.severity == "hard"
+        assert "严重逾期" in r.detail
+
+
+# ---------------------------------------------------------------------------
+# check_emotion_punctuation (aligned threshold)
+# ---------------------------------------------------------------------------
+
+class TestCheckEmotionPunctuationAligned:
+    def test_below_1_per_k_warning(self):
+        """Exclamation marks at 0.8/k should trigger soft warning with new threshold."""
+        # Build ~2500 chars with only 2 exclamation marks and plenty of questions
+        base = "叙述内容文字" * 400  # 2400 chars
+        excl = "啊！"  # 1 exclamation mark in ~2500 chars => 0.4/k
+        ques = "吗？" * 10  # 10 question marks => ~4/k (above threshold)
+        text = base + excl + ques
+        r = check_emotion_punctuation(text)
+        assert r.passed is False
+        assert r.severity == "soft"

@@ -290,6 +290,7 @@ class ContextManager:
                 chapter,
                 window=self.config.context_recent_summaries_window,
             ),
+            "key_chapter_summaries": self._load_key_chapter_summaries(chapter),
         }
 
         scene = {
@@ -1195,7 +1196,51 @@ class ContextManager:
 
         return results
 
-    def _load_recent_summaries(self, chapter: int, window: int = 3) -> List[Dict[str, Any]]:
+    def _load_key_chapter_summaries(self, chapter: int, limit: int = 3) -> List[Dict[str, Any]]:
+        """加载历史关键章节（高分转折章）的摘要，补充远距离记忆。
+
+        从 review_metrics 表中选取 overall_score 最高的章节（排除 recent window 内的），
+        加载它们的摘要作为远距离记忆补充。
+        """
+        if chapter <= 10:
+            return []
+
+        recent_start = max(1, chapter - int(getattr(self.config, "context_recent_summaries_window", 5)))
+
+        db_path = self.config.ink_dir / "index.db"
+        if not db_path.exists():
+            return []
+
+        results: List[Dict[str, Any]] = []
+        try:
+            from contextlib import closing
+            with closing(sqlite3.connect(str(db_path))) as conn:
+                conn.execute("PRAGMA busy_timeout = 5000")
+                cursor = conn.cursor()
+                # 选取 recent window 之前的高分章节
+                cursor.execute("""
+                    SELECT start_chapter, overall_score
+                    FROM review_metrics
+                    WHERE start_chapter < ? AND overall_score IS NOT NULL
+                    ORDER BY overall_score DESC
+                    LIMIT ?
+                """, (recent_start, limit))
+                high_score_chapters = cursor.fetchall()
+
+                for row in high_score_chapters:
+                    ch = row[0]
+                    score = row[1]
+                    summary = self._load_summary_text(ch)
+                    if summary:
+                        summary["source"] = "key_chapter"
+                        summary["review_score"] = score
+                        results.append(summary)
+        except Exception as e:
+            logger.warning("Failed to load key chapter summaries: %s", e)
+
+        return results
+
+    def _load_recent_summaries(self, chapter: int, window: int = 5) -> List[Dict[str, Any]]:
         summaries = []
         for ch in range(max(1, chapter - window), chapter):
             summary = self._load_summary_text(ch)

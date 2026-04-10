@@ -390,6 +390,18 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-protag
 数据来源：大纲本章梗概 + `state.json` protagonist_state + 上章摘要。
 若数据不足，基于大纲合理推断，标注"[推断]"。
 
+##### 角色板块增强：语言指纹注入
+
+当 `character_evolution_ledger` 中存在 `voice_fingerprint` 数据时，在角色板块中追加：
+
+```
+## 出场角色语言指纹
+- 萧炎：口头禅["斗之力，无处不在"] | 风格：粗犷直接 | 语气：倔强不服输 | 禁忌表达：不会说文雅/书生气的话
+- 林渊：口头禅["有意思"] | 风格：冷静分析型 | 语气：淡然疏离 | 禁忌表达：不会用感叹号结尾
+```
+
+这些指纹帮助 writer-agent 在写对话时保持角色声音的区分度和一致性。
+
 **第8.7板块：出场角色状态快照（v10.6 新增）**：
 
 从 index.db 读取本章出场角色的最新状态：

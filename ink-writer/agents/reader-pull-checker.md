@@ -220,6 +220,12 @@ model: inherit
 }
 ```
 
+### 5.1.1 连续过渡章硬约束
+
+- 不允许连续 2 章以上使用 `TRANSITIONAL_SETUP` 作为 Override 理由
+- 若当前章检测到 `TRANSITIONAL_SETUP` Override，且前一章也有 `TRANSITIONAL_SETUP` Override，则第二章的所有 `TRANSITIONAL_SETUP` Override 升级为 `HARD` 违规
+- 检查方式：从 `override_contracts` 表中查询前一章的 Override 记录
+
 ### 5.2 rationale_type 枚举
 
 | 类型 | 描述 | 债务影响 |

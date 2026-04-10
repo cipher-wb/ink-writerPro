@@ -247,6 +247,30 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 }
 ```
 
+##### 角色语言指纹（voice_fingerprint）
+
+每次角色有显著对话时，在 `character_evolution_entries` 中记录该角色的语言特征：
+
+```json
+{
+  "entity_id": "xiaoyan",
+  "chapter": 15,
+  "voice_fingerprint": {
+    "catchphrases": ["斗之力，无处不在"],
+    "speech_habits": ["喜欢用反问句", "生气时用短句"],
+    "vocabulary_level": "粗犷直接",
+    "tone": "倔强不服输",
+    "dialect_markers": [],
+    "forbidden_expressions": ["不会说文雅/书生气的话"]
+  }
+}
+```
+
+**规则**：
+- 主角和核心配角（tier=核心）必须有 voice_fingerprint
+- 每 10 章至少更新一次（角色成长可能改变说话方式）
+- `forbidden_expressions` 是该角色绝对不会说的话，用于防止角色声音趋同
+
 ### Step B.7.5: 出场角色状态更新（v10.6 新增）
 
 对本章所有出场角色（不限于核心/重要tier），更新以下状态字段到 payload：
