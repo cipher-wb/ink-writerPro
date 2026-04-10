@@ -34,6 +34,12 @@ from .index_manager import IndexManager
 from .query_router import QueryRouter
 from .observability import safe_append_perf_timing, safe_log_tool_call
 
+try:
+    from filelock import FileLock
+    _HAS_FILELOCK = True
+except ImportError:
+    _HAS_FILELOCK = False
+
 # v7.0.5: jieba 分词（可选依赖，未安装时回退到单字分词）
 try:
     import jieba
@@ -256,6 +262,7 @@ class RAGAdapter:
         """获取数据库连接（确保关闭，避免 Windows 下文件句柄泄漏）"""
         conn = sqlite3.connect(str(self.config.vector_db))
         conn.execute("PRAGMA journal_mode = WAL")
+        conn.execute("PRAGMA busy_timeout = 5000")
         try:
             yield conn
         finally:
@@ -419,64 +426,83 @@ class RAGAdapter:
         stored = 0
         skipped = 0
         errors = []
-        with self._get_conn() as conn:
-            cursor = conn.cursor()
 
-            for chunk, embedding in zip(chunks, embeddings):
-                if embedding is None:
-                    # 嵌入失败，跳过该 chunk（仅存储 BM25 索引供关键词检索）
-                    skipped += 1
+        # FileLock 保护并发写入 vectors.db
+        lock_path = str(self.config.vector_db) + ".lock"
+        lock = FileLock(lock_path, timeout=30) if _HAS_FILELOCK else None
+
+        try:
+            if lock is not None:
+                lock.acquire()
+        except Exception as e:
+            logger.warning("Failed to acquire FileLock for vectors.db, proceeding without lock: %s", e)
+            lock = None
+
+        try:
+            with self._get_conn() as conn:
+                cursor = conn.cursor()
+
+                for chunk, embedding in zip(chunks, embeddings):
+                    if embedding is None:
+                        # 嵌入失败，跳过该 chunk（仅存储 BM25 索引供关键词检索）
+                        skipped += 1
+                        chunk_id = chunk.get("chunk_id")
+                        if not chunk_id:
+                            if chunk.get("chunk_type") == "summary":
+                                chunk_id = f"ch{int(chunk['chapter']):04d}_summary"
+                            else:
+                                chunk_id = f"ch{int(chunk['chapter']):04d}_s{int(chunk['scene_index'])}"
+                        try:
+                            self._update_bm25_index(cursor, chunk_id, chunk.get("content", ""))
+                        except Exception as e:
+                            errors.append(f"BM25 index failed for {chunk_id}: {e}")
+                        continue
+
+                    chunk_type = chunk.get("chunk_type") or "scene"
                     chunk_id = chunk.get("chunk_id")
                     if not chunk_id:
-                        if chunk.get("chunk_type") == "summary":
+                        if chunk_type == "summary":
                             chunk_id = f"ch{int(chunk['chapter']):04d}_summary"
                         else:
                             chunk_id = f"ch{int(chunk['chapter']):04d}_s{int(chunk['scene_index'])}"
+
+                    # 将向量序列化为 bytes
+                    embedding_bytes = self._serialize_embedding(embedding)
+
+                    cursor.execute("""
+                        INSERT OR REPLACE INTO vectors
+                        (chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        chunk_id,
+                        chunk["chapter"],
+                        chunk.get("scene_index", 0) if chunk_type == "scene" else 0,
+                        chunk.get("content", ""),
+                        embedding_bytes,
+                        chunk.get("parent_chunk_id"),
+                        chunk_type,
+                        chunk.get("source_file"),
+                    ))
+
+                    # 同时更新 BM25 索引
                     try:
                         self._update_bm25_index(cursor, chunk_id, chunk.get("content", ""))
                     except Exception as e:
                         errors.append(f"BM25 index failed for {chunk_id}: {e}")
-                    continue
 
-                chunk_type = chunk.get("chunk_type") or "scene"
-                chunk_id = chunk.get("chunk_id")
-                if not chunk_id:
-                    if chunk_type == "summary":
-                        chunk_id = f"ch{int(chunk['chapter']):04d}_summary"
-                    else:
-                        chunk_id = f"ch{int(chunk['chapter']):04d}_s{int(chunk['scene_index'])}"
+                    stored += 1
 
-                # 将向量序列化为 bytes
-                embedding_bytes = self._serialize_embedding(embedding)
-
-                cursor.execute("""
-                    INSERT OR REPLACE INTO vectors
-                    (chunk_id, chapter, scene_index, content, embedding, parent_chunk_id, chunk_type, source_file)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
-                    chunk_id,
-                    chunk["chapter"],
-                    chunk.get("scene_index", 0) if chunk_type == "scene" else 0,
-                    chunk.get("content", ""),
-                    embedding_bytes,
-                    chunk.get("parent_chunk_id"),
-                    chunk_type,
-                    chunk.get("source_file"),
-                ))
-
-                # 同时更新 BM25 索引
                 try:
-                    self._update_bm25_index(cursor, chunk_id, chunk.get("content", ""))
+                    conn.commit()
                 except Exception as e:
-                    errors.append(f"BM25 index failed for {chunk_id}: {e}")
-
-                stored += 1
-
-            try:
-                conn.commit()
-            except Exception as e:
-                logger.error("SQLite commit failed: %s", e)
-                errors.append(f"SQLite commit failed: {e}")
+                    logger.error("SQLite commit failed: %s", e)
+                    errors.append(f"SQLite commit failed: {e}")
+        finally:
+            if lock is not None:
+                try:
+                    lock.release()
+                except Exception:
+                    pass
 
         # 输出警告日志
         if skipped > 0:

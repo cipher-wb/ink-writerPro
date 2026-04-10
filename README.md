@@ -1,7 +1,7 @@
 # Ink Writer Pro
 
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-11.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-11.2.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://claude.ai/claude-code)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-Extension-4285F4.svg)](https://github.com/google-gemini/gemini-cli)
 [![Codex CLI](https://img.shields.io/badge/Codex%20CLI-Skills-74AA9C.svg)](https://github.com/openai/codex)
@@ -276,9 +276,22 @@ Step 6     Git 备份
 
 ---
 
-## v11.0 新特性
+## v11.x 新特性
 
-### 写作技法深度集成
+### v11.2: 工程深度审查修复
+
+基于全项目工程审查报告，修复了 P0/P1 级别的逻辑漏洞：
+
+- **计算型闸门实装**：角色冲突检测（已死亡/已离场角色自动拦截）、战力检测（禁用技能/已失去物品使用拦截）、对话占比分层告警（<5% hard / 5-15% soft / 15-25% info）
+- **远距离记忆注入**：chapter > 50 时自动加载历史卷 mega-summary，解决长篇"记忆黑洞"
+- **跨卷记忆压缩**：`ink memory auto-compress` 子命令 + ink-auto 自动检测并提示
+- **SQLite 并发保护**：busy_timeout 5s + FileLock 保护 vectors.db + 写事务 BEGIN IMMEDIATE + 重试机制
+- **Token 预算硬上限**：超限时按优先级裁剪（alerts → preferences → memory → story_skeleton → global）
+- **审查闸门强化**：黄金三章硬拦截（回退重写而非润色）、反 AI 开头 critical 纳入总分 cap 60、读者体验 rewrite 阻断
+- **元数据泄漏检测修正**：从 pass 改为 fail，确保元数据不漏入正文
+- **完结标记 CLI 化**：`update-state --mark-completed` 替代内联 Python
+
+### v11.0: 写作技法深度集成
 
 **核心改进**：从"告诉 AI 不要做什么"（约束驱动）升级为"教 AI 怎么写"（技法驱动）。
 
@@ -406,7 +419,9 @@ A: 100 章写作中，检查点总开销约 7 小时，占总时间 7-14%。
 
 | 版本 | 说明 |
 |------|------|
-| **v11.0.0 (当前)** | 写作技法深度集成 + Style RAG 风格参考库(3295片段) + RAG必填 + 统计层6项修复 + 记忆系统升级 + 3个新craft分析 + P1/P2问题修复 |
+| **v11.2.0 (当前)** | 工程深度审查修复：计算型闸门实装(角色冲突/战力检测) + 远距离摘要注入 + 跨卷记忆压缩 + SQLite并发保护(FileLock+busy_timeout+写事务重试) + 黄金三章硬拦截 + 反AI开头硬拦截 + 读者体验阻断 + Token预算硬上限 + 对话阈值分层 + 元数据泄漏检测修复 + 完结标记CLI化 + 16个新测试 |
+| v11.1.0 | 计算型闸门框架 + 远距离摘要注入 + mega-summary自动触发 + Token预算硬上限 + 对话阈值分层 |
+| v11.0.0 | 写作技法深度集成 + Style RAG 风格参考库(3295片段) + RAG必填 + 统计层6项修复 + 记忆系统升级 + 3个新craft分析 + P1/P2问题修复 |
 | v10.5.0 | 爽点质量提升 + 完结检测 |
 | v10.4.0 | 写作质量约束升级 |
 | v10.3.0 | ink-fix 自动修复 + 编码校验 |

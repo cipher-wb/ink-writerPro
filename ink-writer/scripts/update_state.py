@@ -341,6 +341,11 @@ class StateUpdater:
         })
         print(f"📝 添加审查记录: 第{chapters_range}章 → {report_file}")
 
+    def mark_completed(self):
+        """标记项目为已完结"""
+        self.state.setdefault("progress", {})["is_completed"] = True
+        print("📝 标记项目为已完结: progress.is_completed = True")
+
     def update_strand_tracker(self, strand: str, chapter: int):
         """更新主导情节线（Strand Weave系统）"""
         # 验证 strand 参数
@@ -525,6 +530,13 @@ def main():
         help='更新主导情节线（quest/fire/constellation 章节号）'
     )
 
+    # 完结标记
+    parser.add_argument(
+        '--mark-completed',
+        action='store_true',
+        help='标记项目为已完结（设置 progress.is_completed = true）'
+    )
+
     args = parser.parse_args()
 
     # 如果没有任何更新参数，显示帮助并退出
@@ -538,7 +550,8 @@ def main():
         args.progress,
         args.volume_planned,
         args.add_review,
-        args.strand_dominant
+        args.strand_dominant,
+        args.mark_completed
     ]):
         parser.print_help()
         sys.exit(1)
@@ -609,6 +622,10 @@ def main():
         if args.strand_dominant:
             strand, chapter = args.strand_dominant
             updater.update_strand_tracker(strand, int(chapter))
+
+        # 完结标记
+        if args.mark_completed:
+            updater.mark_completed()
 
         # 保存更新
         if not updater.save():

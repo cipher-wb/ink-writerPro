@@ -23,6 +23,7 @@ AUDIT_COUNT=0
 MACRO_COUNT=0
 PLAN_COUNT=0
 FIX_COUNT=0
+COMPRESS_NOTIFY_COUNT=0
 PLANNED_VOLUMES=":"  # 追踪已尝试生成大纲的卷（字符串匹配，兼容 bash 3.2）
 COMPLETED=0
 START_TIME=$(date +%s)
@@ -112,6 +113,7 @@ write_report() {
 | 自动修复 | ${FIX_COUNT} 次 |
 | 数据审计 | ${AUDIT_COUNT} 次 |
 | 宏观审查 | ${MACRO_COUNT} 次 |
+| 记忆压缩提示 | ${COMPRESS_NOTIFY_COUNT} 次 |
 | 自动规划 | ${PLAN_COUNT} 卷 |
 
 ## 执行时间线
@@ -828,6 +830,22 @@ for i in $(seq 1 "$N"); do
     python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
         --project-root "$PROJECT_ROOT" workflow clear 2>/dev/null || true
 
+    # 跨卷记忆压缩检查（在新卷首章自动提示）
+    COMPRESS_JSON=$(python3 -X utf8 "$SCRIPTS_DIR/ink.py" \
+        --project-root "$PROJECT_ROOT" memory auto-compress --chapter "$NEXT_CH" --format json 2>/dev/null) || true
+    if [ -n "$COMPRESS_JSON" ]; then
+        COMPRESS_NEEDED=$(echo "$COMPRESS_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin).get('needed', False))" 2>/dev/null || echo "False")
+        if [[ "$COMPRESS_NEEDED" == "True" ]]; then
+            COMPRESS_VOL=$(echo "$COMPRESS_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin).get('volume_to_compress', '?'))" 2>/dev/null || echo "?")
+            COMPRESS_REASON=$(echo "$COMPRESS_JSON" | python3 -c "import sys,json; print(json.load(sys.stdin).get('reason', ''))" 2>/dev/null || echo "")
+            echo "    📦 记忆压缩提示: 第${COMPRESS_VOL}卷需要mega-summary压缩"
+            echo "       ${COMPRESS_REASON}"
+            echo "       将由 ink-write Step 0 自动执行"
+            report_event "📦" "记忆压缩提示" "第${COMPRESS_VOL}卷待压缩"
+            COMPRESS_NOTIFY_COUNT=$((COMPRESS_NOTIFY_COUNT + 1))
+        fi
+    fi
+
     echo ""
     echo "[$i/$N] 第${NEXT_CH}章 开始写作..."
     echo "───────────────────────────────────"
@@ -854,14 +872,8 @@ for i in $(seq 1 "$N"); do
             echo "═══════════════════════════════════════"
             echo "  🎉 全书完结！第${NEXT_CH}章是最终章。"
             echo "═══════════════════════════════════════"
-            python3 -X utf8 -c "
-import json
-with open('${PROJECT_ROOT}/.ink/state.json', 'r') as f:
-    state = json.load(f)
-state.setdefault('progress', {})['is_completed'] = True
-with open('${PROJECT_ROOT}/.ink/state.json', 'w') as f:
-    json.dump(state, f, ensure_ascii=False, indent=2)
-" 2>/dev/null || true
+            python3 -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
+                update-state --mark-completed 2>/dev/null || true
             EXIT_REASON="全书完结"
             report_event "🎉" "全书完结" "第${NEXT_CH}章为最终章"
             print_summary

@@ -417,6 +417,14 @@ def main() -> None:
     p_archive = sub.add_parser("archive", help="转发到 archive_manager.py")
     p_archive.add_argument("args", nargs=argparse.REMAINDER)
 
+    # ── memory 子命令（跨卷记忆压缩）──
+    p_memory = sub.add_parser("memory", help="跨卷记忆压缩管理")
+    memory_sub = p_memory.add_subparsers(dest="memory_action", required=True)
+
+    p_mem_auto = memory_sub.add_parser("auto-compress", help="检查并执行卷级记忆压缩")
+    p_mem_auto.add_argument("--chapter", type=int, required=True, help="当前章节号")
+    p_mem_auto.add_argument("--format", choices=["text", "json"], default="json", help="输出格式")
+
     p_init = sub.add_parser("init", help="转发到 init_project.py（初始化项目）")
     p_init.add_argument("args", nargs=argparse.REMAINDER)
 
@@ -546,6 +554,35 @@ def main() -> None:
     if tool == "extract-context":
         return_args = [*forward_args, "--chapter", str(args.chapter), "--format", str(args.format)]
         raise SystemExit(_run_script("extract_chapter_context.py", return_args))
+
+    if tool == "memory":
+        from data_modules.memory_compressor import (
+            check_compression_needed,
+            load_volume_summaries,
+            build_mega_summary_prompt,
+            save_mega_summary,
+        )
+
+        if args.memory_action == "auto-compress":
+            result = check_compression_needed(project_root, args.chapter)
+            use_json = getattr(args, "format", "json") == "json"
+
+            if result["needed"]:
+                vol = result["volume_to_compress"]
+                summaries = load_volume_summaries(project_root, vol)
+                prompt = build_mega_summary_prompt(summaries, vol)
+                result["prompt"] = prompt
+                result["summary_count"] = len(summaries)
+
+            if use_json:
+                print(json.dumps(result, ensure_ascii=False, indent=2))
+            else:
+                if result["needed"]:
+                    print(f"COMPRESS_NEEDED vol={result['volume_to_compress']} summaries={result['summary_count']}")
+                    print(f"reason: {result['reason']}")
+                else:
+                    print(f"NO_COMPRESS_NEEDED: {result['reason']}")
+            raise SystemExit(0)
 
     raise SystemExit(2)
 

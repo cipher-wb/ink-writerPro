@@ -115,39 +115,90 @@ def check_file_naming(chapter_file: Path, chapter_num: int) -> CheckResult:
 
 
 def check_character_conflicts(chapter_text: str, project_root: Path) -> CheckResult:
-    """检查角色名基础冲突（占位检查，复杂检测交给 consistency-checker）"""
+    """检查角色名基础冲突：已死亡/已离场角色出现、角色位置冲突"""
     db_path = project_root / ".ink" / "index.db"
     if not db_path.exists():
         return CheckResult("character_conflicts", True, "soft", "index.db 不存在，跳过角色检查")
 
     try:
-        conn = sqlite3.connect(str(db_path))
-        cursor = conn.cursor()
+        with closing(sqlite3.connect(str(db_path))) as conn:
+            cursor = conn.cursor()
 
-        # 获取所有已知实体名称和别名
-        known_names: set[str] = set()
-        try:
-            cursor.execute("SELECT name FROM entities WHERE type = 'character'")
-            for row in cursor.fetchall():
-                known_names.add(row[0])
-        except sqlite3.OperationalError:
-            pass
+            # 获取所有已知角色名称和别名
+            known_names: set[str] = set()
+            try:
+                cursor.execute("SELECT name FROM entities WHERE type = 'character'")
+                for row in cursor.fetchall():
+                    known_names.add(row[0])
+            except sqlite3.OperationalError:
+                pass
 
-        try:
-            cursor.execute("SELECT alias FROM aliases")
-            for row in cursor.fetchall():
-                known_names.add(row[0])
-        except sqlite3.OperationalError:
-            pass
+            try:
+                cursor.execute("SELECT alias FROM aliases")
+                for row in cursor.fetchall():
+                    known_names.add(row[0])
+            except sqlite3.OperationalError:
+                pass
 
-        conn.close()
+            if not known_names:
+                return CheckResult("character_conflicts", True, "soft", "实体库为空，跳过角色检查")
 
-        if not known_names:
-            return CheckResult("character_conflicts", True, "soft", "实体库为空，跳过角色检查")
+            issues: list[str] = []
 
-        # 简单检测：检查已知角色是否在正文中出现了错误的名字变体
-        # 这里只做基础检查，复杂的交给 consistency-checker
-        return CheckResult("character_conflicts", True, "soft", f"已知实体 {len(known_names)} 个，基础检查通过")
+            # 检测1：已死亡角色出现在正文中（非回忆/提及）
+            dead_names: list[str] = []
+            try:
+                cursor.execute(
+                    "SELECT e.name FROM entities e "
+                    "JOIN state_changes sc ON e.id = sc.entity_id "
+                    "WHERE sc.field = 'status' AND sc.new_value IN ('dead', '死亡', '已死', '阵亡') "
+                    "AND e.type = 'character'"
+                )
+                dead_names = [row[0] for row in cursor.fetchall()]
+            except sqlite3.OperationalError:
+                pass
+
+            # 排除回忆/追忆上下文的关键词
+            recall_patterns = ("回忆", "想起", "记得", "曾经", "当年", "往事", "遗言", "墓前", "祭")
+            for name in dead_names:
+                if len(name) >= 2 and name in chapter_text:
+                    # 查找所有出现位置，检查是否都在回忆上下文中
+                    non_recall_mentions = 0
+                    for m in re.finditer(re.escape(name), chapter_text):
+                        start = max(0, m.start() - 30)
+                        context_window = chapter_text[start:m.start()]
+                        if not any(kw in context_window for kw in recall_patterns):
+                            non_recall_mentions += 1
+                    if non_recall_mentions > 0:
+                        issues.append(f"已死亡角色「{name}」在正文中以非回忆形式出现了 {non_recall_mentions} 次")
+
+            # 检测2：已明确离场角色出现在当前场景
+            departed_names: list[str] = []
+            try:
+                cursor.execute(
+                    "SELECT e.name FROM entities e "
+                    "JOIN state_changes sc ON e.id = sc.entity_id "
+                    "WHERE sc.field = 'status' AND sc.new_value IN ('departed', '离场', '已离开', '失踪') "
+                    "AND e.type = 'character'"
+                )
+                departed_names = [row[0] for row in cursor.fetchall()]
+            except sqlite3.OperationalError:
+                pass
+
+            # 离场角色的对话出现（不是被提及）
+            for name in departed_names:
+                if len(name) >= 2:
+                    dialogue_pattern = rf'{re.escape(name)}[：:说道]|[""「][^""」]*[""」][，。！？]*{re.escape(name)}'
+                    if re.search(dialogue_pattern, chapter_text):
+                        issues.append(f"已离场角色「{name}」在正文中有对话/行动描写")
+
+        if issues:
+            return CheckResult(
+                "character_conflicts", False, "hard",
+                f"发现 {len(issues)} 处角色冲突",
+                "\n".join(issues[:5])
+            )
+        return CheckResult("character_conflicts", True, "soft", f"已知实体 {len(known_names)} 个，角色冲突检查通过")
 
     except Exception as e:
         return CheckResult("character_conflicts", True, "soft", f"角色检查异常: {e}")
@@ -192,7 +243,7 @@ def check_foreshadowing_consistency(project_root: Path, chapter_num: int) -> Che
 
 
 def check_power_level(chapter_text: str, project_root: Path) -> CheckResult:
-    """检查主角能力等级基础一致性（占位检查，详细越级检测交给 consistency-checker）"""
+    """检查主角能力等级基础一致性：禁用技能出现、已消耗资源再次使用"""
     state_path = project_root / ".ink" / "state.json"
     if not state_path.exists():
         return CheckResult("power_level", True, "soft", "state.json 不存在，跳过能力检查")
@@ -201,15 +252,59 @@ def check_power_level(chapter_text: str, project_root: Path) -> CheckResult:
         with open(state_path, "r", encoding="utf-8") as f:
             state = json.load(f)
 
-        protagonist = state.get("protagonist", {})
+        protagonist = state.get("protagonist", state.get("protagonist_state", {}))
         power = protagonist.get("power", {})
         realm = power.get("realm", "")
 
         if not realm:
             return CheckResult("power_level", True, "soft", "主角境界未设置，跳过能力检查")
 
-        # 基础检查通过（详细的越级检查交给 consistency-checker）
-        return CheckResult("power_level", True, "soft", f"主角当前境界: {realm}")
+        issues: list[str] = []
+
+        # 检测1：禁用/已失去的技能出现在正文中
+        disabled_abilities = power.get("disabled_abilities", [])
+        lost_items = power.get("lost_items", [])
+        for ability in disabled_abilities:
+            if isinstance(ability, str) and len(ability) >= 2 and ability in chapter_text:
+                issues.append(f"已禁用技能「{ability}」出现在正文中")
+        for item in lost_items:
+            if isinstance(item, str) and len(item) >= 2 and item in chapter_text:
+                # 排除"失去""曾经拥有"等回忆上下文
+                for m in re.finditer(re.escape(item), chapter_text):
+                    start = max(0, m.start() - 20)
+                    context_before = chapter_text[start:m.start()]
+                    if not any(kw in context_before for kw in ("失去", "曾经", "已经没有", "不再拥有")):
+                        issues.append(f"已失去物品「{item}」在正文中以非回忆形式出现")
+                        break
+
+        # 检测2：检查 state_changes 中标记为降级的能力
+        db_path = project_root / ".ink" / "index.db"
+        if db_path.exists():
+            try:
+                with closing(sqlite3.connect(str(db_path))) as conn:
+                    cursor = conn.cursor()
+                    # 查找主角已被夺走/封印的能力
+                    cursor.execute(
+                        "SELECT field, old_value, new_value, reason FROM state_changes "
+                        "WHERE entity_id IN (SELECT id FROM entities WHERE is_protagonist = 1) "
+                        "AND field IN ('ability_lost', 'sealed_ability', 'disabled_skill') "
+                        "ORDER BY chapter DESC LIMIT 10"
+                    )
+                    for row in cursor.fetchall():
+                        old_val = row[1] or ""
+                        if len(old_val) >= 2 and old_val in chapter_text:
+                            reason = row[3] or "未知原因"
+                            issues.append(f"因「{reason}」失去的能力「{old_val}」出现在正文中")
+            except sqlite3.OperationalError:
+                pass
+
+        if issues:
+            return CheckResult(
+                "power_level", False, "hard",
+                f"主角当前境界: {realm}，发现 {len(issues)} 处能力冲突",
+                "\n".join(issues[:5])
+            )
+        return CheckResult("power_level", True, "soft", f"主角当前境界: {realm}，能力检查通过")
 
     except Exception as e:
         return CheckResult("power_level", True, "soft", f"能力检查异常: {e}")
@@ -257,7 +352,14 @@ def check_contract_completeness(project_root: Path, chapter_num: int) -> CheckRe
 # ---------------------------------------------------------------------------
 
 def check_dialogue_ratio(chapter_text: str) -> CheckResult:
-    """检查对话占比是否达到最低要求（标杆34.5%，最低5%）"""
+    """检查对话占比是否达到最低要求（标杆34.5%）
+
+    分层告警：
+    - < 5%  → hard（角色互动严重不足）
+    - 5-15% → soft warning（偏低）
+    - 15-25% → info（可接受但低于标杆）
+    - >= 25% → 通过
+    """
     compact = re.sub(r'\s+', '', chapter_text)
     total_len = len(compact)
     if total_len < 500:
@@ -269,9 +371,15 @@ def check_dialogue_ratio(chapter_text: str) -> CheckResult:
 
     if ratio < 0.05:
         return CheckResult(
-            "dialogue_ratio", False, "soft",
+            "dialogue_ratio", False, "hard",
             f"对话占比 {ratio:.1%}（标杆34.5%），角色互动严重不足",
             "建议回到 Step 2A 补充对话场景。仅纯独处/逃亡/修炼章可豁免。"
+        )
+    if ratio < 0.15:
+        return CheckResult(
+            "dialogue_ratio", False, "soft",
+            f"对话占比 {ratio:.1%}（标杆34.5%），对话偏少",
+            "建议增加角色互动对话，提升场景感和代入感。"
         )
     return CheckResult("dialogue_ratio", True, "soft", f"对话占比 {ratio:.1%}")
 
@@ -329,7 +437,7 @@ def check_metadata_leakage(chapter_text: str) -> CheckResult:
     hits = [p for p in METADATA_PATTERNS if re.search(p, tail)]
     if hits:
         return CheckResult(
-            "metadata_leakage", True, "soft",
+            "metadata_leakage", False, "soft",
             f"正文末尾检测到元数据泄漏: {', '.join(hits)}",
             "建议在润色步骤中清理这些元数据行",
         )

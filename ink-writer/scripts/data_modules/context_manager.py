@@ -195,6 +195,43 @@ class ContextManager:
         assembled["weights"] = weights
         if chapter > 0:
             assembled.setdefault("meta", {})["context_weight_stage"] = self._resolve_context_stage(chapter)
+
+        # Token 预算硬上限：估算总 token 数，超出时按优先级裁剪
+        hard_token_limit = int(getattr(self.config, "context_hard_token_limit", 16000))
+        total_chars = sum(
+            len(s.get("text", ""))
+            for s in assembled.get("sections", {}).values()
+        )
+        # 中文约 1.5 chars/token
+        estimated_tokens = int(total_chars / 1.5)
+        assembled.setdefault("meta", {})["estimated_tokens"] = estimated_tokens
+        assembled["meta"]["hard_token_limit"] = hard_token_limit
+
+        if estimated_tokens > hard_token_limit:
+            # 按优先级从低到高裁剪：alerts → preferences → memory → story_skeleton → global
+            trim_order = ["alerts", "preferences", "memory", "story_skeleton", "global"]
+            sections = assembled.get("sections", {})
+            for section_name in trim_order:
+                if section_name not in sections:
+                    continue
+                section = sections[section_name]
+                text = section.get("text", "")
+                if len(text) > 200:
+                    trimmed = text[:200] + "…[BUDGET_TRIMMED]"
+                    section["text"] = trimmed
+                    section["budget_trimmed"] = True
+                    total_chars = sum(len(s.get("text", "")) for s in sections.values())
+                    estimated_tokens = int(total_chars / 1.5)
+                    assembled["meta"]["estimated_tokens"] = estimated_tokens
+                    if estimated_tokens <= hard_token_limit:
+                        break
+            assembled["meta"]["budget_trimmed"] = estimated_tokens > hard_token_limit
+            if estimated_tokens > hard_token_limit:
+                logger.warning(
+                    "Context pack exceeds hard token limit: %d > %d (after trimming)",
+                    estimated_tokens, hard_token_limit,
+                )
+
         return assembled
 
     def filter_invalid_items(self, items: List[Dict[str, Any]], source_type: str, id_key: str) -> List[Dict[str, Any]]:
@@ -232,6 +269,10 @@ class ContextManager:
                 state,
                 chapter,
                 window=self.config.context_recent_meta_window,
+            ),
+            "volume_summaries": self._load_volume_summaries(
+                chapter,
+                window=self.config.context_recent_summaries_window,
             ),
         }
 
@@ -1096,6 +1137,45 @@ class ContextManager:
 
     def _load_outline(self, chapter: int) -> str:
         return load_chapter_outline(self.config.project_root, chapter, max_chars=1500)
+
+    def _load_volume_summaries(
+        self, chapter: int, window: int = 3, chapters_per_volume: int = 50
+    ) -> List[Dict[str, Any]]:
+        """加载当前章节之前所有已完成卷的 mega-summary。
+
+        只返回在 recent_summaries 窗口之前的卷，避免重复加载。
+        """
+        if chapter <= chapters_per_volume:
+            return []
+
+        summaries_dir = self.config.ink_dir / "summaries"
+        if not summaries_dir.exists():
+            return []
+
+        # recent window 覆盖的最小章节号
+        recent_start = max(1, chapter - window)
+
+        results: List[Dict[str, Any]] = []
+        vol = 1
+        while True:
+            vol_end = vol * chapters_per_volume
+            # 该卷结束章必须在 recent window 之前，否则跳过（避免重叠）
+            if vol_end >= recent_start:
+                break
+            mega_file = summaries_dir / f"vol{vol}_mega.md"
+            if mega_file.exists():
+                try:
+                    content = mega_file.read_text(encoding="utf-8")
+                    results.append({
+                        "volume": vol,
+                        "summary": content,
+                        "type": "mega_summary",
+                    })
+                except OSError:
+                    logger.warning("failed to read mega-summary: %s", mega_file)
+            vol += 1
+
+        return results
 
     def _load_recent_summaries(self, chapter: int, window: int = 3) -> List[Dict[str, Any]]:
         summaries = []
