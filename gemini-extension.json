@@ -1,6 +1,6 @@
 {
   "name": "ink-writer",
   "description": "Long-form web novel creation system with skills, agents, data chain, and RAG",
-  "version": "11.0.0",
+  "version": "11.2.0",
   "contextFileName": "GEMINI.md"
 }
