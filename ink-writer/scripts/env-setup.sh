@@ -24,8 +24,15 @@ if [ -z "${CLAUDE_PLUGIN_ROOT:-}" ] || [ ! -d "${CLAUDE_PLUGIN_ROOT}/scripts" ];
   elif [ -d "$PWD/../scripts" ] && [ -d "$PWD/../skills" ]; then
     export CLAUDE_PLUGIN_ROOT="$(cd "$PWD/.." && pwd)"
   else
-    echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
-    return 1 2>/dev/null || exit 1
+    # Fallback: 从本脚本自身路径反推插件根目录 (scripts/ 的父目录)
+    _ENV_SETUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+    if [ -d "${_ENV_SETUP_DIR}" ] && [ -d "${_ENV_SETUP_DIR}/../skills" ]; then
+      export CLAUDE_PLUGIN_ROOT="$(cd "${_ENV_SETUP_DIR}/.." && pwd)"
+    else
+      echo "ERROR: 未设置 CLAUDE_PLUGIN_ROOT，且无法从当前目录推断插件根目录" >&2
+      return 1 2>/dev/null || exit 1
+    fi
+    unset _ENV_SETUP_DIR
   fi
 fi
 
