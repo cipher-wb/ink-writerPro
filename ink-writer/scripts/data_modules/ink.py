@@ -425,6 +425,10 @@ def main() -> None:
     p_mem_auto.add_argument("--chapter", type=int, required=True, help="当前章节号")
     p_mem_auto.add_argument("--format", choices=["text", "json"], default="json", help="输出格式")
 
+    p_mem_save = memory_sub.add_parser("save-mega", help="保存卷级 mega-summary")
+    p_mem_save.add_argument("--volume", type=int, required=True, help="卷号")
+    p_mem_save.add_argument("--content", type=str, required=True, help="mega-summary 内容")
+
     p_init = sub.add_parser("init", help="转发到 init_project.py（初始化项目）")
     p_init.add_argument("args", nargs=argparse.REMAINDER)
 
@@ -582,6 +586,11 @@ def main() -> None:
                     print(f"reason: {result['reason']}")
                 else:
                     print(f"NO_COMPRESS_NEEDED: {result['reason']}")
+            raise SystemExit(0)
+
+        if args.memory_action == "save-mega":
+            save_mega_summary(project_root, args.volume, args.content)
+            print(json.dumps({"saved": True, "volume": args.volume}, ensure_ascii=False))
             raise SystemExit(0)
 
     raise SystemExit(2)

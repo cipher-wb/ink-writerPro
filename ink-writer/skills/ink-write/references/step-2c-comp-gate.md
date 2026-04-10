@@ -36,8 +36,8 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
       "message": "2 条伏笔严重逾期（>20章）"
     }
   ],
-  "checks_run": 6,
-  "checks_passed": 5
+  "checks_run": 11,
+  "checks_passed": 10
 }
 ```
 
@@ -51,6 +51,11 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 | `foreshadowing` | 软 | 检查伏笔逾期 >20 章的情况 |
 | `power_level` | 软 | 检查主角能力等级基础一致性 |
 | `contract` | 软 | 检查前章 chapter_meta 关键字段完整性 |
+| `dialogue_ratio` | 硬/软 | 对话占比（<5% 硬失败, 5-15% 软警告, ≥15% 通过） |
+| `opening_pattern` | 硬 | 时间标记开头检测（"第N天"等 → critical） |
+| `metadata_leakage` | 软 | 元数据泄漏全文扫描（作者按/注/Summary等） |
+| `sentence_length` | 软 | 句长均值（<15 碎片化, >45 过长, 标杆28.6） |
+| `emotion_punctuation` | 软 | 情感标点密度（感叹号/问号, 标杆3.8/4.2千字） |
 
 ## 判定逻辑
 

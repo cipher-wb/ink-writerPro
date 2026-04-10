@@ -946,38 +946,6 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
         finally:
             conn.close()
 
-    @contextmanager
-    def _write_transaction(self):
-        """Wrap write operations in BEGIN IMMEDIATE transaction with retry-on-busy.
-
-        Usage::
-
-            with self._write_transaction() as conn:
-                conn.execute("INSERT ...")
-                # commit is called automatically on success
-        """
-        with self._get_conn() as conn:
-            max_retries = 3
-            for attempt in range(max_retries):
-                try:
-                    conn.execute("BEGIN IMMEDIATE")
-                    yield conn
-                    conn.commit()
-                    return
-                except sqlite3.OperationalError as e:
-                    if "database is locked" in str(e) and attempt < max_retries - 1:
-                        try:
-                            conn.rollback()
-                        except Exception:
-                            pass
-                        time.sleep(0.1 * (attempt + 1))
-                    else:
-                        try:
-                            conn.rollback()
-                        except Exception:
-                            pass
-                        raise
-
     def _ensure_column(self, cursor, table_name: str, column_name: str, column_def: str) -> None:
         """为旧库追加缺失列。"""
         try:

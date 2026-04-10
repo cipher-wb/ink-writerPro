@@ -31,7 +31,6 @@ class IndexChapterMixin:
                     meta.summary,
                 ),
             )
-            conn.commit()
 
     def get_chapter(self, chapter: int) -> Optional[Dict]:
         """获取章节元数据"""
@@ -90,8 +89,6 @@ class IndexChapterMixin:
                         json.dumps(scene.characters, ensure_ascii=False),
                     ),
                 )
-
-            conn.commit()
 
     def get_scenes(self, chapter: int) -> List[Dict]:
         """获取章节场景"""
@@ -174,7 +171,6 @@ class IndexChapterMixin:
                     confidence,
                 ),
             )
-            conn.commit()
 
     def get_entity_appearances(self, entity_id: str, limit: int = None) -> List[Dict]:
         """获取实体出场记录"""

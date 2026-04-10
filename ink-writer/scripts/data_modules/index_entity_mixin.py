@@ -94,7 +94,6 @@ class IndexEntityMixin:
                             entity.id,
                         ),
                     )
-                conn.commit()
                 return False
             else:
                 # 新实体: 插入
@@ -118,7 +117,6 @@ class IndexEntityMixin:
                         1 if entity.is_archived else 0,
                     ),
                 )
-                conn.commit()
                 return True
 
     def get_entity(self, entity_id: str) -> Optional[Dict]:
@@ -204,7 +202,7 @@ class IndexEntityMixin:
 
         例如: update_entity_current("xiaoyan", {"realm": "斗师"})
         """
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
 
             cursor.execute(
@@ -235,12 +233,11 @@ class IndexEntityMixin:
             """,
                 (json.dumps(current, ensure_ascii=False), entity_id),
             )
-            conn.commit()
             return True
 
     def archive_entity(self, entity_id: str) -> bool:
         """归档实体 (不删除，只是标记)"""
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -249,7 +246,6 @@ class IndexEntityMixin:
             """,
                 (entity_id,),
             )
-            conn.commit()
             return cursor.rowcount > 0
 
     # ==================== v5.1 别名操作 ====================
@@ -260,7 +256,7 @@ class IndexEntityMixin:
 
         同一别名可映射多个实体 (如 "天云宗" → 地点 + 势力)
         """
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             try:
                 cursor.execute(
@@ -270,7 +266,6 @@ class IndexEntityMixin:
                 """,
                     (alias, entity_id, entity_type),
                 )
-                conn.commit()
                 return cursor.rowcount > 0
             except sqlite3.IntegrityError:
                 return False
@@ -308,13 +303,12 @@ class IndexEntityMixin:
 
     def remove_alias(self, alias: str, entity_id: str) -> bool:
         """移除别名"""
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 "DELETE FROM aliases WHERE alias = ? AND entity_id = ?",
                 (alias, entity_id),
             )
-            conn.commit()
             return cursor.rowcount > 0
 
     # ==================== v5.1 状态变化操作 ====================
@@ -342,7 +336,6 @@ class IndexEntityMixin:
                     change.chapter,
                 ),
             )
-            conn.commit()
             return cursor.lastrowid
 
     def get_entity_state_changes(self, entity_id: str, limit: int = 20) -> List[Dict]:
@@ -420,7 +413,6 @@ class IndexEntityMixin:
                 """,
                     (rel.description, rel.chapter, existing["id"]),
                 )
-                conn.commit()
                 return False
             else:
                 # 自动补建引用实体的存根记录，避免 FK 约束失败
@@ -447,7 +439,6 @@ class IndexEntityMixin:
                         rel.chapter,
                     ),
                 )
-                conn.commit()
                 return True
 
     def get_entity_relationships(
@@ -582,7 +573,7 @@ class IndexEntityMixin:
             confidence = 1.0
         confidence = max(0.0, min(1.0, confidence))
 
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -604,7 +595,6 @@ class IndexEntityMixin:
                     confidence,
                 ),
             )
-            conn.commit()
             return int(cursor.lastrowid or 0)
 
     def get_relationship_events(

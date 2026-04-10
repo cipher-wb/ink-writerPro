@@ -11,10 +11,12 @@ To keep scripts robust, always resolve chapter files via these helpers instead o
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 from typing import Optional
 
+_DEFAULT_CPV = int(os.environ.get("INK_CHAPTERS_PER_VOLUME", "50"))
 
 _CHAPTER_NUM_RE = re.compile(r"第(?P<num>\d+)章")
 _OUTLINE_HEADING_RE = re.compile(r"^#{1,6}\s*第\s*(?P<num>\d+)\s*章[：:]\s*(?P<title>.+?)\s*$", re.MULTILINE)
@@ -23,7 +25,7 @@ _SPLIT_OUTLINE_FILENAME_RE = re.compile(r"^第0*(?P<num>\d+)章[-—_ ]+(?P<titl
 CHAPTER_TITLE_MAX_LENGTH = 60  # 章节标题在文件名中的最大字符数
 
 
-def volume_num_for_chapter(chapter_num: int, *, chapters_per_volume: int = 50) -> int:
+def volume_num_for_chapter(chapter_num: int, *, chapters_per_volume: int = _DEFAULT_CPV) -> int:
     if chapter_num <= 0:
         raise ValueError("chapter_num must be >= 1")
     return (chapter_num - 1) // chapters_per_volume + 1

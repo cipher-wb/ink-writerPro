@@ -138,7 +138,6 @@ class IndexReadingMixin:
                     json.dumps(meta.payload_json, ensure_ascii=False),
                 ),
             )
-            conn.commit()
 
     def get_chapter_reading_power(self, chapter: int) -> Optional[Dict]:
         """获取章节追读力元数据"""
@@ -284,7 +283,6 @@ class IndexReadingMixin:
                     json.dumps(payload, ensure_ascii=False),
                 ),
             )
-            conn.commit()
 
     def get_chapter_memory_card(self, chapter: int) -> Optional[Dict[str, Any]]:
         """获取某章记忆卡。"""
@@ -415,7 +413,6 @@ class IndexReadingMixin:
                     json.dumps(payload, ensure_ascii=False),
                 ),
             )
-            conn.commit()
 
     def get_plot_thread(self, thread_id: str) -> Optional[Dict[str, Any]]:
         """获取单条剧情线程。"""
@@ -469,7 +466,7 @@ class IndexReadingMixin:
             "notes": meta.notes,
             "involved_entities": meta.involved_entities,
         }
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -505,7 +502,6 @@ class IndexReadingMixin:
                     json.dumps(payload, ensure_ascii=False),
                 ),
             )
-            conn.commit()
 
     def get_timeline_anchor(self, chapter: int) -> Optional[Dict[str, Any]]:
         """获取单章时间锚点。"""
@@ -553,7 +549,7 @@ class IndexReadingMixin:
             "evidence": meta.evidence,
             "related_entities": meta.related_entities,
         }
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -582,7 +578,6 @@ class IndexReadingMixin:
                     json.dumps(payload, ensure_ascii=False),
                 ),
             )
-            conn.commit()
             return int(cursor.lastrowid or 0)
 
     def get_candidate_facts(
@@ -618,7 +613,7 @@ class IndexReadingMixin:
     def save_review_metrics(self, metrics: ReviewMetrics) -> None:
         """保存审查指标记录"""
         self._ensure_review_report_file(metrics)
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -650,7 +645,6 @@ class IndexReadingMixin:
                     json.dumps(metrics.review_payload_json, ensure_ascii=False),
                 ),
             )
-            conn.commit()
 
     def get_recent_review_metrics(self, limit: int = 5) -> List[Dict]:
         """获取最近审查记录"""
@@ -748,7 +742,7 @@ class IndexReadingMixin:
 
     def save_writing_checklist_score(self, meta: WritingChecklistScoreMeta) -> None:
         """保存章节写作清单评分。"""
-        with self._get_conn() as conn:
+        with self._get_conn(immediate=True) as conn:
             cursor = conn.cursor()
             cursor.execute(
                 """
@@ -791,7 +785,6 @@ class IndexReadingMixin:
                     meta.notes,
                 ),
             )
-            conn.commit()
 
     def get_writing_checklist_score(self, chapter: int) -> Optional[Dict[str, Any]]:
         """获取指定章节的写作清单评分。"""

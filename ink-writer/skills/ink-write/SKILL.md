@@ -220,7 +220,7 @@ python3 -X utf8 “${SCRIPTS_DIR}/ink.py” --project-root “${PROJECT_ROOT}”
 
 #### Step 0.3: 跨卷记忆压缩检查
 
-当 chapter > 50 时自动检查是否需要卷级记忆压缩：
+当 chapter > chapters_per_volume（默认 50，可通过环境变量 INK_CHAPTERS_PER_VOLUME 配置）时自动检查是否需要卷级记忆压缩：
 
 ```bash
 COMPRESS_RESULT=$(python3 -X utf8 “$SCRIPTS_DIR/ink.py” --project-root “$PROJECT_ROOT” memory auto-compress --chapter {chapter_num} --format json)
@@ -1059,6 +1059,23 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 硬要求：
 - 当 `chapter <= 3` 时，`golden-three-checker` 未通过不得放行。
 - 未落库 `review_metrics` 不得进入 Step 5。
+
+#### Step 3.5: Harness 级闸门复检
+
+审查聚合完成后，执行确定性闸门脚本作为最终兜底：
+
+```bash
+python3 -X utf8 "$SCRIPTS_DIR/step3_harness_gate.py" \
+    --project-root "$PROJECT_ROOT" --chapter {chapter_num} --format json
+```
+
+- **exit 0**：通过，继续 Step 4
+- **exit 1**：硬拦截。读取 JSON 输出的 `action` 字段：
+  - `rewrite_step2a`：回退 Step 2A 重写（黄金三章/读者体验/质量过低）
+  - 输出拦截原因供参考
+- **exit 2**：脚本异常，输出 WARNING 并继续 Step 4（不阻断）
+
+此步骤是确定性检查，不依赖 LLM 判断。即使 Step 3 的 LLM 审查遗漏了某条闸门规则，此脚本也会兜底拦截。
 
 ### Step 4：润色（问题修复优先）
 

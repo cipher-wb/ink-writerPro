@@ -60,7 +60,7 @@ def _create_real_schema(db_path, *, with_state_changes=True):
     conn.execute(
         "CREATE TABLE plot_thread_registry ("
         "  thread_id TEXT PRIMARY KEY, title TEXT, content TEXT, thread_type TEXT,"
-        "  status TEXT, priority TEXT, planted_chapter INTEGER,"
+        "  status TEXT, priority INTEGER DEFAULT 50, planted_chapter INTEGER,"
         "  last_touched_chapter INTEGER, target_payoff_chapter INTEGER,"
         "  resolved_chapter INTEGER, related_entities TEXT, notes TEXT,"
         "  confidence REAL, payload_json TEXT, created_at TIMESTAMP, updated_at TIMESTAMP"

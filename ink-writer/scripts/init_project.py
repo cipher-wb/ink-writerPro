@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime
@@ -25,6 +26,8 @@ from pathlib import Path
 from runtime_compat import enable_windows_utf8_stdio
 from typing import Any, Dict, List
 import re
+
+_DEFAULT_CPV = int(os.environ.get("INK_CHAPTERS_PER_VOLUME", "50"))
 
 # 安全修复：导入安全工具函数
 from security_utils import sanitize_commit_message, atomic_write_json, is_git_available
@@ -176,7 +179,7 @@ def _ensure_state_schema(state: Dict[str, Any]) -> Dict[str, Any]:
     return state
 
 
-def _build_master_outline(target_chapters: int, *, chapters_per_volume: int = 50) -> str:
+def _build_master_outline(target_chapters: int, *, chapters_per_volume: int = _DEFAULT_CPV) -> str:
     volumes = (target_chapters - 1) // chapters_per_volume + 1 if target_chapters > 0 else 1
     lines: list[str] = [
         "# 总纲",
@@ -205,7 +208,7 @@ def _build_master_outline(target_chapters: int, *, chapters_per_volume: int = 50
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _inject_volume_rows(template_text: str, target_chapters: int, *, chapters_per_volume: int = 50) -> str:
+def _inject_volume_rows(template_text: str, target_chapters: int, *, chapters_per_volume: int = _DEFAULT_CPV) -> str:
     """在总纲模板的卷表中注入卷行（若存在表头）。"""
     lines = template_text.splitlines()
     header_idx = None
@@ -342,7 +345,7 @@ def init_project(
     )
 
     # v10.5: 构建 volumes 数组（含 is_final 完结标记）
-    chapters_per_volume = 50
+    chapters_per_volume = _DEFAULT_CPV
     num_volumes = (int(target_chapters) - 1) // chapters_per_volume + 1 if int(target_chapters) > 0 else 1
     volumes_list = []
     for v in range(1, num_volumes + 1):
