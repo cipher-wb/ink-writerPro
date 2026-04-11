@@ -260,8 +260,8 @@ def _build_preflight_report(explicit_project_root: Optional[str]) -> dict:
             else:
                 # 实际调用API验证连通性（发送一个测试文本）
                 try:
-                    from data_modules.api_client import APIClient
-                    api = APIClient(cfg)
+                    from data_modules.api_client import EmbeddingAPIClient
+                    api = EmbeddingAPIClient(cfg)
                     test_result = asyncio.run(api.embed(["RAG连通性测试"]))
                     if test_result and len(test_result) > 0 and len(test_result[0]) > 0:
                         dim = len(test_result[0])

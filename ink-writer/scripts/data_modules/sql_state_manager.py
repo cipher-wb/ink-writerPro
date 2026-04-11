@@ -580,8 +580,9 @@ class SQLStateManager:
                     priority=int(item.get("priority", 50) or 50),
                     planted_chapter=int(item.get("planted_chapter") or item.get("chapter") or chapter),
                     last_touched_chapter=int(item.get("last_touched_chapter") or chapter),
-                    target_payoff_chapter=int(item.get("target_payoff_chapter") or item.get("target_chapter") or 0),
-                    resolved_chapter=int(item.get("resolved_chapter") or 0),
+                    # v9.x+: 把 `or 0` 兜底改为 None，避免 audit 查询把未设目标的伏笔误判为"已逾期"
+                    target_payoff_chapter=(lambda v: int(v) if v else None)(item.get("target_payoff_chapter") or item.get("target_chapter")),
+                    resolved_chapter=(lambda v: int(v) if v else None)(item.get("resolved_chapter")),
                     related_entities=list(item.get("related_entities", []) or related_entities),
                     notes=str(item.get("notes", "")),
                     confidence=float(item.get("confidence", 1.0) or 1.0),

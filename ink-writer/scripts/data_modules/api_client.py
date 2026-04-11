@@ -60,7 +60,7 @@ class EmbeddingAPIClient:
                 limit=self.config.http_connector_limit,
                 limit_per_host=self.config.http_connector_limit_per_host,
             )
-            self._session = aiohttp.ClientSession(connector=connector)
+            self._session = aiohttp.ClientSession(connector=connector, trust_env=True)
         return self._session
 
     async def close(self):
@@ -259,7 +259,7 @@ class RerankAPIClient:
                 limit=self.config.http_connector_limit,
                 limit_per_host=self.config.http_connector_limit_per_host,
             )
-            self._session = aiohttp.ClientSession(connector=connector)
+            self._session = aiohttp.ClientSession(connector=connector, trust_env=True)
         return self._session
 
     async def close(self):

@@ -1,7 +1,7 @@
 # Ink Writer Pro
 
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-11.4.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-11.5.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://claude.ai/claude-code)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-Extension-4285F4.svg)](https://github.com/google-gemini/gemini-cli)
 [![Codex CLI](https://img.shields.io/badge/Codex%20CLI-Skills-74AA9C.svg)](https://github.com/openai/codex)
@@ -278,6 +278,16 @@ Step 6     Git 备份
 
 ## v11.x 新特性
 
+### v11.5: 跨章遗忘 bug 根因修复
+
+针对长篇连载中反复出现的"跨章细节遗忘"、"信息重复揭露"、"角色首次见面矛盾"、"伏笔逾期误报"等一系列问题，定位并修复了三个**架构层级**的根本原因：
+
+- **`previous_chapters` 窗口从 2 章扩大到 10 章**：`extract_chapter_context.py` 中的 `build_review_pack_payload` 和 `build_chapter_context_payload` 两处 `range(chapter_num - 2, chapter_num)` 的硬编码 2 章窗口，是 writer/checker 无法"记住"跨 3-10 章细节的根本原因。扩大到 10 章后，作者 AI 写新章时能看到前 10 章的完整摘要+片段，大幅缓解"老周第一次开口 3 章重复"、"账本重复揭露同一情报"、"物资数字跨章漂移"、"裴衡首次见面矛盾"等一系列跨章 bug。
+- **`plot_thread_registry.target_payoff_chapter` 空值兜底修复**：`sql_state_manager.py:583` 的 `int(item.get("target_payoff_chapter") or 0)` 会把 `None` 强制转成 `0`，导致 audit 查询把所有"未设目标章节"的活跃伏笔误判为"已逾期"（在长篇项目中可达 80+ 条假阳性）。改为 None-safe 兜底后，audit 结果回归真实数字。
+- **SQL schema 与 Pydantic 对齐**：`index_manager.py` 的 `plot_thread_registry` 表中 `target_payoff_chapter` / `resolved_chapter` 从 `INTEGER DEFAULT 0` 改为 `INTEGER`（无默认值），与 Pydantic 模型 `Optional[int] = None` 对齐。避免 data-agent 写入时即使传 None 也被 schema 默认值覆盖成 0。
+
+这三个修复对所有使用 ink-writer 的长篇项目都有显著价值——特别是已写到 50+ 章的项目。旧项目升级后建议跑一次 `ink db rebuild` 应用新 schema，然后对历史章节用 data-agent 重新 ingest 刷新元数据。
+
 ### v11.2: 工程深度审查修复
 
 基于全项目工程审查报告，修复了 P0/P1 级别的逻辑漏洞：
@@ -419,7 +429,8 @@ A: 100 章写作中，检查点总开销约 7 小时，占总时间 7-14%。
 
 | 版本 | 说明 |
 |------|------|
-| **v11.4.0 (当前)** | 写作质量提升+LLM创造力增强：TTR词汇多样性检测 + 首句钩子检测 + 伏笔分级(10/20/30章) + 闸门阈值对齐 + 摘要窗口扩大(3→5) + 关键章摘要常驻 + 角色语言指纹(voice_fingerprint) + 微观意外感注入(Anti-Cliché) + 反套路检测 + 过渡章豁免收紧 + 简介质检 + 风格采纳度验证 + 13项计算检查(1095测试) |
+| **v11.5.0 (当前)** | 跨章遗忘 bug 根因修复：**previous_chapters 窗口 2→10 章**（`extract_chapter_context.py` 两处硬编码）+ **plot_thread target_payoff_chapter 空值兜底从 `or 0` 改为 None-safe**（`sql_state_manager.py`，修复 audit 把未设目标伏笔误判逾期的系统性 bug）+ **SQL schema 与 Pydantic 对齐**（`index_manager.py` 的 target_payoff_chapter/resolved_chapter 从 DEFAULT 0 改为 NULL）。三个修复对长篇连载（50+ 章）项目有显著价值。 |
+| v11.4.0 | 写作质量提升+LLM创造力增强：TTR词汇多样性检测 + 首句钩子检测 + 伏笔分级(10/20/30章) + 闸门阈值对齐 + 摘要窗口扩大(3→5) + 关键章摘要常驻 + 角色语言指纹(voice_fingerprint) + 微观意外感注入(Anti-Cliché) + 反套路检测 + 过渡章豁免收紧 + 简介质检 + 风格采纳度验证 + 13项计算检查(1095测试) |
 | v11.3.0 | 工程深度审查全量修复(22项)：计算型闸门SQL对齐真实Schema + 死亡/离场/能力状态标准化 + mega-summary自动生成 + 伏笔数据源统一 + _write_transaction接入9个mixin + Step3 Harness闸门 + 黄金三章契约检查 + 风格样本fallback + 对话「」支持 + 句长/标点检查 + 元数据全文扫描 + Token裁剪通知 + chapters_per_volume配置化 + reader-pull始终执行 + 29个新测试(1083总) |
 | v11.2.0 | 计算型闸门实装 + 远距离摘要注入 + 跨卷记忆压缩 + SQLite并发保护 + 黄金三章硬拦截 + Token预算硬上限 + 对话阈值分层 + 完结标记CLI化 |
 | v11.1.0 | 计算型闸门框架 + 远距离摘要注入 + mega-summary自动触发 + Token预算硬上限 + 对话阈值分层 |

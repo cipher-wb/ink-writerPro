@@ -510,7 +510,8 @@ def build_chapter_context_payload(project_root: Path, chapter_num: int) -> Dict[
     outline = extract_chapter_outline(project_root, chapter_num)
 
     prev_summaries = []
-    for prev_ch in range(max(1, chapter_num - 2), chapter_num):
+    # v9.x+: 窗口从 2 章扩大到 10 章，让 core_context.recent_summaries 承载更长的跨章记忆
+    for prev_ch in range(max(1, chapter_num - 10), chapter_num):
         summary = extract_chapter_summary(project_root, prev_ch)
         prev_summaries.append(f"### 第{prev_ch}章摘要\n{summary}")
 
@@ -592,7 +593,8 @@ def build_review_pack_payload(project_root: Path, chapter_num: int, payload: Dic
     chapter_text = chapter_path.read_text(encoding="utf-8") if chapter_path else ""
 
     previous_chapters: List[Dict[str, Any]] = []
-    for prev_ch in range(max(1, chapter_num - 2), chapter_num):
+    # v9.x+: 窗口从 2 章扩大到 10 章，缓解跨章遗忘 bug（作者写新章时能看到前 10 章而非 2 章）
+    for prev_ch in range(max(1, chapter_num - 10), chapter_num):
         prev_file = find_chapter_file(project_root, prev_ch)
         prev_path = prev_file.resolve() if prev_file and prev_file.exists() else None
         previous_chapters.append(
