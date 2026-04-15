@@ -164,6 +164,11 @@
 - polish-agent repair priority: Step 1.5 hook → Step 1.6 emotion → Step 2 editor-wisdom
 - config/emotion-curve.yaml: variance_threshold=0.15, score_threshold=60, max_retries=2
 - data-agent Step B.12 extracts emotion curves to data/emotion_curves.jsonl (per-scene valence/arousal)
+- Anti-detection gate: `ink_writer.anti_detection.anti_detection_gate.run_anti_detection_gate()` — sentence diversity hard gate at Step 3.8
+- Zero-tolerance check runs BEFORE checker_fn; matching ZT_TIME_OPENING/ZT_MEANWHILE causes immediate block with no retry
+- config/anti-detection.yaml: score_threshold=70, golden_three_threshold=80, max_retries=1, plus statistical thresholds + zero_tolerance rules
+- sentence_diversity.py: pure statistical analysis (sentence CV, short/long ratio, paragraph CV, dialogue ratio, emotion punctuation density, causal density)
+- polish-agent repair priority: Step 1.5 hook → Step 1.6 emotion → Step 1.7 anti-detection → Step 2 editor-wisdom
 - Style RAG: `ink_writer.style_rag.StyleRAGRetriever` — semantic search over 3295 human-written scene fragments (FAISS+bge-small-zh-v1.5)
 - Style RAG index files: data/style_rag/{style_rag.faiss, metadata.json, contents.json}; rebuild via `python scripts/build_style_rag.py`
 - Style RAG filters: scene_type, emotion, genre, min_quality — filtered search reconstructs vectors from FAISS for subset matching
@@ -233,4 +238,27 @@
   - _extract_paragraph_text must handle out-of-range paragraphs gracefully (return empty → skip)
   - FakeRetriever with .calls list is the standard test pattern for retriever-dependent code
   - Style RAG integration is prompt-level (formats text for LLM context), not code-level (no direct rewrite logic)
+---
+
+## 2026-04-15 - US-203
+- Implemented `ink_writer/anti_detection/` module: config.py, sentence_diversity.py, fix_prompt_builder.py, anti_detection_gate.py
+- `sentence_diversity.py`: pure statistical analysis — sentence CV, mean, short/long ratio, paragraph CV, single-sentence-paragraph ratio, dialogue ratio, emotion punctuation density (!/…/？), causal word density
+- `anti_detection_gate.py`: zero-tolerance pre-check + checker score gate + polish retry loop (max 1 retry)
+- Zero-tolerance rules: ZT_TIME_OPENING (时间标记开头) + ZT_MEANWHILE ("与此同时"转场) — immediate block, no retry, no checker call
+- Created `config/anti-detection.yaml` with all statistical thresholds documented + zero_tolerance rule definitions
+- Updated `ink-write/SKILL.md`: added Step 3.8 anti-detection sentence diversity gate (after Step 3.7 emotion gate, before Step 4)
+- Updated `polish-agent.md`: added `anti_detection_fix_prompt` input field + Step 1.7 anti-detection repair
+- Updated `step-3-review-gate.md`: documented AI味句式多样性硬门禁 in gate rules
+- 46 new tests (config 5, fix_prompt_builder 7, sentence_diversity 10, zero_tolerance 9, gate 11, integration 4), 1440 total pass
+- Coverage 82.54%
+- Files changed: ink_writer/anti_detection/{__init__,config,sentence_diversity,fix_prompt_builder,anti_detection_gate}.py, config/anti-detection.yaml, ink-writer/skills/ink-write/SKILL.md, ink-writer/agents/polish-agent.md, ink-writer/skills/ink-write/references/step-3-review-gate.md, tests/anti_detection/{__init__,test_anti_detection_gate}.py, pytest.ini
+- **Learnings for future iterations:**
+  - The gate pattern (config dataclass + zero-tolerance pre-check + retry loop + blocked file + logger) is now the third instance — could be abstracted but 3 isn't enough to justify
+  - Zero-tolerance check must run BEFORE checker_fn to avoid wasting LLM calls on obviously-blocked chapters
+  - ZT_TIME_OPENING regex matches against first_line only (stripped); ZT_MEANWHILE matches against full text
+  - sentence_diversity.py is pure Python, no LLM dependency — can be used for fast pre-filtering before expensive checker calls
+  - Chinese dialogue detection uses \u201c/\u201d (""） and \u300c/\u300d (「」) paired quotes
+  - Causal density calculation: count per 200 chars (matching anti-detection-checker spec's "每200字1个" threshold)
+  - polish-agent step numbering now: 1.5 hook → 1.6 emotion → 1.7 anti-detection → 2 editor-wisdom → 2.5 review issues → 2.8 style RAG → 3 AI味修复
+  - max_retries=1 for anti-detection gate (vs 2 for hook/emotion) because AI-taste issues are structural and rarely fixed in 1 polish pass; if it fails, human review is more productive
 ---

@@ -178,8 +178,8 @@
         "Tests pass"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/anti_detection/ module (config, sentence_diversity, fix_prompt_builder, anti_detection_gate). config/anti-detection.yaml with all thresholds + zero-tolerance list. ink-write Step 3.8 anti-detection gate. polish-agent Step 1.7 anti-detection repair. Zero-tolerance: ZT_TIME_OPENING + ZT_MEANWHILE = immediate block, no retry. 46 new tests (1440 total)."
     },
     {
       "id": "US-204",
