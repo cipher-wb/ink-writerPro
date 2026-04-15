@@ -31,6 +31,10 @@
 - config/high-point-scheduler.yaml: max_consecutive_no_hp=2, combo_window=5, milestone_window=12, climax_zone_start=0.85
 - ink-plan Step 2.5 is high-point scheduling; Step 2.6 is cool-point execution script (was Step 2.5)
 - Chapter outline template `爽点配方` field format: `类型=X | 强度=Y | 兑现窗口=Z章`
+- Cultural lexicon: `ink_writer.cultural_lexicon` module; config at `config/cultural-lexicon.yaml`; data at `data/cultural_lexicon/{genre}.json`
+- Lexicon entry types: idiom, slang, dialect, era_word, jargon — validated in tests
+- context-agent Step 2.6 injects cultural lexicon; writer-agent has corresponding section for using it
+- `sample_lexicon()` uses chapter_no + seed_offset for deterministic but chapter-varying selection
 
 ---
 
@@ -261,4 +265,23 @@
   - Causal density calculation: count per 200 chars (matching anti-detection-checker spec's "每200字1个" threshold)
   - polish-agent step numbering now: 1.5 hook → 1.6 emotion → 1.7 anti-detection → 2 editor-wisdom → 2.5 review issues → 2.8 style RAG → 3 AI味修复
   - max_retries=1 for anti-detection gate (vs 2 for hook/emotion) because AI-taste issues are structural and rarely fixed in 1 polish pass; if it fails, human review is more productive
+---
+
+## 2026-04-15 - US-204
+- Implemented `ink_writer/cultural_lexicon/` module: config.py, loader.py, context_injection.py
+- 6 genre lexicons: xianxia (310), xuanhuan (305), urban (355), scifi (310), lishi (305), youxi (305) — all ≥300 entries
+- Each entry: {id, term, type, category, usage_example, context_hint}; types: idiom/slang/dialect/era_word/jargon
+- `loader.py`: `load_lexicon()` + `sample_lexicon()` with chapter-seeded deterministic sampling + category diversity
+- `context_injection.py`: `build_cultural_lexicon_section()` outputs Markdown "### 13. 文化语料库" section for execution pack
+- `config.py`: `CulturalLexiconConfig` from `config/cultural-lexicon.yaml` — per-genre min_terms, inject_count, seed_offset
+- Updated `context-agent.md`: added Step 2.6 文化语料库注入 with full execution steps
+- Updated `writer-agent.md`: added 文化语料库 section for using injected lexicon during writing
+- 68 new tests (7 config, 6 loader, 8 sampling, 10 injection, 7×6 live data validation), 1508 total pass
+- Files changed: ink_writer/cultural_lexicon/{__init__,config,loader,context_injection}.py, config/cultural-lexicon.yaml, data/cultural_lexicon/{xianxia,xuanhuan,urban,scifi,lishi,youxi}.json, ink-writer/agents/{context-agent,writer-agent}.md, tests/cultural/{__init__,test_lexicon_injection}.py, pytest.ini
+- **Learnings for future iterations:**
+  - Lexicon JSON schema: {genre, version, description, total_count, entries: [{id, term, type, category, usage_example, context_hint}]}
+  - `sample_lexicon()` with categories ensures at least one entry per category before random fill — good for diverse injection
+  - context-agent execution pack section numbering: 13 = 文化语料库 (after existing 12 sections)
+  - writer-agent references "第13板块" for cultural lexicon usage instructions
+  - Live data tests are parametrized by genre (6 genres × 7 tests = 42 live tests) — validate schema, min entries, no duplicates, no empty terms, valid types, markdown output
 ---
