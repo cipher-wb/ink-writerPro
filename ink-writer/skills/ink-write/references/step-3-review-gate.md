@@ -4,7 +4,7 @@
 
 - 必须使用 `Task` 调用审查 subagent，禁止主流程直接内联“自审结论”。
 - Step 3 开始前，必须先生成 `review_bundle_file`，并把该绝对路径传给所有 checker。
-- 审查任务不得无上限并发；最大并发数为 2，条件审查器默认顺序执行。
+- 审查任务全量并发（US-503），首个硬门禁失败立即 cancel 其余并触发 polish。
 - `overall_score` 必须来自聚合结果，不可主观估分。
 - 单章写作场景下，统一传入：`{chapter, chapter_file, project_root, review_bundle_file}`。
 - `chapter_file` 与 `review_bundle_file` 必须是绝对路径，禁止把目录路径或相对路径交给 checker。
@@ -87,23 +87,25 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 
 ## Task 调用模板（示意）
 
+**并发策略（US-503）**：所有独立 checker 同时并行发射，首个硬门禁失败立即 cancel 其余。
+
 ```text
-selected = [“consistency-checker”, “continuity-checker”, “ooc-checker”]
+selected = [“consistency-checker”, “continuity-checker”, “ooc-checker”,
+            “anti-detection-checker”, “reader-pull-checker”]
 
 if mode != “minimal”:
   if chapter <= 3: selected.append(“golden-three-checker”)
-  selected.append(“reader-pull-checker”)  # 始终执行，过渡章仅降级软评分权重
   if trigger_high_point: selected.append(“high-point-checker”)
   if trigger_pacing: selected.append(“pacing-checker”)
   if trigger_proofreading: selected.append(“proofreading-checker”)
   if trigger_reader_sim: selected.append(“reader-simulator”)
+  if trigger_emotion: selected.append(“emotion-curve-checker”)
 
-core_stage = ["consistency-checker", "continuity-checker"]
-run Task in parallel(core_stage, max_concurrency=2)
-run Task("ooc-checker", {chapter, chapter_file, project_root, review_bundle_file})
+# 全量并发：所有 checker 同时启动（max_concurrency 由 Claude Code Task 调度器控制）
+run Task in parallel(selected, max_concurrency=len(selected))
 
-for agent in conditional_selected:
-  run Task(agent, {chapter, chapter_file, project_root, review_bundle_file})
+# 首个硬门禁失败 → 立即触发 polish，无需等其他 checker 完成
+# 硬门禁: consistency, continuity, ooc（总权重 65%，任一 score<40 即 hard fail）
 ```
 
 ## 输出契约（统一）
