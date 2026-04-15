@@ -300,6 +300,31 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style benchmark 
 
 若 style_rag.db 不存在或返回为空，跳过此板块（不阻断流程）。
 
+### Step 2.6: 文化语料库注入（Cultural Lexicon）
+
+> 依赖模块：`ink_writer.cultural_lexicon`；配置：`config/cultural-lexicon.yaml`
+
+1. 读取 `config/cultural-lexicon.yaml`，检查 `enabled` 和 `inject_into.context` 是否为 `true`
+2. 若任一为 `false`，跳过本步骤
+3. 从 `state.json` 取 `project.genre`，加载 `data/cultural_lexicon/{genre}.json`
+4. 按章节号种子采样 `inject_count` 条词条（保证每章选词不同但可复现）
+5. 按类别分组，写入任务书第 13 板块：
+
+```markdown
+### 13. 文化语料库（Cultural Lexicon）
+
+**题材**：{genre} | **本章最低使用数**：{min_terms}
+
+**推荐用词**（自然融入，禁止堆砌）：
+
+**[category]**
+- **{term}**（{type}）：{usage_example}
+
+> 硬约束：本章正文须自然使用 ≥{min_terms} 个上述或同类文化词汇，不得机械罗列。
+```
+
+**降级处理**：若语料库文件不存在，静默跳过（不阻断流程）。
+
 ### Step 2.7: 编辑建议召回（Editor Wisdom）
 
 > 依赖模块：`ink_writer.editor_wisdom`；配置：`config/editor-wisdom.yaml`
