@@ -42,6 +42,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 - `pacing-checker`
 - `proofreading-checker`
 - `reader-simulator`
+- `emotion-curve-checker`
 
 ## Auto 路由判定信号
 
@@ -78,6 +79,11 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
   - 关键章/高潮章/卷末章/卷首章；
   - 用户显式要求”读者体验审查”或”模拟读者”；
   - 最近 3 章审查分数持续下降（连续递减 ≥ 5 分/章）。
+- `emotion-curve-checker`：当满足任一条件时启用
+  - 章号 >= 5（前期章节情绪数据不足以对比）；
+  - 最近 3 章情绪方差持续偏低（data/emotion_curves.jsonl 中 valence_variance < 0.15）；
+  - 关键章/高潮章/情感线章节（大纲标签命中）；
+  - 用户显式要求”情绪审查”或”情绪曲线检查”。
 
 ## Task 调用模板（示意）
 
@@ -120,6 +126,7 @@ for agent in conditional_selected:
 | `pacing-checker` | 5% | 节奏控制 | 条件——Strand 平衡 |
 | `proofreading-checker` | 5% | 文笔质量 | 条件——修辞/段落/代称/禁忌 |
 | `golden-three-checker` | 特殊 | 黄金三章 | 仅ch1-3，替代 reader-pull 的 15% 权重 |
+| `emotion-curve-checker` | 5% | 情绪曲线 | 条件——情绪起伏/平淡段/目标对齐 |
 | `reader-simulator` | 特殊 | 阅读体验 | 仅关键章启用，不参与总分计算，独立输出沉浸度/弃读风险 |
 
 ### 计算公式

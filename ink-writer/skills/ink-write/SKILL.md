@@ -1112,6 +1112,41 @@ if reader_pull_result.overall_score < threshold:
 
 **Python 模块**：`ink_writer.reader_pull.hook_retry_gate.run_hook_gate()`
 
+#### Step 3.7: 情绪曲线门禁（emotion curve gate）
+
+> v13.0 新增。从 emotion-curve-checker 结果中提取 {score, violations, fix_prompt}，情绪曲线过平时自动触发 polish-agent 定向修复，最多重试 2 次。
+
+**执行条件**：emotion-curve-checker 在 Step 3 中被调度执行（条件审查器命中时）。
+
+**流程**：
+
+```text
+emotion_result = Step 3 中 emotion-curve-checker 的输出
+config = config/emotion-curve.yaml
+threshold = config.score_threshold
+
+if emotion_result.overall_score < threshold:
+    for retry in 1..2:
+        调用 polish-agent，传入:
+          chapter_file = 当前章节路径
+          emotion_fix_prompt = emotion_result.fix_prompt
+          issues = emotion_result.hard_violations + soft_suggestions
+        重新执行 emotion-curve-checker
+        if new_score >= threshold: break
+    else:
+        写入 chapters/{n}/emotion_blocked.md（得分、违规列表、fix_prompt）
+        章节标记为失败，不进入 Step 4
+```
+
+**emotion_blocked.md 格式**：包含最终得分、阈值、平淡段位置及修复提示。
+
+**与 Step 3.6 的关系**：
+- 追读力门禁（Step 3.6）先执行；若已阻断则跳过情绪门禁
+- 情绪门禁通过后正常进入 Step 4
+- 情绪门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.emotion.emotion_gate.run_emotion_gate()`
+
 ### Step 4：润色（问题修复优先）
 
 执行前必须加载：

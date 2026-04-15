@@ -37,6 +37,7 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
     {"rule_id": "EW-0042", "quote": "问题段落原文", "severity": "hard", "fix_suggestion": "具体修复建议"}
   ],
   "hook_fix_prompt": "",
+  "emotion_fix_prompt": "",
   "pass": true
 }
 ```
@@ -65,6 +66,16 @@ cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
 2. 重点关注章末钩子、开篇张力、微兑现密度
 3. 修复时不得改变剧情事实、设定物理边界或角色核心行为
 4. 修复完成后正文应能通过 reader-pull-checker 的阈值检查
+
+### 1.6 情绪曲线修复（emotion_fix_prompt）
+
+当输入包含非空 `emotion_fix_prompt` 时（来自 emotion-curve-checker 情绪门禁），在追读力修复之后执行：
+
+1. 逐条执行 `emotion_fix_prompt` 中的修复指令
+2. 重点关注平淡段落的情绪注入（插入冲突、感官冲击、情绪反转）
+3. 保持情绪变化自然流畅，不得生硬插入无关冲突
+4. 不得改变剧情事实或角色核心行为
+5. 修复完成后正文应能通过 emotion-curve-checker 的方差阈值检查
 
 ### 2. 编辑智慧违规精准修复
 

@@ -435,6 +435,30 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - `narration_only` 类型仅记录 index.db，不影响写作约束（全知旁白合法使用真名）
 - 每个实体的同一 `knowledge_type` 只记录首次习得，后续章节重复出现不重复写入
 
+### Step B.12: 情绪曲线提取（Emotion Curve）
+
+将章节按场景切分，对每个场景计算 (valence, arousal) 情绪坐标，输出到 `data/emotion_curves.jsonl`。
+
+**切分规则**：
+- 按双换行 / `***` / `---` 分隔符切分场景
+- 最小场景长度 200 字，短段落合并到相邻场景
+
+**情绪计算**：
+- 扫描 7 种情绪关键词（紧张/热血/悲伤/轻松/震惊/愤怒/温馨）
+- 按频率加权计算 valence（正负向）和 arousal（唤起度）
+- 无关键词命中的场景标记为"中性"（valence=0, arousal=0.3）
+
+**输出到 `data/emotion_curves.jsonl`**（追加写入）：
+```jsonl
+{"chapter": 100, "scene": 0, "start_char": 0, "end_char": 450, "valence": 0.4, "arousal": 0.8, "dominant_emotion": "热血"}
+{"chapter": 100, "scene": 1, "start_char": 451, "end_char": 950, "valence": -0.3, "arousal": 0.3, "dominant_emotion": "悲伤"}
+```
+
+**执行规则**：
+- 每章写入前先检查是否已有该章数据（避免重复），如有则覆盖
+- 此数据供 emotion-curve-checker 和 pacing-checker 使用
+- 不写入 index.db（非实体数据）
+
 ### Step C: 实体消歧处理
 
 **置信度策略**:
