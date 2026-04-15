@@ -8,7 +8,7 @@ import pytest
 
 
 AGENTS_DIR = Path(__file__).resolve().parents[2] / "ink-writer" / "agents"
-AGENTS_DIR_SECONDARY = Path(__file__).resolve().parents[2] / "agents" / "ink-writer"
+AGENTS_DIR_CANONICAL = AGENTS_DIR
 REFERENCES_DIR = Path(__file__).resolve().parents[2] / "ink-writer" / "references"
 DOCS_DIR = Path(__file__).resolve().parents[2] / "docs"
 
@@ -152,12 +152,17 @@ class TestAgentDirectoryIntegrity:
             "reader-simulator.md",
             "golden-three-checker.md",
             "thread-lifecycle-tracker.md",
+            "editor-wisdom-checker.md",
         ]
         for agent_file in expected:
             assert (AGENTS_DIR / agent_file).exists(), f"Missing agent: {agent_file}"
 
-    def test_editor_wisdom_checker_in_secondary_dir(self):
-        assert (AGENTS_DIR_SECONDARY / "editor-wisdom-checker.md").exists()
+    def test_editor_wisdom_checker_in_canonical_dir(self):
+        assert (AGENTS_DIR / "editor-wisdom-checker.md").exists()
+
+    def test_no_secondary_agent_directory(self):
+        old_secondary = Path(__file__).resolve().parents[2] / "agents" / "ink-writer"
+        assert not old_secondary.exists(), "agents/ink-writer/ should be eliminated (US-402)"
 
     def test_all_agent_specs_have_frontmatter(self):
         for md_file in AGENTS_DIR.glob("*.md"):

@@ -24,7 +24,7 @@ ink-writer/agents/ (17 agents)
 ├── foreshadow-tracker.md     [Review/Planning] ← MERGED
 └── plotline-tracker.md       [Review/Planning] ← MERGED
 
-agents/ink-writer/ (1 agent)
+agents/ink-writer/ (1 agent) ← ELIMINATED in US-402
 └── editor-wisdom-checker.md  [Review]
 ```
 
@@ -34,10 +34,10 @@ agents/ink-writer/ (1 agent)
 - foreshadow-tracker ↔ plotline-tracker: identical state machine, scoring model, ink-plan interaction
 - Missing IO schema for 6 agents in checker-output-schema.md
 
-## After (v13): 17 Agents, Unified Architecture
+## After (v13): 17 Agents, Single Directory
 
 ```
-ink-writer/agents/ (16 agents)
+ink-writer/agents/ (17 agents)
 ├── writer-agent.md                [Writing]
 ├── context-agent.md               [Context]
 ├── data-agent.md                  [Data]
@@ -51,12 +51,10 @@ ink-writer/agents/ (16 agents)
 ├── emotion-curve-checker.md       [Review: Quality]
 ├── high-point-checker.md          [Review: Quality]
 ├── pacing-checker.md              [Review: Quality]
+├── editor-wisdom-checker.md       [Review: Quality] ← MOVED from agents/ink-writer/
 ├── reader-pull-checker.md         [Review: Engagement]
 ├── reader-simulator.md            [Review: Engagement]
 └── thread-lifecycle-tracker.md    [Review: Story] ← NEW (merged)
-
-agents/ink-writer/ (1 agent)
-└── editor-wisdom-checker.md       [Review: Quality]
 ```
 
 ### Changes Summary

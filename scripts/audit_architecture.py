@@ -31,7 +31,6 @@ PYTHON_PACKAGES = [
 
 AGENT_DIRS = [
     PROJECT_ROOT / "ink-writer" / "agents",
-    PROJECT_ROOT / "agents" / "ink-writer",
 ]
 
 NGRAM_SIZE = 6
@@ -387,7 +386,6 @@ def run_audit(
     if agent_dirs is None:
         agent_dirs = [
             project_root / "ink-writer" / "agents",
-            project_root / "agents" / "ink-writer",
         ]
     if output_path is None:
         output_path = project_root / "reports" / "architecture_audit.md"
