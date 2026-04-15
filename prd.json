@@ -275,8 +275,8 @@
         "Tests pass"
       ],
       "priority": 17,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/plotline/ module (config, tracker, fix_prompt_builder). plotline-tracker agent spec. ink-plan Step 2.7 hard constraint + 明暗线推进 outline field. ink-write Step 3.10 plotline gate. migrate.py v10→v11 with plotline_lifecycle_config. Dashboard /api/plotlines + /api/plotlines/heatmap. 300-chapter simulation test passes. 56 new tests (1727 total), coverage 82.24%."
     },
     {
       "id": "US-401",

@@ -60,6 +60,17 @@
 - polish-agent Step 1.8 handles voice_fix_prompt (voice fingerprint repair)
 - config/voice-fingerprint.yaml: score_threshold=60, max_retries=2, catchphrase_absence_chapters=3
 - pytest.ini testpaths now includes `tests/voice_fingerprint`
+- plotline-tracker agent: scans every chapter for main/sub/dark plotline inactivity
+- Inactivity thresholds: main=3章, sub=8章, dark=15章; severity: main=critical, sub=high, dark=medium
+- ink-plan Step 2.7 calls `scan_plotlines()` + `build_plan_injection()`; forced_advances as hard constraint
+- Chapter outline `明暗线推进` field: [plotline_id]:推进描述, ... | 无
+- ink-write Step 3.10 is the plotline gate; runs after Step 3.9 voice fingerprint gate
+- Plotline data stored in `plot_thread_registry` with `thread_type='plotline'`; line_type in payload_json
+- config/plotline-lifecycle.yaml: main_max_gap=3, sub_max_gap=8, dark_max_gap=15, max_forced_advances=2
+- Dashboard `/api/plotlines` + `/api/plotlines/heatmap` endpoints for plotline visualization
+- migrate.py CURRENT_SCHEMA_VERSION=11; v10→v11 adds plotline_lifecycle_config
+- state_schema.py PlotThreads model has plotline_registry field
+- pytest.ini testpaths now includes `tests/plotline`
 
 ---
 
@@ -391,4 +402,26 @@
   - `_infer_vocab_level_from_length()` is a rough heuristic; real scoring relies on the vocabulary_level field from character archive, not inference
   - The 300-chapter simulation test is lightweight (no LLM calls) — tests the scoring math, not generation quality
   - When bumping CURRENT_SCHEMA_VERSION, existing migration tests may assert old version — update them to use CURRENT_SCHEMA_VERSION constant
+---
+
+## 2026-04-16 - US-305
+- Implemented plotline lifecycle tracker (明暗线追踪器)
+- New module `ink_writer/plotline/` with config.py, tracker.py, fix_prompt_builder.py
+- Plotlines (main/sub/dark) tracked via `plot_thread_registry` table with `thread_type='plotline'`, line_type stored in `payload_json`
+- Inactivity detection: main=3章, sub=8章, dark=15章 max gap; severity: main=critical, sub=high, dark=medium
+- plotline-tracker agent spec: `ink-writer/agents/plotline-tracker.md`
+- ink-plan Step 2.7: plotline lifecycle scheduling (hard constraint) + `明暗线推进` chapter outline field
+- ink-write Step 3.10: plotline gate after voice fingerprint gate
+- Dashboard: `/api/plotlines` (list) + `/api/plotlines/heatmap` (heatmap by chapter bucket)
+- migrate.py v10→v11: adds `plotline_lifecycle_config` to state.json
+- state_schema.py: added `plotline_registry` field to PlotThreads model
+- config/plotline-lifecycle.yaml: all thresholds documented
+- 56 new tests (1727 total), 300-chapter simulation passes, coverage 82.24%
+- Files changed: ink_writer/plotline/{__init__,config,tracker,fix_prompt_builder}.py, config/plotline-lifecycle.yaml, ink-writer/agents/plotline-tracker.md, ink-writer/skills/ink-plan/SKILL.md, ink-writer/skills/ink-write/SKILL.md, ink-writer/scripts/{state_schema,migrate}.py, ink-writer/dashboard/app.py, tests/plotline/{__init__,test_plotline_config,test_plotline_tracker,test_plotline_fix_prompt,test_plotline_migration}.py, tests/voice_fingerprint/test_voice_migration.py, pytest.ini
+- **Learnings for future iterations:**
+  - Plotlines reuse `plot_thread_registry` table via `thread_type='plotline'` — no new table needed, just filter on thread_type
+  - `payload_json` is the extension point for type-specific data (line_type for plotlines, other fields for foreshadowing)
+  - When adding new outline fields, update 3 places in ink-plan: chapter format template, final check list, and hard fail conditions
+  - Dashboard heatmap reuses the tracker module's `build_plotline_heatmap()` — pass db_path not conn to avoid lifecycle issues
+  - 300-chapter simulation tests are fast (~0.1s) because they only test scan logic, not LLM generation
 ---
