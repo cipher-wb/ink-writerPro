@@ -1,0 +1,26 @@
+# 章节级并发管线配置
+# US-501: ink-auto --parallel N
+
+# 最大并发章节数
+max_parallel: 8
+
+# 默认并发数
+default_parallel: 4
+
+# 单章写作后冷却（秒）
+cooldown: 10
+
+# 检查点后冷却（秒）
+checkpoint_cooldown: 15
+
+# SQLite WAL 忙等待超时（毫秒）
+sqlite_busy_timeout: 10000
+
+# 章节锁 TTL（秒）
+chapter_lock_ttl: 600
+
+# state 更新锁超时（秒）
+state_lock_timeout: 30
+
+# 批次失败时是否中止剩余
+abort_on_batch_failure: true
