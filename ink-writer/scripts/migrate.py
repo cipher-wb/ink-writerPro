@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Tuple
 
-CURRENT_SCHEMA_VERSION = 7
+CURRENT_SCHEMA_VERSION = 8
 
 # 迁移注册表: List[(from_version, migration_func)]
 _migrations: List[Tuple[int, Callable[[Dict[str, Any]], Dict[str, Any]]]] = []
@@ -116,6 +116,23 @@ def _migrate_v6_to_v7(state: Dict[str, Any]) -> Dict[str, Any]:
             "enhance": 25,
             "rewrite_min": 0,
         },
+    }
+    return state
+
+
+@migration(7)
+def _migrate_v7_to_v8(state: Dict[str, Any]) -> Dict[str, Any]:
+    """v7 → v8: 钩子契约支持。
+
+    新增:
+    - hook_contract_config: 钩子契约验证配置
+    """
+    state["schema_version"] = 8
+    state["hook_contract_config"] = {
+        "enabled": True,
+        "valid_types": ["crisis", "mystery", "emotion", "choice", "desire"],
+        "max_payoff_window": 30,
+        "outline_backfilled": False,
     }
     return state
 

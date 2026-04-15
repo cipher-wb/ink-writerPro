@@ -142,10 +142,26 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" backup restore 
 
 state.json 可通过 `.ink/state.json.bak.6` 恢复。
 
+## Phase 2.5：大纲钩子契约回填（v13 新增）
+
+v13 要求每章大纲包含 `钩子契约` 字段。对已有大纲执行自动回填：
+
+```bash
+python3 scripts/patch_outline_hook_contract.py --project-root "${PROJECT_ROOT}" --dry-run
+# 确认无误后去掉 --dry-run 执行
+python3 scripts/patch_outline_hook_contract.py --project-root "${PROJECT_ROOT}"
+```
+
+- 基于现有 `钩子` 字段推断类型（悬念→mystery、危机→crisis 等）
+- 兑现锚点默认设为下一章
+- 兑现摘要从钩子描述截取
+- 回填前自动备份原文件（`.md.bak.pre_hook_contract`）
+- 建议回填后人工检查兑现锚点是否合理
+
 ## 安全保证
 
 - 执行前自动备份整个 `.ink/` 目录
 - 不修改章节正文文件
-- 不修改大纲文件
+- 大纲文件仅在钩子契约回填时修改（Phase 2.5），且会自动备份原文件
 - 不删除任何历史数据
 - 任何 Phase 失败都可回滚到备份
