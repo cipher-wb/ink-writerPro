@@ -227,6 +227,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 - 仅当 `pack-json` 缺字段时才允许读取。
 - 读取后必须只补缺口，禁止把整份大 JSON 原样抄回输出。
 - 条件读取：`rag_assist`（当 `invoked=true` 且 `hits` 非空时，必须提炼成可执行约束，禁止只贴检索命中）
+- v13.0 (US-302): `rag_assist.mode` 可能为 `semantic_hybrid`，表示来自本地 FAISS 语义召回（semantic Top-K ∪ entity-forced ∪ recent-N）。处理方式与旧 `summary_memory_bm25` 相同：提炼命中为可执行约束。
 
 ### Step 0.7: 时间线读取（新增，必做）
 

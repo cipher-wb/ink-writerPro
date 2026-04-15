@@ -375,6 +375,56 @@ def _search_with_rag(
     }
 
 
+def _search_semantic_recall(
+    project_root: Path,
+    chapter_num: int,
+    query: str,
+    top_k: int,
+    scene_entities: List[str] | None = None,
+) -> Dict[str, Any] | None:
+    """Semantic chapter recall via local FAISS index (US-302).
+
+    Returns payload dict on success, None if index not available.
+    """
+    from ink_writer.semantic_recall.config import SemanticRecallConfig
+    from ink_writer.semantic_recall.chapter_index import ChapterVectorIndex
+    from ink_writer.semantic_recall.retriever import SemanticChapterRetriever
+
+    sr_config = SemanticRecallConfig.from_project_root(project_root)
+    if not sr_config.enabled:
+        return None
+
+    index_dir = project_root / ".ink" / "chapter_index"
+    if not (index_dir / "chapters.faiss").exists():
+        return None
+
+    try:
+        index = ChapterVectorIndex(index_dir=index_dir, model_name=sr_config.model_name)
+        if index.card_count == 0:
+            return None
+        sr_config.final_top_k = top_k
+        retriever = SemanticChapterRetriever(index=index, config=sr_config)
+        payload = retriever.recall_to_payload(
+            query=query,
+            chapter_num=chapter_num,
+            scene_entities=scene_entities,
+        )
+        payload["enabled"] = True
+        return payload
+    except Exception as exc:
+        logger.warning("Semantic recall failed: %s, falling back", exc)
+        return None
+
+
+def _extract_scene_entities(memory_context: Dict[str, Any]) -> List[str]:
+    """Extract entity names from memory context for entity-forced recall."""
+    entities: List[str] = []
+    prev_card = memory_context.get("previous_chapter_memory_card", {})
+    if isinstance(prev_card, dict):
+        entities.extend(prev_card.get("involved_entities", []) or [])
+    return [str(e) for e in entities if e][:20]
+
+
 def _load_rag_assist(
     project_root: Path,
     chapter_num: int,
@@ -406,11 +456,21 @@ def _load_rag_assist(
         base_payload["reason"] = "context_not_actionable"
         return base_payload
 
+    # v13.0 (US-302): 优先使用本地语义召回（FAISS），无需 API Key
+    scene_entities = _extract_scene_entities(memory_context)
+    semantic_payload = _search_semantic_recall(
+        project_root=project_root,
+        chapter_num=chapter_num,
+        query=query,
+        top_k=top_k,
+        scene_entities=scene_entities,
+    )
+    if semantic_payload and semantic_payload.get("hits"):
+        return semantic_payload
+
     vector_db = config.vector_db
     has_embed_key = bool(str(getattr(config, "embed_api_key", "") or "").strip())
 
-    # v11.0: 无 API Key 时跳过向量检索，直接走本地内存卡检索
-    # （preflight 硬门控已在写作入口阻断无key情况，此处是兜底+测试兼容）
     if not has_embed_key:
         logger.warning("RAG: EMBED_API_KEY 未配置，跳过向量检索，使用本地内存卡")
         try:
@@ -427,7 +487,6 @@ def _load_rag_assist(
             base_payload["reason"] = "missing_embed_api_key"
             return base_payload
 
-    # 向量数据库为空是正常的（第1章时还没写过），此时走本地内存卡检索
     if not vector_db.exists() or vector_db.stat().st_size <= 0:
         local_payload = _search_memory_cards_and_summaries(
             project_root=project_root,
@@ -439,13 +498,11 @@ def _load_rag_assist(
         local_payload["reason"] = "vector_db_empty_first_chapters"
         return local_payload
 
-    # 正常向量RAG检索
     try:
         rag_payload = _search_with_rag(project_root=project_root, chapter_num=chapter_num, query=query, top_k=top_k)
         rag_payload["enabled"] = True
         if rag_payload.get("hits"):
             return rag_payload
-        # 向量检索无命中，补充本地内存卡检索
         local_payload = _search_memory_cards_and_summaries(
             project_root=project_root,
             chapter_num=chapter_num,
@@ -456,7 +513,6 @@ def _load_rag_assist(
         local_payload["reason"] = "vector_no_hits_supplemented_local"
         return local_payload
     except Exception as exc:
-        # v11.0: RAG API 调用失败，记录错误并回退到本地检索（preflight 应已验证 API 可达）
         logger.warning("RAG API 调用失败: %s，回退到本地内存卡检索", exc)
         try:
             local_payload = _search_memory_cards_and_summaries(

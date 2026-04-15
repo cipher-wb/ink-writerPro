@@ -226,8 +226,8 @@
         "Tests pass"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/semantic_recall/ module (config, chapter_index, retriever). FAISS ChapterVectorIndex over chapter_memory_cards. SemanticChapterRetriever with 3-way recall: semantic Top-K ∪ entity-forced ∪ recent-N. Wired into extract_chapter_context.py as priority path before legacy RAG/BM25. config/semantic-recall.yaml. scripts/build_chapter_index.py. 300-chapter simulation test passes (0 missed callbacks). 32 new tests (1568 total), coverage 82.53%."
     },
     {
       "id": "US-303",
