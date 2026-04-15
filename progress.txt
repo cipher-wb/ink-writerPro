@@ -6,7 +6,10 @@
 - DataModulesConfig.from_project_root(path) expects `.ink/` dir with `state.json` under project_root
 - Review metrics are stored in review_metrics table with JSON-encoded dimension_scores, severity_counts, review_payload_json
 - chapter_reading_power table stores per-chapter hook/micropayoff data; tool_call_stats has limited columns (no duration_ms/tokens_used)
-- pytest.ini testpaths: `ink-writer/scripts/data_modules/tests tests/baseline`; pythonpath includes `scripts`
+- pytest.ini testpaths: `ink-writer/scripts/data_modules/tests tests/baseline tests/audit`; pythonpath includes `scripts`
+- Agent specs are markdown with YAML frontmatter (name/description/tools/model); IO sections labeled "输入"/"输出格式"
+- Import cycle detection works via pure Python AST + DFS; no need for networkx dependency
+- 14 agents in `ink-writer/agents/`, 1 in `agents/ink-writer/` (editor-wisdom-checker)
 - benchmark/corpus_index.json has 117 books; use `collections` field for ranking, `dir` field for filesystem lookup
 - benchmark/config.py has SCENE_TYPE_KEYWORDS / EMOTION_KEYWORDS — reuse for text analysis instead of reinventing
 
@@ -42,4 +45,20 @@
   - Hook density for real novels averages ~0.17 (end-of-chapter hooks are sparse but impactful)
   - High-point keyword density averages ~0.75 per 1000 chars across genres
   - compute_percentiles returns int for min/max when inputs are ints — use isinstance(x, (int, float)) in assertions
+---
+
+## 2026-04-15 - US-003
+- Implemented `scripts/audit_architecture.py`: architecture static audit script
+- Detects: import cycles (AST+DFS), unused modules, agent IO contract overlaps, repeated prompt fragments (n-gram dedup)
+- Outputs `reports/architecture_audit.md` with summary, per-agent IO contract table, overlap analysis
+- Results: 121 modules scanned, 1 import cycle (chapter_paths ↔ chapter_outline_loader), 29 unused module candidates, 15 agents with 8 overlap pairs, 29 repeated prompt fragments
+- Added `tests/audit/test_audit_architecture.py` with 19 tests (fake fixture + live integration)
+- Updated `pytest.ini` to include `tests/audit` in testpaths
+- Files changed: scripts/audit_architecture.py, tests/audit/__init__.py, tests/audit/test_audit_architecture.py, pytest.ini, reports/architecture_audit.md
+- **Learnings for future iterations:**
+  - Pure Python AST parsing is sufficient for import cycle detection — no need for networkx
+  - Agent spec files use YAML frontmatter with IO sections labeled "输入"/"输出格式" (Chinese)
+  - Some agents (consistency-checker, continuity-checker, ooc-checker, pacing-checker) have identical descriptions → overlap detection catches them
+  - When filtering test files by path, avoid `"test" in str(path)` — pytest tmp dirs contain "test" in directory names; use `path.name.startswith("test_")` instead
+  - The editor-wisdom-checker in `agents/ink-writer/` is the only agent not in `ink-writer/agents/`
 ---
