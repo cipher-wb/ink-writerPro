@@ -12,7 +12,7 @@
 - pytest.ini testpaths: `ink-writer/scripts/data_modules/tests tests/baseline tests/audit tests/hooks tests/pacing tests/emotion tests/style_rag tests/anti_detection tests/cultural tests/memory_arch`; pythonpath includes `scripts`
 - Agent specs are markdown with YAML frontmatter (name/description/tools/model); IO sections labeled "输入"/"输出格式"
 - Import cycle detection works via pure Python AST + DFS; no need for networkx dependency
-- 14 agents in `ink-writer/agents/`, 1 in `agents/ink-writer/` (editor-wisdom-checker)
+- All 19 agent specs in single canonical directory `ink-writer/agents/` (US-402 eliminated dual-directory split)
 - benchmark/corpus_index.json has 117 books; use `collections` field for ranking, `dir` field for filesystem lookup
 - benchmark/config.py has SCENE_TYPE_KEYWORDS / EMOTION_KEYWORDS — reuse for text analysis instead of reinventing
 - Hook types taxonomy (5 core): crisis, mystery, emotion, choice, desire — aligned with reader-pull-checker agent
@@ -445,4 +445,14 @@
   - Agent specs are markdown instructions for Claude subagents; "merging" means creating a unified spec with a type parameter, while Python modules can remain separate
   - checker-output-schema.md summary format should list ALL active checkers (was missing 6); keep this in sync when adding new agents
   - Old agent files retained for backward compatibility — agent name aliasing ensures no breakage
+---
+
+## 2026-04-16 - US-402
+- Eliminated dual agent directory: moved editor-wisdom-checker.md from agents/ink-writer/ to ink-writer/agents/
+- Removed empty agents/ directory
+- Files changed: CLAUDE.md, docs/agent_topology_v13.md, scripts/audit_architecture.py, tests/audit/test_agent_topology.py, ink-writer/agents/editor-wisdom-checker.md
+- **Learnings for future iterations:**
+  - Only 1 agent (editor-wisdom-checker) was in the secondary directory; all others were already in ink-writer/agents/
+  - audit_architecture.py has AGENT_DIRS in two places (module-level constant + function default) — update both
+  - Test file test_agent_topology.py explicitly asserted the secondary directory existed — tests that assert directory structure need updating when directories are reorganized
 ---

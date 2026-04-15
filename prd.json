@@ -307,8 +307,8 @@
         "Tests pass"
       ],
       "priority": 19,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Canonical directory = ink-writer/agents/ (19 specs). Moved editor-wisdom-checker.md from agents/ink-writer/. Updated audit_architecture.py, agent_topology_v13.md, CLAUDE.md, test_agent_topology.py. Removed empty agents/ directory. 1752 tests pass, coverage 82.24%."
     },
     {
       "id": "US-403",
