@@ -1,0 +1,16 @@
+# 增量数据提取配置
+# US-504: data-agent diff 模式
+
+enabled: true
+
+# 实体识别置信度阈值
+diff_confidence_threshold: 0.8
+
+# 跳过未变化的实体
+skip_unchanged_entities: true
+
+# 始终提取主角（即使无变化）
+always_extract_protagonist: true
+
+# 先前状态最大章节距离（超过则退化为全量提取）
+max_prior_state_age: 5
