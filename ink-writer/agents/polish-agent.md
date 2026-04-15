@@ -39,6 +39,7 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
   "hook_fix_prompt": "",
   "emotion_fix_prompt": "",
   "anti_detection_fix_prompt": "",
+  "voice_fix_prompt": "",
   "style_references": "【人写参考】块（由 Style RAG 检索，Step 2.8 生成；为空则跳过）",
   "pass": true
 }
@@ -91,6 +92,19 @@ cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
 6. 削减因果连接词（删除中间环节，保留叙事跳跃感）
 7. 不得改变剧情事实、设定物理边界或角色核心行为
 8. 修复完成后正文应能通过 anti-detection-checker 的阈值检查
+
+### 1.8 语气指纹修复（voice_fix_prompt）
+
+当输入包含非空 `voice_fix_prompt` 时（来自 voice-fingerprint 语气指纹门禁），在AI味修复之后执行：
+
+1. 逐条执行 `voice_fix_prompt` 中的修复指令
+2. 重点关注角色对话辨识度：每个角色的说话方式必须具有独特性
+3. 修复禁忌表达：替换为符合角色 `vocabulary_level` 和 `tone` 的表达
+4. 恢复口头禅：在对话中自然融入角色的 `catchphrases`
+5. 修正用词层次：调整对话用词至角色设定的 `vocabulary_level` 级别
+6. 增大角色间风格差异：去掉说话人名字后，仅从用词和句式就能判断是谁在说话
+7. 不得改变剧情事实或角色核心行为
+8. 修复完成后正文应能通过 voice-fingerprint 的阈值检查
 
 ### 2. 编辑智慧违规精准修复
 

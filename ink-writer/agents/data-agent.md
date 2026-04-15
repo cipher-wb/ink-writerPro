@@ -270,6 +270,9 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - 主角和核心配角（tier=核心）必须有 voice_fingerprint
 - 每 10 章至少更新一次（角色成长可能改变说话方式）
 - `forbidden_expressions` 是该角色绝对不会说的话，用于防止角色声音趋同
+- voice_fingerprint 写入 `save-character-evolution` 的 `voice_fingerprint` 字段（自动序列化为 `voice_fingerprint_json` 列）
+- 首次出场角色必须自动学习语气指纹；后续追加不覆盖（append-only）
+- 语气指纹是 ooc-checker Step 3.9 语气指纹门禁的权威数据源
 
 ### Step B.7.5: 出场角色状态更新（v10.6 新增）
 

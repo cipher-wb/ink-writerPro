@@ -48,6 +48,18 @@
 - ink-plan Step 2.4 calls `scan_foreshadows()` + `build_plan_injection()`; forced_payoffs as hard constraint
 - Chapter outline `伏笔处置` field: 无 | 埋设:[id] | 推进:[id] | 兑现:[id]
 - Dashboard `/api/plot-threads/heatmap` endpoint + ForeshadowHeatmap React component
+- voice_fingerprint module: `ink_writer.voice_fingerprint` (config, fingerprint, ooc_gate, fix_prompt_builder)
+- `voice_fingerprint_json` TEXT column in character_evolution_ledger (added via _ensure_column, not CREATE TABLE change)
+- VoiceFingerprint fields: catchphrases, speech_habits, vocabulary_level, tone, dialect_markers, forbidden_expressions
+- `save_fingerprint_to_db()` / `load_fingerprint_from_db()` / `load_all_fingerprints()` for bulk operations
+- `merge_fingerprint()` does append-only merge respecting max_* limits from LearningConfig
+- `score_chapter_voice()` checks forbidden expressions (critical), catchphrase absence (medium), vocab mismatch (medium), distinctiveness (medium)
+- `run_voice_gate()` pattern mirrors `run_emotion_gate()`: checker_fn → score → polish_fn retry → voice_blocked.md on fail
+- migrate.py CURRENT_SCHEMA_VERSION=10; v9→v10 adds voice_fingerprint_config
+- ink-write Step 3.9 is the voice fingerprint gate; runs after Step 3.8 anti-detection gate
+- polish-agent Step 1.8 handles voice_fix_prompt (voice fingerprint repair)
+- config/voice-fingerprint.yaml: score_threshold=60, max_retries=2, catchphrase_absence_chapters=3
+- pytest.ini testpaths now includes `tests/voice_fingerprint`
 
 ---
 
@@ -357,4 +369,26 @@
   - Dashboard frontend uses pure CSS for heatmap (no charting library needed); rgba opacity mapping works well for density
   - foreshadow-tracker is read-only (no DB writes); data-agent handles status updates via `plot_thread_updates`
   - Step 0 逾期伏笔检查 and canary A.6 are complementary: Step 0 is priority-aware overdue, A.6 is silence-only detection
+---
+
+## 2026-04-16 - US-304
+- Implemented voice fingerprint system: `ink_writer/voice_fingerprint/` module with config, fingerprint, ooc_gate, fix_prompt_builder
+- `VoiceFingerprint` dataclass: catchphrases, speech_habits, vocabulary_level, tone, dialect_markers, forbidden_expressions
+- DB layer: `voice_fingerprint_json` TEXT column added to `character_evolution_ledger` via `_ensure_column`; CRUD via `save_fingerprint_to_db()` / `load_fingerprint_from_db()` / `load_all_fingerprints()`
+- Auto-learn: `merge_fingerprint()` append-only merge with configurable max limits per field
+- Scoring: `score_chapter_voice()` with 4 violation types: VOICE_FORBIDDEN_EXPRESSION (critical), VOICE_CATCHPHRASE_ABSENT (medium), VOICE_VOCAB_MISMATCH (medium), VOICE_INDISTINCT (medium)
+- Gate: `run_voice_gate()` mirrors emotion_gate pattern — checker_fn → polish retry (max 2) → voice_blocked.md on fail
+- `config/voice-fingerprint.yaml`: score_threshold=60, max_retries=2, deviation thresholds, learning config
+- Migration: `migrate.py` v9→v10 adds `voice_fingerprint_config` to state.json
+- Agent specs updated: ooc-checker (voice_fingerprint-based validation), polish-agent (Step 1.8 voice repair), ink-write (Step 3.9 voice gate), data-agent (voice_fingerprint persistence rules)
+- 55 new tests (1671 total), coverage 82.31%
+- 300-chapter simulation passes: OOC score < 5 (zero critical/high violations with proper fingerprint adherence)
+- Files changed: ink_writer/voice_fingerprint/{__init__,config,fingerprint,ooc_gate,fix_prompt_builder}.py, config/voice-fingerprint.yaml, ink-writer/scripts/data_modules/index_manager.py, ink-writer/scripts/migrate.py, ink-writer/agents/{ooc-checker,data-agent,polish-agent}.md, ink-writer/skills/ink-write/SKILL.md, tests/voice_fingerprint/{__init__,test_voice_config,test_voice_fingerprint,test_voice_ooc_gate,test_voice_fix_prompt,test_voice_migration}.py, tests/memory_arch/test_memory_architecture.py, pytest.ini, prd.json
+- **Learnings for future iterations:**
+  - `_ensure_column` in IndexManager handles schema evolution without needing a new CREATE TABLE — use it for adding nullable columns
+  - `save_character_evolution()` now accepts `voice_fingerprint` (dict) or `voice_fingerprint_json` (str) — COALESCE preserves existing fingerprint if new one is null
+  - Dialogue extraction uses multiple regex patterns (「」 and "" quotes, various speech verbs like 说/道/喊/叫/笑/怒) — Chinese punctuation matters
+  - `_infer_vocab_level_from_length()` is a rough heuristic; real scoring relies on the vocabulary_level field from character archive, not inference
+  - The 300-chapter simulation test is lightweight (no LLM calls) — tests the scoring math, not generation quality
+  - When bumping CURRENT_SCHEMA_VERSION, existing migration tests may assert old version — update them to use CURRENT_SCHEMA_VERSION constant
 ---

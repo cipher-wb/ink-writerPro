@@ -359,21 +359,21 @@ class TestMigrationV8toV9:
         assert result["schema_version"] == CURRENT_SCHEMA_VERSION
         assert result.get("_migrated_to_single_source") is True
 
-    def test_v9_already_migrated_skips(self, tmp_path):
+    def test_v10_already_migrated_skips(self, tmp_path):
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "ink-writer" / "scripts"))
-        from migrate import run_migrations
+        from migrate import run_migrations, CURRENT_SCHEMA_VERSION
 
         project_root = tmp_path / "test_project"
         ink_dir = project_root / ".ink"
         ink_dir.mkdir(parents=True)
 
-        state_v9 = {"schema_version": 9, "project_info": {"title": "Already v9"}}
+        state_current = {"schema_version": CURRENT_SCHEMA_VERSION, "project_info": {"title": "Already current"}}
         state_file = ink_dir / "state.json"
-        state_file.write_text(json.dumps(state_v9, ensure_ascii=False), encoding="utf-8")
+        state_file.write_text(json.dumps(state_current, ensure_ascii=False), encoding="utf-8")
 
         result = run_migrations(state_file)
-        assert result["schema_version"] == 9
+        assert result["schema_version"] == CURRENT_SCHEMA_VERSION
 
     def test_full_migration_with_sqlite_sync(self, tmp_path):
         import sys

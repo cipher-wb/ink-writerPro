@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Tuple
 
-CURRENT_SCHEMA_VERSION = 9
+CURRENT_SCHEMA_VERSION = 10
 
 # 迁移注册表: List[(from_version, migration_func)]
 _migrations: List[Tuple[int, Callable[[Dict[str, Any]], Dict[str, Any]]]] = []
@@ -148,6 +148,24 @@ def _migrate_v8_to_v9(state: Dict[str, Any]) -> Dict[str, Any]:
     """
     state["schema_version"] = 9
     state["_migrated_to_single_source"] = True
+    return state
+
+
+@migration(9)
+def _migrate_v9_to_v10(state: Dict[str, Any]) -> Dict[str, Any]:
+    """v9 → v10: 语气指纹支持。
+
+    新增:
+    - voice_fingerprint_config: 语气指纹验证配置
+    SQLite 层: character_evolution_ledger 新增 voice_fingerprint_json 列（由 IndexManager._ensure_column 自动处理）
+    """
+    state["schema_version"] = 10
+    state["voice_fingerprint_config"] = {
+        "enabled": True,
+        "score_threshold": 60.0,
+        "max_retries": 2,
+        "core_tiers": ["核心", "重要"],
+    }
     return state
 
 

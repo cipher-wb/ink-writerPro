@@ -1190,6 +1190,26 @@ if anti_detection_result.overall_score < threshold:
 
 **Python 模块**：`ink_writer.anti_detection.anti_detection_gate.run_anti_detection_gate()`
 
+#### Step 3.9: 语气指纹门禁（voice fingerprint gate）
+
+**触发条件**：前序门禁（Step 3.6/3.7/3.8）均未阻断。
+
+**流程**：
+1. 从 `character_evolution_ledger` 加载出场角色的 `voice_fingerprint_json`
+2. 提取章节中各角色对话，逐项校验：
+   - 禁忌表达命中 → `critical`（必须修复）
+   - 口头禅缺席 ≥ N 章 → `medium`
+   - 用词层次偏离 → `medium`
+   - 角色间对话辨识度不足 → `medium`
+3. 综合评分低于阈值（默认60） → 触发 polish-agent（Step 1.8 voice_fix_prompt）
+4. 最多重试2次；仍不通过 → 写 `voice_blocked.md` + 阻断
+
+**与 Step 3.6/3.7/3.8 的关系**：
+- 前序门禁先执行；若已阻断则跳过语气指纹门禁
+- 语气指纹门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.voice_fingerprint.ooc_gate.run_voice_gate()`
+
 ### Step 4：润色（问题修复优先）
 
 执行前必须加载：

@@ -822,6 +822,9 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 "CREATE INDEX IF NOT EXISTS idx_cel_chapter ON character_evolution_ledger(chapter)"
             )
 
+            # v10 引入: 语气指纹 JSON
+            self._ensure_column(cursor, "character_evolution_ledger", "voice_fingerprint_json", "TEXT")
+
             self._ensure_column(cursor, "chapter_reading_power", "notes", "TEXT")
             self._ensure_column(cursor, "chapter_reading_power", "payload_json", "TEXT")
             self._ensure_column(cursor, "review_metrics", "review_payload_json", "TEXT")
@@ -1071,18 +1074,25 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
 
     def save_character_evolution(self, data: Dict[str, Any]) -> int:
         """保存角色演变记录（UPSERT: 同entity同chapter覆盖）"""
+        import json as _json
+
+        vf = data.get("voice_fingerprint")
+        vf_json = _json.dumps(vf, ensure_ascii=False) if isinstance(vf, dict) else data.get("voice_fingerprint_json")
+
         with self._get_conn() as conn:
             cursor = conn.execute(
                 """INSERT INTO character_evolution_ledger
                    (entity_id, chapter, arc_phase, personality_delta,
-                    voice_sample, motivation_shift, relationship_shifts)
-                   VALUES (?, ?, ?, ?, ?, ?, ?)
+                    voice_sample, motivation_shift, relationship_shifts,
+                    voice_fingerprint_json)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                    ON CONFLICT(entity_id, chapter) DO UPDATE SET
                     arc_phase = excluded.arc_phase,
                     personality_delta = excluded.personality_delta,
                     voice_sample = excluded.voice_sample,
                     motivation_shift = excluded.motivation_shift,
-                    relationship_shifts = excluded.relationship_shifts""",
+                    relationship_shifts = excluded.relationship_shifts,
+                    voice_fingerprint_json = COALESCE(excluded.voice_fingerprint_json, character_evolution_ledger.voice_fingerprint_json)""",
                 (
                     data.get("entity_id"),
                     data.get("chapter"),
@@ -1091,6 +1101,7 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                     data.get("voice_sample"),
                     data.get("motivation_shift"),
                     data.get("relationship_shifts"),
+                    vf_json,
                 ),
             )
             conn.commit()
@@ -1101,7 +1112,8 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
         with self._get_conn() as conn:
             rows = conn.execute(
                 """SELECT chapter, arc_phase, personality_delta,
-                          voice_sample, motivation_shift, relationship_shifts
+                          voice_sample, motivation_shift, relationship_shifts,
+                          voice_fingerprint_json
                    FROM character_evolution_ledger
                    WHERE entity_id = ?
                    ORDER BY chapter ASC
@@ -1120,7 +1132,8 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 placeholders = ",".join("?" for _ in entity_ids)
                 rows = conn.execute(
                     f"""SELECT entity_id, chapter, arc_phase, personality_delta,
-                               voice_sample, motivation_shift, relationship_shifts
+                               voice_sample, motivation_shift, relationship_shifts,
+                               voice_fingerprint_json
                         FROM character_evolution_ledger
                         WHERE entity_id IN ({placeholders})
                         ORDER BY entity_id, chapter ASC""",
