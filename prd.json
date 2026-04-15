@@ -82,8 +82,8 @@
         "Tests pass"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: hook_contract field added to ink-plan chapter template + hard fail conditions. hook_contract.py validation module + patch_outline_hook_contract.py backfill script. migrate.py v7→v8 with hook_contract_config. 29 tests pass (1206 total)."
     },
     {
       "id": "US-103",
@@ -99,8 +99,8 @@
         "Tests pass"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/reader_pull/ module (config, fix_prompt_builder, hook_retry_gate). reader-pull-checker outputs {score, violations[], fix_prompt}. ink-write Step 3.6 hook retry gate with max 2 retries → hook_blocked.md. polish-agent accepts hook_fix_prompt. 31 new tests (1237 total)."
     },
     {
       "id": "US-104",

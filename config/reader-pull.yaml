@@ -1,0 +1,12 @@
+# Reader-pull hook retry gate configuration
+enabled: true
+
+# Score threshold for passing (0-100)
+# Below this triggers polish retry loop
+score_threshold: 70.0
+
+# Stricter threshold for golden three chapters (1-3)
+golden_three_threshold: 80.0
+
+# Maximum polish retries before blocking chapter
+max_retries: 2

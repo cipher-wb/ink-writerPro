@@ -1077,6 +1077,41 @@ python3 -X utf8 "$SCRIPTS_DIR/step3_harness_gate.py" \
 
 此步骤是确定性检查，不依赖 LLM 判断。即使 Step 3 的 LLM 审查遗漏了某条闸门规则，此脚本也会兜底拦截。
 
+#### Step 3.6: 追读力门禁（hook retry gate）
+
+> v13.0 新增。从 reader-pull-checker 结果中提取 {score, violations, fix_prompt}，得分低于阈值时自动触发 polish-agent 定向修复，最多重试 2 次。
+
+**执行条件**：reader-pull-checker 在 Step 3 中被调度执行（条件审查器命中时）。
+
+**流程**：
+
+```text
+reader_pull_result = Step 3 中 reader-pull-checker 的输出
+config = config/reader-pull.yaml
+threshold = config.score_threshold（章节 ≤ 3 时用 golden_three_threshold）
+
+if reader_pull_result.overall_score < threshold:
+    for retry in 1..2:
+        调用 polish-agent，传入:
+          chapter_file = 当前章节路径
+          hook_fix_prompt = reader_pull_result.fix_prompt
+          issues = reader_pull_result.hard_violations + soft_suggestions
+        重新执行 reader-pull-checker
+        if new_score >= threshold: break
+    else:
+        写入 chapters/{n}/hook_blocked.md（得分、违规列表、fix_prompt）
+        章节标记为失败，不进入 Step 4
+```
+
+**hook_blocked.md 格式**：包含最终得分、阈值、所有未解决违规及修复提示。
+
+**与 Step 4 的关系**：
+- 若追读力门禁通过（含重试后通过），正常进入 Step 4 执行其他修复
+- 若门禁阻断，Step 4/5/6 均跳过
+- 追读力门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.reader_pull.hook_retry_gate.run_hook_gate()`
+
 ### Step 4：润色（问题修复优先）
 
 执行前必须加载：

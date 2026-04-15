@@ -36,6 +36,7 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
   "editor_wisdom_violations": [
     {"rule_id": "EW-0042", "quote": "问题段落原文", "severity": "hard", "fix_suggestion": "具体修复建议"}
   ],
+  "hook_fix_prompt": "",
   "pass": true
 }
 ```
@@ -55,6 +56,15 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
    "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"
 ```
+
+### 1.5 追读力修复（hook_fix_prompt）
+
+当输入包含非空 `hook_fix_prompt` 时（来自 reader-pull-checker 追读力门禁），优先于其他修复执行：
+
+1. 逐条执行 `hook_fix_prompt` 中的修复指令
+2. 重点关注章末钩子、开篇张力、微兑现密度
+3. 修复时不得改变剧情事实、设定物理边界或角色核心行为
+4. 修复完成后正文应能通过 reader-pull-checker 的阈值检查
 
 ### 2. 编辑智慧违规精准修复
 

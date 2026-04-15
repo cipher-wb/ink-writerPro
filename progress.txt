@@ -16,6 +16,15 @@
 - Position types: open (chapter opening), mid (mid-chapter tension), cliff (chapter-end cliffhanger)
 - Genre hook templates in GENRE_HOOK_TEMPLATES cover 13 genres; each genre has 5 templates across different hook types
 - data/hook_patterns.json is the canonical hook pattern library; regenerate via `python3 scripts/mine_hook_patterns.py`
+- Chapter outline schema is Markdown-based (not JSON); defined in ink-plan/SKILL.md lines 448-468
+- hook_contract field format: `类型=X | 兑现锚点=第M章 | 兑现摘要=Y` — parsed by ink-writer/scripts/hook_contract.py
+- Outline backfill migration: `python3 scripts/patch_outline_hook_contract.py --project-root <path>` — backs up originals before patching
+- migrate.py CURRENT_SCHEMA_VERSION=8; v7→v8 adds hook_contract_config to state.json
+- reader-pull hook retry gate: `ink_writer.reader_pull.hook_retry_gate.run_hook_gate()` — mirrors editor_wisdom/review_gate.py pattern
+- fix_prompt_builder: `VIOLATION_FIX_TEMPLATES` maps violation IDs to Chinese fix instructions; `normalize_checker_output()` handles both old and new output formats
+- config/reader-pull.yaml: score_threshold=70, golden_three_threshold=80, max_retries=2
+- polish-agent accepts `hook_fix_prompt` field for targeted hook/追读力 repairs (Step 1.5 in execution flow)
+- ink-write Step 3.6 is the hook retry gate; runs after Step 3.5 harness gate, before Step 4
 
 ---
 
@@ -84,4 +93,42 @@
   - Genre templates add ~65 patterns (5 per genre × 13 genres), useful to guarantee hitting the 200-pattern minimum
   - Hook type taxonomy (crisis/mystery/emotion/choice/desire) is aligned with reader-pull-checker agent spec
   - Deduplication key is `position:hook_type:regex`; same regex at different positions counts as different patterns
+---
+
+## 2026-04-15 - US-102
+- Implemented hook_contract enforcement in ink-plan chapter outline schema
+- Added `钩子契约` field to chapter block template: `类型=X | 兑现锚点=第M章 | 兑现摘要=Y`
+- ink-plan hard fail conditions now reject outlines missing hook_contract or with invalid type
+- Created `ink-writer/scripts/hook_contract.py`: parsing, extraction, validation (5 valid types aligned with hook_patterns.json)
+- Created `scripts/patch_outline_hook_contract.py`: backfill migration for existing outlines (guesses type from 钩子 field, defaults anchor to next chapter)
+- Updated `ink-writer/skills/ink-migrate/SKILL.md`: added Phase 2.5 for outline hook contract backfill
+- Updated `ink-writer/scripts/migrate.py`: v7→v8 migration adds hook_contract_config to state.json
+- Added `tests/hooks/test_hook_contract_required.py` with 29 tests (parsing, validation, backfill, migration)
+- Files changed: ink-writer/scripts/hook_contract.py, scripts/patch_outline_hook_contract.py, tests/hooks/test_hook_contract_required.py, ink-writer/scripts/migrate.py, ink-writer/skills/ink-plan/SKILL.md, ink-writer/skills/ink-migrate/SKILL.md
+- **Learnings for future iterations:**
+  - Chapter outline is pure Markdown with no JSON schema validation at load time — validation is prompt-level in ink-plan SKILL.md
+  - The `钩子` field uses Chinese hook type names (悬念钩/危机钩/etc.) while hook_contract uses English types (mystery/crisis/etc.) — the mapping is in HOOK_KEYWORD_MAP
+  - ink-migrate originally stated "不修改大纲文件" — US-102 adds a new phase specifically for outline migration, documented as Phase 2.5
+  - migrate.py uses a decorator-based registration pattern: `@migration(from_version)` — each migration bumps schema_version
+  - Outline sections are split by `### 第 N 章：` regex headers; bullet items use `- ` prefix
+---
+
+## 2026-04-15 - US-103
+- Implemented `ink_writer/reader_pull/` module: config.py, fix_prompt_builder.py, hook_retry_gate.py
+- `normalize_checker_output()`: normalizes reader-pull-checker output from {overall_score, hard_violations, soft_suggestions} to {score, violations[], fix_prompt}
+- `build_fix_prompt()`: generates actionable Chinese fix instructions from violation list using VIOLATION_FIX_TEMPLATES
+- `run_hook_gate()`: check→polish→recheck loop (max 2 retries), writes `chapters/{n}/hook_blocked.md` on failure
+- Updated `reader-pull-checker.md`: added `fix_prompt` field to output schema with documentation
+- Updated `polish-agent.md`: added `hook_fix_prompt` input field + Step 1.5 execution section
+- Updated `ink-write/SKILL.md`: added Step 3.6 hook retry gate between Step 3.5 and Step 4
+- Created `config/reader-pull.yaml`: score_threshold=70, golden_three_threshold=80, max_retries=2
+- Added `tests/hooks/test_reader_pull_retry.py` with 31 tests (config, fix_prompt_builder, hook_retry_gate, integration, edge cases)
+- All 1237 tests pass, coverage 82.54%
+- Files changed: ink_writer/reader_pull/__init__.py, ink_writer/reader_pull/config.py, ink_writer/reader_pull/fix_prompt_builder.py, ink_writer/reader_pull/hook_retry_gate.py, config/reader-pull.yaml, ink-writer/agents/reader-pull-checker.md, ink-writer/agents/polish-agent.md, ink-writer/skills/ink-write/SKILL.md, tests/hooks/test_reader_pull_retry.py
+- **Learnings for future iterations:**
+  - The editor_wisdom/review_gate.py pattern (dataclass results, callable checker/polish, log+blocked file) is the canonical gate pattern — reuse it for new gates
+  - polish_fn signature differs between gates: editor_wisdom uses (text, violations, chapter_no), reader_pull uses (text, fix_prompt, chapter_no) — fix_prompt is more actionable for LLM polish
+  - reader-pull-checker output has two score fields conceptually: overall_score (existing) and score (normalized) — normalize_checker_output handles both
+  - VIOLATION_FIX_TEMPLATES use {detail} placeholder for dynamic content from violation descriptions
+  - config/reader-pull.yaml is the single source of truth for hook gate thresholds; avoid hardcoding
 ---
