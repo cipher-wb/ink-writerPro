@@ -6,7 +6,7 @@
 - DataModulesConfig.from_project_root(path) expects `.ink/` dir with `state.json` under project_root
 - Review metrics are stored in review_metrics table with JSON-encoded dimension_scores, severity_counts, review_payload_json
 - chapter_reading_power table stores per-chapter hook/micropayoff data; tool_call_stats has limited columns (no duration_ms/tokens_used)
-- pytest.ini testpaths: `ink-writer/scripts/data_modules/tests tests/baseline tests/audit tests/hooks tests/pacing`; pythonpath includes `scripts`
+- pytest.ini testpaths: `ink-writer/scripts/data_modules/tests tests/baseline tests/audit tests/hooks tests/pacing tests/emotion tests/style_rag`; pythonpath includes `scripts`
 - Agent specs are markdown with YAML frontmatter (name/description/tools/model); IO sections labeled "输入"/"输出格式"
 - Import cycle detection works via pure Python AST + DFS; no need for networkx dependency
 - 14 agents in `ink-writer/agents/`, 1 in `agents/ink-writer/` (editor-wisdom-checker)
@@ -164,6 +164,9 @@
 - polish-agent repair priority: Step 1.5 hook → Step 1.6 emotion → Step 2 editor-wisdom
 - config/emotion-curve.yaml: variance_threshold=0.15, score_threshold=60, max_retries=2
 - data-agent Step B.12 extracts emotion curves to data/emotion_curves.jsonl (per-scene valence/arousal)
+- Style RAG: `ink_writer.style_rag.StyleRAGRetriever` — semantic search over 3295 human-written scene fragments (FAISS+bge-small-zh-v1.5)
+- Style RAG index files: data/style_rag/{style_rag.faiss, metadata.json, contents.json}; rebuild via `python scripts/build_style_rag.py`
+- Style RAG filters: scene_type, emotion, genre, min_quality — filtered search reconstructs vectors from FAISS for subset matching
 ---
 
 ## 2026-04-15 - US-105
@@ -188,4 +191,24 @@
   - Corpus similarity uses interpolation to same-length then cosine; reference curves from first N chapters serve as comparison targets
   - polish-agent now has 3 priority repair steps: 1.5 hook → 1.6 emotion → 2 editor-wisdom
   - The fix_prompt_builder pattern (VIOLATION_FIX_TEMPLATES dict + build_fix_prompt + normalize_checker_output) is identical across gates — could be abstracted but premature for now
+---
+
+## 2026-04-15 - US-201
+- Implemented Style RAG index builder + semantic retriever
+- `scripts/build_style_rag.py`: reads 3295 fragments from benchmark/style_rag.db, encodes with BAAI/bge-small-zh-v1.5, builds FAISS IndexFlatIP, outputs to data/style_rag/ (faiss index + metadata.json + contents.json + build_stats.json)
+- `ink_writer/style_rag/retriever.py`: StyleRAGRetriever class with full-text semantic search + filter-by-scene_type/emotion/genre/min_quality
+- `ink_writer/style_rag/__init__.py`: exports StyleFragment + StyleRAGRetriever
+- Reuses same model (bge-small-zh-v1.5) and FAISS pattern as editor-wisdom retriever
+- Metadata separated from content: metadata.json has preview only (≤200 chars), contents.json has full text — keeps metadata load fast
+- 24 tests (2 dataclass, 3 init, 7 retrieval, 7 filtered retrieval, 5 build script) + 3 live-index tests (skipped if index not built)
+- All 1367 tests pass
+- Files changed: scripts/build_style_rag.py, ink_writer/style_rag/__init__.py, ink_writer/style_rag/retriever.py, tests/style_rag/__init__.py, tests/style_rag/test_style_rag.py, pytest.ini, prd.json
+- **Learnings for future iterations:**
+  - benchmark/style_rag.db already has 3295 scene-tagged fragments from style_rag_builder.py — no need to re-slice, just build vector index on top
+  - Style RAG fragments are keyed by md5(title:ch:scene_index)[:12]; same ID scheme in both SQLite and FAISS metadata
+  - Full content stored separately in contents.json (not metadata.json) to keep metadata load fast; retriever joins them by id
+  - StyleRAGRetriever._filtered_search reconstructs vectors from FAISS index for subset search (same pattern as editor-wisdom category filtering)
+  - Module-scoped fixtures recommended for sentence-transformers tests (model load ~30s); use tmp_path_factory not tmp_path for module scope
+  - The existing style_rag_builder.py classifies scenes using SCENE_TYPE_KEYWORDS and EMOTION_KEYWORDS from benchmark/config.py
+  - Fragment quality_score (0-1) computed by deviation from style benchmarks (avg_sentence_length=28.6, dialogue_ratio=0.345, etc.)
 ---
