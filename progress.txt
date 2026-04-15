@@ -1,6 +1,9 @@
 # Ralph Progress — deep-review-and-perfection
 
 ## Codebase Patterns
+- thread-lifecycle-tracker.md unifies foreshadow + plotline tracking; old specs kept for backward compat
+- checker-output-schema.md must list ALL active checkers in both metrics sections and summary format
+- shared-checker-preamble.md contains common input/output/scoring rules referenced by all checkers
 - IndexManager auto-creates all DB tables on init; never create tables manually in fixtures — let IndexManager.__init__ handle schema, then INSERT test data
 - E402 lint warnings are expected for scripts using sys.path manipulation before imports (project_locator, data_modules)
 - DataModulesConfig.from_project_root(path) expects `.ink/` dir with `state.json` under project_root
@@ -424,4 +427,22 @@
   - When adding new outline fields, update 3 places in ink-plan: chapter format template, final check list, and hard fail conditions
   - Dashboard heatmap reuses the tracker module's `build_plotline_heatmap()` — pass db_path not conn to avoid lifecycle issues
   - 300-chapter simulation tests are fast (~0.1s) because they only test scan logic, not LLM generation
+---
+
+## 2026-04-16 - US-401
+- Implemented Agent 职责重映射 based on US-003 audit findings
+- Merged `foreshadow-tracker` + `plotline-tracker` → `thread-lifecycle-tracker` (identical state machine, scoring model, ink-plan interaction)
+- Created `ink-writer/references/shared-checker-preamble.md` extracting common checker input/output/scoring rules
+- Added 6 missing metrics schemas to `checker-output-schema.md` (emotion-curve, anti-detection, proofreading, golden-three, thread-lifecycle, editor-wisdom)
+- Updated `ink-plan/SKILL.md` and `ink-write/SKILL.md` references from old trackers to unified tracker
+- Created `docs/agent_topology_v13.md` with before/after diagrams, pipeline architecture, responsibility matrix
+- Documented 7 overlap pairs as false positives (shared boilerplate, not functional duplication)
+- Regenerated `reports/architecture_audit.md` (now 19 agents, 9 overlap pairs, 50 prompt fragments)
+- Files changed: docs/agent_topology_v13.md, ink-writer/agents/thread-lifecycle-tracker.md, ink-writer/references/shared-checker-preamble.md, ink-writer/references/checker-output-schema.md, ink-writer/skills/ink-plan/SKILL.md, ink-writer/skills/ink-write/SKILL.md, reports/architecture_audit.md, tests/audit/test_agent_topology.py
+- **Learnings for future iterations:**
+  - Most "overlap pairs" in the audit are false positives from shared boilerplate text, not functional duplication — only merge when the state machine, scoring model, and external interaction patterns are truly identical
+  - The review gate (step-3-review-gate.md) only governs Step 3 checkers; trackers (foreshadow/plotline) run at different pipeline stages (Step 0 and Step 3.10 in ink-write, Steps 2.4/2.7 in ink-plan)
+  - Agent specs are markdown instructions for Claude subagents; "merging" means creating a unified spec with a type parameter, while Python modules can remain separate
+  - checker-output-schema.md summary format should list ALL active checkers (was missing 6); keep this in sync when adding new agents
+  - Old agent files retained for backward compatibility — agent name aliasing ensures no breakage
 ---

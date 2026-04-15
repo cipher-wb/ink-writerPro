@@ -291,8 +291,8 @@
         "Tests pass"
       ],
       "priority": 18,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Merged foreshadow-tracker + plotline-tracker → thread-lifecycle-tracker (identical state machine). Created shared-checker-preamble.md. Added 6 missing metrics schemas to checker-output-schema.md. docs/agent_topology_v13.md with before/after diagrams + pipeline architecture + responsibility matrix. 7 overlap pairs documented as false positives. 24 new tests (1751 total), coverage 82.24%."
     },
     {
       "id": "US-402",
