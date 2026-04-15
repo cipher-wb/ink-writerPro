@@ -326,7 +326,7 @@ except Exception as e:
 ```
 
 **处理规则**：
-- foreshadow-tracker 按优先级分级检测逾期（P0 宽限5章, P1 宽限10章, P2 宽限20章）和沉默（超30章未推进）
+- thread-lifecycle-tracker[foreshadow] 按优先级分级检测逾期（P0 宽限5章, P1 宽限10章, P2 宽限20章）和沉默（超30章未推进）
 - `forced_payoffs` 非空时：Context Agent Board 7 强制置顶，writer-agent 必须在本章处理
 - 此检查为**警告模式**（不强制阻断写作），但 forced_payoffs 中的伏笔会注入到 Context Agent Board 7 中作为本章写作硬约束
 - 若存在逾期伏笔，建议在本章解决，或通过 /ink-plan 显式延期目标章节

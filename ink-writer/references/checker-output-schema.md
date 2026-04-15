@@ -174,6 +174,102 @@
 > - `total` = 正向5维之和 - 反向2维之和，范围 -20~50
 > - `verdict`: `pass`(≥32) / `enhance`(25-31) / `rewrite`(<25)
 
+### emotion-curve-checker
+```json
+{
+  "metrics": {
+    "scene_count": 5,
+    "avg_valence": 0.3,
+    "avg_arousal": 0.6,
+    "emotion_variance": 0.25,
+    "flat_segments": 1,
+    "target_similarity": 0.82,
+    "peak_scene": 3,
+    "trough_scene": 1
+  }
+}
+```
+
+### anti-detection-checker
+```json
+{
+  "metrics": {
+    "sentence_length_cv": 0.42,
+    "repeated_pattern_count": 2,
+    "connective_frequency": 0.08,
+    "dialogue_ratio": 0.35,
+    "info_density_score": 72,
+    "causal_chain_score": 80,
+    "composite_score": 78
+  }
+}
+```
+
+### proofreading-checker
+```json
+{
+  "metrics": {
+    "rhetoric_score": 75,
+    "paragraph_score": 80,
+    "pronoun_score": 70,
+    "anachronism_score": 90,
+    "style_consistency_score": 82
+  }
+}
+```
+
+### golden-three-checker
+```json
+{
+  "metrics": {
+    "ten_second_scan": 8,
+    "promise_visibility": 7,
+    "micropayoff_count": 3,
+    "hook_reply_hit": true,
+    "closure_detected": true,
+    "traction_score": 85
+  }
+}
+```
+
+### thread-lifecycle-tracker
+```json
+{
+  "metrics": {
+    "foreshadow": {
+      "total_active": 12,
+      "total_overdue": 2,
+      "total_silent": 1,
+      "overdue_critical": 1,
+      "overdue_high": 1,
+      "overdue_medium": 0,
+      "density_warning": false
+    },
+    "plotline": {
+      "total_active": 6,
+      "total_inactive": 1,
+      "inactive_critical": 0,
+      "inactive_high": 1,
+      "inactive_medium": 0,
+      "density_warning": false
+    }
+  }
+}
+```
+
+### editor-wisdom-checker
+```json
+{
+  "metrics": {
+    "rules_triggered": 5,
+    "critical_violations": 1,
+    "high_violations": 2,
+    "medium_violations": 2,
+    "rule_categories": ["开篇", "对话", "节奏"]
+  }
+}
+```
+
 ## 汇总格式
 
 Step 3 完成后，输出汇总 JSON：
@@ -187,7 +283,14 @@ Step 3 完成后，输出汇总 JSON：
     "consistency-checker": {"score": 90, "pass": true, "critical": 0, "high": 0},
     "ooc-checker": {"score": 75, "pass": true, "critical": 0, "high": 1},
     "continuity-checker": {"score": 85, "pass": true, "critical": 0, "high": 0},
-    "pacing-checker": {"score": 80, "pass": true, "critical": 0, "high": 0}
+    "pacing-checker": {"score": 80, "pass": true, "critical": 0, "high": 0},
+    "emotion-curve-checker": {"score": 78, "pass": true, "critical": 0, "high": 0},
+    "anti-detection-checker": {"score": 82, "pass": true, "critical": 0, "high": 1},
+    "proofreading-checker": {"score": 88, "pass": true, "critical": 0, "high": 0},
+    "thread-lifecycle-tracker": {"score": 75, "pass": true, "critical": 0, "high": 1},
+    "golden-three-checker": {"score": 85, "pass": true, "critical": 0, "high": 0},
+    "reader-simulator": {"score": 80, "pass": true, "critical": 0, "high": 0},
+    "editor-wisdom-checker": {"score": 77, "pass": true, "critical": 0, "high": 1}
   },
   "overall": {
     "score": 82.5,

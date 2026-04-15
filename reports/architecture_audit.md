@@ -4,12 +4,12 @@
 
 ## Summary
 
-- **Python modules scanned**: 121
+- **Python modules scanned**: 162
 - **Import cycles found**: 1
-- **Unused module candidates**: 31
-- **Agents scanned**: 15
-- **Agent overlap pairs**: 8
-- **Repeated prompt fragments**: 29
+- **Unused module candidates**: 72
+- **Agents scanned**: 19
+- **Agent overlap pairs**: 9
+- **Repeated prompt fragments**: 50
 
 ## 1. Import Cycles
 
@@ -17,6 +17,15 @@
 
 ## 2. Unused Module Candidates
 
+- `anti_detection` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/__init__.py)
+- `anti_detection.anti_detection_gate` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/anti_detection_gate.py)
+- `anti_detection.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/config.py)
+- `anti_detection.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/fix_prompt_builder.py)
+- `anti_detection.sentence_diversity` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/sentence_diversity.py)
+- `cultural_lexicon` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/__init__.py)
+- `cultural_lexicon.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/config.py)
+- `cultural_lexicon.context_injection` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/context_injection.py)
+- `cultural_lexicon.loader` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/loader.py)
 - `data_modules.cli_args` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/cli_args.py)
 - `data_modules.cli_output` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/cli_output.py)
 - `data_modules.context_weights` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/context_weights.py)
@@ -46,8 +55,40 @@
 - `editor_wisdom.retriever` (/Users/cipher/AI/ink/ink-writer/ink_writer/editor_wisdom/retriever.py)
 - `editor_wisdom.review_gate` (/Users/cipher/AI/ink/ink-writer/ink_writer/editor_wisdom/review_gate.py)
 - `editor_wisdom.writer_injection` (/Users/cipher/AI/ink/ink-writer/ink_writer/editor_wisdom/writer_injection.py)
+- `emotion` (/Users/cipher/AI/ink/ink-writer/ink_writer/emotion/__init__.py)
+- `emotion.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/emotion/config.py)
+- `emotion.emotion_detector` (/Users/cipher/AI/ink/ink-writer/ink_writer/emotion/emotion_detector.py)
+- `emotion.emotion_gate` (/Users/cipher/AI/ink/ink-writer/ink_writer/emotion/emotion_gate.py)
+- `emotion.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/emotion/fix_prompt_builder.py)
+- `foreshadow` (/Users/cipher/AI/ink/ink-writer/ink_writer/foreshadow/__init__.py)
+- `foreshadow.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/foreshadow/config.py)
+- `foreshadow.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/foreshadow/fix_prompt_builder.py)
+- `foreshadow.tracker` (/Users/cipher/AI/ink/ink-writer/ink_writer/foreshadow/tracker.py)
+- `hook_contract` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/hook_contract.py)
 - `ink` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/ink.py)
+- `pacing` (/Users/cipher/AI/ink/ink-writer/ink_writer/pacing/__init__.py)
+- `pacing.high_point_scheduler` (/Users/cipher/AI/ink/ink-writer/ink_writer/pacing/high_point_scheduler.py)
+- `plotline` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/__init__.py)
+- `plotline.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/config.py)
+- `plotline.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/fix_prompt_builder.py)
+- `plotline.tracker` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/tracker.py)
+- `reader_pull` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/__init__.py)
+- `reader_pull.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/config.py)
+- `reader_pull.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/fix_prompt_builder.py)
+- `reader_pull.hook_retry_gate` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/hook_retry_gate.py)
+- `semantic_recall` (/Users/cipher/AI/ink/ink-writer/ink_writer/semantic_recall/__init__.py)
+- `semantic_recall.chapter_index` (/Users/cipher/AI/ink/ink-writer/ink_writer/semantic_recall/chapter_index.py)
+- `semantic_recall.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/semantic_recall/config.py)
+- `semantic_recall.retriever` (/Users/cipher/AI/ink/ink-writer/ink_writer/semantic_recall/retriever.py)
 - `step3_harness_gate` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/step3_harness_gate.py)
+- `style_rag` (/Users/cipher/AI/ink/ink-writer/ink_writer/style_rag/__init__.py)
+- `style_rag.polish_integration` (/Users/cipher/AI/ink/ink-writer/ink_writer/style_rag/polish_integration.py)
+- `style_rag.retriever` (/Users/cipher/AI/ink/ink-writer/ink_writer/style_rag/retriever.py)
+- `voice_fingerprint` (/Users/cipher/AI/ink/ink-writer/ink_writer/voice_fingerprint/__init__.py)
+- `voice_fingerprint.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/voice_fingerprint/config.py)
+- `voice_fingerprint.fingerprint` (/Users/cipher/AI/ink/ink-writer/ink_writer/voice_fingerprint/fingerprint.py)
+- `voice_fingerprint.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/voice_fingerprint/fix_prompt_builder.py)
+- `voice_fingerprint.ooc_gate` (/Users/cipher/AI/ink/ink-writer/ink_writer/voice_fingerprint/ooc_gate.py)
 
 ## 3. Agent IO Contract Table
 
@@ -58,14 +99,18 @@
 | context-agent | 上下文搜集Agent，内置 Context Contract，输出可被 Step 2A 直接消费的创作执行包。 | Read, Grep, Bash | ```json {   "chapter": 100,   "project_root": "D:/… | 输出必须是单一执行包，包含 3 层：  1. **任务书（10板块）** - 本章核心任务（目标/阻… |
 | continuity-checker | 连贯性检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | data-agent | 数据处理Agent，负责 AI 实体提取、场景切片、索引构建，并记录钩子/模式/结束状态与章节摘要。 | Read, Write, Bash | ```json {   "chapter": 100,   "chapter_file": "正文/… | ```json {   "entities_appeared": [     {"id": "xia… |
+| emotion-curve-checker | 情绪心电图检查，检测情绪曲线平淡/单调/与目标曲线偏差，输出结构化报告 | Read |  | ```json {   "agent": "emotion-curve-checker",   "c… |
+| foreshadow-tracker | 伏笔生命周期追踪器，每章扫描所有活跃伏笔，检测逾期/沉默/密度异常，输出结构化报告 | Read |  |  |
 | golden-three-checker | 黄金三章检查器，专门审查第1-3章的开头抓取力、承诺兑现和章末驱动力。 | Read | - `chapter` - `chapter_file` - `project_root` - `.… | ```json {   "agent": "golden-three-checker",   "ch… |
 | high-point-checker | 爽点密度检查，支持迪化误解/身份掉马模式，输出结构化报告 | Read |  |  |
 | ooc-checker | 人物OOC检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | pacing-checker | Strand Weave 节奏检查，输出结构化报告供润色步骤参考 | Read |  |  |
+| plotline-tracker | 明暗线追踪器，每章扫描所有活跃线程（主线/支线/暗线），检测断更/密度异常，输出结构化报告 | Read |  |  |
 | polish-agent | Step 4 润色 Agent，基于审查报告修复问题 + 去 AI 味 + 安全校验 | Read, Write, Bash | ```json {   "chapter_file": "正文/第0123章-章节标题.md",  … | 1. 润色后章节正文（覆盖原文件） 2. 润色报告：  ```text [润色报告] - 严重问题已… |
 | proofreading-checker | 文笔质量检查Agent，检测修辞重复、段落结构、代称混乱和文化禁忌 | Read, Grep | 与其他 checker 相同，接收 `review_bundle_file` 路径。 | 遵循 `checker-output-schema.md` 的统一格式：  ```json {   … |
 | reader-pull-checker | 追读力检查器，评估钩子/微兑现/约束分层，支持 Override Contract | Read | - 章节正文（实际章节文件路径，优先 `正文/第{NNNN}章-{title_safe}.md`，旧… | ```json {   "agent": "reader-pull-checker",   "cha… |
 | reader-simulator | 读者模拟器，从目标读者视角评估章节阅读体验，输出沉浸度/情绪曲线/弃读风险报告 | Read |  |  |
+| thread-lifecycle-tracker | 线程生命周期追踪器，统一管理伏笔(foreshadow)与明暗线(plotline)的全生命周期，检测逾期/断更/沉默/… | Read |  |  |
 | writer-agent | Step 2A 正文起草 Agent，消费创作执行包生成符合大纲的章节草稿 | Read, Write, Bash | ```json {   "project_root": "{PROJECT_ROOT}",   "c… | - 章节草稿文件：`正文/第{chapter_padded}章-{title_safe}.md` 或… |
 | editor-wisdom-checker | 编辑智慧检查器，基于检索到的编辑规则对章节进行评分，输出违规列表和修复建议。 | Read | - `chapter_text`: 章节正文 - `chapter_no`: 章节号 - `rule… | ```json {   "agent": "editor-wisdom-checker",   "c… |
 
@@ -83,6 +128,8 @@
   Shared terms: 输出结构化报告供润色步骤参考
 - **continuity-checker** ↔ **pacing-checker** (overlap ratio: 0.5)
   Shared terms: 输出结构化报告供润色步骤参考
+- **foreshadow-tracker** ↔ **thread-lifecycle-tracker** (overlap ratio: 0.667)
+  Shared terms: 密度异常, 检测逾期, 沉默, 输出结构化报告
 - **ooc-checker** ↔ **pacing-checker** (overlap ratio: 0.5)
   Shared terms: 输出结构化报告供润色步骤参考
 - **polish-agent** ↔ **writer-agent** (overlap ratio: 0.4)
@@ -92,17 +139,25 @@
 
 Fragments appearing in 2+ agent specs (top 50):
 
-- **8x** in [continuity-checker, editor-wisdom-checker, golden-three-checker, high-point-checker, ooc-checker, pacing-checker, reader-pull-checker, reader-simulator]: `仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件 禁止读取 db`
-- **6x** in [consistency-checker, continuity-checker, high-point-checker, ooc-checker, pacing-checker, reader-simulator]: `输出格式 遵循 claude_plugin_root references checker output`
-- **6x** in [consistency-checker, continuity-checker, high-point-checker, ooc-checker, pacing-checker, reader-simulator]: `schema md 统一 json schema 输入硬规则`
+- **12x** in [continuity-checker, editor-wisdom-checker, emotion-curve-checker, foreshadow-tracker, golden-three-checker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-pull-checker, reader-simulator, thread-lifecycle-tracker]: `仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件 禁止读取 db`
+- **10x** in [consistency-checker, continuity-checker, emotion-curve-checker, foreshadow-tracker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-simulator, thread-lifecycle-tracker]: `输出格式 遵循 claude_plugin_root references checker output`
+- **10x** in [consistency-checker, continuity-checker, emotion-curve-checker, foreshadow-tracker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-simulator, thread-lifecycle-tracker]: `schema md 统一 json schema 输入硬规则`
+- **9x** in [consistency-checker, continuity-checker, emotion-curve-checker, foreshadow-tracker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-simulator]: `md 统一 json schema 输入硬规则 必须先读取`
+- **8x** in [continuity-checker, emotion-curve-checker, foreshadow-tracker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-simulator]: `json schema 输入硬规则 必须先读取 review_bundle_file 默认只使用审查包中的正文`
 - **5x** in [consistency-checker, continuity-checker, high-point-checker, ooc-checker, pacing-checker]: `检查范围 输入 单章或章节区间 如 45 45`
 - **5x** in [consistency-checker, continuity-checker, high-point-checker, ooc-checker, pacing-checker]: `覆盖范围 第 n 章 第 m`
-- **5x** in [continuity-checker, high-point-checker, ooc-checker, pacing-checker, reader-simulator]: `json schema 输入硬规则 必须先读取 review_bundle_file 默认只使用审查包中的正文`
 - **4x** in [consistency-checker, continuity-checker, ooc-checker, pacing-checker]: `禁止读取 db 文件 目录路径 以及白名单外的相对路径 检查范围`
 - **4x** in [context-agent, high-point-checker, reader-pull-checker, reader-simulator]: `claude_plugin_root references reading power taxonomy md`
+- **4x** in [emotion-curve-checker, foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `禁止读取 db 文件 目录路径 以及白名单外的相对路径 核心概念`
 - **3x** in [consistency-checker, continuity-checker, pacing-checker]: `输入参数 json project_root project_root chapter_file absolute_chapter_file`
 - **3x** in [continuity-checker, pacing-checker, reader-simulator]: `schema 输入硬规则 必须先读取 review_bundle_file 默认只使用审查包中的正文 前序摘要`
 - **3x** in [data-agent, polish-agent, writer-agent]: `tools read write bash model inherit`
+- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `密度异常 输出结构化报告 tools read model inherit`
+- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `章节历史 仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件 禁止读取`
+- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `step 2 逐条扫描 对每条 status active`
+- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `密度告警 5 最低分 0 pass overall_score`
+- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `规划失败 硬阻断 3 plan_injection_mode warn 时`
+- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `tracker 只读 不修改 index db data`
 - **3x** in [high-point-checker, reader-pull-checker, reader-simulator]: `禁止读取 db 文件 目录路径 以及白名单外的相对路径 核心参考`
 - **3x** in [high-point-checker, reader-pull-checker, reader-simulator]: `题材画像 claude_plugin_root references genre profiles md`
 - **2x** in [anti-detection-checker, proofreading-checker]: `输入 与其他 checker 相同 接收 review_bundle_file`
@@ -114,10 +169,23 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [context-agent, writer-agent]: `references shared scene craft index md`
 - **2x** in [continuity-checker, pacing-checker]: `执行流程 第一步 加载上下文 输入参数 json project_root`
 - **2x** in [continuity-checker, pacing-checker]: `absolute_chapter_file review_bundle_file absolute_review_bundle_file 先读取 review_bundle_file 只有`
-- **2x** in [golden-three-checker, reader-pull-checker]: `writing_guidance 仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件 禁止读取`
-- **2x** in [editor-wisdom-checker, golden-three-checker]: `禁止读取 db 文件 目录路径 以及白名单外的相对路径 核心职责`
-- **2x** in [high-point-checker, reader-pull-checker]: `db 文件 目录路径 以及白名单外的相对路径 核心参考 分类法`
-- **2x** in [high-point-checker, reader-pull-checker]: `references reading power taxonomy md 题材画像`
-- **2x** in [pacing-checker, reader-simulator]: `输入硬规则 必须先读取 review_bundle_file 默认只使用审查包中的正文 前序摘要 reader_signal`
-- **2x** in [pacing-checker, reader-simulator]: `outline 仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件 禁止读取`
-- **2x** in [polish-agent, writer-agent]: `内容层 step 2b 表达层 step 4`
+- **2x** in [data-agent, ooc-checker]: `catchphrases 斗之力 无处不在 speech_habits 喜欢用反问句 生气时用短句`
+- **2x** in [data-agent, ooc-checker]: `vocabulary_level 粗犷直接 tone 倔强不服输 dialect_markers forbidden_expressions`
+- **2x** in [emotion-curve-checker, high-point-checker]: `schema 输入硬规则 必须先读取 review_bundle_file 默认只使用审查包中的正文 题材画像`
+- **2x** in [emotion-curve-checker, high-point-checker]: `最近章节摘要与 guidance 仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `沉默 密度异常 输出结构化报告 tools read model`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `级别 priority 宽限期 逾期后处理 p0 核心`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `80 5章 critical ink plan 强制安排兑现`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `p1 重要 50 10章 high ink`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `20章 medium 告警建议 沉默检测 活跃伏笔 last_touched_chapter`
+- **2x** in [foreshadow-tracker, plotline-tracker]: `从 review_bundle 或 index db 快照获取`
+- **2x** in [foreshadow-tracker, plotline-tracker]: `获取快照 step 2 逐条扫描 对每条 status`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `逾期检测 若 target_payoff_chapter 非空且 current_chapter target_payoff_chapter`
+- **2x** in [foreshadow-tracker, plotline-tracker]: `title content 关键词 若找到 记录为 本章推进`
+- **2x** in [foreshadow-tracker, plotline-tracker]: `4 评分 base_score 100 每条 critical`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `pass overall_score 60 且无 critical 逾期`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `true issues id foreshadow_overdue_critical type 伏笔逾期`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `thread_id description 核心伏笔 title 逾期 n`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `total_active 12 total_overdue 2 total_silent 1`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `plan_injection_mode force 时 不安排 规划失败 硬阻断`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `data agent 在 step b 中更新`

@@ -407,7 +407,7 @@ For each chapter, determine:
 - Fire Strand → 情感爽点（认可、保护、告白）
 - Constellation Strand → 认知爽点（真相、预言、身份）
 
-**2.4 伏笔生命周期调度** (hard constraint from foreshadow-tracker)
+**2.4 伏笔生命周期调度** (hard constraint from thread-lifecycle-tracker[foreshadow])
 - 调用 `ink_writer.foreshadow.tracker.scan_foreshadows()` 获取逾期/沉默伏笔
 - 调用 `ink_writer.foreshadow.tracker.build_plan_injection()` 获取强制兑现列表
 - 输入：index.db 路径, 当前章号
@@ -425,7 +425,7 @@ For each chapter, determine:
 - high_point_type 映射：face_slap=装逼打脸, hidden_strength=扮猪吃虎, level_up_kill=越级反杀, authority_challenge=打脸权威, villain_fail=反派翻车, sweet_surprise=甜蜜超预期
 - 将调度器输出的 rationale 附加到大纲注释中，便于 writer-agent 理解意图
 
-**2.7 明暗线生命周期调度** (hard constraint from plotline-tracker)
+**2.7 明暗线生命周期调度** (hard constraint from thread-lifecycle-tracker[plotline])
 - 调用 `ink_writer.plotline.tracker.scan_plotlines()` 获取断更线程
 - 调用 `ink_writer.plotline.tracker.build_plan_injection()` 获取强制推进列表
 - 输入：index.db 路径, 当前章号
@@ -668,8 +668,8 @@ Final check:
 - 章纲文件已写入：`大纲/第{volume_id}卷-详细大纲.md`
 - 设定集已完成基线补齐与本卷增量补充（原文件内可见）
 - 每章包含：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置/明暗线推进
-- **伏笔强制兑现校验**：foreshadow-tracker 的 `forced_payoffs` 中每条伏笔必须在本卷章纲中至少有一章标注 `伏笔处置: 兑现:[thread_id]`；缺失则 hard fail
-- **明暗线强制推进校验**：plotline-tracker 的 `forced_advances` 中每条线程必须在本卷章纲中至少有一章标注 `明暗线推进: [plotline_id]:推进描述`；缺失则 hard fail
+- **伏笔强制兑现校验**：thread-lifecycle-tracker 的 `forced_payoffs` 中每条伏笔必须在本卷章纲中至少有一章标注 `伏笔处置: 兑现:[thread_id]`；缺失则 hard fail
+- **明暗线强制推进校验**：thread-lifecycle-tracker 的 `forced_advances` 中每条线程必须在本卷章纲中至少有一章标注 `明暗线推进: [plotline_id]:推进描述`；缺失则 hard fail
 - 时间线单调递增，倒计时推进正确
 - 与总纲冲突/高潮一致，约束触发频率合理（如有 idea_bank）
 
@@ -689,7 +689,7 @@ Final check:
 - 与总纲核心冲突或卷末高潮明显冲突
 - 设定集基线未补齐，或本卷增量未回写到现有设定集
 - 存在 `BLOCKER` 未裁决
-- **伏笔强制兑现未安排**：foreshadow-tracker 返回 `forced_payoffs` 且 `mode == "force"`，但本卷章纲中无对应 `伏笔处置: 兑现:[thread_id]` 标注
+- **伏笔强制兑现未安排**：thread-lifecycle-tracker 返回 `forced_payoffs` 且 `mode == "force"`，但本卷章纲中无对应 `伏笔处置: 兑现:[thread_id]` 标注
 - 约束触发频率不足（当 idea_bank 启用时）
 
 ### Rollback / recovery
