@@ -158,4 +158,34 @@
   - Volume position 0.85-1.0 is the climax zone; chapters 1-3 are golden opening — both get intensity boosts
   - The 50-chapter simulation test is the key acceptance test; it runs the scheduler in a feedback loop (recipe → record → next chapter)
   - config/high-point-scheduler.yaml follows same pattern as config/reader-pull.yaml
+- Emotion valence/arousal model: 7 Chinese emotions → (valence, arousal) 2D mapping in EMOTION_VALENCE_AROUSAL dict
+- emotion-curve-checker is conditional (not core); weight 5% in review gate; triggers ch≥5 or flat emotion history
+- ink-write Step 3.7 is emotion curve gate; runs after Step 3.6 hook gate, before Step 4
+- polish-agent repair priority: Step 1.5 hook → Step 1.6 emotion → Step 2 editor-wisdom
+- config/emotion-curve.yaml: variance_threshold=0.15, score_threshold=60, max_retries=2
+- data-agent Step B.12 extracts emotion curves to data/emotion_curves.jsonl (per-scene valence/arousal)
+---
+
+## 2026-04-15 - US-105
+- Implemented `ink_writer/emotion/` module: config.py, emotion_detector.py, fix_prompt_builder.py, emotion_gate.py
+- `emotion_detector`: scene splitting (double newline/***/--- separators, min 200 chars), keyword-based valence/arousal (7 emotions), flat segment detection, cosine similarity, curve interpolation
+- `emotion_gate`: run_emotion_gate() with max-2-retry polish loop, writes `chapters/{n}/emotion_blocked.md` on failure
+- `fix_prompt_builder`: 5 violation templates (EMOTION_FLAT/VARIANCE_LOW/AROUSAL_FLAT/MONOTONE/CORPUS_MISMATCH), normalize_checker_output()
+- Created `emotion-curve-checker.md` agent spec: scene-level valence/arousal analysis, scoring formula, fix_prompt generation
+- Updated `data-agent.md`: added Step B.12 emotion curve extraction to data/emotion_curves.jsonl
+- Updated `ink-write/SKILL.md`: added Step 3.7 emotion curve gate (after Step 3.6 hook gate, before Step 4)
+- Updated `step-3-review-gate.md`: added emotion-curve-checker as conditional checker (5% weight, triggers on ch≥5 or flat history)
+- Updated `polish-agent.md`: added emotion_fix_prompt input + Step 1.6 emotion repair
+- Config: `config/emotion-curve.yaml` — variance_threshold=0.15, score_threshold=60, max_retries=2, corpus_similarity_threshold=0.8
+- 65 new tests (detector/config/gate/fix_prompt/50-chapter simulation), 1343 total pass
+- Files changed: ink_writer/emotion/__init__.py, ink_writer/emotion/config.py, ink_writer/emotion/emotion_detector.py, ink_writer/emotion/emotion_gate.py, ink_writer/emotion/fix_prompt_builder.py, config/emotion-curve.yaml, ink-writer/agents/emotion-curve-checker.md, ink-writer/agents/data-agent.md, ink-writer/agents/polish-agent.md, ink-writer/skills/ink-write/SKILL.md, ink-writer/skills/ink-write/references/step-3-review-gate.md, tests/emotion/__init__.py, tests/emotion/test_emotion_engine.py, pytest.ini
+- **Learnings for future iterations:**
+  - Emotion valence/arousal model: 7 emotions mapped to 2D space; keyword frequency weighting is simple but effective for Chinese text
+  - Scene splitting must handle very short Chinese text — min_scene_chars=200 aggressively merges; test texts need ≥200 chars per scene segment
+  - The gate pattern (config dataclass + retry loop + blocked file + logger) from reader_pull is directly reusable — just change names and violation templates
+  - emotion-curve-checker is a conditional checker (not core); triggers on ch≥5, flat history, or emotional arc chapters
+  - Step 3.7 runs after Step 3.6 (hook gate); if hook gate already blocked, emotion gate is skipped
+  - Corpus similarity uses interpolation to same-length then cosine; reference curves from first N chapters serve as comparison targets
+  - polish-agent now has 3 priority repair steps: 1.5 hook → 1.6 emotion → 2 editor-wisdom
+  - The fix_prompt_builder pattern (VIOLATION_FIX_TEMPLATES dict + build_fix_prompt + normalize_checker_output) is identical across gates — could be abstracted but premature for now
 ---
