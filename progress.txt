@@ -79,6 +79,12 @@
 - `scripts/ab_prompts.py` commands: list, diff-all, show, compare
 - audit_architecture.py `_strip_template_refs()` excludes `{{PROMPT_TEMPLATE:...}}` from n-gram analysis
 - pytest.ini testpaths now includes `tests/prompts`
+- Parallel pipeline: `ink_writer.parallel` module (PipelineManager + ChapterLockManager)
+- ink-auto.sh supports `--parallel N` flag; delegates to Python asyncio orchestrator when N>1
+- ChapterLockManager uses SQLite `parallel_locks.db` with TTL-based locks for cross-process coordination
+- PipelineManager: batch-parallel model — N chapters per batch, checkpoints after each batch completes
+- config/parallel-pipeline.yaml for parallel settings (max_parallel, cooldown, lock TTL)
+- pytest.ini testpaths now includes `tests/parallel`; asyncio_mode=auto for async tests
 
 ---
 
@@ -507,4 +513,23 @@
   - The n-gram dedup in audit_architecture.py counts template reference markers as duplicates — must strip them before analysis
   - 4 agents (anti-detection-checker, proofreading-checker, context-agent, data-agent) have unique enough content that no template extraction is needed
   - agent-specific "默认数据源" lines must remain inline since each agent uses different data
+---
+
+## 2026-04-16 - US-501
+- What was implemented: 章节级并发管线 — ink-auto --parallel N 支持
+- Files changed:
+  - ink_writer/parallel/__init__.py (new)
+  - ink_writer/parallel/chapter_lock.py (new) — SQLite-based cross-process chapter locks with TTL
+  - ink_writer/parallel/pipeline_manager.py (new) — asyncio PipelineManager orchestrator
+  - config/parallel-pipeline.yaml (new) — parallel settings
+  - ink-writer/scripts/ink-auto.sh — argument parsing for --parallel, parallel dispatch block
+  - ink-writer/skills/ink-auto/SKILL.md — documented --parallel usage
+  - pytest.ini — added tests/parallel, asyncio_mode=auto
+  - tests/parallel/test_chapter_lock.py (new) — 12 lock tests
+  - tests/parallel/test_pipeline_manager.py (new) — 22 pipeline tests
+- **Learnings for future iterations:**
+  - asyncio_mode=auto in pytest.ini is needed for @pytest.mark.asyncio tests to work without per-test markers
+  - ChapterResult.elapsed must handle start_time=0 edge case (test with time=0 fixtures)
+  - SQLite WAL + busy_timeout already existed in IndexManager; parallel_locks.db is a separate coordination DB
+  - The batch-parallel model (write N → checkpoint → next batch) is simpler than true pipeline parallelism and avoids complex inter-stage dependencies
 ---
