@@ -407,6 +407,15 @@ For each chapter, determine:
 - Fire Strand → 情感爽点（认可、保护、告白）
 - Constellation Strand → 认知爽点（真相、预言、身份）
 
+**2.4 伏笔生命周期调度** (hard constraint from foreshadow-tracker)
+- 调用 `ink_writer.foreshadow.tracker.scan_foreshadows()` 获取逾期/沉默伏笔
+- 调用 `ink_writer.foreshadow.tracker.build_plan_injection()` 获取强制兑现列表
+- 输入：index.db 路径, 当前章号
+- 输出：{forced_payoffs, mode, alerts, total_active, total_overdue, total_silent}
+- **硬约束**：`mode == "force"` 时，`forced_payoffs` 中的伏笔**必须**在本批大纲中安排兑现章节
+- 每章最多安排 2 条强制兑现（`max_forced_payoffs_per_chapter`）
+- 将 `alerts` 列表注入到章纲注释中，便于 writer-agent 理解伏笔紧迫度
+
 **2.5 爽点节奏调度** (hard constraint from high_point_scheduler)
 - 调用 `ink_writer.pacing.high_point_scheduler.schedule_high_point()` 获取本章爽点配方
 - 输入：chapter_no, volume_position (0.0-1.0), last_5_chapter_high_points
@@ -475,6 +484,7 @@ Chapter format (include 反派层级 for context-agent):
 - 章末未闭合问题: {30字以内}
 - 钩子: {类型} - {30字以内}
 - 钩子契约: 类型={crisis|mystery|emotion|choice|desire} | 兑现锚点=第{M}章 | 兑现摘要={20字以内}
+- 伏笔处置: {无 | 埋设:[thread_id]描述 | 推进:[thread_id]描述 | 兑现:[thread_id]描述}
 ```
 
 黄金三章附加规则（第 1-3 章必须额外写出）：
@@ -646,7 +656,8 @@ Final check:
 - 时间线表文件已写入：`大纲/第{volume_id}卷-时间线.md`
 - 章纲文件已写入：`大纲/第{volume_id}卷-详细大纲.md`
 - 设定集已完成基线补齐与本卷增量补充（原文件内可见）
-- 每章包含：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约
+- 每章包含：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置
+- **伏笔强制兑现校验**：foreshadow-tracker 的 `forced_payoffs` 中每条伏笔必须在本卷章纲中至少有一章标注 `伏笔处置: 兑现:[thread_id]`；缺失则 hard fail
 - 时间线单调递增，倒计时推进正确
 - 与总纲冲突/高潮一致，约束触发频率合理（如有 idea_bank）
 
@@ -655,7 +666,7 @@ Final check:
 - 节拍表中段反转缺失（未按“必填/无（理由）”规则填写）
 - **时间线表文件不存在或为空**
 - 章纲文件不存在或为空
-- 任一章节缺少：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约
+- 任一章节缺少：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置
 - **钩子契约缺失或格式错误**：每章必须有 `钩子契约: 类型=X | 兑现锚点=第M章 | 兑现摘要=Y`，类型必须在 {crisis, mystery, emotion, choice, desire} 内
 - 爽点链的爆发章号与对应章纲的压扬标记不一致（交叉校验失败）
 - 第 1-3 章缺少：本章职责/读者承诺/兑现项/禁止拖沓区
@@ -666,6 +677,7 @@ Final check:
 - 与总纲核心冲突或卷末高潮明显冲突
 - 设定集基线未补齐，或本卷增量未回写到现有设定集
 - 存在 `BLOCKER` 未裁决
+- **伏笔强制兑现未安排**：foreshadow-tracker 返回 `forced_payoffs` 且 `mode == "force"`，但本卷章纲中无对应 `伏笔处置: 兑现:[thread_id]` 标注
 - 约束触发频率不足（当 idea_bank 启用时）
 
 ### Rollback / recovery

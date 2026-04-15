@@ -296,41 +296,40 @@ COMPRESS_RESULT=$(python3 -X utf8 “$SCRIPTS_DIR/ink.py” --project-root “$P
 
 ```bash
 python3 -X utf8 -c “
-import json, sqlite3
+import sys, json
 from pathlib import Path
+sys.path.insert(0, str(Path('${SCRIPTS_DIR}').resolve().parent.parent))
+from ink_writer.foreshadow.tracker import scan_foreshadows, build_plan_injection
+from ink_writer.foreshadow.config import load_config
 project_root = '${PROJECT_ROOT}'
 state = json.loads(Path(f'{project_root}/.ink/state.json').read_text())
 current = state.get('progress', {}).get('current_chapter', 0)
-grace = 10
 db_path = f'{project_root}/.ink/index.db'
 try:
-    conn = sqlite3.connect(db_path)
-    rows = conn.execute(
-        'SELECT thread_id, title, content, target_payoff_chapter FROM plot_thread_registry '
-        'WHERE status = ? AND target_payoff_chapter IS NOT NULL AND target_payoff_chapter < ?',
-        ('active', current - grace)
-    ).fetchall()
-    conn.close()
-    if rows:
-        print(f'⚠️ 发现 {len(rows)} 条逾期伏笔（超过目标章节{grace}章以上仍未解决）：')
-        for r in rows:
-            overdue = current - r[3]
-            print(f'  - [{r[0]}] {r[1]}: 目标ch{r[3]}, 已逾期{overdue}章')
+    config = load_config()
+    scan = scan_foreshadows(db_path, current, config)
+    injection = build_plan_injection(scan, config)
+    if scan.alerts:
+        for alert in scan.alerts:
+            print(alert)
+        print(f'📊 活跃伏笔: {scan.total_active} | 逾期: {len(scan.overdue)} | 沉默: {len(scan.silent)}')
+        if scan.forced_payoffs:
+            print(f'🔴 强制兑现: {len(scan.forced_payoffs)}条 — 本章必须处理')
+            for fp in scan.forced_payoffs:
+                print(f'  → [{fp.record.thread_id}] {fp.record.title} (severity={fp.severity})')
     else:
         print('✅ 无逾期伏笔')
+    print(json.dumps(injection, ensure_ascii=False))
 except Exception as e:
     print(f'⚠️ 伏笔检查跳过（数据库不可用）: {e}')
 “
 ```
 
 **处理规则**：
-- 若存在逾期超过10章的活跃伏笔 → 输出警告列表：
-  ```
-  ⚠️ 发现 {N} 条逾期伏笔（超过目标章节10章以上仍未解决）：
-  - [{thread_id}] {title}: 目标ch{target}, 当前已逾期{overdue}章
-  建议：在本章解决，或通过 /ink-plan 显式延期目标章节。
-  ```
-- 此检查为**警告模式**（不强制阻断），但会在 Context Agent Board 7 中强制置顶逾期伏笔。
+- foreshadow-tracker 按优先级分级检测逾期（P0 宽限5章, P1 宽限10章, P2 宽限20章）和沉默（超30章未推进）
+- `forced_payoffs` 非空时：Context Agent Board 7 强制置顶，writer-agent 必须在本章处理
+- 此检查为**警告模式**（不强制阻断写作），但 forced_payoffs 中的伏笔会注入到 Context Agent Board 7 中作为本章写作硬约束
+- 若存在逾期伏笔，建议在本章解决，或通过 /ink-plan 显式延期目标章节
 
 ### Step 0.7：金丝雀健康扫描（Canary Health Scan）
 

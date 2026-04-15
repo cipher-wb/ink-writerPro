@@ -1,0 +1,31 @@
+# 伏笔生命周期管理器配置
+enabled: true
+
+# 逾期宽限期（超过 target_payoff_chapter 多少章算逾期）
+overdue_grace_chapters: 10
+
+# 沉默阈值（活跃伏笔多少章未被提及算遗忘）
+silence_threshold_chapters: 30
+
+# 按权重分级的逾期阈值（priority 越高宽限越短）
+priority_overdue_rules:
+  # priority >= 80 (P0 核心伏笔): 超期 5 章即强制
+  p0_threshold: 80
+  p0_grace: 5
+  # priority >= 50 (P1 重要伏笔): 超期 10 章即强制
+  p1_threshold: 50
+  p1_grace: 10
+  # priority < 50 (P2 次要伏笔): 超期 20 章即告警
+  p2_grace: 20
+
+# 每章最多强制安排兑现的伏笔数（避免一章堆太多）
+max_forced_payoffs_per_chapter: 2
+
+# ink-plan 注入模式：force (硬约束) | warn (仅告警)
+plan_injection_mode: force
+
+# 伏笔密度告警：活跃伏笔超过此数发出告警
+active_foreshadow_warn_limit: 15
+
+# 热力图分桶大小（章）
+heatmap_bucket_size: 10
