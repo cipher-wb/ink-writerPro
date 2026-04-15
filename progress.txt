@@ -95,6 +95,10 @@
 - Sync checkers wrapped in asyncio.to_thread(); async checkers run natively
 - step-3-review-gate.md: full parallelism (removed max_concurrency=2 limit)
 - pytest.ini testpaths now includes `tests/checker_pipeline`
+- Incremental extract: `ink_writer.incremental_extract` module (differ.py + config.py)
+- `compute_entity_diff()` categorizes entities into new/changed/unchanged/removed
+- config/incremental-extract.yaml: always_extract_protagonist=true, max_prior_state_age=5
+- pytest.ini testpaths now includes `tests/incremental_extract`
 
 ---
 
@@ -576,4 +580,20 @@
   - asyncio.iscoroutinefunction deprecated in 3.16; use inspect.iscoroutinefunction() instead
   - cancel_event pattern: set event on hard-gate fail, check at semaphore acquire — doesn't cancel in-progress to_thread tasks but prevents new ones from starting
   - Thread-based tasks (to_thread) can't be truly cancelled mid-sleep; timing tests must be tolerant
+---
+
+## 2026-04-16 - US-504
+- What was implemented: 增量数据提取 — diff-based entity extraction
+- Files changed:
+  - ink_writer/incremental_extract/__init__.py (new)
+  - ink_writer/incremental_extract/config.py (new) — IncrementalExtractConfig
+  - ink_writer/incremental_extract/differ.py (new) — compute_entity_diff, EntityDiff, DiffResult
+  - config/incremental-extract.yaml (new)
+  - tests/incremental_extract/test_incremental_extract.py (new) — 30 tests
+  - pytest.ini — added tests/incremental_extract
+- **Learnings for future iterations:**
+  - Data-agent already only extracts from current chapter; "full extraction" means re-identifying all appearing entities
+  - Protagonist always-extract flag prevents drift in protagonist state tracking
+  - _normalize() with json.dumps(sort_keys=True) ensures dict/list comparisons are order-independent
+  - Savings of ≥60% typical when most entities don't change between chapters
 ---

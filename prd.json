@@ -401,8 +401,8 @@
         "Tests pass"
       ],
       "priority": 25,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/incremental_extract/ module (differ.py + config.py). compute_entity_diff categorizes entities into new/changed/unchanged/removed. Protagonist always-extract. config/incremental-extract.yaml. 30 new tests (1926 total), ≥60% savings validated, diff-vs-full equivalence test passes."
     },
     {
       "id": "US-601",
