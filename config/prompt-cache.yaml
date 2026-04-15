@@ -1,0 +1,29 @@
+# Anthropic Prompt Cache 优化配置
+# US-502: 通过 cache_control 标注稳定段最大化缓存命中率
+
+enabled: true
+
+# 最小可缓存 token 数（Anthropic 要求 ≥1024）
+min_cacheable_tokens: 1024
+
+# 稳定段：跨章节不变，适合缓存
+stable_segments:
+  - system_prompt        # agent 角色定义
+  - character_archive    # 角色档案
+  - worldbuilding        # 世界观设定
+  - style_guide          # 风格契约
+  - power_system         # 力量体系
+  - iron_laws            # 防幻觉定律
+  - editor_wisdom_rules  # 编辑智慧规则
+
+# 易变段：每章变化，不缓存
+volatile_segments:
+  - chapter_outline      # 章节大纲
+  - recent_summaries     # 最近章节摘要
+  - protagonist_state    # 主角当前状态
+  - scene_context        # 场景上下文
+  - alerts               # 告警信息
+
+# 缓存指标数据库路径（相对于项目根目录）
+# 留空则使用默认 .ink/cache_metrics.db
+# metrics_db_path: null
