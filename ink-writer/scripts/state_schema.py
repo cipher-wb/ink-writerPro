@@ -282,11 +282,11 @@ class ProjectInfo(BaseModel):
 
 
 class StateModel(BaseModel):
-    """state.json 顶层模型 (schema_version 7)"""
+    """state.json 顶层模型 (schema_version 9: 单一事实源架构)"""
 
     model_config = ConfigDict(extra="allow")
 
-    schema_version: int = Field(default=7)
+    schema_version: int = Field(default=9)
     project_info: ProjectInfo = Field(default_factory=ProjectInfo)
     progress: ProgressState = Field(default_factory=ProgressState)
     protagonist_state: ProtagonistState = Field(default_factory=ProtagonistState)

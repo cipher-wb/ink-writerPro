@@ -320,7 +320,7 @@ class TestMigrateV7toV8:
 
         from migrate import run_migrations
         result = run_migrations(state_path)
-        assert result["schema_version"] == 8
+        assert result["schema_version"] >= 8
         assert "hook_contract_config" in result
         config = result["hook_contract_config"]
         assert config["enabled"] is True

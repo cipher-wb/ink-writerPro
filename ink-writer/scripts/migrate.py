@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Tuple
 
-CURRENT_SCHEMA_VERSION = 8
+CURRENT_SCHEMA_VERSION = 9
 
 # 迁移注册表: List[(from_version, migration_func)]
 _migrations: List[Tuple[int, Callable[[Dict[str, Any]], Dict[str, Any]]]] = []
@@ -137,6 +137,47 @@ def _migrate_v7_to_v8(state: Dict[str, Any]) -> Dict[str, Any]:
     return state
 
 
+@migration(8)
+def _migrate_v8_to_v9(state: Dict[str, Any]) -> Dict[str, Any]:
+    """v8 → v9: 单一事实源架构。
+
+    state.json 中的所有数据迁移到 SQLite (index.db) 的 state_kv、
+    disambiguation_log、review_checkpoint_entries 表。
+    state.json 降级为可随时重建的视图缓存。
+    标记 _migrated_to_single_source。
+    """
+    state["schema_version"] = 9
+    state["_migrated_to_single_source"] = True
+    return state
+
+
+def migrate_state_to_sqlite(state_path: Path, project_root: Path) -> None:
+    """v8→v9 的 SQLite 数据迁移（在 schema 迁移后调用）。
+
+    将 state.json 全量数据写入 SQLite state_kv 等表，
+    然后从 SQLite 重建 state.json 验证往返一致性。
+    """
+    import json as _json
+
+    with open(state_path, "r", encoding="utf-8") as f:
+        state = _json.load(f)
+
+    if state.get("schema_version", 0) < 9:
+        return
+
+    try:
+        sys.path.insert(0, str(Path(__file__).parent))
+        from data_modules.sql_state_manager import SQLStateManager
+        from data_modules.config import DataModulesConfig
+
+        config = DataModulesConfig(project_root=project_root)
+        sql_mgr = SQLStateManager(config)
+        sql_mgr.migrate_state_to_kv(state)
+        print("  ✅ state.json 数据已同步到 SQLite state_kv")
+    except Exception as e:
+        print(f"  ⚠️ SQLite 数据迁移失败（state.json 仍可用）: {e}")
+
+
 # ---------------------------------------------------------------------------
 # CLI 入口
 # ---------------------------------------------------------------------------
@@ -154,4 +195,6 @@ if __name__ == "__main__":
     project_root = Path(args.project_root).resolve()
     state_file = project_root / ".ink" / "state.json"
 
-    run_migrations(state_file)
+    state = run_migrations(state_file)
+    if state.get("schema_version", 0) >= 9:
+        migrate_state_to_sqlite(state_file, project_root)

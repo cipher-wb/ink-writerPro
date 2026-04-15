@@ -719,6 +719,305 @@ class SQLStateManager:
 
         return result
 
+    # ==================== v13 单一事实源: state_kv 操作 ====================
+
+    def set_state_kv(self, key: str, value: Any) -> None:
+        """写入 state_kv 键值对（value 自动 JSON 序列化）"""
+        value_json = json.dumps(value, ensure_ascii=False)
+        with self._index_manager._get_conn(immediate=True) as conn:
+            conn.execute(
+                "INSERT OR REPLACE INTO state_kv (key, value, updated_at) VALUES (?, ?, datetime('now'))",
+                (key, value_json),
+            )
+
+    def get_state_kv(self, key: str, default: Any = None) -> Any:
+        """读取 state_kv 键值对（自动 JSON 反序列化）"""
+        with self._index_manager._get_conn() as conn:
+            row = conn.execute(
+                "SELECT value FROM state_kv WHERE key = ?", (key,)
+            ).fetchone()
+            if row is None:
+                return default
+            return json.loads(row["value"])
+
+    def get_all_state_kv(self) -> Dict[str, Any]:
+        """读取全部 state_kv 键值对"""
+        with self._index_manager._get_conn() as conn:
+            rows = conn.execute("SELECT key, value FROM state_kv").fetchall()
+            return {row["key"]: json.loads(row["value"]) for row in rows}
+
+    def delete_state_kv(self, key: str) -> bool:
+        """删除 state_kv 键值对"""
+        with self._index_manager._get_conn(immediate=True) as conn:
+            cursor = conn.execute("DELETE FROM state_kv WHERE key = ?", (key,))
+            return cursor.rowcount > 0
+
+    def bulk_set_state_kv(self, entries: Dict[str, Any]) -> int:
+        """批量写入 state_kv 键值对"""
+        with self._index_manager._get_conn(immediate=True) as conn:
+            count = 0
+            for key, value in entries.items():
+                value_json = json.dumps(value, ensure_ascii=False)
+                conn.execute(
+                    "INSERT OR REPLACE INTO state_kv (key, value, updated_at) VALUES (?, ?, datetime('now'))",
+                    (key, value_json),
+                )
+                count += 1
+            return count
+
+    # ==================== v13 单一事实源: 消歧记录操作 ====================
+
+    def add_disambiguation_entry(self, category: str, payload: Any, chapter: int = 0) -> int:
+        """添加消歧记录 (category: 'warning' | 'pending')"""
+        payload_json = json.dumps(payload, ensure_ascii=False) if not isinstance(payload, str) else payload
+        with self._index_manager._get_conn(immediate=True) as conn:
+            cursor = conn.execute(
+                "INSERT INTO disambiguation_log (category, payload, chapter, status) VALUES (?, ?, ?, 'active')",
+                (category, payload_json, chapter),
+            )
+            return cursor.lastrowid or 0
+
+    def get_disambiguation_entries(self, category: str, status: str = "active") -> List[Any]:
+        """获取消歧记录"""
+        with self._index_manager._get_conn() as conn:
+            rows = conn.execute(
+                "SELECT payload FROM disambiguation_log WHERE category = ? AND status = ? ORDER BY created_at",
+                (category, status),
+            ).fetchall()
+            result = []
+            for row in rows:
+                try:
+                    result.append(json.loads(row["payload"]))
+                except (json.JSONDecodeError, TypeError):
+                    result.append(row["payload"])
+            return result
+
+    def resolve_disambiguation_entry(self, entry_id: int) -> bool:
+        """标记消歧记录为已解决"""
+        with self._index_manager._get_conn(immediate=True) as conn:
+            cursor = conn.execute(
+                "UPDATE disambiguation_log SET status = 'resolved', resolved_at = datetime('now') WHERE id = ?",
+                (entry_id,),
+            )
+            return cursor.rowcount > 0
+
+    def bulk_add_disambiguation_entries(self, category: str, payloads: List[Any], chapter: int = 0) -> int:
+        """批量添加消歧记录"""
+        with self._index_manager._get_conn(immediate=True) as conn:
+            count = 0
+            for payload in payloads:
+                payload_json = json.dumps(payload, ensure_ascii=False) if not isinstance(payload, str) else payload
+                conn.execute(
+                    "INSERT INTO disambiguation_log (category, payload, chapter, status) VALUES (?, ?, ?, 'active')",
+                    (category, payload_json, chapter),
+                )
+                count += 1
+            return count
+
+    # ==================== v13 单一事实源: 审查检查点操作 ====================
+
+    def add_review_checkpoint(self, payload: Any) -> int:
+        """添加审查检查点"""
+        payload_json = json.dumps(payload, ensure_ascii=False) if not isinstance(payload, str) else payload
+        with self._index_manager._get_conn(immediate=True) as conn:
+            cursor = conn.execute(
+                "INSERT INTO review_checkpoint_entries (payload) VALUES (?)",
+                (payload_json,),
+            )
+            return cursor.lastrowid or 0
+
+    def get_review_checkpoints(self, limit: int = 100) -> List[Any]:
+        """获取审查检查点（按插入顺序返回）"""
+        with self._index_manager._get_conn() as conn:
+            rows = conn.execute(
+                "SELECT payload FROM review_checkpoint_entries ORDER BY id ASC LIMIT ?",
+                (limit,),
+            ).fetchall()
+            result = []
+            for row in rows:
+                try:
+                    result.append(json.loads(row["payload"]))
+                except (json.JSONDecodeError, TypeError):
+                    result.append(row["payload"])
+            return result
+
+    def bulk_add_review_checkpoints(self, payloads: List[Any]) -> int:
+        """批量添加审查检查点"""
+        with self._index_manager._get_conn(immediate=True) as conn:
+            count = 0
+            for payload in payloads:
+                payload_json = json.dumps(payload, ensure_ascii=False) if not isinstance(payload, str) else payload
+                conn.execute(
+                    "INSERT INTO review_checkpoint_entries (payload) VALUES (?)",
+                    (payload_json,),
+                )
+                count += 1
+            return count
+
+    # ==================== v13 单一事实源: state.json 视图重建 ====================
+
+    def rebuild_state_dict(self) -> Dict[str, Any]:
+        """
+        从 SQLite 重建完整的 state.json 字典。
+
+        SQLite 是唯一事实源，此方法从各表汇总数据，
+        输出与现有 state.json schema 完全兼容的 dict。
+        """
+        kv = self.get_all_state_kv()
+
+        state: Dict[str, Any] = {
+            "schema_version": int(kv.get("schema_version", 9)),
+            "project_info": kv.get("project_info", {}),
+            "progress": kv.get("progress", {}),
+            "protagonist_state": kv.get("protagonist_state", {}),
+            "relationships": kv.get("relationships", {}),
+            "world_settings": kv.get("world_settings", {
+                "power_system": [], "factions": [], "locations": []
+            }),
+            "strand_tracker": kv.get("strand_tracker", {
+                "last_quest_chapter": 0,
+                "last_fire_chapter": 0,
+                "last_constellation_chapter": 0,
+                "current_dominant": "quest",
+                "chapters_since_switch": 0,
+                "history": [],
+            }),
+        }
+
+        # 消歧数据
+        state["disambiguation_warnings"] = self.get_disambiguation_entries("warning")
+        state["disambiguation_pending"] = self.get_disambiguation_entries("pending")
+
+        # 审查检查点
+        state["review_checkpoints"] = self.get_review_checkpoints()
+
+        # 剧情线程 → plot_threads 格式
+        state["plot_threads"] = self._rebuild_plot_threads()
+
+        # chapter_meta: 最近 20 章
+        state["chapter_meta"] = self._rebuild_recent_chapter_meta(limit=20)
+
+        # 附加 config 字段
+        for cfg_key in ("harness_config", "hook_contract_config"):
+            if cfg_key in kv:
+                state[cfg_key] = kv[cfg_key]
+
+        return state
+
+    def rebuild_state_json(self, output_path: Optional[Path] = None) -> Dict[str, Any]:
+        """重建 state.json 文件并写入磁盘"""
+        state = self.rebuild_state_dict()
+        target = output_path or self.config.state_file
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(
+            json.dumps(state, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        return state
+
+    def _rebuild_plot_threads(self) -> Dict[str, Any]:
+        """从 plot_thread_registry 表重建 plot_threads"""
+        with self._index_manager._get_conn() as conn:
+            active_rows = conn.execute(
+                "SELECT * FROM plot_thread_registry WHERE status = 'active' ORDER BY priority DESC"
+            ).fetchall()
+            foreshadow_rows = conn.execute(
+                "SELECT * FROM plot_thread_registry WHERE thread_type = 'foreshadowing' ORDER BY planted_chapter"
+            ).fetchall()
+
+        active_threads = []
+        for row in active_rows:
+            active_threads.append({
+                "thread_id": row["thread_id"],
+                "title": row["title"],
+                "content": row["content"],
+                "type": row["thread_type"],
+                "status": row["status"],
+                "priority": row["priority"],
+                "planted_chapter": row["planted_chapter"],
+                "last_touched_chapter": row["last_touched_chapter"],
+            })
+
+        foreshadowing = []
+        for row in foreshadow_rows:
+            foreshadowing.append({
+                "thread_id": row["thread_id"],
+                "title": row["title"],
+                "content": row["content"],
+                "status": row["status"],
+                "planted_chapter": row["planted_chapter"],
+                "target_payoff_chapter": row["target_payoff_chapter"],
+                "resolved_chapter": row["resolved_chapter"],
+            })
+
+        return {"active_threads": active_threads, "foreshadowing": foreshadowing}
+
+    def _rebuild_recent_chapter_meta(self, limit: int = 20) -> Dict[str, Any]:
+        """从 chapters + chapter_reading_power 表重建最近 chapter_meta"""
+        with self._index_manager._get_conn() as conn:
+            rows = conn.execute(
+                "SELECT chapter, title, location, word_count FROM chapters ORDER BY chapter DESC LIMIT ?",
+                (limit,),
+            ).fetchall()
+
+        result = {}
+        for row in rows:
+            ch_key = str(row["chapter"])
+            meta: Dict[str, Any] = {"version": 1}
+
+            with self._index_manager._get_conn() as conn:
+                rp = conn.execute(
+                    "SELECT hook_type, hook_strength FROM chapter_reading_power WHERE chapter = ?",
+                    (row["chapter"],),
+                ).fetchone()
+
+            hook_type = rp["hook_type"] if rp else ""
+            hook_strength = rp["hook_strength"] if rp else ""
+
+            meta["hook"] = {"type": hook_type, "content": "", "strength": hook_strength}
+            meta["pattern"] = {"opening": "", "hook": hook_type, "emotion_rhythm": ""}
+            meta["ending"] = {"time": "", "location": row["location"] or "", "emotion": ""}
+
+            result[ch_key] = meta
+
+        return result
+
+    def migrate_state_to_kv(self, state: Dict[str, Any]) -> int:
+        """
+        将 state.json 全量数据迁移到 state_kv + disambiguation_log + review_checkpoint_entries。
+
+        用于 v8→v9 迁移。
+        返回写入的 kv 条目数。
+        """
+        kv_keys = [
+            "schema_version", "project_info", "progress", "protagonist_state",
+            "relationships", "world_settings", "strand_tracker",
+            "harness_config", "hook_contract_config",
+        ]
+
+        kv_entries = {}
+        for key in kv_keys:
+            if key in state:
+                kv_entries[key] = state[key]
+
+        count = self.bulk_set_state_kv(kv_entries)
+
+        # 迁移消歧数据
+        warnings = state.get("disambiguation_warnings", [])
+        if warnings:
+            count += self.bulk_add_disambiguation_entries("warning", warnings)
+
+        pending = state.get("disambiguation_pending", [])
+        if pending:
+            count += self.bulk_add_disambiguation_entries("pending", pending)
+
+        # 迁移审查检查点
+        checkpoints = state.get("review_checkpoints", [])
+        if checkpoints:
+            count += self.bulk_add_review_checkpoints(checkpoints)
+
+        return count
+
 
 # ==================== CLI 接口 ====================
 

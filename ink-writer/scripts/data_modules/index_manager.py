@@ -920,6 +920,42 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 "CREATE INDEX IF NOT EXISTS idx_comp_gate_chapter ON computational_gate_log(chapter)"
             )
 
+            # ==================== v13.0 引入表：单一事实源架构 ====================
+
+            # 状态键值存储（替代 state.json 作为唯一事实源）
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS state_kv (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
+            # 消歧记录表（替代 state.json 中的 disambiguation_warnings/pending）
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS disambiguation_log (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    category TEXT NOT NULL,
+                    payload TEXT NOT NULL,
+                    chapter INTEGER,
+                    status TEXT DEFAULT 'active',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    resolved_at TIMESTAMP
+                )
+            """)
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_disambig_category_status ON disambiguation_log(category, status)"
+            )
+
+            # 审查检查点表（替代 state.json 中的 review_checkpoints）
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS review_checkpoint_entries (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    payload TEXT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+
             conn.commit()
 
     @contextmanager
