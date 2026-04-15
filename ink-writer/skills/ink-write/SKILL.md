@@ -1159,14 +1159,18 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 1. 修复 `critical`（必须）
 2. 修复 `high`（不能修复则记录 deviation）
 3. 处理 `medium/low`（按收益择优）
-4. **AI味定向修复**（根据 `anti-detection-checker` 的 `fix_priority` 列表逐项修复）：
+4. **Style RAG 人写参考检索**（当 `fix_priority` 非空时）：
+   - 调用 `ink_writer.style_rag.build_polish_style_pack(fix_priorities, chapter_text, chapter_no, retriever, genre)` 检索人写标杆片段
+   - 将返回的 `PolishStylePack.format_full_prompt()` 注入改写上下文
+   - 参考人写片段的句式节奏和表达手法，**不可照搬内容或剧情**
+5. **AI味定向修复**（根据 `anti-detection-checker` 的 `fix_priority` 列表，结合人写参考逐项修复）：
    - 句长平坦区：在指定位置插入碎句（≤8字）或合并为长流句（≥35字）
    - 信息密度无波动：在指定位置插入无功能感官句（环境/声音/温度/气味细节）
    - 因果链过密：删除指定位置的中间因果环节，让读者自行推断
    - 对话同质：按指定角色差异化对话长度和风格（加入省略/打断/反问/语气词）
    - 段落过于工整：拆分指定长段为碎片段，增加单句段
    - 视角泄露：改写为POV角色的有限感知（猜测/推断/不确定）
-5. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
+6. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
 
 黄金三章定向修复（当 `chapter <= 3` 时必须执行）：
 - 前移触发点，禁止把强事件压到开头窗口之后。

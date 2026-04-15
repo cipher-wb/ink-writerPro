@@ -38,6 +38,7 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
   ],
   "hook_fix_prompt": "",
   "emotion_fix_prompt": "",
+  "style_references": "【人写参考】块（由 Style RAG 检索，Step 2.8 生成；为空则跳过）",
   "pass": true
 }
 ```
@@ -111,9 +112,20 @@ cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
 - `PACING_IMBALANCE`：增加缺失推进事件或删冗余说明段
 - `CONTINUITY_BREAK`：补衔接句与过渡动作
 
+### 2.8 Style RAG 人写参考检索
+
+当 `anti-detection-checker` 的 `fix_priority` 非空时，在 AI 味定向修复前检索人写标杆片段作为改写参考：
+
+1. 对每条 `fix_priority` 项，提取对应段落文本作为语义查询
+2. 调用 `ink_writer.style_rag.build_polish_style_pack()` 检索 Top-3 人写片段（按 scene_type/genre/quality 过滤）
+3. 将检索结果格式化为 `【人写参考】` 块，注入 Step 3 的改写上下文
+4. 改写时参考人写片段的句式节奏和表达手法，**不可照搬内容或剧情**
+
+**Python 模块**：`ink_writer.style_rag.polish_integration.build_polish_style_pack()`
+
 ### 3. AI 味定向修复
 
-根据 `anti-detection-checker` 的 `fix_priority` 列表逐项修复：
+根据 `anti-detection-checker` 的 `fix_priority` 列表，结合 Step 2.8 检索的人写参考逐项修复：
 
 1. **开头时间标记** → 用行动/对话/感官/悬念切入替代时间标记开头，时间锚点通过角色感知自然带出
 2. **句子碎片化（句长均值过低）** → 将连续短句（≤15字）合并为25-40字复合句，用逗号串联动作和细节。**严禁反向插入碎句**

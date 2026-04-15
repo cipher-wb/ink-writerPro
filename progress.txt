@@ -167,6 +167,8 @@
 - Style RAG: `ink_writer.style_rag.StyleRAGRetriever` — semantic search over 3295 human-written scene fragments (FAISS+bge-small-zh-v1.5)
 - Style RAG index files: data/style_rag/{style_rag.faiss, metadata.json, contents.json}; rebuild via `python scripts/build_style_rag.py`
 - Style RAG filters: scene_type, emotion, genre, min_quality — filtered search reconstructs vectors from FAISS for subset matching
+- polish-agent Step 2.8: Style RAG retrieval via `build_polish_style_pack()`; formats `【人写参考】` blocks for AI味修复 context
+- RetrieverProtocol (typing.Protocol) in polish_integration.py allows test mocking without FAISS/sentence-transformers dependency
 ---
 
 ## 2026-04-15 - US-105
@@ -211,4 +213,24 @@
   - Module-scoped fixtures recommended for sentence-transformers tests (model load ~30s); use tmp_path_factory not tmp_path for module scope
   - The existing style_rag_builder.py classifies scenes using SCENE_TYPE_KEYWORDS and EMOTION_KEYWORDS from benchmark/config.py
   - Fragment quality_score (0-1) computed by deviation from style benchmarks (avg_sentence_length=28.6, dialogue_ratio=0.345, etc.)
+---
+
+## 2026-04-15 - US-202
+- Implemented `ink_writer/style_rag/polish_integration.py`: bridge between polish-agent and Style RAG retriever
+- `build_polish_style_pack()`: takes anti-detection-checker fix_priorities + chapter text, retrieves Top-K human-written snippets per fix item
+- `PolishStylePack.format_full_prompt()`: formats references as `【人写参考】` blocks with stats (句长均值/对话占比/质量分)
+- `_extract_paragraph_text()`: extracts query text from chapter by paragraph/line location strings
+- `FIX_TYPE_TO_SCENE_HINT`: maps fix types to scene_type filters (对话同质→对话, etc.)
+- Updated `polish-agent.md`: added Step 2.8 Style RAG retrieval + `style_references` input field
+- Updated `ink-write/SKILL.md`: Step 4 now includes Style RAG retrieval (step 4) before AI味修复 (step 5), Anti-AI check renumbered to step 6
+- Updated `ink_writer/style_rag/__init__.py`: exports PolishStylePack, StyleReference, build_polish_style_pack
+- Added `tests/style_rag/test_polish_integration.py` with 27 tests (extract, StyleReference, PolishStylePack, build integration, error handling)
+- All 1394 tests pass (27 new)
+- Files changed: ink_writer/style_rag/polish_integration.py, ink_writer/style_rag/__init__.py, ink-writer/agents/polish-agent.md, ink-writer/skills/ink-write/SKILL.md, tests/style_rag/test_polish_integration.py, prd.json
+- **Learnings for future iterations:**
+  - RetrieverProtocol pattern (typing.Protocol) allows easy test mocking without depending on FAISS/sentence-transformers at test time
+  - polish-agent step numbering: 1.5 hook → 1.6 emotion → 2 editor-wisdom → 2.5 review issues → 2.8 style RAG → 3 AI味修复
+  - _extract_paragraph_text must handle out-of-range paragraphs gracefully (return empty → skip)
+  - FakeRetriever with .calls list is the standard test pattern for retriever-dependent code
+  - Style RAG integration is prompt-level (formats text for LLM context), not code-level (no direct rewrite logic)
 ---

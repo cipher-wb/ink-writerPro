@@ -162,8 +162,8 @@
         "Tests pass"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/style_rag/polish_integration.py with build_polish_style_pack(). polish-agent Step 2.8 retrieves Top-K human snippets per fix_priority item as '人写参考'. ink-write Step 4 updated (steps 4-6 renumbered). 27 tests pass (1394 total)."
     },
     {
       "id": "US-203",
