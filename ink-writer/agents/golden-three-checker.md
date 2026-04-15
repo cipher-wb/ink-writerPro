@@ -110,6 +110,36 @@ model: inherit
   - 无目标闲聊
   - 抽象哲思独白开场
 
+## 编辑智慧增强审查
+
+当 `config/editor-wisdom.yaml` 中 `enabled=true` 时，对第 1-3 章额外执行编辑智慧规则审查：
+
+### 规则范围
+
+仅召回以下 4 个类别的编辑规则：
+- `opening`（开篇技巧）
+- `hook`（钩子设计）
+- `golden_finger`（金手指设计）
+- `character`（角色塑造）
+
+### 阈值
+
+- 第 1-3 章使用 `golden_three_threshold`（默认 0.85），高于普通章节的 `hard_gate_threshold`（默认 0.75）
+- 低于阈值时触发 polish → re-check 循环（最多 3 次重试）
+
+### 报告输出
+
+生成 `reports/golden-three-editor-wisdom.md`，包含：
+- 每章得分/阈值/通过状态汇总表
+- 每章违规项详情和修复建议
+- 综合结果判定
+
+### 实现入口
+
+- 规则召回：`ink_writer/editor_wisdom/golden_three.py` → `retrieve_golden_three_rules()`
+- 结果评判：`ink_writer/editor_wisdom/golden_three.py` → `check_golden_three_chapter()`
+- 报告生成：`ink_writer/editor_wisdom/golden_three.py` → `generate_report()`
+
 ## 输出补充
 
 - 若发现问题，`issues` 中必须给出可执行修复建议，优先使用：

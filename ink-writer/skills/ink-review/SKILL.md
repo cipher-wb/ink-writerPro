@@ -157,6 +157,49 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 - `reader-simulator`（完整模式：替换 Core 的快速模式，含情绪曲线+读者独白）
 - `anti-detection-checker`
 
+## Step 3.5: 编辑智慧硬门禁（Editor Wisdom Hard Gate）
+
+> 在所有 checker 完成后、生成审查报告前，运行编辑智慧门禁检查。
+
+**前置条件**：Step 3 所有 checker 结果已返回。
+
+**执行逻辑**：
+
+1. 加载 `config/editor-wisdom.yaml`，检查 `enabled` 标志
+2. 调用 `editor-wisdom-checker` 对章节评分
+3. 比较得分与阈值：
+   - 章节 1-3：使用 `golden_three_threshold`（默认 0.85）
+   - 其他章节：使用 `hard_gate_threshold`（默认 0.75）
+4. **若得分 ≥ 阈值**：通过，继续 Step 4
+5. **若得分 < 阈值**：
+   - 调用 `polish-agent` 传入 violations 列表进行精准修复
+   - 重新运行 `editor-wisdom-checker`
+   - 最多重试 3 次（1 次初始检查 + 2 次润色后重检）
+6. **3 次重试均未通过**：
+   - 写入 `chapters/{n}/blocked.md` 描述剩余违规
+   - **不输出最终章节文件**（阻断发布）
+   - 在审查报告中标注为"编辑智慧门禁阻断"
+
+**日志**：每次检查尝试记录到 `logs/editor-wisdom/chapter_{n}.log`
+
+**编排模块**：`ink_writer/editor_wisdom/review_gate.py` — `run_review_gate()`
+
+```python
+from ink_writer.editor_wisdom.review_gate import run_review_gate
+
+gate_result = run_review_gate(
+    chapter_text=chapter_text,
+    chapter_no=chapter_no,
+    project_root=project_root,
+    checker_fn=checker_fn,
+    polish_fn=polish_fn,
+)
+
+if not gate_result.passed:
+    # blocked.md already written; halt chapter emission
+    pass
+```
+
 ## Step 4: 生成审查报告
 
 保存到：`审查报告/第{start}-{end}章审查报告.md`

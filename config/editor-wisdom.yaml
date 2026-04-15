@@ -1,0 +1,9 @@
+# 编辑星河写作智慧模块配置
+enabled: true
+retrieval_top_k: 5
+hard_gate_threshold: 0.75
+golden_three_threshold: 0.85
+inject_into:
+  context: true
+  writer: true
+  polish: true

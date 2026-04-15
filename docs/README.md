@@ -24,6 +24,10 @@
 
 - `genres.md`：题材模板与复合题材规则
 
+## 编辑智慧
+
+- `editor-wisdom-integration.md`：编辑星河知识库架构、数据流、调优与 FAQ
+
 ## 运维与恢复
 
 - `operations.md`：项目结构与故障恢复/运维手册

@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Callable
 from pathlib import Path
 
 
@@ -84,6 +85,79 @@ def check_review_gate(project_root: Path, chapter_num: int) -> dict:
     return result
 
 
+class ChapterBlockedError(Exception):
+    """Raised when editor-wisdom gate blocks a chapter after max retries."""
+
+
+def _find_chapter_file(project_root: Path, chapter_num: int) -> Path | None:
+    chapter_dir = project_root / "chapters" / str(chapter_num)
+    for name in ("draft.md", "chapter.md", "final.md"):
+        candidate = chapter_dir / name
+        if candidate.exists():
+            return candidate
+    if chapter_dir.exists():
+        mds = sorted(chapter_dir.glob("*.md"))
+        for md in mds:
+            if md.name != "blocked.md":
+                return md
+    return None
+
+
+def run_editor_wisdom_gate(
+    project_root: Path,
+    chapter_num: int,
+    chapter_text: str | None = None,
+    *,
+    checker_fn: Callable[[str, int], dict] | None = None,
+    polish_fn: Callable[[str, list[dict], int], str] | None = None,
+) -> int:
+    """Run the editor-wisdom hard gate. Returns 0=pass, 1=blocked.
+
+    Raises ChapterBlockedError when the gate blocks after max retries.
+    """
+    from ink_writer.editor_wisdom.config import load_config
+    from ink_writer.editor_wisdom.review_gate import run_review_gate
+
+    config = load_config()
+    if not config.enabled:
+        return 0
+
+    if chapter_text is None:
+        chapter_file = _find_chapter_file(project_root, chapter_num)
+        if chapter_file is None:
+            return 0
+        chapter_text = chapter_file.read_text(encoding="utf-8")
+
+    if checker_fn is None:
+        def checker_fn(text: str, ch_no: int) -> dict:
+            from ink_writer.editor_wisdom.checker import check_chapter
+            from ink_writer.editor_wisdom.retriever import Retriever
+            retriever = Retriever()
+            rules = retriever.retrieve(text)
+            return check_chapter(text, ch_no, rules, config=config)
+
+    if polish_fn is None:
+        def polish_fn(text: str, violations: list[dict], ch_no: int) -> str:
+            return text
+
+    result = run_review_gate(
+        chapter_text=chapter_text,
+        chapter_no=chapter_num,
+        project_root=str(project_root),
+        checker_fn=checker_fn,
+        polish_fn=polish_fn,
+        config=config,
+    )
+
+    if not result.passed:
+        raise ChapterBlockedError(
+            f"Chapter {chapter_num} blocked after {len(result.attempts)} attempts "
+            f"(score={result.final_score}, threshold={result.threshold}). "
+            f"See {result.blocked_path}"
+        )
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Step 3 Harness Gate")
     parser.add_argument("--project-root", required=True, type=Path)
@@ -106,7 +180,17 @@ def main() -> int:
             print(f"❌ Step 3 Gate FAIL: {result['reason']}")
             print(f"   Action: {result['action']}")
 
-    return 0 if result["pass"] else 1
+    if not result["pass"]:
+        return 1
+
+    try:
+        run_editor_wisdom_gate(args.project_root, args.chapter)
+        print(f"✅ Editor-Wisdom Gate PASS (ch{args.chapter})")
+    except ChapterBlockedError as e:
+        print(f"❌ Editor-Wisdom Gate BLOCKED: {e}", file=sys.stderr)
+        return 1
+
+    return 0
 
 
 if __name__ == "__main__":

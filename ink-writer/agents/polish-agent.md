@@ -33,6 +33,9 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
     {"agent": "consistency-checker", "type": "POWER_CONFLICT", "severity": "critical", "location": "第6段", "suggestion": "境界越权"},
     {"agent": "anti-detection-checker", "fix_priority": ["句长平坦区@段3-5", "视角泄露@段12"]}
   ],
+  "editor_wisdom_violations": [
+    {"rule_id": "EW-0042", "quote": "问题段落原文", "severity": "hard", "fix_suggestion": "具体修复建议"}
+  ],
   "pass": true
 }
 ```
@@ -53,7 +56,24 @@ cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
    "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"
 ```
 
-### 2. 按优先级修复审查问题
+### 2. 编辑智慧违规精准修复
+
+当输入包含 `editor_wisdom_violations` 时，按以下流程逐条修复：
+
+| 严重度 | 处理规则 |
+|--------|---------|
+| `hard` | 必须修复；定位 `quote` 所在段落，按 `fix_suggestion` 精准改写 |
+| `soft` | 应当修复；按建议改写，允许合理变通 |
+
+**修复步骤**：
+1. 按 severity 排序（hard 优先，soft 其次）
+2. 对每条 violation，在正文中定位 `quote` 对应的段落
+3. 根据 `fix_suggestion` 改写该段落，保持上下文连贯
+4. 每条修复后检查：是否改变了剧情事实（若是则回退）
+
+修复完成后，生成 `chapters/{n}/_patches.md`，包含润色前后的 unified diff 以供审计。
+
+### 2.5 按优先级修复审查问题
 
 | 优先级 | 处理规则 |
 |--------|---------|
@@ -160,6 +180,7 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 ```
 
 3. 变更摘要（含：修复项、保留项、deviation、`anti_ai_force_check`、diff 校验结果）
+4. `chapters/{n}/_patches.md`：润色前后的 unified diff（当存在 editor_wisdom_violations 时生成）
 
 ## 润色红线（不可突破）
 
@@ -184,3 +205,5 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 4. No-Poison 五类毒点已检查
 5. Step 4.5 diff 校验通过（无 critical 违规）
 6. 未触碰润色红线
+7. editor_wisdom_violations 中所有 `hard` 违规已修复或记录 deviation
+8. `_patches.md` 已生成（当存在 violations 时）

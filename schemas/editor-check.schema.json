@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Editor Wisdom Check Result",
+  "description": "Output schema for editor-wisdom-checker agent scoring a chapter against retrieved rules",
+  "type": "object",
+  "required": ["agent", "chapter", "score", "violations", "summary"],
+  "properties": {
+    "agent": {
+      "type": "string",
+      "const": "editor-wisdom-checker"
+    },
+    "chapter": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Server-computed score, not from LLM. Formula: max(0, 1 - sum(weight[severity])), weights: hard=0.3, soft=0.1, info=0."
+    },
+    "violations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule_id", "quote", "severity", "fix_suggestion"],
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "pattern": "^EW-\\d{4}$"
+          },
+          "quote": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["hard", "soft", "info"]
+          },
+          "fix_suggestion": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -451,6 +451,16 @@ def main() -> None:
 
     p_cp_disambig = sub.add_parser("disambig-check", help="检查消歧积压数量和紧急程度")
 
+    # ── editor-wisdom 子命令 ──
+    p_ew = sub.add_parser("editor-wisdom", help="编辑星河写作智慧管理（rebuild / query / stats）")
+    ew_sub = p_ew.add_subparsers(dest="ew_action", required=True)
+
+    ew_sub.add_parser("rebuild", help="按顺序运行 01..06 脚本重建知识库与索引")
+    p_ew_query = ew_sub.add_parser("query", help="语义查询规则，例: ink editor-wisdom query '开篇 3 秒钩子'")
+    p_ew_query.add_argument("query_text", help="查询文本")
+    p_ew_query.add_argument("--top-k", type=int, default=5, help="返回条数（默认 5）")
+    ew_sub.add_parser("stats", help="打印规则统计：总数、分类分布、索引数、上次构建时间")
+
     p_extract_context = sub.add_parser("extract-context", help="转发到 extract_chapter_context.py")
     p_extract_context.add_argument("--chapter", type=int, required=True, help="目标章节号")
     p_extract_context.add_argument(
@@ -558,6 +568,17 @@ def main() -> None:
     if tool == "extract-context":
         return_args = [*forward_args, "--chapter", str(args.chapter), "--format", str(args.format)]
         raise SystemExit(_run_script("extract_chapter_context.py", return_args))
+
+    if tool == "editor-wisdom":
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+        from ink_writer.editor_wisdom.cli import cmd_rebuild, cmd_query, cmd_stats
+
+        if args.ew_action == "rebuild":
+            raise SystemExit(cmd_rebuild())
+        if args.ew_action == "query":
+            raise SystemExit(cmd_query(args.query_text, args.top_k))
+        if args.ew_action == "stats":
+            raise SystemExit(cmd_stats())
 
     if tool == "memory":
         from data_modules.memory_compressor import (

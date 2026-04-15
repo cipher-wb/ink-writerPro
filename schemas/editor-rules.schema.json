@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Editor Wisdom Rules",
+  "description": "Atomic machine-consumable rules extracted from editor wisdom content",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "category", "rule", "why", "severity", "applies_to", "source_files"],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^EW-\\d{4}$",
+        "description": "Unique rule ID in format EW-NNNN"
+      },
+      "category": {
+        "type": "string",
+        "enum": ["opening", "hook", "golden_finger", "character", "pacing", "highpoint", "taboo", "genre", "ops", "misc"]
+      },
+      "rule": {
+        "type": "string",
+        "maxLength": 120,
+        "description": "Imperative Chinese rule text"
+      },
+      "why": {
+        "type": "string",
+        "description": "Explanation of why this rule matters"
+      },
+      "severity": {
+        "type": "string",
+        "enum": ["hard", "soft", "info"]
+      },
+      "applies_to": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": ["all_chapters", "golden_three", "opening_only"]
+        },
+        "minItems": 1,
+        "description": "Contexts where this rule applies"
+      },
+      "source_files": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "description": "Source filenames this rule was extracted from"
+      }
+    },
+    "additionalProperties": false
+  }
+}

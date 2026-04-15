@@ -300,6 +300,33 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style benchmark 
 
 若 style_rag.db 不存在或返回为空，跳过此板块（不阻断流程）。
 
+### Step 2.7: 编辑建议召回（Editor Wisdom）
+
+> 依赖模块：`ink_writer.editor_wisdom`；配置：`config/editor-wisdom.yaml`
+
+1. 读取 `config/editor-wisdom.yaml`，检查 `enabled` 和 `inject_into.context` 是否为 `true`
+2. 若任一为 `false`，跳过本步骤（不输出编辑建议板块）
+3. 构建检索 query = `{scene_type} {本章大纲概要}`
+4. 调用 `retriever.retrieve(query, k=config.retrieval_top_k)` 获取 top-K 规则
+5. 若 `chapter_no <= 3`（黄金三章），额外检索 `category="opening"` 的规则并合并去重
+6. 若检索结果为空，跳过本步骤
+7. 将规则按 severity 分组（hard → soft → info），写入任务书第 12 板块：
+
+```markdown
+### 12. 编辑建议（Editor Wisdom）
+
+**硬约束（必须遵守）**：
+- [EW-XXXX][category] 规则文本
+
+**软约束（建议遵守）**：
+- [EW-XXXX][category] 规则文本
+
+**参考信息**：
+- [EW-XXXX][category] 规则文本
+```
+
+**降级处理**：若 vector_index 不存在或 retriever 初始化失败，静默跳过（不阻断流程），在日志中记录原因。
+
 ### Step 3: 实体与最近出场 + 伏笔读取 + 知识盲区
 ```bash
 python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-entities
@@ -526,3 +553,4 @@ Context Contract 必须字段（不可缺）：
 13. ✅ **第9板块（知识盲区）完整**：本章出场实体均有知情状态标注，`protagonist_knowledge_gate` 已注入 Context Contract
 14. ✅ **第10板块（爽点布局）完整**：三段位置规划明确，债务状态已列出
 15. ✅ **第8.8板块（场景写作技法）完整**：场景类型已推断，对应技法清单已注入
+16. ✅ **第12板块（编辑建议）**：当 editor-wisdom 模块启用且检索有结果时，规则按 severity 分组输出；模块禁用或检索为空时不输出此板块

@@ -1,0 +1,176 @@
+# Ralph Progress — editor-wisdom-fix
+
+## Codebase Patterns
+- `run_review_gate` lives in `ink_writer/editor_wisdom/review_gate.py`; the python orchestration entry is `ink-writer/scripts/step3_harness_gate.py`
+- Tests live in `tests/editor_wisdom/`; use `python3 -m pytest tests/editor_wisdom/ -v` to run
+- `EditorWisdomConfig` from `ink_writer/editor_wisdom/config.py` is the central config; mock with `patch("ink_writer.editor_wisdom.config.load_config")`
+- mypy is not installed; use `ast.parse` for syntax validation
+- Coverage fail-under=70% is project-wide; individual test runs will show FAIL but tests themselves pass
+- Anthropic model IDs are centralized in `ink_writer/editor_wisdom/models.py` (HAIKU_MODEL, SONNET_MODEL); import from there, don't hardcode
+- `applies_to` is restricted to enum `['all_chapters', 'golden_three', 'opening_only']`; LLM free-text values are filtered in `05_extract_rules.py`
+- `GOLDEN_THREE_CATEGORIES` is defined in `golden_three.py` and also mirrored in `05_extract_rules.py`; consumer-side filtering uses category, not applies_to
+- `Rule` dataclass has a `score: float = 0.0` field; always populated by `Retriever.retrieve`
+- FAISS index is `IndexFlatIP`; use `index.reconstruct(i)` to extract individual vectors for category-filtered search
+- `Rule` dataclass requires `why: str` field (no default); tests must include it: `Rule(id=..., rule=..., category=..., why="...", severity=...)`
+- `cmd_rebuild(from_step=N)` supports resuming from step N (1..6); skips earlier steps
+- `02_clean.py` uses `hashlib.blake2b` for minhash signatures (deterministic, not `hash()`)
+- `context_injection.py` queries ALL 4 `GOLDEN_THREE_CATEGORIES` for ch<=3, not just 'opening'
+
+---
+
+## 2026-04-15 - US-001
+- **What was implemented**: Wired `run_review_gate` into `step3_harness_gate.py` orchestration entry
+- **Files changed**:
+  - `ink-writer/scripts/step3_harness_gate.py` — added `ChapterBlockedError`, `_find_chapter_file`, `run_editor_wisdom_gate` functions; integrated into `main()`
+  - `tests/editor_wisdom/test_review_gate_wired.py` — new integration test (6 tests)
+- **Call sites before**: only `review_gate.py` definition + test files (test_review_gate.py, test_golden_three_enhancement.py)
+- **Learnings for future iterations:**
+  - `step3_harness_gate.py` already had report-based checks; editor-wisdom gate runs AFTER those pass
+  - `run_review_gate` handles retry loop + blocked.md internally; caller just needs to catch `ChapterBlockedError`
+  - Polish fn defaults to identity in CLI harness; real polish happens through SKILL.md agent orchestration
+  - Test pattern: inject `checker_fn` and `polish_fn` callables, patch `load_config`
+---
+
+## 2026-04-15 - US-002
+- **What was implemented**: Eliminated silent degradation — when `config.enabled=true` and index is missing, system now raises `EditorWisdomIndexMissingError` instead of silently returning empty results
+- **Files changed**:
+  - `ink_writer/editor_wisdom/exceptions.py` — new file with `EditorWisdomIndexMissingError`
+  - `ink_writer/editor_wisdom/retriever.py` — `__init__` now checks for `rules.faiss` and `metadata.json` before loading, raises custom exception
+  - `ink_writer/editor_wisdom/context_injection.py` — re-raises when `config.enabled=true`, only swallows when `enabled=false`
+  - `ink_writer/editor_wisdom/writer_injection.py` — same pattern as context_injection
+  - `ink_writer/editor_wisdom/checker.py` — `rules=[]` with `enabled=true` raises instead of returning score=1.0
+  - `tests/editor_wisdom/test_no_silent_fallback.py` — new test file (7 tests)
+  - Updated existing tests in `test_context_injection.py`, `test_writer_injection.py`, `test_checker.py`
+- **Learnings for future iterations:**
+  - `enabled=False` path returns empty early in context_injection/writer_injection (before Retriever), so the swallow-on-disabled is only reachable via the general Exception catch
+  - Existing tests asserted the old silent-swallow behavior — must update them when changing error semantics
+  - `checker.py` receives `rules: list[Rule]` from upstream; it doesn't construct Retriever itself, so the empty-rules guard is a second line of defense
+  - 173 total tests in `tests/editor_wisdom/` — run full suite to catch regressions across modules
+---
+
+## 2026-04-15 - US-003
+- **What was implemented**: Eliminated score ambiguity — LLM prompts no longer ask for score output; `_compute_score` is the sole source of truth with updated weights (hard=0.3, soft=0.1, info=0)
+- **Files changed**:
+  - `ink_writer/editor_wisdom/checker.py` — removed score from SYSTEM_PROMPT and user prompt output template; updated `_compute_score` weights and added docstring
+  - `schemas/editor-check.schema.json` — annotated score field as "server-computed, not from LLM"
+  - `tests/editor_wisdom/test_checker.py` — added `test_llm_score_ignored_server_computed` (LLM returns 0.99, server computes 0.4); updated existing score assertions for new weights
+- **Learnings for future iterations:**
+  - The LLM response still includes a score field (it's hard to prevent), but `check_chapter` always overwrites it with `_compute_score`
+  - Weight change from hard=0.1/soft=0.05 to hard=0.3/soft=0.1 — other test files using pre-set score values in mocks are unaffected since they don't call `_compute_score`
+  - 174 total tests now in `tests/editor_wisdom/` — all passing
+---
+
+## 2026-04-15 - US-004
+- **What was implemented**: Fixed fabricated Anthropic model IDs; extracted canonical constants to `ink_writer/editor_wisdom/models.py`
+- **Files changed**:
+  - `ink_writer/editor_wisdom/models.py` — new file with `HAIKU_MODEL` and `SONNET_MODEL` constants
+  - `scripts/editor-wisdom/03_classify.py` — replaced `claude-haiku-4-5-20241022` with `HAIKU_MODEL` import
+  - `scripts/editor-wisdom/05_extract_rules.py` — replaced `claude-sonnet-4-6-20250514` with `SONNET_MODEL` import
+  - `ink_writer/editor_wisdom/checker.py` — replaced inline string with `HAIKU_MODEL` import
+  - `tests/editor_wisdom/test_model_ids_valid.py` — new smoke test (4 tests)
+- **Model ID findings before fix**:
+  - `checker.py:77` → `claude-haiku-4-5-20251001` (valid)
+  - `03_classify.py:73` → `claude-haiku-4-5-20241022` (FABRICATED — `20241022` doesn't exist)
+  - `05_extract_rules.py:74` → `claude-sonnet-4-6-20250514` (FABRICATED — `20250514` doesn't exist)
+- **Learnings for future iterations:**
+  - All three consumers now import from `models.py`; add new model IDs there
+  - The smoke test scans both `scripts/editor-wisdom/` and `ink_writer/editor_wisdom/` directories
+  - 178 total tests now in `tests/editor_wisdom/` — all passing
+---
+
+## 2026-04-15 - US-005
+- **What was implemented**: Fixed retriever category filtering — now slices vector matrix to category rows and computes numpy inner product for true top-K within category; fixed `min(len, len)` typo; added `score: float` field to `Rule` dataclass
+- **Files changed**:
+  - `ink_writer/editor_wisdom/retriever.py` — rewrote `retrieve()` with category-aware vector slicing via `index.reconstruct()`; added `_meta_to_rule` helper; added `score` field to `Rule`
+  - `tests/editor_wisdom/test_retriever_category.py` — new test file (6 tests): 10 categories × 3 rules, verifies category filtering, score ordering, edge cases
+- **Learnings for future iterations:**
+  - `faiss.IndexFlatIP` supports `reconstruct(i)` to extract individual vectors — useful for sub-index operations
+  - The old code did global FAISS search then post-filtered, which could return fewer than k results for a category even when k candidates existed
+  - Adding `score: float = 0.0` as default to the dataclass is backwards-compatible with all existing Rule() constructions
+  - 184 total tests now in `tests/editor_wisdom/` — all passing
+---
+
+## 2026-04-15 - US-006
+- **What was implemented**: Added per-file error handling and periodic cache flushing to both `03_classify.py` and `05_extract_rules.py`
+- **Files changed**:
+  - `scripts/editor-wisdom/03_classify.py` — added `_append_error()`, try/except per LLM call, periodic flush (every 10 items / 60s), top-level try/finally
+  - `scripts/editor-wisdom/05_extract_rules.py` — same pattern as 03_classify
+  - `tests/editor_wisdom/test_batch_resilience.py` — new test file (4 tests): verifies 3/10 failures produce 3 error log entries, cache has ≥4 results, and cache is flushed periodically
+- **Learnings for future iterations:**
+  - Both scripts share identical `_append_error` and periodic flush logic — could be extracted to a shared module if more scripts need it
+  - Error log path is `data_dir / "errors.log"` — both scripts write to the same file (append mode), so entries from classify and extract can intermix
+  - The `continue` on failure means failed files are skipped entirely (not added to classified.json / rules.json), keeping output clean
+  - 188 total tests now in `tests/editor_wisdom/` — all passing
+---
+
+## 2026-04-15 - US-007
+- **What was implemented**: Hardened `applies_to` field to enum whitelist; added golden_three auto-tagging in post-processing; unified writer_injection to filter by category instead of applies_to
+- **Files changed**:
+  - `scripts/editor-wisdom/05_extract_rules.py` — added `GOLDEN_THREE_CATEGORIES`, `VALID_APPLIES_TO`, `_apply_golden_three_tag()`; filters invalid applies_to values in `_extract_from_one`
+  - `ink_writer/editor_wisdom/writer_injection.py` — golden-three branch now uses `r.category in GOLDEN_THREE_CATEGORIES` instead of `"golden_three" in r.applies_to`
+  - `schemas/editor-rules.schema.json` — applies_to items restricted to enum `["all_chapters", "golden_three", "opening_only"]`
+  - `tests/editor_wisdom/test_golden_three_applies_to.py` — new test file (10 tests)
+  - `tests/editor_wisdom/test_extract_rules.py` — updated SAMPLE_RULES to use valid enum values
+- **Learnings for future iterations:**
+  - The LLM prompt in `05_extract_rules.py` still mentions free-text applies_to examples; the server-side filter silently strips invalid values and falls back to `["all_chapters"]`
+  - `_apply_golden_three_tag` runs AFTER `_deduplicate_rules` so deduped rules also get the tag
+  - writer_injection and golden_three.py now both import `GOLDEN_THREE_CATEGORIES` from golden_three.py — single source of truth for the set
+  - 198 total tests now in `tests/editor_wisdom/` — all passing
+---
+
+## 2026-04-15 - US-008
+- **What was implemented**: Modified `retrieve_golden_three_rules` to sort merged per-category results by score descending and truncate to k
+- **Files changed**:
+  - `ink_writer/editor_wisdom/golden_three.py` — added `all_rules.sort(key=lambda r: -r.score)` and `return all_rules[:k]`
+  - `tests/editor_wisdom/test_golden_three_score_merge.py` — new test file (5 tests): verifies score ordering, k truncation, mixed scores across categories
+- **Learnings for future iterations:**
+  - The old code returned ALL deduplicated rules without truncation or ordering — with 4 categories × k=5 each, could return up to 20 rules
+  - `ScoredRetriever` test helper pre-sorts by score within each category, mimicking real retriever behavior
+  - Existing tests (27 in golden_three_enhancement + applies_to) still pass since default k=5 > typical 4-rule test sets
+  - 203 total tests now in `tests/editor_wisdom/` — all passing
+---
+
+## 2026-04-15 - US-009
+- **What was implemented**: 8 Minor fixes consolidated into one story
+  - m1: `review_gate.py` — initialized `violations=[]` and `score=1.0` before retry loop to prevent `UnboundLocalError` when `max_retries=0`
+  - m2: `context_injection.py` — golden-three branch now queries all 4 categories (opening, hook, golden_finger, character) instead of just 'opening'
+  - m3: `checker.py` — code-fence stripping changed to regex `r'^```(?:\w+)?\n([\s\S]*?)\n```$'` for robustness
+  - m4: `docs/editor-wisdom-integration.md` — added FAQ entry documenting applies_to whitelist
+  - m5: `02_clean.py` — replaced `hash((i, ng)) & 0xFFFFFFFF` with `hashlib.blake2b(...)` for cross-platform reproducibility
+  - m6: `test_polish_injection.py` — added explicit count assertion that ≥2 of 3 violation quotes appear in markdown
+  - m7: `.gitignore` — added `logs/editor-wisdom/`
+  - m8: `cli.py` — `cmd_rebuild` now accepts `from_step: int` parameter (1..6) to resume pipeline
+- **Files changed**:
+  - `ink_writer/editor_wisdom/review_gate.py` — 2 lines added (variable init)
+  - `ink_writer/editor_wisdom/context_injection.py` — import GOLDEN_THREE_CATEGORIES, loop over all 4 categories
+  - `ink_writer/editor_wisdom/checker.py` — added `import re`, replaced code-fence stripping with regex
+  - `ink_writer/editor_wisdom/cli.py` — `cmd_rebuild(from_step=1)` with validation and skip messaging
+  - `scripts/editor-wisdom/02_clean.py` — `import hashlib`, blake2b-based minhash signature
+  - `docs/editor-wisdom-integration.md` — new FAQ entry for applies_to
+  - `.gitignore` — added logs/editor-wisdom/
+  - `tests/editor_wisdom/test_review_gate.py` — new TestReviewGateMaxRetriesZero class
+  - `tests/editor_wisdom/test_polish_injection.py` — strengthened quote count assertion
+  - `tests/editor_wisdom/test_minor_fixes.py` — new file with 12 tests covering all 8 fixes
+- **Learnings for future iterations:**
+  - `Rule` dataclass requires `why: str` (no default) — omitting it causes TypeError in tests
+  - `context_injection.py` now imports from `golden_three.py` — circular import risk if golden_three ever imports from context_injection
+  - The regex for code-fence stripping is strict (requires opening and closing on their own lines) — if LLM outputs partial fences this will pass through to json.loads which will fail with a clear error
+  - 216 total tests now in `tests/editor_wisdom/` — all passing
+---
+
+## 2026-04-15 - US-010
+- **What was implemented**: End-to-end smoke test script proving the hard gate blocks a bad chapter
+  - `scripts/editor-wisdom/smoke_test.py`: checks API key → ensures index → generates bad chapter → runs real `run_review_gate` → asserts block + blocked.md
+  - Produces `reports/editor-wisdom-smoke-report.md` with step-by-step logs
+  - Exits 0 with "skipped" status when `ANTHROPIC_API_KEY` is absent
+  - Updated `docs/editor-wisdom-integration.md` with "Running the Smoke Test" section
+- **Files changed**:
+  - `scripts/editor-wisdom/smoke_test.py` — new e2e smoke test script
+  - `tests/editor_wisdom/test_smoke_test.py` — 10 tests covering API key check, skip behavior, report writing, index rebuild, and gate blocking
+  - `docs/editor-wisdom-integration.md` — added smoke test usage section
+- **Learnings for future iterations:**
+  - `run_review_gate` with `max_retries=3` makes 3 checker calls and 2 polish calls (polish only between attempts)
+  - The smoke test uses a tempdir for `project_root` to avoid polluting the real project with `chapters/1/blocked.md`
+  - Importing `smoke_test.py` as a module requires adding `scripts/editor-wisdom/` to `sys.path` in tests
+  - 226 total tests now in `tests/editor_wisdom/` — all passing
+---
