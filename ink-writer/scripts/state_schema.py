@@ -111,6 +111,7 @@ class PlotThreads(BaseModel):
 
     active_threads: List[Any] = Field(default_factory=list)
     foreshadowing: List[Any] = Field(default_factory=list)
+    plotline_registry: List[Any] = Field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------

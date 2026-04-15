@@ -15,7 +15,7 @@ from migrate import _migrate_v9_to_v10, CURRENT_SCHEMA_VERSION  # noqa: E402
 
 
 def test_current_schema_version():
-    assert CURRENT_SCHEMA_VERSION == 10
+    assert CURRENT_SCHEMA_VERSION == 11
 
 
 def test_migrate_v9_to_v10_adds_voice_fingerprint_config():

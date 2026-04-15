@@ -425,6 +425,16 @@ For each chapter, determine:
 - high_point_type 映射：face_slap=装逼打脸, hidden_strength=扮猪吃虎, level_up_kill=越级反杀, authority_challenge=打脸权威, villain_fail=反派翻车, sweet_surprise=甜蜜超预期
 - 将调度器输出的 rationale 附加到大纲注释中，便于 writer-agent 理解意图
 
+**2.7 明暗线生命周期调度** (hard constraint from plotline-tracker)
+- 调用 `ink_writer.plotline.tracker.scan_plotlines()` 获取断更线程
+- 调用 `ink_writer.plotline.tracker.build_plan_injection()` 获取强制推进列表
+- 输入：index.db 路径, 当前章号
+- 输出：{forced_advances, mode, alerts, total_active, total_inactive}
+- **硬约束**：`mode == "force"` 时，`forced_advances` 中的线程**必须**在本批大纲中安排推进章节
+- 每章最多安排 2 条强制推进（`max_forced_advances_per_chapter`）
+- 将 `alerts` 列表注入到章纲注释中，便于 writer-agent 理解线程紧迫度
+- 线型阈值：main=3章断更, sub=8章, dark=15章
+
 **2.6 爽点执行剧本** (based on 节拍表爽点链规划 + 调度器配方)
 - 检查本章所属的爽点链（PC-X），确定本章角色（铺垫/压迫/爆发）
 - 填写**压扬标记**：压/平/扬
@@ -485,6 +495,7 @@ Chapter format (include 反派层级 for context-agent):
 - 钩子: {类型} - {30字以内}
 - 钩子契约: 类型={crisis|mystery|emotion|choice|desire} | 兑现锚点=第{M}章 | 兑现摘要={20字以内}
 - 伏笔处置: {无 | 埋设:[thread_id]描述 | 推进:[thread_id]描述 | 兑现:[thread_id]描述}
+- 明暗线推进: {[plotline_id]:推进描述, ... | 无}
 ```
 
 黄金三章附加规则（第 1-3 章必须额外写出）：
@@ -656,8 +667,9 @@ Final check:
 - 时间线表文件已写入：`大纲/第{volume_id}卷-时间线.md`
 - 章纲文件已写入：`大纲/第{volume_id}卷-详细大纲.md`
 - 设定集已完成基线补齐与本卷增量补充（原文件内可见）
-- 每章包含：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置
+- 每章包含：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置/明暗线推进
 - **伏笔强制兑现校验**：foreshadow-tracker 的 `forced_payoffs` 中每条伏笔必须在本卷章纲中至少有一章标注 `伏笔处置: 兑现:[thread_id]`；缺失则 hard fail
+- **明暗线强制推进校验**：plotline-tracker 的 `forced_advances` 中每条线程必须在本卷章纲中至少有一章标注 `明暗线推进: [plotline_id]:推进描述`；缺失则 hard fail
 - 时间线单调递增，倒计时推进正确
 - 与总纲冲突/高潮一致，约束触发频率合理（如有 idea_bank）
 
@@ -666,7 +678,7 @@ Final check:
 - 节拍表中段反转缺失（未按“必填/无（理由）”规则填写）
 - **时间线表文件不存在或为空**
 - 章纲文件不存在或为空
-- 任一章节缺少：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置
+- 任一章节缺少：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置/明暗线推进
 - **钩子契约缺失或格式错误**：每章必须有 `钩子契约: 类型=X | 兑现锚点=第M章 | 兑现摘要=Y`，类型必须在 {crisis, mystery, emotion, choice, desire} 内
 - 爽点链的爆发章号与对应章纲的压扬标记不一致（交叉校验失败）
 - 第 1-3 章缺少：本章职责/读者承诺/兑现项/禁止拖沓区

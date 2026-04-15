@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Tuple
 
-CURRENT_SCHEMA_VERSION = 10
+CURRENT_SCHEMA_VERSION = 11
 
 # 迁移注册表: List[(from_version, migration_func)]
 _migrations: List[Tuple[int, Callable[[Dict[str, Any]], Dict[str, Any]]]] = []
@@ -166,6 +166,32 @@ def _migrate_v9_to_v10(state: Dict[str, Any]) -> Dict[str, Any]:
         "max_retries": 2,
         "core_tiers": ["核心", "重要"],
     }
+    return state
+
+
+@migration(10)
+def _migrate_v10_to_v11(state: Dict[str, Any]) -> Dict[str, Any]:
+    """v10 → v11: 明暗线追踪器支持。
+
+    新增:
+    - plotline_lifecycle_config: 明暗线生命周期管理配置
+    SQLite 层: plot_thread_registry 已支持 thread_type='plotline'（无 schema 变更）
+    """
+    state["schema_version"] = 11
+    state["plotline_lifecycle_config"] = {
+        "enabled": True,
+        "inactivity_rules": {
+            "main_max_gap": 3,
+            "sub_max_gap": 8,
+            "dark_max_gap": 15,
+        },
+        "max_forced_advances_per_chapter": 2,
+        "plan_injection_mode": "force",
+    }
+    plot_threads = state.get("plot_threads", {})
+    if "plotline_registry" not in plot_threads:
+        plot_threads["plotline_registry"] = []
+        state["plot_threads"] = plot_threads
     return state
 
 

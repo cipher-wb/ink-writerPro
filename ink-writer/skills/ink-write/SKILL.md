@@ -1210,6 +1210,26 @@ if anti_detection_result.overall_score < threshold:
 
 **Python 模块**：`ink_writer.voice_fingerprint.ooc_gate.run_voice_gate()`
 
+#### Step 3.10: 明暗线推进门禁（plotline gate）
+
+**触发条件**：前序门禁（Step 3.6/3.7/3.8/3.9）均未阻断。
+
+**流程**：
+1. 从 `plot_thread_registry`（`thread_type='plotline'`）加载所有活跃线程
+2. 调用 `ink_writer.plotline.tracker.scan_plotlines()` 检测断更线程
+3. 检查本章大纲 `明暗线推进` 字段中声明的线程是否在正文中有实际推进：
+   - 主线断更 > 3章 → `critical`（必须推进）
+   - 支线断更 > 8章 → `high`
+   - 暗线断更 > 15章 → `medium`
+4. 存在 critical 断更且本章未推进 → 触发 polish-agent（Step 1.9 plotline_fix_prompt）
+5. 最多重试2次；仍不通过 → 写 `plotline_blocked.md` + 阻断
+
+**与 Step 3.6-3.9 的关系**：
+- 前序门禁先执行；若已阻断则跳过明暗线门禁
+- 明暗线门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.plotline.tracker.scan_plotlines()`
+
 ### Step 4：润色（问题修复优先）
 
 执行前必须加载：

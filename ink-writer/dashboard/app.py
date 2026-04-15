@@ -327,6 +327,37 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
 
             return buckets
 
+    @app.get("/api/plotlines")
+    def list_plotlines(status: Optional[str] = None, limit: int = 100):
+        with closing(_get_db()) as conn:
+            if status:
+                return _fetchall_safe(
+                    conn,
+                    "SELECT * FROM plot_thread_registry WHERE thread_type = 'plotline' AND status = ? ORDER BY priority DESC, last_touched_chapter DESC LIMIT ?",
+                    (status, limit),
+                )
+            return _fetchall_safe(
+                conn,
+                "SELECT * FROM plot_thread_registry WHERE thread_type = 'plotline' ORDER BY priority DESC, last_touched_chapter DESC LIMIT ?",
+                (limit,),
+            )
+
+    @app.get("/api/plotlines/heatmap")
+    def plotlines_heatmap(bucket_size: int = 10):
+        with closing(_get_db()) as conn:
+            try:
+                max_ch_row = conn.execute("SELECT MAX(chapter) FROM chapters").fetchone()
+                max_chapter = max_ch_row[0] if max_ch_row and max_ch_row[0] else 0
+            except Exception:
+                max_chapter = 0
+
+            if max_chapter <= 0:
+                return []
+
+            from ink_writer.plotline.tracker import build_plotline_heatmap
+            db_path = _ink_dir() / "index.db"
+            return build_plotline_heatmap(str(db_path), max_chapter, bucket_size)
+
     @app.get("/api/timeline-anchors")
     def list_timeline_anchors(limit: int = 50):
         with closing(_get_db()) as conn:
