@@ -1,7 +1,7 @@
 # Ink Writer Pro
 
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-11.5.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-12.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://claude.ai/claude-code)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-Extension-4285F4.svg)](https://github.com/google-gemini/gemini-cli)
 [![Codex CLI](https://img.shields.io/badge/Codex%20CLI-Skills-74AA9C.svg)](https://github.com/openai/codex)
@@ -278,6 +278,53 @@ Step 6     Git 备份
 
 ---
 
+## v12.x 新特性
+
+### v12.0: 编辑星河写作智慧集成（364 条规则 + 本地 RAG + 硬门禁）
+
+起点金牌编辑"编辑星河"在小红书/抖音发布的 288 份写作建议被结构化为本地知识库 + 向量索引，作为**硬约束**融入写作全链路。
+
+**数据层**
+- 从 288 份原始文章清洗得 286 份，分类到 10 个主题域（opening/hook/golden_finger/character/pacing/highpoint/taboo/genre/ops/misc）
+- LLM 抽取 **364 条原子规则**，按 severity（hard/soft/info）+ applies_to（all_chapters/golden_three/opening_only）标注
+- 本地 FAISS + `BAAI/bge-small-zh-v1.5` 向量索引，**零外部 embedding API 成本**
+- 人类可读 KB：`docs/editor-wisdom/*.md` 10 份分类文档
+
+**工程层**
+- `ink_writer/editor_wisdom/`：retriever / checker / config / review_gate / 三个 injector / CLI
+- 改造 **context-agent / writer-agent / polish-agent** 三个现有 agent：写作时自动召回 top-K 相关规则注入 prompt
+- 新 **editor-wisdom-checker** agent：每章按规则打分，违规输出 `{rule_id, quote, fix_suggestion}`
+- **硬门禁闭环**：score < 阈值 → polish-agent 按 violations 精准修复 → re-check；最多 3 次仍不过则写 `blocked.md` 中断该章（**非静默放行**）
+- **黄金三章加严**：chapter_no ≤ 3 用 `golden_three_threshold=0.85`（普通章节 0.75）
+
+**Claude Code 套餐兼容**
+- 新增 `llm_backend.py` 适配器：优先 Anthropic SDK（若 `ANTHROPIC_API_KEY` 存在），无 key 时 fallback 到 `claude -p --no-session-persistence` subprocess
+- 订阅登录用户可以直接跑 pipeline，无需 API key
+
+**验证**
+- 227 个单元测试全绿（含跨模块契约测试，防"mock 通过但真实集成失败"）
+- 端到端 smoke test 证明硬门禁真实生效：烂章节 score 0.0 → 3 次 polish → `blocked.md` 写入 → 主文件未生成
+
+**使用**
+```bash
+# 首次启用（或更新规则后）重建索引
+python3 scripts/editor-wisdom/06_build_index.py
+
+# 查规则 / 分类 / 索引统计
+ink editor-wisdom query "开篇 3 秒钩子"
+ink editor-wisdom stats
+
+# 配置开关（config/editor-wisdom.yaml）
+enabled: true
+retrieval_top_k: 5
+hard_gate_threshold: 0.75
+golden_three_threshold: 0.85
+```
+
+配置文件：`config/editor-wisdom.yaml`。架构文档：`docs/editor-wisdom-integration.md`。
+
+---
+
 ## v11.x 新特性
 
 ### v11.5: 跨章遗忘 bug 根因修复
@@ -431,7 +478,8 @@ A: 100 章写作中，检查点总开销约 7 小时，占总时间 7-14%。
 
 | 版本 | 说明 |
 |------|------|
-| **v11.5.0 (当前)** | 跨章遗忘 bug 根因修复：**previous_chapters 窗口 2→10 章**（`extract_chapter_context.py` 两处硬编码）+ **plot_thread target_payoff_chapter 空值兜底从 `or 0` 改为 None-safe**（`sql_state_manager.py`，修复 audit 把未设目标伏笔误判逾期的系统性 bug）+ **SQL schema 与 Pydantic 对齐**（`index_manager.py` 的 target_payoff_chapter/resolved_chapter 从 DEFAULT 0 改为 NULL）。三个修复对长篇连载（50+ 章）项目有显著价值。 |
+| **v12.0.0 (当前)** | **编辑星河写作智慧集成**：起点金牌编辑的 288 份建议清洗→分类（10 主题）→抽取 **364 条原子规则**→构建本地 FAISS 向量索引（`BAAI/bge-small-zh`）。新增 `editor-wisdom-checker` agent + 改造 context/writer/polish 三个现有 agent 注入召回规则。**硬门禁闭环**：score<阈值→polish→re-check，3 次不过写 `blocked.md` 中断。**黄金三章加严阈值 0.85**。新增 `llm_backend.py` 适配器：Claude Code 订阅用户无需 API key 即可走 `claude -p` 跑 pipeline。227 单测+端到端 smoke 均通过。 |
+| v11.5.0 | 跨章遗忘 bug 根因修复：**previous_chapters 窗口 2→10 章**（`extract_chapter_context.py` 两处硬编码）+ **plot_thread target_payoff_chapter 空值兜底从 `or 0` 改为 None-safe**（`sql_state_manager.py`，修复 audit 把未设目标伏笔误判逾期的系统性 bug）+ **SQL schema 与 Pydantic 对齐**（`index_manager.py` 的 target_payoff_chapter/resolved_chapter 从 DEFAULT 0 改为 NULL）。三个修复对长篇连载（50+ 章）项目有显著价值。 |
 | v11.4.0 | 写作质量提升+LLM创造力增强：TTR词汇多样性检测 + 首句钩子检测 + 伏笔分级(10/20/30章) + 闸门阈值对齐 + 摘要窗口扩大(3→5) + 关键章摘要常驻 + 角色语言指纹(voice_fingerprint) + 微观意外感注入(Anti-Cliché) + 反套路检测 + 过渡章豁免收紧 + 简介质检 + 风格采纳度验证 + 13项计算检查(1095测试) |
 | v11.3.0 | 工程深度审查全量修复(22项)：计算型闸门SQL对齐真实Schema + 死亡/离场/能力状态标准化 + mega-summary自动生成 + 伏笔数据源统一 + _write_transaction接入9个mixin + Step3 Harness闸门 + 黄金三章契约检查 + 风格样本fallback + 对话「」支持 + 句长/标点检查 + 元数据全文扫描 + Token裁剪通知 + chapters_per_volume配置化 + reader-pull始终执行 + 29个新测试(1083总) |
 | v11.2.0 | 计算型闸门实装 + 远距离摘要注入 + 跨卷记忆压缩 + SQLite并发保护 + 黄金三章硬拦截 + Token预算硬上限 + 对话阈值分层 + 完结标记CLI化 |
