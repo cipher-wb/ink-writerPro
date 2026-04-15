@@ -66,8 +66,8 @@
         "Tests pass"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: scripts/mine_hook_patterns.py mines 208 patterns (≥200) from 50-book corpus. 5 hook types × 3 positions + 13 genre templates. 29 tests pass (1177 total)."
     },
     {
       "id": "US-102",

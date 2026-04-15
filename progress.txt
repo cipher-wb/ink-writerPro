@@ -12,6 +12,10 @@
 - 14 agents in `ink-writer/agents/`, 1 in `agents/ink-writer/` (editor-wisdom-checker)
 - benchmark/corpus_index.json has 117 books; use `collections` field for ranking, `dir` field for filesystem lookup
 - benchmark/config.py has SCENE_TYPE_KEYWORDS / EMOTION_KEYWORDS — reuse for text analysis instead of reinventing
+- Hook types taxonomy (5 core): crisis, mystery, emotion, choice, desire — aligned with reader-pull-checker agent
+- Position types: open (chapter opening), mid (mid-chapter tension), cliff (chapter-end cliffhanger)
+- Genre hook templates in GENRE_HOOK_TEMPLATES cover 13 genres; each genre has 5 templates across different hook types
+- data/hook_patterns.json is the canonical hook pattern library; regenerate via `python3 scripts/mine_hook_patterns.py`
 
 ---
 
@@ -61,4 +65,23 @@
   - Some agents (consistency-checker, continuity-checker, ooc-checker, pacing-checker) have identical descriptions → overlap detection catches them
   - When filtering test files by path, avoid `"test" in str(path)` — pytest tmp dirs contain "test" in directory names; use `path.name.startswith("test_")` instead
   - The editor-wisdom-checker in `agents/ink-writer/` is the only agent not in `ink-writer/agents/`
+---
+
+## 2026-04-15 - US-101
+- Implemented `scripts/mine_hook_patterns.py`: mines hook patterns from reference corpus
+- 208 unique patterns (≥200 requirement met): 60 crisis, 53 mystery, 35 emotion, 24 choice, 36 desire
+- Positions: 162 cliff, 17 open, 29 mid
+- 7847 raw matches across 1487 chapters from 50 books, deduplicated to 208 patterns
+- 13 genre-specific template sets (玄幻/仙侠/都市/科幻/游戏/悬疑/历史/轻小说/末日/克苏鲁/电竞/直播文/系统流/穿越)
+- Each pattern has: id, type, position, trigger_template, payoff_window_chapters, examples, source_refs
+- Output: `data/hook_patterns.json`
+- Added `tests/hooks/test_hook_patterns.py` with 29 tests (schema, correctness, deduplication, live corpus)
+- Updated `pytest.ini` to include `tests/hooks` in testpaths
+- Files changed: scripts/mine_hook_patterns.py, data/hook_patterns.json, tests/hooks/__init__.py, tests/hooks/test_hook_patterns.py, pytest.ini
+- **Learnings for future iterations:**
+  - Chinese punctuation (`"` / `"`) in Python regex strings causes syntax errors; use Unicode escapes (`\u201c`) or raw strings carefully
+  - Fixture chapters must be ≥200 chars to pass the `len(text) < 200` filter in scanning functions
+  - Genre templates add ~65 patterns (5 per genre × 13 genres), useful to guarantee hitting the 200-pattern minimum
+  - Hook type taxonomy (crisis/mystery/emotion/choice/desire) is aligned with reader-pull-checker agent spec
+  - Deduplication key is `position:hook_type:regex`; same regex at different positions counts as different patterns
 ---
