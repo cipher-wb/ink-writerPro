@@ -210,8 +210,8 @@
         "Tests pass"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: state_kv/disambiguation_log/review_checkpoint_entries tables in IndexManager. SQLStateManager with full CRUD + rebuild_state_dict/rebuild_state_json. StateManager syncs to state_kv on save, rebuilds from SQLite when state.json missing. migrate.py v8→v9 with SQLite data migration. 28 new tests (1536 total), coverage 82.59%."
     },
     {
       "id": "US-302",

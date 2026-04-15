@@ -6,7 +6,7 @@
 - DataModulesConfig.from_project_root(path) expects `.ink/` dir with `state.json` under project_root
 - Review metrics are stored in review_metrics table with JSON-encoded dimension_scores, severity_counts, review_payload_json
 - chapter_reading_power table stores per-chapter hook/micropayoff data; tool_call_stats has limited columns (no duration_ms/tokens_used)
-- pytest.ini testpaths: `ink-writer/scripts/data_modules/tests tests/baseline tests/audit tests/hooks tests/pacing tests/emotion tests/style_rag`; pythonpath includes `scripts`
+- pytest.ini testpaths: `ink-writer/scripts/data_modules/tests tests/baseline tests/audit tests/hooks tests/pacing tests/emotion tests/style_rag tests/anti_detection tests/cultural tests/memory_arch`; pythonpath includes `scripts`
 - Agent specs are markdown with YAML frontmatter (name/description/tools/model); IO sections labeled "输入"/"输出格式"
 - Import cycle detection works via pure Python AST + DFS; no need for networkx dependency
 - 14 agents in `ink-writer/agents/`, 1 in `agents/ink-writer/` (editor-wisdom-checker)
@@ -19,7 +19,11 @@
 - Chapter outline schema is Markdown-based (not JSON); defined in ink-plan/SKILL.md lines 448-468
 - hook_contract field format: `类型=X | 兑现锚点=第M章 | 兑现摘要=Y` — parsed by ink-writer/scripts/hook_contract.py
 - Outline backfill migration: `python3 scripts/patch_outline_hook_contract.py --project-root <path>` — backs up originals before patching
-- migrate.py CURRENT_SCHEMA_VERSION=8; v7→v8 adds hook_contract_config to state.json
+- migrate.py CURRENT_SCHEMA_VERSION=9; v7→v8 adds hook_contract_config, v8→v9 adds single-source-of-truth (state_kv, disambiguation_log, review_checkpoint_entries)
+- state.json is a derived view cache (v13 architecture); SQLite index.db is the single source of truth
+- SQLStateManager.rebuild_state_dict() regenerates state.json from SQLite; called automatically when state.json is missing
+- state_kv table stores singleton state fields (project_info, progress, protagonist_state, world_settings, strand_tracker, configs)
+- StateManager._sync_state_to_kv() syncs singleton fields to SQLite after every save_state()
 - reader-pull hook retry gate: `ink_writer.reader_pull.hook_retry_gate.run_hook_gate()` — mirrors editor_wisdom/review_gate.py pattern
 - fix_prompt_builder: `VIOLATION_FIX_TEMPLATES` maps violation IDs to Chinese fix instructions; `normalize_checker_output()` handles both old and new output formats
 - config/reader-pull.yaml: score_threshold=70, golden_three_threshold=80, max_retries=2
@@ -284,4 +288,24 @@
   - context-agent execution pack section numbering: 13 = 文化语料库 (after existing 12 sections)
   - writer-agent references "第13板块" for cultural lexicon usage instructions
   - Live data tests are parametrized by genre (6 genres × 7 tests = 42 live tests) — validate schema, min entries, no duplicates, no empty terms, valid types, markdown output
+---
+
+## 2026-04-15 - US-301
+- Implemented single-source-of-truth memory architecture (v13)
+- New SQLite tables: `state_kv` (key-value singleton state), `disambiguation_log`, `review_checkpoint_entries`
+- SQLStateManager: full CRUD for state_kv, disambiguation, checkpoints + `rebuild_state_dict()`/`rebuild_state_json()`
+- StateManager: `_sync_state_to_kv()` syncs singleton state to SQLite after every `save_state()`
+- StateManager: `_load_state()` falls back to SQLite rebuild when `state.json` is missing
+- migrate.py: v8→v9 migration + `migrate_state_to_sqlite()` for SQLite data sync
+- state_schema.py: StateModel default schema_version updated to 9
+- init_project.py: default schema_version updated to 9
+- docs/memory_architecture_v13.md: full design document
+- Files changed: index_manager.py, sql_state_manager.py, state_manager.py, migrate.py, state_schema.py, init_project.py, pytest.ini, test_state_schema.py, test_init_project.py, test_hook_contract_required.py
+- New files: docs/memory_architecture_v13.md, tests/memory_arch/test_memory_architecture.py
+- **Learnings for future iterations:**
+  - state_kv is a generic key-value store; all state.json singleton fields stored as JSON blobs under their field name as key
+  - When bumping CURRENT_SCHEMA_VERSION, update ALL places that hardcode old version: state_schema.py, init_project.py, and test fixtures
+  - SQLite `ORDER BY created_at DESC` with same-second timestamps is non-deterministic; use `ORDER BY id ASC` for stable insertion-order retrieval
+  - The rebuild path (`rebuild_state_dict`) must produce output compatible with `_ensure_state_schema()` — include all required fields with defaults
+  - `migrate_state_to_sqlite` is a separate function from `run_migrations` because it needs DataModulesConfig which requires the full project path
 ---
