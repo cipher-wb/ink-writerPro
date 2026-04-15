@@ -354,8 +354,8 @@
         "Tests pass"
       ],
       "priority": 22,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/parallel/ module (pipeline_manager.py + chapter_lock.py). PipelineManager asyncio orchestrator with batch-parallel chapter writing. ChapterLockManager SQLite-based cross-process locks with TTL. ink-auto.sh --parallel N flag delegates to Python orchestrator. config/parallel-pipeline.yaml. 34 new tests (1841 total), coverage 82.24%."
     },
     {
       "id": "US-502",
