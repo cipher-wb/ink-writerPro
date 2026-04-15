@@ -1,0 +1,440 @@
+{
+  "project": "ink-writer",
+  "branchName": "ralph/deep-review-and-perfection",
+  "description": "ink-writer v12 → v13 深度优化：6 个 Phase / 24 个 US，端到端追求架构合理 + 作品质量爆款级 + 长篇 300w 字不崩 + 效率最优。基线 → 追读力 → 去 AI 味 → 长篇不崩 → 架构清理 → 效率 → 300 章压测验收。详见 tasks/prd-deep-review-and-perfection.md。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "[P0] 建立质量基线测量脚本",
+      "description": "As an optimizer, I need a one-shot baseline script that measures all quality/perf metrics so every subsequent change can be compared against it.",
+      "acceptanceCriteria": [
+        "Create scripts/measure_baseline.py that runs end-to-end and emits JSON",
+        "Metrics covered: hook_density, high_point_density, emotion_variance, ai_taste_score, ooc_score, consistency_score, avg_chapter_seconds, avg_chapter_tokens",
+        "Output written to benchmark/baseline_v12.json with timestamp + git sha",
+        "Script is idempotent and can be re-run after each Phase",
+        "Add tests/baseline/test_measure_baseline.py asserting JSON schema",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Completed: scripts/measure_baseline.py + 11 tests. All 1106 tests pass."
+    },
+    {
+      "id": "US-002",
+      "title": "[P0] 建立爆款对照集 (≥30 本)",
+      "description": "As an optimizer, I need a reference corpus of bestseller webnovel samples so quality metrics have a meaningful target.",
+      "acceptanceCriteria": [
+        "Create benchmark/reference_corpus/ with ≥30 bestseller samples (公开样章 only, no full-book scraping for compliance)",
+        "Each sample has manifest.json: source, genre, chapters_count, license_note",
+        "Add scripts/build_reference_corpus.py to (re)build the corpus",
+        "Compute corpus-level percentiles (P25/P50/P75) for hook_density and high_point_density into benchmark/reference_stats.json",
+        "Add tests/baseline/test_reference_corpus.py: corpus loadable, stats valid",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Completed: 50-book reference corpus with manifest.json per book, text-based hook/high-point analysis, P25/P50/P75 percentiles in reference_stats.json. 23 tests pass (1129 total)."
+    },
+    {
+      "id": "US-003",
+      "title": "[P0] 架构静态扫描脚本",
+      "description": "As an architect, I need an automated audit detecting circular imports, duplicate agent responsibilities, dead code, and prompt duplication.",
+      "acceptanceCriteria": [
+        "Create scripts/audit_architecture.py emitting reports/architecture_audit.md",
+        "Detects: import cycles (networkx), unused modules (vulture), agent IO contract overlaps, repeated prompt fragments (>30 token n-grams)",
+        "Output a per-agent IO contract table",
+        "Add tests/audit/test_audit_architecture.py with a fake fixture project",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-101",
+      "title": "[P1-钩子] 抽取爆款钩子模式库",
+      "description": "As a writer pipeline, I need a hook pattern library mined from the reference corpus so every chapter can be planned around a proven hook.",
+      "acceptanceCriteria": [
+        "Mine ≥200 hook patterns from benchmark/reference_corpus/ into data/hook_patterns.json",
+        "Each entry: {id, type, position (open|mid|cliff), trigger_template, payoff_window_chapters, source_ref}",
+        "Add scripts/mine_hook_patterns.py reproducible",
+        "Add tests/hooks/test_hook_patterns.py validating schema + non-empty per type",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-102",
+      "title": "[P1-钩子] 大纲阶段强制声明钩子契约",
+      "description": "As ink-plan, I must require every chapter outline to declare its hook_type + payoff_anchor so writing has a verifiable target.",
+      "acceptanceCriteria": [
+        "Extend chapter outline schema with hook_contract: {type, anchor_chapter, payoff_summary}",
+        "ink-plan agent rejects outlines without hook_contract (hard fail)",
+        "Migrate existing outlines via ink-migrate (back-fill best-guess)",
+        "Add tests/hooks/test_hook_contract_required.py",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-103",
+      "title": "[P1-钩子] reader-pull-checker 输出可执行 fix prompt + 重写闭环",
+      "description": "As the writing loop, when hook density is below target, I must auto-trigger polish with a concrete fix prompt, max 2 retries.",
+      "acceptanceCriteria": [
+        "reader-pull-checker now returns {score, violations[], fix_prompt}",
+        "ink-write loop calls polish-agent with fix_prompt when score below threshold",
+        "Max 2 retries, then write chapters/{n}/hook_blocked.md and fail chapter",
+        "Integration test: monkey-patch checker to return score=0.1 → assert polish called 2x → assert hook_blocked.md exists",
+        "On corpus replay, hook density improves ≥30% vs US-001 baseline",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-104",
+      "title": "[P1-爽点] 爽点节奏调度器",
+      "description": "As ink-plan, I need a high_point_scheduler that decides per-chapter high-point recipe based on chapter position and recent history, instead of relying on the checker post-hoc.",
+      "acceptanceCriteria": [
+        "Create ink_writer/pacing/high_point_scheduler.py",
+        "Inputs: chapter_no, volume_position, last_5_chapter_high_points; Output: {high_point_type, intensity, payoff_window}",
+        "Wired into ink-plan as a hard constraint passed to writer-agent",
+        "50-chapter simulated test: high_point_density variance ≤ 0.2, no 3 consecutive chapters without high_point",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-105",
+      "title": "[P1-情绪] 情绪心电图引擎",
+      "description": "As the writing loop, every chapter must emit a scene-level emotion curve and align with target curve; large flat segments trigger polish.",
+      "acceptanceCriteria": [
+        "data-agent extracts per-scene {valence, arousal} into data/emotion_curves.jsonl",
+        "New agent emotion-curve-checker compares to target curve for the chapter type",
+        "If chapter emotion variance < threshold → mark 'flat', trigger polish to add conflict, max 2 retries",
+        "On corpus replay, emotion curve cosine similarity vs reference ≥ 0.8",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-201",
+      "title": "[P2-去AI味] Style RAG 索引构建",
+      "description": "As polish-agent, I need a Style RAG of human-written scene snippets (sliced by scene_type × emotion) so I can rewrite AI-tasting paragraphs against real human reference.",
+      "acceptanceCriteria": [
+        "Slice benchmark/reference_corpus/ into scene snippets, tag scene_type + emotion + sentence-feature",
+        "Build sentence-transformers index (reuse editor-wisdom retriever module) into data/style_rag/",
+        "Add scripts/build_style_rag.py reproducible",
+        "Add tests/style_rag/test_style_rag.py: query returns Top-K with distance ascending",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-202",
+      "title": "[P2-去AI味] polish-agent 接入 Style RAG",
+      "description": "As polish-agent, I must retrieve Top-K human snippets and use them as in-context rewriting reference whenever anti-detection score is borderline.",
+      "acceptanceCriteria": [
+        "polish-agent calls Style RAG retriever for each AI-tasting paragraph",
+        "Retrieved snippets injected into rewrite prompt with explicit '人写参考' framing",
+        "On corpus replay, anti-detection composite score improves ≥10 vs US-001 baseline",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-203",
+      "title": "[P2-去AI味] 句式多样性硬门禁",
+      "description": "As ink-write, I must enforce statistical features (sentence-length variance, repeated patterns, connective frequency) as hard gates with auto-polish on fail.",
+      "acceptanceCriteria": [
+        "Add config/anti_ai_thresholds.yaml with all thresholds documented",
+        "Hard gate runs at end of ink-write; on fail → 1 polish round → still fail → block + report",
+        "Zero-tolerance list (e.g. '第xx日' opening) causes immediate block, no retry",
+        "Integration test with a deliberately AI-tasting fixture chapter",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-204",
+      "title": "[P2-去AI味] 文化语料库注入",
+      "description": "As context-agent, I should attach a genre-specific cultural lexicon (idioms/dialect/era words) to the writing pack so chapters avoid generic AI phrasing.",
+      "acceptanceCriteria": [
+        "Build data/cultural_lexicon/{xianxia,urban,scifi,...}.json (≥300 entries each)",
+        "context-agent attaches the relevant lexicon to the writing pack",
+        "Each chapter must use ≥N non-generic terms (config per genre)",
+        "Add tests/cultural/test_lexicon_injection.py",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-301",
+      "title": "[P3-长篇] 实体记忆图谱重构 (单一事实源)",
+      "description": "As the memory subsystem, I must unify state.json + index.db into a single SQLite source-of-truth with state.json as a rebuildable view cache.",
+      "acceptanceCriteria": [
+        "Write docs/memory_architecture_v13.md with new schema (characters/factions/items/foreshadows/settings/timeline)",
+        "Implement migration in ink-migrate; existing half-written projects upgrade losslessly",
+        "state.json becomes a derived view, can be rebuilt anytime from sqlite",
+        "All existing audits (ink-audit) pass on a migrated fixture project",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-302",
+      "title": "[P3-长篇] 跨章语义检索取代关键词召回",
+      "description": "As context-agent, I should retrieve historical context via vector semantic search + entity-forced recall, not keyword match, to reduce missed callbacks across 300 chapters.",
+      "acceptanceCriteria": [
+        "Build per-chapter summary vector index",
+        "Recall = semantic Top-K ∪ strong-entity-forced ∪ recent N",
+        "Writing pack size ≤ 80% of current baseline (more precise → shorter)",
+        "Simulated 300-chapter replay: missed-callback events = 0",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-303",
+      "title": "[P3-长篇] 伏笔生命周期管理器",
+      "description": "As foreshadow-tracker, I scan all open foreshadows each chapter and force ink-plan to schedule payoff if any exceeds the lifetime threshold.",
+      "acceptanceCriteria": [
+        "New agent foreshadow-tracker runs every chapter",
+        "Each foreshadow has weight + lifetime threshold",
+        "Overdue → ink-plan must inject payoff into next outline (hard constraint)",
+        "Dashboard renders foreshadow heatmap (read-only HTML)",
+        "Simulated 300-chapter replay: overdue-unpaid = 0",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-304",
+      "title": "[P3-长篇] 人物语气指纹",
+      "description": "As character-archive, every character builds a voice_fingerprint (high-freq words, sentence-length, catchphrases, value anchors) after first appearance and later chapters must align.",
+      "acceptanceCriteria": [
+        "Add voice_fingerprint field to character archive schema",
+        "Auto-learn fingerprint from first appearance; append-only updates",
+        "ooc-checker now scores against fingerprint; deviation > threshold triggers polish",
+        "Simulated 300-chapter replay: OOC score < 5",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-305",
+      "title": "[P3-长篇] 明暗线追踪器",
+      "description": "As the planning subsystem, every plotline (main/sub/dark) is explicit and every chapter must tag which lines it advances; long inactivity triggers warning.",
+      "acceptanceCriteria": [
+        "Extend state.json/sqlite with plotlines schema",
+        "ink-plan must tag each chapter outline with plotline_ids",
+        "Inactive plotline > N chapters → warn + force ink-plan reschedule",
+        "Simulated 300-chapter replay: dropped-plotlines = 0",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-401",
+      "title": "[P4-架构] Agent 职责重映射",
+      "description": "Based on US-003 audit, merge/split agents to eliminate overlap (e.g. unify multiple checkers into a checker pipeline) and produce a topology doc.",
+      "acceptanceCriteria": [
+        "Output docs/agent_topology_v13.md with before/after diagrams",
+        "Each agent has single responsibility + schema-typed IO",
+        "Overlapping agents merged (no duplicate logic)",
+        "All existing pytest pass after refactor",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-402",
+      "title": "[P4-架构] 双 agent 目录消除",
+      "description": "Eliminate the split between ink-writer/agents/ and agents/ink-writer/; unify under one canonical root and update all references + CLAUDE.md.",
+      "acceptanceCriteria": [
+        "Decide single canonical agent directory (document choice in commit)",
+        "Move all agent specs; update every reference (grep clean)",
+        "Update CLAUDE.md, AGENTS.md, GEMINI.md",
+        "All pytest pass",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-403",
+      "title": "[P4-架构] ink-writer vs webnovel-writer skill 决策",
+      "description": "Decide whether to merge or formally separate the two skill systems and document the outcome.",
+      "acceptanceCriteria": [
+        "Write docs/skill_systems_decision.md with decision + rationale",
+        "If merge: provide migration script + deprecation timeline",
+        "If keep both: document each system's scope in README.md",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-404",
+      "title": "[P4-架构] Prompt 模板集中化与版本化",
+      "description": "Extract scattered prompts to templates/prompts/ with version tags and A/B-test capability; eliminate duplicated prompt fragments.",
+      "acceptanceCriteria": [
+        "All agent prompts loaded from templates/prompts/ (no inline strings >50 chars)",
+        "Each template carries semver + changelog comment header",
+        "A/B test harness scripts/ab_prompts.py runs both versions on a fixture set",
+        "Duplicate fragments (>30 tokens) eliminated (verified by US-003 audit)",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-501",
+      "title": "[P5-效率] 章节级并发管线",
+      "description": "Refactor ink-auto from serial to N-chapter concurrent pipeline (write/review/polish/extract overlap) with entity-write locking.",
+      "acceptanceCriteria": [
+        "ink-auto supports --parallel N flag",
+        "Entity writes use sqlite WAL or explicit lock to avoid races",
+        "Throughput ≥ 2.5x serial when N=4 on a fixture",
+        "No data corruption vs serial baseline (diff entity DB)",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-502",
+      "title": "[P5-效率] Anthropic prompt cache 优化",
+      "description": "Split system prompt into stable + volatile segments and tag stable segments with cache_control to maximize cache hits.",
+      "acceptanceCriteria": [
+        "Identify stable segments (character archive, worldbuilding, style guide) per agent",
+        "Apply cache_control to stable segments via Anthropic SDK",
+        "Measured cache hit rate ≥ 70% over a 20-chapter run",
+        "Per-chapter token cost down ≥ 30% vs US-001 baseline",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-503",
+      "title": "[P5-效率] 检查器并行化 + 早失败终止",
+      "description": "Run review-stage checkers concurrently; first hard-gate fail short-circuits to polish without waiting for the rest.",
+      "acceptanceCriteria": [
+        "Checkers run via asyncio.gather",
+        "First hard-gate failure cancels remaining checkers and triggers polish",
+        "Review-stage wall time ≤ 50% of US-001 baseline",
+        "No false-positive blocks (regression test on golden chapters)",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-504",
+      "title": "[P5-效率] 增量数据提取",
+      "description": "data-agent extracts only diffs from the new chapter instead of re-extracting all entities every time.",
+      "acceptanceCriteria": [
+        "Implement diff-based extraction comparing chapter_N to chapter_{N-1} state",
+        "Data-extraction wall time ≤ 40% of US-001 baseline",
+        "Diff vs full-extraction is identical on a 20-chapter fixture",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-601",
+      "title": "[P6-验收] 300 章无人值守压测",
+      "description": "Run a hands-off 300-chapter generation on a chosen genre and collect all metrics for G1-G5 verification.",
+      "acceptanceCriteria": [
+        "benchmark/300chapter_run/ contains full chapters + logs + metrics.json",
+        "Generate reports/v13_acceptance.md comparing G1-G5 targets",
+        "If any metric misses target → file follow-up issues per failing US (do not silently pass)",
+        "If all pass → tag v13.0.0 in git",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-602",
+      "title": "[P6-验收] 盲测人工评估 (≥5 名读者)",
+      "description": "Mix generated chapters with bestseller chapters and have ≥5 human readers blind-rate them.",
+      "acceptanceCriteria": [
+        "Build benchmark/blind_test/ with shuffled mix",
+        "Collect ratings on attractiveness, AI-taste, character, pacing, emotion",
+        "Generated avg score ≥ 0.95 × reference avg",
+        "Report archived to reports/blind_test_v13.md",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

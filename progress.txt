@@ -1,0 +1,45 @@
+# Ralph Progress — deep-review-and-perfection
+
+## Codebase Patterns
+- IndexManager auto-creates all DB tables on init; never create tables manually in fixtures — let IndexManager.__init__ handle schema, then INSERT test data
+- E402 lint warnings are expected for scripts using sys.path manipulation before imports (project_locator, data_modules)
+- DataModulesConfig.from_project_root(path) expects `.ink/` dir with `state.json` under project_root
+- Review metrics are stored in review_metrics table with JSON-encoded dimension_scores, severity_counts, review_payload_json
+- chapter_reading_power table stores per-chapter hook/micropayoff data; tool_call_stats has limited columns (no duration_ms/tokens_used)
+- pytest.ini testpaths: `ink-writer/scripts/data_modules/tests tests/baseline`; pythonpath includes `scripts`
+- benchmark/corpus_index.json has 117 books; use `collections` field for ranking, `dir` field for filesystem lookup
+- benchmark/config.py has SCENE_TYPE_KEYWORDS / EMOTION_KEYWORDS — reuse for text analysis instead of reinventing
+
+---
+
+## 2026-04-15 - US-001
+- Implemented `scripts/measure_baseline.py`: end-to-end baseline measurement script
+- Metrics: hook_density, strong_hook_ratio, avg_micropayoffs, avg_debt_balance, high_point_density, emotion_variance, avg_immersion, ai_taste_score, ooc_score, consistency_score, avg_chapter_seconds, avg_chapter_tokens
+- Output: structured JSON to `benchmark/baseline_v12.json` with timestamp + git SHA
+- Added `tests/baseline/test_measure_baseline.py` with 11 tests (schema, correctness, idempotency, empty project)
+- Updated `pytest.ini` to include `tests/baseline` in testpaths and `scripts` in pythonpath
+- Files changed: scripts/measure_baseline.py, tests/baseline/__init__.py, tests/baseline/test_measure_baseline.py, pytest.ini
+- **Learnings for future iterations:**
+  - tool_call_stats table does NOT have duration_ms or tokens_used columns — only tool_name, success, retry_count, error_code, error_message, chapter
+  - Word counts are in chapters table; token estimates derived from word_count × 1.5
+  - Performance timing must come from review_metrics created_at/updated_at delta, not tool_call_stats
+  - The project has two agent directories: `ink-writer/agents/` (14 agents) and `agents/ink-writer/` (1 agent: editor-wisdom-checker)
+---
+
+## 2026-04-15 - US-002
+- Implemented `scripts/build_reference_corpus.py`: selects Top-N books by collections, creates reference_corpus/ with manifest.json per book, analyzes text for hook/high-point metrics, outputs P25/P50/P75 percentiles
+- Built 50-book reference corpus from existing 117-book scraped corpus
+- `benchmark/reference_stats.json`: hook_density P75=0.2604, high_point_density P75=0.965
+- Each book in `benchmark/reference_corpus/{title}/manifest.json` has: book_id, title, author, source, genre, chapters_count, license_note
+- Chapter files are symlinked to avoid data duplication
+- Added `benchmark/reference_corpus/` to .gitignore (copyrighted content)
+- Added `tests/baseline/test_reference_corpus.py` with 23 tests (20 unit + 3 live corpus validation)
+- Files changed: scripts/build_reference_corpus.py, tests/baseline/test_reference_corpus.py, benchmark/reference_stats.json, .gitignore
+- **Learnings for future iterations:**
+  - Existing corpus at benchmark/corpus/ has 117 books with metadata.json + chapters/ch00N.txt structure
+  - benchmark/corpus_index.json is the master index with collections/genre/chapter_count per book
+  - benchmark/config.py has SCENE_TYPE_KEYWORDS and EMOTION_KEYWORDS useful for text analysis
+  - Hook density for real novels averages ~0.17 (end-of-chapter hooks are sparse but impactful)
+  - High-point keyword density averages ~0.75 per 1000 chars across genres
+  - compute_percentiles returns int for min/max when inputs are ints — use isinstance(x, (int, float)) in assertions
+---
