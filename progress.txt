@@ -74,6 +74,11 @@
 - migrate.py CURRENT_SCHEMA_VERSION=11; v10→v11 adds plotline_lifecycle_config
 - state_schema.py PlotThreads model has plotline_registry field
 - pytest.ini testpaths now includes `tests/plotline`
+- Prompt templates in `ink-writer/templates/prompts/` with `{{PROMPT_TEMPLATE:filename.md}}` reference pattern
+- `_manifest.json` tracks template name, version, consumers, changelog
+- `scripts/ab_prompts.py` commands: list, diff-all, show, compare
+- audit_architecture.py `_strip_template_refs()` excludes `{{PROMPT_TEMPLATE:...}}` from n-gram analysis
+- pytest.ini testpaths now includes `tests/prompts`
 
 ---
 
@@ -471,4 +476,35 @@
   - webnovel-writer's --fast/--minimal modes are not yet in ink-write — noted as Phase B backport item
   - Shared data_modules are byte-identical between both systems; ink-writer adds 6 extra modules
   - Core references (core-constraints.md, strand-weave-pattern.md, cool-points-guide.md) are byte-identical
+---
+
+## 2026-04-16 - US-404
+- Implemented: Prompt template centralization with version tracking and A/B test capability
+- Files created:
+  - `ink-writer/templates/prompts/` — 10 versioned shared prompt templates + `_manifest.json`
+  - `scripts/ab_prompts.py` — A/B test harness with list/diff-all/show/compare commands
+  - `tests/prompts/test_prompt_templates.py` — 24 tests for template system
+- Files modified:
+  - 15 agent specs updated with `{{PROMPT_TEMPLATE:...}}` references (31 total refs)
+  - `scripts/audit_architecture.py` — template-aware n-gram dedup
+  - `ink-writer/references/shared-checker-preamble.md` — marked as migrated
+  - `tests/audit/test_agent_topology.py` — updated for template refs
+  - `pytest.ini` — added tests/prompts testpath
+- Templates extracted:
+  - checker-input-rules.md (13 consumers)
+  - checker-output-reference.md (10 consumers)
+  - checker-range-input.md (5 consumers)
+  - checker-load-context.md (3 consumers)
+  - checker-report-template.md (5 consumers)
+  - responsibility-boundary.md (2 consumers)
+  - iron-laws.md (2 consumers)
+  - knowledge-boundary-rules.md (2 consumers)
+  - tracker-shared-logic.md (3 consumers)
+  - polish-priority-rules.md (1 consumer)
+- **Learnings for future iterations:**
+  - Agent specs are Claude Code subagent markdown — "prompt extraction" means replacing inline duplicate blocks with `{{PROMPT_TEMPLATE:...}}` references, not Python code changes
+  - The `{{SHARED_CHECKER_PREAMBLE}}` pattern in thread-lifecycle-tracker was the precedent for template references
+  - The n-gram dedup in audit_architecture.py counts template reference markers as duplicates — must strip them before analysis
+  - 4 agents (anti-detection-checker, proofreading-checker, context-agent, data-agent) have unique enough content that no template extraction is needed
+  - agent-specific "默认数据源" lines must remain inline since each agent uses different data
 ---
