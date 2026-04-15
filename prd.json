@@ -322,8 +322,8 @@
         "Tests pass"
       ],
       "priority": 20,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: Decision = merge (deprecate webnovel-writer, ink-writer as sole system). docs/skill_systems_decision.md with full comparison, rationale, 4-phase migration timeline. migrate_webnovel_to_ink.sh already existed. 31 tests pass (1783 total), coverage 82.24%."
     },
     {
       "id": "US-404",

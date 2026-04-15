@@ -456,3 +456,19 @@
   - audit_architecture.py has AGENT_DIRS in two places (module-level constant + function default) — update both
   - Test file test_agent_topology.py explicitly asserted the secondary directory existed — tests that assert directory structure need updating when directories are reorganized
 ---
+
+## 2026-04-16 - US-403
+- What was implemented: Decision document for ink-writer vs webnovel-writer skill system merge
+- Decision: Merge — ink-writer is the sole system, webnovel-writer deprecated
+- Files changed:
+  - docs/skill_systems_decision.md (new): full comparison analysis + 4-phase migration timeline
+  - tests/skill_systems/test_skill_systems_decision.py (new): 31 tests validating decision doc completeness + ink-writer superset coverage
+  - tests/skill_systems/__init__.py (new)
+  - pytest.ini: added tests/skill_systems to testpaths
+- **Learnings for future iterations:**
+  - ink-writer skills are at `ink-writer/skills/`, webnovel-writer at `~/.claude/plugins/marketplaces/webnovel-writer-marketplace/webnovel-writer/skills/`
+  - migrate_webnovel_to_ink.sh already exists and handles .webnovel→.ink + volume flattening
+  - webnovel-writer's --fast/--minimal modes are not yet in ink-write — noted as Phase B backport item
+  - Shared data_modules are byte-identical between both systems; ink-writer adds 6 extra modules
+  - Core references (core-constraints.md, strand-weave-pattern.md, cool-points-guide.md) are byte-identical
+---
