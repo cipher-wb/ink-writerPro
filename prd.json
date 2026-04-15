@@ -243,8 +243,8 @@
         "Tests pass"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/foreshadow/ module (config, tracker, fix_prompt_builder). foreshadow-tracker agent spec with priority-aware overdue rules (P0/P1/P2). ink-plan Step 2.4 hard constraint + 伏笔处置 field. ink-write Step 0 upgraded. Dashboard /api/plot-threads/heatmap + ForeshadowHeatmap component. 48 new tests (1616 total), 300-chapter simulation passes."
     },
     {
       "id": "US-304",

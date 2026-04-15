@@ -44,6 +44,10 @@
 - SemanticChapterRetriever: 3-way recall = semantic Top-K ∪ entity-forced ∪ recent-N; config at `config/semantic-recall.yaml`
 - extract_chapter_context.py `_search_semantic_recall()` is the priority path; falls back to legacy RAG/BM25 if index unavailable
 - pytest.ini testpaths now includes `tests/semantic_recall`
+- foreshadow-tracker agent scans every chapter; priority-aware overdue: P0(grace=5), P1(grace=10), P2(grace=20)
+- ink-plan Step 2.4 calls `scan_foreshadows()` + `build_plan_injection()`; forced_payoffs as hard constraint
+- Chapter outline `伏笔处置` field: 无 | 埋设:[id] | 推进:[id] | 兑现:[id]
+- Dashboard `/api/plot-threads/heatmap` endpoint + ForeshadowHeatmap React component
 
 ---
 
@@ -332,4 +336,25 @@
   - ChapterCard.from_db_row() handles both JSON-string and native-list fields for unresolved_questions/key_facts/involved_entities
   - entity-forced recall iterates cards in reverse (newest first) for efficiency with `max_hits * 3` scan window
   - The 300-chapter simulation test validates recent-N guarantee (0 missed callbacks); entity-forced coverage is best-effort
+---
+
+## 2026-04-15 - US-303
+- Implemented foreshadow lifecycle manager: `ink_writer/foreshadow/` module with config, tracker, fix_prompt_builder
+- `foreshadow-tracker` agent spec: priority-aware overdue rules (P0 grace=5ch, P1 grace=10ch, P2 grace=20ch), silence detection (30ch threshold), density warnings
+- `config/foreshadow-lifecycle.yaml`: tunable thresholds for overdue grace, silence, forced payoffs, injection mode
+- `ink_writer/foreshadow/tracker.py`: `scan_foreshadows()` scans active foreshadows from SQLite, classifies overdue/silent, generates alerts; `build_plan_injection()` creates ink-plan payload; `build_heatmap_data()` for dashboard
+- `ink_writer/foreshadow/fix_prompt_builder.py`: builds targeted fix prompts with 5 violation types (OVERDUE_CRITICAL/HIGH/MEDIUM, SILENT, DENSITY_HIGH)
+- ink-plan SKILL.md: Step 2.4 foreshadow lifecycle scheduling (hard constraint), chapter outline `伏笔处置` field, forced payoff validation + hard fail
+- ink-write SKILL.md: Step 0 逾期伏笔检查 upgraded from raw SQL to `foreshadow.tracker.scan_foreshadows()`
+- Dashboard: `/api/plot-threads/heatmap` endpoint (bucketed by chapter range), `ForeshadowHeatmap` React component with color-coded cells (planted=blue, active=yellow, resolved=green, overdue_risk=red)
+- 48 new tests (1616 total), coverage 82.32%
+- 300-chapter simulation: test_300_chapter_lifecycle_zero_overdue passes (with tracker intervention, overdue=0); test_300_chapter_no_tracker_has_overdue confirms overdue accumulates without intervention
+- Files changed: ink_writer/foreshadow/{__init__,config,tracker,fix_prompt_builder}.py, config/foreshadow-lifecycle.yaml, ink-writer/agents/foreshadow-tracker.md, ink-writer/dashboard/app.py, ink-writer/dashboard/frontend/src/App.jsx, ink-writer/skills/ink-plan/SKILL.md, ink-writer/skills/ink-write/SKILL.md, tests/foreshadow/{__init__,test_config,test_tracker,test_fix_prompt}.py, pytest.ini
+- **Learnings for future iterations:**
+  - `plot_thread_registry` already has `target_payoff_chapter` (nullable) and `priority` fields — no schema migration needed
+  - `_load_active_foreshadows()` must use `sqlite3.Row` factory for dict-like access; plain fetchall returns tuples
+  - `build_heatmap_data()` should still generate empty buckets when no foreshadows exist (for dashboard grid)
+  - Dashboard frontend uses pure CSS for heatmap (no charting library needed); rgba opacity mapping works well for density
+  - foreshadow-tracker is read-only (no DB writes); data-agent handles status updates via `plot_thread_updates`
+  - Step 0 逾期伏笔检查 and canary A.6 are complementary: Step 0 is priority-aware overdue, A.6 is silence-only detection
 ---
