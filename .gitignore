@@ -64,6 +64,7 @@ logs/editor-wisdom/
 
 # Benchmark corpus (copyrighted content, not for distribution)
 benchmark/corpus/
+benchmark/reference_corpus/
 benchmark/per_book_stats/
 benchmark/per_book_craft/
 scripts/ralph/progress.txt
