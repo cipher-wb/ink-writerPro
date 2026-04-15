@@ -39,6 +39,11 @@
 - Lexicon entry types: idiom, slang, dialect, era_word, jargon — validated in tests
 - context-agent Step 2.6 injects cultural lexicon; writer-agent has corresponding section for using it
 - `sample_lexicon()` uses chapter_no + seed_offset for deterministic but chapter-varying selection
+- Semantic recall module: `ink_writer.semantic_recall` (config, chapter_index, retriever); FAISS index at `.ink/chapter_index/`
+- ChapterVectorIndex stores chapter_memory_cards as FAISS vectors (BAAI/bge-small-zh-v1.5); build via `scripts/build_chapter_index.py`
+- SemanticChapterRetriever: 3-way recall = semantic Top-K ∪ entity-forced ∪ recent-N; config at `config/semantic-recall.yaml`
+- extract_chapter_context.py `_search_semantic_recall()` is the priority path; falls back to legacy RAG/BM25 if index unavailable
+- pytest.ini testpaths now includes `tests/semantic_recall`
 
 ---
 
@@ -308,4 +313,23 @@
   - SQLite `ORDER BY created_at DESC` with same-second timestamps is non-deterministic; use `ORDER BY id ASC` for stable insertion-order retrieval
   - The rebuild path (`rebuild_state_dict`) must produce output compatible with `_ensure_state_schema()` — include all required fields with defaults
   - `migrate_state_to_sqlite` is a separate function from `run_migrations` because it needs DataModulesConfig which requires the full project path
+---
+
+## 2026-04-15 - US-302
+- Implemented `ink_writer/semantic_recall/` module: config.py, chapter_index.py, retriever.py
+- ChapterVectorIndex: FAISS FlatIP index over chapter memory cards, supports incremental add + save/load
+- SemanticChapterRetriever: 3-way hybrid recall (semantic Top-K ∪ entity-forced ∪ recent-N), entity overlap boosting
+- Config: `config/semantic-recall.yaml` with all thresholds documented
+- Build script: `scripts/build_chapter_index.py --project-root <path> [--rebuild]`
+- Integration: `extract_chapter_context.py` → `_search_semantic_recall()` as priority path before legacy RAG/BM25
+- context-agent.md updated with `semantic_hybrid` mode documentation
+- 32 new tests (1568 total), coverage 82.53%
+- Files changed: ink_writer/semantic_recall/{__init__,config,chapter_index,retriever}.py, config/semantic-recall.yaml, scripts/build_chapter_index.py, ink-writer/scripts/extract_chapter_context.py, ink-writer/agents/context-agent.md, tests/semantic_recall/{test_config,test_chapter_index,test_retriever,test_integration}.py, pytest.ini
+- **Learnings for future iterations:**
+  - FAISS FlatIP with normalized embeddings = cosine similarity; same pattern as style_rag
+  - Reuse BAAI/bge-small-zh-v1.5 model across all vector indices (style_rag, editor-wisdom, chapter_index) for consistency
+  - `_search_memory_cards_and_summaries()` uses lexical token overlap; semantic recall is strictly superior for cross-chapter continuity
+  - ChapterCard.from_db_row() handles both JSON-string and native-list fields for unresolved_questions/key_facts/involved_entities
+  - entity-forced recall iterates cards in reverse (newest first) for efficiency with `max_hits * 3` scan window
+  - The 300-chapter simulation test validates recent-N guarantee (0 missed callbacks); entity-forced coverage is best-effort
 ---
