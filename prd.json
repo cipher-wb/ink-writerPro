@@ -386,8 +386,8 @@
         "Tests pass"
       ],
       "priority": 24,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/checker_pipeline/ module with CheckerRunner (asyncio.to_thread for sync, native async support). GateSpec with hard_gate flag. cancel_event-based early termination. step-3-review-gate.md updated for full parallelism. 25 new tests (1896 total)."
     },
     {
       "id": "US-504",

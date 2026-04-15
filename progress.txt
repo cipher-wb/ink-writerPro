@@ -90,6 +90,11 @@
 - CacheMetricsTracker stores per-call cache hit/miss in `.ink/cache_metrics.db`
 - config/prompt-cache.yaml: 7 stable segments (system_prompt, character_archive, worldbuilding, etc.) + 5 volatile
 - pytest.ini testpaths now includes `tests/prompt_cache`
+- Checker pipeline: `ink_writer.checker_pipeline` module (CheckerRunner + GateSpec)
+- CheckerRunner: asyncio parallel with cancel_event for early termination on hard-gate failure
+- Sync checkers wrapped in asyncio.to_thread(); async checkers run natively
+- step-3-review-gate.md: full parallelism (removed max_concurrency=2 limit)
+- pytest.ini testpaths now includes `tests/checker_pipeline`
 
 ---
 
@@ -556,4 +561,19 @@
   - PromptCacheConfig uses dataclass field(default_factory=...) — can't reference class attributes in load_config, need defaults instance
   - CacheMetricsTracker stores per-call metrics so cache_hit_rate can be computed over any window
   - Anthropic cache_control format: [{"type": "text", "text": ..., "cache_control": {"type": "ephemeral"}}]
+---
+
+## 2026-04-16 - US-503
+- What was implemented: 检查器并行化 + 早失败终止
+- Files changed:
+  - ink_writer/checker_pipeline/__init__.py (new)
+  - ink_writer/checker_pipeline/runner.py (new) — CheckerRunner asyncio executor with GateSpec
+  - ink-writer/skills/ink-write/references/step-3-review-gate.md — full parallelism dispatch
+  - tests/checker_pipeline/test_checker_runner.py (new) — 25 tests
+  - pytest.ini — added tests/checker_pipeline
+- **Learnings for future iterations:**
+  - Sync checker functions with time.sleep() block the event loop — must use asyncio.to_thread() for true parallelism
+  - asyncio.iscoroutinefunction deprecated in 3.16; use inspect.iscoroutinefunction() instead
+  - cancel_event pattern: set event on hard-gate fail, check at semaphore acquire — doesn't cancel in-progress to_thread tasks but prevents new ones from starting
+  - Thread-based tasks (to_thread) can't be truly cancelled mid-sleep; timing tests must be tolerant
 ---
