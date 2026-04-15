@@ -407,7 +407,16 @@ For each chapter, determine:
 - Fire Strand → 情感爽点（认可、保护、告白）
 - Constellation Strand → 认知爽点（真相、预言、身份）
 
-**2.5 爽点执行剧本** (based on 节拍表爽点链规划)
+**2.5 爽点节奏调度** (hard constraint from high_point_scheduler)
+- 调用 `ink_writer.pacing.high_point_scheduler.schedule_high_point()` 获取本章爽点配方
+- 输入：chapter_no, volume_position (0.0-1.0), last_5_chapter_high_points
+- 输出：{high_point_type, intensity, payoff_window, require_high_point, rationale}
+- **硬约束**：require_high_point=true 的章节**必须**包含对应 intensity 级别的爽点
+- intensity 映射：minor=小爽点(单一模式), combo=组合爽点(2模式叠加), milestone=里程碑爽点(改变主角地位)
+- high_point_type 映射：face_slap=装逼打脸, hidden_strength=扮猪吃虎, level_up_kill=越级反杀, authority_challenge=打脸权威, villain_fail=反派翻车, sweet_surprise=甜蜜超预期
+- 将调度器输出的 rationale 附加到大纲注释中，便于 writer-agent 理解意图
+
+**2.6 爽点执行剧本** (based on 节拍表爽点链规划 + 调度器配方)
 - 检查本章所属的爽点链（PC-X），确定本章角色（铺垫/压迫/爆发）
 - 填写**压扬标记**：压/平/扬
 - 填写**爽点执行**字段：
@@ -454,6 +463,7 @@ Chapter format (include 反派层级 for context-agent):
 - 章内时间跨度: {如 3小时/半天/1天}
 - 与上章时间差: {如 紧接/6小时/1天/跨夜}
 - 倒计时状态: {事件A D-3 -> D-2 / 无}
+- 爽点配方: 类型={face_slap|hidden_strength|level_up_kill|authority_challenge|villain_fail|sweet_surprise} | 强度={minor|combo|milestone} | 兑现窗口={1-3章}
 - 爽点: {类型} - {60-80字，含"谁→做什么→对象反应→围观反应"}
 - 爽点执行: 铺垫来源:{哪章/本章} | 信息差:{读者知X但角色不知Y/无(理由)} | 预期读者情绪:{解气/震撼/热血/优越感}
 - 压扬标记: {压/平/扬}
