@@ -85,6 +85,11 @@
 - PipelineManager: batch-parallel model — N chapters per batch, checkpoints after each batch completes
 - config/parallel-pipeline.yaml for parallel settings (max_parallel, cooldown, lock TTL)
 - pytest.ini testpaths now includes `tests/parallel`; asyncio_mode=auto for async tests
+- Prompt cache: `ink_writer.prompt_cache` module (config, segmenter, metrics)
+- cache_control applied to editor-wisdom llm_backend.py and checker.py system prompts
+- CacheMetricsTracker stores per-call cache hit/miss in `.ink/cache_metrics.db`
+- config/prompt-cache.yaml: 7 stable segments (system_prompt, character_archive, worldbuilding, etc.) + 5 volatile
+- pytest.ini testpaths now includes `tests/prompt_cache`
 
 ---
 
@@ -532,4 +537,23 @@
   - ChapterResult.elapsed must handle start_time=0 edge case (test with time=0 fixtures)
   - SQLite WAL + busy_timeout already existed in IndexManager; parallel_locks.db is a separate coordination DB
   - The batch-parallel model (write N → checkpoint → next batch) is simpler than true pipeline parallelism and avoids complex inter-stage dependencies
+---
+
+## 2026-04-16 - US-502
+- What was implemented: Anthropic prompt cache 优化 — cache_control + 指标追踪
+- Files changed:
+  - ink_writer/prompt_cache/__init__.py (new)
+  - ink_writer/prompt_cache/config.py (new) — PromptCacheConfig with stable/volatile segment lists
+  - ink_writer/prompt_cache/segmenter.py (new) — CacheableMessage, segment_system_prompt, build_cached_system_param
+  - ink_writer/prompt_cache/metrics.py (new) — CacheMetricsTracker SQLite-backed
+  - ink_writer/editor_wisdom/llm_backend.py — cache_control on system param + _record_cache_metrics
+  - ink_writer/editor_wisdom/checker.py — cached_system block for direct anthropic_client calls
+  - config/prompt-cache.yaml (new) — 7 stable + 5 volatile segments
+  - tests/prompt_cache/test_prompt_cache.py (new) — 30 tests
+  - pytest.ini — added tests/prompt_cache
+- **Learnings for future iterations:**
+  - Main writing pipeline uses Claude Code Task tool, not direct API calls — cache_control applies only to editor-wisdom direct SDK calls
+  - PromptCacheConfig uses dataclass field(default_factory=...) — can't reference class attributes in load_config, need defaults instance
+  - CacheMetricsTracker stores per-call metrics so cache_hit_rate can be computed over any window
+  - Anthropic cache_control format: [{"type": "text", "text": ..., "cache_control": {"type": "ephemeral"}}]
 ---

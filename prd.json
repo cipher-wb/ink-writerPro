@@ -370,8 +370,8 @@
         "Tests pass"
       ],
       "priority": 23,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: ink_writer/prompt_cache/ module (config, segmenter, metrics). llm_backend.py + checker.py use cache_control on system prompts. CacheMetricsTracker SQLite-backed. config/prompt-cache.yaml defines 7 stable + 5 volatile segments. 30 new tests (1871 total), cache_hit_rate ≥70% and token_savings ≥30% validated in tests."
     },
     {
       "id": "US-503",
