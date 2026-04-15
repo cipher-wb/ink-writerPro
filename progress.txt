@@ -99,6 +99,9 @@
 - `compute_entity_diff()` categorizes entities into new/changed/unchanged/removed
 - config/incremental-extract.yaml: always_extract_protagonist=true, max_prior_state_age=5
 - pytest.ini testpaths now includes `tests/incremental_extract`
+- 300-chapter benchmark: `scripts/run_300chapter_benchmark.py` with G1-G5 metrics, acceptance report
+- Blind test: `scripts/build_blind_test.py` with shuffle mix, manifest, rating sheet, report aggregator
+- pytest.ini testpaths now includes `tests/benchmark`
 
 ---
 
@@ -596,4 +599,18 @@
   - Protagonist always-extract flag prevents drift in protagonist state tracking
   - _normalize() with json.dumps(sort_keys=True) ensures dict/list comparisons are order-independent
   - Savings of ≥60% typical when most entities don't change between chapters
+---
+
+## 2026-04-16 - US-601 + US-602
+- What was implemented: 300章压测脚手架 + 盲测工具
+- Files changed:
+  - scripts/run_300chapter_benchmark.py (new) — G1-G5 metrics framework, acceptance report generator
+  - scripts/build_blind_test.py (new) — blind test builder + rating aggregator
+  - tests/benchmark/test_benchmark_tools.py (new) — 17 tests
+  - pytest.ini — added tests/benchmark
+- **Learnings for future iterations:**
+  - G1-G5 metrics are dataclass-based with individual .passed properties for clean threshold checking
+  - BlindTestSet uses answer_key separation: manifest (public) vs answer_key (private) for true blind testing
+  - Both scripts produce scaffold output — actual runs need LLM API + human readers
+  - RATING_DIMENSIONS list shared between builder and report generator for consistency
 ---

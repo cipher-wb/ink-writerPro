@@ -417,8 +417,8 @@
         "Tests pass"
       ],
       "priority": 26,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: scripts/run_300chapter_benchmark.py with G1-G5 metrics framework, BenchmarkResult, generate_acceptance_report(). Integrates with ink-auto --parallel. --dry-run mode. 9 tests pass. Note: actual 300-chapter run requires LLM API + real project."
     },
     {
       "id": "US-602",
@@ -433,8 +433,8 @@
         "Tests pass"
       ],
       "priority": 27,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed: scripts/build_blind_test.py with build_blind_test() (shuffle mix + manifest + answer_key + rating_sheet). generate_blind_test_report() aggregates ratings and checks 0.95× threshold. 8 tests pass. Note: actual blind test requires human readers."
     }
   ]
 }
