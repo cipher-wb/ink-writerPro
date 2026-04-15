@@ -99,6 +99,7 @@
 | context-agent | 上下文搜集Agent，内置 Context Contract，输出可被 Step 2A 直接消费的创作执行包。 | Read, Grep, Bash | ```json {   "chapter": 100,   "project_root": "D:/… | 输出必须是单一执行包，包含 3 层：  1. **任务书（10板块）** - 本章核心任务（目标/阻… |
 | continuity-checker | 连贯性检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | data-agent | 数据处理Agent，负责 AI 实体提取、场景切片、索引构建，并记录钩子/模式/结束状态与章节摘要。 | Read, Write, Bash | ```json {   "chapter": 100,   "chapter_file": "正文/… | ```json {   "entities_appeared": [     {"id": "xia… |
+| editor-wisdom-checker | 编辑智慧检查器，基于检索到的编辑规则对章节进行评分，输出违规列表和修复建议。 | Read | - `chapter_text`: 章节正文 - `chapter_no`: 章节号 - `rule… | ```json {   "agent": "editor-wisdom-checker",   "c… |
 | emotion-curve-checker | 情绪心电图检查，检测情绪曲线平淡/单调/与目标曲线偏差，输出结构化报告 | Read |  | ```json {   "agent": "emotion-curve-checker",   "c… |
 | foreshadow-tracker | 伏笔生命周期追踪器，每章扫描所有活跃伏笔，检测逾期/沉默/密度异常，输出结构化报告 | Read |  |  |
 | golden-three-checker | 黄金三章检查器，专门审查第1-3章的开头抓取力、承诺兑现和章末驱动力。 | Read | - `chapter` - `chapter_file` - `project_root` - `.… | ```json {   "agent": "golden-three-checker",   "ch… |
@@ -112,7 +113,6 @@
 | reader-simulator | 读者模拟器，从目标读者视角评估章节阅读体验，输出沉浸度/情绪曲线/弃读风险报告 | Read |  |  |
 | thread-lifecycle-tracker | 线程生命周期追踪器，统一管理伏笔(foreshadow)与明暗线(plotline)的全生命周期，检测逾期/断更/沉默/… | Read |  |  |
 | writer-agent | Step 2A 正文起草 Agent，消费创作执行包生成符合大纲的章节草稿 | Read, Write, Bash | ```json {   "project_root": "{PROJECT_ROOT}",   "c… | - 章节草稿文件：`正文/第{chapter_padded}章-{title_safe}.md` 或… |
-| editor-wisdom-checker | 编辑智慧检查器，基于检索到的编辑规则对章节进行评分，输出违规列表和修复建议。 | Read | - `chapter_text`: 章节正文 - `chapter_no`: 章节号 - `rule… | ```json {   "agent": "editor-wisdom-checker",   "c… |
 
 ## 4. Agent Responsibility Overlaps
 
@@ -139,26 +139,15 @@
 
 Fragments appearing in 2+ agent specs (top 50):
 
-- **12x** in [continuity-checker, editor-wisdom-checker, emotion-curve-checker, foreshadow-tracker, golden-three-checker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-pull-checker, reader-simulator, thread-lifecycle-tracker]: `仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件 禁止读取 db`
-- **10x** in [consistency-checker, continuity-checker, emotion-curve-checker, foreshadow-tracker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-simulator, thread-lifecycle-tracker]: `输出格式 遵循 claude_plugin_root references checker output`
-- **10x** in [consistency-checker, continuity-checker, emotion-curve-checker, foreshadow-tracker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-simulator, thread-lifecycle-tracker]: `schema md 统一 json schema 输入硬规则`
-- **9x** in [consistency-checker, continuity-checker, emotion-curve-checker, foreshadow-tracker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-simulator]: `md 统一 json schema 输入硬规则 必须先读取`
-- **8x** in [continuity-checker, emotion-curve-checker, foreshadow-tracker, high-point-checker, ooc-checker, pacing-checker, plotline-tracker, reader-simulator]: `json schema 输入硬规则 必须先读取 review_bundle_file 默认只使用审查包中的正文`
 - **5x** in [consistency-checker, continuity-checker, high-point-checker, ooc-checker, pacing-checker]: `检查范围 输入 单章或章节区间 如 45 45`
 - **5x** in [consistency-checker, continuity-checker, high-point-checker, ooc-checker, pacing-checker]: `覆盖范围 第 n 章 第 m`
-- **4x** in [consistency-checker, continuity-checker, ooc-checker, pacing-checker]: `禁止读取 db 文件 目录路径 以及白名单外的相对路径 检查范围`
 - **4x** in [context-agent, high-point-checker, reader-pull-checker, reader-simulator]: `claude_plugin_root references reading power taxonomy md`
-- **4x** in [emotion-curve-checker, foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `禁止读取 db 文件 目录路径 以及白名单外的相对路径 核心概念`
-- **3x** in [consistency-checker, continuity-checker, pacing-checker]: `输入参数 json project_root project_root chapter_file absolute_chapter_file`
-- **3x** in [continuity-checker, pacing-checker, reader-simulator]: `schema 输入硬规则 必须先读取 review_bundle_file 默认只使用审查包中的正文 前序摘要`
 - **3x** in [data-agent, polish-agent, writer-agent]: `tools read write bash model inherit`
 - **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `密度异常 输出结构化报告 tools read model inherit`
-- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `章节历史 仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件 禁止读取`
 - **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `step 2 逐条扫描 对每条 status active`
 - **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `密度告警 5 最低分 0 pass overall_score`
 - **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `规划失败 硬阻断 3 plan_injection_mode warn 时`
 - **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `tracker 只读 不修改 index db data`
-- **3x** in [high-point-checker, reader-pull-checker, reader-simulator]: `禁止读取 db 文件 目录路径 以及白名单外的相对路径 核心参考`
 - **3x** in [high-point-checker, reader-pull-checker, reader-simulator]: `题材画像 claude_plugin_root references genre profiles md`
 - **2x** in [anti-detection-checker, proofreading-checker]: `输入 与其他 checker 相同 接收 review_bundle_file`
 - **2x** in [anti-detection-checker, proofreading-checker]: `output schema md 的统一格式 json checker`
@@ -167,12 +156,9 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [context-agent, data-agent]: `cli 入口与脚本目录校验 必做 为避免 pythonpath cd`
 - **2x** in [context-agent, data-agent]: `index recent appearances limit 20 python3`
 - **2x** in [context-agent, writer-agent]: `references shared scene craft index md`
-- **2x** in [continuity-checker, pacing-checker]: `执行流程 第一步 加载上下文 输入参数 json project_root`
-- **2x** in [continuity-checker, pacing-checker]: `absolute_chapter_file review_bundle_file absolute_review_bundle_file 先读取 review_bundle_file 只有`
 - **2x** in [data-agent, ooc-checker]: `catchphrases 斗之力 无处不在 speech_habits 喜欢用反问句 生气时用短句`
 - **2x** in [data-agent, ooc-checker]: `vocabulary_level 粗犷直接 tone 倔强不服输 dialect_markers forbidden_expressions`
-- **2x** in [emotion-curve-checker, high-point-checker]: `schema 输入硬规则 必须先读取 review_bundle_file 默认只使用审查包中的正文 题材画像`
-- **2x** in [emotion-curve-checker, high-point-checker]: `最近章节摘要与 guidance 仅当审查包缺字段时 才允许补读 allowed_read_files 中的绝对路径文件`
+- **2x** in [emotion-curve-checker, high-point-checker]: `本 agent 默认数据源 审查包中的正文 题材画像 最近章节摘要与`
 - **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `沉默 密度异常 输出结构化报告 tools read model`
 - **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `级别 priority 宽限期 逾期后处理 p0 核心`
 - **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `80 5章 critical ink plan 强制安排兑现`
@@ -189,3 +175,17 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `total_active 12 total_overdue 2 total_silent 1`
 - **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `plan_injection_mode force 时 不安排 规划失败 硬阻断`
 - **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `data agent 在 step b 中更新`
+- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `与 dashboard 的交互 api plot threads`
+- **2x** in [high-point-checker, reader-pull-checker]: `核心参考 分类法 claude_plugin_root references reading power`
+- **2x** in [high-point-checker, reader-pull-checker]: `taxonomy md 题材画像 claude_plugin_root references genre`
+- **2x** in [pacing-checker, reader-simulator]: `本 agent 默认数据源 审查包中的正文 前序摘要 reader_signal`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `本 agent 默认数据源 审查包中的正文 线程列表 章节历史`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `2 逐条扫描 对每条 status active 的线程`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `1 断更检测 current_chapter last_touched_chapter max_gap 按`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `5 密度告警 5 最低分 0 pass`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `主线断更 主线 title 已 n 章未推进`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `本章必须通过关键事件推进核心冲突 支线断更 支线 title 已 n`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `建议在本章通过配角行动推进 暗线断更 暗线 title 已 n`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `建议通过暗示或伏笔隐性推进 step 6 输出报告 json agent`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `id plotline_inactive_high type 支线断更 severity high`
+- **2x** in [plotline-tracker, thread-lifecycle-tracker]: `suggestion 本章安排推进 can_override false hard_violations soft_suggestions`

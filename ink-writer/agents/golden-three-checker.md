@@ -9,12 +9,9 @@ model: inherit
 
 > 仅用于第 1-3 章。若章节号大于 3，直接返回 `pass=true` 与说明“not_applicable”。
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 默认只使用审查包中的正文、golden_three_contract、chapter_memory_card、writing_guidance。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、golden_three_contract、chapter_memory_card、writing_guidance。
 
 ## 核心职责
 

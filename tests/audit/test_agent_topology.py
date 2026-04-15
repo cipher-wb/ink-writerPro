@@ -50,7 +50,7 @@ class TestThreadLifecycleTrackerExists:
 
     def test_unified_tracker_output_follows_checker_schema(self):
         content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text()
-        assert "checker-output-schema.md" in content
+        assert "checker-output-schema.md" in content or "checker-output-reference.md" in content
         for field in ["agent", "chapter", "overall_score", "pass", "issues", "metrics", "summary"]:
             assert f'"{field}"' in content
 

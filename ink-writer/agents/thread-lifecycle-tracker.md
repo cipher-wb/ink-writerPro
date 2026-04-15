@@ -13,15 +13,11 @@ model: inherit
 >
 > 两类线程共享相同的状态机和评分模型，通过 `thread_type` 区分配置。
 
-> **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+{{PROMPT_TEMPLATE:checker-output-reference.md}}
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-{{SHARED_CHECKER_PREAMBLE}}
-
-- 默认只使用审查包中的正文、线程列表、章节历史。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、线程列表、章节历史。
 
 ## 核心概念
 

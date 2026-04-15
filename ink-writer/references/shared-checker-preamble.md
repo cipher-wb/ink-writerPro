@@ -1,6 +1,7 @@
 # Checker 共享前言 (Shared Preamble)
 
-所有 checker agent 必须遵循以下共享规则。agent spec 中以 `{{SHARED_CHECKER_PREAMBLE}}` 标记引用此文件。
+> **已迁移**: 输入硬规则已迁移至 `templates/prompts/checker-input-rules.md`（v1.0.0）。
+> agent spec 中以 `{{PROMPT_TEMPLATE:checker-input-rules.md}}` 标记引用。以下保留为兼容参考。
 
 ## 输入硬规则
 

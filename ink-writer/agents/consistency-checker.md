@@ -9,15 +9,11 @@ model: inherit
 
 > **职责**: 设定守卫者，执行第二防幻觉定律（设定即物理）。
 
-> **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+{{PROMPT_TEMPLATE:checker-output-reference.md}}
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 若 `review_bundle_file` 缺失，直接返回 `pass=false`，并说明 `REVIEW_BUNDLE_MISSING`；禁止自行扫描项目目录补救。
-- 默认只使用审查包内嵌的正文、上下文、设定快照。
-- 仅当审查包明确缺字段时，才允许补充读取 `allowed_read_files` 中列出的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包内嵌的正文、上下文、设定快照。
 
 ## 检查范围
 
@@ -29,16 +25,7 @@ model: inherit
 
 ### 第一步: 加载参考资料
 
-**输入参数**:
-```json
-{
-  "project_root": "{PROJECT_ROOT}",
-  "chapter_file": "{ABSOLUTE_CHAPTER_FILE}",
-  "review_bundle_file": "{ABSOLUTE_REVIEW_BUNDLE_FILE}"
-}
-```
-
-先读取 `review_bundle_file`。只有当审查包没有给出必要字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
+{{PROMPT_TEMPLATE:checker-load-context.md}}
 
 ### 第二步: 三层一致性检查
 

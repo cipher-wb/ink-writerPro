@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0.0",
+  "description": "Prompt template manifest — tracks all shared prompt components with version and hash for A/B testing",
+  "templates": {
+    "checker-input-rules": {
+      "file": "checker-input-rules.md",
+      "version": "1.0.0",
+      "consumers": [
+        "consistency-checker", "continuity-checker", "emotion-curve-checker",
+        "foreshadow-tracker", "golden-three-checker", "high-point-checker",
+        "ooc-checker", "pacing-checker", "plotline-tracker",
+        "reader-pull-checker", "reader-simulator", "thread-lifecycle-tracker",
+        "editor-wisdom-checker"
+      ],
+      "changelog": "Initial extraction from 12+ checker agent specs"
+    },
+    "checker-output-reference": {
+      "file": "checker-output-reference.md",
+      "version": "1.0.0",
+      "consumers": [
+        "consistency-checker", "continuity-checker", "emotion-curve-checker",
+        "foreshadow-tracker", "high-point-checker", "ooc-checker",
+        "pacing-checker", "plotline-tracker", "reader-simulator",
+        "thread-lifecycle-tracker"
+      ],
+      "changelog": "Initial extraction from 10 checker agent specs"
+    },
+    "checker-range-input": {
+      "file": "checker-range-input.md",
+      "version": "1.0.0",
+      "consumers": [
+        "consistency-checker", "continuity-checker", "high-point-checker",
+        "ooc-checker", "pacing-checker"
+      ],
+      "changelog": "Initial extraction from 5 checker agent specs"
+    },
+    "checker-load-context": {
+      "file": "checker-load-context.md",
+      "version": "1.0.0",
+      "consumers": [
+        "consistency-checker", "continuity-checker", "pacing-checker"
+      ],
+      "changelog": "Initial extraction from 3 checker agent specs"
+    },
+    "checker-report-template": {
+      "file": "checker-report-template.md",
+      "version": "1.0.0",
+      "consumers": [
+        "consistency-checker", "continuity-checker", "high-point-checker",
+        "ooc-checker", "pacing-checker"
+      ],
+      "changelog": "Initial extraction from 5 checker agent specs"
+    },
+    "responsibility-boundary": {
+      "file": "responsibility-boundary.md",
+      "version": "1.0.0",
+      "consumers": ["writer-agent", "polish-agent"],
+      "changelog": "Initial extraction from writer-agent + polish-agent"
+    },
+    "iron-laws": {
+      "file": "iron-laws.md",
+      "version": "1.0.0",
+      "consumers": ["writer-agent", "consistency-checker"],
+      "changelog": "Initial extraction from writer-agent (2x) + consistency-checker"
+    },
+    "knowledge-boundary-rules": {
+      "file": "knowledge-boundary-rules.md",
+      "version": "1.0.0",
+      "consumers": ["writer-agent", "consistency-checker"],
+      "changelog": "Initial extraction from writer-agent (2x) + consistency-checker"
+    },
+    "tracker-shared-logic": {
+      "file": "tracker-shared-logic.md",
+      "version": "1.0.0",
+      "consumers": [
+        "foreshadow-tracker", "plotline-tracker", "thread-lifecycle-tracker"
+      ],
+      "changelog": "Initial extraction from 3 tracker agent specs"
+    },
+    "polish-priority-rules": {
+      "file": "polish-priority-rules.md",
+      "version": "1.0.0",
+      "consumers": ["polish-agent"],
+      "changelog": "Initial extraction from polish-agent"
+    }
+  }
+}

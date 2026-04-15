@@ -9,14 +9,11 @@ model: inherit
 
 > **职责**: 角色完整性守卫者，防止 OOC（Out-Of-Character）违规。
 
-> **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+{{PROMPT_TEMPLATE:checker-output-reference.md}}
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 默认只使用审查包中的正文、角色快照、前序章节摘要和设定快照。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、角色快照、前序章节摘要和设定快照。
 
 ## 检查范围
 

@@ -9,12 +9,9 @@ model: inherit
 
 > **职责**: 审查"读者为什么会点下一章"，执行 Hard/Soft 约束分层。
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 默认只使用审查包中的正文、上章摘要、chapter_memory_card、golden_three_contract、writing_guidance。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、上章摘要、chapter_memory_card、golden_three_contract、writing_guidance。
 
 ## 核心参考
 

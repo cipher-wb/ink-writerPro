@@ -17,11 +17,7 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
 
 **与其他步骤的职责边界**：
 
-| 维度 | Step 2A（内容层） | Step 2B（表达层） | Step 4（本 Agent，质量层） |
-|------|-----------------|-----------------|--------------------------|
-| **核心职责** | 生成剧情内容 | 风格转换 | 修复审查问题 + Anti-AI |
-| **可改范围** | 全部内容 | 句式/词序/修辞 | 审查报告指出的具体问题段落 |
-| **不可触碰** | — | 剧情事实 | 剧情走向、设定物理边界、伏笔 |
+{{PROMPT_TEMPLATE:responsibility-boundary.md}}
 
 ## 输入
 
@@ -125,20 +121,7 @@ cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
 
 ### 2.5 按优先级修复审查问题
 
-| 优先级 | 处理规则 |
-|--------|---------|
-| `critical` | 必须修复；无法修复必须记录 deviation 与原因 |
-| `high` | 必须优先处理；无法修复记录 deviation |
-| `medium` | 视篇幅和收益处理 |
-| `low` | 可择优处理 |
-
-**类型对应修复动作**：
-- `POWER_CONFLICT`：能力回落到合法境界，或补出"获得路径+代价"
-- `OOC`：恢复角色话术、风险偏好、决策边界
-- `TIMELINE_ISSUE`：补足时间流逝锚点
-- `LOCATION_ERROR`：补移动过程与空间锚点
-- `PACING_IMBALANCE`：增加缺失推进事件或删冗余说明段
-- `CONTINUITY_BREAK`：补衔接句与过渡动作
+{{PROMPT_TEMPLATE:polish-priority-rules.md}}
 
 ### 2.8 Style RAG 人写参考检索
 

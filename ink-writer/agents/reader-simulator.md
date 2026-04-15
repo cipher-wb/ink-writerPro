@@ -10,14 +10,11 @@ model: inherit
 > **职责**: 模拟目标读者的真实阅读体验，从"会不会继续看"的角度评估章节质量。
 > 与其他 checker 的区别：其他 checker 从"技术正确性"角度审查，reader-simulator 从"读者感受"角度评估。
 
-> **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+{{PROMPT_TEMPLATE:checker-output-reference.md}}
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 默认只使用审查包中的正文、前序摘要、reader_signal、outline。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、前序摘要、reader_signal、outline。
 
 ## 核心参考
 

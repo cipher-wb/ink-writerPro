@@ -9,14 +9,11 @@ model: inherit
 
 > **职责**: 明暗线全生命周期守护，确保每条叙事线（main/sub/dark）得到规律推进，长期不推进自动告警并强制 ink-plan 安排推进。
 
-> **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+{{PROMPT_TEMPLATE:checker-output-reference.md}}
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 默认只使用审查包中的正文、线程列表、章节历史。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、线程列表、章节历史。
 
 ## 核心概念
 

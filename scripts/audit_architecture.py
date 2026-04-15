@@ -215,8 +215,15 @@ def parse_agents(agent_dirs: list[Path]) -> list[dict[str, Any]]:
     return agents
 
 
+_TEMPLATE_REF_RE = re.compile(r"\{\{PROMPT_TEMPLATE:[^}]+\}\}")
+
+
 def _tokenize_simple(text: str) -> list[str]:
     return re.findall(r"[\w\u4e00-\u9fff]+", text.lower())
+
+
+def _strip_template_refs(text: str) -> str:
+    return _TEMPLATE_REF_RE.sub("", text)
 
 
 def detect_agent_overlaps(agents: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -251,7 +258,7 @@ def find_repeated_prompt_fragments(
     ngram_sources: dict[tuple[str, ...], list[str]] = defaultdict(list)
 
     for agent in agents:
-        tokens = _tokenize_simple(agent["full_text"])
+        tokens = _tokenize_simple(_strip_template_refs(agent["full_text"]))
         seen_in_agent: set[tuple[str, ...]] = set()
         for k in range(len(tokens) - ngram_size + 1):
             ngram = tuple(tokens[k : k + ngram_size])
