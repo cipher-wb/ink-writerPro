@@ -1147,6 +1147,50 @@ if emotion_result.overall_score < threshold:
 
 **Python 模块**：`ink_writer.emotion.emotion_gate.run_emotion_gate()`
 
+#### Step 3.8: AI味硬门禁（anti-detection sentence diversity gate）
+
+> v13.0 新增。从 anti-detection-checker 结果中提取统计特征（句长变异系数、短句占比、对话占比、情感标点密度等），不达标时自动触发 polish-agent 定向修复。零容忍项（如时间标记开头）立即阻断，不触发重试。
+
+**执行条件**：anti-detection-checker 在 Step 3 中被调度执行（核心审查器，始终运行）。
+
+**流程**：
+
+```text
+# 1. 零容忍检查（在 checker 调用之前）
+config = config/anti-detection.yaml
+zero_tolerance_hit = check_zero_tolerance(chapter_text, config)
+if zero_tolerance_hit:
+    写入 chapters/{n}/anti_detection_blocked.md（零容忍阻断）
+    章节标记为失败，不进入 Step 4
+
+# 2. 综合评分检查 + 重试
+anti_detection_result = Step 3 中 anti-detection-checker 的输出
+threshold = config.score_threshold（章节 ≤ 3 时用 golden_three_threshold）
+
+if anti_detection_result.overall_score < threshold:
+    for retry in 1..1:
+        调用 polish-agent，传入:
+          chapter_file = 当前章节路径
+          anti_detection_fix_prompt = anti_detection_result.fix_prompt
+          issues = anti_detection_result.fix_priority
+        重新执行 anti-detection-checker
+        if new_score >= threshold: break
+    else:
+        写入 chapters/{n}/anti_detection_blocked.md（得分、违规列表、fix_prompt）
+        章节标记为失败，不进入 Step 4
+```
+
+**零容忍清单**（匹配即阻断，不重试）：
+- `ZT_TIME_OPENING`：章节以时间标记开头（第xx日/次日/N天后等）
+- `ZT_MEANWHILE`：使用"与此同时"全知视角转场
+
+**与 Step 3.6/3.7 的关系**：
+- 追读力门禁（Step 3.6）和情绪门禁（Step 3.7）先执行；若已阻断则跳过 AI味门禁
+- AI味门禁通过后正常进入 Step 4
+- AI味门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.anti_detection.anti_detection_gate.run_anti_detection_gate()`
+
 ### Step 4：润色（问题修复优先）
 
 执行前必须加载：

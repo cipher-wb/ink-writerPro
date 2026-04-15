@@ -38,6 +38,7 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
   ],
   "hook_fix_prompt": "",
   "emotion_fix_prompt": "",
+  "anti_detection_fix_prompt": "",
   "style_references": "【人写参考】块（由 Style RAG 检索，Step 2.8 生成；为空则跳过）",
   "pass": true
 }
@@ -77,6 +78,19 @@ cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
 3. 保持情绪变化自然流畅，不得生硬插入无关冲突
 4. 不得改变剧情事实或角色核心行为
 5. 修复完成后正文应能通过 emotion-curve-checker 的方差阈值检查
+
+### 1.7 AI味句式多样性修复（anti_detection_fix_prompt）
+
+当输入包含非空 `anti_detection_fix_prompt` 时（来自 anti-detection-checker 句式多样性门禁），在情绪曲线修复之后执行：
+
+1. 逐条执行 `anti_detection_fix_prompt` 中的修复指令
+2. 重点关注句长多样性（合并碎句为长复合句、在描写处插入长句）
+3. 增加情感标点密度（感叹号/省略号/反问句）
+4. 段落结构打碎（拆分工整长段为碎片段和单句段）
+5. 增加对话占比（内心独白转化为角色对话）
+6. 削减因果连接词（删除中间环节，保留叙事跳跃感）
+7. 不得改变剧情事实、设定物理边界或角色核心行为
+8. 修复完成后正文应能通过 anti-detection-checker 的阈值检查
 
 ### 2. 编辑智慧违规精准修复
 
