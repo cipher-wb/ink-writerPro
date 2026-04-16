@@ -169,7 +169,7 @@ class TestABPrompts:
         import ab_prompts
 
         results = ab_prompts.diff_all_agents()
-        assert len(results) == 19
+        assert len(results) == 21
         for r in results:
             assert "agent" in r
             assert "template_refs" in r
