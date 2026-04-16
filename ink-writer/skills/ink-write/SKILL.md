@@ -1169,7 +1169,7 @@ Task 传参硬约束：
 - `consistency-checker`（权重 25%）
 - `continuity-checker`（权重 15%）
 - `ooc-checker`（权重 20%）
-- `logic-checker`（权重 15%）——章内微观逻辑验证（L1-L8：数字算术/动作序列/属性一致/空间连续/物品连续/感官一致/对话归属/因果逻辑）
+- `logic-checker`（权重 15%）——章内微观逻辑验证（L1-L9：数字算术/动作序列/属性一致/空间连续/物品连续/感官一致/对话归属/因果逻辑/枚举完整性）
 - `outline-compliance-checker`（权重 15%）——大纲合规验证（O1-O7：实体出场/禁止发明/目标充分性/伏笔埋设/钩子合规/黄金三章附加/否定约束合规），消费 MCC（板块14）+ 否定约束（板块15）
 - `anti-detection-checker`（权重 10%）
 - `reader-simulator`（**快速模式**，v9.0 升格为核心裁判。输出 `reader_verdict` 7 维评分，驱动 Step 4 自动返修）
