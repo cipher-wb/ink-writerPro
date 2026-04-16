@@ -98,3 +98,31 @@
   - MCC "not_specified" fields are safe to trim because writer-agent's self-check already handles missing MCC fields
   - The 4 required-keep fields were chosen because writer-agent uses them as structural anchors even when empty
 ---
+
+## 2026-04-16 - US-006
+- Added pure JSON output hard constraints to `ink-writer/agents/data-agent.md`
+- New "输出格式硬约束" section with 5 rules: pure JSON only, no markdown fences, no analysis text, no redundant notes in values, strict schema compliance
+- Added correct vs incorrect output examples to make the constraint unambiguous
+- Updated Step J reporting: slow-run explanations (>30s) now go in `warnings` array instead of free text
+- Updated success criteria: #9 strengthened to "纯 JSON（无 markdown 围栏、无解释文字）", added #10 for `json.loads()` parseability
+- Files changed: ink-writer/agents/data-agent.md
+- **Learnings for future iterations:**
+  - data-agent.md is pure agent spec (792→821 lines), no Python code — changes are documentation-only
+  - Step J "报告文字部分" was ambiguous — now clarified to use `warnings` array within JSON
+  - The output section sits between "输入" and "StateChange 标准化枚举" sections (lines 41-95)
+---
+
+## 2026-04-16 - US-007
+- Reorganized SKILL.md References section into 3 cache-tiered batches: 静态(跨章不变) → 半静态(跨卷不变) → 动态(每章变化)
+- Added cache optimization rationale comment at top of References section
+- Updated Step 2A and Step 4 loading blocks in SKILL.md with batch comments
+- Updated writer-agent.md loading order with cache tier comments (core-constraints=static, anti-detection=semi-static)
+- Updated polish-agent.md loading order with cache tier comments (polish-guide+typesetting=static)
+- Zero content changes — only reordered declarations and added explanatory comments
+- Files changed: ink-writer/skills/ink-write/SKILL.md, ink-writer/agents/writer-agent.md, ink-writer/agents/polish-agent.md
+- **Learnings for future iterations:**
+  - SKILL.md References section was previously unordered; now grouped by cache tier for prompt cache optimization
+  - writer-agent and polish-agent already had good static-first order; main value was adding explicit comments and SKILL.md restructuring
+  - scene-craft-index.md is loaded on-demand within writer-agent (not at agent init), so its position doesn't affect cache
+  - PROMPT_TEMPLATE references (iron-laws, responsibility-boundary, knowledge-boundary-rules) are injected at parse time, not runtime — their order in the .md file matters for readability but less for cache
+---

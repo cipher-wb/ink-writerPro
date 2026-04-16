@@ -101,7 +101,7 @@
         "预估output token减少20-30%"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/data-agent.md。纯文档修改。"
     },
     {
@@ -116,7 +116,7 @@
         "polish-agent.md的参考文件加载顺序也同步优化"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "修改 SKILL.md + writer-agent.md + polish-agent.md。纯顺序调整，零内容变更。"
     }
   ]
