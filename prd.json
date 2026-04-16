@@ -32,7 +32,7 @@
         "节拍表验证时违反上述规则 → hard fail 阻断进入 Step 5"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "这是大纲层的前置保障，确保爽点不会全部堆在后面。"
     },
     {

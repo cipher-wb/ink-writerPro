@@ -37,3 +37,14 @@
   - 大卖点类型列表（11种）比原 high_point_type（6种）更丰富，新增了迪化误解/身份掉马/能力升级/关键情报获取/危机逆转
   - 小卖点类型列表是全新字段，与大卖点互补——微兑现/角色魅力/世界观趣味/关系推进/小悬念/能力小应用
 ---
+
+## 2026-04-16 - US-002
+- What was implemented: 大纲层爽点前置原则 — 节拍表强制前3章爽点分布
+- Files changed:
+  - ink-writer/skills/ink-plan/SKILL.md (Step 4 新增爽点前置硬约束 + Step 5 卷骨架验证规则 + Step 8 validation 1.6节 + Hard fail conditions)
+  - ink-writer/templates/output/大纲-卷节拍表.md (Section 7 新增爽点前置原则约束提示)
+- **Learnings for future iterations:**
+  - 节拍表约束需要在 4 处同步：Step 4 生成时硬约束、Step 5 卷骨架验证规则、Step 8 validation section、Step 8 hard fail conditions
+  - 前3章规则是与US-001的章纲字段联动的——前置检查依赖章纲的大卖点/小卖点/压扬标记字段已填写
+  - PC-1 爆发章位置约束是对节拍表 Section 7 爽点链表中 PC-1 行的爆发章列的校验
+---
