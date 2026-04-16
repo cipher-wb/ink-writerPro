@@ -64,7 +64,7 @@
         "用户可在 state.json 设置 audit_mode: relaxed 手动降级回旧标准"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "一次性解决'可选约束没人开'的问题。relaxed 模式作为逃生出口保留。"
     },
     {
@@ -80,7 +80,7 @@
         "修改 golden_three_threshold 从 0.85 提升为 0.90"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "与 US-003 配对：US-003 在大纲层锁定闭环，US-005 在审查层验证正文是否落地。"
     },
     {

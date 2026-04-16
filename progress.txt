@@ -26,6 +26,11 @@
 - golden_three.py ch1 contract: `ch1_closure_contract` 字段含 ability_display/crisis/ability_benefit + validation_rules
 - ink-plan Step 6 黄金三章附加规则: 第1章闭环硬约束（能力展示→危机→能力收益）
 - ink-plan Step 8 validation 1.7: 第1章完整小闭环检查（4条 hard fail）
+- golden_three_threshold 默认值出现在 3 处：golden-three-checker.md / ink-review/SKILL.md / ink-write/SKILL.md（引用）
+- audit_mode 三级：normal（默认=原strict）/ strict（hard block）/ relaxed（旧标准降级），读取自 state.json
+- ink-review/SKILL.md 也引用 golden_three_threshold 阈值，修改阈值时需同步
+- golden-three-checker CH1 闭环规则: CH1_NO_ABILITY_BENEFIT(critical) / CH1_PASSIVE_PROTAGONIST(critical) / CH1_ABSTRACT_PAYOFF(high) / CH1_LATE_CRISIS(high)
+- checker critical → hard block 回退由 ink-write Step 3.5 harness gate `rewrite_step2a` action 实现
 
 ---
 
@@ -62,4 +67,27 @@
   - Python 字符串中不能使用中文全角引号 `""` 作为字面内容——会被解释器当作字符串分隔符导致 SyntaxError，需用单引号 `''` 替代
   - Step 8 validation 新增约束需要在两处同步：validation section（检查逻辑描述）+ hard fail conditions（阻断条件列表）
   - `章末未闭合问题` 字段的层级要求是 US-003 的关键约束——不能停留在"探索能力"层级，必须指向主线大冲突
+---
+
+## 2026-04-16 - US-004
+- What was implemented: 审核模式默认化 — 前3万字里程碑升级为全项目默认
+- Files changed:
+  - ink-writer/skills/ink-plan/SKILL.md (Line 534-550: 里程碑从条件触发改为默认启用，升级ch1/ch2/ch3/ch4-5/ch6-10五阶段，新增audit_mode三级配置)
+  - ink-writer/agents/golden-three-checker.md (Line 124: threshold 0.85→0.90; Line 167-179: 里程碑参考表升级+默认启用标注+audit_mode降级说明)
+  - ink-writer/skills/ink-review/SKILL.md (Line 171: golden_three_threshold 默认值同步 0.85→0.90)
+- **Learnings for future iterations:**
+  - golden_three_threshold 的默认值出现在 3 处：golden-three-checker.md（定义）、ink-review/SKILL.md（引用）、ink-write/SKILL.md（引用但未标具体数字），修改时需全文 grep `0.85` 和 `golden_three_threshold`
+  - audit_mode 三级设计：normal（默认=原strict）、strict（hard block）、relaxed（旧标准降级），读取自 state.json
+  - 里程碑从 4 阶段（ch1-2/ch3-5/ch6-10/ch10-12）拆为 5 阶段（ch1/ch2/ch3/ch4-5/ch6-10），粒度更细
+---
+
+## 2026-04-16 - US-005
+- What was implemented: 第1章完整小闭环 — 审查层强制验证。golden-three-checker 新增4条第1章闭环检测规则
+- Files changed:
+  - ink-writer/agents/golden-three-checker.md (第1章 critical 新增 CH1_NO_ABILITY_BENEFIT + CH1_PASSIVE_PROTAGONIST；high 新增 CH1_ABSTRACT_PAYOFF + CH1_LATE_CRISIS；新增 Hard Block 回退路由 section；输出补充新增3条修复建议)
+- **Learnings for future iterations:**
+  - golden_three_threshold 已在 US-004 中从 0.85 升级为 0.90，US-005 无需重复修改
+  - golden-three-checker 的 critical 规则通过 ink-write Step 3.5 harness gate 的 `rewrite_step2a` action 实现 hard block 回退，无需在 checker 内直接调用回退逻辑
+  - CH1 闭环检测规则与 US-003 的大纲层闭环约束配对：大纲层锁定 `能力展示→危机→能力收益`，审查层验证正文是否落地
+  - 新增规则命名遵循 `CH1_` 前缀 + 大写下划线格式，与 checker 其他规则风格一致
 ---
