@@ -96,7 +96,7 @@
         "清理后 python -c \"import ink_writer\" 仍可正常执行"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "一次性清理操作，用 rm 命令执行"
     },
     {
@@ -111,7 +111,7 @@
         "保留核心配置文件（pyproject.toml、requirements.txt、CLAUDE.md 等）"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "marketplace 的 ink-writer/ 是 symlink，不能误删"
     },
     {
