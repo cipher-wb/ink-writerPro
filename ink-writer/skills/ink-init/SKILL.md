@@ -90,6 +90,72 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 > - 输入混搭指令（如「1的书名 + 2的主角 + 3的冲突」）
 > - 输入 **0** 重新随机生成 3 套全新方案
 
+## Quick Step 2：用户选择与方案确定
+
+### 选择模式
+
+根据用户输入，进入对应分支：
+
+**A) 直接选择（输入 1/2/3）**
+- 将对应编号的方案作为最终方案，直接进入 Quick Step 3。
+
+**B) 混搭（如「1的书名 + 2的主角 + 3的冲突」）**
+- 解析用户混搭指令，从指定方案中提取对应字段。
+- 未指定的字段从用户选中最多的方案中继承。
+- 合并后展示最终方案摘要，请求用户确认：
+  > 混搭方案如下：[展示合并结果]
+  > 确认？（输入 Y 确认，或继续修改）
+- 用户确认后进入 Quick Step 3。
+
+**C) 重新随机（输入 0 或「重新随机」）**
+- 回到 Quick Step 1，重新生成 3 套全新方案。
+- 不限重随次数。
+- 新方案必须与上一轮方案在题材方向上不同（尽量避免重复）。
+
+### 补充采集（可选）
+
+方案确认后，检查以下字段是否已足够详细，不足则快速追问（每个字段最多 1 轮）：
+- 目标规模（总字数/章数）— 若未指定，建议默认值并确认
+- 主角欲望/缺陷 — 方案中已包含简要描述，确认是否需要细化
+- 世界规模 — 从方案题材自动推断默认值，确认即可
+
+## Quick Step 3：自动填充与初始化
+
+方案确定后，自动执行以下操作：
+
+### 1) 映射到内部数据模型
+
+将最终方案字段映射到 Deep Mode 的内部数据模型（见 §内部数据模型）：
+
+| 方案字段 | 映射目标 |
+|----------|----------|
+| 书名 | `project.title` |
+| 题材方向 | `project.genre` |
+| 核心卖点 | `constraints.core_selling_points[0]` |
+| 主角姓名 | `protagonist.name` |
+| 主角设定（欲望） | `protagonist.desire` |
+| 主角设定（缺陷） | `protagonist.flaw` |
+| 女主/核心配角姓名 | `relationship.heroine_names[0]` 或 `relationship.co_protagonists[0]` |
+| 核心冲突 | `project.core_conflict` |
+| 金手指概要 | `golden_finger.type` + `golden_finger.name` |
+| 前三章钩子 | `constraints.opening_hook` |
+
+未覆盖的字段（如 `world.scale`、`world.power_system_type`）从题材自动推断合理默认值。
+
+### 2) 填充 `.ink/state.json` 和 `.ink/preferences.json`
+
+执行与 Deep Mode 相同的 `init_project.py` 脚本（见 §执行生成），传入映射后的参数。
+
+### 3) 对接后续流程
+
+初始化完成后，进入与 Deep Mode 相同的后续流程：
+- 写入 `idea_bank.json`
+- Patch 总纲
+- 验证与交付
+- RAG 配置引导
+
+即：从 §执行生成 的"1) 运行初始化脚本"开始，与 Deep Mode 共用同一套生成、验证、失败处理逻辑。
+
 ---
 
 # Deep Mode（苏格拉底式深度采集）
