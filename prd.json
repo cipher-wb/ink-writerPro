@@ -142,7 +142,7 @@
         "不破坏现有时间线闸门、黄金三章硬拦截、AI味硬门禁"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/skills/ink-write/references/step-3-review-gate.md。PRD详见 tasks/prd-logic-fortress.md US-005。"
     },
     {

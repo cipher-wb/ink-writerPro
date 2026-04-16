@@ -136,3 +136,22 @@
   - O3 核心目标充分性使用**相对判定**而非固定百分比——自创篇幅 vs 核心事件篇幅的字数比较
   - 具名群演豁免规则在O2中详细定义：出场≤2句 + 不推动剧情转折 + 不参与冲突 + 不提供关键信息
 ---
+
+## 2026-04-16 - US-008
+- 实现了 step-3-review-gate.md 新增 logic-checker 和 outline-compliance-checker 为核心审查器，含硬阻断规则
+- Files changed: ink-writer/skills/ink-write/references/step-3-review-gate.md
+- 修改内容：
+  - 核心审查器列表从5个扩展到7个，新增 logic-checker 和 outline-compliance-checker
+  - 权重表更新：continuity 20%→15%、reader-pull 15%→10%、新增 logic-checker 15%、outline-compliance-checker 15%
+  - 新增逻辑门禁（Logic Gate）：critical 或 ≥2 high → 回退 Step 2A，含 repair_context 精简版传递
+  - 新增大纲合规门禁（Outline Compliance Gate）：critical 或 ≥2 high → 回退 Step 2A，含 repair_context 精简版传递
+  - 新增逻辑/合规门禁回退机制：每个门禁独立计数，最多2次回退，第3次暂停请求人工干预
+  - repair_context 膨胀控制：仅传4字段（type/severity/location/suggestion），≤500 tokens
+  - 新 checker 的 critical 使 overall_score cap 到 50（比现有 60 更严格）
+  - Task调用模板、dimension_scores 示例、进入Step 4前闸门列表同步更新
+  - golden-three-checker 权重引用从15%更新为10%（跟随 reader-pull 调整）
+- **Learnings for future iterations:**
+  - step-3-review-gate.md 修改点分散：审查路由(~L30)、Task模板(~L93)、权重表(~L126)、计算公式(~L148)、dimension_scores(~L157)、进入Step4前闸门(~L222)，每次修改需全面同步
+  - 硬门禁有两种风格：(1) score<40 即 hard fail（consistency/continuity/ooc 的传统模式）(2) critical/high 计数触发回退（逻辑/合规门禁的新模式）——两者共存
+  - repair_context 是新概念：回退 Step 2A 时注入 writer-agent 的修复上下文，需要在 ink-write SKILL.md (US-011) 中配合文档化
+---
