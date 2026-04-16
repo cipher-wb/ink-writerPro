@@ -4,9 +4,9 @@
 
 ## Summary
 
-- **Python modules scanned**: 162
+- **Python modules scanned**: 174
 - **Import cycles found**: 1
-- **Unused module candidates**: 72
+- **Unused module candidates**: 84
 - **Agents scanned**: 19
 - **Agent overlap pairs**: 9
 - **Repeated prompt fragments**: 50
@@ -22,6 +22,8 @@
 - `anti_detection.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/config.py)
 - `anti_detection.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/fix_prompt_builder.py)
 - `anti_detection.sentence_diversity` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/sentence_diversity.py)
+- `checker_pipeline` (/Users/cipher/AI/ink/ink-writer/ink_writer/checker_pipeline/__init__.py)
+- `checker_pipeline.runner` (/Users/cipher/AI/ink/ink-writer/ink_writer/checker_pipeline/runner.py)
 - `cultural_lexicon` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/__init__.py)
 - `cultural_lexicon.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/config.py)
 - `cultural_lexicon.context_injection` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/context_injection.py)
@@ -65,13 +67,23 @@
 - `foreshadow.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/foreshadow/fix_prompt_builder.py)
 - `foreshadow.tracker` (/Users/cipher/AI/ink/ink-writer/ink_writer/foreshadow/tracker.py)
 - `hook_contract` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/hook_contract.py)
+- `incremental_extract` (/Users/cipher/AI/ink/ink-writer/ink_writer/incremental_extract/__init__.py)
+- `incremental_extract.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/incremental_extract/config.py)
+- `incremental_extract.differ` (/Users/cipher/AI/ink/ink-writer/ink_writer/incremental_extract/differ.py)
 - `ink` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/ink.py)
 - `pacing` (/Users/cipher/AI/ink/ink-writer/ink_writer/pacing/__init__.py)
 - `pacing.high_point_scheduler` (/Users/cipher/AI/ink/ink-writer/ink_writer/pacing/high_point_scheduler.py)
+- `parallel` (/Users/cipher/AI/ink/ink-writer/ink_writer/parallel/__init__.py)
+- `parallel.chapter_lock` (/Users/cipher/AI/ink/ink-writer/ink_writer/parallel/chapter_lock.py)
+- `parallel.pipeline_manager` (/Users/cipher/AI/ink/ink-writer/ink_writer/parallel/pipeline_manager.py)
 - `plotline` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/__init__.py)
 - `plotline.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/config.py)
 - `plotline.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/fix_prompt_builder.py)
 - `plotline.tracker` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/tracker.py)
+- `prompt_cache` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/__init__.py)
+- `prompt_cache.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/config.py)
+- `prompt_cache.metrics` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/metrics.py)
+- `prompt_cache.segmenter` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/segmenter.py)
 - `reader_pull` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/__init__.py)
 - `reader_pull.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/config.py)
 - `reader_pull.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/fix_prompt_builder.py)

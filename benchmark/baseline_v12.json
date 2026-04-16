@@ -1,0 +1,80 @@
+{
+  "version": "v12",
+  "timestamp": "2026-04-16T00:09:41.899954+00:00",
+  "git_sha": "9f2a0725308c122b20abfc54707a8a892fbb6a35",
+  "project_root": "/private/var/folders/5f/5yzvp03s66q14xzywk1rsyrh0000gn/T/pytest-of-cipher/pytest-504/test_use_writes_pointer0/book",
+  "chapter_count": 0,
+  "entity_count": 0,
+  "metrics": {
+    "hook_density": 0.0,
+    "strong_hook_ratio": 0.0,
+    "avg_micropayoffs": 0.0,
+    "avg_debt_balance": 0.0,
+    "high_point_density": 0.0,
+    "high_point_stdev": 0.0,
+    "emotion_variance": 0.0,
+    "avg_immersion": 0.0,
+    "ai_taste_score": 0.0,
+    "ai_taste_stdev": 0.0,
+    "ooc_score": 0.0,
+    "ooc_stdev": 0.0,
+    "consistency_score": 0.0,
+    "consistency_stdev": 0.0,
+    "avg_chapter_seconds": 0.0,
+    "avg_chapter_tokens": 0.0
+  },
+  "detail": {
+    "hook": {
+      "hook_density": 0.0,
+      "strong_hook_ratio": 0.0,
+      "avg_micropayoffs": 0.0,
+      "avg_debt_balance": 0.0,
+      "sample_count": 0
+    },
+    "high_point": {
+      "high_point_density": 0.0,
+      "sample_count": 0
+    },
+    "emotion": {
+      "emotion_variance": 0.0,
+      "avg_immersion": 0.0,
+      "sample_count": 0
+    },
+    "ai_taste": {
+      "ai_taste_score": 0.0,
+      "sample_count": 0
+    },
+    "ooc": {
+      "ooc_score": 0.0,
+      "sample_count": 0
+    },
+    "consistency": {
+      "consistency_score": 0.0,
+      "sample_count": 0
+    },
+    "performance": {
+      "avg_chapter_seconds": 0.0,
+      "sample_count": 0
+    },
+    "tokens": {
+      "avg_chapter_tokens": 0.0,
+      "sample_count": 0
+    },
+    "review_aggregate": {
+      "review_count": 0,
+      "overall_avg": 0.0,
+      "dimension_avg": {},
+      "severity_totals": {}
+    }
+  },
+  "sample_counts": {
+    "hook": 0,
+    "high_point": 0,
+    "emotion": 0,
+    "ai_taste": 0,
+    "ooc": 0,
+    "consistency": 0,
+    "performance": 0,
+    "tokens": 0
+  }
+}
