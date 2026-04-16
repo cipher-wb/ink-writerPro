@@ -508,6 +508,102 @@ get_chapter_wordcount() {
 }
 
 # ═══════════════════════════════════════════
+# 内层进度事件解析
+# ═══════════════════════════════════════════
+
+# step_id → 名称映射
+get_step_name() {
+    local sid="$1"
+    case "$sid" in
+        "Step 0")    echo "预检" ;;
+        "Step 0.7")  echo "金丝雀扫描" ;;
+        "Step 0.8")  echo "设定校验" ;;
+        "Step 1")    echo "上下文构建" ;;
+        "Step 2A")   echo "正文起草" ;;
+        "Step 2A.5") echo "字数校验" ;;
+        "Step 2B")   echo "风格适配" ;;
+        "Step 2C")   echo "计算型闸门" ;;
+        "Step 3")    echo "审查" ;;
+        "Step 4")    echo "润色" ;;
+        "Step 5")    echo "数据回写" ;;
+        "Step 6")    echo "Git 备份" ;;
+        *)           echo "" ;;
+    esac
+}
+
+# 解析子进程输出：[INK-PROGRESS] 行格式化展示，其余透传
+# 参数：$1=日志文件路径
+# stdin: 子进程的合并输出流
+parse_progress_output() {
+    local log_file="$1"
+    local line event_rest event_type step_id step_name seconds
+    local ch_num ch_wc ch_score ch_secs
+
+    while IFS= read -r line; do
+        # 所有原始输出写入日志文件
+        printf '%s\n' "$line" >> "$log_file"
+
+        # 检测 [INK-PROGRESS] 前缀
+        case "$line" in
+            *"[INK-PROGRESS] "*)
+                # 提取 [INK-PROGRESS] 后面的内容
+                event_rest="${line#*\[INK-PROGRESS\] }"
+                # 提取事件类型（第一个空格前的部分）
+                event_type="${event_rest%% *}"
+
+                case "$event_type" in
+                    step_started)
+                        # 格式: step_started {step_id}
+                        step_id="${event_rest#step_started }"
+                        step_name=$(get_step_name "$step_id")
+                        echo "    ⏳ ${step_id} ${step_name} ← 执行中..."
+                        ;;
+                    step_completed)
+                        # 格式: step_completed {step_id} {elapsed_seconds}
+                        # step_id 含空格，elapsed_seconds 是最后一个字段
+                        local args="${event_rest#step_completed }"
+                        seconds="${args##* }"
+                        step_id="${args% *}"
+                        step_name=$(get_step_name "$step_id")
+                        echo "    ✅ ${step_id} ${step_name} (${seconds}s)"
+                        ;;
+                    step_skipped)
+                        # 格式: step_skipped {step_id}
+                        step_id="${event_rest#step_skipped }"
+                        step_name=$(get_step_name "$step_id")
+                        echo "    ⏭  ${step_id} ${step_name} (跳过)"
+                        ;;
+                    step_retry)
+                        # 格式: step_retry {from_step} {to_step}
+                        local retry_args="${event_rest#step_retry }"
+                        echo "    🔄 回退重写: ${retry_args}"
+                        ;;
+                    chapter_completed)
+                        # 格式: chapter_completed {ch} {wc} {score} {secs}
+                        local ch_args="${event_rest#chapter_completed }"
+                        ch_num="${ch_args%% *}"; ch_args="${ch_args#* }"
+                        ch_wc="${ch_args%% *}"; ch_args="${ch_args#* }"
+                        ch_score="${ch_args%% *}"; ch_args="${ch_args#* }"
+                        ch_secs="${ch_args}"
+                        local ch_dur
+                        ch_dur=$(format_duration "$ch_secs" 2>/dev/null || echo "${ch_secs}s")
+                        echo ""
+                        echo "    ✅ 第${ch_num}章完成 | ${ch_wc}字 | 总耗时 ${ch_dur} | 审查分 ${ch_score}"
+                        ;;
+                    *)
+                        # 未知事件类型，静默忽略（不影响流程）
+                        ;;
+                esac
+                ;;
+            *)
+                # 非 [INK-PROGRESS] 行：正常透传到终端
+                printf '%s\n' "$line"
+                ;;
+        esac
+    done
+}
+
+# ═══════════════════════════════════════════
 # CLI 进程启动通用函数
 # ═══════════════════════════════════════════
 
@@ -521,21 +617,21 @@ run_cli_process() {
             claude -p "$prompt" \
                 --permission-mode bypassPermissions \
                 --no-session-persistence \
-                2>&1 | tee "$log_file" &
+                2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             CHILD_PID=""
             ;;
         gemini)
             echo "$prompt" | gemini --yolo \
-                2>&1 | tee "$log_file" &
+                2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             CHILD_PID=""
             ;;
         codex)
             codex --approval-mode full-auto "$prompt" \
-                2>&1 | tee "$log_file" &
+                2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             CHILD_PID=""

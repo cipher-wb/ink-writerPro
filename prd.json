@@ -1,199 +1,107 @@
 {
   "project": "ink-writer",
-  "branchName": "ralph/logic-fortress",
-  "description": "Logic Fortress — ink-writer 逻辑防崩体系：新增强制合规清单(MCC)、logic-checker、outline-compliance-checker，两层防线消除大纲偏离和章内逻辑矛盾。详见 tasks/prd-logic-fortress.md。",
+  "branchName": "ralph/wordcount-and-progress",
+  "description": "字数上限收紧（4000字硬上限）+ 双层进度条（内层12步/外层章节级）。详见 tasks/prd-wordcount-and-progress.md。",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Context-Agent 新增板块14：强制合规清单(MCC)结构定义",
-      "description": "As a context-agent spec, I need a new Board 14 (MCC) section that defines required_entities, required_foreshadows, required_hook, chapter_goal, required_coolpoint, forbidden_inventions, required_change, and required_open_question fields extracted from the chapter outline.",
+      "title": "Writer-Agent 字数上限收紧",
+      "description": "As a writer-agent spec, I need the climax chapter word limit reduced from 50% overshoot (4500) to 33% overshoot (4000 hard cap).",
       "acceptanceCriteria": [
-        "context-agent.md 新增「板块 14: 强制合规清单（Mandatory Compliance Checklist, MCC）」章节",
-        "板块14定义8个字段的提取规则：required_entities(从关键实体)、required_foreshadows(从伏笔处置.埋设)、required_hook(从钩子)、chapter_goal(从目标)、required_coolpoint(从爽点)、forbidden_inventions(含max_new_named_characters和forbidden_plot_elements)、required_change(从本章变化)、required_open_question(从章末未闭合问题)",
-        "forbidden_inventions.max_new_named_characters 默认为0，除非大纲关键实体中标注'新角色'",
-        "定义具名群演例外规则：出场≤2句且无剧情影响的命名角色不算违规",
-        "当大纲缺少某字段时，MCC对应项标记为 not_specified",
-        "MCC输出为JSON结构，嵌入执行包的独立板块",
-        "给出MCC的JSON schema示例，包含所有字段的类型和示例值",
-        "不破坏现有板块1-13及扩展板块8.5-8.8、11-13的内容"
+        "writer-agent.md 中「关键章/高潮章/卷末章：可上浮 50%」改为「可上浮 33%（硬上限 4000 字）」（约L176）",
+        "writer-agent.md 硬性指标「默认 2200-3000，关键章可上浮50%」改为「默认 2200-3000，关键章可上浮33%，硬上限 4000」（约L331）",
+        "硬下限 2200 字不变",
+        "不破坏现有字数校验逻辑框架"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "修改 ink-writer/agents/context-agent.md。MCC是整个Logic Fortress的基础，所有下游都依赖它。PRD详见 tasks/prd-logic-fortress.md US-001。"
+      "notes": "修改 ink-writer/agents/writer-agent.md。字数线第1步。"
     },
     {
       "id": "US-002",
-      "title": "Context-Agent 板块5时间约束增强：time_budget与precision_scenes",
-      "description": "As a context-agent spec, I need Board 5 (Time Constraints) to include time_budget and precision_scenes fields for chapters with countdown/timer scenes.",
+      "title": "SKILL.md Step 2A.5 字数校验阈值更新",
+      "description": "As the ink-write workflow spec, I need Step 2A.5 word count validation thresholds updated from 4500 to 4000.",
       "acceptanceCriteria": [
-        "context-agent.md 板块5新增 time_budget 字段定义",
-        "time_budget 包含 total_span(从大纲章内时间跨度) 和 precision_scenes[]",
-        "precision_scenes 自动生成条件：大纲中出现'倒计时'、'计时器'、'限时'等关键词",
-        "每个precision_scene包含：type、start、end、duration、note",
-        "给出完整JSON示例",
-        "标注precision_scenes将注入writer-agent执行包，作为数字即承诺铁律的参考数据",
-        "不破坏板块5现有的时间锚点、跨度、倒计时状态等字段"
+        "SKILL.md Step 2A.5 字数校验表：3501-4000字 = 偏长（关键章可放行），>4000字 = 严重超标必须精简",
+        "删除原来 3501-4500 和 >4500 的两行，替换为 3501-4000 和 >4000",
+        "上浮描述从「上浮 50%」改为「上浮 33%（不超过 4000）」",
+        "精简规则不变（删冗余/合并/压缩过渡，禁止删关键剧情点）",
+        "不修改硬下限 2200 相关逻辑"
       ],
       "priority": 2,
       "passes": true,
-      "notes": "修改 ink-writer/agents/context-agent.md 的板块5。与US-001同文件但不同章节。PRD详见 tasks/prd-logic-fortress.md US-009。"
+      "notes": "修改 ink-writer/skills/ink-write/SKILL.md 的 Step 2A.5 区域。字数线第2步。"
     },
     {
       "id": "US-003",
-      "title": "Writer-Agent 新增5条逻辑自洽铁律",
-      "description": "As a writer-agent spec, I need 5 new Logic Consistency Iron Laws (L1-L5) added alongside existing writing iron laws to prevent in-chapter logic defects at the source.",
+      "title": "workflow_manager.py 增加进度事件输出",
+      "description": "As workflow_manager, I need to emit [INK-PROGRESS] events to stdout on step start/complete/chapter complete so the terminal can display progress.",
       "acceptanceCriteria": [
-        "writer-agent.md 新增「逻辑自洽铁律」章节，与现有「写作铁律」并列",
-        "铁律L1-数字即承诺：章内数字算术必须正确，数字变化必须有叙事时间支撑，省略需显式过渡标记",
-        "铁律L2-动作即物理：动作结果必须成为下一动作前提，禁止结果先于原因",
-        "铁律L3-属性即锁定：章内角色固定属性不可无故变更，执行包角色档案是权威来源",
-        "铁律L4-空间即连续：位置变化必须有移动过程，同一时刻只能在一个地点",
-        "铁律L5-大纲即合同：MCC required_entities必须出场，禁止无授权新角色(具名群演除外)，核心事件不被自创情节喧宾夺主，伏笔必须埋设，钩子不得提前消费",
-        "5条铁律同步加入writer-agent现有的「禁止事项」清单",
-        "不破坏现有的写作铁律、防幻觉三定律、硬性指标检查等内容"
+        "workflow_manager.py 的 complete-step 子命令执行时，向 stdout 输出：[INK-PROGRESS] step_completed {step_id} {elapsed_seconds}",
+        "workflow_manager.py 新增 start-step 子命令（或在 begin-task/现有流程中），输出：[INK-PROGRESS] step_started {step_id}",
+        "complete-task 子命令输出：[INK-PROGRESS] chapter_completed {chapter_num} {word_count} {overall_score} {total_seconds}",
+        "进度行以 [INK-PROGRESS] 前缀标识，格式为单行纯文本便于 grep 解析",
+        "不破坏现有 workflow_state.json 写入逻辑",
+        "新增至少3个单元测试覆盖 start-step、complete-step 进度事件输出、complete-task 进度事件输出"
       ],
       "priority": 3,
       "passes": true,
-      "notes": "修改 ink-writer/agents/writer-agent.md。PRD详见 tasks/prd-logic-fortress.md US-006。"
+      "notes": "修改 ink-writer/scripts/workflow_manager.py + 新增测试。进度线基础，US-004/005/006 都依赖它。"
     },
     {
       "id": "US-004",
-      "title": "Writer-Agent 新增MCC写作前确认与写作后自检机制",
-      "description": "As a writer-agent spec, I need pre-write MCC confirmation and post-write MCC self-check mechanisms so outline compliance is enforced during drafting.",
+      "title": "ink-write SKILL.md 定义进度输出规范",
+      "description": "As the ink-write workflow spec, I need progress output rules defined for each Step so the writer agent emits [INK-PROGRESS] events at every step boundary.",
       "acceptanceCriteria": [
-        "writer-agent.md 新增「写作前确认」环节：读取MCC生成内部写作合同（不输出，仅内部确认）",
-        "writer-agent.md 新增「写作后自检」环节（Step 2A末尾，输出正文之前）",
-        "自检逐项验证6项：required_entity出场、required_foreshadow埋设、required_hook在章末300字内、chapter_goal未被喧宾夺主、无未授权新角色(具名群演除外)、required_change已体现",
-        "任一项失败则writer-agent自行修正后重新输出，最多重试2轮",
-        "自检结果持久化为JSON：.ink/tmp/mcc_selfcheck_ch{NNNN}.json",
-        "自检失败超2轮标记为mcc_selfcheck_failed，Step 3强制触发outline-compliance-checker",
-        "不破坏现有的字数检查、标题检查、对话占比检查等自检项"
+        "SKILL.md 新增「进度输出规范」章节，定义12步的step_id和名称映射表",
+        "规定：每个 Step 开始前必须调用 workflow start-step --step-id {id}",
+        "规定：每个 Step 完成后的 workflow complete-step 已自动输出进度事件（US-003实现）",
+        "规定：被跳过的步骤（如Step 5.5无需修复）也必须调用 complete-step 并标记 skipped",
+        "规定：回退重写时输出 [INK-PROGRESS] step_retry {from_step} {to_step}",
+        "定义终端进度条渲染格式：Unicode bar(█░) + 百分比 + 章节号 + 步骤状态列表(✅/⏳/☐/⏭/🔄)",
+        "定义完成汇总行格式：✅ 第{N}章完成 | {字数}字 | 总耗时 {time} | 审查分 {score}",
+        "不破坏现有Step定义和执行规则"
       ],
       "priority": 4,
       "passes": true,
-      "notes": "修改 ink-writer/agents/writer-agent.md。依赖US-001的MCC定义和US-003的铁律。PRD详见 tasks/prd-logic-fortress.md US-002。"
+      "notes": "修改 ink-writer/skills/ink-write/SKILL.md。依赖US-003的事件钩子。"
     },
     {
       "id": "US-005",
-      "title": "新建 logic-checker 审查器规格文件（L1-L4层）",
-      "description": "As a new checker agent, I need a logic-checker.md spec file covering the first 4 layers: Arithmetic Consistency, Action Sequence, Intra-Chapter Attribute, and Spatial Continuity.",
+      "title": "ink-auto.sh 外层章节进度条",
+      "description": "As ink-auto.sh, I need to display a chapter-level progress bar showing X/N chapters completed with estimated time remaining.",
       "acceptanceCriteria": [
-        "创建 agents/logic-checker.md，包含标准agent frontmatter（name、description、type等）",
-        "L1-数字/算术一致性：检查章内数字序列算术正确性，叙事时间估算规则(对话5-10s/动作3-5s/心理=暂停/环境1-3s)，±30%偏差容忍，severity分级(critical/high/medium)",
-        "L2-动作序列一致性：检测连续动作矛盾和同时双位置，severity分级(critical/high)",
-        "L3-章内属性一致性：提取同一角色的所有属性描述并交叉验证，severity分级(critical核心属性/medium次要属性)",
-        "L4-空间连续性：检测无移动描写的瞬移，场景切换例外规则，severity分级(high/medium)",
-        "定义MUST_NOT_PASS条件：存在任何critical或≥2个high severity issue",
-        "输出格式与现有checker一致：JSON issues[] + Markdown报告",
-        "包含至少2个具体检测示例（对照第一章的实际bug）"
+        "新增 bash 函数 print_chapter_progress() 输出章节级进度条",
+        "进度条格式：═══ 📖 总进度 [████░░░░] 3/10 章 (30%) + ⏱️ 已耗时/预计剩余",
+        "进度条使用 Unicode 块字符（█░），宽度 20 字符",
+        "预计剩余时间 = 已耗时 / 已完成章数 × 剩余章数（第1章完成前显示'计算中'）",
+        "每章开始前调用 print_chapter_progress 输出进度条",
+        "每章完成后刷新进度条（章数+1，时间更新）",
+        "检查点操作展示详细子步骤进度（每5章：☐审查→☐修复；每10章：+☐审计→☐修复；每20章：+☐宏观审查→☐修复→☐消歧检查），每个子步骤开始时标⏳完成时标✅，格式示例：🔍 检查点 [第5-10章] ✅审查 ✅修复 ⏳审计 ☐审计修复",
+        "不修改现有 [$i/$N] 日志格式（进度条是额外新增）",
+        "终端宽度 < 60 时降级为纯文字（📖 3/10 章 30%）"
       ],
       "priority": 5,
       "passes": true,
-      "notes": "新建 ink-writer/agents/logic-checker.md。参考 consistency-checker.md 的格式。PRD详见 tasks/prd-logic-fortress.md US-003。"
+      "notes": "修改 ink-writer/scripts/ink-auto.sh。进度线外层。"
     },
     {
       "id": "US-006",
-      "title": "logic-checker 补充 L5-L8 层检查",
-      "description": "As the logic-checker agent spec, I need layers 5-8 added: Object Continuity, Sensory Consistency, Dialogue Attribution, and Causal Logic.",
+      "title": "ink-auto.sh 解析内层进度事件并展示步骤进度",
+      "description": "As ink-auto.sh, I need to parse [INK-PROGRESS] events from child CLI processes and display step-level progress beneath the chapter progress bar.",
       "acceptanceCriteria": [
-        "logic-checker.md 新增 L5-物品连续性：物品提及后未放下不可消失，未获取不可突然出现，severity分级(high关键道具/medium次要物品)",
-        "logic-checker.md 新增 L6-感官一致性：环境感官与角色行为匹配，severity分级(high直接矛盾/medium轻微不协调)",
-        "logic-checker.md 新增 L7-对话归属清晰性：≥3人场景连续3句无说话人标记时检查可推断性，severity分级(high无法判断/medium需回读)",
-        "logic-checker.md 新增 L8-因果逻辑：结果不先于原因，决策必须有合理动机铺垫，severity分级(critical/high/medium)",
-        "L5-L8的severity定义与L1-L4的MUST_NOT_PASS条件统一",
-        "每层至少1个具体检测示例",
-        "文件结构完整连贯，L1-L8形成统一的8层检查体系"
+        "ink-auto.sh 启动子进程时通过管道捕获 stdout，同时 tee 到日志文件",
+        "实时解析 [INK-PROGRESS] step_started/step_completed/chapter_completed 事件",
+        "step_started 时在外层终端缩进展示：    ⏳ Step {id} {名称} ← 执行中...",
+        "step_completed 时更新为：    ✅ Step {id} {名称} ({seconds}s)",
+        "chapter_completed 时输出汇总行并清除步骤明细",
+        "子进程的非 [INK-PROGRESS] 输出正常透传到终端（不被过滤）",
+        "日志文件记录完整原始输出（含 [INK-PROGRESS] 行）",
+        "解析失败时静默忽略（不影响写作流程）"
       ],
       "priority": 6,
       "passes": true,
-      "notes": "修改 ink-writer/agents/logic-checker.md（US-005创建的文件）。PRD详见 tasks/prd-logic-fortress.md US-003。"
-    },
-    {
-      "id": "US-007",
-      "title": "新建 outline-compliance-checker 审查器规格文件",
-      "description": "As a new checker agent, I need an outline-compliance-checker.md spec file that verifies chapter text strictly follows the outline using 6 layers of checks (O1-O6).",
-      "acceptanceCriteria": [
-        "创建 agents/outline-compliance-checker.md，包含标准agent frontmatter",
-        "O1-实体出场合规：大纲关键实体必须有实质性互动，标注'(死亡)'的必须有死亡场景，severity(critical/high)",
-        "O2-禁止发明检查：有名字新角色必须在大纲中，具名群演(≤2句无剧情影响)例外，severity(critical/high)",
-        "O3-核心目标充分性：核心事件必须存在+自创内容篇幅不得超过核心事件篇幅(相对判定非百分比)，severity(critical/high/medium)",
-        "O4-伏笔埋设验证：大纲要求的伏笔必须有对应描写，severity(high/medium)",
-        "O5-钩子合规：章末500字内出现且未提前消费，severity(high/medium)",
-        "O6-黄金三章附加项：仅ch≤3启用，逐项验证，severity: high",
-        "定义MUST_NOT_PASS：任何critical或≥2 high",
-        "输出格式与现有checker一致，消费MCC(板块14)作为输入"
-      ],
-      "priority": 7,
-      "passes": true,
-      "notes": "新建 ink-writer/agents/outline-compliance-checker.md。PRD详见 tasks/prd-logic-fortress.md US-004。"
-    },
-    {
-      "id": "US-008",
-      "title": "Step 3 Review Gate 集成：新增两个核心审查器与硬阻断规则",
-      "description": "As the step-3-review-gate spec, I need logic-checker and outline-compliance-checker registered as always-on core checkers with hard-block gates and updated weight table.",
-      "acceptanceCriteria": [
-        "step-3-review-gate.md 审查路由表新增 logic-checker 和 outline-compliance-checker 为核心审查器（始终执行）",
-        "权重表更新：consistency 25%、continuity 15%、ooc 20%、logic-checker 15%、reader-pull 10%、outline-compliance-checker 15%",
-        "新增 Logic Gate：logic-checker critical或≥2 high → 回退Step 2A",
-        "新增 Outline Compliance Gate：outline-compliance-checker critical或≥2 high → 回退Step 2A",
-        "回退传递issues[]精简版（issue类型/severity/位置/修复建议）作为repair context",
-        "最多2次回退，第3次暂停请求人工干预",
-        "新checker的critical使overall_score cap到50",
-        "不破坏现有时间线闸门、黄金三章硬拦截、AI味硬门禁"
-      ],
-      "priority": 8,
-      "passes": true,
-      "notes": "修改 ink-writer/skills/ink-write/references/step-3-review-gate.md。PRD详见 tasks/prd-logic-fortress.md US-005。"
-    },
-    {
-      "id": "US-009",
-      "title": "Polish-Agent 逻辑修复能力增强",
-      "description": "As the polish-agent spec, I need new P0/P0.5 priority fix prompts for logic and outline-compliance medium issues, plus Step 4.5 safety checks.",
-      "acceptanceCriteria": [
-        "polish-agent.md 修复优先级列表新增 P0(逻辑修复) 和 P0.5(大纲合规修复)，插在现有优先级之前",
-        "逻辑修复约束：数字错误只改数字，空间跳跃只加过渡句，物品连续性添加状态变化描写",
-        "Step 4.5 安全校验新增：逻辑修复未引入新矛盾+大纲合规修复未改剧情走向",
-        "明确标注仅处理medium/low，critical和high由Step 3硬阻断处理",
-        "不破坏现有的追读力修复、情绪曲线修复、AI味修复等优先级"
-      ],
-      "priority": 9,
-      "passes": true,
-      "notes": "修改 ink-writer/agents/polish-agent.md。PRD详见 tasks/prd-logic-fortress.md US-007。"
-    },
-    {
-      "id": "US-010",
-      "title": "Continuity-Checker 大纲偏差检查增强",
-      "description": "As the continuity-checker spec, I need the outline consistency dimension upgraded to include quantified deviation detection.",
-      "acceptanceCriteria": [
-        "continuity-checker.md 的「大纲一致性」维度新增篇幅偏差检测",
-        "自创事件篇幅 > 核心事件篇幅 → severity: high（喧宾夺主）",
-        "自创事件篇幅 > 30%全文 → severity: medium（篇幅膨胀）",
-        "MUST_NOT_PASS 新增：自创事件篇幅超过核心事件篇幅",
-        "标注与outline-compliance-checker的互补关系",
-        "不破坏现有场景转换、情节线连贯、伏笔管理等维度"
-      ],
-      "priority": 10,
-      "passes": true,
-      "notes": "修改 ink-writer/agents/continuity-checker.md。PRD详见 tasks/prd-logic-fortress.md US-008。"
-    },
-    {
-      "id": "US-011",
-      "title": "ink-write SKILL.md 流程文档全面更新",
-      "description": "As the ink-write main workflow spec, I need all steps updated to reflect MCC, new checkers, updated gates, weights, and retry paths.",
-      "acceptanceCriteria": [
-        "Step 1 输出规格新增 MCC 板块14描述",
-        "Step 2A 流程新增「写作前确认MCC」和「写作后自检MCC」环节",
-        "Step 3 审查路由表新增 logic-checker 和 outline-compliance-checker",
-        "Step 3 硬阻断规则新增 Logic Gate 和 Outline Compliance Gate",
-        "Step 3→Step 2A 回退路径文档化（repair context，issues[]精简版，最多2次回退）",
-        "Step 4 修复优先级新增 P0逻辑修复和P0.5大纲合规修复",
-        "Step 4.5 安全校验新增逻辑修复验证",
-        "权重表更新为7个核心checker的新权重",
-        "不破坏现有其他步骤描述"
-      ],
-      "priority": 11,
-      "passes": true,
-      "notes": "修改 ink-writer/skills/ink-write/SKILL.md。最后执行，依赖所有前序US。PRD详见 tasks/prd-logic-fortress.md US-010。"
+      "notes": "修改 ink-writer/scripts/ink-auto.sh。依赖US-003和US-005。进度线最后一步。"
     }
   ]
 }

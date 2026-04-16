@@ -1,212 +1,96 @@
-# Ralph Progress — logic-fortress
+# Ralph Progress — wordcount-and-progress
 
 ## Codebase Patterns
-- Agent spec files are markdown in ink-writer/agents/ (e.g. writer-agent.md, context-agent.md, consistency-checker.md)
-- Main workflow spec: ink-writer/skills/ink-write/SKILL.md
-- Review gate spec: ink-writer/skills/ink-write/references/step-3-review-gate.md
-- Polish guide: ink-writer/skills/ink-write/references/polish-guide.md
-- Core constraints: ink-writer/references/shared/core-constraints.md
-- All agent specs use markdown with YAML-like structure (sections, subsections, bullet lists)
-- Existing checker pattern: frontmatter → purpose → check layers → severity definitions → MUST_NOT_PASS → output format → examples
-- 新建checker必须引用3个模板: checker-output-reference.md, checker-input-rules.md, checker-load-context.md
-- checker JSON输出的私有扩展字段（如logic-checker的layer字段）放在issues[]内，不替代统一schema字段
+- Agent spec files are markdown in ink-writer/agents/ (e.g. writer-agent.md)
+- Main workflow spec: ink-writer/skills/ink-write/SKILL.md (~1700 lines)
+- Workflow manager: ink-writer/scripts/workflow_manager.py (manages workflow_state.json, has subcommands via argparse)
+- Auto batch script: ink-writer/scripts/ink-auto.sh (~1000 lines bash)
+- Word count validation is in SKILL.md Step 2A.5 (~L865-880)
+- Writer-agent word limits at ~L176 and ~L331
+- ink-auto.sh main loop starts ~L1000+, uses [$i/$N] format for chapter counting
+- ink-auto.sh 进度条函数：print_chapter_progress() ~L76, print_checkpoint_progress() ~L129, format_duration() ~L63
+- ink-auto.sh 检查点编排器 run_checkpoint() 内使用 cp_steps/cp_status 数组追踪子步骤进度
+- ink-auto.sh 内层进度解析：parse_progress_output() 函数 ~L536，get_step_name() ~L517
+- run_cli_process() 用 parse_progress_output 替代 tee，同时写日志+解析进度+透传普通输出
+- workflow_manager.py subcommands: begin-task, complete-step, complete-task, etc.
+- [INK-PROGRESS] events are emitted to stdout by start_step(), complete_step(), complete_task() — grep for "[INK-PROGRESS]" to parse
+- Tests in tests/ directory, run with pytest
+- 进度输出规范在 SKILL.md ~L95，定义 12 步映射和事件格式
+- 12步进度映射：Step 0/0.7/0.8/1/2A/2A.5/2B/2C/3/4/5/6
 
 ---
 
 ## 2026-04-16 - US-001
-- 实现了 context-agent.md 板块14：强制合规清单（MCC）结构定义
-- Files changed: ink-writer/agents/context-agent.md
-- 修改内容：
-  - 输出格式板块列表从"10板块"更新为"10+4板块"，新增板块14描述
-  - Step 5 组装环节新增完整的板块14定义：8字段提取规则表、JSON schema示例、缺失处理、具名群演例外规则、MCC输出格式
-  - 成功标准新增4条（#17-#20）覆盖MCC完整性验证
+- writer-agent.md 两处字数上限从 50% 改为 33%（硬上限 4000 字）
+- Files changed: ink-writer/agents/writer-agent.md (L176, L331)
 - **Learnings for future iterations:**
-  - context-agent.md 的板块编号体系：1-10为核心板块，8.5/8.7/8.8为扩展板块，11-13为可选模块板块，14为MCC
-  - 扩展板块（11 Style Reference、12 Editor Wisdom、13 Cultural Lexicon）在原文件的 Step 2.5-2.7 中定义，不在 Step 5 组装区
-  - 新增板块14在 Step 5 组装区的板块10之后、Context Contract 必须字段之前
+  - writer-agent.md 字数规则分布在两处：§字数要求(~L172) 和 §硬性指标(~L329)，修改时需同步两处
+  - 硬下限 2200 和默认范围 2200-3000 保持不变，只改上浮比例和硬上限
 ---
 
 ## 2026-04-16 - US-002
-- 实现了 context-agent.md 板块5时间约束增强：新增 time_budget 与 precision_scenes
-- Files changed: ink-writer/agents/context-agent.md
-- 修改内容：
-  - 板块5输出模板新增"时间预算"引用行
-  - 新增「时间预算（time_budget）」子章节：提取规则、precision_scene条目结构表、JSON示例、缺失处理、下游注入说明
-  - precision_scenes自动触发关键词：倒计时、计时器、限时、读秒、分钟内、秒内、时间窗口、deadline
-  - 顶部输出格式概览更新：时间约束字段列表新增"时间预算/精确计时场景"
-  - 压缩优先级P1新增precision_scenes保留
-  - 成功标准新增#21(time_budget完整性)和#22(precision_scenes下游注入标注)
+- SKILL.md Step 2A.5 字数校验阈值从 4500 更新为 4000
+- Files changed: ink-writer/skills/ink-write/SKILL.md (L870-871, L875)
 - **Learnings for future iterations:**
-  - 板块5的修改点分散在多处：顶部概览(~L41)、压缩优先级(~L196)、Step 0.7详细定义(~L257)、成功标准(~L700+)，修改时需全部同步
-  - time_budget是嵌套在板块5 markdown输出内的子结构，不是独立板块
+  - 字数校验规则集中在 SKILL.md Step 2A.5（L864-878），判定表+豁免条件两处需同步
+  - 豁免条件中的上浮比例描述需与判定表的数值一致
+  - SKILL.md 修改是纯文档变更，不影响测试
 ---
 
 ## 2026-04-16 - US-003
-- 实现了 writer-agent.md 新增5条逻辑自洽铁律（L1-L5）
-- Files changed: ink-writer/agents/writer-agent.md
-- 修改内容：
-  - 在「写作铁律」和「句式节奏」之间新增「逻辑自洽铁律」章节，定义L1-L5五条铁律
-  - L1数字即承诺、L2动作即物理、L3属性即锁定、L4空间即连续、L5大纲即合同
-  - 「禁止事项」清单新增6条对应L1-L5的禁止项（L5拆为1条综合禁止项）
-  - 现有写作铁律、句式节奏、情感节拍、禁止事项原有条目均未改动
+- workflow_manager.py 三个函数增加 [INK-PROGRESS] 事件输出到 stdout
+- start_step() → [INK-PROGRESS] step_started {step_id}
+- complete_step() → [INK-PROGRESS] step_completed {step_id} {elapsed_seconds}
+- complete_task() → [INK-PROGRESS] chapter_completed {chapter_num} {word_count} {overall_score} {total_seconds}
+- 新增3个单元测试，全部通过（1098 passed）
+- Files changed: ink-writer/scripts/workflow_manager.py, ink-writer/scripts/data_modules/tests/test_workflow_manager.py
 - **Learnings for future iterations:**
-  - writer-agent.md 的「写作铁律」在"写作核心思维"大章节下（~L41-50），是一组bullet list，不是独立子标题
-  - 「禁止事项」在文件后半部（~L307原位），以"❌"开头的列表形式
-  - 逻辑自洽铁律作为### 三级标题独立章节插入，与写作铁律并列但更显眼
+  - complete_step 的 elapsed_seconds 从 current_step["started_at"] 和 current_step["completed_at"] 计算，两个字段在 step 生命周期中已由代码设置
+  - complete_task 的 word_count/overall_score 来自 task["artifacts"]，需要在调用 complete-task --artifacts 时传入
+  - capsys fixture 是测试 stdout 输出的标准方式，与 monkeypatch 兼容良好
+  - [INK-PROGRESS] 前缀设计为单行纯文本，step_id 中的空格（如 "Step 1"）会导致解析时需要特殊处理
 ---
 
 ## 2026-04-16 - US-004
-- 实现了 writer-agent.md 新增MCC写作前确认与写作后自检机制
-- Files changed: ink-writer/agents/writer-agent.md
-- 修改内容：
-  - 新增「MCC 合规机制（写作前确认 + 写作后自检）」## 章节，位于「约束护栏」和「禁止事项」之间
-  - 写作前确认：读取板块14 MCC → 内部生成写作合同（不输出），逐项列出required_entities/foreshadows/hook/goal/coolpoint/change/open_question/forbidden_inventions
-  - 写作后自检：6项验证表（实体出场/伏笔埋设/章末钩子/核心目标主导性/禁止发明/状态变化），失败→自行修正最多2轮
-  - 自检结果持久化：`.ink/tmp/mcc_selfcheck_ch{NNNN}.json`，包含chapter/round/passed/items[]
-  - 超2轮标记mcc_selfcheck_failed，Step 3强制触发outline-compliance-checker
-  - 硬性指标新增MCC自检合规项
-  - 成功标准新增第7条MCC自检通过
+- SKILL.md 新增「进度输出规范」章节（85行），插入在「流程硬约束」与「引用加载等级」之间
+- 定义 12 步 step_id 与名称映射表（Step 0 → Step 6，含 0.7/0.8/2A.5/2C 子步骤）
+- 定义事件输出规则：step_started/step_completed/step_skipped/step_retry/chapter_completed
+- 定义终端进度条渲染格式：Unicode bar(█░) + 百分比 + 步骤状态列表(✅⏳☐⏭🔄)
+- 定义完成汇总行格式：✅ 第{N}章完成 | {字数}字 | 总耗时 {time} | 审查分 {score}
+- Files changed: ink-writer/skills/ink-write/SKILL.md
 - **Learnings for future iterations:**
-  - writer-agent.md 的MCC合规机制放在「约束护栏」(~L317)之后、「禁止事项」之前，作为独立的## 二级标题
-  - 自检JSON schema的check字段用snake_case命名：entity_presence, foreshadow_embedding, hook_placement, goal_dominance, invention_guard, required_change
-  - not_specified字段在自检中status标记为"skipped"，不计入pass/fail判定
+  - 进度输出规范章节位于 SKILL.md ~L95（流程硬约束之后、引用加载等级之前）
+  - 12步映射：Step 0/0.7/0.8/1/2A/2A.5/2B/2C/3/4/5/6，其中 Step 4 含 4.5，Step 5 含 5.5
+  - 跳过的步骤也需要调用 complete-step（确保进度条正确推进）
+  - 纯文档变更，不影响任何测试
 ---
 
 ## 2026-04-16 - US-005
-- 新建 ink-writer/agents/logic-checker.md，覆盖L1-L4四层检查
-- Files changed: ink-writer/agents/logic-checker.md (新建)
-- 修改内容：
-  - 标准 agent frontmatter（name/description/tools/model）
-  - L1 数字/算术一致性：数字序列算术校验、叙事时间粗粒度估算表（对话5-10s/动作3-5s/心理=0/环境1-3s）、±30%偏差容忍、severity三级
-  - L2 动作序列一致性：连续动作矛盾检测、双位置检测、物理可行性、severity两级
-  - L3 章内属性一致性：属性提取+交叉验证+权威档案对照、severity两级
-  - L4 空间连续性：瞬移检测、场景切换三类例外规则、severity两级
-  - MUST_NOT_PASS：任何critical或≥2个high
-  - 输出格式：JSON issues[]（含layer字段）+ Markdown报告，与统一checker schema兼容
-  - metrics字段：按层分计数 + critical/high/medium/low总计
-  - 4个检测示例（L1倒计时跳跃、L1金额算术、L2动作矛盾、L4空间瞬移），其中前3个基于第一章实际bug
-  - 与checker的互补关系表（consistency/continuity/ooc）
+- ink-auto.sh 新增章节级进度条和检查点子步骤进度展示
+- 新增 format_duration()、print_chapter_progress()、print_checkpoint_progress() 三个函数
+- print_chapter_progress：Unicode 进度条（█░，20字符宽度）+ 百分比 + 已耗时/ETA
+- 终端宽度 < 60 时自动降级为纯文字模式
+- 检查点编排器 run_checkpoint() 使用 cp_steps/cp_status 数组动态追踪每个子步骤状态（☐⏳✅）
+- 主循环中每章开始前和完成后各调用一次 print_chapter_progress 刷新进度
+- Files changed: ink-writer/scripts/ink-auto.sh (+160 lines)
 - **Learnings for future iterations:**
-  - checker agent spec结构模板：frontmatter → 职责 → 模板引用(output-reference/input-rules) → 检查范围 → 执行流程(加载→检查→判定→报告→JSON) → 禁止事项 → 互补关系 → 成功标准
-  - issues[] 中的 layer 字段（如"L1"）是 logic-checker 的私有扩展字段，不是统一schema的必填项
-  - metrics 按层计数方式：l1_arithmetic_issues / l2_action_issues / l3_attribute_issues / l4_spatial_issues
+  - bash 数组和嵌套函数（_render_cp_progress 等）在 run_checkpoint 内定义，利用闭包访问 cp_steps/cp_status
+  - tput cols 在非交互终端可能失败，需要 fallback（默认 80）
+  - ETA 在第1章完成前显示"计算中"，避免除零错误
+  - 检查点步骤索引：审查(0)、修复(1) 固定在前两位，审计/宏观/消歧动态追加
 ---
 
 ## 2026-04-16 - US-006
-- 实现了 logic-checker.md 补充 L5-L8 四层检查，形成完整8层检查体系
-- Files changed: ink-writer/agents/logic-checker.md
-- 修改内容：
-  - 第二步标题从"四层逻辑检查（L1-L4）"更新为"八层逻辑检查（L1-L8）"
-  - 新增 L5 物品连续性：物品消失/凭空出现/状态连续检测，severity: high/medium
-  - 新增 L6 感官一致性：视觉/听觉/其他感官与环境匹配，含感官遮蔽例外，severity: high/medium
-  - 新增 L7 对话归属清晰性：≥3人场景连续无标记对话检测，双人场景豁免，severity: high/medium
-  - 新增 L8 因果逻辑：因果时序/决策动机/信息获取合法性检测，含隐性动机豁免，severity: critical/high/medium
-  - 报告模板新增 L5-L8 四个表格区域和对应修复建议
-  - JSON metrics 新增 l5_object_issues / l6_sensory_issues / l7_dialogue_issues / l8_causal_issues
-  - 禁止事项新增3条（L6感官遮蔽例外、L7双人场景豁免、L8隐性动机豁免）
-  - 成功标准扩展覆盖8层（critical列表新增因果倒置，high列表新增道具/感官/对话/决策）
+- ink-auto.sh 新增内层进度事件解析，替换 tee 为 parse_progress_output
+- 新增 get_step_name() 映射12步step_id到中文名称
+- 新增 parse_progress_output() 实时解析 [INK-PROGRESS] 事件并格式化展示
+- run_cli_process() 三个平台分支均改用 parse_progress_output 替代 tee
+- 支持事件：step_started(⏳)、step_completed(✅)、step_skipped(⏭)、step_retry(🔄)、chapter_completed(汇总行)
+- 非 [INK-PROGRESS] 输出正常透传，日志文件记录完整原始输出
+- Files changed: ink-writer/scripts/ink-auto.sh (+99 lines)
 - **Learnings for future iterations:**
-  - L5-L8 遵循与 L1-L4 相同的结构模式：检查目标 → 检查规则(numbered) → severity表 → 检测示例(代码块)
-  - L8 因果逻辑是唯一新增 critical severity 的层（因果严重倒置），L5-L7 最高为 high
-  - 每层的豁免/例外规则很重要：L6感官遮蔽例外（超能力）、L7双人场景豁免、L8隐性动机豁免——这些在禁止事项中也要同步体现
-  - metrics 命名规律：l{N}_{domain}_issues，如 l5_object_issues, l8_causal_issues
----
-
-## 2026-04-16 - US-007
-- 新建 ink-writer/agents/outline-compliance-checker.md，覆盖O1-O6六层大纲合规检查
-- Files changed: ink-writer/agents/outline-compliance-checker.md (新建)
-- 修改内容：
-  - 标准 agent frontmatter（name/description/tools/model）
-  - O1 实体出场合规：逐一比对MCC required_entities，验证出场+实质性互动+死亡场景，severity: critical/high
-  - O2 禁止发明检查：未授权新角色检测，含群众演员豁免+集合名词具体化豁免+具名群演豁免（≤2句无剧情影响），severity: critical/high
-  - O3 核心目标充分性：存在性二值判定+主导性相对判定（自创篇幅 vs 核心篇幅）+展开充分性，severity: critical/high/medium
-  - O4 伏笔埋设验证：语义匹配+埋设质量判定，severity: high/medium
-  - O5 钩子合规：章末500字内出现+未被提前消费，severity: high/medium
-  - O6 黄金三章附加项：仅ch≤3启用，逐项验证，severity: high
-  - MUST_NOT_PASS：任何critical或≥2个high
-  - 输出格式：JSON issues[]（含layer字段）+ Markdown报告，消费MCC板块14
-  - MCC缺失处理：标记mcc_missing，O1-O5降级为warning
-  - metrics: o1_entity_issues / o2_invention_issues / o3_goal_issues / o4_foreshadow_issues / o5_hook_issues / o6_golden_three_issues
-  - 与continuity/consistency/logic三个checker的互补关系表
-- **Learnings for future iterations:**
-  - outline-compliance-checker 的layer字段前缀用"O"（O1-O6），区别于logic-checker的"L"（L1-L8）
-  - issue type命名规律：ENTITY_MISSING, UNAUTHORIZED_INVENTION, GOAL_OVERSHADOWED, GOAL_UNDERDEVELOPED, FORESHADOW_MISSING, HOOK_CONSUMED, HOOK_MISSING, GOLDEN_THREE_UNMET
-  - metrics 命名规律：o{N}_{domain}_issues，如 o1_entity_issues, o5_hook_issues
-  - JSON issue id 前缀用 "OCC_"，区别于 logic-checker 的 "LOGIC_"
-  - O3 核心目标充分性使用**相对判定**而非固定百分比——自创篇幅 vs 核心事件篇幅的字数比较
-  - 具名群演豁免规则在O2中详细定义：出场≤2句 + 不推动剧情转折 + 不参与冲突 + 不提供关键信息
----
-
-## 2026-04-16 - US-009
-- 实现了 polish-agent.md 逻辑修复能力增强：新增 P0/P0.5 优先级和 Step 4.5 安全校验
-- Files changed: ink-writer/agents/polish-agent.md, ink-writer/templates/prompts/polish-priority-rules.md
-- 修改内容：
-  - 输入JSON新增 logic_fix_prompt 和 outline_fix_prompt 字段
-  - 新增 Step 1.1 P0:逻辑修复 — 8种问题类型的修复策略表（L1-L8），最小化改动原则
-  - 新增 Step 1.2 P0.5:大纲合规修复 — 3种问题类型的修复策略表（O3/O4/O5），不改剧情走向
-  - Step 4.5 安全校验新增两项：逻辑修复引入新矛盾检测 + 大纲合规修复偏离剧情检测
-  - 润色报告新增 P0/P0.5 修复计数
-  - 成功标准新增第3/4条（逻辑修复和大纲合规修复的验证通过）
-  - polish-priority-rules.md 新增 P0/P0.5 优先级行和12种类型对应修复动作
-- **Learnings for future iterations:**
-  - polish-agent.md 的修复步骤编号规律：1.1/1.2(逻辑/合规) → 1.5(追读力) → 1.6(情绪) → 1.7(AI味) → 1.8(语气) → 2(编辑智慧) → 2.5(审查问题) → 3(AI味定向) → 4(Anti-AI验证) → 5(毒点)
-  - 修复优先级从高到低：P0(逻辑) > P0.5(大纲合规) > critical > high > medium > low
-  - 逻辑修复的核心原则是"最小化改动"：只改错误本身，不动周围叙事，避免修复引入新问题
-  - polish-priority-rules.md 是模板文件（通过{{PROMPT_TEMPLATE:...}}引用），修改它影响所有使用该模板的agent
----
-
-## 2026-04-16 - US-010
-- 实现了 continuity-checker.md 大纲偏差检查增强：新增篇幅偏差量化检测
-- Files changed: ink-writer/agents/continuity-checker.md
-- 修改内容：
-  - 第三步大纲一致性检查新增「篇幅偏差量化检测」子节：核心事件篇幅 vs 自创事件篇幅
-  - 自创 > 核心 → high（喧宾夺主），自创 > 30%全文 → medium（篇幅膨胀）
-  - 标注与 outline-compliance-checker (O3) 的互补关系
-  - 报告模板新增「篇幅偏差」表格
-  - 禁止事项新增：不得通过自创篇幅超过核心篇幅的章节
-  - 成功标准新增：篇幅偏差量化检测通过
-- **Learnings for future iterations:**
-  - continuity-checker.md 的检查步骤：第一步加载 → 第二步四层连贯检查 → 第三步大纲一致性 → 第四步拖沓检查 → 第五步报告
-  - 篇幅偏差量化放在第三步（大纲一致性），因为它本质是大纲合规的量化维度
-  - 禁止事项和成功标准在文件最末尾
----
-
-## 2026-04-16 - US-011
-- 实现了 ink-write SKILL.md 流程文档全面更新
-- Files changed: ink-writer/skills/ink-write/SKILL.md
-- 修改内容：
-  - Step 1 输出规格新增板块14 MCC描述
-  - Step 2A 新增"MCC写作前确认"和"MCC写作后自检"两个环节（6项验证+2轮重试+失败标记）
-  - Step 3 核心审查器从5个扩展到7个，新增 logic-checker(15%) 和 outline-compliance-checker(15%)，权重表完整更新
-  - Step 3 调度顺序从4轮扩展到5轮
-  - Step 3.51 新增逻辑门禁（Logic Gate）：critical/≥2high → 回退Step 2A + repair_context
-  - Step 3.52 新增大纲合规门禁（Outline Compliance Gate）：同上规则
-  - 回退机制文档化：每个门禁独立计数，最多2次回退，第3次暂停人工干预
-  - overall_score cap 到50（新checker存在critical时）
-  - Step 4 执行顺序新增 P0(逻辑修复) 和 P0.5(大纲合规修复)，原有步骤重新编号1-8
-  - Step 4.5 安全校验表新增2项：逻辑修复引入新矛盾检测 + 大纲合规修复偏离剧情检测
-  - dimension_scores 新增"章内逻辑"和"大纲合规"两个维度
-- **Learnings for future iterations:**
-  - SKILL.md 非常长（~1700行），修改点分散在多处，需要仔细定位每个相关区域
-  - Step 3 门禁编号规律：3.5(Harness) → 3.51(Logic) → 3.52(Outline) → 3.6(追读力) → 3.7(情绪) → 3.8(AI味) → 3.9(语气指纹) → 3.10(明暗线)
-  - dimension_scores 是中文键名（爽点密度/设定一致性/节奏控制/人物塑造/连贯性/章内逻辑/大纲合规/追读力/AI味检测）
----
-
-## 2026-04-16 - US-008
-- 实现了 step-3-review-gate.md 新增 logic-checker 和 outline-compliance-checker 为核心审查器，含硬阻断规则
-- Files changed: ink-writer/skills/ink-write/references/step-3-review-gate.md
-- 修改内容：
-  - 核心审查器列表从5个扩展到7个，新增 logic-checker 和 outline-compliance-checker
-  - 权重表更新：continuity 20%→15%、reader-pull 15%→10%、新增 logic-checker 15%、outline-compliance-checker 15%
-  - 新增逻辑门禁（Logic Gate）：critical 或 ≥2 high → 回退 Step 2A，含 repair_context 精简版传递
-  - 新增大纲合规门禁（Outline Compliance Gate）：critical 或 ≥2 high → 回退 Step 2A，含 repair_context 精简版传递
-  - 新增逻辑/合规门禁回退机制：每个门禁独立计数，最多2次回退，第3次暂停请求人工干预
-  - repair_context 膨胀控制：仅传4字段（type/severity/location/suggestion），≤500 tokens
-  - 新 checker 的 critical 使 overall_score cap 到 50（比现有 60 更严格）
-  - Task调用模板、dimension_scores 示例、进入Step 4前闸门列表同步更新
-  - golden-three-checker 权重引用从15%更新为10%（跟随 reader-pull 调整）
-- **Learnings for future iterations:**
-  - step-3-review-gate.md 修改点分散：审查路由(~L30)、Task模板(~L93)、权重表(~L126)、计算公式(~L148)、dimension_scores(~L157)、进入Step4前闸门(~L222)，每次修改需全面同步
-  - 硬门禁有两种风格：(1) score<40 即 hard fail（consistency/continuity/ooc 的传统模式）(2) critical/high 计数触发回退（逻辑/合规门禁的新模式）——两者共存
-  - repair_context 是新概念：回退 Step 2A 时注入 writer-agent 的修复上下文，需要在 ink-write SKILL.md (US-011) 中配合文档化
+  - step_id 含空格（如 "Step 2A"），解析 step_completed 时用 ${args##* } 取最后字段（seconds），${args% *} 取其余部分（step_id）
+  - parse_progress_output 通过 while IFS= read -r 逐行处理，printf '%s\n' 比 echo 更安全（避免 -n/-e 等特殊字符问题）
+  - 未知事件类型静默忽略，确保前向兼容
+  - bash case 语句中 *"[INK-PROGRESS] "* 模式匹配比 grep/regex 更高效且无需子进程
 ---
