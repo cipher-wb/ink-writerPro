@@ -33,7 +33,7 @@ model: inherit
 
 输出必须是单一执行包，包含 3 层：
 
-1. **任务书（10板块）**
+1. **任务书（10+4 板块）**
 - 本章核心任务（目标/阻力/代价、冲突一句话、必须完成、绝对不能、反派层级、**核心主题**）
 - 接住上章（上章钩子、读者期待、开头建议）
 - 出场角色（状态、动机、情绪底色、说话风格、红线、**演变轨迹**、最近台词样本）
@@ -44,6 +44,10 @@ model: inherit
 - 追读力策略（未闭合问题 + 钩子类型/强度、微兑现建议、差异化提示）
 - **知识盲区（Knowledge Gate）**（本章出场实体的主角知情状态，驱动第四定律约束）
 - **爽点布局（Cool-Point Layout）**（本章类型/推荐模式/三段位置规划/债务状态）
+- 风格参考样本（Style Reference）（扩展板块11）
+- 编辑建议（Editor Wisdom）（扩展板块12）
+- 文化语料库（Cultural Lexicon）（扩展板块13）
+- **强制合规清单（Mandatory Compliance Checklist, MCC）**（板块14，从大纲提取的写作合同）
 
 2. **Context Contract（内置 Step 1.5）**
 - 目标、阻力、代价、本章变化、未闭合问题、核心冲突一句话
@@ -537,6 +541,83 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-e
 
 （数据来源：`index get-recent-reading-power`、`index get-pattern-usage-stats`、`index get-debt-summary`、genre_profile）
 
+**第14板块：强制合规清单（Mandatory Compliance Checklist, MCC）** ：
+
+> MCC 是大纲→正文的写作合同，writer-agent 必须在写作前确认、写作后自检。下游 outline-compliance-checker 以 MCC 为判定基准。
+
+从本章大纲中提取以下 8 个字段，组装为 JSON 结构：
+
+```json
+{
+  "mcc_version": "1.0",
+  "chapter": "{NNNN}",
+  "required_entities": [
+    {"name": "萧炎", "role": "protagonist", "source": "大纲.关键实体"},
+    {"name": "药老", "role": "mentor", "source": "大纲.关键实体", "note": "新角色"}
+  ],
+  "required_foreshadows": [
+    {"id": "F-001", "content": "数字颜色从灰变红", "source": "大纲.伏笔处置.埋设"}
+  ],
+  "required_hook": {
+    "type": "悬念",
+    "content": "倒计时出现在自己手上",
+    "source": "大纲.钩子"
+  },
+  "chapter_goal": {
+    "content": "孕妇之死触发主角觉醒",
+    "source": "大纲.目标"
+  },
+  "required_coolpoint": {
+    "content": "主角首次看到倒计时改变的震撼",
+    "source": "大纲.爽点"
+  },
+  "forbidden_inventions": {
+    "max_new_named_characters": 0,
+    "forbidden_plot_elements": [],
+    "note": "max_new_named_characters 默认为0，除非大纲关键实体中标注'新角色'则按标注数量调整"
+  },
+  "required_change": {
+    "content": "主角从普通人变为'能看到倒计时的人'",
+    "source": "大纲.本章变化"
+  },
+  "required_open_question": {
+    "content": "倒计时能改变吗？",
+    "source": "大纲.章末未闭合问题"
+  }
+}
+```
+
+**MCC 提取规则**：
+
+| MCC 字段 | 大纲来源字段 | 提取规则 |
+|----------|------------|---------|
+| `required_entities` | 大纲.关键实体 | 逐个提取，保留角色名和角色定位；若标注"新角色"则在 note 中记录 |
+| `required_foreshadows` | 大纲.伏笔处置.埋设 | 仅提取本章需要**埋设**的伏笔（非回收） |
+| `required_hook` | 大纲.钩子 | 提取钩子类型和内容描述 |
+| `chapter_goal` | 大纲.目标 | 提取核心目标的一句话描述 |
+| `required_coolpoint` | 大纲.爽点 | 提取本章爽点描述 |
+| `forbidden_inventions` | 推导 | `max_new_named_characters` = 大纲关键实体中标注"新角色"的数量（默认0）；`forbidden_plot_elements` 从大纲"禁止拖沓区"等字段提取（若无则空数组） |
+| `required_change` | 大纲.本章变化 | 提取本章结束时必须发生的状态变化 |
+| `required_open_question` | 大纲.章末未闭合问题 | 提取必须在章末留下的未解问题 |
+
+**缺失字段处理**：当大纲缺少某字段时，MCC 对应项标记为 `"not_specified"`，不阻断流程，但在 Step 3 由 outline-compliance-checker 降级为 warning。
+
+**具名群演例外规则**：出场 ≤2 句且无剧情影响的命名角色（如"卖煎饼的老王"一句话后再无出场）不受 `max_new_named_characters` 限制，不算违规。此规则同时适用于 writer-agent 自检和 outline-compliance-checker 审查。
+
+**MCC 输出位置**：作为执行包任务书的独立板块（板块14），JSON 结构嵌入 Markdown：
+
+```markdown
+### 14. 强制合规清单（MCC）
+
+> 本清单为写作合同，writer-agent 必须在写作前内部确认、写作后逐项自检。
+
+\`\`\`json
+{MCC JSON}
+\`\`\`
+
+**具名群演例外**：出场≤2句且无剧情影响的命名角色不算违规。
+```
+
 Context Contract 必须字段（不可缺）：
 - `目标` / `阻力` / `代价` / `本章变化` / `未闭合问题`
 - `核心冲突一句话`
@@ -565,7 +646,7 @@ Context Contract 必须字段（不可缺）：
 ## 成功标准
 
 1. ✅ 创作执行包可直接驱动 Step 2A（无需补问）
-2. ✅ 任务书包含 10 个板块（含时间约束、知识盲区、爽点布局）
+2. ✅ 任务书包含 10+4 个板块（含时间约束、知识盲区、爽点布局、扩展板块11-13、MCC板块14）
 3. ✅ 上章钩子与读者期待明确（若存在）
 4. ✅ 角色动机/情绪为推断结果（非空）
 5. ✅ 最近模式已对比，给出差异化建议
@@ -580,3 +661,7 @@ Context Contract 必须字段（不可缺）：
 14. ✅ **第10板块（爽点布局）完整**：三段位置规划明确，债务状态已列出
 15. ✅ **第8.8板块（场景写作技法）完整**：场景类型已推断，对应技法清单已注入
 16. ✅ **第12板块（编辑建议）**：当 editor-wisdom 模块启用且检索有结果时，规则按 severity 分组输出；模块禁用或检索为空时不输出此板块
+17. ✅ **第14板块（MCC）完整**：8个字段均已从大纲提取（required_entities、required_foreshadows、required_hook、chapter_goal、required_coolpoint、forbidden_inventions、required_change、required_open_question），缺失字段标记为 `not_specified`
+18. ✅ **MCC JSON schema 正确**：输出为合法 JSON，嵌入执行包板块14
+19. ✅ **forbidden_inventions.max_new_named_characters** 正确计算：默认0，仅当大纲关键实体标注"新角色"时调整
+20. ✅ **具名群演例外规则已标注**：出场≤2句且无剧情影响的命名角色不算违规
