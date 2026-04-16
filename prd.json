@@ -85,7 +85,7 @@
         "不修改context-agent的数据读取逻辑，只改输出格式化"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/context-agent.md。主要影响早期章节。"
     },
     {
