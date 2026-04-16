@@ -92,6 +92,91 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - **禁止批量并行**：多章必须严格串行执行。第 i 章的充分性闸门和验证全部通过后，才能开始第 i+1 章的 Step 0。
 - **禁止批量中途询问**：`--batch` 模式下，禁止在章节之间停下来询问用户"是否继续"、"要不要写下一章"、"需要确认吗"等。用户指定了 `--batch N` 就是明确授权连续写 N 章，必须自动执行到全部完成或遇到失败为止。唯一允许暂停的情况是：章节写作失败且重试后仍失败、章号与预期不一致、大纲缺失。
 
+## 进度输出规范
+
+本章节定义 ink-write 工作流的 [INK-PROGRESS] 事件输出规则，用于终端进度条渲染。
+
+### 12 步 step_id 与名称映射表
+
+| 序号 | step_id    | 名称                | 说明                              |
+|------|------------|---------------------|-----------------------------------|
+| 1    | Step 0     | 预检                | 预检 + 上下文加载 + 断点记录       |
+| 2    | Step 0.7   | 金丝雀扫描          | 金丝雀健康扫描                     |
+| 3    | Step 0.8   | 设定校验            | 设定权限校验（防幻觉）             |
+| 4    | Step 1     | 上下文构建          | 脚本执行包构建 / Context Agent     |
+| 5    | Step 2A    | 正文起草            | 正文起草（2200-3000 字）           |
+| 6    | Step 2A.5  | 字数校验            | 编码校验 + 字数校验                |
+| 7    | Step 2B    | 风格适配            | 风格适配                           |
+| 8    | Step 2C    | 计算型闸门          | 计算型闸门校验                     |
+| 9    | Step 3     | 审查                | 审查（Task 子代理执行）            |
+| 10   | Step 4     | 润色                | 润色 + 改写安全校验（含 Step 4.5） |
+| 11   | Step 5     | 数据回写            | Data Agent + 前序章修复（含 Step 5.5） |
+| 12   | Step 6     | Git 备份            | Git 备份                           |
+
+### 事件输出规则
+
+1. **Step 开始**：每个 Step 启动前必须调用 `workflow start-step --step-id {step_id}`，自动输出：
+   ```
+   [INK-PROGRESS] step_started {step_id}
+   ```
+
+2. **Step 完成**：每个 Step 完成后调用 `workflow complete-step --step {step_id}`，自动输出：
+   ```
+   [INK-PROGRESS] step_completed {step_id} {elapsed_seconds}
+   ```
+
+3. **跳过的步骤**：被跳过的步骤（如 Step 5.5 无需修复、Step 2C 无需校验）也必须调用 `workflow complete-step --step {step_id}` 并在前一行输出：
+   ```
+   [INK-PROGRESS] step_skipped {step_id}
+   ```
+
+4. **回退重写**：审查不通过触发回退时，输出：
+   ```
+   [INK-PROGRESS] step_retry {from_step} {to_step}
+   ```
+   例如：`[INK-PROGRESS] step_retry Step 3 Step 2A` 表示审查不通过，回退到正文起草。
+
+5. **章节完成**：`workflow complete-task` 自动输出（US-003 已实现）：
+   ```
+   [INK-PROGRESS] chapter_completed {chapter_num} {word_count} {overall_score} {total_seconds}
+   ```
+
+### 终端进度条渲染格式
+
+外层工具（ink-auto.sh）解析 [INK-PROGRESS] 事件后，按以下格式渲染终端进度条：
+
+**内层步骤进度条**（单章内 12 步）：
+
+```
+📝 第{N}章 [{████████░░░░}] 8/12 步 (67%) — ⏳ Step 3 审查
+```
+
+- 使用 Unicode 块字符 `█`（已完成）和 `░`（未完成），宽度 12 字符（对应 12 步）
+- 百分比 = 已完成步骤数 / 12 × 100%
+- 右侧显示当前执行中的步骤名称
+
+**步骤状态列表**（详细模式）：
+
+```
+  ✅ Step 0 预检  ✅ Step 0.7 金丝雀扫描  ✅ Step 0.8 设定校验
+  ✅ Step 1 上下文构建  ✅ Step 2A 正文起草  ✅ Step 2A.5 字数校验
+  ✅ Step 2B 风格适配  ⏳ Step 2C 计算型闸门  ☐ Step 3 审查
+  ☐ Step 4 润色  ☐ Step 5 数据回写  ☐ Step 6 Git 备份
+```
+
+状态图标：`✅` 已完成 / `⏳` 执行中 / `☐` 待执行 / `⏭` 已跳过 / `🔄` 重试中
+
+### 完成汇总行格式
+
+章节完成后输出单行汇总：
+
+```
+✅ 第{N}章完成 | {字数}字 | 总耗时 {time} | 审查分 {score}
+```
+
+- `{time}` 格式：`{分}m{秒}s`（如 `12m34s`），不足 1 分钟则显示 `{秒}s`
+- `{score}` 为审查综合评分（来自 chapter_completed 事件的 overall_score）
+
 ## 引用加载等级（strict, lazy）
 
 - L0：未进入对应步骤前，不加载任何参考文件。
