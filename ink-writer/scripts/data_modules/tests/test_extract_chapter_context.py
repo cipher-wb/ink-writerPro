@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import pytest
 
 
 def test_extract_state_summary_accepts_dominant_key(tmp_path):
@@ -177,6 +178,7 @@ def test_build_chapter_context_payload_includes_contract_sections(tmp_path):
 
 
 def test_build_chapter_context_payload_uses_memory_card_local_rag_fallback(tmp_path):
+    pytest.importorskip("faiss")
 
     from extract_chapter_context import build_chapter_context_payload
     from data_modules.config import DataModulesConfig
@@ -222,6 +224,7 @@ def test_build_chapter_context_payload_uses_memory_card_local_rag_fallback(tmp_p
 
 
 def test_build_execution_pack_payload_contains_golden_three_prompt_sections(tmp_path):
+    pytest.importorskip("faiss")
 
     from extract_chapter_context import build_chapter_context_payload, build_execution_pack_payload
     from data_modules.config import DataModulesConfig
@@ -365,6 +368,7 @@ def test_build_execution_pack_payload_contains_golden_three_prompt_sections(tmp_
 
 
 def test_build_execution_pack_payload_preserves_chapter_two_continuity(tmp_path):
+    pytest.importorskip("faiss")
 
     from extract_chapter_context import build_chapter_context_payload, build_execution_pack_payload
     from data_modules.config import DataModulesConfig
