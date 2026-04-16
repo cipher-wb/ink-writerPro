@@ -166,6 +166,7 @@ class ChapterMemoryCardMeta:
     key_facts: List[str] = field(default_factory=list)
     involved_entities: List[str] = field(default_factory=list)
     plot_progress: List[str] = field(default_factory=list)
+    scene_exit_snapshot: List[Dict[str, Any]] = field(default_factory=list)
     payload_json: Dict[str, Any] = field(default_factory=dict)
 
 

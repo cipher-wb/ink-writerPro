@@ -88,6 +88,7 @@ class ChapterMemoryCard(BaseModel):
     key_facts: List[str] = Field(default_factory=list)
     involved_entities: List[str] = Field(default_factory=list)
     plot_progress: List[str] = Field(default_factory=list)
+    scene_exit_snapshot: List[Dict[str, Any]] = Field(default_factory=list)
 
 
 class TimelineAnchor(BaseModel):

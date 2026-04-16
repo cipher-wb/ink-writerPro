@@ -254,8 +254,9 @@ class IndexReadingMixin:
                 """
                 INSERT INTO chapter_memory_cards (
                     chapter, summary, goal, conflict, result, next_chapter_bridge,
-                    unresolved_questions, key_facts, involved_entities, plot_progress, payload_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    unresolved_questions, key_facts, involved_entities, plot_progress, payload_json,
+                    scene_exit_snapshot
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(chapter) DO UPDATE SET
                     summary=excluded.summary,
                     goal=excluded.goal,
@@ -267,6 +268,7 @@ class IndexReadingMixin:
                     involved_entities=excluded.involved_entities,
                     plot_progress=excluded.plot_progress,
                     payload_json=excluded.payload_json,
+                    scene_exit_snapshot=excluded.scene_exit_snapshot,
                     updated_at=CURRENT_TIMESTAMP
             """,
                 (
@@ -281,6 +283,7 @@ class IndexReadingMixin:
                     json.dumps(meta.involved_entities, ensure_ascii=False),
                     json.dumps(meta.plot_progress, ensure_ascii=False),
                     json.dumps(payload, ensure_ascii=False),
+                    json.dumps(meta.scene_exit_snapshot, ensure_ascii=False) if meta.scene_exit_snapshot else None,
                 ),
             )
 
@@ -303,6 +306,7 @@ class IndexReadingMixin:
                     "involved_entities",
                     "plot_progress",
                     "payload_json",
+                    "scene_exit_snapshot",
                 ],
             )
 
@@ -334,6 +338,7 @@ class IndexReadingMixin:
                         "involved_entities",
                         "plot_progress",
                         "payload_json",
+                        "scene_exit_snapshot",
                     ],
                 )
                 for row in cursor.fetchall()

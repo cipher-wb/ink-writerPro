@@ -49,7 +49,7 @@
         "给出1个具体示例（第3章悦悦和悦悦妈妈的退出快照）"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/data-agent.md + index_manager.py(chapter_memory_cards表加字段)。"
     },
     {
