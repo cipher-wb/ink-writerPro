@@ -88,6 +88,7 @@ class ChapterMemoryCard(BaseModel):
     key_facts: List[str] = Field(default_factory=list)
     involved_entities: List[str] = Field(default_factory=list)
     plot_progress: List[str] = Field(default_factory=list)
+    scene_exit_snapshot: List[Dict[str, Any]] = Field(default_factory=list)
 
 
 class TimelineAnchor(BaseModel):
@@ -182,6 +183,7 @@ class DataAgentOutput(BaseModel):
     plot_thread_updates: List[PlotThreadUpdate] = Field(default_factory=list)
     reading_power: ReadingPowerPayload = Field(default_factory=ReadingPowerPayload)
     candidate_facts: List[CandidateFact] = Field(default_factory=list)
+    negative_constraints: List[Dict[str, Any]] = Field(default_factory=list)
     uncertain: List[UncertainMention] = Field(default_factory=list)
     warnings: List[str] = Field(default_factory=list)
 
@@ -229,6 +231,7 @@ def normalize_data_agent_output(payload: Dict[str, Any]) -> Dict[str, Any]:
         "scenes",
         "plot_thread_updates",
         "candidate_facts",
+        "negative_constraints",
         "uncertain",
         "warnings",
     ]:

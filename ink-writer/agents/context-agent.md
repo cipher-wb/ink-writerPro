@@ -33,7 +33,7 @@ model: inherit
 
 输出必须是单一执行包，包含 3 层：
 
-1. **任务书（10+4 板块）**
+1. **任务书（10+6 板块）**
 - 本章核心任务（目标/阻力/代价、冲突一句话、必须完成、绝对不能、反派层级、**核心主题**）
 - 接住上章（上章钩子、读者期待、开头建议）
 - 出场角色（状态、动机、情绪底色、说话风格、红线、**演变轨迹**、最近台词样本）
@@ -48,6 +48,8 @@ model: inherit
 - 编辑建议（Editor Wisdom）（扩展板块12）
 - 文化语料库（Cultural Lexicon）（扩展板块13）
 - **强制合规清单（Mandatory Compliance Checklist, MCC）**（板块14，从大纲提取的写作合同）
+- **否定约束清单（Active Negative Constraints）**（板块15，从 index.db 读取的活跃否定约束，writer 不可违反的硬约束）
+- **上章场景退出快照（Previous Scene-Exit Snapshot）**（板块16，上一章每个出场角色的精确退出状态，本章续写起点）
 
 2. **Context Contract（内置 Step 1.5）**
 - 目标、阻力、代价、本章变化、未闭合问题、核心冲突一句话
@@ -84,6 +86,8 @@ model: inherit
 | strand_tracker | 三线平衡 | 无历史 → 不做平衡警告 | `skip_strand_balance_check: true` |
 | 伏笔追踪 | 未回收伏笔 | 无历史 → 空列表 | `foreshadowing: []` |
 | 债务追踪 | Override 债务 | 无历史 → 零债务 | `debt_balance: 0` |
+| 否定约束 | 活跃否定约束 | 无历史 → 空列表 | `active_negative_constraints: []` |
+| 场景退出快照 | 上章退出快照 | 第1章无上章 → 空快照 | `scene_exit_snapshot: []` |
 
 **执行规则**：
 1. 在 Step 0.5（环境检查）中读取 `current_chapter`，若 ≤ 3 则设置 `early_stage_degradation: true`
@@ -118,7 +122,7 @@ model: inherit
 ## 关键数据来源
 
 - `state.json`: 进度、主角状态、strand_tracker、chapter_meta、project.genre、plot_threads.foreshadowing
-- `index.db`: 实体/别名/关系/状态变化/override_contracts/chase_debt/chapter_reading_power
+- `index.db`: 实体/别名/关系/状态变化/override_contracts/chase_debt/chapter_reading_power/negative_constraints/scene_exit_snapshot
 - `.ink/summaries/ch{NNNN}.md`: 章节摘要（含钩子/结束状态）
 - `.ink/context_snapshots/`: 上下文快照（优先复用）
 - `大纲/` 与 `设定集/`
@@ -186,6 +190,8 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 | 每条未清算债务 | +100 tokens | +500 |
 | 大纲标注为"关键章节" | +2000 tokens | +2000 |
 | 出场角色关联伏笔/历史事件 | +80 tokens | +800 |
+| 板块15 活跃否定约束（每条） | +30 tokens | +600 |
+| 板块16 上章退出快照（每角色） | +50 tokens | +500 |
 
 最终预算 = min(基础 + 加分, 15000)
 
@@ -202,6 +208,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 
 - P1: 时间约束 + 任务书核心（必保留）
 - P2: 伏笔前 10 条 + 上章钩子
+- P2.5: 否定约束清单（板块15）+ 上章退出快照（板块16）
 - P3: 角色状态与红线
 - P4: 追读力策略
 - P4.5: 卷级mega-summary（优先于逐章摘要，ch>50时启用）
@@ -444,6 +451,22 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-protag
   - 三次排序：`content` 字典序（确保稳定）
 - 输出到第 7 板块时，按 `remaining` 升序列出。
 
+### Step 3.5: 否定约束 + 场景退出快照读取（必做）
+
+```bash
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-active-constraints --chapter {NNNN}
+python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-chapter-memory-card --chapter {NNNN_PREV}
+```
+
+- **否定约束**：`get-active-constraints` 返回所有 `resolved_chapter IS NULL` 且 `(valid_until IS NULL OR valid_until >= current_chapter)` 的约束列表
+  - 按实体分组，每条标注 ❌ 前缀
+  - 最多保留 20 条（超出时按 `valid_until` 升序截断——即将到期的优先保留）
+  - 若返回为空（新项目或无约束），板块 15 输出"[当前无活跃否定约束]"，不可静默跳过
+- **场景退出快照**：从上一章（`{NNNN_PREV}`）的 `chapter_memory_card` 中读取 `scene_exit_snapshot` 字段
+  - 最多保留 10 个角色（超出时按出场频率截断——高频角色优先保留）
+  - 若上一章无快照（新项目或第1章），板块 16 输出"[首章，无上章退出快照]"，不可静默跳过
+- **降级处理**：CLI 命令失败时，板块 15/16 输出降级占位符并标注 `[数据读取失败，降级模式]`，不阻断流程
+
 ### Step 4: 摘要与推断补全
 - 优先读取 `.ink/summaries/ch{NNNN-1}.md`
 - 若缺失，降级为章节正文前 300-500 字概述
@@ -518,7 +541,28 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-e
 | 药老 | ch88 | ⚠️12章 | 未知 | 恢复实力 | 沉默 | 师父 |
 ```
 
-**久未出场警告**：
+**近期活跃但本章无安排（📌标注）**：
+
+> 最近 3 章内出场过、但**不在本章大纲 `关键实体` 中**的角色，需额外标注 📌，提醒 writer 注意状态连续性。
+
+**生成规则**：
+1. 从 `index.db recent-appearances --limit 20` 结果中筛选 `last_chapter >= current_chapter - 3` 的角色
+2. 排除本章大纲 `关键实体`（MCC `required_entities`）中已列出的角色
+3. 剩余角色标注 📌，附带上次出场章节、距今章数、以及简要状态提示
+
+**标注格式**（追加在状态快照表之后）：
+
+```
+📌 近期活跃但本章无安排：
+- 📌 悦悦（上次出场：ch3，距今2章）— 本章大纲未安排出场，若需提及请确保状态连续（参照板块16退出快照）
+- 📌 悦悦妈妈（上次出场：ch3，距今2章）— 本章大纲未安排出场，若需提及请确保状态连续（参照板块16退出快照）
+```
+
+**writer 使用规则**：
+- 📌 角色：writer **不主动让其出场**，但若剧情需要提及（如对话中提到、回忆中出现），须参照板块 16 的 `scene_exit_snapshot` 保持状态连续
+- 📌 角色**不算** outline-compliance-checker O1 层的"缺少关键实体"——它们不在 MCC `required_entities` 中，仅是状态连续性提醒
+
+**久未出场警告**（与📌互斥，久未出场角色不会同时标📌）：
 - 距上次出场 >10章：标注 "⚠️{N}章"，提示 writer-agent 再次出场需回忆性过渡
 - 距上次出场 >20章：标注 "🔴{N}章"，提示可能需要重新介绍角色
 
@@ -660,6 +704,60 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-e
 **具名群演例外**：出场≤2句且无剧情影响的命名角色不算违规。
 ```
 
+**第15板块：否定约束清单（Active Negative Constraints）** ：
+
+> 从 Step 3.5 读取的活跃否定约束，按实体分组展示。Writer-agent 不可违反这些约束。
+
+```markdown
+### 15. 否定约束清单（Active Negative Constraints）
+
+> ⛔ 以下约束为硬性禁区，writer 不可违反。若本章剧情确需推翻某条约束，必须在正文中写出完整的建立过程（≥3段实际场景），禁止一句补叙带过。
+
+**[实体A 相关]**
+- ❌ [NC-ch003-001] 程予安与悦悦妈妈没有任何联系方式 — 除非本章正文中明确写出两人建立联系的完整场景
+- ❌ [NC-ch003-002] 程予安不知道悦悦妈妈的姓名和身份 — 除非本章正文中有获知信息的合理途径
+
+**[实体B 相关]**
+- ❌ [NC-ch005-001] ...
+
+📊 共 {N} 条活跃约束（上限20条，已按剩余有效章数排序截断）
+```
+
+**板块 15 规则**：
+- **数据来源**：`index.db → get_active_constraints(current_chapter)`
+- **分组规则**：按 `entities` 字段中的实体名分组展示
+- **排序规则**：组内按 `chapter` 升序（最早的约束在前）
+- **截断规则**：最多 20 条；超出时按 `valid_until` 升序截断（即将到期的优先保留，`valid_until=null` 永久约束最后截断）
+- **Token 预算**：500-800 tokens
+- **空值处理**：无活跃约束时输出 `[当前无活跃否定约束]`，不可静默跳过
+- **下游透传**：板块 15 的完整内容将透传至 Step 3 审查包，供 outline-compliance-checker O7 使用
+
+**第16板块：上章场景退出快照（Previous Scene-Exit Snapshot）** ：
+
+> 从 Step 3.5 读取的上一章 `scene_exit_snapshot`，展示每个角色的退出状态。
+
+```markdown
+### 16. 上章场景退出快照（Previous Scene-Exit Snapshot）
+
+> 📍 以下为上一章（ch{NNNN-1}）结束时各角色的精确状态。本章若出现这些角色，必须从此状态开始续写，不可凭空改变。
+
+| 角色 | 章末位置 | 情绪状态 | 与主角关系 | 联系方式 | 最后动作 | 未闭合事项 |
+|------|---------|---------|-----------|---------|---------|-----------|
+| 悦悦 | 被妈妈带走 | 不舍/好奇 | 初识 | ❌ 无 | 回头看了一眼 | 约好"下次还来玩" |
+| 悦悦妈妈 | 带走悦悦离开 | 警惕/匆忙 | 陌生 | ❌ 无 | 拉着悦悦快步离开 | 无 |
+| 程予安 | 公园长椅 | 失落/坚定 | — | — | 决定不搬家 | 需要找到新的观察地点 |
+```
+
+**板块 16 规则**：
+- **数据来源**：`chapter_memory_cards → scene_exit_snapshot`（上一章）
+- **截断规则**：最多 10 个角色；超出时按出场频率截断（高频角色优先保留）
+- **Token 预算**：500-800 tokens
+- **空值处理**：第 1 章或上一章无快照时输出 `[首章，无上章退出快照]`，不可静默跳过
+- **writer 使用规则**：
+  - 本章出场的角色，必须从快照记录的状态开始续写
+  - 快照中 `contact_established: false` 的角色对，禁止直接使用联系方式（与板块 15 否定约束联动）
+  - 快照中 `open_threads` 非空的角色，writer 应考虑在本章推进或提及这些未闭合事项
+
 Context Contract 必须字段（不可缺）：
 - `目标` / `阻力` / `代价` / `本章变化` / `未闭合问题`
 - `核心冲突一句话`
@@ -667,6 +765,7 @@ Context Contract 必须字段（不可缺）：
 - `是否过渡章`
 - `追读力设计`
 - `protagonist_knowledge_gate`（知识盲区清单，供 consistency-checker Layer 5 使用）
+- `active_negative_constraints`（活跃否定约束清单，供 writer-agent L6 铁律和 outline-compliance-checker O7 使用）
 
 ### Step 5.5: 输出后处理 — 空值字段自适应裁剪（v13.1 新增）
 
@@ -686,6 +785,7 @@ Context Contract 必须字段（不可缺）：
    - `chapter_goal` — 本章目标（writer 核心输入）
    - `required_entities` — 必须出场实体（即使空数组也输出，表示"无强制出场要求"）
    - `time_budget` — 时间预算（即使 `total_span: "not_specified"` 也输出，表示"无时间约束"）
+   - `active_negative_constraints` — 否定约束清单（即使空数组也输出，表示"无活跃约束"，保证 writer L6 铁律和 checker O7 有输入）
 
 3. **嵌套裁剪**：对象内部的空值字段也递归裁剪。若裁剪后对象变为 `{}`，且该对象不在必保留列表中，则整个对象移除。
 
@@ -744,14 +844,14 @@ Context Contract 必须字段（不可缺）：
 ## 成功标准
 
 1. ✅ 创作执行包可直接驱动 Step 2A（无需补问）
-2. ✅ 任务书包含 10+4 个板块（含时间约束、知识盲区、爽点布局、扩展板块11-13、MCC板块14）
+2. ✅ 任务书包含 10+6 个板块（含时间约束、知识盲区、爽点布局、扩展板块11-13、MCC板块14、否定约束板块15、退出快照板块16）
 3. ✅ 上章钩子与读者期待明确（若存在）
 4. ✅ 角色动机/情绪为推断结果（非空）
 5. ✅ 最近模式已对比，给出差异化建议
 6. ✅ 章末钩子建议类型明确
 7. ✅ 反派层级已注明（若大纲提供）
 8. ✅ 第 7 板块已基于 `plot_threads.foreshadowing` 按紧急度排序输出
-9. ✅ Context Contract 字段完整且与任务书一致（含 `protagonist_knowledge_gate`）
+9. ✅ Context Contract 字段完整且与任务书一致（含 `protagonist_knowledge_gate`、`active_negative_constraints`）
 10. ✅ 逻辑红线校验通过（fail=0）
 11. ✅ **时间约束板块完整**（上章时间锚点、本章时间锚点、允许推进跨度、过渡要求、倒计时状态、time_budget）
 12. ✅ **时间逻辑红线通过**（无回跳、无倒计时跳跃、大跨度有过渡要求）
@@ -767,3 +867,5 @@ Context Contract 必须字段（不可缺）：
 22. ✅ **precision_scenes 下游注入标注**：precision_scenes 已标注将注入 writer-agent 执行包作为 L1 铁律参考数据
 23. ✅ **空值字段裁剪已执行**（Step 5.5）：null/空字符串/空数组/空对象/not_specified 字段已移除，必保留字段（chapter_num、chapter_goal、required_entities、time_budget）未被裁剪
 24. ✅ **裁剪日志已附加**：执行包末尾包含 `<!-- context-pack-trim: ... -->` 统计注释
+25. ✅ **第15板块（否定约束清单）完整**：活跃否定约束按实体分组展示，≤20 条，标注 ❌ 前缀和推翻条件；无约束时输出占位提示；`active_negative_constraints` 已注入 Context Contract
+26. ✅ **第16板块（上章退出快照）完整**：上一章每个出场角色的退出状态（位置/情绪/关系/联系方式/最后动作/未闭合事项）已展示，≤10 角色；首章时输出占位提示

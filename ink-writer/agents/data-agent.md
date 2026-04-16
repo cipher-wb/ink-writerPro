@@ -488,6 +488,132 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - 此数据供 emotion-curve-checker 和 pacing-checker 使用
 - 不写入 index.db（非实体数据）
 
+### Step B.13: 否定约束提取（Negative Constraint Extraction）
+
+扫描本章正文，提取 3-8 条"明确未发生"的关键事实，防止后续章节凭空编造这些事实。
+
+**聚焦原则**：不贪多，仅提取关键的、后续章节可能误用的否定事实。日常琐事（"主角没有吃早餐"）不提取。
+
+**4类提取规则**：
+
+| type | 说明 | 典型场景 |
+|------|------|---------|
+| `no_contact_exchange` | 未建立联系 | 两个角色同场但未交换联系方式/名字/信物 |
+| `no_information_gained` | 未获知信息 | 主角对某事实仍不知情（虽然读者/旁白已知） |
+| `no_critical_action` | 未发生的关键动作 | 角色有机会但未出手/未表态/未使用某能力 |
+| `no_revelation` | 未揭示的设定 | 某身份/秘密/背景在本章仍未暴露 |
+
+**id格式**：`NC-ch{NNNN}-{NNN}`（如 `NC-ch0003-001`）
+
+**输出到 payload**：
+```json
+{
+  "negative_constraints": [
+    {
+      "id": "NC-ch0003-001",
+      "chapter": 3,
+      "type": "no_contact_exchange",
+      "entities": ["protagonist", "yueyue_mama"],
+      "description": "主角与悦悦妈妈全程无直接对话，未交换姓名或联系方式",
+      "valid_until": null,
+      "override_condition": "主角与悦悦妈妈在后续章节有正式互动场景"
+    },
+    {
+      "id": "NC-ch0003-002",
+      "chapter": 3,
+      "type": "no_information_gained",
+      "entities": ["protagonist", "yueyue"],
+      "description": "主角不知道悦悦的全名和家庭背景，仅知道她叫'悦悦'",
+      "valid_until": null,
+      "override_condition": "有人正式告知主角悦悦的全名或家庭信息"
+    }
+  ]
+}
+```
+
+**提取示例 1（第3章悦悦妈妈案例）**：
+- 第3章中悦悦妈妈在远处出现，与主角无交集
+- 提取：`no_contact_exchange` — 主角与悦悦妈妈无直接接触
+- 提取：`no_information_gained` — 主角不知悦悦妈妈的身份/职业
+- 作用：防止第5章突然写出"主角拨通了悦悦妈妈的电话"
+
+**提取示例 2（信息不对称案例）**：
+- 第7章旁白交代反派的计划，但主角未在场
+- 提取：`no_information_gained` — 主角不知反派正在策划伏击
+- 作用：防止主角在第8章莫名其妙地"预感到危险并提前布防"
+
+**写入规则**：
+- 通过 `index_manager.save_negative_constraints(chapter, constraints_list)` 批量写入 index.db
+- 每章提取 3-8 条，少于3条时检查是否遗漏关键否定事实
+- `valid_until` 为 null 表示永久有效，非 null 表示在指定章节后自动失效
+- `override_condition` 描述在什么条件下该约束可被正当推翻
+
+### Step B.14: 场景退出状态快照（Scene-Exit Snapshot）
+
+扫描本章正文，为**每个出场角色**提取章末精确状态快照，防止后续章节出现"人物凭空消失"或"状态跳跃"。
+
+**核心原则**：每个本章出场角色都必须有快照条目，不可遗漏。
+
+**每个角色提取以下字段**：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `entity_id` | string | 角色实体标识（与 entities 表一致） |
+| `location_at_exit` | string | 章末时所在位置（如"医院走廊"、"自家客厅"） |
+| `emotional_state` | string | 章末情绪状态（如"焦虑"、"释然"、"愤怒压抑"） |
+| `relationship_to_protagonist` | string | 与主角的关系状态：陌生/初识/熟识/信任/亲密/敌对/中立 |
+| `contact_established` | boolean\|null | 是否与主角建立了联系方式（true/false/null=不适用） |
+| `last_action` | string | 最后一个动作（如"转身离开"、"躺在病床上"、"挥手道别"） |
+| `open_threads` | string[] | 与该角色相关的未闭合事项（如"约好明天再见"、"欠了一个人情"） |
+
+**输出到 payload（嵌入 `chapter_memory_card` 内）**：
+```json
+{
+  "chapter_memory_card": {
+    "summary": "...",
+    "goal": "...",
+    "conflict": "...",
+    "result": "...",
+    "next_chapter_bridge": "...",
+    "unresolved_questions": [...],
+    "key_facts": [...],
+    "involved_entities": [...],
+    "plot_progress": [...],
+    "scene_exit_snapshot": [
+      {
+        "entity_id": "yueyue",
+        "location_at_exit": "小区花园入口",
+        "emotional_state": "开心但恋恋不舍",
+        "relationship_to_protagonist": "初识",
+        "contact_established": false,
+        "last_action": "被妈妈牵着手走远",
+        "open_threads": ["悦悦说过'哥哥明天还来吗'"]
+      },
+      {
+        "entity_id": "yueyue_mama",
+        "location_at_exit": "小区花园入口",
+        "emotional_state": "中性，略带警惕",
+        "relationship_to_protagonist": "陌生",
+        "contact_established": false,
+        "last_action": "牵着悦悦离开，未回头",
+        "open_threads": []
+      }
+    ]
+  }
+}
+```
+
+**提取示例（第3章悦悦和悦悦妈妈）**：
+- 悦悦：章末被妈妈牵走，与主角处于"初识"关系，未建立联系方式，遗留悬念"明天还来吗"
+- 悦悦妈妈：全程无直接互动，与主角处于"陌生"关系，未建立联系方式，无未闭合事项
+- 作用：第5章若需提及悦悦，必须从"被妈妈牵走"的状态续写，不可直接写"悦悦跑过来找主角"
+
+**写入规则**：
+- `scene_exit_snapshot` 作为 `chapter_memory_card` 的一个子字段，随 `chapter_memory_card` 一起写入 index.db 的 `chapter_memory_cards` 表（独立列 `scene_exit_snapshot`）
+- 每个出场角色必须有快照，检查 `involved_entities` 列表确保无遗漏
+- `contact_established` 为 null 表示"不适用"（如路人、未与主角产生任何交集的角色）
+- `open_threads` 为空数组 `[]` 表示无未闭合事项
+
 ### Step C: 实体消歧处理
 
 **置信度策略**:
@@ -527,7 +653,7 @@ cat > "{project_root}/.ink/tmp/data_agent_payload_ch{chapter_padded}.json" <<'EO
   "relationships_new": [...],
   "scenes": [...],
   "chapter_meta": {...},
-  "chapter_memory_card": {...},
+  "chapter_memory_card": {"...", "scene_exit_snapshot": [...]},
   "timeline_anchor": {...},
   "plot_thread_updates": [...],
   "reading_power": {...},
@@ -535,7 +661,8 @@ cat > "{project_root}/.ink/tmp/data_agent_payload_ch{chapter_padded}.json" <<'EO
   "character_evolution_entries": [...],
   "narrative_commitments_new": [...],
   "narrative_commitments_resolved": [...],
-  "character_status_updates": [...]
+  "character_status_updates": [...],
+  "negative_constraints": [...]
 }
 EOF
 

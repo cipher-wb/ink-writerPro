@@ -23,7 +23,7 @@ allowed-tools: Read Write Edit Grep Bash Task
 
 ## 模式定义
 
-- `/ink-write`：Step 1 → 2A → 2A.5 → 2B → 2C → 3 → 4 → 4.5 → 5 → 5.5 → 6
+- `/ink-write`：Step 1 → 2A → 2A.1 → 2A.5 → 2B → 2C → 3 → 4 → 4.5 → 5 → 5.5 → 6
 
 ### Agent 调用成本控制策略
 
@@ -96,7 +96,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 
 本章节定义 ink-write 工作流的 [INK-PROGRESS] 事件输出规则，用于终端进度条渲染。
 
-### 12 步 step_id 与名称映射表
+### 13 步 step_id 与名称映射表
 
 | 序号 | step_id    | 名称                | 说明                              |
 |------|------------|---------------------|-----------------------------------|
@@ -105,13 +105,14 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 | 3    | Step 0.8   | 设定校验            | 设定权限校验（防幻觉）             |
 | 4    | Step 1     | 上下文构建          | 脚本执行包构建 / Context Agent     |
 | 5    | Step 2A    | 正文起草            | 正文起草（2200-3000 字）           |
-| 6    | Step 2A.5  | 字数校验            | 编码校验 + 字数校验                |
-| 7    | Step 2B    | 风格适配            | 风格适配                           |
-| 8    | Step 2C    | 计算型闸门          | 计算型闸门校验                     |
-| 9    | Step 3     | 审查                | 审查（Task 子代理执行）            |
-| 10   | Step 4     | 润色                | 润色 + 改写安全校验（含 Step 4.5） |
-| 11   | Step 5     | 数据回写            | Data Agent + 前序章修复（含 Step 5.5） |
-| 12   | Step 6     | Git 备份            | Git 备份                           |
+| 6    | Step 2A.1  | 自洽回扫            | 章内自洽回扫（4 项语义检查）       |
+| 7    | Step 2A.5  | 字数校验            | 编码校验 + 字数校验                |
+| 8    | Step 2B    | 风格适配            | 风格适配                           |
+| 9    | Step 2C    | 计算型闸门          | 计算型闸门校验                     |
+| 10   | Step 3     | 审查                | 审查（Task 子代理执行）            |
+| 11   | Step 4     | 润色                | 润色 + 改写安全校验（含 Step 4.5） |
+| 12   | Step 5     | 数据回写            | Data Agent + 前序章修复（含 Step 5.5） |
+| 13   | Step 6     | Git 备份            | Git 备份                           |
 
 ### 事件输出规则
 
@@ -145,23 +146,23 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 
 外层工具（ink-auto.sh）解析 [INK-PROGRESS] 事件后，按以下格式渲染终端进度条：
 
-**内层步骤进度条**（单章内 12 步）：
+**内层步骤进度条**（单章内 13 步）：
 
 ```
-📝 第{N}章 [{████████░░░░}] 8/12 步 (67%) — ⏳ Step 3 审查
+📝 第{N}章 [{█████████░░░░}] 9/13 步 (69%) — ⏳ Step 3 审查
 ```
 
-- 使用 Unicode 块字符 `█`（已完成）和 `░`（未完成），宽度 12 字符（对应 12 步）
-- 百分比 = 已完成步骤数 / 12 × 100%
+- 使用 Unicode 块字符 `█`（已完成）和 `░`（未完成），宽度 13 字符（对应 13 步）
+- 百分比 = 已完成步骤数 / 13 × 100%
 - 右侧显示当前执行中的步骤名称
 
 **步骤状态列表**（详细模式）：
 
 ```
   ✅ Step 0 预检  ✅ Step 0.7 金丝雀扫描  ✅ Step 0.8 设定校验
-  ✅ Step 1 上下文构建  ✅ Step 2A 正文起草  ✅ Step 2A.5 字数校验
-  ✅ Step 2B 风格适配  ⏳ Step 2C 计算型闸门  ☐ Step 3 审查
-  ☐ Step 4 润色  ☐ Step 5 数据回写  ☐ Step 6 Git 备份
+  ✅ Step 1 上下文构建  ✅ Step 2A 正文起草  ✅ Step 2A.1 自洽回扫
+  ✅ Step 2A.5 字数校验  ✅ Step 2B 风格适配  ⏳ Step 2C 计算型闸门
+  ☐ Step 3 审查  ☐ Step 4 润色  ☐ Step 5 数据回写  ☐ Step 6 Git 备份
 ```
 
 状态图标：`✅` 已完成 / `⏳` 执行中 / `☐` 待执行 / `⏭` 已跳过 / `🔄` 重试中
@@ -924,7 +925,37 @@ cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 - 自检失败超 2 轮 → 标记 `mcc_selfcheck_failed`，Step 3 强制触发 outline-compliance-checker
 
 输出：
-- 章节草稿（可进入 Step 2A.5 字数校验）。
+- 章节草稿（可进入 Step 2A.1 自洽回扫）。
+
+### Step 2A.1：自洽回扫（Self-Consistency Scan）
+
+> Step 2A 产出正文后、Step 2A.5 字数校验前，writer-agent 对自己的产出做一次结构化自洽回扫，捕获章内前后矛盾。此步骤不阻断流程（即使发现无法修复的问题也继续），但回扫结果会注入 Step 3 审查包，供 checker 重点关注。
+
+输入：
+- Step 2A 产出的章节正文（已写入文件）
+- 执行包中的板块 15 否定约束清单
+
+执行（writer-agent 自洽回扫，参见 writer-agent.md「自洽回扫」章节）：
+
+4 项检查：
+1. **SC-1 观察-统计完整性**：正文中角色做出的每次观察/发现，是否在后续的总结/统计/回忆中都被纳入？
+2. **SC-2 信息引用合法性**：正文中角色引用的每个事实/关系/联系方式，在本章正文中或执行包的否定约束之外是否有合法来源？
+3. **SC-3 角色存在完整性**：本章开头出场的所有角色，在结尾前是否都有交代？
+4. **SC-4 因果链闭合**：正文中的每个行为动机是否有前因，每个开始的动作是否有结果？
+
+修正规则：
+- 发现问题时 writer 自行修正（最多 2 轮），修正后重新回扫
+- 回扫结果持久化：`.ink/tmp/selfcheck_scan_ch{NNNN}.json`
+- 超 2 轮仍有问题 → 标记为 `scan_unresolved`，**不阻断流程**，继续进入 Step 2A.5
+
+Step 3 联动：
+- 回扫结果（无论通过或未解决）注入 Step 3 审查包
+- `scan_unresolved` 标记的章节，Step 3 审查器会对相关问题区域做重点检查
+- 回扫结果文件路径：`.ink/tmp/selfcheck_scan_ch{NNNN}.json`，Step 3 生成审查包时自动包含
+
+输出：
+- 修正后的章节正文（或标记 `scan_unresolved` 的原始正文）
+- `.ink/tmp/selfcheck_scan_ch{NNNN}.json` 回扫报告
 
 ### Step 2A.5：编码校验 + 字数校验（必做，不可跳过）
 
@@ -1138,8 +1169,8 @@ Task 传参硬约束：
 - `consistency-checker`（权重 25%）
 - `continuity-checker`（权重 15%）
 - `ooc-checker`（权重 20%）
-- `logic-checker`（权重 15%）——章内微观逻辑验证（L1-L8：数字算术/动作序列/属性一致/空间连续/物品连续/感官一致/对话归属/因果逻辑）
-- `outline-compliance-checker`（权重 15%）——大纲合规验证（O1-O6：实体出场/禁止发明/目标充分性/伏笔埋设/钩子合规/黄金三章附加），消费 MCC（板块14）
+- `logic-checker`（权重 15%）——章内微观逻辑验证（L1-L9：数字算术/动作序列/属性一致/空间连续/物品连续/感官一致/对话归属/因果逻辑/枚举完整性）
+- `outline-compliance-checker`（权重 15%）——大纲合规验证（O1-O7：实体出场/禁止发明/目标充分性/伏笔埋设/钩子合规/黄金三章附加/否定约束合规），消费 MCC（板块14）+ 否定约束（板块15）
 - `anti-detection-checker`（权重 10%）
 - `reader-simulator`（**快速模式**，v9.0 升格为核心裁判。输出 `reader_verdict` 7 维评分，驱动 Step 4 自动返修）
 

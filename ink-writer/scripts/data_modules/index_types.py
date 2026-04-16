@@ -166,6 +166,7 @@ class ChapterMemoryCardMeta:
     key_facts: List[str] = field(default_factory=list)
     involved_entities: List[str] = field(default_factory=list)
     plot_progress: List[str] = field(default_factory=list)
+    scene_exit_snapshot: List[Dict[str, Any]] = field(default_factory=list)
     payload_json: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -235,6 +236,21 @@ class ReviewMetrics:
     report_file: str = ""
     notes: str = ""
     review_payload_json: Dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class NegativeConstraintMeta:
+    """否定约束记录 (narrative-coherence 引入)"""
+
+    id: str  # NC-ch{NNNN}-{NNN}
+    chapter: int
+    type: str  # no_contact_exchange / no_information_gained / no_critical_action / no_revelation
+    entities: List[str] = field(default_factory=list)
+    description: str = ""
+    valid_until: int = 0  # 0 means permanent
+    override_condition: str = ""
+    resolved_chapter: int = 0  # 0 means unresolved
+    resolved_reason: str = ""
 
 
 @dataclass

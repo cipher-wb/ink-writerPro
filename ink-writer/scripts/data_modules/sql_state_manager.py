@@ -543,6 +543,7 @@ class SQLStateManager:
                     key_facts=list(chapter_memory_card.get("key_facts", []) or []),
                     involved_entities=list(chapter_memory_card.get("involved_entities", []) or related_entities),
                     plot_progress=list(chapter_memory_card.get("plot_progress", []) or []),
+                    scene_exit_snapshot=list(chapter_memory_card.get("scene_exit_snapshot", []) or []),
                     payload_json=dict(chapter_memory_card),
                 )
             )

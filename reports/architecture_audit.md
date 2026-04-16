@@ -4,9 +4,9 @@
 
 ## Summary
 
-- **Python modules scanned**: 177
+- **Python modules scanned**: 179
 - **Import cycles found**: 1
-- **Unused module candidates**: 86
+- **Unused module candidates**: 85
 - **Agents scanned**: 21
 - **Agent overlap pairs**: 9
 - **Repeated prompt fragments**: 50
@@ -38,7 +38,6 @@
 - `data_modules.index_entity_mixin` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_entity_mixin.py)
 - `data_modules.index_observability_mixin` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_observability_mixin.py)
 - `data_modules.index_reading_mixin` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_reading_mixin.py)
-- `data_modules.index_types` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_types.py)
 - `data_modules.observability` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/observability.py)
 - `data_modules.schemas` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/schemas.py)
 - `data_modules.tests` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/tests/__init__.py)
@@ -110,7 +109,7 @@
 |-------|-------------|-------|--------|---------|
 | anti-detection-checker | AI味检测Agent，从统计特征层面检测文本是否具有AI生成痕迹，输出定位到具体段落的修复建议 | Read, Grep | 与其他 checker 相同，接收 `review_bundle_file` 路径和 `chapte… | 遵循 `checker-output-schema.md` 的统一格式：  ```json {   … |
 | consistency-checker | 设定一致性检查，输出结构化报告供润色步骤参考 | Read |  |  |
-| context-agent | 上下文搜集Agent，内置 Context Contract，输出可被 Step 2A 直接消费的创作执行包。 | Read, Grep, Bash | ```json {   "chapter": 100,   "project_root": "D:/… | 输出必须是单一执行包，包含 3 层：  1. **任务书（10+4 板块）** - 本章核心任务（目… |
+| context-agent | 上下文搜集Agent，内置 Context Contract，输出可被 Step 2A 直接消费的创作执行包。 | Read, Grep, Bash | ```json {   "chapter": 100,   "project_root": "D:/… | 输出必须是单一执行包，包含 3 层：  1. **任务书（10+6 板块）** - 本章核心任务（目… |
 | continuity-checker | 连贯性检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | data-agent | 数据处理Agent，负责 AI 实体提取、场景切片、索引构建，并记录钩子/模式/结束状态与章节摘要。 | Read, Write, Bash | ```json {   "chapter": 100,   "chapter_file": "正文/… | ### 输出格式硬约束（纯 JSON，零解释文字）  > **铁律**：Data Agent 的最终… |
 | editor-wisdom-checker | 编辑智慧检查器，基于检索到的编辑规则对章节进行评分，输出违规列表和修复建议。 | Read | - `chapter_text`: 章节正文 - `chapter_no`: 章节号 - `rule… | ```json {   "agent": "editor-wisdom-checker",   "c… |
@@ -118,9 +117,9 @@
 | foreshadow-tracker | 伏笔生命周期追踪器，每章扫描所有活跃伏笔，检测逾期/沉默/密度异常，输出结构化报告 | Read |  |  |
 | golden-three-checker | 黄金三章检查器，专门审查第1-3章的开头抓取力、承诺兑现和章末驱动力。 | Read | - `chapter` - `chapter_file` - `project_root` - `.… | ```json {   "agent": "golden-three-checker",   "ch… |
 | high-point-checker | 爽点密度检查，支持迪化误解/身份掉马模式，输出结构化报告 | Read |  |  |
-| logic-checker | 章内微观逻辑自洽性检查，覆盖数字算术、动作序列、属性一致、空间连续等8层验证 | Read |  |  |
+| logic-checker | 章内微观逻辑自洽性检查，覆盖数字算术、动作序列、属性一致、空间连续、枚举完整性等9层验证 | Read |  |  |
 | ooc-checker | 人物OOC检查，输出结构化报告供润色步骤参考 | Read |  |  |
-| outline-compliance-checker | 大纲合规验证，消费MCC（板块14）逐项检查正文是否严格遵守大纲，六层检查覆盖实体出场、禁止发明、目标充分性、伏笔埋设、… | Read |  |  |
+| outline-compliance-checker | 大纲合规验证，消费MCC（板块14）逐项检查正文是否严格遵守大纲，七层检查覆盖实体出场、禁止发明、目标充分性、伏笔埋设、… | Read |  |  |
 | pacing-checker | Strand Weave 节奏检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | plotline-tracker | 明暗线追踪器，每章扫描所有活跃线程（主线/支线/暗线），检测断更/密度异常，输出结构化报告 | Read |  |  |
 | polish-agent | Step 4 润色 Agent，基于审查报告修复问题 + 去 AI 味 + 安全校验 | Read, Write, Bash | ```json {   "chapter_file": "正文/第0123章-章节标题.md",  … | 1. 润色后章节正文（覆盖原文件） 2. 润色报告：  ```text [润色报告] - 逻辑修复(… |
@@ -198,10 +197,10 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [logic-checker, outline-compliance-checker]: `json issues markdown 报告 执行流程 第一步`
 - **2x** in [logic-checker, outline-compliance-checker]: `第三步 must_not_pass 判定 硬阻断条件 满足任一则 pass`
 - **2x** in [logic-checker, outline-compliance-checker]: `false 存在任何 critical severity issue 存在`
-- **2x** in [logic-checker, outline-compliance-checker]: `2 个 high severity issue 不满足硬阻断条件时`
 - **2x** in [logic-checker, outline-compliance-checker]: `true 但 medium low issue 仍传递给`
 - **2x** in [logic-checker, outline-compliance-checker]: `polish agent 处理 第四步 生成报告 markdown`
 - **2x** in [logic-checker, outline-compliance-checker]: `综合评分 结论 通过 未通过 简要说明 critical`
+- **2x** in [logic-checker, outline-compliance-checker]: `count high count medium count low`
 - **2x** in [logic-checker, outline-compliance-checker]: `是否触发 原因 第五步 输出 json json`
 - **2x** in [logic-checker, outline-compliance-checker]: `硬阻断触发 必须回退修复 禁止事项 降低任何层级的 severity 严重度不得降级`
 - **2x** in [pacing-checker, reader-simulator]: `本 agent 默认数据源 审查包中的正文 前序摘要 reader_signal`
