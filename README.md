@@ -1,7 +1,7 @@
 # Ink Writer Pro
 
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-12.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-13.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-Plugin-purple.svg)](https://claude.ai/claude-code)
 [![Gemini CLI](https://img.shields.io/badge/Gemini%20CLI-Extension-4285F4.svg)](https://github.com/google-gemini/gemini-cli)
 [![Codex CLI](https://img.shields.io/badge/Codex%20CLI-Skills-74AA9C.svg)](https://github.com/openai/codex)
@@ -278,6 +278,46 @@ Step 6     Git 备份
 
 ---
 
+## v13.0 新特性（Deep Review & Perfection）
+
+v13 围绕**追读力 / 去 AI 味 / 长篇不崩 / 架构 / 效率**做了 27 个 US 的端到端优化，1943 单测全绿。
+
+**追读力三件套**
+- **钩子模式库**（208 条）：从 50 本爆款挖掘 `{type, position, trigger, payoff_window}`，大纲阶段强制声明 `hook_contract`，reader-pull-checker 输出可执行 fix_prompt + 2 轮自动重写闭环，失败写 `hook_blocked.md`
+- **爽点节奏调度器**：`ink_writer/pacing/high_point_scheduler.py` 按章节位置 + 近 5 章历史决定本章爽点配方（6 类 × 3 强度），50 章模拟爽点密度方差 ≤ 0.2
+- **情绪心电图**：data-agent 提取 per-scene `{valence, arousal}` → `emotion-curve-checker` 与目标曲线对齐，平淡段落触发 polish 加冲突
+
+**去 AI 味**
+- **Style RAG**：将爆款切片为场景级片段（scene_type × emotion × 句式特征），sentence-transformers 索引，polish-agent 检索 Top-K 人写参考改写
+- **句式多样性硬门禁**：句长 CV / 短句占比 / 段落 CV / 对话占比 / 情感标点密度等统计特征写入 `config/anti-detection.yaml`，零容忍清单（"第xx日"开头、"与此同时"）立即阻断
+- **文化语料库**：按题材（xianxia/urban/scifi/...）注入成语/方言/时代词，context-agent 自动附加
+
+**长篇不崩**
+- **单一事实源记忆图谱**：SQLite 为唯一源，state.json 降级为可重建视图；ink-migrate 平滑迁移
+- **跨章语义检索**：章节摘要向量索引 + 强实体强制召回 + 近 N 章，取代关键词匹配
+- **伏笔生命周期管理**：`foreshadow-tracker` 每章扫 open 伏笔，超期强制 ink-plan 安排兑现
+- **人物语气指纹**：首次出场自动学习 `voice_fingerprint`，ooc-checker 按指纹打分
+- **明暗线追踪器**：每章 `plotline_ids` 标注，长期不推进告警并强制调度
+
+**架构清理**
+- `foreshadow-tracker` + `plotline-tracker` → **`thread-lifecycle-tracker`**（共享状态机）
+- **双 agent 目录消除**：统一到 `ink-writer/agents/`
+- **skill 系统决策**：webnovel-writer 废弃，ink-writer 为唯一保留
+- **Prompt 集中化**：所有 prompt 进 `templates/prompts/` + semver + A/B 测试
+
+**效率**
+- **章节级并发管线**：`--parallel N`，4 并发吞吐 ≥ 串行 2.5×
+- **Anthropic Prompt Cache**：稳定段标注 `cache_control`，目标命中率 ≥ 70%，章 token ↓ 30%+
+- **检查器并行化 + 早失败**：`asyncio.gather` + 首个硬门禁失败短路到 polish
+- **增量数据提取**：按 diff 提取，数据阶段耗时 ≤ 40%
+
+**脚手架**
+- `scripts/measure_baseline.py`：一键采集 8 项质量/性能指标
+- `scripts/run_300chapter_benchmark.py`：300 章无人值守压测
+- `scripts/build_blind_test.py`：盲测样本构建
+
+---
+
 ## v12.x 新特性
 
 ### v12.0: 编辑星河写作智慧集成（364 条规则 + 本地 RAG + 硬门禁）
@@ -478,7 +518,8 @@ A: 100 章写作中，检查点总开销约 7 小时，占总时间 7-14%。
 
 | 版本 | 说明 |
 |------|------|
-| **v12.0.0 (当前)** | **编辑星河写作智慧集成**：起点金牌编辑的 288 份建议清洗→分类（10 主题）→抽取 **364 条原子规则**→构建本地 FAISS 向量索引（`BAAI/bge-small-zh`）。新增 `editor-wisdom-checker` agent + 改造 context/writer/polish 三个现有 agent 注入召回规则。**硬门禁闭环**：score<阈值→polish→re-check，3 次不过写 `blocked.md` 中断。**黄金三章加严阈值 0.85**。新增 `llm_backend.py` 适配器：Claude Code 订阅用户无需 API key 即可走 `claude -p` 跑 pipeline。227 单测+端到端 smoke 均通过。 |
+| **v13.0.0 (当前)** | **Deep Review & Perfection**：27 US / 6 Phase 端到端优化。**追读力**：208 条钩子模式库 + `hook_contract` 强制声明 + reader-pull 自动重写闭环；爽点调度器（6 类 × 3 强度）；情绪心电图（per-scene valence/arousal 对齐）。**去 AI 味**：Style RAG（人写片段检索改写）+ 句式多样性硬门禁 + 零容忍清单 + 题材文化语料库。**长篇不崩**：SQLite 单一事实源记忆图谱 + 跨章语义检索 + 伏笔/明暗线生命周期追踪 + 人物语气指纹（`thread-lifecycle-tracker` 合并 foreshadow/plotline）。**架构**：双 agent 目录消除、webnovel-writer 废弃、Prompt 集中化 + A/B 测试。**效率**：`--parallel N` 章节并发（吞吐 ≥ 2.5×）+ Anthropic prompt cache（命中率 ≥ 70%、token ↓ 30%+）+ 检查器 asyncio 并行早失败 + data-agent 增量 diff 提取。**脚手架**：`measure_baseline.py` / `run_300chapter_benchmark.py` / `build_blind_test.py`。1943 单测全绿。 |
+| v12.0.0 | **编辑星河写作智慧集成**：起点金牌编辑的 288 份建议清洗→分类（10 主题）→抽取 **364 条原子规则**→构建本地 FAISS 向量索引（`BAAI/bge-small-zh`）。新增 `editor-wisdom-checker` agent + 改造 context/writer/polish 三个现有 agent 注入召回规则。**硬门禁闭环**：score<阈值→polish→re-check，3 次不过写 `blocked.md` 中断。**黄金三章加严阈值 0.85**。新增 `llm_backend.py` 适配器：Claude Code 订阅用户无需 API key 即可走 `claude -p` 跑 pipeline。227 单测+端到端 smoke 均通过。 |
 | v11.5.0 | 跨章遗忘 bug 根因修复：**previous_chapters 窗口 2→10 章**（`extract_chapter_context.py` 两处硬编码）+ **plot_thread target_payoff_chapter 空值兜底从 `or 0` 改为 None-safe**（`sql_state_manager.py`，修复 audit 把未设目标伏笔误判逾期的系统性 bug）+ **SQL schema 与 Pydantic 对齐**（`index_manager.py` 的 target_payoff_chapter/resolved_chapter 从 DEFAULT 0 改为 NULL）。三个修复对长篇连载（50+ 章）项目有显著价值。 |
 | v11.4.0 | 写作质量提升+LLM创造力增强：TTR词汇多样性检测 + 首句钩子检测 + 伏笔分级(10/20/30章) + 闸门阈值对齐 + 摘要窗口扩大(3→5) + 关键章摘要常驻 + 角色语言指纹(voice_fingerprint) + 微观意外感注入(Anti-Cliché) + 反套路检测 + 过渡章豁免收紧 + 简介质检 + 风格采纳度验证 + 13项计算检查(1095测试) |
 | v11.3.0 | 工程深度审查全量修复(22项)：计算型闸门SQL对齐真实Schema + 死亡/离场/能力状态标准化 + mega-summary自动生成 + 伏笔数据源统一 + _write_transaction接入9个mixin + Step3 Harness闸门 + 黄金三章契约检查 + 风格样本fallback + 对话「」支持 + 句长/标点检查 + 元数据全文扫描 + Token裁剪通知 + chapters_per_volume配置化 + reader-pull始终执行 + 29个新测试(1083总) |
