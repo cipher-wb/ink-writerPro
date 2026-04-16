@@ -32,6 +32,8 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
   "editor_wisdom_violations": [
     {"rule_id": "EW-0042", "quote": "问题段落原文", "severity": "hard", "fix_suggestion": "具体修复建议"}
   ],
+  "logic_fix_prompt": "",
+  "outline_fix_prompt": "",
   "hook_fix_prompt": "",
   "emotion_fix_prompt": "",
   "anti_detection_fix_prompt": "",
@@ -56,6 +58,43 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
    "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"
 ```
+
+### 1.1 P0: 逻辑修复（logic_fix_prompt）
+
+当输入包含非空 `logic_fix_prompt` 时（来自 logic-checker 的 medium/low severity 问题），作为**最高优先级**修复执行：
+
+> **仅处理 medium/low severity**。critical 和 high 由 Step 3 逻辑门禁硬阻断处理，不会流入 Step 4。
+
+修复约束（最小化改动原则）：
+
+| 问题类型 | 修复策略 | 禁止操作 |
+|----------|---------|---------|
+| L1 数字错误 | 只改数字本身，使其算术正确 | 不改周围叙事内容 |
+| L2 动作序列 | 调整动作顺序或补充过渡动作 | 不删除已有情节段落 |
+| L3 属性不一致 | 统一为首次出现的属性值 | 不改角色设定档的权威属性 |
+| L4 空间跳跃 | 只添加过渡句（移动描写） | 不删除原有内容 |
+| L5 物品连续性 | 添加物品状态变化的描写（放下/收起/消失原因） | 不删除物品相关情节 |
+| L6 感官矛盾 | 调整感官描写使其与环境匹配 | 不改变环境设定 |
+| L7 对话归属 | 补充说话人标记 | 不改变对话内容 |
+| L8 因果铺垫不足 | 补充动机/信息铺垫句 | 不改变决策结果 |
+
+逐条执行 `logic_fix_prompt` 中的修复指令，每条修复后验证：未引入新的逻辑矛盾。
+
+### 1.2 P0.5: 大纲合规修复（outline_fix_prompt）
+
+当输入包含非空 `outline_fix_prompt` 时（来自 outline-compliance-checker 的 medium/low severity 问题），在逻辑修复之后执行：
+
+> **仅处理 medium/low severity**。critical 和 high 由 Step 3 大纲合规门禁硬阻断处理，不会流入 Step 4。
+
+修复约束：
+
+| 问题类型 | 修复策略 | 禁止操作 |
+|----------|---------|---------|
+| O3 核心目标展开不足 | 在现有核心事件段落前后补充细节展开 | 不改变剧情走向 |
+| O4 伏笔埋设模糊 | 强化伏笔关键词的可识别度（加粗暗示、增加环境呼应） | 不新增大纲未规定的伏笔 |
+| O5 钩子位置偏移 | 将钩子内容移至章末 500 字内 | 不改变钩子悬念内容 |
+
+逐条执行 `outline_fix_prompt` 中的修复指令，每条修复后验证：未改变剧情走向。
 
 ### 1.5 追读力修复（hook_fix_prompt）
 
@@ -197,6 +236,8 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 
 | 检查项 | 判定规则 | 违规处理 |
 |--------|---------|---------|
+| 逻辑修复引入新矛盾 | 逻辑修复（Step 1.1）的 diff 是否引入了新的数字错误、动作矛盾或空间跳跃 | `critical`：恢复原文该段，记录 deviation |
+| 大纲合规修复偏离剧情 | 大纲合规修复（Step 1.2）的 diff 是否改变了剧情走向、角色决策或因果关系 | `critical`：恢复原文该段，记录 deviation |
 | 剧情事实变更 | 角色行为结果、因果关系、数字是否改变 | `critical`：恢复原文该段 |
 | 设定违规引入 | 变更后出现原文没有的能力/地点/角色名 | `critical`：恢复原文该段 |
 | OOC 引入 | 角色语气/决策风格与角色档案明显偏离 | `high`：恢复或重新改写 |
@@ -213,6 +254,8 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 
 ```text
 [润色报告]
+- 逻辑修复(P0): N 处
+- 大纲合规修复(P0.5): N 处
 - 严重问题已修复: N 处
 - 高优先级已修复: N 处
 - 中低优先级已修复: N 处
@@ -245,9 +288,11 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 
 1. `critical` 全部修复或记录 deviation
 2. `high` 全部处理
-3. `anti_ai_force_check = pass`
-4. No-Poison 五类毒点已检查
-5. Step 4.5 diff 校验通过（无 critical 违规）
-6. 未触碰润色红线
-7. editor_wisdom_violations 中所有 `hard` 违规已修复或记录 deviation
-8. `_patches.md` 已生成（当存在 violations 时）
+3. `logic_fix_prompt` 中所有项已修复，且未引入新逻辑矛盾（Step 4.5 验证通过）
+4. `outline_fix_prompt` 中所有项已修复，且未改变剧情走向（Step 4.5 验证通过）
+5. `anti_ai_force_check = pass`
+6. No-Poison 五类毒点已检查
+7. Step 4.5 diff 校验通过（无 critical 违规）
+8. 未触碰润色红线
+9. editor_wisdom_violations 中所有 `hard` 违规已修复或记录 deviation
+10. `_patches.md` 已生成（当存在 violations 时）
