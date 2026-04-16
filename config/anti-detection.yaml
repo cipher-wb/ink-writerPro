@@ -1,0 +1,62 @@
+# Anti-Detection 句式多样性硬门禁配置
+# 用于 ink-write Step 3.8，检测统计特征级 AI 味并自动修复
+
+enabled: true
+
+# 综合评分阈值（anti-detection-checker overall_score）
+score_threshold: 70.0
+golden_three_threshold: 80.0
+
+# 最大重试次数（不含零容忍项，零容忍项直接阻断无重试）
+max_retries: 1
+
+# --- 句式多样性统计阈值 ---
+# 句长变异系数下限（< 此值视为句长过于均匀）
+sentence_cv_min: 0.35
+# 句长均值下限（< 此值视为句子碎片化）
+sentence_mean_min: 18.0
+# 短句占比上限（> 此值视为短句过多）
+short_sentence_ratio_max: 0.25
+# 长句占比下限（< 此值视为缺乏长句纵深）
+long_sentence_ratio_min: 0.15
+
+# --- 段落结构阈值 ---
+# 单句段占比下限（< 此值视为段落结构过于工整）
+single_sentence_paragraph_ratio_min: 0.20
+# 段落长度变异系数下限
+paragraph_cv_min: 0.40
+
+# --- 对话阈值 ---
+# 对话占比下限（< 此值视为对话不足）
+dialogue_ratio_min: 0.10
+
+# --- 情感标点阈值（每千字） ---
+exclamation_density_min: 1.5
+ellipsis_density_min: 1.0
+question_density_min: 2.0
+total_emotion_punctuation_min: 5.0
+
+# --- 因果链阈值 ---
+# 因果连接词密度上限（每200字）
+causal_density_max: 1.0
+
+# --- 零容忍清单 ---
+# 匹配任一条目立即阻断，不触发 polish 重试
+zero_tolerance:
+  - id: ZT_TIME_OPENING
+    description: "章节以时间标记开头（第xx日/次日/N天后等）"
+    patterns:
+      - "^第[一二三四五六七八九十百千万\\d]+[天日]"
+      - "^[次翌]日"
+      - "^[一二三四五六七八九十百千万\\d]+天[后前]"
+      - "^[一二三四五六七八九十百千万\\d]+个?[月年周]后"
+      - "^那天[早晚]"
+      - "^[清凌]晨"
+      - "^[傍黄]昏"
+      - "^夜[里晚深]"
+      - "^时间[来到了过了]"
+      - "^[这那]一[天日年]"
+  - id: ZT_MEANWHILE
+    description: "使用'与此同时'全知视角转场"
+    patterns:
+      - "与此同时"

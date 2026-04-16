@@ -9,14 +9,11 @@ model: inherit
 
 > **职责**: 节奏分析师，执行 Strand Weave 平衡检查，防止读者疲劳。
 
-> **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+{{PROMPT_TEMPLATE:checker-output-reference.md}}
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 默认只使用审查包中的正文、前序摘要、reader_signal、memory_context、outline。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、前序摘要、reader_signal、memory_context、outline。
 
 ## 检查范围
 
@@ -28,16 +25,7 @@ model: inherit
 
 ### 第一步: 加载上下文
 
-**输入参数**:
-```json
-{
-  "project_root": "{PROJECT_ROOT}",
-  "chapter_file": "{ABSOLUTE_CHAPTER_FILE}",
-  "review_bundle_file": "{ABSOLUTE_REVIEW_BUNDLE_FILE}"
-}
-```
-
-先读取 `review_bundle_file`。只有 bundle 缺字段时才允许补读白名单内的绝对路径文件。
+{{PROMPT_TEMPLATE:checker-load-context.md}}
 
 **禁止**: 通过脚本或目录扫描自行读取 `state.json/index.db/正文/大纲`
 

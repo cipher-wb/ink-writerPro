@@ -1,0 +1,36 @@
+# 语气指纹系统配置
+# 用于角色语音一致性检查与自动学习
+
+enabled: true
+score_threshold: 60.0
+max_retries: 2
+
+# 偏差检测阈值
+deviation_thresholds:
+  # 口头禅缺席告警：连续 N 章未出现任何口头禅
+  catchphrase_absence_chapters: 3
+  # 用词层次偏差阈值（0-1，越高越宽松）
+  vocabulary_level_mismatch: 0.4
+  # 禁忌表达违规严重级别
+  forbidden_expression_severity: "critical"
+  # 语气漂移阈值
+  tone_drift_threshold: 0.5
+  # 角色间对话辨识度最低差异
+  distinctiveness_min_diff: 0.3
+
+# 自动学习配置
+learning:
+  # 至少 N 行对话才触发自动学习
+  min_dialogue_lines: 5
+  # 首次出场自动学习语气指纹
+  auto_learn_on_first_appearance: true
+  # 追加模式（不覆盖已有数据）
+  append_only: true
+  max_catchphrases: 5
+  max_speech_habits: 5
+  max_forbidden_expressions: 5
+
+# 参与指纹检查的角色层级
+core_tiers:
+  - "核心"
+  - "重要"

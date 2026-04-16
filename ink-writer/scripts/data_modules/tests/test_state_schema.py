@@ -407,7 +407,7 @@ class TestProjectInfo:
 class TestStateModel:
     def test_defaults(self):
         sm = StateModel()
-        assert sm.schema_version == 7
+        assert sm.schema_version == 9
         assert isinstance(sm.project_info, ProjectInfo)
         assert isinstance(sm.progress, ProgressState)
         assert isinstance(sm.protagonist_state, ProtagonistState)
@@ -422,11 +422,11 @@ class TestStateModel:
 
     def test_model_validate_empty(self):
         sm = StateModel.model_validate({})
-        assert sm.schema_version == 7
+        assert sm.schema_version == 9
 
     def test_model_validate_full(self):
         data = {
-            "schema_version": 7,
+            "schema_version": 9,
             "project_info": {"title": "TestBook", "genre": "sci-fi"},
             "progress": {"current_chapter": 5, "total_words": 12000},
             "protagonist_state": {
@@ -445,7 +445,7 @@ class TestStateModel:
             "strand_tracker": {"current_dominant": "fire"},
         }
         sm = StateModel.model_validate(data)
-        assert sm.schema_version == 7
+        assert sm.schema_version == 9
         assert sm.project_info.title == "TestBook"
         assert sm.progress.current_chapter == 5
         assert sm.protagonist_state.power.realm == "练气"
@@ -495,7 +495,7 @@ class TestLoadState:
         """When state.json doesn't exist, return a default StateModel."""
         state = load_state(tmp_path)
         assert isinstance(state, StateModel)
-        assert state.schema_version == 7
+        assert state.schema_version == 9
 
     def test_load_existing_file(self, tmp_path):
         ink_dir = tmp_path / ".ink"
@@ -530,7 +530,7 @@ class TestLoadState:
         ink_dir.mkdir()
         (ink_dir / "state.json").write_text("{}", encoding="utf-8")
         state = load_state(tmp_path)
-        assert state.schema_version == 7
+        assert state.schema_version == 9
 
 
 class TestSaveState:

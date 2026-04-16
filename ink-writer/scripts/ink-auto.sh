@@ -5,15 +5,40 @@
 # 内置自动大纲生成 + 运行报告生成
 #
 # 用法:
-#   ink-auto 5     # 写 5 章
-#   ink-auto       # 默认 5 章
+#   ink-auto 5              # 写 5 章（串行）
+#   ink-auto --parallel 4 20  # 写 20 章，4 章并发
+#   ink-auto                # 默认 5 章
 #
 # 前提: 在小说项目目录下运行（含 .ink/state.json）
 # 支持: claude / gemini / codex（自动检测）
 
 set -euo pipefail
 
-N=${1:-5}
+# ═══════════════════════════════════════════
+# 参数解析：支持 --parallel N
+# ═══════════════════════════════════════════
+
+PARALLEL=0
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --parallel)
+            PARALLEL="${2:-4}"
+            shift 2
+            ;;
+        -p)
+            PARALLEL="${2:-4}"
+            shift 2
+            ;;
+        *)
+            POSITIONAL_ARGS+=("$1")
+            shift
+            ;;
+    esac
+done
+
+N=${POSITIONAL_ARGS[0]:-5}
 COOLDOWN=${INK_AUTO_COOLDOWN:-10}
 CHECKPOINT_COOLDOWN=${INK_AUTO_CHECKPOINT_COOLDOWN:-15}
 
@@ -809,7 +834,58 @@ print_summary() {
 }
 
 # ═══════════════════════════════════════════
-# 主循环
+# 并发模式：委托给 Python asyncio 编排器
+# ═══════════════════════════════════════════
+
+if (( PARALLEL > 1 )); then
+    echo "═══════════════════════════════════════"
+    echo "  ink-auto | 写 $N 章 | 并发 $PARALLEL | $PLATFORM"
+    echo "  项目: $PROJECT_ROOT"
+    echo "  检查点: 每批次完成后统一运行"
+    echo "  日志: $LOG_DIR"
+    echo "═══════════════════════════════════════"
+
+    python3 -X utf8 -c "
+import sys, asyncio, json
+sys.path.insert(0, '$PLUGIN_ROOT')
+sys.path.insert(0, '${PLUGIN_ROOT}/scripts')
+from pathlib import Path
+from ink_writer.parallel.pipeline_manager import PipelineManager, PipelineConfig
+
+config = PipelineConfig(
+    project_root=Path('$PROJECT_ROOT'),
+    plugin_root=Path('$PLUGIN_ROOT'),
+    parallel=$PARALLEL,
+    cooldown=$COOLDOWN,
+    checkpoint_cooldown=$CHECKPOINT_COOLDOWN,
+    platform='$PLATFORM',
+)
+mgr = PipelineManager(config)
+report = asyncio.run(mgr.run(total_chapters=$N))
+result = report.to_dict()
+
+print()
+print('═══════════════════════════════════════')
+print(f'  ink-auto 并发完成报告')
+print('═══════════════════════════════════════')
+print(f'  并发度: {result[\"parallel\"]}')
+print(f'  完成: {result[\"completed\"]} 章 | 失败: {result[\"failed\"]} 章')
+print(f'  墙钟时间: {result[\"wall_time_s\"]}s | 串行等效: {result[\"serial_total_s\"]}s')
+print(f'  加速比: {result[\"speedup\"]}x')
+print('═══════════════════════════════════════')
+
+# 输出 JSON 报告
+report_path = Path('$REPORT_DIR') / f'auto-parallel-{__import__(\"time\").strftime(\"%Y%m%d-%H%M%S\")}.json'
+report_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+print(f'  报告: {report_path}')
+
+sys.exit(1 if result['failed'] > 0 else 0)
+"
+    exit $?
+fi
+
+# ═══════════════════════════════════════════
+# 主循环（串行模式）
 # ═══════════════════════════════════════════
 
 echo "═══════════════════════════════════════"

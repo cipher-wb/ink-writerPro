@@ -17,11 +17,7 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
 
 **与其他步骤的职责边界**：
 
-| 维度 | Step 2A（内容层） | Step 2B（表达层） | Step 4（本 Agent，质量层） |
-|------|-----------------|-----------------|--------------------------|
-| **核心职责** | 生成剧情内容 | 风格转换 | 修复审查问题 + Anti-AI |
-| **可改范围** | 全部内容 | 句式/词序/修辞 | 审查报告指出的具体问题段落 |
-| **不可触碰** | — | 剧情事实 | 剧情走向、设定物理边界、伏笔 |
+{{PROMPT_TEMPLATE:responsibility-boundary.md}}
 
 ## 输入
 
@@ -36,6 +32,11 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
   "editor_wisdom_violations": [
     {"rule_id": "EW-0042", "quote": "问题段落原文", "severity": "hard", "fix_suggestion": "具体修复建议"}
   ],
+  "hook_fix_prompt": "",
+  "emotion_fix_prompt": "",
+  "anti_detection_fix_prompt": "",
+  "voice_fix_prompt": "",
+  "style_references": "【人写参考】块（由 Style RAG 检索，Step 2.8 生成；为空则跳过）",
   "pass": true
 }
 ```
@@ -56,6 +57,51 @@ cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
    "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"
 ```
 
+### 1.5 追读力修复（hook_fix_prompt）
+
+当输入包含非空 `hook_fix_prompt` 时（来自 reader-pull-checker 追读力门禁），优先于其他修复执行：
+
+1. 逐条执行 `hook_fix_prompt` 中的修复指令
+2. 重点关注章末钩子、开篇张力、微兑现密度
+3. 修复时不得改变剧情事实、设定物理边界或角色核心行为
+4. 修复完成后正文应能通过 reader-pull-checker 的阈值检查
+
+### 1.6 情绪曲线修复（emotion_fix_prompt）
+
+当输入包含非空 `emotion_fix_prompt` 时（来自 emotion-curve-checker 情绪门禁），在追读力修复之后执行：
+
+1. 逐条执行 `emotion_fix_prompt` 中的修复指令
+2. 重点关注平淡段落的情绪注入（插入冲突、感官冲击、情绪反转）
+3. 保持情绪变化自然流畅，不得生硬插入无关冲突
+4. 不得改变剧情事实或角色核心行为
+5. 修复完成后正文应能通过 emotion-curve-checker 的方差阈值检查
+
+### 1.7 AI味句式多样性修复（anti_detection_fix_prompt）
+
+当输入包含非空 `anti_detection_fix_prompt` 时（来自 anti-detection-checker 句式多样性门禁），在情绪曲线修复之后执行：
+
+1. 逐条执行 `anti_detection_fix_prompt` 中的修复指令
+2. 重点关注句长多样性（合并碎句为长复合句、在描写处插入长句）
+3. 增加情感标点密度（感叹号/省略号/反问句）
+4. 段落结构打碎（拆分工整长段为碎片段和单句段）
+5. 增加对话占比（内心独白转化为角色对话）
+6. 削减因果连接词（删除中间环节，保留叙事跳跃感）
+7. 不得改变剧情事实、设定物理边界或角色核心行为
+8. 修复完成后正文应能通过 anti-detection-checker 的阈值检查
+
+### 1.8 语气指纹修复（voice_fix_prompt）
+
+当输入包含非空 `voice_fix_prompt` 时（来自 voice-fingerprint 语气指纹门禁），在AI味修复之后执行：
+
+1. 逐条执行 `voice_fix_prompt` 中的修复指令
+2. 重点关注角色对话辨识度：每个角色的说话方式必须具有独特性
+3. 修复禁忌表达：替换为符合角色 `vocabulary_level` 和 `tone` 的表达
+4. 恢复口头禅：在对话中自然融入角色的 `catchphrases`
+5. 修正用词层次：调整对话用词至角色设定的 `vocabulary_level` 级别
+6. 增大角色间风格差异：去掉说话人名字后，仅从用词和句式就能判断是谁在说话
+7. 不得改变剧情事实或角色核心行为
+8. 修复完成后正文应能通过 voice-fingerprint 的阈值检查
+
 ### 2. 编辑智慧违规精准修复
 
 当输入包含 `editor_wisdom_violations` 时，按以下流程逐条修复：
@@ -75,24 +121,22 @@ cp "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
 
 ### 2.5 按优先级修复审查问题
 
-| 优先级 | 处理规则 |
-|--------|---------|
-| `critical` | 必须修复；无法修复必须记录 deviation 与原因 |
-| `high` | 必须优先处理；无法修复记录 deviation |
-| `medium` | 视篇幅和收益处理 |
-| `low` | 可择优处理 |
+{{PROMPT_TEMPLATE:polish-priority-rules.md}}
 
-**类型对应修复动作**：
-- `POWER_CONFLICT`：能力回落到合法境界，或补出"获得路径+代价"
-- `OOC`：恢复角色话术、风险偏好、决策边界
-- `TIMELINE_ISSUE`：补足时间流逝锚点
-- `LOCATION_ERROR`：补移动过程与空间锚点
-- `PACING_IMBALANCE`：增加缺失推进事件或删冗余说明段
-- `CONTINUITY_BREAK`：补衔接句与过渡动作
+### 2.8 Style RAG 人写参考检索
+
+当 `anti-detection-checker` 的 `fix_priority` 非空时，在 AI 味定向修复前检索人写标杆片段作为改写参考：
+
+1. 对每条 `fix_priority` 项，提取对应段落文本作为语义查询
+2. 调用 `ink_writer.style_rag.build_polish_style_pack()` 检索 Top-3 人写片段（按 scene_type/genre/quality 过滤）
+3. 将检索结果格式化为 `【人写参考】` 块，注入 Step 3 的改写上下文
+4. 改写时参考人写片段的句式节奏和表达手法，**不可照搬内容或剧情**
+
+**Python 模块**：`ink_writer.style_rag.polish_integration.build_polish_style_pack()`
 
 ### 3. AI 味定向修复
 
-根据 `anti-detection-checker` 的 `fix_priority` 列表逐项修复：
+根据 `anti-detection-checker` 的 `fix_priority` 列表，结合 Step 2.8 检索的人写参考逐项修复：
 
 1. **开头时间标记** → 用行动/对话/感官/悬念切入替代时间标记开头，时间锚点通过角色感知自然带出
 2. **句子碎片化（句长均值过低）** → 将连续短句（≤15字）合并为25-40字复合句，用逗号串联动作和细节。**严禁反向插入碎句**

@@ -1,0 +1,23 @@
+# 明暗线生命周期管理器配置
+enabled: true
+
+# 按线型分级的不活跃阈值（超过此章数未推进即告警）
+inactivity_rules:
+  # 主线: 最多 3 章不推进即告警（读者最敏感）
+  main_max_gap: 3
+  # 支线: 最多 8 章不推进即告警
+  sub_max_gap: 8
+  # 暗线: 最多 15 章不推进即告警（允许长期潜伏）
+  dark_max_gap: 15
+
+# 每章最多强制安排推进的线程数（避免一章堆太多）
+max_forced_advances_per_chapter: 2
+
+# ink-plan 注入模式：force (硬约束) | warn (仅告警)
+plan_injection_mode: force
+
+# 活跃线程密度告警：超过此数发出告警
+active_plotline_warn_limit: 10
+
+# 热力图分桶大小（章）
+heatmap_bucket_size: 10

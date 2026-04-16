@@ -1,0 +1,26 @@
+# 语义召回配置 — 替代关键词匹配的跨章上下文检索
+# 复用 BAAI/bge-small-zh-v1.5（与 editor-wisdom / style-rag 共用模型）
+
+enabled: true
+model_name: "BAAI/bge-small-zh-v1.5"
+
+# 语义检索阶段：从向量索引中取 Top-K 候选
+semantic_top_k: 8
+
+# 最近 N 章强制召回（无论语义分多低）
+recent_n: 5
+
+# 实体强制召回：当前章涉及的实体在历史章节中出现过 → 强制纳入
+entity_forced_max: 10
+
+# 三路合并后最终返回的 Top-K
+final_top_k: 10
+
+# 语义相似度最低阈值（低于此分的语义命中丢弃）
+min_semantic_score: 0.3
+
+# 实体重叠加分权重（每个重叠实体加 weight 分，最多计 3 个）
+entity_boost_weight: 0.15
+
+# 最终写作包中 recall 内容的最大字符数（更精准 → 更短）
+max_pack_chars: 3000

@@ -22,11 +22,24 @@ allowed-tools: Bash Read
 ## 用法
 
 ```
-/ink-auto        → 默认写 5 章
-/ink-auto 10     → 写 10 章
+/ink-auto        → 默认写 5 章（串行）
+/ink-auto 10     → 写 10 章（串行）
 /ink-auto 100    → 写 100 章（全自动，含检查点和自动规划）
 /ink-auto 1      → 写 1 章（测试用）
 ```
+
+### 并发模式
+
+```
+/ink-auto --parallel 4 20  → 4 章并发写 20 章
+/ink-auto -p 4 10          → 同上简写
+```
+
+并发模式委托给 `ink_writer.parallel.PipelineManager` asyncio 编排器：
+- 每批 N 章并发写作，使用独立 CLI 进程
+- 实体写入受 SQLite WAL + ChapterLockManager 保护
+- 检查点在每批完成后统一运行
+- 单章失败触发重试，批次失败中止后续
 
 ## 执行方式
 

@@ -1,0 +1,17 @@
+# 情绪心电图引擎配置
+enabled: true
+
+# 单章情绪方差阈值：低于此值标记为"平淡"
+variance_threshold: 0.15
+
+# 最大允许平淡段落数
+flat_segment_max: 2
+
+# 与对照集情绪曲线的余弦相似度下限
+corpus_similarity_threshold: 0.8
+
+# 情绪门禁分数阈值
+score_threshold: 60.0
+
+# 最大重试次数（触发 polish 修复）
+max_retries: 2

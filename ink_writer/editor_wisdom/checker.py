@@ -114,13 +114,22 @@ def check_chapter(
     user_prompt = _build_user_prompt(chapter_text, chapter_no, rules)
 
     if anthropic_client is not None:
+        cached_system = [
+            {
+                "type": "text",
+                "text": SYSTEM_PROMPT,
+                "cache_control": {"type": "ephemeral"},
+            }
+        ]
         response = anthropic_client.messages.create(
             model=model,
             max_tokens=2048,
-            system=SYSTEM_PROMPT,
+            system=cached_system,
             messages=[{"role": "user", "content": user_prompt}],
         )
         raw_text = response.content[0].text.strip()
+        from .llm_backend import _record_cache_metrics
+        _record_cache_metrics(response, model, agent="editor-wisdom-checker")
     else:
         from .llm_backend import call_llm
         raw_text = call_llm(model, SYSTEM_PROMPT, user_prompt, max_tokens=2048).strip()

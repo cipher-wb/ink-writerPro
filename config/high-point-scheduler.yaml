@@ -1,0 +1,21 @@
+# High-point scheduler configuration
+# Controls cool-point scheduling for chapter outlines
+
+# Max consecutive chapters allowed without a high-point
+max_consecutive_no_hp: 2
+
+# Window (in chapters) for combo high-point requirement (≥1 per window)
+combo_window: 5
+
+# Window (in chapters) for milestone high-point requirement (≥1 per window)
+milestone_window: 12
+
+# Max times a single high-point type can repeat in the combo_window
+type_repeat_limit: 2
+
+# Volume position range for climax zone (forces milestone intensity)
+climax_zone_start: 0.85
+climax_zone_end: 1.0
+
+# First N chapters get intensity boost (golden opening)
+opening_boost_chapters: 3

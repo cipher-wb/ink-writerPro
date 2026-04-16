@@ -296,41 +296,40 @@ COMPRESS_RESULT=$(python3 -X utf8 “$SCRIPTS_DIR/ink.py” --project-root “$P
 
 ```bash
 python3 -X utf8 -c “
-import json, sqlite3
+import sys, json
 from pathlib import Path
+sys.path.insert(0, str(Path('${SCRIPTS_DIR}').resolve().parent.parent))
+from ink_writer.foreshadow.tracker import scan_foreshadows, build_plan_injection
+from ink_writer.foreshadow.config import load_config
 project_root = '${PROJECT_ROOT}'
 state = json.loads(Path(f'{project_root}/.ink/state.json').read_text())
 current = state.get('progress', {}).get('current_chapter', 0)
-grace = 10
 db_path = f'{project_root}/.ink/index.db'
 try:
-    conn = sqlite3.connect(db_path)
-    rows = conn.execute(
-        'SELECT thread_id, title, content, target_payoff_chapter FROM plot_thread_registry '
-        'WHERE status = ? AND target_payoff_chapter IS NOT NULL AND target_payoff_chapter < ?',
-        ('active', current - grace)
-    ).fetchall()
-    conn.close()
-    if rows:
-        print(f'⚠️ 发现 {len(rows)} 条逾期伏笔（超过目标章节{grace}章以上仍未解决）：')
-        for r in rows:
-            overdue = current - r[3]
-            print(f'  - [{r[0]}] {r[1]}: 目标ch{r[3]}, 已逾期{overdue}章')
+    config = load_config()
+    scan = scan_foreshadows(db_path, current, config)
+    injection = build_plan_injection(scan, config)
+    if scan.alerts:
+        for alert in scan.alerts:
+            print(alert)
+        print(f'📊 活跃伏笔: {scan.total_active} | 逾期: {len(scan.overdue)} | 沉默: {len(scan.silent)}')
+        if scan.forced_payoffs:
+            print(f'🔴 强制兑现: {len(scan.forced_payoffs)}条 — 本章必须处理')
+            for fp in scan.forced_payoffs:
+                print(f'  → [{fp.record.thread_id}] {fp.record.title} (severity={fp.severity})')
     else:
         print('✅ 无逾期伏笔')
+    print(json.dumps(injection, ensure_ascii=False))
 except Exception as e:
     print(f'⚠️ 伏笔检查跳过（数据库不可用）: {e}')
 “
 ```
 
 **处理规则**：
-- 若存在逾期超过10章的活跃伏笔 → 输出警告列表：
-  ```
-  ⚠️ 发现 {N} 条逾期伏笔（超过目标章节10章以上仍未解决）：
-  - [{thread_id}] {title}: 目标ch{target}, 当前已逾期{overdue}章
-  建议：在本章解决，或通过 /ink-plan 显式延期目标章节。
-  ```
-- 此检查为**警告模式**（不强制阻断），但会在 Context Agent Board 7 中强制置顶逾期伏笔。
+- thread-lifecycle-tracker[foreshadow] 按优先级分级检测逾期（P0 宽限5章, P1 宽限10章, P2 宽限20章）和沉默（超30章未推进）
+- `forced_payoffs` 非空时：Context Agent Board 7 强制置顶，writer-agent 必须在本章处理
+- 此检查为**警告模式**（不强制阻断写作），但 forced_payoffs 中的伏笔会注入到 Context Agent Board 7 中作为本章写作硬约束
+- 若存在逾期伏笔，建议在本章解决，或通过 /ink-plan 显式延期目标章节
 
 ### Step 0.7：金丝雀健康扫描（Canary Health Scan）
 
@@ -1077,6 +1076,160 @@ python3 -X utf8 "$SCRIPTS_DIR/step3_harness_gate.py" \
 
 此步骤是确定性检查，不依赖 LLM 判断。即使 Step 3 的 LLM 审查遗漏了某条闸门规则，此脚本也会兜底拦截。
 
+#### Step 3.6: 追读力门禁（hook retry gate）
+
+> v13.0 新增。从 reader-pull-checker 结果中提取 {score, violations, fix_prompt}，得分低于阈值时自动触发 polish-agent 定向修复，最多重试 2 次。
+
+**执行条件**：reader-pull-checker 在 Step 3 中被调度执行（条件审查器命中时）。
+
+**流程**：
+
+```text
+reader_pull_result = Step 3 中 reader-pull-checker 的输出
+config = config/reader-pull.yaml
+threshold = config.score_threshold（章节 ≤ 3 时用 golden_three_threshold）
+
+if reader_pull_result.overall_score < threshold:
+    for retry in 1..2:
+        调用 polish-agent，传入:
+          chapter_file = 当前章节路径
+          hook_fix_prompt = reader_pull_result.fix_prompt
+          issues = reader_pull_result.hard_violations + soft_suggestions
+        重新执行 reader-pull-checker
+        if new_score >= threshold: break
+    else:
+        写入 chapters/{n}/hook_blocked.md（得分、违规列表、fix_prompt）
+        章节标记为失败，不进入 Step 4
+```
+
+**hook_blocked.md 格式**：包含最终得分、阈值、所有未解决违规及修复提示。
+
+**与 Step 4 的关系**：
+- 若追读力门禁通过（含重试后通过），正常进入 Step 4 执行其他修复
+- 若门禁阻断，Step 4/5/6 均跳过
+- 追读力门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.reader_pull.hook_retry_gate.run_hook_gate()`
+
+#### Step 3.7: 情绪曲线门禁（emotion curve gate）
+
+> v13.0 新增。从 emotion-curve-checker 结果中提取 {score, violations, fix_prompt}，情绪曲线过平时自动触发 polish-agent 定向修复，最多重试 2 次。
+
+**执行条件**：emotion-curve-checker 在 Step 3 中被调度执行（条件审查器命中时）。
+
+**流程**：
+
+```text
+emotion_result = Step 3 中 emotion-curve-checker 的输出
+config = config/emotion-curve.yaml
+threshold = config.score_threshold
+
+if emotion_result.overall_score < threshold:
+    for retry in 1..2:
+        调用 polish-agent，传入:
+          chapter_file = 当前章节路径
+          emotion_fix_prompt = emotion_result.fix_prompt
+          issues = emotion_result.hard_violations + soft_suggestions
+        重新执行 emotion-curve-checker
+        if new_score >= threshold: break
+    else:
+        写入 chapters/{n}/emotion_blocked.md（得分、违规列表、fix_prompt）
+        章节标记为失败，不进入 Step 4
+```
+
+**emotion_blocked.md 格式**：包含最终得分、阈值、平淡段位置及修复提示。
+
+**与 Step 3.6 的关系**：
+- 追读力门禁（Step 3.6）先执行；若已阻断则跳过情绪门禁
+- 情绪门禁通过后正常进入 Step 4
+- 情绪门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.emotion.emotion_gate.run_emotion_gate()`
+
+#### Step 3.8: AI味硬门禁（anti-detection sentence diversity gate）
+
+> v13.0 新增。从 anti-detection-checker 结果中提取统计特征（句长变异系数、短句占比、对话占比、情感标点密度等），不达标时自动触发 polish-agent 定向修复。零容忍项（如时间标记开头）立即阻断，不触发重试。
+
+**执行条件**：anti-detection-checker 在 Step 3 中被调度执行（核心审查器，始终运行）。
+
+**流程**：
+
+```text
+# 1. 零容忍检查（在 checker 调用之前）
+config = config/anti-detection.yaml
+zero_tolerance_hit = check_zero_tolerance(chapter_text, config)
+if zero_tolerance_hit:
+    写入 chapters/{n}/anti_detection_blocked.md（零容忍阻断）
+    章节标记为失败，不进入 Step 4
+
+# 2. 综合评分检查 + 重试
+anti_detection_result = Step 3 中 anti-detection-checker 的输出
+threshold = config.score_threshold（章节 ≤ 3 时用 golden_three_threshold）
+
+if anti_detection_result.overall_score < threshold:
+    for retry in 1..1:
+        调用 polish-agent，传入:
+          chapter_file = 当前章节路径
+          anti_detection_fix_prompt = anti_detection_result.fix_prompt
+          issues = anti_detection_result.fix_priority
+        重新执行 anti-detection-checker
+        if new_score >= threshold: break
+    else:
+        写入 chapters/{n}/anti_detection_blocked.md（得分、违规列表、fix_prompt）
+        章节标记为失败，不进入 Step 4
+```
+
+**零容忍清单**（匹配即阻断，不重试）：
+- `ZT_TIME_OPENING`：章节以时间标记开头（第xx日/次日/N天后等）
+- `ZT_MEANWHILE`：使用"与此同时"全知视角转场
+
+**与 Step 3.6/3.7 的关系**：
+- 追读力门禁（Step 3.6）和情绪门禁（Step 3.7）先执行；若已阻断则跳过 AI味门禁
+- AI味门禁通过后正常进入 Step 4
+- AI味门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.anti_detection.anti_detection_gate.run_anti_detection_gate()`
+
+#### Step 3.9: 语气指纹门禁（voice fingerprint gate）
+
+**触发条件**：前序门禁（Step 3.6/3.7/3.8）均未阻断。
+
+**流程**：
+1. 从 `character_evolution_ledger` 加载出场角色的 `voice_fingerprint_json`
+2. 提取章节中各角色对话，逐项校验：
+   - 禁忌表达命中 → `critical`（必须修复）
+   - 口头禅缺席 ≥ N 章 → `medium`
+   - 用词层次偏离 → `medium`
+   - 角色间对话辨识度不足 → `medium`
+3. 综合评分低于阈值（默认60） → 触发 polish-agent（Step 1.8 voice_fix_prompt）
+4. 最多重试2次；仍不通过 → 写 `voice_blocked.md` + 阻断
+
+**与 Step 3.6/3.7/3.8 的关系**：
+- 前序门禁先执行；若已阻断则跳过语气指纹门禁
+- 语气指纹门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.voice_fingerprint.ooc_gate.run_voice_gate()`
+
+#### Step 3.10: 明暗线推进门禁（plotline gate）
+
+**触发条件**：前序门禁（Step 3.6/3.7/3.8/3.9）均未阻断。
+
+**流程**：
+1. 从 `plot_thread_registry`（`thread_type='plotline'`）加载所有活跃线程
+2. 调用 `ink_writer.plotline.tracker.scan_plotlines()` 检测断更线程
+3. 检查本章大纲 `明暗线推进` 字段中声明的线程是否在正文中有实际推进：
+   - 主线断更 > 3章 → `critical`（必须推进）
+   - 支线断更 > 8章 → `high`
+   - 暗线断更 > 15章 → `medium`
+4. 存在 critical 断更且本章未推进 → 触发 polish-agent（Step 1.9 plotline_fix_prompt）
+5. 最多重试2次；仍不通过 → 写 `plotline_blocked.md` + 阻断
+
+**与 Step 3.6-3.9 的关系**：
+- 前序门禁先执行；若已阻断则跳过明暗线门禁
+- 明暗线门禁的 polish 调用独立于 Step 4 的常规润色
+
+**Python 模块**：`ink_writer.plotline.tracker.scan_plotlines()`
+
 ### Step 4：润色（问题修复优先）
 
 执行前必须加载：
@@ -1089,14 +1242,18 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 1. 修复 `critical`（必须）
 2. 修复 `high`（不能修复则记录 deviation）
 3. 处理 `medium/low`（按收益择优）
-4. **AI味定向修复**（根据 `anti-detection-checker` 的 `fix_priority` 列表逐项修复）：
+4. **Style RAG 人写参考检索**（当 `fix_priority` 非空时）：
+   - 调用 `ink_writer.style_rag.build_polish_style_pack(fix_priorities, chapter_text, chapter_no, retriever, genre)` 检索人写标杆片段
+   - 将返回的 `PolishStylePack.format_full_prompt()` 注入改写上下文
+   - 参考人写片段的句式节奏和表达手法，**不可照搬内容或剧情**
+5. **AI味定向修复**（根据 `anti-detection-checker` 的 `fix_priority` 列表，结合人写参考逐项修复）：
    - 句长平坦区：在指定位置插入碎句（≤8字）或合并为长流句（≥35字）
    - 信息密度无波动：在指定位置插入无功能感官句（环境/声音/温度/气味细节）
    - 因果链过密：删除指定位置的中间因果环节，让读者自行推断
    - 对话同质：按指定角色差异化对话长度和风格（加入省略/打断/反问/语气词）
    - 段落过于工整：拆分指定长段为碎片段，增加单句段
    - 视角泄露：改写为POV角色的有限感知（猜测/推断/不确定）
-5. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
+6. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
 
 黄金三章定向修复（当 `chapter <= 3` 时必须执行）：
 - 前移触发点，禁止把强事件压到开头窗口之后。

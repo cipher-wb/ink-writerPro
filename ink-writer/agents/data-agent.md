@@ -270,6 +270,9 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - 主角和核心配角（tier=核心）必须有 voice_fingerprint
 - 每 10 章至少更新一次（角色成长可能改变说话方式）
 - `forbidden_expressions` 是该角色绝对不会说的话，用于防止角色声音趋同
+- voice_fingerprint 写入 `save-character-evolution` 的 `voice_fingerprint` 字段（自动序列化为 `voice_fingerprint_json` 列）
+- 首次出场角色必须自动学习语气指纹；后续追加不覆盖（append-only）
+- 语气指纹是 ooc-checker Step 3.9 语气指纹门禁的权威数据源
 
 ### Step B.7.5: 出场角色状态更新（v10.6 新增）
 
@@ -434,6 +437,30 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - 若全章没有任何知识获取事件 → `"protagonist_knowledge_events": []`（正常，不是问题）
 - `narration_only` 类型仅记录 index.db，不影响写作约束（全知旁白合法使用真名）
 - 每个实体的同一 `knowledge_type` 只记录首次习得，后续章节重复出现不重复写入
+
+### Step B.12: 情绪曲线提取（Emotion Curve）
+
+将章节按场景切分，对每个场景计算 (valence, arousal) 情绪坐标，输出到 `data/emotion_curves.jsonl`。
+
+**切分规则**：
+- 按双换行 / `***` / `---` 分隔符切分场景
+- 最小场景长度 200 字，短段落合并到相邻场景
+
+**情绪计算**：
+- 扫描 7 种情绪关键词（紧张/热血/悲伤/轻松/震惊/愤怒/温馨）
+- 按频率加权计算 valence（正负向）和 arousal（唤起度）
+- 无关键词命中的场景标记为"中性"（valence=0, arousal=0.3）
+
+**输出到 `data/emotion_curves.jsonl`**（追加写入）：
+```jsonl
+{"chapter": 100, "scene": 0, "start_char": 0, "end_char": 450, "valence": 0.4, "arousal": 0.8, "dominant_emotion": "热血"}
+{"chapter": 100, "scene": 1, "start_char": 451, "end_char": 950, "valence": -0.3, "arousal": 0.3, "dominant_emotion": "悲伤"}
+```
+
+**执行规则**：
+- 每章写入前先检查是否已有该章数据（避免重复），如有则覆盖
+- 此数据供 emotion-curve-checker 和 pacing-checker 使用
+- 不写入 index.db（非实体数据）
 
 ### Step C: 实体消歧处理
 

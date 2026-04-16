@@ -224,6 +224,9 @@ function DashboardPage({ data }) {
                 </div>
             ) : null}
 
+            {/* 伏笔热力图 */}
+            <ForeshadowHeatmap />
+
             <MergedDataView />
         </>
     )
@@ -582,6 +585,77 @@ function walkFirstFile(items) {
 
 // ====================================================================
 // 数据总览内嵌：全量数据视图
+// ====================================================================
+
+function ForeshadowHeatmap() {
+    const [buckets, setBuckets] = useState([])
+    useEffect(() => {
+        fetchJSON('/api/plot-threads/heatmap', { bucket_size: 10 })
+            .then(setBuckets)
+            .catch(() => setBuckets([]))
+    }, [])
+
+    if (!buckets.length) return null
+
+    const maxVal = Math.max(1, ...buckets.map(b => b.planted + b.active + b.resolved + b.overdue_risk))
+
+    const cellColor = (value, type) => {
+        const intensity = Math.min(value / Math.max(maxVal * 0.3, 1), 1)
+        const colors = {
+            planted: `rgba(59, 130, 246, ${0.15 + intensity * 0.85})`,
+            active: `rgba(245, 158, 11, ${0.15 + intensity * 0.85})`,
+            resolved: `rgba(34, 197, 94, ${0.15 + intensity * 0.85})`,
+            overdue_risk: `rgba(239, 68, 68, ${0.15 + intensity * 0.85})`,
+        }
+        return colors[type] || 'transparent'
+    }
+
+    return (
+        <div className="card dashboard-section-card">
+            <div className="card-header">
+                <span className="card-title">🗺️ 伏笔热力图</span>
+                <span className="card-badge badge-blue">{buckets.length} 区间</span>
+            </div>
+            <div style={{ overflowX: 'auto', padding: '12px' }}>
+                <div style={{ display: 'flex', gap: 4, marginBottom: 8, fontSize: 12, color: 'var(--text-secondary)' }}>
+                    <span style={{ background: 'rgba(59,130,246,0.5)', padding: '2px 8px', borderRadius: 4 }}>🔵 埋设</span>
+                    <span style={{ background: 'rgba(245,158,11,0.5)', padding: '2px 8px', borderRadius: 4 }}>🟡 活跃</span>
+                    <span style={{ background: 'rgba(34,197,94,0.5)', padding: '2px 8px', borderRadius: 4 }}>🟢 兑现</span>
+                    <span style={{ background: 'rgba(239,68,68,0.5)', padding: '2px 8px', borderRadius: 4 }}>🔴 逾期风险</span>
+                </div>
+                <table className="data-table" style={{ fontSize: 12 }}>
+                    <thead>
+                        <tr>
+                            <th>章节区间</th>
+                            {['planted', 'active', 'resolved', 'overdue_risk'].map(t => (
+                                <th key={t}>{t === 'planted' ? '埋设' : t === 'active' ? '活跃' : t === 'resolved' ? '兑现' : '逾期风险'}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {buckets.map((b, i) => (
+                            <tr key={i}>
+                                <td>ch{b.bucket_start}-{b.bucket_end}</td>
+                                {['planted', 'active', 'resolved', 'overdue_risk'].map(t => (
+                                    <td key={t} style={{
+                                        background: cellColor(b[t], t),
+                                        textAlign: 'center',
+                                        fontWeight: b[t] > 0 ? 600 : 400,
+                                        color: b[t] > 0 ? '#fff' : 'var(--text-secondary)',
+                                    }}>
+                                        {b[t] || '·'}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
+
+
 // ====================================================================
 
 function MergedDataView() {

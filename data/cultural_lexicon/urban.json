@@ -1,0 +1,2848 @@
+{
+  "genre": "urban",
+  "version": "1.0.0",
+  "description": "都市题材文化语料库",
+  "total_count": 355,
+  "entries": [
+    {
+      "id": "DS001",
+      "term": "空手套白狼",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "不花本钱赚大钱",
+      "context_hint": "描写商业手段高明"
+    },
+    {
+      "id": "DS002",
+      "term": "杀鸡儆猴",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "惩罚一个警告其他人",
+      "context_hint": "职场权力斗争"
+    },
+    {
+      "id": "DS003",
+      "term": "以退为进",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "表面退让实则争取更大利益",
+      "context_hint": "商业谈判策略"
+    },
+    {
+      "id": "DS004",
+      "term": "暗度陈仓",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "暗中行事达到目的",
+      "context_hint": "描写商战中的隐秘操作"
+    },
+    {
+      "id": "DS005",
+      "term": "借刀杀人",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "利用别人达到自己目的",
+      "context_hint": "商业竞争中借力打力"
+    },
+    {
+      "id": "DS006",
+      "term": "一石二鸟",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "一举两得",
+      "context_hint": "描写精明的商业决策"
+    },
+    {
+      "id": "DS007",
+      "term": "打蛇打七寸",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "抓住要害",
+      "context_hint": "商战中精准打击对手"
+    },
+    {
+      "id": "DS008",
+      "term": "背水一战",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "没有退路的决战",
+      "context_hint": "创业关键时刻"
+    },
+    {
+      "id": "DS009",
+      "term": "四两拨千斤",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "用小力气办大事",
+      "context_hint": "描写商业杠杆"
+    },
+    {
+      "id": "DS010",
+      "term": "鸡蛋不放一个篮子",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "分散风险",
+      "context_hint": "投资理财场景"
+    },
+    {
+      "id": "DS011",
+      "term": "割韭菜",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "收割散户利益",
+      "context_hint": "金融市场操作"
+    },
+    {
+      "id": "DS012",
+      "term": "接盘侠",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "被迫接手烂摊子的人",
+      "context_hint": "商业接盘场景"
+    },
+    {
+      "id": "DS013",
+      "term": "独角兽",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "估值超10亿美元的创业公司",
+      "context_hint": "互联网创业"
+    },
+    {
+      "id": "DS014",
+      "term": "对赌协议",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "投资方与融资方的业绩约定",
+      "context_hint": "风投融资"
+    },
+    {
+      "id": "DS015",
+      "term": "资本寒冬",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "融资环境恶化",
+      "context_hint": "创投环境描写"
+    },
+    {
+      "id": "DS016",
+      "term": "闭环",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "形成完整的业务循环",
+      "context_hint": "商业模式分析"
+    },
+    {
+      "id": "DS017",
+      "term": "赛道",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "细分市场领域",
+      "context_hint": "创业方向选择"
+    },
+    {
+      "id": "DS018",
+      "term": "护城河",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "企业竞争壁垒",
+      "context_hint": "商业战略分析"
+    },
+    {
+      "id": "DS019",
+      "term": "天使轮",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "最早期的融资阶段",
+      "context_hint": "创业融资"
+    },
+    {
+      "id": "DS020",
+      "term": "内卷",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "过度竞争",
+      "context_hint": "职场竞争压力"
+    },
+    {
+      "id": "DS021",
+      "term": "躺平",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "放弃内卷选择低欲望生活",
+      "context_hint": "当代年轻人心态"
+    },
+    {
+      "id": "DS022",
+      "term": "打工人",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "上班族的自嘲",
+      "context_hint": "职场日常"
+    },
+    {
+      "id": "DS023",
+      "term": "社畜",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "被工作压榨的上班族",
+      "context_hint": "描写职场困境"
+    },
+    {
+      "id": "DS024",
+      "term": "996",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "早九晚九每周六天的工作制",
+      "context_hint": "互联网公司加班"
+    },
+    {
+      "id": "DS025",
+      "term": "摸鱼",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "上班偷懒",
+      "context_hint": "办公室日常"
+    },
+    {
+      "id": "DS026",
+      "term": "甩锅",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "推卸责任",
+      "context_hint": "职场政治"
+    },
+    {
+      "id": "DS027",
+      "term": "画饼",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "用空头承诺激励",
+      "context_hint": "老板忽悠员工"
+    },
+    {
+      "id": "DS028",
+      "term": "PUA",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "精神控制和打压",
+      "context_hint": "职场或情感操控"
+    },
+    {
+      "id": "DS029",
+      "term": "降维打击",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "用高维能力碾压低维对手",
+      "context_hint": "商业竞争"
+    },
+    {
+      "id": "DS030",
+      "term": "底层逻辑",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "事物的根本原理",
+      "context_hint": "分析问题时用"
+    },
+    {
+      "id": "DS031",
+      "term": "复盘",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "回顾总结",
+      "context_hint": "项目结束后分析"
+    },
+    {
+      "id": "DS032",
+      "term": "抓手",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "突破口或着力点",
+      "context_hint": "寻找解决方案"
+    },
+    {
+      "id": "DS033",
+      "term": "赋能",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "给予能力和资源",
+      "context_hint": "企业管理"
+    },
+    {
+      "id": "DS034",
+      "term": "颗粒度",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "细节程度",
+      "context_hint": "工作精细化"
+    },
+    {
+      "id": "DS035",
+      "term": "组合拳",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "一系列配套措施",
+      "context_hint": "描写综合策略"
+    },
+    {
+      "id": "DS036",
+      "term": "杀熟",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "对老客户收更高价",
+      "context_hint": "商业陷阱"
+    },
+    {
+      "id": "DS037",
+      "term": "韭菜",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "被反复收割的投资者",
+      "context_hint": "金融圈用语"
+    },
+    {
+      "id": "DS038",
+      "term": "风口",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "行业发展机遇",
+      "context_hint": "创业趋势"
+    },
+    {
+      "id": "DS039",
+      "term": "蓝海",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "未被充分开发的市场",
+      "context_hint": "商业机会"
+    },
+    {
+      "id": "DS040",
+      "term": "红海",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "竞争激烈的市场",
+      "context_hint": "商业困境"
+    },
+    {
+      "id": "DS041",
+      "term": "对标",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "以某个标杆为参照",
+      "context_hint": "商业对比"
+    },
+    {
+      "id": "DS042",
+      "term": "破圈",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "突破原有圈层",
+      "context_hint": "营销传播"
+    },
+    {
+      "id": "DS043",
+      "term": "种草",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "推荐引发购买欲望",
+      "context_hint": "消费场景"
+    },
+    {
+      "id": "DS044",
+      "term": "拔草",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "买下之前被推荐的东西",
+      "context_hint": "消费场景"
+    },
+    {
+      "id": "DS045",
+      "term": "翻车",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "出了意外事故",
+      "context_hint": "直播带货失败"
+    },
+    {
+      "id": "DS046",
+      "term": "人情世故",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "社会交往中的人际关系和处事之道",
+      "context_hint": "描写社交场合"
+    },
+    {
+      "id": "DS047",
+      "term": "左右逢源",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "在各方面都处理得很好",
+      "context_hint": "描写社交能力强的人"
+    },
+    {
+      "id": "DS048",
+      "term": "见风使舵",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "根据情况改变态度",
+      "context_hint": "描写圆滑的人"
+    },
+    {
+      "id": "DS049",
+      "term": "趋炎附势",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "巴结有权势的人",
+      "context_hint": "描写势利小人"
+    },
+    {
+      "id": "DS050",
+      "term": "推心置腹",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "真诚相待",
+      "context_hint": "描写深厚友谊"
+    },
+    {
+      "id": "DS051",
+      "term": "肝胆相照",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "以真心对待",
+      "context_hint": "描写兄弟情义"
+    },
+    {
+      "id": "DS052",
+      "term": "口蜜腹剑",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "嘴上说好话心里想坏事",
+      "context_hint": "描写虚伪的人"
+    },
+    {
+      "id": "DS053",
+      "term": "两面三刀",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "当面一套背后一套",
+      "context_hint": "描写阴险的人"
+    },
+    {
+      "id": "DS054",
+      "term": "狐假虎威",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "借别人的权势吓唬人",
+      "context_hint": "描写小人得志"
+    },
+    {
+      "id": "DS055",
+      "term": "落井下石",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "趁人危难加以打击",
+      "context_hint": "描写卑鄙行为"
+    },
+    {
+      "id": "DS056",
+      "term": "雪中送炭",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "在困难时给予帮助",
+      "context_hint": "描写温暖人情"
+    },
+    {
+      "id": "DS057",
+      "term": "锦上添花",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "在好的基础上更加美好",
+      "context_hint": "描写社交场合"
+    },
+    {
+      "id": "DS058",
+      "term": "塑料姐妹花",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "表面亲密实际虚假的朋友",
+      "context_hint": "描写虚假友谊"
+    },
+    {
+      "id": "DS059",
+      "term": "社恐",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "社交恐惧症",
+      "context_hint": "描写内向角色"
+    },
+    {
+      "id": "DS060",
+      "term": "社牛",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "社交牛逼症",
+      "context_hint": "描写外向角色"
+    },
+    {
+      "id": "DS061",
+      "term": "emo",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "情绪低落",
+      "context_hint": "描写角色情绪"
+    },
+    {
+      "id": "DS062",
+      "term": "渣男",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "不负责任的男性",
+      "context_hint": "情感关系"
+    },
+    {
+      "id": "DS063",
+      "term": "海王",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "同时与多人暧昧",
+      "context_hint": "情感关系"
+    },
+    {
+      "id": "DS064",
+      "term": "绿茶",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "表面无辜实则心机的人",
+      "context_hint": "描写心机角色"
+    },
+    {
+      "id": "DS065",
+      "term": "白莲花",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "装纯洁的人",
+      "context_hint": "描写虚伪角色"
+    },
+    {
+      "id": "DS066",
+      "term": "舔狗",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "卑微讨好别人的人",
+      "context_hint": "单方面付出"
+    },
+    {
+      "id": "DS067",
+      "term": "工具人",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "被利用的人",
+      "context_hint": "描写被利用的角色"
+    },
+    {
+      "id": "DS068",
+      "term": "气场",
+      "type": "jargon",
+      "category": "social",
+      "usage_example": "个人散发的气势",
+      "context_hint": "描写人物出场"
+    },
+    {
+      "id": "DS069",
+      "term": "段位",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "能力水平",
+      "context_hint": "评价某人的能力"
+    },
+    {
+      "id": "DS070",
+      "term": "人设",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "人物设定或形象",
+      "context_hint": "娱乐圈或社交"
+    },
+    {
+      "id": "DS071",
+      "term": "塌房",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "偶像形象崩塌",
+      "context_hint": "娱乐圈事件"
+    },
+    {
+      "id": "DS072",
+      "term": "吃瓜",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "围观看热闹",
+      "context_hint": "社交场景"
+    },
+    {
+      "id": "DS073",
+      "term": "瓜",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "八卦新闻",
+      "context_hint": "社交话题"
+    },
+    {
+      "id": "DS074",
+      "term": "凡尔赛",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "低调炫耀",
+      "context_hint": "描写虚荣心理"
+    },
+    {
+      "id": "DS075",
+      "term": "内卷王",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "极度内卷的人",
+      "context_hint": "竞争场景"
+    },
+    {
+      "id": "DS076",
+      "term": "老油条",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "经验丰富世故圆滑的人",
+      "context_hint": "描写老练角色"
+    },
+    {
+      "id": "DS077",
+      "term": "愣头青",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "不懂世事的年轻人",
+      "context_hint": "描写莽撞角色"
+    },
+    {
+      "id": "DS078",
+      "term": "拎得清",
+      "type": "dialect",
+      "category": "social",
+      "usage_example": "分得清轻重",
+      "context_hint": "描写明事理的人"
+    },
+    {
+      "id": "DS079",
+      "term": "不着调",
+      "type": "dialect",
+      "category": "social",
+      "usage_example": "不靠谱",
+      "context_hint": "描写不可靠的人"
+    },
+    {
+      "id": "DS080",
+      "term": "不靠谱",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "不可信赖",
+      "context_hint": "评价某人"
+    },
+    {
+      "id": "DS081",
+      "term": "仗义",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "讲义气",
+      "context_hint": "描写豪爽角色"
+    },
+    {
+      "id": "DS082",
+      "term": "局气",
+      "type": "dialect",
+      "category": "social",
+      "usage_example": "大方讲究",
+      "context_hint": "北方人评价"
+    },
+    {
+      "id": "DS083",
+      "term": "敞亮",
+      "type": "dialect",
+      "category": "social",
+      "usage_example": "坦诚大方",
+      "context_hint": "北方人评价"
+    },
+    {
+      "id": "DS084",
+      "term": "牛掰",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "非常厉害",
+      "context_hint": "表达赞叹"
+    },
+    {
+      "id": "DS085",
+      "term": "人精",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "非常精明的人",
+      "context_hint": "描写聪明角色"
+    },
+    {
+      "id": "DS086",
+      "term": "戏精",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "爱演戏夸张的人",
+      "context_hint": "描写做作的人"
+    },
+    {
+      "id": "DS087",
+      "term": "心机婊",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "有心计的人",
+      "context_hint": "描写心机角色"
+    },
+    {
+      "id": "DS088",
+      "term": "暖男",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "体贴温柔的男性",
+      "context_hint": "描写男性角色"
+    },
+    {
+      "id": "DS089",
+      "term": "直男",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "思维直线的男性",
+      "context_hint": "描写不解风情"
+    },
+    {
+      "id": "DS090",
+      "term": "佛系",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "随缘不争的态度",
+      "context_hint": "描写淡然心态"
+    },
+    {
+      "id": "DS091",
+      "term": "黑科技",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "超越常规的先进技术",
+      "context_hint": "描写科技产品"
+    },
+    {
+      "id": "DS092",
+      "term": "上线",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "产品正式发布",
+      "context_hint": "互联网产品开发"
+    },
+    {
+      "id": "DS093",
+      "term": "迭代",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "产品版本更新",
+      "context_hint": "软件开发"
+    },
+    {
+      "id": "DS094",
+      "term": "灰度发布",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "小范围测试新功能",
+      "context_hint": "互联网运营"
+    },
+    {
+      "id": "DS095",
+      "term": "流量",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "用户访问量",
+      "context_hint": "互联网运营"
+    },
+    {
+      "id": "DS096",
+      "term": "变现",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "将流量转化为收入",
+      "context_hint": "商业模式"
+    },
+    {
+      "id": "DS097",
+      "term": "私域",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "企业自有的用户池",
+      "context_hint": "营销策略"
+    },
+    {
+      "id": "DS098",
+      "term": "带宽",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "数据传输能力",
+      "context_hint": "技术描写"
+    },
+    {
+      "id": "DS099",
+      "term": "算法",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "数据处理规则",
+      "context_hint": "人工智能场景"
+    },
+    {
+      "id": "DS100",
+      "term": "大数据",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "海量数据分析",
+      "context_hint": "科技描写"
+    },
+    {
+      "id": "DS101",
+      "term": "云端",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "远程服务器",
+      "context_hint": "技术基础设施"
+    },
+    {
+      "id": "DS102",
+      "term": "去中心化",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "分布式架构",
+      "context_hint": "区块链技术"
+    },
+    {
+      "id": "DS103",
+      "term": "元宇宙",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "虚拟现实世界",
+      "context_hint": "科技前沿"
+    },
+    {
+      "id": "DS104",
+      "term": "数字孪生",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "物理实体的数字副本",
+      "context_hint": "工业互联网"
+    },
+    {
+      "id": "DS105",
+      "term": "中台",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "企业共享服务平台",
+      "context_hint": "技术架构"
+    },
+    {
+      "id": "DS106",
+      "term": "技术债",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "为赶进度留下的技术隐患",
+      "context_hint": "软件开发"
+    },
+    {
+      "id": "DS107",
+      "term": "重构",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "重新设计代码结构",
+      "context_hint": "软件工程"
+    },
+    {
+      "id": "DS108",
+      "term": "开源",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "公开源代码",
+      "context_hint": "技术社区"
+    },
+    {
+      "id": "DS109",
+      "term": "极客",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "技术狂热者",
+      "context_hint": "描写技术人员"
+    },
+    {
+      "id": "DS110",
+      "term": "码农",
+      "type": "slang",
+      "category": "tech",
+      "usage_example": "程序员",
+      "context_hint": "自嘲式描写"
+    },
+    {
+      "id": "DS111",
+      "term": "产品经理",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "负责产品规划的人",
+      "context_hint": "互联网职位"
+    },
+    {
+      "id": "DS112",
+      "term": "运维",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "系统运营维护",
+      "context_hint": "技术岗位"
+    },
+    {
+      "id": "DS113",
+      "term": "全栈",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "前后端都能做",
+      "context_hint": "技术能力"
+    },
+    {
+      "id": "DS114",
+      "term": "前端",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "用户界面开发",
+      "context_hint": "技术领域"
+    },
+    {
+      "id": "DS115",
+      "term": "后端",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "服务器逻辑开发",
+      "context_hint": "技术领域"
+    },
+    {
+      "id": "DS116",
+      "term": "接口",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "系统间的对接方式",
+      "context_hint": "技术对接"
+    },
+    {
+      "id": "DS117",
+      "term": "上架",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "应用发布到商店",
+      "context_hint": "App开发"
+    },
+    {
+      "id": "DS118",
+      "term": "下架",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "从商店撤除应用",
+      "context_hint": "App管理"
+    },
+    {
+      "id": "DS119",
+      "term": "宕机",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "服务器崩溃",
+      "context_hint": "技术故障"
+    },
+    {
+      "id": "DS120",
+      "term": "内存泄漏",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "程序内存不释放",
+      "context_hint": "编程Bug"
+    },
+    {
+      "id": "DS121",
+      "term": "死循环",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "程序陷入无限循环",
+      "context_hint": "编程Bug"
+    },
+    {
+      "id": "DS122",
+      "term": "硬核",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "高难度高水平",
+      "context_hint": "技术评价"
+    },
+    {
+      "id": "DS123",
+      "term": "拉满",
+      "type": "slang",
+      "category": "tech",
+      "usage_example": "达到最大值",
+      "context_hint": "性能描写"
+    },
+    {
+      "id": "DS124",
+      "term": "氪金",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "花大量钱",
+      "context_hint": "游戏或消费"
+    },
+    {
+      "id": "DS125",
+      "term": "充值",
+      "type": "slang",
+      "category": "tech",
+      "usage_example": "投入金钱",
+      "context_hint": "游戏消费"
+    },
+    {
+      "id": "DS126",
+      "term": "刷屏",
+      "type": "slang",
+      "category": "tech",
+      "usage_example": "大量信息出现",
+      "context_hint": "社交媒体"
+    },
+    {
+      "id": "DS127",
+      "term": "热搜",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "热门搜索话题",
+      "context_hint": "社交媒体"
+    },
+    {
+      "id": "DS128",
+      "term": "种子用户",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "最早期的核心用户",
+      "context_hint": "产品启动"
+    },
+    {
+      "id": "DS129",
+      "term": "日活",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "每日活跃用户数",
+      "context_hint": "产品指标"
+    },
+    {
+      "id": "DS130",
+      "term": "月活",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "每月活跃用户数",
+      "context_hint": "产品指标"
+    },
+    {
+      "id": "DS131",
+      "term": "留存率",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "用户持续使用的比例",
+      "context_hint": "产品分析"
+    },
+    {
+      "id": "DS132",
+      "term": "转化率",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "目标达成比例",
+      "context_hint": "营销分析"
+    },
+    {
+      "id": "DS133",
+      "term": "黑客马拉松",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "编程竞赛活动",
+      "context_hint": "技术圈"
+    },
+    {
+      "id": "DS134",
+      "term": "智能合约",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "自动执行的区块链合约",
+      "context_hint": "区块链"
+    },
+    {
+      "id": "DS135",
+      "term": "链上",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "记录在区块链上",
+      "context_hint": "区块链"
+    },
+    {
+      "id": "DS136",
+      "term": "江湖",
+      "type": "idiom",
+      "category": "street",
+      "usage_example": "社会上的人际圈子",
+      "context_hint": "描写社会关系网"
+    },
+    {
+      "id": "DS137",
+      "term": "混社会",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "在社会上闯荡",
+      "context_hint": "描写底层生活"
+    },
+    {
+      "id": "DS138",
+      "term": "罩得住",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "能控制局面",
+      "context_hint": "描写有实力的人"
+    },
+    {
+      "id": "DS139",
+      "term": "撑场面",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "维持体面",
+      "context_hint": "社交场合"
+    },
+    {
+      "id": "DS140",
+      "term": "抖机灵",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "耍小聪明",
+      "context_hint": "描写小聪明行为"
+    },
+    {
+      "id": "DS141",
+      "term": "横着走",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "嚣张跋扈",
+      "context_hint": "描写霸道行为"
+    },
+    {
+      "id": "DS142",
+      "term": "扎心了",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "深受打击",
+      "context_hint": "情感受伤"
+    },
+    {
+      "id": "DS143",
+      "term": "心塞",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "心里堵得慌",
+      "context_hint": "描写郁闷情绪"
+    },
+    {
+      "id": "DS144",
+      "term": "怼",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "当面反驳",
+      "context_hint": "冲突场景"
+    },
+    {
+      "id": "DS145",
+      "term": "撕",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "公开争吵",
+      "context_hint": "冲突场景"
+    },
+    {
+      "id": "DS146",
+      "term": "杠精",
+      "type": "era_word",
+      "category": "street",
+      "usage_example": "爱抬杠的人",
+      "context_hint": "描写好争辩的人"
+    },
+    {
+      "id": "DS147",
+      "term": "键盘侠",
+      "type": "era_word",
+      "category": "street",
+      "usage_example": "只在网上逞英雄的人",
+      "context_hint": "网络场景"
+    },
+    {
+      "id": "DS148",
+      "term": "喷子",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "恶意攻击他人的人",
+      "context_hint": "网络暴力"
+    },
+    {
+      "id": "DS149",
+      "term": "路怒症",
+      "type": "era_word",
+      "category": "street",
+      "usage_example": "开车时容易暴怒",
+      "context_hint": "交通场景"
+    },
+    {
+      "id": "DS150",
+      "term": "碰瓷",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "故意制造事故索赔",
+      "context_hint": "街头骗术"
+    },
+    {
+      "id": "DS151",
+      "term": "老铁",
+      "type": "dialect",
+      "category": "street",
+      "usage_example": "好朋友",
+      "context_hint": "东北话称呼"
+    },
+    {
+      "id": "DS152",
+      "term": "咋整",
+      "type": "dialect",
+      "category": "street",
+      "usage_example": "怎么办",
+      "context_hint": "东北话口语"
+    },
+    {
+      "id": "DS153",
+      "term": "贼拉",
+      "type": "dialect",
+      "category": "street",
+      "usage_example": "非常",
+      "context_hint": "东北话程度副词"
+    },
+    {
+      "id": "DS154",
+      "term": "嘎嘣脆",
+      "type": "dialect",
+      "category": "street",
+      "usage_example": "干脆利落",
+      "context_hint": "东北话形容"
+    },
+    {
+      "id": "DS155",
+      "term": "牛气冲天",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "非常牛",
+      "context_hint": "表达极度赞叹"
+    },
+    {
+      "id": "DS156",
+      "term": "接地气",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "贴近普通人生活",
+      "context_hint": "描写亲民"
+    },
+    {
+      "id": "DS157",
+      "term": "高大上",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "高端大气上档次",
+      "context_hint": "描写奢华"
+    },
+    {
+      "id": "DS158",
+      "term": "白富美",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "肤白貌美家境好的女性",
+      "context_hint": "描写女性"
+    },
+    {
+      "id": "DS159",
+      "term": "高富帅",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "高大英俊有钱的男性",
+      "context_hint": "描写男性"
+    },
+    {
+      "id": "DS160",
+      "term": "屌丝",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "自嘲的草根青年",
+      "context_hint": "描写草根"
+    },
+    {
+      "id": "DS161",
+      "term": "逆袭",
+      "type": "era_word",
+      "category": "street",
+      "usage_example": "从底层翻身",
+      "context_hint": "描写命运转折"
+    },
+    {
+      "id": "DS162",
+      "term": "开挂",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "像开了外挂一样厉害",
+      "context_hint": "描写超常表现"
+    },
+    {
+      "id": "DS163",
+      "term": "躺枪",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "无辜受牵连",
+      "context_hint": "描写无辜被波及"
+    },
+    {
+      "id": "DS164",
+      "term": "背锅",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "替人承担责任",
+      "context_hint": "描写无辜受过"
+    },
+    {
+      "id": "DS165",
+      "term": "炸裂",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "极其震撼",
+      "context_hint": "表达强烈震撼"
+    },
+    {
+      "id": "DS166",
+      "term": "上头",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "情绪激动控制不住",
+      "context_hint": "描写冲动"
+    },
+    {
+      "id": "DS167",
+      "term": "下头",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "瞬间失去兴趣",
+      "context_hint": "描写失望"
+    },
+    {
+      "id": "DS168",
+      "term": "整活",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "搞花样",
+      "context_hint": "描写创意行为"
+    },
+    {
+      "id": "DS169",
+      "term": "摆烂",
+      "type": "era_word",
+      "category": "street",
+      "usage_example": "放弃努力",
+      "context_hint": "描写消极态度"
+    },
+    {
+      "id": "DS170",
+      "term": "卷",
+      "type": "era_word",
+      "category": "street",
+      "usage_example": "过度竞争",
+      "context_hint": "当代社会状态"
+    },
+    {
+      "id": "DS171",
+      "term": "润",
+      "type": "era_word",
+      "category": "street",
+      "usage_example": "移民出国",
+      "context_hint": "当代流行语"
+    },
+    {
+      "id": "DS172",
+      "term": "出圈",
+      "type": "era_word",
+      "category": "street",
+      "usage_example": "超出原有圈子",
+      "context_hint": "传播现象"
+    },
+    {
+      "id": "DS173",
+      "term": "掉线",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "精神恍惚",
+      "context_hint": "描写走神"
+    },
+    {
+      "id": "DS174",
+      "term": "充电",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "学习充实自己",
+      "context_hint": "自我提升"
+    },
+    {
+      "id": "DS175",
+      "term": "拉踩",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "贬低一个抬高另一个",
+      "context_hint": "比较评价"
+    },
+    {
+      "id": "DS176",
+      "term": "站队",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "选择立场",
+      "context_hint": "描写政治站位"
+    },
+    {
+      "id": "DS177",
+      "term": "画大饼",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "描绘虚假前景",
+      "context_hint": "描写忽悠"
+    },
+    {
+      "id": "DS178",
+      "term": "套路",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "固定的欺骗手法",
+      "context_hint": "描写骗术"
+    },
+    {
+      "id": "DS179",
+      "term": "反套路",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "打破常规做法",
+      "context_hint": "描写出其不意"
+    },
+    {
+      "id": "DS180",
+      "term": "接梗",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "接住别人抛出的话题",
+      "context_hint": "社交互动"
+    },
+    {
+      "id": "DS181",
+      "term": "色香味俱全",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "食物各方面都好",
+      "context_hint": "描写美食"
+    },
+    {
+      "id": "DS182",
+      "term": "回味无穷",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "吃后令人久久难忘",
+      "context_hint": "描写美食体验"
+    },
+    {
+      "id": "DS183",
+      "term": "垂涎三尺",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "形容非常想吃",
+      "context_hint": "描写食欲"
+    },
+    {
+      "id": "DS184",
+      "term": "食不知味",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "心事重重吃东西没味道",
+      "context_hint": "描写忧愁"
+    },
+    {
+      "id": "DS185",
+      "term": "大快朵颐",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "痛快地大吃",
+      "context_hint": "描写畅快进食"
+    },
+    {
+      "id": "DS186",
+      "term": "津津有味",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "吃得很有滋味",
+      "context_hint": "描写享受美食"
+    },
+    {
+      "id": "DS187",
+      "term": "秀色可餐",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "形容容貌美丽",
+      "context_hint": "美食与美人并提"
+    },
+    {
+      "id": "DS188",
+      "term": "粗茶淡饭",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "简单的饮食",
+      "context_hint": "描写朴素生活"
+    },
+    {
+      "id": "DS189",
+      "term": "山珍海味",
+      "type": "idiom",
+      "category": "food",
+      "usage_example": "珍贵的美食",
+      "context_hint": "描写奢华饮食"
+    },
+    {
+      "id": "DS190",
+      "term": "深夜食堂",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "深夜营业的小饭馆",
+      "context_hint": "都市夜生活"
+    },
+    {
+      "id": "DS191",
+      "term": "苍蝇馆子",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "环境简陋但味道好的小店",
+      "context_hint": "地道美食"
+    },
+    {
+      "id": "DS192",
+      "term": "网红店",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "因网络走红的店铺",
+      "context_hint": "消费场景"
+    },
+    {
+      "id": "DS193",
+      "term": "打卡",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "到某地拍照留念",
+      "context_hint": "网红消费"
+    },
+    {
+      "id": "DS194",
+      "term": "排队王",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "需要长时间排队的店",
+      "context_hint": "热门餐厅"
+    },
+    {
+      "id": "DS195",
+      "term": "探店",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "去店铺体验并分享",
+      "context_hint": "美食博主"
+    },
+    {
+      "id": "DS196",
+      "term": "外卖",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "送餐上门服务",
+      "context_hint": "都市快节奏"
+    },
+    {
+      "id": "DS197",
+      "term": "预制菜",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "提前制作好的半成品菜",
+      "context_hint": "餐饮行业"
+    },
+    {
+      "id": "DS198",
+      "term": "锅气",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "大火爆炒的气息",
+      "context_hint": "烹饪描写"
+    },
+    {
+      "id": "DS199",
+      "term": "镬气",
+      "type": "dialect",
+      "category": "food",
+      "usage_example": "广东话的锅气",
+      "context_hint": "粤菜烹饪"
+    },
+    {
+      "id": "DS200",
+      "term": "老字号",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "历史悠久的品牌",
+      "context_hint": "传统美食"
+    },
+    {
+      "id": "DS201",
+      "term": "非遗",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "非物质文化遗产",
+      "context_hint": "传统技艺"
+    },
+    {
+      "id": "DS202",
+      "term": "烟火气",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "生活气息",
+      "context_hint": "描写市井生活"
+    },
+    {
+      "id": "DS203",
+      "term": "嗦粉",
+      "type": "dialect",
+      "category": "food",
+      "usage_example": "吸食米粉",
+      "context_hint": "湖南广西美食"
+    },
+    {
+      "id": "DS204",
+      "term": "过早",
+      "type": "dialect",
+      "category": "food",
+      "usage_example": "吃早餐",
+      "context_hint": "武汉方言"
+    },
+    {
+      "id": "DS205",
+      "term": "宵夜",
+      "type": "dialect",
+      "category": "food",
+      "usage_example": "深夜加餐",
+      "context_hint": "南方说法"
+    },
+    {
+      "id": "DS206",
+      "term": "干饭",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "吃饭",
+      "context_hint": "网络流行语"
+    },
+    {
+      "id": "DS207",
+      "term": "干饭人",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "努力吃饭的人",
+      "context_hint": "自嘲式表达"
+    },
+    {
+      "id": "DS208",
+      "term": "碳水炸弹",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "高碳水食物",
+      "context_hint": "减肥者用语"
+    },
+    {
+      "id": "DS209",
+      "term": "刺客",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "价格出奇贵的东西",
+      "context_hint": "雪糕刺客等"
+    },
+    {
+      "id": "DS210",
+      "term": "螺蛳粉",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "广西特色米粉",
+      "context_hint": "地方小吃"
+    },
+    {
+      "id": "DS211",
+      "term": "火锅",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "涮锅子",
+      "context_hint": "聚餐方式"
+    },
+    {
+      "id": "DS212",
+      "term": "撸串",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "吃烤串",
+      "context_hint": "夜生活"
+    },
+    {
+      "id": "DS213",
+      "term": "小龙虾",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "夏季热门美食",
+      "context_hint": "夜宵文化"
+    },
+    {
+      "id": "DS214",
+      "term": "奶茶",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "混合茶饮",
+      "context_hint": "年轻人消费"
+    },
+    {
+      "id": "DS215",
+      "term": "续命水",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "咖啡或奶茶",
+      "context_hint": "打工人必备"
+    },
+    {
+      "id": "DS216",
+      "term": "肥宅快乐水",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "可乐等碳酸饮料",
+      "context_hint": "宅家休闲"
+    },
+    {
+      "id": "DS217",
+      "term": "光盘行动",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "不浪费食物",
+      "context_hint": "社会倡议"
+    },
+    {
+      "id": "DS218",
+      "term": "食材",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "烹饪原料",
+      "context_hint": "烹饪场景"
+    },
+    {
+      "id": "DS219",
+      "term": "摆盘",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "食物装饰摆放",
+      "context_hint": "精致料理"
+    },
+    {
+      "id": "DS220",
+      "term": "控糖",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "控制糖分摄入",
+      "context_hint": "健康饮食"
+    },
+    {
+      "id": "DS221",
+      "term": "轻食",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "低热量健康餐",
+      "context_hint": "健康生活"
+    },
+    {
+      "id": "DS222",
+      "term": "代餐",
+      "type": "era_word",
+      "category": "food",
+      "usage_example": "替代正餐的食品",
+      "context_hint": "减肥场景"
+    },
+    {
+      "id": "DS223",
+      "term": "咖位",
+      "type": "slang",
+      "category": "food",
+      "usage_example": "地位等级",
+      "context_hint": "娱乐圈借用"
+    },
+    {
+      "id": "DS224",
+      "term": "大盘鸡",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "新疆特色菜",
+      "context_hint": "地方美食"
+    },
+    {
+      "id": "DS225",
+      "term": "卤味",
+      "type": "jargon",
+      "category": "food",
+      "usage_example": "卤制食品",
+      "context_hint": "街边小吃"
+    },
+    {
+      "id": "DS226",
+      "term": "百感交集",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "各种情感交织在一起",
+      "context_hint": "描写复杂情绪"
+    },
+    {
+      "id": "DS227",
+      "term": "五味杂陈",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "心中滋味复杂",
+      "context_hint": "描写复杂情绪"
+    },
+    {
+      "id": "DS228",
+      "term": "刻骨铭心",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "记忆深刻难以忘怀",
+      "context_hint": "描写深刻记忆"
+    },
+    {
+      "id": "DS229",
+      "term": "黯然神伤",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "心情低落悲伤",
+      "context_hint": "描写忧伤"
+    },
+    {
+      "id": "DS230",
+      "term": "肝肠寸断",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "极度悲痛",
+      "context_hint": "描写极度悲伤"
+    },
+    {
+      "id": "DS231",
+      "term": "喜极而泣",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "高兴到流泪",
+      "context_hint": "描写极度喜悦"
+    },
+    {
+      "id": "DS232",
+      "term": "悲喜交加",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "既悲伤又高兴",
+      "context_hint": "描写复杂心情"
+    },
+    {
+      "id": "DS233",
+      "term": "心如刀绞",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "心里像刀割一样痛",
+      "context_hint": "描写痛苦"
+    },
+    {
+      "id": "DS234",
+      "term": "心花怒放",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "内心非常高兴",
+      "context_hint": "描写极度开心"
+    },
+    {
+      "id": "DS235",
+      "term": "怒不可遏",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "愤怒到无法控制",
+      "context_hint": "描写暴怒"
+    },
+    {
+      "id": "DS236",
+      "term": "义愤填膺",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "对不公正的事情感到愤怒",
+      "context_hint": "描写正义感"
+    },
+    {
+      "id": "DS237",
+      "term": "欲哭无泪",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "悲伤到哭不出来",
+      "context_hint": "描写极度无奈"
+    },
+    {
+      "id": "DS238",
+      "term": "如坐针毡",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "坐立不安",
+      "context_hint": "描写焦虑"
+    },
+    {
+      "id": "DS239",
+      "term": "忐忑不安",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "心神不定",
+      "context_hint": "描写紧张"
+    },
+    {
+      "id": "DS240",
+      "term": "心惊肉跳",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "非常害怕",
+      "context_hint": "描写恐惧"
+    },
+    {
+      "id": "DS241",
+      "term": "毛骨悚然",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "极度恐惧",
+      "context_hint": "描写恐怖场景"
+    },
+    {
+      "id": "DS242",
+      "term": "不寒而栗",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "不冷却发抖",
+      "context_hint": "描写恐惧"
+    },
+    {
+      "id": "DS243",
+      "term": "泪目",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "感动到流泪",
+      "context_hint": "网络流行表达"
+    },
+    {
+      "id": "DS244",
+      "term": "破防",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "情感防线被突破",
+      "context_hint": "描写被触动"
+    },
+    {
+      "id": "DS245",
+      "term": "意难平",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "心中不甘不平",
+      "context_hint": "描写遗憾"
+    },
+    {
+      "id": "DS246",
+      "term": "上头",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "一时冲动",
+      "context_hint": "描写情绪失控"
+    },
+    {
+      "id": "DS247",
+      "term": "窒息",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "压抑到透不过气",
+      "context_hint": "描写窒息感"
+    },
+    {
+      "id": "DS248",
+      "term": "酸了",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "感到嫉妒",
+      "context_hint": "描写羡慕嫉妒"
+    },
+    {
+      "id": "DS249",
+      "term": "甜齁",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "甜到发腻",
+      "context_hint": "描写甜蜜情感"
+    },
+    {
+      "id": "DS250",
+      "term": "虐心",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "让人心疼",
+      "context_hint": "描写悲情故事"
+    },
+    {
+      "id": "DS251",
+      "term": "暖心",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "让人感到温暖",
+      "context_hint": "描写温情"
+    },
+    {
+      "id": "DS252",
+      "term": "爆哭",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "大哭",
+      "context_hint": "描写失控哭泣"
+    },
+    {
+      "id": "DS253",
+      "term": "笑cry",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "笑到哭",
+      "context_hint": "描写极度好笑"
+    },
+    {
+      "id": "DS254",
+      "term": "无语",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "说不出话",
+      "context_hint": "描写无奈"
+    },
+    {
+      "id": "DS255",
+      "term": "裂开",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "崩溃",
+      "context_hint": "描写心理崩溃"
+    },
+    {
+      "id": "DS256",
+      "term": "麻了",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "麻木了",
+      "context_hint": "描写无感"
+    },
+    {
+      "id": "DS257",
+      "term": "绝了",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "太离谱了",
+      "context_hint": "表达震惊"
+    },
+    {
+      "id": "DS258",
+      "term": "慕了",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "羡慕",
+      "context_hint": "表达羡慕"
+    },
+    {
+      "id": "DS259",
+      "term": "栓Q",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "谢谢的谐音梗",
+      "context_hint": "调侃感谢"
+    },
+    {
+      "id": "DS260",
+      "term": "YYDS",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "永远的神",
+      "context_hint": "表达极度崇拜"
+    },
+    {
+      "id": "DS261",
+      "term": "芭比Q",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "完了",
+      "context_hint": "表达糟糕结局"
+    },
+    {
+      "id": "DS262",
+      "term": "DNA动了",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "被唤醒深层记忆",
+      "context_hint": "描写触动回忆"
+    },
+    {
+      "id": "DS263",
+      "term": "格局",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "视野胸怀",
+      "context_hint": "评价人的境界"
+    },
+    {
+      "id": "DS264",
+      "term": "拿捏",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "把握得当",
+      "context_hint": "描写对事物的掌控"
+    },
+    {
+      "id": "DS265",
+      "term": "稳住",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "保持镇定",
+      "context_hint": "描写冷静应对"
+    },
+    {
+      "id": "DS266",
+      "term": "崩不住",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "无法维持冷静",
+      "context_hint": "描写情绪崩溃"
+    },
+    {
+      "id": "DS267",
+      "term": "心态崩了",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "心理防线崩溃",
+      "context_hint": "描写挫败感"
+    },
+    {
+      "id": "DS268",
+      "term": "真香",
+      "type": "era_word",
+      "category": "emotion",
+      "usage_example": "打脸式地喜欢上",
+      "context_hint": "描写态度转变"
+    },
+    {
+      "id": "DS269",
+      "term": "下饭",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "让人尴尬到无法直视",
+      "context_hint": "描写尴尬"
+    },
+    {
+      "id": "DS270",
+      "term": "离谱",
+      "type": "slang",
+      "category": "emotion",
+      "usage_example": "不合常理",
+      "context_hint": "表达震惊"
+    },
+    {
+      "id": "DS271",
+      "term": "佛系青年",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "随缘不争的年轻人",
+      "context_hint": "描写淡然心态"
+    },
+    {
+      "id": "DS272",
+      "term": "咸鱼",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "没有追求的人",
+      "context_hint": "自嘲式描写"
+    },
+    {
+      "id": "DS273",
+      "term": "学霸",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "学习特别好的人",
+      "context_hint": "校园场景"
+    },
+    {
+      "id": "DS274",
+      "term": "学渣",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "学习差的人",
+      "context_hint": "校园场景"
+    },
+    {
+      "id": "DS275",
+      "term": "大佬",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "某领域的厉害人物",
+      "context_hint": "表达尊敬"
+    },
+    {
+      "id": "DS276",
+      "term": "小白",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "新手",
+      "context_hint": "描写初学者"
+    },
+    {
+      "id": "DS277",
+      "term": "老司机",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "经验丰富的人",
+      "context_hint": "描写老手"
+    },
+    {
+      "id": "DS278",
+      "term": "人间清醒",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "看透事物本质的人",
+      "context_hint": "描写理性角色"
+    },
+    {
+      "id": "DS279",
+      "term": "清醒",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "头脑清楚不被蒙蔽",
+      "context_hint": "描写理智"
+    },
+    {
+      "id": "DS280",
+      "term": "头铁",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "固执不听劝",
+      "context_hint": "描写倔强"
+    },
+    {
+      "id": "DS281",
+      "term": "心大",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "心态好不在意",
+      "context_hint": "描写豁达"
+    },
+    {
+      "id": "DS282",
+      "term": "佛了",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "无所谓了",
+      "context_hint": "描写放弃挣扎"
+    },
+    {
+      "id": "DS283",
+      "term": "精神内耗",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "自我消耗的心理状态",
+      "context_hint": "描写焦虑"
+    },
+    {
+      "id": "DS284",
+      "term": "信息茧房",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "只接触同类信息",
+      "context_hint": "媒体环境"
+    },
+    {
+      "id": "DS285",
+      "term": "搭子",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "特定场景的伙伴",
+      "context_hint": "社交方式"
+    },
+    {
+      "id": "DS286",
+      "term": "特种兵旅游",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "短时间高强度旅游",
+      "context_hint": "旅游方式"
+    },
+    {
+      "id": "DS287",
+      "term": "city walk",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "城市漫步",
+      "context_hint": "休闲方式"
+    },
+    {
+      "id": "DS288",
+      "term": "松弛感",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "从容不迫的状态",
+      "context_hint": "描写气质"
+    },
+    {
+      "id": "DS289",
+      "term": "多巴胺穿搭",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "色彩鲜艳的穿衣风格",
+      "context_hint": "时尚潮流"
+    },
+    {
+      "id": "DS290",
+      "term": "i人",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "内向型人格",
+      "context_hint": "性格描写"
+    },
+    {
+      "id": "DS291",
+      "term": "e人",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "外向型人格",
+      "context_hint": "性格描写"
+    },
+    {
+      "id": "DS292",
+      "term": "嘴替",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "替人说出心声的人",
+      "context_hint": "表达共鸣"
+    },
+    {
+      "id": "DS293",
+      "term": "显眼包",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "爱出风头的人",
+      "context_hint": "描写活泼角色"
+    },
+    {
+      "id": "DS294",
+      "term": "电子榨菜",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "吃饭时看的视频",
+      "context_hint": "日常习惯"
+    },
+    {
+      "id": "DS295",
+      "term": "赛博朋克",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "高科技低生活的美学",
+      "context_hint": "科技描写"
+    },
+    {
+      "id": "DS296",
+      "term": "元气满满",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "精力充沛",
+      "context_hint": "描写活力"
+    },
+    {
+      "id": "DS297",
+      "term": "满血复活",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "恢复最佳状态",
+      "context_hint": "描写复原"
+    },
+    {
+      "id": "DS298",
+      "term": "能量拉满",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "充满干劲",
+      "context_hint": "描写积极"
+    },
+    {
+      "id": "DS299",
+      "term": "反差萌",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "与外表不符的可爱",
+      "context_hint": "描写反差"
+    },
+    {
+      "id": "DS300",
+      "term": "鸡汤",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "励志但空洞的话",
+      "context_hint": "描写空话"
+    },
+    {
+      "id": "DS301",
+      "term": "毒鸡汤",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "反讽的励志话",
+      "context_hint": "描写讽刺"
+    },
+    {
+      "id": "DS302",
+      "term": "小确幸",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "微小但确定的幸福",
+      "context_hint": "描写日常美好"
+    },
+    {
+      "id": "DS303",
+      "term": "仪式感",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "对生活的仪式化",
+      "context_hint": "描写生活态度"
+    },
+    {
+      "id": "DS304",
+      "term": "断舍离",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "舍弃不需要的东西",
+      "context_hint": "描写极简生活"
+    },
+    {
+      "id": "DS305",
+      "term": "自律",
+      "type": "jargon",
+      "category": "slang_modern",
+      "usage_example": "自我约束",
+      "context_hint": "描写自控力"
+    },
+    {
+      "id": "DS306",
+      "term": "他律",
+      "type": "jargon",
+      "category": "slang_modern",
+      "usage_example": "外部约束",
+      "context_hint": "描写外部监督"
+    },
+    {
+      "id": "DS307",
+      "term": "天花板",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "某领域的最高水平",
+      "context_hint": "描写极致"
+    },
+    {
+      "id": "DS308",
+      "term": "扫地僧",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "深藏不露的高手",
+      "context_hint": "描写隐藏实力"
+    },
+    {
+      "id": "DS309",
+      "term": "降维",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "从高处看低处",
+      "context_hint": "描写认知差距"
+    },
+    {
+      "id": "DS310",
+      "term": "升维",
+      "type": "slang",
+      "category": "slang_modern",
+      "usage_example": "提升认知层次",
+      "context_hint": "描写成长"
+    },
+    {
+      "id": "DS311",
+      "term": "圈层",
+      "type": "jargon",
+      "category": "slang_modern",
+      "usage_example": "社会阶层或兴趣群体",
+      "context_hint": "社会结构"
+    },
+    {
+      "id": "DS312",
+      "term": "下沉市场",
+      "type": "jargon",
+      "category": "slang_modern",
+      "usage_example": "三四线城市市场",
+      "context_hint": "商业分析"
+    },
+    {
+      "id": "DS313",
+      "term": "Z世代",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "1995-2009年出生的人",
+      "context_hint": "人群划分"
+    },
+    {
+      "id": "DS314",
+      "term": "银发经济",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "老年人消费市场",
+      "context_hint": "商业趋势"
+    },
+    {
+      "id": "DS315",
+      "term": "数字游民",
+      "type": "era_word",
+      "category": "slang_modern",
+      "usage_example": "远程工作的流动人群",
+      "context_hint": "工作方式"
+    },
+    {
+      "id": "DS316",
+      "term": "望眼欲穿",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "急切盼望",
+      "context_hint": "描写期待"
+    },
+    {
+      "id": "DS317",
+      "term": "如鱼得水",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "处境非常好",
+      "context_hint": "描写得意"
+    },
+    {
+      "id": "DS318",
+      "term": "水土不服",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "不适应新环境",
+      "context_hint": "描写适应问题"
+    },
+    {
+      "id": "DS319",
+      "term": "入乡随俗",
+      "type": "idiom",
+      "category": "social",
+      "usage_example": "到了新地方要遵从当地习惯",
+      "context_hint": "描写融入"
+    },
+    {
+      "id": "DS320",
+      "term": "孤注一掷",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "把一切都押上",
+      "context_hint": "描写冒险"
+    },
+    {
+      "id": "DS321",
+      "term": "东山再起",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "失败后重新崛起",
+      "context_hint": "描写翻身"
+    },
+    {
+      "id": "DS322",
+      "term": "白手起家",
+      "type": "idiom",
+      "category": "business",
+      "usage_example": "从零开始创业",
+      "context_hint": "描写创业"
+    },
+    {
+      "id": "DS323",
+      "term": "峰回路转",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "事情出现转机",
+      "context_hint": "描写转折"
+    },
+    {
+      "id": "DS324",
+      "term": "柳暗花明",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "困境之后出现希望",
+      "context_hint": "描写希望"
+    },
+    {
+      "id": "DS325",
+      "term": "否极泰来",
+      "type": "idiom",
+      "category": "emotion",
+      "usage_example": "坏运到头好运来",
+      "context_hint": "描写命运转折"
+    },
+    {
+      "id": "DS326",
+      "term": "一夜暴富",
+      "type": "slang",
+      "category": "business",
+      "usage_example": "突然变得非常有钱",
+      "context_hint": "描写财富暴增"
+    },
+    {
+      "id": "DS327",
+      "term": "财务自由",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "不用再为钱工作",
+      "context_hint": "描写财富目标"
+    },
+    {
+      "id": "DS328",
+      "term": "朝九晚五",
+      "type": "era_word",
+      "category": "business",
+      "usage_example": "固定上班时间",
+      "context_hint": "描写上班族"
+    },
+    {
+      "id": "DS329",
+      "term": "弹性工作",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "灵活的工作时间",
+      "context_hint": "现代工作方式"
+    },
+    {
+      "id": "DS330",
+      "term": "居家办公",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "在家工作",
+      "context_hint": "疫情后工作方式"
+    },
+    {
+      "id": "DS331",
+      "term": "共享经济",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "共享资源的经济模式",
+      "context_hint": "商业模式"
+    },
+    {
+      "id": "DS332",
+      "term": "直播带货",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "通过直播销售商品",
+      "context_hint": "电商模式"
+    },
+    {
+      "id": "DS333",
+      "term": "短视频",
+      "type": "era_word",
+      "category": "tech",
+      "usage_example": "短时长视频内容",
+      "context_hint": "内容形式"
+    },
+    {
+      "id": "DS334",
+      "term": "算法推荐",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "基于算法的内容推荐",
+      "context_hint": "信息获取"
+    },
+    {
+      "id": "DS335",
+      "term": "信息差",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "信息不对称带来的优势",
+      "context_hint": "商业机会"
+    },
+    {
+      "id": "DS336",
+      "term": "降本增效",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "降低成本提高效率",
+      "context_hint": "企业管理"
+    },
+    {
+      "id": "DS337",
+      "term": "共赢",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "双方都获利",
+      "context_hint": "合作模式"
+    },
+    {
+      "id": "DS338",
+      "term": "双赢",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "两方面都有好处",
+      "context_hint": "谈判结果"
+    },
+    {
+      "id": "DS339",
+      "term": "对冲",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "用相反操作降低风险",
+      "context_hint": "金融操作"
+    },
+    {
+      "id": "DS340",
+      "term": "杠杆",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "以小博大",
+      "context_hint": "金融手段"
+    },
+    {
+      "id": "DS341",
+      "term": "跑路",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "逃跑",
+      "context_hint": "描写逃避"
+    },
+    {
+      "id": "DS342",
+      "term": "翻盘",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "扭转局面",
+      "context_hint": "描写逆转"
+    },
+    {
+      "id": "DS343",
+      "term": "躺赢",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "不费力就赢了",
+      "context_hint": "描写轻松获胜"
+    },
+    {
+      "id": "DS344",
+      "term": "血亏",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "损失惨重",
+      "context_hint": "描写巨大损失"
+    },
+    {
+      "id": "DS345",
+      "term": "血赚",
+      "type": "slang",
+      "category": "street",
+      "usage_example": "赚了大便宜",
+      "context_hint": "描写巨大收益"
+    },
+    {
+      "id": "DS346",
+      "term": "秒杀",
+      "type": "slang",
+      "category": "tech",
+      "usage_example": "瞬间抢购",
+      "context_hint": "电商场景"
+    },
+    {
+      "id": "DS347",
+      "term": "种子选手",
+      "type": "jargon",
+      "category": "social",
+      "usage_example": "最有希望获胜的选手",
+      "context_hint": "竞争场景"
+    },
+    {
+      "id": "DS348",
+      "term": "黑马",
+      "type": "jargon",
+      "category": "social",
+      "usage_example": "出人意料的胜出者",
+      "context_hint": "描写意外"
+    },
+    {
+      "id": "DS349",
+      "term": "独狼",
+      "type": "slang",
+      "category": "social",
+      "usage_example": "独来独往的人",
+      "context_hint": "描写孤独角色"
+    },
+    {
+      "id": "DS350",
+      "term": "团魂",
+      "type": "era_word",
+      "category": "social",
+      "usage_example": "团队精神",
+      "context_hint": "描写团队凝聚力"
+    },
+    {
+      "id": "DS351",
+      "term": "互联网思维",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "用互联网方式思考",
+      "context_hint": "思维方式"
+    },
+    {
+      "id": "DS352",
+      "term": "降噪",
+      "type": "jargon",
+      "category": "tech",
+      "usage_example": "过滤无用信息",
+      "context_hint": "信息处理"
+    },
+    {
+      "id": "DS353",
+      "term": "聚焦",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "集中注意力",
+      "context_hint": "工作方式"
+    },
+    {
+      "id": "DS354",
+      "term": "深耕",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "深入某个领域",
+      "context_hint": "职业发展"
+    },
+    {
+      "id": "DS355",
+      "term": "跨界",
+      "type": "jargon",
+      "category": "business",
+      "usage_example": "跨越不同领域",
+      "context_hint": "创新方式"
+    }
+  ]
+}

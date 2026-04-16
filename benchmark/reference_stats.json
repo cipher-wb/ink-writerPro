@@ -1,0 +1,474 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2026-04-15T12:26:44.133390+00:00",
+  "corpus_size": 50,
+  "books_analyzed": 50,
+  "hook_density": {
+    "p25": 0.1,
+    "p50": 0.1667,
+    "p75": 0.2604,
+    "min": 0,
+    "max": 0.5,
+    "mean": 0.1917
+  },
+  "high_point_density": {
+    "p25": 0.5954,
+    "p50": 0.7587,
+    "p75": 0.965,
+    "min": 0.1485,
+    "max": 1.4165,
+    "mean": 0.7713
+  },
+  "per_book": [
+    {
+      "title": "诡秘之主",
+      "author": "爱潜水的乌贼",
+      "genre": "异世大陆",
+      "collections": 18375600,
+      "hook_density": 0.2667,
+      "high_point_density": 0.5887,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "捞尸人",
+      "author": "纯洁滴小龙",
+      "genre": "异术超能",
+      "collections": 8217748,
+      "hook_density": 0.4333,
+      "high_point_density": 0.7768,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "这游戏也太真实了",
+      "author": "晨星LL",
+      "genre": "时空穿梭",
+      "collections": 4592261,
+      "hook_density": 0.1667,
+      "high_point_density": 0.6351,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "宿命之环",
+      "author": "爱潜水的乌贼",
+      "genre": "异世大陆",
+      "collections": 4357695,
+      "hook_density": 0.2414,
+      "high_point_density": 0.8326,
+      "chapters_analyzed": 29
+    },
+    {
+      "title": "赤心巡天",
+      "author": "情何以甚",
+      "genre": "古典仙侠",
+      "collections": 3890302,
+      "hook_density": 0.1,
+      "high_point_density": 0.7217,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "夜无疆",
+      "author": "辰东",
+      "genre": "东方玄幻",
+      "collections": 2985854,
+      "hook_density": 0.2667,
+      "high_point_density": 0.5321,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "仙工开物",
+      "author": "蛊真人",
+      "genre": "修真文明",
+      "collections": 2124388,
+      "hook_density": 0.2667,
+      "high_point_density": 0.6893,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "超神机械师",
+      "author": "齐佩甲",
+      "genre": "游戏异界",
+      "collections": 2113993,
+      "hook_density": 0.1,
+      "high_point_density": 1.1847,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "没钱修什么仙？",
+      "author": "熊狼狗",
+      "genre": "修真文明",
+      "collections": 2029208,
+      "hook_density": 0.4,
+      "high_point_density": 1.0296,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "青山",
+      "author": "会说话的肘子",
+      "genre": "东方玄幻",
+      "collections": 1494093,
+      "hook_density": 0.3,
+      "high_point_density": 0.5528,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "惊悚乐园",
+      "author": "三天两觉",
+      "genre": "虚拟网游",
+      "collections": 1488256,
+      "hook_density": 0.3667,
+      "high_point_density": 0.9745,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "第一玩家",
+      "author": "流泪猫安头",
+      "genre": "游戏异界",
+      "collections": 1122269,
+      "hook_density": 0.3,
+      "high_point_density": 1.07,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "从水猴子开始成神",
+      "author": "甲壳蚁",
+      "genre": "东方玄幻",
+      "collections": 1059405,
+      "hook_density": 0.1,
+      "high_point_density": 0.6578,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "异度旅社",
+      "author": "远瞳",
+      "genre": "时空穿梭",
+      "collections": 964257,
+      "hook_density": 0.1667,
+      "high_point_density": 0.9096,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "1979黄金时代",
+      "author": "睡觉会变白",
+      "genre": "都市生活",
+      "collections": 933825,
+      "hook_density": 0,
+      "high_point_density": 0.3784,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "仙人消失之后",
+      "author": "风行水云间",
+      "genre": "幻想修仙",
+      "collections": 870397,
+      "hook_density": 0.1,
+      "high_point_density": 0.7555,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "刚准备高考，离婚逆袭系统来了",
+      "author": "七月封阳",
+      "genre": "都市生活",
+      "collections": 782826,
+      "hook_density": 0.1,
+      "high_point_density": 0.4016,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "山河稷",
+      "author": "姬叉",
+      "genre": "幻想修仙",
+      "collections": 767671,
+      "hook_density": 0.4,
+      "high_point_density": 0.8587,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "重回1982小渔村",
+      "author": "米饭的米",
+      "genre": "都市生活",
+      "collections": 763701,
+      "hook_density": 0.1,
+      "high_point_density": 0.1485,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "元始法则",
+      "author": "飞天鱼",
+      "genre": "异世大陆",
+      "collections": 748640,
+      "hook_density": 0.1,
+      "high_point_density": 1.2733,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "借剑",
+      "author": "幼儿园一把手",
+      "genre": "幻想修仙",
+      "collections": 690985,
+      "hook_density": 0.1,
+      "high_point_density": 0.7234,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "长夜君主",
+      "author": "风凌天下",
+      "genre": "异世大陆",
+      "collections": 660808,
+      "hook_density": 0.1333,
+      "high_point_density": 1.3607,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "鸣龙",
+      "author": "关关公子",
+      "genre": "东方玄幻",
+      "collections": 618697,
+      "hook_density": 0.2333,
+      "high_point_density": 0.4636,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "万历明君",
+      "author": "鹤招",
+      "genre": "两宋元明",
+      "collections": 563866,
+      "hook_density": 0.0667,
+      "high_point_density": 0.577,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "魅力点满，继承游戏资产",
+      "author": "纵伐",
+      "genre": "都市生活",
+      "collections": 518870,
+      "hook_density": 0.1667,
+      "high_point_density": 0.8138,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "苟在武道世界成圣",
+      "author": "在水中的纸老虎",
+      "genre": "东方玄幻",
+      "collections": 500220,
+      "hook_density": 0.2667,
+      "high_point_density": 0.97,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "以神通之名",
+      "author": "猪心虾仁",
+      "genre": "都市异能",
+      "collections": 489845,
+      "hook_density": 0.1,
+      "high_point_density": 0.687,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "神明调查报告",
+      "author": "黑山老鬼",
+      "genre": "时空穿梭",
+      "collections": 451348,
+      "hook_density": 0.2333,
+      "high_point_density": 0.8713,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "我在永夜打造庇护所",
+      "author": "中世纪的兔子",
+      "genre": "异世大陆",
+      "collections": 404761,
+      "hook_density": 0.2333,
+      "high_point_density": 0.9973,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "废土边境检查官",
+      "author": "斤斤斤",
+      "genre": "末世危机",
+      "collections": 375422,
+      "hook_density": 0.0667,
+      "high_point_density": 0.8658,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "怪物来了",
+      "author": "一刀斩斩斩",
+      "genre": "游戏异界",
+      "collections": 369064,
+      "hook_density": 0.1333,
+      "high_point_density": 1.0582,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "高门庶子",
+      "author": "一片雪饼",
+      "genre": "架空历史",
+      "collections": 359930,
+      "hook_density": 0.2667,
+      "high_point_density": 0.6744,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "整座大山都是我的猎场",
+      "author": "百李山中仙",
+      "genre": "都市生活",
+      "collections": 352616,
+      "hook_density": 0.2333,
+      "high_point_density": 0.2316,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "腐朽世界",
+      "author": "滚开",
+      "genre": "异世大陆",
+      "collections": 348251,
+      "hook_density": 0.2333,
+      "high_point_density": 0.948,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "真君驾到",
+      "author": "阎ZK",
+      "genre": "东方玄幻",
+      "collections": 328817,
+      "hook_density": 0.1333,
+      "high_point_density": 1.1859,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "山海提灯",
+      "author": "跃千愁",
+      "genre": "幻想修仙",
+      "collections": 326937,
+      "hook_density": 0.2333,
+      "high_point_density": 0.6547,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "大明王朝1627",
+      "author": "一橛柴",
+      "genre": "两宋元明",
+      "collections": 295484,
+      "hook_density": 0.1333,
+      "high_point_density": 1.4165,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "苟在两界修仙",
+      "author": "文抄公",
+      "genre": "修真文明",
+      "collections": 287681,
+      "hook_density": 0.1667,
+      "high_point_density": 1.2303,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "招黑体质开局修行在废土",
+      "author": "陈风笑",
+      "genre": "星际文明",
+      "collections": 282955,
+      "hook_density": 0.5,
+      "high_point_density": 0.6486,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "仙道尽头",
+      "author": "怕辣的红椒",
+      "genre": "幻想修仙",
+      "collections": 279598,
+      "hook_density": 0.1,
+      "high_point_density": 0.7803,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "仙业",
+      "author": "鹓扶君",
+      "genre": "古典仙侠",
+      "collections": 276978,
+      "hook_density": 0.2333,
+      "high_point_density": 0.2815,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "人在美利坚：我的叔叔堂吉诃德",
+      "author": "喜欢吃圣代",
+      "genre": "异术超能",
+      "collections": 256128,
+      "hook_density": 0.1,
+      "high_point_density": 0.5915,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "亡灵法师，召唤055什么鬼？",
+      "author": "卧雪观星",
+      "genre": "异世大陆",
+      "collections": 254728,
+      "hook_density": 0.2778,
+      "high_point_density": 0.9501,
+      "chapters_analyzed": 18
+    },
+    {
+      "title": "西游：拦路人！",
+      "author": "九月病句",
+      "genre": "古典仙侠",
+      "collections": 242774,
+      "hook_density": 0.0667,
+      "high_point_density": 0.6404,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "1984：从破产川菜馆开始",
+      "author": "轻语江湖",
+      "genre": "都市生活",
+      "collections": 226926,
+      "hook_density": 0.1333,
+      "high_point_density": 0.2271,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "戾天子",
+      "author": "三山风",
+      "genre": "架空历史",
+      "collections": 226909,
+      "hook_density": 0.1667,
+      "high_point_density": 0.5462,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "集群重炮轰杀修仙者",
+      "author": "绝望羔羊",
+      "genre": "修真文明",
+      "collections": 223736,
+      "hook_density": 0.1,
+      "high_point_density": 1.035,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "状元郎",
+      "author": "三戒大师",
+      "genre": "两宋元明",
+      "collections": 218204,
+      "hook_density": 0.1667,
+      "high_point_density": 0.6072,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "我，枪神！",
+      "author": "如水意",
+      "genre": "都市生活",
+      "collections": 214096,
+      "hook_density": 0.2,
+      "high_point_density": 0.794,
+      "chapters_analyzed": 30
+    },
+    {
+      "title": "玩家重载",
+      "author": "黑灯夏火",
+      "genre": "进化变异",
+      "collections": 212948,
+      "hook_density": 0.1333,
+      "high_point_density": 0.7618,
+      "chapters_analyzed": 30
+    }
+  ]
+}

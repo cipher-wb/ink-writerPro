@@ -9,12 +9,9 @@ model: inherit
 
 > **职责**: 审查"读者为什么会点下一章"，执行 Hard/Soft 约束分层。
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 默认只使用审查包中的正文、上章摘要、chapter_memory_card、golden_three_contract、writing_guidance。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、上章摘要、chapter_memory_card、golden_three_contract、writing_guidance。
 
 ## 核心参考
 
@@ -51,6 +48,7 @@ model: inherit
       "allowed_rationales": ["TRANSITIONAL_SETUP", "CHARACTER_CREDIBILITY"]
     }
   ],
+  "fix_prompt": "【追读力修复指令】请针对以下问题逐项修复：\n\n1. [medium] SOFT_HOOK_STRENGTH：钩子强度不足：将章末钩子从'钩子强度为weak，建议提升至medium'提升，增加紧迫感或好奇心。\n   → 建议：将'回去休息了'改为悬念/危机\n\n修复时不得改变剧情事实、设定物理边界或角色核心行为。",
   "metrics": {
     "hook_present": true,
     "hook_type": "渴望钩",
@@ -68,6 +66,8 @@ model: inherit
   "override_eligible": true
 }
 ```
+
+> **`fix_prompt` 字段**（v13.0 新增）：当 `pass == false` 或得分低于阈值时，必须生成针对所有 `hard_violations` + 触发的 `soft_suggestions` 的可执行修复指令。此字段由 ink-write Step 3→4 的追读力门禁传递给 polish-agent 执行定向修复。若无违规，`fix_prompt` 为空字符串。
 
 ---
 

@@ -9,14 +9,11 @@ model: inherit
 
 > **职责**: 角色完整性守卫者，防止 OOC（Out-Of-Character）违规。
 
-> **输出格式**: 遵循 `${CLAUDE_PLUGIN_ROOT}/references/checker-output-schema.md` 统一 JSON Schema
+{{PROMPT_TEMPLATE:checker-output-reference.md}}
 
-## 输入硬规则
+{{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-- 必须先读取 `review_bundle_file`。
-- 默认只使用审查包中的正文、角色快照、前序章节摘要和设定快照。
-- 仅当审查包缺字段时，才允许补读 `allowed_read_files` 中的绝对路径文件。
-- 禁止读取 `.db` 文件、目录路径、以及白名单外的相对路径。
+**本 agent 默认数据源**: 审查包中的正文、角色快照、前序章节摘要和设定快照。
 
 ## 检查范围
 
@@ -133,17 +130,31 @@ model: inherit
 | **反派（嚣张型）** | 嘲讽、轻蔑、自信 | ❌ "对不起...我错了..." (突然怯懦) |
 | **修仙者** | "阁下/道友/在下" | ❌ "牛逼/666/OMG" (现代网络用语) |
 
-### 对话语言档案校验
+### 对话语言档案校验（voice_fingerprint）
 
-> 在检查角色对话是否OOC时，**必须参照该角色的语言档案**（若存在）。
+> 在检查角色对话是否OOC时，**必须参照该角色的语气指纹**（`voice_fingerprint_json` from `character_evolution_ledger`）。
+> 语气指纹是角色的权威语音参考，首次出场后自动学习，后续章节必须对齐。
+
+**voice_fingerprint 结构**:
+```json
+{
+  "catchphrases": ["斗之力，无处不在"],
+  "speech_habits": ["喜欢用反问句", "生气时用短句"],
+  "vocabulary_level": "粗犷直接",
+  "tone": "倔强不服输",
+  "dialect_markers": [],
+  "forbidden_expressions": ["不会说文雅/书生气的话"]
+}
+```
 
 **检查项**：
-1. **标志性用语缺失**：若角色在 3+ 章中未使用任何 `signature_expressions`，标记为 `medium` 警告
-2. **禁用表达命中**：若角色使用了 `forbidden_expressions` 中的表达，标记为 `high` 问题
-3. **句式偏好偏离**：若角色的对话句式明显偏离 `sentence_tendency`（如应短句偏好却连续使用长句），标记为 `low` 提示
-4. **词汇层次错位**：若设定为"文言色彩"的角色使用了纯现代网络用语，标记为 `medium` 警告
+1. **口头禅缺失**：若角色在 3+ 章中未使用任何 `catchphrases`，标记为 `medium` 警告
+2. **禁用表达命中**：若角色使用了 `forbidden_expressions` 中的表达，标记为 `critical` 问题（必须修复）
+3. **句式偏好偏离**：若角色的对话句式明显偏离 `speech_habits`（如应短句偏好却连续使用长句），标记为 `low` 提示
+4. **词汇层次错位**：若角色对话用词层次偏离 `vocabulary_level`（如设定为"粗犷"却使用文雅书面语），标记为 `medium` 警告
+5. **语气漂移**：若角色整体语气偏离 `tone` 设定，标记为 `medium` 警告
 
-**降级处理**：若角色无语言档案（C级以下角色），跳过本检查项，仅执行基础OOC检查。
+**降级处理**：若角色无 `voice_fingerprint`（装饰级角色或尚未出场），跳过本检查项，仅执行基础OOC检查。
 
 ### 第5.5步: 声音区分度检查
 

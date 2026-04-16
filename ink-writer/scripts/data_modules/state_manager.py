@@ -230,10 +230,18 @@ class StateManager:
         return state
 
     def _load_state(self):
-        """加载状态文件"""
+        """加载状态文件。如果 state.json 缺失但 index.db 存在，尝试从 SQLite 重建。"""
         if self.config.state_file.exists():
             self._state = read_json_safe(self.config.state_file, default={})
             self._state = self._ensure_state_schema(self._state)
+        elif self._sql_state_manager and self.config.index_db.exists():
+            try:
+                self._state = self._sql_state_manager.rebuild_state_dict()
+                self._state = self._ensure_state_schema(self._state)
+                logger.info("state.json 缺失，已从 SQLite 重建")
+            except Exception as exc:
+                logger.warning("从 SQLite 重建 state.json 失败: %s", exc)
+                self._state = self._ensure_state_schema({})
         else:
             self._state = self._ensure_state_schema({})
 
@@ -409,6 +417,9 @@ class StateManager:
                     logger.error("Failed to write state.json: %s", exc)
                     raise
 
+                # v13: 同步单例状态到 SQLite state_kv（视图缓存支撑）
+                self._sync_state_to_kv(disk_state)
+
                 # v5.1 引入: 同步到 SQLite（失败时保留 pending 以便重试）
                 sqlite_pending_snapshot = self._snapshot_sqlite_pending()
                 sqlite_sync_ok = self._sync_to_sqlite()
@@ -437,6 +448,23 @@ class StateManager:
 
         except filelock.Timeout:
             raise RuntimeError("无法获取 state.json 文件锁，请稍后重试")
+
+    def _sync_state_to_kv(self, disk_state: Dict[str, Any]) -> None:
+        """将 state.json 单例字段同步到 SQLite state_kv 表（v13 单一事实源）"""
+        if not self._sql_state_manager:
+            return
+        kv_keys = [
+            "schema_version", "project_info", "progress", "protagonist_state",
+            "relationships", "world_settings", "strand_tracker",
+            "harness_config", "hook_contract_config",
+        ]
+        entries = {k: disk_state[k] for k in kv_keys if k in disk_state}
+        if not entries:
+            return
+        try:
+            self._sql_state_manager.bulk_set_state_kv(entries)
+        except Exception as exc:
+            logger.warning("state_kv 同步失败: %s", exc)
 
     def _sync_to_sqlite(self) -> bool:
         """同步待处理数据到 SQLite（v5.1 引入，v5.4 沿用，v5.5 增加重试机制）"""

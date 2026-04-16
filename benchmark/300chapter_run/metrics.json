@@ -1,0 +1,34 @@
+{
+  "total_chapters": 300,
+  "wall_time_s": 0,
+  "all_passed": false,
+  "g1_readability": {
+    "hook_density_p75": 0.0,
+    "high_point_density_p75": 0.0,
+    "emotion_similarity": 0.0,
+    "passed": false
+  },
+  "g2_anti_ai": {
+    "score": 0.0,
+    "passed": false
+  },
+  "g3_architecture": {
+    "circular_deps": 0,
+    "duplicate_impl": 0,
+    "dead_code_pct": 0.0,
+    "passed": true
+  },
+  "g4_long_form": {
+    "ooc_score": 0.0,
+    "contradictions": 0,
+    "dropped_plotlines": 0,
+    "passed": true
+  },
+  "g5_efficiency": {
+    "avg_chapter_seconds": 0.0,
+    "time_target": 0.0,
+    "avg_chapter_tokens": 0,
+    "token_target": 0,
+    "passed": true
+  }
+}

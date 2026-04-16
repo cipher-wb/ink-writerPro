@@ -407,7 +407,35 @@ For each chapter, determine:
 - Fire Strand → 情感爽点（认可、保护、告白）
 - Constellation Strand → 认知爽点（真相、预言、身份）
 
-**2.5 爽点执行剧本** (based on 节拍表爽点链规划)
+**2.4 伏笔生命周期调度** (hard constraint from thread-lifecycle-tracker[foreshadow])
+- 调用 `ink_writer.foreshadow.tracker.scan_foreshadows()` 获取逾期/沉默伏笔
+- 调用 `ink_writer.foreshadow.tracker.build_plan_injection()` 获取强制兑现列表
+- 输入：index.db 路径, 当前章号
+- 输出：{forced_payoffs, mode, alerts, total_active, total_overdue, total_silent}
+- **硬约束**：`mode == "force"` 时，`forced_payoffs` 中的伏笔**必须**在本批大纲中安排兑现章节
+- 每章最多安排 2 条强制兑现（`max_forced_payoffs_per_chapter`）
+- 将 `alerts` 列表注入到章纲注释中，便于 writer-agent 理解伏笔紧迫度
+
+**2.5 爽点节奏调度** (hard constraint from high_point_scheduler)
+- 调用 `ink_writer.pacing.high_point_scheduler.schedule_high_point()` 获取本章爽点配方
+- 输入：chapter_no, volume_position (0.0-1.0), last_5_chapter_high_points
+- 输出：{high_point_type, intensity, payoff_window, require_high_point, rationale}
+- **硬约束**：require_high_point=true 的章节**必须**包含对应 intensity 级别的爽点
+- intensity 映射：minor=小爽点(单一模式), combo=组合爽点(2模式叠加), milestone=里程碑爽点(改变主角地位)
+- high_point_type 映射：face_slap=装逼打脸, hidden_strength=扮猪吃虎, level_up_kill=越级反杀, authority_challenge=打脸权威, villain_fail=反派翻车, sweet_surprise=甜蜜超预期
+- 将调度器输出的 rationale 附加到大纲注释中，便于 writer-agent 理解意图
+
+**2.7 明暗线生命周期调度** (hard constraint from thread-lifecycle-tracker[plotline])
+- 调用 `ink_writer.plotline.tracker.scan_plotlines()` 获取断更线程
+- 调用 `ink_writer.plotline.tracker.build_plan_injection()` 获取强制推进列表
+- 输入：index.db 路径, 当前章号
+- 输出：{forced_advances, mode, alerts, total_active, total_inactive}
+- **硬约束**：`mode == "force"` 时，`forced_advances` 中的线程**必须**在本批大纲中安排推进章节
+- 每章最多安排 2 条强制推进（`max_forced_advances_per_chapter`）
+- 将 `alerts` 列表注入到章纲注释中，便于 writer-agent 理解线程紧迫度
+- 线型阈值：main=3章断更, sub=8章, dark=15章
+
+**2.6 爽点执行剧本** (based on 节拍表爽点链规划 + 调度器配方)
 - 检查本章所属的爽点链（PC-X），确定本章角色（铺垫/压迫/爆发）
 - 填写**压扬标记**：压/平/扬
 - 填写**爽点执行**字段：
@@ -454,6 +482,7 @@ Chapter format (include 反派层级 for context-agent):
 - 章内时间跨度: {如 3小时/半天/1天}
 - 与上章时间差: {如 紧接/6小时/1天/跨夜}
 - 倒计时状态: {事件A D-3 -> D-2 / 无}
+- 爽点配方: 类型={face_slap|hidden_strength|level_up_kill|authority_challenge|villain_fail|sweet_surprise} | 强度={minor|combo|milestone} | 兑现窗口={1-3章}
 - 爽点: {类型} - {60-80字，含"谁→做什么→对象反应→围观反应"}
 - 爽点执行: 铺垫来源:{哪章/本章} | 信息差:{读者知X但角色不知Y/无(理由)} | 预期读者情绪:{解气/震撼/热血/优越感}
 - 压扬标记: {压/平/扬}
@@ -464,6 +493,9 @@ Chapter format (include 反派层级 for context-agent):
 - 本章变化: {30字以内，优先可量化变化}
 - 章末未闭合问题: {30字以内}
 - 钩子: {类型} - {30字以内}
+- 钩子契约: 类型={crisis|mystery|emotion|choice|desire} | 兑现锚点=第{M}章 | 兑现摘要={20字以内}
+- 伏笔处置: {无 | 埋设:[thread_id]描述 | 推进:[thread_id]描述 | 兑现:[thread_id]描述}
+- 明暗线推进: {[plotline_id]:推进描述, ... | 无}
 ```
 
 黄金三章附加规则（第 1-3 章必须额外写出）：
@@ -500,6 +532,11 @@ Chapter format (include 反派层级 for context-agent):
   - 意思是：本章结尾要设置这个悬念钩子
   - 下章 context-agent 会读取 chapter_meta[N].hook（实际实现的钩子），生成"接住上章"指导
   - 钩子类型参考：悬念钩 | 危机钩 | 承诺钩 | 情绪钩 | 选择钩 | 渴望钩
+- **钩子契约**：可验证的钩子承诺（硬约束）。
+  - `类型`：必须是 crisis/mystery/emotion/choice/desire 之一（对齐 `data/hook_patterns.json` 分类）
+  - `兑现锚点`：该钩子预期在哪一章兑现（可以是本章或后续章号）
+  - `兑现摘要`：20 字以内描述兑现内容
+  - 用于前置约束 + 后置校验闭环：reader-pull-checker 会验证兑现是否达成
 
 Save after each batch:
 ```bash
@@ -630,7 +667,9 @@ Final check:
 - 时间线表文件已写入：`大纲/第{volume_id}卷-时间线.md`
 - 章纲文件已写入：`大纲/第{volume_id}卷-详细大纲.md`
 - 设定集已完成基线补齐与本卷增量补充（原文件内可见）
-- 每章包含：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子
+- 每章包含：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置/明暗线推进
+- **伏笔强制兑现校验**：thread-lifecycle-tracker 的 `forced_payoffs` 中每条伏笔必须在本卷章纲中至少有一章标注 `伏笔处置: 兑现:[thread_id]`；缺失则 hard fail
+- **明暗线强制推进校验**：thread-lifecycle-tracker 的 `forced_advances` 中每条线程必须在本卷章纲中至少有一章标注 `明暗线推进: [plotline_id]:推进描述`；缺失则 hard fail
 - 时间线单调递增，倒计时推进正确
 - 与总纲冲突/高潮一致，约束触发频率合理（如有 idea_bank）
 
@@ -639,7 +678,8 @@ Final check:
 - 节拍表中段反转缺失（未按“必填/无（理由）”规则填写）
 - **时间线表文件不存在或为空**
 - 章纲文件不存在或为空
-- 任一章节缺少：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子
+- 任一章节缺少：目标/阻力/代价/时间锚点/章内时间跨度/与上章时间差/爽点/爽点执行/压扬标记/Strand/反派层级/视角/关键实体/本章变化/章末未闭合问题/钩子/钩子契约/伏笔处置/明暗线推进
+- **钩子契约缺失或格式错误**：每章必须有 `钩子契约: 类型=X | 兑现锚点=第M章 | 兑现摘要=Y`，类型必须在 {crisis, mystery, emotion, choice, desire} 内
 - 爽点链的爆发章号与对应章纲的压扬标记不一致（交叉校验失败）
 - 第 1-3 章缺少：本章职责/读者承诺/兑现项/禁止拖沓区
 - **任一章节时间字段（时间锚点/章内时间跨度/与上章时间差）缺失**
@@ -649,6 +689,7 @@ Final check:
 - 与总纲核心冲突或卷末高潮明显冲突
 - 设定集基线未补齐，或本卷增量未回写到现有设定集
 - 存在 `BLOCKER` 未裁决
+- **伏笔强制兑现未安排**：thread-lifecycle-tracker 返回 `forced_payoffs` 且 `mode == "force"`，但本卷章纲中无对应 `伏笔处置: 兑现:[thread_id]` 标注
 - 约束触发频率不足（当 idea_bank 启用时）
 
 ### Rollback / recovery

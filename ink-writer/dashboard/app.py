@@ -270,6 +270,94 @@ def create_app(project_root: str | Path | None = None) -> FastAPI:
                 (limit,),
             )
 
+    @app.get("/api/plot-threads/heatmap")
+    def plot_threads_heatmap(bucket_size: int = 10):
+        with closing(_get_db()) as conn:
+            try:
+                max_ch_row = conn.execute("SELECT MAX(chapter) FROM chapters").fetchone()
+                max_chapter = max_ch_row[0] if max_ch_row and max_ch_row[0] else 0
+            except Exception:
+                max_chapter = 0
+
+            if max_chapter <= 0:
+                return []
+
+            try:
+                all_threads = conn.execute(
+                    "SELECT planted_chapter, last_touched_chapter, target_payoff_chapter, "
+                    "resolved_chapter, status, priority FROM plot_thread_registry"
+                ).fetchall()
+            except Exception:
+                return []
+
+            num_buckets = (max_chapter + bucket_size - 1) // bucket_size
+            buckets = []
+            for i in range(num_buckets):
+                start = i * bucket_size + 1
+                end = min((i + 1) * bucket_size, max_chapter)
+                buckets.append({
+                    "bucket_start": start,
+                    "bucket_end": end,
+                    "planted": 0,
+                    "active": 0,
+                    "resolved": 0,
+                    "overdue_risk": 0,
+                })
+
+            for t in all_threads:
+                planted = t["planted_chapter"] or 0
+                resolved = t["resolved_chapter"] or 0
+                target = t["target_payoff_chapter"]
+                status_val = t["status"]
+
+                if planted > 0:
+                    bi = min((planted - 1) // bucket_size, num_buckets - 1)
+                    buckets[bi]["planted"] += 1
+                if resolved and resolved > 0:
+                    bi = min((resolved - 1) // bucket_size, num_buckets - 1)
+                    buckets[bi]["resolved"] += 1
+                if status_val == "active":
+                    touch = t["last_touched_chapter"] or planted
+                    if touch > 0:
+                        bi = min((touch - 1) // bucket_size, num_buckets - 1)
+                        buckets[bi]["active"] += 1
+                    if target and target > 0:
+                        bi = min((target - 1) // bucket_size, num_buckets - 1)
+                        buckets[bi]["overdue_risk"] += 1
+
+            return buckets
+
+    @app.get("/api/plotlines")
+    def list_plotlines(status: Optional[str] = None, limit: int = 100):
+        with closing(_get_db()) as conn:
+            if status:
+                return _fetchall_safe(
+                    conn,
+                    "SELECT * FROM plot_thread_registry WHERE thread_type = 'plotline' AND status = ? ORDER BY priority DESC, last_touched_chapter DESC LIMIT ?",
+                    (status, limit),
+                )
+            return _fetchall_safe(
+                conn,
+                "SELECT * FROM plot_thread_registry WHERE thread_type = 'plotline' ORDER BY priority DESC, last_touched_chapter DESC LIMIT ?",
+                (limit,),
+            )
+
+    @app.get("/api/plotlines/heatmap")
+    def plotlines_heatmap(bucket_size: int = 10):
+        with closing(_get_db()) as conn:
+            try:
+                max_ch_row = conn.execute("SELECT MAX(chapter) FROM chapters").fetchone()
+                max_chapter = max_ch_row[0] if max_ch_row and max_ch_row[0] else 0
+            except Exception:
+                max_chapter = 0
+
+            if max_chapter <= 0:
+                return []
+
+            from ink_writer.plotline.tracker import build_plotline_heatmap
+            db_path = _ink_dir() / "index.db"
+            return build_plotline_heatmap(str(db_path), max_chapter, bucket_size)
+
     @app.get("/api/timeline-anchors")
     def list_timeline_anchors(limit: int = 50):
         with closing(_get_db()) as conn:

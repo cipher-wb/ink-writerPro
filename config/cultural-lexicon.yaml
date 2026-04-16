@@ -1,0 +1,23 @@
+# 文化语料库注入配置
+# US-204: 按题材自动注入成语/俗语/方言/时代词，避免 AI 通用化表达
+
+enabled: true
+
+inject_into:
+  context: true
+  writer: true
+
+# 每章最低非通用词使用数（按题材）
+min_terms_per_chapter:
+  xianxia: 5
+  xuanhuan: 5
+  urban: 3
+  scifi: 4
+  lishi: 5
+  youxi: 3
+
+# 每次注入到创作执行包的推荐词条数
+inject_count: 20
+
+# 随机采样种子偏移（基于章节号，保证每章选词不同但可复现）
+seed_offset: 42
