@@ -47,7 +47,7 @@
         "修改 scripts/data_modules/golden_three.py 的 build_golden_three_plan()，将闭环要求写入 golden_three_plan.json 的 ch1 contract"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "这是编辑评分最直接的提升点。编辑核心批评就是读者等太久才知道能力能干嘛。"
     },
     {

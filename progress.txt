@@ -23,6 +23,9 @@
 - ink-plan Step 5 volume skeleton: `爽点密度规划` 表升级为 `卖点密度规划` 含大小卖点列
 - ink-plan Step 8 validation: 4 条新 hard fail（大卖点缺失/小卖点<2/前3章类型重复/非法类型）
 - 节拍表模板: Section 7 新增卖点密度硬约束说明 + 爽点链表新增 `大卖点类型` 列
+- golden_three.py ch1 contract: `ch1_closure_contract` 字段含 ability_display/crisis/ability_benefit + validation_rules
+- ink-plan Step 6 黄金三章附加规则: 第1章闭环硬约束（能力展示→危机→能力收益）
+- ink-plan Step 8 validation 1.7: 第1章完整小闭环检查（4条 hard fail）
 
 ---
 
@@ -47,4 +50,16 @@
   - 节拍表约束需要在 4 处同步：Step 4 生成时硬约束、Step 5 卷骨架验证规则、Step 8 validation section、Step 8 hard fail conditions
   - 前3章规则是与US-001的章纲字段联动的——前置检查依赖章纲的大卖点/小卖点/压扬标记字段已填写
   - PC-1 爆发章位置约束是对节拍表 Section 7 爽点链表中 PC-1 行的爆发章列的校验
+---
+
+## 2026-04-16 - US-003
+- What was implemented: 第1章完整小闭环 — 大纲层强制能力→危机→收益闭环
+- Files changed:
+  - ink-writer/skills/ink-plan/SKILL.md (Step 6 黄金三章附加规则新增第1章闭环硬约束 + Step 8 validation 1.7 + Step 8 完整性检查 + Hard fail conditions 新增4条)
+  - ink-writer/scripts/data_modules/golden_three.py (build_golden_three_plan ch1 新增 ch1_closure_contract + resolve/guidance/checklist 三处联动)
+- **Learnings for future iterations:**
+  - golden_three.py 中 ch1 plan 的新字段需要在 3 个函数中同步：build_golden_three_plan（生成）、resolve_golden_three_contract（解析传递）、build_golden_three_guidance（生成指导文本）+ build_golden_three_checklist（生成检查项）
+  - Python 字符串中不能使用中文全角引号 `""` 作为字面内容——会被解释器当作字符串分隔符导致 SyntaxError，需用单引号 `''` 替代
+  - Step 8 validation 新增约束需要在两处同步：validation section（检查逻辑描述）+ hard fail conditions（阻断条件列表）
+  - `章末未闭合问题` 字段的层级要求是 US-003 的关键约束——不能停留在"探索能力"层级，必须指向主线大冲突
 ---
