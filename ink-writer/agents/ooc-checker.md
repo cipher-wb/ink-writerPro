@@ -177,6 +177,85 @@ model: inherit
 - 师父用排比短句、威严
 - 杀手用黑色幽默、漫不经心
 
+### 第5.6步: HUMAN_INSTINCT_VIOLATION 人类本能反应违反检测
+
+**目的**：配对 writer-agent L9 人类本能反应律，检测触发场景发生后在场角色是否有符合常识的本能反应。违反会让读者瞬间跳戏（"看到人倒下居然没人去扶"）。
+
+**参考词表**：`references/shared/human-instinct-triggers.md`（5类触发场景 A/B/C/D/E + 反应级别 + 非典型反应豁免标签）。
+
+#### 检测方法（关键词滑窗扫描）
+
+1. **扫描触发事件关键词**：逐段扫描正文，定位 5 类触发场景关键词：
+   - **场景 A（受伤/倒下/求救）**：受伤 / 流血 / 倒地 / 摔倒 / 昏迷 / 呼救 / 求救 / 惨叫 / 濒死 / 中毒 / 中箭
+   - **场景 B（生命威胁）**：剑指咽喉 / 枪口对准 / 即将坠落 / 爆炸将至 / 被追杀 / 被围攻 / 刀架脖子 / 杀气迫近 / 死亡威胁
+   - **场景 C（极端事件）**：目睹死亡 / 巨大爆炸 / 世界崩塌 / 至亲出事 / 家园被毁 / 突发灾难 / 见到鬼神 / 规则被打破
+   - **场景 D（被侮辱）**：当众羞辱 / 踩踏尊严 / 辱骂 / 嘲讽 / 扇耳光 / 嘲笑出身 / 诋毁至亲 / 破坏信仰
+   - **场景 E（重大好处/机缘）**：捡到宝物 / 获得传承 / 获赠重金 / 被大人物赏识 / 能力突破 / 修为暴涨 / 意外机缘
+2. **检查后续 200 字内反应关键词**：每个触发事件点向后扫描 200 字（跨段落），查找反应关键词：
+   - **动作类**：冲过去 / 蹲下 / 拨打 / 呼喊 / 救援 / 拦住 / 挡在 / 护住 / 撤退 / 格挡 / 攥拳 / 咬牙
+   - **身体感官类**：颤抖 / 冷汗 / 心跳加快 / 呼吸急促 / 瞳孔涣散 / 手心出汗 / 腿软 / 失语 / 呆立
+   - **情绪类**：恐惧 / 愤怒 / 震惊 / 惊骇 / 悲痛 / 兴奋 / 紧张 / 惊呼 / 隐忍 / 暴怒 / 惊愕
+   - **思维类**：警觉 / 警惕 / 怀疑 / 反常必有妖 / 审视 / 戒备 / 提防
+3. **反应段字数核对**：
+   - 场景 A ≥ 80 字；场景 B ≥ 60 字；场景 C ≥ 100 字；场景 D/E ≥ 50 字
+   - 短于此值视为"一笔带过"，按下方规则分级
+4. **在场角色识别**：以触发事件段落内显式出现的角色为"在场角色"；公共场所（市集/街道/大殿/宗门广场等）还需检查围观群众反应
+5. **豁免标签校验**：若"无反应/淡漠反应"的角色在设定集 `personality_tags` 中有对应豁免标签，则严重度自动降级（见下方分级表）
+
+#### 分级规则（HUMAN_INSTINCT_VIOLATION）
+
+| 违反类型 | 判定条件 | severity | 处置（普通章节） | 处置（黄金三章 ch1-3） |
+|---------|---------|---------|-----------------|------------------------|
+| **NO_RESPONSE_TO_INJURY** | 场景 A/C 发生，在场角色完全无反应（200字内无任一反应关键词） | **critical** | hard block → 回退 Step 2A 重写 | **hard block → 回退 Step 2A** |
+| **FLAT_TO_LIFE_THREAT** | 场景 B 发生，主角平静无波动（无任何身体感官/思维/情绪反应关键词） | **high** | 允许 Step 4 润色修复 | **hard block → 回退 Step 2A 重写** |
+| **NO_EMOTION_ON_WINDFALL** | 场景 E 发生，主角获重大好处但毫无情绪（无兴奋/谨慎/怀疑任一反应） | **high** | 允许 Step 4 润色修复 | **hard block → 回退 Step 2A 重写** |
+| **INSULT_NO_REACTION** | 场景 D 发生，被侮辱者无愤怒/隐忍/反击之一（继续谈笑风生） | **high** | 允许 Step 4 润色修复 | hard block → 回退 Step 2A |
+| **BYSTANDER_SILENCE** | 场景 A/B/C 在公共场所发生，但围观群众完全失声（无惊呼/躲避/议论） | **medium** | Step 4 润色修复 | Step 4 润色修复 |
+| **UNDERSIZED_REACTION** | 有反应但反应段字数低于场景要求最低值（A<80/B<60/C<100/D<50/E<50） | **medium** | Step 4 润色修复 | **high（黄金三章加严）** |
+| **UNREASONABLE_NPC** | 路人配角反应不合理（与场景严重度严重错位，如目睹死亡后继续闲聊） | **medium** | Step 4 润色修复 | high |
+
+#### 豁免标签自动降级
+
+若"无反应"角色在设定集 `personality_tags` 中含以下标签，按表降级严重度：
+
+| 触发场景 | 豁免标签 | 降级效果 |
+|---------|---------|---------|
+| A（有人受伤/倒下） | `cold_blooded` / `mission_first` / `traumatized` / `non_human` | critical → medium |
+| B（生命威胁） | `battle_hardened` / `supernatural_calm` / `death_wish` | high → low |
+| C（极端事件） | `witnessed_worse` / `reborn_veteran` | critical → medium |
+| D（被侮辱） | `transcendent` / `long_game` | high → low |
+| E（重大机缘） | `seen_bigger` / `burden_avoidance` | high → low |
+
+**重要**：豁免不是"免检"——即使有标签，角色仍需表现出微表情/微动作或内在波动（如冷血者的"麻木观察"、超脱者的"云淡风轻但境界感"），完全无任何反应描写仍按 `low` 标记以便润色层补充。
+
+#### 与 Context Contract 联动
+
+若 Context Contract 中 `本章人类本能触发场景` 字段为空（无触发场景声明），而正文中扫描出触发关键词且无合理反应 → 额外记一项 `CONTRACT_MISS_TRIGGER`（medium），提示 writer-agent 下次需要在 Contract 中预声明触发场景。
+
+#### 输出 JSON 示例
+
+```json
+{
+  "human_instinct_check": {
+    "triggers_detected": [
+      {"scene": "A", "location": "第3段", "keyword": "倒地"},
+      {"scene": "E", "location": "第8段", "keyword": "获得传承"}
+    ],
+    "violations": [
+      {
+        "rule": "NO_RESPONSE_TO_INJURY|FLAT_TO_LIFE_THREAT|NO_EMOTION_ON_WINDFALL|INSULT_NO_REACTION|BYSTANDER_SILENCE|UNDERSIZED_REACTION|UNREASONABLE_NPC|CONTRACT_MISS_TRIGGER",
+        "severity": "critical|high|medium|low",
+        "scene": "A|B|C|D|E",
+        "location": "段落定位",
+        "exempted_by_tag": "cold_blooded|battle_hardened|... 或 null",
+        "fix_hint": "补充反应关键词方向（动作/感官/情绪/思维）+ 字数锚点"
+      }
+    ],
+    "conclusion": "通过|预警|未通过"
+  }
+}
+```
+
 ### 第六步: 角色成长 vs. OOC
 
 **区分合理成长与 OOC**:
@@ -240,6 +319,29 @@ model: inherit
 | 林天 | 谨慎 | 自信 | ✓ 实力提升+经历铺垫 | ✓ 合理成长 |
 | 慕容雪 | 高傲 | 温柔 | ✗ 无铺垫 | ❌ OOC |
 
+## 人类本能反应检测（HUMAN_INSTINCT_VIOLATION）
+
+**触发场景扫描结果**:
+| 场景类型 | 位置 | 触发关键词 | 反应段字数 | 判定 |
+|---------|------|-----------|-----------|------|
+| A（受伤/倒下） | 第{n}段 | "倒地" | {x}字（要求≥80） | ✓/UNDERSIZED/NO_RESPONSE |
+| B（生命威胁） | 第{n}段 | "剑指咽喉" | {x}字（要求≥60） | ✓/FLAT_TO_LIFE_THREAT |
+| C（极端事件） | 第{n}段 | "目睹死亡" | {x}字（要求≥100） | ✓/NO_RESPONSE_TO_INJURY |
+| D（被侮辱） | — | — | — | — |
+| E（重大机缘） | 第{n}段 | "获得传承" | {x}字（要求≥50） | ✓/NO_EMOTION_ON_WINDFALL |
+
+**违反明细**:
+- **NO_RESPONSE_TO_INJURY**（critical / 黄金三章 hard block）：{n}处
+- **FLAT_TO_LIFE_THREAT**（high / 黄金三章 hard block）：{n}处
+- **NO_EMOTION_ON_WINDFALL**（high / 黄金三章 hard block）：{n}处
+- **INSULT_NO_REACTION**（high）：{n}处
+- **BYSTANDER_SILENCE**（medium）：{n}处
+- **UNDERSIZED_REACTION**（medium / 黄金三章 high）：{n}处
+- **UNREASONABLE_NPC**（medium）：{n}处
+- **CONTRACT_MISS_TRIGGER**（medium）：{n}处
+
+**豁免触发统计**：{n}处因角色设定集标签（cold_blooded/battle_hardened/transcendent 等）自动降级
+
 ## 修复建议
 1. **修复第{M}章林天OOC**: 补充对手触及底线的情节
 2. **慕容雪性格转变**: 添加渐进式铺垫（3-5章）或调整此章表现
@@ -260,6 +362,10 @@ model: inherit
 ❌ 通过存在严重 OOC 且未标记的章节（如反派智商下线）
 ❌ 忽略角色对话风格违规
 ❌ 混淆 OOC 与角色成长
+❌ 放过 NO_RESPONSE_TO_INJURY critical 章节（场景A/C发生但在场角色完全无反应必须 hard block）
+❌ 黄金三章中放过 FLAT_TO_LIFE_THREAT / NO_EMOTION_ON_WINDFALL（ch1-3 这两类 high 升级为 hard block）
+❌ 忽略围观群众失声（BYSTANDER_SILENCE），公共场所世界不能空洞
+❌ 误判豁免（设定集无 cold_blooded/battle_hardened/transcendent 等对应标签的角色，不得免检其无反应）
 
 ## 成功标准
 
@@ -268,3 +374,8 @@ model: inherit
 - 角色成长是渐进且有动机的
 - 对话风格与既定档案匹配
 - 报告能区分 OOC 和合理成长
+- 所有 5 类人类本能触发场景（A/B/C/D/E）有合理反应落地，0 个 NO_RESPONSE_TO_INJURY critical
+- 反应段字数满足场景最低要求（A≥80/B≥60/C≥100/D≥50/E≥50）
+- 公共场所围观群众反应有体现，0 个 BYSTANDER_SILENCE
+- 非典型反应（冷血/超脱/战斗经验）有对应 `personality_tags` 支撑，豁免决策可追溯
+- 黄金三章中 HUMAN_INSTINCT_VIOLATION critical 或升级 hard block 触发 → 回退 Step 2A 而非 Step 4

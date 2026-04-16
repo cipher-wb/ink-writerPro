@@ -190,7 +190,7 @@
         "黄金三章中 HUMAN_INSTINCT_VIOLATION critical → hard block"
       ],
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "notes": "与 US-011 配对：US-011 预防（写作时遵守），US-012 检测（审查时拦截）。"
     },
     {

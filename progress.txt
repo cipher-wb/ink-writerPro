@@ -187,3 +187,25 @@
   - step-3-review-gate.md 的门禁判定逻辑需要区分 is_golden_three，因为 PASSIVE_STREAK 在 ch1-3 和普通章节处置不同
   - protagonist_agency_check 输出 JSON 与 selling_point_check 并列，都在 metrics 对象下
 ---
+
+## 2026-04-16 - US-012
+- What was implemented: 人物反应真实性检测 — ooc-checker 新增 HUMAN_INSTINCT_VIOLATION 层（8 条规则 + 豁免降级表 + Contract 联动），step-3-review-gate 新增人类本能反应门禁
+- Files changed:
+  - ink-writer/ink-writer/agents/ooc-checker.md (第5.6步 HUMAN_INSTINCT_VIOLATION 检测 section + 5 类场景关键词扫描 + 8 条违反规则 + 黄金三章加严 + 豁免标签降级表 + 报告模板人类本能反应段 + 禁止事项4条 + 成功标准5条 + 输出JSON human_instinct_check)
+  - ink-writer/ink-writer/skills/ink-write/references/step-3-review-gate.md (新增人类本能反应门禁 section + 进入Step 4前闸门 bullet)
+- **Learnings for future iterations:**
+  - ooc-checker 的 HUMAN_INSTINCT_VIOLATION 层插在 5.5 声音区分度 之后、第六步（角色成长 vs. OOC）之前，作为 5.6
+  - 新增 8 条规则：NO_RESPONSE_TO_INJURY(critical A/C)、FLAT_TO_LIFE_THREAT(high B)、NO_EMOTION_ON_WINDFALL(high E)、INSULT_NO_REACTION(high D)、BYSTANDER_SILENCE(medium 公共场所)、UNDERSIZED_REACTION(medium 字数不足)、UNREASONABLE_NPC(medium 配角错位)、CONTRACT_MISS_TRIGGER(medium Contract 漏声明)
+  - 黄金三章加严的 4 条规则：NO_RESPONSE_TO_INJURY 普通即 critical hard block；FLAT_TO_LIFE_THREAT / NO_EMOTION_ON_WINDFALL / INSULT_NO_REACTION 从 high 升级为 hard block
+  - 豁免标签降级表（5 类场景对应标签）：A→cold_blooded/mission_first/traumatized/non_human；B→battle_hardened/supernatural_calm/death_wish；C→witnessed_worse/reborn_veteran；D→transcendent/long_game；E→seen_bigger/burden_avoidance
+  - 豁免不是"免检"——即使有标签，完全无任何反应仍标 low 供润色补救（冷血者需"麻木观察"、超脱者需"境界感"）
+  - 检测方法与 AC 对齐："扫描触发事件关键词 → 检查后续200字内是否有反应关键词"，关键词表分 4 类（动作/身体感官/情绪/思维）
+  - 反应段字数最低要求来自 human-instinct-triggers.md：A≥80/B≥60/C≥100/D≥50/E≥50，UNDERSIZED_REACTION 规则直接引用
+  - step-3-review-gate 门禁判定逻辑需要区分 is_golden_three，因为 FLAT_TO_LIFE_THREAT / NO_EMOTION_ON_WINDFALL / INSULT_NO_REACTION 在 ch1-3 和普通章节处置不同（与 US-010 PASSIVE_STREAK 相同模式）
+  - Contract 联动规则 CONTRACT_MISS_TRIGGER：Context Contract `本章人类本能触发场景` 字段为空但正文扫出关键词 → 下章 Contract 需修正（非写作层硬阻断，只是反馈 writer-agent）
+- ooc-checker HUMAN_INSTINCT_VIOLATION 插入位置: 第5.5步（声音区分度）之后、第六步（角色成长）之前，编号为 5.6
+- ooc-checker HUMAN_INSTINCT 规则族: NO_RESPONSE_TO_INJURY(critical) / FLAT_TO_LIFE_THREAT(high) / NO_EMOTION_ON_WINDFALL(high) / INSULT_NO_REACTION(high) / BYSTANDER_SILENCE(medium) / UNDERSIZED_REACTION(medium) / UNREASONABLE_NPC(medium) / CONTRACT_MISS_TRIGGER(medium)
+- step-3-review-gate 人类本能反应门禁: NO_RESPONSE_TO_INJURY critical → hard block；黄金三章 FLAT_TO_LIFE_THREAT/NO_EMOTION_ON_WINDFALL/INSULT_NO_REACTION high → hard block
+- 触发场景关键词 5 类 A/B/C/D/E 与 human-instinct-triggers.md 表完全对齐；反应关键词分 4 类（动作/身体感官/情绪/思维），200字滑窗匹配
+- 豁免标签自动降级表: A→cold_blooded/mission_first/traumatized/non_human; B→battle_hardened/supernatural_calm/death_wish; C→witnessed_worse/reborn_veteran; D→transcendent/long_game; E→seen_bigger/burden_avoidance
+---
