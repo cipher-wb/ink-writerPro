@@ -223,7 +223,7 @@
         "黄金三章中 critical 级别 → hard block 回退 Step 2A；普通章节 critical → hard block，high → Step 4 润色修复"
       ],
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "notes": "GENERIC_DESCRIPTION 需要一个空洞感官词列表，可以在 prose-craft-rules.md 中维护。"
     },
     {
@@ -239,7 +239,7 @@
         "润色后必须通过 proofreading-checker Layer 6 的重检（与 US-014 联动）"
       ],
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "notes": "这是最后一道兜底。依赖 US-013 的 prose-craft-rules.md 作为替换参考。"
     }
   ]

@@ -1,233 +1,33 @@
-# Ralph Progress — combat-pacing-overhaul
-
 ## Codebase Patterns
-- Agent specs: ink-writer/agents/*.md (21+ files)
-- Main workflow: ink-writer/skills/ink-write/SKILL.md (~2000 lines)
-- Outline workflow: ink-writer/skills/ink-plan/SKILL.md
-- Writer-agent: ink-writer/agents/writer-agent.md (iron laws L1-L6+SC, MCC self-check 7 items)
-- High-point-checker: ink-writer/agents/high-point-checker.md (爽点检测)
-- Golden-three-checker: ink-writer/agents/golden-three-checker.md (黄金三章)
-- OOC-checker: ink-writer/agents/ooc-checker.md (角色一致性)
-- Proofreading-checker: ink-writer/agents/proofreading-checker.md (Layer 1-5)
-- Polish-guide: ink-writer/skills/ink-write/references/polish-guide.md (Anti-AI layers 1-7)
-- golden_three.py: ink-writer/scripts/data_modules/golden_three.py
-- Templates: ink-writer/templates/output/大纲-卷节拍表.md, 大纲-总纲.md
-- References: ink-writer/references/shared/ (core-constraints, cool-points-guide, golden-opening-patterns, strand-weave-pattern)
-- Genre profiles: ink-writer/references/genre-profiles.md
-- Step flow: Step 0→0.2→0.3→0.7→0.8→1→2A→2A.1→2A.5→2B→2C→3→4→4.5→5→5.5→6
-- writer-agent touch points for new iron law: 铁律定义, MCC自检表, 失败处理策略, selfcheck JSON示例, 禁止事项, 硬性指标计数, 成功标准
-- high-point-checker: 爽点识别→位置扫描→压扬一致性→卖点密度硬约束(Step 1.7)→密度基线→rolling window→Override Contract
-- high-point-checker SELLING_POINT rules: SELLING_POINT_DEFICIT(critical: 大卖点缺失/小卖点<2; high: 无反应段; medium: 无情绪触发) + SELLING_POINT_FRONT_LOADING(high: 前1/3无小卖点)
-- step-3-review-gate: 卖点密度门禁在逻辑/大纲合规门禁之后、回退机制之前
-- rolling window: 连续2章大卖点缺失→critical(原为3章连续零爽点→high)
-- proofreading-checker layers: L1修辞重复, L2段落结构, L3代词清晰度, L4文化/时代错位, L5跨章风格一致性
-- writer-agent iron laws: L1数字即承诺, L2动作即物理, L3属性即锁定, L4空间即连续, L5大纲即合同, L6否定即禁区, L7卖点落地律, L8主角能动律
-- MCC self-check: 9项（原8项+主角能动性），self-consistency scan: 6项（原5项+SC-6主角能动性检查）
-
-- ink-plan Step 6 chapter format: `爽点配方` → `大卖点类型`（新增11种合法类型），新增 `大卖点描述`（≤80字）和 `小卖点`（2个×≤40字）
-- ink-plan Step 5 volume skeleton: `爽点密度规划` 表升级为 `卖点密度规划` 含大小卖点列
-- ink-plan Step 8 validation: 4 条新 hard fail（大卖点缺失/小卖点<2/前3章类型重复/非法类型）
-- 节拍表模板: Section 7 新增卖点密度硬约束说明 + 爽点链表新增 `大卖点类型` 列
-- golden_three.py ch1 contract: `ch1_closure_contract` 字段含 ability_display/crisis/ability_benefit + validation_rules
-- ink-plan Step 6 黄金三章附加规则: 第1章闭环硬约束（能力展示→危机→能力收益）
-- ink-plan Step 8 validation 1.7: 第1章完整小闭环检查（4条 hard fail）
-- golden_three_threshold 默认值出现在 3 处：golden-three-checker.md / ink-review/SKILL.md / ink-write/SKILL.md（引用）
-- audit_mode 三级：normal（默认=原strict）/ strict（hard block）/ relaxed（旧标准降级），读取自 state.json
-- ink-review/SKILL.md 也引用 golden_three_threshold 阈值，修改阈值时需同步
-- golden-three-checker CH1 闭环规则: CH1_NO_ABILITY_BENEFIT(critical) / CH1_PASSIVE_PROTAGONIST(critical) / CH1_ABSTRACT_PAYOFF(high) / CH1_LATE_CRISIS(high)
-- checker critical → hard block 回退由 ink-write Step 3.5 harness gate `rewrite_step2a` action 实现
+- Agent 规格文件在 `ink-writer/agents/`，技能文件在 `ink-writer/skills/`
+- 审查门禁逻辑在 `ink-writer/skills/ink-write/references/step-3-review-gate.md`
+- 弱动词/感官判据维护在 `ink-writer/skills/ink-write/references/prose-craft-rules.md`
+- 每个 US 通常涉及 agent 规格 + review gate + references 三处联动修改
+- 黄金三章（ch1-3）规则在多个 checker 中都有加严处理模式
 
 ---
 
-## 2026-04-16 - US-001
-- What was implemented: 大纲层爽点密度硬约束 — ink-plan 章纲新增大小卖点必填字段
+## 2026-04-17 - US-014
+- 在 proofreading-checker.md 新增 Layer 6（文笔工艺质量检测），包含 4 个子规则：WEAK_VERB_OVERUSE、SENSORY_DESERT、ADJECTIVE_PILE、GENERIC_DESCRIPTION
+- 在 step-3-review-gate.md 新增文笔工艺门禁（Prose Craft Gate），含 hard block/soft warning 判定逻辑和黄金三章加严规则
 - Files changed:
-  - ink-writer/skills/ink-plan/SKILL.md (Step 5 卷skeleton + Step 6 章纲格式 + Step 8 验证)
-  - ink-writer/templates/output/大纲-卷节拍表.md (Section 7 爽点链规划)
+  - ink-writer/agents/proofreading-checker.md (+101 lines: Layer 6 全部内容)
+  - ink-writer/skills/ink-write/references/step-3-review-gate.md (+55 lines: Prose Craft Gate)
 - **Learnings for future iterations:**
-  - `爽点配方` 字段在 SKILL.md 中出现 2 处（2.5调度器描述 + 章纲格式模板），改名时需全文搜索
-  - 章纲格式变更后，Step 8 的完整性检查、Final check、Hard fail 三处字段列表都需同步更新
-  - 大卖点类型列表（11种）比原 high_point_type（6种）更丰富，新增了迪化误解/身份掉马/能力升级/关键情报获取/危机逆转
-  - 小卖点类型列表是全新字段，与大卖点互补——微兑现/角色魅力/世界观趣味/关系推进/小悬念/能力小应用
+  - Layer 6 是 proofreading-checker 中唯一可产出 critical 的层级，header 注释已明确标注
+  - prose-craft-rules.md 由 US-013 创建并 commit，US-014 的 checker 和 US-015 的 polish-agent 都引用它
+  - 空洞感官词黑名单已在 prose-craft-rules.md 第三节维护，checker 加载该文件获取判据
+  - 黄金三章升级模式：high → critical hard block，与 US-010/US-012 的模式一致
 ---
 
-## 2026-04-16 - US-002
-- What was implemented: 大纲层爽点前置原则 — 节拍表强制前3章爽点分布
+## 2026-04-17 - US-015
+- 在 polish-guide.md 新增 Layer 8（文笔工艺润色），包含 8a 弱动词替换、8b 感官沙漠补充、8c 形容词精简、8z Layer 6 等价自检
+- 在 polish-agent.md 新增 Step 4.5 Layer 8 执行流程、加载 prose-craft-rules.md、更新输出报告格式和成功标准
 - Files changed:
-  - ink-writer/skills/ink-plan/SKILL.md (Step 4 新增爽点前置硬约束 + Step 5 卷骨架验证规则 + Step 8 validation 1.6节 + Hard fail conditions)
-  - ink-writer/templates/output/大纲-卷节拍表.md (Section 7 新增爽点前置原则约束提示)
+  - ink-writer/skills/ink-write/references/polish-guide.md (+50 lines: Layer 8 + 终检/清单更新)
+  - ink-writer/agents/polish-agent.md (+40 lines: Layer 8 步骤 + 成功标准 #11-12 + 报告格式)
 - **Learnings for future iterations:**
-  - 节拍表约束需要在 4 处同步：Step 4 生成时硬约束、Step 5 卷骨架验证规则、Step 8 validation section、Step 8 hard fail conditions
-  - 前3章规则是与US-001的章纲字段联动的——前置检查依赖章纲的大卖点/小卖点/压扬标记字段已填写
-  - PC-1 爆发章位置约束是对节拍表 Section 7 爽点链表中 PC-1 行的爆发章列的校验
----
-
-## 2026-04-16 - US-003
-- What was implemented: 第1章完整小闭环 — 大纲层强制能力→危机→收益闭环
-- Files changed:
-  - ink-writer/skills/ink-plan/SKILL.md (Step 6 黄金三章附加规则新增第1章闭环硬约束 + Step 8 validation 1.7 + Step 8 完整性检查 + Hard fail conditions 新增4条)
-  - ink-writer/scripts/data_modules/golden_three.py (build_golden_three_plan ch1 新增 ch1_closure_contract + resolve/guidance/checklist 三处联动)
-- **Learnings for future iterations:**
-  - golden_three.py 中 ch1 plan 的新字段需要在 3 个函数中同步：build_golden_three_plan（生成）、resolve_golden_three_contract（解析传递）、build_golden_three_guidance（生成指导文本）+ build_golden_three_checklist（生成检查项）
-  - Python 字符串中不能使用中文全角引号 `""` 作为字面内容——会被解释器当作字符串分隔符导致 SyntaxError，需用单引号 `''` 替代
-  - Step 8 validation 新增约束需要在两处同步：validation section（检查逻辑描述）+ hard fail conditions（阻断条件列表）
-  - `章末未闭合问题` 字段的层级要求是 US-003 的关键约束——不能停留在"探索能力"层级，必须指向主线大冲突
----
-
-## 2026-04-16 - US-004
-- What was implemented: 审核模式默认化 — 前3万字里程碑升级为全项目默认
-- Files changed:
-  - ink-writer/skills/ink-plan/SKILL.md (Line 534-550: 里程碑从条件触发改为默认启用，升级ch1/ch2/ch3/ch4-5/ch6-10五阶段，新增audit_mode三级配置)
-  - ink-writer/agents/golden-three-checker.md (Line 124: threshold 0.85→0.90; Line 167-179: 里程碑参考表升级+默认启用标注+audit_mode降级说明)
-  - ink-writer/skills/ink-review/SKILL.md (Line 171: golden_three_threshold 默认值同步 0.85→0.90)
-- **Learnings for future iterations:**
-  - golden_three_threshold 的默认值出现在 3 处：golden-three-checker.md（定义）、ink-review/SKILL.md（引用）、ink-write/SKILL.md（引用但未标具体数字），修改时需全文 grep `0.85` 和 `golden_three_threshold`
-  - audit_mode 三级设计：normal（默认=原strict）、strict（hard block）、relaxed（旧标准降级），读取自 state.json
-  - 里程碑从 4 阶段（ch1-2/ch3-5/ch6-10/ch10-12）拆为 5 阶段（ch1/ch2/ch3/ch4-5/ch6-10），粒度更细
----
-
-## 2026-04-16 - US-005
-- What was implemented: 第1章完整小闭环 — 审查层强制验证。golden-three-checker 新增4条第1章闭环检测规则
-- Files changed:
-  - ink-writer/agents/golden-three-checker.md (第1章 critical 新增 CH1_NO_ABILITY_BENEFIT + CH1_PASSIVE_PROTAGONIST；high 新增 CH1_ABSTRACT_PAYOFF + CH1_LATE_CRISIS；新增 Hard Block 回退路由 section；输出补充新增3条修复建议)
-- **Learnings for future iterations:**
-  - golden_three_threshold 已在 US-004 中从 0.85 升级为 0.90，US-005 无需重复修改
-  - golden-three-checker 的 critical 规则通过 ink-write Step 3.5 harness gate 的 `rewrite_step2a` action 实现 hard block 回退，无需在 checker 内直接调用回退逻辑
-  - CH1 闭环检测规则与 US-003 的大纲层闭环约束配对：大纲层锁定 `能力展示→危机→能力收益`，审查层验证正文是否落地
-  - 新增规则命名遵循 `CH1_` 前缀 + 大写下划线格式，与 checker 其他规则风格一致
----
-
-## 2026-04-16 - US-006
-- What was implemented: 正文写作层卖点落地 — writer-agent 新增 L7 卖点落地律 + MCC自检/自洽回扫扩展
-- Files changed:
-  - ink-writer/agents/writer-agent.md (L7卖点落地律定义 + MCC自检第8项卖点覆盖 + SC-5卖点覆盖检查 + 禁止事项 + 硬性指标计数 + 成功标准计数)
-  - ink-writer/skills/ink-write/SKILL.md (Step 2A MCC自检从6项→8项 + Step 2A.1从4项→5项语义检查 + SC-5卖点覆盖检查)
-- **Learnings for future iterations:**
-  - writer-agent 新增铁律需同步更新 7 处：铁律定义、MCC自检表+JSON示例、自洽回扫检查项+类型枚举、禁止事项、硬性指标计数、成功标准计数
-  - ink-write/SKILL.md 的 MCC自检项数和 Step 2A.1 的检查项数需与 writer-agent.md 保持同步
-  - 卖点覆盖检查的关键设计：遗漏卖点必须在 Step 2A（写作层）修正，不得留到 Step 4（润色层），因为卖点是结构性要素
-  - MCC自检原来是6项（writer-agent.md中是7项因含否定约束），SKILL.md中需同步为8项
----
-
-## 2026-04-16 - US-007
-- What was implemented: 审查层卖点密度检测 — high-point-checker 新增 SELLING_POINT_DEFICIT + SELLING_POINT_FRONT_LOADING 规则，rolling window 收紧，step-3-review-gate 新增卖点密度门禁
-- Files changed:
-  - ink-writer/agents/high-point-checker.md (Step 1.7 卖点密度硬约束检测 section + rolling window 收紧为2章 + 报告模板卖点段 + 禁止事项3条 + 成功标准4条 + 输出JSON selling_point_check)
-  - ink-writer/skills/ink-write/references/step-3-review-gate.md (新增卖点密度门禁 section + 进入Step 4前闸门bullet)
-- **Learnings for future iterations:**
-  - high-point-checker 的新规则插入位置在 Step 1.6（压扬一致性）之后、第二步（识别爽点）之前，作为 Step 1.7
-  - SELLING_POINT_DEFICIT 的 critical 子规则（大卖点缺失/小卖点<2）必须触发 hard block 回退 Step 2A，不能仅送 Step 4 润色——卖点缺失是结构性问题
-  - step-3-review-gate.md 是门禁规则的集中定义处，ink-review/SKILL.md 本身不含门禁细节
-  - rolling window 收紧需要同步修改两处：密度基线中的连续低密度告警 + 报告模板中的结论说明
-  - high-point-checker 输出 JSON 的 metrics 字段需要新增 selling_point_check 子对象，与现有 cool_point_count 等并列
-- protagonist-action-verbs.md: 基础通用(6类)+仙侠(3类)+都市(3类)+科幻(3类)，按场景分组
-- ink-plan Step 6 章纲格式: `主角行动` 字段插在 `关键实体` 与 `本章变化` 之间
-- ink-plan Step 8 validation: 1.8 主角行动检查（黑名单hard fail + 连续重复medium warning）
-- ink-plan Step 6 生成策略: 新增 section 7（主角行动验证），原 section 7 标题去重改编号为 8
-- high-point-checker Step 1.8: PROTAGONIST_AGENCY 规则族（CAMERA_PROTAGONIST/PASSIVE_STREAK/NO_CONSEQUENCE/STATIC_SITUATION）
-- high-point-checker 黄金三章加严: CAMERA_PROTAGONIST(critical,不可Override) + PASSIVE_STREAK(high→hard block)
-- step-3-review-gate 主角能动性门禁: CAMERA_PROTAGONIST critical → hard block; 黄金三章 PASSIVE_STREAK high → hard block
-- human-instinct-triggers.md: 5类触发场景（A受伤/B生命威胁/C极端事件/D侮辱/E重大机缘）+ 反应级别 + 非典型反应豁免标签 + 仙侠/都市/科幻扩展
-- writer-agent L9 人类本能反应律: 5类触发场景 + 反应字数要求 + 围观群众不可失声 + 非典型反应豁免需设定集标签
-- writer-agent 铁律总数: 6条 → 9条（L1-L9），L1-L4由logic-checker验证，L5-L8由MCC自检验证，L9由ooc-checker验证
-- Context Contract 字段扩展: 新增 `本章人类本能触发场景` 字段（格式：场景类型+关键触发事件+所需反应级别）
-- US-011/US-012 分工: US-011写作预防（L9+Contract字段+触发词表），US-012审查检测（ooc-checker HUMAN_INSTINCT_VIOLATION 层）
-- AC "更新铁律计数和成功标准" 解释: 只需更新铁律计数(6→9)和成功标准中的铁律覆盖描述，MCC自检和SC项数保持不变（因为L9检测在ooc-checker而非writer-agent自检）
----
-
-## 2026-04-16 - US-011
-- What was implemented: 人物反应真实性预防 — writer-agent 新增 L9 人类本能反应律 + 触发场景词表 + Context Contract 字段扩展
-- Files changed:
-  - ink-writer/references/shared/human-instinct-triggers.md (新建：5类触发场景 + 反应级别 + 非典型反应豁免 + 题材扩展 + 使用说明)
-  - ink-writer/agents/writer-agent.md (L9 人类本能反应律定义 + 铁律计数 6→9 + 禁止事项新增 L9 条 + 成功标准扩展含 L9 覆盖说明)
-  - ink-writer/skills/ink-write/SKILL.md (Context Contract 全字段列表新增 `本章人类本能触发场景` + 详细说明和示例)
-- **Learnings for future iterations:**
-  - writer-agent 的 "6 条铁律" 计数在 L7/L8 引入后未同步更新，US-011 一并修正为 9 条
-  - L9 与 L7/L8 设计模式不同：L7/L8 在 writer-agent 内有 MCC 自检项和 SC 回扫项，L9 的检测完全委托给 ooc-checker（US-012），writer-agent 只做预防不做自检
-  - "Step 1.5（Contract）" 实际是 Step 1 内置的 Context Contract（v10.6 合并后不再拆分独立 Step 1.5），新字段加在 Step 1 输出描述的字段列表中
-  - 非典型反应豁免机制的关键：要求角色设定集中有对应标签（cold_blooded/mission_first/traumatized/battle_hardened/transcendent等），否则视为违反
-  - logic-checker 自己有 L1-L9 命名系统（物理逻辑域），与 writer-agent 的 L1-L9 铁律（写作铁律域）是独立的两套命名，不冲突
-  - 5 类触发场景的反应字数最低要求：A/B≥60-80字，C≥100字，D/E≥50字——这些是 ooc-checker 后续检测的量化锚点
----
-
-## 2026-04-16 - US-008
-- What was implemented: 大纲层主角能动性 — 新增主角行动必填字段 + 被动描述黑名单 + 动词参考表
-- Files changed:
-  - ink-writer/skills/ink-plan/SKILL.md (Step 6 章纲格式新增 `主角行动` 字段 + 生成策略新增 section 7 主角行动验证 + Step 8 新增 1.8 主角行动检查 + 完整性检查 + Final check + Hard fail conditions 2条)
-  - ink-writer/references/shared/protagonist-action-verbs.md (新建：基础通用6类+仙侠3类+都市3类+科幻3类动词表 + 黑名单10词)
-- **Learnings for future iterations:**
-  - `主角行动` 字段在 SKILL.md 中需要同步的位置：章纲格式模板、生成策略验证section、Step 8 validation、完整性检查、Final check字段列表、Hard fail conditions
-  - 被动描述黑名单10词：被/发现/意识到/感受到/想到/回忆/观察/注意到/看到/听到
-  - protagonist-action-verbs.md 放在 references/shared/ 目录下，与其他共享参考文件（cool-points-guide、core-constraints等）并列
-  - Step 6 生成策略原来有7个section（1-7），新增主角行动验证后变为8个（1-8），标题去重从7改为8
----
-
-## 2026-04-16 - US-009
-- What was implemented: 正文写作层主角能动性 — writer-agent 新增 L8 主角能动律 + MCC自检/自洽回扫扩展
-- Files changed:
-  - ink-writer/agents/writer-agent.md (L8主角能动律定义 + MCC自检第9项主角能动性 + SC-6主角能动性检查 + 禁止事项 + selfcheck JSON示例 + type枚举 + 硬性指标计数 + 成功标准计数 + 修正轮次描述)
-  - ink-writer/skills/ink-write/SKILL.md (Step 2A MCC自检从8项→9项 + Step 2A.1从5项→6项语义检查 + SC-6主角能动性检查 + 步骤总览表计数)
-- **Learnings for future iterations:**
-  - writer-agent 新增铁律需同步更新 9 处：铁律定义、MCC自检表+JSON示例、自洽回扫检查项+type枚举+示例、禁止事项、硬性指标计数、成功标准计数、修正轮次描述
-  - ink-write/SKILL.md 需同步 4 处：步骤总览表的检查项数、Step 2A MCC项数、Step 2A.1检查项数+检查内容
-  - L8 与 L7 设计模式不同：L7 是"与大纲字段联动"（卖点），L8 是"结构性行为约束"（主角能动性），后者更像 L1-L4 的物理约束风格
-  - SC-6 与 SC-4（因果链闭合）有部分重叠但侧重不同：SC-4 检查任意角色的因果链，SC-6 专门检查主角的主动行为及其后果
----
-
-## 2026-04-16 - US-010
-- What was implemented: 审查层主角能动性检测 — high-point-checker 新增 PROTAGONIST_AGENCY 规则族（CAMERA_PROTAGONIST/PASSIVE_STREAK/NO_CONSEQUENCE/STATIC_SITUATION），step-3-review-gate 新增主角能动性门禁
-- Files changed:
-  - ink-writer/agents/high-point-checker.md (Step 1.8 主角能动性检测 section + 4条规则 + 黄金三章加严 + 报告模板主角能动性段 + 输出JSON protagonist_agency_check + 禁止事项3条 + 成功标准4条)
-  - ink-writer/skills/ink-write/references/step-3-review-gate.md (新增主角能动性门禁 section + 进入Step 4前闸门bullet)
-- **Learnings for future iterations:**
-  - high-point-checker 的主角能动性规则插在 Step 1.7（卖点密度）之后、第二步（识别爽点）之前，作为 Step 1.8
-  - CAMERA_PROTAGONIST 是唯一 critical 级别规则，普通章节和黄金三章处置相同（都是 hard block）
-  - PASSIVE_STREAK 在黄金三章中升级为 hard block，普通章节保持 high 可润色修复——这是与 golden-three-checker 协调的关键差异
-  - STATIC_SITUATION 有悬念过渡章豁免机制：章纲压扬标记为"压"且标注悬念蓄势 → 从 high 降为 medium
-  - step-3-review-gate.md 的门禁判定逻辑需要区分 is_golden_three，因为 PASSIVE_STREAK 在 ch1-3 和普通章节处置不同
-  - protagonist_agency_check 输出 JSON 与 selling_point_check 并列，都在 metrics 对象下
----
-
-## 2026-04-16 - US-012
-- What was implemented: 人物反应真实性检测 — ooc-checker 新增 HUMAN_INSTINCT_VIOLATION 层（8 条规则 + 豁免降级表 + Contract 联动），step-3-review-gate 新增人类本能反应门禁
-- Files changed:
-  - ink-writer/ink-writer/agents/ooc-checker.md (第5.6步 HUMAN_INSTINCT_VIOLATION 检测 section + 5 类场景关键词扫描 + 8 条违反规则 + 黄金三章加严 + 豁免标签降级表 + 报告模板人类本能反应段 + 禁止事项4条 + 成功标准5条 + 输出JSON human_instinct_check)
-  - ink-writer/ink-writer/skills/ink-write/references/step-3-review-gate.md (新增人类本能反应门禁 section + 进入Step 4前闸门 bullet)
-- **Learnings for future iterations:**
-  - ooc-checker 的 HUMAN_INSTINCT_VIOLATION 层插在 5.5 声音区分度 之后、第六步（角色成长 vs. OOC）之前，作为 5.6
-  - 新增 8 条规则：NO_RESPONSE_TO_INJURY(critical A/C)、FLAT_TO_LIFE_THREAT(high B)、NO_EMOTION_ON_WINDFALL(high E)、INSULT_NO_REACTION(high D)、BYSTANDER_SILENCE(medium 公共场所)、UNDERSIZED_REACTION(medium 字数不足)、UNREASONABLE_NPC(medium 配角错位)、CONTRACT_MISS_TRIGGER(medium Contract 漏声明)
-  - 黄金三章加严的 4 条规则：NO_RESPONSE_TO_INJURY 普通即 critical hard block；FLAT_TO_LIFE_THREAT / NO_EMOTION_ON_WINDFALL / INSULT_NO_REACTION 从 high 升级为 hard block
-  - 豁免标签降级表（5 类场景对应标签）：A→cold_blooded/mission_first/traumatized/non_human；B→battle_hardened/supernatural_calm/death_wish；C→witnessed_worse/reborn_veteran；D→transcendent/long_game；E→seen_bigger/burden_avoidance
-  - 豁免不是"免检"——即使有标签，完全无任何反应仍标 low 供润色补救（冷血者需"麻木观察"、超脱者需"境界感"）
-  - 检测方法与 AC 对齐："扫描触发事件关键词 → 检查后续200字内是否有反应关键词"，关键词表分 4 类（动作/身体感官/情绪/思维）
-  - 反应段字数最低要求来自 human-instinct-triggers.md：A≥80/B≥60/C≥100/D≥50/E≥50，UNDERSIZED_REACTION 规则直接引用
-  - step-3-review-gate 门禁判定逻辑需要区分 is_golden_three，因为 FLAT_TO_LIFE_THREAT / NO_EMOTION_ON_WINDFALL / INSULT_NO_REACTION 在 ch1-3 和普通章节处置不同（与 US-010 PASSIVE_STREAK 相同模式）
-  - Contract 联动规则 CONTRACT_MISS_TRIGGER：Context Contract `本章人类本能触发场景` 字段为空但正文扫出关键词 → 下章 Contract 需修正（非写作层硬阻断，只是反馈 writer-agent）
-- ooc-checker HUMAN_INSTINCT_VIOLATION 插入位置: 第5.5步（声音区分度）之后、第六步（角色成长）之前，编号为 5.6
-- ooc-checker HUMAN_INSTINCT 规则族: NO_RESPONSE_TO_INJURY(critical) / FLAT_TO_LIFE_THREAT(high) / NO_EMOTION_ON_WINDFALL(high) / INSULT_NO_REACTION(high) / BYSTANDER_SILENCE(medium) / UNDERSIZED_REACTION(medium) / UNREASONABLE_NPC(medium) / CONTRACT_MISS_TRIGGER(medium)
-- step-3-review-gate 人类本能反应门禁: NO_RESPONSE_TO_INJURY critical → hard block；黄金三章 FLAT_TO_LIFE_THREAT/NO_EMOTION_ON_WINDFALL/INSULT_NO_REACTION high → hard block
-- 触发场景关键词 5 类 A/B/C/D/E 与 human-instinct-triggers.md 表完全对齐；反应关键词分 4 类（动作/身体感官/情绪/思维），200字滑窗匹配
-- 豁免标签自动降级表: A→cold_blooded/mission_first/traumatized/non_human; B→battle_hardened/supernatural_calm/death_wish; C→witnessed_worse/reborn_veteran; D→transcendent/long_game; E→seen_bigger/burden_avoidance
-- writer-agent 铁律总数: 9条 → 10条（L1-L10），L1-L4 由 logic-checker 验证，L5-L8 由 MCC 自检验证，L9 由 ooc-checker 验证，L10 由 proofreading-checker Layer 6 验证
-- prose-craft-rules.md 放在 skills/ink-write/references/ 目录下（不同于 human-instinct-triggers.md 放在 references/shared/）——原因: US-013 AC 明确要求该路径，且本规则仅在 ink-write 路径下生效
-- L10 三条子规则: L10a 弱动词黑名单(10词×≤3次,总≤15次) + L10b 感官锚点(每800字≥1非视觉,全章≥3) + L10c 具象名词(禁连用2+空洞形容词+空洞感官词黑名单)
-- writer-agent 执行前加载清单: core-constraints.md + anti-detection-writing.md + prose-craft-rules.md（3 个文件）
-- MCC 自检保持 9 项 / 自洽回扫保持 6 项（L10 不进入 writer-agent 自检，完全委托给 proofreading-checker Layer 6，与 L9 委托 ooc-checker 同模式）
-- US-013/US-014/US-015 分工: US-013 预防（L10+prose-craft-rules.md），US-014 审查（proofreading-checker Layer 6），US-015 润色兜底（polish-agent Layer 8）
----
-
-## 2026-04-16 - US-013
-- What was implemented: 遣词造句预防 — writer-agent 新增 L10 遣词造句律 + prose-craft-rules.md 替换示例库
-- Files changed:
-  - ink-writer/skills/ink-write/references/prose-craft-rules.md (新建: 弱动词黑名单10词×5场景替换示例库+感官锚点规则+空洞形容词/空洞感官词黑名单+使用说明+与其他铁律关系)
-  - ink-writer/agents/writer-agent.md (L10 遣词造句律定义 + 铁律计数 9→10 + 执行前加载新增 prose-craft-rules.md + 禁止事项新增 L10 条 + 成功标准扩展含 L10 覆盖说明 + 新增"文字有质感"成功标准)
-  - ink-writer/skills/ink-write/SKILL.md (Step 2A 执行前加载新增 prose-craft-rules.md + References 清单新增条目 + 批量模式关键规则加载清单更新)
-- **Learnings for future iterations:**
-  - writer-agent 新增铁律 L10 的模式与 L9 相同：只做预防（写作时遵守），检测完全委托给 proofreading-checker（与 L9 委托 ooc-checker 一致），因此 MCC 自检 9 项和 SC 6 项数量保持不变
-  - prose-craft-rules.md 放在 `skills/ink-write/references/` 而非 `references/shared/`——AC 明确指定该路径，且该规则只在 ink-write 流水线内生效（不被 ink-plan 消费）
-  - 弱动词黑名单 10 词每词需 5 场景×≥1 例替换，共 50+ 条替换示例，按战斗/日常/情感/悬疑/题材专门（修仙/都市/科幻）场景分组
-  - 空洞感官词黑名单（"气氛紧张""感觉不对""空气凝固"等）是 US-014 GENERIC_DESCRIPTION 规则的判据——在 US-013 中与 L10c 一起定义在 prose-craft-rules.md 第三节
-  - 写作铁律和逻辑自洽铁律分两段：写作铁律（顶部）描述创作意识，逻辑自洽铁律（L1-L10）描述硬约束；L10 与 L9 同属"质感"层铁律，放在最后
-  - L10 与 L9 的协同：本能反应段天然是感官锚点富集区（触觉/嗅觉/体感），满足 L9 自动帮助满足 L10b
-  - "更新铁律计数和成功标准" 的执行: 仅需更新铁律计数（9→10）+ 成功标准中的铁律覆盖描述+新增一条"文字有质感"成功标准，不需要更新 MCC/SC 项数
+  - Layer 8 位于 Anti-AI 二次验证（Step 4）之后、No-Poison（Step 5）之前，确保先用 anti_ai_scanner 过一遍再去处理文笔问题
+  - Layer 6 等价自检（8z）是 polish-guide 和 polish-agent 双文件的联动点，两处描述需保持一致
+  - prose-craft-rules.md 现在被三个模块引用：writer-agent L10（预防）、proofreading-checker Layer 6（检测）、polish-agent Layer 8（修复）
 ---
