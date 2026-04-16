@@ -87,6 +87,44 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
   - 关键章/高潮章/情感线章节（大纲标签命中）；
   - 用户显式要求”情绪审查”或”情绪曲线检查”。
 
+## Checker 输入 Profile 映射表（审查包瘦身）
+
+每个 checker 只需消费审查包的部分字段。生成瘦身包时，按下表提取对应字段子集。
+**meta 字段始终保留**：`chapter`、`project_root`、`chapter_file`、`chapter_file_name`、`chapter_char_count`、`absolute_paths`、`allowed_read_files`、`review_policy`。
+
+### 核心 Checker Profile
+
+| Checker | 需要的字段（除 meta 外） | 说明 |
+|---------|------------------------|------|
+| `anti-detection-checker` | `chapter_text` | 最轻量——仅需正文做 AI 味检测 |
+| `logic-checker` | `chapter_text`、`scene_context`、`setting_snapshots`、`core_context` | 需要角色属性+设定做 L1-L8 验证 |
+| `outline-compliance-checker` | `chapter_text`、`outline`、`scene_context`、`core_context` | 需要大纲+MCC 做合规验证 |
+| `continuity-checker` | `chapter_text`、`previous_chapters`、`memory_context`、`outline`、`narrative_commitments`、`plot_structure_fingerprints` | 需要前序+记忆做连贯验证 |
+| `consistency-checker` | `chapter_text`、`setting_snapshots`、`scene_context`、`previous_chapters`、`memory_context`、`narrative_commitments`、`plot_structure_fingerprints` | 最重量——跨章设定一致性 |
+| `ooc-checker` | `chapter_text`、`scene_context`、`previous_chapters`、`setting_snapshots` | 角色行为/对话一致验证 |
+| `reader-pull-checker` | `chapter_text`、`reader_signal`、`memory_context`、`outline`、`golden_three_contract` | 追读力评估 |
+
+### 条件 Checker Profile 复用规则
+
+条件 checker 复用最近核心 checker 的 profile：
+
+| 条件 Checker | 复用 Profile | 理由 |
+|-------------|-------------|------|
+| `golden-three-checker` | `reader-pull-checker` | 同属读者体验维度 |
+| `high-point-checker` | `reader-pull-checker` | 同属读者体验维度 |
+| `pacing-checker` | `continuity-checker` | Strand 平衡需要前序+记忆 |
+| `proofreading-checker` | `anti-detection-checker` | 同属文本表层检查 |
+| `reader-simulator` | `reader-pull-checker` | 同属读者体验维度 |
+| `emotion-curve-checker` | `reader-pull-checker` | 情绪曲线需要读者信号 |
+
+### 瘦身包生成规则
+
+1. 先生成完整审查包（`review_bundle_ch${chapter_padded}.json`）。
+2. 为每个选中的 checker 生成瘦身包：从完整包中提取 meta 字段 + profile 指定字段。
+3. **降级兜底**：若瘦身包生成失败（脚本异常/字段缺失），退回完整包，不影响审查流程。
+4. 瘦身包路径：`${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}_${checker_name}.json`。
+5. Task 传参时 `review_bundle_file` 指向对应瘦身包路径。
+
 ## Task 调用模板（示意）
 
 **并发策略（US-503）**：所有独立 checker 同时并行发射，首个硬门禁失败立即 cancel 其余。

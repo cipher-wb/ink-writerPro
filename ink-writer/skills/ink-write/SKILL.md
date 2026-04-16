@@ -1061,8 +1061,20 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
   > "${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"
 ```
 
+生成按 checker 瘦身包（必做，紧随完整包之后）：
+```bash
+# selected_checkers 为本次选中的 checker 列表（逗号分隔）
+python3 -X utf8 "${SCRIPTS_DIR}/slim_review_bundle.py" \
+  --bundle "${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json" \
+  --checkers "${selected_checkers}" \
+  --outdir "${PROJECT_ROOT}/.ink/tmp" \
+  > "${PROJECT_ROOT}/.ink/tmp/slim_bundle_map.json"
+# 输出 JSON 映射：checker_name → 瘦身包路径
+# 若某 checker 瘦身失败，自动退回完整包路径（向后兼容）
+```
+
 Task 传参硬约束：
-- 必须传 `review_bundle_file="${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"`
+- 必须传 `review_bundle_file`：优先使用瘦身包路径（从 `slim_bundle_map.json` 读取），若瘦身包不存在则退回完整包 `"${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"`
 - 必须传绝对路径 `chapter_file`
 - checker 不得自行扫描 `正文/`、`设定集/`、`.ink/` 目录，不得读取 `.db`
 
