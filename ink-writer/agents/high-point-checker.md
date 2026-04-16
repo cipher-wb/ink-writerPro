@@ -81,6 +81,52 @@ model: inherit
 }
 ```
 
+### Step 1.7: 卖点密度硬约束检测（SELLING_POINT 规则族）
+
+> US-007 新增。与大纲层 US-001 的 `大卖点`/`小卖点` 字段联动，在审查阶段强制验证正文是否达标。
+
+#### SELLING_POINT_DEFICIT（卖点不足）
+
+从章纲中读取 `大卖点描述`、`大卖点类型`、`小卖点`（2个）字段，然后在正文中扫描是否落地：
+
+| 子规则 | 判定条件 | severity | 处置 |
+|--------|---------|----------|------|
+| **大卖点缺失** | 正文中无法识别出大纲规定的大卖点场景（无对应的铺垫→爆发→反应三段式） | **critical** | hard block → 回退 Step 2A 重写 |
+| **小卖点不足** | 正文中可识别的小卖点场景 < 2 个 | **critical** | hard block → 回退 Step 2A 重写 |
+| **大卖点无反应段** | 大卖点有爆发但缺少"反应段"（围观反应/对手反应/读者共鸣段落） | **high** | 可润色修复 |
+| **小卖点无情绪触发** | 小卖点场景中无可识别的读者情绪触发点（惊喜/满足/好奇/紧张等） | **medium** | 建议修复 |
+
+**识别方法**：
+1. 从章纲提取大卖点类型（装逼打脸/扮猪吃虎/越级反杀……）和大卖点描述（≤80字）
+2. 在正文中搜索与大卖点类型匹配的执行模式（复用第二步的8种标准模式识别）
+3. 验证大卖点的三段式完整性：铺垫段（信息差/压制/期待建立）→ 爆发段（反转/碾压/揭示）→ 反应段（围观震惊/对手崩溃/情感升华）
+4. 从章纲提取2个小卖点描述，在正文中扫描对应的微兑现/角色魅力/关系推进/小悬念等场景
+5. 验证每个小卖点是否有明确的情绪触发点（读者应产生何种情绪反应）
+
+#### SELLING_POINT_FRONT_LOADING（卖点前置不足）
+
+| 判定条件 | severity | 说明 |
+|---------|----------|------|
+| 章节前1/3（基于 Step 1.5 的分段扫描）无任何小卖点出现 | **high** | 防止"慢热"——读者在前700字内得不到任何情绪奖励就会流失 |
+
+结合 Step 1.5 的 `opening` 分段，检查前1/3是否至少有1个小卖点（微兑现/角色魅力展示/小悬念等）。
+
+**输出字段追加**：
+```json
+{
+  "selling_point_check": {
+    "big_sp_found": true|false,
+    "big_sp_has_reaction": true|false,
+    "small_sp_count": 0|1|2|...,
+    "small_sp_emotion_triggers": [true|false, true|false],
+    "front_loading_pass": true|false,
+    "issues": [
+      {"rule": "SELLING_POINT_DEFICIT", "sub_rule": "大卖点缺失|小卖点不足|大卖点无反应段|小卖点无情绪触发", "severity": "critical|high|medium", "detail": "..."}
+    ]
+  }
+}
+```
+
 ### 第二步: 识别爽点
 
 扫描 **8 种标准执行模式**：
@@ -181,7 +227,8 @@ model: inherit
 - `position_warning: "all_end_loaded"` → **medium** issue（爽点全堆后1/3）
 - 连续2章 `opening_cold_start` → **high** issue
 
-**连续低密度告警（升级为 high）**：
+**连续低密度告警**：
+- 连续2章大卖点缺失 → **critical**，hard block（US-007 收紧：原为3章连续零爽点）
 - 连续3章无任何爽点（含过渡章豁免）→ **high**，必须修复
 - 连续5章爽点质量均为C/F级 → **high**，必须修复
 
@@ -245,11 +292,17 @@ Mode diversity: Warning - Monotonous pacing
 ## 覆盖范围
 第 {N} 章 - 第 {M} 章
 
+## 卖点密度检查
+- 大卖点: {✓ 已落地 / ✗ 缺失}（类型: {type}，三段式: 铺垫{✓/✗} 爆发{✓/✗} 反应{✓/✗}）
+- 小卖点: {N}/2 个已落地（前1/3前置: {✓/✗}）
+- **SELLING_POINT_DEFICIT**: {通过/critical/high/medium}
+- **SELLING_POINT_FRONT_LOADING**: {通过/high}
+
 ## 密度检查
 - 第 {N} 章: ✓ 2 个爽点（装逼打脸 + 越级反杀）
 - 第 {M} 章: △ 0 个爽点 **[预警 - 连续出现时需补强]**
 
-**结论**: {通过/预警/未通过}（基于滚动窗口）
+**结论**: {通过/预警/未通过}（基于滚动窗口，连续2章大卖点缺失=critical）
 
 ## 类型分布
 - 装逼打脸: {count}（{percent}%）
@@ -287,10 +340,16 @@ Mode diversity: Warning - Monotonous pacing
 ❌ 通过连续 5+ 章同类型爽点
 ❌ 迪化误解中配角智商明显下线
 ❌ 身份掉马无任何前期暗示
+❌ 通过大卖点缺失或小卖点不足2个的章节（SELLING_POINT_DEFICIT critical 必须 hard block）
+❌ 放过大卖点只有爆发没有反应段的章节
+❌ 忽略章节前1/3无任何小卖点的慢热问题
 
 ## 成功标准
 
-- 滚动窗口密度保持健康（不连续低密度）
+- 每章 1 大卖点 + 2 小卖点全部落地（SELLING_POINT_DEFICIT 无 critical）
+- 大卖点完成铺垫→爆发→反应三段式
+- 章节前1/3至少出现1个小卖点（SELLING_POINT_FRONT_LOADING 通过）
+- 滚动窗口密度保持健康（不连续2章大卖点缺失）
 - 类型分布显示多样性（单一类型不超过 80%）
 - 平均质量评级 ≥ B
 - 迪化误解的脑补需合理
@@ -312,8 +371,16 @@ Mode diversity: Warning - Monotonous pacing
     "density_score": 8,
     "type_diversity": 0.9,
     "milestone_present": false,
-    "monotony_risk": false
+    "monotony_risk": false,
+    "selling_point_check": {
+      "big_sp_found": true,
+      "big_sp_has_reaction": true,
+      "small_sp_count": 2,
+      "small_sp_emotion_triggers": [true, true],
+      "front_loading_pass": true,
+      "rolling_window_consecutive_deficit": 0
+    }
   },
-  "summary": "爽点密度达标，类型分布健康，执行质量稳定。"
+  "summary": "爽点密度达标，卖点落地完整（1大+2小），类型分布健康。"
 }
 ```
