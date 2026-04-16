@@ -1,6 +1,6 @@
 # Ink Writer Pro
 
-[![Version](https://img.shields.io/badge/Version-13.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-13.1.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 
 **一条命令，自动写 10 章并审查修复。** AI 驱动的长篇网文写作工具，专为起点/番茄等平台的商业连载设计。
