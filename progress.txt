@@ -7,8 +7,8 @@
 - Data-agent: ink-writer/agents/data-agent.md (Steps A-F with substeps B.1-B.13)
 - Context-agent: ink-writer/agents/context-agent.md (boards 1-14 + 8.5/8.7/8.8/11-16, 8.7 has 📌/⚠️/🔴 three-tier warnings)
 - Writer-agent: ink-writer/agents/writer-agent.md (iron laws L1-L6, MCC self-check 7 items)
-- Outline-compliance-checker: ink-writer/agents/outline-compliance-checker.md (O1-O6)
-- Logic-checker: ink-writer/agents/logic-checker.md (L1-L8)
+- Outline-compliance-checker: ink-writer/agents/outline-compliance-checker.md (O1-O7, O7=否定约束合规)
+- Logic-checker: ink-writer/agents/logic-checker.md (L1-L9, L9=枚举完整性)
 - chapter_memory_cards table stores per-chapter metadata including summaries
 - protagonist_knowledge table tracks what protagonist knows per entity
 - relationship_events table tracks relationship changes with polarity/strength
@@ -139,4 +139,53 @@
   - Board 8.7 now has 3 tiers of character warnings: 📌 (recent, ≤3 chapters), ⚠️ (>10 chapters), 🔴 (>20 chapters)
   - 📌 角色 are NOT in MCC required_entities by definition, so O1 naturally doesn't check them — the豁免 note is for clarity, not functional change
   - Modifying outline-compliance-checker O1 requires careful placement — rules are numbered, insert sub-bullets under existing rules rather than adding new numbered items
+---
+
+## 2026-04-16 - US-008
+- Added Step 2A.1 (自洽回扫/Self-Consistency Scan) to SKILL.md between Step 2A and Step 2A.5
+- Updated mode definition (line 26): Step 1 → 2A → **2A.1** → 2A.5 → 2B → ...
+- Updated step mapping table from 12 to 13 steps, inserted Step 2A.1 at position 6
+- Updated progress bar references: 12→13 steps, bar width 13 chars, percentage denominator 13
+- Updated step status list example to include Step 2A.1 自洽回扫
+- Step 2A output now says "可进入 Step 2A.1 自洽回扫" instead of "可进入 Step 2A.5 字数校验"
+- Step 2A.1 definition: input (2A正文 + 板块15否定约束), 4 checks (SC-1~SC-4), max 2 fix rounds, persist to .ink/tmp/, scan_unresolved does NOT block, results inject into Step 3
+- Files changed: ink-writer/skills/ink-write/SKILL.md
+- **Learnings for future iterations:**
+  - Step 2A.1 is non-blocking — scan_unresolved flag gets injected into Step 3 review bundle but doesn't stop the flow
+  - Progress bar width must match total step count (13 chars for 13 steps)
+  - When inserting a new step, update 5 locations: mode definition, step mapping table, progress bar, step status list, and the previous step's output line
+---
+
+## 2026-04-16 - US-009
+- Added O7 (否定约束合规/Negative Constraint Compliance) to outline-compliance-checker.md after O6
+- O7 reads active_negative_constraints from review bundle (board 15 passthrough)
+- 3-tier detection: direct reference (critical), one-line backstory (critical), full establishment scene ≥3 paragraphs (PASS)
+- Added O7 to MUST_NOT_PASS conditions (O7 critical = hard block)
+- Added o7_negative_constraint_issues to metrics JSON
+- Added O7 section to report template + repair suggestions
+- Updated description from "六层" to "七层", SKILL.md checker description from O1-O6 to O1-O7
+- Added 禁止事项: 不可将正当推翻（≥3段）判为违反
+- Added 成功标准: 正文无违反否定约束的引用
+- Files changed: outline-compliance-checker.md, SKILL.md
+- **Learnings for future iterations:**
+  - outline-compliance-checker has 8 touch points for a new layer: layer definition, MUST_NOT_PASS, report template, repair suggestions, JSON metrics, description, 禁止事项, 成功标准
+  - O7 consumes board 15 data that was transparent-passed from context-agent through the review bundle — no new data pipeline needed
+  - The severity model is binary for O7: either critical (violated) or PASS (not violated or properly overridden) — no medium/low
+---
+
+## 2026-04-16 - US-010
+- Added L9 (枚举完整性/Enumeration Completeness) to logic-checker.md after L8
+- Detection: identifies enumeration/statistic/list in text → traces back all same-category items from earlier text → checks completeness
+- Severity: high (omitted explicit observation/character), medium (implicit exclusion without reason)
+- Implicit exclusion exemption: if text explicitly states exclusion reason, omission is legal
+- L9 high counts merge with L1-L8 high for MUST_NOT_PASS (critical or ≥2 high)
+- Added l9_enumeration_issues to metrics JSON
+- Added L9 section to report template + repair suggestions
+- Updated description from "8层" to "9层", SKILL.md checker description from L1-L8 to L1-L9
+- Added 成功标准: 枚举/统计覆盖前文所有同类事物
+- Files changed: logic-checker.md, SKILL.md
+- **Learnings for future iterations:**
+  - logic-checker has 7 touch points for a new layer: layer definition, report template, repair suggestions, JSON metrics, description, MUST_NOT_PASS (shared), 成功标准
+  - L9 is the only layer without Python precheck support — it requires semantic understanding that regex can't do
+  - L9's "implicit exclusion exemption" is important to avoid false positives on deliberate narrative choices
 ---

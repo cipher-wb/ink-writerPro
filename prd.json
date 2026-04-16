@@ -130,7 +130,7 @@
         "不影响Step 2A和Step 2A.5的现有逻辑"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/skills/ink-write/SKILL.md。依赖US-006的回扫定义。"
     },
     {
@@ -147,7 +147,7 @@
         "不影响O1-O6的现有逻辑"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/outline-compliance-checker.md。"
     },
     {
@@ -164,7 +164,7 @@
         "不影响L1-L8的现有逻辑"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/logic-checker.md。"
     }
   ]
