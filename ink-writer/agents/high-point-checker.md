@@ -127,6 +127,81 @@ model: inherit
 }
 ```
 
+### Step 1.8: 主角能动性检测（PROTAGONIST_AGENCY 规则族）
+
+> US-010 新增。与写作层 US-009 的 L8 主角能动律配对，在审查阶段兜底检测摄像头主角问题。
+
+#### CAMERA_PROTAGONIST（摄像头主角）
+
+| 判定条件 | severity | 处置 |
+|---------|----------|------|
+| 全章主角无主动改变局面的行为——主角仅作为旁观者/记录者存在，未做出任何导致剧情走向改变的主动决策或行动 | **critical** | hard block → 回退 Step 2A 重写 |
+
+**识别方法**：
+1. 扫描全章，提取主角的所有行为动词
+2. 判断是否存在至少1个"改变局面"的主动行为：该行为导致了可观察的后果（他人反应变化/局势转变/资源得失/关系变化）
+3. 若主角全章行为仅限于：观察、思考、感受、回忆、聆听、跟随、被动接受——判定为 CAMERA_PROTAGONIST
+
+#### PASSIVE_STREAK（被动长段）
+
+| 判定条件 | severity | 处置（普通章节） | 处置（黄金三章 ch1-3） |
+|---------|----------|----------------|---------------------|
+| 主角连续800+字仅观察/思考/感受，无任何主动行为介入 | **high** | 允许 Step 4 润色修复 | **hard block → 回退 Step 2A 重写** |
+
+**识别方法**：
+1. 以主角为视角的连续段落中，统计纯内心活动/感官描写/被动叙述的字数
+2. 当连续800字以上主角未执行任何主动行为动词（决定/冲向/使用/对抗/说服/拒绝/选择等，参考 `references/shared/protagonist-action-verbs.md`）→ 标记为被动长段
+3. 纯对话段中主角的主动发言（质问/命令/谈判/欺骗等）不算被动
+
+#### NO_CONSEQUENCE（无后果行动）
+
+| 判定条件 | severity | 处置 |
+|---------|----------|------|
+| 主角有行动但行动未产生任何可观察后果——行动前后局势/关系/资源无变化 | **high** | 允许 Step 4 润色修复 |
+
+**识别方法**：
+1. 提取主角的主动行为列表
+2. 逐个检查每个行为是否导致了后续变化（他人态度/环境/资源/信息/关系的改变）
+3. 若所有主动行为均为"无效行动"（行动了但什么都没改变），判定为 NO_CONSEQUENCE
+
+#### STATIC_SITUATION（处境未变）
+
+| 判定条件 | severity | 处置 |
+|---------|----------|------|
+| 章末主角处境与章首相同——排除大纲中标记为"悬念过渡章"的章节 | **high** | 允许 Step 4 润色修复 |
+
+**识别方法**：
+1. 对比章首和章末主角的状态快照：位置/关系/资源/能力/信息/情绪/社会地位
+2. 若以上维度均无显性变化（或仅有内心感悟层面的变化），判定为 STATIC_SITUATION
+3. **豁免条件**：章纲中 `压扬标记` 为"压"且明确标注为悬念蓄势章 → 降为 medium
+
+#### 黄金三章加严规则
+
+| 章节范围 | 规则 | 加严处置 |
+|---------|------|---------|
+| ch1-3 | CAMERA_PROTAGONIST | **hard block → 回退 Step 2A**（与普通章节相同，但不可Override） |
+| ch1-3 | PASSIVE_STREAK | **hard block → 回退 Step 2A**（普通章节为 high，黄金三章升级为 hard block） |
+| ch1-3 | NO_CONSEQUENCE | high（与普通章节相同） |
+| ch1-3 | STATIC_SITUATION | high（与普通章节相同） |
+
+黄金三章的 CAMERA_PROTAGONIST 和 PASSIVE_STREAK 不允许 Override——前3章主角必须有行动力，这是编辑评估的核心指标。
+
+**输出字段追加**：
+```json
+{
+  "protagonist_agency_check": {
+    "has_decisive_action": true|false,
+    "passive_streak_max_chars": 0,
+    "actions_have_consequences": true|false,
+    "situation_changed": true|false,
+    "is_golden_three": true|false,
+    "issues": [
+      {"rule": "CAMERA_PROTAGONIST|PASSIVE_STREAK|NO_CONSEQUENCE|STATIC_SITUATION", "severity": "critical|high|medium", "detail": "...", "location": "段落定位"}
+    ]
+  }
+}
+```
+
 ### 第二步: 识别爽点
 
 扫描 **8 种标准执行模式**：
@@ -298,6 +373,16 @@ Mode diversity: Warning - Monotonous pacing
 - **SELLING_POINT_DEFICIT**: {通过/critical/high/medium}
 - **SELLING_POINT_FRONT_LOADING**: {通过/high}
 
+## 主角能动性检查
+- 主动改变局面行为: {✓ 有 / ✗ 无}
+- 最长被动段: {N} 字（阈值: 800字）
+- 行动后果: {✓ 有可观察后果 / ✗ 无后果}
+- 章末处境变化: {✓ 已变化 / ✗ 与章首相同}
+- **CAMERA_PROTAGONIST**: {通过/critical}
+- **PASSIVE_STREAK**: {通过/high}
+- **NO_CONSEQUENCE**: {通过/high}
+- **STATIC_SITUATION**: {通过/high/medium}
+
 ## 密度检查
 - 第 {N} 章: ✓ 2 个爽点（装逼打脸 + 越级反杀）
 - 第 {M} 章: △ 0 个爽点 **[预警 - 连续出现时需补强]**
@@ -343,6 +428,9 @@ Mode diversity: Warning - Monotonous pacing
 ❌ 通过大卖点缺失或小卖点不足2个的章节（SELLING_POINT_DEFICIT critical 必须 hard block）
 ❌ 放过大卖点只有爆发没有反应段的章节
 ❌ 忽略章节前1/3无任何小卖点的慢热问题
+❌ 通过全章主角无主动行为的摄像头主角章节（CAMERA_PROTAGONIST critical 必须 hard block）
+❌ 黄金三章中放过主角连续800+字被动段（PASSIVE_STREAK 在 ch1-3 升级为 hard block）
+❌ 忽略主角行动无后果的章节（NO_CONSEQUENCE 必须标记 high）
 
 ## 成功标准
 
@@ -354,6 +442,10 @@ Mode diversity: Warning - Monotonous pacing
 - 平均质量评级 ≥ B
 - 迪化误解的脑补需合理
 - 身份掉马需有铺垫
+- 每章主角至少1个改变局面的主动行为（CAMERA_PROTAGONIST 无 critical）
+- 主角连续被动段不超过800字（PASSIVE_STREAK 通过）
+- 主角行动产生可观察后果（NO_CONSEQUENCE 通过）
+- 章末主角处境因自身行动而变化（STATIC_SITUATION 通过）
 - 报告包含可执行的修复建议
 
 ## 输出格式增强
@@ -379,8 +471,15 @@ Mode diversity: Warning - Monotonous pacing
       "small_sp_emotion_triggers": [true, true],
       "front_loading_pass": true,
       "rolling_window_consecutive_deficit": 0
+    },
+    "protagonist_agency_check": {
+      "has_decisive_action": true,
+      "passive_streak_max_chars": 320,
+      "actions_have_consequences": true,
+      "situation_changed": true,
+      "is_golden_three": false
     }
   },
-  "summary": "爽点密度达标，卖点落地完整（1大+2小），类型分布健康。"
+  "summary": "爽点密度达标，卖点落地完整（1大+2小），主角能动性正常，类型分布健康。"
 }
 ```

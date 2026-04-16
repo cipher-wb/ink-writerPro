@@ -21,8 +21,8 @@
 - step-3-review-gate: 卖点密度门禁在逻辑/大纲合规门禁之后、回退机制之前
 - rolling window: 连续2章大卖点缺失→critical(原为3章连续零爽点→high)
 - proofreading-checker layers: L1修辞重复, L2段落结构, L3代词清晰度, L4文化/时代错位, L5跨章风格一致性
-- writer-agent iron laws: L1数字即承诺, L2动作即物理, L3属性即锁定, L4空间即连续, L5大纲即合同, L6否定即禁区, L7卖点落地律
-- MCC self-check: 8项（原7项+卖点覆盖），self-consistency scan: 5项（原4项+SC-5卖点覆盖检查）
+- writer-agent iron laws: L1数字即承诺, L2动作即物理, L3属性即锁定, L4空间即连续, L5大纲即合同, L6否定即禁区, L7卖点落地律, L8主角能动律
+- MCC self-check: 9项（原8项+主角能动性），self-consistency scan: 6项（原5项+SC-6主角能动性检查）
 
 - ink-plan Step 6 chapter format: `爽点配方` → `大卖点类型`（新增11种合法类型），新增 `大卖点描述`（≤80字）和 `小卖点`（2个×≤40字）
 - ink-plan Step 5 volume skeleton: `爽点密度规划` 表升级为 `卖点密度规划` 含大小卖点列
@@ -124,6 +124,9 @@
 - ink-plan Step 6 章纲格式: `主角行动` 字段插在 `关键实体` 与 `本章变化` 之间
 - ink-plan Step 8 validation: 1.8 主角行动检查（黑名单hard fail + 连续重复medium warning）
 - ink-plan Step 6 生成策略: 新增 section 7（主角行动验证），原 section 7 标题去重改编号为 8
+- high-point-checker Step 1.8: PROTAGONIST_AGENCY 规则族（CAMERA_PROTAGONIST/PASSIVE_STREAK/NO_CONSEQUENCE/STATIC_SITUATION）
+- high-point-checker 黄金三章加严: CAMERA_PROTAGONIST(critical,不可Override) + PASSIVE_STREAK(high→hard block)
+- step-3-review-gate 主角能动性门禁: CAMERA_PROTAGONIST critical → hard block; 黄金三章 PASSIVE_STREAK high → hard block
 ---
 
 ## 2026-04-16 - US-008
@@ -136,4 +139,30 @@
   - 被动描述黑名单10词：被/发现/意识到/感受到/想到/回忆/观察/注意到/看到/听到
   - protagonist-action-verbs.md 放在 references/shared/ 目录下，与其他共享参考文件（cool-points-guide、core-constraints等）并列
   - Step 6 生成策略原来有7个section（1-7），新增主角行动验证后变为8个（1-8），标题去重从7改为8
+---
+
+## 2026-04-16 - US-009
+- What was implemented: 正文写作层主角能动性 — writer-agent 新增 L8 主角能动律 + MCC自检/自洽回扫扩展
+- Files changed:
+  - ink-writer/agents/writer-agent.md (L8主角能动律定义 + MCC自检第9项主角能动性 + SC-6主角能动性检查 + 禁止事项 + selfcheck JSON示例 + type枚举 + 硬性指标计数 + 成功标准计数 + 修正轮次描述)
+  - ink-writer/skills/ink-write/SKILL.md (Step 2A MCC自检从8项→9项 + Step 2A.1从5项→6项语义检查 + SC-6主角能动性检查 + 步骤总览表计数)
+- **Learnings for future iterations:**
+  - writer-agent 新增铁律需同步更新 9 处：铁律定义、MCC自检表+JSON示例、自洽回扫检查项+type枚举+示例、禁止事项、硬性指标计数、成功标准计数、修正轮次描述
+  - ink-write/SKILL.md 需同步 4 处：步骤总览表的检查项数、Step 2A MCC项数、Step 2A.1检查项数+检查内容
+  - L8 与 L7 设计模式不同：L7 是"与大纲字段联动"（卖点），L8 是"结构性行为约束"（主角能动性），后者更像 L1-L4 的物理约束风格
+  - SC-6 与 SC-4（因果链闭合）有部分重叠但侧重不同：SC-4 检查任意角色的因果链，SC-6 专门检查主角的主动行为及其后果
+---
+
+## 2026-04-16 - US-010
+- What was implemented: 审查层主角能动性检测 — high-point-checker 新增 PROTAGONIST_AGENCY 规则族（CAMERA_PROTAGONIST/PASSIVE_STREAK/NO_CONSEQUENCE/STATIC_SITUATION），step-3-review-gate 新增主角能动性门禁
+- Files changed:
+  - ink-writer/agents/high-point-checker.md (Step 1.8 主角能动性检测 section + 4条规则 + 黄金三章加严 + 报告模板主角能动性段 + 输出JSON protagonist_agency_check + 禁止事项3条 + 成功标准4条)
+  - ink-writer/skills/ink-write/references/step-3-review-gate.md (新增主角能动性门禁 section + 进入Step 4前闸门bullet)
+- **Learnings for future iterations:**
+  - high-point-checker 的主角能动性规则插在 Step 1.7（卖点密度）之后、第二步（识别爽点）之前，作为 Step 1.8
+  - CAMERA_PROTAGONIST 是唯一 critical 级别规则，普通章节和黄金三章处置相同（都是 hard block）
+  - PASSIVE_STREAK 在黄金三章中升级为 hard block，普通章节保持 high 可润色修复——这是与 golden-three-checker 协调的关键差异
+  - STATIC_SITUATION 有悬念过渡章豁免机制：章纲压扬标记为"压"且标注悬念蓄势 → 从 high 降为 medium
+  - step-3-review-gate.md 的门禁判定逻辑需要区分 is_golden_three，因为 PASSIVE_STREAK 在 ch1-3 和普通章节处置不同
+  - protagonist_agency_check 输出 JSON 与 selling_point_check 并列，都在 metrics 对象下
 ---

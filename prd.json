@@ -143,7 +143,7 @@
         "更新铁律计数和成功标准"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "与 US-008 配对：US-008 在大纲锁定主角行动，US-009 在正文层确保执行。"
     },
     {
@@ -159,7 +159,7 @@
         "普通章节中 CAMERA_PROTAGONIST → hard block；PASSIVE_STREAK → high 允许润色修复"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "审查层兜底。注意与 golden-three-checker 的协调：ch1-3 用更严格标准。"
     },
     {
