@@ -1,440 +1,134 @@
 {
   "project": "ink-writer",
-  "branchName": "ralph/deep-review-and-perfection",
-  "description": "ink-writer v12 → v13 深度优化：6 个 Phase / 24 个 US，端到端追求架构合理 + 作品质量爆款级 + 长篇 300w 字不崩 + 效率最优。基线 → 追读力 → 去 AI 味 → 长篇不崩 → 架构清理 → 效率 → 300 章压测验收。详见 tasks/prd-deep-review-and-perfection.md。",
+  "branchName": "ralph/ink-optimization",
+  "description": "Ink Writer 效率优化与项目瘦身：新增 ink-init --quick 快速随机模式、防重复角色命名系统、项目文件清理、README 面向用户重写。详见 tasks/prd-ink-writer-optimization.md。",
   "userStories": [
     {
       "id": "US-001",
-      "title": "[P0] 建立质量基线测量脚本",
-      "description": "As an optimizer, I need a one-shot baseline script that measures all quality/perf metrics so every subsequent change can be compared against it.",
+      "title": "创建命名黑名单数据文件",
+      "description": "As a developer, I need a blacklist of overused AI character names so the naming system can avoid them.",
       "acceptanceCriteria": [
-        "Create scripts/measure_baseline.py that runs end-to-end and emits JSON",
-        "Metrics covered: hook_density, high_point_density, emotion_variance, ai_taste_score, ooc_score, consistency_score, avg_chapter_seconds, avg_chapter_tokens",
-        "Output written to benchmark/baseline_v12.json with timestamp + git sha",
-        "Script is idempotent and can be re-run after each Phase",
-        "Add tests/baseline/test_measure_baseline.py asserting JSON schema",
-        "Typecheck passes",
-        "Tests pass"
+        "创建 data/naming/blacklist.json，JSON 数组格式",
+        "包含至少 50 个 AI 高频重复名字，覆盖男女主角和常见配角名",
+        "包含：林默、苏婉清、陆辰、沈清月、叶辰、萧寒、顾念、林羽、慕容、秦墨、陆言、沈如烟、宁晚、苏子衿、叶北辰等",
+        "按性别分组（male/female 两个数组），便于查询",
+        "JSON 格式合法，可被 python json.load 正常解析"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "Completed: scripts/measure_baseline.py + 11 tests. All 1106 tests pass."
+      "notes": "命名系统的基础数据文件之一，需先于命名逻辑实现"
     },
     {
       "id": "US-002",
-      "title": "[P0] 建立爆款对照集 (≥30 本)",
-      "description": "As an optimizer, I need a reference corpus of bestseller webnovel samples so quality metrics have a meaningful target.",
+      "title": "创建多维度姓氏库数据文件",
+      "description": "As a developer, I need a rich surname database with rarity tiers so character names have variety.",
       "acceptanceCriteria": [
-        "Create benchmark/reference_corpus/ with ≥30 bestseller samples (公开样章 only, no full-book scraping for compliance)",
-        "Each sample has manifest.json: source, genre, chapters_count, license_note",
-        "Add scripts/build_reference_corpus.py to (re)build the corpus",
-        "Compute corpus-level percentiles (P25/P50/P75) for hook_density and high_point_density into benchmark/reference_stats.json",
-        "Add tests/baseline/test_reference_corpus.py: corpus loadable, stats valid",
-        "Typecheck passes",
-        "Tests pass"
+        "创建 data/naming/surnames.json",
+        "按稀有度分 4 层：common（常见姓，占 20%）、moderate（中频姓，占 40%）、rare（稀有姓，占 30%）、compound（复姓，占 10%）",
+        "总量不少于 200 个姓氏",
+        "common 层包含赵钱孙李等常用姓但数量控制在 30 个以内",
+        "rare 层包含真实存在但不常见的中国姓氏（如荀、褚、卫、闻人等）",
+        "compound 层包含至少 20 个复姓（如欧阳、司马、上官、令狐、独孤、慕容、公孙等）",
+        "JSON 格式合法，可被 python json.load 正常解析"
       ],
       "priority": 2,
       "passes": true,
-      "notes": "Completed: 50-book reference corpus with manifest.json per book, text-based hook/high-point analysis, P25/P50/P75 percentiles in reference_stats.json. 23 tests pass (1129 total)."
+      "notes": "姓氏按稀有度分层，生成时按概率权重随机抽取"
     },
     {
       "id": "US-003",
-      "title": "[P0] 架构静态扫描脚本",
-      "description": "As an architect, I need an automated audit detecting circular imports, duplicate agent responsibilities, dead code, and prompt duplication.",
+      "title": "创建名字素材库数据文件",
+      "description": "As a developer, I need a given-name component library organized by style so names match character personalities.",
       "acceptanceCriteria": [
-        "Create scripts/audit_architecture.py emitting reports/architecture_audit.md",
-        "Detects: import cycles (networkx), unused modules (vulture), agent IO contract overlaps, repeated prompt fragments (>30 token n-grams)",
-        "Output a per-agent IO contract table",
-        "Add tests/audit/test_audit_architecture.py with a fake fixture project",
-        "Typecheck passes",
-        "Tests pass"
+        "创建 data/naming/given_names.json",
+        "按风格分至少 5 类：classical（古风典雅）、modern（现代简约）、martial（江湖豪放）、scholarly（书卷气质）、cold（冷峻凌厉）",
+        "每种风格再分 male/female 两组",
+        "每组不少于 50 个字/词素（单字和双字名素材均包含）",
+        "素材为可组合的名字用字，非完整名字（如「瑾」「远」「霜」「逸」而非「张瑾远」）",
+        "JSON 格式合法，可被 python json.load 正常解析"
       ],
       "priority": 3,
       "passes": true,
-      "notes": "Completed: scripts/audit_architecture.py (pure Python AST+DFS, no external deps). Detects import cycles, unused modules, agent IO overlaps, prompt duplication. 19 tests pass (1148 total)."
+      "notes": "名字素材为单字或双字词素，运行时随机组合成完整名字"
     },
     {
-      "id": "US-101",
-      "title": "[P1-钩子] 抽取爆款钩子模式库",
-      "description": "As a writer pipeline, I need a hook pattern library mined from the reference corpus so every chapter can be planned around a proven hook.",
+      "id": "US-004",
+      "title": "ink-init SKILL.md 新增 --quick 快速随机模式",
+      "description": "As a novel writer, I want /ink-init --quick to generate 3 complete novel proposals for quick selection instead of answering 10+ questions.",
       "acceptanceCriteria": [
-        "Mine ≥200 hook patterns from benchmark/reference_corpus/ into data/hook_patterns.json",
-        "Each entry: {id, type, position (open|mid|cliff), trigger_template, payoff_window_chapters, source_ref}",
-        "Add scripts/mine_hook_patterns.py reproducible",
-        "Add tests/hooks/test_hook_patterns.py validating schema + non-empty per type",
-        "Typecheck passes",
-        "Tests pass"
+        "ink-init SKILL.md 新增 --quick 参数识别逻辑，放在流程最前端",
+        "不带 --quick 时保留原有苏格拉底式提问流程完全不变",
+        "带 --quick 时生成 3 套完整方案，每套包含：书名、题材方向、核心卖点、主角姓名+设定、女主/核心配角姓名+设定、核心冲突、金手指概要、前三章钩子概念",
+        "方案生成前 Read data/naming/ 下三个文件，用黑名单过滤 + 姓氏库随机 + 名字素材库随机组合角色名",
+        "3 套方案之间在题材方向、角色设定、冲突模式上有明显差异化",
+        "方案以结构化 markdown 表格或编号列表展示，每套方案清晰标注编号 1/2/3",
+        "保留 genre anti-trope 参考文件（L2 层）的加载，供方案生成参考"
       ],
       "priority": 4,
       "passes": true,
-      "notes": "Completed: scripts/mine_hook_patterns.py mines 208 patterns (≥200) from 50-book corpus. 5 hook types × 3 positions + 13 genre templates. 29 tests pass (1177 total)."
+      "notes": "核心功能，依赖 US-001~003 的命名数据文件。修改 ink-writer/skills/ink-init/SKILL.md"
     },
     {
-      "id": "US-102",
-      "title": "[P1-钩子] 大纲阶段强制声明钩子契约",
-      "description": "As ink-plan, I must require every chapter outline to declare its hook_type + payoff_anchor so writing has a verifiable target.",
+      "id": "US-005",
+      "title": "ink-init --quick 选择、混搭与重随逻辑",
+      "description": "As a novel writer, I want to pick one proposal, mix-and-match across proposals, or re-roll all 3 if none appeal to me.",
       "acceptanceCriteria": [
-        "Extend chapter outline schema with hook_contract: {type, anchor_chapter, payoff_summary}",
-        "ink-plan agent rejects outlines without hook_contract (hard fail)",
-        "Migrate existing outlines via ink-migrate (back-fill best-guess)",
-        "Add tests/hooks/test_hook_contract_required.py",
-        "Typecheck passes",
-        "Tests pass"
+        "用户输入编号（1/2/3）直接选择该方案，进入自动初始化",
+        "用户输入混搭指令（如「1的书名+2的主角+3的冲突」）时，系统合并为最终方案",
+        "用户输入 0 或「重新随机」时，重新生成 3 套全新方案（不限重随次数）",
+        "选择/混搭确认后，自动填充 .ink/state.json 和 .ink/preferences.json",
+        "填充的 state.json 包含书名、主角、配角、题材、金手指等核心字段",
+        "确认后进入大纲生成流程（与苏格拉底模式的后续流程对接）"
       ],
       "priority": 5,
       "passes": true,
-      "notes": "Completed: hook_contract field added to ink-plan chapter template + hard fail conditions. hook_contract.py validation module + patch_outline_hook_contract.py backfill script. migrate.py v7→v8 with hook_contract_config. 29 tests pass (1206 total)."
+      "notes": "US-004 的后续交互逻辑，写在同一个 SKILL.md 中"
     },
     {
-      "id": "US-103",
-      "title": "[P1-钩子] reader-pull-checker 输出可执行 fix prompt + 重写闭环",
-      "description": "As the writing loop, when hook density is below target, I must auto-trigger polish with a concrete fix prompt, max 2 retries.",
+      "id": "US-006",
+      "title": "项目文件清理 — 主项目目录",
+      "description": "As a developer, I want to remove outdated review reports and logs from the main project directory.",
       "acceptanceCriteria": [
-        "reader-pull-checker now returns {score, violations[], fix_prompt}",
-        "ink-write loop calls polish-agent with fix_prompt when score below threshold",
-        "Max 2 retries, then write chapters/{n}/hook_blocked.md and fail chapter",
-        "Integration test: monkey-patch checker to return score=0.1 → assert polish called 2x → assert hook_blocked.md exists",
-        "On corpus replay, hook density improves ≥30% vs US-001 baseline",
-        "Typecheck passes",
-        "Tests pass"
+        "删除项目根目录下所有 工程审查报告_v*.md 文件（v9.7.0 ~ v9.16.0）",
+        "删除 data/editor-wisdom/ 下：errors.log、skipped.log、classify_report.md、cleanup_report.md",
+        "删除 reports/ 下过时的审计报告（如 architecture_audit.md），保留 v13_acceptance.md",
+        "保留 archive/ 目录不动",
+        "清理后 python -c \"import ink_writer\" 仍可正常执行"
       ],
       "priority": 6,
       "passes": true,
-      "notes": "Completed: ink_writer/reader_pull/ module (config, fix_prompt_builder, hook_retry_gate). reader-pull-checker outputs {score, violations[], fix_prompt}. ink-write Step 3.6 hook retry gate with max 2 retries → hook_blocked.md. polish-agent accepts hook_fix_prompt. 31 new tests (1237 total)."
+      "notes": "一次性清理操作，用 rm 命令执行"
     },
     {
-      "id": "US-104",
-      "title": "[P1-爽点] 爽点节奏调度器",
-      "description": "As ink-plan, I need a high_point_scheduler that decides per-chapter high-point recipe based on chapter position and recent history, instead of relying on the checker post-hoc.",
+      "id": "US-007",
+      "title": "项目文件清理 — marketplace 目录",
+      "description": "As a developer, I want to remove outdated reports from the marketplace plugin directory.",
       "acceptanceCriteria": [
-        "Create ink_writer/pacing/high_point_scheduler.py",
-        "Inputs: chapter_no, volume_position, last_5_chapter_high_points; Output: {high_point_type, intensity, payoff_window}",
-        "Wired into ink-plan as a hard constraint passed to writer-agent",
-        "50-chapter simulated test: high_point_density variance ≤ 0.2, no 3 consecutive chapters without high_point",
-        "Typecheck passes",
-        "Tests pass"
+        "删除 /Users/cipher/.claude/plugins/marketplaces/ink-writer-marketplace/ 根目录下所有 工程审查报告_v*.md",
+        "删除 marketplace 的 reports/ 下 ralph-editor-wisdom-review.md 和 architecture_audit.md",
+        "删除 marketplace 的 docs/archive/ 下所有旧版工程审计报告（ENGINEERING_AUDIT_*.md 等历史分析报告）",
+        "确认 ink-writer/ symlink 仍然有效且指向正确目标",
+        "保留核心配置文件（pyproject.toml、requirements.txt、CLAUDE.md 等）"
       ],
       "priority": 7,
       "passes": true,
-      "notes": "Completed: ink_writer/pacing/high_point_scheduler.py with 6 types × 3 intensities. Wired into ink-plan Step 2.5 as hard constraint + chapter template 爽点配方 field. config/high-point-scheduler.yaml for thresholds. 41 tests (1278 total), 50-chapter simulation passes all constraints."
+      "notes": "marketplace 的 ink-writer/ 是 symlink，不能误删"
     },
     {
-      "id": "US-105",
-      "title": "[P1-情绪] 情绪心电图引擎",
-      "description": "As the writing loop, every chapter must emit a scene-level emotion curve and align with target curve; large flat segments trigger polish.",
+      "id": "US-008",
+      "title": "README 面向用户重写",
+      "description": "As a novel writer (user), I want the README to clearly explain what this tool does, how to install it, and how to use it.",
       "acceptanceCriteria": [
-        "data-agent extracts per-scene {valence, arousal} into data/emotion_curves.jsonl",
-        "New agent emotion-curve-checker compares to target curve for the chapter type",
-        "If chapter emotion variance < threshold → mark 'flat', trigger polish to add conflict, max 2 retries",
-        "On corpus replay, emotion curve cosine similarity vs reference ≥ 0.8",
-        "Typecheck passes",
-        "Tests pass"
+        "README.md 以用户视角重写，核心结构：一句话介绍 → 功能亮点 → 安装方法 → 快速上手 → 命令速查表 → FAQ",
+        "功能亮点用具体场景说明（如「一条命令自动写 10 章并审查修复」而非「14 个 AI Agent」）",
+        "安装方法覆盖 Claude Code（推荐）、Gemini CLI、Codex CLI 三种方式",
+        "快速上手提供从 /ink-init 到 /ink-write 的完整示例流程，包含 --quick 模式",
+        "命令速查表列出所有 /ink-* 命令及一句话说明",
+        "总长度控制在 200 行以内"
       ],
       "priority": 8,
       "passes": true,
-      "notes": "Completed: ink_writer/emotion/ module (detector, gate, fix_prompt_builder, config). emotion-curve-checker agent spec. data-agent Step B.12 emotion curve extraction. ink-write Step 3.7 emotion gate. polish-agent Step 1.6 emotion repair. 65 new tests (1343 total)."
-    },
-    {
-      "id": "US-201",
-      "title": "[P2-去AI味] Style RAG 索引构建",
-      "description": "As polish-agent, I need a Style RAG of human-written scene snippets (sliced by scene_type × emotion) so I can rewrite AI-tasting paragraphs against real human reference.",
-      "acceptanceCriteria": [
-        "Slice benchmark/reference_corpus/ into scene snippets, tag scene_type + emotion + sentence-feature",
-        "Build sentence-transformers index (reuse editor-wisdom retriever module) into data/style_rag/",
-        "Add scripts/build_style_rag.py reproducible",
-        "Add tests/style_rag/test_style_rag.py: query returns Top-K with distance ascending",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 9,
-      "passes": true,
-      "notes": "Completed: scripts/build_style_rag.py builds FAISS index from style_rag.db (3295 fragments). ink_writer/style_rag/ retriever module with StyleRAGRetriever (semantic search + scene_type/emotion/genre/quality filters). Reuses BAAI/bge-small-zh-v1.5 from editor-wisdom. 24 tests pass (1367 total)."
-    },
-    {
-      "id": "US-202",
-      "title": "[P2-去AI味] polish-agent 接入 Style RAG",
-      "description": "As polish-agent, I must retrieve Top-K human snippets and use them as in-context rewriting reference whenever anti-detection score is borderline.",
-      "acceptanceCriteria": [
-        "polish-agent calls Style RAG retriever for each AI-tasting paragraph",
-        "Retrieved snippets injected into rewrite prompt with explicit '人写参考' framing",
-        "On corpus replay, anti-detection composite score improves ≥10 vs US-001 baseline",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 10,
-      "passes": true,
-      "notes": "Completed: ink_writer/style_rag/polish_integration.py with build_polish_style_pack(). polish-agent Step 2.8 retrieves Top-K human snippets per fix_priority item as '人写参考'. ink-write Step 4 updated (steps 4-6 renumbered). 27 tests pass (1394 total)."
-    },
-    {
-      "id": "US-203",
-      "title": "[P2-去AI味] 句式多样性硬门禁",
-      "description": "As ink-write, I must enforce statistical features (sentence-length variance, repeated patterns, connective frequency) as hard gates with auto-polish on fail.",
-      "acceptanceCriteria": [
-        "Add config/anti_ai_thresholds.yaml with all thresholds documented",
-        "Hard gate runs at end of ink-write; on fail → 1 polish round → still fail → block + report",
-        "Zero-tolerance list (e.g. '第xx日' opening) causes immediate block, no retry",
-        "Integration test with a deliberately AI-tasting fixture chapter",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 11,
-      "passes": true,
-      "notes": "Completed: ink_writer/anti_detection/ module (config, sentence_diversity, fix_prompt_builder, anti_detection_gate). config/anti-detection.yaml with all thresholds + zero-tolerance list. ink-write Step 3.8 anti-detection gate. polish-agent Step 1.7 anti-detection repair. Zero-tolerance: ZT_TIME_OPENING + ZT_MEANWHILE = immediate block, no retry. 46 new tests (1440 total)."
-    },
-    {
-      "id": "US-204",
-      "title": "[P2-去AI味] 文化语料库注入",
-      "description": "As context-agent, I should attach a genre-specific cultural lexicon (idioms/dialect/era words) to the writing pack so chapters avoid generic AI phrasing.",
-      "acceptanceCriteria": [
-        "Build data/cultural_lexicon/{xianxia,urban,scifi,...}.json (≥300 entries each)",
-        "context-agent attaches the relevant lexicon to the writing pack",
-        "Each chapter must use ≥N non-generic terms (config per genre)",
-        "Add tests/cultural/test_lexicon_injection.py",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 12,
-      "passes": true,
-      "notes": "Completed: 6 genre lexicons (xianxia/xuanhuan/urban/scifi/lishi/youxi, ≥300 entries each). ink_writer/cultural_lexicon/ module (config, loader, context_injection). context-agent Step 2.6 + writer-agent cultural lexicon sections. config/cultural-lexicon.yaml with per-genre min_terms. 68 tests (1508 total)."
-    },
-    {
-      "id": "US-301",
-      "title": "[P3-长篇] 实体记忆图谱重构 (单一事实源)",
-      "description": "As the memory subsystem, I must unify state.json + index.db into a single SQLite source-of-truth with state.json as a rebuildable view cache.",
-      "acceptanceCriteria": [
-        "Write docs/memory_architecture_v13.md with new schema (characters/factions/items/foreshadows/settings/timeline)",
-        "Implement migration in ink-migrate; existing half-written projects upgrade losslessly",
-        "state.json becomes a derived view, can be rebuilt anytime from sqlite",
-        "All existing audits (ink-audit) pass on a migrated fixture project",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 13,
-      "passes": true,
-      "notes": "Completed: state_kv/disambiguation_log/review_checkpoint_entries tables in IndexManager. SQLStateManager with full CRUD + rebuild_state_dict/rebuild_state_json. StateManager syncs to state_kv on save, rebuilds from SQLite when state.json missing. migrate.py v8→v9 with SQLite data migration. 28 new tests (1536 total), coverage 82.59%."
-    },
-    {
-      "id": "US-302",
-      "title": "[P3-长篇] 跨章语义检索取代关键词召回",
-      "description": "As context-agent, I should retrieve historical context via vector semantic search + entity-forced recall, not keyword match, to reduce missed callbacks across 300 chapters.",
-      "acceptanceCriteria": [
-        "Build per-chapter summary vector index",
-        "Recall = semantic Top-K ∪ strong-entity-forced ∪ recent N",
-        "Writing pack size ≤ 80% of current baseline (more precise → shorter)",
-        "Simulated 300-chapter replay: missed-callback events = 0",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 14,
-      "passes": true,
-      "notes": "Completed: ink_writer/semantic_recall/ module (config, chapter_index, retriever). FAISS ChapterVectorIndex over chapter_memory_cards. SemanticChapterRetriever with 3-way recall: semantic Top-K ∪ entity-forced ∪ recent-N. Wired into extract_chapter_context.py as priority path before legacy RAG/BM25. config/semantic-recall.yaml. scripts/build_chapter_index.py. 300-chapter simulation test passes (0 missed callbacks). 32 new tests (1568 total), coverage 82.53%."
-    },
-    {
-      "id": "US-303",
-      "title": "[P3-长篇] 伏笔生命周期管理器",
-      "description": "As foreshadow-tracker, I scan all open foreshadows each chapter and force ink-plan to schedule payoff if any exceeds the lifetime threshold.",
-      "acceptanceCriteria": [
-        "New agent foreshadow-tracker runs every chapter",
-        "Each foreshadow has weight + lifetime threshold",
-        "Overdue → ink-plan must inject payoff into next outline (hard constraint)",
-        "Dashboard renders foreshadow heatmap (read-only HTML)",
-        "Simulated 300-chapter replay: overdue-unpaid = 0",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 15,
-      "passes": true,
-      "notes": "Completed: ink_writer/foreshadow/ module (config, tracker, fix_prompt_builder). foreshadow-tracker agent spec with priority-aware overdue rules (P0/P1/P2). ink-plan Step 2.4 hard constraint + 伏笔处置 field. ink-write Step 0 upgraded. Dashboard /api/plot-threads/heatmap + ForeshadowHeatmap component. 48 new tests (1616 total), 300-chapter simulation passes."
-    },
-    {
-      "id": "US-304",
-      "title": "[P3-长篇] 人物语气指纹",
-      "description": "As character-archive, every character builds a voice_fingerprint (high-freq words, sentence-length, catchphrases, value anchors) after first appearance and later chapters must align.",
-      "acceptanceCriteria": [
-        "Add voice_fingerprint field to character archive schema",
-        "Auto-learn fingerprint from first appearance; append-only updates",
-        "ooc-checker now scores against fingerprint; deviation > threshold triggers polish",
-        "Simulated 300-chapter replay: OOC score < 5",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 16,
-      "passes": true,
-      "notes": "Completed: ink_writer/voice_fingerprint/ module (config, fingerprint, ooc_gate, fix_prompt_builder). voice_fingerprint_json column in character_evolution_ledger. migrate.py v9→v10 with voice_fingerprint_config. ooc-checker voice_fingerprint validation. polish-agent Step 1.8 voice repair. ink-write Step 3.9 voice gate. config/voice-fingerprint.yaml. 300-chapter simulation passes (OOC score < 5). 55 new tests (1671 total), coverage 82.31%."
-    },
-    {
-      "id": "US-305",
-      "title": "[P3-长篇] 明暗线追踪器",
-      "description": "As the planning subsystem, every plotline (main/sub/dark) is explicit and every chapter must tag which lines it advances; long inactivity triggers warning.",
-      "acceptanceCriteria": [
-        "Extend state.json/sqlite with plotlines schema",
-        "ink-plan must tag each chapter outline with plotline_ids",
-        "Inactive plotline > N chapters → warn + force ink-plan reschedule",
-        "Simulated 300-chapter replay: dropped-plotlines = 0",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 17,
-      "passes": true,
-      "notes": "Completed: ink_writer/plotline/ module (config, tracker, fix_prompt_builder). plotline-tracker agent spec. ink-plan Step 2.7 hard constraint + 明暗线推进 outline field. ink-write Step 3.10 plotline gate. migrate.py v10→v11 with plotline_lifecycle_config. Dashboard /api/plotlines + /api/plotlines/heatmap. 300-chapter simulation test passes. 56 new tests (1727 total), coverage 82.24%."
-    },
-    {
-      "id": "US-401",
-      "title": "[P4-架构] Agent 职责重映射",
-      "description": "Based on US-003 audit, merge/split agents to eliminate overlap (e.g. unify multiple checkers into a checker pipeline) and produce a topology doc.",
-      "acceptanceCriteria": [
-        "Output docs/agent_topology_v13.md with before/after diagrams",
-        "Each agent has single responsibility + schema-typed IO",
-        "Overlapping agents merged (no duplicate logic)",
-        "All existing pytest pass after refactor",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 18,
-      "passes": true,
-      "notes": "Completed: Merged foreshadow-tracker + plotline-tracker → thread-lifecycle-tracker (identical state machine). Created shared-checker-preamble.md. Added 6 missing metrics schemas to checker-output-schema.md. docs/agent_topology_v13.md with before/after diagrams + pipeline architecture + responsibility matrix. 7 overlap pairs documented as false positives. 24 new tests (1751 total), coverage 82.24%."
-    },
-    {
-      "id": "US-402",
-      "title": "[P4-架构] 双 agent 目录消除",
-      "description": "Eliminate the split between ink-writer/agents/ and agents/ink-writer/; unify under one canonical root and update all references + CLAUDE.md.",
-      "acceptanceCriteria": [
-        "Decide single canonical agent directory (document choice in commit)",
-        "Move all agent specs; update every reference (grep clean)",
-        "Update CLAUDE.md, AGENTS.md, GEMINI.md",
-        "All pytest pass",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 19,
-      "passes": true,
-      "notes": "Completed: Canonical directory = ink-writer/agents/ (19 specs). Moved editor-wisdom-checker.md from agents/ink-writer/. Updated audit_architecture.py, agent_topology_v13.md, CLAUDE.md, test_agent_topology.py. Removed empty agents/ directory. 1752 tests pass, coverage 82.24%."
-    },
-    {
-      "id": "US-403",
-      "title": "[P4-架构] ink-writer vs webnovel-writer skill 决策",
-      "description": "Decide whether to merge or formally separate the two skill systems and document the outcome.",
-      "acceptanceCriteria": [
-        "Write docs/skill_systems_decision.md with decision + rationale",
-        "If merge: provide migration script + deprecation timeline",
-        "If keep both: document each system's scope in README.md",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 20,
-      "passes": true,
-      "notes": "Completed: Decision = merge (deprecate webnovel-writer, ink-writer as sole system). docs/skill_systems_decision.md with full comparison, rationale, 4-phase migration timeline. migrate_webnovel_to_ink.sh already existed. 31 tests pass (1783 total), coverage 82.24%."
-    },
-    {
-      "id": "US-404",
-      "title": "[P4-架构] Prompt 模板集中化与版本化",
-      "description": "Extract scattered prompts to templates/prompts/ with version tags and A/B-test capability; eliminate duplicated prompt fragments.",
-      "acceptanceCriteria": [
-        "All agent prompts loaded from templates/prompts/ (no inline strings >50 chars)",
-        "Each template carries semver + changelog comment header",
-        "A/B test harness scripts/ab_prompts.py runs both versions on a fixture set",
-        "Duplicate fragments (>30 tokens) eliminated (verified by US-003 audit)",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 21,
-      "passes": true,
-      "notes": "Completed: 10 versioned prompt templates in templates/prompts/. 15/19 agents updated with 31 {{PROMPT_TEMPLATE:...}} references. scripts/ab_prompts.py A/B harness (list/diff-all/show/compare). audit_architecture.py template-aware. Top duplication: 12x→5x. 24 new tests (1807 total), coverage 82.24%."
-    },
-    {
-      "id": "US-501",
-      "title": "[P5-效率] 章节级并发管线",
-      "description": "Refactor ink-auto from serial to N-chapter concurrent pipeline (write/review/polish/extract overlap) with entity-write locking.",
-      "acceptanceCriteria": [
-        "ink-auto supports --parallel N flag",
-        "Entity writes use sqlite WAL or explicit lock to avoid races",
-        "Throughput ≥ 2.5x serial when N=4 on a fixture",
-        "No data corruption vs serial baseline (diff entity DB)",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 22,
-      "passes": true,
-      "notes": "Completed: ink_writer/parallel/ module (pipeline_manager.py + chapter_lock.py). PipelineManager asyncio orchestrator with batch-parallel chapter writing. ChapterLockManager SQLite-based cross-process locks with TTL. ink-auto.sh --parallel N flag delegates to Python orchestrator. config/parallel-pipeline.yaml. 34 new tests (1841 total), coverage 82.24%."
-    },
-    {
-      "id": "US-502",
-      "title": "[P5-效率] Anthropic prompt cache 优化",
-      "description": "Split system prompt into stable + volatile segments and tag stable segments with cache_control to maximize cache hits.",
-      "acceptanceCriteria": [
-        "Identify stable segments (character archive, worldbuilding, style guide) per agent",
-        "Apply cache_control to stable segments via Anthropic SDK",
-        "Measured cache hit rate ≥ 70% over a 20-chapter run",
-        "Per-chapter token cost down ≥ 30% vs US-001 baseline",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 23,
-      "passes": true,
-      "notes": "Completed: ink_writer/prompt_cache/ module (config, segmenter, metrics). llm_backend.py + checker.py use cache_control on system prompts. CacheMetricsTracker SQLite-backed. config/prompt-cache.yaml defines 7 stable + 5 volatile segments. 30 new tests (1871 total), cache_hit_rate ≥70% and token_savings ≥30% validated in tests."
-    },
-    {
-      "id": "US-503",
-      "title": "[P5-效率] 检查器并行化 + 早失败终止",
-      "description": "Run review-stage checkers concurrently; first hard-gate fail short-circuits to polish without waiting for the rest.",
-      "acceptanceCriteria": [
-        "Checkers run via asyncio.gather",
-        "First hard-gate failure cancels remaining checkers and triggers polish",
-        "Review-stage wall time ≤ 50% of US-001 baseline",
-        "No false-positive blocks (regression test on golden chapters)",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 24,
-      "passes": true,
-      "notes": "Completed: ink_writer/checker_pipeline/ module with CheckerRunner (asyncio.to_thread for sync, native async support). GateSpec with hard_gate flag. cancel_event-based early termination. step-3-review-gate.md updated for full parallelism. 25 new tests (1896 total)."
-    },
-    {
-      "id": "US-504",
-      "title": "[P5-效率] 增量数据提取",
-      "description": "data-agent extracts only diffs from the new chapter instead of re-extracting all entities every time.",
-      "acceptanceCriteria": [
-        "Implement diff-based extraction comparing chapter_N to chapter_{N-1} state",
-        "Data-extraction wall time ≤ 40% of US-001 baseline",
-        "Diff vs full-extraction is identical on a 20-chapter fixture",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 25,
-      "passes": true,
-      "notes": "Completed: ink_writer/incremental_extract/ module (differ.py + config.py). compute_entity_diff categorizes entities into new/changed/unchanged/removed. Protagonist always-extract. config/incremental-extract.yaml. 30 new tests (1926 total), ≥60% savings validated, diff-vs-full equivalence test passes."
-    },
-    {
-      "id": "US-601",
-      "title": "[P6-验收] 300 章无人值守压测",
-      "description": "Run a hands-off 300-chapter generation on a chosen genre and collect all metrics for G1-G5 verification.",
-      "acceptanceCriteria": [
-        "benchmark/300chapter_run/ contains full chapters + logs + metrics.json",
-        "Generate reports/v13_acceptance.md comparing G1-G5 targets",
-        "If any metric misses target → file follow-up issues per failing US (do not silently pass)",
-        "If all pass → tag v13.0.0 in git",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 26,
-      "passes": true,
-      "notes": "Completed: scripts/run_300chapter_benchmark.py with G1-G5 metrics framework, BenchmarkResult, generate_acceptance_report(). Integrates with ink-auto --parallel. --dry-run mode. 9 tests pass. Note: actual 300-chapter run requires LLM API + real project."
-    },
-    {
-      "id": "US-602",
-      "title": "[P6-验收] 盲测人工评估 (≥5 名读者)",
-      "description": "Mix generated chapters with bestseller chapters and have ≥5 human readers blind-rate them.",
-      "acceptanceCriteria": [
-        "Build benchmark/blind_test/ with shuffled mix",
-        "Collect ratings on attractiveness, AI-taste, character, pacing, emotion",
-        "Generated avg score ≥ 0.95 × reference avg",
-        "Report archived to reports/blind_test_v13.md",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 27,
-      "passes": true,
-      "notes": "Completed: scripts/build_blind_test.py with build_blind_test() (shuffle mix + manifest + answer_key + rating_sheet). generate_blind_test_report() aggregates ratings and checks 0.95× threshold. 8 tests pass. Note: actual blind test requires human readers."
+      "notes": "最后执行，因为需要反映前面所有变更（特别是 --quick 模式）"
     }
   ]
 }

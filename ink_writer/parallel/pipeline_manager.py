@@ -346,14 +346,28 @@ class PipelineManager:
         return await self._check_outline(chapter)
 
     async def _get_volume_for_chapter(self, chapter: int) -> Optional[str]:
+        """Parse volume outlines to determine which volume a chapter belongs to."""
         try:
-            result = await self._ink_py(
-                "state", "get-volume", "--chapter", str(chapter)
-            )
-            vol = result.strip()
-            return vol if vol and vol != "0" else None
+            outline_dir = self.config.project_root / "大纲"
+            for f in sorted(outline_dir.glob("第*卷-*.md")):
+                # e.g. "第1卷-节拍表.md" -> "1"
+                import re
+                m = re.match(r"第(\d+)卷-", f.name)
+                if m:
+                    vol = m.group(1)
+                    # Read 节拍表 to get chapter range
+                    if f.name.endswith("-节拍表.md"):
+                        content = f.read_text(encoding="utf-8")
+                        chs = [int(x) for x in re.findall(r"第(\d+)章", content)]
+                        if chs:
+                            ch_min, ch_max = min(chs), max(chs)
+                            if ch_min <= chapter <= ch_max:
+                                return vol
+                    # Fallback: assume this volume covers unknown chapters
+                    return vol
+            return "1"  # Default to volume 1
         except Exception:
-            return None
+            return "1"
 
     async def _clear_workflow(self) -> None:
         try:

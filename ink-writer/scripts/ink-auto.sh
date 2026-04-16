@@ -61,6 +61,7 @@ EXIT_REASON=""
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPO_ROOT="$(cd "$PLUGIN_ROOT/.." && pwd)"
 SCRIPTS_DIR="${PLUGIN_ROOT}/scripts"
 
 find_project_root() {
@@ -847,7 +848,7 @@ if (( PARALLEL > 1 )); then
 
     python3 -X utf8 -c "
 import sys, asyncio, json
-sys.path.insert(0, '$PLUGIN_ROOT')
+sys.path.insert(0, '$REPO_ROOT')
 sys.path.insert(0, '${PLUGIN_ROOT}/scripts')
 from pathlib import Path
 from ink_writer.parallel.pipeline_manager import PipelineManager, PipelineConfig

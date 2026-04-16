@@ -1,10 +1,164 @@
 ---
 name: ink-init
-description: 深度初始化网文项目。通过分阶段交互收集完整创作信息，生成可直接进入规划与写作的项目骨架与约束文件。
+description: 深度初始化网文项目。通过分阶段交互收集完整创作信息，生成可直接进入规划与写作的项目骨架与约束文件。支持 --quick 快速随机模式。
 allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 ---
 
-# Project Initialization (Deep Mode)
+# Project Initialization
+
+## 模式分支（流程最前端）
+
+解析用户输入参数：
+
+- **带 `--quick`**：进入 Quick 模式（见下方 §Quick Mode）。
+- **不带 `--quick`**：进入 Deep 模式（原有苏格拉底式提问流程，见 §Deep Mode）。
+
+---
+
+# Quick Mode（快速随机方案生成）
+
+## 目标
+
+一条命令生成 3 套完整小说方案，用户选一个（或混搭/重随）即可进入初始化，跳过 10+ 轮问答。
+
+## Quick Step 0：加载命名素材与参考
+
+必须 Read 以下文件：
+
+1. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/blacklist.json` — 黑名单，生成的所有角色名不得命中此列表中的任何条目。
+2. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/surnames.json` — 姓氏库（按 common/moderate/rare/compound 四层），随机抽取时按稀有度加权：common 20%、moderate 40%、rare 30%、compound 10%。
+3. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/given_names.json` — 名字素材库（按 classical/modern/martial/scholarly/cold 五风格 × male/female），根据方案风格从匹配风格池中随机取 1-2 字组合。
+4. `references/genre-tropes.md`（L1 必读）。
+5. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
+
+## Quick Step 1：生成 3 套差异化方案
+
+### 差异化约束
+
+3 套方案必须在以下维度两两不同：
+- **题材方向**：从题材集合（见 Deep Mode Step 1 的题材集合）中选 3 个不同大类。
+- **角色设定**：主角性格/背景不重复（如成长型 vs 复仇型 vs 天才型）。
+- **冲突模式**：核心冲突不雷同（如弱变强 vs 阴谋揭露 vs 守护底线）。
+- **金手指类型**：避免 3 套都是系统流（如系统 vs 传承 vs 天赋 vs 重生记忆）。
+
+### 命名规则
+
+对每套方案中的角色名（主角、女主/核心配角）：
+
+1. 从 `surnames.json` 按加权概率随机取姓氏。
+2. 从 `given_names.json` 按方案风格匹配风格池，随机取 1-2 字组合为名。
+3. 将完整姓名与 `blacklist.json` 的 male/female 列表做全匹配校验。
+4. 若命中黑名单，丢弃并重新生成（最多重试 3 次，仍命中则换姓重试）。
+5. 3 套方案之间的角色姓名不得重复。
+
+### 每套方案必须包含
+
+| 字段 | 说明 |
+|------|------|
+| 书名 | 吸引力优先，可带副标题 |
+| 题材方向 | 从题材集合中选择（可复合 A+B） |
+| 核心卖点 | 一句话，读者为什么要追 |
+| 主角姓名 + 设定 | 姓名（命名系统生成）+ 2-3 句人设（含欲望、缺陷） |
+| 女主/核心配角姓名 + 设定 | 姓名（命名系统生成）+ 1-2 句人设 |
+| 核心冲突 | 全书主线冲突一句话 |
+| 金手指概要 | 类型 + 能力 + 代价，或"无金手指" |
+| 前三章钩子概念 | 第 1/2/3 章各一句话钩子描述 |
+
+### 输出格式
+
+以编号列表展示，每套方案清晰标注 **方案 1 / 方案 2 / 方案 3**，内部按上述字段分项排列。示例结构：
+
+```markdown
+### 方案 1：《书名》
+
+- **题材方向**：XX
+- **核心卖点**：XX
+- **主角**：姓名 — XX（欲望/缺陷）
+- **女主/核心配角**：姓名 — XX
+- **核心冲突**：XX
+- **金手指**：XX（代价：XX）
+- **前三章钩子**：
+  1. 第1章：XX
+  2. 第2章：XX
+  3. 第3章：XX
+```
+
+展示完毕后，提示用户：
+
+> 请选择：
+> - 输入 **1/2/3** 选择对应方案
+> - 输入混搭指令（如「1的书名 + 2的主角 + 3的冲突」）
+> - 输入 **0** 重新随机生成 3 套全新方案
+
+## Quick Step 2：用户选择与方案确定
+
+### 选择模式
+
+根据用户输入，进入对应分支：
+
+**A) 直接选择（输入 1/2/3）**
+- 将对应编号的方案作为最终方案，直接进入 Quick Step 3。
+
+**B) 混搭（如「1的书名 + 2的主角 + 3的冲突」）**
+- 解析用户混搭指令，从指定方案中提取对应字段。
+- 未指定的字段从用户选中最多的方案中继承。
+- 合并后展示最终方案摘要，请求用户确认：
+  > 混搭方案如下：[展示合并结果]
+  > 确认？（输入 Y 确认，或继续修改）
+- 用户确认后进入 Quick Step 3。
+
+**C) 重新随机（输入 0 或「重新随机」）**
+- 回到 Quick Step 1，重新生成 3 套全新方案。
+- 不限重随次数。
+- 新方案必须与上一轮方案在题材方向上不同（尽量避免重复）。
+
+### 补充采集（可选）
+
+方案确认后，检查以下字段是否已足够详细，不足则快速追问（每个字段最多 1 轮）：
+- 目标规模（总字数/章数）— 若未指定，建议默认值并确认
+- 主角欲望/缺陷 — 方案中已包含简要描述，确认是否需要细化
+- 世界规模 — 从方案题材自动推断默认值，确认即可
+
+## Quick Step 3：自动填充与初始化
+
+方案确定后，自动执行以下操作：
+
+### 1) 映射到内部数据模型
+
+将最终方案字段映射到 Deep Mode 的内部数据模型（见 §内部数据模型）：
+
+| 方案字段 | 映射目标 |
+|----------|----------|
+| 书名 | `project.title` |
+| 题材方向 | `project.genre` |
+| 核心卖点 | `constraints.core_selling_points[0]` |
+| 主角姓名 | `protagonist.name` |
+| 主角设定（欲望） | `protagonist.desire` |
+| 主角设定（缺陷） | `protagonist.flaw` |
+| 女主/核心配角姓名 | `relationship.heroine_names[0]` 或 `relationship.co_protagonists[0]` |
+| 核心冲突 | `project.core_conflict` |
+| 金手指概要 | `golden_finger.type` + `golden_finger.name` |
+| 前三章钩子 | `constraints.opening_hook` |
+
+未覆盖的字段（如 `world.scale`、`world.power_system_type`）从题材自动推断合理默认值。
+
+### 2) 填充 `.ink/state.json` 和 `.ink/preferences.json`
+
+执行与 Deep Mode 相同的 `init_project.py` 脚本（见 §执行生成），传入映射后的参数。
+
+### 3) 对接后续流程
+
+初始化完成后，进入与 Deep Mode 相同的后续流程：
+- 写入 `idea_bank.json`
+- Patch 总纲
+- 验证与交付
+- RAG 配置引导
+
+即：从 §执行生成 的"1) 运行初始化脚本"开始，与 Deep Mode 共用同一套生成、验证、失败处理逻辑。
+
+---
+
+# Deep Mode（苏格拉底式深度采集）
 
 ## 目标
 
@@ -136,7 +290,7 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
   - 创意约束需要“时间敏感依据”；
   - 对题材信息存在明显不确定。
 
-## 交互流程（Deep）
+## 交互流程（Deep Mode）
 
 ### Step 0：预检与上下文加载
 
