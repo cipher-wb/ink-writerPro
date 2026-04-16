@@ -157,7 +157,7 @@
         "不破坏现有的追读力修复、情绪曲线修复、AI味修复等优先级"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/polish-agent.md。PRD详见 tasks/prd-logic-fortress.md US-007。"
     },
     {

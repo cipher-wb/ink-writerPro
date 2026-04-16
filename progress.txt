@@ -137,6 +137,24 @@
   - 具名群演豁免规则在O2中详细定义：出场≤2句 + 不推动剧情转折 + 不参与冲突 + 不提供关键信息
 ---
 
+## 2026-04-16 - US-009
+- 实现了 polish-agent.md 逻辑修复能力增强：新增 P0/P0.5 优先级和 Step 4.5 安全校验
+- Files changed: ink-writer/agents/polish-agent.md, ink-writer/templates/prompts/polish-priority-rules.md
+- 修改内容：
+  - 输入JSON新增 logic_fix_prompt 和 outline_fix_prompt 字段
+  - 新增 Step 1.1 P0:逻辑修复 — 8种问题类型的修复策略表（L1-L8），最小化改动原则
+  - 新增 Step 1.2 P0.5:大纲合规修复 — 3种问题类型的修复策略表（O3/O4/O5），不改剧情走向
+  - Step 4.5 安全校验新增两项：逻辑修复引入新矛盾检测 + 大纲合规修复偏离剧情检测
+  - 润色报告新增 P0/P0.5 修复计数
+  - 成功标准新增第3/4条（逻辑修复和大纲合规修复的验证通过）
+  - polish-priority-rules.md 新增 P0/P0.5 优先级行和12种类型对应修复动作
+- **Learnings for future iterations:**
+  - polish-agent.md 的修复步骤编号规律：1.1/1.2(逻辑/合规) → 1.5(追读力) → 1.6(情绪) → 1.7(AI味) → 1.8(语气) → 2(编辑智慧) → 2.5(审查问题) → 3(AI味定向) → 4(Anti-AI验证) → 5(毒点)
+  - 修复优先级从高到低：P0(逻辑) > P0.5(大纲合规) > critical > high > medium > low
+  - 逻辑修复的核心原则是"最小化改动"：只改错误本身，不动周围叙事，避免修复引入新问题
+  - polish-priority-rules.md 是模板文件（通过{{PROMPT_TEMPLATE:...}}引用），修改它影响所有使用该模板的agent
+---
+
 ## 2026-04-16 - US-008
 - 实现了 step-3-review-gate.md 新增 logic-checker 和 outline-compliance-checker 为核心审查器，含硬阻断规则
 - Files changed: ink-writer/skills/ink-write/references/step-3-review-gate.md
