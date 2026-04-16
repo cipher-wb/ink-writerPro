@@ -16,7 +16,10 @@
 - Genre profiles: ink-writer/references/genre-profiles.md
 - Step flow: Step 0→0.2→0.3→0.7→0.8→1→2A→2A.1→2A.5→2B→2C→3→4→4.5→5→5.5→6
 - writer-agent touch points for new iron law: 铁律定义, MCC自检表, 失败处理策略, selfcheck JSON示例, 禁止事项, 硬性指标计数, 成功标准
-- high-point-checker: 爽点识别→位置扫描→压扬一致性→密度基线→rolling window→Override Contract
+- high-point-checker: 爽点识别→位置扫描→压扬一致性→卖点密度硬约束(Step 1.7)→密度基线→rolling window→Override Contract
+- high-point-checker SELLING_POINT rules: SELLING_POINT_DEFICIT(critical: 大卖点缺失/小卖点<2; high: 无反应段; medium: 无情绪触发) + SELLING_POINT_FRONT_LOADING(high: 前1/3无小卖点)
+- step-3-review-gate: 卖点密度门禁在逻辑/大纲合规门禁之后、回退机制之前
+- rolling window: 连续2章大卖点缺失→critical(原为3章连续零爽点→high)
 - proofreading-checker layers: L1修辞重复, L2段落结构, L3代词清晰度, L4文化/时代错位, L5跨章风格一致性
 - writer-agent iron laws: L1数字即承诺, L2动作即物理, L3属性即锁定, L4空间即连续, L5大纲即合同, L6否定即禁区, L7卖点落地律
 - MCC self-check: 8项（原7项+卖点覆盖），self-consistency scan: 5项（原4项+SC-5卖点覆盖检查）
@@ -104,4 +107,33 @@
   - ink-write/SKILL.md 的 MCC自检项数和 Step 2A.1 的检查项数需与 writer-agent.md 保持同步
   - 卖点覆盖检查的关键设计：遗漏卖点必须在 Step 2A（写作层）修正，不得留到 Step 4（润色层），因为卖点是结构性要素
   - MCC自检原来是6项（writer-agent.md中是7项因含否定约束），SKILL.md中需同步为8项
+---
+
+## 2026-04-16 - US-007
+- What was implemented: 审查层卖点密度检测 — high-point-checker 新增 SELLING_POINT_DEFICIT + SELLING_POINT_FRONT_LOADING 规则，rolling window 收紧，step-3-review-gate 新增卖点密度门禁
+- Files changed:
+  - ink-writer/agents/high-point-checker.md (Step 1.7 卖点密度硬约束检测 section + rolling window 收紧为2章 + 报告模板卖点段 + 禁止事项3条 + 成功标准4条 + 输出JSON selling_point_check)
+  - ink-writer/skills/ink-write/references/step-3-review-gate.md (新增卖点密度门禁 section + 进入Step 4前闸门bullet)
+- **Learnings for future iterations:**
+  - high-point-checker 的新规则插入位置在 Step 1.6（压扬一致性）之后、第二步（识别爽点）之前，作为 Step 1.7
+  - SELLING_POINT_DEFICIT 的 critical 子规则（大卖点缺失/小卖点<2）必须触发 hard block 回退 Step 2A，不能仅送 Step 4 润色——卖点缺失是结构性问题
+  - step-3-review-gate.md 是门禁规则的集中定义处，ink-review/SKILL.md 本身不含门禁细节
+  - rolling window 收紧需要同步修改两处：密度基线中的连续低密度告警 + 报告模板中的结论说明
+  - high-point-checker 输出 JSON 的 metrics 字段需要新增 selling_point_check 子对象，与现有 cool_point_count 等并列
+- protagonist-action-verbs.md: 基础通用(6类)+仙侠(3类)+都市(3类)+科幻(3类)，按场景分组
+- ink-plan Step 6 章纲格式: `主角行动` 字段插在 `关键实体` 与 `本章变化` 之间
+- ink-plan Step 8 validation: 1.8 主角行动检查（黑名单hard fail + 连续重复medium warning）
+- ink-plan Step 6 生成策略: 新增 section 7（主角行动验证），原 section 7 标题去重改编号为 8
+---
+
+## 2026-04-16 - US-008
+- What was implemented: 大纲层主角能动性 — 新增主角行动必填字段 + 被动描述黑名单 + 动词参考表
+- Files changed:
+  - ink-writer/skills/ink-plan/SKILL.md (Step 6 章纲格式新增 `主角行动` 字段 + 生成策略新增 section 7 主角行动验证 + Step 8 新增 1.8 主角行动检查 + 完整性检查 + Final check + Hard fail conditions 2条)
+  - ink-writer/references/shared/protagonist-action-verbs.md (新建：基础通用6类+仙侠3类+都市3类+科幻3类动词表 + 黑名单10词)
+- **Learnings for future iterations:**
+  - `主角行动` 字段在 SKILL.md 中需要同步的位置：章纲格式模板、生成策略验证section、Step 8 validation、完整性检查、Final check字段列表、Hard fail conditions
+  - 被动描述黑名单10词：被/发现/意识到/感受到/想到/回忆/观察/注意到/看到/听到
+  - protagonist-action-verbs.md 放在 references/shared/ 目录下，与其他共享参考文件（cool-points-guide、core-constraints等）并列
+  - Step 6 生成策略原来有7个section（1-7），新增主角行动验证后变为8个（1-8），标题去重从7改为8
 ---

@@ -111,7 +111,7 @@
         "修改 ink-review Step 3 review gate：SELLING_POINT_DEFICIT severity=critical 时，强制回退 Step 2A 而非 Step 4"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "审查层兜底，确保即使 writer-agent 遗漏卖点也能被拦截。"
     },
     {
@@ -127,7 +127,7 @@
         "更新大纲模板加入 `主角行动` 字段"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "动词表按类型分section：基础通用 + 仙侠扩展（御剑/凝气/淬体）+ 都市扩展（撕毁/砸/谈判）+ 科幻扩展。"
     },
     {
