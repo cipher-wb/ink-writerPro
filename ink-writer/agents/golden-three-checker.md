@@ -77,9 +77,13 @@ model: inherit
   - 前 300 字无强触发
   - 前 800 字仍看不清主角压力/独特抓手/核心问题
   - 第1章只有主角独角戏（无有名字有态度的配角出现）
+  - **CH1_NO_ABILITY_BENEFIT**：第1章结束时主角能力未产生任何具体收益（无报酬/地位提升/新能力解锁/危机解除后的奖励等可感知变化）→ hard block，回退 Step 2A 重写
+  - **CH1_PASSIVE_PROTAGONIST**：第1章主角仅观察/思考能力，未主动使用能力做出行动（能力只停留在"发现""感知""理解"层面，未转化为主动行为）→ hard block，回退 Step 2A 重写
 - `high`:
   - 章末缺少高价值承诺、未闭合问题、可见变化中的任意两项
   - 有名字的配角少于2个
+  - **CH1_ABSTRACT_PAYOFF**：第1章能力收益是认知层面的（"主角理解了……""主角意识到……""主角有了新认知"）而非行动/结果层面的具体收益 → 建议回退 Step 2A 重写
+  - **CH1_LATE_CRISIS**：第1章前60%篇幅无危机事件触发（无威胁/冲突/紧迫感出现）→ 建议回退 Step 2A 重写
 
 ### 第 2 章
 
@@ -121,7 +125,7 @@ model: inherit
 
 ### 阈值
 
-- 第 1-3 章使用 `golden_three_threshold`（默认 0.85），高于普通章节的 `hard_gate_threshold`（默认 0.75）
+- 第 1-3 章使用 `golden_three_threshold`（默认 0.90），高于普通章节的 `hard_gate_threshold`（默认 0.75）
 - 低于阈值时触发 polish → re-check 循环（最多 3 次重试）
 
 ### 报告输出
@@ -137,6 +141,12 @@ model: inherit
 - 结果评判：`ink_writer/editor_wisdom/golden_three.py` → `check_golden_three_chapter()`
 - 报告生成：`ink_writer/editor_wisdom/golden_three.py` → `generate_report()`
 
+## Hard Block 回退路由
+
+第1章闭环检测中的 `critical` 级别规则（CH1_NO_ABILITY_BENEFIT、CH1_PASSIVE_PROTAGONIST）触发 **hard block**，必须回退到 **Step 2A 重写**（不是 Step 4 润色）。这类问题是结构性缺陷，无法通过润色修复。
+
+第1章闭环检测中的 `high` 级别规则（CH1_ABSTRACT_PAYOFF、CH1_LATE_CRISIS）强烈建议回退 Step 2A 重写。若仅有 `high` 而无 `critical`，允许用户自行决定是否回退。
+
 ## 输出补充
 
 - 若发现问题，`issues` 中必须给出可执行修复建议，优先使用：
@@ -147,6 +157,9 @@ model: inherit
   - 增强章末动机句
   - 增加有温度的配角互动
   - 强化第1句的"认知缺口"
+  - 补充能力→行动→具体收益闭环（CH1_NO_ABILITY_BENEFIT/CH1_PASSIVE_PROTAGONIST）
+  - 将抽象认知收益替换为具体可感知结果（CH1_ABSTRACT_PAYOFF）
+  - 前移危机事件到章节前60%位置（CH1_LATE_CRISIS）
 
 ## 简介质检（ch1 专项）
 
@@ -164,15 +177,18 @@ model: inherit
 
 简介是读者和编辑的"第零章"，比正文第一句更先被看到。
 
-## 前3万字里程碑参考（供 ink-plan 审核模式使用）
+## 前3万字里程碑参考（所有项目默认启用）
 
-起点编辑在3万字（~12章）时做正式评估。前12章大纲应确保完成以下里程碑：
+起点编辑在3万字（~12章）时做正式评估。前12章大纲**必须**完成以下里程碑：
 
 | 章节范围 | 必须完成的里程碑 |
 |---------|----------------|
-| ch1-2 | 主角人设标签明确 + 金手指首秀 + 首次危机 |
-| ch3-5 | 第一个小胜利 + 重要配角/女主出场 |
-| ch6-10 | 第一个完整小高潮 + 世界观展开（通过行动而非讲述） |
-| ch10-12 | 长线冲突确立 + 读者知道"这本书要讲什么" |
+| ch1 | 能力展示 + 首次危机 + **能力产生具体收益（完整小闭环）** + 至少2个有温度的配角 |
+| ch2 | 第一个小胜利 + 重要配角出场 + **主线冲突方向明确** |
+| ch3 | 第一个完整小高潮 + **读者已知道"这本书要讲什么"** |
+| ch4-5 | 世界观通过行动展开（非讲述） |
+| ch6-10 | 第一个完整对决 + 长线冲突确立 |
 
 若某里程碑在对应范围内缺失，在大纲审查时标记为 `high`。
+
+**audit_mode 降级**：若 `state.json` 中 `audit_mode: "relaxed"`，里程碑缺失降为 `medium` 建议级别。

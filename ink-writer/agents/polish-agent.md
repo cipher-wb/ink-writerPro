@@ -49,6 +49,7 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
 # 第一批：静态（跨章不变）
 cat "${SKILL_ROOT}/references/polish-guide.md"
 cat "${SKILL_ROOT}/references/writing/typesetting.md"
+cat "${SKILL_ROOT}/references/prose-craft-rules.md"
 ```
 
 ## 执行流程
@@ -209,6 +210,43 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 - `risk_score 30-50` → 针对 high 风险段落二次改写（最多 1 轮）
 - `risk_score > 50` → `anti_ai_force_check: fail`，大幅重写
 
+### 4.5 Layer 8 文笔工艺润色（Prose Craft Polish）
+
+在 Anti-AI 二次验证通过后执行。参照 `prose-craft-rules.md` 和 `polish-guide.md` 第8层规则。
+
+#### 8a 弱动词逐词替换
+
+1. 全文扫描弱动词黑名单（是/有/做/进行/开始/觉得/感到/看到/听到/想到），统计每词频次
+2. 对超阈值（>3次/词）的弱动词，逐个替换为强动词（参考 `prose-craft-rules.md` 替换示例库）
+3. **语义一致性约束**：替换后上下文语义不变，不扭曲原意、不改变角色行为结果
+4. 直接引语和短章末尾抒情段（≤100字）豁免
+
+#### 8b 感官沙漠补充
+
+1. 滑动 800 字窗口检测连续 800+ 字无非视觉感官描写
+2. 在每个感官沙漠区插入 1-2 个自然非视觉感官锚点
+3. 按场景配伍选锚点：紧张→触觉+嗅觉；日常→味觉+听觉；情感→体感+嗅觉
+4. 全章非视觉感官描写若 < 3 处，集中补足
+
+#### 8c 形容词堆叠精简
+
+1. 扫描同一名词前 3+ 个形容词堆叠
+2. 精简为 1 精准形容词 + 1 具象细节
+3. 空洞感官词（气氛紧张/感觉不对等）改写为具体身体反应或场景细节
+
+#### 8z Layer 6 等价自检
+
+润色完成后执行 proofreading-checker Layer 6 等价自检：
+
+| 自检项 | 通过标准 |
+|--------|---------|
+| WEAK_VERB_OVERUSE | 任一弱动词 ≤ 3 次，总计 ≤ 15 次 |
+| SENSORY_DESERT | 连续 800 字无非视觉感官；全章 ≥ 3 处 |
+| ADJECTIVE_PILE | 无 3+ 形容词堆叠 |
+| GENERIC_DESCRIPTION | 无空洞感官词残留 |
+
+未通过项返回对应子步骤修复，最多 1 轮。结果写入 `prose_craft_check: pass/fail`。
+
 ### 5. No-Poison 毒点规避（5类）
 
 1. 降智推进 2. 强行误会 3. 圣母无代价 4. 工具人配角 5. 双标裁决
@@ -261,7 +299,9 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 - 高优先级已修复: N 处
 - 中低优先级已修复: N 处
 - Anti-AI 改写: N 处
+- Layer 8 文笔工艺: 弱动词替换 N 处 / 感官补充 N 处 / 形容词精简 N 处
 - anti_ai_force_check: pass/fail
+- prose_craft_check: pass/fail
 - 毒点风险: pass/fail
 - 偏离记录:
   - {位置}: {原因}
@@ -297,3 +337,5 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 8. 未触碰润色红线
 9. editor_wisdom_violations 中所有 `hard` 违规已修复或记录 deviation
 10. `_patches.md` 已生成（当存在 violations 时）
+11. Layer 8 文笔工艺润色已完成（弱动词替换 + 感官补充 + 形容词精简）
+12. `prose_craft_check = pass`（Layer 6 等价自检通过）

@@ -208,12 +208,23 @@ def build_golden_three_plan(
                     "前300字出现强触发",
                     "前800字看清主角压力/独特抓手/核心问题",
                     "本章给出至少1个可见变化",
+                    "完成能力展示→危机→能力收益的完整小闭环",
                 ],
                 "micro_payoffs": [
                     selling_points[0] if selling_points else "读者看见主角的独特优势",
                     "主角拿到一个明确行动理由",
                 ],
-                "end_hook_requirement": "留下高价值承诺 + 未闭合问题 + 可见变化",
+                "ch1_closure_contract": {
+                    "ability_display": "主角的金手指/核心能力首次被读者看到",
+                    "crisis": "因能力暴露、环境突变或外部威胁产生的紧迫危机",
+                    "ability_benefit": "主角通过使用能力获得的具体、可感知收益",
+                    "validation_rules": [
+                        "三个子字段任一为空 → hard fail",
+                        "ability_benefit 不能是抽象描述（认知/理解/意识到/感悟）→ hard fail",
+                        "章末未闭合问题必须指向主线大冲突，不能停留在能力探索层级 → hard fail",
+                    ],
+                },
+                "end_hook_requirement": "留下高价值承诺 + 未闭合问题（指向主线大冲突）+ 可见变化",
                 "forbidden_slow_zones": shared_slow_zones,
             },
             "2": {
@@ -312,7 +323,7 @@ def resolve_golden_three_contract(
         genre_profile=genre_profile,
     )
 
-    return {
+    result = {
         "enabled": True,
         "chapter": int(chapter),
         "profile": str(opening_strategy.get("profile") or DEFAULT_OPENING_STRATEGY["profile"]),
@@ -328,6 +339,14 @@ def resolve_golden_three_contract(
         "forbidden_slow_zones": list(chapter_plan.get("forbidden_slow_zones", []) or []),
         "trigger_tokens": list(genre_mode.get("trigger_tokens") or []),
     }
+
+    # Ch1 closure contract: ability display → crisis → ability benefit
+    if int(chapter) == 1:
+        ch1_closure = chapter_plan.get("ch1_closure_contract")
+        if isinstance(ch1_closure, dict):
+            result["ch1_closure_contract"] = ch1_closure
+
+    return result
 
 
 def build_golden_three_guidance(contract: Dict[str, Any]) -> List[str]:
@@ -362,6 +381,15 @@ def build_golden_three_guidance(contract: Dict[str, Any]) -> List[str]:
     forbidden = list(contract.get("forbidden_slow_zones") or [])
     if forbidden:
         guidance.append("硬禁区：" + "；".join(str(item) for item in forbidden[:4]))
+
+    # Ch1 closure guidance
+    ch1_closure = contract.get("ch1_closure_contract")
+    if isinstance(ch1_closure, dict) and int(contract.get("chapter") or 0) == 1:
+        guidance.append(
+            "第1章完整小闭环（硬约束）：本章必须完成'能力展示→危机→能力收益'的完整闭环。"
+            "能力收益必须是具体可感知的变化（如获得报酬/地位提升/危机解除），"
+            "不能是抽象认知（如'主角理解了……'）。"
+        )
 
     return guidance
 
@@ -410,6 +438,21 @@ def build_golden_three_checklist(contract: Dict[str, Any]) -> List[Dict[str, Any
                 "verify_hint": "正文里能定位到明确兑现段落。",
             }
         )
+
+    # Ch1 closure checklist items
+    ch1_closure = contract.get("ch1_closure_contract")
+    if isinstance(ch1_closure, dict) and chapter == 1:
+        items.append(
+            {
+                "id": "golden_three_ch1_closure",
+                "label": "第1章完成能力展示→危机→能力收益完整小闭环",
+                "weight": 2.0,
+                "required": True,
+                "source": "golden_three.ch1_closure",
+                "verify_hint": "正文中能力产生了具体、可感知的收益（非抽象认知）。",
+            }
+        )
+
     return items
 
 

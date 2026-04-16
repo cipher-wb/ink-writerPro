@@ -168,7 +168,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 1. 加载 `config/editor-wisdom.yaml`，检查 `enabled` 标志
 2. 调用 `editor-wisdom-checker` 对章节评分
 3. 比较得分与阈值：
-   - 章节 1-3：使用 `golden_three_threshold`（默认 0.85）
+   - 章节 1-3：使用 `golden_three_threshold`（默认 0.90）
    - 其他章节：使用 `hard_gate_threshold`（默认 0.75）
 4. **若得分 ≥ 阈值**：通过，继续 Step 4
 5. **若得分 < 阈值**：

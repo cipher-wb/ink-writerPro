@@ -105,7 +105,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 | 3    | Step 0.8   | 设定校验            | 设定权限校验（防幻觉）             |
 | 4    | Step 1     | 上下文构建          | 脚本执行包构建 / Context Agent     |
 | 5    | Step 2A    | 正文起草            | 正文起草（2200-3000 字）           |
-| 6    | Step 2A.1  | 自洽回扫            | 章内自洽回扫（4 项语义检查）       |
+| 6    | Step 2A.1  | 自洽回扫            | 章内自洽回扫（6 项语义检查）       |
 | 7    | Step 2A.5  | 字数校验            | 编码校验 + 字数校验                |
 | 8    | Step 2B    | 风格适配            | 风格适配                           |
 | 9    | Step 2C    | 计算型闸门          | 计算型闸门校验                     |
@@ -218,6 +218,9 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - `references/anti-detection-writing.md`
   - 用途：Step 2A 防AI检测源头写作指南（句长突发度/信息密度波动/逻辑跳跃/对话人类化/词汇意外性/段落碎片化/视角限制）。
   - 触发：Step 2A 必读。
+- `references/prose-craft-rules.md`
+  - 用途：Step 2A 遣词造句律（L10）参考——弱动词黑名单+场景化替换示例库、感官锚点密度规则、空洞形容词与空洞感官词清单。也作为 proofreading-checker Layer 6 和 polish-agent Layer 8 的判据。
+  - 触发：Step 2A 必读；Step 3 proofreading-checker、Step 4 polish-agent 按需加载。
 - `references/style-variants.md`
   - 用途：Step 1（内置 Contract）开头/钩子/节奏变体与重复风险控制。
   - 触发：Step 1 当需要做差异化设计时加载。
@@ -840,7 +843,8 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 - 输出必须同时包含：
   - 8 板块任务书（本章核心任务/接住上章/角色/场景与力量约束/时间约束/风格指导/连续性与伏笔/追读力策略）；
   - **板块 14: 强制合规清单（MCC）**——从大纲自动提取 required_entities、required_foreshadows、required_hook、chapter_goal、required_coolpoint、forbidden_inventions、required_change、required_open_question，供 Step 2A 写作合同和 Step 3 outline-compliance-checker 消费；
-  - Context Contract 全字段（目标/阻力/代价/本章变化/未闭合问题/开头类型/情绪节奏/信息密度/过渡章判定/追读力设计）；
+  - Context Contract 全字段（目标/阻力/代价/本章变化/未闭合问题/开头类型/情绪节奏/信息密度/过渡章判定/追读力设计/本章人类本能触发场景）；
+    - `本章人类本能触发场景`：从节拍/大纲识别本章将出现的五类触发场景（A-有人受伤/B-生命威胁/C-极端事件/D-被侮辱/E-获重大好处），按"场景类型 + 关键触发事件 + 所需反应级别"格式列出。示例：`场景B（生命威胁）：主角被反派剑指咽喉 → 紧张反应（≥60字身体感官+决策）`；若本章无触发场景，填 `无`。字段为 writer-agent L9 人类本能反应律提供写作锚点，触发词与扩展场景参见 `references/shared/human-instinct-triggers.md`；
   - 若 `chapter <= 3`：额外包含 `golden_three_role / opening_window_chars / reader_promise / must_deliver_this_chapter / end_hook_requirement`；
   - Step 2A 可直接消费的”写作执行包”（章节节拍、不可变事实清单、禁止事项、终检清单）。
 - 合同与任务书出现冲突时，以“大纲与设定约束更严格者”为准。
@@ -884,6 +888,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 cat "${SKILL_ROOT}/../../references/shared/core-constraints.md"
 # 第二批：半静态（跨卷不变）
 cat "${SKILL_ROOT}/references/anti-detection-writing.md"
+cat "${SKILL_ROOT}/references/prose-craft-rules.md"
 ```
 
 硬要求：
@@ -913,13 +918,16 @@ cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 - 以上自检发现问题时直接修复，不另起步骤。
 
 **MCC 写作后自检**（输出正文之前必做）：
-- 逐项验证 6 项：
+- 逐项验证 9 项：
   1. ✅/❌ 每个 required_entity 是否在正文中出场（至少有名字或明确指代出现）
   2. ✅/❌ 每个 required_foreshadow 是否在正文中有对应段落
   3. ✅/❌ required_hook 是否在章末 300 字内出现
   4. ✅/❌ chapter_goal 核心事件是否存在且未被自创内容喧宾夺主
   5. ✅/❌ 正文中无 MCC 未列出的新命名角色（具名群演除外：出场≤2句且无剧情影响）
   6. ✅/❌ required_change 是否在正文中体现
+  7. ✅/❌ 否定约束合规（正文是否违反执行包板块15中的否定约束）
+  8. ✅/❌ 卖点覆盖（章纲大卖点是否有铺垫→爆发→反应三段式，2个小卖点是否各有情绪触发点）
+  9. ✅/❌ 主角能动性（主角是否有至少1个改变局面的主动行为？行为是否产生可观察后果？是否存在800+字被动段？章末处境是否因主角行动而变化？）
 - 任一项 ❌ → 自行修正后重新输出，最多重试 2 轮
 - 自检结果持久化：`.ink/tmp/mcc_selfcheck_ch{NNNN}.json`
 - 自检失败超 2 轮 → 标记 `mcc_selfcheck_failed`，Step 3 强制触发 outline-compliance-checker
@@ -929,7 +937,7 @@ cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 
 ### Step 2A.1：自洽回扫（Self-Consistency Scan）
 
-> Step 2A 产出正文后、Step 2A.5 字数校验前，writer-agent 对自己的产出做一次结构化自洽回扫，捕获章内前后矛盾。此步骤不阻断流程（即使发现无法修复的问题也继续），但回扫结果会注入 Step 3 审查包，供 checker 重点关注。
+> Step 2A 产出正文后、Step 2A.5 字数校验前，writer-agent 对自己的产出做一次结构化自洽回扫，捕获章内前后矛盾和卖点遗漏。此步骤不阻断流程（即使发现无法修复的问题也继续），但回扫结果会注入 Step 3 审查包，供 checker 重点关注。
 
 输入：
 - Step 2A 产出的章节正文（已写入文件）
@@ -937,11 +945,13 @@ cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 
 执行（writer-agent 自洽回扫，参见 writer-agent.md「自洽回扫」章节）：
 
-4 项检查：
+6 项检查：
 1. **SC-1 观察-统计完整性**：正文中角色做出的每次观察/发现，是否在后续的总结/统计/回忆中都被纳入？
 2. **SC-2 信息引用合法性**：正文中角色引用的每个事实/关系/联系方式，在本章正文中或执行包的否定约束之外是否有合法来源？
 3. **SC-3 角色存在完整性**：本章开头出场的所有角色，在结尾前是否都有交代？
 4. **SC-4 因果链闭合**：正文中的每个行为动机是否有前因，每个开始的动作是否有结果？
+5. **SC-5 卖点覆盖检查**：章纲规定的大卖点是否在正文中有完整的"铺垫→爆发→反应"三段式场景？2个小卖点是否各有可识别的情绪触发点？遗漏卖点必须在本步骤内补充修正，**不得留到 Step 4 润色**。
+6. **SC-6 主角能动性检查**：主角是否有至少1个改变局面的主动行为？该行为是否产生了可观察后果？是否存在连续800+字的被动段（仅观察/思考/感受）？章末主角处境是否因自己的行动而发生了变化？正文是否体现了章纲 `主角行动` 字段定义的行为？
 
 修正规则：
 - 发现问题时 writer 自行修正（最多 2 轮），修正后重新回扫
@@ -2011,7 +2021,7 @@ FOR i = 1 TO N:
     # 1. 本次为 --batch {N}，用户已授权连续写 {N} 章，写完立即继续，禁止询问
     # 2. 每章正文必须 ≥ 2200 字（硬下限，无豁免，不足必须补写）
     # 3. 每章必须完整执行 Step 0→1→2A→2A.5→2B→3→4→4.5→5→6，禁止跳步
-    # 4. Step 2A 必须加载 core-constraints.md 和 anti-detection-writing.md
+    # 4. Step 2A 必须加载 core-constraints.md、anti-detection-writing.md、prose-craft-rules.md
     # 5. Step 3 审查必须由 Task 子代理执行，禁止伪造审查结论
     # 6. Step 2A.5 字数校验：< 2200 字必须补写，最多 2 轮，仍不足则阻断
     # 7. 章节标题 ≥ 2 个汉字且全书唯一
