@@ -33,17 +33,21 @@ model: inherit
 
 输出必须是单一执行包，包含 3 层：
 
-1. **任务书（10板块）**
+1. **任务书（10+4 板块）**
 - 本章核心任务（目标/阻力/代价、冲突一句话、必须完成、绝对不能、反派层级、**核心主题**）
 - 接住上章（上章钩子、读者期待、开头建议）
 - 出场角色（状态、动机、情绪底色、说话风格、红线、**演变轨迹**、最近台词样本）
 - 场景与力量约束（地点、可用能力、禁用能力）
-- **时间约束**（上章时间锚点、本章时间锚点、允许推进跨度、时间过渡要求、倒计时状态）
+- **时间约束**（上章时间锚点、本章时间锚点、允许推进跨度、时间过渡要求、倒计时状态、时间预算/精确计时场景）
 - 风格指导（本章类型、参考样本、最近模式、本章建议）
 - 连续性与伏笔（时间/位置/情绪连贯；必须处理/可选伏笔）
 - 追读力策略（未闭合问题 + 钩子类型/强度、微兑现建议、差异化提示）
 - **知识盲区（Knowledge Gate）**（本章出场实体的主角知情状态，驱动第四定律约束）
 - **爽点布局（Cool-Point Layout）**（本章类型/推荐模式/三段位置规划/债务状态）
+- 风格参考样本（Style Reference）（扩展板块11）
+- 编辑建议（Editor Wisdom）（扩展板块12）
+- 文化语料库（Cultural Lexicon）（扩展板块13）
+- **强制合规清单（Mandatory Compliance Checklist, MCC）**（板块14，从大纲提取的写作合同）
 
 2. **Context Contract（内置 Step 1.5）**
 - 目标、阻力、代价、本章变化、未闭合问题、核心冲突一句话
@@ -189,7 +193,7 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" extract-context 
 
 以下信息即使预算不足也**必须保留**，优先级高于一切截断规则：
 
-1. **时间约束**：当前时间锚点、活跃倒计时、上章时间标记
+1. **时间约束**：当前时间锚点、活跃倒计时、上章时间标记、precision_scenes（若有）
 2. **本章任务书核心字段**：章纲要求、必须完成的剧情点
 3. **上章钩子与读者期待**：上章末尾悬念、读者应有的期待
 4. **伏笔优先队列前 10 条**：按 (target_chapter - current_chapter) 升序
@@ -259,7 +263,49 @@ cat "{project_root}/大纲/第{volume_id}卷-时间线.md"
 - 本章允许推进: 最大 {章内时间跨度}
 - 时间过渡要求: {若跨夜/跨日，需补写的过渡句}
 - 倒计时状态: {物资耗尽 D-5 → D-4 / 无}
+- 时间预算: (见下方 time_budget)
 ```
+
+#### 时间预算（time_budget）
+
+从大纲"章内时间跨度"计算本章可用的叙事时间总量，并识别需要精确计时的场景。
+
+**提取规则**：
+- `total_span`：直接取大纲的"章内时间跨度"字段值
+- `precision_scenes[]`：**自动生成条件** — 大纲中出现以下关键词时触发：`倒计时`、`计时器`、`限时`、`读秒`、`分钟内`、`秒内`、`时间窗口`、`deadline`
+
+**precision_scene 条目结构**：
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `type` | string | 场景类型：`countdown` / `timer` / `deadline` |
+| `start` | string | 起始时间点（从大纲提取） |
+| `end` | string | 结束时间点（从大纲提取） |
+| `duration` | string | 持续时长（人类可读格式） |
+| `note` | string | 对 writer-agent 的约束说明（需在多少叙事时间内完成） |
+
+**JSON 示例**：
+```json
+{
+  "time_budget": {
+    "total_span": "4小时",
+    "precision_scenes": [
+      {
+        "type": "countdown",
+        "start": "3:42",
+        "end": "0:00",
+        "duration": "3分42秒",
+        "note": "孕妇倒计时归零，需在约4分钟叙事内完成"
+      }
+    ]
+  }
+}
+```
+
+**缺失处理**：
+- 大纲无"章内时间跨度" → `total_span: "not_specified"`
+- 大纲无倒计时/计时器关键词 → `precision_scenes: []`
+
+**下游注入**：`precision_scenes` 将注入 writer-agent 执行包，作为**逻辑自洽铁律 L1（数字即承诺）**的参考数据 — writer 必须确保精确计时场景中的时间流逝与 `duration` 一致。
 
 **时间约束硬规则**：
 - 若 `与上章时间差` 为"跨夜"或"跨日"，必须在任务书中标注"需补写时间过渡"
@@ -537,6 +583,83 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-core-e
 
 （数据来源：`index get-recent-reading-power`、`index get-pattern-usage-stats`、`index get-debt-summary`、genre_profile）
 
+**第14板块：强制合规清单（Mandatory Compliance Checklist, MCC）** ：
+
+> MCC 是大纲→正文的写作合同，writer-agent 必须在写作前确认、写作后自检。下游 outline-compliance-checker 以 MCC 为判定基准。
+
+从本章大纲中提取以下 8 个字段，组装为 JSON 结构：
+
+```json
+{
+  "mcc_version": "1.0",
+  "chapter": "{NNNN}",
+  "required_entities": [
+    {"name": "萧炎", "role": "protagonist", "source": "大纲.关键实体"},
+    {"name": "药老", "role": "mentor", "source": "大纲.关键实体", "note": "新角色"}
+  ],
+  "required_foreshadows": [
+    {"id": "F-001", "content": "数字颜色从灰变红", "source": "大纲.伏笔处置.埋设"}
+  ],
+  "required_hook": {
+    "type": "悬念",
+    "content": "倒计时出现在自己手上",
+    "source": "大纲.钩子"
+  },
+  "chapter_goal": {
+    "content": "孕妇之死触发主角觉醒",
+    "source": "大纲.目标"
+  },
+  "required_coolpoint": {
+    "content": "主角首次看到倒计时改变的震撼",
+    "source": "大纲.爽点"
+  },
+  "forbidden_inventions": {
+    "max_new_named_characters": 0,
+    "forbidden_plot_elements": [],
+    "note": "max_new_named_characters 默认为0，除非大纲关键实体中标注'新角色'则按标注数量调整"
+  },
+  "required_change": {
+    "content": "主角从普通人变为'能看到倒计时的人'",
+    "source": "大纲.本章变化"
+  },
+  "required_open_question": {
+    "content": "倒计时能改变吗？",
+    "source": "大纲.章末未闭合问题"
+  }
+}
+```
+
+**MCC 提取规则**：
+
+| MCC 字段 | 大纲来源字段 | 提取规则 |
+|----------|------------|---------|
+| `required_entities` | 大纲.关键实体 | 逐个提取，保留角色名和角色定位；若标注"新角色"则在 note 中记录 |
+| `required_foreshadows` | 大纲.伏笔处置.埋设 | 仅提取本章需要**埋设**的伏笔（非回收） |
+| `required_hook` | 大纲.钩子 | 提取钩子类型和内容描述 |
+| `chapter_goal` | 大纲.目标 | 提取核心目标的一句话描述 |
+| `required_coolpoint` | 大纲.爽点 | 提取本章爽点描述 |
+| `forbidden_inventions` | 推导 | `max_new_named_characters` = 大纲关键实体中标注"新角色"的数量（默认0）；`forbidden_plot_elements` 从大纲"禁止拖沓区"等字段提取（若无则空数组） |
+| `required_change` | 大纲.本章变化 | 提取本章结束时必须发生的状态变化 |
+| `required_open_question` | 大纲.章末未闭合问题 | 提取必须在章末留下的未解问题 |
+
+**缺失字段处理**：当大纲缺少某字段时，MCC 对应项标记为 `"not_specified"`，不阻断流程，但在 Step 3 由 outline-compliance-checker 降级为 warning。
+
+**具名群演例外规则**：出场 ≤2 句且无剧情影响的命名角色（如"卖煎饼的老王"一句话后再无出场）不受 `max_new_named_characters` 限制，不算违规。此规则同时适用于 writer-agent 自检和 outline-compliance-checker 审查。
+
+**MCC 输出位置**：作为执行包任务书的独立板块（板块14），JSON 结构嵌入 Markdown：
+
+```markdown
+### 14. 强制合规清单（MCC）
+
+> 本清单为写作合同，writer-agent 必须在写作前内部确认、写作后逐项自检。
+
+\`\`\`json
+{MCC JSON}
+\`\`\`
+
+**具名群演例外**：出场≤2句且无剧情影响的命名角色不算违规。
+```
+
 Context Contract 必须字段（不可缺）：
 - `目标` / `阻力` / `代价` / `本章变化` / `未闭合问题`
 - `核心冲突一句话`
@@ -565,7 +688,7 @@ Context Contract 必须字段（不可缺）：
 ## 成功标准
 
 1. ✅ 创作执行包可直接驱动 Step 2A（无需补问）
-2. ✅ 任务书包含 10 个板块（含时间约束、知识盲区、爽点布局）
+2. ✅ 任务书包含 10+4 个板块（含时间约束、知识盲区、爽点布局、扩展板块11-13、MCC板块14）
 3. ✅ 上章钩子与读者期待明确（若存在）
 4. ✅ 角色动机/情绪为推断结果（非空）
 5. ✅ 最近模式已对比，给出差异化建议
@@ -574,9 +697,15 @@ Context Contract 必须字段（不可缺）：
 8. ✅ 第 7 板块已基于 `plot_threads.foreshadowing` 按紧急度排序输出
 9. ✅ Context Contract 字段完整且与任务书一致（含 `protagonist_knowledge_gate`）
 10. ✅ 逻辑红线校验通过（fail=0）
-11. ✅ **时间约束板块完整**（上章时间锚点、本章时间锚点、允许推进跨度、过渡要求、倒计时状态）
+11. ✅ **时间约束板块完整**（上章时间锚点、本章时间锚点、允许推进跨度、过渡要求、倒计时状态、time_budget）
 12. ✅ **时间逻辑红线通过**（无回跳、无倒计时跳跃、大跨度有过渡要求）
 13. ✅ **第9板块（知识盲区）完整**：本章出场实体均有知情状态标注，`protagonist_knowledge_gate` 已注入 Context Contract
 14. ✅ **第10板块（爽点布局）完整**：三段位置规划明确，债务状态已列出
 15. ✅ **第8.8板块（场景写作技法）完整**：场景类型已推断，对应技法清单已注入
 16. ✅ **第12板块（编辑建议）**：当 editor-wisdom 模块启用且检索有结果时，规则按 severity 分组输出；模块禁用或检索为空时不输出此板块
+17. ✅ **第14板块（MCC）完整**：8个字段均已从大纲提取（required_entities、required_foreshadows、required_hook、chapter_goal、required_coolpoint、forbidden_inventions、required_change、required_open_question），缺失字段标记为 `not_specified`
+18. ✅ **MCC JSON schema 正确**：输出为合法 JSON，嵌入执行包板块14
+19. ✅ **forbidden_inventions.max_new_named_characters** 正确计算：默认0，仅当大纲关键实体标注"新角色"时调整
+20. ✅ **具名群演例外规则已标注**：出场≤2句且无剧情影响的命名角色不算违规
+21. ✅ **time_budget 完整**：`total_span` 已从大纲提取（或标记 `not_specified`），大纲含倒计时/计时器关键词时 `precision_scenes` 非空
+22. ✅ **precision_scenes 下游注入标注**：precision_scenes 已标注将注入 writer-agent 执行包作为 L1 铁律参考数据

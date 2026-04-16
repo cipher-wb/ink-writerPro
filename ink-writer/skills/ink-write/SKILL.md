@@ -744,9 +744,10 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 - 当 `chapter <= 3` 时，必须额外读取 `.ink/golden_three_plan.json` 与 `.ink/preferences.json`，进入黄金三章模式。
 - 输出必须同时包含：
   - 8 板块任务书（本章核心任务/接住上章/角色/场景与力量约束/时间约束/风格指导/连续性与伏笔/追读力策略）；
+  - **板块 14: 强制合规清单（MCC）**——从大纲自动提取 required_entities、required_foreshadows、required_hook、chapter_goal、required_coolpoint、forbidden_inventions、required_change、required_open_question，供 Step 2A 写作合同和 Step 3 outline-compliance-checker 消费；
   - Context Contract 全字段（目标/阻力/代价/本章变化/未闭合问题/开头类型/情绪节奏/信息密度/过渡章判定/追读力设计）；
   - 若 `chapter <= 3`：额外包含 `golden_three_role / opening_window_chars / reader_promise / must_deliver_this_chapter / end_hook_requirement`；
-  - Step 2A 可直接消费的“写作执行包”（章节节拍、不可变事实清单、禁止事项、终检清单）。
+  - Step 2A 可直接消费的”写作执行包”（章节节拍、不可变事实清单、禁止事项、终检清单）。
 - 合同与任务书出现冲突时，以“大纲与设定约束更严格者”为准。
 - 默认应直接复用脚本产出的 execution pack，不再起子代理做二次整理。
 
@@ -802,12 +803,29 @@ cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 - **禁止英文结论话术**：正文、审查说明、润色说明、变更摘要、最终报告中不得出现 Overall / PASS / FAIL / Summary / Conclusion 等英文结论标题。
 - **英文仅限机器标识**：CLI flag（`--batch`）、checker id（`consistency-checker`）、DB 字段名（`anti_ai_force_check`）、JSON 键名等不可改的接口名保持英文，其余一律使用简体中文。
 
+**MCC 写作前确认**（执行包含板块14时必做）：
+- 读取板块 14 MCC，内部生成"写作合同"（不输出，仅内部确认）
+- 逐项列出 required_entities、required_foreshadows、required_hook、chapter_goal、required_coolpoint、required_change、required_open_question、forbidden_inventions
+- MCC 中标记为 `not_specified` 的项跳过
+
 防检测自检（交出草稿前必须完成）：
 - 检查是否存在连续 4+ 句长度在 15-25 字的"平坦区"，若有则插入碎句或长流句打破。
 - 检查是否有连续 500 字全部在推进情节，若有则插入无功能感官细节。
 - 检查对话是否所有角色风格和长度趋同，若有则差异化处理。
 - 检查单句段占比是否 ≥ 25%，不足则拆分或增加碎片段。
 - 以上自检发现问题时直接修复，不另起步骤。
+
+**MCC 写作后自检**（输出正文之前必做）：
+- 逐项验证 6 项：
+  1. ✅/❌ 每个 required_entity 是否在正文中出场（至少有名字或明确指代出现）
+  2. ✅/❌ 每个 required_foreshadow 是否在正文中有对应段落
+  3. ✅/❌ required_hook 是否在章末 300 字内出现
+  4. ✅/❌ chapter_goal 核心事件是否存在且未被自创内容喧宾夺主
+  5. ✅/❌ 正文中无 MCC 未列出的新命名角色（具名群演除外：出场≤2句且无剧情影响）
+  6. ✅/❌ required_change 是否在正文中体现
+- 任一项 ❌ → 自行修正后重新输出，最多重试 2 轮
+- 自检结果持久化：`.ink/tmp/mcc_selfcheck_ch{NNNN}.json`
+- 自检失败超 2 轮 → 标记 `mcc_selfcheck_failed`，Step 3 强制触发 outline-compliance-checker
 
 输出：
 - 章节草稿（可进入 Step 2A.5 字数校验）。
@@ -964,10 +982,12 @@ Task 传参硬约束：
 - checker 不得自行扫描 `正文/`、`设定集/`、`.ink/` 目录，不得读取 `.db`
 
 核心审查器（始终执行）：
-- `consistency-checker`
-- `continuity-checker`
-- `ooc-checker`
-- `anti-detection-checker`
+- `consistency-checker`（权重 25%）
+- `continuity-checker`（权重 15%）
+- `ooc-checker`（权重 20%）
+- `logic-checker`（权重 15%）——章内微观逻辑验证（L1-L8：数字算术/动作序列/属性一致/空间连续/物品连续/感官一致/对话归属/因果逻辑）
+- `outline-compliance-checker`（权重 15%）——大纲合规验证（O1-O6：实体出场/禁止发明/目标充分性/伏笔埋设/钩子合规/黄金三章附加），消费 MCC（板块14）
+- `anti-detection-checker`（权重 10%）
 - `reader-simulator`（**快速模式**，v9.0 升格为核心裁判。输出 `reader_verdict` 7 维评分，驱动 Step 4 自动返修）
 
 条件审查器（`auto` 命中时执行）：
@@ -977,7 +997,7 @@ Task 传参硬约束：
 - `pacing-checker`
 - `proofreading-checker`
 
-审查范围：核心 5 个 + auto 命中的条件审查器（始终全量执行）。
+审查范围：核心 7 个 + auto 命中的条件审查器（始终全量执行）。
 
 **reader_verdict 联动逻辑**（Step 3 完成后判定）：
 - `reader_verdict.verdict == "pass"` → 正常进入 Step 4
@@ -1007,9 +1027,10 @@ Task 传参硬约束：
 
 推荐调度顺序：
 1. `consistency-checker` + `continuity-checker` 并发（最多 2 个）
-2. `ooc-checker` + `anti-detection-checker` 并发（最多 2 个）
-3. `reader-simulator`（快速模式，核心裁判）
-4. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker`
+2. `ooc-checker` + `logic-checker` 并发（最多 2 个）
+3. `outline-compliance-checker` + `anti-detection-checker` 并发（最多 2 个）
+4. `reader-simulator`（快速模式，核心裁判）
+5. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker`
 
 审查指标落库（必做）：
 ```bash
@@ -1029,7 +1050,7 @@ review_metrics 字段约束（当前工作流约定只传以下字段）：
   "start_chapter": 100,
   "end_chapter": 100,
   "overall_score": 85.0,
-  "dimension_scores": {"爽点密度": 8.5, "设定一致性": 8.0, "节奏控制": 7.8, "人物塑造": 8.2, "连贯性": 9.0, "追读力": 8.7, "AI味检测": 7.2},
+  "dimension_scores": {"爽点密度": 8.5, "设定一致性": 8.0, "节奏控制": 7.8, "人物塑造": 8.2, "连贯性": 9.0, "章内逻辑": 8.8, "大纲合规": 9.0, "追读力": 8.7, "AI味检测": 7.2},
   "severity_counts": {"critical": 0, "high": 1, "medium": 2, "low": 0},
   "critical_issues": ["问题描述"],
   "report_file": "审查报告/第100-100章审查报告.md",
@@ -1075,6 +1096,53 @@ python3 -X utf8 "$SCRIPTS_DIR/step3_harness_gate.py" \
 - **exit 2**：脚本异常，输出 WARNING 并继续 Step 4（不阻断）
 
 此步骤是确定性检查，不依赖 LLM 判断。即使 Step 3 的 LLM 审查遗漏了某条闸门规则，此脚本也会兜底拦截。
+
+#### Step 3.51: 逻辑门禁（Logic Gate）
+
+> 基于 logic-checker 结果判定章内微观逻辑是否通过。
+
+**Hard Block 条件**：logic-checker 存在 critical issue 或 ≥2 个 high severity issue。
+
+```text
+logic_result = Step 3 中 logic-checker 的输出
+
+if logic_result has critical OR count(high) >= 2:
+    生成 repair_context（精简版 issues[]，每条仅含 type/severity/location/suggestion，≤500 tokens）
+    退回 Step 2A 重写，注入 repair_context 作为 writer-agent 的修复指引
+    逻辑门禁回退计数 += 1
+    if 逻辑门禁回退计数 >= 3:
+        暂停流程，输出诊断报告请求人工干预
+else:
+    logic_result 中的 medium/low issues 传递给 Step 4 polish-agent（logic_fix_prompt）
+```
+
+**overall_score cap**：logic-checker 存在 critical issue 时，overall_score 上限 cap 到 50。
+
+#### Step 3.52: 大纲合规门禁（Outline Compliance Gate）
+
+> 基于 outline-compliance-checker 结果判定正文是否忠于大纲。
+
+**Hard Block 条件**：outline-compliance-checker 存在 critical issue 或 ≥2 个 high severity issue。
+
+```text
+occ_result = Step 3 中 outline-compliance-checker 的输出
+
+if occ_result has critical OR count(high) >= 2:
+    生成 repair_context（精简版 issues[]，每条仅含 type/severity/location/suggestion，≤500 tokens）
+    退回 Step 2A 重写，注入 repair_context 作为 writer-agent 的修复指引
+    大纲合规门禁回退计数 += 1
+    if 大纲合规门禁回退计数 >= 3:
+        暂停流程，输出诊断报告请求人工干预
+else:
+    occ_result 中的 medium/low issues 传递给 Step 4 polish-agent（outline_fix_prompt）
+```
+
+**overall_score cap**：outline-compliance-checker 存在 critical issue 时，overall_score 上限 cap 到 50。
+
+**Step 3.51/3.52 → Step 2A 回退路径**：
+- 回退时 writer-agent 接收 `repair_context`：checker 报告的 issues[] 精简版（type/severity/location/suggestion），不传完整报告
+- 每个门禁独立计数回退次数，最多 2 次回退
+- 第 3 次失败 → 暂停请求人工干预，不再自动重试
 
 #### Step 3.6: 追读力门禁（hook retry gate）
 
@@ -1239,21 +1307,23 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 ```
 
 执行顺序：
-1. 修复 `critical`（必须）
-2. 修复 `high`（不能修复则记录 deviation）
-3. 处理 `medium/low`（按收益择优）
-4. **Style RAG 人写参考检索**（当 `fix_priority` 非空时）：
+1. **P0: 逻辑修复**（logic_fix_prompt，来自 logic-checker 的 medium/low）——数字只改数字、空间只加过渡句、物品加状态描写，最小化改动
+2. **P0.5: 大纲合规修复**（outline_fix_prompt，来自 outline-compliance-checker 的 medium/low）——补充展开/强化可识别度/调整位置，不改剧情走向
+3. 修复 `critical`（必须）
+4. 修复 `high`（不能修复则记录 deviation）
+5. 处理 `medium/low`（按收益择优）
+6. **Style RAG 人写参考检索**（当 `fix_priority` 非空时）：
    - 调用 `ink_writer.style_rag.build_polish_style_pack(fix_priorities, chapter_text, chapter_no, retriever, genre)` 检索人写标杆片段
    - 将返回的 `PolishStylePack.format_full_prompt()` 注入改写上下文
    - 参考人写片段的句式节奏和表达手法，**不可照搬内容或剧情**
-5. **AI味定向修复**（根据 `anti-detection-checker` 的 `fix_priority` 列表，结合人写参考逐项修复）：
+7. **AI味定向修复**（根据 `anti-detection-checker` 的 `fix_priority` 列表，结合人写参考逐项修复）：
    - 句长平坦区：在指定位置插入碎句（≤8字）或合并为长流句（≥35字）
    - 信息密度无波动：在指定位置插入无功能感官句（环境/声音/温度/气味细节）
    - 因果链过密：删除指定位置的中间因果环节，让读者自行推断
    - 对话同质：按指定角色差异化对话长度和风格（加入省略/打断/反问/语气词）
    - 段落过于工整：拆分指定长段为碎片段，增加单句段
    - 视角泄露：改写为POV角色的有限感知（猜测/推断/不确定）
-6. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
+8. 执行 Anti-AI 与 No-Poison 全文终检（必须输出 `anti_ai_force_check: pass/fail`）
 
 黄金三章定向修复（当 `chapter <= 3` 时必须执行）：
 - 前移触发点，禁止把强事件压到开头窗口之后。
@@ -1279,6 +1349,8 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
 
    | 检查项 | 判定规则 | 违规处理 |
    |--------|---------|---------|
+   | 逻辑修复引入新矛盾 | P0 逻辑修复的 diff 是否引入了新的数字错误、动作矛盾或空间跳跃 | `critical`：恢复原文该段，记录 deviation |
+   | 大纲合规修复偏离剧情 | P0.5 大纲合规修复的 diff 是否改变了剧情走向、角色决策或因果关系 | `critical`：恢复原文该段，记录 deviation |
    | 剧情事实变更 | 角色行为结果、因果关系、数字/数量是否改变 | `critical`：必须恢复原文该段 |
    | 设定违规引入 | 变更后出现原文没有的能力/地点/角色名 | `critical`：必须恢复原文该段 |
    | OOC 引入 | 角色语气/决策风格与角色档案明显偏离 | `high`：恢复或重新改写该段 |
