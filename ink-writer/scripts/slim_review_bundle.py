@@ -98,10 +98,14 @@ def resolve_profile(checker_name: str) -> list[str] | None:
     return None
 
 
-def slim_bundle(full_bundle: dict[str, Any], checker_name: str) -> dict[str, Any]:
+def slim_bundle(
+    full_bundle: dict[str, Any],
+    checker_name: str,
+    extra_fields: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Extract a slim bundle for the given checker.
 
-    Returns a dict with META_FIELDS + checker-specific fields.
+    Returns a dict with META_FIELDS + checker-specific fields + optional extra_fields.
     Raises ValueError if the checker has no known profile.
     """
     profile_fields = resolve_profile(checker_name)
@@ -109,15 +113,26 @@ def slim_bundle(full_bundle: dict[str, Any], checker_name: str) -> dict[str, Any
         raise ValueError(f"Unknown checker: {checker_name}")
 
     wanted = set(META_FIELDS) | set(profile_fields)
-    return {k: v for k, v in full_bundle.items() if k in wanted}
+    result = {k: v for k, v in full_bundle.items() if k in wanted}
+    if extra_fields:
+        result.update(extra_fields)
+    return result
 
 
 def generate_slim_bundles(
     bundle_path: Path,
     checkers: list[str],
     outdir: Path,
+    per_checker_extras: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Path]:
     """Generate slim bundle files for each checker.
+
+    Args:
+        bundle_path: Path to the full review bundle JSON.
+        checkers: List of checker names.
+        outdir: Output directory for slim bundles.
+        per_checker_extras: Optional dict mapping checker_name -> extra fields to inject.
+            Example: {"logic-checker": {"precheck_results": {...}}}
 
     Returns a mapping of checker_name -> output_path.
     On per-checker failure, maps to the original full bundle path (fallback).
@@ -127,11 +142,12 @@ def generate_slim_bundles(
 
     outdir.mkdir(parents=True, exist_ok=True)
     result: dict[str, Path] = {}
+    extras = per_checker_extras or {}
 
     for checker in checkers:
         out_file = outdir / f"review_bundle_ch{chapter_padded}_{checker}.json"
         try:
-            slimmed = slim_bundle(full_bundle, checker)
+            slimmed = slim_bundle(full_bundle, checker, extras.get(checker))
             out_file.write_text(
                 json.dumps(slimmed, ensure_ascii=False, indent=2),
                 encoding="utf-8",
@@ -149,6 +165,11 @@ def main() -> None:
     parser.add_argument("--bundle", required=True, help="Path to full review bundle JSON")
     parser.add_argument("--checkers", required=True, help="Comma-separated checker names")
     parser.add_argument("--outdir", required=True, help="Output directory for slim bundles")
+    parser.add_argument(
+        "--precheck",
+        action="store_true",
+        help="Run logic_precheck and inject results into logic-checker bundle",
+    )
     args = parser.parse_args()
 
     bundle_path = Path(args.bundle)
@@ -159,7 +180,27 @@ def main() -> None:
     checkers = [c.strip() for c in args.checkers.split(",") if c.strip()]
     outdir = Path(args.outdir)
 
-    result = generate_slim_bundles(bundle_path, checkers, outdir)
+    per_checker_extras: dict[str, dict[str, Any]] | None = None
+    if args.precheck and "logic-checker" in checkers:
+        try:
+            from logic_precheck import run_precheck
+
+            full_bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
+            chapter_text = full_bundle.get("chapter_text", "")
+            character_snapshot = {
+                "protagonist_snapshot": (full_bundle.get("core_context") or {}).get(
+                    "protagonist_snapshot", {}
+                ),
+                "appearing_characters": (full_bundle.get("scene_context") or {}).get(
+                    "appearing_characters", []
+                ),
+            }
+            precheck_results = run_precheck(chapter_text, character_snapshot)
+            per_checker_extras = {"logic-checker": {"precheck_results": precheck_results}}
+        except Exception as e:
+            print(f"WARNING: logic precheck failed, skipping: {e}", file=sys.stderr)
+
+    result = generate_slim_bundles(bundle_path, checkers, outdir, per_checker_extras)
 
     # Output mapping as JSON for consumption by the workflow
     output = {checker: str(path) for checker, path in result.items()}

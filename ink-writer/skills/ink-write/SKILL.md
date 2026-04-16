@@ -1064,13 +1064,17 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 生成按 checker 瘦身包（必做，紧随完整包之后）：
 ```bash
 # selected_checkers 为本次选中的 checker 列表（逗号分隔）
+# --precheck: 自动运行 logic_precheck.py 并将结果注入 logic-checker 的瘦身包
 python3 -X utf8 "${SCRIPTS_DIR}/slim_review_bundle.py" \
   --bundle "${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json" \
   --checkers "${selected_checkers}" \
   --outdir "${PROJECT_ROOT}/.ink/tmp" \
+  --precheck \
   > "${PROJECT_ROOT}/.ink/tmp/slim_bundle_map.json"
 # 输出 JSON 映射：checker_name → 瘦身包路径
 # 若某 checker 瘦身失败，自动退回完整包路径（向后兼容）
+# --precheck 运行 L1/L3 计算型预检，结果注入 logic-checker 包的 precheck_results 字段
+# 若预检失败，静默跳过（不阻断流程）
 ```
 
 Task 传参硬约束：

@@ -51,7 +51,7 @@
         "至少5个单元测试（含第一章倒计时bug作为回归测试）"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "新建 ink-writer/scripts/logic_precheck.py + 测试 + 修改 logic-checker.md。"
     },
     {
