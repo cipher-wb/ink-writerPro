@@ -171,6 +171,27 @@
   - 禁止事项和成功标准在文件最末尾
 ---
 
+## 2026-04-16 - US-011
+- 实现了 ink-write SKILL.md 流程文档全面更新
+- Files changed: ink-writer/skills/ink-write/SKILL.md
+- 修改内容：
+  - Step 1 输出规格新增板块14 MCC描述
+  - Step 2A 新增"MCC写作前确认"和"MCC写作后自检"两个环节（6项验证+2轮重试+失败标记）
+  - Step 3 核心审查器从5个扩展到7个，新增 logic-checker(15%) 和 outline-compliance-checker(15%)，权重表完整更新
+  - Step 3 调度顺序从4轮扩展到5轮
+  - Step 3.51 新增逻辑门禁（Logic Gate）：critical/≥2high → 回退Step 2A + repair_context
+  - Step 3.52 新增大纲合规门禁（Outline Compliance Gate）：同上规则
+  - 回退机制文档化：每个门禁独立计数，最多2次回退，第3次暂停人工干预
+  - overall_score cap 到50（新checker存在critical时）
+  - Step 4 执行顺序新增 P0(逻辑修复) 和 P0.5(大纲合规修复)，原有步骤重新编号1-8
+  - Step 4.5 安全校验表新增2项：逻辑修复引入新矛盾检测 + 大纲合规修复偏离剧情检测
+  - dimension_scores 新增"章内逻辑"和"大纲合规"两个维度
+- **Learnings for future iterations:**
+  - SKILL.md 非常长（~1700行），修改点分散在多处，需要仔细定位每个相关区域
+  - Step 3 门禁编号规律：3.5(Harness) → 3.51(Logic) → 3.52(Outline) → 3.6(追读力) → 3.7(情绪) → 3.8(AI味) → 3.9(语气指纹) → 3.10(明暗线)
+  - dimension_scores 是中文键名（爽点密度/设定一致性/节奏控制/人物塑造/连贯性/章内逻辑/大纲合规/追读力/AI味检测）
+---
+
 ## 2026-04-16 - US-008
 - 实现了 step-3-review-gate.md 新增 logic-checker 和 outline-compliance-checker 为核心审查器，含硬阻断规则
 - Files changed: ink-writer/skills/ink-write/references/step-3-review-gate.md

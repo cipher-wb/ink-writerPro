@@ -192,7 +192,7 @@
         "不破坏现有其他步骤描述"
       ],
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/skills/ink-write/SKILL.md。最后执行，依赖所有前序US。PRD详见 tasks/prd-logic-fortress.md US-010。"
     }
   ]
