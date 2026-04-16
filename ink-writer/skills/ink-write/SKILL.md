@@ -984,6 +984,22 @@ echo "当前章节字数: ${WORD_COUNT}"
 
 ### Step 2B：风格适配
 
+#### Step 2B 前置指标计算（必做，决定执行模式）
+
+```bash
+STEP2B_METRICS=$(python3 -X utf8 “${SCRIPTS_DIR}/step2b_metrics.py” \
+  --chapter-file “${CHAPTER_FILE}” 2>/dev/null) || true
+```
+
+判定逻辑：
+- **脚本不存在或执行失败** → 退回全量模式（向后兼容）。
+- **`targeted_mode: true`**（句长均值 > 20字 且 对话占比 > 10%）→ 进入**定向检查模式**。
+- **`targeted_mode: false`** → 执行原有的**全量风格适配**。
+
+输出 `STEP2B_METRICS` 中的 `mode` 字段到日志，便于追溯。
+
+#### 模式 A：全量风格适配（`mode == “full”`）
+
 执行前加载：
 ```bash
 cat “${SKILL_ROOT}/references/style-adapter.md”
@@ -1001,8 +1017,33 @@ cat “${SKILL_ROOT}/references/style-adapter.md”
 当本地 `style_samples` 表为空或匹配结果不足 2 条时（新项目常见情况）：
 1. 从 `scene-craft-index.md` 的对应场景类型范例中提取 2-3 个参考片段
 2. 若项目配置了 `genre`，从 benchmark `style_rag.db`（如果存在）按 genre + scene_type 检索 3 个标杆片段
-3. 将这些 fallback 样本注入执行包第 11 板块，标记为 `source: "benchmark_fallback"`
+3. 将这些 fallback 样本注入执行包第 11 板块，标记为 `source: “benchmark_fallback”`
 4. 从第 11 章起，本地高分章节应已积累足够样本，不再触发 fallback
+
+#### 模式 B：定向检查模式（`mode == “targeted”`）
+
+> 当 writer-agent (Step 2A) 产出已内化风格（句长、对话占比达标），Step 2B 降级为定向红线检查，
+> 只处理 3 项残留职责，跳过全文改写。省约 80% Step 2B token。
+
+执行前加载：
+```bash
+cat “${SKILL_ROOT}/references/style-adapter.md”  # 仅需读取”定向检查模式”章节
+```
+
+定向检查仅做 3 件事（参考 `STEP2B_METRICS` 中的检测结果辅助定位）：
+
+1. **拆分超长句**（>55 字的非对话句）
+   - `STEP2B_METRICS.long_sentences` 已预标记位置，逐一拆分
+   - 35-55 字长句保留不动（正常节奏纵深）
+2. **删除总结式旁白**（”由此可见”、”换句话说”、”总而言之”等 AI 痕迹短语）
+   - `STEP2B_METRICS.summary_phrases` 已预标记位置和上下文
+   - 替换为直接结论动作，不做元叙述
+3. **清除模板腔**（检查 `ai-word-blacklist.md` 中的黑名单词）
+   - 当单章使用密度超过标杆均值 2 倍时替换
+
+硬约束（与全量模式相同）：
+- 不改剧情事实、事件顺序、角色行为结果、设定规则。
+- **定向检查完成后必须自检**：确认所有人名、地名、数字、行为结果、因果关系零偏差。
 
 输出：
 - 风格化正文（覆盖原章节文件）。
