@@ -23,7 +23,7 @@ allowed-tools: Read Write Edit Grep Bash Task
 
 ## 模式定义
 
-- `/ink-write`：Step 1 → 2A → 2A.5 → 2B → 2C → 3 → 4 → 4.5 → 5 → 6
+- `/ink-write`：Step 1 → 2A → 2A.5 → 2B → 2C → 3 → 4 → 4.5 → 5 → 5.5 → 6
 
 ### Agent 调用成本控制策略
 
@@ -1655,6 +1655,44 @@ C.4 审查分数趋势: PASS / WARNING / SKIPPED
 ```
 
 仅当 C.1 为 FAIL（重试后仍失败）时阻断 Step 5 完成。其余 WARNING 记录到审查报告但不阻断。
+
+### Step 5.5：前序章数据即时修复（Cascading Data Fix）
+
+> **原理**：Step 3 审查可能发现前序章的数据层问题（如时间线锚点错误、角色状态不一致）。这类问题会通过 context-agent 传播到后续章节——如果不立即修复，每一章都会继承错误数据，形成雪崩式传播。正文层问题（如某段描写不够充分）不会传播，可以等 5 章检查点批量修复。
+
+**触发条件**（必须同时满足）：
+1. Step 3 审查报告中存在涉及**前序章**的 `TIMELINE_ISSUE`（severity ≥ high）或数据一致性问题
+2. Mini-Audit C.1 或 C.3 报告了 FAIL 或 WARNING
+
+**不触发的情况**：
+- 问题仅涉及当前章正文（已由 Step 4 polish 处理）
+- 问题仅涉及前序章正文（等 5 章检查点由 ink-fix 批量处理）
+- Mini-Audit 全部 PASS
+
+**执行逻辑**：
+
+```
+if (C.1 == FAIL 且已自动修复) or (C.3 == WARNING):
+    # 1. 识别受影响的前序章数据
+    affected = 从 Mini-Audit 报告中提取受影响的章节号和字段
+    
+    # 2. 仅修复数据层（state.json / index.db），不改正文
+    for chapter_id in affected:
+        修复 state.json 中 chapter_meta[chapter_id] 的错误字段
+        修复 index.db 中对应记录（时间锚点、角色状态等）
+    
+    # 3. 验证修复
+    重跑 Mini-Audit C.1 和 C.3 验证数据一致性
+    
+    # 4. 记录修复日志
+    输出: "Step 5.5: 已修复前序章数据 [ch{N}] — {修复内容摘要}"
+```
+
+**约束**：
+- **只修数据，不改正文**：正文修复需要全局视野，交给 5 章检查点的 ink-fix
+- **耗时预算**：≤ 30 秒（仅 JSON/SQLite 操作，无 LLM 调用）
+- **最多修复 3 章**：超过 3 章受影响说明问题系统性，暂停并输出诊断报告
+- **修复失败不阻断**：记录 WARNING 继续进入 Step 6，留给检查点处理
 
 ### Step 6：Git 备份（可失败但需说明）
 
