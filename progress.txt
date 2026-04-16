@@ -94,3 +94,14 @@
   - .claude/ 路径被 Claude Code 标记为敏感，直接 rm 会被拒绝，需要用 git rm 代替
   - marketplace 的 commit 是在 marketplace 仓库中，主项目仓库只更新 prd.json/progress.txt
 ---
+
+## 2026-04-16 - US-008
+- README.md 从 552 行开发者视角重写为 169 行用户视角
+- 结构：一句话介绍 → 功能亮点(6项场景化) → 安装(3平台+RAG) → 快速上手(quick+deep+日常) → 命令速查(15条) → FAQ(6问)
+- 包含 --quick 模式的完整使用示例
+- Files changed: README.md
+- **Learnings for future iterations:**
+  - 用户视角 README 核心是"我能用它做什么"而非"它有什么技术"
+  - 版本历史、架构图、Agent 详情等开发者内容全部移除，减少 70% 篇幅
+  - FAQ 直接回答用户最关心的 6 个问题，不堆技术细节
+---

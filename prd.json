@@ -127,7 +127,7 @@
         "总长度控制在 200 行以内"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "最后执行，因为需要反映前面所有变更（特别是 --quick 模式）"
     }
   ]
