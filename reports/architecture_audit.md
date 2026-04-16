@@ -4,9 +4,9 @@
 
 ## Summary
 
-- **Python modules scanned**: 174
+- **Python modules scanned**: 177
 - **Import cycles found**: 1
-- **Unused module candidates**: 84
+- **Unused module candidates**: 86
 - **Agents scanned**: 21
 - **Agent overlap pairs**: 9
 - **Repeated prompt fragments**: 50
@@ -92,6 +92,8 @@
 - `semantic_recall.chapter_index` (/Users/cipher/AI/ink/ink-writer/ink_writer/semantic_recall/chapter_index.py)
 - `semantic_recall.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/semantic_recall/config.py)
 - `semantic_recall.retriever` (/Users/cipher/AI/ink/ink-writer/ink_writer/semantic_recall/retriever.py)
+- `slim_review_bundle` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/slim_review_bundle.py)
+- `step2b_metrics` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/step2b_metrics.py)
 - `step3_harness_gate` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/step3_harness_gate.py)
 - `style_rag` (/Users/cipher/AI/ink/ink-writer/ink_writer/style_rag/__init__.py)
 - `style_rag.polish_integration` (/Users/cipher/AI/ink/ink-writer/ink_writer/style_rag/polish_integration.py)
@@ -110,7 +112,7 @@
 | consistency-checker | 设定一致性检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | context-agent | 上下文搜集Agent，内置 Context Contract，输出可被 Step 2A 直接消费的创作执行包。 | Read, Grep, Bash | ```json {   "chapter": 100,   "project_root": "D:/… | 输出必须是单一执行包，包含 3 层：  1. **任务书（10+4 板块）** - 本章核心任务（目… |
 | continuity-checker | 连贯性检查，输出结构化报告供润色步骤参考 | Read |  |  |
-| data-agent | 数据处理Agent，负责 AI 实体提取、场景切片、索引构建，并记录钩子/模式/结束状态与章节摘要。 | Read, Write, Bash | ```json {   "chapter": 100,   "chapter_file": "正文/… | ```json {   "entities_appeared": [     {"id": "xia… |
+| data-agent | 数据处理Agent，负责 AI 实体提取、场景切片、索引构建，并记录钩子/模式/结束状态与章节摘要。 | Read, Write, Bash | ```json {   "chapter": 100,   "chapter_file": "正文/… | ### 输出格式硬约束（纯 JSON，零解释文字）  > **铁律**：Data Agent 的最终… |
 | editor-wisdom-checker | 编辑智慧检查器，基于检索到的编辑规则对章节进行评分，输出违规列表和修复建议。 | Read | - `chapter_text`: 章节正文 - `chapter_no`: 章节号 - `rule… | ```json {   "agent": "editor-wisdom-checker",   "c… |
 | emotion-curve-checker | 情绪心电图检查，检测情绪曲线平淡/单调/与目标曲线偏差，输出结构化报告 | Read |  | ```json {   "agent": "emotion-curve-checker",   "c… |
 | foreshadow-tracker | 伏笔生命周期追踪器，每章扫描所有活跃伏笔，检测逾期/沉默/密度异常，输出结构化报告 | Read |  |  |

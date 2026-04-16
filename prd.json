@@ -1,107 +1,123 @@
 {
   "project": "ink-writer",
-  "branchName": "ralph/wordcount-and-progress",
-  "description": "字数上限收紧（4000字硬上限）+ 双层进度条（内层12步/外层章节级）。详见 tasks/prd-wordcount-and-progress.md。",
+  "branchName": "ralph/token-optimization",
+  "description": "Token & Time 优化：审查包按checker瘦身、计算型预检、Step 2B降级、Context裁剪、Data-Agent JSON输出、Prompt结构优化。目标：30min→20min，token -35%，质量零下降。详见 tasks/prd-token-optimization.md。",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Writer-Agent 字数上限收紧",
-      "description": "As a writer-agent spec, I need the climax chapter word limit reduced from 50% overshoot (4500) to 33% overshoot (4000 hard cap).",
+      "title": "质量验证脚本",
+      "description": "As a developer, I need an automated script to verify writing quality hasn't degraded after optimizations by comparing overall_score, checker scores, issue counts, and entity extraction counts.",
       "acceptanceCriteria": [
-        "writer-agent.md 中「关键章/高潮章/卷末章：可上浮 50%」改为「可上浮 33%（硬上限 4000 字）」（约L176）",
-        "writer-agent.md 硬性指标「默认 2200-3000，关键章可上浮50%」改为「默认 2200-3000，关键章可上浮33%，硬上限 4000」（约L331）",
-        "硬下限 2200 字不变",
-        "不破坏现有字数校验逻辑框架"
+        "新建 scripts/verify_optimization_quality.py",
+        "脚本接收两个审查报告目录路径（--before 和 --after），解析其中的审查 JSON 文件",
+        "对比4个维度：overall_score差值(阈值≤2)、各checker分数差值(阈值≤3)、issues数量差值(优化后不多于优化前超1个)、实体提取数量差值(阈值≤5%)",
+        "输出结构化报告：PASS/FAIL + 详细对比表（markdown格式）",
+        "任一指标超阈值输出FAIL+具体超标项",
+        "至少3个单元测试覆盖：全部PASS场景、score超标FAIL场景、issues超标FAIL场景",
+        "脚本可通过 python3 scripts/verify_optimization_quality.py --before dir1 --after dir2 直接运行"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "修改 ink-writer/agents/writer-agent.md。字数线第1步。"
+      "notes": "所有后续US都依赖此脚本做质量验证。第一个实施。位于 ink-writer/scripts/verify_optimization_quality.py。"
     },
     {
       "id": "US-002",
-      "title": "SKILL.md Step 2A.5 字数校验阈值更新",
-      "description": "As the ink-write workflow spec, I need Step 2A.5 word count validation thresholds updated from 4500 to 4000.",
+      "title": "审查包按Checker生成专用瘦身版",
+      "description": "As the Step 3 review pipeline, I need per-checker tailored review bundles that only include fields each checker actually consumes, reducing redundant data transfer.",
       "acceptanceCriteria": [
-        "SKILL.md Step 2A.5 字数校验表：3501-4000字 = 偏长（关键章可放行），>4000字 = 严重超标必须精简",
-        "删除原来 3501-4500 和 >4500 的两行，替换为 3501-4000 和 >4000",
-        "上浮描述从「上浮 50%」改为「上浮 33%（不超过 4000）」",
-        "精简规则不变（删冗余/合并/压缩过渡，禁止删关键剧情点）",
-        "不修改硬下限 2200 相关逻辑"
+        "step-3-review-gate.md 新增 checker 输入 profile 映射表，定义7个核心checker各自需要的字段清单",
+        "Profile定义：anti-detection(chapter_text+meta)、logic(chapter_text+character_snapshot+setting_snapshot+mcc)、outline-compliance(chapter_text+outline_excerpt+character_snapshot+mcc)、continuity(chapter_text+previous_summary+memory_context+outline_excerpt)、consistency(chapter_text+setting+character+previous_summary+memory_context+narrative_commitments)、ooc(chapter_text+character_snapshot+previous_summary+setting_snapshot)、reader-pull(chapter_text+reader_signal+memory_context+outline_excerpt+golden_three_contract)",
+        "SKILL.md Step 3 审查包生成逻辑更新：为每个checker生成专用瘦身包（从完整包中提取对应profile的字段子集）",
+        "降级兜底：若生成瘦身包失败，退回完整包（向后兼容）",
+        "条件checker复用最近核心checker的profile",
+        "不修改任何checker的spec文件（checker不感知包被裁剪）"
       ],
       "priority": 2,
       "passes": true,
-      "notes": "修改 ink-writer/skills/ink-write/SKILL.md 的 Step 2A.5 区域。字数线第2步。"
+      "notes": "修改 step-3-review-gate.md + SKILL.md Step 3 区域。最大单项token节省（Step 3 约-30%）。"
     },
     {
       "id": "US-003",
-      "title": "workflow_manager.py 增加进度事件输出",
-      "description": "As workflow_manager, I need to emit [INK-PROGRESS] events to stdout on step start/complete/chapter complete so the terminal can display progress.",
+      "title": "logic-checker计算型预检模块",
+      "description": "As a pre-check optimization for logic-checker, I need a Python script that pre-screens L1 (arithmetic) and L3 (attribute consistency) checks, injecting results into the checker prompt to reduce LLM analysis scope.",
       "acceptanceCriteria": [
-        "workflow_manager.py 的 complete-step 子命令执行时，向 stdout 输出：[INK-PROGRESS] step_completed {step_id} {elapsed_seconds}",
-        "workflow_manager.py 新增 start-step 子命令（或在 begin-task/现有流程中），输出：[INK-PROGRESS] step_started {step_id}",
-        "complete-task 子命令输出：[INK-PROGRESS] chapter_completed {chapter_num} {word_count} {overall_score} {total_seconds}",
-        "进度行以 [INK-PROGRESS] 前缀标识，格式为单行纯文本便于 grep 解析",
-        "不破坏现有 workflow_state.json 写入逻辑",
-        "新增至少3个单元测试覆盖 start-step、complete-step 进度事件输出、complete-task 进度事件输出"
+        "新建 ink-writer/scripts/logic_precheck.py",
+        "函数 precheck_arithmetic(chapter_text): 用正则提取所有数字序列(倒计时/金额/距离等)，检查相邻数值算术一致性",
+        "函数 precheck_attributes(chapter_text, character_snapshot): 提取同一角色所有属性描述，交叉验证一致性",
+        "输出JSON: {l1_precheck: pass|issues_found, l1_issues: [...], l3_precheck: pass|issues_found, l3_issues: [...]}",
+        "预检结果注入logic-checker审查包的precheck_results字段",
+        "logic-checker.md更新：当precheck pass时L1/L3可快速确认（但仍必须过一遍作为双保险，明确标注'参考性预检，LLM可推翻'）",
+        "执行时间<1秒",
+        "至少5个单元测试（含第一章倒计时bug作为回归测试）"
       ],
       "priority": 3,
       "passes": true,
-      "notes": "修改 ink-writer/scripts/workflow_manager.py + 新增测试。进度线基础，US-004/005/006 都依赖它。"
+      "notes": "新建 ink-writer/scripts/logic_precheck.py + 测试 + 修改 logic-checker.md。"
     },
     {
       "id": "US-004",
-      "title": "ink-write SKILL.md 定义进度输出规范",
-      "description": "As the ink-write workflow spec, I need progress output rules defined for each Step so the writer agent emits [INK-PROGRESS] events at every step boundary.",
+      "title": "Step 2B降级为定向红线检查",
+      "description": "As the ink-write workflow, I need Step 2B to downgrade to targeted check mode when writer-agent output already meets style metrics, only handling 3 residual responsibilities instead of full rewrite.",
       "acceptanceCriteria": [
-        "SKILL.md 新增「进度输出规范」章节，定义12步的step_id和名称映射表",
-        "规定：每个 Step 开始前必须调用 workflow start-step --step-id {id}",
-        "规定：每个 Step 完成后的 workflow complete-step 已自动输出进度事件（US-003实现）",
-        "规定：被跳过的步骤（如Step 5.5无需修复）也必须调用 complete-step 并标记 skipped",
-        "规定：回退重写时输出 [INK-PROGRESS] step_retry {from_step} {to_step}",
-        "定义终端进度条渲染格式：Unicode bar(█░) + 百分比 + 章节号 + 步骤状态列表(✅/⏳/☐/⏭/🔄)",
-        "定义完成汇总行格式：✅ 第{N}章完成 | {字数}字 | 总耗时 {time} | 审查分 {score}",
-        "不破坏现有Step定义和执行规则"
+        "SKILL.md Step 2B开始前新增Python快速统计：计算句长均值(按。？！分句)和对话占比(「」内/总字数)",
+        "达标条件：句长均值>20字 且 对话占比>10% → 进入定向检查模式",
+        "未达标 → 执行原有全量风格适配（完全不变）",
+        "定向检查模式只做3件事：拆分超长句(>55字非对话句)、删除总结式旁白(由此可见/换句话说等AI痕迹)、清除模板腔(ai-word-blacklist.md黑名单词)",
+        "定向检查模式的prompt长度<原全量模式的30%",
+        "style-adapter.md更新：明确两种模式的触发条件和职责边界",
+        "SKILL.md Step 2B流程更新：新增条件分支",
+        "不删除或修改全量模式的任何逻辑（只是条件跳过）"
       ],
       "priority": 4,
       "passes": true,
-      "notes": "修改 ink-writer/skills/ink-write/SKILL.md。依赖US-003的事件钩子。"
+      "notes": "修改 SKILL.md Step 2B + style-adapter.md。节省约80% Step 2B token。"
     },
     {
       "id": "US-005",
-      "title": "ink-auto.sh 外层章节进度条",
-      "description": "As ink-auto.sh, I need to display a chapter-level progress bar showing X/N chapters completed with estimated time remaining.",
+      "title": "早期章节Context执行包自适应裁剪",
+      "description": "As context-agent, I need to automatically trim null/empty/empty-array fields from the execution pack output, reducing JSON overhead for early chapters with little history.",
       "acceptanceCriteria": [
-        "新增 bash 函数 print_chapter_progress() 输出章节级进度条",
-        "进度条格式：═══ 📖 总进度 [████░░░░] 3/10 章 (30%) + ⏱️ 已耗时/预计剩余",
-        "进度条使用 Unicode 块字符（█░），宽度 20 字符",
-        "预计剩余时间 = 已耗时 / 已完成章数 × 剩余章数（第1章完成前显示'计算中'）",
-        "每章开始前调用 print_chapter_progress 输出进度条",
-        "每章完成后刷新进度条（章数+1，时间更新）",
-        "检查点操作展示详细子步骤进度（每5章：☐审查→☐修复；每10章：+☐审计→☐修复；每20章：+☐宏观审查→☐修复→☐消歧检查），每个子步骤开始时标⏳完成时标✅，格式示例：🔍 检查点 [第5-10章] ✅审查 ✅修复 ⏳审计 ☐审计修复",
-        "不修改现有 [$i/$N] 日志格式（进度条是额外新增）",
-        "终端宽度 < 60 时降级为纯文字（📖 3/10 章 30%）"
+        "context-agent.md新增输出后处理规则：值为null/空字符串/空数组/空对象的字段不输出",
+        "not_specified状态的MCC字段不输出",
+        "必保留字段列表（即使为空也输出）：chapter_num、chapter_goal、required_entities、time_budget",
+        "预估ch1执行包从~8000 tokens压缩到~3000 tokens",
+        "ch50+执行包不受显著影响（字段大多有值）",
+        "不修改context-agent的数据读取逻辑，只改输出格式化"
       ],
       "priority": 5,
       "passes": true,
-      "notes": "修改 ink-writer/scripts/ink-auto.sh。进度线外层。"
+      "notes": "修改 ink-writer/agents/context-agent.md。主要影响早期章节。"
     },
     {
       "id": "US-006",
-      "title": "ink-auto.sh 解析内层进度事件并展示步骤进度",
-      "description": "As ink-auto.sh, I need to parse [INK-PROGRESS] events from child CLI processes and display step-level progress beneath the chapter progress bar.",
+      "title": "Data-Agent结构化JSON输出约束",
+      "description": "As data-agent, I need to output pure JSON only without explanatory text, reducing output tokens by 20-30%.",
       "acceptanceCriteria": [
-        "ink-auto.sh 启动子进程时通过管道捕获 stdout，同时 tee 到日志文件",
-        "实时解析 [INK-PROGRESS] step_started/step_completed/chapter_completed 事件",
-        "step_started 时在外层终端缩进展示：    ⏳ Step {id} {名称} ← 执行中...",
-        "step_completed 时更新为：    ✅ Step {id} {名称} ({seconds}s)",
-        "chapter_completed 时输出汇总行并清除步骤明细",
-        "子进程的非 [INK-PROGRESS] 输出正常透传到终端（不被过滤）",
-        "日志文件记录完整原始输出（含 [INK-PROGRESS] 行）",
-        "解析失败时静默忽略（不影响写作流程）"
+        "data-agent.md输出格式章节新增硬约束：输出必须为纯JSON",
+        "禁止在JSON之外输出markdown、分析过程、思考步骤",
+        "JSON结构遵循现有schema（entities、relations、scene_slices、summary等）不变",
+        "新增输出示例：展示正确的纯JSON格式和错误的带解释文字格式",
+        "Step 5的解析逻辑不受影响",
+        "预估output token减少20-30%"
       ],
       "priority": 6,
       "passes": true,
-      "notes": "修改 ink-writer/scripts/ink-auto.sh。依赖US-003和US-005。进度线最后一步。"
+      "notes": "修改 ink-writer/agents/data-agent.md。纯文档修改。"
+    },
+    {
+      "id": "US-007",
+      "title": "SKILL.md Prompt结构优化（Cache命中最大化）",
+      "description": "As ink-write SKILL.md, I need reference file loading order reorganized to put static content first and dynamic content last, maximizing Claude Code CLI prompt cache hits.",
+      "acceptanceCriteria": [
+        "SKILL.md所有Step的参考文件加载规则重新排序为三批：第一批(静态跨章不变): core-constraints/iron-laws/responsibility-boundary/knowledge-boundary-rules；第二批(半静态跨卷不变): style-adapter/anti-detection-writing/scene-craft-index；第三批(动态每章变化): 执行包/审查包/正文",
+        "writer-agent.md中PROMPT_TEMPLATE引用顺序调整为静态优先",
+        "不改变任何文件的内容，只改加载顺序声明",
+        "新增注释说明加载顺序的设计理由（cache优化）",
+        "polish-agent.md的参考文件加载顺序也同步优化"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "修改 SKILL.md + writer-agent.md + polish-agent.md。纯顺序调整，零内容变更。"
     }
   ]
 }

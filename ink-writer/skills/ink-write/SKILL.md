@@ -189,26 +189,34 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 
 ## References（逐文件引用清单）
 
-### 根目录
+> **加载顺序设计**：按 cache 亲和度分三批排列——静态文件（跨章不变）前置、半静态文件（跨卷不变）居中、动态文件（每章变化）后置。Claude Code CLI 内置 prompt cache（5 分钟 TTL），同一会话内多 Step 共享的静态内容放在前面可最大化 cache 命中率。各 Step 加载参考文件时，应按此顺序读取。
 
-- `references/step-3-review-gate.md`
-  - 用途：Step 3 审查调用模板、汇总格式、落库 JSON 规范。
-  - 触发：Step 3 必读。
-- `references/step-5-debt-switch.md`
-  - 用途：Step 5 债务利息开关规则（默认关闭）。
-  - 触发：Step 5 必读。
+### 第一批：静态（跨章不变，cache 命中率最高）
+
 - `../../references/shared/core-constraints.md`
   - 用途：Step 2A 写作硬约束（大纲即法律 / 设定即物理 / 发明需识别）。
   - 触发：Step 2A 必读。
+- `references/step-3-review-gate.md`
+  - 用途：Step 3 审查调用模板、汇总格式、落库 JSON 规范。
+  - 触发：Step 3 必读。
 - `references/polish-guide.md`
   - 用途：Step 4 问题修复、Anti-AI 与 No-Poison 规则。
   - 触发：Step 4 必读。
 - `references/writing/typesetting.md`
   - 用途：Step 4 移动端阅读排版与发布前速查。
   - 触发：Step 4 必读。
+- `references/step-5-debt-switch.md`
+  - 用途：Step 5 债务利息开关规则（默认关闭）。
+  - 触发：Step 5 必读。
+
+### 第二批：半静态（跨卷不变，同卷内 cache 可复用）
+
 - `references/style-adapter.md`
   - 用途：Step 2B 风格转译规则，不改剧情事实。
   - 触发：Step 2B 执行时必读。
+- `references/anti-detection-writing.md`
+  - 用途：Step 2A 防AI检测源头写作指南（句长突发度/信息密度波动/逻辑跳跃/对话人类化/词汇意外性/段落碎片化/视角限制）。
+  - 触发：Step 2A 必读。
 - `references/style-variants.md`
   - 用途：Step 1（内置 Contract）开头/钩子/节奏变体与重复风险控制。
   - 触发：Step 1 当需要做差异化设计时加载。
@@ -221,14 +229,15 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - `references/writing/genre-hook-payoff-library.md`
   - 用途：电竞/直播文/克苏鲁的钩子与微兑现快速库。
   - 触发：Step 1 题材命中 `esports/livestream/cosmic-horror` 时必读。
-- `references/anti-detection-writing.md`
-  - 用途：Step 2A 防AI检测源头写作指南（句长突发度/信息密度波动/逻辑跳跃/对话人类化/词汇意外性/段落碎片化/视角限制）。
-  - 触发：Step 2A 必读。
 
-### writing（问题定向加读）
+### 第三批：动态（每章变化，cache 无法复用）
+
+> 以下内容在运行时按需加载，不列入静态引用清单：执行包（Step 1 产出）、审查包（Step 3 输入）、章节正文、前序摘要。
+
+### writing（问题定向加读，半静态）
 
 - `references/writing/combat-scenes.md`
-  - 触发：战斗章或审查命中“战斗可读性/镜头混乱”。
+  - 触发：战斗章或审查命中”战斗可读性/镜头混乱”。
 - `references/writing/dialogue-writing.md`
   - 触发：审查命中 OOC、对话说明书化、对白辨识差。
 - `references/writing/emotion-psychology.md`
@@ -868,9 +877,11 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 
 ### Step 2A：正文起草
 
-执行前必须加载：
+执行前必须加载（静态优先，最大化 cache 命中）：
 ```bash
+# 第一批：静态（跨章不变）
 cat "${SKILL_ROOT}/../../references/shared/core-constraints.md"
+# 第二批：半静态（跨卷不变）
 cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 ```
 
@@ -984,6 +995,22 @@ echo "当前章节字数: ${WORD_COUNT}"
 
 ### Step 2B：风格适配
 
+#### Step 2B 前置指标计算（必做，决定执行模式）
+
+```bash
+STEP2B_METRICS=$(python3 -X utf8 “${SCRIPTS_DIR}/step2b_metrics.py” \
+  --chapter-file “${CHAPTER_FILE}” 2>/dev/null) || true
+```
+
+判定逻辑：
+- **脚本不存在或执行失败** → 退回全量模式（向后兼容）。
+- **`targeted_mode: true`**（句长均值 > 20字 且 对话占比 > 10%）→ 进入**定向检查模式**。
+- **`targeted_mode: false`** → 执行原有的**全量风格适配**。
+
+输出 `STEP2B_METRICS` 中的 `mode` 字段到日志，便于追溯。
+
+#### 模式 A：全量风格适配（`mode == “full”`）
+
 执行前加载：
 ```bash
 cat “${SKILL_ROOT}/references/style-adapter.md”
@@ -1001,8 +1028,33 @@ cat “${SKILL_ROOT}/references/style-adapter.md”
 当本地 `style_samples` 表为空或匹配结果不足 2 条时（新项目常见情况）：
 1. 从 `scene-craft-index.md` 的对应场景类型范例中提取 2-3 个参考片段
 2. 若项目配置了 `genre`，从 benchmark `style_rag.db`（如果存在）按 genre + scene_type 检索 3 个标杆片段
-3. 将这些 fallback 样本注入执行包第 11 板块，标记为 `source: "benchmark_fallback"`
+3. 将这些 fallback 样本注入执行包第 11 板块，标记为 `source: “benchmark_fallback”`
 4. 从第 11 章起，本地高分章节应已积累足够样本，不再触发 fallback
+
+#### 模式 B：定向检查模式（`mode == “targeted”`）
+
+> 当 writer-agent (Step 2A) 产出已内化风格（句长、对话占比达标），Step 2B 降级为定向红线检查，
+> 只处理 3 项残留职责，跳过全文改写。省约 80% Step 2B token。
+
+执行前加载：
+```bash
+cat “${SKILL_ROOT}/references/style-adapter.md”  # 仅需读取”定向检查模式”章节
+```
+
+定向检查仅做 3 件事（参考 `STEP2B_METRICS` 中的检测结果辅助定位）：
+
+1. **拆分超长句**（>55 字的非对话句）
+   - `STEP2B_METRICS.long_sentences` 已预标记位置，逐一拆分
+   - 35-55 字长句保留不动（正常节奏纵深）
+2. **删除总结式旁白**（”由此可见”、”换句话说”、”总而言之”等 AI 痕迹短语）
+   - `STEP2B_METRICS.summary_phrases` 已预标记位置和上下文
+   - 替换为直接结论动作，不做元叙述
+3. **清除模板腔**（检查 `ai-word-blacklist.md` 中的黑名单词）
+   - 当单章使用密度超过标杆均值 2 倍时替换
+
+硬约束（与全量模式相同）：
+- 不改剧情事实、事件顺序、角色行为结果、设定规则。
+- **定向检查完成后必须自检**：确认所有人名、地名、数字、行为结果、因果关系零偏差。
 
 输出：
 - 风格化正文（覆盖原章节文件）。
@@ -1061,8 +1113,24 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
   > "${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"
 ```
 
+生成按 checker 瘦身包（必做，紧随完整包之后）：
+```bash
+# selected_checkers 为本次选中的 checker 列表（逗号分隔）
+# --precheck: 自动运行 logic_precheck.py 并将结果注入 logic-checker 的瘦身包
+python3 -X utf8 "${SCRIPTS_DIR}/slim_review_bundle.py" \
+  --bundle "${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json" \
+  --checkers "${selected_checkers}" \
+  --outdir "${PROJECT_ROOT}/.ink/tmp" \
+  --precheck \
+  > "${PROJECT_ROOT}/.ink/tmp/slim_bundle_map.json"
+# 输出 JSON 映射：checker_name → 瘦身包路径
+# 若某 checker 瘦身失败，自动退回完整包路径（向后兼容）
+# --precheck 运行 L1/L3 计算型预检，结果注入 logic-checker 包的 precheck_results 字段
+# 若预检失败，静默跳过（不阻断流程）
+```
+
 Task 传参硬约束：
-- 必须传 `review_bundle_file="${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"`
+- 必须传 `review_bundle_file`：优先使用瘦身包路径（从 `slim_bundle_map.json` 读取），若瘦身包不存在则退回完整包 `"${PROJECT_ROOT}/.ink/tmp/review_bundle_ch${chapter_padded}.json"`
 - 必须传绝对路径 `chapter_file`
 - checker 不得自行扫描 `正文/`、`设定集/`、`.ink/` 目录，不得读取 `.db`
 
@@ -1385,8 +1453,9 @@ if anti_detection_result.overall_score < threshold:
 
 ### Step 4：润色（问题修复优先）
 
-执行前必须加载：
+执行前必须加载（静态优先，最大化 cache 命中）：
 ```bash
+# 第一批：静态（跨章不变）
 cat "${SKILL_ROOT}/references/polish-guide.md"
 cat "${SKILL_ROOT}/references/writing/typesetting.md"
 ```

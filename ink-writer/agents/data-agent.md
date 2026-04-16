@@ -40,6 +40,18 @@ model: inherit
 
 ## 输出
 
+### 输出格式硬约束（纯 JSON，零解释文字）
+
+> **铁律**：Data Agent 的最终输出**必须为纯 JSON**，不得包含任何 JSON 之外的内容。
+
+**必须遵守**：
+1. 输出内容为**单个合法 JSON 对象**，不含 markdown 代码围栏（\`\`\`json ... \`\`\`）
+2. **禁止**在 JSON 之外输出分析过程、思考步骤、解释段落、总结文字
+3. **禁止**在 JSON 值中嵌入冗余解释（如 `"note": "这里我选择了...因为..."`）
+4. JSON 结构严格遵循下方 schema（entities、relations、scene_slices、summary 等），不得自行添加非 schema 字段
+5. 所有文本值使用简洁表述，不含修饰性语句
+
+**正确示例**（纯 JSON，直接可解析）：
 ```json
 {
   "entities_appeared": [
@@ -61,6 +73,20 @@ model: inherit
   "warnings": []
 }
 ```
+
+**错误示例**（包含解释文字，严禁）：
+```
+经过分析，本章共出现了5个实体。以下是提取结果：
+
+{
+  "entities_appeared": [...],
+  "analysis_notes": "萧炎在本章有重要的境界突破，我判断..."
+}
+
+总结：本章的实体提取较为复杂，主要难点在于...
+```
+
+**违规后果**：包含非 JSON 内容会导致 Step 5 的 `state process-chapter` 解析失败，触发 Step 5 重跑。
 
 ##### StateChange 标准化枚举（必须严格遵守）
 
@@ -627,7 +653,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style ex
 **性能日志落盘（新增，必做）**：
 - 脚本自动写入：`.ink/observability/data_agent_timing.jsonl`
 - Data Agent 报告中仍需返回：`timing_ms` + `bottlenecks_top3`
-- 规则：`bottlenecks_top3` 始终按耗时降序返回；当 `TOTAL > 30000ms` 时，需在报告文字部分附加原因说明。
+- 规则：`bottlenecks_top3` 始终按耗时降序返回；当 `TOTAL > 30000ms` 时，在 JSON 报告的 `warnings` 数组中附加原因说明（如 `"TOTAL > 30s: B_entity_extract 占比 65%"`），不得在 JSON 之外输出解释文字。
 
 观测日志说明：
 - `call_trace.jsonl`：外层流程调用链（agent 启动、排队、环境探测等系统开销）。
@@ -789,4 +815,5 @@ chapter_meta 写入时，必须包含以下版本控制字段：
 6. ✅ 章节摘要文件生成成功
 7. ✅ chapter_meta 写入 state.json
 8. ✅ 当前章节在 `chapter_memory_cards / chapter_reading_power / scenes` 三张表中均有记录
-9. ✅ 输出格式为有效 JSON
+9. ✅ 输出为纯 JSON（无 markdown 围栏、无解释文字、无分析过程）
+10. ✅ JSON 可被 `json.loads()` 直接解析，无需预处理或文本清洗

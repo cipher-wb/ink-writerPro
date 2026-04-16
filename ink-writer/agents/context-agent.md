@@ -668,6 +668,62 @@ Context Contract 必须字段（不可缺）：
 - `追读力设计`
 - `protagonist_knowledge_gate`（知识盲区清单，供 consistency-checker Layer 5 使用）
 
+### Step 5.5: 输出后处理 — 空值字段自适应裁剪（v13.1 新增）
+
+> **目的**：减少执行包的 JSON 冗余开销。早期章节（ch1-3）缺乏历史数据，大量字段为空值，裁剪后预估从 ~8000 tokens 压缩到 ~3000 tokens；成熟章节（ch50+）字段大多有值，裁剪影响极小。
+
+**裁剪规则**（在 Step 5 组装完成后、Step 6 红线校验前执行）：
+
+1. **自动裁剪**：以下值的字段从输出中移除（不输出 key）：
+   - `null`
+   - `""`（空字符串）
+   - `[]`（空数组）
+   - `{}`（空对象）
+   - `"not_specified"`（MCC 字段的缺失标记 — writer 的自检已处理 not_specified，无需传输）
+
+2. **必保留字段**（即使值为空也必须输出，保证下游 Step 2A 结构完整）：
+   - `chapter_num` — 章节编号（下游定位依赖）
+   - `chapter_goal` — 本章目标（writer 核心输入）
+   - `required_entities` — 必须出场实体（即使空数组也输出，表示"无强制出场要求"）
+   - `time_budget` — 时间预算（即使 `total_span: "not_specified"` 也输出，表示"无时间约束"）
+
+3. **嵌套裁剪**：对象内部的空值字段也递归裁剪。若裁剪后对象变为 `{}`，且该对象不在必保留列表中，则整个对象移除。
+
+4. **裁剪日志**：在执行包末尾附加一行注释，记录裁剪统计：
+   ```
+   <!-- context-pack-trim: removed {N} empty fields, kept {M} required fields -->
+   ```
+
+**示例**（ch1 场景）：
+
+裁剪前：
+```json
+{
+  "chapter_num": "0001",
+  "chapter_goal": "主角目睹孕妇之死",
+  "previous_summary": null,
+  "memory_context": [],
+  "foreshadowing": [],
+  "required_entities": [],
+  "narrative_commitments": null,
+  "time_budget": {"total_span": "4小时", "precision_scenes": []}
+}
+```
+
+裁剪后：
+```json
+{
+  "chapter_num": "0001",
+  "chapter_goal": "主角目睹孕妇之死",
+  "required_entities": [],
+  "time_budget": {"total_span": "4小时"}
+}
+```
+
+（`previous_summary`、`memory_context`、`foreshadowing`、`narrative_commitments` 被裁剪；`required_entities` 因必保留而保留；`time_budget.precision_scenes` 空数组被裁剪但 `time_budget` 本身因必保留而保留）
+
+**降级兜底**：若裁剪逻辑导致 Step 6 红线校验失败（如误裁了关键字段），回退到未裁剪版本重新输出。
+
 ### Step 6: 逻辑红线校验（输出前强制）
 对执行包做一致性自检，任一 fail 则回到 Step 5 重组：
 
@@ -709,3 +765,5 @@ Context Contract 必须字段（不可缺）：
 20. ✅ **具名群演例外规则已标注**：出场≤2句且无剧情影响的命名角色不算违规
 21. ✅ **time_budget 完整**：`total_span` 已从大纲提取（或标记 `not_specified`），大纲含倒计时/计时器关键词时 `precision_scenes` 非空
 22. ✅ **precision_scenes 下游注入标注**：precision_scenes 已标注将注入 writer-agent 执行包作为 L1 铁律参考数据
+23. ✅ **空值字段裁剪已执行**（Step 5.5）：null/空字符串/空数组/空对象/not_specified 字段已移除，必保留字段（chapter_num、chapter_goal、required_entities、time_budget）未被裁剪
+24. ✅ **裁剪日志已附加**：执行包末尾包含 `<!-- context-pack-trim: ... -->` 统计注释

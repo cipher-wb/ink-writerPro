@@ -31,6 +31,24 @@ model: inherit
 - 执行包中的角色档案（用于 L3 属性校验的权威来源）
 - 执行包中的 MCC 板块14（用于 L5 大纲即合同校验，L5-L8 见下文）
 - 执行包中的时间约束/time_budget（用于 L1 数字校验的参考）
+- `precheck_results`（若存在）——Python 计算型预检结果，包含 L1/L3 的初步扫描
+
+### 第 1.5 步: 读取计算型预检结果（若存在）
+
+若审查包中包含 `precheck_results` 字段，读取其内容：
+- `l1_precheck`: "pass" 或 "issues_found"
+- `l1_issues`: Python 预检发现的 L1 疑似问题列表
+- `l3_precheck`: "pass" 或 "issues_found"
+- `l3_issues`: Python 预检发现的 L3 疑似问题列表
+
+**使用规则**：
+- **参考性预检，LLM 可推翻**：预检结果仅供参考，LLM 仍必须执行全部 8 层检查。
+- 若 `l1_precheck == "pass"`：L1 层可快速确认（预检已扫描数字序列和算术关系），但仍需过一遍，发现预检遗漏的问题。
+- 若 `l1_precheck == "issues_found"`：优先深入分析 `l1_issues` 中标注的位置，确认是否为真实问题。
+- 若 `l3_precheck == "pass"`：L3 层可快速确认（预检已扫描角色属性交叉验证），但仍需过一遍。
+- 若 `l3_precheck == "issues_found"`：优先深入分析 `l3_issues` 中标注的位置。
+- **双保险原则**：预检通过不等于可以跳过——Python 正则无法理解语义，LLM 可能发现预检遗漏的深层逻辑问题。
+- **无 precheck_results 时**：按原有流程执行全部 8 层检查，无任何降级。
 
 ### 第二步: 八层逻辑检查（L1-L8）
 
