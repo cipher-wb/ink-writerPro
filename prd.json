@@ -96,7 +96,7 @@
         "更新铁律计数和成功标准"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "依赖 US-001 的大纲字段定义。writer-agent 已有 L1-L6+SC 自检，新增 L7 遵循已有模式。"
     },
     {

@@ -18,6 +18,8 @@
 - writer-agent touch points for new iron law: 铁律定义, MCC自检表, 失败处理策略, selfcheck JSON示例, 禁止事项, 硬性指标计数, 成功标准
 - high-point-checker: 爽点识别→位置扫描→压扬一致性→密度基线→rolling window→Override Contract
 - proofreading-checker layers: L1修辞重复, L2段落结构, L3代词清晰度, L4文化/时代错位, L5跨章风格一致性
+- writer-agent iron laws: L1数字即承诺, L2动作即物理, L3属性即锁定, L4空间即连续, L5大纲即合同, L6否定即禁区, L7卖点落地律
+- MCC self-check: 8项（原7项+卖点覆盖），self-consistency scan: 5项（原4项+SC-5卖点覆盖检查）
 
 - ink-plan Step 6 chapter format: `爽点配方` → `大卖点类型`（新增11种合法类型），新增 `大卖点描述`（≤80字）和 `小卖点`（2个×≤40字）
 - ink-plan Step 5 volume skeleton: `爽点密度规划` 表升级为 `卖点密度规划` 含大小卖点列
@@ -90,4 +92,16 @@
   - golden-three-checker 的 critical 规则通过 ink-write Step 3.5 harness gate 的 `rewrite_step2a` action 实现 hard block 回退，无需在 checker 内直接调用回退逻辑
   - CH1 闭环检测规则与 US-003 的大纲层闭环约束配对：大纲层锁定 `能力展示→危机→能力收益`，审查层验证正文是否落地
   - 新增规则命名遵循 `CH1_` 前缀 + 大写下划线格式，与 checker 其他规则风格一致
+---
+
+## 2026-04-16 - US-006
+- What was implemented: 正文写作层卖点落地 — writer-agent 新增 L7 卖点落地律 + MCC自检/自洽回扫扩展
+- Files changed:
+  - ink-writer/agents/writer-agent.md (L7卖点落地律定义 + MCC自检第8项卖点覆盖 + SC-5卖点覆盖检查 + 禁止事项 + 硬性指标计数 + 成功标准计数)
+  - ink-writer/skills/ink-write/SKILL.md (Step 2A MCC自检从6项→8项 + Step 2A.1从4项→5项语义检查 + SC-5卖点覆盖检查)
+- **Learnings for future iterations:**
+  - writer-agent 新增铁律需同步更新 7 处：铁律定义、MCC自检表+JSON示例、自洽回扫检查项+类型枚举、禁止事项、硬性指标计数、成功标准计数
+  - ink-write/SKILL.md 的 MCC自检项数和 Step 2A.1 的检查项数需与 writer-agent.md 保持同步
+  - 卖点覆盖检查的关键设计：遗漏卖点必须在 Step 2A（写作层）修正，不得留到 Step 4（润色层），因为卖点是结构性要素
+  - MCC自检原来是6项（writer-agent.md中是7项因含否定约束），SKILL.md中需同步为8项
 ---
