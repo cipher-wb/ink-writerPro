@@ -840,7 +840,8 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 - 输出必须同时包含：
   - 8 板块任务书（本章核心任务/接住上章/角色/场景与力量约束/时间约束/风格指导/连续性与伏笔/追读力策略）；
   - **板块 14: 强制合规清单（MCC）**——从大纲自动提取 required_entities、required_foreshadows、required_hook、chapter_goal、required_coolpoint、forbidden_inventions、required_change、required_open_question，供 Step 2A 写作合同和 Step 3 outline-compliance-checker 消费；
-  - Context Contract 全字段（目标/阻力/代价/本章变化/未闭合问题/开头类型/情绪节奏/信息密度/过渡章判定/追读力设计）；
+  - Context Contract 全字段（目标/阻力/代价/本章变化/未闭合问题/开头类型/情绪节奏/信息密度/过渡章判定/追读力设计/本章人类本能触发场景）；
+    - `本章人类本能触发场景`：从节拍/大纲识别本章将出现的五类触发场景（A-有人受伤/B-生命威胁/C-极端事件/D-被侮辱/E-获重大好处），按"场景类型 + 关键触发事件 + 所需反应级别"格式列出。示例：`场景B（生命威胁）：主角被反派剑指咽喉 → 紧张反应（≥60字身体感官+决策）`；若本章无触发场景，填 `无`。字段为 writer-agent L9 人类本能反应律提供写作锚点，触发词与扩展场景参见 `references/shared/human-instinct-triggers.md`；
   - 若 `chapter <= 3`：额外包含 `golden_three_role / opening_window_chars / reader_promise / must_deliver_this_chapter / end_hook_requirement`；
   - Step 2A 可直接消费的”写作执行包”（章节节拍、不可变事实清单、禁止事项、终检清单）。
 - 合同与任务书出现冲突时，以“大纲与设定约束更严格者”为准。

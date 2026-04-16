@@ -127,6 +127,27 @@
 - high-point-checker Step 1.8: PROTAGONIST_AGENCY 规则族（CAMERA_PROTAGONIST/PASSIVE_STREAK/NO_CONSEQUENCE/STATIC_SITUATION）
 - high-point-checker 黄金三章加严: CAMERA_PROTAGONIST(critical,不可Override) + PASSIVE_STREAK(high→hard block)
 - step-3-review-gate 主角能动性门禁: CAMERA_PROTAGONIST critical → hard block; 黄金三章 PASSIVE_STREAK high → hard block
+- human-instinct-triggers.md: 5类触发场景（A受伤/B生命威胁/C极端事件/D侮辱/E重大机缘）+ 反应级别 + 非典型反应豁免标签 + 仙侠/都市/科幻扩展
+- writer-agent L9 人类本能反应律: 5类触发场景 + 反应字数要求 + 围观群众不可失声 + 非典型反应豁免需设定集标签
+- writer-agent 铁律总数: 6条 → 9条（L1-L9），L1-L4由logic-checker验证，L5-L8由MCC自检验证，L9由ooc-checker验证
+- Context Contract 字段扩展: 新增 `本章人类本能触发场景` 字段（格式：场景类型+关键触发事件+所需反应级别）
+- US-011/US-012 分工: US-011写作预防（L9+Contract字段+触发词表），US-012审查检测（ooc-checker HUMAN_INSTINCT_VIOLATION 层）
+- AC "更新铁律计数和成功标准" 解释: 只需更新铁律计数(6→9)和成功标准中的铁律覆盖描述，MCC自检和SC项数保持不变（因为L9检测在ooc-checker而非writer-agent自检）
+---
+
+## 2026-04-16 - US-011
+- What was implemented: 人物反应真实性预防 — writer-agent 新增 L9 人类本能反应律 + 触发场景词表 + Context Contract 字段扩展
+- Files changed:
+  - ink-writer/references/shared/human-instinct-triggers.md (新建：5类触发场景 + 反应级别 + 非典型反应豁免 + 题材扩展 + 使用说明)
+  - ink-writer/agents/writer-agent.md (L9 人类本能反应律定义 + 铁律计数 6→9 + 禁止事项新增 L9 条 + 成功标准扩展含 L9 覆盖说明)
+  - ink-writer/skills/ink-write/SKILL.md (Context Contract 全字段列表新增 `本章人类本能触发场景` + 详细说明和示例)
+- **Learnings for future iterations:**
+  - writer-agent 的 "6 条铁律" 计数在 L7/L8 引入后未同步更新，US-011 一并修正为 9 条
+  - L9 与 L7/L8 设计模式不同：L7/L8 在 writer-agent 内有 MCC 自检项和 SC 回扫项，L9 的检测完全委托给 ooc-checker（US-012），writer-agent 只做预防不做自检
+  - "Step 1.5（Contract）" 实际是 Step 1 内置的 Context Contract（v10.6 合并后不再拆分独立 Step 1.5），新字段加在 Step 1 输出描述的字段列表中
+  - 非典型反应豁免机制的关键：要求角色设定集中有对应标签（cold_blooded/mission_first/traumatized/battle_hardened/transcendent等），否则视为违反
+  - logic-checker 自己有 L1-L9 命名系统（物理逻辑域），与 writer-agent 的 L1-L9 铁律（写作铁律域）是独立的两套命名，不冲突
+  - 5 类触发场景的反应字数最低要求：A/B≥60-80字，C≥100字，D/E≥50字——这些是 ooc-checker 后续检测的量化锚点
 ---
 
 ## 2026-04-16 - US-008
