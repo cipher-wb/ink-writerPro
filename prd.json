@@ -70,7 +70,7 @@
         "不破坏现有的字数检查、标题检查、对话占比检查等自检项"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/writer-agent.md。依赖US-001的MCC定义和US-003的铁律。PRD详见 tasks/prd-logic-fortress.md US-002。"
     },
     {
@@ -88,7 +88,7 @@
         "包含至少2个具体检测示例（对照第一章的实际bug）"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "新建 ink-writer/agents/logic-checker.md。参考 consistency-checker.md 的格式。PRD详见 tasks/prd-logic-fortress.md US-003。"
     },
     {
@@ -105,7 +105,7 @@
         "文件结构完整连贯，L1-L8形成统一的8层检查体系"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/logic-checker.md（US-005创建的文件）。PRD详见 tasks/prd-logic-fortress.md US-003。"
     },
     {
