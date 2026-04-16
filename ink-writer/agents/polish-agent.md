@@ -43,9 +43,10 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
 }
 ```
 
-**执行前必须加载**：
+**执行前必须加载**（静态优先，最大化 cache 命中）：
 
 ```bash
+# 第一批：静态（跨章不变）
 cat "${SKILL_ROOT}/references/polish-guide.md"
 cat "${SKILL_ROOT}/references/writing/typesetting.md"
 ```

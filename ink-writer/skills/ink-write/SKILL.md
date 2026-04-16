@@ -189,26 +189,34 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 
 ## References（逐文件引用清单）
 
-### 根目录
+> **加载顺序设计**：按 cache 亲和度分三批排列——静态文件（跨章不变）前置、半静态文件（跨卷不变）居中、动态文件（每章变化）后置。Claude Code CLI 内置 prompt cache（5 分钟 TTL），同一会话内多 Step 共享的静态内容放在前面可最大化 cache 命中率。各 Step 加载参考文件时，应按此顺序读取。
 
-- `references/step-3-review-gate.md`
-  - 用途：Step 3 审查调用模板、汇总格式、落库 JSON 规范。
-  - 触发：Step 3 必读。
-- `references/step-5-debt-switch.md`
-  - 用途：Step 5 债务利息开关规则（默认关闭）。
-  - 触发：Step 5 必读。
+### 第一批：静态（跨章不变，cache 命中率最高）
+
 - `../../references/shared/core-constraints.md`
   - 用途：Step 2A 写作硬约束（大纲即法律 / 设定即物理 / 发明需识别）。
   - 触发：Step 2A 必读。
+- `references/step-3-review-gate.md`
+  - 用途：Step 3 审查调用模板、汇总格式、落库 JSON 规范。
+  - 触发：Step 3 必读。
 - `references/polish-guide.md`
   - 用途：Step 4 问题修复、Anti-AI 与 No-Poison 规则。
   - 触发：Step 4 必读。
 - `references/writing/typesetting.md`
   - 用途：Step 4 移动端阅读排版与发布前速查。
   - 触发：Step 4 必读。
+- `references/step-5-debt-switch.md`
+  - 用途：Step 5 债务利息开关规则（默认关闭）。
+  - 触发：Step 5 必读。
+
+### 第二批：半静态（跨卷不变，同卷内 cache 可复用）
+
 - `references/style-adapter.md`
   - 用途：Step 2B 风格转译规则，不改剧情事实。
   - 触发：Step 2B 执行时必读。
+- `references/anti-detection-writing.md`
+  - 用途：Step 2A 防AI检测源头写作指南（句长突发度/信息密度波动/逻辑跳跃/对话人类化/词汇意外性/段落碎片化/视角限制）。
+  - 触发：Step 2A 必读。
 - `references/style-variants.md`
   - 用途：Step 1（内置 Contract）开头/钩子/节奏变体与重复风险控制。
   - 触发：Step 1 当需要做差异化设计时加载。
@@ -221,14 +229,15 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - `references/writing/genre-hook-payoff-library.md`
   - 用途：电竞/直播文/克苏鲁的钩子与微兑现快速库。
   - 触发：Step 1 题材命中 `esports/livestream/cosmic-horror` 时必读。
-- `references/anti-detection-writing.md`
-  - 用途：Step 2A 防AI检测源头写作指南（句长突发度/信息密度波动/逻辑跳跃/对话人类化/词汇意外性/段落碎片化/视角限制）。
-  - 触发：Step 2A 必读。
 
-### writing（问题定向加读）
+### 第三批：动态（每章变化，cache 无法复用）
+
+> 以下内容在运行时按需加载，不列入静态引用清单：执行包（Step 1 产出）、审查包（Step 3 输入）、章节正文、前序摘要。
+
+### writing（问题定向加读，半静态）
 
 - `references/writing/combat-scenes.md`
-  - 触发：战斗章或审查命中“战斗可读性/镜头混乱”。
+  - 触发：战斗章或审查命中”战斗可读性/镜头混乱”。
 - `references/writing/dialogue-writing.md`
   - 触发：审查命中 OOC、对话说明书化、对白辨识差。
 - `references/writing/emotion-psychology.md`
@@ -868,9 +877,11 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 
 ### Step 2A：正文起草
 
-执行前必须加载：
+执行前必须加载（静态优先，最大化 cache 命中）：
 ```bash
+# 第一批：静态（跨章不变）
 cat "${SKILL_ROOT}/../../references/shared/core-constraints.md"
+# 第二批：半静态（跨卷不变）
 cat "${SKILL_ROOT}/references/anti-detection-writing.md"
 ```
 
@@ -1442,8 +1453,9 @@ if anti_detection_result.overall_score < threshold:
 
 ### Step 4：润色（问题修复优先）
 
-执行前必须加载：
+执行前必须加载（静态优先，最大化 cache 命中）：
 ```bash
+# 第一批：静态（跨章不变）
 cat "${SKILL_ROOT}/references/polish-guide.md"
 cat "${SKILL_ROOT}/references/writing/typesetting.md"
 ```
