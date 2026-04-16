@@ -69,6 +69,7 @@ from .index_types import (  # noqa: F401
     CandidateFactMeta,
     ReviewMetrics,
     WritingChecklistScoreMeta,
+    NegativeConstraintMeta,
 )
 
 
@@ -270,7 +271,7 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
             return False
 
     # index.db schema 版本号，每次变更表结构时递增
-    SCHEMA_VERSION = 1
+    SCHEMA_VERSION = 2
 
     def _init_db(self):
         """初始化数据库表"""
@@ -959,6 +960,33 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 )
             """)
 
+            # ==================== v2 schema 引入：否定约束管线 ====================
+
+            # 否定约束表：记录每章"未发生的事"，防止后续章节凭空编造
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS negative_constraints (
+                    id TEXT PRIMARY KEY,
+                    chapter INTEGER NOT NULL,
+                    type TEXT NOT NULL,
+                    entities TEXT,
+                    description TEXT,
+                    valid_until INTEGER,
+                    override_condition TEXT,
+                    resolved_chapter INTEGER,
+                    resolved_reason TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_neg_constraints_chapter ON negative_constraints(chapter)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_neg_constraints_resolved ON negative_constraints(resolved_chapter)"
+            )
+
+            # chapter_memory_cards 新增 scene_exit_snapshot 字段（US-003 预留）
+            self._ensure_column(cursor, "chapter_memory_cards", "scene_exit_snapshot", "TEXT")
+
             conn.commit()
 
     @contextmanager
@@ -1311,6 +1339,86 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 (before_chapter, limit),
             ).fetchall()
             return [dict(row) for row in rows]
+
+    # ==================== 否定约束操作 ====================
+
+    def save_negative_constraints(self, chapter: int, constraints_list: List[Dict[str, Any]]) -> int:
+        """批量写入否定约束。
+
+        Args:
+            chapter: 章节号
+            constraints_list: 约束列表，每条含 id/type/entities/description 等字段
+
+        Returns:
+            写入条数
+        """
+        if not constraints_list:
+            return 0
+        with self._get_conn() as conn:
+            count = 0
+            for c in constraints_list:
+                conn.execute(
+                    """INSERT OR REPLACE INTO negative_constraints
+                       (id, chapter, type, entities, description, valid_until,
+                        override_condition, resolved_chapter, resolved_reason)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (
+                        c.get("id", f"NC-ch{chapter:04d}-{count:03d}"),
+                        chapter,
+                        c.get("type", ""),
+                        json.dumps(c.get("entities", []), ensure_ascii=False),
+                        c.get("description", ""),
+                        c.get("valid_until") or None,
+                        c.get("override_condition", ""),
+                        None,
+                        None,
+                    ),
+                )
+                count += 1
+            conn.commit()
+            return count
+
+    def get_active_constraints(self, current_chapter: int) -> List[Dict[str, Any]]:
+        """返回所有活跃的否定约束。
+
+        活跃条件：resolved_chapter IS NULL 且 (valid_until IS NULL OR valid_until >= current_chapter)
+        """
+        with self._get_conn() as conn:
+            rows = conn.execute(
+                """SELECT id, chapter, type, entities, description,
+                          valid_until, override_condition
+                   FROM negative_constraints
+                   WHERE resolved_chapter IS NULL
+                     AND (valid_until IS NULL OR valid_until >= ?)
+                   ORDER BY chapter ASC""",
+                (current_chapter,),
+            ).fetchall()
+            results = []
+            for row in rows:
+                d = dict(row)
+                try:
+                    d["entities"] = json.loads(d["entities"]) if d["entities"] else []
+                except (json.JSONDecodeError, TypeError):
+                    d["entities"] = []
+                results.append(d)
+            return results
+
+    def resolve_constraint(self, constraint_id: str, chapter: int, reason: str) -> bool:
+        """标记否定约束为已解除。
+
+        Returns:
+            True if a row was updated, False otherwise.
+        """
+        with self._get_conn() as conn:
+            cursor = conn.execute(
+                """UPDATE negative_constraints
+                   SET resolved_chapter = ?, resolved_reason = ?
+                   WHERE id = ? AND resolved_chapter IS NULL""",
+                (chapter, reason, constraint_id),
+            )
+            conn.commit()
+            return cursor.rowcount > 0
+
 
 # ==================== CLI 命令处理函数 ====================
 

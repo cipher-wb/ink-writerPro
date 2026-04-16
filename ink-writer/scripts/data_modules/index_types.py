@@ -238,6 +238,21 @@ class ReviewMetrics:
 
 
 @dataclass
+class NegativeConstraintMeta:
+    """否定约束记录 (narrative-coherence 引入)"""
+
+    id: str  # NC-ch{NNNN}-{NNN}
+    chapter: int
+    type: str  # no_contact_exchange / no_information_gained / no_critical_action / no_revelation
+    entities: List[str] = field(default_factory=list)
+    description: str = ""
+    valid_until: int = 0  # 0 means permanent
+    override_condition: str = ""
+    resolved_chapter: int = 0  # 0 means unresolved
+    resolved_reason: str = ""
+
+
+@dataclass
 class WritingChecklistScoreMeta:
     """写作清单评分记录（Context Contract v2 Phase F）"""
 
