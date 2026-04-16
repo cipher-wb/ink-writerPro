@@ -208,4 +208,26 @@
 - step-3-review-gate 人类本能反应门禁: NO_RESPONSE_TO_INJURY critical → hard block；黄金三章 FLAT_TO_LIFE_THREAT/NO_EMOTION_ON_WINDFALL/INSULT_NO_REACTION high → hard block
 - 触发场景关键词 5 类 A/B/C/D/E 与 human-instinct-triggers.md 表完全对齐；反应关键词分 4 类（动作/身体感官/情绪/思维），200字滑窗匹配
 - 豁免标签自动降级表: A→cold_blooded/mission_first/traumatized/non_human; B→battle_hardened/supernatural_calm/death_wish; C→witnessed_worse/reborn_veteran; D→transcendent/long_game; E→seen_bigger/burden_avoidance
+- writer-agent 铁律总数: 9条 → 10条（L1-L10），L1-L4 由 logic-checker 验证，L5-L8 由 MCC 自检验证，L9 由 ooc-checker 验证，L10 由 proofreading-checker Layer 6 验证
+- prose-craft-rules.md 放在 skills/ink-write/references/ 目录下（不同于 human-instinct-triggers.md 放在 references/shared/）——原因: US-013 AC 明确要求该路径，且本规则仅在 ink-write 路径下生效
+- L10 三条子规则: L10a 弱动词黑名单(10词×≤3次,总≤15次) + L10b 感官锚点(每800字≥1非视觉,全章≥3) + L10c 具象名词(禁连用2+空洞形容词+空洞感官词黑名单)
+- writer-agent 执行前加载清单: core-constraints.md + anti-detection-writing.md + prose-craft-rules.md（3 个文件）
+- MCC 自检保持 9 项 / 自洽回扫保持 6 项（L10 不进入 writer-agent 自检，完全委托给 proofreading-checker Layer 6，与 L9 委托 ooc-checker 同模式）
+- US-013/US-014/US-015 分工: US-013 预防（L10+prose-craft-rules.md），US-014 审查（proofreading-checker Layer 6），US-015 润色兜底（polish-agent Layer 8）
+---
+
+## 2026-04-16 - US-013
+- What was implemented: 遣词造句预防 — writer-agent 新增 L10 遣词造句律 + prose-craft-rules.md 替换示例库
+- Files changed:
+  - ink-writer/skills/ink-write/references/prose-craft-rules.md (新建: 弱动词黑名单10词×5场景替换示例库+感官锚点规则+空洞形容词/空洞感官词黑名单+使用说明+与其他铁律关系)
+  - ink-writer/agents/writer-agent.md (L10 遣词造句律定义 + 铁律计数 9→10 + 执行前加载新增 prose-craft-rules.md + 禁止事项新增 L10 条 + 成功标准扩展含 L10 覆盖说明 + 新增"文字有质感"成功标准)
+  - ink-writer/skills/ink-write/SKILL.md (Step 2A 执行前加载新增 prose-craft-rules.md + References 清单新增条目 + 批量模式关键规则加载清单更新)
+- **Learnings for future iterations:**
+  - writer-agent 新增铁律 L10 的模式与 L9 相同：只做预防（写作时遵守），检测完全委托给 proofreading-checker（与 L9 委托 ooc-checker 一致），因此 MCC 自检 9 项和 SC 6 项数量保持不变
+  - prose-craft-rules.md 放在 `skills/ink-write/references/` 而非 `references/shared/`——AC 明确指定该路径，且该规则只在 ink-write 流水线内生效（不被 ink-plan 消费）
+  - 弱动词黑名单 10 词每词需 5 场景×≥1 例替换，共 50+ 条替换示例，按战斗/日常/情感/悬疑/题材专门（修仙/都市/科幻）场景分组
+  - 空洞感官词黑名单（"气氛紧张""感觉不对""空气凝固"等）是 US-014 GENERIC_DESCRIPTION 规则的判据——在 US-013 中与 L10c 一起定义在 prose-craft-rules.md 第三节
+  - 写作铁律和逻辑自洽铁律分两段：写作铁律（顶部）描述创作意识，逻辑自洽铁律（L1-L10）描述硬约束；L10 与 L9 同属"质感"层铁律，放在最后
+  - L10 与 L9 的协同：本能反应段天然是感官锚点富集区（触觉/嗅觉/体感），满足 L9 自动帮助满足 L10b
+  - "更新铁律计数和成功标准" 的执行: 仅需更新铁律计数（9→10）+ 成功标准中的铁律覆盖描述+新增一条"文字有质感"成功标准，不需要更新 MCC/SC 项数
 ---

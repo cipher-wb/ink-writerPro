@@ -218,6 +218,9 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 - `references/anti-detection-writing.md`
   - 用途：Step 2A 防AI检测源头写作指南（句长突发度/信息密度波动/逻辑跳跃/对话人类化/词汇意外性/段落碎片化/视角限制）。
   - 触发：Step 2A 必读。
+- `references/prose-craft-rules.md`
+  - 用途：Step 2A 遣词造句律（L10）参考——弱动词黑名单+场景化替换示例库、感官锚点密度规则、空洞形容词与空洞感官词清单。也作为 proofreading-checker Layer 6 和 polish-agent Layer 8 的判据。
+  - 触发：Step 2A 必读；Step 3 proofreading-checker、Step 4 polish-agent 按需加载。
 - `references/style-variants.md`
   - 用途：Step 1（内置 Contract）开头/钩子/节奏变体与重复风险控制。
   - 触发：Step 1 当需要做差异化设计时加载。
@@ -885,6 +888,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 cat "${SKILL_ROOT}/../../references/shared/core-constraints.md"
 # 第二批：半静态（跨卷不变）
 cat "${SKILL_ROOT}/references/anti-detection-writing.md"
+cat "${SKILL_ROOT}/references/prose-craft-rules.md"
 ```
 
 硬要求：
@@ -2017,7 +2021,7 @@ FOR i = 1 TO N:
     # 1. 本次为 --batch {N}，用户已授权连续写 {N} 章，写完立即继续，禁止询问
     # 2. 每章正文必须 ≥ 2200 字（硬下限，无豁免，不足必须补写）
     # 3. 每章必须完整执行 Step 0→1→2A→2A.5→2B→3→4→4.5→5→6，禁止跳步
-    # 4. Step 2A 必须加载 core-constraints.md 和 anti-detection-writing.md
+    # 4. Step 2A 必须加载 core-constraints.md、anti-detection-writing.md、prose-craft-rules.md
     # 5. Step 3 审查必须由 Task 子代理执行，禁止伪造审查结论
     # 6. Step 2A.5 字数校验：< 2200 字必须补写，最多 2 轮，仍不足则阻断
     # 7. 章节标题 ≥ 2 个汉字且全书唯一
