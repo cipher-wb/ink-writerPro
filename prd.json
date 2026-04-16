@@ -173,7 +173,7 @@
         "不破坏现有场景转换、情节线连贯、伏笔管理等维度"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/continuity-checker.md。PRD详见 tasks/prd-logic-fortress.md US-008。"
     },
     {
