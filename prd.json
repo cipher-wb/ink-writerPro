@@ -66,7 +66,7 @@
         "不影响现有板块1-14"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/context-agent.md。依赖US-001/002/003的数据。"
     },
     {
@@ -82,7 +82,7 @@
         "不影响现有L1-L5铁律"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/writer-agent.md。依赖US-004的板块15。"
     },
     {
@@ -99,7 +99,7 @@
         "给出2个具体检测示例（统计遗漏+信息引用无来源）"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/writer-agent.md。这是核心的章内矛盾防线。"
     },
     {
@@ -114,7 +114,7 @@
         "不影响现有的⚠️(>10章)和🔴(>20章)久未出场标记"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "修改 ink-writer/agents/context-agent.md 板块8.7。依赖US-003的scene_exit_snapshot。"
     },
     {
