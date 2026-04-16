@@ -632,6 +632,11 @@ class StateManager:
         if isinstance(fingerprint, dict) and "chapter" in fingerprint:
             idx.save_plot_structure_fingerprint(fingerprint)
 
+        # 否定约束
+        neg_constraints = sqlite_data.get("negative_constraints", [])
+        if neg_constraints:
+            idx.save_negative_constraints(chapter, neg_constraints)
+
     def _attempt_stale_recovery(self) -> None:
         """当 _sqlite_sync_stale 为 True 时，在 save_state 开头尝试一次恢复性同步。
 
@@ -1564,6 +1569,10 @@ class StateManager:
         # 处理冲突结构指纹
         if isinstance(result.get("plot_structure_fingerprint"), dict):
             self._pending_sqlite_data["plot_structure_fingerprint"] = dict(result.get("plot_structure_fingerprint"))
+
+        # 处理否定约束
+        if isinstance(result.get("negative_constraints"), list):
+            self._pending_sqlite_data["negative_constraints"] = list(result.get("negative_constraints"))
 
         # 写入 chapter_meta（兼容快照，附带轻量结构化信息）
         chapter_meta = self._build_chapter_meta_payload(chapter, result, warnings)

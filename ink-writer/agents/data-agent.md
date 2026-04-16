@@ -488,6 +488,66 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - 此数据供 emotion-curve-checker 和 pacing-checker 使用
 - 不写入 index.db（非实体数据）
 
+### Step B.13: 否定约束提取（Negative Constraint Extraction）
+
+扫描本章正文，提取 3-8 条"明确未发生"的关键事实，防止后续章节凭空编造这些事实。
+
+**聚焦原则**：不贪多，仅提取关键的、后续章节可能误用的否定事实。日常琐事（"主角没有吃早餐"）不提取。
+
+**4类提取规则**：
+
+| type | 说明 | 典型场景 |
+|------|------|---------|
+| `no_contact_exchange` | 未建立联系 | 两个角色同场但未交换联系方式/名字/信物 |
+| `no_information_gained` | 未获知信息 | 主角对某事实仍不知情（虽然读者/旁白已知） |
+| `no_critical_action` | 未发生的关键动作 | 角色有机会但未出手/未表态/未使用某能力 |
+| `no_revelation` | 未揭示的设定 | 某身份/秘密/背景在本章仍未暴露 |
+
+**id格式**：`NC-ch{NNNN}-{NNN}`（如 `NC-ch0003-001`）
+
+**输出到 payload**：
+```json
+{
+  "negative_constraints": [
+    {
+      "id": "NC-ch0003-001",
+      "chapter": 3,
+      "type": "no_contact_exchange",
+      "entities": ["protagonist", "yueyue_mama"],
+      "description": "主角与悦悦妈妈全程无直接对话，未交换姓名或联系方式",
+      "valid_until": null,
+      "override_condition": "主角与悦悦妈妈在后续章节有正式互动场景"
+    },
+    {
+      "id": "NC-ch0003-002",
+      "chapter": 3,
+      "type": "no_information_gained",
+      "entities": ["protagonist", "yueyue"],
+      "description": "主角不知道悦悦的全名和家庭背景，仅知道她叫'悦悦'",
+      "valid_until": null,
+      "override_condition": "有人正式告知主角悦悦的全名或家庭信息"
+    }
+  ]
+}
+```
+
+**提取示例 1（第3章悦悦妈妈案例）**：
+- 第3章中悦悦妈妈在远处出现，与主角无交集
+- 提取：`no_contact_exchange` — 主角与悦悦妈妈无直接接触
+- 提取：`no_information_gained` — 主角不知悦悦妈妈的身份/职业
+- 作用：防止第5章突然写出"主角拨通了悦悦妈妈的电话"
+
+**提取示例 2（信息不对称案例）**：
+- 第7章旁白交代反派的计划，但主角未在场
+- 提取：`no_information_gained` — 主角不知反派正在策划伏击
+- 作用：防止主角在第8章莫名其妙地"预感到危险并提前布防"
+
+**写入规则**：
+- 通过 `index_manager.save_negative_constraints(chapter, constraints_list)` 批量写入 index.db
+- 每章提取 3-8 条，少于3条时检查是否遗漏关键否定事实
+- `valid_until` 为 null 表示永久有效，非 null 表示在指定章节后自动失效
+- `override_condition` 描述在什么条件下该约束可被正当推翻
+
 ### Step C: 实体消歧处理
 
 **置信度策略**:
@@ -535,7 +595,8 @@ cat > "{project_root}/.ink/tmp/data_agent_payload_ch{chapter_padded}.json" <<'EO
   "character_evolution_entries": [...],
   "narrative_commitments_new": [...],
   "narrative_commitments_resolved": [...],
-  "character_status_updates": [...]
+  "character_status_updates": [...],
+  "negative_constraints": [...]
 }
 EOF
 

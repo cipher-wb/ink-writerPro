@@ -116,6 +116,63 @@ class TestResolveConstraint:
         assert result is False  # already resolved, no row updated
 
 
+class TestProcessChapterIntegration:
+    """Test negative_constraints flow through process_chapter_result → _sync_index_extensions."""
+
+    def test_negative_constraints_pending_data(self, tmp_path, sample_constraints):
+        """process_chapter_result buffers negative_constraints into _pending_sqlite_data."""
+        from data_modules.state_manager import StateManager
+
+        ink_dir = tmp_path / ".ink"
+        ink_dir.mkdir()
+        cfg = DataModulesConfig.from_project_root(tmp_path)
+        mgr = StateManager(cfg, enable_sqlite_sync=False)
+
+        result = {
+            "entities_appeared": [],
+            "entities_new": [],
+            "state_changes": [],
+            "relationships_new": [],
+            "negative_constraints": sample_constraints,
+        }
+        mgr.process_chapter_result(3, result)
+        assert mgr._pending_sqlite_data["negative_constraints"] == sample_constraints
+
+    def test_sync_index_extensions_writes_constraints(self, tmp_path, sample_constraints):
+        """_sync_index_extensions writes negative_constraints to index.db."""
+        from data_modules.state_manager import StateManager
+
+        ink_dir = tmp_path / ".ink"
+        ink_dir.mkdir()
+        cfg = DataModulesConfig.from_project_root(tmp_path)
+        mgr = StateManager(cfg, enable_sqlite_sync=True)
+
+        sqlite_data = {"negative_constraints": sample_constraints}
+        mgr._sync_index_extensions(sqlite_data, chapter=3)
+
+        idx = mgr._sql_state_manager._index_manager
+        active = idx.get_active_constraints(3)
+        assert len(active) == 3
+        ids = {c["id"] for c in active}
+        assert "NC-ch0003-001" in ids
+
+    def test_empty_negative_constraints_no_error(self, tmp_path):
+        """Empty negative_constraints list should not cause errors."""
+        from data_modules.state_manager import StateManager
+
+        ink_dir = tmp_path / ".ink"
+        ink_dir.mkdir()
+        cfg = DataModulesConfig.from_project_root(tmp_path)
+        mgr = StateManager(cfg, enable_sqlite_sync=True)
+
+        sqlite_data = {"negative_constraints": []}
+        mgr._sync_index_extensions(sqlite_data, chapter=1)
+
+        idx = mgr._sql_state_manager._index_manager
+        active = idx.get_active_constraints(1)
+        assert len(active) == 0
+
+
 class TestSchemaVersion:
     def test_schema_version_is_2(self, index_mgr):
         assert IndexManager.SCHEMA_VERSION == 2
