@@ -7,7 +7,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import numpy as np
+np = pytest.importorskip("numpy")
 
 from ink_writer.semantic_recall.chapter_index import ChapterCard, ChapterVectorIndex
 

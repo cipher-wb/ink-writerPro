@@ -5,6 +5,8 @@ from __future__ import annotations
 import pytest
 from pathlib import Path
 
+pytest.importorskip("numpy")
+
 from ink_writer.semantic_recall.config import SemanticRecallConfig
 
 

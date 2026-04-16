@@ -7,10 +7,11 @@ import pathlib
 import sqlite3
 from unittest.mock import patch
 
-import faiss
-import numpy as np
 import pytest
-from sentence_transformers import SentenceTransformer
+
+faiss = pytest.importorskip("faiss")
+np = pytest.importorskip("numpy")
+SentenceTransformer = pytest.importorskip("sentence_transformers").SentenceTransformer
 
 from ink_writer.style_rag.retriever import (
     MODEL_NAME,

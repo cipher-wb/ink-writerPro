@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from unittest.mock import MagicMock, patch
 
-import numpy as np
+np = pytest.importorskip("numpy")
 
 from ink_writer.semantic_recall.chapter_index import ChapterCard, ChapterVectorIndex
 from ink_writer.semantic_recall.config import SemanticRecallConfig

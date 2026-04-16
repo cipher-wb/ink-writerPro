@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import pytest
 
+pytest.importorskip("faiss")
+
 from ink_writer.style_rag.polish_integration import (
     DEFAULT_TOP_K,
     MIN_QUALITY,
