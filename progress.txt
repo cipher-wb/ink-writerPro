@@ -16,7 +16,8 @@
 - Slim bundle generation: slim_review_bundle.py --bundle X --checkers Y --outdir Z (per-checker field subsetting with fallback)
 - Logic precheck: ink-writer/scripts/logic_precheck.py provides precheck_arithmetic() and precheck_attributes()
 - Slim bundle precheck injection: slim_review_bundle.py --precheck flag runs logic_precheck and injects into logic-checker bundle
-- Step 2B uses style-adapter.md, has built-in skip condition when metrics met
+- Step 2B uses style-adapter.md, has dual-mode (full/targeted) based on step2b_metrics.py
+- step2b_metrics.py: evaluate() returns {avg_sentence_length, dialogue_ratio, targeted_mode, long_sentences, summary_phrases}
 - context-agent token budget: 8000(ch1-3) / 7000(ch4-30) / 9000(ch31-100) / 13000(ch101+), cap 15000
 - data-agent.md is 792 lines, outputs entities/relations/summaries
 - ai-word-blacklist.md at ink-writer/references/shared/ai-word-blacklist.md (49 lines)
@@ -64,4 +65,20 @@
   - Character attribute extraction needs sentence-level context (not just post-name window) to catch "张伟是个程序员" patterns
   - `slim_bundle()` `extra_fields` parameter cleanly injects precheck without changing per-checker profile definitions
   - ruff SIM110 requires replacing for-loop-with-return-True patterns with `any()` expressions
+---
+
+## 2026-04-16 - US-004
+- Implemented Step 2B conditional downgrade to targeted check mode
+- Created `ink-writer/scripts/step2b_metrics.py` — calculates sentence length avg and dialogue ratio
+  - `evaluate()`: returns metrics + mode decision (targeted/full) + pre-detected issues
+  - `find_long_sentences()`: detects >55 char non-dialogue sentences
+  - `find_summary_phrases()`: detects AI trace phrases (由此可见, 换句话说, etc.)
+- Updated `SKILL.md` Step 2B: added pre-computation step and dual-mode branch (Mode A: full, Mode B: targeted)
+- Updated `style-adapter.md`: replaced "必要性评估" with structured dual-mode spec (trigger conditions, responsibilities)
+- Files changed: ink-writer/scripts/step2b_metrics.py (new), ink-writer/skills/ink-write/SKILL.md, ink-writer/skills/ink-write/references/style-adapter.md, tests/baseline/test_step2b_metrics.py (new)
+- **Learnings for future iterations:**
+  - style-adapter.md already had informal skip conditions (v10.6); formalizing into code + spec makes it deterministic
+  - Chinese sentence splitting by 。？！ is sufficient; English periods within Chinese text are rare in this codebase
+  - Dialogue uses 「」 (not "" or '') in this project — regex must match these specific brackets
+  - Summary phrases list should match ai-word-blacklist.md patterns but focus on meta-narrative markers specifically
 ---

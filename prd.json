@@ -69,7 +69,7 @@
         "不删除或修改全量模式的任何逻辑（只是条件跳过）"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "修改 SKILL.md Step 2B + style-adapter.md。节省约80% Step 2B token。"
     },
     {
