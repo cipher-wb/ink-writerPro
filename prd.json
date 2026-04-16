@@ -124,7 +124,7 @@
         "输出格式与现有checker一致，消费MCC(板块14)作为输入"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "新建 ink-writer/agents/outline-compliance-checker.md。PRD详见 tasks/prd-logic-fortress.md US-004。"
     },
     {

@@ -111,3 +111,28 @@
   - 每层的豁免/例外规则很重要：L6感官遮蔽例外（超能力）、L7双人场景豁免、L8隐性动机豁免——这些在禁止事项中也要同步体现
   - metrics 命名规律：l{N}_{domain}_issues，如 l5_object_issues, l8_causal_issues
 ---
+
+## 2026-04-16 - US-007
+- 新建 ink-writer/agents/outline-compliance-checker.md，覆盖O1-O6六层大纲合规检查
+- Files changed: ink-writer/agents/outline-compliance-checker.md (新建)
+- 修改内容：
+  - 标准 agent frontmatter（name/description/tools/model）
+  - O1 实体出场合规：逐一比对MCC required_entities，验证出场+实质性互动+死亡场景，severity: critical/high
+  - O2 禁止发明检查：未授权新角色检测，含群众演员豁免+集合名词具体化豁免+具名群演豁免（≤2句无剧情影响），severity: critical/high
+  - O3 核心目标充分性：存在性二值判定+主导性相对判定（自创篇幅 vs 核心篇幅）+展开充分性，severity: critical/high/medium
+  - O4 伏笔埋设验证：语义匹配+埋设质量判定，severity: high/medium
+  - O5 钩子合规：章末500字内出现+未被提前消费，severity: high/medium
+  - O6 黄金三章附加项：仅ch≤3启用，逐项验证，severity: high
+  - MUST_NOT_PASS：任何critical或≥2个high
+  - 输出格式：JSON issues[]（含layer字段）+ Markdown报告，消费MCC板块14
+  - MCC缺失处理：标记mcc_missing，O1-O5降级为warning
+  - metrics: o1_entity_issues / o2_invention_issues / o3_goal_issues / o4_foreshadow_issues / o5_hook_issues / o6_golden_three_issues
+  - 与continuity/consistency/logic三个checker的互补关系表
+- **Learnings for future iterations:**
+  - outline-compliance-checker 的layer字段前缀用"O"（O1-O6），区别于logic-checker的"L"（L1-L8）
+  - issue type命名规律：ENTITY_MISSING, UNAUTHORIZED_INVENTION, GOAL_OVERSHADOWED, GOAL_UNDERDEVELOPED, FORESHADOW_MISSING, HOOK_CONSUMED, HOOK_MISSING, GOLDEN_THREE_UNMET
+  - metrics 命名规律：o{N}_{domain}_issues，如 o1_entity_issues, o5_hook_issues
+  - JSON issue id 前缀用 "OCC_"，区别于 logic-checker 的 "LOGIC_"
+  - O3 核心目标充分性使用**相对判定**而非固定百分比——自创篇幅 vs 核心事件篇幅的字数比较
+  - 具名群演豁免规则在O2中详细定义：出场≤2句 + 不推动剧情转折 + 不参与冲突 + 不提供关键信息
+---
