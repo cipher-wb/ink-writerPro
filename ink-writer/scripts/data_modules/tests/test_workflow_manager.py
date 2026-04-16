@@ -351,3 +351,68 @@ def test_cleanup_artifacts_confirm_deletes_with_backup(tmp_path, monkeypatch):
     backup_dir = tmp_path / ".ink" / "recovery_backups"
     backups = list(backup_dir.glob("ch0008-*"))
     assert backups
+
+
+# ---------- US-003: [INK-PROGRESS] event output tests ----------
+
+
+def test_start_step_emits_ink_progress_event(tmp_path, monkeypatch, capsys):
+    """start-step should emit [INK-PROGRESS] step_started {step_id}."""
+    module = _load_module()
+    monkeypatch.setattr(module, "find_project_root", lambda: tmp_path)
+
+    ink_dir = tmp_path / ".ink"
+    ink_dir.mkdir(parents=True, exist_ok=True)
+
+    module.start_task("ink-write", {"chapter_num": 30})
+    module.start_step("Step 1", "Context")
+
+    captured = capsys.readouterr().out
+    assert "[INK-PROGRESS] step_started Step 1" in captured
+
+
+def test_complete_step_emits_ink_progress_event(tmp_path, monkeypatch, capsys):
+    """complete-step should emit [INK-PROGRESS] step_completed {step_id} {elapsed}."""
+    module = _load_module()
+    monkeypatch.setattr(module, "find_project_root", lambda: tmp_path)
+
+    ink_dir = tmp_path / ".ink"
+    ink_dir.mkdir(parents=True, exist_ok=True)
+
+    module.start_task("ink-write", {"chapter_num": 31})
+    module.start_step("Step 1", "Context")
+    module.complete_step("Step 1")
+
+    captured = capsys.readouterr().out
+    # Should contain the progress line with step_id and a numeric elapsed value
+    lines = [l for l in captured.splitlines() if "[INK-PROGRESS] step_completed" in l]
+    assert len(lines) == 1
+    parts = lines[0].split()
+    assert parts[0] == "[INK-PROGRESS]"
+    assert parts[1] == "step_completed"
+    assert parts[2] == "Step"  # "Step 1" splits into two tokens
+    assert parts[3] == "1"
+    # Last part should be a float (elapsed seconds)
+    float(parts[4])
+
+
+def test_complete_task_emits_ink_progress_chapter_completed(tmp_path, monkeypatch, capsys):
+    """complete-task should emit [INK-PROGRESS] chapter_completed {chapter} {word_count} {score} {seconds}."""
+    module = _load_module()
+    monkeypatch.setattr(module, "find_project_root", lambda: tmp_path)
+
+    ink_dir = tmp_path / ".ink"
+    ink_dir.mkdir(parents=True, exist_ok=True)
+
+    module.start_task("ink-write", {"chapter_num": 32})
+    module.start_step("Step 1", "Context")
+    module.complete_step("Step 1")
+    module.complete_task(json.dumps({"word_count": 2800, "overall_score": 85}))
+
+    captured = capsys.readouterr().out
+    lines = [l for l in captured.splitlines() if "[INK-PROGRESS] chapter_completed" in l]
+    assert len(lines) == 1
+    line = lines[0]
+    assert "32" in line
+    assert "2800" in line
+    assert "85" in line

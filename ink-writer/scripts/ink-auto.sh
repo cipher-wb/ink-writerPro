@@ -56,6 +56,83 @@ START_TIME_STR=$(date "+%Y-%m-%d %H:%M:%S")
 EXIT_REASON=""
 
 # ═══════════════════════════════════════════
+# 章节级进度条
+# ═══════════════════════════════════════════
+
+# 格式化秒数为人类可读时间
+format_duration() {
+    local secs="$1"
+    if (( secs < 60 )); then
+        echo "${secs}s"
+    elif (( secs < 3600 )); then
+        echo "$((secs / 60))m$((secs % 60))s"
+    else
+        echo "$((secs / 3600))h$(( (secs % 3600) / 60 ))m"
+    fi
+}
+
+# 输出章节级进度条
+# 参数：$1=已完成章数, $2=总章数
+print_chapter_progress() {
+    local done="$1"
+    local total="$2"
+    local now
+    now=$(date +%s)
+    local elapsed=$(( now - START_TIME ))
+    local pct=0
+    if (( total > 0 )); then
+        pct=$(( done * 100 / total ))
+    fi
+
+    # 终端宽度检测
+    local term_width
+    term_width=$(tput cols 2>/dev/null || echo 80)
+
+    if (( term_width < 60 )); then
+        # 窄屏降级：纯文字
+        local eta_str="计算中"
+        if (( done > 0 )); then
+            local remaining_secs=$(( elapsed * (total - done) / done ))
+            eta_str=$(format_duration "$remaining_secs")
+        fi
+        echo "📖 ${done}/${total} 章 ${pct}% | ⏱️ $(format_duration "$elapsed") | 剩余 ${eta_str}"
+        return
+    fi
+
+    # 进度条：宽度 20 字符
+    local bar_width=20
+    local filled=0
+    if (( total > 0 )); then
+        filled=$(( done * bar_width / total ))
+    fi
+    local empty=$(( bar_width - filled ))
+
+    local bar=""
+    local j
+    for (( j=0; j<filled; j++ )); do bar+="█"; done
+    for (( j=0; j<empty; j++ )); do bar+="░"; done
+
+    # 时间估算
+    local elapsed_str
+    elapsed_str=$(format_duration "$elapsed")
+    local eta_str="计算中"
+    if (( done > 0 )); then
+        local remaining_secs=$(( elapsed * (total - done) / done ))
+        eta_str=$(format_duration "$remaining_secs")
+    fi
+
+    echo "═══ 📖 总进度 [${bar}] ${done}/${total} 章 (${pct}%) | ⏱️ 已耗时 ${elapsed_str} / 预计剩余 ${eta_str}"
+}
+
+# 检查点子步骤进度显示
+# 参数：$1=检查点范围描述, $2=步骤状态字符串（如 "✅审查 ✅修复 ⏳审计 ☐审计修复"）
+print_checkpoint_progress() {
+    local scope="$1"
+    local steps="$2"
+    echo "🔍 检查点 [${scope}] ${steps}"
+}
+
+# ═══════════════════════════════════════════
 # 路径检测
 # ═══════════════════════════════════════════
 
@@ -431,6 +508,102 @@ get_chapter_wordcount() {
 }
 
 # ═══════════════════════════════════════════
+# 内层进度事件解析
+# ═══════════════════════════════════════════
+
+# step_id → 名称映射
+get_step_name() {
+    local sid="$1"
+    case "$sid" in
+        "Step 0")    echo "预检" ;;
+        "Step 0.7")  echo "金丝雀扫描" ;;
+        "Step 0.8")  echo "设定校验" ;;
+        "Step 1")    echo "上下文构建" ;;
+        "Step 2A")   echo "正文起草" ;;
+        "Step 2A.5") echo "字数校验" ;;
+        "Step 2B")   echo "风格适配" ;;
+        "Step 2C")   echo "计算型闸门" ;;
+        "Step 3")    echo "审查" ;;
+        "Step 4")    echo "润色" ;;
+        "Step 5")    echo "数据回写" ;;
+        "Step 6")    echo "Git 备份" ;;
+        *)           echo "" ;;
+    esac
+}
+
+# 解析子进程输出：[INK-PROGRESS] 行格式化展示，其余透传
+# 参数：$1=日志文件路径
+# stdin: 子进程的合并输出流
+parse_progress_output() {
+    local log_file="$1"
+    local line event_rest event_type step_id step_name seconds
+    local ch_num ch_wc ch_score ch_secs
+
+    while IFS= read -r line; do
+        # 所有原始输出写入日志文件
+        printf '%s\n' "$line" >> "$log_file"
+
+        # 检测 [INK-PROGRESS] 前缀
+        case "$line" in
+            *"[INK-PROGRESS] "*)
+                # 提取 [INK-PROGRESS] 后面的内容
+                event_rest="${line#*\[INK-PROGRESS\] }"
+                # 提取事件类型（第一个空格前的部分）
+                event_type="${event_rest%% *}"
+
+                case "$event_type" in
+                    step_started)
+                        # 格式: step_started {step_id}
+                        step_id="${event_rest#step_started }"
+                        step_name=$(get_step_name "$step_id")
+                        echo "    ⏳ ${step_id} ${step_name} ← 执行中..."
+                        ;;
+                    step_completed)
+                        # 格式: step_completed {step_id} {elapsed_seconds}
+                        # step_id 含空格，elapsed_seconds 是最后一个字段
+                        local args="${event_rest#step_completed }"
+                        seconds="${args##* }"
+                        step_id="${args% *}"
+                        step_name=$(get_step_name "$step_id")
+                        echo "    ✅ ${step_id} ${step_name} (${seconds}s)"
+                        ;;
+                    step_skipped)
+                        # 格式: step_skipped {step_id}
+                        step_id="${event_rest#step_skipped }"
+                        step_name=$(get_step_name "$step_id")
+                        echo "    ⏭  ${step_id} ${step_name} (跳过)"
+                        ;;
+                    step_retry)
+                        # 格式: step_retry {from_step} {to_step}
+                        local retry_args="${event_rest#step_retry }"
+                        echo "    🔄 回退重写: ${retry_args}"
+                        ;;
+                    chapter_completed)
+                        # 格式: chapter_completed {ch} {wc} {score} {secs}
+                        local ch_args="${event_rest#chapter_completed }"
+                        ch_num="${ch_args%% *}"; ch_args="${ch_args#* }"
+                        ch_wc="${ch_args%% *}"; ch_args="${ch_args#* }"
+                        ch_score="${ch_args%% *}"; ch_args="${ch_args#* }"
+                        ch_secs="${ch_args}"
+                        local ch_dur
+                        ch_dur=$(format_duration "$ch_secs" 2>/dev/null || echo "${ch_secs}s")
+                        echo ""
+                        echo "    ✅ 第${ch_num}章完成 | ${ch_wc}字 | 总耗时 ${ch_dur} | 审查分 ${ch_score}"
+                        ;;
+                    *)
+                        # 未知事件类型，静默忽略（不影响流程）
+                        ;;
+                esac
+                ;;
+            *)
+                # 非 [INK-PROGRESS] 行：正常透传到终端
+                printf '%s\n' "$line"
+                ;;
+        esac
+    done
+}
+
+# ═══════════════════════════════════════════
 # CLI 进程启动通用函数
 # ═══════════════════════════════════════════
 
@@ -444,21 +617,21 @@ run_cli_process() {
             claude -p "$prompt" \
                 --permission-mode bypassPermissions \
                 --no-session-persistence \
-                2>&1 | tee "$log_file" &
+                2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             CHILD_PID=""
             ;;
         gemini)
             echo "$prompt" | gemini --yolo \
-                2>&1 | tee "$log_file" &
+                2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             CHILD_PID=""
             ;;
         codex)
             codex --approval-mode full-auto "$prompt" \
-                2>&1 | tee "$log_file" &
+                2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             CHILD_PID=""
@@ -758,22 +931,97 @@ run_checkpoint() {
     audit_depth=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['audit'] or '')")
     macro_tier=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['macro'] or '')")
     do_disambig=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['disambig'])")
+    review_start=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review_range'][0])")
+    review_end=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review_range'][1])")
+
+    # 构建检查点子步骤列表并动态展示进度
+    local cp_scope="第${review_start}-${review_end}章"
+    local cp_steps=()
+    cp_steps+=("审查" "修复")
+    if [[ -n "$audit_depth" ]]; then
+        cp_steps+=("审计" "审计修复")
+    fi
+    if [[ -n "$macro_tier" ]]; then
+        cp_steps+=("宏观审查" "宏观修复")
+    fi
+    if [[ "$do_disambig" == "True" ]]; then
+        cp_steps+=("消歧检查")
+    fi
+
+    # 初始化步骤状态数组（所有☐）
+    local cp_status=()
+    local si
+    for si in "${!cp_steps[@]}"; do
+        cp_status[$si]="☐"
+    done
+
+    # Helper: 渲染当前检查点进度
+    _render_cp_progress() {
+        local parts=""
+        local si
+        for si in "${!cp_steps[@]}"; do
+            parts+="${cp_status[$si]}${cp_steps[$si]} "
+        done
+        print_checkpoint_progress "$cp_scope" "$parts"
+    }
+
+    # Helper: 标记步骤开始(⏳)并渲染
+    _cp_step_start() {
+        local idx="$1"
+        cp_status[$idx]="⏳"
+        _render_cp_progress
+    }
+
+    # Helper: 标记步骤完成(✅)并渲染
+    _cp_step_done() {
+        local idx="$1"
+        cp_status[$idx]="✅"
+        _render_cp_progress
+    }
+
+    local step_idx=0  # 当前步骤索引追踪
+
+    # 审查（步骤0）+ 修复（步骤1）始终在最后执行，先执行高层级操作
+    # 重排：审计→宏观→消歧→审查→修复
+    step_idx=2  # 跳过审查(0)和修复(1)，从审计开始
 
     # 从高到低执行审计（高层级先行，结果可被后续审查利用）
     if [[ -n "$audit_depth" ]]; then
+        _cp_step_start "$step_idx"
         run_audit "$audit_depth"
+        _cp_step_done "$step_idx"
+        step_idx=$((step_idx + 1))
+
+        _cp_step_start "$step_idx"
+        # audit修复已在 run_audit 内部的 run_auto_fix 中完成
+        _cp_step_done "$step_idx"
+        step_idx=$((step_idx + 1))
     fi
     if [[ -n "$macro_tier" ]]; then
+        _cp_step_start "$step_idx"
         run_macro_review "$macro_tier"
+        _cp_step_done "$step_idx"
+        step_idx=$((step_idx + 1))
+
+        _cp_step_start "$step_idx"
+        # macro修复已在 run_macro_review 内部的 run_auto_fix 中完成
+        _cp_step_done "$step_idx"
+        step_idx=$((step_idx + 1))
     fi
     if [[ "$do_disambig" == "True" ]]; then
+        _cp_step_start "$step_idx"
         check_disambiguation_backlog
+        _cp_step_done "$step_idx"
     fi
 
     # 审查最近5章 + 自动修复（始终执行）
-    review_start=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review_range'][0])")
-    review_end=$(echo "$cp_json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['review_range'][1])")
+    _cp_step_start 0
     run_review_and_fix "$review_start" "$review_end"
+    _cp_step_done 0
+
+    _cp_step_start 1
+    # 修复已在 run_review_and_fix 内部的 run_auto_fix 中完成
+    _cp_step_done 1
 
     echo "───────── 检查点完成 ─────────"
     echo ""
@@ -943,6 +1191,8 @@ for i in $(seq 1 "$N"); do
     fi
 
     echo ""
+    print_chapter_progress "$COMPLETED" "$N"
+    echo ""
     echo "[$i/$N] 第${NEXT_CH}章 开始写作..."
     echo "───────────────────────────────────"
     report_event "📝" "写作启动" "第${NEXT_CH}章 [$i/$N]"
@@ -955,8 +1205,9 @@ for i in $(seq 1 "$N"); do
 
     if verify_chapter "$NEXT_CH"; then
         WC=$(get_chapter_wordcount "$NEXT_CH")
-        echo "[$i/$N] ✅ 第${NEXT_CH}章完成 | ${WC}字"
         COMPLETED=$((COMPLETED + 1))
+        echo "[$i/$N] ✅ 第${NEXT_CH}章完成 | ${WC}字"
+        print_chapter_progress "$COMPLETED" "$N"
         report_event "✅" "写作完成" "第${NEXT_CH}章 ${WC}字"
 
         run_checkpoint "$NEXT_CH"
@@ -987,8 +1238,9 @@ for i in $(seq 1 "$N"); do
 
         if verify_chapter "$NEXT_CH"; then
             WC=$(get_chapter_wordcount "$NEXT_CH")
-            echo "[$i/$N] ✅ 第${NEXT_CH}章完成（重试成功）| ${WC}字"
             COMPLETED=$((COMPLETED + 1))
+            echo "[$i/$N] ✅ 第${NEXT_CH}章完成（重试成功）| ${WC}字"
+            print_chapter_progress "$COMPLETED" "$N"
             report_event "✅" "重试成功" "第${NEXT_CH}章 ${WC}字"
 
             run_checkpoint "$NEXT_CH"

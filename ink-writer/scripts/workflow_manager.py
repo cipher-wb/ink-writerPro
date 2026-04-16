@@ -428,6 +428,7 @@ def start_step(step_id, step_name, progress_note=None):
         },
     )
     print(f"▶️ {step_id} 开始: {step_name}")
+    print(f"[INK-PROGRESS] step_started {step_id}")
 
 
 def complete_step(step_id, artifacts_json=None):
@@ -489,7 +490,19 @@ def complete_step(step_id, artifacts_json=None):
             "chapter": task.get("args", {}).get("chapter_num"),
         },
     )
+    elapsed_seconds = 0.0
+    started_at_str = current_step.get("started_at")
+    if started_at_str:
+        try:
+            elapsed_seconds = round(
+                (datetime.fromisoformat(current_step["completed_at"])
+                 - datetime.fromisoformat(started_at_str)).total_seconds(),
+                1,
+            )
+        except (ValueError, KeyError):
+            pass
     print(f"✅ {step_id} 完成")
+    print(f"[INK-PROGRESS] step_completed {step_id} {elapsed_seconds}")
 
 
 def complete_task(final_artifacts_json=None):
@@ -536,7 +549,22 @@ def complete_task(final_artifacts_json=None):
             "failed_steps": len(task.get("failed_steps", [])),
         },
     )
+    # Emit [INK-PROGRESS] chapter_completed event
+    chapter_num = task.get("args", {}).get("chapter_num", "?")
+    word_count = task.get("artifacts", {}).get("word_count", 0)
+    overall_score = task.get("artifacts", {}).get("overall_score", "-")
+    total_seconds = 0.0
+    if task.get("started_at"):
+        try:
+            total_seconds = round(
+                (datetime.fromisoformat(task["completed_at"])
+                 - datetime.fromisoformat(task["started_at"])).total_seconds(),
+                1,
+            )
+        except (ValueError, KeyError):
+            pass
     print("🎀 任务完成")
+    print(f"[INK-PROGRESS] chapter_completed {chapter_num} {word_count} {overall_score} {total_seconds}")
 
 
 def detect_interruption():
