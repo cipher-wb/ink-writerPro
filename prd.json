@@ -34,8 +34,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "schema/skeleton/roadmap 三件套就位；skeleton total=0 + 12 条示例 seed（覆盖全 10 类）；jsonschema Draft7 双向校验通过；SKILL.md Quick Step 0 加载列表第 6 条新增 anti-trope-seeds.json"
     },
     {
       "id": "US-003",

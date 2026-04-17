@@ -21,3 +21,18 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - 验证字数用 `python3 -c "import re; print(len(re.findall(r'[\u4e00-\u9fff]', open(...).read())))"`，只算汉字，别算 markdown 符号。
   - 本 PRD 所有 US 的"Typecheck passes" 门禁对纯 markdown 文件等价于 JSON schema/frontmatter 语法正确；无需运行 mypy。
 ---
+
+## 2026-04-17 - US-002
+- 新建 `ink-writer/skills/ink-init/references/creativity/anti-trope-seeds-schema.json`（JSON Schema Draft-07，10 类 category enum，Seed 必填 7 字段 seed_id/category/value/rarity/genre_tags/example_pairing/source，可选 meta_rules_hit；$schema 字段允许 data 自引用）。
+- 新建 `ink-writer/skills/ink-init/references/creativity/anti-trope-seeds.json`（skeleton：version=v1.0-skeleton, total=0, categories=10 类 meta, changelog=[], seeds=12 条示例跨全 10 类）。
+- 新建 `ink-writer/skills/ink-init/references/creativity/anti-trope-seeds-roadmap.md`（Phase-Seed-1 分 10 批流程/稀有度分布硬约束表 rarity≥4 合计 ≥50% + rarity=5 ≥20%；Phase-Seed-∞ 触发条件 A/B/手动；OQ-10 单条贡献命令明示范围外）。
+- 修改 `ink-writer/skills/ink-init/SKILL.md` Quick Step 0 加载列表第 6 条加入 anti-trope-seeds.json（L1 必读），原第 6 条题材 anti-trope-*.md 顺延为第 7 条。
+- 校验：`python3 -c "import jsonschema; jsonschema.validate(data, schema); jsonschema.Draft7Validator.check_schema(schema)"` 双向通过。
+- Files changed: 4（3 新增 + 1 编辑）。
+- **Learnings for future iterations:**
+  - JSON schema 若声明 `additionalProperties: false`，数据顶层有 `$schema` 会被判为非法；必须把 `$schema` 加进 properties 白名单。
+  - genre_tags 枚举与 category 枚举是两套词典（genre_tags 里没有 mythology / taboo / worldview 等），写示例时别把 category 名误当 genre。
+  - skeleton 文件的 example 种子不计入 `total`；Phase-Seed-1 启动时 `total=0 → 100 → ... → 1000` 与 example 物理分离，避免 Ralph 越权注入正式种子跳过 review。
+  - jsonschema 依赖在系统 Python 3.14 已安装（`/Library/Frameworks/Python.framework/Versions/3.14/`），后续 US-014 测试可直接 import。
+  - Quick Step 0 加载列表当前编号：1 blacklist / 2 surnames / 3 given_names / 4 genre-tropes / 5 meta-creativity-rules / 6 anti-trope-seeds / 7 题材 anti-trope-*，后续 US-003/004/005/006 继续递增追加。
+---
