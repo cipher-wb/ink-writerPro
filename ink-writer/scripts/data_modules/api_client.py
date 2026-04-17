@@ -22,12 +22,16 @@ Data Modules - API 客户端 (v5.4，v5.0 OpenAI 兼容接口沿用)
 """
 
 import asyncio
+import logging
 import aiohttp
 import time
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
 
 from .config import get_config
+
+# v13 US-018：从 print 迁移到 logging，避免污染 CLI stdout；LOG_LEVEL 可控
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -160,7 +164,7 @@ class EmbeddingAPIClient:
                         # 可重试的状态码: 429 (限流), 500, 502, 503, 504
                         if resp.status in (429, 500, 502, 503, 504) and attempt < max_retries - 1:
                             delay = base_delay * (2 ** attempt)  # 指数退避
-                            print(f"[WARN] Embed {resp.status}, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
+                            logger.warning(f"Embed {resp.status}, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
                             await asyncio.sleep(delay)
                             continue
 
@@ -168,31 +172,31 @@ class EmbeddingAPIClient:
                         err_text = await resp.text()
                         self.last_error_status = int(resp.status)
                         self.last_error_message = str(err_text[:200])
-                        print(f"[ERR] Embed {resp.status}: {err_text[:200]}")
+                        logger.error(f"Embed {resp.status}: {err_text[:200]}")
                         return None
 
                 except asyncio.TimeoutError:
                     if attempt < max_retries - 1:
                         delay = base_delay * (2 ** attempt)
-                        print(f"[WARN] Embed timeout, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
+                        logger.warning(f"Embed timeout, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
                         await asyncio.sleep(delay)
                         continue
                     self.stats.errors += 1
                     self.last_error_status = None
                     self.last_error_message = f"Timeout after {max_retries} attempts"
-                    print(f"[ERR] Embed: Timeout after {max_retries} attempts")
+                    logger.error(f"Embed: Timeout after {max_retries} attempts")
                     return None
 
                 except Exception as e:
                     if attempt < max_retries - 1:
                         delay = base_delay * (2 ** attempt)
-                        print(f"[WARN] Embed error: {e}, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
+                        logger.warning(f"Embed error: {e}, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
                         await asyncio.sleep(delay)
                         continue
                     self.stats.errors += 1
                     self.last_error_status = None
                     self.last_error_message = str(e)
-                    print(f"[ERR] Embed: {e}")
+                    logger.error(f"Embed: {e}")
                     return None
 
             return None
@@ -226,9 +230,9 @@ class EmbeddingAPIClient:
                 all_embeddings.extend(result)
             else:
                 if not skip_failures:
-                    print(f"[WARN] Embed batch {batch_idx} failed, aborting all")
+                    logger.warning(f"Embed batch {batch_idx} failed, aborting all")
                     return []
-                print(f"[WARN] Embed batch {batch_idx} failed, marking {actual_batch_size} items as None")
+                logger.warning(f"Embed batch {batch_idx} failed, marking {actual_batch_size} items as None")
                 all_embeddings.extend([None] * actual_batch_size)
 
         return all_embeddings[:len(texts)]
@@ -357,33 +361,33 @@ class RerankAPIClient:
                         # 可重试的状态码
                         if resp.status in (429, 500, 502, 503, 504) and attempt < max_retries - 1:
                             delay = base_delay * (2 ** attempt)
-                            print(f"[WARN] Rerank {resp.status}, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
+                            logger.warning(f"Rerank {resp.status}, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
                             await asyncio.sleep(delay)
                             continue
 
                         self.stats.errors += 1
                         err_text = await resp.text()
-                        print(f"[ERR] Rerank {resp.status}: {err_text[:200]}")
+                        logger.error(f"Rerank {resp.status}: {err_text[:200]}")
                         return None
 
                 except asyncio.TimeoutError:
                     if attempt < max_retries - 1:
                         delay = base_delay * (2 ** attempt)
-                        print(f"[WARN] Rerank timeout, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
+                        logger.warning(f"Rerank timeout, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
                         await asyncio.sleep(delay)
                         continue
                     self.stats.errors += 1
-                    print(f"[ERR] Rerank: Timeout after {max_retries} attempts")
+                    logger.error(f"Rerank: Timeout after {max_retries} attempts")
                     return None
 
                 except Exception as e:
                     if attempt < max_retries - 1:
                         delay = base_delay * (2 ** attempt)
-                        print(f"[WARN] Rerank error: {e}, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
+                        logger.warning(f"Rerank error: {e}, retrying in {delay:.1f}s ({attempt + 1}/{max_retries})")
                         await asyncio.sleep(delay)
                         continue
                     self.stats.errors += 1
-                    print(f"[ERR] Rerank: {e}")
+                    logger.error(f"Rerank: {e}")
                     return None
 
             return None
