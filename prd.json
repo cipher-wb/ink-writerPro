@@ -248,8 +248,8 @@
         "Tests pass"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "tests/ink_init/{__init__.py,test_quick_creativity.py} 新建；13 项断言覆盖 6 大验收维度（schema合法+skeleton校验/M01-M10/7修辞标签≥10/黑名单扩展/nicknames≥100/给定名三风格桶）；pytest.ini testpaths 追加 tests/ink_init；python3 -m pytest tests/ink_init/ --no-cov → 13 passed。"
     }
   ]
 }

@@ -177,3 +177,18 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - roadmap.md 本体未动版本号，避免与 anti-trope-seeds.json 的语义 version（v1.0-skeleton / v1.0 / v1.x）混淆；roadmap 是指引文档，版本号独立。
   - 后续若实施 OQ-10 /ink-seeds add 单条贡献命令，触发本 roadmap §范围外说明的脱括号操作，需独立 PRD 不在本 quick 升级范围。
 ---
+
+## 2026-04-17 - US-014
+- 新建 `tests/ink_init/__init__.py` + `tests/ink_init/test_quick_creativity.py`（13 项断言，6 大验收维度）。
+- 覆盖：(1) anti-trope-seeds-schema.json Draft-07 合法性 + skeleton 双向校验（jsonschema.Draft7Validator.check_schema + validate，缺依赖时 pytest.importorskip 跳过，不拖 CI）；(2) meta-creativity-rules.md M01-M10 正则全命中（US-012 已扩到 M11 自然满足）；(3) book-title-patterns.json 7 修辞标签 Counter 各 ≥10 + V1/V2/V3 各 ≥50；(4) blacklist.json suffix_ban ≥15 含神帝/至尊/龙傲天/战神 + prefix_ban ≥10 含我的/全球/最强/重生之 + name_combo_ban 7 姓 × 8 字完整；(5) nicknames.json ≥100 条且每条含 rarity∈[1,5] + style_tags 非空；(6) given_names.json rough/smoky/jianghu 三桶 male/female 各 ≥30 条 + _style_tag 映射 V1/V2/V3。
+- 修改 `pytest.ini` testpaths 末尾追加 `tests/ink_init`（原列表采用空格分隔枚举式，未用通配）。
+- 执行 `python3 -m pytest tests/ink_init/ -v --no-cov` → 13 passed in 0.04s。
+- Files changed: 3（2 新增 + 1 编辑 pytest.ini）。
+- **Learnings for future iterations:**
+  - pytest.ini testpaths 采用**枚举式**（非通配），tests/ 下新增子目录必须手动加入 testpaths 才会被 CI 收集；后续 US 若再新增 tests/ 子目录须重复该动作。
+  - `--cov-fail-under=70` 是全局 addopts；单目录跑新测试必须加 `--no-cov` 否则覆盖率会拉低全局到 0% 导致失败；CI 全量 run 才走 coverage。
+  - `jsonschema` 在 3.14 已安装，但为防 3.12 lock 偏差，测试用 `pytest.importorskip("jsonschema")` 优雅降级。
+  - anti-trope-seeds.json skeleton 的 `total=0` 语义：Phase-Seed-1 交互补充后 1000 条，测试只守 skeleton 状态；若未来 total 变化，应改测试为 `assert total in (0, 1000)` 或读 version 字段判定。
+  - meta-creativity-rules.md 现为 v1.1 含 M01-M11（US-012 扩展），测试用 `required = {01..10}` 的子集断言保证向后兼容——未来扩到 M12/M13 不会打破。
+  - book-title-patterns.json 顶层还有 `rhetoric_tag_coverage_audit` 字段作为内置 sample 清单，测试**重新实跑 Counter** 而非读 audit 字段，避免 audit 与实际数据漂移被放过。
+---
