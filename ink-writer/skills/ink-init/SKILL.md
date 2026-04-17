@@ -31,7 +31,8 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 4. `references/genre-tropes.md`（L1 必读）。
 5. `references/creativity/meta-creativity-rules.md`（L1 必读）—— 10 条元规则 M01-M10，作为 Quick Step 1 方案校验的硬约束标尺。
 6. `references/creativity/anti-trope-seeds.json`（L1 必读）—— Layer 2 种子库骨架，扰动引擎抽取稀缺元素来源；skeleton 期 example 种子即可，1000 条正式种子由 Phase-Seed-1 交互会话补全，详见 `anti-trope-seeds-roadmap.md`。
-7. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
+7. `references/creativity/perturbation-engine.md`（L1 必读）—— Layer 3 扰动引擎规格；定义扰动对抽取算法、5 种模式、档位 N 矩阵、3 套方案整对去重，Quick Step 1 必须按本规格生成 `perturbation_pairs` 字段。
+8. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
 
 ## Quick Step 1：生成 3 套差异化方案
 
