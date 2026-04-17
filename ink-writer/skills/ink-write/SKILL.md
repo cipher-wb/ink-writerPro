@@ -1220,6 +1220,7 @@ Task 传参硬约束：
 - `outline-compliance-checker`（权重 15%）——大纲合规验证（O1-O7：实体出场/禁止发明/目标充分性/伏笔埋设/钩子合规/黄金三章附加/否定约束合规），消费 MCC（板块14）+ 否定约束（板块15）
 - `anti-detection-checker`（权重 10%）
 - `reader-simulator`（**快速模式**，v9.0 升格为核心裁判。输出 `reader_verdict` 7 维评分，驱动 Step 4 自动返修）
+- `flow-naturalness-checker`（US-014 新增，核心文笔层——权重 5%。信息节奏/融入方式/过渡/对话辨识/黄金比例/语气/voice 七维）
 
 条件审查器（`auto` 命中时执行）：
 - `golden-three-checker`
@@ -1227,6 +1228,8 @@ Task 传参硬约束：
 - `high-point-checker`
 - `pacing-checker`
 - `proofreading-checker`
+- `prose-impact-checker`（US-014，ch1-3 强制；关键章/战斗/情感高光章命中启用）
+- `sensory-immersion-checker`（US-014，ch1-3 强制；情感章/悬疑章/战斗章命中启用）
 
 审查范围：核心 7 个 + auto 命中的条件审查器（始终全量执行）。
 
@@ -1261,7 +1264,8 @@ Task 传参硬约束：
 2. `ooc-checker` + `logic-checker` 并发（最多 2 个）
 3. `outline-compliance-checker` + `anti-detection-checker` 并发（最多 2 个）
 4. `reader-simulator`（快速模式，核心裁判）
-5. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker`
+5. `flow-naturalness-checker`（核心文笔层，US-014）
+6. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker` → `prose-impact-checker`（US-014）→ `sensory-immersion-checker`（US-014）
 
 审查指标落库（必做）：
 ```bash
@@ -1281,7 +1285,7 @@ review_metrics 字段约束（当前工作流约定只传以下字段）：
   "start_chapter": 100,
   "end_chapter": 100,
   "overall_score": 85.0,
-  "dimension_scores": {"爽点密度": 8.5, "设定一致性": 8.0, "节奏控制": 7.8, "人物塑造": 8.2, "连贯性": 9.0, "章内逻辑": 8.8, "大纲合规": 9.0, "追读力": 8.7, "AI味检测": 7.2},
+  "dimension_scores": {"爽点密度": 8.5, "设定一致性": 8.0, "节奏控制": 7.8, "人物塑造": 8.2, "连贯性": 9.0, "章内逻辑": 8.8, "大纲合规": 9.0, "追读力": 8.7, "AI味检测": 7.2, "文笔冲击力": 8.2, "感官沉浸": 7.8, "自然流畅度": 8.5},
   "severity_counts": {"critical": 0, "high": 1, "medium": 2, "low": 0},
   "critical_issues": ["问题描述"],
   "report_file": "审查报告/第100-100章审查报告.md",
@@ -1374,6 +1378,59 @@ else:
 - 回退时 writer-agent 接收 `repair_context`：checker 报告的 issues[] 精简版（type/severity/location/suggestion），不传完整报告
 - 每个门禁独立计数回退次数，最多 2 次回退
 - 第 3 次失败 → 暂停请求人工干预，不再自动重试
+
+#### Step 3.53: 文笔冲击力门禁（Prose Impact Gate，US-014）
+
+> 基于 prose-impact-checker 六维（镜头多样性/感官丰富度/句式节奏/动词锐度/环境-情绪共振/特写缺失）判定文笔冲击力。仅当 prose-impact-checker 被调度时执行（ch1-3 强制；条件命中）。
+
+**Hard Block 条件**：任一维度 `severity=critical`；或 ch1-3 任一维度 `severity=high`；或 `SHOT_MONOTONE.CHAPTER`/`CAMERA_CLOSEUP_MISSING` severity=critical。
+
+```text
+pi_result = Step 3 中 prose-impact-checker 的输出（若未启用则跳过本门禁）
+
+blockers = filter(pi_result.issues, severity="critical")
+if chapter <= 3:
+    blockers += filter(pi_result.issues, severity="high")
+
+if len(blockers) > 0:
+    生成 repair_context（精简版，≤500 tokens），注入 writer-agent 指令指向 L10d/L10e/L10f/L10g 违规点
+    回退 Step 2A 重写
+    prose_impact_gate 回退计数 += 1
+    if 回退计数 >= 3:
+        暂停流程请求人工干预
+else:
+    high/medium issues 传递给 Step 4 polish-agent Layer 9（prose_impact_fix_prompt）
+```
+
+**overall_score cap**：prose-impact-checker 存在 critical issue 时，overall_score 上限 cap 到 55（略低于 logic/outline 的 50，高于普通 critical 的 60）。
+
+#### Step 3.54: 自然流畅度门禁（Flow Naturalness Gate，US-014）
+
+> 基于 flow-naturalness-checker 七维（信息密度均匀/融入方式/过渡/对话辨识/黄金比例/语气一致/voice 一致）判定"塞信息感"与"对话雷同"。**核心 checker**，始终执行；本门禁默认启用。
+
+**Hard Block 条件**：
+- `INFO_OVERLOAD.CHAPTER` / `DIALOGUE_INDISTINGUISHABLE` / `NARRATION_AS_INFO_DUMP` 任一 `critical`
+- ch1-3 中 `VOICE_PROFILE_VIOLATION` / `INFO_OVERLOAD.SEGMENT` severity=`high`（升级为 hard block）
+
+```text
+fn_result = Step 3 中 flow-naturalness-checker 的输出
+
+fn_critical = filter(fn_result.issues, severity="critical")
+gt_voice = filter(fn_result.issues, rule="VOICE_PROFILE_VIOLATION", severity="high") if chapter<=3 else []
+gt_info = filter(fn_result.issues, rule="INFO_OVERLOAD.SEGMENT", severity="high") if chapter<=3 else []
+blockers = fn_critical + gt_voice + gt_info
+
+if len(blockers) > 0:
+    生成 repair_context（issue_type/severity/location/suggestion，≤500 tokens）
+    回退 Step 2A 重写，注入 writer-agent 指令指向 info_budget / voice_profile 违规点
+    flow_naturalness_gate 回退计数 += 1
+    if 回退计数 >= 3:
+        暂停流程请求人工干预
+else:
+    high/medium issues 传递给 Step 4 polish-agent（flow_fix_prompt，对应 Layer 9c/9d）
+```
+
+**overall_score cap**：flow-naturalness-checker 存在 critical issue 时，overall_score 上限 cap 到 55。
 
 #### Step 3.6: 追读力门禁（hook retry gate）
 

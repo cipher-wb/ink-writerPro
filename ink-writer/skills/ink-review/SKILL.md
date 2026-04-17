@@ -76,9 +76,10 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflow comple
 
 ## Review depth
 
-- **Core (default)**: consistency / continuity / ooc / reader-pull / **reader-simulator（快速模式）**
-- **Full (关键章/用户要求)**: core + high-point + pacing + proofreading + golden-three(前3章)
-- **Full+ (卷首章/卷末章/用户要求)**: full + **reader-simulator（完整模式，替换快速模式）** + anti-detection-checker
+- **Core (default)**: consistency / continuity / ooc / reader-pull / **reader-simulator（快速模式）** / **flow-naturalness-checker（US-014 新增，核心文笔层）**
+- **Full (关键章/用户要求)**: core + high-point + pacing + proofreading + golden-three(前3章) + **prose-impact-checker（US-014）** + **sensory-immersion-checker（US-014）**
+- **Full+ (卷首章/卷末章/用户要求)**: full + **reader-simulator（完整模式，替换快速模式）** + anti-detection-checker（US-014：prose-impact-checker 与 sensory-immersion-checker 使用完整分析模式）
+- **黄金三章强制项（US-014）**：当 `chapter <= 3` 时，无论选择 Core / Full / Full+，均强制追加 `prose-impact-checker` 与 `sensory-immersion-checker`
 
 > **v9.0 变更**: reader-simulator 从 Full+ 升格为 Core 级别（快速模式）。每章必跑，输出 `reader_verdict` 7 维评分驱动自动返修。Full+ 级别运行完整模式（含情绪曲线和读者独白）。
 
@@ -146,16 +147,22 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 - `ooc-checker`
 - `reader-pull-checker`
 - `reader-simulator`（快速模式：仅 7 维评分 + 弃读风险热点，跳过逐段模拟和读者独白）
+- `flow-naturalness-checker`（US-014：核心文笔层——信息节奏/融入方式/过渡/对话辨识/黄金比例/语气/voice 七维）
 
 **Full 追加**:
 - `golden-three-checker`（仅第 1-3 章强制）
 - `high-point-checker`
 - `pacing-checker`
 - `proofreading-checker`（文笔质量：修辞重复/段落结构/代称混乱/文化禁忌）
+- `prose-impact-checker`（US-014：文笔冲击力——镜头多样性/感官丰富度/句式节奏/动词锐度/环境-情绪共振/特写缺失）
+- `sensory-immersion-checker`（US-014：感官沉浸——主导感官轮换/深度/通感/感官-情绪匹配/抽象替代）
 
 **Full+ 追加**:
 - `reader-simulator`（完整模式：替换 Core 的快速模式，含情绪曲线+读者独白）
 - `anti-detection-checker`
+- `prose-impact-checker` 与 `sensory-immersion-checker` 切换为**完整分析模式**（逐场景深度统计 + 跨章感官主导轮换校验）
+
+**黄金三章强制项（US-014）**：当 `chapter <= 3` 时，无论选择 Core / Full / Full+，均强制追加 `prose-impact-checker` 与 `sensory-immersion-checker`，保障开篇文笔与感官沉浸双重把关。
 
 ## Step 3.5: 编辑智慧硬门禁（Editor Wisdom Hard Gate）
 
@@ -210,6 +217,7 @@ if not gate_result.passed:
 
 ## 综合评分
 - 爽点密度 / 设定一致性 / 节奏控制 / 人物塑造 / 连贯性 / 追读力
+- **文笔冲击力** / **感官沉浸** / **自然流畅度**（US-014：启用对应 checker 时填入）
 - 总评与等级
 
 ## 修改优先级
@@ -233,7 +241,10 @@ if not gate_result.passed:
     "节奏控制": 7,
     "人物塑造": 8,
     "连贯性": 9,
-    "追读力": 9
+    "追读力": 9,
+    "文笔冲击力": 8,
+    "感官沉浸": 7,
+    "自然流畅度": 8
   },
   "severity_counts": {"critical": 1, "high": 2, "medium": 3, "low": 1},
   "critical_issues": ["设定自相矛盾"],

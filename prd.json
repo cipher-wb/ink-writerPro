@@ -220,7 +220,7 @@
         "Typecheck passes"
       ],
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "notes": "依赖 US-010/011/012 的3个新 checker 已创建。参考现有 step-3-review-gate.md 的门禁集成模式。"
     },
     {

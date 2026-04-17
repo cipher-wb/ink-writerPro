@@ -187,3 +187,18 @@
   - `ch1_cool_point_spec.scene_description`（US-003 派生）是 CH1_COOL_POINT_VISIBILITY 的 ground truth，正文前 300 字与其做关键词/动作/视觉锚点三选一匹配；若 init 未升级到 US-003，该字段缺失，checker 应降级为 medium 而非崩溃——这是跨 US 向后兼容的"graceful degrade"模式，与 US-012 voice_profile data_gap 处置一致
   - US-004 在大纲层用 `爽点闭环` 三节拍（ability_demo/crisis_trigger/concrete_payoff）锁定，US-013 在正文层用同名术语反向验证——术语稳定性是跨 US 协同的核心，新 checker 应一律复用既有大纲字段名而非造新名
 ---
+
+## 2026-04-17 - US-014
+- 实现：ink-write 与 ink-review 集成 3 个新 checker（prose-impact / sensory-immersion / flow-naturalness）
+- 变更文件：
+  - `ink-writer/skills/ink-write/SKILL.md`：Step 3 核心 checker 列表新增 flow-naturalness-checker（权重 5%）；条件 checker 列表新增 prose-impact-checker 与 sensory-immersion-checker（ch1-3 强制）；调度顺序追加；dimension_scores 示例补三维度；新增 Step 3.53（文笔冲击力门禁）和 Step 3.54（自然流畅度门禁），独立回退计数，overall_score cap=55
+  - `ink-writer/skills/ink-write/references/step-3-review-gate.md`：核心/条件 checker 列表更新；Auto 路由判定新增 prose-impact / sensory-immersion 触发条件；Profile 映射表新增 flow-naturalness（核心）与 prose-impact / sensory-immersion（复用 proofreading profile）；Task 调用模板 selected 列表补全；权重表新增 flow 5%/prose-impact 5%/sensory 3%；dimension_scores 示例补三维度；Step 4 前闸门清单新增两条；新增 `文笔冲击力门禁` 与 `自然流畅度门禁` 两节（hard block 条件、判定逻辑、回退限制）
+  - `ink-writer/skills/ink-review/SKILL.md`：Review depth 定义更新 Core+flow-naturalness / Full+prose-impact+sensory-immersion / Full+ 升级完整分析模式；黄金三章（ch1-3）强制启用 prose-impact+sensory-immersion；报告模板综合评分段增三维度；review_metrics 示例补三维度
+  - `prd.json`：US-014 passes=true
+- **Learnings for future iterations：**
+  - Step 3 门禁按编号递增（3.5/3.51/3.52/3.53/3.54/3.6/3.7/...），新增门禁应贴着同类别编号插入；独立回退计数避免串扰
+  - ink-write 与 ink-review 各有自己的 checker 列表（前者按"核心/条件"划分，后者按"Core/Full/Full+"划分），新增 checker 必须两边都登记
+  - ch1-3 加严是黄金三章约定模式：ink-write 在 Auto 路由中 `chapter <= 3` 触发；ink-review 在深度外额外强制追加；两处必须一致
+  - prose-impact / sensory-immersion 复用 proofreading profile（同属文本表层）；flow-naturalness 需要 `voice_profile` + `info_budget` 两个 init/plan 阶段字段，profile 映射要显式声明
+  - overall_score cap 层级：logic/outline critical=50（致命）< prose-impact/flow critical=55（结构性文笔）< 普通 critical=60，按问题致命度梯度
+---
