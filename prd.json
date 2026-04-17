@@ -188,7 +188,7 @@
         "Typecheck passes"
       ],
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "notes": "这是解决'不自然感'的核心检查器。对话辨识度检查是最重要的维度。"
     },
     {

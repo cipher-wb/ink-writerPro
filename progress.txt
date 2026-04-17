@@ -146,6 +146,20 @@
   - 战斗场景三段式"远景→近景→特写"与 L7 大卖点"铺垫→爆发→反应"天然对齐（特写=爆发、远景回收=反应），后续 polish-agent Layer 9a 可优先识别此耦合
 ---
 
+## 2026-04-17 - US-012
+- 实现：新增 `agents/flow-naturalness-checker.md` 自然流畅度检查器，七维评级（信息密度均匀度/信息融入方式/过渡流畅度/对话辨识度/对话黄金比例/语气一致性/voice 一致性）
+- 变更文件：
+  - `ink-writer/ink-writer/agents/flow-naturalness-checker.md`（新增）：格式对齐 prose-impact-checker / sensory-immersion-checker，含场景/段落切片、七维判定阈值、黄金三章加严表（INFO_BUDGET_OVERFLOW_GOLDEN / POV_INTRA_PARAGRAPH 不可 Override）、段落级修复建议、JSON 输出增强结构；info_budget 5 种融入方式枚举与 ink-plan/L11 完全对齐；voice_profile 5 维（speech_vocabulary_level / preferred_sentence_length / verbal_tics / emotional_tell / taboo_topics）与 init Step 2+ 完全对齐
+  - `prd.json`（符号链接 `scripts/ralph/prd.json`）：US-012 passes=true
+- **Learnings for future iterations：**
+  - `info_budget.natural_delivery_hints` 的 5 类枚举（行动展示/对话揭示/后果倒推/误读制造/环境映射）在本 checker 维度 2 中完整落地；writer-agent L11 此前压缩为「行动/对话/后果 + 环境映射」4 类，本 checker 把「误读制造」补回独立分类——若后续 writer-agent 输出未利用「误读制造」会被 DELIVERY_HINT_IGNORED 检出，这是预期行为
+  - 「voice_profile data_gap」处置策略：缺数据时维度评级冻结为 B 而非 D，避免老项目（init 未升级）被误判 hard block；其他 checker 借鉴此 graceful-degrade 模式
+  - DIALOGUE_GOLDEN_RATIO 与 ink-write Step 2C `dialogue_golden_ratio` 检查同名同语义，但本 checker 增加 `combat_heavy_chapter` 豁免（战斗场景占比 >40% 时对话比天然偏低，避免误判）；Step 2C 后续应同步此豁免逻辑
+  - POV_INTRA_PARAGRAPH（单段内 POV 主语切换）是「自然度」检测中第二个 hard block 项（继 INFO_BUDGET_OVERFLOW_GOLDEN 之后），对应国内编辑最反感的「无缝换视角」错误；此规则不可 Override，与 sensory-immersion 的 COOL_POINT_ABSTRACT 同级别
+  - 抽象收益词黑名单（理解/领悟/感悟…）在本 checker 显式划清边界——属于 sensory-immersion-checker (ABSTRACT_NAKED) 与 golden-three-checker (CH1_PAYOFF_TANGIBILITY) 域，flow-naturalness 不重复检测，避免一个问题被三处累加扣分
+  - 七维 checker 是本仓库目前维度数最多的 checker（prose-impact 6 维 / sensory-immersion 5 维 / flow-naturalness 7 维），未来 US-014 集成时建议把 flow-naturalness 放在「核心检查器」而非「条件检查器」（PRD US-014 已指明）
+---
+
 ## 2026-04-17 - US-011
 - 实现：新增 agents/sensory-immersion-checker.md 感官沉浸检查器（五维：主导轮换/深度/通感/情绪匹配/抽象替代）
 - 变更文件：
