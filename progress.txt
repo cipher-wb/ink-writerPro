@@ -223,3 +223,19 @@
   - `merged_fix_suggestion` 字段是本 US 新引入的合并通道，polish-agent Layer 9 消费时应优先读取它而非各 issue 的独立 fix_suggestion（避免同问题收到冲突指令）
   - 后续 US-016 polish-agent Layer 9 的 4 个子层（9a 镜头/9b 感官/9c 信息密度/9d 句式）与 6B.1/6A.2/6B.4/6B.2 一一对应——术语严格保持对齐
 ---
+
+## 2026-04-17 - US-016
+- 实现：polish-agent 新增 Layer 9 文笔冲击力润色（9a 镜头/9b 感官/9c 信息密度/9d 句式 + 9z Layer 6A+6B 等价自检），与 US-010/011/012/015 检查维度一一对应形成兜底闭环
+- 变更文件：
+  - `ink-writer/ink-writer/agents/polish-agent.md`：在 4.5（Layer 8 自检）与 5（No-Poison）之间插入完整 Step 4.6（Layer 9 Prose Impact Polish）——前提数据（shot_plan/sensory_plan/info_plan 缺失走 data_gap）+ 共同约束（不改剧情/POV 不变/黄金三章零 critical）+ 4 子层规则段（9a 镜头类型切换策略与战斗三段式补全、9b 场景主导感官注入与 ROTATION_STALL 兜底、9c 5 种拆分策略消费 info_budget.natural_delivery_hints 5 类枚举、9d CV 0.40/0.35/0.45/0.50 分档 + 句法骨架 6 类切换）+ 9z Layer 6A+6B 等价自检（沿用 Layer 8 合并建议通道 `merged_fix_suggestion`）；润色报告补 "Layer 9 文笔冲击力" 行与 `prose_impact_check: pass/fail`；成功标准追加 13/14 条
+  - `prd.json`（符号链接 `scripts/ralph/prd.json`）：US-016 passes=true
+- **Learnings for future iterations：**
+  - polish-agent 的 Layer 编号是"强约定"：8 对应 Layer 6，9 对应 Layer 6A+6B；若后续再加 checker 层，polish Layer 编号应保持与 proofreading Layer 对齐（方便 9z 自检路由）
+  - `merged_fix_suggestion` 通道（US-015 引入）在 polish Layer 9 正式消费：当报告含该字段时一次性读取，避免 Layer 6A 与 6B 各自 fix_suggestion 在 9a/9d 产生冲突指令（例如 "减短句子" vs "增加句法变化"）
+  - Layer 9c 的 5 种拆分策略（拆段/转行动/转对话/转后果/误读制造）完整回填了 `info_budget.natural_delivery_hints` 枚举——writer-agent L11 之前压缩为 4 类，polish 层在这里补齐第 5 类"误读制造"，是 flow-naturalness DELIVERY_HINT_IGNORED 的最后兜底
+  - data_gap 处置再次统一：缺 shot_plan/sensory_plan/info_plan 时 Layer 9 降级为 advisory 而非 hard-fail，与 flow-naturalness（voice_profile 缺失冻结 B）、sensory-immersion（跨章 trail 缺失）、proofreading 6B 一致——这是本仓库跨 US 向后兼容的 graceful-degrade 标准模式
+  - CV 分档目标（章级 0.40 / 紧张 0.45 / 情感高潮 0.50 / 硬下限 0.35）是 writer-agent L10f、prose-impact 3 维评级、polish 9d 三处复用的术语，术语稳定性再次验证——新规则必须一律复用已有阈值而非自造
+  - POV_INTRA_PARAGRAPH（flow-naturalness 唯一 hard block）在 polish Layer 9 共同约束中再次声明"单段不切 POV"，确保 Layer 9 所有子层修复都不会引入新 POV 违规，形成"审查-修复"语义闭环
+  - 战斗/冲突场景"远景→近景→特写"三段式与 L7 大卖点"铺垫→爆发→反应"对齐——Layer 9a 修复时若检测到战斗场景缺三段式，应优先补"特写=爆发"段，而非机械插入"远景/近景"
+  - 第 1 章 info 带宽锁死（金手指机制 + 1 辅助设定 + 2 有名角色）在 Layer 9c 再次落地，形成 init（US-001）→ plan（US-005）→ write L11（US-008）→ review 6B.4（US-015）→ polish 9c（US-016）的 5 阶段闭环，任何一处松动都会放行"塞信息感"
+---

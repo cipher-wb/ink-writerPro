@@ -247,6 +247,90 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 
 未通过项返回对应子步骤修复，最多 1 轮。结果写入 `prose_craft_check: pass/fail`。
 
+### 4.6 Layer 9 文笔冲击力润色（Prose Impact Polish）
+
+在 Layer 8 Layer 6 等价自检通过后执行。本层针对 `prose-impact-checker` / `sensory-immersion-checker` / `flow-naturalness-checker` / `proofreading-checker Layer 6B` 产出的四类结构性问题做兜底修复；即使 write 阶段铁律 L10d/L10e/L11 已约束，仍可能残留未对齐到 `shot_plan`/`sensory_plan`/`info_plan` 的段落。
+
+**前提数据**：`shot_plan`（写作时生成的场景镜头规划）、`sensory_plan`（场景主导感官规划）、`info_plan` / `info_budget`（每章信息配额），以及 Step 3 的检查器报告。缺失任一 plan 时，按对应 checker 的 `data_gap` 处置：评级冻结，不在 Layer 9 强制修复，仅输出 advisory。
+
+**共同约束（4 子层均适用）**：
+- 仅做表达层调整，不改变剧情事实、角色决策、物理边界
+- 保持 POV 主语不变；不得在单段内切换视角（与 Layer 6B flow-naturalness POV_INTRA_PARAGRAPH 规则一致）
+- 每次修复后不得引入 Layer 1-5 新违规（Step 4.5 diff 校验把关）
+- 黄金三章（ch1-3）硬约束：9a/9b/9c/9d 任一违规必须修复至通过；普通章节允许保留 ≤1 项 warning
+
+#### 9a 镜头单一性修复（Shot Monotony Fix）
+
+对应规则码：`SHOT_MONOTONY`（writer-agent L10d / prose-impact-checker 镜头多样性 / proofreading 6B.1）
+
+1. 定位连续 > 3 段同一镜头类型（远景/近景/特写）的段落区间，优先处理 critical 段
+2. 参考本场景的 `shot_plan`：
+   - 若当前连续块为"远景"，将中间段切换为"近景"（聚焦动作/微表情）或"特写"（决定性瞬间：手指收紧、眉骨一跳、武器刃尖）
+   - 若当前连续块为"近景"，插入 1 段"远景"（环境回收）或"特写"（细节放大），节奏上形成呼吸
+   - 若当前连续块为"特写"，改中间 1-2 段为"近景"或"远景"，避免读者视觉疲劳
+3. 战斗/冲突场景强制"远景→近景→特写"三段式节奏：若当前缺"远景"开场，补 ≤40 字环境感知句；若缺"特写"决定性瞬间，在高潮动作处补 ≤30 字身体/物体特写
+4. 修复后复核：任一镜头类型连续 ≤ 3 段；战斗场景含三段式节奏标记
+5. 与 `shot_plan` 偏差修复：若报告含 `SHOT_PLAN_MISMATCH`，按 plan 重排镜头类型而非自由发挥
+
+#### 9b 感官注入（Sensory Injection）
+
+对应规则码：`SENSORY_DESERT`（Layer 8b 已处理量的底线）+ `ROTATION_STALL` / `NON_VISUAL_BELOW_THRESHOLD`（prose-impact / sensory-immersion）
+
+1. 筛选 `non_visual_ratio < 20%` 的场景（战斗/情感场景阈值提升到 30%）
+2. 按 `sensory_plan` 的主导感官在该场景内注入 1-2 个自然感官锚点（每个 ≤25 字，不打断动作节奏）：
+   - 情感场景 → 触觉 + 温度（"指尖沁出一层薄汗 / 后颈被风拂过一下凉意"）
+   - 战斗场景 → 触觉 + 嗅觉（"虎口发麻 / 血腥气顶上鼻梁"）
+   - 悬疑场景 → 听觉 + 触觉（"脚步声在走廊尽头折了一下 / 门把手冰得刺骨"）
+3. 相邻 2 个场景主导感官未轮换（`ROTATION_STALL`）→ 在后一场景的首段插入主导感官锚点并替换一个视觉句为对应感官句
+4. 禁止把感官锚点塞到对话中间（破坏对话节奏）；应放在动作/心理间隙
+5. 修复后复核：场景非视觉感官占比 ≥ 20%（情感/战斗场景 ≥ 30%），相邻场景主导感官不同
+
+#### 9c 信息密度稀释（Info Density Dilution）
+
+对应规则码：`INFO_DENSITY_OVERFLOW`（writer-agent L11 / proofreading 6B.4 / flow-naturalness 维度 1）
+
+1. 定位单段 > 2 个新概念/设定 或 连续 3 段内 > 2 个设定解释的段落
+2. 拆分策略（按优先级）：
+   - **拆段**：把第 2 个及以后的新概念移到下一段，首段仅保留 1 个新概念 + 锚点感知
+   - **转行动**：将纯叙述设定解释改为角色动作+环境反馈（"他摸了摸腰间的玉牌，冰凉" 代替 "玉牌是家族传承之物"）
+   - **转对话**：将设定讲解嵌入角色之间的简短对话（最多 2 来回），配角问、主角答
+   - **转后果**：用后果倒推揭示设定（"那一掌没落在他肩上，落在了虚空里——这就是流云步的玄妙" 代替预先解释）
+3. 消费 `info_budget.natural_delivery_hints` 5 类枚举（行动展示/对话揭示/后果倒推/误读制造/环境映射）：若 hint 建议 "误读制造" 但正文用了纯叙述，必须改写为误读呈现
+4. 第 1 章硬约束：单段最多 1 个新概念，全章带宽 = 金手指核心机制 + 1 个辅助设定 + 2 个有名角色，超出部分必须推后或删除
+5. 新概念引入后至少间隔 500 字才能引入下一个；违反时把后者移至本章靠后段落
+6. 修复后复核：任一 200 字段 ≤ 1 新概念；连续 3 段 ≤ 2 设定解释；配额未超 `info_budget.max_new_concepts`
+
+#### 9d 句式节奏调整（Sentence Rhythm Adjustment）
+
+对应规则码：`SENTENCE_RHYTHM_FLAT` / `CV_CRITICAL` / `SENTENCE_STRUCTURE_REPETITION`（writer-agent L10f / prose-impact / proofreading 6B.2）
+
+1. 定位连续 > 3 段句式结构相同的段落（6 类句法骨架：主谓宾陈述/主谓补/动词起首/名词起首/从句套主句/对话起首）
+2. 变换策略（在保留段落语义前提下）：
+   - **长短交替**：把其中 1-2 段改写为"短句群（3-5 个 ≤15 字）→ 1 个长句（≥35 字）"断层结构；紧张/战斗段优先
+   - **对话插入**：在连续叙述段间插入 1 段短对话（1-2 句，≤2 来回），打破叙述节奏
+   - **句法骨架切换**：把"主谓宾"改写为"动词起首"（将状语/动词前置）或"从句套主句"（补 1 个时间/因果从句）
+   - **连词删除/增加**：紧张段删连词（"他缩肩，下蹲，滚向雪地。"），日常段允许增加过渡词避免跳跃
+3. CV 修复目标：章级句长变异系数 CV ≥ 0.40（硬下限 0.35）；紧张/战斗场景 CV ≥ 0.45；情感高潮 CV ≥ 0.50
+4. 稀缺律：连续 3 句以上短句后必须接 1 个长句让读者呼吸；不得通篇短句或通篇中长句
+5. 禁止操作：不得在内心独白/回忆段删除连词（破坏思维连贯）；不得为达成 CV 而切碎关键动作序列
+6. 修复后复核：句法骨架任一类型连续 ≤ 3 段；章级 CV ≥ 0.40；紧张段短句稀缺律满足
+
+#### 9z Layer 6A + 6B 等价自检
+
+Layer 9 完成后执行 proofreading-checker Layer 6A+6B 等价自检：
+
+| 自检项 | 通过标准 |
+|--------|---------|
+| SHOT_MONOTONY (6B.1) | 任一镜头类型连续 ≤ 3 段；战斗场景含三段式 |
+| SENTENCE_STRUCTURE_REPETITION (6B.2) | 任一句法骨架连续 ≤ 3 段；CV ≥ 0.40 |
+| ENV_EMOTION_DISSONANCE (6B.3) | 环境描写与场景情绪共振或对照（对照需视角角色认知不适） |
+| INFO_DENSITY_OVERFLOW (6B.4) | 单段 ≤ 1 新概念；连续 3 段 ≤ 2 设定；未超 `info_budget` 配额 |
+| WEAK_VERB / SENSORY_DESERT / ADJECTIVE_PILE / GENERIC (6A) | 沿用 Layer 8 标准 |
+
+未通过项返回对应子层修复（9a/9b/9c/9d），最多 1 轮。结果写入 `prose_impact_check: pass/fail`。
+
+**合并指令处理**：若 Step 3 审查报告含 `merged_fix_suggestion`（Layer 6A+6B 联合合并），Layer 9 优先读取该合并建议并在对应子层一次性修复，避免同问题收到冲突指令（详见 US-015 约定）。
+
 ### 5. No-Poison 毒点规避（5类）
 
 1. 降智推进 2. 强行误会 3. 圣母无代价 4. 工具人配角 5. 双标裁决
@@ -300,8 +384,10 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 - 中低优先级已修复: N 处
 - Anti-AI 改写: N 处
 - Layer 8 文笔工艺: 弱动词替换 N 处 / 感官补充 N 处 / 形容词精简 N 处
+- Layer 9 文笔冲击力: 镜头切换 N 处 / 感官注入 N 处 / 信息稀释 N 处 / 句式调整 N 处
 - anti_ai_force_check: pass/fail
 - prose_craft_check: pass/fail
+- prose_impact_check: pass/fail
 - 毒点风险: pass/fail
 - 偏离记录:
   - {位置}: {原因}
@@ -339,3 +425,5 @@ cd "$PROJECT_ROOT" && python3 scripts/anti_ai_scanner.py --file "章节路径" -
 10. `_patches.md` 已生成（当存在 violations 时）
 11. Layer 8 文笔工艺润色已完成（弱动词替换 + 感官补充 + 形容词精简）
 12. `prose_craft_check = pass`（Layer 6 等价自检通过）
+13. Layer 9 文笔冲击力润色已完成（9a 镜头切换 + 9b 感官注入 + 9c 信息稀释 + 9d 句式调整）
+14. `prose_impact_check = pass`（Layer 6A+6B 等价自检通过，黄金三章零 critical）

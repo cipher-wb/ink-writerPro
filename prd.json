@@ -252,7 +252,7 @@
         "Typecheck passes"
       ],
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "notes": "polish-agent 已有 Layer 8（Prose Craft Polish from combat-pacing-overhaul），Layer 9 是新增层。9a/9b/9c/9d 与 US-010/011/012 的检查维度一一对应。"
     },
     {
