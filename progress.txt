@@ -89,3 +89,16 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - 抽取算法以 stable_hash 固定种子，方便 US-014 写测试时构造可复现 fixture。
   - Quick Step 0 加载列表当前编号：1 blacklist / 2 surnames / 3 given_names / 4 genre-tropes / 5 meta-creativity-rules / 6 anti-trope-seeds / 7 perturbation-engine / 8 题材 anti-trope-*。
 ---
+
+## 2026-04-17 - US-007
+- 新建 `data/market-trends/README.md`（目录用途 + 固定 2 检索源 + 4 条硬编码检索语 + 缓存命名规则 cache-YYYYMMDD.md + Markdown 缓存格式（两平台 Top 10 + 5-8 热门套路关键词 + 共通套路列表）+ 90 天保留 + fallback 规则（7 天内替代 / 7 天外降级 fetch_status:none）+ 消费者清单）。
+- 修改 `ink-writer/skills/ink-init/SKILL.md` Quick Step 0 末尾（第 39 行后）插入「WebSearch 子步骤：双平台榜单反向建模」段落：4 条硬编码检索语、两平台并行执行、15s 超时、当日缓存命中跳过、fallback 最近 7 天缓存、fetch_status 三态、`market_avoid` 字段供 Quick Step 1 规避 Top 5 共通套路。
+- `allowed-tools` frontmatter 已含 `WebSearch WebFetch`（无需改动）。
+- Files changed: 2 新增（data/market-trends/README.md）+ 1 编辑（SKILL.md）。
+- **Learnings for future iterations:**
+  - data 顶层已有 `cultural_lexicon / editor-wisdom / hook_patterns.json / naming`，本次新增 `market-trends/` 与 `naming/` 平级，不污染 skills/ 目录。
+  - 缓存文件名用 UTC+8 日期 `cache-$(date +%Y%m%d).md`；Quick Step 0 的 Read 需用 `${CLAUDE_PLUGIN_ROOT}/../../data/market-trends/cache-$(date +%Y%m%d).md` 相对路径。
+  - US-008 创意指纹「反向规避」字段直接消费 Quick Step 1 每套方案的 `market_avoid` 数组；fetch_status=none 时填「无当日数据」。
+  - fetch_status 三态：ok（当日命中）/ fallback（7 天内近似）/ none（7 天内无缓存），前端提示语与方案硬约束都由此分支。
+  - WebSearch 并行 4 条检索语聚合落盘的动作由 Quick 模式首次运行时触发；Deep 模式不强制（本 PRD 未要求）。
+---

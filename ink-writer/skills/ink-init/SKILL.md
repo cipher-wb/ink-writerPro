@@ -38,6 +38,40 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 11. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/book-title-patterns.json`（L1 必读）—— V1/V2/V3 三档各 50+ 条书名模板，每条含 `rhetoric_tags`（7 种修辞：pun/homophone/antithesis/irony/oxymoron/concrete_abstract/anachronism），Quick Step 1.7 书名生成与修辞标签标注的抽取池。
 12. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
 
+### WebSearch 子步骤：双平台榜单反向建模
+
+固定 2 个检索源（不可配置）：**起点中文网月票榜** + **番茄小说热门新书**。
+
+**硬编码检索语**（4 条，两两分平台并行执行）：
+
+1. `起点中文网 月票榜 2026 热门 题材`
+2. `起点 分类 月榜`
+3. `番茄小说 爆款 套路 2026`
+4. `番茄免费小说 热门 新书`
+
+**缓存路径与命名**：
+
+- 基准目录 `${CLAUDE_PLUGIN_ROOT}/../../data/market-trends/`（见该目录 `README.md`）。
+- 缓存文件 `cache-YYYYMMDD.md`（`YYYYMMDD` 为 UTC+8 当日日期）。
+
+**执行流程**：
+
+1. Read `${CLAUDE_PLUGIN_ROOT}/../../data/market-trends/cache-$(date +%Y%m%d).md`。
+   - 若存在 → 当日已缓存，直接复用，**跳过 WebSearch**。
+2. 若不存在 → 两平台并行 WebSearch（起点 2 条 + 番茄 2 条）；总延迟上限 **15s**。
+3. 聚合结果写入 `cache-YYYYMMDD.md`，格式见 `data/market-trends/README.md`（两平台 Top 10 + 各 5-8 热门套路关键词 + **两平台共通套路 Top 5** 列表）。
+4. 保留最近 **90 天** 缓存，超期文件启动时静默清理。
+
+**Fallback**：
+
+- WebSearch 失败 / 超时 → 回溯最近 **7 天** 内任一 `cache-*.md` 作为近似当日数据；命中则在 Quick Step 2 输出显式提示 `⚠️ 使用 N 天前榜单数据`。
+- 7 天内无缓存 → `fetch_status: none`，Quick Step 1 **跳过** 反向规避，创意指纹「反向规避」字段填 `无当日数据`。
+
+**消费（Quick Step 1）**：
+
+- 方案生成时 **必须规避两平台共通 Top 5 热门套路关键词**；单平台榜单不强制规避。
+- 被规避的关键词记入每套方案字段 `market_avoid`（数组），Quick Step 2 创意指纹消费。
+
 ## Quick Step 1：生成 3 套差异化方案
 
 ### 差异化约束

@@ -129,8 +129,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "新建 data/market-trends/README.md 定义缓存格式（cache-YYYYMMDD.md）+ 90 天保留 + 7 天 fallback + 两平台共通 Top 5 规避规则；SKILL.md Quick Step 0 末尾插入「WebSearch 子步骤」含 4 条硬编码检索语（起点月票榜/起点分类月榜/番茄爆款套路/番茄免费热门新书）+ 15s 超时 + 当日缓存命中跳过逻辑 + fetch_status 三态（ok/fallback/none）+ market_avoid 字段供创意指纹消费；allowed-tools 已含 WebSearch（无需改动）。"
     },
     {
       "id": "US-008",
