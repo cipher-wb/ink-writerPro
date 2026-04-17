@@ -1,0 +1,12 @@
+## Codebase Patterns
+- Agent 规格文件在 `ink-writer/agents/`，技能文件在 `ink-writer/skills/`
+- 审查门禁逻辑在 `ink-writer/skills/ink-write/references/step-3-review-gate.md`
+- 弱动词/感官判据维护在 `ink-writer/skills/ink-write/references/prose-craft-rules.md`
+- 每个 US 通常涉及 agent 规格 + review gate + references 三处联动修改
+- 黄金三章（ch1-3）规则在多个 checker 中都有加严处理模式
+- 感官技法参考 `ink-writer/references/scene-craft/desire-description.md`
+- 电影剪辑参考 `ink-writer/references/scene-craft/combat-scenes.md`
+- 句式节奏参考 `ink-writer/references/scene-craft/pacing-rhythm.md` 或 `pacing-control.md`
+- 场景工艺索引 `ink-writer/references/scene-craft/scene-craft-index.md`
+
+---

@@ -17,7 +17,7 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": true,
+      "passes": false,
       "notes": "这是爽点前置的数据源头，后续 plan/write/review 全部依赖这些字段。参考现有 golden_finger_design.md 的收集模式。"
     },
     {
@@ -32,7 +32,7 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": true,
+      "passes": false,
       "notes": "用户回答'不知道'时系统自动生成推荐值是关键体验。生成规则：性格外向→句长中等偏长+主动句式；内向→短促+被动句式等。"
     },
     {
@@ -47,7 +47,7 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": true,
+      "passes": false,
       "notes": "依赖 US-001 的数据。golden_three_plan.json 已有 ch1/ch2/ch3 的 contract 字段，新增 ch1_cool_point_spec 作为 ch1 的扩展。"
     },
     {

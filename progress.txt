@@ -35,3 +35,14 @@
   - voice_profile 的「自动生成 + Y/N 确认」是兜底体验，user 答「不知道」时不能阻塞流程，必须有可执行的默认推荐规则；后续 OOC checker 也会消费这些字段
   - 配角语言档案以 dict 形式挂在 `relationship.voice_profiles[<name>]`（区别于 protagonist 的 inline 结构），方便后续按角色名 O(1) 查询
 ---
+
+## 2026-04-17 - US-003
+- 实现：ink-init 新增第一章爽点规格 `ch1_cool_point_spec`，派生到 `golden_three_plan.json.chapters["1"]`
+- 变更文件：
+  - `ink-writer/skills/ink-init/SKILL.md`：新增 Step 3+++ 派生规则（scene_description/involved_characters/payoff_form/reader_emotion_target 四字段 + Y/N 确认）；内部数据模型新增 `ch1_cool_point_spec` 结构；充分性闸门 5b 硬阻断；执行生成新增「Patch golden_three_plan.json」小节（含幂等/重置规则）；Quick 模式 US-003 自动填充段（关键词匹配 payoff_form + emotion 模板）；成功标准追加 `user_confirmed=true` 校验
+  - `scripts/ralph/prd.json`：US-003 passes=true
+- **Learnings for future iterations：**
+  - `.ink/golden_three_plan.json` 的实际生成逻辑在 `ink-writer/scripts/data_modules/golden_three.py::build_golden_three_plan`，chapter 1 的 contract 字段在 `ch1_closure_contract`；若后续 US 需要从正文检查 `ch1_cool_point_spec`，应在 `resolve_golden_three_contract` 同步透出，否则 write/review 读不到
+  - init 流程中，派生字段（从其他必收字段合并生成）应显式标注 `derived_from` 字段，便于幂等重跑时判断是否需要重置 `user_confirmed`
+  - payoff_form 的 5 个枚举值（资源获取/敌人击退/他人认可/地位提升/信息解锁）将在 US-004 `concrete_payoff` 与 US-013 硬阻断复用，建议后续抽取到共享 references 文件
+---
