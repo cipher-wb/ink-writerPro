@@ -19,7 +19,22 @@ model: inherit
 - 逐条规则审查章节正文，判定是否存在违规
 - 对每个违规标注原文引用、规则 ID 和修复建议
 - 计算综合评分（0-1），hard 违规权重最高，info 不计入扣分
-- 黄金三章（chapter <= 3）使用更严格阈值
+- 黄金三章（chapter <= 3）使用更严格阈值（US-017 起 0.92，加入文笔维度后整体标准提升）
+
+## 评分维度（US-017）
+
+除原综合 score 外，本 checker 同时输出 4 个文笔维度子评分（dimension_scores），分别消费 `prose_shot/prose_sensory/prose_rhythm/prose_density` 4 个规则类别：
+
+| dimension_id | 中文标签 | 规则类别 | 触发示例规则 |
+|---|---|---|---|
+| `shot_diversity` | 镜头多样性 | prose_shot | EW-0365 / EW-0366 / EW-0369 |
+| `sensory_richness` | 感官丰富度 | prose_sensory | EW-0371 / EW-0372 / EW-0374 |
+| `sentence_rhythm` | 句式节奏 | prose_rhythm | EW-0377 / EW-0378 / EW-0382 |
+| `info_density_uniformity` | 信息密度均匀度 | prose_density | EW-0383 / EW-0385 / EW-0386 |
+
+每个维度评分 = `1 - 0.1 × hard_count - 0.05 × soft_count`（最低 0.0）。综合 score 取 4 维加权平均（各 25%）与原编辑规则评分的 max。
+
+黄金三章（chapter ≤ 3）任一文笔维度 score < 0.85 视为 hard block，与原 `golden_three_threshold` 0.92 共同构成双重防线。
 
 ## 输入
 
@@ -35,12 +50,25 @@ model: inherit
   "agent": "editor-wisdom-checker",
   "chapter": 1,
   "score": 0.82,
+  "dimension_scores": {
+    "shot_diversity": 0.90,
+    "sensory_richness": 0.85,
+    "sentence_rhythm": 0.75,
+    "info_density_uniformity": 0.80
+  },
   "violations": [
     {
       "rule_id": "EW-0012",
       "quote": "被违反的原文段落引用",
       "severity": "hard",
       "fix_suggestion": "具体的修复建议"
+    },
+    {
+      "rule_id": "EW-0377",
+      "quote": "句长一致段落引用",
+      "severity": "hard",
+      "dimension": "sentence_rhythm",
+      "fix_suggestion": "插入一段≥30字的长句拉开节奏，使章级 CV 回升至 0.40 以上"
     }
   ],
   "summary": "综合评价概述"

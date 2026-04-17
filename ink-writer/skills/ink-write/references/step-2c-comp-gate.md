@@ -58,6 +58,12 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 | `emotion_punctuation` | 软 | 情感标点密度（感叹号/问号, 标杆3.8/4.2千字） |
 | `vocabulary_diversity` | 软 | 词汇多样性 TTR（<0.35 报警，标杆≥0.45） |
 | `first_sentence_hook` | 软 | 第一句钩子特征检测（说明性/总结性开头报警） |
+| `sensory_diversity` | 软 | 单场景非视觉感官占比 <20% / 全章非视觉感官种类 <2 → warning（US-009） |
+| `shot_switch_density` | 软 | 连续 ≥3 段同一镜头类型（远景/近景/特写）→ warning；战斗/冲突场景缺失"远景→近景→特写"三段式 → warning（US-009） |
+| `sentence_rhythm_cv` | 硬/软 | 句长 CV < 0.35 → 硬失败（退回 Step 2A 补写节奏断层）；0.35 ≤ CV < 0.40 → 软警告（US-009） |
+| `info_density_budget` | 软 | 本章新概念 > `info_budget.max_new_concepts` / 新命名角色 > `info_budget.max_named_characters` / 单段 >1 新概念 → warning（US-009，L11 铁律兜底） |
+| `voice_profile_consistency` | 软 | 具名角色对话命中其 voice_profile 特征 <60% → warning（对照 init 收集的 voice_profiles，US-009） |
+| `dialogue_golden_ratio` | 软 | 对话 40-50% / 叙述 30-40% / 心理 10-20%；任一偏离 ±10% → warning（US-009，与硬性 `dialogue_ratio` <5% 互补） |
 
 ## 判定逻辑
 

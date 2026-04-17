@@ -1,0 +1,33 @@
+## Codebase Patterns
+- Agent 规格文件在 `ink-writer/agents/`，技能文件在 `ink-writer/skills/`
+- 审查门禁逻辑在 `ink-writer/skills/ink-write/references/step-3-review-gate.md`
+- 弱动词/感官判据维护在 `ink-writer/skills/ink-write/references/prose-craft-rules.md`
+- 每个 US 通常涉及 agent 规格 + review gate + references 三处联动修改
+- 黄金三章（ch1-3）规则在多个 checker 中都有加严处理模式
+
+---
+
+## 2026-04-17 - US-014
+- 在 proofreading-checker.md 新增 Layer 6（文笔工艺质量检测），包含 4 个子规则：WEAK_VERB_OVERUSE、SENSORY_DESERT、ADJECTIVE_PILE、GENERIC_DESCRIPTION
+- 在 step-3-review-gate.md 新增文笔工艺门禁（Prose Craft Gate），含 hard block/soft warning 判定逻辑和黄金三章加严规则
+- Files changed:
+  - ink-writer/agents/proofreading-checker.md (+101 lines: Layer 6 全部内容)
+  - ink-writer/skills/ink-write/references/step-3-review-gate.md (+55 lines: Prose Craft Gate)
+- **Learnings for future iterations:**
+  - Layer 6 是 proofreading-checker 中唯一可产出 critical 的层级，header 注释已明确标注
+  - prose-craft-rules.md 由 US-013 创建并 commit，US-014 的 checker 和 US-015 的 polish-agent 都引用它
+  - 空洞感官词黑名单已在 prose-craft-rules.md 第三节维护，checker 加载该文件获取判据
+  - 黄金三章升级模式：high → critical hard block，与 US-010/US-012 的模式一致
+---
+
+## 2026-04-17 - US-015
+- 在 polish-guide.md 新增 Layer 8（文笔工艺润色），包含 8a 弱动词替换、8b 感官沙漠补充、8c 形容词精简、8z Layer 6 等价自检
+- 在 polish-agent.md 新增 Step 4.5 Layer 8 执行流程、加载 prose-craft-rules.md、更新输出报告格式和成功标准
+- Files changed:
+  - ink-writer/skills/ink-write/references/polish-guide.md (+50 lines: Layer 8 + 终检/清单更新)
+  - ink-writer/agents/polish-agent.md (+40 lines: Layer 8 步骤 + 成功标准 #11-12 + 报告格式)
+- **Learnings for future iterations:**
+  - Layer 8 位于 Anti-AI 二次验证（Step 4）之后、No-Poison（Step 5）之前，确保先用 anti_ai_scanner 过一遍再去处理文笔问题
+  - Layer 6 等价自检（8z）是 polish-guide 和 polish-agent 双文件的联动点，两处描述需保持一致
+  - prose-craft-rules.md 现在被三个模块引用：writer-agent L10（预防）、proofreading-checker Layer 6（检测）、polish-agent Layer 8（修复）
+---

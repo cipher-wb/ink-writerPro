@@ -62,6 +62,7 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 | 女主/核心配角姓名 + 设定 | 姓名（命名系统生成）+ 1-2 句人设 |
 | 核心冲突 | 全书主线冲突一句话 |
 | 金手指概要 | 类型 + 能力 + 代价，或"无金手指" |
+| 第一章爽点预览 | **必填 ≥50 字**（US-001）：描述金手指在第一章的具体收益场景（资源/击退/认可/地位/信息/危机解除），含视觉/感官特征。禁止仅写抽象收益。 |
 | 前三章钩子概念 | 第 1/2/3 章各一句话钩子描述 |
 
 ### 输出格式
@@ -77,6 +78,7 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 - **女主/核心配角**：姓名 — XX
 - **核心冲突**：XX
 - **金手指**：XX（代价：XX）
+- **第一章爽点预览**：XX（≥50 字，具体收益场景 + 视觉/感官特征）
 - **前三章钩子**：
   1. 第1章：XX
   2. 第2章：XX
@@ -138,9 +140,28 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 | 女主/核心配角姓名 | `relationship.heroine_names[0]` 或 `relationship.co_protagonists[0]` |
 | 核心冲突 | `project.core_conflict` |
 | 金手指概要 | `golden_finger.type` + `golden_finger.name` |
+| 第一章爽点预览 | `golden_finger.first_payoff`（若未达 80 字，自动扩写或追问补齐以通过充分性闸门 5a）；同时派生 `golden_finger.visual_signature`（从预览中抽取视觉/感官描写，不足 50 字则追问） |
 | 前三章钩子 | `constraints.opening_hook` |
 
 未覆盖的字段（如 `world.scale`、`world.power_system_type`）从题材自动推断合理默认值。
+
+**US-001 Quick 模式补充填充**（充分性闸门 5a 所需）：
+- `golden_finger.first_payoff`：由「第一章爽点预览」扩写至 ≥80 字（追问用户或自动展开具体收益形式）。
+- `golden_finger.visual_signature`：从预览中抽取视觉/感官片段，若 <50 字则由系统补齐并请用户确认。
+- `golden_finger.escalation_ladder`：基于金手指类型自动生成三阶段默认梯度（ch1 / ch10 / late_game），各写一句话，展示给用户确认（Y/N）。
+- `golden_finger.payoff_self_check`：Quick 模式下自动填入「已通过预览字段校验」，若用户修改预览则重置该字段要求用户重新回答。
+
+**US-003 Quick 模式第一章爽点规格自动填充**（充分性闸门 5b 所需）：
+- 在 `golden_finger.first_payoff` / `visual_signature` 已补齐后，自动合并派生 `ch1_cool_point_spec` 四字段（规则同 Deep Mode Step 3+++）。
+- `involved_characters` 默认取 `protagonist.name` + `relationship.heroine_names[0]`（或首个核心配角），若存在对抗型爽点则额外追加临时对手代号。
+- `payoff_form` 基于 `first_payoff` 关键词匹配（含「钱/资源/宝物」→资源获取；「击退/震慑/重创」→敌人击退；「刮目相看/认可/赞叹」→他人认可；「上位/晋升/拜入」→地位提升；「揭穿/窥见/看懂」→信息解锁）；匹配失败时默认「敌人击退」并提示用户校正。
+- `reader_emotion_target` 由 `payoff_self_check` 衍生，若缺失则使用模板「第一章末读者因 <主角><payoff_form> 的具体画面，产生<爽快/惊艳/期待>的情绪」。
+- 生成后以紧凑表格一次性展示，请求 Y/N 确认；回答 N 则进入逐字段微调（最多 3 轮）；标记 `ch1_cool_point_spec.auto_generated=true` 与 `user_confirmed` 的最终取值。
+
+**US-002 Quick 模式角色语言档案自动填充**（充分性闸门 3a 所需）：
+- 基于方案中的「主角设定（含性格/背景）」与「女主/核心配角设定」，按 Deep Mode 的「自动推荐规则」生成 `protagonist.voice_profile` 与 `relationship.voice_profiles[<core_partner_name>]` 两份完整档案。
+- 自动填充时，标记 `voice_profile.auto_generated=true`。
+- 生成后以紧凑表格展示给用户，请求一次性 Y/N 确认；用户回答 N 则进入逐字段微调（最多 5 轮），完成后再继续 Quick Step 3 的剩余流程。
 
 ### 2) 填充 `.ink/state.json` 和 `.ink/preferences.json`
 
@@ -349,6 +370,29 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 - 主角原型标签（成长型/复仇型/天才流等）
 - 多主角分工
 
+#### Step 2+ 角色语言特征档案（必收，US-002）
+
+为「主角 + 核心配角（女主/男主搭档/核心反派一名）」的每位角色，建立 `voice_profile` 子字段组，必须全部填写：
+
+1. **`speech_vocabulary_level`**：词汇层级，从下列枚举中选一项 — `口语化` / `标准` / `文雅` / `古风` / `混合`。
+2. **`preferred_sentence_length`**：偏好句长，从下列枚举中选一项 — `短促` / `中等` / `冗长` / `跳跃（短长交错）`。
+3. **`verbal_tics`**：口头禅清单（**最多 3 个**，可为空数组）。每条不超过 8 字，要求是该角色高频复用且能让读者一眼认出来的语气词/连接词/自我标签。
+4. **`emotional_tell`**：情绪外显规则（一句话）— 描述当此角色处于愤怒/羞愧/紧张等高情绪场景时，其语言会发生的具体变化（变短/变长/破句/失语/突然引经据典/方言冒头/称谓切换 等）。
+5. **`taboo_topics`**：禁言话题列表 — 此角色绝不会主动提起或在对话中尽量回避的话题（家人/某段过往/某位故人/某种身份），用于对话审查时识别角色破功。
+
+**采集策略**：
+- 优先让用户自己描述各角色「最像 ta 自己的一句话」，再据此结构化抽取。
+- 若用户表示「不知道 / 想不出来」，**系统必须基于已收集的 `性格 + 年龄 + 职业 + 背景 + 出身阶层` 自动生成推荐档案**，并以 `Y/N` 模式请求确认（用户回答 N 则进入逐字段微调）。
+- 自动推荐规则参考（最小集）：
+  - `性格外向 + 年轻` → 句长「中等」、口语化、口头禅 1-2 个
+  - `性格内向 / 谨慎` → 句长「短促」、词汇「标准」、口头禅 0-1 个
+  - `古风背景 / 修仙长者` → 词汇「古风」或「文雅」、句长「中等」或「冗长」、emotional_tell 多为「失语 / 称谓切换」
+  - `市井 / 江湖` → 词汇「口语化」、口头禅可含俚语
+  - `学者 / 科研 / 谋士` → 词汇「文雅」、句长「冗长」、情绪激动时反向「破句」
+- 至少为「主角 + 1 名核心配角」完整填写；其余次要配角可在后续 plan 阶段按需补齐。
+
+收集后，所有 `voice_profile` 必须随主角卡一起在 `Step 6 一致性复述` 阶段展示给用户最终确认。
+
 ### Step 3：金手指与兑现机制
 
 收集项（必收）：
@@ -363,6 +407,60 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 - 若为系统流：系统性格、升级节奏
 - 若为重生：重生时间点、记忆完整度
 - 若为传承/器灵：辅助边界与出手限制
+
+#### Step 3+ 爽点前置收益场景（必收，US-001）
+
+在完成上述金手指基础信息后，追加三项爽点前置字段，必须全部填写：
+
+1. **`golden_finger_first_payoff`**（≥80 字）
+   - 描述金手指在**第一章**为主角带来的具体收益场景：什么能力被触发、触发后主角获得了什么具体有形的好处（资源/敌人击退/他人认可/地位提升/信息解锁/危机解除等）。
+   - 禁止使用抽象词汇作为收益（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了）。
+   - 若用户给出的描述不足 80 字或仅提及抽象收益，继续追问直至满足。
+2. **`golden_finger_visual_signature`**（≥50 字）
+   - 描述金手指激活时的视觉/感官特征：画面是什么、有无光效/声响/触感/气味等感官锚点。此字段将在 write 阶段用于感官描写注入。
+3. **`golden_finger_escalation_ladder`**
+   - 能力阶梯三段描述，必须显式给出：
+     - 第 1 章：此时能做什么、有什么边界。
+     - 第 10 章前后：升级后能做什么。
+     - 后期（主线中后段）：最终形态能做什么。
+   - 禁止仅写“逐步提升”“循序渐进”之类空泛表述。
+
+#### Step 3++ 读者爽感自检（必问）
+
+上述三项收集完毕后，再追加以下强制追问（用户必须回答，不能跳过）：
+
+> 「如果读者看完第一章，仍然不知道金手指究竟能怎么爽（不知道它能解决什么问题、不知道它带来什么具体好处），你会怎么改？」
+
+- 将用户的回答作为 `golden_finger_payoff_self_check` 字段写入内部数据模型。
+- 若用户表示“不知道如何改”或给出空洞回答，系统根据已收集的 `golden_finger_first_payoff` 生成 2-3 条强化建议供用户选择。
+- 用户给出有效答复后方可进入 Step 4。
+
+#### Step 3+++ 第一章爽点规格派生（US-003）
+
+完成 Step 3+ / Step 3++ 后，系统基于已收集字段自动派生**第一章爽点规格** `ch1_cool_point_spec`，该对象将被写入 `.ink/golden_three_plan.json` 的 `chapters["1"].ch1_cool_point_spec`，供 `/ink-plan` 与 `/ink-write` 阶段消费。
+
+派生规则（由系统生成草案，再交由用户 Y/N 确认）：
+
+- `scene_description`（≥100 字，必填）：
+  - 将 `golden_finger.first_payoff` 与 `golden_finger.visual_signature` 合并为一段完整的第一章爽点场景描述：交代触发位置、触发动作、能力画面/感官锚点、具体收益结果。
+  - 若合并后 <100 字，系统自动补齐缺失要素（环境/对手/观众反应）再提交确认；仍不足则追问用户。
+  - 禁止使用纯抽象收益词（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了）。
+- `involved_characters`（字符串数组，必填）：
+  - 默认从 `protagonist.name` + `relationship.heroine_names[0]` + `relationship.co_protagonists[0]` 中抽取非空项。
+  - 至少 1 项；若爽点为对抗型则必须补充反派/对手名（可为临时代号）。
+- `payoff_form`（枚举，必填）：
+  - 候选值：`资源获取` / `敌人击退` / `他人认可` / `地位提升` / `信息解锁`。
+  - 系统基于 `golden_finger.first_payoff` 的关键词自动匹配；匹配不确定时展示候选列表供用户选择。
+- `reader_emotion_target`（≥30 字，必填）：
+  - 描述第一章末读者应产生的情绪反应（例：爽快/惊艳/期待/共情）及其触发点。
+  - 系统依据 `golden_finger.payoff_self_check` 的回答生成初稿。
+
+**用户确认（Y/N 必走）**：
+
+1. 系统以紧凑格式展示 `ch1_cool_point_spec` 草案的 4 个字段。
+2. 用户回答 `Y` → 写入 `golden_three_plan.json`，进入 Step 4。
+3. 用户回答 `N` → 进入逐字段修改（最多 3 轮）；任一字段修改后必须重新校验长度与枚举约束，通过后再次请求确认。
+4. 未经用户确认前，禁止执行生成阶段的 `golden_three_plan.json` 写入。
 
 ### Step 4：世界观与力量规则
 
@@ -466,7 +564,14 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
     "desire": "",
     "flaw": "",
     "archetype": "",
-    "structure": "单主角"
+    "structure": "单主角",
+    "voice_profile": {
+      "speech_vocabulary_level": "",
+      "preferred_sentence_length": "",
+      "verbal_tics": [],
+      "emotional_tell": "",
+      "taboo_topics": []
+    }
   },
   "relationship": {
     "heroine_config": "",
@@ -476,7 +581,8 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
     "co_protagonist_roles": [],
     "antagonist_tiers": {},
     "antagonist_level": "",
-    "antagonist_mirror": ""
+    "antagonist_mirror": "",
+    "voice_profiles": {}
   },
   "golden_finger": {
     "type": "",
@@ -484,7 +590,22 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
     "style": "",
     "visibility": "",
     "irreversible_cost": "",
-    "growth_rhythm": ""
+    "growth_rhythm": "",
+    "first_payoff": "",
+    "visual_signature": "",
+    "escalation_ladder": {
+      "ch1": "",
+      "ch10": "",
+      "late_game": ""
+    },
+    "payoff_self_check": ""
+  },
+  "ch1_cool_point_spec": {
+    "scene_description": "",
+    "involved_characters": [],
+    "payoff_form": "",
+    "reader_emotion_target": "",
+    "user_confirmed": false
   },
   "world": {
     "scale": "",
@@ -514,8 +635,28 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 1. 书名、题材（可复合）已确定。
 2. 目标规模可计算（字数或章数至少一个）。
 3. 主角姓名 + 欲望 + 缺陷完整。
+3a. **角色语言特征档案齐备**（US-002 硬阻断）：
+   - `protagonist.voice_profile` 中 `speech_vocabulary_level`、`preferred_sentence_length`、`emotional_tell` 三个字段非空；`verbal_tics` 与 `taboo_topics` 允许为空数组但必须显式存在。
+   - 至少 1 名核心配角（`relationship.heroine_names[0]` 或 `relationship.co_protagonists[0]`）在 `relationship.voice_profiles` 中存在同结构条目，且上述三项关键字段非空。
+   - 用户拒绝填写时，必须有自动推荐档案 + 用户 Y 确认记录（写入 `voice_profile.auto_generated=true`）。
+   - 未通过此闸门 → 阻断进入 `/ink-plan` 阶段。
 4. 世界规模 + 力量体系类型完整。
 5. 金手指类型已确定（允许“无金手指”）。
+5a. **金手指爽点前置字段齐备**（US-001 硬阻断）：
+   - `golden_finger.first_payoff` 非空且 ≥ 80 字，且不含纯抽象收益词（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了）。
+   - `golden_finger.visual_signature` 非空且 ≥ 50 字。
+   - `golden_finger.escalation_ladder.ch1` / `ch10` / `late_game` 三项均非空。
+   - `golden_finger.payoff_self_check` 非空（读者爽感自检已回答）。
+   - 若 `golden_finger.type` 为「无金手指」，允许上述字段留空，但必须显式标记 `type="无金手指"` 且在总纲中补充“无金手指兑现路径”说明。
+   - 未通过此闸门 → 阻断进入 `/ink-plan` 阶段。
+5b. **第一章爽点规格 `ch1_cool_point_spec` 已确认**（US-003 硬阻断）：
+   - `scene_description` 非空且 ≥100 字，不含抽象收益词黑名单；
+   - `involved_characters` 至少 1 项；
+   - `payoff_form` ∈ {资源获取, 敌人击退, 他人认可, 地位提升, 信息解锁}；
+   - `reader_emotion_target` 非空且 ≥30 字；
+   - `user_confirmed=true`（必须经过 Step 3+++ 的 Y/N 确认步骤）。
+   - 若 `golden_finger.type="无金手指"`，本闸门跳过但必须写入占位说明 `scene_description="[无金手指方案] 以 <具体手段> 交付第一章兑现"`。
+   - 未通过此闸门 → 阻断写入 `.ink/golden_three_plan.json`。
 6. 创意约束已确定：
    - 反套路规则 1 条
    - 硬约束至少 2 条
@@ -593,7 +734,33 @@ python3 "${SCRIPTS_DIR}/ink.py" init \
 }
 ```
 
-### 3) Patch 总纲
+### 3) Patch `golden_three_plan.json`（US-003）
+
+`init_project.py` 生成 `.ink/golden_three_plan.json` 之后，将 §内部数据模型 中的 `ch1_cool_point_spec` 写入 `chapters["1"].ch1_cool_point_spec`：
+
+```json
+{
+  "chapters": {
+    "1": {
+      "ch1_cool_point_spec": {
+        "scene_description": "",
+        "involved_characters": [],
+        "payoff_form": "",
+        "reader_emotion_target": "",
+        "user_confirmed": true,
+        "auto_generated": false,
+        "derived_from": ["golden_finger.first_payoff", "golden_finger.visual_signature"]
+      }
+    }
+  }
+}
+```
+
+约束：
+- 仅在充分性闸门 5b 通过后写入；未通过则以原子失败回退并提示用户回到 Step 3+++。
+- 再次运行 `/ink-init` 时，若用户未显式修改爽点字段，保持现有 `ch1_cool_point_spec` 不变（幂等）；若 `first_payoff` 或 `visual_signature` 变更，重置 `user_confirmed=false` 并重走 Step 3+++ 确认。
+
+### 4) Patch 总纲
 
 必须补齐：
 - 故事一句话
@@ -618,7 +785,7 @@ test -f "{project_root}/.ink/idea_bank.json"
 成功标准：
 - `state.json` 存在且关键字段不为空（title/genre/target_words/target_chapters）。
 - `preferences.json` 已开启 `opening_strategy.golden_three_enabled=true`。
-- `golden_three_plan.json` 已生成第 1-3 章承诺卡。
+- `golden_three_plan.json` 已生成第 1-3 章承诺卡，且 `chapters["1"].ch1_cool_point_spec` 四字段齐备、`user_confirmed=true`（US-003）。
 - 设定集核心文件存在：`世界观.md`、`力量体系.md`、`主角卡.md`、`金手指设计.md`。
 - `总纲.md` 已填核心主线与约束字段。
 - `idea_bank.json` 已写入且与最终选定方案一致。

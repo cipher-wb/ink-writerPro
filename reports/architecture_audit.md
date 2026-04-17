@@ -163,7 +163,9 @@ Fragments appearing in 2+ agent specs (top 50):
 - **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `密度告警 5 最低分 0 pass overall_score`
 - **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `规划失败 硬阻断 3 plan_injection_mode warn 时`
 - **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `tracker 只读 不修改 index db data`
+- **3x** in [golden-three-checker, high-point-checker, ooc-checker]: `hard block 回退 step 2a 重写`
 - **3x** in [high-point-checker, reader-pull-checker, reader-simulator]: `题材画像 claude_plugin_root references genre profiles md`
+- **3x** in [high-point-checker, ooc-checker, proofreading-checker]: `critical hard block 回退 step 2a`
 - **2x** in [anti-detection-checker, proofreading-checker]: `输入 与其他 checker 相同 接收 review_bundle_file`
 - **2x** in [anti-detection-checker, proofreading-checker]: `output schema md 的统一格式 json checker`
 - **2x** in [context-agent, data-agent]: `project_root d wk 斗破苍穹 storage_path ink`
@@ -194,13 +196,11 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `与 dashboard 的交互 api plot threads`
 - **2x** in [high-point-checker, reader-pull-checker]: `核心参考 分类法 claude_plugin_root references reading power`
 - **2x** in [high-point-checker, reader-pull-checker]: `taxonomy md 题材画像 claude_plugin_root references genre`
+- **2x** in [high-point-checker, ooc-checker]: `判定条件 severity 处置 普通章节 处置 黄金三章`
+- **2x** in [high-point-checker, ooc-checker]: `high 允许 step 4 润色修复 hard`
 - **2x** in [logic-checker, outline-compliance-checker]: `json issues markdown 报告 执行流程 第一步`
 - **2x** in [logic-checker, outline-compliance-checker]: `第三步 must_not_pass 判定 硬阻断条件 满足任一则 pass`
 - **2x** in [logic-checker, outline-compliance-checker]: `false 存在任何 critical severity issue 存在`
 - **2x** in [logic-checker, outline-compliance-checker]: `true 但 medium low issue 仍传递给`
 - **2x** in [logic-checker, outline-compliance-checker]: `polish agent 处理 第四步 生成报告 markdown`
 - **2x** in [logic-checker, outline-compliance-checker]: `综合评分 结论 通过 未通过 简要说明 critical`
-- **2x** in [logic-checker, outline-compliance-checker]: `count high count medium count low`
-- **2x** in [logic-checker, outline-compliance-checker]: `是否触发 原因 第五步 输出 json json`
-- **2x** in [logic-checker, outline-compliance-checker]: `硬阻断触发 必须回退修复 禁止事项 降低任何层级的 severity 严重度不得降级`
-- **2x** in [pacing-checker, reader-simulator]: `本 agent 默认数据源 审查包中的正文 前序摘要 reader_signal`

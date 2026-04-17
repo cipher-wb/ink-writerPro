@@ -2,8 +2,45 @@
 enabled: true
 retrieval_top_k: 5
 hard_gate_threshold: 0.75
-golden_three_threshold: 0.85
+# 黄金三章阈值：US-017 后从 0.85/0.90 提升至 0.92（加入文笔维度后总体标准提高）
+golden_three_threshold: 0.92
 inject_into:
   context: true
   writer: true
   polish: true
+
+# US-017：RAG 知识库新增文笔规则来源
+rule_sources:
+  base:
+    - "data/editor-wisdom/rules.json"
+  prose_craft:
+    - source: "skills/ink-write/references/writing/desire-description.md"
+      categories: ["prose_sensory"]
+    - source: "skills/ink-write/references/writing/combat-scenes.md"
+      categories: ["prose_shot", "prose_rhythm"]
+    - source: "ink-writer/references/shared/scene-craft-index.md"
+      categories: ["prose_shot", "prose_density"]
+    - source: "skills/ink-review/references/pacing-control.md"
+      categories: ["prose_rhythm"]
+
+# US-017：editor-wisdom-checker 评分维度（在原编辑规则评分之外，新增文笔四维）
+scoring_dimensions:
+  - id: shot_diversity
+    label: 镜头多样性
+    rule_categories: ["prose_shot"]
+  - id: sensory_richness
+    label: 感官丰富度
+    rule_categories: ["prose_sensory"]
+  - id: sentence_rhythm
+    label: 句式节奏
+    rule_categories: ["prose_rhythm"]
+  - id: info_density_uniformity
+    label: 信息密度均匀度
+    rule_categories: ["prose_density"]
+
+# US-017：文笔规则触发的黄金三章硬阻断类别（hard severity 自动 hard block）
+prose_categories:
+  - prose_shot
+  - prose_sensory
+  - prose_rhythm
+  - prose_density

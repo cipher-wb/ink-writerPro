@@ -17,7 +17,7 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": true,
+      "passes": false,
       "notes": "这是爽点前置的数据源头，后续 plan/write/review 全部依赖这些字段。参考现有 golden_finger_design.md 的收集模式。"
     },
     {
@@ -32,7 +32,7 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": true,
+      "passes": false,
       "notes": "用户回答'不知道'时系统自动生成推荐值是关键体验。生成规则：性格外向→句长中等偏长+主动句式；内向→短促+被动句式等。"
     },
     {
@@ -47,7 +47,7 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": true,
+      "passes": false,
       "notes": "依赖 US-001 的数据。golden_three_plan.json 已有 ch1/ch2/ch3 的 contract 字段，新增 ch1_cool_point_spec 作为 ch1 的扩展。"
     },
     {
@@ -63,7 +63,7 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": true,
+      "passes": false,
       "notes": "依赖 US-003 的 ch1_cool_point_spec 数据。已有第一章节拍规则（ability_demo→crisis→benefit），本次增强：感官要求、排除列表、gate 强制。"
     },
     {
@@ -78,7 +78,7 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": true,
+      "passes": false,
       "notes": "info_budget 是解决'塞信息感'的结构性方案。natural_delivery_hints 的5种融入方式：行动展示/对话揭示/后果倒推/误读制造/环境映射。"
     },
     {
@@ -95,7 +95,7 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": true,
+      "passes": false,
       "notes": "参考 combat-scenes.md 中的镜头切换示例模式。writer-agent 现有 L10a/b/c，L10d 紧跟其后。"
     },
     {
@@ -111,7 +111,7 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": true,
+      "passes": false,
       "notes": "参考 desire-description.md（感官）和 pacing-rhythm.md（句式）。L10e 强化现有 L10b 的感官规则，L10f 新增句式节奏规则。"
     },
     {
@@ -127,7 +127,7 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": true,
+      "passes": false,
       "notes": "L11 依赖 US-005 的 info_budget 字段。L10g 参考scene-craft-index.md 的环境描写规则。"
     },
     {
@@ -143,7 +143,7 @@
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": true,
+      "passes": false,
       "notes": "依赖 US-006/007/008 的 L10d-g 和 L11 规则已在 writer-agent 中定义。Step 2C 是确定性检查，开销可忽略。"
     },
     {
@@ -158,7 +158,7 @@
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": true,
+      "passes": false,
       "notes": "新 agent 文件，遵循 agents/ 目录下已有 checker 的格式规范。后续 US-014 将其集成到 ink-write 和 ink-review。"
     },
     {
@@ -173,7 +173,7 @@
         "Typecheck passes"
       ],
       "priority": 11,
-      "passes": true,
+      "passes": false,
       "notes": "与 prose-impact-checker 互补：后者关注视觉冲击和电影感，前者关注五感沉浸深度。"
     },
     {
@@ -188,7 +188,7 @@
         "Typecheck passes"
       ],
       "priority": 12,
-      "passes": true,
+      "passes": false,
       "notes": "这是解决'不自然感'的核心检查器。对话辨识度检查是最重要的维度。"
     },
     {
@@ -204,7 +204,7 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": true,
+      "passes": false,
       "notes": "与 US-004 配对：US-004 在大纲层锁定闭环，US-013 在审查层验证正文是否落地。"
     },
     {
@@ -220,7 +220,7 @@
         "Typecheck passes"
       ],
       "priority": 14,
-      "passes": true,
+      "passes": false,
       "notes": "依赖 US-010/011/012 的3个新 checker 已创建。参考现有 step-3-review-gate.md 的门禁集成模式。"
     },
     {
@@ -235,7 +235,7 @@
         "Typecheck passes"
       ],
       "priority": 15,
-      "passes": true,
+      "passes": false,
       "notes": "Layer 6 已在 combat-pacing-overhaul 分支中创建，本次是增强而非重建。保留现有 6A 规则不变。"
     },
     {
@@ -252,7 +252,7 @@
         "Typecheck passes"
       ],
       "priority": 16,
-      "passes": true,
+      "passes": false,
       "notes": "polish-agent 已有 Layer 8（Prose Craft Polish from combat-pacing-overhaul），Layer 9 是新增层。9a/9b/9c/9d 与 US-010/011/012 的检查维度一一对应。"
     },
     {
@@ -267,7 +267,7 @@
         "Typecheck passes"
       ],
       "priority": 17,
-      "passes": true,
+      "passes": false,
       "notes": "editor-wisdom RAG 已有 288 份编辑建议，新增的文笔规则需要符合同样的格式（条件→规则→严重度→修复建议）。"
     },
     {
@@ -282,7 +282,7 @@
         "Typecheck passes"
       ],
       "priority": 18,
-      "passes": true,
+      "passes": false,
       "notes": "这个文件被 ink-plan 和 ink-write 的参考系统加载，更新后自动生效于后续项目。"
     }
   ]

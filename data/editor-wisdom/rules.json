@@ -4842,5 +4842,324 @@
     "source_files": [
       "【合集】编辑星河_抖音全部视频内容.md"
     ]
+  },
+  {
+    "id": "EW-0365",
+    "category": "prose_shot",
+    "rule": "每个场景段落必须明确镜头类型（远景/近景/特写），场景内至少完成一次镜头切换；连续3段以上同一镜头类型视为镜头单一违规",
+    "why": "镜头切换是文字电影感的核心来源，单一镜头长时间堆砌会让画面扁平、读者视线疲劳，编辑反复指出'文字要像分镜剧本一样有切换'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "combat-scenes.md",
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0366",
+    "category": "prose_shot",
+    "rule": "战斗或冲突场景必须采用'远景→近景→特写'三段式镜头节奏，决定性瞬间（拳头接触、武器碰撞、表情凝固）必须配特写镜头",
+    "why": "决定性瞬间没有特写=爆发感泄气；编辑在多本爆款拆解中强调'打斗看的是关键帧的特写定格'，缺特写直接削弱爽点冲击",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "combat-scenes.md",
+      "combat.md"
+    ]
+  },
+  {
+    "id": "EW-0367",
+    "category": "prose_shot",
+    "rule": "远景用于场景开场和环境交代，近景用于人物动作和微表情，特写用于决定性瞬间；三种镜头职能不可错配",
+    "why": "镜头职能错配（如用远景写关键拳头接触）会让读者感受不到张力，等同于'电影把高潮拍成航拍'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "combat-scenes.md"
+    ]
+  },
+  {
+    "id": "EW-0368",
+    "category": "prose_shot",
+    "rule": "起草前应在内部生成 shot_plan（镜头规划），按场景节拍标注镜头序列；shot_plan 不输出到正文但用于自检镜头多样性",
+    "why": "无规划起草是镜头单一的根因；编辑指出'有镜头预设的作者，画面感稳定碾压无预设的'",
+    "severity": "info",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0369",
+    "category": "prose_shot",
+    "rule": "黄金三章每章至少出现2次特写镜头（关键情绪/冲突/金手指激活点），缺失特写视为爽点视觉化失败",
+    "why": "黄金三章读者扫读速度最快，特写是抓住视觉注意力的最强信号；编辑反复强调'前三章必须有让读者停留的画面'",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "combat-scenes.md",
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0370",
+    "category": "prose_shot",
+    "rule": "镜头切换必须为剧情服务（情绪转折/视角变化/危机升级），禁止为切换而切换（仅为追求节奏机械跳镜头）",
+    "why": "无意义切镜头让读者跟丢叙事线，编辑批评'有些作者强行切镜头反而把节奏打散'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0371",
+    "category": "prose_sensory",
+    "rule": "每个场景必须指定主导感官（非默认视觉），相邻两个场景的主导感官必须轮换；连续2个场景同主导感官视为感官停滞",
+    "why": "全章只用视觉=感官沙漠；主导感官轮换是沉浸感的结构性来源，编辑指出'好的开篇让读者听见、闻到、摸到'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "desire-description.md",
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0372",
+    "category": "prose_sensory",
+    "rule": "每800字至少出现1处非视觉感官描写（听觉/嗅觉/触觉/味觉/温度/体感）；战斗与情感场景密度加倍",
+    "why": "非视觉感官是把读者从'看故事'拉到'在故事里'的关键；编辑明确'纯视觉描写是AI味的第一信号'",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "desire-description.md"
+    ]
+  },
+  {
+    "id": "EW-0373",
+    "category": "prose_sensory",
+    "rule": "情感场景优先触觉+温度，战斗场景优先触觉+嗅觉，悬疑场景优先听觉+触觉；场景类型与主导感官需匹配",
+    "why": "感官选错=情绪不对位；编辑在情感戏拆解中反复强调'体温、心跳、呼吸频率比眼神更能传递情绪浓度'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "desire-description.md"
+    ]
+  },
+  {
+    "id": "EW-0374",
+    "category": "prose_sensory",
+    "rule": "禁止用'他感到悲伤/愤怒/惊讶/紧张'等抽象情绪词替代具体感官描写；情绪必须通过身体反应、外部环境、动作细节传递",
+    "why": "抽象情绪词是AI味的核心特征；编辑指出'所有抽象情绪词都可以也应该被身体细节替换'",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "desire-description.md"
+    ]
+  },
+  {
+    "id": "EW-0375",
+    "category": "prose_sensory",
+    "rule": "每章至少出现1处通感描写（跨感官比喻，如'声音像碎冰渣子'、'目光像被烫了一下'）",
+    "why": "通感是文笔高级感的标志，编辑在精品分析中常引用通感句作为'笔力天花板'示例",
+    "severity": "info",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "desire-description.md"
+    ]
+  },
+  {
+    "id": "EW-0376",
+    "category": "prose_sensory",
+    "rule": "每场景至少包含一段≥80字的感官描写段落（战斗与情感场景≥100字），用于建立沉浸锚点",
+    "why": "感官描写段落是读者进入场景的'加载页'，过短会让场景悬浮，编辑批评'没有感官锚点的段落像PPT幻灯片'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "desire-description.md",
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0377",
+    "category": "prose_rhythm",
+    "rule": "章级句长变异系数（CV）应≥0.40；CV<0.35 视为句式平铺，连续超过3段句长接近视为节奏单调",
+    "why": "句长一致是AI味最显眼的统计特征，编辑直接指出'句长直方图扁平=机器写'",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "pacing-control.md"
+    ]
+  },
+  {
+    "id": "EW-0378",
+    "category": "prose_rhythm",
+    "rule": "紧张/战斗场景句均长度≤15字且允许删除连词（如'他缩肩，下蹲，滚向雪地'三动作零连词）",
+    "why": "短句因稀缺而有力，连词删除能让心率跟着加速；编辑在打斗拆解中反复演示'删掉的'然后''的然后''就把战斗写活了'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "pacing-control.md",
+      "combat-scenes.md"
+    ]
+  },
+  {
+    "id": "EW-0379",
+    "category": "prose_rhythm",
+    "rule": "情感与日常场景句均25-40字，情绪高潮必须采用'连续短句→突然长句'的断层效果",
+    "why": "断层是把情绪推到喉咙的句法手段，编辑认为'高潮全是中长句=情绪在脑子里转，短句突然长句=情绪砸到胸口'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "pacing-control.md"
+    ]
+  },
+  {
+    "id": "EW-0380",
+    "category": "prose_rhythm",
+    "rule": "连续3句以上短句后必须接1个长句让读者呼吸；连续3段同一句法骨架视为句式雷同违规",
+    "why": "短句堆砌不松一口气=读者窒息；句法骨架重复（如'主+谓+宾.主+谓+宾.'）=节奏死板",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "pacing-control.md"
+    ]
+  },
+  {
+    "id": "EW-0381",
+    "category": "prose_rhythm",
+    "rule": "内心独白与回忆段禁止删除连词，删连词只在紧张/战斗段允许；内心戏需保持思维连贯",
+    "why": "内心戏删连词=思维断片，破坏角色心理逻辑；编辑指出'回忆段是节奏减速带，不是加速带'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "pacing-control.md"
+    ]
+  },
+  {
+    "id": "EW-0382",
+    "category": "prose_rhythm",
+    "rule": "黄金三章 CV 不低于 0.40，第1章首次爽点段必须出现至少一组短句节奏（≤15字×3句）",
+    "why": "前三章节奏决定追读率，爽点段没有短句=读者扫读时感受不到爆点",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "pacing-control.md"
+    ]
+  },
+  {
+    "id": "EW-0383",
+    "category": "prose_density",
+    "rule": "单段（≤200字）最多引入1个新概念/设定；连续3段内不允许超过2个设定解释",
+    "why": "信息过载是'塞信息感'的直接成因，编辑反复指出'前三章塞设定=直接劝退'",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0384",
+    "category": "prose_density",
+    "rule": "新概念引入后至少间隔500字才能引入下一个；设定信息必须通过行动展示/对话揭示/后果倒推三种方式之一融入，禁止纯叙述堆砌",
+    "why": "三种融入方式是'设定不显眼'的工程化解法；纯叙述设定块=读者跳过区",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0385",
+    "category": "prose_density",
+    "rule": "第1章信息带宽锁死：金手指核心机制 + 1个核心设定 + 2个有名角色，其他信息必须通过留白/悬念推后",
+    "why": "第1章是信息焦虑高发区，超带宽会让读者短期记忆崩溃；编辑指出'第1章每多1个名字读者就少1%往下翻'",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0386",
+    "category": "prose_density",
+    "rule": "第1-3章 max_new_concepts 上限为2，max_named_characters 第1章上限为2、第2-3章上限为3；超出视为信息密度违规",
+    "why": "黄金三章配额来自爆款逆推数据，超额章节追读率显著下降",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0387",
+    "category": "prose_density",
+    "rule": "info_budget.natural_delivery_hints 5种融入方式（行动展示/对话揭示/后果倒推/误读制造/环境映射）必须按章纲规划消费，至少使用其中3种以保持信息节奏多样",
+    "why": "5种方式仅用1-2种=读者识别为'信息块'，混合使用能让设定隐形",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "scene-craft-index.md"
+    ]
+  },
+  {
+    "id": "EW-0388",
+    "category": "prose_density",
+    "rule": "环境描写必须与场景情绪共振或形成有意识对照；对照型环境必须被视角角色'注意到并产生认知不适'，禁止装饰性反讽",
+    "why": "环境-情绪脱节=场景悬浮；对照型缺角色反应=反讽变装饰，编辑批评'葬礼写大太阳但没人皱眉=作者炫技'",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "scene-craft-index.md",
+      "desire-description.md"
+    ]
   }
 ]

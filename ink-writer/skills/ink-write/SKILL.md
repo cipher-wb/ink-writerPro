@@ -905,6 +905,22 @@ cat "${SKILL_ROOT}/references/prose-craft-rules.md"
 - **禁止英文结论话术**：正文、审查说明、润色说明、变更摘要、最终报告中不得出现 Overall / PASS / FAIL / Summary / Conclusion 等英文结论标题。
 - **英文仅限机器标识**：CLI flag（`--batch`）、checker id（`consistency-checker`）、DB 字段名（`anti_ai_force_check`）、JSON 键名等不可改的接口名保持英文，其余一律使用简体中文。
 
+**场景匹配技法注入**（US-009，起草前必做）：
+- 根据本章大纲的场景类型标签（`scene_type` 或从章纲节拍推断：战斗/对话/日常/悬疑/情感/过渡），抽取匹配的技法条目注入 Step 2A prompt，作为"本章起草技法提示"。
+- 抽取规则（按场景类型）：
+  - 战斗/冲突场景 → `references/writing/combat-scenes.md`（镜头三段式远景→近景→特写）+ `references/writing/desire-description.md`（触觉/嗅觉主导）+ 句式 `references/pacing-control.md`（短句密集、连词删除、CV≥0.40）
+  - 情感/关系场景 → `references/writing/desire-description.md`（触觉+温度主导）+ `references/writing/emotion-psychology.md`
+  - 悬疑/探索场景 → `references/writing/scene-description.md`（听觉+触觉）+ `pacing-control.md`（长短交替）
+  - 日常/对话场景 → `references/writing/dialogue-writing.md` + 句长均值 25-40 字
+- 每种场景仅抽取与当前场景匹配的 3-5 条核心提示（不全文注入），附加到执行包末尾的"本章技法提示"子板块。
+- 提示注入后，writer-agent 在起草时必须先生成内部锚定产物（`shot_plan` / `sensory_plan` / `info_plan`，参见 writer-agent L10d/L10e/L11），再起草正文。
+
+**voice_profile 一致性检查**（US-009，起草时必做）：
+- 本章每个具名角色的对话，必须遵循执行包中该角色的 `voice_profile`（来自 init 阶段收集：speech_vocabulary_level / preferred_sentence_length / verbal_tics / emotional_tell / taboo_topics）。
+- 起草前：Writer 从执行包板块"角色语言档案"提取本章出场角色的 voice_profile 列表，对照逐条落实。
+- 起草后自检：每段对话至少命中该角色 voice_profile 的 2 个特征维度（词汇层级 + 句长倾向），否则视为"风格雷同"，必须改写。
+- 自检未通过的段落会在 Step 2C `voice_profile_consistency` 检查中被再次验证；违规标记为 soft_warning，传递给 Step 3 ooc-checker 作为定位提示。
+
 **MCC 写作前确认**（执行包含板块14时必做）：
 - 读取板块 14 MCC，内部生成"写作合同"（不输出，仅内部确认）
 - 逐项列出 required_entities、required_foreshadows、required_hook、chapter_goal、required_coolpoint、required_change、required_open_question、forbidden_inventions
@@ -1072,6 +1088,21 @@ cat “${SKILL_ROOT}/references/style-adapter.md”
 3. 将这些 fallback 样本注入执行包第 11 板块，标记为 `source: “benchmark_fallback”`
 4. 从第 11 章起，本地高分章节应已积累足够样本，不再触发 fallback
 
+#### 模式 A+：电影剪辑适配（全量模式下的强制子步骤，US-009）
+
+> 全量风格适配执行完句式转译后，进入"电影剪辑适配"子步骤，确保镜头节奏匹配场景类型。
+> 此子步骤在"模式 A 全量"分支内强制执行；在"模式 B 定向"分支下仅做镜头单一性抽检。
+
+1. **场景类型自动检测**：读取章节大纲的 `scene_type` 字段，若无则按章内节拍结构推断（战斗/对话/日常/悬疑/情感/过渡）。
+2. **应用对应镜头节奏**：
+   - 战斗/冲突场景 → 强制 `远景→近景→特写` 三段式节奏（首段定位环境、中段展示动作、特写聚焦决定性瞬间）。
+   - 情感/关系场景 → 以近景+特写为主，允许 1 段远景回收。
+   - 日常/对话场景 → 近景主导，场景切换时插入 1 次远景过渡。
+   - 悬疑/探索场景 → 远景+特写交替（强化未知感）。
+3. **镜头切换密度兜底**：若检测到连续 3 段同一镜头类型（远景/近景/特写），定向调整中间段为不同镜头；**不改剧情事实**，仅调整描写视距与焦点。
+4. **感官轮换兜底**：若相邻 2 个场景主导感官相同（L10e 违规），在后一个场景插入 1-2 句非视觉感官锚点（触觉/听觉/嗅觉）以扭转模态。
+5. **硬约束**：与模式 A 主体一致——只做表达层调整，不改数字/行为结果/因果/角色关系。
+
 #### 模式 B：定向检查模式（`mode == “targeted”`）
 
 > 当 writer-agent (Step 2A) 产出已内化风格（句长、对话占比达标），Step 2B 降级为定向红线检查，
@@ -1125,13 +1156,19 @@ COMP_GATE_RESULT=$(python3 "${SCRIPTS_DIR}/computational_checks.py" \
 - **exit 0 + 有 soft_warnings** → 将 `soft_warnings` 记录到日志，附加到 review_bundle 的 `computational_warnings` 字段，进入 Step 3。
 - **exit 0 + 全部通过** → 正常进入 Step 3。
 
-检查项（6 项确定性检查）：
+检查项（11 项确定性检查）：
 - 章节字数区间 [2200, 5000]
 - 章节文件命名规范
 - 角色名基础冲突
 - 伏笔生命周期一致性
 - 主角能力等级基础检查
 - 前章契约字段完整性
+- **感官多样性**（US-009）：单场景非视觉感官占比 < 20% → soft_warning；全章非视觉感官种类 < 2 → soft_warning
+- **镜头切换密度**（US-009）：连续 ≥ 3 段同一镜头类型（远景/近景/特写）→ soft_warning；战斗/冲突场景缺失"远景→近景→特写"三段式 → soft_warning
+- **句式节奏**（US-009）：句长 CV（标准差/均值）< 0.40 → soft_warning；< 0.35 → hard_failure（退回 Step 2A 补写节奏断层）
+- **信息密度扫描**（US-009）：本章新概念数 > 章纲 `info_budget.max_new_concepts` → soft_warning；新命名角色数 > `info_budget.max_named_characters` → soft_warning；单段（≤200 字）新概念数 > 1 → soft_warning（L11 铁律兜底）
+- **voice_profile 一致性**（US-009）：对照 init 阶段收集的 `voice_profiles`，本章具名角色对话的句长倾向 / 词汇层级 / 口头禅命中率若 < 60% → soft_warning
+- **对话黄金比例**（US-009）：对话占比 40-50%、叙述占比 30-40%、心理占比 10-20%；任一维度偏离目标区间 ±10% → soft_warning（与 `dialogue_ratio` 硬失败 <5% 互补，不冲突）
 
 ### Step 3：审查（auto 路由，必须由 Task 子代理执行）
 
@@ -1183,6 +1220,7 @@ Task 传参硬约束：
 - `outline-compliance-checker`（权重 15%）——大纲合规验证（O1-O7：实体出场/禁止发明/目标充分性/伏笔埋设/钩子合规/黄金三章附加/否定约束合规），消费 MCC（板块14）+ 否定约束（板块15）
 - `anti-detection-checker`（权重 10%）
 - `reader-simulator`（**快速模式**，v9.0 升格为核心裁判。输出 `reader_verdict` 7 维评分，驱动 Step 4 自动返修）
+- `flow-naturalness-checker`（US-014 新增，核心文笔层——权重 5%。信息节奏/融入方式/过渡/对话辨识/黄金比例/语气/voice 七维）
 
 条件审查器（`auto` 命中时执行）：
 - `golden-three-checker`
@@ -1190,6 +1228,8 @@ Task 传参硬约束：
 - `high-point-checker`
 - `pacing-checker`
 - `proofreading-checker`
+- `prose-impact-checker`（US-014，ch1-3 强制；关键章/战斗/情感高光章命中启用）
+- `sensory-immersion-checker`（US-014，ch1-3 强制；情感章/悬疑章/战斗章命中启用）
 
 审查范围：核心 7 个 + auto 命中的条件审查器（始终全量执行）。
 
@@ -1224,7 +1264,8 @@ Task 传参硬约束：
 2. `ooc-checker` + `logic-checker` 并发（最多 2 个）
 3. `outline-compliance-checker` + `anti-detection-checker` 并发（最多 2 个）
 4. `reader-simulator`（快速模式，核心裁判）
-5. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker`
+5. `flow-naturalness-checker`（核心文笔层，US-014）
+6. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker` → `prose-impact-checker`（US-014）→ `sensory-immersion-checker`（US-014）
 
 审查指标落库（必做）：
 ```bash
@@ -1244,7 +1285,7 @@ review_metrics 字段约束（当前工作流约定只传以下字段）：
   "start_chapter": 100,
   "end_chapter": 100,
   "overall_score": 85.0,
-  "dimension_scores": {"爽点密度": 8.5, "设定一致性": 8.0, "节奏控制": 7.8, "人物塑造": 8.2, "连贯性": 9.0, "章内逻辑": 8.8, "大纲合规": 9.0, "追读力": 8.7, "AI味检测": 7.2},
+  "dimension_scores": {"爽点密度": 8.5, "设定一致性": 8.0, "节奏控制": 7.8, "人物塑造": 8.2, "连贯性": 9.0, "章内逻辑": 8.8, "大纲合规": 9.0, "追读力": 8.7, "AI味检测": 7.2, "文笔冲击力": 8.2, "感官沉浸": 7.8, "自然流畅度": 8.5},
   "severity_counts": {"critical": 0, "high": 1, "medium": 2, "low": 0},
   "critical_issues": ["问题描述"],
   "report_file": "审查报告/第100-100章审查报告.md",
@@ -1337,6 +1378,59 @@ else:
 - 回退时 writer-agent 接收 `repair_context`：checker 报告的 issues[] 精简版（type/severity/location/suggestion），不传完整报告
 - 每个门禁独立计数回退次数，最多 2 次回退
 - 第 3 次失败 → 暂停请求人工干预，不再自动重试
+
+#### Step 3.53: 文笔冲击力门禁（Prose Impact Gate，US-014）
+
+> 基于 prose-impact-checker 六维（镜头多样性/感官丰富度/句式节奏/动词锐度/环境-情绪共振/特写缺失）判定文笔冲击力。仅当 prose-impact-checker 被调度时执行（ch1-3 强制；条件命中）。
+
+**Hard Block 条件**：任一维度 `severity=critical`；或 ch1-3 任一维度 `severity=high`；或 `SHOT_MONOTONE.CHAPTER`/`CAMERA_CLOSEUP_MISSING` severity=critical。
+
+```text
+pi_result = Step 3 中 prose-impact-checker 的输出（若未启用则跳过本门禁）
+
+blockers = filter(pi_result.issues, severity="critical")
+if chapter <= 3:
+    blockers += filter(pi_result.issues, severity="high")
+
+if len(blockers) > 0:
+    生成 repair_context（精简版，≤500 tokens），注入 writer-agent 指令指向 L10d/L10e/L10f/L10g 违规点
+    回退 Step 2A 重写
+    prose_impact_gate 回退计数 += 1
+    if 回退计数 >= 3:
+        暂停流程请求人工干预
+else:
+    high/medium issues 传递给 Step 4 polish-agent Layer 9（prose_impact_fix_prompt）
+```
+
+**overall_score cap**：prose-impact-checker 存在 critical issue 时，overall_score 上限 cap 到 55（略低于 logic/outline 的 50，高于普通 critical 的 60）。
+
+#### Step 3.54: 自然流畅度门禁（Flow Naturalness Gate，US-014）
+
+> 基于 flow-naturalness-checker 七维（信息密度均匀/融入方式/过渡/对话辨识/黄金比例/语气一致/voice 一致）判定"塞信息感"与"对话雷同"。**核心 checker**，始终执行；本门禁默认启用。
+
+**Hard Block 条件**：
+- `INFO_OVERLOAD.CHAPTER` / `DIALOGUE_INDISTINGUISHABLE` / `NARRATION_AS_INFO_DUMP` 任一 `critical`
+- ch1-3 中 `VOICE_PROFILE_VIOLATION` / `INFO_OVERLOAD.SEGMENT` severity=`high`（升级为 hard block）
+
+```text
+fn_result = Step 3 中 flow-naturalness-checker 的输出
+
+fn_critical = filter(fn_result.issues, severity="critical")
+gt_voice = filter(fn_result.issues, rule="VOICE_PROFILE_VIOLATION", severity="high") if chapter<=3 else []
+gt_info = filter(fn_result.issues, rule="INFO_OVERLOAD.SEGMENT", severity="high") if chapter<=3 else []
+blockers = fn_critical + gt_voice + gt_info
+
+if len(blockers) > 0:
+    生成 repair_context（issue_type/severity/location/suggestion，≤500 tokens）
+    回退 Step 2A 重写，注入 writer-agent 指令指向 info_budget / voice_profile 违规点
+    flow_naturalness_gate 回退计数 += 1
+    if 回退计数 >= 3:
+        暂停流程请求人工干预
+else:
+    high/medium issues 传递给 Step 4 polish-agent（flow_fix_prompt，对应 Layer 9c/9d）
+```
+
+**overall_score cap**：flow-naturalness-checker 存在 critical issue 时，overall_score 上限 cap 到 55。
 
 #### Step 3.6: 追读力门禁（hook retry gate）
 
