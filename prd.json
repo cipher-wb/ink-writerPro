@@ -158,7 +158,7 @@
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "新 agent 文件，遵循 agents/ 目录下已有 checker 的格式规范。后续 US-014 将其集成到 ink-write 和 ink-review。"
     },
     {

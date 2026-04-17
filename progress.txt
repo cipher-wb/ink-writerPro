@@ -119,6 +119,21 @@
   - Step 2B 模式 A+ 电影剪辑适配是"三个内部 plan 的第一个集中消费者"——shot_plan/sensory_plan/info_plan 均在 Step 2A 起草前锚定，Step 2B 在保持剧情零偏差前提下只对镜头/感官模态做表达层调整；后续 US-010/011/012 的 checker 应按 plan 枚举反向验证
 ---
 
+## 2026-04-17 - US-010
+- 实现：新增文笔冲击力检查器 `prose-impact-checker`，六维评级（镜头多样性/感官丰富度/句式节奏/动词锐度/环境-情绪共振/特写缺失）
+- 变更文件：
+  - `ink-writer/agents/prose-impact-checker.md`（新增）：遵循 high-point-checker 的 frontmatter + Step 流程 + 规则码 + 禁止事项 + 成功标准 + JSON 输出增强结构；六维各给 A/B/C/D 评级规则；黄金三章加严表；规则码与 writer-agent L10d/f/g 保持一致（SHOT_MONOTONY/CV_CRITICAL/ENV_EMOTION_DISSONANCE 等复用 proofreading-checker 协同码）
+  - `scripts/ralph/prd.json`：US-010 passes=true
+- **Learnings for future iterations：**
+  - 新 checker 文件必须包含 `{{PROMPT_TEMPLATE:checker-output-reference.md}}` 与 `{{PROMPT_TEMPLATE:checker-input-rules.md}}` 两个模板占位，运行时会注入统一的输入输出约定；不加会导致报告格式与其他 checker 不兼容
+  - 六维评级（A/B/C/D）+ 规则码（大写 SNAKE_CASE）+ severity（critical/high/medium/warning）三层嵌套是本仓库 checker 的标准结构，新 checker 应沿用；critical 默认对应 hard block，warning 仅影响维度降级
+  - prose-impact-checker 的规则码复用 writer-agent 协同拦截码（SHOT_MONOTONY/SENTENCE_RHYTHM_FLAT/ENV_EMOTION_DISSONANCE/INFO_DENSITY_OVERFLOW），保证"起草铁律→审查规则码"同名——后续 US-011/012 的 checker 也应延续此约定
+  - `sensory_plan`/`shot_plan`/`info_plan` 三个内部锚定产物是本 checker 与 writer-agent 的桥梁：checker 通过比对"正文实际感官分布 vs plan"判定 SENSORY_PLAN_MISMATCH，实现"规划-执行-审查"闭环
+  - 场景类型→CV 目标区间映射（紧张≤15字/≥0.45、日常25-40字/0.35-0.50、情感高潮≥0.50、悬疑20-30字/≥0.40）与 writer-agent L10f 的三档节奏保持一致，后续 polish-agent Layer 9d 的节奏修复目标应以此表为准
+  - 环境-情绪"共振型 vs 对照型"二元模型（US-008 引入）在本 checker 落地为 ENV_EMOTION_DISSONANCE + CONTRAST_NO_DISCOMFORT 两条独立规则——对照型缺认知不适 = high，这是防止装饰性反讽的关键检测点
+  - 黄金三章加严模式（CLOSEUP_ABSENT high→critical、CV_WARNING warning→critical、VISUAL_OVERLOAD warning→high）沿袭 high-point-checker 的 ch1-3 加严传统，US-011/012 的 checker 也应设置独立加严章节
+---
+
 ## 2026-04-17 - US-006
 - 实现：writer-agent L10 铁律下新增 L10d 电影镜头切换法则（远景/近景/特写三分镜、场景内≥1次切换、战斗场景强制三段式、连续>3段同镜头违规、起草前生成 shot_plan、与 L10b 感官协同）
 - 变更文件：
