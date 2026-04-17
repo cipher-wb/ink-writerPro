@@ -253,13 +253,22 @@ class TestStyleFragment:
 
 class TestRetrieverInit:
     def test_missing_index_raises(self, tmp_path):
-        with pytest.raises(FileNotFoundError, match="Style RAG index files missing"):
-            StyleRAGRetriever(index_dir=tmp_path / "nonexistent")
+        # v13 US-008：索引缺失时默认走 SQLite fallback；要 raise 需同时禁 auto_build 且 db_path 不存在
+        with pytest.raises(FileNotFoundError, match="auto-build failed and SQLite fallback"):
+            StyleRAGRetriever(
+                index_dir=tmp_path / "nonexistent",
+                db_path=tmp_path / "nonexistent.db",
+                auto_build=False,
+            )
 
     def test_partial_missing_raises(self, tmp_path):
         (tmp_path / "style_rag.faiss").touch()
         with pytest.raises(FileNotFoundError):
-            StyleRAGRetriever(index_dir=tmp_path)
+            StyleRAGRetriever(
+                index_dir=tmp_path,
+                db_path=tmp_path / "nonexistent.db",
+                auto_build=False,
+            )
 
     def test_loads_successfully(self, retriever):
         assert retriever.fragment_count == len(SAMPLE_FRAGMENTS)

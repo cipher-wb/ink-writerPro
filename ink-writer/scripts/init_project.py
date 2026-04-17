@@ -898,6 +898,59 @@ def main() -> None:
         cultivation_subtiers=args.cultivation_subtiers,
     )
 
+    # v13 US-008：项目初始化完成后，若 Style RAG 索引不存在则尝试自动构建
+    _try_ensure_style_rag_index()
+
+
+def _try_ensure_style_rag_index() -> None:
+    """若 data/style_rag/ 索引缺失，尝试调用 build_style_rag.py 构建；失败只打印 hint。
+
+    v13 US-008 修复：让 Style RAG 默认可用，不再"建了没用"。
+    """
+    import subprocess
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    repo_root = _Path(__file__).resolve().parent.parent.parent
+    index_dir = repo_root / "data" / "style_rag"
+    build_script = repo_root / "scripts" / "build_style_rag.py"
+    src_db = repo_root / "benchmark" / "style_rag.db"
+
+    required = [index_dir / "style_rag.faiss", index_dir / "metadata.json", index_dir / "contents.json"]
+    if all(p.exists() for p in required):
+        return  # 已就位
+
+    if not build_script.exists() or not src_db.exists():
+        print(
+            f"⚠️  Style RAG 索引未构建且源数据 {src_db.name} 不存在；跳过自动构建。"
+            f" 若需启用人写样本检索，请先运行 scripts/style_rag_builder.py 生成源数据。",
+            file=_sys.stderr,
+        )
+        return
+
+    print(f"⏳ 正在构建 Style RAG 向量索引（首次 ~3min）...", file=_sys.stderr)
+    try:
+        result = subprocess.run(
+            [_sys.executable, str(build_script)],
+            capture_output=True, text=True, timeout=600,
+        )
+        if result.returncode == 0:
+            print(f"✅ Style RAG 索引构建完成：{index_dir}", file=_sys.stderr)
+        else:
+            print(
+                f"⚠️  Style RAG 索引构建失败（exit {result.returncode}）；"
+                f"后续写作会自动降级到 SQLite fallback（无语义相似度）。"
+                f"\n   手动重试：python3 {build_script}"
+                f"\n   stderr: {result.stderr[-300:]}",
+                file=_sys.stderr,
+            )
+    except Exception as exc:
+        print(
+            f"⚠️  Style RAG 自动构建异常：{exc}；"
+            f"后续写作会降级到 SQLite fallback。手动重试：python3 {build_script}",
+            file=_sys.stderr,
+        )
+
 
 if __name__ == "__main__":
     main()
