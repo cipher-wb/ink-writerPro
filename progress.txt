@@ -23,3 +23,15 @@
   - Quick 模式和 Deep 模式共用同一充分性闸门，所以 Quick Step 3 必须显式补齐所有 Deep 必收字段的默认生成逻辑
   - 抽象收益词黑名单（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了）在 US-004/US-013 也会复用，后续可抽取到共享 references
 ---
+
+## 2026-04-17 - US-002
+- 实现：ink-init Step 2 新增角色语言特征档案（voice_profile）必收子字段
+- 变更文件：
+  - `ink-writer/skills/ink-init/SKILL.md`：Deep Mode 新增 Step 2+（5字段 voice_profile + 自动推荐规则 + Y/N 确认）；内部数据模型 protagonist 与 relationship 增 voice_profile / voice_profiles 结构；充分性闸门新增 3a 硬阻断；Quick Step 3 增 US-002 自动填充段
+  - `ink-writer/templates/output/设定集-主角卡.md`：新增「## 语言特征档案」段落（5 维度 + 自动生成标记）
+  - `scripts/ralph/prd.json`：US-002 passes=true
+- **Learnings for future iterations：**
+  - 主角卡模板路径在 `ink-writer/templates/output/设定集-主角卡.md`（`docs/templates`），所有 init 字段最终都会落到此模板某个段落；新增任何字段都需要同时在模板里开槽，否则 plan/write 阶段查不到
+  - voice_profile 的「自动生成 + Y/N 确认」是兜底体验，user 答「不知道」时不能阻塞流程，必须有可执行的默认推荐规则；后续 OOC checker 也会消费这些字段
+  - 配角语言档案以 dict 形式挂在 `relationship.voice_profiles[<name>]`（区别于 protagonist 的 inline 结构），方便后续按角色名 O(1) 查询
+---

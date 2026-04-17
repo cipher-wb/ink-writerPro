@@ -32,7 +32,7 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "用户回答'不知道'时系统自动生成推荐值是关键体验。生成规则：性格外向→句长中等偏长+主动句式；内向→短促+被动句式等。"
     },
     {

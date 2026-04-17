@@ -151,6 +151,11 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 - `golden_finger.escalation_ladder`：基于金手指类型自动生成三阶段默认梯度（ch1 / ch10 / late_game），各写一句话，展示给用户确认（Y/N）。
 - `golden_finger.payoff_self_check`：Quick 模式下自动填入「已通过预览字段校验」，若用户修改预览则重置该字段要求用户重新回答。
 
+**US-002 Quick 模式角色语言档案自动填充**（充分性闸门 3a 所需）：
+- 基于方案中的「主角设定（含性格/背景）」与「女主/核心配角设定」，按 Deep Mode 的「自动推荐规则」生成 `protagonist.voice_profile` 与 `relationship.voice_profiles[<core_partner_name>]` 两份完整档案。
+- 自动填充时，标记 `voice_profile.auto_generated=true`。
+- 生成后以紧凑表格展示给用户，请求一次性 Y/N 确认；用户回答 N 则进入逐字段微调（最多 5 轮），完成后再继续 Quick Step 3 的剩余流程。
+
 ### 2) 填充 `.ink/state.json` 和 `.ink/preferences.json`
 
 执行与 Deep Mode 相同的 `init_project.py` 脚本（见 §执行生成），传入映射后的参数。
@@ -358,6 +363,29 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 - 主角原型标签（成长型/复仇型/天才流等）
 - 多主角分工
 
+#### Step 2+ 角色语言特征档案（必收，US-002）
+
+为「主角 + 核心配角（女主/男主搭档/核心反派一名）」的每位角色，建立 `voice_profile` 子字段组，必须全部填写：
+
+1. **`speech_vocabulary_level`**：词汇层级，从下列枚举中选一项 — `口语化` / `标准` / `文雅` / `古风` / `混合`。
+2. **`preferred_sentence_length`**：偏好句长，从下列枚举中选一项 — `短促` / `中等` / `冗长` / `跳跃（短长交错）`。
+3. **`verbal_tics`**：口头禅清单（**最多 3 个**，可为空数组）。每条不超过 8 字，要求是该角色高频复用且能让读者一眼认出来的语气词/连接词/自我标签。
+4. **`emotional_tell`**：情绪外显规则（一句话）— 描述当此角色处于愤怒/羞愧/紧张等高情绪场景时，其语言会发生的具体变化（变短/变长/破句/失语/突然引经据典/方言冒头/称谓切换 等）。
+5. **`taboo_topics`**：禁言话题列表 — 此角色绝不会主动提起或在对话中尽量回避的话题（家人/某段过往/某位故人/某种身份），用于对话审查时识别角色破功。
+
+**采集策略**：
+- 优先让用户自己描述各角色「最像 ta 自己的一句话」，再据此结构化抽取。
+- 若用户表示「不知道 / 想不出来」，**系统必须基于已收集的 `性格 + 年龄 + 职业 + 背景 + 出身阶层` 自动生成推荐档案**，并以 `Y/N` 模式请求确认（用户回答 N 则进入逐字段微调）。
+- 自动推荐规则参考（最小集）：
+  - `性格外向 + 年轻` → 句长「中等」、口语化、口头禅 1-2 个
+  - `性格内向 / 谨慎` → 句长「短促」、词汇「标准」、口头禅 0-1 个
+  - `古风背景 / 修仙长者` → 词汇「古风」或「文雅」、句长「中等」或「冗长」、emotional_tell 多为「失语 / 称谓切换」
+  - `市井 / 江湖` → 词汇「口语化」、口头禅可含俚语
+  - `学者 / 科研 / 谋士` → 词汇「文雅」、句长「冗长」、情绪激动时反向「破句」
+- 至少为「主角 + 1 名核心配角」完整填写；其余次要配角可在后续 plan 阶段按需补齐。
+
+收集后，所有 `voice_profile` 必须随主角卡一起在 `Step 6 一致性复述` 阶段展示给用户最终确认。
+
 ### Step 3：金手指与兑现机制
 
 收集项（必收）：
@@ -502,7 +530,14 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
     "desire": "",
     "flaw": "",
     "archetype": "",
-    "structure": "单主角"
+    "structure": "单主角",
+    "voice_profile": {
+      "speech_vocabulary_level": "",
+      "preferred_sentence_length": "",
+      "verbal_tics": [],
+      "emotional_tell": "",
+      "taboo_topics": []
+    }
   },
   "relationship": {
     "heroine_config": "",
@@ -512,7 +547,8 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
     "co_protagonist_roles": [],
     "antagonist_tiers": {},
     "antagonist_level": "",
-    "antagonist_mirror": ""
+    "antagonist_mirror": "",
+    "voice_profiles": {}
   },
   "golden_finger": {
     "type": "",
@@ -558,6 +594,11 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 1. 书名、题材（可复合）已确定。
 2. 目标规模可计算（字数或章数至少一个）。
 3. 主角姓名 + 欲望 + 缺陷完整。
+3a. **角色语言特征档案齐备**（US-002 硬阻断）：
+   - `protagonist.voice_profile` 中 `speech_vocabulary_level`、`preferred_sentence_length`、`emotional_tell` 三个字段非空；`verbal_tics` 与 `taboo_topics` 允许为空数组但必须显式存在。
+   - 至少 1 名核心配角（`relationship.heroine_names[0]` 或 `relationship.co_protagonists[0]`）在 `relationship.voice_profiles` 中存在同结构条目，且上述三项关键字段非空。
+   - 用户拒绝填写时，必须有自动推荐档案 + 用户 Y 确认记录（写入 `voice_profile.auto_generated=true`）。
+   - 未通过此闸门 → 阻断进入 `/ink-plan` 阶段。
 4. 世界规模 + 力量体系类型完整。
 5. 金手指类型已确定（允许“无金手指”）。
 5a. **金手指爽点前置字段齐备**（US-001 硬阻断）：
