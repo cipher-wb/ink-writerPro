@@ -127,7 +127,7 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "L11 依赖 US-005 的 info_budget 字段。L10g 参考scene-craft-index.md 的环境描写规则。"
     },
     {

@@ -91,6 +91,19 @@
   - writer-agent 子铁律新增"五处联动"模式再次验证：header 计数 / 规则正文 / checker 码 / 禁止事项 / 成功标准；本次因一次添加 2 条（e+f），所有五处都是批量追加
 ---
 
+## 2026-04-17 - US-008
+- 实现：writer-agent 逻辑自洽铁律新增 L10g 环境情绪共振法则 + L11 信息密度铁律（与 ink-plan info_budget 形成规划-执行-审查闭环）
+- 变更文件：
+  - `ink-writer/agents/writer-agent.md`：铁律数 "10 条"→"11 条"；L10 header "六条子规则"→"七条子规则"；L10f 后新增 L10g（共振/对照配伍、mood_env_map、禁止脱节、与 L10b/L10e 协同、违规示例）；L10 section 尾新增完整 L11 铁律（段内配额 ≤1 新概念/段、连续 3 段 ≤2 设定、500 字间隔、三种融入方式强制、info_budget 配额消费、第 1 章带宽锁死、info_plan 锚定、与 L5/L10e/L10g 协同）；proofreading-checker 协同拦截码追加 `ENV_EMOTION_DISSONANCE`（L11 指向 `INFO_DENSITY_OVERFLOW` Layer 6B）；polish-agent 兜底描述追加环境情绪脱节；禁止事项 L10 条款追加"环境情绪脱节"，新增整条 L11 禁止事项；成功标准第 3 条追加 L10g/L11；成功标准第 8 条"10 条铁律"→"11 条铁律（L1-L11）"并标注 L11 验证器归属
+  - `prd.json`（符号链接 `scripts/ralph/prd.json`）：US-008 passes=true
+- **Learnings for future iterations：**
+  - L11 是本轮 prd 首个**跨阶段协同铁律**：init（金手指字段）→ plan（info_budget 生成）→ write（L11 消费配额）→ review（proofreading 6B + flow-naturalness-checker 验证），5 阶段共享"新概念/有名角色/融入方式枚举"术语；后续 US-009/US-012/US-015 必须延用相同字段名与枚举值，否则配额链断裂
+  - `info_budget` 的 5 种融入方式枚举（行动展示/对话揭示/后果倒推/误读制造/环境映射）在 writer-agent L11 中被压缩为 3 类主干（行动/对话/后果）+ 1 类进阶（环境映射，与 L10g 协同），"误读制造"未单列——后续 flow-naturalness-checker 应实现完整 5 类枚举以保持 plan-review 一致
+  - 新增整条铁律（L1-Lxx 级别，非子规则）的联动位点扩展为"六处"：(1) 逻辑自洽铁律 intro 计数、(2) 铁律正文段、(3) 禁止事项独立条款、(4) 成功标准铁律总数与验证器归属、(5) proofreading-checker 协同拦截码、(6) polish-agent Layer 描述；较"子规则五处联动"多 1 处（铁律计数在 intro）
+  - writer-agent 在 L10g 中引入"共振 vs 对照"二元模型（环境与情绪同向/反向），对照型环境必须被视角角色"注意到并产生认知不适"——这是防止"葬礼晴天"沦为装饰性反讽的关键约束，后续 prose-impact-checker 环境-情绪维度应区分两种模式的检测阈值
+  - `info_plan` 与前序 US-006/US-007 的 `shot_plan`/`sensory_plan` 构成三位一体的"起草前内部锚定"模式，均不输出到正文——后续 Step 2B 电影剪辑适配（US-009）可一次性消费三个 plan
+---
+
 ## 2026-04-17 - US-006
 - 实现：writer-agent L10 铁律下新增 L10d 电影镜头切换法则（远景/近景/特写三分镜、场景内≥1次切换、战斗场景强制三段式、连续>3段同镜头违规、起草前生成 shot_plan、与 L10b 感官协同）
 - 变更文件：
