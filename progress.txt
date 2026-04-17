@@ -145,3 +145,17 @@
   - `shot_plan` 是 L10d 的内部锚定产物（不输出到正文），后续 US-009 Step 2B 电影剪辑适配可直接消费此概念；US-010 prose-impact-checker 的"镜头多样性"维度也应按 shot_plan 的三分镜枚举（远景/近景/特写）做统计
   - 战斗场景三段式"远景→近景→特写"与 L7 大卖点"铺垫→爆发→反应"天然对齐（特写=爆发、远景回收=反应），后续 polish-agent Layer 9a 可优先识别此耦合
 ---
+
+## 2026-04-17 - US-011
+- 实现：新增 agents/sensory-immersion-checker.md 感官沉浸检查器（五维：主导轮换/深度/通感/情绪匹配/抽象替代）
+- 变更文件：
+  - `ink-writer/agents/sensory-immersion-checker.md`：新建，格式对齐 prose-impact-checker.md，含场景切片/五维判定阈值/黄金三章加严/段落级修复建议/JSON 输出格式
+  - `prd.json`（符号链接 `scripts/ralph/prd.json`）：US-011 passes=true
+- **Learnings for future iterations：**
+  - checker agent 的实际落位是 `ink-writer/ink-writer/agents/`（双层目录），不是项目根 `agents/`，PRD 里写的"agents/xxx.md"实际路径需加前缀
+  - 新 checker 必须复用 `{{PROMPT_TEMPLATE:checker-output-reference.md}}` 与 `{{PROMPT_TEMPLATE:checker-input-rules.md}}` 两个 prompt 模板占位符（在 `ink-writer/templates/prompts/`），保证 review bundle 消费规则一致
+  - scene-craft 目录下实际文件是 combat.md/emotion.md/dialogue.md/climax.md/suspense.md，PRD 中引用的 desire-description.md/pacing-rhythm.md/scene-craft-index.md 并不存在，编写新 checker 时引用路径要按实际文件命名，否则 Read 会失败
+  - sensory-immersion-checker 与 prose-impact-checker 的"感官维度"有重叠但分工明确：prose-impact 关注视觉占比和非视觉类型数（量化冲击），sensory-immersion 关注主导感官轮换+深度+通感+身体锚点（沉浸深度）——US-014 集成时需强调互补而非重复
+  - COOL_POINT_ABSTRACT（爽点段抽象替代）升级为 hard block 是本次设计的关键防线，与 US-013 CH1_PAYOFF_TANGIBILITY 检查形成"大纲+正文"双保险
+  - 跨章主导感官轮换需要 bundle 提供 `scene_dominant_sensory_trail`，后续 context-agent/data-agent 需补齐此字段才能让 ROTATION_STALL 跨章检测落地
+---
