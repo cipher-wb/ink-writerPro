@@ -1,0 +1,25 @@
+# Pytest Baseline - 2026-04-17 22:50 CST
+# 在 Ralph Step 2 修复前记录，供每个 US 执行后对比验证"无新增失败"
+
+## Summary
+**2028 passed, 1 warning in 118.35s (0:01:58)**
+Exit code: 0
+
+## Command
+pytest --no-cov -q
+
+## Environment
+- Platform: darwin Python 3.14.3
+- pytest 9.0.2, pluggy 1.6.0
+- plugins: anyio-4.12.1, timeout-2.4.0, asyncio-1.3.0, cov-7.0.0
+- rootdir: /Users/cipher/AI/ink/ink-writer
+
+## Known Warnings (baseline)
+- jieba/_compat.py:18 UserWarning: pkg_resources deprecated
+  （依赖库内部问题，非 ink-writer 代码引入）
+
+## Regression Policy
+每个 Ralph US 完成后对比：
+- 新增失败 > 0 → passes=false，在 notes 记原因
+- 新增失败 = 0 → passes=true
+- 若某测试因 US 预期行为变更需调整（如 US-024 会改 warning→raise），必须在 notes 明示

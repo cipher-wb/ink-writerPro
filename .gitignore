@@ -51,6 +51,9 @@ claude_inventory.csv
 # Editor wisdom vector index (large binary, rebuild with 06_build_index.py)
 data/editor-wisdom/vector_index/
 
+# Style RAG vector index (large binary, rebuild with scripts/build_style_rag.py)
+data/style_rag/
+
 # Editor wisdom runtime artifacts
 data/editor-wisdom/errors.log
 reports/editor-wisdom-smoke-report.md
