@@ -49,8 +49,13 @@ class TestAntiTropeSeeds:
         assert isinstance(data, dict)
         assert "seeds" in data and isinstance(data["seeds"], list)
         assert "version" in data
-        # skeleton 保持 total=0，Phase-Seed-1 交互补充后递增
-        assert data.get("total", 0) == 0
+        # total 按 Phase-Seed-1 batch 粒度递增（100 的倍数，skeleton=0，1000 封顶）
+        total = data.get("total", 0)
+        assert total >= 0
+        assert total % 100 == 0, f"total 应为 100 的倍数，实际 {total}"
+        assert total <= 1000, f"total 上限 1000，实际 {total}"
+        # seeds 数组长度应 ≥ total（含 skeleton 示例）
+        assert len(data["seeds"]) >= total
 
 
 # ---------------------------------------------------------------------------

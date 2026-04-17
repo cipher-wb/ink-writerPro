@@ -1,7 +1,7 @@
 {
   "$schema": "./anti-trope-seeds-schema.json",
-  "version": "v1.0-skeleton",
-  "total": 0,
+  "version": "v1.1",
+  "total": 100,
   "categories": [
     {
       "id": "profession",
@@ -54,34 +54,55 @@
       "intent": "关键道具/信物/遗物，用于权力颗粒度（M09）与反向冲突（M02）。"
     }
   ],
-  "changelog": [],
+  "changelog": [
+    {
+      "version": "v1.1",
+      "date": "2026-04-17",
+      "delta": 100,
+      "note": "Batch 1/10 职业类入库。分布 R1/R2/R3/R4/R5 = 5/20/25/30/20；R4+R5=50%，R5=20%。20 条用户 review 通过 (source=human)，80 条 LLM 生成 (source=llm)。WebSearch 反查已剔除起点+番茄双平台高频职业（神医/警察/总裁/特种兵/网红/修真者/捞尸人/电竞选手/网文作家 等）。"
+    }
+  ],
   "seeds": [
     {
       "seed_id": "profession-001",
       "category": "profession",
       "value": "殡仪馆化妆师",
       "rarity": 4,
-      "genre_tags": ["urban", "mystery"],
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
       "example_pairing": "与 taboo『触碰死者面容须道歉』搭配，激活 M01 代价可视化。",
       "source": "llm",
-      "meta_rules_hit": ["M01", "M04"]
+      "meta_rules_hit": [
+        "M01",
+        "M04"
+      ]
     },
     {
       "seed_id": "profession-002",
       "category": "profession",
       "value": "明代钦天监天象记录员",
       "rarity": 5,
-      "genre_tags": ["history", "xianxia"],
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
       "example_pairing": "与 era『万历十五年』搭配，激活 M05 时空错位。",
       "source": "llm",
-      "meta_rules_hit": ["M05"]
+      "meta_rules_hit": [
+        "M05"
+      ]
     },
     {
       "seed_id": "era-001",
       "category": "era",
       "value": "2003 年非典夏天",
       "rarity": 4,
-      "genre_tags": ["urban", "realistic"],
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
       "example_pairing": "与 object『体温计』搭配，激活 M05+M01。",
       "source": "llm"
     },
@@ -90,7 +111,10 @@
       "category": "era",
       "value": "末世第 47 日",
       "rarity": 3,
-      "genre_tags": ["apocalypse", "scifi"],
+      "genre_tags": [
+        "apocalypse",
+        "scifi"
+      ],
       "example_pairing": "与 worldview『太阳不再落下』搭配，激活 M10 尺度跃迁。",
       "source": "llm"
     },
@@ -99,27 +123,42 @@
       "category": "conflict",
       "value": "主角必须说服反派不要拯救世界",
       "rarity": 5,
-      "genre_tags": ["universal"],
+      "genre_tags": [
+        "universal"
+      ],
       "example_pairing": "与 worldview『拯救需要献祭 10% 人口』搭配，激活 M02 反向冲突。",
       "source": "llm",
-      "meta_rules_hit": ["M02", "M07"]
+      "meta_rules_hit": [
+        "M02",
+        "M07"
+      ]
     },
     {
       "seed_id": "worldview-001",
       "category": "worldview",
       "value": "所有人每说一句谎言，身上长一根白头发",
       "rarity": 5,
-      "genre_tags": ["urban", "mystery", "xianxia"],
+      "genre_tags": [
+        "urban",
+        "mystery",
+        "xianxia"
+      ],
       "example_pairing": "与 profession『刑警』搭配，激活 M03 信息不对称+M01 代价可视化。",
       "source": "llm",
-      "meta_rules_hit": ["M01", "M03"]
+      "meta_rules_hit": [
+        "M01",
+        "M03"
+      ]
     },
     {
       "seed_id": "emotion-001",
       "category": "emotion",
       "value": "对失败的眷恋",
       "rarity": 4,
-      "genre_tags": ["realistic", "romance"],
+      "genre_tags": [
+        "realistic",
+        "romance"
+      ],
       "example_pairing": "与 profession『职业电竞选手』搭配，激活 M07 欲望悖论。",
       "source": "llm"
     },
@@ -128,7 +167,10 @@
       "category": "taboo",
       "value": "不能在日出前说出真名",
       "rarity": 4,
-      "genre_tags": ["xianxia", "mystery"],
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
       "example_pairing": "与 object『户籍册』搭配，激活 M01+M08 系统反噬。",
       "source": "llm"
     },
@@ -137,7 +179,10 @@
       "category": "mythology",
       "value": "山海经·刑天舞干戚（无头者继续战斗）",
       "rarity": 4,
-      "genre_tags": ["xianxia", "history"],
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
       "example_pairing": "与 body_feature『颈部疤痕』搭配，激活 M06 身份反差。",
       "source": "human"
     },
@@ -146,7 +191,10 @@
       "category": "taboo_language",
       "value": "闽南语讣告用的『转厝』",
       "rarity": 5,
-      "genre_tags": ["realistic", "mystery"],
+      "genre_tags": [
+        "realistic",
+        "mystery"
+      ],
       "example_pairing": "与 profession『殡仪馆化妆师』搭配，激活 M03+M06。",
       "source": "human"
     },
@@ -155,7 +203,9 @@
       "category": "body_feature",
       "value": "左手小指先天缺失一节",
       "rarity": 3,
-      "genre_tags": ["universal"],
+      "genre_tags": [
+        "universal"
+      ],
       "example_pairing": "与 conflict『必须弹奏一首钢琴曲才能启动机关』搭配，激活 M01。",
       "source": "llm"
     },
@@ -164,9 +214,1526 @@
       "category": "object",
       "value": "一张 1987 年的中奖彩票存根",
       "rarity": 4,
-      "genre_tags": ["urban", "realistic", "mystery"],
+      "genre_tags": [
+        "urban",
+        "realistic",
+        "mystery"
+      ],
       "example_pairing": "与 era『2003 年非典夏天』搭配，激活 M05+M09 权力颗粒度。",
       "source": "llm"
+    },
+    {
+      "seed_id": "profession-003",
+      "category": "profession",
+      "value": "殡仪接待员",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『笑脸背后的职业性漠然』搭配，激活 M03 信息不对称。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-004",
+      "category": "profession",
+      "value": "药店夜班售货员",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 era『凌晨三点』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-005",
+      "category": "profession",
+      "value": "殡葬花圈编制工",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 object『丝带上的结痕』搭配，激活 M03 信息不对称。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-006",
+      "category": "profession",
+      "value": "公共厕所清洁工",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 worldview『每格隔间一份人性档案』搭配，激活 M09 权力颗粒度。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "profession-007",
+      "category": "profession",
+      "value": "城市公交司机",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 era『末班车』搭配，激活 M05 时空错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "profession-008",
+      "category": "profession",
+      "value": "火葬场炉工",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『骨灰颜色透露情绪』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-009",
+      "category": "profession",
+      "value": "外卖站调度员",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 conflict『不送餐却掌控一座城的胃』搭配，激活 M04 角色错位。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-010",
+      "category": "profession",
+      "value": "宠物医院夜班兽医",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『替深夜失踪宠物写悼词』搭配，激活 M07 欲望悖论。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "profession-011",
+      "category": "profession",
+      "value": "垃圾分类督导员",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 object『垃圾袋里的生活原形』搭配，激活 M09 权力颗粒度。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "profession-012",
+      "category": "profession",
+      "value": "婚礼司仪",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 conflict『预测三年内离婚率』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-013",
+      "category": "profession",
+      "value": "保险理赔员",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『看照片判断是否人为』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-014",
+      "category": "profession",
+      "value": "典当行鉴定师",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『物品带有不属于自己的记忆』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-015",
+      "category": "profession",
+      "value": "酒店查房清洁工",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『床单折痕即入住者秘密』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-016",
+      "category": "profession",
+      "value": "公园长椅维修工",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 object『长椅见证过的眼泪』搭配，激活 M03 信息不对称。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-017",
+      "category": "profession",
+      "value": "花店送花员",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 taboo『每束花须传达指定台词』搭配，激活 M09 权力颗粒度。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "profession-018",
+      "category": "profession",
+      "value": "养老院陪聊员",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『老人的故事被反复改写』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-019",
+      "category": "profession",
+      "value": "出租车调度员",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 conflict『从司机口音猜乘客去向』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-020",
+      "category": "profession",
+      "value": "游泳馆救生员",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『分辨自杀与溺水的瞬间』搭配，激活 M03 信息不对称。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-021",
+      "category": "profession",
+      "value": "夜市烧烤摊老板",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『每个醉汉心里的坑』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-022",
+      "category": "profession",
+      "value": "网吧通宵管理员",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 body_feature『从屏幕色温读玩家心理』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-023",
+      "category": "profession",
+      "value": "催乳师",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 body_feature『乳汁颜色显母亲情绪』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-024",
+      "category": "profession",
+      "value": "洗浴中心技师",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『按出客人身体藏的伤』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-025",
+      "category": "profession",
+      "value": "临终关怀护工",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 taboo『给每个要走的人讲最后一个笑话』搭配，激活 M07 欲望悖论。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "profession-026",
+      "category": "profession",
+      "value": "寿衣裁缝",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『寿衣却按活人尺寸做』搭配，激活 M04 角色错位。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-027",
+      "category": "profession",
+      "value": "遗物整理师",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 object『从抽屉推演一生』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-028",
+      "category": "profession",
+      "value": "赊刀人",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 era『走街串巷卖刀、十年后回来收账』搭配，激活 M05 时空错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M05",
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-029",
+      "category": "profession",
+      "value": "仵作",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『用针灸与尸体对话』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-030",
+      "category": "profession",
+      "value": "接生婆",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『从婴儿哭声判断命格』搭配，激活 M03 信息不对称。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-031",
+      "category": "profession",
+      "value": "道场仪轨主持",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 taboo『每场法事都在写自己的遗嘱』搭配，激活 M07 欲望悖论。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "profession-032",
+      "category": "profession",
+      "value": "AI 遗言审核员",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "scifi"
+      ],
+      "example_pairing": "与 taboo『判断哪些遗言不能让家属看到』搭配，激活 M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M01",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-033",
+      "category": "profession",
+      "value": "抖音鉴黄师",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『一天看 8 小时人性暗面』搭配，激活 M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-034",
+      "category": "profession",
+      "value": "二甲医院殡葬科主任",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『医院的最后一站』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-035",
+      "category": "profession",
+      "value": "网约车夜班代驾",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『替醉汉做决定』搭配，激活 M09 权力颗粒度。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "profession-036",
+      "category": "profession",
+      "value": "婚介所红娘",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 emotion『预言每对男女的结局』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-037",
+      "category": "profession",
+      "value": "精神病院陪护",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『把疯话记成诗』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-038",
+      "category": "profession",
+      "value": "骨灰撒海承办人",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『知道哪些骨灰不愿被撒入海』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03",
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "profession-039",
+      "category": "profession",
+      "value": "法医秘书",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『尸检报告的情感侧写』搭配，激活 M03 信息不对称。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-040",
+      "category": "profession",
+      "value": "拆迁队谈判员",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『熟知每户人的逼点』搭配，激活 M09 权力颗粒度。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "profession-041",
+      "category": "profession",
+      "value": "寺庙签文解读员",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "xianxia"
+      ],
+      "example_pairing": "与 taboo『解签时知道什么不能说』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03",
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-042",
+      "category": "profession",
+      "value": "监狱探视登记员",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『家属的第二张脸』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-043",
+      "category": "profession",
+      "value": "守陵人",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 taboo『每座陵的夜里都有自己的剧本』搭配，激活 M08 系统反噬。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-044",
+      "category": "profession",
+      "value": "遗像摄影师",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『从眼神拍出死亡日期』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-045",
+      "category": "profession",
+      "value": "殡仪馆接尸车司机",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『车里从不开空调，因为还有别的乘客』搭配，激活 M04 角色错位。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-046",
+      "category": "profession",
+      "value": "催婚专家",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 conflict『三天内把任何人逼到相亲』搭配，激活 M09 权力颗粒度。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "profession-047",
+      "category": "profession",
+      "value": "古玩修复师",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『修过的器物能听见原主的话』搭配，激活 M08 系统反噬。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-048",
+      "category": "profession",
+      "value": "死亡清洁员",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『独居老人家的最后一个访客』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-049",
+      "category": "profession",
+      "value": "纹身祛除师",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 object『每次激光都在删除一段故事』搭配，激活 M01 代价可视化。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-050",
+      "category": "profession",
+      "value": "快递业内鬼",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『掌握每个客户真实邮寄路径』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-051",
+      "category": "profession",
+      "value": "戒毒所心理辅导员",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『戒毒者都有相同的 3 岁记忆』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-052",
+      "category": "profession",
+      "value": "婚礼花童",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 body_feature『成年人被雇用扮演小孩』搭配，激活 M06 身份反差。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "profession-053",
+      "category": "profession",
+      "value": "殡葬业主持人",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 conflict『葬礼变相亲现场』搭配，激活 M02 反向冲突。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M02",
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-054",
+      "category": "profession",
+      "value": "直播间鉴宝托儿",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『托儿的鉴定比真专家准』搭配，激活 M06 身份反差。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "profession-055",
+      "category": "profession",
+      "value": "网约车交警",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『白天查违章晚上接自己的乘客』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-056",
+      "category": "profession",
+      "value": "二甲医院算命科医生",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『挂号费 30 给你指活法』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04",
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "profession-057",
+      "category": "profession",
+      "value": "讨薪农民工头子",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 conflict『讨的不是钱是别人的命』搭配，激活 M06 身份反差。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "profession-058",
+      "category": "profession",
+      "value": "殡葬 KTV 点歌员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『每首歌都是死者生前爱听的』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-059",
+      "category": "profession",
+      "value": "宠物心理咨询师",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『猫狗的心结比人还复杂』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-060",
+      "category": "profession",
+      "value": "代人道歉公司员工",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 conflict『每天替别人说 500 次对不起』搭配，激活 M06 身份反差。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M06",
+        "M02"
+      ]
+    },
+    {
+      "seed_id": "profession-061",
+      "category": "profession",
+      "value": "夜间广场舞领舞",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 era『白天是殡仪馆音效师』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-062",
+      "category": "profession",
+      "value": "婚礼逃跑新娘雇佣者",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 conflict『专门帮新娘在仪式上逃跑』搭配，激活 M02 反向冲突。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M02"
+      ]
+    },
+    {
+      "seed_id": "profession-063",
+      "category": "profession",
+      "value": "葬礼送花童",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『6 岁小孩 100 块哭一场』搭配，激活 M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M01",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "profession-064",
+      "category": "profession",
+      "value": "遗嘱视频导演",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『拍一部死后才播的纪录片』搭配，激活 M05 时空错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "profession-065",
+      "category": "profession",
+      "value": "网红宠物殡葬师",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 conflict『直播下葬金鱼收一万礼物』搭配，激活 M02 反向冲突。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M02"
+      ]
+    },
+    {
+      "seed_id": "profession-066",
+      "category": "profession",
+      "value": "AI 分手代理人",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "scifi"
+      ],
+      "example_pairing": "与 conflict『替你分手的是一段代码』搭配，激活 M06 身份反差。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "profession-067",
+      "category": "profession",
+      "value": "濒危物种婚礼摄影师",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 body_feature『人类最后见到的动物』搭配，激活 M10 尺度跃迁。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "profession-068",
+      "category": "profession",
+      "value": "核电站门卫",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "scifi"
+      ],
+      "example_pairing": "与 taboo『检查进入的灵魂数而非人数』搭配，激活 M04 角色错位。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-069",
+      "category": "profession",
+      "value": "监狱心理咨询师兼夜班保安",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『白天听囚徒的梦晚上守梦』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04",
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "profession-070",
+      "category": "profession",
+      "value": "寺庙财务总监",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 object『香火钱背后的资本游戏』搭配，激活 M06 身份反差。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "profession-071",
+      "category": "profession",
+      "value": "代扫墓大叔",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『从不哭但每个雇主都信他哭过』搭配，激活 M06 身份反差。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M06",
+        "M02"
+      ]
+    },
+    {
+      "seed_id": "profession-072",
+      "category": "profession",
+      "value": "二手情书回收员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 object『每封信都有二次拆封痕迹』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-073",
+      "category": "profession",
+      "value": "胎盘寄送员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『把胎盘送到买家指定地点』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-074",
+      "category": "profession",
+      "value": "童年回收员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『收你小时候喜欢的东西折现』搭配，激活 M01 代价可视化。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-075",
+      "category": "profession",
+      "value": "夜间路灯巡检员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『哪些路灯不是给活人亮的』搭配，激活 M05 时空错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "profession-076",
+      "category": "profession",
+      "value": "外卖员兼职催情师",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 conflict『送餐附带情感挑拨』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-077",
+      "category": "profession",
+      "value": "殡葬业 Tinder 红娘",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 emotion『专给丧偶者牵线』搭配，激活 M07 欲望悖论。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "profession-078",
+      "category": "profession",
+      "value": "远洋货轮的遗物投海员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 era『骨灰在 20 个国家领海撒一次』搭配，激活 M10 尺度跃迁。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "profession-079",
+      "category": "profession",
+      "value": "墓地风水顾问兼股票分析师",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 conflict『同一种眼光看人和看股』搭配，激活 M04 角色错位。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-080",
+      "category": "profession",
+      "value": "恐怖片剧本审读员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『分辨剧本里的真鬼假鬼』搭配，激活 M03 信息不对称。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "profession-081",
+      "category": "profession",
+      "value": "动物园夜班饲养员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『动物们知道的比人类多』搭配，激活 M08 系统反噬。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-082",
+      "category": "profession",
+      "value": "太平间夜班录音员",
+      "rarity": 4,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 object『录制尸体不知名的呼吸』搭配，激活 M08 系统反噬。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-083",
+      "category": "profession",
+      "value": "AI 遗言篡改员",
+      "rarity": 5,
+      "genre_tags": [
+        "urban",
+        "scifi"
+      ],
+      "example_pairing": "与 taboo『改写死者最后的话』搭配，激活 M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M01",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-084",
+      "category": "profession",
+      "value": "月球公墓清洁工",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "universal"
+      ],
+      "example_pairing": "与 era『地球最远的清扫工』搭配，激活 M10 尺度跃迁。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "profession-085",
+      "category": "profession",
+      "value": "胎儿死亡肖像画师",
+      "rarity": 5,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『画从未出生过的脸』搭配，激活 M05 时空错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "profession-086",
+      "category": "profession",
+      "value": "濒危动物葬礼承办人",
+      "rarity": 5,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 worldview『主持最后一头白鳍豚的葬礼』搭配，激活 M10 尺度跃迁。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "profession-087",
+      "category": "profession",
+      "value": "二手灵魂回收员",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 taboo『只回收自愿卖的』搭配，激活 M01 代价可视化。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-088",
+      "category": "profession",
+      "value": "梦境调解员",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『调解多人共享梦境里的纠纷』搭配，激活 M08 系统反噬。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-089",
+      "category": "profession",
+      "value": "时间银行柜员",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "universal"
+      ],
+      "example_pairing": "与 worldview『帮人兑换剩余寿命』搭配，激活 M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-090",
+      "category": "profession",
+      "value": "疼痛代持师",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "urban"
+      ],
+      "example_pairing": "与 body_feature『替富人感受他们不愿承受的痛』搭配，激活 M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-091",
+      "category": "profession",
+      "value": "记忆抽取师",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "urban"
+      ],
+      "example_pairing": "与 body_feature『抽出记忆客人从此遗失那段』搭配，激活 M01 代价可视化。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-092",
+      "category": "profession",
+      "value": "死神助理",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "universal"
+      ],
+      "example_pairing": "与 worldview『每天处理排队等死的凡人』搭配，激活 M06 身份反差。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M06",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-093",
+      "category": "profession",
+      "value": "灵异现象鉴定公证员",
+      "rarity": 5,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『给闹鬼开具法律证明』搭配，激活 M04 角色错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "profession-094",
+      "category": "profession",
+      "value": "未命名神的接线员",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "universal"
+      ],
+      "example_pairing": "与 object『电话亭打进来找神』搭配，激活 M08 系统反噬。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-095",
+      "category": "profession",
+      "value": "平行宇宙婚姻登记员",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "romance"
+      ],
+      "example_pairing": "与 conflict『你和另一个自己办离婚』搭配，激活 M05 时空错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "profession-096",
+      "category": "profession",
+      "value": "轮回排队员",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "universal"
+      ],
+      "example_pairing": "与 worldview『阎王殿门口发号的工作人员』搭配，激活 M06 身份反差。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "profession-097",
+      "category": "profession",
+      "value": "宇宙拾荒者",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "apocalypse"
+      ],
+      "example_pairing": "与 object『太空捡别人丢弃的卫星残骸』搭配，激活 M10 尺度跃迁。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "profession-098",
+      "category": "profession",
+      "value": "遗梦回收员",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "mystery"
+      ],
+      "example_pairing": "与 object『只收没做完的梦』搭配，激活 M08 系统反噬。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "profession-099",
+      "category": "profession",
+      "value": "星座 HR 官",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "universal"
+      ],
+      "example_pairing": "与 worldview『管天上 12 星座的员工考勤』搭配，激活 M10 尺度跃迁。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "profession-100",
+      "category": "profession",
+      "value": "无主坟墓验收员",
+      "rarity": 5,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『核对每座无名坟是否合规』搭配，激活 M09 权力颗粒度。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "profession-101",
+      "category": "profession",
+      "value": "人类备份保管员",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "universal"
+      ],
+      "example_pairing": "与 worldview『云端保存某人所有社交记忆』搭配，激活 M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "profession-102",
+      "category": "profession",
+      "value": "死者直播账号管理员",
+      "rarity": 5,
+      "genre_tags": [
+        "urban",
+        "scifi"
+      ],
+      "example_pairing": "与 conflict『已故网红的账号继续运营』搭配，激活 M05 时空错位。",
+      "source": "llm",
+      "meta_rules_hit": [
+        "M05"
+      ]
     }
   ]
 }
