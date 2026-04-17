@@ -1,7 +1,7 @@
 {
   "$schema": "./anti-trope-seeds-schema.json",
-  "version": "v1.6",
-  "total": 600,
+  "version": "v1.7",
+  "total": 700,
   "categories": [
     {
       "id": "profession",
@@ -90,6 +90,12 @@
       "date": "2026-04-17",
       "delta": 100,
       "note": "Batch 6/10 禁忌类入库。分布 R1/R2/R3/R4/R5 = 5/20/25/30/20；R4+R5=50%，R5=20%。20 条用户 review 通过 (source=human)，80 条 LLM 生成 (source=llm)。WebSearch 反查已剔除起点+番茄双平台高频禁忌套路（修仙宗门戒律：血脉禁咒/真名禁忌/师徒禁忌/本命法宝/同门相残；通用民俗大而泛：孕妇摘果抱小孩搬家/半夜照镜/婚衣不带口袋/戴孝不进新房/百日不婚/四眼人入洞房）。策略：细颗粒 + 精确触发条件 + 可视后果；情境化（时间/空间/身份/职业）+ 精确操作 + 明确代价。直接激活 M01（代价可视化）+ M08（系统反噬）。"
+    },
+    {
+      "version": "v1.7",
+      "date": "2026-04-17",
+      "delta": 100,
+      "note": "Batch 7/10 神话类入库。分布 R1/R2/R3/R4/R5 = 5/20/25/30/20；R4+R5=50%，R5=20%。20 条用户 review 通过 (source=human)，80 条 LLM 生成 (source=llm)。WebSearch 反查已剔除起点+番茄双平台高频神话套路（洪荒封神盘古三清女娲补天/西游孙悟空/封神哪吒姜子牙/通俗希腊宙斯哈迪斯/通俗北欧奥丁托尔洛基/被梗化的克苏鲁/常规鬼神黑白无常牛头马面孟婆阎罗）。策略：走「冷门典籍具体片段」，侧入神话叙事的缝隙——被省略的一瞬/被遗忘的片段/跨文明冷门神话。100 条跨越山海经/淮南子/列仙传/神异经/博物志/述异记/酉阳杂俎/太平广记 + 彝苗藏壮满蒙朝等民族神话 + 希腊/北欧/埃及/苏美尔/玛雅/印加/阿兹特克/克尔特/毛利等世界神话。"
     }
   ],
   "seeds": [
@@ -7998,6 +8004,1286 @@
         "xianxia"
       ],
       "example_pairing": "与 worldview『临终一句话在世间回响三天』搭配，激活 M05+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-002",
+      "category": "mythology",
+      "value": "灶神每年腊月二十四上天汇报",
+      "rarity": 1,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 era『春节前三天』搭配，激活 M05+M09。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "mythology-003",
+      "category": "mythology",
+      "value": "观音静瓶柳枝的水洒到额头",
+      "rarity": 1,
+      "genre_tags": [
+        "xianxia",
+        "universal"
+      ],
+      "example_pairing": "与 emotion『被世界温柔对待后的离场欲』搭配，激活 M01+M07。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "mythology-004",
+      "category": "mythology",
+      "value": "土地公庙里点三炷香",
+      "rarity": 1,
+      "genre_tags": [
+        "history",
+        "universal"
+      ],
+      "example_pairing": "与 profession『村口代香婆』搭配，激活 M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-005",
+      "category": "mythology",
+      "value": "月下老人错牵的红线",
+      "rarity": 1,
+      "genre_tags": [
+        "romance",
+        "xianxia"
+      ],
+      "example_pairing": "与 conflict『要说服仇家女儿嫁进自家以保她命』搭配，激活 M02+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-006",
+      "category": "mythology",
+      "value": "年兽怕红怕响",
+      "rarity": 1,
+      "genre_tags": [
+        "history",
+        "universal"
+      ],
+      "example_pairing": "与 era『春节前三天』搭配，激活 M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-007",
+      "category": "mythology",
+      "value": "哪吒剔骨还父抽筋还母的最后一刀",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『必须代替父亲向全村道歉』搭配，激活 M01+M06。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "mythology-008",
+      "category": "mythology",
+      "value": "嫦娥吞药时右手垂落的一粒药渣",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 object『一只刻着双字的铜打火机』搭配，激活 M05+M01。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "mythology-009",
+      "category": "mythology",
+      "value": "愚公移山时河边的妇人在看",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "universal"
+      ],
+      "example_pairing": "与 emotion『看见别人替自己承担时的轻微满足』搭配，激活 M09+M07。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M09",
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "mythology-010",
+      "category": "mythology",
+      "value": "精卫填海带回的第一枚石子",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 body_feature『掌心一道常磨的浅纹』搭配，激活 M01+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "mythology-011",
+      "category": "mythology",
+      "value": "女娲捏到第十万个人时打了哈欠",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 emotion『无法为理应难过之事哭出来的困惑』搭配，激活 M10+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-012",
+      "category": "mythology",
+      "value": "夸父追日渴死前最后一步方向",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 era『太阳黑子第 25 活动周期峰值夜』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-013",
+      "category": "mythology",
+      "value": "后羿射日第十支箭未出弓",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 object『一支尾羽尚全的旧箭』搭配，激活 M05+M02。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-014",
+      "category": "mythology",
+      "value": "大禹治水走过的第二条岔路",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『每条河下游能听见上游承诺』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-015",
+      "category": "mythology",
+      "value": "孟婆熬汤加盐的手势",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『舌根下一枚米粒大的银疤』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-016",
+      "category": "mythology",
+      "value": "黄泉路上的三生石反面",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每人影子是某个死者留下来的』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-017",
+      "category": "mythology",
+      "value": "阎罗点名簿的第一页空白",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 profession『阴曹生死簿誊录员』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-018",
+      "category": "mythology",
+      "value": "八仙过海各自的无用法宝",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 emotion『胜利之后最先想起的是自己的懒散』搭配，激活 M07+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-019",
+      "category": "mythology",
+      "value": "王母蟠桃园守桃人的交接日",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 era『二十四节气「大雪」黎明』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-020",
+      "category": "mythology",
+      "value": "判官笔落墨时的三声咳",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『写已故者姓名后不得再沾同一墨』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-021",
+      "category": "mythology",
+      "value": "钟馗年画背后写的小字",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 profession『年画老作坊印版师傅』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-022",
+      "category": "mythology",
+      "value": "山神土地夜里互访",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 era『惊蛰节气五更天』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-023",
+      "category": "mythology",
+      "value": "灵鹊桥搭完时鹊羽落在地上",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 object『一根染过红的鹊羽』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-024",
+      "category": "mythology",
+      "value": "卧冰求鲤中鱼跃出的方向",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 body_feature『胸前贴过冰的红痕一直未退』搭配，激活 M01+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-025",
+      "category": "mythology",
+      "value": "鲤鱼跳龙门失败后的回游",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 emotion『决定离婚那一天爱得最深』搭配，激活 M07+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-026",
+      "category": "mythology",
+      "value": "三生石刻名时最后一笔",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 taboo『写信给尚未出生的人须用左手』搭配，激活 M05+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-027",
+      "category": "mythology",
+      "value": "山海经·烛龙闭眼时北海结冰",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 worldview『日出日落时所有人保持无声一分钟』搭配，激活 M10+M05。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M10",
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "mythology-028",
+      "category": "mythology",
+      "value": "山海经·陆吾守昆仑西门只睁左眼",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『遇两面镜对照时须闭左眼过去』搭配，激活 M03+M06。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "mythology-029",
+      "category": "mythology",
+      "value": "山海经·帝江无面而识歌",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo_language『沉默时不得在心里默念姓』搭配，激活 M03+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "mythology-030",
+      "category": "mythology",
+      "value": "山海经·英招身为马而人面",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 body_feature『颈下一撮天生的柔毛』搭配，激活 M06+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "mythology-031",
+      "category": "mythology",
+      "value": "淮南子·共工怒触不周山半壁未倒",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 conflict『让两个互斥的真相同时为真』搭配，激活 M10+M02。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M10",
+        "M02"
+      ]
+    },
+    {
+      "seed_id": "mythology-032",
+      "category": "mythology",
+      "value": "列子·愚公移山之山今夜不动",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 worldview『所有承诺写入空气违约者当夜失眠』搭配，激活 M05+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-033",
+      "category": "mythology",
+      "value": "楚辞·湘夫人衣袂挂在橘树",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 object『一枝干枯的橘枝』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-034",
+      "category": "mythology",
+      "value": "搜神记·干将莫邪双剑认主口诀",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo_language『认主时不得连读第三遍』搭配，激活 M03+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-035",
+      "category": "mythology",
+      "value": "白泽精怪图中的一张无名页",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 object『一本被翻过第 43 页的图册』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-036",
+      "category": "mythology",
+      "value": "敦煌壁画第 45 窟的飞天眼角",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 era『敦煌藏经洞 1900 年被打开那一天』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-037",
+      "category": "mythology",
+      "value": "彝族阿细祭火节的火种传接",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 profession『阿细祭司传人』搭配，激活 M08+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-038",
+      "category": "mythology",
+      "value": "苗族蝴蝶妈妈生十二蛋的顺序",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 body_feature『右肩胛一道蝶翼形浅纹』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-039",
+      "category": "mythology",
+      "value": "藏族格萨尔王失而复得的护心镜",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 object『一面未磨透的铜镜』搭配，激活 M01+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-040",
+      "category": "mythology",
+      "value": "壮族布洛陀铺石天梯被中断的节点",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 conflict『必须阻止自己十年前那条决定发生』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-041",
+      "category": "mythology",
+      "value": "满族长白山鳌花鱼的三次变脸",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『眉骨高出常人半分』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-042",
+      "category": "mythology",
+      "value": "蒙古苏勒德长矛的三缕马鬃",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 object『一缕系在马鞍上的黑鬃』搭配，激活 M06+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-043",
+      "category": "mythology",
+      "value": "回族三月三踏青的第一步",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "universal"
+      ],
+      "example_pairing": "与 era『回历 1399 年麦加清真寺事件当夜』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-044",
+      "category": "mythology",
+      "value": "布依族盘古仙鹅落脚的水塘",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 worldview『每座桥下住着一个被遗忘的约定』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-045",
+      "category": "mythology",
+      "value": "白族本主庙神像的左侧耳缺",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 body_feature『左耳天生一小片软骨凹陷』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-046",
+      "category": "mythology",
+      "value": "纳西族东巴经的最后一页空白",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo『翻译典籍不得在朔日起头』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-047",
+      "category": "mythology",
+      "value": "哈尼族四月太阳节的滑箩声",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo_language『滑箩响时不得发问』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-048",
+      "category": "mythology",
+      "value": "朝鲜族檀君熊变人第二十一日",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 emotion『被自己的梦抛弃时的孤绝』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-049",
+      "category": "mythology",
+      "value": "傣族泼水节的第一瓢水",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "universal"
+      ],
+      "example_pairing": "与 taboo『送伞须先展开再送不得合着递』搭配，激活 M01+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-050",
+      "category": "mythology",
+      "value": "畲族盘瓠王夜里走过的桥",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 body_feature『足底一颗不规则的痣』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-051",
+      "category": "mythology",
+      "value": "土家族梯玛祭祀的十二角鼓",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo『戏班接客前须由小孩踩台』搭配，激活 M09+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-052",
+      "category": "mythology",
+      "value": "山海经·奢比尸之人耳长于口三寸",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『右耳耳垂比左耳长一截』搭配，激活 M06+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "mythology-053",
+      "category": "mythology",
+      "value": "列仙传·赤松子入火服食松脂百年",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 era『夏商断代认定的武王伐纣那一日』搭配，激活 M05+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "mythology-054",
+      "category": "mythology",
+      "value": "神异经·西北荒有兽吞声食味为食",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo_language『桨下不得数到四』搭配，激活 M03+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "mythology-055",
+      "category": "mythology",
+      "value": "博物志·吴刚伐桂伐痕每夜复合一分",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 worldview『每件物品记得最后一次被触摸的温度』搭配，激活 M10+M05。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M10",
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "mythology-056",
+      "category": "mythology",
+      "value": "述异记·八月望日江上女鬼摇船声",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 era『农历七月半溪水』搭配，激活 M05+M08。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "mythology-057",
+      "category": "mythology",
+      "value": "酉阳杂俎·夜叉持婴不得渡水之戒",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『替别人守灵第三日不得离开』搭配，激活 M08+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M08",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "mythology-058",
+      "category": "mythology",
+      "value": "太平广记·黑雾中来信者不得答",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『夜里接长途不得先报家址』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-059",
+      "category": "mythology",
+      "value": "古今图书集成·守井童子瞳孔方向",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 body_feature『瞳孔颜色不对称』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-060",
+      "category": "mythology",
+      "value": "希腊·珀涅罗珀白日织的第三道纹",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "romance"
+      ],
+      "example_pairing": "与 conflict『不改过去的前提下阻止现在发生』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-061",
+      "category": "mythology",
+      "value": "希腊·俄尔甫斯回头前一步的暂停",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "romance"
+      ],
+      "example_pairing": "与 taboo『告别时回头的一方当日寿命减一』搭配，激活 M05+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-062",
+      "category": "mythology",
+      "value": "北欧·尤弥尔血变海水的比例",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 worldview『整个世界每天午夜消失三秒钟』搭配，激活 M10+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-063",
+      "category": "mythology",
+      "value": "北欧·诸神黄昏前一日的晴天",
+      "rarity": 4,
+      "genre_tags": [
+        "apocalypse",
+        "history"
+      ],
+      "example_pairing": "与 era『2022 年俄乌战争爆发次晨』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-064",
+      "category": "mythology",
+      "value": "埃及·奈芙蒂斯遮住太阳的那只手",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 body_feature『右手掌心一道月牙形旧伤』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-065",
+      "category": "mythology",
+      "value": "埃及·托特记账册的空白页数量",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 profession『档案抹除专员』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-066",
+      "category": "mythology",
+      "value": "苏美尔·吉尔伽美什失永生草的沙地",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 object『一根不再生根的草茎』搭配，激活 M01+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-067",
+      "category": "mythology",
+      "value": "巴比伦·提亚玛特眼泪变成河那滴",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『每场雨带走记忆最短的那一段』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-068",
+      "category": "mythology",
+      "value": "克尔特·德鲁伊三日不食看见符号",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 body_feature『手心有一枚形状陌生的疤』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-069",
+      "category": "mythology",
+      "value": "玛雅·洪水前最后一个会笑的人",
+      "rarity": 4,
+      "genre_tags": [
+        "apocalypse",
+        "history"
+      ],
+      "example_pairing": "与 era『玛雅长计历 13.0.0.0.0 东八区凌晨』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-070",
+      "category": "mythology",
+      "value": "印加·维拉科查造人漏下的微尘",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 era『印加「第五个太阳」纪元末日』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-071",
+      "category": "mythology",
+      "value": "阿兹特克·羽蛇神离去时留下的羽纹",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 object『一枚蓝绿相间的羽片』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-072",
+      "category": "mythology",
+      "value": "印度·湿婆第三只眼闭上的午后",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo『在镜中对答不得超过两个问题』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-073",
+      "category": "mythology",
+      "value": "印度·摩诃婆罗多战地最先熄的火",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "apocalypse"
+      ],
+      "example_pairing": "与 conflict『必须替天敌完成其上任者最后一次仪式』搭配，激活 M02+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-074",
+      "category": "mythology",
+      "value": "日本·天照隐身岩洞第三十天",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 emotion『对明天的不真切感占据今日』搭配，激活 M05+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-075",
+      "category": "mythology",
+      "value": "日本·浦岛太郎玉匣未开的一角",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 object『一只从未打开过的漆木匣』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-076",
+      "category": "mythology",
+      "value": "韩国·檀君熊妇舍弃第一日的蒜",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 body_feature『口腔里一丝终年不散的清苦』搭配，激活 M06+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-077",
+      "category": "mythology",
+      "value": "越南·雄王开国时的第十八代孙",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "universal"
+      ],
+      "example_pairing": "与 era『1945 年日本投降诏书当晚』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-078",
+      "category": "mythology",
+      "value": "蒙古·天鹅落在额尔古纳河之时",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 emotion『与陌生人同看同片云的无因喜悦』搭配，激活 M07+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-079",
+      "category": "mythology",
+      "value": "突厥·阿史那出狼洞数到的第九步",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 era『阴山匈奴王庭坠星那一夜』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-080",
+      "category": "mythology",
+      "value": "爱斯基摩·海神塞德娜被砍手的深度",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "apocalypse"
+      ],
+      "example_pairing": "与 body_feature『无名指缺失最后一节』搭配，激活 M01+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-081",
+      "category": "mythology",
+      "value": "毛利·塔内让天与地分开时第二口气",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 worldview『光是记忆最慢的形式』搭配，激活 M10+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-082",
+      "category": "mythology",
+      "value": "玉壶冰·未被记录的第三句神谕",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『让一本尚未写出的书提前自毁』搭配，激活 M10+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M10",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "mythology-083",
+      "category": "mythology",
+      "value": "鬼谷子·阴阳互换之术不得录于卷",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo『把自己的心跳写下后不得读出』搭配，激活 M10+M08。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M10",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "mythology-084",
+      "category": "mythology",
+      "value": "上古·盘古梦境的最后一秒",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『整个世界每天午夜消失三秒钟』搭配，激活 M05+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "mythology-085",
+      "category": "mythology",
+      "value": "连山易·第八卦爻辞遗失在周初",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo『一本书被读过第 99 次不得续读』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-086",
+      "category": "mythology",
+      "value": "归藏易·地母歌中最短的一句",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo_language『古歌的韵脚不得被记下』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-087",
+      "category": "mythology",
+      "value": "伏羲观河时忽略的一根芦苇",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 worldview『每件物品记得最后一次被触摸的温度』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-088",
+      "category": "mythology",
+      "value": "神农尝百草漏尝的一种",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 body_feature『舌尖一小块终年麻木』搭配，激活 M01+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-089",
+      "category": "mythology",
+      "value": "女娲补天最后一块五色石的颜色",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 object『一块夹在典籍里的灰石』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-090",
+      "category": "mythology",
+      "value": "轩辕黄帝梦见赤松子的第三百日",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 era『1905 年废科举令颁布当日』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-091",
+      "category": "mythology",
+      "value": "帝俊与娲的十二子中第十三个",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『让自己名字从历史消失但留下父亲的』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-092",
+      "category": "mythology",
+      "value": "山海经·诸山图里漏标的一座",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 profession『博物馆地图修复师』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-093",
+      "category": "mythology",
+      "value": "夸父追日途经第一片胡杨林方向",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 era『阴山匈奴王庭坠星那一夜』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-094",
+      "category": "mythology",
+      "value": "禹王九鼎铸成时沉入江心第三鼎",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 object『一块刻着夔纹的青铜碎片』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-095",
+      "category": "mythology",
+      "value": "屈子怀沙前一夜江雾的形状",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 emotion『听自己死亡那天乌云密度的预感』搭配，激活 M05+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-096",
+      "category": "mythology",
+      "value": "周穆王八骏中第九匹未归的名字",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo『替天记账不得以真名自述』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-097",
+      "category": "mythology",
+      "value": "道藏·正一经第一版遗失的章节",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 profession『道藏整理室助理研究员』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-098",
+      "category": "mythology",
+      "value": "佛藏·白马寺初译经的一页错简",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo『翻译典籍不得在朔日起头』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-099",
+      "category": "mythology",
+      "value": "古埃及·死者之书第 125 章的签名",
+      "rarity": 5,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 object『一卷已碎的莎草纸残片』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-100",
+      "category": "mythology",
+      "value": "北欧·九个世界中第十个的传说",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "apocalypse"
+      ],
+      "example_pairing": "与 worldview『所有未发生的事都已在别处发生』搭配，激活 M10+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-101",
+      "category": "mythology",
+      "value": "亚特兰蒂斯沉没前最后一盏灯",
+      "rarity": 5,
+      "genre_tags": [
+        "apocalypse",
+        "xianxia"
+      ],
+      "example_pairing": "与 era『印加「第五个太阳」纪元末日』搭配，激活 M05+M10。",
       "source": "llm"
     }
   ]
