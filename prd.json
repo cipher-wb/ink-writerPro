@@ -282,7 +282,7 @@
         "Typecheck passes"
       ],
       "priority": 18,
-      "passes": false,
+      "passes": true,
       "notes": "这个文件被 ink-plan 和 ink-write 的参考系统加载，更新后自动生效于后续项目。"
     }
   ]

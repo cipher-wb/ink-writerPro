@@ -256,3 +256,17 @@
   - 战斗/冲突场景"远景→近景→特写"三段式与 L7 大卖点"铺垫→爆发→反应"对齐——Layer 9a 修复时若检测到战斗场景缺三段式，应优先补"特写=爆发"段，而非机械插入"远景/近景"
   - 第 1 章 info 带宽锁死（金手指机制 + 1 辅助设定 + 2 有名角色）在 Layer 9c 再次落地，形成 init（US-001）→ plan（US-005）→ write L11（US-008）→ review 6B.4（US-015）→ polish 9c（US-016）的 5 阶段闭环，任何一处松动都会放行"塞信息感"
 ---
+
+## 2026-04-17 - US-018
+- 实现：golden-opening-patterns.md 为既有 5 种模式各新增「爽点闭环示例 / 感官描写要求 / 镜头计划」三段；新增第 6 种模式 Golden Finger Showcase（金手指展示型）
+- 变更文件：
+  - `ink-writer/references/shared/golden-opening-patterns.md`：模式 1-5 每项扩展三段（爽点闭环四节拍 ability_demo/crisis_trigger/concrete_payoff/reader_reaction + 主导感官与非视觉占比要求 + shot_plan 远近特三镜计划）；新增模式 6 Golden Finger Showcase（系统/签到/抽奖流通用开篇范式 + 2 次触发要求 + 爽点闭环 + 感官 + 镜头）
+  - `prd.json`：US-018 passes=true
+- **Learnings for future iterations：**
+  - `references/shared/` 下的 patterns 文件是被 ink-plan Step 1/Step 7 与 ink-write Step 2A「场景匹配技法注入」共同消费的——任何模式扩展都会自动流向 plan（章纲生成参考模式枚举）与 write（起草前抽取同名模式）；新增模式应同步 ink-plan SKILL.md 的「允许模式枚举」列表（若存在），否则新模式会被 plan 阶段视为无效
+  - 爽点闭环四节拍命名严格对齐 US-004 大纲字段（ability_demo/crisis_trigger/concrete_payoff）+ US-013 reader_emotion_target——术语稳定性是跨 init→plan→write→review→reference 五阶段协同的核心
+  - 抽象收益词黑名单再次复用（12 词版：理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了/看透了/释怀了/有了新认知），本次在模式示例中以「严禁」形式具象化；下一 US 可考虑抽取到 `references/shared/abstract-payoff-blacklist.md` 成为单一真源
+  - 模式 6 Golden Finger Showcase 是"系统/签到/抽奖"类爆款文的专属开篇模板，与模式 1-5 正交不重叠——该模式要求前 300 字内金手指机制显形 + 第 1 章 ≥2 次触发，与 US-001 golden_finger_first_payoff + US-004 第 1 章爽点闭环形成开篇模式层的强约束
+  - shot_plan 中"金手指触发瞬间禁止用远景"与"战斗特写缺失 = critical"是两条普适的 L10d 扩展，可供 prose-impact-checker 的 CLOSEUP_ABSENT / SHOT_PLAN_VIOLATION 规则参考
+  - 非视觉感官占比阈值按场景类型分档（危机/反差 ≥25% / 底层群像 --- / 战斗 ≥30% / 悬疑 ≥35% / 金手指展示 ≥3 种同时到场）——可供 sensory-immersion-checker 场景分档阈值使用（当前 checker 使用统一阈值，后续可按模式精细化）
+---
