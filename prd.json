@@ -204,7 +204,7 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "notes": "与 US-004 配对：US-004 在大纲层锁定闭环，US-013 在审查层验证正文是否落地。"
     },
     {

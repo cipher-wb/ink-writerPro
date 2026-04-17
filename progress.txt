@@ -173,3 +173,17 @@
   - COOL_POINT_ABSTRACT（爽点段抽象替代）升级为 hard block 是本次设计的关键防线，与 US-013 CH1_PAYOFF_TANGIBILITY 检查形成"大纲+正文"双保险
   - 跨章主导感官轮换需要 bundle 提供 `scene_dominant_sensory_trail`，后续 context-agent/data-agent 需补齐此字段才能让 ROTATION_STALL 跨章检测落地
 ---
+
+## 2026-04-17 - US-013
+- 实现：golden-three-checker 新增 4 条爽点闭环硬阻断规则，形成「大纲锁定（US-004）+ 正文验证（US-013）」双保险
+- 变更文件：
+  - `ink-writer/ink-writer/agents/golden-three-checker.md`：第 1 章 `critical` 新增 CH1_COOL_POINT_VISIBILITY（10 秒扫读 scene_description 命中率 <50% → hard block）、CH1_ABILITY_SOLUTION_CHAIN（沿 crisis→ability→payoff 反向溯因检测"灵机一动/恰好/旁人出手"等绕过桥段 → hard block）、CH1_PAYOFF_TANGIBILITY（收益主句命中抽象黑名单 12 词 → hard block，补齐"看透了/释怀了/有了新认知"3 词）；第 1 章 `high` 新增 CH1_READER_EMOTION_PREDICTABLE（章末 500 字情绪向量与 ch1_cool_point_spec.reader_emotion_target 方向不符 → hard block 不可 Override，字段缺失降级 medium）；Hard Block 回退路由段新增"不可 Override 清单"明确 4 项均不接受 editor_wisdom / audit_mode=relaxed / 用户 Override；输出补充段新增 4 条修复建议行
+  - `scripts/ralph/prd.json`：US-013 passes=true
+- **Learnings for future iterations：**
+  - golden-three-checker 的检查规则有两个层级表达位点：`判定规则 > 第 1 章` 下的 critical/high 枚举 + `Hard Block 回退路由` 段的路由描述 + `输出补充` 的修复建议；新增规则需三处同步，否则规则可被 run，但不会被路由到 Step 2A 或反映到 issues 建议
+  - "不可 Override"是 US-013 引入的新概念——与之前的 hard block 区别在于不接受 editor_wisdom 阈值降级/audit_mode=relaxed/用户 CLI Override 三条通路；后续新增强制阻断规则建议显式在 `Hard Block 回退路由` 段注明 Override 策略，否则默认可 Override
+  - CH1_PAYOFF_TANGIBILITY 与 CH1_ABSTRACT_PAYOFF 的分工：前者检测"黑名单词是否出现在收益主句"（critical hard block），后者检测"黑名单词出现在辅句/补充句"（high 建议），属于同一问题的严重度分级——后续抽取共享抽象收益词黑名单到 `references/shared/abstract-payoff-blacklist.md` 时需要保持这两档严重度的判定边界
+  - 抽象收益词黑名单从 US-001/US-004 的 9 词扩到 12 词（新增"看透了/释怀了/有了新认知"）；这些词来自本仓库写作审查实战案例，后续共享文件应以 12 词为基线
+  - `ch1_cool_point_spec.scene_description`（US-003 派生）是 CH1_COOL_POINT_VISIBILITY 的 ground truth，正文前 300 字与其做关键词/动作/视觉锚点三选一匹配；若 init 未升级到 US-003，该字段缺失，checker 应降级为 medium 而非崩溃——这是跨 US 向后兼容的"graceful degrade"模式，与 US-012 voice_profile data_gap 处置一致
+  - US-004 在大纲层用 `爽点闭环` 三节拍（ability_demo/crisis_trigger/concrete_payoff）锁定，US-013 在正文层用同名术语反向验证——术语稳定性是跨 US 协同的核心，新 checker 应一律复用既有大纲字段名而非造新名
+---

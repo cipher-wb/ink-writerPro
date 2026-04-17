@@ -79,11 +79,15 @@ model: inherit
   - 第1章只有主角独角戏（无有名字有态度的配角出现）
   - **CH1_NO_ABILITY_BENEFIT**：第1章结束时主角能力未产生任何具体收益（无报酬/地位提升/新能力解锁/危机解除后的奖励等可感知变化）→ hard block，回退 Step 2A 重写
   - **CH1_PASSIVE_PROTAGONIST**：第1章主角仅观察/思考能力，未主动使用能力做出行动（能力只停留在"发现""感知""理解"层面，未转化为主动行为）→ hard block，回退 Step 2A 重写
+  - **CH1_COOL_POINT_VISIBILITY**：对正文执行「10 秒扫读测试」——若读者在正文前 300 字（≈扫读 10 秒区间）无法识别出金手指/爽点场景（能力是什么 / 对应的具体收益场景），即爽点不可见 → **hard block，不可 Override，回退 Step 2A 重写**。判定依据：比对 `golden_three_plan.json.chapters["1"].ch1_cool_point_spec.scene_description` 与正文前 300 字，命中率 <50%（关键词/动作/视觉锚点三选一缺失）
+  - **CH1_ABILITY_SOLUTION_CHAIN**：第 1 章危机的解决链路中插入了与金手指无关的外部助力或巧合（出现 "灵机一动 / 恰好 / 正巧 / 突然想起 / 碰巧 / 凑巧 / 刚好 / 路过的高人 / 旁人出手 / 意外解围" 等绕过金手指的桥段），导致金手指不是危机解决的**直接因**或**唯一因** → **hard block，不可 Override，回退 Step 2A 重写**。判定依据：沿 crisis_trigger → ability_use → concrete_payoff 三节拍反向溯因，ability_use 与 concrete_payoff 之间出现非金手指外部因子即命中
+  - **CH1_PAYOFF_TANGIBILITY**：第 1 章收益段落（concrete_payoff 对应正文）出现抽象收益词黑名单中任一词作为**收益主句** → **hard block，不可 Override，回退 Step 2A 重写**。黑名单：`理解 / 领悟 / 感悟 / 知道了 / 发现了 / 明白了 / 意识到 / 成长了 / 坚强了 / 看透了 / 释怀了 / 有了新认知`。允许的具体收益形式枚举（必须命中至少 1 项）：`资源获取 / 敌人击退 / 他人认可 / 地位提升 / 信息解锁 / 危机解除`
 - `high`:
   - 章末缺少高价值承诺、未闭合问题、可见变化中的任意两项
   - 有名字的配角少于2个
-  - **CH1_ABSTRACT_PAYOFF**：第1章能力收益是认知层面的（"主角理解了……""主角意识到……""主角有了新认知"）而非行动/结果层面的具体收益 → 建议回退 Step 2A 重写
+  - **CH1_ABSTRACT_PAYOFF**：第1章能力收益是认知层面的（"主角理解了……""主角意识到……""主角有了新认知"）而非行动/结果层面的具体收益 → 建议回退 Step 2A 重写（与 CH1_PAYOFF_TANGIBILITY 为同一问题的 soft 层级，仅在黑名单词出现于辅句/补充句而非收益主句时降级到此）
   - **CH1_LATE_CRISIS**：第1章前60%篇幅无危机事件触发（无威胁/冲突/紧迫感出现）→ 建议回退 Step 2A 重写
+  - **CH1_READER_EMOTION_PREDICTABLE**：第 1 章结尾读者情绪与 `golden_three_plan.json.chapters["1"].ch1_cool_point_spec.reader_emotion_target` 描述**显著不符**（落差 / 爽快 / 揪心 / 好奇 / 悬疑 / 期待 等情绪目标在正文末 500 字的情绪曲线中未被激活或方向相反）→ **hard block（high 级别，不可 Override），回退 Step 2A 重写**。判定依据：对正文末 500 字做情绪关键词与句式节奏推断，与 reader_emotion_target 做向量方向对齐；若 `ch1_cool_point_spec` 字段缺失，降级为 medium 提醒（不阻断）
 
 ### 第 2 章
 
@@ -143,9 +147,11 @@ model: inherit
 
 ## Hard Block 回退路由
 
-第1章闭环检测中的 `critical` 级别规则（CH1_NO_ABILITY_BENEFIT、CH1_PASSIVE_PROTAGONIST）触发 **hard block**，必须回退到 **Step 2A 重写**（不是 Step 4 润色）。这类问题是结构性缺陷，无法通过润色修复。
+第1章闭环检测中的 `critical` 级别规则（CH1_NO_ABILITY_BENEFIT、CH1_PASSIVE_PROTAGONIST、**CH1_COOL_POINT_VISIBILITY**、**CH1_ABILITY_SOLUTION_CHAIN**、**CH1_PAYOFF_TANGIBILITY**）触发 **hard block**，必须回退到 **Step 2A 重写**（不是 Step 4 润色）。这类问题是结构性缺陷，无法通过润色修复。
 
-第1章闭环检测中的 `high` 级别规则（CH1_ABSTRACT_PAYOFF、CH1_LATE_CRISIS）强烈建议回退 Step 2A 重写。若仅有 `high` 而无 `critical`，允许用户自行决定是否回退。
+**不可 Override 清单**：`CH1_COOL_POINT_VISIBILITY`、`CH1_ABILITY_SOLUTION_CHAIN`、`CH1_PAYOFF_TANGIBILITY`、`CH1_READER_EMOTION_PREDICTABLE` 四项为 US-013 强制 hard block，**不接受 editor_wisdom / audit_mode=relaxed / 用户 Override 指令降级**；一旦命中必须回到 Step 2A。其他 `critical`（CH1_NO_ABILITY_BENEFIT / CH1_PASSIVE_PROTAGONIST）沿用旧策略。
+
+第1章闭环检测中的 `high` 级别规则（CH1_ABSTRACT_PAYOFF、CH1_LATE_CRISIS）强烈建议回退 Step 2A 重写；其中 **CH1_READER_EMOTION_PREDICTABLE** 虽为 high 级别，但属不可 Override 硬阻断。若仅有其他 `high` 而无 `critical`，允许用户自行决定是否回退。
 
 ## 输出补充
 
@@ -158,8 +164,12 @@ model: inherit
   - 增加有温度的配角互动
   - 强化第1句的"认知缺口"
   - 补充能力→行动→具体收益闭环（CH1_NO_ABILITY_BENEFIT/CH1_PASSIVE_PROTAGONIST）
-  - 将抽象认知收益替换为具体可感知结果（CH1_ABSTRACT_PAYOFF）
+  - 将抽象认知收益替换为具体可感知结果（CH1_ABSTRACT_PAYOFF / CH1_PAYOFF_TANGIBILITY）
   - 前移危机事件到章节前60%位置（CH1_LATE_CRISIS）
+  - 把金手指/爽点场景前置到正文前 300 字并给出视觉锚点（CH1_COOL_POINT_VISIBILITY）
+  - 剔除"灵机一动 / 恰好 / 旁人出手"等绕过金手指的桥段，让金手指成为危机解除的直接因（CH1_ABILITY_SOLUTION_CHAIN）
+  - 按 `ch1_cool_point_spec.payoff_form` 枚举重写收益主句（资源获取 / 敌人击退 / 他人认可 / 地位提升 / 信息解锁 / 危机解除）
+  - 按 `ch1_cool_point_spec.reader_emotion_target` 反向调整章末 500 字情绪句式与收束（CH1_READER_EMOTION_PREDICTABLE）
 
 ## 简介质检（ch1 专项）
 
