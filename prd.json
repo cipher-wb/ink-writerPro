@@ -63,7 +63,7 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "依赖 US-003 的 ch1_cool_point_spec 数据。已有第一章节拍规则（ability_demo→crisis→benefit），本次增强：感官要求、排除列表、gate 强制。"
     },
     {

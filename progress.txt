@@ -10,6 +10,9 @@
 - 场景工艺索引 `ink-writer/references/scene-craft/scene-craft-index.md`
 - ink-init 深度模式的金手指收集在 `ink-writer/skills/ink-init/SKILL.md` Step 3；Quick 模式方案表在同文件 Quick Step 1；内部数据模型/充分性闸门在文件末尾
 - 修改 init 收集字段时需三处联动：Step 文字说明 + 内部数据模型 JSON + 充分性闸门；Quick 模式另需同步方案表/输出模板/Quick Step 3 映射
+- ink-plan 主规格在 `ink-writer/skills/ink-plan/SKILL.md`；章纲生成规则（第 1 章闭环、爽点前置、验证 Hard fail）集中在文件后半部分（章纲 format ~ line 494；第 1 章硬约束 ~ line 532；Validation 1.7 ~ line 655；Hard fail conditions ~ line 764）
+- `scripts/ralph/prd.json` 是 `/Users/cipher/ai/ink/ink-writer/prd.json` 的符号链接（macOS 大小写不敏感路径），改一处即可
+- 抽象收益词黑名单（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了/看透了/释怀了/有了新认知）与允许 payoff_form 枚举（资源获取/敌人击退/他人认可/地位提升/信息解锁/危机解除）在 init/plan/review 三处复用，后续可共享 references
 
 ---
 
@@ -45,4 +48,20 @@
   - `.ink/golden_three_plan.json` 的实际生成逻辑在 `ink-writer/scripts/data_modules/golden_three.py::build_golden_three_plan`，chapter 1 的 contract 字段在 `ch1_closure_contract`；若后续 US 需要从正文检查 `ch1_cool_point_spec`，应在 `resolve_golden_three_contract` 同步透出，否则 write/review 读不到
   - init 流程中，派生字段（从其他必收字段合并生成）应显式标注 `derived_from` 字段，便于幂等重跑时判断是否需要重置 `user_confirmed`
   - payoff_form 的 5 个枚举值（资源获取/敌人击退/他人认可/地位提升/信息解锁）将在 US-004 `concrete_payoff` 与 US-013 硬阻断复用，建议后续抽取到共享 references 文件
+---
+
+## 2026-04-17 - US-004
+- 实现：ink-plan 第 1 章大纲强制爽点闭环 gate，PC-1 爆发章锁定第 1 章，新增 cool_point_preview / 读者承诺金手指具体承诺句
+- 变更文件：
+  - `ink-writer/skills/ink-plan/SKILL.md`：
+    - Step 1 必载列表新增 `.ink/golden_three_plan.json`（缺 `chapters["1"].ch1_cool_point_spec` → hard fail，阻断）
+    - Step 4 爽点前置原则：PC-1 第 1 卷爆发章从"不得晚于第 3 章"收紧为"锁定第 1 章"
+    - 章纲 format 后的第 1 章硬约束重写为 `爽点闭环` 三节拍（ability_demo+感官×≥2 / crisis_trigger 与金手指直接相关 / concrete_payoff 硬排除词表+允许列表枚举），新增 `cool_point_preview` ≤300 字字段与金手指具体承诺句硬要求，保留旧 `第1章闭环` 兼容映射
+    - Validation 1.7 同步新增 8 条硬阻断项；Hard fail conditions 新增 9 条对应项
+  - `prd.json`（符号链接 `scripts/ralph/prd.json`）：US-004 passes=true
+- **Learnings for future iterations：**
+  - `.ink/golden_three_plan.json` 由 US-003 派生，plan 阶段是其第一个消费者；若 `ch1_cool_point_spec.payoff_form` 不在 5 枚举内，最早在 plan 硬 fail，不会泄到 write 阶段
+  - `爽点闭环` 三节拍（ability_demo/crisis_trigger/concrete_payoff）命名与 prd US-004 保持一致，US-013 golden-three-checker 将用同名字段检测正文落地，需保持术语稳定
+  - 第 1 章 `读者承诺` 的"金手指具体承诺句"模板（"{金手指}将帮助主角{动词}{对象}"）会被 US-013 CH1_READER_EMOTION_PREDICTABLE 反向校验，writer-agent 也建议引用
+  - 兼容策略：保留旧 `第1章闭环` 字段的交叉一致性校验，避免已写入旧格式章纲的项目在二次 /ink-plan 时被误判失败
 ---
