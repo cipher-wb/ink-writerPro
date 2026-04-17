@@ -235,7 +235,7 @@
         "Typecheck passes"
       ],
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "notes": "Layer 6 已在 combat-pacing-overhaul 分支中创建，本次是增强而非重建。保留现有 6A 规则不变。"
     },
     {

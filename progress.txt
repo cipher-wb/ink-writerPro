@@ -202,3 +202,24 @@
   - prose-impact / sensory-immersion 复用 proofreading profile（同属文本表层）；flow-naturalness 需要 `voice_profile` + `info_budget` 两个 init/plan 阶段字段，profile 映射要显式声明
   - overall_score cap 层级：logic/outline critical=50（致命）< prose-impact/flow critical=55（结构性文笔）< 普通 critical=60，按问题致命度梯度
 ---
+
+## 2026-04-17 - US-015
+- 实现：proofreading-checker 将原 Layer 6 重命名为 Layer 6A（文笔工艺基础），新增 Layer 6B（文笔工艺进阶），覆盖镜头单一性/句式雷同度/环境-情绪脱节/信息密度超标 4 条规则
+- 变更文件：
+  - `ink-writer/ink-writer/agents/proofreading-checker.md`：
+    - intro 与 Layer 6 警示语同步为"Layer 6A / 6B"
+    - "检查维度（6层）"→"检查维度（7层：1-5 + 6A + 6B）"
+    - 第 6 层标题改为"第6A层：文笔工艺基础（Prose Craft Basics）"，保留既有 6.1-6.4 规则完全不变
+    - 在 Layer 6A score 计算后新增完整 Layer 6B 章节：前提数据 / 6B.1 SHOT_MONOTONY / 6B.2 SENTENCE_STRUCTURE_REPETITION / 6B.3 ENV_EMOTION_DISSONANCE / 6B.4 INFO_DENSITY_OVERFLOW / 处置规则表 / Layer 6A+6B 联合合并规则 / 修复建议扩展 / score 计算 / 禁止事项 / 成功标准
+    - 联合合并规则：同一章 6A 和 6B 各产生 critical 时保留两条独立 issue，但在 `merged_fix_suggestion` 合并综合修复建议（critical ≥ 2 时强制推荐回退重写）
+    - data_gap 降级策略延用 flow-naturalness / sensory-immersion 既定模式（前提缺失时评级冻结 B、不产生 hard block）
+  - `scripts/ralph/prd.json`：US-015 passes=true
+- **Learnings for future iterations：**
+  - proofreading-checker 原 Layer 6 的规则码与 prose-impact-checker / writer-agent 的协同码同名（SHOT_MONOTONY / ENV_EMOTION_DISSONANCE / INFO_DENSITY_OVERFLOW）——本 US 把"同名"正式落地为 6B 规则码，两处共存允许独立触发但 polish-agent 需去重；写新规则时应优先复用 writer-agent 协同码而非造新名
+  - Layer 6A + 6B 的 score 合并采用"算术平均"而非加权，因两层等重贡献于同一 dimensions.prose_craft_quality.score；如后续改权重，需同步修改 step-3-review-gate.md 的权重表
+  - 6B.1 SHOT_MONOTONY 与 Layer 2「段落开头单调」的边界：Layer 2 看**开头词**，6B.1 看**镜头类型**（即使开头词不同也可能连续同镜头）——两者可同时触发、不视为重复扣分
+  - 6B.2 SENTENCE_STRUCTURE_REPETITION 与 Layer 2「结构相同」的边界：Layer 2 表层（开头词 / 字面句式），6B.2 深层（句法骨架 6 类模板）——后续可抽取共享 `sentence-skeleton-templates.md` 供 polish-agent Layer 9d 做反向改写
+  - 6B.4 INFO_DENSITY_OVERFLOW.GOLDEN 是继 US-013 CH1_PAYOFF_TANGIBILITY 之后第二个"黄金三章 info_budget 配额硬阻断"，形成"大纲配额（US-005）→ 起草铁律（L11）→ 审查拦截（6B.4）"三层链路，术语/黑名单/融入方式枚举必须保持 plan-write-review 一致
+  - `merged_fix_suggestion` 字段是本 US 新引入的合并通道，polish-agent Layer 9 消费时应优先读取它而非各 issue 的独立 fix_suggestion（避免同问题收到冲突指令）
+  - 后续 US-016 polish-agent Layer 9 的 4 个子层（9a 镜头/9b 感官/9c 信息密度/9d 句式）与 6B.1/6A.2/6B.4/6B.2 一一对应——术语严格保持对齐
+---
