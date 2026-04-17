@@ -180,8 +180,8 @@
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Quick Step 1 新增「档位驱动生成参数」表（档位 1-4 × 元规则下限/扰动对数/稀有度门槛/粗口密度/附加约束）+「疯批档商业安全边界打破」清单 B01-B12 共 12 条（反派视角/悲剧/长期失败/反爽点反转/无金手指逆袭/道德争议/禁忌关系/信仰崩塌/非人类视角/叙事反套路/现实阴暗/自我毁灭）+「差异化约束 4 维硬校验」（题材/元规则交集≤1/扰动对完全不重叠/V1V2V3 各占一档）+「自检与重试」（每维度 3 次重试→降档，复用 Quick Step 1.5 降档算法，写入 aggression_level_effective + aggression_downgrade_log）；字段表补充 meta_rules_hit/perturbation_pairs/market_avoid/safety_boundary_broken/aggression_level_effective 五字段；Markdown 示例追加「打破商业安全边界」示例行。SKILL.md 1034→1088 行（US-011 900 行精简在其自身迭代处理）。"
     },
     {
       "id": "US-011",
