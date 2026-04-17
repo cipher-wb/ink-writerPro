@@ -206,8 +206,8 @@ def run_editor_wisdom_gate(
     if checker_fn is None:
         def checker_fn(text: str, ch_no: int) -> dict:
             from ink_writer.editor_wisdom.checker import check_chapter
-            from ink_writer.editor_wisdom.retriever import Retriever
-            retriever = Retriever()
+            from ink_writer.editor_wisdom.retriever import get_retriever
+            retriever = get_retriever()  # v13 US-006：单例复用，避免每章 ~30s BAAI 加载
             rules = retriever.retrieve(text)
             return check_chapter(text, ch_no, rules, config=config)
 
