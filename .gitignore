@@ -75,3 +75,4 @@ scripts/ralph/progress.txt
 # Ralph runtime state (root-level)
 /prd.json
 /progress.txt
+ink_writer.egg-info/
