@@ -111,7 +111,7 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "参考 desire-description.md（感官）和 pacing-rhythm.md（句式）。L10e 强化现有 L10b 的感官规则，L10f 新增句式节奏规则。"
     },
     {
