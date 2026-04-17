@@ -102,3 +102,13 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - fetch_status 三态：ok（当日命中）/ fallback（7 天内近似）/ none（7 天内无缓存），前端提示语与方案硬约束都由此分支。
   - WebSearch 并行 4 条检索语聚合落盘的动作由 Quick 模式首次运行时触发；Deep 模式不强制（本 PRD 未要求）。
 ---
+
+## 2026-04-17 - US-008
+- 修改 `ink-writer/skills/ink-init/SKILL.md`：Quick Step 1 输出模板尾部追加 `#### 🧬 创意指纹` 板块示例（5 字段 Markdown 列表 + ≤200 字提示 + 3 套差异性提示行）；Quick Step 2 开头插入「🧬 创意指纹板块规格」小节（表格定义 5 字段的数据源 meta_rules_hit / perturbation_pairs / gf_checks / style_voice+sample_line / market_avoid，档位下限 1→≥1/2→≥2/3→≥3/4→≥5 元规则；2 对扰动起步），并追加差异性硬约束（元规则集合两两无交集或 ≤1 + 扰动对两两不重叠 + 语言档位两两不同）+ 违反退回 Quick Step 1 重抽。
+- Files changed: 1（编辑 SKILL.md）。SKILL.md 963 行（US-011 上限 900 行将在后续用 Step 2 模板精简补救）。
+- **Learnings for future iterations:**
+  - 创意指纹板块的 5 字段数据源与上游的一一映射已锁死：meta_rules_hit(US-001) / perturbation_pairs(US-003) / gf_checks(US-004) / style_voice+sample_line(US-005) / market_avoid(US-007)；US-009/010 若改档位矩阵，只需同步更新指纹的「档位下限」行而不动字段清单。
+  - 创意指纹位置放在每套方案字段区内最后（`#### 🧬 创意指纹`），而非 Quick Step 2 输出时再生成——这样用户看方案列表即含指纹，减少 Quick Step 2 后处理的模板分叉。
+  - 差异性硬约束的第三项「语言档位」可复用 Quick Step 1.6 已硬约束的 V1/V2/V3 各占一档，不需额外校验逻辑；真正需要 Step 1 自检的只有前两项（元规则集合 + 扰动对）。
+  - US-011 「SKILL.md ≤900 行」约束下，US-008 新增约 28 行；后续 US-009/010/011 若继续新增段落，需考虑把 Deep Mode 与 Quick Mode 的共享模板抽到 reference 文件以压缩主文。
+---
