@@ -1,7 +1,7 @@
 {
   "$schema": "./anti-trope-seeds-schema.json",
-  "version": "v1.9",
-  "total": 900,
+  "version": "v2.0",
+  "total": 1000,
   "categories": [
     {
       "id": "profession",
@@ -108,6 +108,12 @@
       "date": "2026-04-17",
       "delta": 100,
       "note": "Batch 9/10 身体特征类入库。分布 R1/R2/R3/R4/R5 = 5/20/25/30/20；R4+R5=50%，R5=20%。20 条用户 review 通过 (source=human)，80 条 LLM 生成 (source=llm)。WebSearch 反查已剔除起点+番茄双平台高频身体特征套路（异色瞳紫瞳金瞳红瞳/白发红眼/玛丽苏绝色冰肌/霸总1.8米八块腹肌/修仙仙骨灵根丹田/反派额疤独眼断臂/吸血鬼苍白尖牙/二次元猫耳狐尾/梗化胎记凤凰徽记图腾）。策略：细小的、真实可观察的身体特征——微小疤痕 / 不对称 / 习惯性小动作 / 细部纹理 / 生理微反应。直接激活 M04（角色错位）+ M01（代价可视化）。"
+    },
+    {
+      "version": "v2.0",
+      "date": "2026-04-17",
+      "delta": 100,
+      "note": "Batch 10/10 物件类入库 —— Phase-Seed-1 收官。分布 R1/R2/R3/R4/R5 = 5/20/25/30/20；R4+R5=50%，R5=20%。20 条用户 review 通过 (source=human)，80 条 LLM 生成 (source=llm)。WebSearch 反查已剔除起点+番茄双平台高频物件套路（修仙法宝飞剑乾坤袋丹药灵符灵石储物戒指九鼎鸿蒙灵宝八卦镜紫金葫芦；霸总奢侈品名车劳力士江诗丹顿；甜宠信物情侣戒玫瑰心形项链；古言信物玉佩玉镯荷包手帕；悬疑老梗血书家族账本；传国重宝玉玺和氏璧龙纹金牌）。策略：微小、不起眼、带瑕疵、有时代纹理、触发具体因果——缺一角 / 褪色 / 印有模糊家徽 / 单只 / 过期标签 / 写到一半。激活 M09（权力颗粒度）+ M02（反向冲突）。—— Phase-Seed-1 完成：版本 v1.0-skeleton → v2.0，total 0 → 1000，10 类别（profession/era/conflict/worldview/emotion/taboo/mythology/taboo_language/body_feature/object）× 每类 100 条。"
     }
   ],
   "seeds": [
@@ -11818,6 +11824,1285 @@
         "mystery"
       ],
       "example_pairing": "与 worldview『所有镜子记录上一被照者相貌一整天』搭配，激活 M06+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-002",
+      "category": "object",
+      "value": "一枚被磨亮的老式一分硬币",
+      "rarity": 1,
+      "genre_tags": [
+        "realistic",
+        "universal"
+      ],
+      "example_pairing": "与 era『月末发工资日』搭配，激活 M09+M05。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M09",
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "object-003",
+      "category": "object",
+      "value": "一本皮面已磨白的笔记本",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 profession『老派编辑助理』搭配，激活 M01+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "object-004",
+      "category": "object",
+      "value": "一张写了一半的明信片",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "romance"
+      ],
+      "example_pairing": "与 emotion『打通多年不联系的人电话时的失声』搭配，激活 M03+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-005",
+      "category": "object",
+      "value": "一只单只不见了对方的袖扣",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 profession『洗衣店老板娘』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-006",
+      "category": "object",
+      "value": "一个贴着过期标签的保温杯",
+      "rarity": 1,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 era『周日下午四点』搭配，激活 M09+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-007",
+      "category": "object",
+      "value": "一张背面有铅笔划痕的老照片",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "mystery"
+      ],
+      "example_pairing": "与 era『1985 年居民身份证启用首日』搭配，激活 M03+M05。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "object-008",
+      "category": "object",
+      "value": "一封未寄出的分手信",
+      "rarity": 2,
+      "genre_tags": [
+        "romance",
+        "urban"
+      ],
+      "example_pairing": "与 emotion『听见前任婚讯时的分层释然』搭配，激活 M07+M01。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M07",
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "object-009",
+      "category": "object",
+      "value": "一枚铜扣子边缘印着模糊家徽",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『必须主动烧毁家谱以换取家族安全』搭配，激活 M06+M09。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "object-010",
+      "category": "object",
+      "value": "一包没吃完的九十年代国产奶糖",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "urban"
+      ],
+      "example_pairing": "与 era『1995 年第一批寻呼机退市前夜』搭配，激活 M05+M07。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "object-011",
+      "category": "object",
+      "value": "一张手绘的老家鸟瞰图",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "history"
+      ],
+      "example_pairing": "与 profession『地方志编撰室外聘写手』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-012",
+      "category": "object",
+      "value": "一只银项圈链扣处有裂纹",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "romance"
+      ],
+      "example_pairing": "与 era『农历辛亥年立秋前一日』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-013",
+      "category": "object",
+      "value": "一本家传的手写食谱",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "history"
+      ],
+      "example_pairing": "与 emotion『长辈从远方寄来咸菜的负罪』搭配，激活 M06+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-014",
+      "category": "object",
+      "value": "一张 1998 年的火车票硬纸片",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic"
+      ],
+      "example_pairing": "与 era『1998 年九江大堤合龙那一夜』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-015",
+      "category": "object",
+      "value": "一块玉坠已缺一角的钥匙圈",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『收到意外示好时的轻微不配』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-016",
+      "category": "object",
+      "value": "一块停走的机械表",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "mystery"
+      ],
+      "example_pairing": "与 era『1997 年邓小平逝世当日早高峰』搭配，激活 M05+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-017",
+      "category": "object",
+      "value": "一盏昏黄的马灯",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 profession『矿工兼夜值员』搭配，激活 M01+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-018",
+      "category": "object",
+      "value": "一把老式剃须刀",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "universal"
+      ],
+      "example_pairing": "与 taboo『岳父过世百日内不得剃须』搭配，激活 M06+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-019",
+      "category": "object",
+      "value": "一只还能拨号的黑色老式座机",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『夜里接长途不得先报家址』搭配，激活 M03+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-020",
+      "category": "object",
+      "value": "一瓶标签褪色的墨水",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "universal"
+      ],
+      "example_pairing": "与 profession『誊抄员』搭配，激活 M03+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-021",
+      "category": "object",
+      "value": "一个缺齿的塑料梳子",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "universal"
+      ],
+      "example_pairing": "与 emotion『母亲开始像孩子一样依赖自己时的失措』搭配，激活 M06+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-022",
+      "category": "object",
+      "value": "一张字迹模糊的药方纸",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 profession『走方卖药郎中』搭配，激活 M03+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-023",
+      "category": "object",
+      "value": "一枚手工打磨的贝壳纽扣",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "romance"
+      ],
+      "example_pairing": "与 era『1988 年海南建省前一天』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-024",
+      "category": "object",
+      "value": "一只永远拧不紧的老钢笔",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "universal"
+      ],
+      "example_pairing": "与 profession『老档案员』搭配，激活 M03+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-025",
+      "category": "object",
+      "value": "一本被雨淋过的诗集",
+      "rarity": 2,
+      "genre_tags": [
+        "romance",
+        "universal"
+      ],
+      "example_pairing": "与 emotion『看自己童年照片时的嫉妒』搭配，激活 M05+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-026",
+      "category": "object",
+      "value": "一张旧式花布手帕",
+      "rarity": 2,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 taboo『送伞须先展开再送不得合着递』搭配，激活 M06+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-027",
+      "category": "object",
+      "value": "一本押宝记录的庄票",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 profession『票号老账房』搭配，激活 M09+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M09",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "object-028",
+      "category": "object",
+      "value": "一份被篡改过的遗嘱",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "urban"
+      ],
+      "example_pairing": "与 conflict『遗产宣读完毕前不得合卷宗』搭配，激活 M09+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M09",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "object-029",
+      "category": "object",
+      "value": "一封投错地址的挂号信",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "realistic"
+      ],
+      "example_pairing": "与 taboo『邮差送错信不得当场开封』搭配，激活 M03+M06。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "object-030",
+      "category": "object",
+      "value": "一只走慢三分钟的怀表",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『钟表匠更换齿轮不得念出数字』搭配，激活 M05+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "object-031",
+      "category": "object",
+      "value": "一方只用过一次的松烟墨",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『写已故者姓名后不得再沾同一墨』搭配，激活 M03+M08。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "object-032",
+      "category": "object",
+      "value": "一张写着「立春」的结婚证",
+      "rarity": 3,
+      "genre_tags": [
+        "romance",
+        "realistic"
+      ],
+      "example_pairing": "与 era『立春后第一个周日』搭配，激活 M05+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-033",
+      "category": "object",
+      "value": "一把四十年代木柄瑞士军刀",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 era『1945 年日本投降诏书当晚』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-034",
+      "category": "object",
+      "value": "一本写到一半便停笔的少年日记",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『葬礼上笑出来之后的恐惧』搭配，激活 M03+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-035",
+      "category": "object",
+      "value": "一块撕掉一角的旧军用水壶",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 era『1950 年抗美援朝首批入朝前夜』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-036",
+      "category": "object",
+      "value": "一罐尚留两颗弹壳的子弹盒",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 era『1987 年大兴安岭林火燃烧第三日』搭配，激活 M01+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-037",
+      "category": "object",
+      "value": "一张被折了三次的老地界图",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『要让一条河的古名被重新写进市志』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-038",
+      "category": "object",
+      "value": "一本 1972 年的民校课本",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 profession『民办教师转公办前夕』搭配，激活 M05+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-039",
+      "category": "object",
+      "value": "一封用米汤隐写的密信",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 era『1936 年西安事变前一日』搭配，激活 M03+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-040",
+      "category": "object",
+      "value": "一只画着双喜但只用过一次的漆盘",
+      "rarity": 3,
+      "genre_tags": [
+        "romance",
+        "history"
+      ],
+      "example_pairing": "与 conflict『必须在婚礼上说出那句不该说的话』搭配，激活 M01+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-041",
+      "category": "object",
+      "value": "一个标签模糊的福尔马林标本瓶",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "scifi"
+      ],
+      "example_pairing": "与 profession『解剖学实验室技术员』搭配，激活 M03+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-042",
+      "category": "object",
+      "value": "一张民国戏票上的手写座号",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 profession『评书场老管事』搭配，激活 M05+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-043",
+      "category": "object",
+      "value": "一副镜腿缠着胶布的眼镜",
+      "rarity": 3,
+      "genre_tags": [
+        "realistic",
+        "urban"
+      ],
+      "example_pairing": "与 profession『高校讲师待评副高』搭配，激活 M06+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-044",
+      "category": "object",
+      "value": "一把钥匙配错了两条齿",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "universal"
+      ],
+      "example_pairing": "与 worldview『所有锁都认识自己的钥匙』搭配，激活 M03+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-045",
+      "category": "object",
+      "value": "一本烫金的旧通讯录",
+      "rarity": 3,
+      "genre_tags": [
+        "realistic",
+        "urban"
+      ],
+      "example_pairing": "与 emotion『久未联系朋友死讯麻木后的愧疚』搭配，激活 M03+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-046",
+      "category": "object",
+      "value": "一只红绳系着的铜铃",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 mythology『灵鹊桥搭完时鹊羽落在地上』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-047",
+      "category": "object",
+      "value": "一张医院探视登记表的撕页",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "urban"
+      ],
+      "example_pairing": "与 profession『医院探视登记员』搭配，激活 M03+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-048",
+      "category": "object",
+      "value": "一只走完七万步的旧计步器",
+      "rarity": 3,
+      "genre_tags": [
+        "realistic",
+        "urban"
+      ],
+      "example_pairing": "与 emotion『独自旅行第三日的过度兴奋』搭配，激活 M05+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-049",
+      "category": "object",
+      "value": "一张影印机影出一半的账单",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 profession『会计事务所见习员』搭配，激活 M03+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-050",
+      "category": "object",
+      "value": "一只掉了一颗纽扣的老式制服",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 era『1982 年现行宪法颁布当日』搭配，激活 M06+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-051",
+      "category": "object",
+      "value": "一本繁体竖排的旧字典",
+      "rarity": 3,
+      "genre_tags": [
+        "history",
+        "realistic"
+      ],
+      "example_pairing": "与 taboo_language『古藏文敦煌写卷地名顺序不得倒』搭配，激活 M03+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-052",
+      "category": "object",
+      "value": "一只只能在月光下读出字的铜镜",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『谎话在当日月圆时被墙壁记住』搭配，激活 M03+M08。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "object-053",
+      "category": "object",
+      "value": "一把锁着的抽屉只能从内部打开",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "scifi"
+      ],
+      "example_pairing": "与 conflict『主角必须证明自己从未存在』搭配，激活 M03+M09。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "object-054",
+      "category": "object",
+      "value": "一枚刻着双字的铜打火机",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "universal"
+      ],
+      "example_pairing": "与 taboo『打火机第二次点燃不得为自己』搭配，激活 M01+M07。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "object-055",
+      "category": "object",
+      "value": "一张所有人都记得却无法出示的照片",
+      "rarity": 4,
+      "genre_tags": [
+        "scifi",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『主角必须证明自己从未存在』搭配，激活 M03+M09。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M09"
+      ]
+    },
+    {
+      "seed_id": "object-056",
+      "category": "object",
+      "value": "一盒永远点不完的红烛",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『公墓门口烛火不得用火柴点』搭配，激活 M01+M08。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "object-057",
+      "category": "object",
+      "value": "一块没刻完的墓碑",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "history"
+      ],
+      "example_pairing": "与 profession『刻碑老匠人』搭配，激活 M01+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "object-058",
+      "category": "object",
+      "value": "一封被拆开又封回的信",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "urban"
+      ],
+      "example_pairing": "与 taboo『背弃承诺者月底收到一封无字信』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-059",
+      "category": "object",
+      "value": "一把从不对上锁孔的铜钥匙",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『所有锁都认识自己的钥匙』搭配，激活 M06+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-060",
+      "category": "object",
+      "value": "一对刻着陌生名字的对戒",
+      "rarity": 4,
+      "genre_tags": [
+        "romance",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『代替死者在婚礼上说「我愿意」』搭配，激活 M06+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-061",
+      "category": "object",
+      "value": "一本每年自动缺一页的日记",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "scifi"
+      ],
+      "example_pairing": "与 worldview『每本日记每年自动删除一行最真的话』搭配，激活 M03+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-062",
+      "category": "object",
+      "value": "一枚会在握紧时发热的硬币",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『不得在自己尚未出生之地许下誓言』搭配，激活 M01+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-063",
+      "category": "object",
+      "value": "一串褪色的红绳挂着一枚银坠",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 mythology『月下老人错牵的红线』搭配，激活 M06+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-064",
+      "category": "object",
+      "value": "一张每年只显字一次的纸",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『不得同时持两个不相识之人的名字』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-065",
+      "category": "object",
+      "value": "一管未开封的墨",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『让一本尚未写出的书提前自毁』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-066",
+      "category": "object",
+      "value": "一块夹在典籍里的灰石",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 mythology『女娲补天最后一块五色石的颜色』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-067",
+      "category": "object",
+      "value": "一盏走得比别家慢的旧灯",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『光是记忆最慢的形式』搭配，激活 M10+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-068",
+      "category": "object",
+      "value": "一根被染过红的鹊羽",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 mythology『灵鹊桥搭完时鹊羽落在地上』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-069",
+      "category": "object",
+      "value": "一枝干枯的橘枝",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 mythology『楚辞·湘夫人衣袂挂在橘树』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-070",
+      "category": "object",
+      "value": "一块写着回鹘文的残木牍",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo_language『失传回鹘文「太阳」字写错者须焚』搭配，激活 M01+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-071",
+      "category": "object",
+      "value": "一卷已碎的莎草纸残片",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『古埃及·死者之书第 125 章的签名』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-072",
+      "category": "object",
+      "value": "一根桥墩上褪色的红绳",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每座桥下住着一个被遗忘的约定』搭配，激活 M03+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-073",
+      "category": "object",
+      "value": "一支只写过自己名的旧钢笔",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "realistic"
+      ],
+      "example_pairing": "与 taboo『替他人签字须先签自己名再涂掉』搭配，激活 M06+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-074",
+      "category": "object",
+      "value": "一枚蓝绿相间的羽片",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 mythology『阿兹特克·羽蛇神离去时留下的羽纹』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-075",
+      "category": "object",
+      "value": "一方压过一次血印的图章",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "history"
+      ],
+      "example_pairing": "与 profession『族中指定的祭祀官』搭配，激活 M01+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-076",
+      "category": "object",
+      "value": "一本被翻过第 43 页的皮面日记",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "urban"
+      ],
+      "example_pairing": "与 emotion『读别人日记里关于自己部分的战栗』搭配，激活 M03+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-077",
+      "category": "object",
+      "value": "一张早年填错生日的登记表",
+      "rarity": 4,
+      "genre_tags": [
+        "realistic",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『故亲人生日短信的错愕与不忍拆穿』搭配，激活 M03+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-078",
+      "category": "object",
+      "value": "一只用旧信封包着的咸菜罐",
+      "rarity": 4,
+      "genre_tags": [
+        "realistic",
+        "universal"
+      ],
+      "example_pairing": "与 emotion『长辈从远方寄来咸菜的负罪』搭配，激活 M01+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-079",
+      "category": "object",
+      "value": "一枚磨平了图案的老铜环",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "mystery"
+      ],
+      "example_pairing": "与 era『辽国天庆五年秋』搭配，激活 M05+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-080",
+      "category": "object",
+      "value": "一把音色特异的六弦琴",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "history"
+      ],
+      "example_pairing": "与 taboo_language『门巴族「六弦琴」曲不得错调』搭配，激活 M06+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-081",
+      "category": "object",
+      "value": "一把从未打开过的漆木匣",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『日本·浦岛太郎玉匣未开的一角』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-082",
+      "category": "object",
+      "value": "一本所有人都写过却无人读过的书",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 worldview『每人有一本自己写却从未读过的书』搭配，激活 M03+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "object-083",
+      "category": "object",
+      "value": "一面从未背反照人的铜镜",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『与只在镜里存在的仇人达成停战』搭配，激活 M06+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "object-084",
+      "category": "object",
+      "value": "一把能开启尚未上锁之门的钥匙",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 worldview『所有锁都认识自己的钥匙』搭配，激活 M05+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "object-085",
+      "category": "object",
+      "value": "一张会逐日变淡的相片",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每次被背叛背叛者手指多一道纹』搭配，激活 M03+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-086",
+      "category": "object",
+      "value": "一只握久会沉的空杯",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 emotion『对自己仓皇时的温柔』搭配，激活 M01+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-087",
+      "category": "object",
+      "value": "一条被折断却仍有光的银线",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每条河下游能听见上游承诺』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-088",
+      "category": "object",
+      "value": "一段从未被讲出的录音",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『新生儿啼哭第一声不得被录音』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-089",
+      "category": "object",
+      "value": "一截写有自己未来名字的木牌",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 taboo『写信给尚未出生的人须用左手』搭配，激活 M05+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-090",
+      "category": "object",
+      "value": "一张逐字消失的遗书",
+      "rarity": 5,
+      "genre_tags": [
+        "mystery",
+        "xianxia"
+      ],
+      "example_pairing": "与 taboo『不得把自己的死亡日告诉相信者』搭配，激活 M03+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-091",
+      "category": "object",
+      "value": "一本尚未出生之人的族谱",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 conflict『让自己名字从历史消失但留下父亲的』搭配，激活 M05+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-092",
+      "category": "object",
+      "value": "一枚不投下影子的铜钱",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每人影子是某个死者留下来的』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-093",
+      "category": "object",
+      "value": "一封被同一人读过两次的信",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『同一年内不得两次原谅同一件事』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-094",
+      "category": "object",
+      "value": "一扇比门框小一寸的门",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 taboo『乔迁第一夜不得从外锁门』搭配，激活 M04+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-095",
+      "category": "object",
+      "value": "一枚刻着所有无名之人的印章",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每千人里有一人从未被任何人注视过』搭配，激活 M03+M09。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-096",
+      "category": "object",
+      "value": "一只比开封时更旧的新书",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『时间向前走但人只向后活』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-097",
+      "category": "object",
+      "value": "一把量过自己身高的木尺",
+      "rarity": 5,
+      "genre_tags": [
+        "universal",
+        "xianxia"
+      ],
+      "example_pairing": "与 body_feature『影子比自己矮两寸』搭配，激活 M04+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-098",
+      "category": "object",
+      "value": "一把只响给一个人听的铃",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 worldview『真正爱过的人月底听见一次敲门声』搭配，激活 M03+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-099",
+      "category": "object",
+      "value": "一本写错自己年份的日历",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『临终前一周的日历自动消失』搭配，激活 M05+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-100",
+      "category": "object",
+      "value": "一面走在时间前面的时钟",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "xianxia"
+      ],
+      "example_pairing": "与 conflict『在所有计时器停走的瞬间完成抉择』搭配，激活 M05+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-101",
+      "category": "object",
+      "value": "一张能够收藏秘密的空白纸",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『把自己的心跳写下后不得读出』搭配，激活 M03+M10。",
       "source": "llm"
     }
   ]
