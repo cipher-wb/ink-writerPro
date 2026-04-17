@@ -1,0 +1,169 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ink-writer.local/schemas/anti-trope-seeds.schema.json",
+  "title": "Anti-Trope Seeds Library Schema",
+  "description": "Layer 2 种子库 schema：元规则之下的具体稀缺元素库，用于 Quick 模式扰动引擎随机抽取注入。skeleton 版仅含示例种子，1000 条正式种子由 Phase-Seed-1 交互会话分 10 批生成。",
+  "type": "object",
+  "required": ["version", "total", "categories", "changelog", "seeds"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "可选：指向本 schema 文件的相对路径，便于编辑器自动补全。"
+    },
+    "version": {
+      "type": "string",
+      "description": "语义版本号，skeleton 期以 v1.0-skeleton 表示未完成；Phase-Seed-1 入库后升到 v1.0；后续增量 v1.1/v1.2...",
+      "pattern": "^v\\d+\\.\\d+(-[a-z0-9]+)?$"
+    },
+    "total": {
+      "type": "integer",
+      "description": "正式入库的 seed 条数（不含 example 种子）。skeleton 期为 0。",
+      "minimum": 0
+    },
+    "categories": {
+      "type": "array",
+      "description": "10 类种子大类 meta，定义库的覆盖面，顺序固定便于抽取时均衡采样。",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "intent"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "profession",
+              "era",
+              "conflict",
+              "worldview",
+              "emotion",
+              "taboo",
+              "mythology",
+              "taboo_language",
+              "body_feature",
+              "object"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "description": "中文标签：职业/时代/冲突/世界观/情感/禁忌/神话/禁忌语言/身体特征/物件"
+          },
+          "intent": {
+            "type": "string",
+            "description": "一句话说明此类为何纳入（稀缺性/扰动价值）。"
+          }
+        }
+      }
+    },
+    "changelog": {
+      "type": "array",
+      "description": "每次版本变更记录。skeleton 期为空数组。",
+      "items": {
+        "type": "object",
+        "required": ["version", "date", "delta", "note"],
+        "additionalProperties": false,
+        "properties": {
+          "version": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "delta": {
+            "type": "integer",
+            "description": "本次新增 seed 数量（正数=新增，负数=撤回）。"
+          },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "seeds": {
+      "type": "array",
+      "description": "种子条目。skeleton 期含 10-20 条 example 种子仅作 schema 展示，不计入 total。",
+      "items": { "$ref": "#/$defs/Seed" }
+    }
+  },
+  "$defs": {
+    "Seed": {
+      "type": "object",
+      "required": [
+        "seed_id",
+        "category",
+        "value",
+        "rarity",
+        "genre_tags",
+        "example_pairing",
+        "source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "seed_id": {
+          "type": "string",
+          "description": "唯一 ID，建议格式 <category-id>-<三位数序号>，如 profession-001。",
+          "pattern": "^[a-z_]+-\\d{3,4}$"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "profession",
+            "era",
+            "conflict",
+            "worldview",
+            "emotion",
+            "taboo",
+            "mythology",
+            "taboo_language",
+            "body_feature",
+            "object"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "description": "种子内容本体（2-30 字）。",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "rarity": {
+          "type": "integer",
+          "description": "稀有度 1-5：1 很常见 / 3 中等 / 5 极稀缺。Phase-Seed-1 需满足 rarity≥4 占比 ≥50%，rarity=5 占比 ≥20%。",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "genre_tags": {
+          "type": "array",
+          "description": "适配题材，至少 1 项。可选：xianxia/urban/apocalypse/scifi/mystery/game/history/realistic/romance/universal。",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "xianxia",
+              "urban",
+              "apocalypse",
+              "scifi",
+              "mystery",
+              "game",
+              "history",
+              "realistic",
+              "romance",
+              "universal"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "example_pairing": {
+          "type": "string",
+          "description": "示例扰动对：与另一 category 的 seed 组合一句话，说明此种子如何激活元规则。"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["llm", "human", "websearch_filtered"],
+          "description": "来源：llm=模型生成 / human=人工贡献 / websearch_filtered=联网检索后人工过滤。"
+        },
+        "meta_rules_hit": {
+          "type": "array",
+          "description": "可选：此种子天然契合的元规则编号（如 M01/M07）。",
+          "items": { "type": "string", "pattern": "^M\\d{2}$" },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

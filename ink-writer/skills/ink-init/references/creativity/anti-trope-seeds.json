@@ -1,0 +1,172 @@
+{
+  "$schema": "./anti-trope-seeds-schema.json",
+  "version": "v1.0-skeleton",
+  "total": 0,
+  "categories": [
+    {
+      "id": "profession",
+      "label": "职业",
+      "intent": "冷门/跨时代/反差职业，用于角色错位（M04）与系统反噬（M08）。"
+    },
+    {
+      "id": "era",
+      "label": "时代",
+      "intent": "明确年代或断代节点，用于时空错位（M05）与尺度跃迁（M10）。"
+    },
+    {
+      "id": "conflict",
+      "label": "冲突",
+      "intent": "主线对抗形态，用于反向冲突（M02）与权力颗粒度（M09）。"
+    },
+    {
+      "id": "worldview",
+      "label": "世界观",
+      "intent": "核心规则设定，用于信息不对称（M03）与欲望悖论（M07）。"
+    },
+    {
+      "id": "emotion",
+      "label": "情感",
+      "intent": "主情绪底色，用于身份反差（M06）与欲望悖论（M07）。"
+    },
+    {
+      "id": "taboo",
+      "label": "禁忌",
+      "intent": "不可触碰的规矩，用于代价可视化（M01）与系统反噬（M08）。"
+    },
+    {
+      "id": "mythology",
+      "label": "神话",
+      "intent": "民俗/典故/神祇片段，用于尺度跃迁（M10）与时空错位（M05）。"
+    },
+    {
+      "id": "taboo_language",
+      "label": "禁忌语言",
+      "intent": "方言/黑话/咒语/敬语，用于身份反差（M06）与信息不对称（M03）。"
+    },
+    {
+      "id": "body_feature",
+      "label": "身体特征",
+      "intent": "外形/生理/残缺标记，用于角色错位（M04）与代价可视化（M01）。"
+    },
+    {
+      "id": "object",
+      "label": "物件",
+      "intent": "关键道具/信物/遗物，用于权力颗粒度（M09）与反向冲突（M02）。"
+    }
+  ],
+  "changelog": [],
+  "seeds": [
+    {
+      "seed_id": "profession-001",
+      "category": "profession",
+      "value": "殡仪馆化妆师",
+      "rarity": 4,
+      "genre_tags": ["urban", "mystery"],
+      "example_pairing": "与 taboo『触碰死者面容须道歉』搭配，激活 M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": ["M01", "M04"]
+    },
+    {
+      "seed_id": "profession-002",
+      "category": "profession",
+      "value": "明代钦天监天象记录员",
+      "rarity": 5,
+      "genre_tags": ["history", "xianxia"],
+      "example_pairing": "与 era『万历十五年』搭配，激活 M05 时空错位。",
+      "source": "llm",
+      "meta_rules_hit": ["M05"]
+    },
+    {
+      "seed_id": "era-001",
+      "category": "era",
+      "value": "2003 年非典夏天",
+      "rarity": 4,
+      "genre_tags": ["urban", "realistic"],
+      "example_pairing": "与 object『体温计』搭配，激活 M05+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "era-002",
+      "category": "era",
+      "value": "末世第 47 日",
+      "rarity": 3,
+      "genre_tags": ["apocalypse", "scifi"],
+      "example_pairing": "与 worldview『太阳不再落下』搭配，激活 M10 尺度跃迁。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "conflict-001",
+      "category": "conflict",
+      "value": "主角必须说服反派不要拯救世界",
+      "rarity": 5,
+      "genre_tags": ["universal"],
+      "example_pairing": "与 worldview『拯救需要献祭 10% 人口』搭配，激活 M02 反向冲突。",
+      "source": "llm",
+      "meta_rules_hit": ["M02", "M07"]
+    },
+    {
+      "seed_id": "worldview-001",
+      "category": "worldview",
+      "value": "所有人每说一句谎言，身上长一根白头发",
+      "rarity": 5,
+      "genre_tags": ["urban", "mystery", "xianxia"],
+      "example_pairing": "与 profession『刑警』搭配，激活 M03 信息不对称+M01 代价可视化。",
+      "source": "llm",
+      "meta_rules_hit": ["M01", "M03"]
+    },
+    {
+      "seed_id": "emotion-001",
+      "category": "emotion",
+      "value": "对失败的眷恋",
+      "rarity": 4,
+      "genre_tags": ["realistic", "romance"],
+      "example_pairing": "与 profession『职业电竞选手』搭配，激活 M07 欲望悖论。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "taboo-001",
+      "category": "taboo",
+      "value": "不能在日出前说出真名",
+      "rarity": 4,
+      "genre_tags": ["xianxia", "mystery"],
+      "example_pairing": "与 object『户籍册』搭配，激活 M01+M08 系统反噬。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "mythology-001",
+      "category": "mythology",
+      "value": "山海经·刑天舞干戚（无头者继续战斗）",
+      "rarity": 4,
+      "genre_tags": ["xianxia", "history"],
+      "example_pairing": "与 body_feature『颈部疤痕』搭配，激活 M06 身份反差。",
+      "source": "human"
+    },
+    {
+      "seed_id": "taboo_language-001",
+      "category": "taboo_language",
+      "value": "闽南语讣告用的『转厝』",
+      "rarity": 5,
+      "genre_tags": ["realistic", "mystery"],
+      "example_pairing": "与 profession『殡仪馆化妆师』搭配，激活 M03+M06。",
+      "source": "human"
+    },
+    {
+      "seed_id": "body_feature-001",
+      "category": "body_feature",
+      "value": "左手小指先天缺失一节",
+      "rarity": 3,
+      "genre_tags": ["universal"],
+      "example_pairing": "与 conflict『必须弹奏一首钢琴曲才能启动机关』搭配，激活 M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "object-001",
+      "category": "object",
+      "value": "一张 1987 年的中奖彩票存根",
+      "rarity": 4,
+      "genre_tags": ["urban", "realistic", "mystery"],
+      "example_pairing": "与 era『2003 年非典夏天』搭配，激活 M05+M09 权力颗粒度。",
+      "source": "llm"
+    }
+  ]
+}

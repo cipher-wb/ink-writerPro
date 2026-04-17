@@ -1,6 +1,6 @@
 ---
 name: ink-init
-description: 深度初始化网文项目。通过分阶段交互收集完整创作信息，生成可直接进入规划与写作的项目骨架与约束文件。支持 --quick 快速随机模式。
+description: 深度初始化网文项目。通过分阶段交互收集完整创作信息，生成可直接进入规划与写作的项目骨架与约束文件。支持 --quick 快速模式，内置 4 档激进度（1 保守 / 2 平衡 / 3 激进 / 4 疯批）与三层创意体系（元规则库 + 种子库 + 扰动引擎）。
 allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 ---
 
@@ -12,6 +12,16 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 
 - **带 `--quick`**：进入 Quick 模式（见下方 §Quick Mode）。
 - **不带 `--quick`**：进入 Deep 模式（原有苏格拉底式提问流程，见 §Deep Mode）。
+
+### Quick 模式命令格式（激进度档位）
+
+Quick 模式支持三种命令格式传入激进度档位（1 保守 / 2 平衡 / 3 激进 / 4 疯批）：
+
+1. `/ink-init --quick` — 不带档位 → Quick Step 0.5 弹 AskUserQuestion 询问。
+2. `/ink-init --quick 2` — 位置参数（**推荐**）：第 2 个 token 直接传入档位数字（1-4）。
+3. `/ink-init --quick --档位=2` — 命名参数：等号后跟档位数字。
+
+**中文词容错**（位置参数与命名参数均适用）：`保守 → 1` / `平衡 → 2` / `激进 → 3` / `疯批 → 4`；大小写与全半角不敏感，无法解析时回退到 Quick Step 0.5 弹询问（不直接报错）。
 
 ---
 
@@ -29,17 +39,156 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 2. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/surnames.json` — 姓氏库（按 common/moderate/rare/compound 四层），随机抽取时按稀有度加权：common 20%、moderate 40%、rare 30%、compound 10%。
 3. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/given_names.json` — 名字素材库（按 classical/modern/martial/scholarly/cold 五风格 × male/female），根据方案风格从匹配风格池中随机取 1-2 字组合。
 4. `references/genre-tropes.md`（L1 必读）。
-5. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
+5. `references/creativity/meta-creativity-rules.md`（L1 必读）—— 10 条元规则 M01-M10，作为 Quick Step 1 方案校验的硬约束标尺。
+6. `references/creativity/anti-trope-seeds.json`（L1 必读）—— Layer 2 种子库骨架，扰动引擎抽取稀缺元素来源；skeleton 期 example 种子即可，1000 条正式种子由 Phase-Seed-1 交互会话补全，详见 `anti-trope-seeds-roadmap.md`。
+7. `references/creativity/perturbation-engine.md`（L1 必读）—— Layer 3 扰动引擎规格；定义扰动对抽取算法、5 种模式、档位 N 矩阵、3 套方案整对去重，Quick Step 1 必须按本规格生成 `perturbation_pairs` 字段。
+8. `references/creativity/golden-finger-rules.md`（L1 必读）—— 金手指三重硬约束（GF-1 非战力维度 / GF-2 代价可视化 / GF-3 一句话爆点）+ 禁止词列表 ≥20 + 校验算法 + 降档逻辑，Quick Step 1.5 校验标尺。
+9. `references/creativity/style-voice-levels.md`（L1 必读）—— 语言风格三档分级（V1 文学狂野 / V2 烟火接地气 / V3 江湖野气）+ 敏感词 L0-L3 四级分类 + 档位×密度矩阵，Quick Step 1.6 分配标尺。
+10. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/nicknames.json`（L1 必读）—— 江湖绰号库 ≥100 条，每条含 `rarity(1-5)` 与 `style_tags`；V3 档主力素材，V1 档冷峻配角可借用 `rough` 标签子集。
+11. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/book-title-patterns.json`（L1 必读）—— V1/V2/V3 三档各 50+ 条书名模板，每条含 `rhetoric_tags`（7 种修辞：pun/homophone/antithesis/irony/oxymoron/concrete_abstract/anachronism），Quick Step 1.7 书名生成与修辞标签标注的抽取池。
+12. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
+
+### WebSearch 子步骤：双平台榜单反向建模
+
+固定 2 个检索源（不可配置）：**起点中文网月票榜** + **番茄小说热门新书**。
+
+**硬编码检索语**（4 条，两两分平台并行执行）：
+
+1. `起点中文网 月票榜 2026 热门 题材`
+2. `起点 分类 月榜`
+3. `番茄小说 爆款 套路 2026`
+4. `番茄免费小说 热门 新书`
+
+**缓存路径与命名**：
+
+- 基准目录 `${CLAUDE_PLUGIN_ROOT}/../../data/market-trends/`（见该目录 `README.md`）。
+- 缓存文件 `cache-YYYYMMDD.md`（`YYYYMMDD` 为 UTC+8 当日日期）。
+
+**执行流程**：
+
+1. Read `${CLAUDE_PLUGIN_ROOT}/../../data/market-trends/cache-$(date +%Y%m%d).md`。
+   - 若存在 → 当日已缓存，直接复用，**跳过 WebSearch**。
+2. 若不存在 → 两平台并行 WebSearch（起点 2 条 + 番茄 2 条）；总延迟上限 **15s**。
+3. 聚合结果写入 `cache-YYYYMMDD.md`，格式见 `data/market-trends/README.md`（两平台 Top 10 + 各 5-8 热门套路关键词 + **两平台共通套路 Top 5** 列表）。
+4. 保留最近 **90 天** 缓存，超期文件启动时静默清理。
+
+**Fallback**：
+
+- WebSearch 失败 / 超时 → 回溯最近 **7 天** 内任一 `cache-*.md` 作为近似当日数据；命中则在 Quick Step 2 输出显式提示 `⚠️ 使用 N 天前榜单数据`。
+- 7 天内无缓存 → `fetch_status: none`，Quick Step 1 **跳过** 反向规避，创意指纹「反向规避」字段填 `无当日数据`。
+
+**消费（Quick Step 1）**：
+
+- 方案生成时 **必须规避两平台共通 Top 5 热门套路关键词**；单平台榜单不强制规避。
+- 被规避的关键词记入每套方案字段 `market_avoid`（数组），Quick Step 2 创意指纹消费。
+
+## Quick Step 0.5：激进度档位选择
+
+### 档位解析顺序
+
+Quick Step 0 完成后、进入 Quick Step 1 前，按以下优先级确定本次生成的激进度档位 `aggression_level ∈ {1, 2, 3, 4}`：
+
+1. **位置参数优先**：若命令包含 `--quick <token>`（例 `--quick 2` / `--quick 激进`），先尝试解析 token；合法则锁定。
+2. **命名参数次之**：若命令包含 `--档位=<token>`（例 `--档位=3` / `--档位=疯批`），解析 token；合法则锁定。
+3. **AskUserQuestion 兜底**：若未传参或 token 无法解析为 1-4，调用 `AskUserQuestion` 工具弹出四选项询问，**默认档位 2 平衡**。
+
+### 中文词容错映射
+
+| 输入 token | 映射档位 |
+|------------|----------|
+| `1` / `保守` / `conservative` | 1 |
+| `2` / `平衡` / `balanced` / 空值（默认） | 2 |
+| `3` / `激进` / `aggressive` | 3 |
+| `4` / `疯批` / `wild` / `crazy` | 4 |
+
+大小写与全半角不敏感；其他 token 视为无法解析 → 回退弹询问。
+
+### 档位矩阵（硬约束）
+
+| 档位 | 名称 | 元规则命中下限 | 扰动对数量 | 稀有度门槛 | 额外约束 |
+|------|------|----------------|------------|------------|----------|
+| 1 | 保守 | ≥1 | 1 | 种子 rarity ≤3 | L1 粗口禁用；V3→V1 回退 |
+| 2 | 平衡 | ≥2 | 2 | 至少 1 对含 rarity 4 种子 | L1 仅 V2/V3 ≤0.2% |
+| 3 | 激进 | ≥3 | 3 | 至少 2 对含 rarity 4 种子 | L2 擦边允许 V3 档 |
+| 4 | 疯批 | ≥5 | 5 | 至少 3 对含 rarity 5 种子 | **必须打破 ≥1 商业安全边界**；至少 1 套 V3 |
+
+上表与 `meta-creativity-rules.md` §校验硬门槛 / `perturbation-engine.md` §档位 N 矩阵 / `style-voice-levels.md` §档位×密度矩阵 保持一致；任一处变更须三处同步。
+
+### AskUserQuestion 规范
+
+当需要弹询问时，调用 `AskUserQuestion`，题干与选项固定如下：
+
+```
+题干：本次 Quick 生成选择哪个激进度档位？
+选项：
+- 1 保守（商业安全，元规则 ≥1，稀有度 ≤3）
+- 2 平衡（默认；元规则 ≥2，扰动 2 对，含 1 对稀有度 4）
+- 3 激进（元规则 ≥3，扰动 3 对，含 2 对稀有度 4，允许 L2 擦边）
+- 4 疯批（元规则 ≥5，扰动 5 对，3 对稀有度 5，必须打破商业安全边界）
+默认：2 平衡
+```
+
+### 日志标注
+
+档位锁定后立即在对话中输出一行日志（让用户可核对）：
+
+```
+本次生成档位：<N> <名称>（元规则≥<X> / 扰动对<Y> / 稀有度门槛<Z>）
+```
+
+示例：`本次生成档位：3 激进（元规则≥3 / 扰动对 3 / 至少 2 对含 rarity 4）`。
+
+### 档位传递给下游
+
+- `aggression_level` 与 `aggression_name` 两字段写入会话上下文，供 Quick Step 1 / 1.5 / 1.6 消费。
+- 3 套方案**统一按该档位**生成（不做梯度分离）；Quick Step 1.5 降档算法触发时更新 `aggression_level_effective`，日志追加一行 `⚠️ 降档：<原> → <新>（原因：<金手指 5 次未通过 / 其他>）`。
 
 ## Quick Step 1：生成 3 套差异化方案
 
-### 差异化约束
+### 档位驱动生成参数（按 `aggression_level` 锁定）
 
-3 套方案必须在以下维度两两不同：
-- **题材方向**：从题材集合（见 Deep Mode Step 1 的题材集合）中选 3 个不同大类。
-- **角色设定**：主角性格/背景不重复（如成长型 vs 复仇型 vs 天才型）。
-- **冲突模式**：核心冲突不雷同（如弱变强 vs 阴谋揭露 vs 守护底线）。
-- **金手指类型**：避免 3 套都是系统流（如系统 vs 传承 vs 天赋 vs 重生记忆）。
+3 套方案**统一**按 Quick Step 0.5 锁定的档位生成（不做梯度分离）。硬参数复用 Quick Step 0.5 §档位矩阵（元规则命中下限 / 扰动对 / 稀有度门槛 / 附加约束）；此处补充粗口密度映射：档位 1 = 0%（L1 禁） / 档位 2 ≈ 0.2% / 档位 3 = 0.5%-0.8%（L2 仅 V3） / 档位 4 = 0.8%-1.5%（L2 仅 V3）。变更须同步 `meta-creativity-rules.md / perturbation-engine.md / style-voice-levels.md`。
+
+### 疯批档（档位 4）商业安全边界打破（必填 ≥1）
+
+当 `aggression_level=4` 时，每套方案必须从以下边界清单中任选 ≥1 条打破，并在方案字段 `safety_boundary_broken` 数组显式列出（字符串数组，元素取自候选编号 + 一句话落地描述）：
+
+1. **B01 反派视角主角**：主角是被广泛认为的"坏人"，全书不洗白。
+2. **B02 悲剧结局主线**：主线走向明确坏结局（主角死/大业毁/所爱失）。
+3. **B03 主角长期失败**：至少前 30% 篇幅主角持续挫败，无顺风局。
+4. **B04 反爽点反转**：关键爽点时刻主角反而付出不可逆代价（爽 1 分换痛 10 分）。
+5. **B05 无金手指逆袭**：在本可设置金手指的题材里坚持用"纯智慧/人性"破局。
+6. **B06 主角道德争议**：主角做明显违背主流价值的选择（弑亲复仇 / 背叛挚友 / 放弃救人）。
+7. **B07 禁忌关系主线**：核心情感线涉及师生 / 上下级 / 继亲 / 仇敌之女等社会禁忌配对。
+8. **B08 信仰崩塌设定**：设定层面瓦解读者熟悉的"大义/正道/师门"光环（例：仙门豢养凡人为食）。
+9. **B09 主角非人类视角**：主角是传统意义的"怪物/妖/AI/反派种族"，用其视角写主线。
+10. **B10 叙事反套路**：使用倒叙/多 POV 轮转/不可靠叙述/第二人称等高风险叙事手法贯穿全书。
+11. **B11 现实阴暗面正面刻画**：直面贫困/阶级/暴力/系统性压迫等现实题材，不做乌托邦软化。
+12. **B12 主角自我毁灭驱动**：主角核心欲望就是毁灭自己或所爱（而非救赎/上升）。
+
+档位 1-3 不要求打破商业安全边界；若方案自发触及，应提醒用户"当前档位未要求，建议升档"。
+
+### 差异化约束（3 套两两不同，4 维硬校验）
+
+3 套方案必须在以下 4 个维度两两不同（**违反任一维度退回本 Step 重抽失败槽位，最多 3 次，仍失败则调用 §降档与重试**）：
+
+1. **题材方向**：从题材集合（见 Deep Mode Step 1 的题材集合）选 3 个不同大类。
+2. **元规则命中**（`meta_rules_hit`）：3 套方案的命中编号集合两两交集 ≤1（档位 ≥3 要求严格无交集）。
+3. **扰动对**（`perturbation_pairs`）：3 套方案的扰动对 seed 条目两两完全不重叠（由 `perturbation-engine.md §整对去重` 硬约束）。
+4. **语言档位**（`style_voice`）：3 套方案 V1/V2/V3 各占一档（由 Quick Step 1.6 硬约束；档位 1 保守 V3→V1 回退时允许 V1 重复但 V2 必占 1 套）。
+
+辅助差异化（非硬校验，仅鼓励）：角色性格/背景不重复、冲突模式不雷同、金手指类型不雷同（系统 vs 传承 vs 天赋 vs 重生记忆）。
+
+### 自检与重试
+
+生成每套方案时在 `think` 过程中对照档位矩阵逐项自检：
+
+- 元规则命中数 < 下限 → 同槽位重抽（保留题材/主角，重新组合元规则 + 扰动对），最多 **3 次**。
+- 扰动对数量或稀有度未达标 → 同槽位重抽 `perturbation_pairs`，最多 **3 次**。
+- 疯批档未打破商业安全边界 → 从 B01-B12 任抽 1 条重构对应方案核心，最多 **3 次**。
+- 3 套差异化 4 维硬校验任一不通过 → 按失败维度（题材/元规则/扰动对/语言档位）重抽对应槽位，最多 **3 次**。
+
+3 次仍失败 → 调用 Quick Step 1.5 的降档逻辑（激进→平衡→保守；保守档不再降），使用更保守参数整体重生成；降档事件写入 `aggression_level_effective` 与 `aggression_downgrade_log`，Quick Step 2 方案标题旁标注「⚠️ 差异化校验触发降档至 X 档」。
 
 ### 命名规则
 
@@ -64,6 +213,11 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 | 金手指概要 | 类型 + 能力 + 代价，或"无金手指" |
 | 第一章爽点预览 | **必填 ≥50 字**（US-001）：描述金手指在第一章的具体收益场景（资源/击退/认可/地位/信息/危机解除），含视觉/感官特征。禁止仅写抽象收益。 |
 | 前三章钩子概念 | 第 1/2/3 章各一句话钩子描述 |
+| `meta_rules_hit` | 命中的元规则编号数组（如 `["M03","M07"]`），数量 ≥ 档位下限（1/2/3/5）。 |
+| `perturbation_pairs` | 扰动对数组（见 perturbation-engine.md schema），数量 = 档位对应值。 |
+| `market_avoid` | 显式规避的两平台共通 Top 5 套路关键词数组；`fetch_status=none` 时填空并在指纹写「无当日数据」。 |
+| `safety_boundary_broken` | **仅档位 4 必填**，打破的商业安全边界数组（如 `["B02 悲剧结局主线：…"]`）；档位 1-3 置空或省略。 |
+| `aggression_level_effective` | 本方案实际生效档位（降档后可能小于 `aggression_level`）。 |
 
 ### 输出格式
 
@@ -83,7 +237,17 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
   1. 第1章：XX
   2. 第2章：XX
   3. 第3章：XX
+- **打破商业安全边界**（仅档位 4 显示）：B02 悲剧结局主线 —— 主角最终死于旧盟友之手，女主以复仇者身份结案。
+
+#### 🧬 创意指纹
+- **命中元规则**：M03 信息不对称（主角知未来小新闻） / M07 欲望悖论（越靠近越失去）
+- **使用扰动对**：「民国租界」×「量子物理」 ；「丧葬师」×「直播带货」
+- **金手指维度**：GF-1=1 / GF-2=1 / GF-3=0（信息类，代价可量化）
+- **语言档位**：V1 文学狂野 —— 「江雾压城，像一口咽不下的铁」
+- **反向规避**：修真升级流、赘婿打脸、系统签到（两平台共通 Top 5）
 ```
+
+> 创意指纹总字数 ≤200 字；3 套方案的指纹必须在 `命中元规则` / `使用扰动对` / `语言档位` 三项中至少三项全不同。
 
 展示完毕后，提示用户：
 
@@ -92,7 +256,114 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 > - 输入混搭指令（如「1的书名 + 2的主角 + 3的冲突」）
 > - 输入 **0** 重新随机生成 3 套全新方案
 
-## Quick Step 2：用户选择与方案确定
+## Quick Step 1.5：金手指三重校验
+
+参照 `references/creativity/golden-finger-rules.md`，对 Quick Step 1 生成的 3 套方案逐套自检金手指，输出 `gf_checks = [GF1, GF2, GF3]` 的 0/1 矩阵：
+
+- **GF-1 非战力维度**：金手指作用维度必须落在 {信息 / 时间 / 情感 / 社交 / 认知 / 概率 / 感知 / 规则} 8 类之一；命中禁止词列表（修为暴涨/无限金币/系统签到/作弊器/外挂 等 ≥20 条）直接 GF1=0。
+- **GF-2 代价可视化**：代价必须明确 / 可量化 / 可被反派利用，且前 10 章可见。模糊代价（如「消耗法力」「会疲劳」）判 GF2=0。
+- **GF-3 一句话爆点**：20 字内讲清楚且触发「这也行？」惊讶感；含具体动作/代价/反直觉维度。
+
+### 通过条件
+
+每套方案 `sum(gf_checks) >= 2` 方可入选（三项通过二项即可）。
+
+### 重抽与降档
+
+- 未通过时回到 Quick Step 1 同一槽位重抽金手指，最多 5 次。
+- 5 次仍未通过 → 触发档位降档（激进→平衡，平衡→保守；保守档不再降），用更保守参数重生成；降档事件写入 `gf_downgrade_log`，Quick Step 2 方案标题旁标注「⚠️ 金手指校验触发降档至 X 档」。
+- 3 套方案各自独立降档，互不影响。
+
+### 输出产物
+
+- `gf_checks` 字段（每套方案一组 3 元 0/1 数组）—— Quick Step 2 创意指纹板块消费。
+- `gf_downgrade_log` 数组（如空则省略）—— Quick Step 2 末尾汇总。
+
+## Quick Step 1.6：语言风格三档分配
+
+参照 `references/creativity/style-voice-levels.md`，对通过金手指校验的 3 套方案强制分配 V1 / V2 / V3 三档，禁止两套同档。
+
+### 分配算法
+
+1. 按种子 `stable_hash(timestamp + genre_tuple)` 固定 `[V1, V2, V3]` 洗牌顺序，依次赋值给方案 1/2/3。
+2. 档位 1 保守：若分配到 V3 → 回退到 V1（`style_fallback: "V3→V1 (level=1)"` 写入日志），保持差异化。
+3. 档位 4 疯批：三套方案中必须至少一套 V3，否则重新分配。
+4. 题材适配度（见 style-voice-levels.md §八）仅作优先级参考，硬约束优先。
+
+### 敏感词/粗口控制
+
+- 每套方案产出 `vocabulary_allowlist`（L0 / L1 / L2 子集）。
+- 档位 × 档位密度矩阵：
+  - 档位 1 保守 = 0%（零 L1+）
+  - 档位 2 平衡 ≈ 0.2%（L0 主力，L1 ≤0.05%）
+  - 档位 3 激进 = 0.5%-0.8%（L2 仅 V3）
+  - 档位 4 疯批 = 0.8%-1.5%（L2 仅 V3）
+- L3 红线全档禁止，命中 → 方案整体重写。
+
+### 输出字段（每套方案）
+
+```
+style_voice: "V1|V2|V3"
+style_voice_name: "文学狂野|烟火接地气|江湖野气"
+density_target: "0.2%"            # 字符串带百分号，便于日志打印
+sample_line: "<5-15 字 voice 示例句>"
+vocabulary_allowlist: ["L0", "L1"?, "L2"?]
+```
+
+以上字段由 Quick Step 2 创意指纹板块「语言档位」直接消费。
+
+## Quick Step 1.7：书名与人名校验
+
+对 Quick Step 1/1.5/1.6 产出的 3 套方案逐套做书名与人名的黑名单校验与修辞标签标注。
+
+### 书名校验
+
+1. 从 `book-title-patterns.json` 对应 V1/V2/V3 档位的桶里抽取模板作为候选（档位 4 疯批允许混抽高稀缺 V3 + V1）。
+2. 候选书名对照 `blacklist.json.book_title_suffix_ban.tokens` 与 `book_title_prefix_ban.tokens` 做子串检测；命中任一立即丢弃重抽（最多 5 次）。
+3. 最终书名输出 `title_rhetoric_tags`（多选自 7 种修辞），取自该模板 `rhetoric_tags`；若模板标签数 <1 需自行推断至少 1 个合法标签。
+4. 3 套方案的 `title_rhetoric_tags` 两两不得完全相同（至少 1 个差异 tag）。
+
+### 人名校验
+
+1. 主角/核心配角名继续走 Quick Step 1 的 `surnames.json + given_names.json`（`given_names.json` 新增 `rough/smoky/jianghu` 桶，与 V1/V2/V3 档位映射：V1→rough、V2→smoky、V3→jianghu，默认从对应桶抽字）。
+2. 若方案为 V3 档，核心绰号从 `nicknames.json` 挑选 `rarity ≥3` 且 `style_tags` 含 `jianghu` 的条目作为「主角外号」。
+3. 全名命中 `blacklist.json.male/female` 列表 → 丢弃重抽。
+4. 全名拆成「姓」与「名末字」，分别对照 `blacklist.json.name_combo_ban.surname_tokens × given_suffix_tokens` 笛卡儿积；命中任一组合直接丢弃重抽（即便不在 male/female 列表中）。
+5. 3 套方案之间的角色姓名不得重复。
+
+### 输出字段（每套方案）
+
+```
+title_rhetoric_tags: ["irony", "oxymoron"]          # 数组，≥1 且 ∈ rhetoric_enum
+nickname?: "刀疤阿九"                                 # 仅 V3 档必填
+name_checks:
+  combo_ban_hit: false
+  blacklist_hit: false
+  retry_count: 0-5
+```
+
+未通过时同步写入 `name_retry_log`，由 Quick Step 2 末尾汇总。
+
+## Quick Step 2：方案输出（含创意指纹）与用户选择
+
+### 🧬 创意指纹板块规格（每套方案末尾必出）
+
+对每套方案，在输出末尾追加固定结构的「🧬 创意指纹」板块，总字数 ≤200 字，Markdown 列表形式，5 个字段顺序固定：
+
+| 字段 | 来源 | 说明 |
+|------|------|------|
+| **命中元规则** | `meta_rules_hit`（Quick Step 1 产出） | 列出 M01-M10 中命中的具体编号 + 一句话说明，≥1 条（档位 1）/ ≥2（档位 2）/ ≥3（档位 3）/ ≥5（档位 4），多条用 ` / ` 分隔。 |
+| **使用扰动对** | `perturbation_pairs`（Quick Step 1） | 至少 2 对（档位 1 可为 1 对）；格式「`seed_a × seed_b`」，多对用 `；` 分隔。 |
+| **金手指维度** | `gf_checks`（Quick Step 1.5） | `GF-1=<0/1> / GF-2=<0/1> / GF-3=<0/1>`；附一句话解释通过的维度（如「信息类，代价可量化」）。 |
+| **语言档位** | `style_voice + sample_line`（Quick Step 1.6） | 格式「`V1/V2/V3 <风格名> —— 「<sample_line>」`」。 |
+| **反向规避** | `market_avoid`（Quick Step 0 WebSearch） | 列出本方案显式规避的两平台共通 Top 5 套路关键词；`fetch_status=none` 时填「无当日数据」。 |
+
+**硬约束：3 套方案的创意指纹必须体现差异性** —— 在以下三项中至少三项全不同：
+- `命中元规则` 的编号集合两两无交集，或交集 ≤1（档位 ≥3 要求严格两两不同）。
+- `使用扰动对` 的 seed 条目两两完全不重叠（Quick Step 1 已由 perturbation-engine.md 硬去重）。
+- `语言档位` 两两不同（Quick Step 1.6 已硬约束 V1/V2/V3 各占一套）。
+
+违反任一项 → 退回 Quick Step 1 重抽失败维度。
 
 ### 选择模式
 
@@ -143,25 +414,13 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 | 第一章爽点预览 | `golden_finger.first_payoff`（若未达 80 字，自动扩写或追问补齐以通过充分性闸门 5a）；同时派生 `golden_finger.visual_signature`（从预览中抽取视觉/感官描写，不足 50 字则追问） |
 | 前三章钩子 | `constraints.opening_hook` |
 
-未覆盖的字段（如 `world.scale`、`world.power_system_type`）从题材自动推断合理默认值。
+未覆盖的字段（如 `world.scale` / `world.power_system_type`）从题材自动推断合理默认值。
 
-**US-001 Quick 模式补充填充**（充分性闸门 5a 所需）：
-- `golden_finger.first_payoff`：由「第一章爽点预览」扩写至 ≥80 字（追问用户或自动展开具体收益形式）。
-- `golden_finger.visual_signature`：从预览中抽取视觉/感官片段，若 <50 字则由系统补齐并请用户确认。
-- `golden_finger.escalation_ladder`：基于金手指类型自动生成三阶段默认梯度（ch1 / ch10 / late_game），各写一句话，展示给用户确认（Y/N）。
-- `golden_finger.payoff_self_check`：Quick 模式下自动填入「已通过预览字段校验」，若用户修改预览则重置该字段要求用户重新回答。
+**自动填充三件套**（依序执行；每件以紧凑表格一次性展示，请求 Y/N 确认；N → 逐字段微调，最多 3-5 轮）：
 
-**US-003 Quick 模式第一章爽点规格自动填充**（充分性闸门 5b 所需）：
-- 在 `golden_finger.first_payoff` / `visual_signature` 已补齐后，自动合并派生 `ch1_cool_point_spec` 四字段（规则同 Deep Mode Step 3+++）。
-- `involved_characters` 默认取 `protagonist.name` + `relationship.heroine_names[0]`（或首个核心配角），若存在对抗型爽点则额外追加临时对手代号。
-- `payoff_form` 基于 `first_payoff` 关键词匹配（含「钱/资源/宝物」→资源获取；「击退/震慑/重创」→敌人击退；「刮目相看/认可/赞叹」→他人认可；「上位/晋升/拜入」→地位提升；「揭穿/窥见/看懂」→信息解锁）；匹配失败时默认「敌人击退」并提示用户校正。
-- `reader_emotion_target` 由 `payoff_self_check` 衍生，若缺失则使用模板「第一章末读者因 <主角><payoff_form> 的具体画面，产生<爽快/惊艳/期待>的情绪」。
-- 生成后以紧凑表格一次性展示，请求 Y/N 确认；回答 N 则进入逐字段微调（最多 3 轮）；标记 `ch1_cool_point_spec.auto_generated=true` 与 `user_confirmed` 的最终取值。
-
-**US-002 Quick 模式角色语言档案自动填充**（充分性闸门 3a 所需）：
-- 基于方案中的「主角设定（含性格/背景）」与「女主/核心配角设定」，按 Deep Mode 的「自动推荐规则」生成 `protagonist.voice_profile` 与 `relationship.voice_profiles[<core_partner_name>]` 两份完整档案。
-- 自动填充时，标记 `voice_profile.auto_generated=true`。
-- 生成后以紧凑表格展示给用户，请求一次性 Y/N 确认；用户回答 N 则进入逐字段微调（最多 5 轮），完成后再继续 Quick Step 3 的剩余流程。
+1. **US-001 金手指爽点补充**（闸门 5a 所需）：由「第一章爽点预览」扩写 `first_payoff`（≥80 字）→ 抽取 `visual_signature`（≥50 字不足则补齐）→ 基于类型生成 `escalation_ladder` 三阶段（ch1/ch10/late_game）→ `payoff_self_check` 自动填「已通过预览字段校验」（用户改预览则重置）。
+2. **US-003 第一章爽点规格派生**（闸门 5b 所需）：在 US-001 字段到位后，合并派生 `ch1_cool_point_spec` 四字段（规则同 Deep Mode Step 3+++）。`involved_characters` 默认 `protagonist.name` + `relationship.heroine_names[0]`（对抗型加临时对手代号）；`payoff_form` 按关键词匹配（钱/资源→资源获取；击退/震慑→敌人击退；认可/赞叹→他人认可；晋升/上位→地位提升；揭穿/窥见→信息解锁；失败默认「敌人击退」并提示校正）；`reader_emotion_target` 由 `payoff_self_check` 衍生。标记 `auto_generated=true` + `user_confirmed` 终值。
+3. **US-002 角色语言档案**（闸门 3a 所需）：基于「主角/核心配角设定」按 Deep Mode「自动推荐规则」生成 `protagonist.voice_profile` + `relationship.voice_profiles[<core_partner_name>]` 两份完整档案；标记 `voice_profile.auto_generated=true`。
 
 ### 2) 填充 `.ink/state.json` 和 `.ink/preferences.json`
 
@@ -222,81 +481,24 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 
 ### 根目录
 
-- `references/genre-tropes.md`
-  - 用途：Step 1 题材归一化、题材特征提示。
-  - 触发：所有项目必读。
-- `references/system-data-flow.md`
-  - 用途：初始化产物与后续 `/plan`、`/write` 的数据流一致性检查。
-  - 触发：Step 0 预检必读。
+- `references/genre-tropes.md` — Step 1 题材归一化；所有项目必读。
+- `references/system-data-flow.md` — init 产物与 `/plan` `/write` 数据流一致性；Step 0 必读。
 
 ### worldbuilding
 
-- `references/worldbuilding/character-design.md`
-  - 用途：Step 2 角色维度补问（目标、缺陷、动机、反差）。
-  - 触发：用户人物信息抽象或扁平时加载。
-- `references/worldbuilding/faction-systems.md`
-  - 用途：Step 4 势力格局与组织层级设计。
-  - 触发：Step 4 默认加载。
-- `references/worldbuilding/power-systems.md`
-  - 用途：Step 4 力量体系类型与边界定义。
-  - 触发：涉及修仙/玄幻/高武/异能时加载。
-- `references/worldbuilding/setting-consistency.md`
-  - 用途：Step 6 一致性复述前做设定冲突检查。
-  - 触发：Step 6 默认加载。
-- `references/worldbuilding/world-rules.md`
-  - 用途：Step 4 世界规则与禁忌项收束。
-  - 触发：Step 4 默认加载。
+- `character-design.md` — Step 2 角色维度补问；人物信息抽象时加载。
+- `faction-systems.md` / `world-rules.md` — Step 4 默认加载（势力/世界规则）。
+- `power-systems.md` — 修仙/玄幻/高武/异能题材加载。
+- `setting-consistency.md` — Step 6 默认加载（设定冲突检查）。
 
 ### creativity
 
-- `references/creativity/creativity-constraints.md`
-  - 用途：Step 5 创意约束包主 schema。
-  - 触发：Step 5 必读。
-- `references/creativity/category-constraint-packs.md`
-  - 用途：Step 5 按平台/题材选择约束包模板。
-  - 触发：Step 5 必读。
-- `references/creativity/creative-combination.md`
-  - 用途：复合题材（A+B）融合规则。
-  - 触发：用户选择复合题材时加载。
-- `references/creativity/inspiration-collection.md`
-  - 用途：用户卡住时提供卖点/钩子候选。
-  - 触发：Step 1 或 Step 5 卡顿时加载。
-- `references/creativity/selling-points.md`
-  - 用途：Step 5 卖点生成与筛选。
-  - 触发：Step 5 必读。
-- `references/creativity/market-positioning.md`
-  - 用途：目标读者/平台定位与商业化语义统一。
-  - 触发：Step 1 用户提及平台或商业目标时加载。
-- `references/creativity/market-trends-2026.md`
-  - 用途：时间敏感市场趋势参考。
-  - 触发：仅用户明确要求“参考当下趋势”时加载。
-- `references/creativity/anti-trope-xianxia.md`
-  - 用途：反套路库（修仙/玄幻/高武/西幻/无限流）。
-  - 触发：题材命中对应映射时加载。
-- `references/creativity/anti-trope-urban.md`
-  - 用途：反套路库（都市异能/都市日常/都市脑洞/电竞/直播文）。
-  - 触发：题材命中对应映射时加载。
-- `references/creativity/anti-trope-game.md`
-  - 用途：反套路库（游戏体育/科幻/系统流）。
-  - 触发：题材命中对应映射时加载。
-- `references/creativity/anti-trope-rules-mystery.md`
-  - 用途：反套路库（规则怪谈/克苏鲁）。
-  - 触发：题材命中对应映射时加载。
-- `references/creativity/anti-trope-romance.md`
-  - 用途：反套路库（言情/婚恋/霸总/替身/豪门/宫斗言情/青春甜宠/民国言情/多子多福/种田/狗血言情）。
-  - 触发：题材命中对应映射时加载。
-- `references/creativity/anti-trope-history.md`
-  - 用途：反套路库（历史古代/历史脑洞/抗战谍战/年代/历史穿越）。
-  - 触发：题材命中对应映射时加载。
-- `references/creativity/anti-trope-apocalypse.md`
-  - 用途：反套路库（末世/废土/灾变）。
-  - 触发：题材命中对应映射时加载。
-- `references/creativity/anti-trope-suspense.md`
-  - 用途：反套路库（悬疑脑洞/悬疑灵异/女频悬疑）。
-  - 触发：题材命中对应映射时加载。
-- `references/creativity/anti-trope-realistic.md`
-  - 用途：反套路库（现实题材/黑暗题材/职场婚恋）。
-  - 触发：题材命中对应映射时加载。
+- `creativity-constraints.md` / `category-constraint-packs.md` / `selling-points.md` — Step 5 必读。
+- `creative-combination.md` — 用户选复合题材时加载。
+- `inspiration-collection.md` — Step 1/5 卡顿时加载。
+- `market-positioning.md` — 用户提及平台/商业目标时加载。
+- `market-trends-2026.md` — 仅用户明确要求参考当下趋势时加载（L3）。
+- `anti-trope-{xianxia,urban,game,rules-mystery,romance,history,apocalypse,suspense,realistic}.md` — 按题材映射加载对应反套路库。
 
 ## 工具策略（按需）
 
@@ -516,117 +718,25 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 
 ### RAG 配置引导（v10.6 新增）
 
-项目初始化成功后，提示用户配置 Embedding API 以启用向量检索增强：
+项目初始化成功后，一次性提示用户配置 Embedding API 以启用向量检索（不阻断流程；跳过时自动使用 BM25 降级）。三选一：
 
-**提示文案**：
-> 推荐配置向量检索（RAG）：ink-writer 内置了完整的语义检索系统，可以在写作时自动召回相关章节片段，大幅提升长篇小说的记忆一致性。
->
-> 配置方式（选一个）：
-> 1. **ModelScope（免费）**：
->    ```
->    echo "EMBED_API_KEY=你的ModelScope密钥" >> ~/.claude/ink-writer/.env
->    ```
->    获取密钥：https://modelscope.cn/my/myaccesstoken
->
-> 2. **OpenAI**：
->    ```
->    echo "EMBED_BASE_URL=https://api.openai.com/v1" >> ~/.claude/ink-writer/.env
->    echo "EMBED_MODEL=text-embedding-3-small" >> ~/.claude/ink-writer/.env
->    echo "EMBED_API_KEY=你的OpenAI密钥" >> ~/.claude/ink-writer/.env
->    ```
->
-> 3. **跳过**：不影响写作，系统自动使用BM25关键词检索（精度略低但完全可用）。
->
-> 配置后运行 `python ink.py rag stats` 验证。
+- **ModelScope 免费**：`echo "EMBED_API_KEY=<key>" >> ~/.claude/ink-writer/.env`（密钥：https://modelscope.cn/my/myaccesstoken）
+- **OpenAI**：追加 `EMBED_BASE_URL=https://api.openai.com/v1` / `EMBED_MODEL=text-embedding-3-small` / `EMBED_API_KEY=<key>`
+- **跳过**：自动 BM25 降级（精度略低但完全可用）
 
-**执行规则**：
-- 仅在项目初始化成功后显示此提示
-- 不阻断任何流程（纯建议性质）
-- 用户选择跳过时不再提醒
+配置后 `python ink.py rag stats` 验证。用户选择跳过后不再提醒。
 
 ## 内部数据模型（初始化收集对象）
 
-```json
-{
-  "project": {
-    "title": "",
-    "genre": "",
-    "target_words": 0,
-    "target_chapters": 0,
-    "one_liner": "",
-    "core_conflict": "",
-    "target_reader": "",
-    "platform": "",
-    "themes": []
-  },
-  "protagonist": {
-    "name": "",
-    "desire": "",
-    "flaw": "",
-    "archetype": "",
-    "structure": "单主角",
-    "voice_profile": {
-      "speech_vocabulary_level": "",
-      "preferred_sentence_length": "",
-      "verbal_tics": [],
-      "emotional_tell": "",
-      "taboo_topics": []
-    }
-  },
-  "relationship": {
-    "heroine_config": "",
-    "heroine_names": [],
-    "heroine_role": "",
-    "co_protagonists": [],
-    "co_protagonist_roles": [],
-    "antagonist_tiers": {},
-    "antagonist_level": "",
-    "antagonist_mirror": "",
-    "voice_profiles": {}
-  },
-  "golden_finger": {
-    "type": "",
-    "name": "",
-    "style": "",
-    "visibility": "",
-    "irreversible_cost": "",
-    "growth_rhythm": "",
-    "first_payoff": "",
-    "visual_signature": "",
-    "escalation_ladder": {
-      "ch1": "",
-      "ch10": "",
-      "late_game": ""
-    },
-    "payoff_self_check": ""
-  },
-  "ch1_cool_point_spec": {
-    "scene_description": "",
-    "involved_characters": [],
-    "payoff_form": "",
-    "reader_emotion_target": "",
-    "user_confirmed": false
-  },
-  "world": {
-    "scale": "",
-    "factions": "",
-    "power_system_type": "",
-    "social_class": "",
-    "resource_distribution": "",
-    "currency_system": "",
-    "currency_exchange": "",
-    "sect_hierarchy": "",
-    "cultivation_chain": "",
-    "cultivation_subtiers": ""
-  },
-  "constraints": {
-    "anti_trope": "",
-    "hard_constraints": [],
-    "core_selling_points": [],
-    "opening_hook": ""
-  }
-}
-```
+按对象 → 字段列表的紧凑声明（类型默认字符串，除非括注）：
+
+- `project`: title / genre / target_words(int) / target_chapters(int) / one_liner / core_conflict / target_reader / platform / themes(array)
+- `protagonist`: name / desire / flaw / archetype / structure(默认"单主角") / voice_profile{speech_vocabulary_level, preferred_sentence_length, verbal_tics(array), emotional_tell, taboo_topics(array)}
+- `relationship`: heroine_config / heroine_names(array) / heroine_role / co_protagonists(array) / co_protagonist_roles(array) / antagonist_tiers(object) / antagonist_level / antagonist_mirror / voice_profiles(object: name→voice_profile)
+- `golden_finger`: type / name / style / visibility / irreversible_cost / growth_rhythm / first_payoff / visual_signature / escalation_ladder{ch1, ch10, late_game} / payoff_self_check
+- `ch1_cool_point_spec`: scene_description / involved_characters(array) / payoff_form / reader_emotion_target / user_confirmed(bool)
+- `world`: scale / factions / power_system_type / social_class / resource_distribution / currency_system / currency_exchange / sect_hierarchy / cultivation_chain / cultivation_subtiers
+- `constraints`: anti_trope / hard_constraints(array) / core_selling_points(array) / opening_hook
 
 ## 充分性闸门（必须通过）
 
@@ -673,43 +783,22 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ### 1) 运行初始化脚本
 
 ```bash
-python3 "${SCRIPTS_DIR}/ink.py" init \
-  "{project_root}" \
-  "{title}" \
-  "{genre}" \
-  --protagonist-name "{protagonist_name}" \
-  --target-words {target_words} \
-  --target-chapters {target_chapters} \
-  --golden-finger-name "{gf_name}" \
-  --golden-finger-type "{gf_type}" \
-  --golden-finger-style "{gf_style}" \
-  --core-selling-points "{core_points}" \
-  --protagonist-structure "{protagonist_structure}" \
-  --heroine-config "{heroine_config}" \
-  --heroine-names "{heroine_names}" \
-  --heroine-role "{heroine_role}" \
-  --co-protagonists "{co_protagonists}" \
-  --co-protagonist-roles "{co_protagonist_roles}" \
-  --antagonist-tiers "{antagonist_tiers}" \
-  --world-scale "{world_scale}" \
-  --factions "{factions}" \
-  --power-system-type "{power_system_type}" \
-  --social-class "{social_class}" \
-  --resource-distribution "{resource_distribution}" \
-  --gf-visibility "{gf_visibility}" \
-  --gf-irreversible-cost "{gf_irreversible_cost}" \
-  --currency-system "{currency_system}" \
-  --currency-exchange "{currency_exchange}" \
-  --sect-hierarchy "{sect_hierarchy}" \
-  --cultivation-chain "{cultivation_chain}" \
+python3 "${SCRIPTS_DIR}/ink.py" init "{project_root}" "{title}" "{genre}" \
+  --protagonist-name "{protagonist_name}" --target-words {target_words} --target-chapters {target_chapters} \
+  --golden-finger-name "{gf_name}" --golden-finger-type "{gf_type}" --golden-finger-style "{gf_style}" \
+  --gf-visibility "{gf_visibility}" --gf-irreversible-cost "{gf_irreversible_cost}" \
+  --protagonist-structure "{protagonist_structure}" --protagonist-desire "{protagonist_desire}" \
+  --protagonist-flaw "{protagonist_flaw}" --protagonist-archetype "{protagonist_archetype}" \
+  --heroine-config "{heroine_config}" --heroine-names "{heroine_names}" --heroine-role "{heroine_role}" \
+  --co-protagonists "{co_protagonists}" --co-protagonist-roles "{co_protagonist_roles}" \
+  --antagonist-tiers "{antagonist_tiers}" --antagonist-level "{antagonist_level}" \
+  --world-scale "{world_scale}" --factions "{factions}" --power-system-type "{power_system_type}" \
+  --social-class "{social_class}" --resource-distribution "{resource_distribution}" \
+  --currency-system "{currency_system}" --currency-exchange "{currency_exchange}" \
+  --sect-hierarchy "{sect_hierarchy}" --cultivation-chain "{cultivation_chain}" \
   --cultivation-subtiers "{cultivation_subtiers}" \
-  --protagonist-desire "{protagonist_desire}" \
-  --protagonist-flaw "{protagonist_flaw}" \
-  --protagonist-archetype "{protagonist_archetype}" \
-  --antagonist-level "{antagonist_level}" \
-  --target-reader "{target_reader}" \
-  --platform "{platform}" \
-  --opening-hook "{opening_hook}"
+  --core-selling-points "{core_points}" --target-reader "{target_reader}" \
+  --platform "{platform}" --opening-hook "{opening_hook}"
 ```
 
 ### 2) 写入 `idea_bank.json`

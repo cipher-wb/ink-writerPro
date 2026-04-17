@@ -17,8 +17,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": true,
-      "notes": "2056 汉字；10 条 M01-M10 齐全；SKILL.md Quick Step 0 已加入 L1 必读"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-002",
@@ -34,8 +34,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "schema/skeleton/roadmap 三件套就位；skeleton total=0 + 12 条示例 seed（覆盖全 10 类）；jsonschema Draft7 双向校验通过；SKILL.md Quick Step 0 加载列表第 6 条新增 anti-trope-seeds.json"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-003",
@@ -52,8 +52,8 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "1579 汉字；5 模式 A-E 各 3 示例；档位 N=1/2/3/5 矩阵；hash(timestamp+genre+draft_index) 抽取算法；3 套整对去重；SKILL.md Quick Step 0 第 7 条加入"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-004",
@@ -71,8 +71,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "1104 汉字；GF-1 8 维度 + 禁用维度；GF-2 10 合格代价示例 + 校验伪代码；GF-3 10 组对比；禁止词 22 条；5 次重抽 + 降档逻辑；SKILL.md Quick Step 0 第 8 条加载 + Quick Step 1.5 插入"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-005",
@@ -90,8 +90,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "2497 汉字；V1/V2/V3 三档定义 + 人名/书名/句式库 + L0-L3 敏感词四级 + 档位×密度矩阵（0% / 0.2% / 0.5%-0.8% / 0.8%-1.5%）+ Quick Step 1.6 分配算法（stable_hash 洗牌、档位 1 V3→V1 回退、档位 4 至少一套 V3）；SKILL.md Quick Step 0 第 9 条加载 + Quick Step 1.6 插入"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-006",
@@ -109,8 +109,8 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": true,
-      "notes": "given_names.json 新增 rough/smoky/jianghu 三桶（male=34 female=30 各 64 条）；nicknames.json 110 条含 rarity+style_tags；book-title-patterns.json V1=54/V2=57/V3=59 条（总 170+），7 修辞标签覆盖计数 pun=13/homophone=11/antithesis=13/irony=81/oxymoron=23/concrete_abstract=45/anachronism=56 全部 ≥10；blacklist.json 扩展后缀 19 条+前缀 14 条+name_combo_ban（7 姓×8 字末字笛卡儿积禁用）；SKILL.md Quick Step 0 加载列表新增第 10/11 条，第 12 条保留题材 anti-trope；Quick Step 1.7 书名/人名校验子步骤插入在 1.6 和 2 之间。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-007",
@@ -129,8 +129,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": true,
-      "notes": "新建 data/market-trends/README.md 定义缓存格式（cache-YYYYMMDD.md）+ 90 天保留 + 7 天 fallback + 两平台共通 Top 5 规避规则；SKILL.md Quick Step 0 末尾插入「WebSearch 子步骤」含 4 条硬编码检索语（起点月票榜/起点分类月榜/番茄爆款套路/番茄免费热门新书）+ 15s 超时 + 当日缓存命中跳过逻辑 + fetch_status 三态（ok/fallback/none）+ market_avoid 字段供创意指纹消费；allowed-tools 已含 WebSearch（无需改动）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-008",
@@ -145,8 +145,8 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": true,
-      "notes": "Quick Step 1 输出模板尾部追加 #### 🧬 创意指纹 板块（5 字段：命中元规则 / 使用扰动对 / 金手指维度 / 语言档位 / 反向规避），含示例与 ≤200 字提示；Quick Step 2 开头新增「创意指纹板块规格」小节，表格定义 5 字段数据源（meta_rules_hit / perturbation_pairs / gf_checks / style_voice+sample_line / market_avoid）+ 档位下限；三项差异性硬约束（元规则编号两两无交集或≤1 + 扰动对完全不重叠 + 语言档位两两不同），违反退回 Quick Step 1 重抽。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-009",
@@ -163,8 +163,8 @@
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": true,
-      "notes": "§模式分支新增「Quick 模式命令格式（激进度档位）」小节，含 3 命令格式 + 中文词容错映射表；Quick Step 0.5 在 Step 0 和 Step 1 之间插入：解析顺序（位置参数→命名参数→AskUserQuestion 兜底默认 2）+ 中文容错表（1/2/3/4/保守/平衡/激进/疯批/英文同义词）+ 档位矩阵表（元规则≥1/2/3/5 扰动 1/2/3/5 稀有度与约束行）+ AskUserQuestion 规范题干 + 日志标注格式「本次生成档位：N 名称」+ 3 套方案统一档位（无梯度）+ aggression_level/name 字段下传 Quick Step 1/1.5/1.6 + 降档日志规范 aggression_level_effective。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-010",
@@ -180,8 +180,8 @@
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": true,
-      "notes": "Quick Step 1 新增「档位驱动生成参数」表（档位 1-4 × 元规则下限/扰动对数/稀有度门槛/粗口密度/附加约束）+「疯批档商业安全边界打破」清单 B01-B12 共 12 条（反派视角/悲剧/长期失败/反爽点反转/无金手指逆袭/道德争议/禁忌关系/信仰崩塌/非人类视角/叙事反套路/现实阴暗/自我毁灭）+「差异化约束 4 维硬校验」（题材/元规则交集≤1/扰动对完全不重叠/V1V2V3 各占一档）+「自检与重试」（每维度 3 次重试→降档，复用 Quick Step 1.5 降档算法，写入 aggression_level_effective + aggression_downgrade_log）；字段表补充 meta_rules_hit/perturbation_pairs/market_avoid/safety_boundary_broken/aggression_level_effective 五字段；Markdown 示例追加「打破商业安全边界」示例行。SKILL.md 1034→1088 行（US-011 900 行精简在其自身迭代处理）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-011",
@@ -197,8 +197,8 @@
         "Typecheck passes"
       ],
       "priority": 11,
-      "passes": true,
-      "notes": "SKILL.md 1088→895 行（≤900 达标）；frontmatter description 更新为 4 档激进度 + 三层创意体系；去重 Quick Step 1「档位驱动生成参数」与 Quick Step 0.5「档位矩阵」的重复表格（合并为粗口密度映射提示，指向 0.5 主表）；修复 `### 命名规则` 重复 heading；8 步骤流程齐备（Step 0/0.5/1/1.5/1.6/1.7/2/3），Step 2 heading 补注「方案输出（含创意指纹）与用户选择」对齐 PRD 8 步骤命名；内部数据模型从 80 行 JSON 压缩为紧凑字段列表（字段与类型保留完整）；执行生成 CLI 多行参数折叠为分组单行（语义不变）；References 逐文件清单由三行/条压缩为单行/条（anti-trope-* 九库合并为 brace 表达式，链接完整性经 `ls references/creativity/` 验证全存在）；RAG 配置引导 30 行示例压缩为 8 行三选一 + 验证命令；Quick Step 3 三个 US-xxx 自动填充块（US-001/002/003）合并为「自动填充三件套」编号列表（逻辑保留 auto_generated 标记/Y-N 确认/微调轮数/关键词匹配矩阵）；allowed-tools 已含 Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch 无需改动。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-012",
@@ -214,8 +214,8 @@
         "Tests pass"
       ],
       "priority": 12,
-      "passes": true,
-      "notes": "筛选 22 条 EW 创意类规则并映射到 M01-M11；meta-creativity-rules.md 升级 v1.1，新增 M11 熟悉×陌生耦合（吸收 EW-0131/0128/0104/0030 等 15 条），文件汉字 2056→3293（11 条 Mxx headings）；Appendix 含桥接映射表 + 覆盖验证（主映射分布 M01×1/M03×2/M05×2/M06×1/M10×1/M11×15）+ Quick 模式消费方式三步；未纳入 10 条经营/签约类 EW 规则（EW-0021/0054/0082/0098/0124/0126/0189/0320/0350/0364）明示走 checker 原通道；编辑 editor-wisdom-checker.md 输出 JSON 新增 creative_dimensions 六键（cost_visibility/info_asymmetry/temporal_displacement/identity_contrast/scale_leap/familiar_strange_coupling）+ 评分规则表；现有 editor_wisdom 228 测试全部通过（pytest -k editor_wisdom）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-013",
@@ -231,8 +231,8 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": true,
-      "notes": "anti-trope-seeds-roadmap.md §Phase-Seed-∞ 验收全部达标：触发条件三路（自动 A 抽取集中度 >30% 且同一 seed 近 30 次 ≥10 次 / 自动 B 同一次 quick 会话内连续 3 次重随 / 手动）；单次补充 100-200 条，流程沿用 Phase-Seed-1 六步（150 候选→WebSearch 反查→去重→稀有度均衡→20 条 review→入库 100 条）；版本号 v1.0→v1.1→v1.2...，frontmatter version + changelog（四字段 version/date/delta/note）；质量门槛 rarity≥4 占比 ≥60%（高于初版 50%），且规避 market-trends 近 30 天共通套路词 + example_pairing 重复 ≤70%；§范围外显式标注 OQ-10 /ink-seeds add 单条贡献命令不计入本 PRD。本 US 在 US-002 roadmap 落地时已连带实现，本轮确认验收全项覆盖，不需正文改动。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-014",
@@ -248,8 +248,8 @@
         "Tests pass"
       ],
       "priority": 14,
-      "passes": true,
-      "notes": "tests/ink_init/{__init__.py,test_quick_creativity.py} 新建；13 项断言覆盖 6 大验收维度（schema合法+skeleton校验/M01-M10/7修辞标签≥10/黑名单扩展/nicknames≥100/给定名三风格桶）；pytest.ini testpaths 追加 tests/ink_init；python3 -m pytest tests/ink_init/ --no-cov → 13 passed。"
+      "passes": false,
+      "notes": ""
     }
   ]
 }
