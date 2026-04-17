@@ -78,7 +78,7 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "info_budget 是解决'塞信息感'的结构性方案。natural_delivery_hints 的5种融入方式：行动展示/对话揭示/后果倒推/误读制造/环境映射。"
     },
     {

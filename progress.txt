@@ -65,3 +65,15 @@
   - 第 1 章 `读者承诺` 的"金手指具体承诺句"模板（"{金手指}将帮助主角{动词}{对象}"）会被 US-013 CH1_READER_EMOTION_PREDICTABLE 反向校验，writer-agent 也建议引用
   - 兼容策略：保留旧 `第1章闭环` 字段的交叉一致性校验，避免已写入旧格式章纲的项目在二次 /ink-plan 时被误判失败
 ---
+
+## 2026-04-17 - US-005
+- 实现：ink-plan 章纲新增 info_budget 信息释放配额字段（max_new_concepts / max_named_characters / setting_reveal_queue / natural_delivery_hints），第 1 章严格上限 2/2 并强制金手指优先
+- 变更文件：
+  - `ink-writer/skills/ink-plan/SKILL.md`：Step 7 章纲 Chapter format 追加 `info_budget` 区块 + 字段说明（5 种融入方式枚举：行动展示/对话揭示/后果倒推/误读制造/环境映射）+ 第 1 章严格执行小节；Validation 新增 1.75 节（8 条硬阻断）；Hard fail conditions 新增 7 条；Final check 与章节缺失清单的字段枚举追加 `info_budget`
+  - `prd.json`（符号链接 `scripts/ralph/prd.json`）：US-005 passes=true
+- **Learnings for future iterations：**
+  - info_budget 的 5 种融入方式枚举（行动展示/对话揭示/后果倒推/误读制造/环境映射）将被 US-008 L11 信息密度铁律与 US-012 flow-naturalness-checker 直接消费，建议后续抽取到 `references/shared/info-delivery-methods.md`
+  - 第 1-3 章 `max_new_concepts` 上限 2 是"塞信息感"的量化防线，与 US-004 `cool_point_preview` 组合后实际把第 1 章信息带宽锁死在"金手指机制 + 1 个辅助设定 + 2 个有名角色"
+  - AC 中提到的 `templates/output/大纲-详细大纲.md` 模板文件并不存在（章纲文件在运行时生成到 `大纲/第{volume_id}卷-详细大纲.md`），章纲字段的"模板"实为 SKILL.md 内 Chapter format 代码块——新增字段只需在此处追加即可
+  - `setting_reveal_queue` 长度 > `max_new_concepts` 是"配额超支"的典型形式，后续 writer-agent 可据此在起草前做预检
+---
