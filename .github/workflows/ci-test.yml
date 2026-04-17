@@ -53,12 +53,22 @@ jobs:
         run: |
           pip install -r ink-writer/scripts/requirements-dev.lock
           pip install -r ink-writer/dashboard/requirements.lock
+          pip install -r requirements.txt
 
       - name: Install dependencies (loose versions, 3.12)
         if: matrix.python-version == '3.12'
         run: |
           pip install -r ink-writer/scripts/requirements-dev.txt
           pip install -r ink-writer/dashboard/requirements.txt
+          pip install -r requirements.txt
+
+      - name: Verify ink_writer core imports (US-003 smoke test)
+        run: |
+          python -c "import ink_writer.editor_wisdom, ink_writer.style_rag, ink_writer.semantic_recall, ink_writer.parallel, ink_writer.checker_pipeline; print('ink_writer core modules OK')"
+          python -c "from ink_writer.editor_wisdom.retriever import Retriever; print('Retriever import-only OK')"
+
+      - name: Verify docs-code number alignment (US-022)
+        run: python scripts/verify_docs.py
 
       - name: Verify dashboard imports
         run: python -c "from ink_writer_dashboard_check import *" 2>/dev/null || python -c "import sys; sys.path.insert(0, 'ink-writer/dashboard'); import path_guard; import watcher; print('Dashboard imports OK')"

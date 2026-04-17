@@ -211,6 +211,10 @@ class StateUpdater:
             return True
 
         try:
+            # v13 US-025 TODO(next-round)：此 CLI 工具直写 state.json 绕过 StateManager，
+            # 未走 SQL-first 顺序（见 tasks/audit-direct-state-writes-2026-04-17.md）。
+            # 下一轮重构为 StateManager 调用。当前保留因为这是脚本化修改工具，
+            # 不在主写作链路。
             # 使用集中式原子写入（带 filelock + 自动备份）
             atomic_write_json(self.state_file, self.state, use_lock=True, backup=True)
             print(f"✅ 已保存（原子化）: {self.state_file}")

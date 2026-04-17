@@ -169,7 +169,8 @@ class TestABPrompts:
         import ab_prompts
 
         results = ab_prompts.diff_all_agents()
-        assert len(results) == 24
+        # v13 US-016：foreshadow-tracker + plotline-tracker 已合并删除（24→22）
+        assert len(results) == 22
         for r in results:
             assert "agent" in r
             assert "template_refs" in r
@@ -216,10 +217,11 @@ class TestDuplicateElimination:
         }
 
     def test_checker_input_rules_not_inline_in_checkers(self) -> None:
+        # v13 US-016：foreshadow-tracker / plotline-tracker 已被 thread-lifecycle-tracker 合并替代并物理删除
         checker_names = [
             "consistency-checker", "continuity-checker", "ooc-checker",
             "high-point-checker", "pacing-checker", "emotion-curve-checker",
-            "reader-simulator", "foreshadow-tracker", "plotline-tracker",
+            "reader-simulator",
             "thread-lifecycle-tracker", "golden-three-checker",
             "editor-wisdom-checker", "reader-pull-checker",
         ]

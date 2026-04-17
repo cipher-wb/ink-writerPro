@@ -271,6 +271,12 @@ def init_project(
     sect_hierarchy: str = "",
     cultivation_chain: str = "",
     cultivation_subtiers: str = "",
+    # v13 US-010：Quick 模式创意指纹 5 字段（JSON 字符串或列表传入）
+    meta_rules_hit: str | list = "",
+    perturbation_pairs: str | list = "",
+    gf_checks: str | list = "",
+    style_voice: str = "",
+    market_avoid: str | list = "",
 ) -> None:
     project_path = Path(project_dir).expanduser().resolve()
     if ".claude" in project_path.parts:
@@ -343,6 +349,31 @@ def init_project(
             "cultivation_subtiers": cultivation_subtiers,
         }
     )
+
+    # v13 US-010：写入创意指纹（Quick 模式 Step 2 产出的 5 字段）
+    def _coerce_list(v) -> list:
+        if isinstance(v, list):
+            return v
+        if not v:
+            return []
+        if isinstance(v, str):
+            try:
+                parsed = json.loads(v)
+                if isinstance(parsed, list):
+                    return parsed
+            except (json.JSONDecodeError, ValueError):
+                pass
+            # 逗号分隔兜底
+            return [s.strip() for s in v.split(",") if s.strip()]
+        return []
+
+    state["project_info"]["creative_fingerprint"] = {
+        "meta_rules_hit": _coerce_list(meta_rules_hit),
+        "perturbation_pairs": _coerce_list(perturbation_pairs),
+        "gf_checks": _coerce_list(gf_checks),
+        "style_voice": style_voice or None,
+        "market_avoid": _coerce_list(market_avoid),
+    }
 
     # v10.5: 构建 volumes 数组（含 is_final 完结标记）
     chapters_per_volume = _DEFAULT_CPV
@@ -848,6 +879,13 @@ def main() -> None:
     parser.add_argument("--cultivation-chain", default="", help="典型境界链")
     parser.add_argument("--cultivation-subtiers", default="", help="小境界划分（初/中/后/巅 等）")
 
+    # v13 US-010：Quick 模式创意指纹参数（JSON 字符串传入）
+    parser.add_argument("--meta-rules-hit", default="", help="命中的元规则 IDs（JSON 数组或逗号分隔，如 '[\"M01\",\"M03\"]'）")
+    parser.add_argument("--perturbation-pairs", default="", help="扰动对列表（JSON 数组，每项含 pair_id/pattern/seed_a/seed_b）")
+    parser.add_argument("--gf-checks", default="", help="金手指三重校验结果（JSON 3 元 0/1 数组，如 '[1,1,0]'）")
+    parser.add_argument("--style-voice", default="", help="语言风格档位（V1/V2/V3）")
+    parser.add_argument("--market-avoid", default="", help="反向规避套路（JSON 数组或逗号分隔）")
+
     # 深度模式可选参数（用于预填模板）
     parser.add_argument("--protagonist-desire", default="", help="主角核心欲望（深度模式）")
     parser.add_argument("--protagonist-flaw", default="", help="主角性格弱点（深度模式）")
@@ -896,7 +934,66 @@ def main() -> None:
         sect_hierarchy=args.sect_hierarchy,
         cultivation_chain=args.cultivation_chain,
         cultivation_subtiers=args.cultivation_subtiers,
+        # v13 US-010 创意指纹 5 字段
+        meta_rules_hit=args.meta_rules_hit,
+        perturbation_pairs=args.perturbation_pairs,
+        gf_checks=args.gf_checks,
+        style_voice=args.style_voice,
+        market_avoid=args.market_avoid,
     )
+
+    # v13 US-008：项目初始化完成后，若 Style RAG 索引不存在则尝试自动构建
+    _try_ensure_style_rag_index()
+
+
+def _try_ensure_style_rag_index() -> None:
+    """若 data/style_rag/ 索引缺失，尝试调用 build_style_rag.py 构建；失败只打印 hint。
+
+    v13 US-008 修复：让 Style RAG 默认可用，不再"建了没用"。
+    """
+    import subprocess
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    repo_root = _Path(__file__).resolve().parent.parent.parent
+    index_dir = repo_root / "data" / "style_rag"
+    build_script = repo_root / "scripts" / "build_style_rag.py"
+    src_db = repo_root / "benchmark" / "style_rag.db"
+
+    required = [index_dir / "style_rag.faiss", index_dir / "metadata.json", index_dir / "contents.json"]
+    if all(p.exists() for p in required):
+        return  # 已就位
+
+    if not build_script.exists() or not src_db.exists():
+        print(
+            f"⚠️  Style RAG 索引未构建且源数据 {src_db.name} 不存在；跳过自动构建。"
+            f" 若需启用人写样本检索，请先运行 scripts/style_rag_builder.py 生成源数据。",
+            file=_sys.stderr,
+        )
+        return
+
+    print(f"⏳ 正在构建 Style RAG 向量索引（首次 ~3min）...", file=_sys.stderr)
+    try:
+        result = subprocess.run(
+            [_sys.executable, str(build_script)],
+            capture_output=True, text=True, timeout=600,
+        )
+        if result.returncode == 0:
+            print(f"✅ Style RAG 索引构建完成：{index_dir}", file=_sys.stderr)
+        else:
+            print(
+                f"⚠️  Style RAG 索引构建失败（exit {result.returncode}）；"
+                f"后续写作会自动降级到 SQLite fallback（无语义相似度）。"
+                f"\n   手动重试：python3 {build_script}"
+                f"\n   stderr: {result.stderr[-300:]}",
+                file=_sys.stderr,
+            )
+    except Exception as exc:
+        print(
+            f"⚠️  Style RAG 自动构建异常：{exc}；"
+            f"后续写作会降级到 SQLite fallback。手动重试：python3 {build_script}",
+            file=_sys.stderr,
+        )
 
 
 if __name__ == "__main__":

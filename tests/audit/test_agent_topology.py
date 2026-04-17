@@ -17,9 +17,11 @@ class TestThreadLifecycleTrackerExists:
     def test_unified_tracker_spec_exists(self):
         assert (AGENTS_DIR / "thread-lifecycle-tracker.md").exists()
 
-    def test_old_specs_retained_for_backward_compat(self):
-        assert (AGENTS_DIR / "foreshadow-tracker.md").exists()
-        assert (AGENTS_DIR / "plotline-tracker.md").exists()
+    def test_old_specs_removed_after_merge(self):
+        # v13 US-016：foreshadow-tracker / plotline-tracker 已被 thread-lifecycle-tracker
+        # 合并替代并物理删除（docs/agent_topology_v13.md 仍标 MERGED 为历史说明）
+        assert not (AGENTS_DIR / "foreshadow-tracker.md").exists()
+        assert not (AGENTS_DIR / "plotline-tracker.md").exists()
 
     def test_unified_tracker_has_frontmatter(self):
         content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text()

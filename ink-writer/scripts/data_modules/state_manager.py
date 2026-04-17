@@ -28,6 +28,14 @@ from datetime import datetime
 import filelock
 
 from .config import get_config
+
+
+class StateWriteError(RuntimeError):
+    """v13 US-024 (FIX-03A)：SQL-first flush 下，SQL 写入失败抛此异常。
+
+    SQLite 是单一事实源；SQL 写失败 = 数据不完整，必须让上层处理，不能 silent warning。
+    JSON 视图写失败仍仅 logger.warning（JSON 可从 SQL 重生）。
+    """
 from .observability import safe_append_perf_timing, safe_log_tool_call
 from .state_validator import (
     normalize_foreshadowing_status,
@@ -410,19 +418,32 @@ class StateManager:
                 if self._pending_latest_warnings:
                     disk_state["latest_warnings"] = list(self._pending_latest_warnings[-20:])
 
-                # 原子写入（锁已持有，不再二次加锁）
+                # v13 US-024 (FIX-03A) SQL-first：先同步 SQL（单一事实源），后写 JSON（视图）
+                # 失败语义：SQL 失败 → raise StateWriteError；JSON 失败 → logger.warning
+
+                # 1) SQL 单例同步（state_kv）：失败提升为 raise（此前是 warning 吞掉）
+                try:
+                    self._sync_state_to_kv(disk_state)
+                except Exception as exc:
+                    raise StateWriteError(
+                        f"state_kv SQL sync failed; aborting flush to preserve data integrity. "
+                        f"Cause: {exc}"
+                    ) from exc
+
+                # 2) SQLite 增量数据同步（entities/changes/relationships）
+                #    v5.1 引入: 同步到 SQLite（失败时保留 pending 以便重试）
+                sqlite_pending_snapshot = self._snapshot_sqlite_pending()
+                sqlite_sync_ok = self._sync_to_sqlite()
+
+                # 3) 原子写入 state.json（视图缓存）：失败只 warning，因为 SQL 已有完整数据
                 try:
                     atomic_write_json(self.config.state_file, disk_state, use_lock=False, backup=True)
                 except Exception as exc:
-                    logger.error("Failed to write state.json: %s", exc)
-                    raise
-
-                # v13: 同步单例状态到 SQLite state_kv（视图缓存支撑）
-                self._sync_state_to_kv(disk_state)
-
-                # v5.1 引入: 同步到 SQLite（失败时保留 pending 以便重试）
-                sqlite_pending_snapshot = self._snapshot_sqlite_pending()
-                sqlite_sync_ok = self._sync_to_sqlite()
+                    logger.warning(
+                        "state.json view write failed: %s; SQL has the authoritative data. "
+                        "Run sql_state_manager.rebuild_state_json() to regenerate JSON view.",
+                        exc,
+                    )
 
                 # 同步内存为磁盘最新快照
                 self._state = disk_state
@@ -450,7 +471,11 @@ class StateManager:
             raise RuntimeError("无法获取 state.json 文件锁，请稍后重试")
 
     def _sync_state_to_kv(self, disk_state: Dict[str, Any]) -> None:
-        """将 state.json 单例字段同步到 SQLite state_kv 表（v13 单一事实源）"""
+        """将 state.json 单例字段同步到 SQLite state_kv 表（v13 单一事实源）。
+
+        v13 US-024 (FIX-03A)：此方法不再吞异常；bulk_set_state_kv 失败会传播到调用方。
+        flush() 会捕获并转为 StateWriteError 中止流程，保证 SQL 单一事实源的完整性。
+        """
         if not self._sql_state_manager:
             return
         kv_keys = [
@@ -461,10 +486,8 @@ class StateManager:
         entries = {k: disk_state[k] for k in kv_keys if k in disk_state}
         if not entries:
             return
-        try:
-            self._sql_state_manager.bulk_set_state_kv(entries)
-        except Exception as exc:
-            logger.warning("state_kv 同步失败: %s", exc)
+        # v13 US-024：不再 try/except 吞掉异常；让 flush() 包装为 StateWriteError
+        self._sql_state_manager.bulk_set_state_kv(entries)
 
     def _sync_to_sqlite(self) -> bool:
         """同步待处理数据到 SQLite（v5.1 引入，v5.4 沿用，v5.5 增加重试机制）"""

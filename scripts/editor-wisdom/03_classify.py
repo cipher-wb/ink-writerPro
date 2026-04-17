@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-"""Classify cleaned files into 10 fixed topic categories via Claude Haiku."""
+"""Classify cleaned files into 10 fixed topic categories via Claude Haiku.
+
+v13 US-007 修复：入口 API Key 校验 + 连续 5 次失败 abort（v5 审计 Critical）。
+原行为：无 key 时每文件 per-file `continue`，最后输出 'API calls: 0' 假成功。
+"""
 
 from __future__ import annotations
 
 import json
+import os
 import random
 import sys
 import time
@@ -12,6 +17,8 @@ from pathlib import Path
 
 from ink_writer.editor_wisdom.llm_backend import call_llm
 from ink_writer.editor_wisdom.models import HAIKU_MODEL
+
+MAX_CONSECUTIVE_FAILURES = 5  # v13 US-007：超过此阈值立即 abort，避免继续烧 API 额度 / 写假输出
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "editor-wisdom"
 
@@ -112,6 +119,7 @@ def classify(data_dir: Path) -> dict[str, int]:
     api_count = 0
     unflushed = 0
     last_flush = time.monotonic()
+    consecutive_failures = 0  # v13 US-007：连续失败次数，超 MAX_CONSECUTIVE_FAILURES 立即 abort
 
     try:
         for entry in entries:
@@ -127,8 +135,16 @@ def classify(data_dir: Path) -> dict[str, int]:
                 else:
                     try:
                         result = _classify_one(body, entry["title"])
+                        consecutive_failures = 0  # 成功则重置计数
                     except Exception as exc:
                         _append_error(data_dir, file_hash, entry.get("filename", ""), exc)
+                        consecutive_failures += 1
+                        if consecutive_failures >= MAX_CONSECUTIVE_FAILURES:
+                            sys.exit(
+                                f"ERROR: {consecutive_failures} consecutive API failures, "
+                                f"aborting to preserve cost. Check errors.log for details. "
+                                f"Last error: {type(exc).__name__}: {exc}"
+                            )
                         continue
                 cache[file_hash] = result
                 api_count += 1
@@ -186,6 +202,14 @@ def _build_report(data_dir: Path, classified: list[dict]) -> None:
 
 
 def main() -> None:
+    # v13 US-007：入口 API_KEY 校验（v5 审计 Critical：此前无校验导致 per-file continue 假成功）
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        sys.exit(
+            "ERROR: ANTHROPIC_API_KEY not set. "
+            "This script requires a valid key to classify entries via Claude Haiku. "
+            "Set it via `export ANTHROPIC_API_KEY=sk-...` and retry."
+        )
+
     data_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_DATA_DIR
 
     if not (data_dir / "clean_index.json").exists():

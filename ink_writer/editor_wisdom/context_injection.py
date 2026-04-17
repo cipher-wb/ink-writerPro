@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from ink_writer.editor_wisdom.config import EditorWisdomConfig, load_config
 from ink_writer.editor_wisdom.exceptions import EditorWisdomIndexMissingError
 from ink_writer.editor_wisdom.golden_three import GOLDEN_THREE_CATEGORIES
-from ink_writer.editor_wisdom.retriever import Retriever, Rule
+from ink_writer.editor_wisdom.retriever import Retriever, Rule, get_retriever
 
 
 @dataclass
@@ -68,7 +68,7 @@ def build_editor_wisdom_section(
 
     if retriever is None:
         try:
-            retriever = Retriever()
+            retriever = get_retriever()  # v13 US-006：单例复用，避免每章重加载 BAAI 模型
         except EditorWisdomIndexMissingError:
             if config.enabled:
                 raise

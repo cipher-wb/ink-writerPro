@@ -15,6 +15,29 @@ from ink_writer.editor_wisdom.exceptions import EditorWisdomIndexMissingError
 DEFAULT_INDEX_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "editor-wisdom" / "vector_index"
 MODEL_NAME = "BAAI/bge-small-zh-v1.5"
 
+# v13 US-006 单例缓存：Retriever 实例化代价高（BAAI/bge-small-zh-v1.5 加载 ~30s），
+# 生产链路多处（step3_harness_gate / writer_injection / context_injection）每章重建
+# 导致重复加载。get_retriever() 按 index_dir 做 module-level 缓存，默认路径下首次
+# 调用后常驻。仍允许显式 Retriever(index_dir=...) 构造用于测试隔离。
+_RETRIEVER_CACHE: dict[str, "Retriever"] = {}
+
+
+def get_retriever(index_dir: Path | str = DEFAULT_INDEX_DIR) -> "Retriever":
+    """返回 process-level 单例。同一 index_dir 的 Retriever 只加载一次。
+
+    v13 US-006：替代裸 `Retriever()` 调用，避免每章重复加载 BAAI/bge 模型。
+    若需测试隔离请直接 Retriever(index_dir=tmp_path)。
+    """
+    key = str(Path(index_dir).resolve())
+    if key not in _RETRIEVER_CACHE:
+        _RETRIEVER_CACHE[key] = Retriever(index_dir)
+    return _RETRIEVER_CACHE[key]
+
+
+def clear_retriever_cache() -> None:
+    """Test hook: 清空 module-level 缓存。"""
+    _RETRIEVER_CACHE.clear()
+
 
 @dataclass
 class Rule:

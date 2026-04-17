@@ -418,8 +418,12 @@ def test_save_state_preserves_sqlite_pending_on_sync_failure(temp_project):
     manager.update_entity("e1", {"current": {"realm": "炼气"}}, "角色")
 
     class _BrokenSQLManager:
+        # v13 US-024 (FIX-03A)：SQL-first 下 state_kv 必须 OK 才进入 entities 步骤
+        def bulk_set_state_kv(self, entries):
+            return True  # state_kv 同步成功
+
         def process_chapter_entities(self, **kwargs):
-            raise RuntimeError("boom")
+            raise RuntimeError("boom")  # 增量数据层失败（可重试）
 
     manager._sql_state_manager = _BrokenSQLManager()
     manager._pending_sqlite_data["chapter"] = 1

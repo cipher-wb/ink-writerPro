@@ -7,8 +7,8 @@
 - **Python modules scanned**: 179
 - **Import cycles found**: 1
 - **Unused module candidates**: 85
-- **Agents scanned**: 24
-- **Agent overlap pairs**: 9
+- **Agents scanned**: 22
+- **Agent overlap pairs**: 8
 - **Repeated prompt fragments**: 50
 
 ## 1. Import Cycles
@@ -115,14 +115,12 @@
 | editor-wisdom-checker | 编辑智慧检查器，基于检索到的编辑规则对章节进行评分，输出违规列表和修复建议。 | Read | - `chapter_text`: 章节正文 - `chapter_no`: 章节号 - `rule… | ```json {   "agent": "editor-wisdom-checker",   "c… |
 | emotion-curve-checker | 情绪心电图检查，检测情绪曲线平淡/单调/与目标曲线偏差，输出结构化报告 | Read |  | ```json {   "agent": "emotion-curve-checker",   "c… |
 | flow-naturalness-checker | 自然流畅度检查器，量化评估信息节奏/融入方式/过渡流畅/对话辨识/对话黄金比例/语气一致/voice 一致七维 | Read |  |  |
-| foreshadow-tracker | 伏笔生命周期追踪器，每章扫描所有活跃伏笔，检测逾期/沉默/密度异常，输出结构化报告 | Read |  |  |
 | golden-three-checker | 黄金三章检查器，专门审查第1-3章的开头抓取力、承诺兑现和章末驱动力。 | Read | - `chapter` - `chapter_file` - `project_root` - `.… | ```json {   "agent": "golden-three-checker",   "ch… |
 | high-point-checker | 爽点密度检查，支持迪化误解/身份掉马模式，输出结构化报告 | Read |  |  |
 | logic-checker | 章内微观逻辑自洽性检查，覆盖数字算术、动作序列、属性一致、空间连续、枚举完整性等9层验证 | Read |  |  |
 | ooc-checker | 人物OOC检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | outline-compliance-checker | 大纲合规验证，消费MCC（板块14）逐项检查正文是否严格遵守大纲，七层检查覆盖实体出场、禁止发明、目标充分性、伏笔埋设、… | Read |  |  |
 | pacing-checker | Strand Weave 节奏检查，输出结构化报告供润色步骤参考 | Read |  |  |
-| plotline-tracker | 明暗线追踪器，每章扫描所有活跃线程（主线/支线/暗线），检测断更/密度异常，输出结构化报告 | Read |  |  |
 | polish-agent | Step 4 润色 Agent，基于审查报告修复问题 + 去 AI 味 + 安全校验 | Read, Write, Bash | ```json {   "chapter_file": "正文/第0123章-章节标题.md",  … | 1. 润色后章节正文（覆盖原文件） 2. 润色报告：  ```text [润色报告] - 逻辑修复(… |
 | proofreading-checker | 文笔质量检查Agent，检测修辞重复、段落结构、代称混乱和文化禁忌 | Read, Grep | 与其他 checker 相同，接收 `review_bundle_file` 路径。 | 遵循 `checker-output-schema.md` 的统一格式：  ```json {   … |
 | prose-impact-checker | 文笔冲击力与电影感检查器，量化评估镜头多样性/感官丰富度/句式节奏/动词锐度/环境情绪共振/特写缺失 | Read |  |  |
@@ -146,8 +144,6 @@
   Shared terms: 输出结构化报告供润色步骤参考
 - **continuity-checker** ↔ **pacing-checker** (overlap ratio: 0.5)
   Shared terms: 输出结构化报告供润色步骤参考
-- **foreshadow-tracker** ↔ **thread-lifecycle-tracker** (overlap ratio: 0.667)
-  Shared terms: 密度异常, 检测逾期, 沉默, 输出结构化报告
 - **ooc-checker** ↔ **pacing-checker** (overlap ratio: 0.5)
   Shared terms: 输出结构化报告供润色步骤参考
 - **polish-agent** ↔ **writer-agent** (overlap ratio: 0.4)
@@ -169,11 +165,6 @@ Fragments appearing in 2+ agent specs (top 50):
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `综合评分 平均评级 x 最低维度 维度 n`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `结论 通过 预警 未通过 简要说明 禁止事项`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `黄金三章无任何 critical 命中 报告包含可执行的段落级修复建议 输出格式增强 json`
-- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `密度异常 输出结构化报告 tools read model inherit`
-- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `step 2 逐条扫描 对每条 status active`
-- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `密度告警 5 最低分 0 pass overall_score`
-- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `规划失败 硬阻断 3 plan_injection_mode warn 时`
-- **3x** in [foreshadow-tracker, plotline-tracker, thread-lifecycle-tracker]: `tracker 只读 不修改 index db data`
 - **3x** in [golden-three-checker, high-point-checker, ooc-checker]: `hard block 回退 step 2a 重写`
 - **3x** in [high-point-checker, reader-pull-checker, reader-simulator]: `题材画像 claude_plugin_root references genre profiles md`
 - **3x** in [high-point-checker, ooc-checker, proofreading-checker]: `critical hard block 回退 step 2a`
@@ -199,11 +190,16 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [flow-naturalness-checker, sensory-immersion-checker]: `升级为 high 普通为 warning ch1 3`
 - **2x** in [flow-naturalness-checker, sensory-immersion-checker]: `段落 p1 p2 具体描述 修复建议 可执行修复方向`
 - **2x** in [flow-naturalness-checker, prose-impact-checker]: `checker chapter 45 overall_score 82 pass`
-- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `沉默 密度异常 输出结构化报告 tools read model`
-- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `级别 priority 宽限期 逾期后处理 p0 核心`
-- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `80 5章 critical ink plan 强制安排兑现`
-- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `p1 重要 50 10章 high ink`
-- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `20章 medium 告警建议 沉默检测 活跃伏笔 last_touched_chapter`
-- **2x** in [foreshadow-tracker, plotline-tracker]: `从 review_bundle 或 index db 快照获取`
-- **2x** in [foreshadow-tracker, plotline-tracker]: `获取快照 step 2 逐条扫描 对每条 status`
-- **2x** in [foreshadow-tracker, thread-lifecycle-tracker]: `逾期检测 若 target_payoff_chapter 非空且 current_chapter target_payoff_chapter`
+- **2x** in [high-point-checker, reader-pull-checker]: `核心参考 分类法 claude_plugin_root references reading power`
+- **2x** in [high-point-checker, reader-pull-checker]: `taxonomy md 题材画像 claude_plugin_root references genre`
+- **2x** in [high-point-checker, ooc-checker]: `判定条件 severity 处置 普通章节 处置 黄金三章`
+- **2x** in [high-point-checker, ooc-checker]: `high 允许 step 4 润色修复 hard`
+- **2x** in [logic-checker, outline-compliance-checker]: `json issues markdown 报告 执行流程 第一步`
+- **2x** in [logic-checker, outline-compliance-checker]: `第三步 must_not_pass 判定 硬阻断条件 满足任一则 pass`
+- **2x** in [logic-checker, outline-compliance-checker]: `false 存在任何 critical severity issue 存在`
+- **2x** in [logic-checker, outline-compliance-checker]: `true 但 medium low issue 仍传递给`
+- **2x** in [logic-checker, outline-compliance-checker]: `polish agent 处理 第四步 生成报告 markdown`
+- **2x** in [logic-checker, outline-compliance-checker]: `综合评分 结论 通过 未通过 简要说明 critical`
+- **2x** in [logic-checker, outline-compliance-checker]: `count high count medium count low`
+- **2x** in [logic-checker, outline-compliance-checker]: `是否触发 原因 第五步 输出 json json`
+- **2x** in [logic-checker, outline-compliance-checker]: `硬阻断触发 必须回退修复 禁止事项 降低任何层级的 severity 严重度不得降级`

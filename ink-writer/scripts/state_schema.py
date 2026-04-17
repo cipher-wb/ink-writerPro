@@ -224,6 +224,25 @@ class WorldBuildingInfo(BaseModel):
     cultivation_subtiers: Optional[str] = Field(default=None)
 
 
+class CreativeFingerprint(BaseModel):
+    """创意指纹（v10 US-009 新增）：承载 Quick 模式产出的 5 个创意字段。
+
+    下游 /ink-plan 和 /ink-write 消费这些字段做一致性校验：
+      - meta_rules_hit：命中的元规则 IDs（M01-M11）
+      - perturbation_pairs：扰动对列表（每项含 pair_id / pattern / seed_a / seed_b）
+      - gf_checks：金手指三重校验结果（3 元 0/1 列表）
+      - style_voice：V1/V2/V3 三档语言风格
+      - market_avoid：双平台榜单反向规避的 Top 5 共通套路
+    """
+    model_config = ConfigDict(extra="allow")
+
+    meta_rules_hit: List[str] = Field(default_factory=list)
+    perturbation_pairs: List[Dict[str, Any]] = Field(default_factory=list)
+    gf_checks: List[int] = Field(default_factory=list)
+    style_voice: Optional[str] = Field(default=None)
+    market_avoid: List[str] = Field(default_factory=list)
+
+
 class ProjectInfo(BaseModel):
     """项目信息（v2: 子模型分组，保持向后兼容）"""
     model_config = ConfigDict(extra="allow")
@@ -238,6 +257,9 @@ class ProjectInfo(BaseModel):
     target_reader: Optional[str] = Field(default=None)
     platform: Optional[str] = Field(default=None)
     opening_hook: Optional[str] = Field(default=None)
+
+    # 创意指纹（v10 US-009 新增，来自 Quick 模式 Step 2 产出）
+    creative_fingerprint: CreativeFingerprint = Field(default_factory=CreativeFingerprint)
 
     # 角色信息
     protagonist_structure: Optional[str] = Field(default=None)
@@ -283,11 +305,11 @@ class ProjectInfo(BaseModel):
 
 
 class StateModel(BaseModel):
-    """state.json 顶层模型 (schema_version 9: 单一事实源架构)"""
+    """state.json 顶层模型 (schema_version 10: 创意指纹字段入库 US-009)"""
 
     model_config = ConfigDict(extra="allow")
 
-    schema_version: int = Field(default=9)
+    schema_version: int = Field(default=10)
     project_info: ProjectInfo = Field(default_factory=ProjectInfo)
     progress: ProgressState = Field(default_factory=ProgressState)
     protagonist_state: ProtagonistState = Field(default_factory=ProtagonistState)

@@ -34,10 +34,10 @@ agents/ink-writer/ (1 agent) ← ELIMINATED in US-402
 - foreshadow-tracker ↔ plotline-tracker: identical state machine, scoring model, ink-plan interaction
 - Missing IO schema for 6 agents in checker-output-schema.md
 
-## After (v13): 17 Agents, Single Directory
+## After (v13.8): 22 Agents, Single Directory
 
 ```
-ink-writer/agents/ (17 agents)
+ink-writer/agents/ (22 agents, v13 US-016 删除 2 僵尸, v13.2-v13.7 新增 5 checker)
 ├── writer-agent.md                [Writing]
 ├── context-agent.md               [Context]
 ├── data-agent.md                  [Data]
@@ -46,27 +46,41 @@ ink-writer/agents/ (17 agents)
 ├── continuity-checker.md          [Review: Content]
 ├── ooc-checker.md                 [Review: Content]
 ├── golden-three-checker.md        [Review: Content]
+├── logic-checker.md               [Review: Content] ← NEW v13.2 Logic Fortress
+├── outline-compliance-checker.md  [Review: Content] ← NEW v13.2 Logic Fortress
 ├── anti-detection-checker.md      [Review: Quality]
 ├── proofreading-checker.md        [Review: Quality]
 ├── emotion-curve-checker.md       [Review: Quality]
 ├── high-point-checker.md          [Review: Quality]
 ├── pacing-checker.md              [Review: Quality]
 ├── editor-wisdom-checker.md       [Review: Quality] ← MOVED from agents/ink-writer/
+├── prose-impact-checker.md        [Review: Quality] ← NEW v13.7 文笔沉浸感
+├── sensory-immersion-checker.md   [Review: Quality] ← NEW v13.7 文笔沉浸感
+├── flow-naturalness-checker.md    [Review: Quality] ← NEW v13.7 文笔沉浸感
 ├── reader-pull-checker.md         [Review: Engagement]
 ├── reader-simulator.md            [Review: Engagement]
-└── thread-lifecycle-tracker.md    [Review: Story] ← NEW (merged)
+└── thread-lifecycle-tracker.md    [Review: Story] ← NEW (merged from foreshadow+plotline)
 ```
+
+### v13 演进概览
+
+| 版本 | 变化 | Agent 数 |
+|------|------|:---:|
+| v13.0 | Baseline（foreshadow/plotline tracker 已合并为 thread-lifecycle-tracker，但老规格保留） | 19 |
+| v13.2 | Logic Fortress：新增 logic-checker + outline-compliance-checker | 21 |
+| v13.7 | 文笔沉浸感：新增 prose-impact / sensory-immersion / flow-naturalness | 24 |
+| v13 US-016 (2026-04-17) | 物理删除僵尸 foreshadow-tracker.md + plotline-tracker.md | **22**（当前） |
 
 ### Changes Summary
 
 | Change | Details |
 |--------|---------|
-| **Merged** | `foreshadow-tracker` + `plotline-tracker` → `thread-lifecycle-tracker` |
-| **Added** | `references/shared-checker-preamble.md` (共享输入/输出/评分规则) |
-| **Updated** | `checker-output-schema.md` (6 missing agent metrics added) |
-| **Updated** | ink-plan SKILL.md references (foreshadow-tracker → thread-lifecycle-tracker[foreshadow]) |
-| **Updated** | ink-write SKILL.md references (同上) |
-| **Retained** | Old agent files kept for backward compatibility (agent name aliasing) |
+| **Merged** | `foreshadow-tracker` + `plotline-tracker` → `thread-lifecycle-tracker` (v13.0) |
+| **v13 US-016** | 老 foreshadow-tracker.md / plotline-tracker.md 物理删除（此前为别名保留） |
+| **Added v13.2** | `logic-checker.md` + `outline-compliance-checker.md`（Logic Fortress） |
+| **Added v13.7** | `prose-impact-checker.md` + `sensory-immersion-checker.md` + `flow-naturalness-checker.md`（文笔沉浸感） |
+| **Added** | `references/shared-checker-preamble.md`（共享输入/输出/评分规则） |
+| **Updated** | `checker-output-schema.md`（6 missing agent metrics added） |
 
 ## Pipeline Architecture
 

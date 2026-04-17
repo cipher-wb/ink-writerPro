@@ -2,9 +2,18 @@
 
 将 ink-auto 的串行写作升级为 N 章并发流水线：
 - 多个 CLI 进程同时写作不同章节
-- 实体写入由 SQLite WAL + ChapterLockManager 保护
 - 检查点在批次完成后统一运行
 - 支持故障隔离：单章失败不影响其他进行中的章节
+
+⚠️ **v13 US-023（FIX-02B）诚实降级声明**：
+   当前仅 `parallel=1`（串行）安全。`parallel>1` 为实验特性：
+   ChapterLockManager 尚未接入（原 docstring 声称接入为虚假陈述），
+   多个 CLI 子进程并发写 `state.json` / `index.db` 存在数据损坏风险。
+   真并发集成见 `tasks/design-fix-04-step3-gate-orchestrator.md` 后续迭代。
+   即日起 `parallel>1` 会触发 RuntimeWarning；用户若坚持使用属自担风险。
+
+TODO: 参考 tasks/design-fix-04-step3-gate-orchestrator.md Phase B/C，
+      接入 ChapterLockManager（threading.local → asyncio.Lock）解除此限制。
 """
 
 from __future__ import annotations
@@ -14,6 +23,7 @@ import json
 import os
 import shutil
 import time
+import warnings
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
@@ -27,6 +37,7 @@ class ChapterStatus(Enum):
     DONE = "done"
     FAILED = "failed"
     RETRYING = "retrying"
+    TIMEOUT_FAILED = "timeout_failed"  # v13 US-013
 
 
 @dataclass
@@ -55,6 +66,8 @@ class PipelineConfig:
     checkpoint_cooldown: int = 15
     platform: str = "claude"
     max_retries: int = 1
+    # v13 US-013：单章超时（秒）。默认 1800（30min），可通过 INK_CHAPTER_TIMEOUT 环境变量覆盖
+    chapter_timeout_s: int = int(os.environ.get("INK_CHAPTER_TIMEOUT", 1800))
 
     @property
     def scripts_dir(self) -> Path:
@@ -133,6 +146,17 @@ class PipelineManager:
     def __init__(self, config: PipelineConfig):
         self.config = config
         self._interrupted = False
+        # v13 US-023（FIX-02B）：parallel>1 是实验特性（ChapterLockManager 未接入），
+        # 显式警告用户有数据竞争风险
+        if config.parallel > 1:
+            warnings.warn(
+                f"PipelineManager: parallel={config.parallel} > 1 is experimental. "
+                f"ChapterLockManager is not yet integrated; concurrent state.json / "
+                f"index.db writes may corrupt data. Recommend parallel=1 for production. "
+                f"See tasks/design-fix-04-step3-gate-orchestrator.md for planned fix.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
 
     async def run(self, total_chapters: int) -> PipelineReport:
         """运行并发管线，写 total_chapters 章。"""
@@ -173,16 +197,30 @@ class PipelineManager:
             # 2) 清理 workflow 残留
             await self._clear_workflow()
 
-            # 3) 并发写作本批次所有章节
+            # 3) 并发写作本批次所有章节（v13 US-013：每章 asyncio.wait_for 包超时）
             tasks = [
-                self._write_single_chapter(ch, batch_idx, i + 1, len(batch))
+                asyncio.wait_for(
+                    self._write_single_chapter(ch, batch_idx, i + 1, len(batch)),
+                    timeout=self.config.chapter_timeout_s,
+                )
                 for i, ch in enumerate(batch)
             ]
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
             batch_failed = False
             for i, result in enumerate(results):
-                if isinstance(result, Exception):
+                # v13 US-013：TimeoutError 单独标记 TIMEOUT_FAILED，不阻塞其它章
+                if isinstance(result, asyncio.TimeoutError):
+                    ch_result = ChapterResult(
+                        chapter=batch[i],
+                        status=ChapterStatus.TIMEOUT_FAILED,
+                        error=f"章节超时（>{self.config.chapter_timeout_s}s）",
+                        start_time=time.time(),
+                        end_time=time.time(),
+                    )
+                    report.results.append(ch_result)
+                    batch_failed = True
+                elif isinstance(result, Exception):
                     ch_result = ChapterResult(
                         chapter=batch[i],
                         status=ChapterStatus.FAILED,

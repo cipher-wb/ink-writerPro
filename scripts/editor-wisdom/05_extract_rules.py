@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Extract atomic machine-consumable rules from classified editor wisdom content."""
+"""Extract atomic machine-consumable rules from classified editor wisdom content.
+
+v13 US-007 修复：入口 API Key 校验 + 连续 5 次失败 abort（v5 审计 Critical）。
+"""
 
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from datetime import datetime, timezone
@@ -11,6 +15,8 @@ from pathlib import Path
 
 from ink_writer.editor_wisdom.llm_backend import call_llm
 from ink_writer.editor_wisdom.models import SONNET_MODEL
+
+MAX_CONSECUTIVE_FAILURES = 5  # v13 US-007
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "editor-wisdom"
 
@@ -138,6 +144,8 @@ def extract_rules(data_dir: Path) -> dict[str, int]:
     unflushed = 0
     last_flush = time.monotonic()
 
+    consecutive_failures = 0  # v13 US-007
+
     try:
         for idx, entry in enumerate(entries, 1):
             file_hash = entry["file_hash"]
@@ -154,9 +162,17 @@ def extract_rules(data_dir: Path) -> dict[str, int]:
                     try:
                         print(f"[{idx}/{len(entries)}] {entry['filename'][:50]}", flush=True)
                         raw_rules = _extract_from_one(body, entry["title"], categories)
+                        consecutive_failures = 0
                     except Exception as exc:
                         print(f"  ERR: {type(exc).__name__}: {str(exc)[:100]}", flush=True)
                         _append_error(data_dir, file_hash, entry.get("filename", ""), exc)
+                        consecutive_failures += 1
+                        if consecutive_failures >= MAX_CONSECUTIVE_FAILURES:
+                            sys.exit(
+                                f"ERROR: {consecutive_failures} consecutive API failures, "
+                                f"aborting to preserve cost. Check errors.log for details. "
+                                f"Last error: {type(exc).__name__}: {exc}"
+                            )
                         continue
                 cache[file_hash] = raw_rules
                 api_count += 1
@@ -222,6 +238,14 @@ def _deduplicate_rules(rules: list[dict]) -> None:
 
 
 def main() -> None:
+    # v13 US-007：入口 API_KEY 校验
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        sys.exit(
+            "ERROR: ANTHROPIC_API_KEY not set. "
+            "This script requires a valid key to extract rules via Claude Sonnet. "
+            "Set it via `export ANTHROPIC_API_KEY=sk-...` and retry."
+        )
+
     data_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_DATA_DIR
 
     if not (data_dir / "classified.json").exists():

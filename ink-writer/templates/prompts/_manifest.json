@@ -7,23 +7,23 @@
       "version": "1.0.0",
       "consumers": [
         "consistency-checker", "continuity-checker", "emotion-curve-checker",
-        "foreshadow-tracker", "golden-three-checker", "high-point-checker",
-        "ooc-checker", "pacing-checker", "plotline-tracker",
+        "golden-three-checker", "high-point-checker",
+        "ooc-checker", "pacing-checker",
         "reader-pull-checker", "reader-simulator", "thread-lifecycle-tracker",
         "editor-wisdom-checker"
       ],
-      "changelog": "Initial extraction from 12+ checker agent specs"
+      "changelog": "Initial extraction from 12+ checker agent specs; v13 US-016 removed foreshadow-tracker/plotline-tracker (merged into thread-lifecycle-tracker)"
     },
     "checker-output-reference": {
       "file": "checker-output-reference.md",
       "version": "1.0.0",
       "consumers": [
         "consistency-checker", "continuity-checker", "emotion-curve-checker",
-        "foreshadow-tracker", "high-point-checker", "ooc-checker",
-        "pacing-checker", "plotline-tracker", "reader-simulator",
+        "high-point-checker", "ooc-checker",
+        "pacing-checker", "reader-simulator",
         "thread-lifecycle-tracker"
       ],
-      "changelog": "Initial extraction from 10 checker agent specs"
+      "changelog": "Initial extraction from 10 checker agent specs; v13 US-016 removed foreshadow-tracker/plotline-tracker"
     },
     "checker-range-input": {
       "file": "checker-range-input.md",
@@ -73,9 +73,9 @@
       "file": "tracker-shared-logic.md",
       "version": "1.0.0",
       "consumers": [
-        "foreshadow-tracker", "plotline-tracker", "thread-lifecycle-tracker"
+        "thread-lifecycle-tracker"
       ],
-      "changelog": "Initial extraction from 3 tracker agent specs"
+      "changelog": "Initial extraction from 3 tracker agent specs; v13 US-016 removed foreshadow-tracker/plotline-tracker (merged)"
     },
     "polish-priority-rules": {
       "file": "polish-priority-rules.md",

@@ -5,42 +5,117 @@ Exit codes:
   0 = 通过，可进入 Step 4
   1 = 硬拦截，必须回退 Step 2A 重写
   2 = 脚本错误（静默跳过）
+
+v13 Health Audit US-005 修复（2026-04-17）：
+  数据源优先级：index.db.review_metrics → 老 .ink/reports/review_ch*.json（fallback，打 warning）。
+  若两者均无对应章节记录 → 显式 FAIL（不再是 silent PASS，v5 审计确认生产链路只写 index.db）。
 """
 from __future__ import annotations
 
 import argparse
 import json
+import logging
 import sys
 from collections.abc import Callable
 from pathlib import Path
 
+logger = logging.getLogger(__name__)
 
-def check_review_gate(project_root: Path, chapter_num: int) -> dict:
-    """检查审查结果是否通过闸门。"""
-    result = {"pass": True, "reason": "", "action": "continue"}
 
-    # 从最近的审查报告中读取
+def _load_review_data_from_index_db(project_root: Path, chapter_num: int) -> dict | None:
+    """Try to load review data from index.db.review_metrics for the given chapter.
+
+    Returns the review payload dict (same shape as legacy JSON) or None if no matching row.
+    v13 US-005: index.db.review_metrics 是生产链路实际写入的表。
+    """
+    db_path = project_root / ".ink" / "index.db"
+    if not db_path.exists():
+        return None
+    try:
+        import sqlite3
+        with sqlite3.connect(str(db_path)) as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT overall_score, dimension_scores, severity_counts, critical_issues,
+                       review_payload_json, report_file, notes
+                FROM review_metrics
+                WHERE start_chapter <= ? AND end_chapter >= ?
+                ORDER BY updated_at DESC
+                LIMIT 1
+                """,
+                (chapter_num, chapter_num),
+            )
+            row = cursor.fetchone()
+            if row is None:
+                return None
+            # 若存在完整 payload（含 checker_results）则用 payload；否则基于列组 minimal dict
+            payload_json = row["review_payload_json"]
+            if payload_json:
+                try:
+                    return json.loads(payload_json)
+                except json.JSONDecodeError:
+                    pass
+            return {
+                "overall_score": row["overall_score"] or 100,
+                "severity_counts": json.loads(row["severity_counts"]) if row["severity_counts"] else {},
+                "dimension_scores": json.loads(row["dimension_scores"]) if row["dimension_scores"] else {},
+                "critical_issues": json.loads(row["critical_issues"]) if row["critical_issues"] else [],
+                "checker_results": {},  # 老 payload_json 缺失时只能降级为 minimal 模式
+            }
+    except Exception as exc:
+        logger.warning("index.db read failed for chapter %s: %s; falling back to JSON", chapter_num, exc)
+        return None
+
+
+def _load_review_data_from_json(project_root: Path, chapter_num: int) -> dict | None:
+    """Legacy path：从 .ink/reports/review_ch*.json 读取审查数据。打 warning 提示该路径已迁移。"""
     reports_dir = project_root / ".ink" / "reports"
     if not reports_dir.exists():
-        return result  # 无报告，默认通过
-
-    # 查找匹配当前章节的审查报告
-    report_file = None
+        return None
     for f in sorted(reports_dir.glob("review_ch*.json"), reverse=True):
         try:
             data = json.loads(f.read_text(encoding="utf-8"))
             start = data.get("start_chapter", 0)
             end = data.get("end_chapter", 0)
             if start <= chapter_num <= end:
-                report_file = f
-                break
+                logger.warning(
+                    "legacy JSON path used for chapter %s (%s); review data should be in index.db.review_metrics. "
+                    "Migrate via save_review_metrics().",
+                    chapter_num,
+                    f.name,
+                )
+                return data
         except (json.JSONDecodeError, OSError):
             continue
+    return None
 
-    if not report_file:
+
+def check_review_gate(project_root: Path, chapter_num: int) -> dict:
+    """检查审查结果是否通过闸门。
+
+    v13 US-005 数据源顺序：
+      1. index.db.review_metrics（生产链路真实写入的表）
+      2. .ink/reports/review_ch*.json（legacy fallback + warning）
+      3. 两者均无记录 → 显式 FAIL（历史默认 silent PASS 是 bug）
+    """
+    result = {"pass": True, "reason": "", "action": "continue"}
+
+    data = _load_review_data_from_index_db(project_root, chapter_num)
+    if data is None:
+        data = _load_review_data_from_json(project_root, chapter_num)
+
+    if data is None:
+        # v13 US-005：无审查数据 = 显式 FAIL（不再默认 PASS，v5 审计 Blocker 修复）
+        result["pass"] = False
+        result["reason"] = (
+            f"no review data found for chapter {chapter_num} "
+            f"(checked index.db.review_metrics and .ink/reports/review_ch*.json)"
+        )
+        result["action"] = "rerun_step3_review"
         return result
 
-    data = json.loads(report_file.read_text(encoding="utf-8"))
     overall_score = data.get("overall_score", 100)
     severity_counts = data.get("severity_counts", {})
     critical_count = severity_counts.get("critical", 0)
@@ -131,8 +206,8 @@ def run_editor_wisdom_gate(
     if checker_fn is None:
         def checker_fn(text: str, ch_no: int) -> dict:
             from ink_writer.editor_wisdom.checker import check_chapter
-            from ink_writer.editor_wisdom.retriever import Retriever
-            retriever = Retriever()
+            from ink_writer.editor_wisdom.retriever import get_retriever
+            retriever = get_retriever()  # v13 US-006：单例复用，避免每章 ~30s BAAI 加载
             rules = retriever.retrieve(text)
             return check_chapter(text, ch_no, rules, config=config)
 
