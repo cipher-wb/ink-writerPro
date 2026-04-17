@@ -213,3 +213,65 @@ Source: docs/engineering-review-report-v5.md + tasks/prd-v13-step2-fixes.md
   - importlib.reload 在多测试间共享枚举会导致 `MyEnum.VAL != MyEnum.VAL`（identity mismatch），慎用
   - `chapter_timeout_s` 作为 dataclass field default 读 env 只在 module 首次 import 时固化；动态 env 切换用显式传参
 ---
+
+## 2026-04-18 00:24 - US-014/015/016/017（批次清理）
+- 执行 `rm -rf archive/2026-04-{15,16,17}*/`（保留 ink-init-quick-creativity 本次归档）
+- 执行 `rm -rf docs/archive/`（v9.x 14 份历史审查）
+- 执行 `rm docs/engineering-review-report{,-v2,-v3,-v4}.md`
+- 执行 `rm ink-writer/agents/foreshadow-tracker.md ink-writer/agents/plotline-tracker.md`
+- 更新测试/manifest 同步 2 个 agent 被删：
+  - tests/prompts/test_prompt_templates.py 白名单去 2 项 + diff_all_runs 24→22
+  - tests/audit/test_agent_topology.py 断言 not exists
+  - ink-writer/templates/prompts/_manifest.json 3 个 consumers 数组清理
+- 执行 `rm .DS_Store × 2 .coverage`
+- 追加 `ink_writer.egg-info/` 到 .gitignore
+- 合计回收 ~603KB / 37+ 条目
+- Verification: 2060 passed + 1 skipped 零回归
+- **Learnings for future iterations:**
+  - 删 agent 规格文件时必查 `_manifest.json` consumers 数组 + ab_prompts 计数 + test_agent_topology 断言 + test_prompt_templates 白名单
+  - `pip install -e .` 生成 `ink_writer.egg-info/` 需 .gitignore
+  - 批量 rm 后立刻跑 pytest 验证比分批跑快
+---
+
+## 2026-04-18 00:29 - US-018
+- 修改 `ink-writer/scripts/data_modules/api_client.py`：加 logger module-level；sed 批量 print→logger（14 处）；保留 6 处 CLI status 输出
+- Verification: 2060 passed 零回归
+- **Learnings for future iterations:**
+  - Edit 失败原因：sed 改过文件后 Claude 的内部缓存失效，需 Read 再 Edit
+  - 日志迁移原则：library 内部使用 logger（retry/timeout/error）；CLI 入口直接状态用 print（用户明确看的状态条）
+  - sed 批量替换：`-E 's/print\(f"\[WARN\] (.+)"\)/logger.warning(f"\1")/g'` 正则捕获组 \1 复用
+---
+
+## 2026-04-18 00:35 - US-019
+- 修改 `ink-writer/scripts/data_modules/index_manager.py:864`：删 CREATE TABLE protagonist_knowledge + 2 索引；替换为 `DROP TABLE IF EXISTS` 提供老项目迁移
+- 新建 `tests/harness/test_orphan_table_dropped.py`（2 测试）
+- **勘误 v5 审计**：schema_meta 和 rag_schema_meta 实际都在用（test_index_manager.py:104 SELECT schema_meta；rag_adapter.py:203-211 INSERT rag_schema_meta），本 US 仅删 protagonist_knowledge
+- Verification: 2062 passed 零回归（+2 新）
+- **Learnings for future iterations:**
+  - v5 审计的"孤儿表"结论需实际 `grep INSERT/SELECT` 复核；本轮发现 2/3 误判
+  - agent spec 中的 `protagonist_knowledge_gate` / `protagonist_knowledge_events` 是字段名（Context Contract / JSON），不依赖 SQL 表名；删表不影响字段语义
+  - DROP TABLE IF EXISTS 在 init 时执行 = 老项目首次打开就清理，避免 migration 基础设施缺失
+---
+
+## 2026-04-18 00:46 - US-020/021/022（文档三件套）
+- US-020: README.md '38 种模板' → '37 种题材模板'（实测 templates/genres/ = 37）
+- US-021: docs/agent_topology_v13.md 主图 17→22 agents；补 v13.2 Logic Fortress（logic-checker + outline-compliance-checker）+ v13.7 文笔沉浸感（prose-impact + sensory-immersion + flow-naturalness）+ US-016 删除 2 僵尸 演进概览
+- US-022: 新建 scripts/verify_docs.py（3 项校验：README / topology / architecture）+ CI 集成 + 修正 architecture.md 14→22 agents / 10→16 Checkers
+- Verification: 2062 passed 零回归；verify_docs 3/3 ok 0 drift
+- **Learnings for future iterations:**
+  - verify_docs.py 正则要精确（`[+＋]\s*(\d+)\s*Checkers` 而非宽松 `(\d+)\s*(个|Checker)`），否则会误匹配 Skills 数字
+  - CI `verify_docs.py` 作为独立 step 而非 pytest 内，便于单独 rerun 和定位 doc drift
+  - architecture.md 一直落后于代码，下次 US-010 补测试时可考虑把更多关键数字（如 30+ SQLite 表数）纳入 verify
+---
+
+## 2026-04-18 01:05 - US-023/024/025（FIX-02B + FIX-03A 架构三件）
+- US-023（FIX-02B）：pipeline_manager.py module docstring 改写去除虚假 ChapterLockManager 声明；__init__ 加 RuntimeWarning when parallel>1；README FAQ 新增并发安全问答。2 新测试；副作用：tests/parallel 产 10 预期警告（诚实降级的正确表现）
+- US-024（FIX-03A 核心）：StateWriteError 新异常；flush() 顺序 SQL-first（_sync_state_to_kv → _sync_to_sqlite → atomic_write_json）；_sync_state_to_kv 不再 try/except 吞异常。4 新测试 + 1 既有测试调整（_BrokenSQLManager 加 bulk_set_state_kv 保留原测试意图）
+- US-025（FIX-03A 扫尾）：审计报告 tasks/audit-direct-state-writes-2026-04-17.md；archive_manager.py:123 + update_state.py:215 加 TODO 注释指向报告。3 新测试（调用点数范围 + TODO 标记 + 审计文件存在）
+- Verification: 2071 passed 零回归（总 baseline +43 新测试）
+- **Learnings for future iterations:**
+  - SQL-first flush 反转时注意：`_sync_state_to_kv` 内 try/except 也要移除（否则异常被吞，flush 无法包装）
+  - 审计 + TODO 是处理"改动复杂、风险高"子任务的稳健策略（避免连锁影响，但仍向后留下线索）
+  - FIX-03A 剩余 2 个直写点（archive_manager / update_state）需单独重构：拆分 state dict 修改逻辑为 StateManager 调用
+  - **Ralph PRD 25 US 全部完成** — v13 Health Audit Step 2 修复圆满结束
+---
