@@ -62,6 +62,7 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 | 女主/核心配角姓名 + 设定 | 姓名（命名系统生成）+ 1-2 句人设 |
 | 核心冲突 | 全书主线冲突一句话 |
 | 金手指概要 | 类型 + 能力 + 代价，或"无金手指" |
+| 第一章爽点预览 | **必填 ≥50 字**（US-001）：描述金手指在第一章的具体收益场景（资源/击退/认可/地位/信息/危机解除），含视觉/感官特征。禁止仅写抽象收益。 |
 | 前三章钩子概念 | 第 1/2/3 章各一句话钩子描述 |
 
 ### 输出格式
@@ -77,6 +78,7 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 - **女主/核心配角**：姓名 — XX
 - **核心冲突**：XX
 - **金手指**：XX（代价：XX）
+- **第一章爽点预览**：XX（≥50 字，具体收益场景 + 视觉/感官特征）
 - **前三章钩子**：
   1. 第1章：XX
   2. 第2章：XX
@@ -138,9 +140,16 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 | 女主/核心配角姓名 | `relationship.heroine_names[0]` 或 `relationship.co_protagonists[0]` |
 | 核心冲突 | `project.core_conflict` |
 | 金手指概要 | `golden_finger.type` + `golden_finger.name` |
+| 第一章爽点预览 | `golden_finger.first_payoff`（若未达 80 字，自动扩写或追问补齐以通过充分性闸门 5a）；同时派生 `golden_finger.visual_signature`（从预览中抽取视觉/感官描写，不足 50 字则追问） |
 | 前三章钩子 | `constraints.opening_hook` |
 
 未覆盖的字段（如 `world.scale`、`world.power_system_type`）从题材自动推断合理默认值。
+
+**US-001 Quick 模式补充填充**（充分性闸门 5a 所需）：
+- `golden_finger.first_payoff`：由「第一章爽点预览」扩写至 ≥80 字（追问用户或自动展开具体收益形式）。
+- `golden_finger.visual_signature`：从预览中抽取视觉/感官片段，若 <50 字则由系统补齐并请用户确认。
+- `golden_finger.escalation_ladder`：基于金手指类型自动生成三阶段默认梯度（ch1 / ch10 / late_game），各写一句话，展示给用户确认（Y/N）。
+- `golden_finger.payoff_self_check`：Quick 模式下自动填入「已通过预览字段校验」，若用户修改预览则重置该字段要求用户重新回答。
 
 ### 2) 填充 `.ink/state.json` 和 `.ink/preferences.json`
 
@@ -364,6 +373,33 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 - 若为重生：重生时间点、记忆完整度
 - 若为传承/器灵：辅助边界与出手限制
 
+#### Step 3+ 爽点前置收益场景（必收，US-001）
+
+在完成上述金手指基础信息后，追加三项爽点前置字段，必须全部填写：
+
+1. **`golden_finger_first_payoff`**（≥80 字）
+   - 描述金手指在**第一章**为主角带来的具体收益场景：什么能力被触发、触发后主角获得了什么具体有形的好处（资源/敌人击退/他人认可/地位提升/信息解锁/危机解除等）。
+   - 禁止使用抽象词汇作为收益（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了）。
+   - 若用户给出的描述不足 80 字或仅提及抽象收益，继续追问直至满足。
+2. **`golden_finger_visual_signature`**（≥50 字）
+   - 描述金手指激活时的视觉/感官特征：画面是什么、有无光效/声响/触感/气味等感官锚点。此字段将在 write 阶段用于感官描写注入。
+3. **`golden_finger_escalation_ladder`**
+   - 能力阶梯三段描述，必须显式给出：
+     - 第 1 章：此时能做什么、有什么边界。
+     - 第 10 章前后：升级后能做什么。
+     - 后期（主线中后段）：最终形态能做什么。
+   - 禁止仅写“逐步提升”“循序渐进”之类空泛表述。
+
+#### Step 3++ 读者爽感自检（必问）
+
+上述三项收集完毕后，再追加以下强制追问（用户必须回答，不能跳过）：
+
+> 「如果读者看完第一章，仍然不知道金手指究竟能怎么爽（不知道它能解决什么问题、不知道它带来什么具体好处），你会怎么改？」
+
+- 将用户的回答作为 `golden_finger_payoff_self_check` 字段写入内部数据模型。
+- 若用户表示“不知道如何改”或给出空洞回答，系统根据已收集的 `golden_finger_first_payoff` 生成 2-3 条强化建议供用户选择。
+- 用户给出有效答复后方可进入 Step 4。
+
 ### Step 4：世界观与力量规则
 
 收集项（必收）：
@@ -484,7 +520,15 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
     "style": "",
     "visibility": "",
     "irreversible_cost": "",
-    "growth_rhythm": ""
+    "growth_rhythm": "",
+    "first_payoff": "",
+    "visual_signature": "",
+    "escalation_ladder": {
+      "ch1": "",
+      "ch10": "",
+      "late_game": ""
+    },
+    "payoff_self_check": ""
   },
   "world": {
     "scale": "",
@@ -516,6 +560,13 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 3. 主角姓名 + 欲望 + 缺陷完整。
 4. 世界规模 + 力量体系类型完整。
 5. 金手指类型已确定（允许“无金手指”）。
+5a. **金手指爽点前置字段齐备**（US-001 硬阻断）：
+   - `golden_finger.first_payoff` 非空且 ≥ 80 字，且不含纯抽象收益词（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了）。
+   - `golden_finger.visual_signature` 非空且 ≥ 50 字。
+   - `golden_finger.escalation_ladder.ch1` / `ch10` / `late_game` 三项均非空。
+   - `golden_finger.payoff_self_check` 非空（读者爽感自检已回答）。
+   - 若 `golden_finger.type` 为「无金手指」，允许上述字段留空，但必须显式标记 `type="无金手指"` 且在总纲中补充“无金手指兑现路径”说明。
+   - 未通过此闸门 → 阻断进入 `/ink-plan` 阶段。
 6. 创意约束已确定：
    - 反套路规则 1 条
    - 硬约束至少 2 条

@@ -1,246 +1,289 @@
 {
   "project": "ink-writer",
-  "branchName": "ralph/combat-pacing-overhaul",
-  "description": "爽点密集化与主线加速 — 架构级改造。强制1大+2小卖点/章、第1章完整闭环、主角能动性三层检测、人物反应真实性双保险、遣词造句质量硬约束。详见 tasks/prd-combat-pacing-overhaul.md。",
+  "branchName": "ralph/prose-immersion-optimization",
+  "description": "全链路文笔冲击力与爽点前置优化。三大维度：(1)爽点前置—init收集金手指收益场景/plan强制第一章闭环/review硬性验证；(2)文笔冲击力—电影镜头切换/感官沉浸/情绪句式/环境共振注入write阶段；(3)语言自然度—信息密度控制/角色语言特征/过渡流畅度。预防+兜底双保险。",
   "userStories": [
     {
       "id": "US-001",
-      "title": "大纲层爽点密度硬约束 — ink-plan 章纲新增大小卖点必填字段",
-      "description": "As a 作者, I want 大纲生成时每章必须规划1个大卖点+2个小卖点, so that 爽点密度在结构设计阶段就被锁定。",
+      "title": "init 阶段新增金手指收益场景必填字段",
+      "description": "As a 创作者, I want ink-init 深度模式第3波（金手指）新增3个必填字段引导我思考金手指的第一章爽点场景, so that 金手指收益信息在初始化阶段就被锁定。",
       "acceptanceCriteria": [
-        "修改 ink-plan/SKILL.md Step 6（卷纲生成）和 Step 7（章纲批量生成），将现有 `爽点配方` 字段重命名为 `大卖点类型`",
-        "每章大纲新增必填字段：`大卖点描述`（≤80字，格式：谁→做什么→对象反应→围观反应）、`小卖点`（2个，各≤40字）",
-        "`大卖点类型` 必须是以下之一：装逼打脸/扮猪吃虎/越级反杀/打脸权威/反派翻车/甜蜜超预期/迪化误解/身份掉马/能力升级/关键情报获取/危机逆转",
-        "`小卖点` 类型必须是以下之一：微兑现（信息/关系/能力/资源/认可/情绪/线索）/角色魅力展示/世界观趣味细节/关系推进/小悬念设置/能力小应用",
-        "大纲验证（Step 8）中，任何章节缺失 `大卖点描述` 或 `小卖点` 数量<2 → hard fail 阻断保存",
-        "大卖点类型不得与前3章重复同一类型 → hard fail",
-        "原有爽点执行字段（铺垫来源/信息差/预期读者情绪）保留，挂在大卖点下"
+        "修改 skills/ink-init/SKILL.md 第3波（金手指收集），新增必填字段：golden_finger_first_payoff（金手指在第一章的具体收益场景描述，≥80字）",
+        "新增必填字段：golden_finger_visual_signature（金手指激活时的视觉/感官特征描述，≥50字）",
+        "新增必填字段：golden_finger_escalation_ladder（金手指能力阶梯：第1章→第10章→后期各能做什么）",
+        "新增追问环节：'如果读者看完第一章不知道金手指能怎么爽，你会怎么改？'——用户回答后方可进入下一波",
+        "快速模式生成的3个方案每个必须包含'第一章爽点预览'段落（≥50字描述第一章爽点场景）",
+        "sufficiency gate 新增检查：缺少 golden_finger_first_payoff 时阻断进入 plan 阶段",
+        "Typecheck passes"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "将现有爽点配方与新大卖点概念合并，避免两套字段混乱。注意同步更新 templates/output/ 中的大纲模板。"
+      "notes": "这是爽点前置的数据源头，后续 plan/write/review 全部依赖这些字段。参考现有 golden_finger_design.md 的收集模式。"
     },
     {
       "id": "US-002",
-      "title": "大纲层爽点前置原则 — 节拍表强制前3章爽点分布",
-      "description": "As a 作者, I want 节拍表规划时锁定前3章的爽点前置分布, so that 不会出现前5章全是铺垫的问题。",
+      "title": "init 阶段新增角色语言特征档案收集",
+      "description": "As a 创作者, I want ink-init 第2波为每个主要角色建立语言特征档案, so that 对话自然且有辨识度，不同角色说话不再雷同。",
       "acceptanceCriteria": [
-        "修改 ink-plan/SKILL.md Step 4（节拍表生成），新增硬约束：卷级爽点链PC-1的第一个爆发章不得晚于本卷第3章",
-        "前3章每章至少1个大卖点+2个小卖点（与US-001字段对齐）",
-        "前3章 `压扬标记` 不能全部为'压'，至少有1章为'扬'",
-        "修改节拍表模板 templates/output/大纲-卷节拍表.md，Section 7（爽点链规划）新增上述约束提示",
-        "节拍表验证时违反上述规则 → hard fail 阻断进入 Step 5"
+        "修改 skills/ink-init/SKILL.md 第2波（角色收集），为主要角色（protagonist + 核心配角）新增子字段组 voice_profile",
+        "voice_profile 包含：speech_vocabulary_level（口语化/标准/文雅/古风）、preferred_sentence_length（短促/中等/冗长）、verbal_tics（口头禅，最多3个）、emotional_tell（情绪时语言变化描述）、taboo_topics（不会主动提起的话题）",
+        "生成的 设定集/主角卡.md 必须包含'语言特征档案'段落，列出上述5个维度",
+        "当用户无法提供语言细节时，基于'性格+年龄+职业+背景'自动生成推荐档案并请用户确认（YN确认模式）",
+        "Typecheck passes"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "这是大纲层的前置保障，确保爽点不会全部堆在后面。"
+      "passes": false,
+      "notes": "用户回答'不知道'时系统自动生成推荐值是关键体验。生成规则：性格外向→句长中等偏长+主动句式；内向→短促+被动句式等。"
     },
     {
       "id": "US-003",
-      "title": "第1章完整小闭环 — 大纲层强制能力→危机→收益闭环",
-      "description": "As a 作者, I want 第1章大纲必须包含能力展示→危机→能力收益完整闭环, so that 读者在第1章内就能看到金手指的实际价值。",
+      "title": "init 阶段 golden_three_plan.json 新增第一章爽点规格",
+      "description": "As a 系统, I want golden_three_plan.json 新增 ch1_cool_point_spec 字段, so that 第一章爽点信息能传递到 plan 和 write 阶段。",
       "acceptanceCriteria": [
-        "修改 ink-plan/SKILL.md Step 7 中第1章的额外验证规则：新增必填字段 `第1章闭环`，格式：`能力展示={事件} → 危机={事件} → 能力收益={具体结果}`",
-        "三个子字段任一为空 → hard fail",
-        "`能力收益` 必须是具体可感知的变化（获得报酬/地位提升/新能力解锁/危机解除后的奖励），不能是抽象描述（主角有了新认知）→ hard fail",
-        "第1章大纲的 `章末未闭合问题` 必须指向主线大冲突（不能是'主角在想这个能力是什么'这种层级）→ hard fail",
-        "修改 scripts/data_modules/golden_three.py 的 build_golden_three_plan()，将闭环要求写入 golden_three_plan.json 的 ch1 contract"
+        "修改 skills/ink-init/SKILL.md 中 golden_three_plan.json 生成逻辑，新增字段 ch1_cool_point_spec",
+        "ch1_cool_point_spec 包含：scene_description（具体爽点场景，≥100字）、involved_characters（涉及角色列表）、payoff_form（收益形式：资源获取/敌人击退/他人认可/地位提升/信息解锁）、reader_emotion_target（读者情绪目标描述）",
+        "ch1_cool_point_spec 的值从 US-001 收集的 golden_finger_first_payoff + golden_finger_visual_signature 合并推导生成",
+        "生成后展示给用户确认（YN模式），用户可修改",
+        "Typecheck passes"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "这是编辑评分最直接的提升点。编辑核心批评就是读者等太久才知道能力能干嘛。"
+      "passes": false,
+      "notes": "依赖 US-001 的数据。golden_three_plan.json 已有 ch1/ch2/ch3 的 contract 字段，新增 ch1_cool_point_spec 作为 ch1 的扩展。"
     },
     {
       "id": "US-004",
-      "title": "审核模式默认化 — 前3万字里程碑升级为全项目默认",
-      "description": "As a 作者, I want 审核优化模式的里程碑约束变为所有新项目默认行为, so that 不需要手动启用就能获得编辑级别的质量保障。",
+      "title": "plan 阶段第一章大纲强制爽点闭环 gate",
+      "description": "As a 创作者, I want ink-plan 生成第一章大纲时必须包含能力展示→危机→具体收益的完整闭环, so that 读者在第1章就能感知金手指的价值。",
       "acceptanceCriteria": [
-        "修改 ink-plan/SKILL.md，将'前3万字里程碑'四阶段约束从条件触发改为默认启用",
-        "里程碑升级：ch1 = 能力展示+首次危机+能力产生具体收益（完整小闭环）+至少2个有温度的配角",
-        "里程碑升级：ch2 = 第一个小胜利+重要配角出场+主线冲突方向明确",
-        "里程碑升级：ch3 = 第一个完整小高潮+读者已知道这本书要讲什么",
-        "里程碑升级：ch4-5 = 世界观通过行动展开（非讲述）；ch6-10 = 第一个完整对决+长线冲突确立",
-        "原'审核优化模式'开关保留，改为 audit_mode: strict/normal（默认normal = 当前strict级别）",
-        "用户可在 state.json 设置 audit_mode: relaxed 手动降级回旧标准"
+        "修改 skills/ink-plan/SKILL.md Step 7（章纲生成），第一章新增必填节拍组 '爽点闭环'，包含3个强制节拍：ability_demo（能力展示，含感官描写要求）、crisis_trigger（危机触发，必须与金手指直接相关）、concrete_payoff（具体收益，排除抽象收益）",
+        "concrete_payoff 硬性排除列表：理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了。允许列表：资源获取/敌人击退/他人认可/地位提升/信息解锁/危机解除",
+        "PC-1 收紧：从'第3章前爆发'改为'第1章完成首次爽点交付'",
+        "新增 gate：第一章大纲缺少上述3个节拍中任一个 → hard fail 阻断，要求重新生成",
+        "第一章大纲新增字段 cool_point_preview（300字以内爽点预览）和 读者承诺 必须包含金手指解决问题的具体承诺",
+        "Typecheck passes"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "一次性解决'可选约束没人开'的问题。relaxed 模式作为逃生出口保留。"
+      "passes": false,
+      "notes": "依赖 US-003 的 ch1_cool_point_spec 数据。已有第一章节拍规则（ability_demo→crisis→benefit），本次增强：感官要求、排除列表、gate 强制。"
     },
     {
       "id": "US-005",
-      "title": "第1章完整小闭环 — 审查层强制验证",
-      "description": "As a 作者, I want golden-three-checker 验证第1章正文是否完成了闭环, so that 不合格的第1章无法通过审查。",
+      "title": "plan 阶段新增 info_budget 信息释放配额",
+      "description": "As a 创作者, I want ink-plan 为每章生成信息释放配额, so that 写作时不会信息过载导致'塞信息感'。",
       "acceptanceCriteria": [
-        "修改 agents/golden-three-checker.md 第1章检测规则，新增 CH1_NO_ABILITY_BENEFIT：第1章结束时主角能力未产生任何具体收益 → severity: critical",
-        "新增 CH1_PASSIVE_PROTAGONIST：第1章主角仅观察/思考能力，未主动使用能力做出行动 → severity: critical",
-        "新增 CH1_ABSTRACT_PAYOFF：第1章能力收益是认知层面的（主角理解了……）而非行动/结果层面的 → severity: high",
-        "新增 CH1_LATE_CRISIS：第1章前60%无危机事件触发 → severity: high",
-        "critical 级别触发 hard block → 回退到 Step 2A 重写（不是 Step 4 润色）",
-        "修改 golden_three_threshold 从 0.85 提升为 0.90"
+        "修改 skills/ink-plan/SKILL.md Step 7（章纲生成），每章大纲新增字段 info_budget",
+        "info_budget 包含：max_new_concepts（本章最多引入新概念数，默认3，第1-3章上限2）、max_named_characters（新出场有名角色上限，默认3，第1章上限2）、setting_reveal_queue（本章需揭示的设定列表，按优先级排序）、natural_delivery_hints（信息融入方式提示列表）",
+        "第一章严格执行：只允许金手指核心机制 + 1个核心设定 + 2个有名角色，其他信息推后",
+        "大纲模板（templates/output/大纲-详细大纲.md）新增 info_budget 区块",
+        "Typecheck passes"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "与 US-003 配对：US-003 在大纲层锁定闭环，US-005 在审查层验证正文是否落地。"
+      "passes": false,
+      "notes": "info_budget 是解决'塞信息感'的结构性方案。natural_delivery_hints 的5种融入方式：行动展示/对话揭示/后果倒推/误读制造/环境映射。"
     },
     {
       "id": "US-006",
-      "title": "正文写作层卖点落地 — writer-agent 新增 L7 卖点落地律",
-      "description": "As a 作者, I want writer-agent 在起草正文时被强制要求写出1大+2小卖点, so that 大纲规划的爽点在正文中真正落地。",
+      "title": "writer-agent 新增 L10d 电影镜头切换规则",
+      "description": "As a 系统, I want writer-agent 在起草正文时遵守电影镜头切换规则, so that 文字有画面感和视觉节奏。",
       "acceptanceCriteria": [
-        "修改 agents/writer-agent.md，在写作铁律中新增 L7：卖点落地律 — 每章必须包含大纲规定的1个大卖点场景+2个小卖点场景",
-        "L7 执行细则：大卖点必须有完整的铺垫→爆发→反应三段式（不能只写爆发没有反应）",
-        "L7 执行细则：小卖点必须有可识别的读者情绪触发点",
-        "修改 ink-write/SKILL.md Step 2A.1（语义自检），新增第5项检查：卖点覆盖检查 — writer-agent 自检是否覆盖了大纲要求的所有卖点",
-        "自检发现遗漏卖点必须在 Step 2A 内自行补充，不得留到 Step 4 润色",
-        "更新铁律计数和成功标准"
+        "修改 agents/writer-agent.md，在 L10 遣词造句律下新增 L10d 电影镜头切换规则",
+        "L10d 规则：每个场景段落标注镜头类型（远景/近景/特写），场景内至少1次镜头切换；战斗/冲突场景强制'远景→近景→特写'三段式节奏",
+        "L10d 规则：远景用于开场和环境交代，近景用于动作和微表情，特写用于决定性瞬间（拳头接触/武器碰撞/表情凝固）",
+        "L10d 规则：连续3段以上同一镜头类型 = 违规，必须切换",
+        "在 writer-agent 的执行流程中，起草前确定当前场景的镜头计划（shot_plan）",
+        "更新铁律计数",
+        "Typecheck passes"
       ],
       "priority": 6,
-      "passes": true,
-      "notes": "依赖 US-001 的大纲字段定义。writer-agent 已有 L1-L6+SC 自检，新增 L7 遵循已有模式。"
+      "passes": false,
+      "notes": "参考 combat-scenes.md 中的镜头切换示例模式。writer-agent 现有 L10a/b/c，L10d 紧跟其后。"
     },
     {
       "id": "US-007",
-      "title": "审查层卖点密度检测 — high-point-checker 新增 SELLING_POINT 规则",
-      "description": "As a 作者, I want high-point-checker 强制检测每章是否达到1大+2小卖点标准, so that 遗漏在审查阶段被拦截。",
+      "title": "writer-agent 新增 L10e 感官主导模态 + L10f 情绪节奏句式",
+      "description": "As a 系统, I want writer-agent 在起草时使用感官主导模态轮换和情绪驱动句式, so that 文字有沉浸感和节奏变化。",
       "acceptanceCriteria": [
-        "修改 agents/high-point-checker.md，新增检测规则 SELLING_POINT_DEFICIT：大卖点<1 → critical hard block；小卖点<2 → critical hard block",
-        "新增 SELLING_POINT_DEFICIT 子规则：大卖点有爆发但无反应段 → high；小卖点无情绪触发点 → medium",
-        "新增 SELLING_POINT_FRONT_LOADING：章节前1/3必须至少出现1个小卖点，否则 high（防慢热）",
-        "将现有 rolling window 规则从3章连续零爽点收紧为2章连续大卖点缺失 → critical",
-        "修改 ink-review Step 3 review gate：SELLING_POINT_DEFICIT severity=critical 时，强制回退 Step 2A 而非 Step 4"
+        "修改 agents/writer-agent.md，新增 L10e 感官主导模态规则：每场景指定主导感官（非默认视觉），场景切换时感官模态轮换；情感场景优先触觉+温度，战斗场景优先触觉+嗅觉，悬疑场景优先听觉+触觉",
+        "修改 agents/writer-agent.md，新增 L10f 情绪节奏句式规则：紧张场景句均≤15字且删除连词；日常场景句均25-40字；情绪高潮采用'连续短句→突然长句'的断层效果",
+        "L10f 规则：短句因稀缺而有力，连续3句以上短句后必须接1个长句让读者呼吸",
+        "L10f 规则：紧张时连词删除（'他缩肩，下蹲，滚向雪地。'——三动作零连词=心率加速）",
+        "更新铁律计数",
+        "Typecheck passes"
       ],
       "priority": 7,
-      "passes": true,
-      "notes": "审查层兜底，确保即使 writer-agent 遗漏卖点也能被拦截。"
+      "passes": false,
+      "notes": "参考 desire-description.md（感官）和 pacing-rhythm.md（句式）。L10e 强化现有 L10b 的感官规则，L10f 新增句式节奏规则。"
     },
     {
       "id": "US-008",
-      "title": "大纲层主角能动性 — 新增主角行动必填字段",
-      "description": "As a 作者, I want 大纲生成时每章必须明确主角的主动行为, so that 摄像头主角在规划阶段就被杜绝。",
+      "title": "writer-agent 新增 L10g 环境情绪共振 + L11 信息密度铁律",
+      "description": "As a 系统, I want writer-agent 在起草时确保环境与情绪共振且信息密度可控, so that 文字有氛围感且不会信息堆砌。",
       "acceptanceCriteria": [
-        "修改 ink-plan/SKILL.md Step 7，每章大纲新增必填字段 `主角行动`（≤30字，动词开头的行为描述）",
-        "验证规则：`主角行动` 不能是被动描述 → hard fail。禁止动词前缀黑名单：被/发现/意识到/感受到/想到/回忆/观察/注意到/看到/听到",
-        "允许动词白名单前缀：决定/冲向/使用/对抗/说服/欺骗/逃离/交换/挑战/保护/破坏/窃取/调查/伪装/拒绝/选择/牺牲/激活/召唤/反击 等",
-        "新增 references/shared/protagonist-action-verbs.md，包含基础列表+按类型（仙侠/都市/科幻）的扩展层",
-        "连续2章 `主角行动` 类型相同（如都是调查）→ medium warning",
-        "更新大纲模板加入 `主角行动` 字段"
+        "修改 agents/writer-agent.md，新增 L10g 环境情绪共振：场景环境描写必须与当前情绪形成共振（正面配明亮/反面配压抑），禁止'情绪与环境脱节'",
+        "修改 agents/writer-agent.md，新增 L11 信息密度铁律：单段（≤200字）最多引入1个新概念/设定；连续3段内不允许2个以上设定解释；设定信息必须通过行动/对话/后果三种方式之一融入；新概念引入后至少隔500字才能引入下一个",
+        "L11 规则：读取大纲的 info_budget.max_new_concepts 字段，严格按配额释放信息",
+        "第一章特殊控制：全章最多金手指核心机制+1个核心设定+2个有名角色，其他通过留白/悬念处理",
+        "更新铁律计数和成功标准",
+        "Typecheck passes"
       ],
       "priority": 8,
-      "passes": true,
-      "notes": "动词表按类型分section：基础通用 + 仙侠扩展（御剑/凝气/淬体）+ 都市扩展（撕毁/砸/谈判）+ 科幻扩展。"
+      "passes": false,
+      "notes": "L11 依赖 US-005 的 info_budget 字段。L10g 参考scene-craft-index.md 的环境描写规则。"
     },
     {
       "id": "US-009",
-      "title": "正文写作层主角能动性 — writer-agent 新增 L8 主角能动律",
-      "description": "As a 作者, I want writer-agent 在写作时确保主角有主动行为, so that 正文不会退化为主角内心独白或旁观记录。",
+      "title": "ink-write Step 2B/2C 新增电影剪辑适配和计算门禁",
+      "description": "As a 系统, I want ink-write 的风格适配和计算门禁阶段新增文笔相关检查, so that 文笔问题在进入审查前就被拦截。",
       "acceptanceCriteria": [
-        "修改 agents/writer-agent.md，在写作铁律中新增 L8：主角能动律 — 每章主角必须做出至少1个改变局面的主动行为，该行为必须产生可观察后果",
-        "L8 执行细则：主角只观察/思考/感受的场景连续超过800字 → 必须插入主角行动",
-        "L8 执行细则：主角行动必须对剧情产生因果影响（不能是无效行动）",
-        "L8 执行细则：章节结尾时主角处境必须因自己行动而变化（不能和章首一样）",
-        "修改 ink-write/SKILL.md Step 2A.1（语义自检），新增第6项检查：主角能动性检查",
-        "更新铁律计数和成功标准"
+        "修改 skills/ink-write/SKILL.md Step 2B（Style Adaptation），新增'电影剪辑适配'模式：自动检测场景类型（战斗/情感/日常/悬疑）并应用对应镜头节奏",
+        "修改 skills/ink-write/SKILL.md Step 2C（Computational Gate），新增检查项：感官多样性（单场景非视觉感官占比≥20%）、镜头切换密度（连续3段同一镜头类型=warning）、句式节奏（CV≥0.40）、信息密度扫描（超出info_budget.max_new_concepts=warning）",
+        "Step 2A prompt 新增场景匹配的技法提示注入：从 desire-description.md/combat-scenes.md/pacing-rhythm.md 抽取与当前场景类型匹配的技法",
+        "角色对话执行 voice_profile 一致性检查（对照 init 阶段收集的语言特征）",
+        "对话黄金比例检查：对话40-50%:叙述30-40%:心理10-20%，偏离±10%=warning",
+        "Typecheck passes"
       ],
       "priority": 9,
-      "passes": true,
-      "notes": "与 US-008 配对：US-008 在大纲锁定主角行动，US-009 在正文层确保执行。"
+      "passes": false,
+      "notes": "依赖 US-006/007/008 的 L10d-g 和 L11 规则已在 writer-agent 中定义。Step 2C 是确定性检查，开销可忽略。"
     },
     {
       "id": "US-010",
-      "title": "审查层主角能动性检测 — high-point-checker 新增摄像头检测规则",
-      "description": "As a 作者, I want 审查阶段能检测出摄像头主角问题, so that 被动主角的章节无法通过审查。",
+      "title": "新增 prose-impact-checker 文笔冲击力检查器",
+      "description": "As a 系统, I want 一个专项检查器评估正文的视觉冲击力和电影感, so that 文笔质量问题能被量化检测。",
       "acceptanceCriteria": [
-        "修改 agents/high-point-checker.md，新增 CAMERA_PROTAGONIST：全章主角无主动改变局面的行为 → critical hard block",
-        "新增 PASSIVE_STREAK：主角连续800+字仅观察/思考/感受 → high",
-        "新增 NO_CONSEQUENCE：主角有行动但行动未产生任何可观察后果 → high",
-        "新增 STATIC_SITUATION：章末主角处境与章首相同（排除刻意留悬念的标记章节）→ high",
-        "黄金三章（ch1-3）中 CAMERA_PROTAGONIST 和 PASSIVE_STREAK → hard block 回退 Step 2A",
-        "普通章节中 CAMERA_PROTAGONIST → hard block；PASSIVE_STREAK → high 允许润色修复"
+        "新增文件 agents/prose-impact-checker.md，定义文笔冲击力检查器",
+        "检查维度：镜头多样性（统计远景/近景/特写分布，单一类型占比>60%=critical）、感官丰富度（视觉占比>70%=warning，非视觉感官种类<2=warning）、句式节奏（句长CV<0.35=critical，0.35-0.40=warning）、动词锐度（动作场景弱动词>30%=warning）、环境-情绪共振（环境描写与场景情绪不匹配=high）、特写缺失（关键情绪/冲突点无特写=high）",
+        "输出格式：结构化报告，每项给score(A/B/C/D)+具体定位（段落号）+修复建议",
+        "检查器格式遵循现有 checker 规范（参考 high-point-checker.md 的结构）",
+        "Typecheck passes"
       ],
       "priority": 10,
-      "passes": true,
-      "notes": "审查层兜底。注意与 golden-three-checker 的协调：ch1-3 用更严格标准。"
+      "passes": false,
+      "notes": "新 agent 文件，遵循 agents/ 目录下已有 checker 的格式规范。后续 US-014 将其集成到 ink-write 和 ink-review。"
     },
     {
       "id": "US-011",
-      "title": "人物反应真实性预防 — writer-agent 新增 L9 人类本能反应律",
-      "description": "As a 作者, I want writer-agent 在写作时自动遵守人类本能反应规则, so that 不会写出看到有人倒下不去管这种违反常识的情节。",
+      "title": "新增 sensory-immersion-checker 感官沉浸检查器",
+      "description": "As a 系统, I want 一个专项检查器评估正文的感官沉浸深度, so that 感官描写不足能被检测。",
       "acceptanceCriteria": [
-        "修改 agents/writer-agent.md，新增 L9：人类本能反应律 — 5类触发场景的强制反应规则",
-        "5类场景：有人受伤/倒下/求救→必须反应；生命威胁→恐惧/紧张/战斗本能；极端事件→震惊/应激；被侮辱→愤怒/隐忍/反击；获重大好处→兴奋/谨慎/怀疑",
-        "允许已建立人设的非典型反应（如冷血杀手），但必须在设定集中有对应标签",
-        "新增 references/shared/human-instinct-triggers.md，包含基础触发词表+类型扩展层（仙侠/都市/科幻）",
-        "修改 ink-write/SKILL.md Step 1.5（Contract），新增 `本章人类本能触发场景` 字段",
-        "更新铁律计数和成功标准"
+        "新增文件 agents/sensory-immersion-checker.md，定义感官沉浸检查器",
+        "检查维度：感官主导轮换（相邻场景主导感官是否不同，连续2个场景同主导=warning）、感官深度（每场景至少80字感官描写段落，战斗/情感场景≥100字）、通感运用（跨感官描写≥1处/章=bonus）、感官-情绪匹配（感官描写是否服务于情绪目标）、抽象替代检测（'他感到悲伤'等抽象情绪词代替具体感官的次数）",
+        "输出格式：与 prose-impact-checker 一致的结构化报告",
+        "检查器格式遵循现有 checker 规范",
+        "Typecheck passes"
       ],
       "priority": 11,
-      "passes": true,
-      "notes": "触发词表分两层：基础（受伤/死亡/威胁/侮辱/重大收益）+ 类型扩展（仙侠:渡劫失败/灵石争夺；都市:职场霸凌/车祸）。"
+      "passes": false,
+      "notes": "与 prose-impact-checker 互补：后者关注视觉冲击和电影感，前者关注五感沉浸深度。"
     },
     {
       "id": "US-012",
-      "title": "人物反应真实性检测 — OOC-checker 新增人类本能违反层",
-      "description": "As a 作者, I want OOC-checker 能检测出违反人类常识反应的情节, so that 失真的人物反应在审查阶段被拦截。",
+      "title": "新增 flow-naturalness-checker 自然流畅度检查器",
+      "description": "As a 系统, I want 一个专项检查器评估正文的信息节奏和语言自然度, so that '塞信息感'和不自然对话能被检测。",
       "acceptanceCriteria": [
-        "修改 agents/ooc-checker.md，新增检测层 HUMAN_INSTINCT_VIOLATION",
-        "场景有人受伤/危险但在场角色完全无反应 → critical；主角获重大好处但无情绪 → high；主角面临生命威胁但平静无波动 → high；路人配角反应不合理 → medium",
-        "检测方法：扫描触发事件关键词（受伤/倒下/爆炸/死亡/威胁/攻击）→ 检查后续200字内是否有反应关键词（冲过去/拨打/呼喊/颤抖/恐惧/愤怒/震惊）",
-        "角色在设定集中有冷血/反社会/非人类标签时自动降低严重度（critical→medium）",
-        "黄金三章中 HUMAN_INSTINCT_VIOLATION critical → hard block"
+        "新增文件 agents/flow-naturalness-checker.md，定义自然流畅度检查器",
+        "检查维度：信息密度均匀度（单段>2个新概念/设定=warning）、信息融入方式（纯叙述性设定解释占比>40%=warning）、过渡流畅度（无连接的视角切换/时空跳跃=high）、对话辨识度（去掉角色名后能否区分说话人，不能=warning）、对话黄金比例（偏离40-50:30-40:10-20超过±10%=warning）、语气一致性（叙述者语气在不正式/口语/文学间不自然切换=high）、角色voice一致性（对话是否符合voice_profile）",
+        "输出格式：结构化报告",
+        "检查器格式遵循现有 checker 规范",
+        "Typecheck passes"
       ],
       "priority": 12,
-      "passes": true,
-      "notes": "与 US-011 配对：US-011 预防（写作时遵守），US-012 检测（审查时拦截）。"
+      "passes": false,
+      "notes": "这是解决'不自然感'的核心检查器。对话辨识度检查是最重要的维度。"
     },
     {
       "id": "US-013",
-      "title": "遣词造句预防 — writer-agent 新增 L10 遣词造句律 + prose-craft-rules.md",
-      "description": "As a 作者, I want writer-agent 在写作时强制使用强动词、具体名词、感官细节, so that 正文不再平淡如水。",
+      "title": "golden-three-checker 新增4项爽点硬阻断检查",
+      "description": "As a 系统, I want golden-three-checker 对第一章爽点闭环进行更严格的验证, so that 不合格的第一章无法通过审查。",
       "acceptanceCriteria": [
-        "修改 agents/writer-agent.md，新增 L10：遣词造句律，包含三条子规则",
-        "L10a 强动词法则：弱动词黑名单（是/有/做/进行/开始/觉得/感到/看到/听到/想到）每词全章≤3次",
-        "L10b 感官锚点法则：每800字内至少1个非视觉感官描写（听觉/嗅觉/触觉/味觉/体感），纯对话段除外",
-        "L10c 具象名词法则：禁止连续2个以上空洞形容词修饰同一名词",
-        "新增 skills/ink-write/references/prose-craft-rules.md，收录弱动词黑名单+替换示例库（每个弱动词至少5个按场景分类的替换示例：战斗/日常/情感/悬疑）",
-        "修改 ink-write/SKILL.md Step 2A，writer-agent 起草时必须加载 prose-craft-rules.md",
-        "更新铁律计数和成功标准"
+        "修改 agents/golden-three-checker.md，新增 CH1_COOL_POINT_VISIBILITY：爽点在10秒扫读测试中不可见 → critical hard block",
+        "新增 CH1_ABILITY_SOLUTION_CHAIN：金手指未直接导致危机解决（有'灵机一动'/'恰好有人帮忙'等绕过）→ critical hard block",
+        "新增 CH1_PAYOFF_TANGIBILITY：收益为抽象描述（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了）→ critical hard block",
+        "新增 CH1_READER_EMOTION_PREDICTABLE：第一章结束时读者情绪不符合 golden_three_plan.json 中 ch1_cool_point_spec.reader_emotion_target → high",
+        "以上4项全部为 hard block 级别，不允许 override",
+        "Typecheck passes"
       ],
       "priority": 13,
-      "passes": true,
-      "notes": "替换示例是关键——不能只说禁止用'是'，要给出具体场景下的替换方案。"
+      "passes": false,
+      "notes": "与 US-004 配对：US-004 在大纲层锁定闭环，US-013 在审查层验证正文是否落地。"
     },
     {
       "id": "US-014",
-      "title": "遣词造句审查 — proofreading-checker 新增 Layer 6 Prose Craft Quality",
-      "description": "As a 作者, I want proofreading-checker 检测弱动词密度和感官描写缺失, so that 遣词造句问题能在审查阶段被量化拦截。",
+      "title": "ink-write 和 ink-review 集成3个新 checker",
+      "description": "As a 系统, I want 3个新 checker 集成到写作和审查流程中, so that 文笔和自然度检查能自动运行。",
       "acceptanceCriteria": [
-        "修改 agents/proofreading-checker.md，新增 Layer 6 — Prose Craft Quality",
-        "WEAK_VERB_OVERUSE：弱动词黑名单中任一词全章>3次 → high；全章弱动词总计>15次 → critical",
-        "SENSORY_DESERT：连续800+字无非视觉感官描写 → high；全章非视觉感官描写<3处 → critical",
-        "ADJECTIVE_PILE：同一名词前堆叠3+个形容词 → medium",
-        "GENERIC_DESCRIPTION：空洞感官词（气氛紧张/感觉不对/有种说不出的）代替具体描写 → medium",
-        "黄金三章中 critical 级别 → hard block 回退 Step 2A；普通章节 critical → hard block，high → Step 4 润色修复"
+        "修改 skills/ink-write/SKILL.md Step 3（审查），将 prose-impact-checker 和 sensory-immersion-checker 加入条件检查器列表（与 high-point-checker 同级），flow-naturalness-checker 加入核心检查器列表",
+        "修改 skills/ink-write/SKILL.md Step 3 review gate，新增文笔冲击力门禁和自然流畅度门禁的判定逻辑",
+        "修改 skills/ink-review/SKILL.md，Core 模式新增 flow-naturalness-checker；Full 模式新增全部3个 checker；Full+ 同 Full 但用完整分析模式",
+        "第1-3章无论何种 review 模式都强制运行 prose-impact-checker + sensory-immersion-checker",
+        "review 报告模板新增'文笔冲击力''感官沉浸''自然流畅度'三个评分维度",
+        "Typecheck passes"
       ],
       "priority": 14,
-      "passes": true,
-      "notes": "GENERIC_DESCRIPTION 需要一个空洞感官词列表，可以在 prose-craft-rules.md 中维护。"
+      "passes": false,
+      "notes": "依赖 US-010/011/012 的3个新 checker 已创建。参考现有 step-3-review-gate.md 的门禁集成模式。"
     },
     {
       "id": "US-015",
-      "title": "遣词造句润色 — polish-agent 新增 Layer 8 Prose Craft Polish",
-      "description": "As a 作者, I want polish-agent 在润色时主动替换弱动词和补充感官细节, so that 即使 writer-agent 遗漏，润色阶段也能兜底。",
+      "title": "proofreading-checker Layer 6 扩展为 6A+6B",
+      "description": "As a 系统, I want proofreading-checker 的文笔工艺层增加镜头和信息密度检查, so that 文笔问题检测更全面。",
       "acceptanceCriteria": [
-        "修改 skills/ink-write/references/polish-guide.md，在 Anti-AI rewrite layers 中新增 Layer 8：Prose Craft Polish",
-        "Layer 8a：扫描全文弱动词，逐个替换为强动词（保持语义不变，参考 prose-craft-rules.md 示例库）",
-        "Layer 8b：扫描感官沙漠区（800+字无感官），插入1-2个自然的感官锚点",
-        "Layer 8c：扫描形容词堆叠，精简为1精准形容词+1具象细节",
-        "polish-agent 替换弱动词时必须保持上下文语义一致",
-        "润色后必须通过 proofreading-checker Layer 6 的重检（与 US-014 联动）"
+        "修改 agents/proofreading-checker.md，将现有 Layer 6 重命名为 Layer 6A（Prose Craft Basics：弱动词/感官沙漠/形容词堆砌/通用描写）",
+        "新增 Layer 6B（Prose Craft Advanced）：镜头单一性（连续>3段无镜头切换=warning）、句式雷同度（连续>3段句式结构相同=warning）、环境-情绪脱节（环境描写与场景情绪矛盾=high）、信息密度超标（单段>2个新概念=warning）",
+        "Layer 6A+6B 同时出现 critical 时，合并为一条修复建议",
+        "修复建议从'替换弱动词'扩展到'建议镜头切换方向'和'建议信息分散方式'",
+        "Typecheck passes"
       ],
       "priority": 15,
-      "passes": true,
-      "notes": "这是最后一道兜底。依赖 US-013 的 prose-craft-rules.md 作为替换参考。"
+      "passes": false,
+      "notes": "Layer 6 已在 combat-pacing-overhaul 分支中创建，本次是增强而非重建。保留现有 6A 规则不变。"
+    },
+    {
+      "id": "US-016",
+      "title": "polish-agent 新增文笔优化修复指令",
+      "description": "As a 系统, I want polish-agent 在润色时主动优化镜头、感官和信息密度问题, so that 即使 write 阶段遗漏也能兜底。",
+      "acceptanceCriteria": [
+        "修改 agents/polish-agent.md，新增 Layer 9（Prose Impact Polish）",
+        "Layer 9a：镜头单一修复——连续>3段同一镜头类型时，将中间段切换为不同镜头（远景→插入近景/特写→远景）",
+        "Layer 9b：感官注入——非视觉感官占比<20%的场景，在合适位置插入1-2个自然感官锚点",
+        "Layer 9c：信息密度稀释——单段>2个新概念时，将部分信息拆分到下一段或转为对话/行动方式表达",
+        "Layer 9d：句式节奏调整——连续>3段句式结构相同时，变换其中1-2段的句式（长短交替/对话插入）",
+        "润色后必须通过 proofreading-checker Layer 6A+6B 的重检",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": "polish-agent 已有 Layer 8（Prose Craft Polish from combat-pacing-overhaul），Layer 9 是新增层。9a/9b/9c/9d 与 US-010/011/012 的检查维度一一对应。"
+    },
+    {
+      "id": "US-017",
+      "title": "editor-wisdom RAG 知识库新增文笔规则",
+      "description": "As a 系统, I want editor-wisdom 的 RAG 知识库包含文笔冲击力和自然流畅度规则, so that 编辑智慧门禁也能检测文笔问题。",
+      "acceptanceCriteria": [
+        "修改 config/editor-wisdom.yaml，新增规则来源：从 desire-description.md、combat-scenes.md、scene-craft-index.md 提取的文笔规则",
+        "editor-wisdom-checker 的评分维度新增：镜头多样性、感官丰富度、句式节奏、信息密度均匀度",
+        "第1-3章的 editor-wisdom 阈值从 0.90 提升到 0.92（加入文笔维度后标准提高）",
+        "新增的文笔规则条目数量≥20条（覆盖镜头/感官/句式/信息密度4个维度）",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": "editor-wisdom RAG 已有 288 份编辑建议，新增的文笔规则需要符合同样的格式（条件→规则→严重度→修复建议）。"
+    },
+    {
+      "id": "US-018",
+      "title": "golden-opening-patterns.md 强化第一章爽点模式",
+      "description": "As a 系统, I want 第一章开篇模式参考文件包含爽点闭环的具体示例, so that plan 和 write 阶段有可参照的模板。",
+      "acceptanceCriteria": [
+        "修改 references/shared/golden-opening-patterns.md，为现有5种成功模式（Crisis/Cognitive Contrast/Bottom-tier Ensemble/Action-Combat/Suspense）各新增'爽点闭环示例'子段",
+        "每种模式的爽点闭环示例必须包含：ability_demo（能力展示，含感官描写）、crisis_trigger（与金手指相关的危机）、concrete_payoff（具体有形收益）、reader_reaction（预期读者情绪反应）",
+        "新增第6种成功模式：Golden Finger Showcase（金手指展示型）——开篇即展示金手指威力，快速进入解决问题循环",
+        "每种模式新增'感官描写要求'和'镜头计划'两个指导段落",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": "这个文件被 ink-plan 和 ink-write 的参考系统加载，更新后自动生效于后续项目。"
     }
   ]
 }
