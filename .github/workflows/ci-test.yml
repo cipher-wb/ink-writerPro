@@ -67,6 +67,9 @@ jobs:
           python -c "import ink_writer.editor_wisdom, ink_writer.style_rag, ink_writer.semantic_recall, ink_writer.parallel, ink_writer.checker_pipeline; print('ink_writer core modules OK')"
           python -c "from ink_writer.editor_wisdom.retriever import Retriever; print('Retriever import-only OK')"
 
+      - name: Verify docs-code number alignment (US-022)
+        run: python scripts/verify_docs.py
+
       - name: Verify dashboard imports
         run: python -c "from ink_writer_dashboard_check import *" 2>/dev/null || python -c "import sys; sys.path.insert(0, 'ink-writer/dashboard'); import path_guard; import watcher; print('Dashboard imports OK')"
 
