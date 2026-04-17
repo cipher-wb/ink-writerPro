@@ -13,6 +13,16 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 - **带 `--quick`**：进入 Quick 模式（见下方 §Quick Mode）。
 - **不带 `--quick`**：进入 Deep 模式（原有苏格拉底式提问流程，见 §Deep Mode）。
 
+### Quick 模式命令格式（激进度档位）
+
+Quick 模式支持三种命令格式传入激进度档位（1 保守 / 2 平衡 / 3 激进 / 4 疯批）：
+
+1. `/ink-init --quick` — 不带档位 → Quick Step 0.5 弹 AskUserQuestion 询问。
+2. `/ink-init --quick 2` — 位置参数（**推荐**）：第 2 个 token 直接传入档位数字（1-4）。
+3. `/ink-init --quick --档位=2` — 命名参数：等号后跟档位数字。
+
+**中文词容错**（位置参数与命名参数均适用）：`保守 → 1` / `平衡 → 2` / `激进 → 3` / `疯批 → 4`；大小写与全半角不敏感，无法解析时回退到 Quick Step 0.5 弹询问（不直接报错）。
+
 ---
 
 # Quick Mode（快速随机方案生成）
@@ -71,6 +81,67 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 
 - 方案生成时 **必须规避两平台共通 Top 5 热门套路关键词**；单平台榜单不强制规避。
 - 被规避的关键词记入每套方案字段 `market_avoid`（数组），Quick Step 2 创意指纹消费。
+
+## Quick Step 0.5：激进度档位选择
+
+### 档位解析顺序
+
+Quick Step 0 完成后、进入 Quick Step 1 前，按以下优先级确定本次生成的激进度档位 `aggression_level ∈ {1, 2, 3, 4}`：
+
+1. **位置参数优先**：若命令包含 `--quick <token>`（例 `--quick 2` / `--quick 激进`），先尝试解析 token；合法则锁定。
+2. **命名参数次之**：若命令包含 `--档位=<token>`（例 `--档位=3` / `--档位=疯批`），解析 token；合法则锁定。
+3. **AskUserQuestion 兜底**：若未传参或 token 无法解析为 1-4，调用 `AskUserQuestion` 工具弹出四选项询问，**默认档位 2 平衡**。
+
+### 中文词容错映射
+
+| 输入 token | 映射档位 |
+|------------|----------|
+| `1` / `保守` / `conservative` | 1 |
+| `2` / `平衡` / `balanced` / 空值（默认） | 2 |
+| `3` / `激进` / `aggressive` | 3 |
+| `4` / `疯批` / `wild` / `crazy` | 4 |
+
+大小写与全半角不敏感；其他 token 视为无法解析 → 回退弹询问。
+
+### 档位矩阵（硬约束）
+
+| 档位 | 名称 | 元规则命中下限 | 扰动对数量 | 稀有度门槛 | 额外约束 |
+|------|------|----------------|------------|------------|----------|
+| 1 | 保守 | ≥1 | 1 | 种子 rarity ≤3 | L1 粗口禁用；V3→V1 回退 |
+| 2 | 平衡 | ≥2 | 2 | 至少 1 对含 rarity 4 种子 | L1 仅 V2/V3 ≤0.2% |
+| 3 | 激进 | ≥3 | 3 | 至少 2 对含 rarity 4 种子 | L2 擦边允许 V3 档 |
+| 4 | 疯批 | ≥5 | 5 | 至少 3 对含 rarity 5 种子 | **必须打破 ≥1 商业安全边界**；至少 1 套 V3 |
+
+上表与 `meta-creativity-rules.md` §校验硬门槛 / `perturbation-engine.md` §档位 N 矩阵 / `style-voice-levels.md` §档位×密度矩阵 保持一致；任一处变更须三处同步。
+
+### AskUserQuestion 规范
+
+当需要弹询问时，调用 `AskUserQuestion`，题干与选项固定如下：
+
+```
+题干：本次 Quick 生成选择哪个激进度档位？
+选项：
+- 1 保守（商业安全，元规则 ≥1，稀有度 ≤3）
+- 2 平衡（默认；元规则 ≥2，扰动 2 对，含 1 对稀有度 4）
+- 3 激进（元规则 ≥3，扰动 3 对，含 2 对稀有度 4，允许 L2 擦边）
+- 4 疯批（元规则 ≥5，扰动 5 对，3 对稀有度 5，必须打破商业安全边界）
+默认：2 平衡
+```
+
+### 日志标注
+
+档位锁定后立即在对话中输出一行日志（让用户可核对）：
+
+```
+本次生成档位：<N> <名称>（元规则≥<X> / 扰动对<Y> / 稀有度门槛<Z>）
+```
+
+示例：`本次生成档位：3 激进（元规则≥3 / 扰动对 3 / 至少 2 对含 rarity 4）`。
+
+### 档位传递给下游
+
+- `aggression_level` 与 `aggression_name` 两字段写入会话上下文，供 Quick Step 1 / 1.5 / 1.6 消费。
+- 3 套方案**统一按该档位**生成（不做梯度分离）；Quick Step 1.5 降档算法触发时更新 `aggression_level_effective`，日志追加一行 `⚠️ 降档：<原> → <新>（原因：<金手指 5 次未通过 / 其他>）`。
 
 ## Quick Step 1：生成 3 套差异化方案
 

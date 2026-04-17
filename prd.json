@@ -163,8 +163,8 @@
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "§模式分支新增「Quick 模式命令格式（激进度档位）」小节，含 3 命令格式 + 中文词容错映射表；Quick Step 0.5 在 Step 0 和 Step 1 之间插入：解析顺序（位置参数→命名参数→AskUserQuestion 兜底默认 2）+ 中文容错表（1/2/3/4/保守/平衡/激进/疯批/英文同义词）+ 档位矩阵表（元规则≥1/2/3/5 扰动 1/2/3/5 稀有度与约束行）+ AskUserQuestion 规范题干 + 日志标注格式「本次生成档位：N 名称」+ 3 套方案统一档位（无梯度）+ aggression_level/name 字段下传 Quick Step 1/1.5/1.6 + 降档日志规范 aggression_level_effective。"
     },
     {
       "id": "US-010",
