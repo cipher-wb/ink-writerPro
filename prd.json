@@ -1,289 +1,255 @@
 {
   "project": "ink-writer",
-  "branchName": "ralph/prose-immersion-optimization",
-  "description": "全链路文笔冲击力与爽点前置优化。三大维度：(1)爽点前置—init收集金手指收益场景/plan强制第一章闭环/review硬性验证；(2)文笔冲击力—电影镜头切换/感官沉浸/情绪句式/环境共振注入write阶段；(3)语言自然度—信息密度控制/角色语言特征/过渡流畅度。预防+兜底双保险。",
+  "branchName": "ralph/ink-init-quick-creativity-upgrade",
+  "description": "优化 /ink-init --quick 的创意生成质量。核心改造：(1) 三层创意体系——Layer 1 元规则库（M01-M10 抽象法则）+ Layer 2 种子库（schema 骨架，1000 条内容由后续交互补充）+ Layer 3 扰动引擎（随机混搭稀缺元素对）；(2) 金手指三重硬约束（非战力维度 + 代价可视化 + 一句话爆点，至少 2 项通过）；(3) 4 档激进度（1 保守 / 2 平衡 / 3 激进 / 4 疯批），数字参数避免拼错；(4) 语言风格三档分级（V1 文学狂野 / V2 烟火接地气 / V3 江湖野气），允许适度粗口擦边但守 L3 红线；(5) 每次联网拉取起点+番茄双平台榜单做反向建模（带日内缓存）；(6) 书名加 7 种修辞标签（双关/谐音/对仗/反讽等）；(7) editor-wisdom RAG 创意条目纳入 Layer 1。本 PRD 只做 Ralph 可自动化的基础设施，种子库 1000 条内容由 Ralph 完成后的人工交互会话分 10 批生成（每批 20 条 review）。",
   "userStories": [
     {
       "id": "US-001",
-      "title": "init 阶段新增金手指收益场景必填字段",
-      "description": "As a 创作者, I want ink-init 深度模式第3波（金手指）新增3个必填字段引导我思考金手指的第一章爽点场景, so that 金手指收益信息在初始化阶段就被锁定。",
+      "title": "Layer 1 元规则库 meta-creativity-rules.md",
+      "description": "As a 创作者, I want 一份抽象的创意元规则库作为系统硬约束检验标尺, so that quick 模式生成方案时不再靠随机拼贴。",
       "acceptanceCriteria": [
-        "修改 skills/ink-init/SKILL.md 第3波（金手指收集），新增必填字段：golden_finger_first_payoff（金手指在第一章的具体收益场景描述，≥80字）",
-        "新增必填字段：golden_finger_visual_signature（金手指激活时的视觉/感官特征描述，≥50字）",
-        "新增必填字段：golden_finger_escalation_ladder（金手指能力阶梯：第1章→第10章→后期各能做什么）",
-        "新增追问环节：'如果读者看完第一章不知道金手指能怎么爽，你会怎么改？'——用户回答后方可进入下一波",
-        "快速模式生成的3个方案每个必须包含'第一章爽点预览'段落（≥50字描述第一章爽点场景）",
-        "sufficiency gate 新增检查：缺少 golden_finger_first_payoff 时阻断进入 plan 阶段",
+        "新建 ink-writer/skills/ink-init/references/creativity/meta-creativity-rules.md",
+        "文件 frontmatter 含 name/description/type/version 字段",
+        "定义 10 条元规则 M01-M10：M01 代价可视化 / M02 反向冲突 / M03 信息不对称 / M04 角色错位 / M05 时空错位 / M06 身份反差 / M07 欲望悖论 / M08 系统反噬 / M09 权力颗粒度 / M10 尺度跃迁",
+        "每条规则含 5 字段：规则名 / 核心定义 / 正例 2 个 / 反例 2 个 / 适配题材（仙侠/都市/末世/科幻/悬疑/游戏/历史/现实/恋爱至少覆盖 4 类）",
+        "SKILL.md（ink-writer/skills/ink-init/SKILL.md）Quick Step 0 加载列表新增该文件为 L1 必读",
+        "文件总字数 2000-4000 字（太短规则不清楚，太长影响 token 预算）",
         "Typecheck passes"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "这是爽点前置的数据源头，后续 plan/write/review 全部依赖这些字段。参考现有 golden_finger_design.md 的收集模式。"
+      "notes": "2056 汉字；10 条 M01-M10 齐全；SKILL.md Quick Step 0 已加入 L1 必读"
     },
     {
       "id": "US-002",
-      "title": "init 阶段新增角色语言特征档案收集",
-      "description": "As a 创作者, I want ink-init 第2波为每个主要角色建立语言特征档案, so that 对话自然且有辨识度，不同角色说话不再雷同。",
+      "title": "Layer 2 种子库 schema + 空骨架 + roadmap",
+      "description": "As a 维护者, I want 种子库的 JSON schema 定义和空骨架文件就位, so that Ralph 完成后用户可启动交互会话分 10 批生成 1000 条内容。",
       "acceptanceCriteria": [
-        "修改 skills/ink-init/SKILL.md 第2波（角色收集），为主要角色（protagonist + 核心配角）新增子字段组 voice_profile",
-        "voice_profile 包含：speech_vocabulary_level（口语化/标准/文雅/古风）、preferred_sentence_length（短促/中等/冗长）、verbal_tics（口头禅，最多3个）、emotional_tell（情绪时语言变化描述）、taboo_topics（不会主动提起的话题）",
-        "生成的 设定集/主角卡.md 必须包含'语言特征档案'段落，列出上述5个维度",
-        "当用户无法提供语言细节时，基于'性格+年龄+职业+背景'自动生成推荐档案并请用户确认（YN确认模式）",
+        "新建 ink-writer/skills/ink-init/references/creativity/anti-trope-seeds.json，含 frontmatter（version=v1.0-skeleton, total=0, categories=10 类 meta, changelog=[]），seeds 数组初始可含 10-20 条示例种子（每类 1-2 条，仅作 schema 展示，不是 1000 条完整内容）",
+        "新建 ink-writer/skills/ink-init/references/creativity/anti-trope-seeds-schema.json，JSON schema 定义 seed 字段：seed_id(string) / category(enum:职业/时代/冲突/世界观/情感/禁忌/神话/禁忌语言/身体特征/物件) / value(string) / rarity(1-5) / genre_tags(array) / example_pairing(string) / source(enum:llm/human/websearch_filtered)",
+        "新建 ink-writer/skills/ink-init/references/creativity/anti-trope-seeds-roadmap.md，明示 Phase-Seed-1（1000 条，10 类 × 100 条，分 10 批 × 每批 20 条 review，本 PRD 实施后交互完成）+ Phase-Seed-∞（增量补充触发条件）",
+        "roadmap 文档含 10 类 × 稀有度分布硬约束表（稀有度 4+5 合计 ≥50%，稀有度 5 ≥20%）",
+        "anti-trope-seeds.json 通过 anti-trope-seeds-schema.json 校验",
+        "SKILL.md Quick Step 0 加载该 JSON 文件为 L1 必读",
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "用户回答'不知道'时系统自动生成推荐值是关键体验。生成规则：性格外向→句长中等偏长+主动句式；内向→短促+被动句式等。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-003",
-      "title": "init 阶段 golden_three_plan.json 新增第一章爽点规格",
-      "description": "As a 系统, I want golden_three_plan.json 新增 ch1_cool_point_spec 字段, so that 第一章爽点信息能传递到 plan 和 write 阶段。",
+      "title": "Layer 3 扰动引擎 perturbation-engine.md",
+      "description": "As a 创作者, I want 一个强制混搭机制的规格文档, so that quick 生成方案时自动从种子库抽取稀缺元素对注入。",
       "acceptanceCriteria": [
-        "修改 skills/ink-init/SKILL.md 中 golden_three_plan.json 生成逻辑，新增字段 ch1_cool_point_spec",
-        "ch1_cool_point_spec 包含：scene_description（具体爽点场景，≥100字）、involved_characters（涉及角色列表）、payoff_form（收益形式：资源获取/敌人击退/他人认可/地位提升/信息解锁）、reader_emotion_target（读者情绪目标描述）",
-        "ch1_cool_point_spec 的值从 US-001 收集的 golden_finger_first_payoff + golden_finger_visual_signature 合并推导生成",
-        "生成后展示给用户确认（YN模式），用户可修改",
+        "新建 ink-writer/skills/ink-init/references/creativity/perturbation-engine.md",
+        "定义「扰动对」概念：每套方案必须注入 ≥N 对扰动（N 由激进度档位决定），从种子库 2 个不同 category 随机抽 1 条组成 1 对",
+        "定义 5 种扰动模式：时代错位 / 职业反差 / 尺度错位 / 规则颠倒 / 感官替换，每种模式含 3+ 示例",
+        "定义抽取算法伪代码：使用种子 hash(timestamp+genre) 固定随机种子（保证同秒内可复现）",
+        "3 套方案之间的扰动对完全不重复（schema 输出字段 perturbation_pairs 需标注）",
+        "SKILL.md Quick Step 0 加载该文件为 L1 必读",
+        "文件总字数 1500-3000 字",
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "依赖 US-001 的数据。golden_three_plan.json 已有 ch1/ch2/ch3 的 contract 字段，新增 ch1_cool_point_spec 作为 ch1 的扩展。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-004",
-      "title": "plan 阶段第一章大纲强制爽点闭环 gate",
-      "description": "As a 创作者, I want ink-plan 生成第一章大纲时必须包含能力展示→危机→具体收益的完整闭环, so that 读者在第1章就能感知金手指的价值。",
+      "title": "金手指三重硬约束 golden-finger-rules.md",
+      "description": "As a 创作者, I want 金手指必须通过非战力维度 + 代价可视化 + 一句话爆点三重校验, so that 生成的金手指不再是战力暴涨或系统签到俗套。",
       "acceptanceCriteria": [
-        "修改 skills/ink-plan/SKILL.md Step 7（章纲生成），第一章新增必填节拍组 '爽点闭环'，包含3个强制节拍：ability_demo（能力展示，含感官描写要求）、crisis_trigger（危机触发，必须与金手指直接相关）、concrete_payoff（具体收益，排除抽象收益）",
-        "concrete_payoff 硬性排除列表：理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了。允许列表：资源获取/敌人击退/他人认可/地位提升/信息解锁/危机解除",
-        "PC-1 收紧：从'第3章前爆发'改为'第1章完成首次爽点交付'",
-        "新增 gate：第一章大纲缺少上述3个节拍中任一个 → hard fail 阻断，要求重新生成",
-        "第一章大纲新增字段 cool_point_preview（300字以内爽点预览）和 读者承诺 必须包含金手指解决问题的具体承诺",
+        "新建 ink-writer/skills/ink-init/references/creativity/golden-finger-rules.md",
+        "定义 GF-1 非战力维度：禁用纯力量/资源类，必须是信息/时间/情感/社交/认知/概率/感知/规则 8 类之一",
+        "定义 GF-2 代价可视化：必须有明确、可量化、可被反派利用的成本（含 10+ 合格示例）",
+        "定义 GF-3 一句话爆点：20 字内能讲清楚且产生'这也行？'的惊讶感（含 10+ 合格/不合格对比）",
+        "金手指禁止词列表 ≥20 个高频俗套词：修为暴涨 / 无限金币 / 系统签到 / 作弊器 / 外挂 / 无限奖励 / 吞噬天赋 / 觉醒面板 / 签到一万年 / 熟练度+1 等",
+        "校验算法：gf_checks 字段输出三项 0/1 矩阵，至少 2 项为 1 方可通过，否则重新生成（最多 5 次）",
+        "生成失败降档逻辑：5 次仍未通过则自动降档（激进→平衡，平衡→保守）",
+        "SKILL.md Quick Step 1.5 新增金手指三重校验子步骤，并加载 golden-finger-rules.md 为 L1 必读",
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "依赖 US-003 的 ch1_cool_point_spec 数据。已有第一章节拍规则（ability_demo→crisis→benefit），本次增强：感官要求、排除列表、gate 强制。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-005",
-      "title": "plan 阶段新增 info_budget 信息释放配额",
-      "description": "As a 创作者, I want ink-plan 为每章生成信息释放配额, so that 写作时不会信息过载导致'塞信息感'。",
+      "title": "语言风格三档分级 style-voice-levels.md",
+      "description": "As a 创作者, I want 3 套方案分别采用 V1 文学狂野 / V2 烟火接地气 / V3 江湖野气三档风格, so that 用户能直观感受不同风格强度的差异。",
       "acceptanceCriteria": [
-        "修改 skills/ink-plan/SKILL.md Step 7（章纲生成），每章大纲新增字段 info_budget",
-        "info_budget 包含：max_new_concepts（本章最多引入新概念数，默认3，第1-3章上限2）、max_named_characters（新出场有名角色上限，默认3，第1章上限2）、setting_reveal_queue（本章需揭示的设定列表，按优先级排序）、natural_delivery_hints（信息融入方式提示列表）",
-        "第一章严格执行：只允许金手指核心机制 + 1个核心设定 + 2个有名角色，其他信息推后",
-        "大纲模板（templates/output/大纲-详细大纲.md）新增 info_budget 区块",
+        "新建 ink-writer/skills/ink-init/references/creativity/style-voice-levels.md",
+        "定义 V1 文学狂野：意象粗粝有美感，示例书名《赤地一拳》《霓虹佛陀》，人名如「池冷灰」「陆无归」",
+        "定义 V2 烟火接地气：口语化方言感，示例书名《老子就是救世主》《外卖送到阎王殿》，人名如「王满仓」「赵二娃」",
+        "定义 V3 江湖野气：绰号感 + 轻度粗口，示例书名《卧槽这关没打过》《神仙打屁》，人名如「刀疤阿九」「臭嘴老七」",
+        "敏感词分级 4 级：L0 中性俚语（老子/丫的/瞎整）全档位允许 / L1 轻度粗口（卧槽/妈的/他娘的/龟儿子）V2+V3 允许 / L2 擦边暗示（腰软/眼神勾魂）V3+激进档允许 / L3 红线（具体生殖器官词/性行为描写/辱骂族群）全档禁止",
+        "密度矩阵：档位 1 保守=0% / 档位 2 平衡=0.2% / 档位 3 激进=0.5%-0.8% / 档位 4 疯批=0.8%-1.5%",
+        "SKILL.md Quick Step 1.6 新增语言风格分配子步骤，3 套方案强制 V1/V2/V3 各占一档",
+        "文件总字数 2000-3500 字",
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "info_budget 是解决'塞信息感'的结构性方案。natural_delivery_hints 的5种融入方式：行动展示/对话揭示/后果倒推/误读制造/环境映射。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-006",
-      "title": "writer-agent 新增 L10d 电影镜头切换规则",
-      "description": "As a 系统, I want writer-agent 在起草正文时遵守电影镜头切换规则, so that 文字有画面感和视觉节奏。",
+      "title": "书名/人名算法升级（含 7 修辞标签）",
+      "description": "As a 创作者, I want 书名和人名不再落入「xx神帝/萧/林/叶 + 尘/风/寒/云」陈词模板, so that 3 套方案在命名上形成鲜明个性。",
       "acceptanceCriteria": [
-        "修改 agents/writer-agent.md，在 L10 遣词造句律下新增 L10d 电影镜头切换规则",
-        "L10d 规则：每个场景段落标注镜头类型（远景/近景/特写），场景内至少1次镜头切换；战斗/冲突场景强制'远景→近景→特写'三段式节奏",
-        "L10d 规则：远景用于开场和环境交代，近景用于动作和微表情，特写用于决定性瞬间（拳头接触/武器碰撞/表情凝固）",
-        "L10d 规则：连续3段以上同一镜头类型 = 违规，必须切换",
-        "在 writer-agent 的执行流程中，起草前确定当前场景的镜头计划（shot_plan）",
-        "更新铁律计数",
+        "更新 data/naming/given_names.json 新增风格标签 rough/smoky/jianghu，每标签至少对应 30+ 条名字素材",
+        "新建 data/naming/nicknames.json 江湖绰号库，≥100 条（刀疤/癞子/麻子/瘸子/秃子/哑巴/独眼/瞎子/烂命/臭嘴/二愣子/闷瓜等），每条含 rarity(1-5) 和 style_tags",
+        "新建 data/naming/book-title-patterns.json，按 V1/V2/V3 三档各 50+ 条模板，每条含 rhetoric_tags 字段（多选）",
+        "7 种修辞标签：pun 双关 / homophone 谐音 / antithesis 对仗 / irony 反讽 / oxymoron 矛盾修辞 / concrete_abstract 具象配抽象 / anachronism 时空错置，每种标签至少 10 条模板",
+        "扩展 data/naming/blacklist.json 禁用书名后缀（神帝/天帝/至尊/大帝/无敌/主宰/龙傲天/战神/剑神/丹帝/仙尊 等 ≥15 条）+ 书名前缀（我的/全球/无敌/最强/重生成 + 职业/身份类陈词 ≥10 条）",
+        "blacklist.json 人名陈词组合禁用：萧/林/叶/楚/顾/秦/陆 × 尘/风/寒/云/逸/辰/墨/天 全部组合",
+        "SKILL.md Quick Step 0 加载 nicknames.json + book-title-patterns.json 为 L1 必读；Quick Step 1.7 新增书名/人名校验子步骤",
+        "所有 JSON 文件通过 schema 校验，字段类型合法",
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": true,
-      "notes": "参考 combat-scenes.md 中的镜头切换示例模式。writer-agent 现有 L10a/b/c，L10d 紧跟其后。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-007",
-      "title": "writer-agent 新增 L10e 感官主导模态 + L10f 情绪节奏句式",
-      "description": "As a 系统, I want writer-agent 在起草时使用感官主导模态轮换和情绪驱动句式, so that 文字有沉浸感和节奏变化。",
+      "title": "联网拉取起点+番茄双平台榜单（含缓存）",
+      "description": "As a 创作者, I want 系统每次 quick 前拉取起点和番茄当日榜单反向建模, so that 方案能显式规避当下高频套路。",
       "acceptanceCriteria": [
-        "修改 agents/writer-agent.md，新增 L10e 感官主导模态规则：每场景指定主导感官（非默认视觉），场景切换时感官模态轮换；情感场景优先触觉+温度，战斗场景优先触觉+嗅觉，悬疑场景优先听觉+触觉",
-        "修改 agents/writer-agent.md，新增 L10f 情绪节奏句式规则：紧张场景句均≤15字且删除连词；日常场景句均25-40字；情绪高潮采用'连续短句→突然长句'的断层效果",
-        "L10f 规则：短句因稀缺而有力，连续3句以上短句后必须接1个长句让读者呼吸",
-        "L10f 规则：紧张时连词删除（'他缩肩，下蹲，滚向雪地。'——三动作零连词=心率加速）",
-        "更新铁律计数",
+        "SKILL.md Quick Step 0 新增 WebSearch 子步骤，固定 2 个检索源（不可配置）：起点中文网月票榜 + 番茄小说热门新书",
+        "检索语硬编码：`起点中文网 月票榜 2026 热门 题材` / `起点 分类 月榜` / `番茄小说 爆款 套路 2026` / `番茄免费小说 热门 新书`",
+        "新建 data/market-trends/README.md 说明目录用途和缓存文件命名规则",
+        "缓存文件格式：data/market-trends/cache-YYYYMMDD.md，含日期 / 两平台各 Top 10 书名 / 各平台 5-8 热门套路关键词 / 两平台共通套路列表",
+        "当日共享缓存，跨日重新搜索；保留最近 90 天缓存",
+        "WebSearch 失败时 fallback 最近 7 天内缓存，输出提示「使用 N 天前榜单数据」",
+        "方案生成时必须规避两平台共通 Top 5 热门套路关键词（单平台榜单不强制规避）",
+        "联网延迟上限 15s（两平台并行搜索，超时 fallback）",
+        "SKILL.md allowed-tools 确认含 WebSearch（已有则跳过）",
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": true,
-      "notes": "参考 desire-description.md（感官）和 pacing-rhythm.md（句式）。L10e 强化现有 L10b 的感官规则，L10f 新增句式节奏规则。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-008",
-      "title": "writer-agent 新增 L10g 环境情绪共振 + L11 信息密度铁律",
-      "description": "As a 系统, I want writer-agent 在起草时确保环境与情绪共振且信息密度可控, so that 文字有氛围感且不会信息堆砌。",
+      "title": "方案输出新增创意指纹板块",
+      "description": "As a 创作者, I want 每套方案末尾显式标注它为什么不套路, so that 我能快速判断选哪一套。",
       "acceptanceCriteria": [
-        "修改 agents/writer-agent.md，新增 L10g 环境情绪共振：场景环境描写必须与当前情绪形成共振（正面配明亮/反面配压抑），禁止'情绪与环境脱节'",
-        "修改 agents/writer-agent.md，新增 L11 信息密度铁律：单段（≤200字）最多引入1个新概念/设定；连续3段内不允许2个以上设定解释；设定信息必须通过行动/对话/后果三种方式之一融入；新概念引入后至少隔500字才能引入下一个",
-        "L11 规则：读取大纲的 info_budget.max_new_concepts 字段，严格按配额释放信息",
-        "第一章特殊控制：全章最多金手指核心机制+1个核心设定+2个有名角色，其他通过留白/悬念处理",
-        "更新铁律计数和成功标准",
+        "SKILL.md Quick Step 2 方案输出模板新增「🧬 创意指纹」板块",
+        "指纹含 5 个字段：命中元规则（列出 M01-M10 具体编号 + 一句话说明） / 使用扰动对（2 对起） / 金手指维度（GF-1/GF-2/GF-3 三项 0/1 矩阵） / 语言档位（V1/V2/V3 + 示例句） / 反向规避（明示规避的当日 Top 5 套路）",
+        "输出格式为 Markdown 列表，总字数 ≤200 字",
+        "3 套方案的创意指纹必须体现差异性（命中元规则、扰动对、语言档位至少三项全不同）",
+        "SKILL.md 同步更新示例输出模板段落",
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": true,
-      "notes": "L11 依赖 US-005 的 info_budget 字段。L10g 参考scene-craft-index.md 的环境描写规则。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-009",
-      "title": "ink-write Step 2B/2C 新增电影剪辑适配和计算门禁",
-      "description": "As a 系统, I want ink-write 的风格适配和计算门禁阶段新增文笔相关检查, so that 文笔问题在进入审查前就被拦截。",
+      "title": "激进度档位前置询问（Quick Step 0.5）",
+      "description": "As a 创作者, I want quick 调用时能先选创意激进度(1-4 档), so that 不用每次在随机结果里碰运气。",
       "acceptanceCriteria": [
-        "修改 skills/ink-write/SKILL.md Step 2B（Style Adaptation），新增'电影剪辑适配'模式：自动检测场景类型（战斗/情感/日常/悬疑）并应用对应镜头节奏",
-        "修改 skills/ink-write/SKILL.md Step 2C（Computational Gate），新增检查项：感官多样性（单场景非视觉感官占比≥20%）、镜头切换密度（连续3段同一镜头类型=warning）、句式节奏（CV≥0.40）、信息密度扫描（超出info_budget.max_new_concepts=warning）",
-        "Step 2A prompt 新增场景匹配的技法提示注入：从 desire-description.md/combat-scenes.md/pacing-rhythm.md 抽取与当前场景类型匹配的技法",
-        "角色对话执行 voice_profile 一致性检查（对照 init 阶段收集的语言特征）",
-        "对话黄金比例检查：对话40-50%:叙述30-40%:心理10-20%，偏离±10%=warning",
+        "SKILL.md Quick Step 0 与 Step 1 之间插入 Quick Step 0.5：激进度选择",
+        "使用 AskUserQuestion 工具，4 档选项：1 保守 / 2 平衡 / 3 激进 / 4 疯批，默认档位 2 平衡",
+        "支持 3 种命令格式（SKILL.md 明示）：`/ink-init --quick` 弹询问 / `/ink-init --quick 2` 位置参数（推荐） / `/ink-init --quick --档位=2` 命名参数",
+        "支持中文词容错：保守/平衡/激进/疯批 → 自动映射到 1/2/3/4",
+        "档位说明：档位 1 = ≥1 元规则 + 1 扰动对（稀有度 ≤3）；档位 2 = ≥2 + 2（≥1 稀有度 4）；档位 3 = ≥3 + 3（≥2 稀有度 4）；档位 4 = ≥5 + 5（≥3 稀有度 5，必须打破 ≥1 商业安全边界）",
+        "SKILL.md 输出日志显式标注本次档位（如「本次生成档位：3 激进」）",
+        "3 套方案均按该档位生成（不做梯度分离）",
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": true,
-      "notes": "依赖 US-006/007/008 的 L10d-g 和 L11 规则已在 writer-agent 中定义。Step 2C 是确定性检查，开销可忽略。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-010",
-      "title": "新增 prose-impact-checker 文笔冲击力检查器",
-      "description": "As a 系统, I want 一个专项检查器评估正文的视觉冲击力和电影感, so that 文笔质量问题能被量化检测。",
+      "title": "3 套方案按激进度档位生成（差异化+校验）",
+      "description": "As a 创作者, I want 3 套方案按选定档位统一调整创意强度, so that 生成结果的创意度可预期。",
       "acceptanceCriteria": [
-        "新增文件 agents/prose-impact-checker.md，定义文笔冲击力检查器",
-        "检查维度：镜头多样性（统计远景/近景/特写分布，单一类型占比>60%=critical）、感官丰富度（视觉占比>70%=warning，非视觉感官种类<2=warning）、句式节奏（句长CV<0.35=critical，0.35-0.40=warning）、动词锐度（动作场景弱动词>30%=warning）、环境-情绪共振（环境描写与场景情绪不匹配=high）、特写缺失（关键情绪/冲突点无特写=high）",
-        "输出格式：结构化报告，每项给score(A/B/C/D)+具体定位（段落号）+修复建议",
-        "检查器格式遵循现有 checker 规范（参考 high-point-checker.md 的结构）",
+        "SKILL.md Quick Step 1 更新方案生成逻辑，按档位确定：规则命中数下限 / 扰动对数量 / 稀有度下限 / 粗口密度",
+        "档位 4 疯批特殊约束：每套方案必须打破至少 1 个商业安全边界（如反派视角主角 / 悲剧结局主线 / 主角长期失败），SKILL.md 提供 10+ 边界示例供选",
+        "3 套方案之间两两不重复的维度：题材方向 / 元规则命中 / 扰动对 / 语言档位",
+        "生成时在 think 过程中自检规则命中数，未达标则重试（最多 3 次），仍失败则降档一级",
+        "SKILL.md Quick Step 1.5 金手指三重校验失败时调用降档逻辑",
+        "SKILL.md 同步更新 3 套方案的 Markdown 输出模板，含完整字段",
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": true,
-      "notes": "新 agent 文件，遵循 agents/ 目录下已有 checker 的格式规范。后续 US-014 将其集成到 ink-write 和 ink-review。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-011",
-      "title": "新增 sensory-immersion-checker 感官沉浸检查器",
-      "description": "As a 系统, I want 一个专项检查器评估正文的感官沉浸深度, so that 感官描写不足能被检测。",
+      "title": "SKILL.md Quick Mode 流程整合与清理",
+      "description": "As a 维护者, I want Quick Mode 的 8 步骤流程在 SKILL.md 中连贯呈现, so that 新增内容不与旧版描述冲突。",
       "acceptanceCriteria": [
-        "新增文件 agents/sensory-immersion-checker.md，定义感官沉浸检查器",
-        "检查维度：感官主导轮换（相邻场景主导感官是否不同，连续2个场景同主导=warning）、感官深度（每场景至少80字感官描写段落，战斗/情感场景≥100字）、通感运用（跨感官描写≥1处/章=bonus）、感官-情绪匹配（感官描写是否服务于情绪目标）、抽象替代检测（'他感到悲伤'等抽象情绪词代替具体感官的次数）",
-        "输出格式：与 prose-impact-checker 一致的结构化报告",
-        "检查器格式遵循现有 checker 规范",
+        "SKILL.md Quick Mode 流程整理为 8 步骤：Step 0 加载（含三层创意+命名+WebSearch） / Step 0.5 档位询问 / Step 1 生成 3 套 / Step 1.5 金手指校验 / Step 1.6 语言档位分配 / Step 1.7 书名/人名校验 / Step 2 输出（含创意指纹） / Step 3 用户选择",
+        "删除或迁移旧版 Quick Step 描述（Step 0/1/2/3 原有内容）避免重复段落",
+        "allowed-tools 声明含 WebSearch / AskUserQuestion / Read / Write / Edit / Grep / Bash / Task",
+        "SKILL.md 总行数 ≤900 行（当前 806 行，控制膨胀）",
+        "SKILL.md 头部 frontmatter 的 description 字段更新，反映 4 档激进度 + 三层创意体系的升级",
+        "文档内链接有效，无悬空引用",
         "Typecheck passes"
       ],
       "priority": 11,
-      "passes": true,
-      "notes": "与 prose-impact-checker 互补：后者关注视觉冲击和电影感，前者关注五感沉浸深度。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-012",
-      "title": "新增 flow-naturalness-checker 自然流畅度检查器",
-      "description": "As a 系统, I want 一个专项检查器评估正文的信息节奏和语言自然度, so that '塞信息感'和不自然对话能被检测。",
+      "title": "editor-wisdom 创意条目整合至 Layer 1",
+      "description": "As a 维护者, I want 把 editor-wisdom RAG 中与独创性相关的规则整合进 Layer 1 元规则, so that 两套规则系统统一不重复。",
       "acceptanceCriteria": [
-        "新增文件 agents/flow-naturalness-checker.md，定义自然流畅度检查器",
-        "检查维度：信息密度均匀度（单段>2个新概念/设定=warning）、信息融入方式（纯叙述性设定解释占比>40%=warning）、过渡流畅度（无连接的视角切换/时空跳跃=high）、对话辨识度（去掉角色名后能否区分说话人，不能=warning）、对话黄金比例（偏离40-50:30-40:10-20超过±10%=warning）、语气一致性（叙述者语气在不正式/口语/文学间不自然切换=high）、角色voice一致性（对话是否符合voice_profile）",
-        "输出格式：结构化报告",
-        "检查器格式遵循现有 checker 规范",
-        "Typecheck passes"
+        "从 data/editor-wisdom/rules.json 筛选所有与独创性/创意/套路规避/新意相关的规则条目，输出筛选清单（预估 15-30 条）",
+        "meta-creativity-rules.md 新增 Appendix 章节「M-EW 桥接规则」，列出被纳入的 EW 规则编号 + 原文 + 映射到 M01-M10 哪条（如有重叠以 M 为主）",
+        "若存在未被 M01-M10 覆盖的 EW 创意类规则，新增 M11+ 元规则收纳（如 EW 提到多模态一致性等独立维度）",
+        "更新 ink-writer/agents/editor-wisdom-checker.md 输出新增 creative_dimensions 字段（与 Layer 1 对齐）",
+        "现有 editor_wisdom 测试全部通过（不引入新的失败）",
+        "Typecheck passes",
+        "Tests pass"
       ],
       "priority": 12,
-      "passes": true,
-      "notes": "这是解决'不自然感'的核心检查器。对话辨识度检查是最重要的维度。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-013",
-      "title": "golden-three-checker 新增4项爽点硬阻断检查",
-      "description": "As a 系统, I want golden-three-checker 对第一章爽点闭环进行更严格的验证, so that 不合格的第一章无法通过审查。",
+      "title": "Phase-Seed-∞ 增量补充规范",
+      "description": "As a 维护者, I want 种子库增量补充的触发条件和流程规范到位, so that 后续补充操作有章可循。",
       "acceptanceCriteria": [
-        "修改 agents/golden-three-checker.md，新增 CH1_COOL_POINT_VISIBILITY：爽点在10秒扫读测试中不可见 → critical hard block",
-        "新增 CH1_ABILITY_SOLUTION_CHAIN：金手指未直接导致危机解决（有'灵机一动'/'恰好有人帮忙'等绕过）→ critical hard block",
-        "新增 CH1_PAYOFF_TANGIBILITY：收益为抽象描述（理解/领悟/感悟/知道了/发现了/明白了/意识到/成长了/坚强了）→ critical hard block",
-        "新增 CH1_READER_EMOTION_PREDICTABLE：第一章结束时读者情绪不符合 golden_three_plan.json 中 ch1_cool_point_spec.reader_emotion_target → high",
-        "以上4项全部为 hard block 级别，不允许 override",
+        "anti-trope-seeds-roadmap.md 新增「Phase-Seed-∞ 增量补充」章节",
+        "触发条件：自动 A（某 category 抽取集中度 >30%）/ 自动 B（用户连续 3 次重随仍不满意）/ 手动（用户主动）",
+        "单次补充规模 100-200 条，流程同 Phase-Seed-1 的分批（生成 150 候选 → WebSearch 反查 → 去重 → 稀有度均衡 → 20 条 review → 入库 100 条）",
+        "补充后版本号规则：v1.0 → v1.1 → v1.2 ... 每次写入 anti-trope-seeds.json frontmatter 的 version + changelog",
+        "补充质量门槛：新增条目稀有度 ≥4 占比 ≥60%（比初版 50% 更严格）",
+        "roadmap 文档明示：OQ-10 `/ink-seeds add` 单条贡献命令不计入本 PRD，后续独立 PRD 实施",
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": true,
-      "notes": "与 US-004 配对：US-004 在大纲层锁定闭环，US-013 在审查层验证正文是否落地。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-014",
-      "title": "ink-write 和 ink-review 集成3个新 checker",
-      "description": "As a 系统, I want 3个新 checker 集成到写作和审查流程中, so that 文笔和自然度检查能自动运行。",
+      "title": "自动化验收测试 test_quick_creativity.py",
+      "description": "As a 维护者, I want 一个静态 fixture 测试脚本持续验证创意质量指标, so that 后续代码修改不会退化。",
       "acceptanceCriteria": [
-        "修改 skills/ink-write/SKILL.md Step 3（审查），将 prose-impact-checker 和 sensory-immersion-checker 加入条件检查器列表（与 high-point-checker 同级），flow-naturalness-checker 加入核心检查器列表",
-        "修改 skills/ink-write/SKILL.md Step 3 review gate，新增文笔冲击力门禁和自然流畅度门禁的判定逻辑",
-        "修改 skills/ink-review/SKILL.md，Core 模式新增 flow-naturalness-checker；Full 模式新增全部3个 checker；Full+ 同 Full 但用完整分析模式",
-        "第1-3章无论何种 review 模式都强制运行 prose-impact-checker + sensory-immersion-checker",
-        "review 报告模板新增'文笔冲击力''感官沉浸''自然流畅度'三个评分维度",
-        "Typecheck passes"
+        "新建 tests/ink_init/test_quick_creativity.py + tests/ink_init/__init__.py",
+        "测试覆盖 6 项：(1) anti-trope-seeds-schema.json 合法性 / (2) meta-creativity-rules.md 至少含 M01-M10 十条规则 / (3) book-title-patterns.json 7 种修辞标签覆盖 / (4) blacklist.json 禁用词扩展 / (5) nicknames.json ≥100 条 / (6) given_names.json 新增 rough/smoky/jianghu 标签",
+        "测试使用 fixture 数据模拟，不实际调 LLM 也不发起 WebSearch",
+        "CI workflow（.github/workflows/ci-test.yml）paths 已含 tests/** 和 ink-writer/skills/**，无需额外改动",
+        "所有测试通过率 100%",
+        "Typecheck passes",
+        "Tests pass"
       ],
       "priority": 14,
-      "passes": true,
-      "notes": "依赖 US-010/011/012 的3个新 checker 已创建。参考现有 step-3-review-gate.md 的门禁集成模式。"
-    },
-    {
-      "id": "US-015",
-      "title": "proofreading-checker Layer 6 扩展为 6A+6B",
-      "description": "As a 系统, I want proofreading-checker 的文笔工艺层增加镜头和信息密度检查, so that 文笔问题检测更全面。",
-      "acceptanceCriteria": [
-        "修改 agents/proofreading-checker.md，将现有 Layer 6 重命名为 Layer 6A（Prose Craft Basics：弱动词/感官沙漠/形容词堆砌/通用描写）",
-        "新增 Layer 6B（Prose Craft Advanced）：镜头单一性（连续>3段无镜头切换=warning）、句式雷同度（连续>3段句式结构相同=warning）、环境-情绪脱节（环境描写与场景情绪矛盾=high）、信息密度超标（单段>2个新概念=warning）",
-        "Layer 6A+6B 同时出现 critical 时，合并为一条修复建议",
-        "修复建议从'替换弱动词'扩展到'建议镜头切换方向'和'建议信息分散方式'",
-        "Typecheck passes"
-      ],
-      "priority": 15,
-      "passes": true,
-      "notes": "Layer 6 已在 combat-pacing-overhaul 分支中创建，本次是增强而非重建。保留现有 6A 规则不变。"
-    },
-    {
-      "id": "US-016",
-      "title": "polish-agent 新增文笔优化修复指令",
-      "description": "As a 系统, I want polish-agent 在润色时主动优化镜头、感官和信息密度问题, so that 即使 write 阶段遗漏也能兜底。",
-      "acceptanceCriteria": [
-        "修改 agents/polish-agent.md，新增 Layer 9（Prose Impact Polish）",
-        "Layer 9a：镜头单一修复——连续>3段同一镜头类型时，将中间段切换为不同镜头（远景→插入近景/特写→远景）",
-        "Layer 9b：感官注入——非视觉感官占比<20%的场景，在合适位置插入1-2个自然感官锚点",
-        "Layer 9c：信息密度稀释——单段>2个新概念时，将部分信息拆分到下一段或转为对话/行动方式表达",
-        "Layer 9d：句式节奏调整——连续>3段句式结构相同时，变换其中1-2段的句式（长短交替/对话插入）",
-        "润色后必须通过 proofreading-checker Layer 6A+6B 的重检",
-        "Typecheck passes"
-      ],
-      "priority": 16,
-      "passes": true,
-      "notes": "polish-agent 已有 Layer 8（Prose Craft Polish from combat-pacing-overhaul），Layer 9 是新增层。9a/9b/9c/9d 与 US-010/011/012 的检查维度一一对应。"
-    },
-    {
-      "id": "US-017",
-      "title": "editor-wisdom RAG 知识库新增文笔规则",
-      "description": "As a 系统, I want editor-wisdom 的 RAG 知识库包含文笔冲击力和自然流畅度规则, so that 编辑智慧门禁也能检测文笔问题。",
-      "acceptanceCriteria": [
-        "修改 config/editor-wisdom.yaml，新增规则来源：从 desire-description.md、combat-scenes.md、scene-craft-index.md 提取的文笔规则",
-        "editor-wisdom-checker 的评分维度新增：镜头多样性、感官丰富度、句式节奏、信息密度均匀度",
-        "第1-3章的 editor-wisdom 阈值从 0.90 提升到 0.92（加入文笔维度后标准提高）",
-        "新增的文笔规则条目数量≥20条（覆盖镜头/感官/句式/信息密度4个维度）",
-        "Typecheck passes"
-      ],
-      "priority": 17,
-      "passes": true,
-      "notes": "editor-wisdom RAG 已有 288 份编辑建议，新增的文笔规则需要符合同样的格式（条件→规则→严重度→修复建议）。"
-    },
-    {
-      "id": "US-018",
-      "title": "golden-opening-patterns.md 强化第一章爽点模式",
-      "description": "As a 系统, I want 第一章开篇模式参考文件包含爽点闭环的具体示例, so that plan 和 write 阶段有可参照的模板。",
-      "acceptanceCriteria": [
-        "修改 references/shared/golden-opening-patterns.md，为现有5种成功模式（Crisis/Cognitive Contrast/Bottom-tier Ensemble/Action-Combat/Suspense）各新增'爽点闭环示例'子段",
-        "每种模式的爽点闭环示例必须包含：ability_demo（能力展示，含感官描写）、crisis_trigger（与金手指相关的危机）、concrete_payoff（具体有形收益）、reader_reaction（预期读者情绪反应）",
-        "新增第6种成功模式：Golden Finger Showcase（金手指展示型）——开篇即展示金手指威力，快速进入解决问题循环",
-        "每种模式新增'感官描写要求'和'镜头计划'两个指导段落",
-        "Typecheck passes"
-      ],
-      "priority": 18,
-      "passes": true,
-      "notes": "这个文件被 ink-plan 和 ink-write 的参考系统加载，更新后自动生效于后续项目。"
+      "passes": false,
+      "notes": ""
     }
   ]
 }

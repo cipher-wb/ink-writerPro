@@ -29,7 +29,8 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 2. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/surnames.json` — 姓氏库（按 common/moderate/rare/compound 四层），随机抽取时按稀有度加权：common 20%、moderate 40%、rare 30%、compound 10%。
 3. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/given_names.json` — 名字素材库（按 classical/modern/martial/scholarly/cold 五风格 × male/female），根据方案风格从匹配风格池中随机取 1-2 字组合。
 4. `references/genre-tropes.md`（L1 必读）。
-5. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
+5. `references/creativity/meta-creativity-rules.md`（L1 必读）—— 10 条元规则 M01-M10，作为 Quick Step 1 方案校验的硬约束标尺。
+6. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
 
 ## Quick Step 1：生成 3 套差异化方案
 
