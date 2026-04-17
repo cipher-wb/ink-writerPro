@@ -104,6 +104,21 @@
   - `info_plan` 与前序 US-006/US-007 的 `shot_plan`/`sensory_plan` 构成三位一体的"起草前内部锚定"模式，均不输出到正文——后续 Step 2B 电影剪辑适配（US-009）可一次性消费三个 plan
 ---
 
+## 2026-04-17 - US-009
+- 实现：ink-write Step 2A 场景匹配技法注入 + voice_profile 一致性检查；Step 2B 新增"电影剪辑适配"子步骤（模式 A+）；Step 2C 在原 6 项上新增 6 项文笔/信息相关确定性检查并同步 `step-2c-comp-gate.md` 检查项表
+- 变更文件：
+  - `ink-writer/skills/ink-write/SKILL.md`：Step 2A 在 MCC 前置确认前新增"场景匹配技法注入"段（战斗/情感/悬疑/日常四类场景→`combat-scenes.md`/`desire-description.md`/`scene-description.md`/`dialogue-writing.md`+`pacing-control.md` 分流抽取；要求 Writer 先生成 shot_plan/sensory_plan/info_plan 再起草）与"voice_profile 一致性检查"段（对照 init 收集的 voice_profile，每段对话至少命中 2 个维度，未过关交 Step 2C 兜底）；Step 2B 全量模式分支下新增"模式 A+ 电影剪辑适配"（场景类型自动检测→对应镜头节奏→连续 3 段同镜头切换→感官轮换兜底，硬约束与模式 A 一致）；Step 2C 检查项从 6 项扩为 11 项，追加 `sensory_diversity`/`shot_switch_density`/`sentence_rhythm_cv`/`info_density_budget`/`voice_profile_consistency`/`dialogue_golden_ratio`（CV<0.35 为唯一新硬失败，其余皆 soft_warning）
+  - `ink-writer/skills/ink-write/references/step-2c-comp-gate.md`：在检查项表末尾追加 6 行新检查条目，列明类型/阈值/严重度，与 SKILL.md 一致
+  - `scripts/ralph/prd.json`：US-009 passes=true
+- **Learnings for future iterations：**
+  - ink-write Step 2C 的检查项定义是"两处联动"：SKILL.md 正文的检查项列表 + `references/step-2c-comp-gate.md` 的检查项表；实际实现脚本 `scripts/computational_checks.py` 运行期幂等（脚本不存在即跳过），spec-only PR 不强制同步脚本——但下一次脚本更新必须对照此表补全，否则新检查被"静默跳过"
+  - 场景类型→技法文件路由映射：战斗=`writing/combat-scenes.md`、情感=`writing/desire-description.md`+`emotion-psychology.md`、悬疑=`writing/scene-description.md`、日常=`writing/dialogue-writing.md`；句式节奏统一指向 `skills/ink-review/references/pacing-control.md`（progress.txt 旧 Codebase Patterns 条目 `pacing-rhythm.md` 实际不存在，以 `pacing-control.md` 为准）
+  - voice_profile 在 init 阶段以两种结构存储（protagonist.voice_profile inline + relationship.voice_profiles 字典），Step 2A 抽取时需按角色类型分别取值；Step 2C 命中率计算建议按"词汇层级 + 句长倾向"2 维为主干，其他 3 维（口头禅/情绪变化/禁忌话题）作为 bonus
+  - 对话黄金比例（40-50:30-40:10-20）与已有 `dialogue_ratio` 硬失败 <5% 并存：前者判定"结构是否均衡"，后者判定"对话是否缺失"，同域不同语义——新增 `dialogue_golden_ratio` 独立键，避免覆盖旧硬阈值
+  - 句长 CV 阈值 0.40 为软目标、0.35 为硬下限，与 writer-agent L10f 自检阈值保持一致；后续 polish-agent Layer 9d 节奏调整应以 CV 0.40 为修复目标
+  - Step 2B 模式 A+ 电影剪辑适配是"三个内部 plan 的第一个集中消费者"——shot_plan/sensory_plan/info_plan 均在 Step 2A 起草前锚定，Step 2B 在保持剧情零偏差前提下只对镜头/感官模态做表达层调整；后续 US-010/011/012 的 checker 应按 plan 枚举反向验证
+---
+
 ## 2026-04-17 - US-006
 - 实现：writer-agent L10 铁律下新增 L10d 电影镜头切换法则（远景/近景/特写三分镜、场景内≥1次切换、战斗场景强制三段式、连续>3段同镜头违规、起草前生成 shot_plan、与 L10b 感官协同）
 - 变更文件：

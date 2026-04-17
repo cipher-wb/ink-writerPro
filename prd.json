@@ -143,7 +143,7 @@
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "依赖 US-006/007/008 的 L10d-g 和 L11 规则已在 writer-agent 中定义。Step 2C 是确定性检查，开销可忽略。"
     },
     {
