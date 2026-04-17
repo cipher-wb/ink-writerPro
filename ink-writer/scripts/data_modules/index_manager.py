@@ -861,27 +861,13 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                 )
             """)
 
-            # v8.2 引入: 主角视角知识管理（Knowledge Gate）
-            cursor.execute("""
-                CREATE TABLE IF NOT EXISTS protagonist_knowledge (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    entity_id TEXT NOT NULL,
-                    knowledge_type TEXT NOT NULL,
-                    knowledge_value TEXT NOT NULL,
-                    chapter_learned INTEGER,
-                    how_learned TEXT,
-                    known_descriptor TEXT,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (entity_id) REFERENCES entities(id) ON DELETE CASCADE,
-                    UNIQUE (entity_id, knowledge_type)
-                )
-            """)
-            cursor.execute(
-                "CREATE INDEX IF NOT EXISTS idx_protagonist_knowledge_entity ON protagonist_knowledge(entity_id)"
-            )
-            cursor.execute(
-                "CREATE INDEX IF NOT EXISTS idx_protagonist_knowledge_learned ON protagonist_knowledge(chapter_learned)"
-            )
+            # v13 US-019：删除孤儿表 protagonist_knowledge（v5 审计确认：INSERT=0，
+            # SELECT=0，定义了但从未被生产代码写入）。agent 规格仍引用
+            # `protagonist_knowledge_gate`（Context Contract 字段）和
+            # `protagonist_knowledge_events`（data-agent 输出 JSON），但这两者不
+            # 依赖此 SQL 表。如未来实现主角知识门控时再重建 table。
+            cursor.execute("DROP TABLE IF EXISTS protagonist_knowledge")
+            # 关联索引 DROP TABLE 时会自动被删除（SQLite 语义）
 
             # ==================== v9.0 引入表：Harness Engineering ====================
 
