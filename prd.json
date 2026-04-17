@@ -231,8 +231,8 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "anti-trope-seeds-roadmap.md §Phase-Seed-∞ 验收全部达标：触发条件三路（自动 A 抽取集中度 >30% 且同一 seed 近 30 次 ≥10 次 / 自动 B 同一次 quick 会话内连续 3 次重随 / 手动）；单次补充 100-200 条，流程沿用 Phase-Seed-1 六步（150 候选→WebSearch 反查→去重→稀有度均衡→20 条 review→入库 100 条）；版本号 v1.0→v1.1→v1.2...，frontmatter version + changelog（四字段 version/date/delta/note）；质量门槛 rarity≥4 占比 ≥60%（高于初版 50%），且规避 market-trends 近 30 天共通套路词 + example_pairing 重复 ≤70%；§范围外显式标注 OQ-10 /ink-seeds add 单条贡献命令不计入本 PRD。本 US 在 US-002 roadmap 落地时已连带实现，本轮确认验收全项覆盖，不需正文改动。"
     },
     {
       "id": "US-014",

@@ -167,3 +167,13 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - editor-wisdom-checker.md 的 dimension_scores（4 文笔维度）与新增 creative_dimensions（6 创意维度）是**并列字段**，不合并权重；综合 score 仍沿用原加权（文笔 + 编辑规则）。下游 US-008 创意指纹的「命中元规则」字段可直接消费 creative_dimensions ≥0.85 的键。
   - 用 `python3 -c "import re; open(...).read(); ..."` 快速查 markdown 汉字数与 heading 个数是常用自检模式；PRD 未限字数时不必苛求，保持结构清晰即可。
 ---
+
+## 2026-04-17 - US-013
+- 验收 anti-trope-seeds-roadmap.md §Phase-Seed-∞ 已在 US-002 落地时一并覆盖全部 6 条验收：触发 A/B/手动；100-200 条六步流程；版本 v1.0→v1.1 递增 + changelog；rarity≥4 ≥60%；OQ-10 范围外。
+- 本轮无正文改动，只更新 prd.json（passes=true + notes 量化复核）。
+- Files changed: 1（prd.json）。
+- **Learnings for future iterations:**
+  - 早期 US 落地时若"顺手"把后续 US 的需求写进同一文件，后续 US 只需验收复核即可——但 PRD passes 仍需单独置位；避免重复动文件导致 commit 冲突。
+  - roadmap.md 本体未动版本号，避免与 anti-trope-seeds.json 的语义 version（v1.0-skeleton / v1.0 / v1.x）混淆；roadmap 是指引文档，版本号独立。
+  - 后续若实施 OQ-10 /ink-seeds add 单条贡献命令，触发本 roadmap §范围外说明的脱括号操作，需独立 PRD 不在本 quick 升级范围。
+---
