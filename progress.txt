@@ -36,3 +36,27 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - jsonschema 依赖在系统 Python 3.14 已安装（`/Library/Frameworks/Python.framework/Versions/3.14/`），后续 US-014 测试可直接 import。
   - Quick Step 0 加载列表当前编号：1 blacklist / 2 surnames / 3 given_names / 4 genre-tropes / 5 meta-creativity-rules / 6 anti-trope-seeds / 7 题材 anti-trope-*，后续 US-003/004/005/006 继续递增追加。
 ---
+
+## 2026-04-17 - US-004
+- 新建 `ink-writer/skills/ink-init/references/creativity/golden-finger-rules.md`（1104 汉字）。
+- 内容：GF-1 非战力维度 8 类（信息/时间/情感/社交/认知/概率/感知/规则）+ 禁用维度；GF-2 代价可视化 10 合格示例 + 校验伪代码；GF-3 一句话爆点 10 组合格/不合格对比；金手指禁止词列表 22 条（修为暴涨/无限金币/系统签到/作弊器/外挂/觉醒面板/熟练度+1 等）；校验算法 5 次重抽 + 降档逻辑（激进→平衡→保守）；`gf_checks` 和 `gf_downgrade_log` 两字段定义。
+- 修改 `ink-writer/skills/ink-init/SKILL.md`：Quick Step 0 第 8 条加载 golden-finger-rules.md（L1 必读），原第 8 条题材 anti-trope-* 顺延为 9；Quick Step 2 之前插入 Quick Step 1.5 段落（三项校验 / 通过条件 sum≥2 / 重抽与降档 / 输出产物）。
+- Files changed: 2（新增 golden-finger-rules.md；编辑 SKILL.md）。
+- **Learnings for future iterations:**
+  - Quick Step 0 加载列表当前编号：1 blacklist / 2 surnames / 3 given_names / 4 genre-tropes / 5 meta-creativity-rules / 6 anti-trope-seeds / 7 perturbation-engine / 8 golden-finger-rules / 9 题材 anti-trope-*。
+  - Quick Step 1.5 输出字段 `gf_checks`（3 元 0/1 数组）与 `gf_downgrade_log`（数组）—— US-008 创意指纹「金手指维度」字段直接消费 gf_checks；US-010 档位降档逻辑应复用本文降档算法，避免双写。
+  - 降档规则：激进→平衡→保守，保守档不再降；US-009 档位系统（1/2/3/4 含疯批）需在实现时扩展本逻辑把档位 4/3/2/1 映射一致。
+  - PRD US-004 验收没有字数上下限，但文件内 4 个代码块（伪代码）+ 10 对比表 + 禁止词列表挤到 1104 汉字，控制得当。
+---
+
+## 2026-04-17 - US-003
+- 新建 `ink-writer/skills/ink-init/references/creativity/perturbation-engine.md`（1579 汉字）。
+- 内容：扰动对定义（跨 category + 稀有度门槛）/ 档位 N 矩阵（1/2/3/5）/ 5 种模式 A-E（时代错位 / 职业反差 / 尺度错位 / 规则颠倒 / 感官替换，每种 3 示例）/ Python 伪代码（stable_hash(timestamp+genre+draft_index) 固定 RNG）/ 3 套方案整对去重 / `perturbation_pairs` schema 字段含 injection_note / 与 Layer 1/2 协作。
+- 修改 `ink-writer/skills/ink-init/SKILL.md` Quick Step 0 加载列表新增第 7 条 perturbation-engine.md（L1 必读），原 7 题材 anti-trope-* 顺延为 8。
+- Files changed: 2（新增 perturbation-engine.md；编辑 SKILL.md）。
+- **Learnings for future iterations:**
+  - 扰动对 schema 字段约定为 `perturbation_pairs`（数组，每对含 pair_id/pattern/seed_a/seed_b/injection_note）；US-008 创意指纹「使用扰动对」字段直接消费此字段。
+  - 档位 N 矩阵在本文件第 2 章定下：1/2/3/5。后续 US-009/010 档位实现需保持一致，不要重复定义。
+  - 抽取算法以 stable_hash 固定种子，方便 US-014 写测试时构造可复现 fixture。
+  - Quick Step 0 加载列表当前编号：1 blacklist / 2 surnames / 3 given_names / 4 genre-tropes / 5 meta-creativity-rules / 6 anti-trope-seeds / 7 perturbation-engine / 8 题材 anti-trope-*。
+---

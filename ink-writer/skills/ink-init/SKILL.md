@@ -32,7 +32,8 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 5. `references/creativity/meta-creativity-rules.md`（L1 必读）—— 10 条元规则 M01-M10，作为 Quick Step 1 方案校验的硬约束标尺。
 6. `references/creativity/anti-trope-seeds.json`（L1 必读）—— Layer 2 种子库骨架，扰动引擎抽取稀缺元素来源；skeleton 期 example 种子即可，1000 条正式种子由 Phase-Seed-1 交互会话补全，详见 `anti-trope-seeds-roadmap.md`。
 7. `references/creativity/perturbation-engine.md`（L1 必读）—— Layer 3 扰动引擎规格；定义扰动对抽取算法、5 种模式、档位 N 矩阵、3 套方案整对去重，Quick Step 1 必须按本规格生成 `perturbation_pairs` 字段。
-8. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
+8. `references/creativity/golden-finger-rules.md`（L1 必读）—— 金手指三重硬约束（GF-1 非战力维度 / GF-2 代价可视化 / GF-3 一句话爆点）+ 禁止词列表 ≥20 + 校验算法 + 降档逻辑，Quick Step 1.5 校验标尺。
+9. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
 
 ## Quick Step 1：生成 3 套差异化方案
 
@@ -94,6 +95,29 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 > - 输入 **1/2/3** 选择对应方案
 > - 输入混搭指令（如「1的书名 + 2的主角 + 3的冲突」）
 > - 输入 **0** 重新随机生成 3 套全新方案
+
+## Quick Step 1.5：金手指三重校验
+
+参照 `references/creativity/golden-finger-rules.md`，对 Quick Step 1 生成的 3 套方案逐套自检金手指，输出 `gf_checks = [GF1, GF2, GF3]` 的 0/1 矩阵：
+
+- **GF-1 非战力维度**：金手指作用维度必须落在 {信息 / 时间 / 情感 / 社交 / 认知 / 概率 / 感知 / 规则} 8 类之一；命中禁止词列表（修为暴涨/无限金币/系统签到/作弊器/外挂 等 ≥20 条）直接 GF1=0。
+- **GF-2 代价可视化**：代价必须明确 / 可量化 / 可被反派利用，且前 10 章可见。模糊代价（如「消耗法力」「会疲劳」）判 GF2=0。
+- **GF-3 一句话爆点**：20 字内讲清楚且触发「这也行？」惊讶感；含具体动作/代价/反直觉维度。
+
+### 通过条件
+
+每套方案 `sum(gf_checks) >= 2` 方可入选（三项通过二项即可）。
+
+### 重抽与降档
+
+- 未通过时回到 Quick Step 1 同一槽位重抽金手指，最多 5 次。
+- 5 次仍未通过 → 触发档位降档（激进→平衡，平衡→保守；保守档不再降），用更保守参数重生成；降档事件写入 `gf_downgrade_log`，Quick Step 2 方案标题旁标注「⚠️ 金手指校验触发降档至 X 档」。
+- 3 套方案各自独立降档，互不影响。
+
+### 输出产物
+
+- `gf_checks` 字段（每套方案一组 3 元 0/1 数组）—— Quick Step 2 创意指纹板块消费。
+- `gf_downgrade_log` 数组（如空则省略）—— Quick Step 2 末尾汇总。
 
 ## Quick Step 2：用户选择与方案确定
 

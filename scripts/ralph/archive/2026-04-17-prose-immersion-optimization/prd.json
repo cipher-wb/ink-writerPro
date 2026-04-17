@@ -17,8 +17,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": true,
-      "notes": "2056 汉字；10 条 M01-M10 齐全；SKILL.md Quick Step 0 已加入 L1 必读"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-002",
@@ -34,8 +34,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "schema/skeleton/roadmap 三件套就位；skeleton total=0 + 12 条示例 seed（覆盖全 10 类）；jsonschema Draft7 双向校验通过；SKILL.md Quick Step 0 加载列表第 6 条新增 anti-trope-seeds.json"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-003",
@@ -52,8 +52,8 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "1579 汉字；5 模式 A-E 各 3 示例；档位 N=1/2/3/5 矩阵；hash(timestamp+genre+draft_index) 抽取算法；3 套整对去重；SKILL.md Quick Step 0 第 7 条加入"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-004",
@@ -71,8 +71,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "1104 汉字；GF-1 8 维度 + 禁用维度；GF-2 10 合格代价示例 + 校验伪代码；GF-3 10 组对比；禁止词 22 条；5 次重抽 + 降档逻辑；SKILL.md Quick Step 0 第 8 条加载 + Quick Step 1.5 插入"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-005",
