@@ -224,6 +224,23 @@
   - 后续 US-016 polish-agent Layer 9 的 4 个子层（9a 镜头/9b 感官/9c 信息密度/9d 句式）与 6B.1/6A.2/6B.4/6B.2 一一对应——术语严格保持对齐
 ---
 
+## 2026-04-17 - US-017
+- 实现：editor-wisdom RAG 知识库新增 24 条文笔规则（4 维度各 6 条），config 引入 rule_sources / scoring_dimensions / prose_categories 三段，golden_three_threshold 提升至 0.92，editor-wisdom-checker 输出新增 dimension_scores 段
+- 变更文件：
+  - `data/editor-wisdom/rules.json`：rule 总数 364→388；新增 EW-0365~EW-0388（prose_shot×6 / prose_sensory×6 / prose_rhythm×6 / prose_density×6），source_files 指向 combat-scenes.md / desire-description.md / scene-craft-index.md / pacing-control.md / combat.md
+  - `config/editor-wisdom.yaml`：golden_three_threshold 0.85→0.92；新增 `rule_sources`（base + prose_craft 4 文件→4 类别映射）/ `scoring_dimensions`（4 维度 + 中文标签 + rule_categories 关联）/ `prose_categories`（hard 自动 hard block 名单）
+  - `ink-writer/agents/editor-wisdom-checker.md`：核心职责段标注 0.92 阈值；新增「评分维度（US-017）」段（4 维度表 + 评分公式 + 黄金三章双防线规则）；输出 JSON 示例补 `dimension_scores` 与 EW-0377 violation 示例
+  - `prd.json`：US-017 passes=true
+- **Learnings for future iterations：**
+  - `data/editor-wisdom/rules.json` 是单一巨型 JSON 数组（4845 行），新增 rule 必须严格 `,` 衔接前一项末尾——本次扩到 EW-0388；后续若新增更多文笔规则，可考虑按类别拆为 `rules.prose.json` + `rules.editor.json` 由 retriever 合并
+  - `EditorWisdomConfig` dataclass 仅消费 `enabled / retrieval_top_k / hard_gate_threshold / golden_three_threshold / inject_into` 5 字段，YAML 中新增的 `rule_sources / scoring_dimensions / prose_categories` 当前未进入 dataclass（不破坏向后兼容），后续若 retriever / checker 需要程序化消费再扩 dataclass + 测试
+  - 文笔规则的 source_files 字段（combat-scenes.md / desire-description.md / pacing-control.md / scene-craft-index.md / combat.md）与现有 EW 规则的真实文件命名（书号_标题.md）格式不同——retriever 不依赖 source_files 做检索，仅用于人审溯源；新规则使用「scene-craft 文件名」为标识符是合理的非破坏性约定
+  - 黄金三章双防线（任一文笔维度 <0.85 hard block + 综合 score <0.92 hard block）将在 step-3-review-gate.md 中体现，本 US 仅在 checker spec 中声明；下次 US-014 之后的门禁联调可补门禁判定逻辑
+  - 4 个维度 ID（shot_diversity / sensory_richness / sentence_rhythm / info_density_uniformity）与 prose-impact-checker（US-010）/ flow-naturalness-checker（US-012）的维度名**故意不同**——editor-wisdom 维度对应 RAG 规则集，前两者对应正文统计，互补非重复
+  - golden_three_threshold 从 0.85（实际默认）调到 0.92 是相对积极的提升，老项目运行 ink-write 时若黄金三章历史得分在 0.85-0.92 区间会新触发 hard block——属于预期行为，可通过 audit_mode=relaxed 临时降级
+  - rules.json 现按 EW-XXXX 自然增长，未做类别分桶；retriever 通过 `category` 字段分桶检索（参见 retriever.py），新增 prose_* 4 类别会自动进入检索池无需迁移
+---
+
 ## 2026-04-17 - US-016
 - 实现：polish-agent 新增 Layer 9 文笔冲击力润色（9a 镜头/9b 感官/9c 信息密度/9d 句式 + 9z Layer 6A+6B 等价自检），与 US-010/011/012/015 检查维度一一对应形成兜底闭环
 - 变更文件：

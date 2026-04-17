@@ -267,7 +267,7 @@
         "Typecheck passes"
       ],
       "priority": 17,
-      "passes": false,
+      "passes": true,
       "notes": "editor-wisdom RAG 已有 288 份编辑建议，新增的文笔规则需要符合同样的格式（条件→规则→严重度→修复建议）。"
     },
     {
