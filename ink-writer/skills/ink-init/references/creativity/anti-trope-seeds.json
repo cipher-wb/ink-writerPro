@@ -1,7 +1,7 @@
 {
   "$schema": "./anti-trope-seeds-schema.json",
-  "version": "v1.8",
-  "total": 800,
+  "version": "v1.9",
+  "total": 900,
   "categories": [
     {
       "id": "profession",
@@ -102,6 +102,12 @@
       "date": "2026-04-17",
       "delta": 100,
       "note": "Batch 8/10 禁忌语言类入库。分布 R1/R2/R3/R4/R5 = 5/20/25/30/20；R4+R5=50%，R5=20%。20 条用户 review 通过 (source=human)，80 条 LLM 生成 (source=llm)。WebSearch 反查已剔除起点+番茄双平台高频禁忌语言套路（道家流行咒临兵斗者皆阵列在前/急急如律令/天地无极乾坤借法；江湖老梗切口天王盖地虎宝塔镇河妖；二次元日式敬语様さんちゃん；哈利波特咒；六字真言堆砌；D&D 系统咒）。策略：方言讳字 / 职业行话 / 地域切口 / 仪式词 / 冷门民族祈祷 / 失传古文字片段。100 条覆盖中国八大方言讳字（粤闽潮吴湘客川晋）+ 行业黑话（刑警/铁路/法医/地铁/殡仪/邮差/码头/中医/十三行/戏班）+ 冷门民族祈祷语（萨满/摩尼/琉球/布朗/纳西/阿昌/锡伯/鄂温克/赫哲/京/拉祜/黎/京族/哈萨克/瑶/侗/畲/苗/门巴/珞巴/塔吉克/回/藏/水/象雄）+ 失传古文字（西夏/契丹/楔形/古希腊/凯尔特/卢恩/回鹘/吐火罗/Bon/阿卡德）。"
+    },
+    {
+      "version": "v1.9",
+      "date": "2026-04-17",
+      "delta": 100,
+      "note": "Batch 9/10 身体特征类入库。分布 R1/R2/R3/R4/R5 = 5/20/25/30/20；R4+R5=50%，R5=20%。20 条用户 review 通过 (source=human)，80 条 LLM 生成 (source=llm)。WebSearch 反查已剔除起点+番茄双平台高频身体特征套路（异色瞳紫瞳金瞳红瞳/白发红眼/玛丽苏绝色冰肌/霸总1.8米八块腹肌/修仙仙骨灵根丹田/反派额疤独眼断臂/吸血鬼苍白尖牙/二次元猫耳狐尾/梗化胎记凤凰徽记图腾）。策略：细小的、真实可观察的身体特征——微小疤痕 / 不对称 / 习惯性小动作 / 细部纹理 / 生理微反应。直接激活 M04（角色错位）+ M01（代价可视化）。"
     }
   ],
   "seeds": [
@@ -10562,6 +10568,1256 @@
         "history"
       ],
       "example_pairing": "与 mythology『苏美尔·吉尔伽美什失永生草的沙地』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-002",
+      "category": "body_feature",
+      "value": "右手食指比左手食指长半毫米",
+      "rarity": 1,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 profession『钟表匠学徒』搭配，激活 M04。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "body_feature-003",
+      "category": "body_feature",
+      "value": "左耳垂有一个没穿过耳洞的小孔",
+      "rarity": 1,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『对从未发生的遗憾的具体怀念』搭配，激活 M04+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "body_feature-004",
+      "category": "body_feature",
+      "value": "笑的时候左边嘴角先动",
+      "rarity": 1,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『被表白后短暂厌恶对方的惊讶』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-005",
+      "category": "body_feature",
+      "value": "右膝盖小时跳皮筋摔的疤",
+      "rarity": 1,
+      "genre_tags": [
+        "realistic",
+        "universal"
+      ],
+      "example_pairing": "与 era『开学第一周』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-006",
+      "category": "body_feature",
+      "value": "说话时下巴会微微前伸",
+      "rarity": 1,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『被夸耀时想要打断对方的冲动』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-007",
+      "category": "body_feature",
+      "value": "左肩胛一道旧烫伤的月牙形疤",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic",
+        "history"
+      ],
+      "example_pairing": "与 era『1958 年大炼钢铁第一个春天』搭配，激活 M01+M05。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M05"
+      ]
+    },
+    {
+      "seed_id": "body_feature-008",
+      "category": "body_feature",
+      "value": "右眼视力比左眼弱半档",
+      "rarity": 2,
+      "genre_tags": [
+        "urban",
+        "mystery"
+      ],
+      "example_pairing": "与 profession『法医助理』搭配，激活 M04+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "body_feature-009",
+      "category": "body_feature",
+      "value": "锁骨中间一颗指甲盖大的痣",
+      "rarity": 2,
+      "genre_tags": [
+        "romance",
+        "universal"
+      ],
+      "example_pairing": "与 object『一条常年戴着的银项链』搭配，激活 M04+M06。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "body_feature-010",
+      "category": "body_feature",
+      "value": "手腕内侧一道几乎褪去的割痕",
+      "rarity": 2,
+      "genre_tags": [
+        "mystery",
+        "urban"
+      ],
+      "example_pairing": "与 emotion『被原谅之后的不适』搭配，激活 M01+M07。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M01",
+        "M07"
+      ]
+    },
+    {
+      "seed_id": "body_feature-011",
+      "category": "body_feature",
+      "value": "左手拇指指甲比右手宽",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 profession『玉雕学徒』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-012",
+      "category": "body_feature",
+      "value": "下嘴唇正中有一道浅裂",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『说出重话之后假装一切如常的克制』搭配，激活 M04+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-013",
+      "category": "body_feature",
+      "value": "后颈有三根特别黑的毛",
+      "rarity": 2,
+      "genre_tags": [
+        "mystery",
+        "universal"
+      ],
+      "example_pairing": "与 emotion『被人注视到发痒的后颈』搭配，激活 M06+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-014",
+      "category": "body_feature",
+      "value": "右手小指关节常年红肿",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic"
+      ],
+      "example_pairing": "与 profession『茶馆学徒』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-015",
+      "category": "body_feature",
+      "value": "右耳耳蜗里一颗天生的红点",
+      "rarity": 2,
+      "genre_tags": [
+        "mystery",
+        "universal"
+      ],
+      "example_pairing": "与 taboo『夜半钟响不得应声』搭配，激活 M04+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-016",
+      "category": "body_feature",
+      "value": "右手背一枚硬币大的色素沉淀",
+      "rarity": 2,
+      "genre_tags": [
+        "realistic"
+      ],
+      "example_pairing": "与 era『1985 年彩电凭票供应最后一周』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-017",
+      "category": "body_feature",
+      "value": "左眼下方一道细细的泪痕",
+      "rarity": 2,
+      "genre_tags": [
+        "romance",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『无法为理应难过之事哭出来的困惑』搭配，激活 M04+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-018",
+      "category": "body_feature",
+      "value": "一哭左脸会先变红",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『被说「你变了」之后的虚假坚守』搭配，激活 M04+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-019",
+      "category": "body_feature",
+      "value": "睡觉时左眼会先闭上",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 conflict『劝服另一个时空的自己不要救自己』搭配，激活 M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-020",
+      "category": "body_feature",
+      "value": "大拇指向后弯能超过 90 度",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 profession『手风琴演奏员』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-021",
+      "category": "body_feature",
+      "value": "睁眼瞬间右眼先开",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 conflict『必须让昨日的自己刺杀今日的自己』搭配，激活 M04+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-022",
+      "category": "body_feature",
+      "value": "右耳道比左耳深一点",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 worldview『每个人只能听见一种频段的真话』搭配，激活 M03+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-023",
+      "category": "body_feature",
+      "value": "左手比右手长半厘米",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 taboo『写信给尚未出生的人须用左手』搭配，激活 M04+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-024",
+      "category": "body_feature",
+      "value": "右边眉毛比左边浓",
+      "rarity": 2,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『忽然想起童年伙伴名字时的自责』搭配，激活 M04+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-025",
+      "category": "body_feature",
+      "value": "后腰一颗永不褪色的红痣",
+      "rarity": 2,
+      "genre_tags": [
+        "romance",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『真正爱过的人月底听见一次敲门声』搭配，激活 M04+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-026",
+      "category": "body_feature",
+      "value": "脖子右侧一颗随情绪变深的痣",
+      "rarity": 2,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 worldview『心跳加速时胸前小痣变深』回声搭配，激活 M04+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-027",
+      "category": "body_feature",
+      "value": "脚底长着一颗朝外的痣",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『畲族盘瓠王夜里走过的桥』搭配，激活 M04+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "body_feature-028",
+      "category": "body_feature",
+      "value": "胸口正中央一道新月形胎记",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『孩子乳牙里藏着父母出生前的秘密』搭配，激活 M04+M06。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M04",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "body_feature-029",
+      "category": "body_feature",
+      "value": "眼角走向和母亲几乎重合",
+      "rarity": 3,
+      "genre_tags": [
+        "urban",
+        "realistic"
+      ],
+      "example_pairing": "与 emotion『照镜发现自己变得像母亲的一瞬』搭配，激活 M06+M04。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M04"
+      ]
+    },
+    {
+      "seed_id": "body_feature-030",
+      "category": "body_feature",
+      "value": "食指无意识摩挲拇指的习惯",
+      "rarity": 3,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『看陌生人做出自己私密动作的狼狈』搭配，激活 M06+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "body_feature-031",
+      "category": "body_feature",
+      "value": "右手掌心一道月牙形旧伤",
+      "rarity": 3,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 worldview『左手掌有一条只属于自己的时间线』搭配，激活 M05+M01。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "body_feature-032",
+      "category": "body_feature",
+      "value": "左手指纹在无名指上缺失",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『替他人签字须先签自己名再涂掉』搭配，激活 M03+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-033",
+      "category": "body_feature",
+      "value": "鼻梁下一颗因紧张变色的小痣",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "urban"
+      ],
+      "example_pairing": "与 emotion『被爱人误解却选择不解释的宁愿』搭配，激活 M04+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-034",
+      "category": "body_feature",
+      "value": "舌尖一小块终年麻木",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『神农尝百草漏尝的一种』搭配，激活 M01+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-035",
+      "category": "body_feature",
+      "value": "左耳听不见某一特定频率",
+      "rarity": 3,
+      "genre_tags": [
+        "scifi",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『每个人只能听见一种频段的真话』搭配，激活 M03+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-036",
+      "category": "body_feature",
+      "value": "呼吸时胸腔比肋骨先动",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『说服永远无法开口的证人作证』搭配，激活 M04+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-037",
+      "category": "body_feature",
+      "value": "脚背正中一道绳索勒痕旧疤",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "history"
+      ],
+      "example_pairing": "与 era『唐朝安史之乱前第七年夏收』搭配，激活 M01+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-038",
+      "category": "body_feature",
+      "value": "耳垂背后有一颗隐秘胎记",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "xianxia"
+      ],
+      "example_pairing": "与 taboo『收养之子五岁生日前不得改姓』搭配，激活 M06+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-039",
+      "category": "body_feature",
+      "value": "指甲半月痕比常人多一层",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『说谎者 24 小时后嘴唇发黑』搭配，激活 M04+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-040",
+      "category": "body_feature",
+      "value": "说谎时左手会无意识握拳",
+      "rarity": 3,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 conflict『不说谎的前提下让所有人都误会自己』搭配，激活 M03+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-041",
+      "category": "body_feature",
+      "value": "额头正中一颗小时留下的疤",
+      "rarity": 3,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 era『1986 年义务教育法颁布那天』搭配，激活 M01+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-042",
+      "category": "body_feature",
+      "value": "声带两道平行的旧痕",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "xianxia"
+      ],
+      "example_pairing": "与 conflict『让自己的声音从所有录音消失』搭配，激活 M06+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-043",
+      "category": "body_feature",
+      "value": "鼻尖左侧一根永远拔不掉的黑毛",
+      "rarity": 3,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『被表白后短暂厌恶对方的惊讶』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-044",
+      "category": "body_feature",
+      "value": "下颌一侧长着多余的小臼齿",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery"
+      ],
+      "example_pairing": "与 profession『牙科诊所前台』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-045",
+      "category": "body_feature",
+      "value": "左边锁骨比右边低半厘米",
+      "rarity": 3,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 emotion『被夸耀时想要打断对方的冲动』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-046",
+      "category": "body_feature",
+      "value": "左右眉弓的角度差 3 度",
+      "rarity": 3,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 profession『素描老师』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-047",
+      "category": "body_feature",
+      "value": "心脏位置偏右一厘米",
+      "rarity": 3,
+      "genre_tags": [
+        "scifi",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『把自己的心跳写下后不得读出』搭配，激活 M04+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-048",
+      "category": "body_feature",
+      "value": "虹膜颜色带微弱金斑",
+      "rarity": 3,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『初见时对方眼眶里短暂出现你的姓氏』搭配，激活 M04+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-049",
+      "category": "body_feature",
+      "value": "前额发际线中间一道浅凹陷",
+      "rarity": 3,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 profession『理发师』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-050",
+      "category": "body_feature",
+      "value": "左手食指背一道被咬过的牙印",
+      "rarity": 3,
+      "genre_tags": [
+        "universal",
+        "mystery"
+      ],
+      "example_pairing": "与 emotion『自己得救时想起未得救陌生人的羞耻』搭配，激活 M01+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-051",
+      "category": "body_feature",
+      "value": "右脚脚心一颗会生长的痣",
+      "rarity": 3,
+      "genre_tags": [
+        "mystery",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『每件物品记得最后一次被触摸的温度』搭配，激活 M04+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-052",
+      "category": "body_feature",
+      "value": "颈下一撮天生的柔毛",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『山海经·英招身为马而人面』搭配，激活 M06+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "body_feature-053",
+      "category": "body_feature",
+      "value": "舌根下一枚米粒大的银疤",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "xianxia"
+      ],
+      "example_pairing": "与 conflict『说服永远无法开口的证人作证』搭配，激活 M03+M01。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M01"
+      ]
+    },
+    {
+      "seed_id": "body_feature-054",
+      "category": "body_feature",
+      "value": "无名指指纹跟食指指纹完全一样",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "scifi"
+      ],
+      "example_pairing": "与 profession『刑事科学技术员』搭配，激活 M03+M06。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "body_feature-055",
+      "category": "body_feature",
+      "value": "右耳耳垂比左耳长一截",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『山海经·奢比尸之人耳长于口三寸』搭配，激活 M06+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "body_feature-056",
+      "category": "body_feature",
+      "value": "右手小指天生比左手短一毫米",
+      "rarity": 4,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 conflict『要同时赢两场你无法公开参加的比赛』搭配，激活 M03+M06。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M03",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "body_feature-057",
+      "category": "body_feature",
+      "value": "瞳孔颜色不对称",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『陌生人第一次对视能读出对方一个后悔』搭配，激活 M06+M03。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M03"
+      ]
+    },
+    {
+      "seed_id": "body_feature-058",
+      "category": "body_feature",
+      "value": "胸口一道只能在月光下看见的纹路",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『夜里听雨须先唤一个已死之人』搭配，激活 M04+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-059",
+      "category": "body_feature",
+      "value": "右肩胛骨下一枚蝶翼形浅纹",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『苗族蝴蝶妈妈生十二蛋的顺序』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-060",
+      "category": "body_feature",
+      "value": "手腕处一圈浅浅的勒痕",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "urban"
+      ],
+      "example_pairing": "与 emotion『对自己仓皇时的温柔』搭配，激活 M01+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-061",
+      "category": "body_feature",
+      "value": "额角一颗会忽隐忽现的痣",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每当有人忘了你你便短暂失忆一次』搭配，激活 M08+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-062",
+      "category": "body_feature",
+      "value": "左胸上方一颗随心跳变深的浅痣",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 worldview『心跳加速时胸前小痣微微变深』搭配，激活 M04+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-063",
+      "category": "body_feature",
+      "value": "一粒从不褪色的胎记沉到骨缝",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『必须对抗一个由自己记忆构成的敌人』搭配，激活 M07+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-064",
+      "category": "body_feature",
+      "value": "掌心一道月牙形常磨的浅纹",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "xianxia"
+      ],
+      "example_pairing": "与 mythology『精卫填海带回的第一枚石子』搭配，激活 M01+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-065",
+      "category": "body_feature",
+      "value": "左眼角下方一道泪痣",
+      "rarity": 4,
+      "genre_tags": [
+        "romance",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『每条河下游能听见上游承诺』搭配，激活 M04+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-066",
+      "category": "body_feature",
+      "value": "眉骨高出常人半分",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『满族长白山鳌花鱼的三次变脸』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-067",
+      "category": "body_feature",
+      "value": "虎牙比常人略长",
+      "rarity": 4,
+      "genre_tags": [
+        "universal"
+      ],
+      "example_pairing": "与 worldview『早晨六点整所有人牙齿微凉』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-068",
+      "category": "body_feature",
+      "value": "舌头侧面一道看不清的浅裂",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery"
+      ],
+      "example_pairing": "与 taboo_language『古藏 Bon 教密咒不得念满九遍』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-069",
+      "category": "body_feature",
+      "value": "右肩胛一道天生的新月疤",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 mythology『藏族格萨尔王失而复得的护心镜』搭配，激活 M06+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-070",
+      "category": "body_feature",
+      "value": "右耳后一颗与故人同位的浅痣",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "universal"
+      ],
+      "example_pairing": "与 conflict『必须阻止所有人记起一个已死去的朋友』搭配，激活 M06+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-071",
+      "category": "body_feature",
+      "value": "背部一处童年烫伤的痕迹",
+      "rarity": 4,
+      "genre_tags": [
+        "realistic",
+        "universal"
+      ],
+      "example_pairing": "与 emotion『被恶意攻击时忽然回到童年的缩小』搭配，激活 M06+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-072",
+      "category": "body_feature",
+      "value": "喉结处一颗会跳动的浅痣",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 body_feature 自指：对 worldview-022『真话打喷嚏』搭配，激活 M04+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-073",
+      "category": "body_feature",
+      "value": "左手无名指永远比右手略肿",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "romance"
+      ],
+      "example_pairing": "与 conflict『在离婚协议上签下不相关之人的名字』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-074",
+      "category": "body_feature",
+      "value": "耳道里残留的海水的咸味",
+      "rarity": 4,
+      "genre_tags": [
+        "apocalypse",
+        "universal"
+      ],
+      "example_pairing": "与 era『2004 年印度洋海啸次日』搭配，激活 M01+M05。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-075",
+      "category": "body_feature",
+      "value": "小指第二节的细纹每年多一道",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每次被背叛背叛者手指多一道纹』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-076",
+      "category": "body_feature",
+      "value": "胸前一道弓弦磨出的茧",
+      "rarity": 4,
+      "genre_tags": [
+        "history",
+        "xianxia"
+      ],
+      "example_pairing": "与 profession『猎户传人』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-077",
+      "category": "body_feature",
+      "value": "额头正中一道命字形的细痕",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『名字里藏着能杀死自己的那一笔』搭配，激活 M06+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-078",
+      "category": "body_feature",
+      "value": "头发长得比常人略快",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『说秘密瞬间听者头发略变长』搭配，激活 M01+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-079",
+      "category": "body_feature",
+      "value": "瞳孔里有一环不易察觉的灰",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 emotion『被自己的梦抛弃时的孤绝』搭配，激活 M04+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-080",
+      "category": "body_feature",
+      "value": "右手掌纹少一条生命线",
+      "rarity": 4,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『不得把自己的死亡日告诉相信者』搭配，激活 M03+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-081",
+      "category": "body_feature",
+      "value": "脚踝一圈看得见的锁链印",
+      "rarity": 4,
+      "genre_tags": [
+        "mystery",
+        "history"
+      ],
+      "example_pairing": "与 era『伪满康德十年新京立春』搭配，激活 M01+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-082",
+      "category": "body_feature",
+      "value": "胎记形状是自己未出生前一个梦",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 worldview『每人一生都是别人做过的一个梦』搭配，激活 M05+M06。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M06"
+      ]
+    },
+    {
+      "seed_id": "body_feature-083",
+      "category": "body_feature",
+      "value": "影子比自己矮两寸",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『不得让自己影子先迈步过门槛』搭配，激活 M06+M08。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M06",
+        "M08"
+      ]
+    },
+    {
+      "seed_id": "body_feature-084",
+      "category": "body_feature",
+      "value": "瞳孔里映出不属于这世界的光",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "xianxia"
+      ],
+      "example_pairing": "与 era『玛雅长计历 13.0.0.0.0 东八区凌晨』搭配，激活 M05+M10。",
+      "source": "human",
+      "meta_rules_hit": [
+        "M05",
+        "M10"
+      ]
+    },
+    {
+      "seed_id": "body_feature-085",
+      "category": "body_feature",
+      "value": "心脏每一次跳动声音不同",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『把自己的心跳写下后不得读出』搭配，激活 M04+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-086",
+      "category": "body_feature",
+      "value": "手心里藏着一个别人看不见的字",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 conflict『让一本尚未写出的书提前自毁』搭配，激活 M03+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-087",
+      "category": "body_feature",
+      "value": "身上比常人少一块肌肉",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "xianxia"
+      ],
+      "example_pairing": "与 conflict『主角必须证明自己从未存在』搭配，激活 M04+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-088",
+      "category": "body_feature",
+      "value": "血的温度比体温低三度",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 worldview『死亡是借来的寿命须还给最后见死者』搭配，激活 M01+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-089",
+      "category": "body_feature",
+      "value": "指甲上浮现过的三行古文",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo_language『失传回鹘文「太阳」写错者须焚』搭配，激活 M03+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-090",
+      "category": "body_feature",
+      "value": "眼泪蒸发速度比常人快",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 emotion『无法为理应难过之事哭出来的困惑』搭配，激活 M04+M07。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-091",
+      "category": "body_feature",
+      "value": "呼吸比常人慢一拍",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "xianxia"
+      ],
+      "example_pairing": "与 worldview『所有真话被说出前一秒已被听见』搭配，激活 M05+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-092",
+      "category": "body_feature",
+      "value": "头发里有一根天生是银色",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『说谎者 24 小时后嘴唇发黑』搭配，激活 M04+M01。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-093",
+      "category": "body_feature",
+      "value": "骨骼里多了一块没有名字的小骨",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "xianxia"
+      ],
+      "example_pairing": "与 profession『骨密度扫描仪校准员』搭配，激活 M04+M10。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-094",
+      "category": "body_feature",
+      "value": "手指在数数时总多出一个",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "scifi"
+      ],
+      "example_pairing": "与 conflict『让两个互斥的真相同时为真』搭配，激活 M10+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-095",
+      "category": "body_feature",
+      "value": "身上一处永远不长汗毛",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『不得同时梦见自己与自己的名字』搭配，激活 M04+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-096",
+      "category": "body_feature",
+      "value": "皮肤在月圆夜会微微透光",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 taboo『谎话在当日月圆时被墙壁记住』搭配，激活 M04+M08。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-097",
+      "category": "body_feature",
+      "value": "心跳与人对视时会共振",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "romance"
+      ],
+      "example_pairing": "与 emotion『陌生人第一次对视能读出对方一个后悔』搭配，激活 M04+M03。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-098",
+      "category": "body_feature",
+      "value": "牙齿不透 X 光",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "mystery"
+      ],
+      "example_pairing": "与 profession『口腔影像科技师』搭配，激活 M03+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-099",
+      "category": "body_feature",
+      "value": "脚印留下的时间比踩踏瞬间长",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『每件物品记得最后一次被触摸的温度』搭配，激活 M05+M04。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-100",
+      "category": "body_feature",
+      "value": "体内某处一直有两个心脏声",
+      "rarity": 5,
+      "genre_tags": [
+        "scifi",
+        "xianxia"
+      ],
+      "example_pairing": "与 conflict『与自己合谋谋杀自己的另一个版本』搭配，激活 M04+M06。",
+      "source": "llm"
+    },
+    {
+      "seed_id": "body_feature-101",
+      "category": "body_feature",
+      "value": "照镜时少一道影子",
+      "rarity": 5,
+      "genre_tags": [
+        "xianxia",
+        "mystery"
+      ],
+      "example_pairing": "与 worldview『所有镜子记录上一被照者相貌一整天』搭配，激活 M06+M08。",
       "source": "llm"
     }
   ]
