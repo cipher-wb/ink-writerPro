@@ -34,7 +34,9 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 7. `references/creativity/perturbation-engine.md`（L1 必读）—— Layer 3 扰动引擎规格；定义扰动对抽取算法、5 种模式、档位 N 矩阵、3 套方案整对去重，Quick Step 1 必须按本规格生成 `perturbation_pairs` 字段。
 8. `references/creativity/golden-finger-rules.md`（L1 必读）—— 金手指三重硬约束（GF-1 非战力维度 / GF-2 代价可视化 / GF-3 一句话爆点）+ 禁止词列表 ≥20 + 校验算法 + 降档逻辑，Quick Step 1.5 校验标尺。
 9. `references/creativity/style-voice-levels.md`（L1 必读）—— 语言风格三档分级（V1 文学狂野 / V2 烟火接地气 / V3 江湖野气）+ 敏感词 L0-L3 四级分类 + 档位×密度矩阵，Quick Step 1.6 分配标尺。
-10. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
+10. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/nicknames.json`（L1 必读）—— 江湖绰号库 ≥100 条，每条含 `rarity(1-5)` 与 `style_tags`；V3 档主力素材，V1 档冷峻配角可借用 `rough` 标签子集。
+11. `${CLAUDE_PLUGIN_ROOT}/../../data/naming/book-title-patterns.json`（L1 必读）—— V1/V2/V3 三档各 50+ 条书名模板，每条含 `rhetoric_tags`（7 种修辞：pun/homophone/antithesis/irony/oxymoron/concrete_abstract/anachronism），Quick Step 1.7 书名生成与修辞标签标注的抽取池。
+12. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
 
 ## Quick Step 1：生成 3 套差异化方案
 
@@ -152,6 +154,38 @@ vocabulary_allowlist: ["L0", "L1"?, "L2"?]
 ```
 
 以上字段由 Quick Step 2 创意指纹板块「语言档位」直接消费。
+
+## Quick Step 1.7：书名与人名校验
+
+对 Quick Step 1/1.5/1.6 产出的 3 套方案逐套做书名与人名的黑名单校验与修辞标签标注。
+
+### 书名校验
+
+1. 从 `book-title-patterns.json` 对应 V1/V2/V3 档位的桶里抽取模板作为候选（档位 4 疯批允许混抽高稀缺 V3 + V1）。
+2. 候选书名对照 `blacklist.json.book_title_suffix_ban.tokens` 与 `book_title_prefix_ban.tokens` 做子串检测；命中任一立即丢弃重抽（最多 5 次）。
+3. 最终书名输出 `title_rhetoric_tags`（多选自 7 种修辞），取自该模板 `rhetoric_tags`；若模板标签数 <1 需自行推断至少 1 个合法标签。
+4. 3 套方案的 `title_rhetoric_tags` 两两不得完全相同（至少 1 个差异 tag）。
+
+### 人名校验
+
+1. 主角/核心配角名继续走 Quick Step 1 的 `surnames.json + given_names.json`（`given_names.json` 新增 `rough/smoky/jianghu` 桶，与 V1/V2/V3 档位映射：V1→rough、V2→smoky、V3→jianghu，默认从对应桶抽字）。
+2. 若方案为 V3 档，核心绰号从 `nicknames.json` 挑选 `rarity ≥3` 且 `style_tags` 含 `jianghu` 的条目作为「主角外号」。
+3. 全名命中 `blacklist.json.male/female` 列表 → 丢弃重抽。
+4. 全名拆成「姓」与「名末字」，分别对照 `blacklist.json.name_combo_ban.surname_tokens × given_suffix_tokens` 笛卡儿积；命中任一组合直接丢弃重抽（即便不在 male/female 列表中）。
+5. 3 套方案之间的角色姓名不得重复。
+
+### 输出字段（每套方案）
+
+```
+title_rhetoric_tags: ["irony", "oxymoron"]          # 数组，≥1 且 ∈ rhetoric_enum
+nickname?: "刀疤阿九"                                 # 仅 V3 档必填
+name_checks:
+  combo_ban_hit: false
+  blacklist_hit: false
+  retry_count: 0-5
+```
+
+未通过时同步写入 `name_retry_log`，由 Quick Step 2 末尾汇总。
 
 ## Quick Step 2：用户选择与方案确定
 

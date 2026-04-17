@@ -109,8 +109,8 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "given_names.json 新增 rough/smoky/jianghu 三桶（male=34 female=30 各 64 条）；nicknames.json 110 条含 rarity+style_tags；book-title-patterns.json V1=54/V2=57/V3=59 条（总 170+），7 修辞标签覆盖计数 pun=13/homophone=11/antithesis=13/irony=81/oxymoron=23/concrete_abstract=45/anachronism=56 全部 ≥10；blacklist.json 扩展后缀 19 条+前缀 14 条+name_combo_ban（7 姓×8 字末字笛卡儿积禁用）；SKILL.md Quick Step 0 加载列表新增第 10/11 条，第 12 条保留题材 anti-trope；Quick Step 1.7 书名/人名校验子步骤插入在 1.6 和 2 之间。"
     },
     {
       "id": "US-007",
