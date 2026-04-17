@@ -95,7 +95,7 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "参考 combat-scenes.md 中的镜头切换示例模式。writer-agent 现有 L10a/b/c，L10d 紧跟其后。"
     },
     {
