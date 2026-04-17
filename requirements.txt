@@ -4,3 +4,12 @@
 # 以下为宽松版本约束（用于开发 / 无 lock 文件场景）：
 -r ink-writer/scripts/requirements.txt
 -r ink-writer/dashboard/requirements.txt
+
+# ink_writer/ Python 包的核心依赖（Step 2 US-001 补齐，v5 审计之前未声明）
+# 干净 runner 上若缺失将导致 ink_writer/editor_wisdom, style_rag, semantic_recall 等模块 ImportError
+numpy~=2.4                    # 数值计算（FAISS / embedding 基础）
+faiss-cpu~=1.13               # 向量检索引擎（editor_wisdom / style_rag / semantic_recall）
+PyYAML~=6.0                   # 配置文件解析（import yaml）
+jsonschema~=4.26              # Schema 校验（creative fingerprint / anti-trope-seeds）
+sentence-transformers~=5.4    # 本地 Embedding（BAAI/bge-small-zh-v1.5）
+anthropic~=0.89               # Claude API 客户端（editor_wisdom classify / extract）
