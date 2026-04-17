@@ -141,3 +141,16 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - 差异性硬约束的第三项「语言档位」可复用 Quick Step 1.6 已硬约束的 V1/V2/V3 各占一档，不需额外校验逻辑；真正需要 Step 1 自检的只有前两项（元规则集合 + 扰动对）。
   - US-011 「SKILL.md ≤900 行」约束下，US-008 新增约 28 行；后续 US-009/010/011 若继续新增段落，需考虑把 Deep Mode 与 Quick Mode 的共享模板抽到 reference 文件以压缩主文。
 ---
+
+## 2026-04-17 - US-011
+- SKILL.md 流程整合与清理：frontmatter description 更新（新增「4 档激进度 + 三层创意体系」），修复 `### 命名规则` 重复 heading（原 203-204 行），合并 Quick Step 0.5「档位矩阵」与 Quick Step 1「档位驱动生成参数」重复表格（Step 1 保留粗口密度映射 + 指针，主表在 0.5），Step 2 标题调整为「方案输出（含创意指纹）与用户选择」对齐 PRD 8 步骤命名。
+- 压缩冗余（不改语义）：内部数据模型 JSON（80 行 → 9 行紧凑字段列表）、执行生成 CLI 参数（38 行 → 17 行分组单行）、References 逐文件清单（70 行 → 17 行单行条目）、RAG 配置引导（30 行 → 8 行三选一）、Quick Step 3 US-xxx 自动填充三块（30 行 → 合并为「自动填充三件套」编号列表）。
+- 行数 1088→895（≤900 达标），links 经 `ls references/creativity/` 验证全存在。
+- Files changed: 1（编辑 SKILL.md）。
+- **Learnings for future iterations:**
+  - allowed-tools 一行已含 Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch，无需改动；未来若新增 MCP 工具须在此声明。
+  - Step 2 创意指纹板块硬约束「3 套差异化」与 Step 1 差异化约束有语义重叠但视角不同（Step 1 看方案，Step 2 看指纹），两处保留不合并以便失败时分层退回。
+  - 档位矩阵单一事实源：Quick Step 0.5 的 4×5 表；Quick Step 1 只保留粗口密度映射（跨档位参数集变更必须回 0.5 同步）。
+  - 8 步骤 Quick Mode 完整序列：Step 0 加载 / 0.5 档位询问 / 1 生成 3 套 / 1.5 金手指校验 / 1.6 语言档位分配 / 1.7 书名/人名校验 / 2 输出（含指纹）+ 用户选择 / 3 自动填充与初始化；US-012/US-013/US-014 若新增步骤应在 Step 1 与 Step 2 之间插入带小数点标号保持序列紧凑。
+  - SKILL.md 行数上限守住 900：后续 US 只能等量替换/合并，不允许纯追加大段文本；下次扩展应优先在 references/ 下新建文件并在 Quick Step 0 加载列表引用。
+---
