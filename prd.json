@@ -214,8 +214,8 @@
         "Tests pass"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "筛选 22 条 EW 创意类规则并映射到 M01-M11；meta-creativity-rules.md 升级 v1.1，新增 M11 熟悉×陌生耦合（吸收 EW-0131/0128/0104/0030 等 15 条），文件汉字 2056→3293（11 条 Mxx headings）；Appendix 含桥接映射表 + 覆盖验证（主映射分布 M01×1/M03×2/M05×2/M06×1/M10×1/M11×15）+ Quick 模式消费方式三步；未纳入 10 条经营/签约类 EW 规则（EW-0021/0054/0082/0098/0124/0126/0189/0320/0350/0364）明示走 checker 原通道；编辑 editor-wisdom-checker.md 输出 JSON 新增 creative_dimensions 六键（cost_visibility/info_asymmetry/temporal_displacement/identity_contrast/scale_leap/familiar_strange_coupling）+ 评分规则表；现有 editor_wisdom 228 测试全部通过（pytest -k editor_wisdom）。"
     },
     {
       "id": "US-013",

@@ -36,6 +36,21 @@ model: inherit
 
 黄金三章（chapter ≤ 3）任一文笔维度 score < 0.85 视为 hard block，与原 `golden_three_threshold` 0.92 共同构成双重防线。
 
+## 创意维度评分（US-012）
+
+本 checker 额外输出 `creative_dimensions` 字段，对齐 Layer 1 元规则库 `meta-creativity-rules.md` 的 M01-M11（v1.1 新增 M11「熟悉×陌生耦合」）。运行时读取 Appendix 桥接表 `ew_to_meta_map`，把被违反的 EW 规则反查到主映射 Mxx，并按规则聚合。
+
+| key | 对齐元规则 | 消费 EW 桥接 | 语义 |
+|---|---|---|---|
+| `cost_visibility` | M01 | EW-0280 等 | 金手指/能力使用是否有画面化代价 |
+| `info_asymmetry` | M03 | EW-0144 / EW-0179 | 爽点是否靠信息差而非设定倾倒 |
+| `temporal_displacement` | M05 | EW-0128 / EW-0272 | 开篇/关键节点是否规避老时空模板 |
+| `identity_contrast` | M06 | EW-0180 | 身份反差是否有职业/铺垫支撑 |
+| `scale_leap` | M10 | EW-0028 | 是否在单点原地打转（换地图套路） |
+| `familiar_strange_coupling` | M11 | EW-0014 / EW-0030 / EW-0031 / EW-0086 / EW-0088 / EW-0104 / EW-0112 / EW-0114 / EW-0130 / EW-0131 / EW-0154 / EW-0178 / EW-0252 / EW-0309 / EW-0318 | 是否在「熟悉底座 + 单一陌生坐标轴」公式内 |
+
+每个 creative_dimensions 子分数 = `1 - 0.1 × hard_count - 0.05 × soft_count`（最低 0.0），未命中违规则为 1.0。综合 `score` 仍为原 4 文笔维度 + 编辑规则评分取 max，creative_dimensions 不改变 score 权重，但用于 Quick 模式反查方案质量与 US-008 创意指纹展示。
+
 ## 输入
 
 - `chapter_text`: 章节正文
@@ -55,6 +70,14 @@ model: inherit
     "sensory_richness": 0.85,
     "sentence_rhythm": 0.75,
     "info_density_uniformity": 0.80
+  },
+  "creative_dimensions": {
+    "cost_visibility": 1.0,
+    "info_asymmetry": 0.90,
+    "temporal_displacement": 1.0,
+    "identity_contrast": 1.0,
+    "scale_leap": 1.0,
+    "familiar_strange_coupling": 0.85
   },
   "violations": [
     {

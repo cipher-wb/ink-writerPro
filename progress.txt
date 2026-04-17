@@ -154,3 +154,16 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - 8 步骤 Quick Mode 完整序列：Step 0 加载 / 0.5 档位询问 / 1 生成 3 套 / 1.5 金手指校验 / 1.6 语言档位分配 / 1.7 书名/人名校验 / 2 输出（含指纹）+ 用户选择 / 3 自动填充与初始化；US-012/US-013/US-014 若新增步骤应在 Step 1 与 Step 2 之间插入带小数点标号保持序列紧凑。
   - SKILL.md 行数上限守住 900：后续 US 只能等量替换/合并，不允许纯追加大段文本；下次扩展应优先在 references/ 下新建文件并在 Quick Step 0 加载列表引用。
 ---
+
+## 2026-04-17 - US-012
+- 筛选 `data/editor-wisdom/rules.json`（388 条）中独创性/反套路/创意相关条目，保留 22 条具元规则级意义的 EW 规则（EW-0014/0028/0030/0031/0086/0088/0104/0112/0114/0128/0130/0131/0144/0154/0178/0179/0180/0252/0272/0280/0309/0318/0364 减去 0364，共 22 条）。
+- 更新 `ink-writer/skills/ink-init/references/creativity/meta-creativity-rules.md`：frontmatter version v1.0→v1.1，title M01-M10→M01-M11；新增 M11 熟悉×陌生耦合（Familiar-Strange Coupling，含核心定义/正例2/反例2/适配题材全字段，对齐原 10 条结构）；末尾追加 Appendix「M-EW 桥接规则」含 22 行映射表（EW ID/严重度/规则摘要/主映射 Mxx/挂靠说明）+ 覆盖验证（M11 承接 15 条）+ 10 条经营类 EW 排除说明 + Quick 模式三步消费方式。汉字数 2056→3293，M 级 headings 10→11。
+- 更新 `ink-writer/agents/editor-wisdom-checker.md`：新增「创意维度评分（US-012）」小节，6 键表格对齐 M01/M03/M05/M06/M10/M11；输出 JSON 模板新增 creative_dimensions 字段（cost_visibility/info_asymmetry/temporal_displacement/identity_contrast/scale_leap/familiar_strange_coupling 六子分数），分数公式复用文笔维度公式 `1 - 0.1×hard - 0.05×soft`。
+- 测试：`pytest tests/ -k editor_wisdom --tb=short` 228 passed / 0 failed（coverage 6.26% 失败仅因 -k 过滤，非本 US 引入）。
+- Files changed: 3（编辑 meta-creativity-rules.md / editor-wisdom-checker.md / prd.json，外加 progress.txt）。
+- **Learnings for future iterations:**
+  - `data/editor-wisdom/rules.json` 是 388 条 list，每条字段 id/category/rule/why/severity/applies_to/source_files，category 分 13 类（taboo/genre/ops/opening/pacing/character/hook/highpoint/prose_shot/prose_sensory/prose_rhythm/prose_density/misc）。ops/genre 类多为签约经营建议，不宜进元规则层。
+  - EW 桥接不要新增 M12+——M11「熟悉×陌生耦合」已覆盖"反套路/反抄袭/反八股/反照搬"四大类共 15 条，强塞 M12 会制造重复（PRD US-012 明示「若存在未被覆盖的新增 M11+」为触发式条款，本次未触发）。
+  - editor-wisdom-checker.md 的 dimension_scores（4 文笔维度）与新增 creative_dimensions（6 创意维度）是**并列字段**，不合并权重；综合 score 仍沿用原加权（文笔 + 编辑规则）。下游 US-008 创意指纹的「命中元规则」字段可直接消费 creative_dimensions ≥0.85 的键。
+  - 用 `python3 -c "import re; open(...).read(); ..."` 快速查 markdown 汉字数与 heading 个数是常用自检模式；PRD 未限字数时不必苛求，保持结构清晰即可。
+---
