@@ -27,6 +27,7 @@ class ChapterStatus(Enum):
     DONE = "done"
     FAILED = "failed"
     RETRYING = "retrying"
+    TIMEOUT_FAILED = "timeout_failed"  # v13 US-013
 
 
 @dataclass
@@ -55,6 +56,8 @@ class PipelineConfig:
     checkpoint_cooldown: int = 15
     platform: str = "claude"
     max_retries: int = 1
+    # v13 US-013：单章超时（秒）。默认 1800（30min），可通过 INK_CHAPTER_TIMEOUT 环境变量覆盖
+    chapter_timeout_s: int = int(os.environ.get("INK_CHAPTER_TIMEOUT", 1800))
 
     @property
     def scripts_dir(self) -> Path:
@@ -173,16 +176,30 @@ class PipelineManager:
             # 2) 清理 workflow 残留
             await self._clear_workflow()
 
-            # 3) 并发写作本批次所有章节
+            # 3) 并发写作本批次所有章节（v13 US-013：每章 asyncio.wait_for 包超时）
             tasks = [
-                self._write_single_chapter(ch, batch_idx, i + 1, len(batch))
+                asyncio.wait_for(
+                    self._write_single_chapter(ch, batch_idx, i + 1, len(batch)),
+                    timeout=self.config.chapter_timeout_s,
+                )
                 for i, ch in enumerate(batch)
             ]
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
             batch_failed = False
             for i, result in enumerate(results):
-                if isinstance(result, Exception):
+                # v13 US-013：TimeoutError 单独标记 TIMEOUT_FAILED，不阻塞其它章
+                if isinstance(result, asyncio.TimeoutError):
+                    ch_result = ChapterResult(
+                        chapter=batch[i],
+                        status=ChapterStatus.TIMEOUT_FAILED,
+                        error=f"章节超时（>{self.config.chapter_timeout_s}s）",
+                        start_time=time.time(),
+                        end_time=time.time(),
+                    )
+                    report.results.append(ch_result)
+                    batch_failed = True
+                elif isinstance(result, Exception):
                     ch_result = ChapterResult(
                         chapter=batch[i],
                         status=ChapterStatus.FAILED,
