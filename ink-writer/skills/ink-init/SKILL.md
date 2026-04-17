@@ -33,7 +33,8 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 6. `references/creativity/anti-trope-seeds.json`（L1 必读）—— Layer 2 种子库骨架，扰动引擎抽取稀缺元素来源；skeleton 期 example 种子即可，1000 条正式种子由 Phase-Seed-1 交互会话补全，详见 `anti-trope-seeds-roadmap.md`。
 7. `references/creativity/perturbation-engine.md`（L1 必读）—— Layer 3 扰动引擎规格；定义扰动对抽取算法、5 种模式、档位 N 矩阵、3 套方案整对去重，Quick Step 1 必须按本规格生成 `perturbation_pairs` 字段。
 8. `references/creativity/golden-finger-rules.md`（L1 必读）—— 金手指三重硬约束（GF-1 非战力维度 / GF-2 代价可视化 / GF-3 一句话爆点）+ 禁止词列表 ≥20 + 校验算法 + 降档逻辑，Quick Step 1.5 校验标尺。
-9. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
+9. `references/creativity/style-voice-levels.md`（L1 必读）—— 语言风格三档分级（V1 文学狂野 / V2 烟火接地气 / V3 江湖野气）+ 敏感词 L0-L3 四级分类 + 档位×密度矩阵，Quick Step 1.6 分配标尺。
+10. 根据随机题材方向加载对应 `references/creativity/anti-trope-*.md`（L2 按需）。
 
 ## Quick Step 1：生成 3 套差异化方案
 
@@ -118,6 +119,39 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 
 - `gf_checks` 字段（每套方案一组 3 元 0/1 数组）—— Quick Step 2 创意指纹板块消费。
 - `gf_downgrade_log` 数组（如空则省略）—— Quick Step 2 末尾汇总。
+
+## Quick Step 1.6：语言风格三档分配
+
+参照 `references/creativity/style-voice-levels.md`，对通过金手指校验的 3 套方案强制分配 V1 / V2 / V3 三档，禁止两套同档。
+
+### 分配算法
+
+1. 按种子 `stable_hash(timestamp + genre_tuple)` 固定 `[V1, V2, V3]` 洗牌顺序，依次赋值给方案 1/2/3。
+2. 档位 1 保守：若分配到 V3 → 回退到 V1（`style_fallback: "V3→V1 (level=1)"` 写入日志），保持差异化。
+3. 档位 4 疯批：三套方案中必须至少一套 V3，否则重新分配。
+4. 题材适配度（见 style-voice-levels.md §八）仅作优先级参考，硬约束优先。
+
+### 敏感词/粗口控制
+
+- 每套方案产出 `vocabulary_allowlist`（L0 / L1 / L2 子集）。
+- 档位 × 档位密度矩阵：
+  - 档位 1 保守 = 0%（零 L1+）
+  - 档位 2 平衡 ≈ 0.2%（L0 主力，L1 ≤0.05%）
+  - 档位 3 激进 = 0.5%-0.8%（L2 仅 V3）
+  - 档位 4 疯批 = 0.8%-1.5%（L2 仅 V3）
+- L3 红线全档禁止，命中 → 方案整体重写。
+
+### 输出字段（每套方案）
+
+```
+style_voice: "V1|V2|V3"
+style_voice_name: "文学狂野|烟火接地气|江湖野气"
+density_target: "0.2%"            # 字符串带百分号，便于日志打印
+sample_line: "<5-15 字 voice 示例句>"
+vocabulary_allowlist: ["L0", "L1"?, "L2"?]
+```
+
+以上字段由 Quick Step 2 创意指纹板块「语言档位」直接消费。
 
 ## Quick Step 2：用户选择与方案确定
 

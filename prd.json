@@ -90,8 +90,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2497 汉字；V1/V2/V3 三档定义 + 人名/书名/句式库 + L0-L3 敏感词四级 + 档位×密度矩阵（0% / 0.2% / 0.5%-0.8% / 0.8%-1.5%）+ Quick Step 1.6 分配算法（stable_hash 洗牌、档位 1 V3→V1 回退、档位 4 至少一套 V3）；SKILL.md Quick Step 0 第 9 条加载 + Quick Step 1.6 插入"
     },
     {
       "id": "US-006",

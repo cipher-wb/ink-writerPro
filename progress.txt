@@ -49,6 +49,19 @@ Started: 2026年 4月17日 星期五 16时44分59秒 CST
   - PRD US-004 验收没有字数上下限，但文件内 4 个代码块（伪代码）+ 10 对比表 + 禁止词列表挤到 1104 汉字，控制得当。
 ---
 
+## 2026-04-17 - US-005
+- 新建 `ink-writer/skills/ink-init/references/creativity/style-voice-levels.md`（2497 汉字）。
+- 内容：V1 文学狂野 / V2 烟火接地气 / V3 江湖野气三档定义（人名/书名/句式样例各套）；L0-L3 四级敏感词分类 + 示例；档位×密度矩阵（档位 1 = 0% / 档位 2 ≈ 0.2% / 档位 3 = 0.5%-0.8% / 档位 4 = 0.8%-1.5%，L2 仅 V3）；Quick Step 1.6 分配算法（stable_hash 洗牌 + 档位 1 V3→V1 回退 + 档位 4 至少一套 V3）；题材×档位适配星表；V1/V2/V3 各 8 条句式落地库；常见跑偏修复表；Voice 一致性约束；与 polish-agent 去 AI 味规则衔接。
+- 修改 `ink-writer/skills/ink-init/SKILL.md`：Quick Step 0 加载列表第 9 条加入 style-voice-levels.md（L1 必读），原第 9 条题材 anti-trope-* 顺延为第 10 条；Quick Step 1.5 之后插入 Quick Step 1.6「语言风格三档分配」段落（算法/密度控制/输出字段 style_voice+style_voice_name+density_target+sample_line+vocabulary_allowlist）。
+- Files changed: 2（新增 style-voice-levels.md；编辑 SKILL.md）。
+- **Learnings for future iterations:**
+  - Quick Step 0 加载列表当前编号：1 blacklist / 2 surnames / 3 given_names / 4 genre-tropes / 5 meta-creativity-rules / 6 anti-trope-seeds / 7 perturbation-engine / 8 golden-finger-rules / 9 style-voice-levels / 10 题材 anti-trope-*。
+  - US-006（书名/人名算法升级）给 given_names.json 新增的 `rough/smoky/jianghu` 风格标签需与本文档 V1/V2/V3 档位映射：rough→V1, smoky→V2, jianghu→V3；blacklist 扩展词（神帝/龙傲天 等）在本文档 §十常见跑偏修复表已声明由 blacklist.json 拦截，US-006 实现时直接新增条目即可。
+  - US-008 创意指纹「语言档位」字段消费本文档 `style_voice + sample_line`；US-009 档位询问需把 4 档映射到本文档密度矩阵；US-010 3 套方案差异化维度包含 style_voice，本 Step 1.6 硬约束已覆盖「两两不同档」。
+  - 档位 1 保守遇 V3 时回退到 V1（而非 V2），保留最大风格差异；日志字段 `style_fallback` 命名已固定。
+  - 字数校验口径与 US-001/003 一致：`python3 -c "import re; print(len(re.findall(r'[\u4e00-\u9fff]', open(...).read())))"`。
+---
+
 ## 2026-04-17 - US-003
 - 新建 `ink-writer/skills/ink-init/references/creativity/perturbation-engine.md`（1579 汉字）。
 - 内容：扰动对定义（跨 category + 稀有度门槛）/ 档位 N 矩阵（1/2/3/5）/ 5 种模式 A-E（时代错位 / 职业反差 / 尺度错位 / 规则颠倒 / 感官替换，每种 3 示例）/ Python 伪代码（stable_hash(timestamp+genre+draft_index) 固定 RNG）/ 3 套方案整对去重 / `perturbation_pairs` schema 字段含 injection_note / 与 Layer 1/2 协作。
