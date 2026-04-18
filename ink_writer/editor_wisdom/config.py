@@ -22,7 +22,11 @@ class EditorWisdomConfig:
     enabled: bool = True
     retrieval_top_k: int = 5
     hard_gate_threshold: float = 0.75
+    # US-015: split golden-three threshold into hard (blocking) + soft (target).
+    # golden_three_threshold is kept for backward-compat (legacy single-value API).
     golden_three_threshold: float = 0.85
+    golden_three_hard_threshold: float = 0.75
+    golden_three_soft_threshold: float = 0.92
     inject_into: InjectInto = field(default_factory=InjectInto)
 
 
@@ -54,5 +58,7 @@ def load_config(path: Path | str | None = None) -> EditorWisdomConfig:
         retrieval_top_k=int(raw.get("retrieval_top_k", 5)),
         hard_gate_threshold=float(raw.get("hard_gate_threshold", 0.75)),
         golden_three_threshold=float(raw.get("golden_three_threshold", 0.85)),
+        golden_three_hard_threshold=float(raw.get("golden_three_hard_threshold", 0.75)),
+        golden_three_soft_threshold=float(raw.get("golden_three_soft_threshold", 0.92)),
         inject_into=inject,
     )

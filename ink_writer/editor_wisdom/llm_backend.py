@@ -92,11 +92,14 @@ def _call_llm_once(
             system_param = system
 
         try:
+            # v16 US-007：除 client 级 timeout 外，显式给 messages.create() 传 timeout，
+            # 确保 per-request 级别也有硬约束（SDK 两层 timeout 取最短生效）。
             response = client.messages.create(
                 model=model,
                 max_tokens=max_tokens,
                 system=system_param,
                 messages=[{"role": "user", "content": user}],
+                timeout=timeout,
             )
         except Exception as exc:
             # anthropic APITimeoutError 转 TimeoutError

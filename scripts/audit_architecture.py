@@ -33,6 +33,25 @@ AGENT_DIRS = [
     PROJECT_ROOT / "ink-writer" / "agents",
 ]
 
+# Directories whose Python files' imports count as "references" but whose
+# files themselves are NOT registered as project modules. This keeps tests
+# and scripts from appearing as unused while still letting them "use" the
+# production modules they import.
+REFERENCE_ONLY_DIRS = [
+    PROJECT_ROOT / "tests",
+]
+
+# Directories scanned for embedded python invocations in Markdown (SKILL.md,
+# task docs, audit reports). Any `from ink_writer.X` / `python -m ink_writer.X`
+# reference found in these files counts as a usage of module `ink_writer.X`.
+MD_SCAN_DIRS = [
+    PROJECT_ROOT / "ink-writer",
+    PROJECT_ROOT / "docs",
+    PROJECT_ROOT / "tasks",
+    PROJECT_ROOT / "reports",
+    PROJECT_ROOT / "scripts",
+]
+
 NGRAM_SIZE = 6
 MIN_NGRAM_TOKENS = 30
 OVERLAP_THRESHOLD = 0.35
@@ -91,13 +110,38 @@ def build_import_graph(roots: list[Path]) -> tuple[dict[str, set[str]], dict[str
     for mod, path in known_modules.items():
         raw_imports = _extract_imports(path)
         for imp in raw_imports:
-            target = imp
-            while target and target not in known_modules:
-                target = target.rsplit(".", 1)[0] if "." in target else ""
-            if target and target in known_modules and target != mod:
-                graph[mod].add(target)
+            resolved = _resolve_import_to_known(imp, known_modules)
+            if resolved and resolved != mod:
+                graph[mod].add(resolved)
 
     return dict(graph), known_modules
+
+
+def _resolve_import_to_known(
+    imp: str, known_modules: dict[str, Path]
+) -> str | None:
+    """Resolve a raw import string to a known module key.
+
+    Handles two cases:
+      1. ``imp`` already matches (or contains as prefix) a known key.
+      2. ``imp`` starts with ``ink_writer.`` but the known keys inside the
+         ``ink_writer`` root are stored without that prefix (see
+         ``_module_name_from_path``). We strip the prefix and retry.
+
+    In both cases we walk up the dotted hierarchy to find the longest match.
+    """
+    candidates: list[str] = [imp]
+    if imp.startswith("ink_writer."):
+        candidates.append(imp[len("ink_writer."):])
+    for candidate in candidates:
+        target = candidate
+        while target:
+            if target in known_modules:
+                return target
+            if "." not in target:
+                break
+            target = target.rsplit(".", 1)[0]
+    return None
 
 
 def find_cycles(graph: dict[str, set[str]]) -> list[list[str]]:
@@ -141,11 +185,15 @@ def find_cycles(graph: dict[str, set[str]]) -> list[list[str]]:
 # ---------------------------------------------------------------------------
 
 def find_unused_modules(
-    graph: dict[str, set[str]], known_modules: dict[str, Path]
+    graph: dict[str, set[str]],
+    known_modules: dict[str, Path],
+    extra_references: set[str] | None = None,
 ) -> list[str]:
     imported_anywhere: set[str] = set()
     for targets in graph.values():
         imported_anywhere.update(targets)
+    if extra_references:
+        imported_anywhere.update(extra_references)
 
     unused = []
     for mod in sorted(known_modules):
@@ -158,6 +206,133 @@ def find_unused_modules(
             continue
         unused.append(mod)
     return unused
+
+
+# ---------------------------------------------------------------------------
+# 2b. External reference scanners (tests + Markdown docs)
+# ---------------------------------------------------------------------------
+
+# Matches `from ink_writer.foo.bar` and `import ink_writer.foo.bar` inside
+# any text (including Markdown code fences, docstrings, triple-quoted blocks).
+_PY_IMPORT_RE = re.compile(
+    r"(?:from|import)\s+(ink_writer(?:\.[A-Za-z_][\w]*)+)"
+)
+
+# Matches `python -m ink_writer.foo.bar` / `python3 -m ink_writer...` shell
+# invocations that appear in Markdown instructions.
+_PY_DASH_M_RE = re.compile(
+    r"python(?:3)?\s+-m\s+(ink_writer(?:\.[A-Za-z_][\w]*)+)"
+)
+
+# Matches `python3 -c "from ink_writer.x import ..."` one-liners. We rely on
+# _PY_IMPORT_RE to pick up the inner `from ink_writer.x` once the surrounding
+# quotes are accounted for (regex is multi-line-tolerant and does not require
+# a newline between `-c "..."` and the `from`).
+
+
+def extract_test_import_references(
+    test_roots: list[Path], known_modules: dict[str, Path]
+) -> set[str]:
+    """Scan Python files under *test_roots* for imports of known modules.
+
+    Tests typically live outside the package roots (e.g. ``tests/`` at repo
+    top level), so their imports do not show up in ``build_import_graph``'s
+    edges. We still want to count those imports so that modules used only by
+    tests don't get flagged as unused dead code.
+    """
+    refs: set[str] = set()
+    for root in test_roots:
+        if not root.is_dir():
+            continue
+        for py_file in root.rglob("*.py"):
+            try:
+                tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
+            except (SyntaxError, UnicodeDecodeError):
+                continue
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    for alias in node.names:
+                        _register_external_hit(alias.name, known_modules, refs)
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    _register_external_hit(node.module, known_modules, refs)
+    return refs
+
+
+def _register_external_hit(
+    imp: str, known_modules: dict[str, Path], refs: set[str]
+) -> None:
+    """Register an external import (test/md) against known modules.
+
+    Known module keys are stored relative to their package root (e.g.
+    ``core.cli.ink`` rather than ``ink_writer.core.cli.ink``). External
+    imports typically include the ``ink_writer.`` prefix, so we try both
+    variants before walking up the dotted hierarchy.
+    """
+    candidates = {imp}
+    if imp.startswith("ink_writer."):
+        candidates.add(imp[len("ink_writer."):])
+    for cand in candidates:
+        _add_if_known(cand, known_modules, refs)
+
+
+def _add_if_known(
+    imp: str, known_modules: dict[str, Path], refs: set[str]
+) -> None:
+    """Walk up ``imp`` components, adding every matching known module."""
+    target = imp
+    while target:
+        if target in known_modules:
+            refs.add(target)
+        if "." not in target:
+            break
+        target = target.rsplit(".", 1)[0]
+
+
+def extract_md_module_references(
+    md_roots: list[Path], known_modules: dict[str, Path]
+) -> set[str]:
+    """Scan Markdown files for embedded Python invocations.
+
+    Picks up:
+      * ``from ink_writer.foo.bar import ...`` (in fenced code blocks)
+      * ``import ink_writer.foo.bar``
+      * ``python -m ink_writer.foo.bar`` / ``python3 -m ink_writer...``
+      * ``python3 -c "from ink_writer.x import y"`` one-liners
+
+    For each hit, we register the matched module and every parent module
+    (e.g. a hit on ``ink_writer.core.cli.ink`` also marks
+    ``ink_writer.core.cli``, ``ink_writer.core``, and ``ink_writer`` as
+    referenced).
+    """
+    refs: set[str] = set()
+    seen_files: set[Path] = set()
+    for root in md_roots:
+        if not root.is_dir():
+            continue
+        for md_file in root.rglob("*.md"):
+            if md_file in seen_files:
+                continue
+            seen_files.add(md_file)
+            try:
+                text = md_file.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                continue
+            for m in _PY_IMPORT_RE.finditer(text):
+                _register_md_hit(m.group(1), known_modules, refs)
+            for m in _PY_DASH_M_RE.finditer(text):
+                _register_md_hit(m.group(1), known_modules, refs)
+    return refs
+
+
+def _register_md_hit(
+    dotted: str, known_modules: dict[str, Path], refs: set[str]
+) -> None:
+    """Register a Markdown-sourced ``ink_writer.x.y`` reference.
+
+    Thin wrapper around :func:`_register_external_hit` kept for readability
+    at call sites that specifically deal with Markdown scan output.
+    """
+    _register_external_hit(dotted, known_modules, refs)
 
 
 # ---------------------------------------------------------------------------
@@ -384,6 +559,8 @@ def run_audit(
     python_packages: list[Path] | None = None,
     agent_dirs: list[Path] | None = None,
     output_path: Path | None = None,
+    test_dirs: list[Path] | None = None,
+    md_dirs: list[Path] | None = None,
 ) -> dict[str, Any]:
     if python_packages is None:
         python_packages = [
@@ -394,12 +571,26 @@ def run_audit(
         agent_dirs = [
             project_root / "ink-writer" / "agents",
         ]
+    if test_dirs is None:
+        test_dirs = [project_root / "tests"]
+    if md_dirs is None:
+        md_dirs = [
+            project_root / "ink-writer",
+            project_root / "docs",
+            project_root / "tasks",
+            project_root / "reports",
+            project_root / "scripts",
+        ]
     if output_path is None:
         output_path = project_root / "reports" / "architecture_audit.md"
 
     graph, known_modules = build_import_graph(python_packages)
     cycles = find_cycles(graph)
-    unused = find_unused_modules(graph, known_modules)
+
+    test_refs = extract_test_import_references(test_dirs, known_modules)
+    md_refs = extract_md_module_references(md_dirs, known_modules)
+    extra_refs = test_refs | md_refs
+    unused = find_unused_modules(graph, known_modules, extra_references=extra_refs)
 
     agents = parse_agents(agent_dirs)
     overlaps = detect_agent_overlaps(agents)
@@ -419,6 +610,8 @@ def run_audit(
         "overlaps": overlaps,
         "prompt_duplicates": prompt_dupes,
         "modules_scanned": len(known_modules),
+        "test_references": sorted(test_refs),
+        "md_references": sorted(md_refs),
         "report_path": str(output_path),
     }
 

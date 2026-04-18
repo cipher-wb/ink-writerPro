@@ -262,10 +262,13 @@ Tier2/Tier3 **不调用 Checker Agent**，直接通过 SQL 查询 + 统计分析
 
 ## 与 ink-auto 的集成
 
-ink-auto 在检查点自动触发宏观审查：
-- `% 20 == 0` → 自动运行 Tier2 + ink-fix 修复
-- `% 200 == 0` → 自动运行 Tier3 + ink-fix 修复
+ink-auto 在检查点自动触发宏观审查（v16 US-008 正式化 5 档分层）：
+- `% 20 == 0` → **Tier2 浅版**（子情节健康 + 冲突去重，~10min）
+- `% 50 == 0` → **Tier2 完整版** + `propagation.drift_detector` 跨章漂移检测（~15min）
+- `% 200 == 0` → **Tier3 跨卷分析**（支线健康/人物弧/承诺审计，~30min）
 
 也可手动运行：
 - `/ink-macro-review Tier2`
 - `/ink-macro-review Tier3`
+
+> **注**：Tier2 在 20/50 章两个节点触发，但"浅版 vs 完整版"的差异体现在：20 章版跳过 propagation.drift_detector（避免过早漂移检测噪声），50 章版补跑完整扫描。外部手动 `/ink-macro-review Tier2` 默认完整版。

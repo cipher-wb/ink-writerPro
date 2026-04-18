@@ -6,6 +6,8 @@ source =
     ink_writer/checker_pipeline
 omit =
     */tests/*
+    # v16 US-006：tests_data_modules 已迁移到 tests/data_modules，路径保留
+    # 兼容老缓存；主 tests/* 规则已覆盖。
     */tests_data_modules/*
     */__pycache__/*
     */frontend/*

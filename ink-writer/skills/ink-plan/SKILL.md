@@ -1,6 +1,7 @@
 ---
 name: ink-plan
 description: Builds volume and chapter outlines from the total outline, inherits creative constraints, and prepares writing-ready chapter plans. Use when the user asks for outlining or runs /ink-plan.
+allowed-tools: Read Bash AskUserQuestion
 ---
 
 # Outline Planning

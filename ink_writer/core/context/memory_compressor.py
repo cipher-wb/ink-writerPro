@@ -21,6 +21,13 @@ from typing import Any, Dict, List, Optional
 
 DEFAULT_CHAPTERS_PER_VOLUME = int(os.environ.get("INK_CHAPTERS_PER_VOLUME", "50"))
 
+# US-022: Chapter-level L1 compression defaults.
+# L1 compresses N consecutive chapter summaries down to 3-5 bullet lines,
+# keeping the runtime context pack small.  L2 remains the volume-level
+# mega-summary (LLM-driven or heuristic).
+DEFAULT_L1_WINDOW = int(os.environ.get("INK_L1_WINDOW", "8"))
+DEFAULT_L1_BULLETS = int(os.environ.get("INK_L1_BULLETS", "3"))
+
 
 def check_compression_needed(
     project_root: Path,
@@ -174,3 +181,148 @@ def save_mega_summary(
     mega_file = summaries_dir / f"vol{volume_num}_mega.md"
     mega_file.write_text(content, encoding="utf-8")
     return mega_file
+
+
+# ---------------------------------------------------------------------------
+# US-022: L1 chapter-level compression (8 chapter summaries -> 3 bullets).
+# ---------------------------------------------------------------------------
+
+_SENT_SPLIT_RE = re.compile(r"(?<=[。！？!?.])\s*")
+
+
+def _select_salient_sentences(body: str, max_sentences: int = 2) -> List[str]:
+    """从一章摘要正文里挑选最显著的 1-2 句。
+
+    启发式：
+    - 首句（主题/目标句）
+    - 最长句（通常信息密度最高 / 结果或反转）
+    - 去重 + trim
+    """
+    text = re.sub(r"\s+", " ", body or "").strip()
+    if not text:
+        return []
+    # 去掉 markdown heading 与列表符
+    text = re.sub(r"^#+\s*", "", text)
+    text = text.replace("- ", "")
+    sents = [s.strip() for s in _SENT_SPLIT_RE.split(text) if s and s.strip()]
+    if not sents:
+        return [text[:80]]
+    picks: List[str] = []
+    picks.append(sents[0])
+    if len(sents) > 1:
+        longest = max(sents[1:], key=len)
+        if longest != picks[0] and len(longest) > 8:
+            picks.append(longest)
+    # cap each sentence length to keep bullets short
+    return [s[:120] for s in picks[:max_sentences]]
+
+
+def compress_chapter_window(
+    project_root: Path,
+    end_chapter: int,
+    window: int = DEFAULT_L1_WINDOW,
+    bullet_target: int = DEFAULT_L1_BULLETS,
+    use_llm: Optional[bool] = None,
+) -> Dict[str, Any]:
+    """将最近 ``window`` 个章节摘要压缩为 ``bullet_target`` 条 bullet。
+
+    默认走纯 Python 启发式（零 LLM 费用）。设置 ``use_llm=True`` 或
+    环境变量 ``INK_USE_LLM_COMPRESSOR=1`` 时返回 ``{"prompt": ...}`` 供调用方
+    发给 LLM；实际 LLM 调用交给上层（保持本模块零外部依赖）。
+
+    Returns:
+        {
+            "chapter_range": [start, end],
+            "bullets": ["...", "..."],   # 3-5 条
+            "source_chapters": [...],
+            "mode": "heuristic" | "llm_prompt",
+            "prompt": "..."               # 仅 mode=llm_prompt 时存在
+        }
+    """
+    bullet_target = max(3, min(5, int(bullet_target or DEFAULT_L1_BULLETS)))
+    start = max(1, end_chapter - window + 1)
+    summaries_dir = project_root / ".ink" / "summaries"
+
+    entries: List[Dict[str, Any]] = []
+    for ch in range(start, end_chapter + 1):
+        ch_file = summaries_dir / f"ch{ch:04d}.md"
+        if not ch_file.exists():
+            continue
+        raw = ch_file.read_text(encoding="utf-8")
+        body = raw
+        fm_match = re.match(r"^---\n.*?\n---\n(.*)", raw, re.DOTALL)
+        if fm_match:
+            body = fm_match.group(1).strip()
+        entries.append({"chapter": ch, "body": body})
+
+    source_chapters = [e["chapter"] for e in entries]
+
+    env_force_llm = os.environ.get("INK_USE_LLM_COMPRESSOR", "").strip() == "1"
+    effective_llm = bool(use_llm) or env_force_llm
+
+    if effective_llm:
+        # Build a prompt for caller-side LLM compression.
+        lines = [
+            f"请将第{start}-{end_chapter}章共{len(entries)}条摘要压缩为{bullet_target}条 bullet，",
+            "每条 <=60 字，突出推动剧情的关键事件/角色状态变化/新伏笔。",
+            "输出严格为 markdown 列表，每行一条。",
+            "",
+        ]
+        for e in entries:
+            lines.append(f"[第{e['chapter']}章] {e['body'][:240]}")
+        return {
+            "chapter_range": [start, end_chapter],
+            "bullets": [],
+            "source_chapters": source_chapters,
+            "mode": "llm_prompt",
+            "prompt": "\n".join(lines),
+        }
+
+    # Heuristic bullet synthesis.
+    bullets: List[str] = []
+    if not entries:
+        return {
+            "chapter_range": [start, end_chapter],
+            "bullets": [],
+            "source_chapters": [],
+            "mode": "heuristic",
+        }
+
+    # Strategy: evenly sample the window and extract a salient line per sample.
+    step = max(1, len(entries) // bullet_target)
+    sampled: List[Dict[str, Any]] = []
+    for i in range(0, len(entries), step):
+        sampled.append(entries[i])
+        if len(sampled) >= bullet_target:
+            break
+    # ensure we always include the last chapter (most recent bridge).
+    if entries[-1] not in sampled:
+        if len(sampled) >= bullet_target:
+            sampled[-1] = entries[-1]
+        else:
+            sampled.append(entries[-1])
+
+    for entry in sampled[:bullet_target]:
+        sents = _select_salient_sentences(entry["body"], max_sentences=1)
+        text = sents[0] if sents else entry["body"][:60]
+        bullets.append(f"第{entry['chapter']}章：{text}")
+
+    return {
+        "chapter_range": [start, end_chapter],
+        "bullets": bullets,
+        "source_chapters": source_chapters,
+        "mode": "heuristic",
+    }
+
+
+def save_l1_summary(
+    project_root: Path,
+    end_chapter: int,
+    result: Dict[str, Any],
+) -> Path:
+    """保存 L1 压缩结果到 ``.ink/summaries/l1_chXXXX.json``。"""
+    summaries_dir = project_root / ".ink" / "summaries"
+    summaries_dir.mkdir(parents=True, exist_ok=True)
+    out = summaries_dir / f"l1_ch{end_chapter:04d}.json"
+    out.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    return out

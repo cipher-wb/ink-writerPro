@@ -95,6 +95,7 @@ def test_check_with_violations_passes_schema() -> None:
 
 
 def test_score_recalculated_from_violations() -> None:
+    # US-015: exponential formula — 2 hard + 1 soft → 0.7^2 * 0.9^1 = 0.441 → 0.44
     violations = [
         {"rule_id": "EW-0001", "quote": "x", "severity": "hard", "fix_suggestion": "fix1"},
         {"rule_id": "EW-0002", "quote": "y", "severity": "hard", "fix_suggestion": "fix2"},
@@ -104,17 +105,19 @@ def test_score_recalculated_from_violations() -> None:
     rules = [_make_rule(f"EW-000{i}") for i in range(1, 4)]
 
     result = check_chapter("正文", 1, rules, anthropic_client=client)
-    assert result["score"] == pytest.approx(0.3)
+    assert result["score"] == pytest.approx(0.44)
 
 
 def test_compute_score_hard_only() -> None:
+    # US-015: 0.7^3 = 0.343 → 0.34
     violations = [{"severity": "hard"}] * 3
-    assert _compute_score(violations) == pytest.approx(0.1)
+    assert _compute_score(violations) == pytest.approx(0.34)
 
 
 def test_compute_score_soft_only() -> None:
+    # US-015: 0.9^4 = 0.6561 → 0.66
     violations = [{"severity": "soft"}] * 4
-    assert _compute_score(violations) == pytest.approx(0.6)
+    assert _compute_score(violations) == pytest.approx(0.66)
 
 
 def test_compute_score_info_no_penalty() -> None:
@@ -123,15 +126,17 @@ def test_compute_score_info_no_penalty() -> None:
 
 
 def test_compute_score_mixed() -> None:
+    # US-015: 1 hard + 1 soft + 1 info → 0.7 * 0.9 = 0.63
     violations = [
         {"severity": "hard"},
         {"severity": "soft"},
         {"severity": "info"},
     ]
-    assert _compute_score(violations) == pytest.approx(0.6)
+    assert _compute_score(violations) == pytest.approx(0.63)
 
 
 def test_compute_score_floor_at_zero() -> None:
+    # US-015: 20 hard → 0.7^20 ≈ 0.00080 → round(0.00, 2) == 0.0
     violations = [{"severity": "hard"}] * 20
     assert _compute_score(violations) == 0.0
 
@@ -195,7 +200,8 @@ def test_llm_score_ignored_server_computed() -> None:
 
     rules = [_make_rule("EW-0001"), _make_rule("EW-0002")]
     result = check_chapter("正文", 1, rules, anthropic_client=client)
-    assert result["score"] == pytest.approx(0.4)
+    # US-015: 2 hard → 0.7^2 = 0.49
+    assert result["score"] == pytest.approx(0.49)
 
 
 def test_agent_field_always_correct() -> None:

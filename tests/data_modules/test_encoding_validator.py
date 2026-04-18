@@ -12,8 +12,8 @@ from textwrap import dedent
 
 import pytest
 
-# 将 scripts/ 加入搜索路径
-SCRIPTS_DIR = Path(__file__).resolve().parents[3] / "ink-writer" / "scripts"
+# v16 US-006：tests_data_modules 迁移到 tests/data_modules/，parents 深度 3→2。
+SCRIPTS_DIR = Path(__file__).resolve().parents[2] / "ink-writer" / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
 
 from encoding_validator import find_mojibake  # noqa: E402

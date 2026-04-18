@@ -216,10 +216,14 @@ class TestGoldenThreePolishLoop:
 
     def test_passes_normal_triggers_polish_golden(self):
         """Same low-quality chapter text passes with is_golden_three=false
-        but triggers polish loop when is_golden_three=true."""
+        but triggers polish loop when is_golden_three=true.
+
+        US-015: switched to dual-threshold API; we force hard=0.85 to preserve
+        the pre-US-015 scenario (strict golden-three blocks score=0.80).
+        """
         config = EditorWisdomConfig(
             hard_gate_threshold=0.75,
-            golden_three_threshold=0.85,
+            golden_three_hard_threshold=0.85,
         )
 
         def score_80_checker(text: str, chapter_no: int) -> dict:
@@ -268,8 +272,8 @@ class TestGoldenThreePolishLoop:
             assert golden_result.final_text is None
 
     def test_golden_passes_with_high_score(self):
-        """Golden-three chapter passes when score exceeds golden_three_threshold."""
-        config = EditorWisdomConfig(golden_three_threshold=0.85)
+        """Golden-three chapter passes when score exceeds golden_three_hard_threshold."""
+        config = EditorWisdomConfig(golden_three_hard_threshold=0.85)
 
         def high_score_checker(text: str, chapter_no: int) -> dict:
             return {
@@ -294,7 +298,7 @@ class TestGoldenThreePolishLoop:
 
     def test_blocked_md_for_golden_three(self):
         """Golden-three chapter that never passes gets blocked.md."""
-        config = EditorWisdomConfig(golden_three_threshold=0.85)
+        config = EditorWisdomConfig(golden_three_hard_threshold=0.85)
 
         def always_low_checker(text: str, chapter_no: int) -> dict:
             return {

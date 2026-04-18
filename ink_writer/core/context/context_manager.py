@@ -576,6 +576,7 @@ class ContextManager:
             active_threads=active_threads,
         )
         candidate_facts = self._load_candidate_facts(previous_card, active_threads)
+        reflections = self._load_reflections()
 
         return {
             "previous_chapter_memory_card": previous_card,
@@ -583,6 +584,35 @@ class ContextManager:
             "recent_timeline_anchors": timeline_anchors,
             "related_entity_state_changes": state_changes,
             "candidate_facts": candidate_facts,
+            "reflections": reflections,
+        }
+
+    def _load_reflections(self) -> Dict[str, Any]:
+        """US-022: L2 memory layer — inject `.ink/reflections.json` bullets.
+
+        Returns a compact dict with the latest reflection bullets.  Absent or
+        corrupt files produce an empty payload so downstream consumers are
+        always safe.
+        """
+        try:
+            from ink_writer.reflection import load_reflections
+        except ImportError:  # pragma: no cover — reflection module optional
+            return {}
+        try:
+            payload = load_reflections(self.config.project_root)
+        except (OSError, ValueError):
+            return {}
+        if not payload:
+            return {}
+        latest = payload.get("latest") or {}
+        if not latest:
+            return {}
+        return {
+            "chapter": latest.get("chapter"),
+            "window": latest.get("window"),
+            "bullets": list(latest.get("bullets") or [])[:5],
+            "mode": latest.get("mode", "heuristic"),
+            "source": ".ink/reflections.json",
         }
 
     def _load_previous_memory_card(self, chapter: int, state: Dict[str, Any]) -> Dict[str, Any]:

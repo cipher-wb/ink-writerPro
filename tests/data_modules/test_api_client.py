@@ -292,7 +292,9 @@ async def test_embedding_exception_and_close(tmp_path, monkeypatch):
     assert session.closed is True
 
 
-def test_rerank_headers_payload_and_stats(tmp_path, capsys):
+def test_rerank_headers_payload_and_stats(tmp_path, caplog):
+    # US-024: print_stats was migrated to logger.warning; assert via caplog.
+    import logging
     config = DataModulesConfig.from_project_root(tmp_path)
     config.rerank_api_key = "rk-test"
     client = RerankAPIClient(config)
@@ -306,9 +308,11 @@ def test_rerank_headers_payload_and_stats(tmp_path, capsys):
     modal = ModalAPIClient(config)
     modal._embed_client.stats.total_calls = 1
     modal._embed_client.stats.total_time = 2.0
-    modal.print_stats()
-    output = capsys.readouterr().out
-    assert "EMBED" in output
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger="ink_writer.core.infra.api_client"):
+        modal.print_stats()
+    messages = [rec.message for rec in caplog.records if rec.name == "ink_writer.core.infra.api_client"]
+    assert any("EMBED" in msg for msg in messages), messages
 
 
 @pytest.mark.asyncio
@@ -441,7 +445,9 @@ async def test_rerank_modal_retry_and_warmup(tmp_path, monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_modal_client_helpers(tmp_path, monkeypatch, capsys):
+async def test_modal_client_helpers(tmp_path, monkeypatch, caplog):
+    # US-024: warmup was migrated to logger.warning; assert via caplog.
+    import logging
     config = DataModulesConfig.from_project_root(tmp_path)
     client = ModalAPIClient(config)
 
@@ -460,9 +466,11 @@ async def test_modal_client_helpers(tmp_path, monkeypatch, capsys):
 
     monkeypatch.setattr(client, "_warmup_embed", fail_warmup)
     monkeypatch.setattr(client, "_warmup_rerank", ok_warmup)
-    await client.warmup()
-    output = capsys.readouterr().out
-    assert "[FAIL]" in output
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger="ink_writer.core.infra.api_client"):
+        await client.warmup()
+    messages = [rec.message for rec in caplog.records if rec.name == "ink_writer.core.infra.api_client"]
+    assert any("[FAIL]" in msg for msg in messages), messages
 
     async def fake_get_session():
         return FakeSession([])

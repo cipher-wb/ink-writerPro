@@ -8,9 +8,9 @@ ink 统一入口脚本（无须 `cd`）
   python "<SCRIPTS_DIR>/ink.py" where
   python "<SCRIPTS_DIR>/ink.py" index stats
 
-说明：
-- 该脚本仅负责把 `.claude/scripts` 加入 sys.path，然后转发到 `data_modules.ink`。
-- 适配 skills/agents 在项目级或用户级（~/.claude）安装时的调用方式。
+v16 US-006（FIX-11 收尾）：把旧版 sys.path.insert 裸路径 hack 替换为显式
+repo_root 判断——若 ``ink_writer`` 不可直接 import（未安装 / PYTHONPATH 未设），
+仅在此入口脚本回退添加仓库根，不再污染全链路 sys.path。
 """
 
 from __future__ import annotations
@@ -22,10 +22,15 @@ from runtime_compat import enable_windows_utf8_stdio
 
 
 def main() -> None:
-    scripts_dir = Path(__file__).resolve().parent
-    sys.path.insert(0, str(scripts_dir))
+    # 确保 ``ink_writer`` 可 import：优先走已安装包或已设 PYTHONPATH；
+    # 仅在两者都缺失时回退向仓库根注入（单一兜底，不再 insert scripts_dir）。
+    try:
+        import ink_writer  # noqa: F401 - import for side-effect only
+    except ImportError:
+        repo_root = Path(__file__).resolve().parent.parent.parent
+        if str(repo_root) not in sys.path:
+            sys.path.insert(0, str(repo_root))
 
-    # 延迟导入，避免 sys.path 未就绪
     from ink_writer.core.cli.ink import main as _main
 
     _main()

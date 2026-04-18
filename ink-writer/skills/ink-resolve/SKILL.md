@@ -78,11 +78,9 @@ D) 删除（误提取，忽略）
 使用 `sql_state_manager.resolve_disambiguation_entry(entry_id)`：
 
 ```bash
+# v16 US-006：ink_writer 已是可直接 import 的顶层包，无需 sys.path.insert。
 python3 -c "
-import sys
 from pathlib import Path
-# [FIX-11] sys.path.insert no longer required — ink_writer is importable
-sys.path.insert(0, str(Path('${CLAUDE_PLUGIN_ROOT}/..')))
 from ink_writer.core.index.index_manager import IndexManager
 from ink_writer.core.state.sql_state_manager import SQLStateManager
 

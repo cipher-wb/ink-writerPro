@@ -38,10 +38,27 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
   "emotion_fix_prompt": "",
   "anti_detection_fix_prompt": "",
   "voice_fix_prompt": "",
+  "merged_fix_suggestion": {
+    "shot":     {"master_checker": "prose-impact-checker",      "violations": [], "fix_prompt": ""},
+    "sensory":  {"master_checker": "sensory-immersion-checker", "violations": [], "fix_prompt": ""},
+    "rhythm":   {"master_checker": "flow-naturalness-checker",  "violations": [], "fix_prompt": ""},
+    "voice":    {"master_checker": "ooc-checker",               "violations": [], "fix_prompt": ""},
+    "dialogue": {"master_checker": "flow-naturalness-checker",  "violations": [], "fix_prompt": ""}
+  },
   "style_references": "【人写参考】块（由 Style RAG 检索，Step 2.8 生成；为空则跳过）",
   "pass": true
 }
 ```
+
+> **文笔维度 merged_fix_suggestion（US-016 / F-011）**：Step 3 会调用
+> `ink_writer.checker_pipeline.merge_fix_suggestion.write_merged_fix_suggestion`
+> 按 [`references/checker-merge-matrix.md`](../references/checker-merge-matrix.md) 把
+> prose-impact / sensory-immersion / flow-naturalness / ooc / proofreading /
+> editor-wisdom 等**文笔维度** checker 的 violations 去重合并为 `merged_fix_suggestion.json`。
+> 本 Agent 在 Layer 9 只消费该合并后的 5 维（镜头/感官/句式节奏/voice/对话）结构，
+> **不再重复读取上述 checker 的原始 report**，避免 token 膨胀和冲突指令。
+> 其他维度（逻辑/连续性/大纲/钩子/情绪/anti-detection/voice-global）仍走
+> 原有的 `*_fix_prompt` 字段，单独传递。
 
 **执行前必须加载**（静态优先，最大化 cache 命中）：
 
@@ -331,6 +348,20 @@ Layer 9 完成后执行 proofreading-checker Layer 6A+6B 等价自检：
 
 **合并指令处理**：若 Step 3 审查报告含 `merged_fix_suggestion`（Layer 6A+6B 联合合并），Layer 9 优先读取该合并建议并在对应子层一次性修复，避免同问题收到冲突指令（详见 US-015 约定）。
 
+**US-016（F-011）文笔维度合并**：当输入含顶层 `merged_fix_suggestion` 对象（由
+`ink_writer/checker_pipeline/merge_fix_suggestion.py` 生成，结构见 References 的
+`checker-merge-matrix.md`）时，Layer 9 按维度依次消费：
+
+| 维度 key   | 主 checker                 | 在本 Agent 对应子层 |
+| ---------- | -------------------------- | ------------------- |
+| `shot`     | prose-impact-checker       | 9a（镜头修复）       |
+| `sensory`  | sensory-immersion-checker  | 9b（感官修复）       |
+| `rhythm`   | flow-naturalness-checker   | 9d（句式节奏）       |
+| `voice`    | ooc-checker                | voice 去 AI 味段   |
+| `dialogue` | flow-naturalness-checker   | 9d 对话子项         |
+
+对于每个维度：遍历 `violations[*].source_checkers` 作为诊断依据（无需重复读取原 checker report），以 `fix_prompt` 作为本维度修复指令。同一 type 在所有从 checker 的建议已被合并器 dedup 为一条，polish-agent **禁止**再重新读取原 checker JSON 造成重复修复。
+
 ### 5. No-Poison 毒点规避（5类）
 
 1. 降智推进 2. 强行误会 3. 圣母无代价 4. 工具人配角 5. 双标裁决
@@ -427,3 +458,34 @@ Layer 9 完成后执行 proofreading-checker Layer 6A+6B 等价自检：
 12. `prose_craft_check = pass`（Layer 6 等价自检通过）
 13. Layer 9 文笔冲击力润色已完成（9a 镜头切换 + 9b 感官注入 + 9c 信息稀释 + 9d 句式调整）
 14. `prose_impact_check = pass`（Layer 6A+6B 等价自检通过，黄金三章零 critical）
+
+## 仲裁消费（章 1-3）
+
+> US-026：前 3 章 checker 冲突仲裁协议。详见 `ink-writer/references/golden-three-arbitration.md`。
+
+当章节编号 ∈ {1, 2, 3} 且 review_bundle 中携带 `arbitration` 字段时，polish-agent **必须**按以下规则消费，
+而不是逐条应用原始 checker issue（避免收到自相矛盾 fix_prompt）：
+
+1. **以 `arbitration.merged_fixes` 为唯一权威指令源**
+   - 忽略原始 `critical_issues` / `editor_wisdom_violations` 中被仲裁合并或丢弃（出现在 `arbitration.dropped`）的条目。
+   - 只执行 `merged_fixes[*].fix_prompt`，按 `priority` 字段从 P0 到 P3 依次处理。
+
+2. **优先级覆盖规则**
+   - 若同一改写点存在多条 merged_fix，优先采纳 `priority` 更高者（P0 > P1 > P2 > P3）。
+   - 低优先级条目若与高优先级冲突，自动降级为 `context_addendum` 注入写作上下文，不再产生独立 diff。
+
+3. **sources 可追溯**
+   - 每条 `merged_fix` 必带 `sources` 数组，列出所有被合并的原始 checker id。
+   - polish-agent 在生成 `_patches.md` 时必须逐条列出 `sources`，便于后续 audit 回溯。
+
+4. **dropped 条目日志化**
+   - 对 `arbitration.dropped[*]` 不执行改写，但在 polish 日志追加 `[arbitration] DROPPED <source> reason=<reason>`。
+
+5. **章节 ≥ 4 不适用**
+   - 仲裁机制仅在黄金前三章生效。若 `arbitration` 字段缺失或章节 ≥ 4，回退到原有逐条处理流程。
+
+### 失败条件
+
+- 若 polish-agent 同时执行了被 `arbitration.dropped` 标记的 fix_prompt，视为仲裁违规，review-gate 将打回重做。
+- 若 `merged_fixes` 中任一条目未被完整应用（且无 deviation 说明），`prose_impact_check` 直接判 fail。
+

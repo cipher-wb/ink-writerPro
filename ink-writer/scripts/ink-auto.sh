@@ -1,7 +1,12 @@
 #!/bin/bash
 # ink-auto: 跨会话无人值守智能批量写作
 # 每章启动全新 CLI 进程，进程退出 = 上下文自然清零
-# 内置分层检查点：每5章审查+修复、每10章审计+修复、每20章深度审查+修复
+# 内置分层检查点（v16 US-008 正式化 5 档）：
+#   每 5 章   → ink-review Core + ink-fix
+#   每 10 章  → + ink-audit quick + ink-fix
+#   每 20 章  → + ink-audit standard + Tier2（浅）+ 消歧
+#   每 50 章  → + Tier2（完整）+ propagation drift_detector
+#   每 200 章 → + Tier3 跨卷分析
 # 内置自动大纲生成 + 运行报告生成
 #
 # 用法:
@@ -747,7 +752,8 @@ run_auto_fix() {
     fi
 
     # 检查报告中是否有需要修复的问题（委托 Python 模块，比 Bash 正则更可靠）
-    if ! python3 -X utf8 -c "import sys; sys.path.insert(0, '$SCRIPTS_DIR'); from data_modules.checkpoint_utils import report_has_issues; exit(0 if report_has_issues('$report_path') else 1)" 2>/dev/null; then
+    # v16 US-006：从 data_modules.checkpoint_utils 迁移到 ink_writer.core.cli.checkpoint_utils。
+    if ! PYTHONPATH="$REPO_ROOT:${PYTHONPATH:-}" python3 -X utf8 -c "from ink_writer.core.cli.checkpoint_utils import report_has_issues; import sys; sys.exit(0 if report_has_issues('$report_path') else 1)" 2>/dev/null; then
         echo "    ✅ 报告无需修复的问题"
         report_event "✅" "${fix_type}修复" "${scope} — 无需修复"
         return 0
@@ -1094,10 +1100,9 @@ if (( PARALLEL > 1 )); then
     echo "  日志: $LOG_DIR"
     echo "═══════════════════════════════════════"
 
-    python3 -X utf8 -c "
-import sys, asyncio, json
-sys.path.insert(0, '$REPO_ROOT')
-sys.path.insert(0, '${PLUGIN_ROOT}/scripts')
+    # v16 US-006：去掉 sys.path.insert hack，改用 PYTHONPATH env var（设计稿 §6.2 零裸路径）。
+    PYTHONPATH="$REPO_ROOT:${PLUGIN_ROOT}/scripts:${PYTHONPATH:-}" python3 -X utf8 -c "
+import asyncio, json
 from pathlib import Path
 from ink_writer.parallel.pipeline_manager import PipelineManager, PipelineConfig
 
@@ -1140,7 +1145,7 @@ fi
 echo "═══════════════════════════════════════"
 echo "  ink-auto | 写 $N 章 | $PLATFORM"
 echo "  项目: $PROJECT_ROOT"
-echo "  检查点: 每5章审查+修复 | 每10章审计+修复 | 每20章深度审查+修复"
+echo "  检查点: 5章 review+fix / 10章 audit quick / 20章 audit standard+Tier2 / 50章 Tier2+drift / 200章 Tier3"
 echo "  日志: $LOG_DIR"
 echo "  报告: $REPORT_FILE"
 echo "═══════════════════════════════════════"

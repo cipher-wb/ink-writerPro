@@ -5,29 +5,29 @@
 - 检查点在批次完成后统一运行
 - 支持故障隔离：单章失败不影响其他进行中的章节
 
-⚠️ **v13 US-023（FIX-02B）诚实降级声明**：
-   当前仅 `parallel=1`（串行）安全。`parallel>1` 为实验特性：
-   ChapterLockManager 尚未接入（原 docstring 声称接入为虚假陈述），
-   多个 CLI 子进程并发写 `state.json` / `index.db` 存在数据损坏风险。
-   真并发集成见 `tasks/design-fix-04-step3-gate-orchestrator.md` 后续迭代。
-   即日起 `parallel>1` 会触发 RuntimeWarning；用户若坚持使用属自担风险。
-
-TODO: 参考 tasks/design-fix-04-step3-gate-orchestrator.md Phase B/C，
-      接入 ChapterLockManager（threading.local → asyncio.Lock）解除此限制。
+v16 US-002：``ChapterLockManager`` 已接入。``_write_single_chapter`` 入口
+使用 ``async_chapter_lock`` 独占章节（防同事件循环/跨进程双重写入），
+``state.json`` / ``index.db`` 的写入路径在 Step 5 data-agent 中可通过
+``async_state_update_lock`` 串行化。仍建议 ``parallel ≤ 4`` 以平衡吞吐与
+磁盘竞争；``parallel > 1`` 不再自动触发 RuntimeWarning。
 """
 
 from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import os
 import shutil
 import time
-import warnings
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Optional
+
+from ink_writer.parallel.chapter_lock import ChapterLockManager
+
+logger = logging.getLogger(__name__)
 
 
 class ChapterStatus(Enum):
@@ -146,16 +146,14 @@ class PipelineManager:
     def __init__(self, config: PipelineConfig):
         self.config = config
         self._interrupted = False
-        # v13 US-023（FIX-02B）：parallel>1 是实验特性（ChapterLockManager 未接入），
-        # 显式警告用户有数据竞争风险
-        if config.parallel > 1:
-            warnings.warn(
-                f"PipelineManager: parallel={config.parallel} > 1 is experimental. "
-                f"ChapterLockManager is not yet integrated; concurrent state.json / "
-                f"index.db writes may corrupt data. Recommend parallel=1 for production. "
-                f"See tasks/design-fix-04-step3-gate-orchestrator.md for planned fix.",
-                RuntimeWarning,
-                stacklevel=2,
+        # v16 US-002：接入 ChapterLockManager（ttl=300s 覆盖典型单章写作 + 审查时长）。
+        # 同进程 asyncio.Lock 快速路径 + SQLite 行锁跨进程 + filelock 兜底。
+        self._lock = ChapterLockManager(config.project_root, ttl=300)
+        if config.parallel > 4:
+            logger.info(
+                "PipelineManager: parallel=%d > 4 可能引发磁盘/LLM 端限流。"
+                "ChapterLockManager 已接入，数据安全；仍建议 parallel≤4 以平衡吞吐。",
+                config.parallel,
             )
 
     async def run(self, total_chapters: int) -> PipelineReport:
@@ -252,7 +250,21 @@ class PipelineManager:
     async def _write_single_chapter(
         self, chapter: int, batch: int, pos: int, batch_size: int
     ) -> ChapterResult:
-        """写作单章：write → verify → retry(if needed)。"""
+        """写作单章：write → verify → retry(if needed)。
+
+        v16 US-002：整段包裹 ``async_chapter_lock`` 独占章节。同事件循环内
+        同章重复调用会阻塞排队；跨进程依赖 SQLite WAL + filelock 串行化。
+        """
+        owner = f"pipeline-b{batch}-p{pos}-ch{chapter}"
+        async with self._lock.async_chapter_lock(
+            chapter, owner, timeout=self.config.chapter_timeout_s
+        ):
+            return await self._write_single_chapter_locked(chapter, batch)
+
+    async def _write_single_chapter_locked(
+        self, chapter: int, batch: int
+    ) -> ChapterResult:
+        """锁内实际写作流程（拆出便于测试 + 保持锁粒度清晰）。"""
         result = ChapterResult(
             chapter=chapter,
             status=ChapterStatus.WRITING,

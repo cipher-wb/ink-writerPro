@@ -1,4 +1,12 @@
-"""Foreshadow lifecycle tracker: scan, classify overdue/silent, generate alerts."""
+"""Foreshadow lifecycle tracker: scan, classify overdue/silent, generate alerts.
+
+.. deprecated:: US-025
+    This module is now a transitional shim. New call sites should import from
+    :mod:`ink_writer.thread_lifecycle.tracker` (``scan_all``) which unifies the
+    foreshadow + plotline scans behind a single entry point. The function
+    signatures here remain unchanged for backward compatibility; the module
+    will be removed in a future iteration once all callers have migrated.
+"""
 
 from __future__ import annotations
 

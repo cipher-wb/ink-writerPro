@@ -11,6 +11,15 @@ from ink_writer.anti_detection.config import AntiDetectionConfig
 _SENTENCE_SPLIT = re.compile(r"[。？！…]+")
 _DIALOGUE_RE = re.compile(r"[\u201c\u300c]([^\u201d\u300d]*?)[\u201d\u300d]")
 _CAUSAL_WORDS = re.compile(r"因为|所以|于是|因此|由于|导致|结果|从而|进而")
+# US-014：连接词密度（递进 / 转折 / 并列 / 总结 / 递进式 AI 书面语）
+_CONJUNCTION_WORDS = re.compile(
+    r"不仅|不但|而且|此外|另外|同时|与此同时|"
+    r"尽管如此|话虽如此|虽然|但是|然而|不过|可是|却|"
+    r"总而言之|综上所述|总的来说|归根结底|"
+    r"首先|其次|再者|最后|"
+    r"毫无疑问|显而易见|不言而喻|众所周知|可想而知|"
+    r"值得一提的是|值得注意的是|不得不提的是|不可否认"
+)
 _EXCLAMATION = re.compile(r"[！!]")
 _ELLIPSIS = re.compile(r"[…]+|\.{3,}")
 _QUESTION = re.compile(r"[？?]")
@@ -40,6 +49,7 @@ class DiversityReport:
     question_density: float = 0.0
     total_punctuation_density: float = 0.0
     causal_density: float = 0.0
+    conjunction_density: float = 0.0
     has_critical: bool = False
 
 
@@ -51,6 +61,24 @@ def _split_sentences(text: str) -> list[str]:
 def _split_paragraphs(text: str) -> list[str]:
     paras = re.split(r"\n\s*\n|\n", text)
     return [p.strip() for p in paras if p.strip()]
+
+
+def conjunction_density(text: str) -> float:
+    """Return the conjunction count per 1000 characters.
+
+    Covers progressive / transitional / summarizing / enumerative / omniscient-
+    judgment connectives commonly over-used in AI-generated Chinese prose.
+    Used by the anti-detection gate (US-014) alongside ``causal_density`` to
+    catch textbook-style writing. Returns 0.0 for empty / very short inputs.
+    """
+    if not text:
+        return 0.0
+    total_chars = len(text)
+    if total_chars < 100:
+        return 0.0
+    count = len(_CONJUNCTION_WORDS.findall(text))
+    kchars = total_chars / 1000
+    return count / kchars if kchars > 0 else 0.0
 
 
 def analyze_diversity(text: str, config: AntiDetectionConfig) -> DiversityReport:
@@ -192,6 +220,19 @@ def analyze_diversity(text: str, config: AntiDetectionConfig) -> DiversityReport
             severity="medium",
             description=f"因果连接词密度={per_200:.1f}/200字（阈值≤{config.causal_density_max}），逻辑链过密",
             fix_suggestion="删除中间因果环节，让读者自行推断，保留叙事跳跃感",
+        ))
+
+    conj_per_k = conjunction_density(text)
+    report.conjunction_density = conj_per_k
+    if conj_per_k > config.conjunction_density_max:
+        report.violations.append(DiversityViolation(
+            id="AD_CONJUNCTION_DENSE",
+            severity="medium",
+            description=(
+                f"连接词密度={conj_per_k:.1f}/千字（阈值≤{config.conjunction_density_max}），"
+                f"'不仅/而且/尽管如此/毫无疑问'等书面连接词过多，AI 书面腔偏重"
+            ),
+            fix_suggestion="删除递进/转折/总结连接词，用画面和动作推进叙事，让逻辑隐藏在细节中",
         ))
 
     report.has_critical = any(v.severity == "critical" for v in report.violations)

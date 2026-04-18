@@ -234,10 +234,14 @@ class TestReviewGatePasses:
 
 class TestGoldenThreeThreshold:
     def test_chapters_1_3_use_golden_threshold(self):
-        """Chapters 1-3 use golden_three_threshold (0.85) instead of hard_gate_threshold (0.75)."""
+        """Chapters 1-3 use golden_three_hard_threshold instead of hard_gate_threshold.
+
+        US-015: switched to dual-threshold API; golden_three_hard_threshold is the
+        blocking bar. This test forces the hard threshold to 0.85 to verify routing.
+        """
         config = EditorWisdomConfig(
             hard_gate_threshold=0.75,
-            golden_three_threshold=0.85,
+            golden_three_hard_threshold=0.85,
         )
 
         def score_80_checker(text: str, chapter_no: int) -> dict:

@@ -5,9 +5,9 @@
 Design: tasks/design-fix-04-step3-gate-orchestrator.md
 
 Mode（env INK_STEP3_RUNNER_MODE）:
-  - off：不跑 runner（退回原 LLM 自律流程）
-  - shadow：跑 runner 并写 review_metrics，但 exit 0 不阻断（默认）
-  - enforce：跑 runner，hard fail → exit 1 真阻断
+  - off：不跑 runner（退回原 LLM 自律流程；紧急降级路径）
+  - shadow：跑 runner 并写 review_metrics，但 exit 0 不阻断（观察用）
+  - enforce（默认 / v16 US-005）：跑 runner，hard fail → exit 1 真阻断
 
 CLI:
   python3 -m ink_writer.checker_pipeline.step3_runner \\
@@ -37,15 +37,85 @@ from ink_writer.checker_pipeline.runner import (
     GateStatus,
     PipelineReport,
 )
+from ink_writer.checker_pipeline.llm_checker_factory import make_llm_checker
+from ink_writer.checker_pipeline.polish_llm_fn import make_llm_polish
 
 logger = logging.getLogger(__name__)
+
+# v16 US-003（FIX-01 Phase B）：5 个 gate 的真 LLM checker 接入。
+# - env INK_STEP3_LLM_CHECKER=off → 退回 benign stub（用于 CI 零 token 回归）。
+# - 默认启用 LLM checker；具体模型在 llm_checker_factory.DEFAULT_CHECKER_MODEL。
+_CHECKER_PROMPTS_DIR = Path(__file__).parent / "prompts"
+
+
+def _should_use_llm_polish() -> bool:
+    """v16 US-004：是否启用真 LLM polish。
+
+    判定与 ``_should_use_llm_checker`` 同语义：
+      1. ``INK_STEP3_LLM_POLISH=off`` 显式关闭 → 原文透传 stub。
+      2. ``INK_STEP3_LLM_POLISH=on`` 显式打开 → 始终走 LLM。
+      3. 默认：有 ``ANTHROPIC_API_KEY`` 才走 LLM，否则 stub（CI 安全）。
+    """
+    env = os.environ.get("INK_STEP3_LLM_POLISH", "").strip().lower()
+    if env == "off":
+        return False
+    if env == "on":
+        return True
+    return bool(os.environ.get("ANTHROPIC_API_KEY"))
+
+
+def _gate_polish(gate_name: str, project_root: Path) -> Callable[[str, str, int], str]:
+    """统一 polish 工厂入口：US-004 默认走 LLM，env 关则原文透传。"""
+    if not _should_use_llm_polish():
+
+        def _stub(text: str, fix: str, ch_no: int) -> str:
+            return text
+
+        return _stub
+    return make_llm_polish(gate_name, project_root=project_root)
+
+
+def _should_use_llm_checker() -> bool:
+    """是否启用真 LLM checker。
+
+    判定优先级（从高到低）：
+      1. ``INK_STEP3_LLM_CHECKER=off`` 显式关闭 → 始终走 stub。
+      2. ``INK_STEP3_LLM_CHECKER=on`` 显式打开 → 始终走 LLM。
+      3. 默认：有 ``ANTHROPIC_API_KEY`` 才走 LLM，否则 stub。
+
+    该规则使无 API key 的 CI / pytest 默认安全（不会尝试 spawn ``claude`` CLI），
+    同时生产用户配置 ``ANTHROPIC_API_KEY`` 后即获得真 LLM 检查。
+    """
+    env = os.environ.get("INK_STEP3_LLM_CHECKER", "").strip().lower()
+    if env == "off":
+        return False
+    if env == "on":
+        return True
+    return bool(os.environ.get("ANTHROPIC_API_KEY"))
+
+
+def _gate_checker(gate_name: str, prompt_filename: str) -> Callable:
+    """统一工厂入口：Phase B 默认走 LLM，env 关则退回 benign stub。
+
+    v16 US-003：stub 返回 score=100（0-100 量纲满分）以便 gate 内部的
+    ``passed = score >= threshold`` 判定为 pass，避免 stub 误阻断。
+    """
+    if not _should_use_llm_checker():
+
+        def _stub(text: str, ch_no: int) -> dict:
+            return {"score": 100.0, "violations": [], "passed": True}
+
+        return _stub
+    return make_llm_checker(gate_name, _CHECKER_PROMPTS_DIR / prompt_filename)
 
 # Env knobs
 MODE_ENV = "INK_STEP3_RUNNER_MODE"  # off / shadow / enforce
 MODE_OFF = "off"
 MODE_SHADOW = "shadow"
 MODE_ENFORCE = "enforce"
-DEFAULT_MODE = MODE_SHADOW
+# v16 US-005：切换为 enforce 默认。hard gate fail → exit 1 真阻断 Step 4。
+# 仍可通过 env INK_STEP3_RUNNER_MODE=shadow/off 显式降级。
+DEFAULT_MODE = MODE_ENFORCE
 VALID_MODES = {MODE_OFF, MODE_SHADOW, MODE_ENFORCE}
 
 
@@ -97,17 +167,12 @@ class Step3Result:
 
 
 def _make_hook_adapter(review_bundle: dict) -> Callable:
-    """reader_pull.hook_retry_gate adapter。"""
+    """reader_pull.hook_retry_gate adapter（US-003：真 LLM checker / US-004：真 polish）。"""
     async def _adapter():
         from ink_writer.reader_pull.hook_retry_gate import run_hook_gate
 
-        def _stub_checker(text: str, ch_no: int) -> dict:
-            # v14 MVP：Phase A shadow 模式下不调用真 LLM checker；
-            # 返回 benign pass 让 runner 基础设施先跑通
-            return {"score": 1.0, "violations": [], "passed": True}
-
-        def _stub_polish(text: str, fix: str, ch_no: int) -> str:
-            return text
+        checker_fn = _gate_checker("reader_pull", "reader_pull.md")
+        polish_fn = _gate_polish("reader_pull", Path(review_bundle.get("project_root", ".")))
 
         try:
             result = await asyncio.to_thread(
@@ -115,8 +180,8 @@ def _make_hook_adapter(review_bundle: dict) -> Callable:
                 chapter_text=review_bundle.get("chapter_text", ""),
                 chapter_no=review_bundle.get("chapter_no", 0),
                 project_root=review_bundle.get("project_root", "."),
-                checker_fn=_stub_checker,
-                polish_fn=_stub_polish,
+                checker_fn=checker_fn,
+                polish_fn=polish_fn,
             )
             passed = getattr(result, "passed", True)
             score = getattr(result, "final_score", 1.0)
@@ -132,11 +197,8 @@ def _make_emotion_adapter(review_bundle: dict) -> Callable:
     async def _adapter():
         from ink_writer.emotion.emotion_gate import run_emotion_gate
 
-        def _stub_checker(text: str, ch_no: int) -> dict:
-            return {"score": 1.0, "curve_ok": True, "violations": []}
-
-        def _stub_polish(text: str, fix: str, ch_no: int) -> str:
-            return text
+        checker_fn = _gate_checker("emotion", "emotion.md")
+        polish_fn = _gate_polish("emotion", Path(review_bundle.get("project_root", ".")))
 
         try:
             result = await asyncio.to_thread(
@@ -144,8 +206,8 @@ def _make_emotion_adapter(review_bundle: dict) -> Callable:
                 chapter_text=review_bundle.get("chapter_text", ""),
                 chapter_no=review_bundle.get("chapter_no", 0),
                 project_root=review_bundle.get("project_root", "."),
-                checker_fn=_stub_checker,
-                polish_fn=_stub_polish,
+                checker_fn=checker_fn,
+                polish_fn=polish_fn,
             )
             passed = getattr(result, "passed", True)
             score = getattr(result, "final_score", 1.0)
@@ -161,11 +223,8 @@ def _make_anti_detection_adapter(review_bundle: dict) -> Callable:
     async def _adapter():
         from ink_writer.anti_detection.anti_detection_gate import run_anti_detection_gate
 
-        def _stub_checker(text: str, ch_no: int) -> dict:
-            return {"score": 1.0, "ai_markers": [], "passed": True}
-
-        def _stub_polish(text: str, fix: str, ch_no: int) -> str:
-            return text
+        checker_fn = _gate_checker("anti_detection", "anti_detection.md")
+        polish_fn = _gate_polish("anti_detection", Path(review_bundle.get("project_root", ".")))
 
         try:
             result = await asyncio.to_thread(
@@ -173,8 +232,8 @@ def _make_anti_detection_adapter(review_bundle: dict) -> Callable:
                 chapter_text=review_bundle.get("chapter_text", ""),
                 chapter_no=review_bundle.get("chapter_no", 0),
                 project_root=review_bundle.get("project_root", "."),
-                checker_fn=_stub_checker,
-                polish_fn=_stub_polish,
+                checker_fn=checker_fn,
+                polish_fn=polish_fn,
             )
             passed = getattr(result, "passed", True)
             score = getattr(result, "final_score", 1.0)
@@ -190,11 +249,8 @@ def _make_voice_adapter(review_bundle: dict) -> Callable:
     async def _adapter():
         from ink_writer.voice_fingerprint.ooc_gate import run_voice_gate
 
-        def _stub_checker(text: str, ch_no: int) -> dict:
-            return {"score": 1.0, "ooc_count": 0, "passed": True}
-
-        def _stub_polish(text: str, fix: str, ch_no: int) -> str:
-            return text
+        checker_fn = _gate_checker("voice", "voice.md")
+        polish_fn = _gate_polish("voice", Path(review_bundle.get("project_root", ".")))
 
         try:
             result = await asyncio.to_thread(
@@ -202,8 +258,8 @@ def _make_voice_adapter(review_bundle: dict) -> Callable:
                 chapter_text=review_bundle.get("chapter_text", ""),
                 chapter_no=review_bundle.get("chapter_no", 0),
                 project_root=review_bundle.get("project_root", "."),
-                checker_fn=_stub_checker,
-                polish_fn=_stub_polish,
+                checker_fn=checker_fn,
+                polish_fn=polish_fn,
             )
             passed = getattr(result, "passed", True)
             score = getattr(result, "final_score", 1.0)
@@ -241,8 +297,8 @@ def _make_plotline_adapter(review_bundle: dict) -> Callable:
 def _build_review_bundle(chapter_id: int, state_dir: Path) -> dict:
     """Minimal review_bundle from state_dir + chapter text.
 
-    v14 Phase A：仅提取 step3_runner 基础 orchestration 需要的字段；
-    Phase B/C 按需扩展。
+    v16 Phase B production：仅提取 step3_runner 基础 orchestration 需要的字段；
+    后续按需扩展。
     """
     project_root = state_dir.parent if state_dir.name == ".ink" else state_dir
     db_path = str(state_dir / "index.db")
