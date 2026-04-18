@@ -42,6 +42,7 @@ class AntiDetectionConfig:
     total_emotion_punctuation_min: float = 5.0
 
     causal_density_max: float = 1.0
+    conjunction_density_max: float = 2.5
 
     zero_tolerance: list[ZeroToleranceRule] = field(default_factory=list)
 
@@ -53,6 +54,7 @@ _SCALAR_FIELDS = {
     "paragraph_cv_min", "dialogue_ratio_min", "exclamation_density_min",
     "ellipsis_density_min", "question_density_min",
     "total_emotion_punctuation_min", "causal_density_max",
+    "conjunction_density_max",
 }
 
 

@@ -40,6 +40,11 @@ total_emotion_punctuation_min: 5.0
 # 因果连接词密度上限（每200字）
 causal_density_max: 1.0
 
+# --- 连接词密度阈值（每千字） ---
+# 连接词总密度上限（每千字，US-014 新增）
+# 2.5 为合理默认值，后续可结合标杆语料微调
+conjunction_density_max: 2.5
+
 # --- 零容忍清单 ---
 # 匹配任一条目立即阻断，不触发 polish 重试
 zero_tolerance:
@@ -60,3 +65,47 @@ zero_tolerance:
     description: "使用'与此同时'全知视角转场"
     patterns:
       - "与此同时"
+      - "就在此时此刻"
+      - "而在此时"
+      - "就在同一时间"
+  - id: ZT_NOT_ONLY_BUT_ALSO
+    description: "'不仅……而且/还'递进式 AI 书面语"
+    patterns:
+      - "不仅[^，。！？；]{0,30}，?而且"
+      - "不仅[^，。！？；]{0,30}，?还"
+      - "不但[^，。！？；]{0,30}，?而且"
+      - "不但[^，。！？；]{0,30}，?还"
+  - id: ZT_DESPITE_STILL
+    description: "'尽管如此/虽然……但是'教科书转折"
+    patterns:
+      - "尽管如此"
+      - "尽管[^，。！？；]{0,40}，?[但却]"
+      - "虽然[^，。！？；]{0,40}，?但是"
+      - "话虽如此"
+  - id: ZT_UNDOUBTEDLY
+    description: "'毫无疑问/显而易见/不言而喻'全知判断"
+    patterns:
+      - "毫无疑问"
+      - "显而易见"
+      - "不言而喻"
+      - "众所周知"
+      - "可想而知"
+  - id: ZT_IN_SHORT
+    description: "'总而言之/综上所述'论文式总结"
+    patterns:
+      - "总而言之"
+      - "综上所述"
+      - "总的来说"
+      - "归根结底"
+  - id: ZT_FIRST_SECOND
+    description: "'首先……其次……最后'列条目式陈述"
+    patterns:
+      - "首先[^。！？]{0,80}，?其次"
+      - "第一[^。！？]{0,60}，?第二[^。！？]{0,60}，?第三"
+  - id: ZT_WORTH_MENTIONING
+    description: "'值得一提的是/值得注意的是'旁白式提醒"
+    patterns:
+      - "值得一提的是"
+      - "值得注意的是"
+      - "不得不提的是"
+      - "不可否认的是"
