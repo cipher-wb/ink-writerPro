@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
+from ink_writer.semantic_recall.bm25 import BM25Index
 from ink_writer.semantic_recall.chapter_index import ChapterCard, ChapterVectorIndex
 from ink_writer.semantic_recall.config import SemanticRecallConfig
 
@@ -34,6 +35,18 @@ class SemanticChapterRetriever:
     ) -> None:
         self._index = index
         self._config = config or SemanticRecallConfig()
+        self._bm25: Optional[BM25Index] = None
+        self._bm25_fingerprint: Optional[int] = None
+
+    # --- BM25 lazy (re)build ---------------------------------------------
+    def _ensure_bm25(self) -> BM25Index:
+        cards = self._index._cards
+        fingerprint = len(cards)
+        if self._bm25 is None or self._bm25_fingerprint != fingerprint:
+            corpus = [c.to_embed_text() for c in cards]
+            self._bm25 = BM25Index().fit(corpus)
+            self._bm25_fingerprint = fingerprint
+        return self._bm25
 
     def recall(
         self,
@@ -54,7 +67,10 @@ class SemanticChapterRetriever:
             k=cfg.semantic_top_k,
             before_chapter=chapter_num,
         )
-        for card, sim in semantic_hits:
+        # Track ranks for RRF fusion (semantic)
+        semantic_ranks: dict[int, int] = {}
+        for rank, (card, sim) in enumerate(semantic_hits):
+            semantic_ranks[card.chapter] = rank
             if sim < cfg.min_semantic_score:
                 continue
             boosted = self._apply_entity_boost(sim, card, scene_entity_set)
@@ -65,6 +81,38 @@ class SemanticChapterRetriever:
                 content=self._card_to_content(card),
                 involved_entities=card.involved_entities,
             )
+
+        # US-022: BM25 lexical branch + reciprocal rank fusion.
+        if cfg.hybrid_enabled and cfg.bm25_top_k > 0:
+            bm25 = self._ensure_bm25()
+            eligible = [
+                i for i, c in enumerate(self._index._cards) if c.chapter < chapter_num
+            ]
+            bm25_hits = bm25.search(query, k=cfg.bm25_top_k, eligible=eligible)
+            bm25_ranks: dict[int, int] = {}
+            for rank, (doc_idx, bm25_score) in enumerate(bm25_hits):
+                card = self._index._cards[doc_idx]
+                bm25_ranks[card.chapter] = rank
+                rrf_component = 1.0 / (cfg.rrf_k + rank + 1)
+                if card.chapter in merged:
+                    hit = merged[card.chapter]
+                    # Fuse: boost existing semantic score with BM25 RRF contribution.
+                    hit.score = hit.score + rrf_component
+                    if "bm25" not in hit.source:
+                        hit.source = f"{hit.source}+bm25"
+                else:
+                    merged[card.chapter] = RecallHit(
+                        chapter=card.chapter,
+                        score=rrf_component,
+                        source="bm25",
+                        content=self._card_to_content(card),
+                        involved_entities=card.involved_entities,
+                    )
+            # Add RRF component for semantic-only hits too (symmetric fusion).
+            for chap, rank in semantic_ranks.items():
+                if chap in merged and "bm25" not in merged[chap].source:
+                    rrf_component = 1.0 / (cfg.rrf_k + rank + 1)
+                    merged[chap].score += rrf_component
 
         if scene_entity_set:
             entity_hits = self._entity_forced_recall(
@@ -141,9 +189,12 @@ class SemanticChapterRetriever:
         return re.sub(r"\s+", " ", content)[:200]
 
     def to_payload(self, hits: list[RecallHit]) -> Dict[str, Any]:
+        mode = "semantic_hybrid"
+        if self._config.hybrid_enabled and any("bm25" in h.source for h in hits):
+            mode = "semantic_hybrid+bm25_rrf"
         return {
             "invoked": True,
-            "mode": "semantic_hybrid",
+            "mode": mode,
             "reason": "ok" if hits else "no_hit",
             "intent": "continuity_memory",
             "needs_graph": False,

@@ -20,6 +20,11 @@ class SemanticRecallConfig:
     min_semantic_score: float = 0.3
     entity_boost_weight: float = 0.15
     max_pack_chars: int = 3000
+    # US-022: Hybrid BM25 + FAISS RRF fusion
+    hybrid_enabled: bool = True
+    bm25_top_k: int = 8
+    rrf_k: int = 60
+    reflections_enabled: bool = True
 
     @classmethod
     def from_yaml(cls, path: Path | str) -> SemanticRecallConfig:
