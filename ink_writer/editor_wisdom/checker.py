@@ -60,13 +60,22 @@ def _validate_result(result: dict) -> dict:
 
 
 def _compute_score(violations: list[dict]) -> float:
-    """Sole source of truth for chapter score. Formula: max(0, 1 - sum(weight[severity])), weights: hard=0.3, soft=0.1, info=0."""
-    score = 1.0
+    """Sole source of truth for chapter score.
+
+    US-015: switched from linear subtraction to exponential decay.
+    Formula: score = 1.0 * (0.7 ** hard_count) * (0.9 ** soft_count).
+    Rationale: prevents a handful of soft violations from dragging the score below the
+    golden-three hard threshold; each additional violation hurts proportionally less.
+    info-severity violations carry no penalty.
+    """
+    hard_count = 0
+    soft_count = 0
     for v in violations:
         if v["severity"] == "hard":
-            score -= 0.3
+            hard_count += 1
         elif v["severity"] == "soft":
-            score -= 0.1
+            soft_count += 1
+    score = 1.0 * (0.7 ** hard_count) * (0.9 ** soft_count)
     return max(0.0, round(score, 2))
 
 

@@ -3,7 +3,10 @@ enabled: true
 retrieval_top_k: 5
 hard_gate_threshold: 0.75
 # 黄金三章阈值：US-017 后从 0.85/0.90 提升至 0.92（加入文笔维度后总体标准提高）
-golden_three_threshold: 0.92
+# US-015：拆分为硬阈值（hard，低于则阻断）+ 软阈值（soft，目标分），避免黄金三章因少量 soft 规则被反复阻断。
+golden_three_threshold: 0.92  # legacy：保留向后兼容（golden_three.py 仍使用）
+golden_three_hard_threshold: 0.75  # 硬阈值：低于此分才阻断 review_gate
+golden_three_soft_threshold: 0.92  # 软阈值：目标分，介于 hard 和 soft 之间视为通过但记录告警
 inject_into:
   context: true
   writer: true
