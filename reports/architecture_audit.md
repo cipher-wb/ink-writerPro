@@ -4,9 +4,9 @@
 
 ## Summary
 
-- **Python modules scanned**: 186
+- **Python modules scanned**: 188
 - **Import cycles found**: 1
-- **Unused module candidates**: 92
+- **Unused module candidates**: 94
 - **Agents scanned**: 22
 - **Agent overlap pairs**: 8
 - **Repeated prompt fragments**: 50
@@ -80,6 +80,8 @@
 - `plotline.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/config.py)
 - `plotline.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/fix_prompt_builder.py)
 - `plotline.tracker` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/tracker.py)
+- `progression` (/Users/cipher/AI/ink/ink-writer/ink_writer/progression/__init__.py)
+- `progression.context_injection` (/Users/cipher/AI/ink/ink-writer/ink_writer/progression/context_injection.py)
 - `prompt_cache` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/__init__.py)
 - `prompt_cache.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/config.py)
 - `prompt_cache.metrics` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/metrics.py)

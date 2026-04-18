@@ -475,6 +475,30 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-chapte
   - 情绪底色 = 上章结束情绪 + 事件走向
   - 可用能力 = 当前境界 + 近期获得 + 设定禁用项
 
+#### Step 4.5: 角色演进摘要注入（FIX-18 P5c）
+
+目的：让 writer-agent 感知"本章之前"所有出场角色（尤其配角）在多维度（立场/关系/境界/知识/情绪/目标）的演进漂移，避免行为与既定进度冲突，或把长期未出场的配角写"掉线"。
+
+**数据来源**：`IndexManager.get_progressions_for_character(char_id, before_chapter=N)`（US-019 FIX-18 P5a 落地的 `character_progressions` 表，由 data-agent Step B.7.6 写入）。
+
+**构造步骤**：
+1. 收集本章出场实体 `char_ids`（来自大纲关键实体 + 推断出场配角）。
+2. 调用 `ink_writer.progression.build_progression_summary(idx, char_ids, before_chapter=N, max_rows_per_char=5)`：
+   - 过滤 `chapter_no < N`
+   - 每角色 ≤5 行（超出时保留最近 N 条，因为近期演进对本章行为更有约束力）
+   - 返回 `{char_id: [{chapter_no, dimension, from_value, to_value, cause}, ...]}`
+3. 渲染为 Markdown：`render_progression_summary_md(summary)`，产出"## 本章之前 · 角色演进摘要"板块，嵌入任务书第 8.7 板块之后（与"出场角色状态快照"并列：快照是**当前**状态，演进摘要是**漂移轨迹**）。
+4. 同一结构注入 Context Contract 的 `character_progression_summary` 字段（供 Step 2A writer-agent 以及后续一致性检查器复用）。
+
+**降级**：
+- 无 `character_progressions` 表（早期章节尚未写过演进）→ 所有角色返回空 → 输出 `[本章之前无角色演进记录]`，不阻断流程。
+- 角色出场但无演进事件 → 不加入 summary（保持表格干净）。
+
+**与其他板块的区别**：
+- 板块 8.7（状态快照）：位置/目标/情绪/关系的**快照值**（来自 `scene_exit_snapshot`）
+- 板块 8.8（本节演进摘要）：维度**漂移历史**（跨多章的 from→to 轨迹）
+- 板块 11（角色语言指纹）：说话风格指纹（来自 `voice_fingerprint`）
+
 ### Step 5: 组装创作执行包（任务书 + Context Contract + 直写提示词）
 输出可直接供 Step 2A 消费的单一执行包，不拆分独立 Step 1.5。
 
@@ -766,6 +790,7 @@ Context Contract 必须字段（不可缺）：
 - `追读力设计`
 - `protagonist_knowledge_gate`（知识盲区清单，供 consistency-checker Layer 5 使用）
 - `active_negative_constraints`（活跃否定约束清单，供 writer-agent L6 铁律和 outline-compliance-checker O7 使用）
+- `character_progression_summary`（FIX-18 P5c）：出场角色"本章之前"的多维度演进切片（≤5 行/角色），由 Step 4.5 构造。无记录时保留字段并置 `"[本章之前无角色演进记录]"` 占位符，不可静默剔除
 
 ### Step 5.5: 输出后处理 — 空值字段自适应裁剪（v13.1 新增）
 

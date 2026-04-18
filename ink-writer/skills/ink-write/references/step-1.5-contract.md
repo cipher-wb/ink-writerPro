@@ -17,6 +17,7 @@
 - 信息密度（low/medium/high）
 - 是否过渡章（true/false，必须按大纲判定，不按字数判定）
 - 追读力设计（钩子类型/强度、微兑现清单、爽点模式）
+- `character_progression_summary`（FIX-18 P5c）：出场角色在本章之前的多维度演进切片（≤5 行/角色，字段 `chapter_no/dimension/from_value/to_value/cause`）。writer-agent 据此感知配角立场/关系/境界/知识/情绪/目标的漂移，避免"掉线"或行为与既定演进冲突。若无记录，输出占位符 `[本章之前无角色演进记录]`。
 
 过渡章判定规则（强制）：
 - 依据章纲/卷纲中的章节功能标签与目标（铺垫/转场/承接/回收等）。
