@@ -195,3 +195,16 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - progression 数据库列名是 from_value/to_value（US-019），但 data-agent JSON 输出契约用 from/to（US-020）；Layer K spec 文档统一用 from_value/to_value 与 IndexManager 对齐（context-agent US-021 注入的 summary 也是 from_value/to_value）
   - "情绪 + 距离<3" 双降级测试：critical→high→low，链式 dict 映射写法 `{"critical":"medium","high":"low"}.get(s,s)` 一行搞定
 ---
+
+## 2026-04-18 14:10 - US-023 (FIX-18 P5e 端到端测试)
+- 新增 tests/integration/test_progressions_e2e.py（3 测试，pytest -m integration）
+  - 80 章 mock：王小明立场陌生→盟友→中立→敌人（ch10/ch40/ch70）
+  - test_ch79_consistent: 正文呼应'敌人'→零违规
+  - test_ch80_sudden_loyalty: 伪造"忠诚"+提到"盟友"→ critical OOC ≥1 条
+  - test_summary_excludes_current_chapter_rows: before_chapter 严格小于
+- Verification: tests/integration/test_progressions_e2e.py 3 passed; 全量 **2406 passed + 1 skipped** 零回归（baseline 2310→2406 由 P5a-d + P5e 累计新增）
+- **Learnings for future iterations:**
+  - tests/ 不是 Python 包（无 __init__），跨子目录 import 会失败：`from tests.harness.X import Y` → ModuleNotFoundError
+  - 集成测试如需复用 harness 内逻辑，要么 inline，要么把目标函数提取到 ink_writer/ 真实模块
+  - Monitor 的 `until ! pgrep` 模式适合等待长任务退出，但要 grep 进程时注意 -q 选项可能截断 ps 命令行
+---
