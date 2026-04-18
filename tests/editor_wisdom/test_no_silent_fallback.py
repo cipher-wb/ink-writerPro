@@ -21,11 +21,14 @@ def test_retriever_raises_on_missing_index(tmp_path):
 def test_context_injection_propagates_when_enabled():
     """With enabled=True, context_injection re-raises EditorWisdomIndexMissingError."""
     from ink_writer.editor_wisdom.context_injection import build_editor_wisdom_section
+    # v14 US-002：patch get_retriever（Step 2 US-006 单例化 后的入口）
+    from ink_writer.editor_wisdom.retriever import clear_retriever_cache
+    clear_retriever_cache()
 
     config = EditorWisdomConfig(enabled=True)
 
     with patch(
-        "ink_writer.editor_wisdom.context_injection.Retriever",
+        "ink_writer.editor_wisdom.context_injection.get_retriever",
         side_effect=EditorWisdomIndexMissingError("missing index"),
     ):
         with pytest.raises(EditorWisdomIndexMissingError):
@@ -50,11 +53,14 @@ def test_context_injection_swallows_when_disabled():
 def test_writer_injection_propagates_when_enabled():
     """With enabled=True, writer_injection re-raises EditorWisdomIndexMissingError."""
     from ink_writer.editor_wisdom.writer_injection import build_writer_constraints
+    # v14 US-002：patch get_retriever（Step 2 US-006 单例化后的入口）
+    from ink_writer.editor_wisdom.retriever import clear_retriever_cache
+    clear_retriever_cache()
 
     config = EditorWisdomConfig(enabled=True)
 
     with patch(
-        "ink_writer.editor_wisdom.writer_injection.Retriever",
+        "ink_writer.editor_wisdom.writer_injection.get_retriever",
         side_effect=EditorWisdomIndexMissingError("missing index"),
     ):
         with pytest.raises(EditorWisdomIndexMissingError):

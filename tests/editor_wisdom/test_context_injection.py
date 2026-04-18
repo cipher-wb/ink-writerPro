@@ -246,8 +246,12 @@ def test_retriever_failure_raises_when_enabled():
     """If retriever init fails and enabled=True, exception propagates."""
     config = EditorWisdomConfig(enabled=True)
 
+    # v14 US-002：Step 2 US-006 改 context_injection 使用 get_retriever 单例，需 patch
+    # get_retriever 而非 Retriever；同时清缓存防止被旧实例命中
+    from ink_writer.editor_wisdom.retriever import clear_retriever_cache
+    clear_retriever_cache()
     with patch(
-        "ink_writer.editor_wisdom.context_injection.Retriever",
+        "ink_writer.editor_wisdom.context_injection.get_retriever",
         side_effect=FileNotFoundError("no index"),
     ):
         with pytest.raises(FileNotFoundError):
