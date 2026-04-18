@@ -139,3 +139,23 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - run_propagation 设计为 records= 注入 mock 是延续 drift_detector 的测试友好惯例
   - DebtStore.save_debts 是 batch upsert，append 是 single；SKILL/AC 用 save_debts 名字对接更直观
 ---
+
+## 2026-04-18 - US-018
+- FIX-17 P4e: propagation 全链路端到端集成测试
+- Files added:
+  - tests/integration/__init__.py
+  - tests/integration/test_propagation_e2e.py (2 tests, @pytest.mark.integration)
+- Files changed:
+  - pytest.ini (testpaths 追加 tests/integration；注册 integration marker)
+- Scenario: 30 章 mock 项目，第 25 章 continuity-checker 报 target=5 的 cross_chapter_conflict
+  - run_propagation(ch=30, interval=30) 经真实 sqlite index.db 捕获 1 条 drift
+  - 验证落盘 .ink/propagation_debt.json
+  - 验证 load_active_debts / render_debts_for_plan / filter_debts_for_range 消费路径
+  - mark_debts_resolved → status='resolved' + active 列表清空 + 幂等
+- 零回归：pytest --no-cov 全量 EXIT=0（progress 100% 全部 passed/skipped）
+- **Learnings for future iterations:**
+  - drift_detector 会同时扫描 critical_issues 和 checker_results；mock 时避免重复源以防 drift 双倍
+  - tests/integration 需显式加入 pytest.ini testpaths，pytest 才会自动发现
+  - integration marker 需要在 pytest.ini [pytest] markers= 注册以消除 PytestUnknownMarkWarning
+  - 构造真实 sqlite review_metrics 表比 records= 注入更能覆盖 _load_records_from_db 的 SQL 路径
+---
