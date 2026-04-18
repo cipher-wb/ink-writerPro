@@ -104,6 +104,25 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - Severity 用 Pydantic Literal，默认 "medium"；落库前要 lower + 白名单过滤，否则 Pydantic 抛
 ---
 
+## 2026-04-18 - US-017（FIX-17 P4d：ink-plan 消费 propagation_debt）
+- 新增 `ink_writer/propagation/plan_integration.py`：
+  - `ACTIVE_STATUSES = {"open", "in_progress"}`（把 AC 里的 status='active' 落到模型真值域）
+  - `load_active_debts(project_root)` / `filter_debts_for_range(debts, start, end)`（target_chapter 区间过滤，inclusive）
+  - `mark_debts_resolved(project_root, debt_ids)`（幂等翻转 → resolved；仅在真正变化时落盘）
+  - `render_debts_for_plan(debts)`（生成 planner 注入用的 markdown snippet）
+- `propagation/__init__.py` 暴露 5 个新 API。
+- `ink-writer/skills/ink-plan/SKILL.md`：Workflow 新增 Step 1.5 + 专章说明；Step 8 收尾调用 `mark_debts_resolved`。
+- 新增 `tests/harness/test_plan_consumes_debts.py`（11 用例）：
+  - 常量断言 / 缺失文件返回空 / active 过滤（剔除 resolved & wont_fix）
+  - 区间过滤（inclusive）/ 颠倒边界容错 / 幂等翻转 / 空 debt_ids 不创建文件
+  - render 空/非空分支 / 端到端 load→filter→annotate→mark
+- Verification: tests/harness 104 passed + 1 skipped（baseline 93 + 11 新增，零回归）
+- **Learnings for future iterations:**
+  - AC 里的 status 名词"active"在 Pydantic 模型里不存在，需要用 `ACTIVE_STATUSES` 常量明确语义，避免后续模块用字符串比较出 bug
+  - mark_debts_resolved 仅在章纲落盘**之后**调用，保证中断场景下不会留下"debts 假 resolved 但 plan 未保存"的脏状态
+  - SKILL.md 示例用 Python 片段而非 bash，是因为 propagation 模块没有 CLI wrapper；planner 本身就在 Python 上下文里调用
+---
+
 ## 2026-04-18 - US-016（FIX-17 P4c：ink-macro-review 集成）
 - 新增 `ink_writer/propagation/macro_integration.py`：`should_run/get_interval/run_propagation`
   - INK_PROPAGATION_INTERVAL 环境覆盖（默认 50；非法/0/负值回落 50）

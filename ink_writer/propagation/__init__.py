@@ -13,6 +13,13 @@ from ink_writer.propagation.macro_integration import (
     run_propagation,
     should_run,
 )
+from ink_writer.propagation.plan_integration import (
+    ACTIVE_STATUSES,
+    filter_debts_for_range,
+    load_active_debts,
+    mark_debts_resolved,
+    render_debts_for_plan,
+)
 
 __all__ = [
     "PropagationDebtFile",
@@ -24,4 +31,9 @@ __all__ = [
     "get_interval",
     "run_propagation",
     "should_run",
+    "ACTIVE_STATUSES",
+    "load_active_debts",
+    "filter_debts_for_range",
+    "mark_debts_resolved",
+    "render_debts_for_plan",
 ]
