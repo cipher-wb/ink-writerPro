@@ -239,3 +239,23 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - Markdown rewriter is aggressive — it rewrites `sys.path.insert(..., ".../scripts")` prose in design docs too. Dry-run only is fine; --apply against docs/tasks/ may need narrower targeting
   - pytest 输出的 summary 在 quiet mode + 大量 warning 时会被 tail/grep 错位；用 `-rN` 可拿到清晰 summary
 ---
+
+## 2026-04-18 - US-028
+- 覆盖率阶梯：30 → 50（补核心模块测试）
+- Files modified:
+  - .coveragerc（扩展 source 到 ink_writer/core + ink_writer/checker_pipeline，omit tests_data_modules）
+  - pytest.ini（--cov-fail-under 30 → 50，更新说明）
+  - ralph/prd.json（US-028 passes=true）
+- Files added:
+  - tests/integration/test_low_coverage_modules.py（17 tests，覆盖 encoding_validator / slim_review_bundle / step3_harness_gate 三个最低覆盖率模块）
+- Verification:
+  - 新 tests：17/17 passing
+  - 全量：2420 passed, 19 skipped（baseline 2403 + 17 new；零回归）
+  - TOTAL coverage: 81.91%（门禁 50% ✅）
+  - 最低 5 模块（扩展后）：encoding_validator 51%, step3_harness_gate 56%, slim_review_bundle 59%, step3_runner 59%, dashboard/app 60%
+- **Learnings for future iterations:**
+  - .coveragerc 之前只测 `ink-writer/scripts` + `ink-writer/dashboard`，FIX-11 迁移后 `ink_writer/core/` 未纳入，导致覆盖率“虚低”或“虚高”——扩展 source 后数字才反映真实状态。
+  - US-029（50 → 70）门槛已由本 US 的 .coveragerc 扩展 + 总覆盖 82% 自动满足，下一轮只需改 pytest.ini `--cov-fail-under` 为 70。
+  - 三个低覆盖模块的集成测试都遵循：`from <module> import <fn>` 纯函数调用（encoding_validator）+ 临时 SQLite/JSON fixture（step3_harness_gate）+ tmp_path 读写（slim_review_bundle）。无需 mock LLM。
+  - `step3_harness_gate` 的数据源优先级 index.db → legacy JSON → 显式 FAIL，构造 fixture 时注意 `review_payload_json` 要是 JSON 字符串且包含 `checker_results` 键。
+---

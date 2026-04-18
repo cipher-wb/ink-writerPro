@@ -2,8 +2,11 @@
 source =
     ink-writer/scripts
     ink-writer/dashboard
+    ink_writer/core
+    ink_writer/checker_pipeline
 omit =
     */tests/*
+    */tests_data_modules/*
     */__pycache__/*
     */frontend/*
 
