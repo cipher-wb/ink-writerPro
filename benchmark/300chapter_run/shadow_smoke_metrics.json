@@ -1,0 +1,26 @@
+{
+  "chapters": 5,
+  "g1_wall_time_per_chapter": {
+    "mean_s": 0.0138,
+    "p95_s": 0.0389,
+    "count": 5
+  },
+  "g2_g3_milestones": [
+    {
+      "chapter": 5,
+      "state_json_kb": 0.71,
+      "index_db_kb": 432.0,
+      "wall_time_s_cum": 0.069
+    }
+  ],
+  "g4_context_pack": {
+    "mean_chars": 1418.0,
+    "mean_tokens_est": 834.1,
+    "count": 5
+  },
+  "g5_retriever_latency": {
+    "p50_ms": 0.001,
+    "p95_ms": 0.001,
+    "count": 1
+  }
+}
