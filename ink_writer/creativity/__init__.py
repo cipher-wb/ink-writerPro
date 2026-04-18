@@ -21,15 +21,23 @@ from ink_writer.creativity.name_validator import (
     validate_book_title,
     validate_character_name,
 )
+from ink_writer.creativity.sensitive_lexicon_validator import (
+    VALID_AGGRESSION_LEVELS,
+    VALID_VOICES,
+    validate_density,
+)
 
 __all__ = [
     "BANNED_WORDS",
     "GF3_MAX_CHARS",
     "Severity",
+    "VALID_AGGRESSION_LEVELS",
     "VALID_DIMENSIONS",
+    "VALID_VOICES",
     "ValidationResult",
     "Violation",
     "validate_book_title",
     "validate_character_name",
+    "validate_density",
     "validate_golden_finger",
 ]
