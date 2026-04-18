@@ -470,6 +470,45 @@ class StateManager:
         except filelock.Timeout:
             raise RuntimeError("无法获取 state.json 文件锁，请稍后重试")
 
+    def save_external_state(self, state_dict: Dict[str, Any]) -> None:
+        """v14 US-012/013：让外部调用者（archive_manager / update_state.py）的 state
+        dict 写入走 SQL-first 流程，保持与 flush() 一致性。
+
+        流程：acquire lock → SQL sync（失败 raise StateWriteError） → JSON view write
+        （失败仅 warning）→ update self._state。
+
+        与 save_state() 区别：不依赖 pending 机制；直接接受外部修改好的完整 state dict。
+        """
+        self.config.ensure_dirs()
+        lock = filelock.FileLock(str(self._lock_path), timeout=10)
+        try:
+            with lock:
+                # 1) SQL 单例同步（SQL-first）：失败提升为 raise
+                try:
+                    self._sync_state_to_kv(state_dict)
+                except Exception as exc:
+                    raise StateWriteError(
+                        f"save_external_state: SQL sync failed, aborting to preserve integrity. "
+                        f"Cause: {exc}"
+                    ) from exc
+
+                # 2) JSON 视图写入：失败仅 warning
+                try:
+                    atomic_write_json(
+                        self.config.state_file, state_dict, use_lock=False, backup=True
+                    )
+                except Exception as exc:
+                    logger.warning(
+                        "save_external_state JSON view write failed: %s; "
+                        "SQL has authoritative data. Use rebuild_state_json() to regenerate.",
+                        exc,
+                    )
+
+                # 3) 更新内存快照
+                self._state = state_dict
+        except filelock.Timeout:
+            raise RuntimeError("save_external_state: 无法获取 state.json 文件锁，稍后重试")
+
     def _sync_state_to_kv(self, disk_state: Dict[str, Any]) -> None:
         """将 state.json 单例字段同步到 SQLite state_kv 表（v13 单一事实源）。
 
