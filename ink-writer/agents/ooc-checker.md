@@ -277,6 +277,63 @@ model: inherit
 - [ ] 转变过程有渐进式铺垫？
 - [ ] 转变后的行为与触发事件逻辑一致？
 
+### Layer K：跨章 Progression 一致性检查（CROSS_CHAPTER_OOC）
+
+> **目的（FIX-18 P5d 闭环）**：80+ 章长篇连载中，data-agent 已落库 `character_progressions`（dimension∈{立场/关系/境界/知识/情绪/目标}，from_value→to_value，cause），context-agent 已把"本章之前 · 角色演进摘要"注入 task-book。本层利用这份摘要做"角色立场/关系/境界渐变是否连贯"的跨章审计 —— 防止"前几章已确认转变到 B，本章却仍在 A"的人设回退。
+>
+> **数据来源**：审查包应携带 `progression_summary`（compact rows：`chapter_no / dimension / from_value / to_value / cause`，按角色聚合）以及"前几章 summary"文本。
+
+#### 检测规则
+
+对每个主要角色 `c` 与每条 progression 行 `(dim, from_value, to_value)`：
+
+1. **回退检测（核心）**：若"前几章 summary"或本章正文中显式出现 `from_value` 描述当前状态、且**未**出现 `to_value` 或更新后状态 → 标 **CROSS_CHAPTER_OOC**（severity=critical）
+   - 示例：progression 行 `(关系, 陌生, 盟友, 共同渡劫, ch12)`；ch80 摘要里仍写"林天对李雪保持陌生人的距离" → critical
+2. **方向冲突**：本章对 `c` 的 `dim` 表现明显朝 `from_value` 反向（progression 标记为 `to_value`，本章描写却退回更早的 `from_value` 之前的状态）→ critical
+3. **静默回滚**：本章正文显式描述该 dim 状态变化，但与 progression 表里最新 `to_value` 不匹配且无 `cause` 解释 → high
+4. **降级条件**：
+   - 若该 progression 行 `chapter_no` 与本章距离 < 3 章 → severity 下调一级（短期内允许情绪/立场反复）
+   - 若 dim ∈ {情绪}（情绪本身允许波动） → critical→medium，high→low
+
+#### 输入契约
+
+审查包必须满足：
+- `progression_summary`：`Dict[char_id, List[Row]]`，Row schema 同 `IndexManager.get_progressions_for_character` 返回（`chapter_no / dimension / from_value / to_value / cause`）
+- `prev_chapter_summary_text`：前 1-3 章正文摘要拼接（context-agent 产出）
+- `current_chapter_text`：本章正文
+
+**降级**：若 `progression_summary` 缺失或为空 → 整层跳过（输出 `cross_chapter_check.skipped: true`）
+
+#### 输出 JSON 示例
+
+```json
+{
+  "cross_chapter_check": {
+    "checked_chars": ["林天", "李雪"],
+    "violations": [
+      {
+        "rule": "CROSS_CHAPTER_OOC",
+        "severity": "critical",
+        "character_id": "char_linchen",
+        "dimension": "关系",
+        "progression_at_chapter": 12,
+        "progression_from": "陌生",
+        "progression_to": "盟友",
+        "evidence_in_text": "ch80 第3段：'对她仍如陌生人般生疏'",
+        "fix_hint": "改写为符合 to_value=盟友 的相处方式，或在 progression_events 中补一次回退事件 + cause"
+      }
+    ],
+    "skipped": false
+  }
+}
+```
+
+#### 与 data-agent / context-agent 的协议
+
+- **data-agent (US-020)**：负责 `progression_events` 落库（`from`/`to`/`cause`）
+- **context-agent (US-021)**：负责把 `progression_summary` 注入 task-book
+- **ooc-checker (本层 US-022)**：消费 summary，做跨章一致性审计；critical 触发 hard block 回退 Step 2A
+
 ### 第七步: 生成报告
 
 ```markdown
@@ -366,6 +423,8 @@ model: inherit
 ❌ 黄金三章中放过 FLAT_TO_LIFE_THREAT / NO_EMOTION_ON_WINDFALL（ch1-3 这两类 high 升级为 hard block）
 ❌ 忽略围观群众失声（BYSTANDER_SILENCE），公共场所世界不能空洞
 ❌ 误判豁免（设定集无 cold_blooded/battle_hardened/transcendent 等对应标签的角色，不得免检其无反应）
+❌ 放过 CROSS_CHAPTER_OOC critical（progression 已标 to_value，但本章/前序摘要仍持 from_value，必须 hard block 回退 Step 2A）
+❌ 在 progression_summary 存在时跳过 Layer K（仅当摘要为空才允许 skipped）
 
 ## 成功标准
 

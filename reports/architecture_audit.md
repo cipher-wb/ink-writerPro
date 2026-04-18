@@ -185,6 +185,7 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [context-agent, data-agent]: `章节编号规则 4位数字 如 0001 0099 0100`
 - **2x** in [context-agent, data-agent]: `cli 入口与脚本目录校验 必做 为避免 pythonpath cd`
 - **2x** in [context-agent, data-agent]: `index recent appearances limit 20 python3`
+- **2x** in [context-agent, ooc-checker]: `立场 关系 境界 知识 情绪 目标`
 - **2x** in [context-agent, writer-agent]: `references shared scene craft index md`
 - **2x** in [context-agent, outline-compliance-checker]: `required_foreshadows id f 001 content 数字颜色从灰变红`
 - **2x** in [data-agent, ooc-checker]: `catchphrases 斗之力 无处不在 speech_habits 喜欢用反问句 生气时用短句`
@@ -211,4 +212,3 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [logic-checker, outline-compliance-checker]: `综合评分 结论 通过 未通过 简要说明 critical`
 - **2x** in [logic-checker, outline-compliance-checker]: `count high count medium count low`
 - **2x** in [logic-checker, outline-compliance-checker]: `是否触发 原因 第五步 输出 json json`
-- **2x** in [logic-checker, outline-compliance-checker]: `硬阻断触发 必须回退修复 禁止事项 降低任何层级的 severity 严重度不得降级`

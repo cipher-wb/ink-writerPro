@@ -183,3 +183,15 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - US-019 (P5a) 实现的 IndexManager.save_progression_event 用 from_value/to_value 列名，但 data-agent JSON 输出契约用 from/to 字段（更紧凑）。Step 5 解析端需要做映射；后续若有 P5c (writer 消费) 要注意这层别名
   - dimension 枚举是中文（立场/关系/境界/知识/情绪/目标），与 US-019 测试里用的英文 power_level/relationship 不一致 — 这是规格演进，US-019 只测 schema 不限 enum，由 data-agent 规格层兜底
 ---
+
+## 2026-04-18 - US-022 (FIX-18 P5d: ooc-checker 跨章 progression 审计)
+- Spec 更新：ink-writer/agents/ooc-checker.md 新增 "Layer K：跨章 Progression 一致性检查" + 4 条规则 + 输入契约 + 输出 JSON 示例 + 与 data/context-agent 协议；禁止事项追加 2 条（放过 critical + 误跳 Layer K）
+- 新测试：tests/harness/test_ooc_checker_progression.py (15 tests)
+  - 规格层 5 测试：grep Layer K 标题/CROSS_CHAPTER_OOC/输入契约/skipped 语义/6 dimension
+  - 数据层 10 测试：纯 Python 等价检测器对 mock 案例断言（关系回退/境界回退/距离降级/情绪降级/双降级/多角色独立/to_value 出现即清除等）
+- Verification: 全量 pytest --no-cov → **2403 passed, 1 skipped**, 零回归（基线 2388 → +15）
+- **Learnings for future iterations:**
+  - ooc-checker 是 Markdown Skill agent，契约测试同 US-020 pattern：spec grep + data 层等价 Python 检测器
+  - progression 数据库列名是 from_value/to_value（US-019），但 data-agent JSON 输出契约用 from/to（US-020）；Layer K spec 文档统一用 from_value/to_value 与 IndexManager 对齐（context-agent US-021 注入的 summary 也是 from_value/to_value）
+  - "情绪 + 距离<3" 双降级测试：critical→high→low，链式 dict 映射写法 `{"critical":"medium","high":"low"}.get(s,s)` 一行搞定
+---
