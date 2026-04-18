@@ -208,3 +208,13 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - 集成测试如需复用 harness 内逻辑，要么 inline，要么把目标函数提取到 ink_writer/ 真实模块
   - Monitor 的 `until ! pgrep` 模式适合等待长任务退出，但要 grep 进程时注意 -q 选项可能截断 ps 命令行
 ---
+
+## 2026-04-18 - US-024
+- FIX-11 design doc for double-package merge (ink_writer/ vs scripts/data_modules/)
+- Files changed: tasks/design-fix-11-python-pkg-merge.md (new), ralph/prd.json (passes:true + AWAITING USER DECISION)
+- Recommended 方向 A (merge into ink_writer/core/). Rationale: 90 vs 32 imports, architecture alignment with CLAUDE.md US-402, eliminates sys.path magic.
+- **Learnings for future iterations:**
+  - This is a 🛑 human-gate story: Ralph pauses here. Do NOT pick up FIX-11 implementation autonomously — wait for APPROVED BY USER note.
+  - Doc-only US means pytest is only used to confirm collection still works; no test changes needed.
+  - When counting imports across dual packages, filter `^from X` and `^import X` to avoid matching comments/docstrings.
+---
