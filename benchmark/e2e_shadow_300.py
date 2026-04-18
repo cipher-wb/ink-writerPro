@@ -90,6 +90,8 @@ class ShadowMetrics:
     context_pack_chars: list[int] = field(default_factory=list)
     # G5
     retriever_latency_ms: list[float] = field(default_factory=list)
+    # US-018: Q1-Q8 quality snapshots (one dict per 50-chapter sample).
+    quality_samples: list[dict[str, Any]] = field(default_factory=list)
 
     @property
     def g1_mean_s(self) -> float:
@@ -134,6 +136,8 @@ class ShadowMetrics:
                 "p95_ms": round(self.g5_p95_ms, 3),
                 "count": len(self.retriever_latency_ms),
             },
+            # US-018: Q1-Q8 quality snapshots (one dict per 50-chapter sample).
+            "quality_samples": list(self.quality_samples),
         }
 
 
@@ -236,11 +240,13 @@ class ShadowRunner:
         milestones: tuple[int, ...] = DEFAULT_MILESTONES,
         real_retriever: bool = False,
         retriever_sample_every: int = 10,
+        quality_sample_every: int = 50,
     ) -> None:
         self.chapters = chapters
         self.milestones = tuple(m for m in milestones if m <= chapters) or (chapters,)
         self.real_retriever = real_retriever
         self.retriever_sample_every = max(1, retriever_sample_every)
+        self.quality_sample_every = max(1, quality_sample_every)
 
         self._owns_project = project_root is None
         if project_root is None:
@@ -410,6 +416,10 @@ class ShadowRunner:
             if ch in self.milestones:
                 self.metrics.milestones.append(self._snapshot_milestone(ch, cum_time))
 
+            # US-018: Q1-Q8 quality snapshot per `quality_sample_every` chapters.
+            if ch % self.quality_sample_every == 0 or ch == self.chapters:
+                self.metrics.quality_samples.append(self._snapshot_quality(ch))
+
             if progress_cb is not None:
                 progress_cb(ch)
 
@@ -426,6 +436,19 @@ class ShadowRunner:
         self.metrics.chapters = self.chapters
         _ = time.perf_counter() - start  # 总时长，保留占位
         return self.metrics
+
+    def _snapshot_quality(self, chapter: int) -> dict[str, Any]:
+        """US-018: collect Q1-Q8 SQL-direct metrics for the current progress.
+
+        Scope: cumulative ``chapter_range=(1, chapter)``. Any missing tables
+        yield ``None`` fields — safe for smoke projects.
+        """
+        from ink_writer.quality_metrics import collect_quality_metrics
+
+        report = collect_quality_metrics(
+            self.project_root, chapter_range=(1, chapter)
+        )
+        return report.to_dict()
 
     def _snapshot_milestone(self, chapter: int, wall_time_cum: float) -> MilestoneSample:
         assert self._config is not None

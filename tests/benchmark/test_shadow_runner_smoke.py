@@ -115,6 +115,34 @@ class TestShadowRunnerSmoke:
         assert "g2_g3_milestones" in loaded
         assert "g4_context_pack" in loaded
         assert "g5_retriever_latency" in loaded
+        # US-018: quality_samples key exists and is JSON-safe.
+        assert "quality_samples" in loaded
+        assert isinstance(loaded["quality_samples"], list)
+
+    def test_quality_samples_collected(self, tmp_path):
+        """US-018: 每 quality_sample_every 章采样一次 Q1-Q8，最后一章必含。"""
+        r = ShadowRunner(
+            chapters=5,
+            project_root=tmp_path,
+            milestones=(5,),
+            real_retriever=False,
+            retriever_sample_every=5,
+            quality_sample_every=2,  # smoke: 章2/4/5 共 3 个样本
+        )
+        try:
+            metrics = r.run()
+        finally:
+            r.cleanup()
+        # 应有 3 个采样点（ch2/ch4/ch5 最后一章补采）
+        assert len(metrics.quality_samples) >= 2
+        for sample in metrics.quality_samples:
+            # 每个采样点都是 QualityReport.to_dict()
+            assert "q1_progression_conflicts" in sample
+            assert "q7_candidate_facts_unresolved" in sample
+            assert "q8_state_index_drift_count" in sample
+            assert sample["chapter_range"][0] == 1
+        # 最后一章范围应与 runner.chapters 对齐
+        assert metrics.quality_samples[-1]["chapter_range"][1] == 5
 
 
 class TestReportGeneration:
