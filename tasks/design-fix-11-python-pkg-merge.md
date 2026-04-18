@@ -56,7 +56,7 @@
 
 ### 1.3 关键摩擦点
 
-1. **路径魔法**：所有 CLI 必须先 `# [FIX-11] sys.path.insert no longer required — ink_writer is importable`，否则 `import data_modules` 失败
+1. **路径魔法（已解决）**：原先所有 CLI 必须先 `sys.path.insert(0, "ink-writer/scripts")`，否则 `import data_modules` 失败。FIX-11 合并后不再需要
 2. **双 schemas.py**：`ink_writer/*/schemas.py`（域内） vs `data_modules/schemas.py`（全局）存在重叠风险
 3. **测试路径**：`data_modules/tests/` 与 `ink_writer/*/tests/` 需要两套 pytest 配置
 4. **历史债**：`data_modules/ink.py` 是主 CLI 入口，但新 agents 都指向 `ink_writer.*`
@@ -165,7 +165,7 @@ ink-writer/scripts/data_modules/
 | **P1** 迁移 | 写 `scripts/fix11_migrate.py`：`git mv` + 改 import（`libcst` 语法树替换）| 脚本幂等；失败可 `git reset --hard` | 1.5h |
 | **P2** 入口 | 改 `scripts/ink.py`、`scripts/migrate.py` 为薄壳：`from ink_writer.core.cli.ink import main` | 局部改动 | 0.3h |
 | **P3** 测试 | 迁 `data_modules/tests/` → `ink_writer/core/tests/`；跑 `pytest --no-cov` | 若断测单独修 | 0.5h |
-| **P4** 清理 | 删 `data_modules/__init__.py`、`data_modules/` 空目录；搜删所有 `# [FIX-11] sys.path.insert no longer required — ink_writer is importable` | commit 粒度细，可 revert | 0.3h |
+| **P4** 清理 | 删 `data_modules/__init__.py`、`data_modules/` 空目录；搜删所有 `sys.path.insert(scripts)` | commit 粒度细，可 revert | 0.3h |
 | **P5** 文档 | 更新 CLAUDE.md、agents/*.md、docs/*.md 中旧路径 | 文本改动 | 0.2h |
 | **P6** PYTHONPATH | 在 `pyproject.toml` / `setup.cfg` 加 `packages = ["ink_writer"]`，`pip install -e .` | 新增配置 | 0.2h |
 
