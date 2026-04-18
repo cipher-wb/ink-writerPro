@@ -192,8 +192,8 @@ __pycache__/
     def _backup_index_db(self, chapter_num: int) -> None:
         """每章备份 index.db（使用 SQLite backup API 保证一致性）"""
         try:
-            from data_modules.config import DataModulesConfig
-            from data_modules.index_manager import IndexManager
+            from ink_writer.core.infra.config import DataModulesConfig
+            from ink_writer.core.index.index_manager import IndexManager
 
             cfg = DataModulesConfig.from_project_root(str(self.project_root))
             if cfg.index_db.exists():

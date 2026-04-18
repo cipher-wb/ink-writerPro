@@ -211,8 +211,8 @@ def migrate_state_to_sqlite(state_path: Path, project_root: Path) -> None:
 
     try:
         sys.path.insert(0, str(Path(__file__).parent))
-        from data_modules.sql_state_manager import SQLStateManager
-        from data_modules.config import DataModulesConfig
+        from ink_writer.core.state.sql_state_manager import SQLStateManager
+        from ink_writer.core.infra.config import DataModulesConfig
 
         config = DataModulesConfig(project_root=project_root)
         sql_mgr = SQLStateManager(config)

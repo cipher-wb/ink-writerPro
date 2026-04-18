@@ -15,20 +15,20 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(ROOT / "ink-writer" / "scripts" / "data_modules"))
+# [FIX-11] removed: sys.path.insert(0, str(ROOT / "ink-writer" / "scripts" / "data_modules"))
 
 
 def test_state_write_error_is_runtime_error_subclass():
     """StateWriteError 必须是 RuntimeError 子类（以便保持兼容捕获）。"""
     pytest.importorskip("data_modules.state_manager", reason="data_modules not available")
-    from data_modules.state_manager import StateWriteError
+    from ink_writer.core.state.state_manager import StateWriteError
     assert issubclass(StateWriteError, RuntimeError)
 
 
 def test_sql_first_raises_when_kv_sync_fails():
     """_sync_state_to_kv 失败 → raise StateWriteError。"""
     pytest.importorskip("data_modules.state_manager", reason="data_modules not available")
-    from data_modules.state_manager import StateManager, StateWriteError
+    from ink_writer.core.state.state_manager import StateManager, StateWriteError
 
     mgr = MagicMock(spec=StateManager)
     mgr._sql_state_manager = MagicMock()
@@ -43,7 +43,7 @@ def test_sql_first_raises_when_kv_sync_fails():
 def test_state_write_error_message_contains_hint():
     """StateWriteError 消息必须含 'aborting flush' 让用户理解严重性。"""
     pytest.importorskip("data_modules.state_manager", reason="data_modules not available")
-    from data_modules.state_manager import StateWriteError
+    from ink_writer.core.state.state_manager import StateWriteError
 
     err = StateWriteError("state_kv SQL sync failed; aborting flush to preserve data integrity.")
     assert "aborting flush" in str(err)
@@ -54,7 +54,7 @@ def test_flush_order_has_sql_before_json_in_source():
 
     这是 SQL-first 顺序的最直接验证（不需要实际跑 flush）。
     """
-    sm_path = ROOT / "ink-writer" / "scripts" / "data_modules" / "state_manager.py"
+    sm_path = ROOT / "ink_writer" / "core" / "state" / "state_manager.py"
     content = sm_path.read_text(encoding="utf-8")
     # 定位 flush 方法内部的两个关键调用
     sync_pos = content.find("self._sync_state_to_kv(disk_state)")

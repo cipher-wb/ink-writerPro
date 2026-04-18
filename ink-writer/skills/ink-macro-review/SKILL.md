@@ -35,6 +35,30 @@ source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 
 **审查范围**：最近50章（或当前卷全部章节）
 
+#### 2.0 反向传播扫描（FIX-17 P4c · US-016）
+
+> 在 Tier2 入口先调用 `drift_detector` + `debt_store.save_debts()`，把跨章违规登记为 propagation debt，供 ink-fix 后续清算。
+
+```bash
+python3 -X utf8 -c "
+import sys
+from ink_writer.propagation import should_run, run_propagation
+current = int('${INK_CURRENT_CHAPTER:-0}')
+if should_run(current):
+    run_propagation('${PROJECT_ROOT}', current, stderr=sys.stderr)
+else:
+    print('Propagation: skipped (current_chapter % interval != 0)', file=sys.stderr)
+"
+```
+
+**触发规则**：
+- 默认每 50 章触发一次（`current_chapter % 50 == 0`）
+- 通过环境变量 `INK_PROPAGATION_INTERVAL` 覆盖间隔（如 `30` 表示每 30 章一次）
+- stderr 摘要：`Propagation: N drifts detected, saved to .ink/propagation_debt.json`
+- 仅写盘：`.ink/propagation_debt.json`（结构见 `ink_writer/propagation/models.py`）
+- 纯只读分析（不修章节文件）；后续修复由 `ink-fix` 消费 debt 文件
+
+
 #### 2.1 子情节健康扫描
 
 ```bash
@@ -134,7 +158,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 ```bash
 python3 -X utf8 -c "
 import sys, json
-sys.path.insert(0, '${SCRIPTS_DIR}/data_modules')
+# [FIX-11] sys.path.insert no longer required — ink_writer is importable
 try:
     from style_anchor import save_anchor, check_drift
     from pathlib import Path

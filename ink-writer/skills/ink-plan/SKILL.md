@@ -41,6 +41,7 @@ Use progressive disclosure and load only what current step requires:
 
 ## Workflow
 1. Load project data.
+1.5. **Load propagation debts（FIX-17 P4d，hard constraint）**。
 2. Build setting baseline from 总纲 + 世界观 (in-place incremental).
 3. Select volume and confirm scope.
 4. Generate volume beat sheet (节拍表).
@@ -48,7 +49,7 @@ Use progressive disclosure and load only what current step requires:
 5. Generate volume skeleton.
 6. Generate chapter outlines in batches.
 7. Enrich existing setting files from volume outline (in-place incremental).
-8. Validate + save + update state.
+8. Validate + save + update state（落盘后标记被消化的 debts 为 resolved）。
 
 ## 1) Load project data
 ```bash
@@ -103,6 +104,45 @@ If 总纲.md lacks volume ranges / core conflict / climax, ask the user to fill 
 - 若总纲中对本卷的设想与已写正文发展出现冲突，以**已写正文为准**——列出冲突项并提示用户，建议更新总纲后再继续。
 - 未闭合伏笔中标记为 P0（紧迫）的线索，必须在新卷大纲中安排回收章节。
 - 角色状态查询结果中的能力/关系/认知，作为新卷角色行为的**起点约束**。
+
+## 1.5) Load propagation debts（FIX-17 P4d）
+
+> 反向传播债务（propagation debts）由 `ink-macro-review` 的 canon-drift-detector 在每
+> 50 章触发时写入 `.ink/propagation_debt.json`。本步把 **status ∈ {"open", "in_progress"}**
+> （即 `ACTIVE_STATUSES`）的 debts 作为本轮规划的**硬约束**注入。
+
+**触发条件**：`.ink/propagation_debt.json` 存在且含 active 条目。若文件不存在或全部已
+`resolved` / `wont_fix`，直接跳过本步。
+
+**加载方式（示例 Python 片段）**：
+```python
+from ink_writer.propagation import (
+    filter_debts_for_range,
+    load_active_debts,
+    mark_debts_resolved,
+    render_debts_for_plan,
+)
+
+active_debts = load_active_debts(PROJECT_ROOT)
+# 新卷规划：把 target_chapter 落在本卷章节区间内的 debts 作为必须消化项
+consumable = filter_debts_for_range(active_debts, volume_start_ch, volume_end_ch)
+print(render_debts_for_plan(consumable))  # 注入 planner 提示
+```
+
+**规划硬约束**：
+- `consumable` 中每条 debt 的 `target_chapter` 必须在本次生成/修订的章纲里得到显式处
+  理：或加伏笔、或补前情、或调整节拍，不得忽略。
+- 章纲（chapter plan）顶部必须列出 `consumed_debt_ids: [DEBT-xxx, ...]`，覆盖所有本轮
+  被消化的 debt_id。
+- 无法在本卷消化的 debts（target_chapter 超出本卷范围）保留 active，留给未来 plan 迭代
+  处理；本步**不得**把它们提前翻转为 resolved。
+
+**Step 8（Validate + save）里必须做的收尾**：
+```python
+mark_debts_resolved(PROJECT_ROOT, consumed_debt_ids)
+```
+仅在章纲落盘成功后调用，确保只有真正被消化的 debts 状态从 `open` / `in_progress`
+翻转为 `resolved`。状态翻转幂等，重复调用安全。
 
 ## 2) Build setting baseline from 总纲 + 世界观
 目标：在不推翻现有内容的前提下，让设定集从“骨架模板”进入“可规划可写作”的基线状态。

@@ -26,7 +26,7 @@ def main() -> None:
     sys.path.insert(0, str(scripts_dir))
 
     # 延迟导入，避免 sys.path 未就绪
-    from data_modules.ink import main as _main
+    from ink_writer.core.cli.ink import main as _main
 
     _main()
 

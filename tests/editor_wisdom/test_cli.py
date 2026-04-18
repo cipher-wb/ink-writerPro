@@ -226,9 +226,8 @@ class TestStats:
 
 class TestArgparse:
     def test_help_text_exists(self):
-        ink_py = Path(__file__).resolve().parent.parent.parent / "ink-writer" / "scripts" / "data_modules" / "ink.py"
         subprocess.run(
-            [sys.executable, "-c", f"import sys; sys.path.insert(0, '{ink_py.parent.parent}'); from data_modules.ink import main"],
+            [sys.executable, "-c", "from ink_writer.core.cli.ink import main"],
             capture_output=True, text=True, timeout=10, check=False,
         )
 

@@ -245,8 +245,8 @@ def _search_memory_cards_and_summaries(
     top_k: int,
 ) -> Dict[str, Any]:
     _ensure_scripts_path()
-    from data_modules.config import DataModulesConfig
-    from data_modules.index_manager import IndexManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
 
     config = DataModulesConfig.from_project_root(project_root)
     index_manager = IndexManager(config)
@@ -325,8 +325,8 @@ def _search_with_rag(
     top_k: int,
 ) -> Dict[str, Any]:
     _ensure_scripts_path()
-    from data_modules.config import DataModulesConfig
-    from data_modules.rag_adapter import RAGAdapter
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.context.rag_adapter import RAGAdapter
 
     config = DataModulesConfig.from_project_root(project_root)
     adapter = RAGAdapter(config)
@@ -432,7 +432,7 @@ def _load_rag_assist(
     memory_context: Dict[str, Any],
 ) -> Dict[str, Any]:
     _ensure_scripts_path()
-    from data_modules.config import DataModulesConfig
+    from ink_writer.core.infra.config import DataModulesConfig
 
     config = DataModulesConfig.from_project_root(project_root)
     enabled = bool(getattr(config, "context_rag_assist_enabled", True))
@@ -532,8 +532,8 @@ def _load_rag_assist(
 def _load_contract_context(project_root: Path, chapter_num: int) -> Dict[str, Any]:
     """Build context via ContextManager and return selected sections."""
     _ensure_scripts_path()
-    from data_modules.config import DataModulesConfig
-    from data_modules.context_manager import ContextManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.context.context_manager import ContextManager
 
     config = DataModulesConfig.from_project_root(project_root)
     manager = ContextManager(config)
@@ -722,8 +722,8 @@ def build_review_pack_payload(project_root: Path, chapter_num: int, payload: Dic
 
     # Inject narrative commitments + plot structure fingerprints from index.db
     try:
-        from data_modules.index_manager import IndexManager
-        from data_modules.config import get_config
+        from ink_writer.core.index.index_manager import IndexManager
+        from ink_writer.core.infra.config import get_config
         idx_config = get_config(str(project_root))
         idx = IndexManager(idx_config)
 

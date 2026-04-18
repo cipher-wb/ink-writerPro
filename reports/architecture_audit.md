@@ -4,9 +4,9 @@
 
 ## Summary
 
-- **Python modules scanned**: 179
+- **Python modules scanned**: 195
 - **Import cycles found**: 1
-- **Unused module candidates**: 85
+- **Unused module candidates**: 123
 - **Agents scanned**: 22
 - **Agent overlap pairs**: 8
 - **Repeated prompt fragments**: 50
@@ -24,25 +24,55 @@
 - `anti_detection.sentence_diversity` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/sentence_diversity.py)
 - `checker_pipeline` (/Users/cipher/AI/ink/ink-writer/ink_writer/checker_pipeline/__init__.py)
 - `checker_pipeline.runner` (/Users/cipher/AI/ink/ink-writer/ink_writer/checker_pipeline/runner.py)
+- `checker_pipeline.step3_runner` (/Users/cipher/AI/ink/ink-writer/ink_writer/checker_pipeline/step3_runner.py)
+- `core` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/__init__.py)
+- `core.cli` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/cli/__init__.py)
+- `core.cli.checkpoint_utils` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/cli/checkpoint_utils.py)
+- `core.cli.cli_args` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/cli/cli_args.py)
+- `core.cli.cli_output` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/cli/cli_output.py)
+- `core.cli.ink` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/cli/ink.py)
+- `core.context` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/context/__init__.py)
+- `core.context.context_manager` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/context/context_manager.py)
+- `core.context.context_ranker` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/context/context_ranker.py)
+- `core.context.context_weights` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/context/context_weights.py)
+- `core.context.memory_compressor` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/context/memory_compressor.py)
+- `core.context.query_router` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/context/query_router.py)
+- `core.context.rag_adapter` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/context/rag_adapter.py)
+- `core.context.writing_guidance_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/context/writing_guidance_builder.py)
+- `core.extract` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/extract/__init__.py)
+- `core.extract.anti_ai_lint` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/extract/anti_ai_lint.py)
+- `core.extract.entity_linker` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/extract/entity_linker.py)
+- `core.extract.genre_aliases` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/extract/genre_aliases.py)
+- `core.extract.genre_profile_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/extract/genre_profile_builder.py)
+- `core.extract.golden_three` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/extract/golden_three.py)
+- `core.extract.style_anchor` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/extract/style_anchor.py)
+- `core.extract.style_sampler` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/extract/style_sampler.py)
+- `core.index` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/index/__init__.py)
+- `core.index.index_chapter_mixin` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/index/index_chapter_mixin.py)
+- `core.index.index_debt_mixin` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/index/index_debt_mixin.py)
+- `core.index.index_entity_mixin` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/index/index_entity_mixin.py)
+- `core.index.index_manager` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/index/index_manager.py)
+- `core.index.index_observability_mixin` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/index/index_observability_mixin.py)
+- `core.index.index_reading_mixin` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/index/index_reading_mixin.py)
+- `core.index.index_types` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/index/index_types.py)
+- `core.infra` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/infra/__init__.py)
+- `core.infra.api_client` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/infra/api_client.py)
+- `core.infra.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/infra/config.py)
+- `core.infra.observability` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/infra/observability.py)
+- `core.state` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/state/__init__.py)
+- `core.state.migrate_state_to_sqlite` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/state/migrate_state_to_sqlite.py)
+- `core.state.schemas` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/state/schemas.py)
+- `core.state.snapshot_manager` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/state/snapshot_manager.py)
+- `core.state.sql_state_manager` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/state/sql_state_manager.py)
+- `core.state.state_manager` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/state/state_manager.py)
+- `core.state.state_validator` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/state/state_validator.py)
+- `core.tests` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/tests/__init__.py)
+- `core.tests_data_modules` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/tests_data_modules/__init__.py)
+- `core.tests_data_modules.conftest` (/Users/cipher/AI/ink/ink-writer/ink_writer/core/tests_data_modules/conftest.py)
 - `cultural_lexicon` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/__init__.py)
 - `cultural_lexicon.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/config.py)
 - `cultural_lexicon.context_injection` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/context_injection.py)
 - `cultural_lexicon.loader` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/loader.py)
-- `data_modules.cli_args` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/cli_args.py)
-- `data_modules.cli_output` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/cli_output.py)
-- `data_modules.context_weights` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/context_weights.py)
-- `data_modules.genre_aliases` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/genre_aliases.py)
-- `data_modules.genre_profile_builder` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/genre_profile_builder.py)
-- `data_modules.index_chapter_mixin` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_chapter_mixin.py)
-- `data_modules.index_debt_mixin` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_debt_mixin.py)
-- `data_modules.index_entity_mixin` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_entity_mixin.py)
-- `data_modules.index_observability_mixin` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_observability_mixin.py)
-- `data_modules.index_reading_mixin` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/index_reading_mixin.py)
-- `data_modules.observability` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/observability.py)
-- `data_modules.schemas` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/schemas.py)
-- `data_modules.tests` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/tests/__init__.py)
-- `data_modules.tests.conftest` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/tests/conftest.py)
-- `data_modules.writing_guidance_builder` (/Users/cipher/AI/ink/ink-writer/ink-writer/scripts/data_modules/writing_guidance_builder.py)
 - `editor_wisdom` (/Users/cipher/AI/ink/ink-writer/ink_writer/editor_wisdom/__init__.py)
 - `editor_wisdom.checker` (/Users/cipher/AI/ink/ink-writer/ink_writer/editor_wisdom/checker.py)
 - `editor_wisdom.cli` (/Users/cipher/AI/ink/ink-writer/ink_writer/editor_wisdom/cli.py)
@@ -79,10 +109,18 @@
 - `plotline.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/config.py)
 - `plotline.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/fix_prompt_builder.py)
 - `plotline.tracker` (/Users/cipher/AI/ink/ink-writer/ink_writer/plotline/tracker.py)
+- `progression` (/Users/cipher/AI/ink/ink-writer/ink_writer/progression/__init__.py)
+- `progression.context_injection` (/Users/cipher/AI/ink/ink-writer/ink_writer/progression/context_injection.py)
 - `prompt_cache` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/__init__.py)
 - `prompt_cache.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/config.py)
 - `prompt_cache.metrics` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/metrics.py)
 - `prompt_cache.segmenter` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/segmenter.py)
+- `propagation` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/__init__.py)
+- `propagation.debt_store` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/debt_store.py)
+- `propagation.drift_detector` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/drift_detector.py)
+- `propagation.macro_integration` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/macro_integration.py)
+- `propagation.models` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/models.py)
+- `propagation.plan_integration` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/plan_integration.py)
 - `reader_pull` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/__init__.py)
 - `reader_pull.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/config.py)
 - `reader_pull.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/fix_prompt_builder.py)
@@ -176,6 +214,7 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [context-agent, data-agent]: `章节编号规则 4位数字 如 0001 0099 0100`
 - **2x** in [context-agent, data-agent]: `cli 入口与脚本目录校验 必做 为避免 pythonpath cd`
 - **2x** in [context-agent, data-agent]: `index recent appearances limit 20 python3`
+- **2x** in [context-agent, ooc-checker]: `立场 关系 境界 知识 情绪 目标`
 - **2x** in [context-agent, writer-agent]: `references shared scene craft index md`
 - **2x** in [context-agent, outline-compliance-checker]: `required_foreshadows id f 001 content 数字颜色从灰变红`
 - **2x** in [data-agent, ooc-checker]: `catchphrases 斗之力 无处不在 speech_habits 喜欢用反问句 生气时用短句`
@@ -202,4 +241,3 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [logic-checker, outline-compliance-checker]: `综合评分 结论 通过 未通过 简要说明 critical`
 - **2x** in [logic-checker, outline-compliance-checker]: `count high count medium count low`
 - **2x** in [logic-checker, outline-compliance-checker]: `是否触发 原因 第五步 输出 json json`
-- **2x** in [logic-checker, outline-compliance-checker]: `硬阻断触发 必须回退修复 禁止事项 降低任何层级的 severity 严重度不得降级`

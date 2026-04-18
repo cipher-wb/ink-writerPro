@@ -21,8 +21,8 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 INK_SCRIPTS_DIR = SCRIPT_DIR.parent / "ink-writer" / "scripts"
 sys.path.insert(0, str(INK_SCRIPTS_DIR))
 
-from data_modules.config import DataModulesConfig
-from data_modules.index_manager import IndexManager
+from ink_writer.core.infra.config import DataModulesConfig
+from ink_writer.core.index.index_manager import IndexManager
 from project_locator import resolve_project_root
 
 

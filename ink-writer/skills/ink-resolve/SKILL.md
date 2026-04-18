@@ -81,10 +81,10 @@ D) 删除（误提取，忽略）
 python3 -c "
 import sys
 from pathlib import Path
-sys.path.insert(0, '${CLAUDE_PLUGIN_ROOT}/scripts/data_modules')
+# [FIX-11] sys.path.insert no longer required — ink_writer is importable
 sys.path.insert(0, str(Path('${CLAUDE_PLUGIN_ROOT}/..')))
-from data_modules.index_manager import IndexManager
-from data_modules.sql_state_manager import SQLStateManager
+from ink_writer.core.index.index_manager import IndexManager
+from ink_writer.core.state.sql_state_manager import SQLStateManager
 
 idx = IndexManager(db_path=Path('${PROJECT_ROOT}/.ink/index.db'))
 sql = SQLStateManager(idx)

@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 def test_new_db_does_not_have_protagonist_knowledge(tmp_path, monkeypatch):
     pytest.importorskip("data_modules.index_manager", reason="data_modules not available")
     monkeypatch.chdir(tmp_path)
-    from data_modules.config import DataModulesConfig
-    from data_modules.index_manager import IndexManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
 
     cfg = DataModulesConfig.from_project_root(tmp_path)
     cfg.ensure_dirs()
@@ -46,8 +46,8 @@ def test_legacy_db_with_protagonist_knowledge_gets_dropped(tmp_path, monkeypatch
     """旧 db 含 protagonist_knowledge → IndexManager init 后被 DROP。"""
     pytest.importorskip("data_modules.index_manager", reason="data_modules not available")
     monkeypatch.chdir(tmp_path)
-    from data_modules.config import DataModulesConfig
-    from data_modules.index_manager import IndexManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
 
     cfg = DataModulesConfig.from_project_root(tmp_path)
     cfg.ensure_dirs()

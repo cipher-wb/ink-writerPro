@@ -33,9 +33,9 @@ _DEFAULT_CPV = int(os.environ.get("INK_CHAPTERS_PER_VOLUME", "50"))
 from security_utils import sanitize_commit_message, atomic_write_json, is_git_available
 from project_locator import write_current_project_pointer
 try:
-    from data_modules.golden_three import build_default_preferences, build_golden_three_plan
+    from ink_writer.core.extract.golden_three import build_default_preferences, build_golden_three_plan
 except ImportError:  # pragma: no cover
-    from scripts.data_modules.golden_three import build_default_preferences, build_golden_three_plan
+    from ink_writer.core.extract.golden_three import build_default_preferences, build_golden_three_plan
 
 
 # Windows 编码兼容性修复

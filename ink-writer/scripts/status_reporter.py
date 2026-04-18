@@ -96,9 +96,9 @@ from runtime_compat import enable_windows_utf8_stdio
 
 # 导入配置
 try:
-    from data_modules.config import get_config, DataModulesConfig
-    from data_modules.index_manager import IndexManager
-    from data_modules.state_validator import (
+    from ink_writer.core.infra.config import get_config, DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
+    from ink_writer.core.state.state_validator import (
         get_chapter_meta_entry,
         is_resolved_foreshadowing_status,
         normalize_foreshadowing_tier,
@@ -107,9 +107,9 @@ try:
         to_positive_int,
     )
 except ImportError:
-    from scripts.data_modules.config import get_config, DataModulesConfig
-    from scripts.data_modules.index_manager import IndexManager
-    from scripts.data_modules.state_validator import (
+    from ink_writer.core.infra.config import get_config, DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
+    from ink_writer.core.state.state_validator import (
         get_chapter_meta_entry,
         is_resolved_foreshadowing_status,
         normalize_foreshadowing_tier,

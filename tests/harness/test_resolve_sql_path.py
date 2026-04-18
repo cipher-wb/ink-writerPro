@@ -28,9 +28,9 @@ def test_resolve_disambiguation_entry_updates_status(tmp_path, monkeypatch):
     """
     pytest.importorskip("data_modules.index_manager", reason="data_modules not available")
     monkeypatch.chdir(tmp_path)
-    from data_modules.config import DataModulesConfig
-    from data_modules.index_manager import IndexManager
-    from data_modules.sql_state_manager import SQLStateManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
+    from ink_writer.core.state.sql_state_manager import SQLStateManager
 
     cfg = DataModulesConfig.from_project_root(tmp_path)
     cfg.ensure_dirs()

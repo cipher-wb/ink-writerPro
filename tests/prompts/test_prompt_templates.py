@@ -14,7 +14,7 @@ TEMPLATES_DIR = PROJECT_ROOT / "ink-writer" / "templates" / "prompts"
 AGENTS_DIR = PROJECT_ROOT / "ink-writer" / "agents"
 MANIFEST_PATH = TEMPLATES_DIR / "_manifest.json"
 
-sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+# [FIX-11] removed: sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 TEMPLATE_REF_PATTERN = re.compile(r"\{\{PROMPT_TEMPLATE:([^}]+)\}\}")
 VERSION_PATTERN = re.compile(r"version:\s*([\d]+\.[\d]+\.[\d]+)")

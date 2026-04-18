@@ -23,12 +23,12 @@ logger = logging.getLogger(__name__)
 SCRIPTS_DIR = Path(__file__).resolve().parent
 INK_WRITER_SCRIPTS = SCRIPTS_DIR.parent / "ink-writer" / "scripts"
 if str(INK_WRITER_SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(INK_WRITER_SCRIPTS))
+    # [FIX-11] removed: sys.path.insert(0, str(INK_WRITER_SCRIPTS))
 
 
 def build_index(project_root: Path, rebuild: bool = False) -> dict:
-    from data_modules.config import DataModulesConfig
-    from data_modules.index_manager import IndexManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
     from ink_writer.semantic_recall.chapter_index import ChapterCard, ChapterVectorIndex
     from ink_writer.semantic_recall.config import SemanticRecallConfig
 

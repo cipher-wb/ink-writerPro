@@ -16,8 +16,8 @@ import pytest
 def test_save_external_state_writes_sql_and_json(tmp_path, monkeypatch):
     pytest.importorskip("data_modules.state_manager", reason="data_modules not available")
     monkeypatch.chdir(tmp_path)
-    from data_modules.config import DataModulesConfig
-    from data_modules.state_manager import StateManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.state.state_manager import StateManager
 
     cfg = DataModulesConfig.from_project_root(tmp_path)
     cfg.ensure_dirs()
@@ -39,8 +39,8 @@ def test_save_external_state_writes_sql_and_json(tmp_path, monkeypatch):
 def test_save_external_state_raises_on_sql_failure(tmp_path, monkeypatch):
     pytest.importorskip("data_modules.state_manager", reason="data_modules not available")
     monkeypatch.chdir(tmp_path)
-    from data_modules.config import DataModulesConfig
-    from data_modules.state_manager import StateManager, StateWriteError
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.state.state_manager import StateManager, StateWriteError
 
     cfg = DataModulesConfig.from_project_root(tmp_path)
     cfg.ensure_dirs()
