@@ -570,7 +570,7 @@ def main() -> None:
         raise SystemExit(_run_script("extract_chapter_context.py", return_args))
 
     if tool == "editor-wisdom":
-        sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+        # v16 US-006：去掉 sys.path.insert hack，依赖模块安装（或 PYTHONPATH）。
         from ink_writer.editor_wisdom.cli import cmd_rebuild, cmd_query, cmd_stats
 
         if args.ew_action == "rebuild":

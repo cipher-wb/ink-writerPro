@@ -747,7 +747,8 @@ run_auto_fix() {
     fi
 
     # 检查报告中是否有需要修复的问题（委托 Python 模块，比 Bash 正则更可靠）
-    if ! python3 -X utf8 -c "import sys; sys.path.insert(0, '$SCRIPTS_DIR'); from data_modules.checkpoint_utils import report_has_issues; exit(0 if report_has_issues('$report_path') else 1)" 2>/dev/null; then
+    # v16 US-006：从 data_modules.checkpoint_utils 迁移到 ink_writer.core.cli.checkpoint_utils。
+    if ! PYTHONPATH="$REPO_ROOT:${PYTHONPATH:-}" python3 -X utf8 -c "from ink_writer.core.cli.checkpoint_utils import report_has_issues; import sys; sys.exit(0 if report_has_issues('$report_path') else 1)" 2>/dev/null; then
         echo "    ✅ 报告无需修复的问题"
         report_event "✅" "${fix_type}修复" "${scope} — 无需修复"
         return 0
@@ -1094,10 +1095,9 @@ if (( PARALLEL > 1 )); then
     echo "  日志: $LOG_DIR"
     echo "═══════════════════════════════════════"
 
-    python3 -X utf8 -c "
-import sys, asyncio, json
-sys.path.insert(0, '$REPO_ROOT')
-sys.path.insert(0, '${PLUGIN_ROOT}/scripts')
+    # v16 US-006：去掉 sys.path.insert hack，改用 PYTHONPATH env var（设计稿 §6.2 零裸路径）。
+    PYTHONPATH="$REPO_ROOT:${PLUGIN_ROOT}/scripts:${PYTHONPATH:-}" python3 -X utf8 -c "
+import asyncio, json
 from pathlib import Path
 from ink_writer.parallel.pipeline_manager import PipelineManager, PipelineConfig
 

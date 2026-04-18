@@ -84,6 +84,60 @@ CHAPTER_LOCK_FORBIDDEN_PATTERNS: tuple[str, ...] = (
 )
 
 
+# v16 US-006：FIX-11 设计稿 §6.2 零裸路径 + §6.3 零 data_modules 校验。
+DATA_MODULES_SCAN_DIRS: tuple[Path, ...] = (
+    ROOT / "ink_writer",
+    ROOT / "ink-writer" / "scripts",
+    ROOT / "scripts",
+)
+DATA_MODULES_IMPORT_RE = re.compile(
+    r"(?m)^(\s*)(from\s+data_modules|import\s+data_modules)\b"
+)
+DATA_MODULES_WHITELIST_SUBPATHS: tuple[str, ...] = (
+    "archive/",
+    "benchmark/",
+    "tests/migration/",
+    "ralph/",
+)
+
+
+def _is_whitelisted(rel: Path) -> bool:
+    s = str(rel).replace("\\", "/")
+    return any(s.startswith(w) for w in DATA_MODULES_WHITELIST_SUBPATHS)
+
+
+def check_no_data_modules_imports(
+    scan_dirs: tuple[Path, ...] = DATA_MODULES_SCAN_DIRS,
+    root: Path = ROOT,
+) -> list[Finding]:
+    """FIX-11 §6.3：禁止代码中再出现 ``from data_modules`` / ``import data_modules``。
+
+    白名单：archive/, benchmark/, tests/migration/, ralph/ 外部工具目录。
+    """
+    findings: list[Finding] = []
+    for d in scan_dirs:
+        if not d.exists():
+            continue
+        for py in d.rglob("*.py"):
+            try:
+                rel = py.resolve().relative_to(root.resolve())
+            except ValueError:
+                rel = py
+            if _is_whitelisted(rel):
+                continue
+            text = py.read_text(encoding="utf-8", errors="ignore")
+            if DATA_MODULES_IMPORT_RE.search(text):
+                findings.append(
+                    Finding(
+                        str(rel),
+                        "contains data_modules import (FIX-11 §6.3 violation)",
+                        "must be migrated to ink_writer.core.*",
+                        ok=False,
+                    )
+                )
+    return findings
+
+
 def check_chapter_lock_consistency(
     skills_dir: Path = SKILLS_DIR,
     pipeline_manager: Path = PIPELINE_MANAGER,
@@ -151,6 +205,7 @@ def main() -> int:
     if arch is not None:
         findings.append(arch)
     findings.extend(check_chapter_lock_consistency())
+    findings.extend(check_no_data_modules_imports())
 
     if args.report:
         print("=== Docs numbers report ===")

@@ -210,7 +210,8 @@ def migrate_state_to_sqlite(state_path: Path, project_root: Path) -> None:
         return
 
     try:
-        sys.path.insert(0, str(Path(__file__).parent))
+        # v16 US-006：去掉 sys.path.insert 裸路径 hack，依赖 pytest.ini /
+        # pyproject PYTHONPATH 让 ink_writer 直接可 import。
         from ink_writer.core.state.sql_state_manager import SQLStateManager
         from ink_writer.core.infra.config import DataModulesConfig
 

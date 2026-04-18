@@ -1,0 +1,29 @@
+# v16 US-006：FIX-11 收尾的 CI 门禁。
+#
+# 目标：阻止任何新代码引入遗留 `data_modules` 包导入。
+# ink_writer/core/ 已是单一事实源（FIX-11 收尾），新代码禁止再 import data_modules。
+#
+# 使用方式（本地）：
+#   pip install pre-commit
+#   pre-commit install
+#   pre-commit run --all-files
+#
+# CI 接入：见 .github/workflows/ 对应任务。
+repos:
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+
+  - repo: local
+    hooks:
+      - id: no-data-modules-imports
+        name: "禁止 data_modules 导入（FIX-11 收尾）"
+        description: >-
+          ink_writer/core/ 已是单一事实源。任何新代码都不得再写
+          `from data_modules.xxx` 或 `import data_modules`。白名单：archive/,
+          benchmark/, tests/migration/, ralph/（外部工具）。
+        language: pygrep
+        entry: '^(from data_modules|import data_modules)\b'
+        types: [python]
+        exclude: '^(archive/|benchmark/|tests/migration/|ralph/)'
