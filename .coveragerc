@@ -9,6 +9,11 @@ omit =
     */tests_data_modules/*
     */__pycache__/*
     */frontend/*
+    # US-029: entry-point stubs，无可测业务逻辑
+    # （真实业务代码在 ink_writer.core.cli.ink / dashboard.server.main，已另行覆盖）
+    */ink-writer/dashboard/__main__.py
+    */ink-writer/scripts/__init__.py
+    */ink-writer/scripts/ink.py
 
 [report]
 show_missing = True

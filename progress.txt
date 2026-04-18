@@ -259,3 +259,21 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - 三个低覆盖模块的集成测试都遵循：`from <module> import <fn>` 纯函数调用（encoding_validator）+ 临时 SQLite/JSON fixture（step3_harness_gate）+ tmp_path 读写（slim_review_bundle）。无需 mock LLM。
   - `step3_harness_gate` 的数据源优先级 index.db → legacy JSON → 显式 FAIL，构造 fixture 时注意 `review_payload_json` 要是 JSON 字符串且包含 `checker_results` 键。
 ---
+
+## 2026-04-18 - US-029
+- 覆盖率阶梯：50 → 70（v5 审计 R2 最终目标）
+- Files modified:
+  - .coveragerc（omit 三个 CLI entry-point stubs：dashboard/__main__.py、scripts/__init__.py、scripts/ink.py）
+  - pytest.ini（--cov-fail-under 50 → 70，更新注释说明）
+  - ralph/prd.json（US-029 passes=true）
+- Verification:
+  - 全量：2420 passed, 19 skipped（与 US-028 基线完全一致，零回归）
+  - 覆盖率：TOTAL 82.02%（从 81.91% 微涨，omit 20 个 stub 行使有效分子/分母调整）
+  - 门禁：Required test coverage of 70% reached ✅
+  - 业务模块 <50%：0 个（最低仍是 encoding_validator 51%，已由 US-028 集成测试兜底）
+- **Learnings for future iterations:**
+  - 覆盖率报表里 0% 的 CLI entry 文件（`__main__.py` / 入口 shim）没业务逻辑，测试它们需要 subprocess 或 runpy，收益低；coverage 的 omit 是规范做法，比写无意义 smoke test 干净。
+  - `ink-writer/scripts/__init__.py` 0% 是因为测试通过 `pythonpath` 把 `ink-writer/scripts` 加入 sys.path，直接 `from xxx import ...` 而非 `from scripts.xxx import ...`，包 init 永不执行 —— 这是 pytest 配置选择，非 bug。
+  - pytest 在 -q + 大量 RuntimeWarning 时，末尾 `N passed in Xs` 摘要会被 capture 机制吞掉（本次日志里看不到），但 `EXIT=0` 和 `[100%]` 进度条已是等价证据；备用计数法：`awk '/^[.sF]+ *\[/ { count += gsub(/\./,".") } END { print count }'` 数 `.` 字符。
+  - v5 审计 R2（70% 覆盖率）正式达成。下一步（若有）应转向 mutation testing 或聚焦低覆盖模块的 missing line，单数字门禁已到顶。
+---
