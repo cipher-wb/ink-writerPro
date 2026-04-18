@@ -202,13 +202,15 @@ def _build_report(data_dir: Path, classified: list[dict]) -> None:
 
 
 def main() -> None:
-    # v13 US-007：入口 API_KEY 校验（v5 审计 Critical：此前无校验导致 per-file continue 假成功）
-    if not os.getenv("ANTHROPIC_API_KEY"):
-        sys.exit(
+    # v13 US-007 / US-026：入口 API_KEY 校验。exit=2 作为 "missing credentials" 约定（区别于通用错误 exit=1）
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        print(
             "ERROR: ANTHROPIC_API_KEY not set. "
             "This script requires a valid key to classify entries via Claude Haiku. "
-            "Set it via `export ANTHROPIC_API_KEY=sk-...` and retry."
+            "Set it via `export ANTHROPIC_API_KEY=sk-...` and retry.",
+            file=sys.stderr,
         )
+        sys.exit(2)
 
     data_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_DATA_DIR
 

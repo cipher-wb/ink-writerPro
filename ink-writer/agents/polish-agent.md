@@ -458,3 +458,34 @@ Layer 9 完成后执行 proofreading-checker Layer 6A+6B 等价自检：
 12. `prose_craft_check = pass`（Layer 6 等价自检通过）
 13. Layer 9 文笔冲击力润色已完成（9a 镜头切换 + 9b 感官注入 + 9c 信息稀释 + 9d 句式调整）
 14. `prose_impact_check = pass`（Layer 6A+6B 等价自检通过，黄金三章零 critical）
+
+## 仲裁消费（章 1-3）
+
+> US-026：前 3 章 checker 冲突仲裁协议。详见 `ink-writer/references/golden-three-arbitration.md`。
+
+当章节编号 ∈ {1, 2, 3} 且 review_bundle 中携带 `arbitration` 字段时，polish-agent **必须**按以下规则消费，
+而不是逐条应用原始 checker issue（避免收到自相矛盾 fix_prompt）：
+
+1. **以 `arbitration.merged_fixes` 为唯一权威指令源**
+   - 忽略原始 `critical_issues` / `editor_wisdom_violations` 中被仲裁合并或丢弃（出现在 `arbitration.dropped`）的条目。
+   - 只执行 `merged_fixes[*].fix_prompt`，按 `priority` 字段从 P0 到 P3 依次处理。
+
+2. **优先级覆盖规则**
+   - 若同一改写点存在多条 merged_fix，优先采纳 `priority` 更高者（P0 > P1 > P2 > P3）。
+   - 低优先级条目若与高优先级冲突，自动降级为 `context_addendum` 注入写作上下文，不再产生独立 diff。
+
+3. **sources 可追溯**
+   - 每条 `merged_fix` 必带 `sources` 数组，列出所有被合并的原始 checker id。
+   - polish-agent 在生成 `_patches.md` 时必须逐条列出 `sources`，便于后续 audit 回溯。
+
+4. **dropped 条目日志化**
+   - 对 `arbitration.dropped[*]` 不执行改写，但在 polish 日志追加 `[arbitration] DROPPED <source> reason=<reason>`。
+
+5. **章节 ≥ 4 不适用**
+   - 仲裁机制仅在黄金前三章生效。若 `arbitration` 字段缺失或章节 ≥ 4，回退到原有逐条处理流程。
+
+### 失败条件
+
+- 若 polish-agent 同时执行了被 `arbitration.dropped` 标记的 fix_prompt，视为仲裁违规，review-gate 将打回重做。
+- 若 `merged_fixes` 中任一条目未被完整应用（且无 deviation 说明），`prose_impact_check` 直接判 fail。
+
