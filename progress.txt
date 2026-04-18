@@ -103,3 +103,20 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - violations key 名不统一（violations vs issues）—— 扫描两者兼容
   - Severity 用 Pydantic Literal，默认 "medium"；落库前要 lower + 白名单过滤，否则 Pydantic 抛
 ---
+
+## 2026-04-18 - US-016（FIX-17 P4c：ink-macro-review 集成）
+- 新增 `ink_writer/propagation/macro_integration.py`：`should_run/get_interval/run_propagation`
+  - INK_PROPAGATION_INTERVAL 环境覆盖（默认 50；非法/0/负值回落 50）
+  - run_propagation 扫描 [current-interval+1, current] 窗口 → drift_detector → DebtStore.save_debts → stderr 摘要
+- DebtStore 新增 `save_debts(items)` 批量 upsert 方法（AC 字面要求的 API）
+- `propagation/__init__.py` 暴露新 API
+- `ink-writer/skills/ink-macro-review/SKILL.md` Tier2 加 §2.0 反向传播扫描 step（python -c 调用）
+- 新增 `tests/harness/test_propagation_macro_integration.py`（13 用例）：
+  - default/env interval 解析；should_run 边界；100 章默认 2 次/env=30 触发 3 次
+  - run_propagation 无 drift / 有 drift 落盘 / 100 章模拟两次触发文件累计 2 条
+- Verification: 全量 **2348 passed + 1 skipped** 零回归（baseline 2327）
+- **Learnings for future iterations:**
+  - SKILL.md 的 "Step" 要落到 Python 模块上，不能只用 sqlite3 行内查询；可调用形式（`python3 -c`）让 skill 与代码解耦
+  - run_propagation 设计为 records= 注入 mock 是延续 drift_detector 的测试友好惯例
+  - DebtStore.save_debts 是 batch upsert，append 是 single；SKILL/AC 用 save_debts 名字对接更直观
+---

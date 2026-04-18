@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional, Union
+from typing import Iterable, Optional, Union
 
 from ink_writer.propagation.models import PropagationDebtFile, PropagationDebtItem
 
@@ -41,5 +41,13 @@ class DebtStore:
     def append(self, item: PropagationDebtItem) -> PropagationDebtFile:
         file = self.load()
         file.upsert(item)
+        self.save(file)
+        return file
+
+    def save_debts(self, items: Iterable[PropagationDebtItem]) -> PropagationDebtFile:
+        """批量 upsert 一组 debts，落盘后返回最新文件视图。"""
+        file = self.load()
+        for item in items:
+            file.upsert(item)
         self.save(file)
         return file
