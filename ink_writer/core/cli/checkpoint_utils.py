@@ -28,28 +28,46 @@ class CheckpointLevel(NamedTuple):
 
 
 def determine_checkpoint(chapter: int) -> CheckpointLevel:
-    """根据章节号决定需要执行的检查点级别。
+    """根据章节号决定需要执行的检查点级别（v16 US-008 起 5 档分层）。
 
     规则（高级别包含低级别）:
-    - 每 5 章: 审查最近 5 章
-    - 每 10 章: + quick 审计
-    - 每 20 章: + standard 审计 + Tier2 宏观审查 + 消歧检查
+    - 每 5 章: ink-review Core + ink-fix
+    - 每 10 章: + ink-audit quick + ink-fix 修复数据问题
+    - 每 20 章: + ink-audit standard + Tier2（浅版）+ 消歧检查
+    - 每 50 章: + Tier2（完整版）+ propagation drift_detector
+    - 每 200 章: + Tier3 跨卷分析
+
+    实现细节：
+      - 200 章优先级最高（同时是 100/50/20/10/5 的倍数），返回 Tier3。
+      - 50 章返回 Tier2 完整 + drift_detector（overrides Tier2 浅版）。
+      - 20 章返回 Tier2 浅版 + standard audit。
+      - 10 章返回 quick audit。
+      - 5 章仅 review。
     """
     if chapter % 5 != 0:
         return CheckpointLevel(review=False, audit=None, macro=None, disambig=False)
 
+    if chapter % 200 == 0:
+        return CheckpointLevel(
+            review=True, audit="standard", macro="Tier3", disambig=True,
+        )
+    if chapter % 50 == 0:
+        # Tier2 完整版 + drift_detector。macro 字段仍记 "Tier2"，具体"完整/浅"
+        # 由 ink-auto 按 chapter % 50 判定是否叠加 propagation。
+        return CheckpointLevel(
+            review=True, audit="standard", macro="Tier2", disambig=True,
+        )
     if chapter % 20 == 0:
         return CheckpointLevel(
             review=True, audit="standard", macro="Tier2", disambig=True,
         )
-    elif chapter % 10 == 0:
+    if chapter % 10 == 0:
         return CheckpointLevel(
             review=True, audit="quick", macro=None, disambig=False,
         )
-    else:
-        return CheckpointLevel(
-            review=True, audit=None, macro=None, disambig=False,
-        )
+    return CheckpointLevel(
+        review=True, audit=None, macro=None, disambig=False,
+    )
 
 
 def review_range(chapter: int) -> tuple[int, int]:
