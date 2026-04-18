@@ -1,6 +1,6 @@
 # Ink Writer Pro
 
-[![Version](https://img.shields.io/badge/Version-15.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-15.9.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 
 **一条命令，自动写 10 章并审查修复。** AI 驱动的长篇网文写作工具，专为起点/番茄等平台的商业连载设计。
@@ -167,11 +167,29 @@ A: ✅ **v15.9.0 起 `parallel>1` 已安全**。`PipelineManager` 在 v16 US-002
 
 ---
 
+## 如何验证（v15.9.0 人感验证 SOP）
+
+v15.9.0 引入 300 章 Shadow 压测骨架（US-017）+ Q1-Q8 质量仪表盘（US-018），所有自动化指标均可 **零 LLM 费** 复现。但自动化指标只能覆盖"不崩"；"好看不好看"需要**人**读。
+
+**三档验证手段**：
+
+1. **自动化（秒级）**：
+   - `python3 -m benchmark.e2e_shadow_300 --chapters 300 --out reports/perf-300ch-v15.md` 跑 G1-G5 性能指标（单章耗时 / checkpoint 开销 / 内存峰值 / 崩溃率 / lock 争用）。
+   - `python3 scripts/quality_dashboard.py --project <path> --out reports/quality-300ch-v15.md` 查 Q1-Q8（角色漂移 / 伏笔回收率 / 命名重复 / 爽点密度等，SQL 直查 index.db）。
+   - `python3 scripts/verify_docs.py` 文档-代码数字一致性。
+
+2. **人感验证（推荐，无可替代）**：**压测后自己读 100 / 200 / 300 三章各 10 分钟**（共 ~30 min），关注 ① 剧情是否还记得 50 章前的伏笔 / 角色状态 ② 文笔是否 AI 味（重复句式 / 空洞形容词） ③ 爽点是否还在 ④ 主角行为是否 OOC。**这是替代 AI 审读员的唯一手段**——LLM 审读会被 checker 自己的偏见污染，只有读者大脑才是真 ground truth。
+
+3. **零回归守卫**：`pytest --no-cov` 须报 `2738 passed, 19 skipped`（v15.9.0 baseline）；任何新 US 只能让这个数字单调上涨。
+
+---
+
 ## 版本历史
 
 | 版本 | 说明 |
 |------|------|
-| **v15.0.0 (当前)** | v14 审计完结 + 架构统一（FIX-17 反向传播 + FIX-18 Progressions + FIX-11 双包合并 breaking + 覆盖率 30→70） |
+| **v15.9.0 (当前)** | **Milestone A+B 收口（止血 + creativity + 压测骨架）** — US-001~002 并发根治（ChapterLockManager 接入 PipelineManager，`parallel>1` 安全）；US-003~005 step3_runner **Phase B** 真 LLM 落地（5 gate checker_fn + polish_fn 接真 claude-sonnet-4-6，enforce E2E 阻断+降级审计）；US-006~008 FIX-11 残留清理+CI 门禁、LLM 显式 timeout、ink-auto 分层检查点 5/10/20/50/200 正式化；US-009~013 **creativity 子系统** Python 实装（name_validator 陈词+书名黑名单 / gf_validator 金手指三重约束 / sensitive_lexicon L0-L3 密度 / 扰动引擎+5 次重抽降档 / Quick Mode SKILL.md 集成）；US-014~016 anti-detection ZT 正则扩展+连接词密度、黄金三章阈值软化+整章重写逃生门、文笔维度 merged_fix_suggestion；US-017 **300 章 Shadow 压测骨架**（benchmark/e2e_shadow_300，G1-G5 性能指标，零 LLM 费）；US-018 **Q1-Q8 质量指标仪表盘**（SQL 直查，零费用，reports/quality-300ch-v15.md）；pytest 2310→2738 全绿零回归 |
+| v15.0.0 | v14 审计完结 + 架构统一（FIX-17 反向传播 + FIX-18 Progressions + FIX-11 双包合并 breaking + 覆盖率 30→70） |
 | v14.0.0 | **深度健康审计修复（v13 Step 2 + Step 3 合计 38 US）** — Blocker 全修（依赖声明 + pyproject + CI smoke + PipelineManager 诚实降级）；FIX-03A Memory v13 **SQL-first** 全链路闭环（StateManager.flush 顺序反转 + save_external_state + archive_manager / update_state / ink-resolve 全部迁移）；**FIX-04 step3_runner Phase A 上线**（5 个孤儿 Python gate 接入生产 + shadow 模式 + CLI + env mode 开关）；tests/editor_wisdom +227 dormant tests 激活；Step 3.5 Harness Gate 改读 index.db.review_metrics；Retriever 单例化；Style RAG 3 档降级（FAISS→subprocess 构建→SQLite fallback）；LLM + 章级 timeout；API Key 入口护栏；创意指纹 5 字段入库；孤儿表 / 僵尸 agent / 死代码清理 ~603KB；scripts/verify_docs.py CI 校验文档-代码数字一致性。pytest 2071→2310 全绿零回归 |
 | v13.8.0 | ink-init --quick 创意生成架构级升级 — 三层创意体系（元规则库 M01-M10 + 种子库 schema + 扰动引擎）+ 金手指三重硬约束（非战力维度/代价可视化/一句话爆点）+ 4 档激进度（1 保守/2 平衡/3 激进/4 疯批）+ 三档语言风格（V1 文学狂野/V2 烟火接地气/V3 江湖野气）+ L0-L3 敏感词分级+档位密度矩阵 + 书名 7 种修辞标签（双关/谐音/对仗/反讽/矛盾/具象配抽象/时空错置）+ 江湖绰号库 110 条+书名模板 170 条 + 陈词黑名单扩展（神帝/至尊/龙傲天 后缀+姓×名末字笛卡儿积）+ 起点番茄双平台榜单联网反向建模（90 天缓存） + 方案输出创意指纹板块 |
 | **v13.7.0** | 文笔沉浸感架构 — 电影镜头切换/感官轮换/信息密度/环境情绪共振四大法则 + prose-impact/sensory-immersion/flow-naturalness 3 个新 checker + polish Layer 9 兜底 + 24 条新文笔规则（EW-0365~0388）+ 第一章 4 项爽点硬阻断 |
