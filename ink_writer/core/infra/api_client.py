@@ -503,3 +503,63 @@ def get_client(config=None) -> ModalAPIClient:
     if _client is None or config is not None:
         _client = ModalAPIClient(config)
     return _client
+
+
+# ==================== v16 US-003: 统一 Claude 调用入口 ====================
+# 将 editor_wisdom.llm_backend.call_llm 的调用路径在 core.infra 层公开一个稳定
+# 入口，便于 checker_pipeline / polish 等子系统统一走 core.infra。US-007 会
+# 在此层补齐显式 timeout；US-021 会在此层采集 prompt_cache usage。
+
+
+# v14 US-007：基于 task_type 的分层默认 timeout（秒）。超过 task_type 用 checker 基准。
+_DEFAULT_TIMEOUTS_BY_TASK: dict[str, float] = {
+    "writer": 300.0,
+    "polish": 180.0,
+    "checker": 90.0,
+    "classify": 60.0,
+    "extract": 60.0,
+}
+
+
+def call_claude(
+    *,
+    model: str,
+    system: str,
+    user: str,
+    max_tokens: int = 1024,
+    timeout: Optional[float] = None,
+    task_type: str = "checker",
+    use_cache: bool = True,
+) -> str:
+    """调用 Claude 并返回原始文本。
+
+    v16 US-003：``checker_pipeline`` 的 LLM checker 工厂统一走此入口。
+    内部委托至 ``ink_writer.editor_wisdom.llm_backend.call_llm``，
+    保留 prompt cache / SDK+CLI 双路径 / 超时重试能力。
+
+    Args:
+        model: Claude 模型 ID，如 ``claude-haiku-4-5``。
+        system: system prompt（支持 cache_control）。
+        user: 用户内容。
+        max_tokens: 响应上限 tokens。
+        timeout: 显式 timeout 秒；默认按 task_type 查表。
+        task_type: writer/polish/checker/classify/extract 之一。
+        use_cache: 是否给 system 加 cache_control。
+
+    Returns:
+        LLM 原始文本。
+    """
+    if timeout is None:
+        timeout = _DEFAULT_TIMEOUTS_BY_TASK.get(task_type, 90.0)
+
+    # 延迟导入，避免 core.infra 被 editor_wisdom 循环导入。
+    from ink_writer.editor_wisdom.llm_backend import call_llm
+
+    return call_llm(
+        model=model,
+        system=system,
+        user=user,
+        max_tokens=max_tokens,
+        use_cache=use_cache,
+        timeout=timeout,
+    )

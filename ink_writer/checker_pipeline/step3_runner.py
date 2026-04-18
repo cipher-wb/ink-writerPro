@@ -37,8 +37,48 @@ from ink_writer.checker_pipeline.runner import (
     GateStatus,
     PipelineReport,
 )
+from ink_writer.checker_pipeline.llm_checker_factory import make_llm_checker
 
 logger = logging.getLogger(__name__)
+
+# v16 US-003（FIX-01 Phase B）：5 个 gate 的真 LLM checker 接入。
+# - env INK_STEP3_LLM_CHECKER=off → 保留 Phase A benign stub（用于 CI 零 token 回归）。
+# - 默认启用 LLM checker；具体模型在 llm_checker_factory.DEFAULT_CHECKER_MODEL。
+_CHECKER_PROMPTS_DIR = Path(__file__).parent / "prompts"
+
+
+def _should_use_llm_checker() -> bool:
+    """是否启用真 LLM checker。
+
+    判定优先级（从高到低）：
+      1. ``INK_STEP3_LLM_CHECKER=off`` 显式关闭 → 始终走 stub。
+      2. ``INK_STEP3_LLM_CHECKER=on`` 显式打开 → 始终走 LLM。
+      3. 默认：有 ``ANTHROPIC_API_KEY`` 才走 LLM，否则 stub。
+
+    该规则使无 API key 的 CI / pytest 默认安全（不会尝试 spawn ``claude`` CLI），
+    同时生产用户配置 ``ANTHROPIC_API_KEY`` 后即获得真 LLM 检查。
+    """
+    env = os.environ.get("INK_STEP3_LLM_CHECKER", "").strip().lower()
+    if env == "off":
+        return False
+    if env == "on":
+        return True
+    return bool(os.environ.get("ANTHROPIC_API_KEY"))
+
+
+def _gate_checker(gate_name: str, prompt_filename: str) -> Callable:
+    """统一工厂入口：Phase B 默认走 LLM，env 关则退回 benign stub。
+
+    v16 US-003：stub 返回 score=100（0-100 量纲满分）以便 gate 内部的
+    ``passed = score >= threshold`` 判定为 pass，避免 Phase A stub 误阻断。
+    """
+    if not _should_use_llm_checker():
+
+        def _stub(text: str, ch_no: int) -> dict:
+            return {"score": 100.0, "violations": [], "passed": True}
+
+        return _stub
+    return make_llm_checker(gate_name, _CHECKER_PROMPTS_DIR / prompt_filename)
 
 # Env knobs
 MODE_ENV = "INK_STEP3_RUNNER_MODE"  # off / shadow / enforce
@@ -97,14 +137,11 @@ class Step3Result:
 
 
 def _make_hook_adapter(review_bundle: dict) -> Callable:
-    """reader_pull.hook_retry_gate adapter。"""
+    """reader_pull.hook_retry_gate adapter（US-003 Phase B：接入真 LLM checker）。"""
     async def _adapter():
         from ink_writer.reader_pull.hook_retry_gate import run_hook_gate
 
-        def _stub_checker(text: str, ch_no: int) -> dict:
-            # v14 MVP：Phase A shadow 模式下不调用真 LLM checker；
-            # 返回 benign pass 让 runner 基础设施先跑通
-            return {"score": 1.0, "violations": [], "passed": True}
+        checker_fn = _gate_checker("reader_pull", "reader_pull.md")
 
         def _stub_polish(text: str, fix: str, ch_no: int) -> str:
             return text
@@ -115,7 +152,7 @@ def _make_hook_adapter(review_bundle: dict) -> Callable:
                 chapter_text=review_bundle.get("chapter_text", ""),
                 chapter_no=review_bundle.get("chapter_no", 0),
                 project_root=review_bundle.get("project_root", "."),
-                checker_fn=_stub_checker,
+                checker_fn=checker_fn,
                 polish_fn=_stub_polish,
             )
             passed = getattr(result, "passed", True)
@@ -132,8 +169,7 @@ def _make_emotion_adapter(review_bundle: dict) -> Callable:
     async def _adapter():
         from ink_writer.emotion.emotion_gate import run_emotion_gate
 
-        def _stub_checker(text: str, ch_no: int) -> dict:
-            return {"score": 1.0, "curve_ok": True, "violations": []}
+        checker_fn = _gate_checker("emotion", "emotion.md")
 
         def _stub_polish(text: str, fix: str, ch_no: int) -> str:
             return text
@@ -144,7 +180,7 @@ def _make_emotion_adapter(review_bundle: dict) -> Callable:
                 chapter_text=review_bundle.get("chapter_text", ""),
                 chapter_no=review_bundle.get("chapter_no", 0),
                 project_root=review_bundle.get("project_root", "."),
-                checker_fn=_stub_checker,
+                checker_fn=checker_fn,
                 polish_fn=_stub_polish,
             )
             passed = getattr(result, "passed", True)
@@ -161,8 +197,7 @@ def _make_anti_detection_adapter(review_bundle: dict) -> Callable:
     async def _adapter():
         from ink_writer.anti_detection.anti_detection_gate import run_anti_detection_gate
 
-        def _stub_checker(text: str, ch_no: int) -> dict:
-            return {"score": 1.0, "ai_markers": [], "passed": True}
+        checker_fn = _gate_checker("anti_detection", "anti_detection.md")
 
         def _stub_polish(text: str, fix: str, ch_no: int) -> str:
             return text
@@ -173,7 +208,7 @@ def _make_anti_detection_adapter(review_bundle: dict) -> Callable:
                 chapter_text=review_bundle.get("chapter_text", ""),
                 chapter_no=review_bundle.get("chapter_no", 0),
                 project_root=review_bundle.get("project_root", "."),
-                checker_fn=_stub_checker,
+                checker_fn=checker_fn,
                 polish_fn=_stub_polish,
             )
             passed = getattr(result, "passed", True)
@@ -190,8 +225,7 @@ def _make_voice_adapter(review_bundle: dict) -> Callable:
     async def _adapter():
         from ink_writer.voice_fingerprint.ooc_gate import run_voice_gate
 
-        def _stub_checker(text: str, ch_no: int) -> dict:
-            return {"score": 1.0, "ooc_count": 0, "passed": True}
+        checker_fn = _gate_checker("voice", "voice.md")
 
         def _stub_polish(text: str, fix: str, ch_no: int) -> str:
             return text
@@ -202,7 +236,7 @@ def _make_voice_adapter(review_bundle: dict) -> Callable:
                 chapter_text=review_bundle.get("chapter_text", ""),
                 chapter_no=review_bundle.get("chapter_no", 0),
                 project_root=review_bundle.get("project_root", "."),
-                checker_fn=_stub_checker,
+                checker_fn=checker_fn,
                 polish_fn=_stub_polish,
             )
             passed = getattr(result, "passed", True)
