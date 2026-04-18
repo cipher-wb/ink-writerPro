@@ -177,6 +177,134 @@ def check_chapter_lock_consistency(
     return findings
 
 
+# v16 US-020：Skill/Agent frontmatter completeness 守卫。
+# 规则：
+#   - 所有 ink-writer/skills/*/SKILL.md 必须含 name/description/allowed-tools 三字段。
+#   - 所有 ink-writer/agents/*.md 必须含 name/description/tools 三字段。
+#   - 新增 agent 如声明默认 allowed-tools 超出 "Read"（例如 Bash/Write/Edit 等
+#     高权限工具）且未在 description 中给出理由关键字（"需要"/"因为"/"since"），
+#     CI 发 warning（不 fail，仅提示人工审阅）。
+SKILL_REQUIRED_FIELDS: tuple[str, ...] = ("name", "description", "allowed-tools")
+AGENT_REQUIRED_FIELDS: tuple[str, ...] = ("name", "description", "tools")
+HIGH_PRIV_TOOLS: tuple[str, ...] = ("Bash", "Write", "Edit", "Task", "WebFetch")
+
+
+def _parse_frontmatter(md_path: Path) -> dict[str, str]:
+    """Return field→value dict from the first YAML-ish frontmatter block.
+
+    Minimal parser: accepts `key: value` on single line within the first
+    `---` / `---` fence. Values are kept raw (trimmed)."""
+    try:
+        text = md_path.read_text(encoding="utf-8")
+    except OSError:
+        return {}
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return {}
+    fm: dict[str, str] = {}
+    for line in lines[1:]:
+        if line.strip() == "---":
+            break
+        m = re.match(r"^([A-Za-z0-9_\-]+)\s*:\s*(.*)$", line)
+        if m:
+            fm[m.group(1)] = m.group(2).strip()
+    return fm
+
+
+def check_skill_frontmatter(
+    skills_dir: Path = SKILLS_DIR,
+) -> list[Finding]:
+    """Every SKILL.md must include name/description/allowed-tools."""
+    findings: list[Finding] = []
+    if not skills_dir.exists():
+        return findings
+    for skill_md in sorted(skills_dir.rglob("SKILL.md")):
+        fm = _parse_frontmatter(skill_md)
+        missing = [f for f in SKILL_REQUIRED_FIELDS if f not in fm or not fm[f]]
+        try:
+            rel = skill_md.relative_to(ROOT)
+        except ValueError:
+            rel = skill_md
+        if missing:
+            findings.append(
+                Finding(
+                    str(rel),
+                    f"frontmatter must include {SKILL_REQUIRED_FIELDS}",
+                    f"missing={missing}",
+                    ok=False,
+                )
+            )
+        else:
+            findings.append(
+                Finding(
+                    str(rel),
+                    "skill frontmatter complete",
+                    "name/description/allowed-tools present",
+                    ok=True,
+                )
+            )
+    return findings
+
+
+def check_agent_frontmatter(
+    agents_dir: Path = AGENTS_DIR,
+) -> list[Finding]:
+    """Every agent .md must include name/description/tools.
+
+    Additionally emits a soft warning (still ok=True) when a newly
+    added agent declares high-privilege default tools beyond ``Read``
+    without a justification keyword in description — CI 只提示不 fail。
+    """
+    findings: list[Finding] = []
+    if not agents_dir.exists():
+        return findings
+    for agent_md in sorted(agents_dir.glob("*.md")):
+        fm = _parse_frontmatter(agent_md)
+        missing = [f for f in AGENT_REQUIRED_FIELDS if f not in fm or not fm[f]]
+        try:
+            rel = agent_md.relative_to(ROOT)
+        except ValueError:
+            rel = agent_md
+        if missing:
+            findings.append(
+                Finding(
+                    str(rel),
+                    f"frontmatter must include {AGENT_REQUIRED_FIELDS}",
+                    f"missing={missing}",
+                    ok=False,
+                )
+            )
+            continue
+
+        # Soft warn: high-privilege tools beyond Read + no justification keyword.
+        tools_field = fm.get("tools", "")
+        declared = [t.strip() for t in re.split(r"[\s,]+", tools_field) if t.strip()]
+        escalated = [t for t in declared if t in HIGH_PRIV_TOOLS]
+        desc = fm.get("description", "")
+        justified = any(kw in desc for kw in ("需要", "因为", "since", "requires"))
+        if escalated and not justified:
+            # warn-only: emit a Finding that renders with ⚠ prefix but
+            # remains ok=True so CI does not fail.
+            findings.append(
+                Finding(
+                    str(rel),
+                    f"default tools include high-priv {escalated}",
+                    "consider adding justification in description (warn only)",
+                    ok=True,
+                )
+            )
+        else:
+            findings.append(
+                Finding(
+                    str(rel),
+                    "agent frontmatter complete",
+                    "name/description/tools present",
+                    ok=True,
+                )
+            )
+    return findings
+
+
 def check_architecture_checkers() -> Finding | None:
     """architecture.md 若声明 checker 数则校验（仅匹配 '+ N Checkers' 模式）。"""
     if not ARCHITECTURE.exists():
@@ -206,6 +334,8 @@ def main() -> int:
         findings.append(arch)
     findings.extend(check_chapter_lock_consistency())
     findings.extend(check_no_data_modules_imports())
+    findings.extend(check_skill_frontmatter())
+    findings.extend(check_agent_frontmatter())
 
     if args.report:
         print("=== Docs numbers report ===")
