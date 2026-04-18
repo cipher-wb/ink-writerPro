@@ -218,3 +218,24 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - Doc-only US means pytest is only used to confirm collection still works; no test changes needed.
   - When counting imports across dual packages, filter `^from X` and `^import X` to avoid matching comments/docstrings.
 ---
+
+## 2026-04-18 - US-025
+- FIX-11 migration script（按批准方向 A）
+- Files added:
+  - scripts/migration/__init__.py
+  - scripts/migration/fix11_merge_packages.py (import rewriter, dry-run + --apply)
+  - tests/migration/__init__.py
+  - tests/migration/test_fix11_script.py (15 tests)
+- Files modified: ralph/prd.json (US-025 passes=true)
+- Verification:
+  - migration tests: 15/15 passing
+  - full suite: 2406 passed, 1 skipped (baseline 2028 — zero regression)
+  - dry-run: /tmp/fix11-diff.txt (580 lines, 30 files would change)
+  - spot-check 3 places ✅: pytest.ini, scripts/build_chapter_index.py, scripts/measure_baseline.py
+- Design-doc alignment: 方向 A (合到 ink_writer/core/{state,index,context,cli,extract,infra})
+- **Learnings for future iterations:**
+  - BUCKET_MAP lives in scripts/migration/fix11_merge_packages.py — update it if new data_modules files land before FIX-11 --apply session
+  - Script does NOT move files; move via `git mv` per design doc §4 Step 2; this script only rewrites imports
+  - Markdown rewriter is aggressive — it rewrites `sys.path.insert(..., ".../scripts")` prose in design docs too. Dry-run only is fine; --apply against docs/tasks/ may need narrower targeting
+  - pytest 输出的 summary 在 quiet mode + 大量 warning 时会被 tail/grep 错位；用 `-rN` 可拿到清晰 summary
+---
