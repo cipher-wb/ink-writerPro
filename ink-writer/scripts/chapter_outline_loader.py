@@ -8,9 +8,9 @@ import re
 from pathlib import Path
 
 try:
-    from chapter_paths import volume_num_for_chapter
+    from chapter_paths_types import volume_num_for_chapter
 except ImportError:  # pragma: no cover
-    from scripts.chapter_paths import volume_num_for_chapter
+    from scripts.chapter_paths_types import volume_num_for_chapter
 
 
 _CHAPTER_RANGE_RE = re.compile(r"^\s*(\d+)\s*-\s*(\d+)\s*$")

@@ -7,28 +7,43 @@ This project has seen multiple chapter filename conventions:
 2) Volume layout:    正文/第1卷/第007章-章节标题.md
 
 To keep scripts robust, always resolve chapter files via these helpers instead of hardcoding a format.
+
+US-025 note: the shared primitives (volume math, chapter regexes) have been
+extracted to ``chapter_paths_types`` to break the historical import cycle with
+``chapter_outline_loader``. Both this module and ``chapter_outline_loader``
+now depend only on ``chapter_paths_types`` at the top level.
 """
 
 from __future__ import annotations
 
-import os
-import re
 from pathlib import Path
 from typing import Optional
 
-_DEFAULT_CPV = int(os.environ.get("INK_CHAPTERS_PER_VOLUME", "50"))
+try:
+    from chapter_paths_types import (
+        CHAPTER_NUM_RE as _CHAPTER_NUM_RE,
+        CHAPTER_TITLE_MAX_LENGTH,
+        OUTLINE_HEADING_RE as _OUTLINE_HEADING_RE,
+        SPLIT_OUTLINE_FILENAME_RE as _SPLIT_OUTLINE_FILENAME_RE,
+        volume_num_for_chapter,
+    )
+except ImportError:  # pragma: no cover
+    from scripts.chapter_paths_types import (
+        CHAPTER_NUM_RE as _CHAPTER_NUM_RE,
+        CHAPTER_TITLE_MAX_LENGTH,
+        OUTLINE_HEADING_RE as _OUTLINE_HEADING_RE,
+        SPLIT_OUTLINE_FILENAME_RE as _SPLIT_OUTLINE_FILENAME_RE,
+        volume_num_for_chapter,
+    )
 
-_CHAPTER_NUM_RE = re.compile(r"第(?P<num>\d+)章")
-_OUTLINE_HEADING_RE = re.compile(r"^#{1,6}\s*第\s*(?P<num>\d+)\s*章[：:]\s*(?P<title>.+?)\s*$", re.MULTILINE)
-_SPLIT_OUTLINE_FILENAME_RE = re.compile(r"^第0*(?P<num>\d+)章[-—_ ]+(?P<title>.+?)\.md$")
-
-CHAPTER_TITLE_MAX_LENGTH = 60  # 章节标题在文件名中的最大字符数
-
-
-def volume_num_for_chapter(chapter_num: int, *, chapters_per_volume: int = _DEFAULT_CPV) -> int:
-    if chapter_num <= 0:
-        raise ValueError("chapter_num must be >= 1")
-    return (chapter_num - 1) // chapters_per_volume + 1
+__all__ = [
+    "CHAPTER_TITLE_MAX_LENGTH",
+    "volume_num_for_chapter",
+    "extract_chapter_num_from_filename",
+    "extract_chapter_title",
+    "find_chapter_file",
+    "default_chapter_draft_path",
+]
 
 
 def extract_chapter_num_from_filename(filename: str) -> Optional[int]:
@@ -84,7 +99,14 @@ def _extract_title_from_split_outline_filename(outline_dir: Path, chapter_num: i
 
 
 def extract_chapter_title(project_root: Path, chapter_num: int) -> str:
-    """从详细大纲提取章节标题，用于生成更直观的章节文件名。"""
+    """从详细大纲提取章节标题，用于生成更直观的章节文件名。
+
+    US-025: ``load_chapter_outline`` is imported lazily inside the function to
+    keep the top-level import graph acyclic. The authoritative cycle fix is
+    the ``chapter_paths_types`` extraction; this lazy import is a belt-and-
+    suspenders safeguard so AST-level scanners (``audit_architecture.py``)
+    register zero cycles.
+    """
     try:
         from chapter_outline_loader import load_chapter_outline
     except ImportError:  # pragma: no cover
@@ -156,4 +178,3 @@ def default_chapter_draft_path(project_root: Path, chapter_num: int, *, use_volu
         return vol_dir / _build_chapter_filename(project_root, chapter_num, use_volume_layout=True)
     else:
         return project_root / "正文" / _build_chapter_filename(project_root, chapter_num, use_volume_layout=False)
-
