@@ -104,6 +104,7 @@ def test_cli_accepts_creative_args(tmp_path):
     project_dir = tmp_path / "book5"
     env = os.environ.copy()
     env["PYTHONPATH"] = f"{ROOT / 'ink-writer' / 'scripts'}:{ROOT}"
+    env["INK_SKIP_STYLE_RAG_INIT"] = "1"  # 跳过 CI 冷启动时 ~3min 的 FAISS 索引构建
     result = subprocess.run(
         [sys.executable, str(INIT_SCRIPT), str(project_dir), "CLI测试", "玄幻",
          "--meta-rules-hit", '["M06"]', "--style-voice", "V2"],

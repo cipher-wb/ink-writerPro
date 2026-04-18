@@ -1,6 +1,6 @@
 # Ink Writer Pro
 
-[![Version](https://img.shields.io/badge/Version-14.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-15.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 
 **一条命令，自动写 10 章并审查修复。** AI 驱动的长篇网文写作工具，专为起点/番茄等平台的商业连载设计。
@@ -171,7 +171,7 @@ A: ⚠️ **当前仅建议 parallel=1（默认串行）**。`parallel>1` 是实
 
 | 版本 | 说明 |
 |------|------|
-| **v15.0.0 (当前)** | **v14 审计完结 + 架构统一（v14 Session B/C 合计 30 US）** — **FIX-17 反向传播闭环**（propagation_debt schema + canon-drift-detector + ink-macro-review Tier2 集成 + ink-plan 消费 + 端到端集成测试）；**FIX-18 Progressions 追踪**（character_progressions schema + data-agent 产出 progression_events + context-agent 注入 summary + ooc-checker Layer K 跨章一致性审计 + 端到端测试）；**FIX-11 双包合并（breaking）**（data_modules 37 模块 + 54 测试按方向 A 迁移至 ink_writer/core/，libcst AST 重写 90+ 导入路径，消除 sys.path.insert 技术债，pip install -e . 可直接导入）；**覆盖率阶梯** 30→50→70（门禁 + 32 个新测试）；**CLAUDE.md / agents 全量同步**。pytest 2310→2420 全绿，总覆盖 81.91%，零回归 |
+| **v15.0.0 (当前)** | v14 审计完结 + 架构统一（FIX-17 反向传播 + FIX-18 Progressions + FIX-11 双包合并 breaking + 覆盖率 30→70） |
 | v14.0.0 | **深度健康审计修复（v13 Step 2 + Step 3 合计 38 US）** — Blocker 全修（依赖声明 + pyproject + CI smoke + PipelineManager 诚实降级）；FIX-03A Memory v13 **SQL-first** 全链路闭环（StateManager.flush 顺序反转 + save_external_state + archive_manager / update_state / ink-resolve 全部迁移）；**FIX-04 step3_runner Phase A 上线**（5 个孤儿 Python gate 接入生产 + shadow 模式 + CLI + env mode 开关）；tests/editor_wisdom +227 dormant tests 激活；Step 3.5 Harness Gate 改读 index.db.review_metrics；Retriever 单例化；Style RAG 3 档降级（FAISS→subprocess 构建→SQLite fallback）；LLM + 章级 timeout；API Key 入口护栏；创意指纹 5 字段入库；孤儿表 / 僵尸 agent / 死代码清理 ~603KB；scripts/verify_docs.py CI 校验文档-代码数字一致性。pytest 2071→2310 全绿零回归 |
 | v13.8.0 | ink-init --quick 创意生成架构级升级 — 三层创意体系（元规则库 M01-M10 + 种子库 schema + 扰动引擎）+ 金手指三重硬约束（非战力维度/代价可视化/一句话爆点）+ 4 档激进度（1 保守/2 平衡/3 激进/4 疯批）+ 三档语言风格（V1 文学狂野/V2 烟火接地气/V3 江湖野气）+ L0-L3 敏感词分级+档位密度矩阵 + 书名 7 种修辞标签（双关/谐音/对仗/反讽/矛盾/具象配抽象/时空错置）+ 江湖绰号库 110 条+书名模板 170 条 + 陈词黑名单扩展（神帝/至尊/龙傲天 后缀+姓×名末字笛卡儿积）+ 起点番茄双平台榜单联网反向建模（90 天缓存） + 方案输出创意指纹板块 |
 | **v13.7.0** | 文笔沉浸感架构 — 电影镜头切换/感官轮换/信息密度/环境情绪共振四大法则 + prose-impact/sensory-immersion/flow-naturalness 3 个新 checker + polish Layer 9 兜底 + 24 条新文笔规则（EW-0365~0388）+ 第一章 4 项爽点硬阻断 |

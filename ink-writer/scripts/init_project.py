@@ -950,10 +950,14 @@ def _try_ensure_style_rag_index() -> None:
     """若 data/style_rag/ 索引缺失，尝试调用 build_style_rag.py 构建；失败只打印 hint。
 
     v13 US-008 修复：让 Style RAG 默认可用，不再"建了没用"。
+    CI/测试可通过 INK_SKIP_STYLE_RAG_INIT=1 跳过（避免 ~3min 阻塞）。
     """
     import subprocess
     import sys as _sys
     from pathlib import Path as _Path
+
+    if os.environ.get("INK_SKIP_STYLE_RAG_INIT"):
+        return
 
     repo_root = _Path(__file__).resolve().parent.parent.parent
     index_dir = repo_root / "data" / "style_rag"
