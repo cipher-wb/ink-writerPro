@@ -437,7 +437,7 @@ class ModalAPIClient:
 
     async def warmup(self):
         """预热 Embedding 和 Rerank 服务"""
-        print("[WARMUP] Warming up Embed + Rerank...")
+        logger.warning("[WARMUP] Warming up Embed + Rerank...")
         start = time.time()
 
         tasks = [self._warmup_embed(), self._warmup_rerank()]
@@ -445,11 +445,11 @@ class ModalAPIClient:
 
         for name, result in zip(["Embed", "Rerank"], results):
             if isinstance(result, Exception):
-                print(f"  [FAIL] {name}: {result}")
+                logger.warning("  [FAIL] %s: %s", name, result)
             else:
-                print(f"  [OK] {name} ready")
+                logger.warning("  [OK] %s ready", name)
 
-        print(f"[WARMUP] Done in {time.time() - start:.1f}s")
+        logger.warning("[WARMUP] Done in %.1fs", time.time() - start)
 
     async def _warmup_embed(self):
         await self._embed_client.warmup()
@@ -485,14 +485,18 @@ class ModalAPIClient:
     # ==================== 统计 ====================
 
     def print_stats(self):
-        print("\n[API STATS]")
+        logger.warning("[API STATS]")
         for name, stats in self.stats.items():
             if stats.total_calls > 0:
                 avg_time = stats.total_time / stats.total_calls
-                print(f"  {name.upper()}: {stats.total_calls} calls, "
-                      f"{stats.total_time:.1f}s total, "
-                      f"{avg_time:.2f}s avg, "
-                      f"{stats.errors} errors")
+                logger.warning(
+                    "  %s: %d calls, %.1fs total, %.2fs avg, %d errors",
+                    name.upper(),
+                    stats.total_calls,
+                    stats.total_time,
+                    avg_time,
+                    stats.errors,
+                )
 
 
 # 全局客户端
