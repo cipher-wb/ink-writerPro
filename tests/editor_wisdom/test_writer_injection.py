@@ -195,8 +195,11 @@ class TestBuildWriterConstraints:
             raise RuntimeError("simulated index missing")
 
         from ink_writer.editor_wisdom import writer_injection as _wi
+        # v14 US-002：Step 2 US-006 改为 get_retriever，故 patch get_retriever
+        from ink_writer.editor_wisdom.retriever import clear_retriever_cache
+        clear_retriever_cache()
 
-        monkeypatch.setattr(_wi, "Retriever", _boom)
+        monkeypatch.setattr(_wi, "get_retriever", _boom)
         with pytest.raises(Exception):
             build_writer_constraints("测试大纲", config=config, retriever=None)
 

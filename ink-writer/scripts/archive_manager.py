@@ -109,19 +109,18 @@ class ArchiveManager:
             return json.load(f)
 
     def save_state(self, state):
-        """保存 state.json（原子化写入）。
+        """保存 state.json（走 StateManager SQL-first 流程，v14 US-012）。
 
-        v13 US-025 审计标记：此路径直写 state.json 绕过 StateManager.flush()，
-        未走 SQL-first 顺序（见 tasks/audit-direct-state-writes-2026-04-17.md）。
-        当前保留是因为归档流程修改 state dict 后一次性写回；重构为 StateManager
-        调用需先拆分归档 state 更新逻辑，放入下一轮 PRD（FIX-03A 扫尾的后续）。
-        影响面仅限归档流程（非主写作链路），风险较低。
+        v14 US-012 修复（原 v13 US-025 TODO）：
+        归档流程完成时的 state 更新现在走 StateManager.save_external_state()，
+        保证 SQL 与 JSON 视图都被 SQL-first 顺序更新。
+        失败会 raise StateWriteError（SQL 写失败时）或 logger.warning（JSON 视图写失败）。
         """
-        # TODO(next-round): 改走 StateManager.add_entity/update_entity + save_state()
-        # 以对齐 US-024 SQL-first 顺序。关联：tasks/audit-direct-state-writes-2026-04-17.md
-        # 使用集中式原子写入（自动备份）
-        atomic_write_json(self.state_file, state, use_lock=True, backup=True)
-        print(f"✅ state.json 已原子化更新")
+        # v14 US-012：走 StateManager SQL-first 流程，不再裸 atomic_write_json
+        from data_modules.state_manager import StateManager
+        sm = StateManager(self._config)
+        sm.save_external_state(state)
+        print(f"✅ state.json 已通过 StateManager SQL-first 更新")
 
     def load_archive(self, archive_file):
         """加载归档文件"""

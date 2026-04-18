@@ -211,13 +211,16 @@ class StateUpdater:
             return True
 
         try:
-            # v13 US-025 TODO(next-round)：此 CLI 工具直写 state.json 绕过 StateManager，
-            # 未走 SQL-first 顺序（见 tasks/audit-direct-state-writes-2026-04-17.md）。
-            # 下一轮重构为 StateManager 调用。当前保留因为这是脚本化修改工具，
-            # 不在主写作链路。
-            # 使用集中式原子写入（带 filelock + 自动备份）
-            atomic_write_json(self.state_file, self.state, use_lock=True, backup=True)
-            print(f"✅ 已保存（原子化）: {self.state_file}")
+            # v14 US-013 修复（原 v13 US-025 TODO）：走 StateManager SQL-first 流程
+            from pathlib import Path as _Path
+            from data_modules.config import DataModulesConfig
+            from data_modules.state_manager import StateManager
+
+            project_root = _Path(self.state_file).parent.parent
+            config = DataModulesConfig.from_project_root(project_root)
+            sm = StateManager(config)
+            sm.save_external_state(self.state)
+            print(f"✅ 已保存（StateManager SQL-first）: {self.state_file}")
             return True
 
         except Exception as e:
