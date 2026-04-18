@@ -38,7 +38,7 @@
 | US-024 | 日志规范化 + JSON/DB 源头统一 | Milestone C | `952bc96` |
 | US-025 | import cycle 解构 + foreshadow/plotline tracker Python 合并 | Milestone C | `f582b27` |
 | US-026 | 前 3 章 checker 冲突仲裁 + 细节收尾（API Key 守卫 + CLAUDE.md 精简） | Milestone C | `053abf8` |
-| US-027 | v16.0.0 发布（Milestone C 收口） | Milestone C | `c4404b5` |
+| US-027 | v16.0.0 发布（Milestone C 收口） | Milestone C | `4f8ce28` |
 
 **总计**：27/27 passes，Milestone A (8) + Milestone B (11) + Milestone C (8)。
 
