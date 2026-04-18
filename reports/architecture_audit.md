@@ -4,9 +4,9 @@
 
 ## Summary
 
-- **Python modules scanned**: 179
+- **Python modules scanned**: 186
 - **Import cycles found**: 1
-- **Unused module candidates**: 85
+- **Unused module candidates**: 92
 - **Agents scanned**: 22
 - **Agent overlap pairs**: 8
 - **Repeated prompt fragments**: 50
@@ -24,6 +24,7 @@
 - `anti_detection.sentence_diversity` (/Users/cipher/AI/ink/ink-writer/ink_writer/anti_detection/sentence_diversity.py)
 - `checker_pipeline` (/Users/cipher/AI/ink/ink-writer/ink_writer/checker_pipeline/__init__.py)
 - `checker_pipeline.runner` (/Users/cipher/AI/ink/ink-writer/ink_writer/checker_pipeline/runner.py)
+- `checker_pipeline.step3_runner` (/Users/cipher/AI/ink/ink-writer/ink_writer/checker_pipeline/step3_runner.py)
 - `cultural_lexicon` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/__init__.py)
 - `cultural_lexicon.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/config.py)
 - `cultural_lexicon.context_injection` (/Users/cipher/AI/ink/ink-writer/ink_writer/cultural_lexicon/context_injection.py)
@@ -83,6 +84,12 @@
 - `prompt_cache.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/config.py)
 - `prompt_cache.metrics` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/metrics.py)
 - `prompt_cache.segmenter` (/Users/cipher/AI/ink/ink-writer/ink_writer/prompt_cache/segmenter.py)
+- `propagation` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/__init__.py)
+- `propagation.debt_store` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/debt_store.py)
+- `propagation.drift_detector` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/drift_detector.py)
+- `propagation.macro_integration` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/macro_integration.py)
+- `propagation.models` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/models.py)
+- `propagation.plan_integration` (/Users/cipher/AI/ink/ink-writer/ink_writer/propagation/plan_integration.py)
 - `reader_pull` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/__init__.py)
 - `reader_pull.config` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/config.py)
 - `reader_pull.fix_prompt_builder` (/Users/cipher/AI/ink/ink-writer/ink_writer/reader_pull/fix_prompt_builder.py)

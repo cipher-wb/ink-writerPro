@@ -159,3 +159,15 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - integration marker 需要在 pytest.ini [pytest] markers= 注册以消除 PytestUnknownMarkWarning
   - 构造真实 sqlite review_metrics 表比 records= 注入更能覆盖 _load_records_from_db 的 SQL 路径
 ---
+
+## 2026-04-18 - US-019
+- Implemented FIX-18 P5a: character_progressions table + save_progression_event / get_progressions_for_character API
+- Files changed:
+  - ink-writer/scripts/data_modules/index_manager.py: +CREATE TABLE character_progressions (composite PK character_id, chapter_no, dimension) + 2 API methods with UPSERT
+  - tests/harness/test_progressions_api.py: 5 test cases (empty, roundtrip, upsert, filter-by-char/chapter, required-field validation)
+- Verification: pytest tests/harness/ → 110 passed, 1 skipped, 0 new failures
+- **Learnings for future iterations:**
+  - IndexManager schema 所有 CREATE TABLE 都集中在 __init__ 末尾的 conn.commit() 之前，新增表在 "US-019" 注释处插入即可
+  - Test pattern: `pytest.importorskip("data_modules.index_manager")` + `monkeypatch.chdir(tmp_path)` + `DataModulesConfig.from_project_root`，参考 test_review_metrics_api.py
+  - API 方法放在 get_character_evolution 系列之后，保持角色相关逻辑聚合
+---

@@ -973,6 +973,26 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
             # chapter_memory_cards 新增 scene_exit_snapshot 字段（US-003 预留）
             self._ensure_column(cursor, "chapter_memory_cards", "scene_exit_snapshot", "TEXT")
 
+            # US-019 (FIX-18 P5a): 角色时间轴进展切片表
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS character_progressions (
+                    character_id TEXT NOT NULL,
+                    chapter_no INTEGER NOT NULL,
+                    dimension TEXT NOT NULL,
+                    from_value TEXT,
+                    to_value TEXT,
+                    cause TEXT,
+                    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (character_id, chapter_no, dimension)
+                )
+            """)
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_char_prog_chapter ON character_progressions(chapter_no)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_char_prog_dimension ON character_progressions(dimension)"
+            )
+
             conn.commit()
 
     @contextmanager
@@ -1134,6 +1154,63 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                    LIMIT ?""",
                 (entity_id, limit),
             ).fetchall()
+            return [dict(row) for row in rows]
+
+    # ==================== 角色进展切片（US-019, FIX-18 P5a）====================
+
+    def save_progression_event(self, data: Dict[str, Any]) -> None:
+        """保存角色进展事件（UPSERT: 同 character_id+chapter_no+dimension 覆盖）。
+
+        必填: character_id, chapter_no, dimension
+        选填: from_value, to_value, cause
+        """
+        character_id = data.get("character_id")
+        chapter_no = data.get("chapter_no")
+        dimension = data.get("dimension")
+        if not character_id or chapter_no is None or not dimension:
+            raise ValueError("character_id/chapter_no/dimension are required")
+        with self._get_conn() as conn:
+            conn.execute(
+                """INSERT INTO character_progressions
+                   (character_id, chapter_no, dimension, from_value, to_value, cause)
+                   VALUES (?, ?, ?, ?, ?, ?)
+                   ON CONFLICT(character_id, chapter_no, dimension) DO UPDATE SET
+                     from_value = excluded.from_value,
+                     to_value = excluded.to_value,
+                     cause = excluded.cause,
+                     recorded_at = CURRENT_TIMESTAMP""",
+                (
+                    character_id,
+                    int(chapter_no),
+                    dimension,
+                    data.get("from_value"),
+                    data.get("to_value"),
+                    data.get("cause"),
+                ),
+            )
+            conn.commit()
+
+    def get_progressions_for_character(
+        self, char_id: str, before_chapter: Optional[int] = None
+    ) -> list:
+        """获取角色的进展切片，按章节升序。before_chapter=None 返回全部。"""
+        with self._get_conn() as conn:
+            if before_chapter is None:
+                rows = conn.execute(
+                    """SELECT character_id, chapter_no, dimension, from_value, to_value, cause, recorded_at
+                       FROM character_progressions
+                       WHERE character_id = ?
+                       ORDER BY chapter_no ASC, dimension ASC""",
+                    (char_id,),
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    """SELECT character_id, chapter_no, dimension, from_value, to_value, cause, recorded_at
+                       FROM character_progressions
+                       WHERE character_id = ? AND chapter_no < ?
+                       ORDER BY chapter_no ASC, dimension ASC""",
+                    (char_id, int(before_chapter)),
+                ).fetchall()
             return [dict(row) for row in rows]
 
     def get_characters_evolution_summary(self, entity_ids: list, max_entries_per_char: int = 10) -> Dict[str, list]:
