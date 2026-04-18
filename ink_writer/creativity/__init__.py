@@ -8,6 +8,12 @@
 - ``cli``（US-013，未实装）：Quick Mode 脚本入口。
 """
 
+from ink_writer.creativity.gf_validator import (
+    BANNED_WORDS,
+    GF3_MAX_CHARS,
+    VALID_DIMENSIONS,
+    validate_golden_finger,
+)
 from ink_writer.creativity.name_validator import (
     Severity,
     ValidationResult,
@@ -17,9 +23,13 @@ from ink_writer.creativity.name_validator import (
 )
 
 __all__ = [
+    "BANNED_WORDS",
+    "GF3_MAX_CHARS",
     "Severity",
+    "VALID_DIMENSIONS",
     "ValidationResult",
     "Violation",
     "validate_book_title",
     "validate_character_name",
+    "validate_golden_finger",
 ]
