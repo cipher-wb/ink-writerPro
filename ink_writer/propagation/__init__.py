@@ -5,5 +5,11 @@ from ink_writer.propagation.models import (
     PropagationDebtItem,
 )
 from ink_writer.propagation.debt_store import DebtStore
+from ink_writer.propagation.drift_detector import detect_drifts
 
-__all__ = ["PropagationDebtFile", "PropagationDebtItem", "DebtStore"]
+__all__ = [
+    "PropagationDebtFile",
+    "PropagationDebtItem",
+    "DebtStore",
+    "detect_drifts",
+]

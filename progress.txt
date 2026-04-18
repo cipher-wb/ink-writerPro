@@ -87,3 +87,19 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
 - FIX-04 完整 Phase A 用 shadow 模式是关键：不阻断生产、先收数据、再决策切 enforce
 - Ralph 人工决策点（US-024 FIX-11）在本 session 未触发（延后）
 ---
+
+## 2026-04-18 - US-015（FIX-17 P4b：canon-drift-detector 实现）
+- 新建 `ink_writer/propagation/drift_detector.py`：`detect_drifts(project_root, chapter_range, *, records=None)`
+  - 从 `.ink/index.db.review_metrics` 读取 critical_issues + review_payload_json.checker_results
+  - 扫 `critical_issues` + `checker_results["consistency-checker"|"continuity-checker"].violations/issues`
+  - 规则：target_chapter(或 ref/source/chapter) < chapter_detected 视为 drift；type ∈ {cross_chapter_conflict, back_propagation, canon_drift} 也命中
+  - 生成 PropagationDebtItem（debt_id=DRIFT-{ch:04d}-{idx:03d} 或 DEBT-...）
+- `ink_writer/propagation/__init__.py` 暴露 `detect_drifts`
+- 新增 `tests/harness/test_drift_detector.py`（11 用例：unit _drifts_from_data + detect_drifts records mock + 真实 sqlite DB 路径）
+- Verification: tests/harness 77 passed；全量 **2327 passed + 1 skipped** 零回归（baseline 2298，净增 29 = 11 新测试 + 之前批次累加）
+- **Learnings for future iterations:**
+  - review_metrics 字段双源：独立列 `critical_issues` + `review_payload_json`（整包），读取顺序 payload 优先、列回退
+  - 测试友好设计：通过可选 `records=` 参数注入 mock 数据，避开 sqlite fixture；仍保留一个真实 DB 用例守底
+  - violations key 名不统一（violations vs issues）—— 扫描两者兼容
+  - Severity 用 Pydantic Literal，默认 "medium"；落库前要 lower + 白名单过滤，否则 Pydantic 抛
+---
