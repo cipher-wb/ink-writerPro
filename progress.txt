@@ -171,3 +171,15 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - Test pattern: `pytest.importorskip("data_modules.index_manager")` + `monkeypatch.chdir(tmp_path)` + `DataModulesConfig.from_project_root`，参考 test_review_metrics_api.py
   - API 方法放在 get_character_evolution 系列之后，保持角色相关逻辑聚合
 ---
+
+## 2026-04-18 - US-020 (FIX-18 P5b: data-agent 产出 progression_events)
+- Spec 更新：ink-writer/agents/data-agent.md 新增 Step B.7.6 "角色演进切片（progression_events）"，声明 6 维度 enum（立场/关系/境界/知识/情绪/目标）+ 字段 schema + 空数组语义；并在顶部输出示例补 progression_events 字段
+- 新测试：tests/harness/test_data_agent_progression_output.py (13 tests)
+  - 规格层 4 测试：守 Step B.7.6 章节、6 dimension enum、空数组说明、字段说明
+  - 数据层 9 测试：mock data-agent JSON 输出 → 字段齐全/dimension 合法/空数组允许；负向校验 dimension 非法/缺字段/未知字段；JSON 序列化往返
+- Verification: 全量 pytest --no-cov → **2379 passed, 1 skipped**（基线 2366 → +13 新测试，零回归）
+- **Learnings for future iterations:**
+  - data-agent 是 Markdown Skill agent（非 Python 模块），契约测试只能两层：规格文本 grep + 数据层 schema 校验。无法直接调用 LLM
+  - US-019 (P5a) 实现的 IndexManager.save_progression_event 用 from_value/to_value 列名，但 data-agent JSON 输出契约用 from/to 字段（更紧凑）。Step 5 解析端需要做映射；后续若有 P5c (writer 消费) 要注意这层别名
+  - dimension 枚举是中文（立场/关系/境界/知识/情绪/目标），与 US-019 测试里用的英文 power_level/relationship 不一致 — 这是规格演进，US-019 只测 schema 不限 enum，由 data-agent 规格层兜底
+---

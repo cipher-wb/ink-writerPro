@@ -67,6 +67,9 @@ model: inherit
     {"from": "xiaoyan", "to": "hongyi_girl", "type": "相识", "description": "初次见面"}
   ],
   "scenes_chunked": 4,
+  "progression_events": [
+    {"character_id": "xiaoyan", "dimension": "境界", "from": "斗者", "to": "斗师", "cause": "突破"}
+  ],
   "uncertain": [
     {"mention": "那位前辈", "candidates": [{"type": "角色", "id": "yaolao"}, {"type": "角色", "id": "elder_zhang"}], "confidence": 0.6}
   ],
@@ -327,6 +330,59 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" where
 - `relationship_to_protagonist`: 本章中与主角的关系定位（若无变化可沿用上一章）
 
 **写入**: 通过 `state process-chapter` 统一落库到 entities 表的扩展字段。
+
+### Step B.7.6: 角色演进切片（progression_events）
+
+> **FIX-18 P5b（US-020）**：本节是 Progressions 时间轴的**生产端**。每章识别核心/重要角色在 6 个维度上的状态变化，写入 `character_progressions` 表（schema 见 US-019）。后续 outline 自动消费这些事件。
+
+**目的**：把每章的"角色状态跃迁"压成结构化事件，逐章累积形成可查询的演进时间轴。和 B.7（章内性格快照）/B.7.5（最新状态字段）互补：B.7.6 是**事件流**，描述某一刻发生了什么"跳跃"。
+
+**触发范围**：tier=核心或重要的出场角色（与 B.7 一致）。
+
+**dimension 枚举（必须严格遵守，不得自由发挥）**：
+
+| dimension | 说明 | from/to 示例 |
+|-----------|------|--------------|
+| `立场` | 阵营/派系归属、敌我转换 | `中立` → `白虎堂` |
+| `关系` | 与某角色的关系性质变化 | `陌生` → `结义兄弟`（cause 中标 target） |
+| `境界` | 修为/等级/职位/段位 | `炼气三层` → `炼气五层` |
+| `知识` | 主线相关的关键信息掌握 | `不知` → `知道父亲是叛徒` |
+| `情绪` | 长期情绪基调跃迁（非短暂情绪波动） | `怀疑` → `坚定` |
+| `目标` | 主线目标/动机的转向 | `复仇` → `保护妹妹` |
+
+**禁止**使用枚举外的 dimension 值（如 `power_level`、`relationship`、自然语言短语等）。dimension 字段必须严格匹配上表 6 个值之一。
+
+**输出到 payload**：
+
+```json
+{
+  "progression_events": [
+    {"character_id": "xiaoyan", "dimension": "境界", "from": "斗者", "to": "斗师", "cause": "突破"},
+    {"character_id": "xiaoyan", "dimension": "目标", "from": "复仇", "to": "保护萧家", "cause": "父亲遇袭"}
+  ]
+}
+```
+
+**字段说明**：
+- `character_id`（必填）：实体 ID，与 entities 表对齐
+- `dimension`（必填）：6 选 1，见上表
+- `from`（可选）：变化前的值；初次设定可省略
+- `to`（必填）：变化后的值
+- `cause`（可选）：触发变化的事件简述（1 句话内）
+
+**无变化处理**：若本章所有出场角色均无上述 6 维度的状态跃迁 → 输出空数组：
+
+```json
+{
+  "progression_events": []
+}
+```
+
+**与 B.7 的边界**：
+- B.7（character_evolution_entries）：章内性格快照、台词样本、关系变化描述（自由文本）
+- B.7.6（progression_events）：6 维度跃迁事件（结构化、enum 受限），用于 outline propagation
+
+**写入**：通过 `state process-chapter` 落库到 `character_progressions` 表（API：`IndexManager.save_progression_event`，US-019 已实现）。
 
 ### Step B.8: 主题呈现提取
 
