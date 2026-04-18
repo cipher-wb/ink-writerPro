@@ -651,6 +651,35 @@ class IndexReadingMixin:
                 ),
             )
 
+    def read_review_metrics(self, chapter_id: int) -> Optional[Dict]:
+        """v14 US-004：按章节号读取 review_metrics 记录（用于 step3_runner 等需要精准章节
+        查询的场景）。返回包含该章节的 metrics 行（start_chapter <= chapter_id <= end_chapter）
+        中 updated_at 最新的那条；无记录返回 None。
+        """
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT * FROM review_metrics
+                WHERE start_chapter <= ? AND end_chapter >= ?
+                ORDER BY updated_at DESC
+                LIMIT 1
+            """,
+                (chapter_id, chapter_id),
+            )
+            row = cursor.fetchone()
+            if row is None:
+                return None
+            return self._row_to_dict(
+                row,
+                parse_json=[
+                    "dimension_scores",
+                    "severity_counts",
+                    "critical_issues",
+                    "review_payload_json",
+                ],
+            )
+
     def get_recent_review_metrics(self, limit: int = 5) -> List[Dict]:
         """获取最近审查记录"""
         with self._get_conn() as conn:
