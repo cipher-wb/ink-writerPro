@@ -59,7 +59,7 @@ from typing import Dict, Any, Optional
 # ============================================================================
 from security_utils import create_secure_directory, atomic_write_json, restore_from_backup
 from project_locator import resolve_state_file
-from data_modules.state_validator import (
+from ink_writer.core.state.state_validator import (
     normalize_foreshadowing_status,
     normalize_state_runtime_sections,
 )
@@ -213,8 +213,8 @@ class StateUpdater:
         try:
             # v14 US-013 修复（原 v13 US-025 TODO）：走 StateManager SQL-first 流程
             from pathlib import Path as _Path
-            from data_modules.config import DataModulesConfig
-            from data_modules.state_manager import StateManager
+            from ink_writer.core.infra.config import DataModulesConfig
+            from ink_writer.core.state.state_manager import StateManager
 
             project_root = _Path(self.state_file).parent.parent
             config = DataModulesConfig.from_project_root(project_root)

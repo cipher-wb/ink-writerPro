@@ -107,8 +107,8 @@ DATA_AGENT_OUTPUT_BY_CHAPTER = {
 def _make_real_idx(tmp_path: Path, monkeypatch):
     pytest.importorskip("data_modules.index_manager", reason="data_modules not available")
     monkeypatch.chdir(tmp_path)
-    from data_modules.config import DataModulesConfig
-    from data_modules.index_manager import IndexManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
 
     cfg = DataModulesConfig.from_project_root(tmp_path)
     cfg.ensure_dirs()

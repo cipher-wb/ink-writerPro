@@ -787,7 +787,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" workflo
 1. **读取 index.db 实体快照**：查询当前章节相关的所有实体状态
    ```bash
    cd "$PROJECT_ROOT" && python -c "
-   from scripts.data_modules.index_manager import IndexManager
+   from ink_writer.core.index.index_manager import IndexManager
    im = IndexManager('index.db')
    # 获取主角当前状态
    print(im.get_entity_current_state('protagonist'))

@@ -28,7 +28,7 @@ def _read_state(project_dir: Path) -> dict:
 
 def test_no_creative_params_empty_fingerprint(tmp_path):
     """直接调用 init_project()，无创意参数 → 空字段。"""
-    sys.path.insert(0, str(ROOT / "ink-writer" / "scripts"))
+    # [FIX-11] removed: sys.path.insert(0, str(ROOT / "ink-writer" / "scripts"))
     import init_project  # noqa: E402
 
     project_dir = tmp_path / "book1"
@@ -45,7 +45,7 @@ def test_no_creative_params_empty_fingerprint(tmp_path):
 
 
 def test_json_string_params_parsed(tmp_path):
-    sys.path.insert(0, str(ROOT / "ink-writer" / "scripts"))
+    # [FIX-11] removed: sys.path.insert(0, str(ROOT / "ink-writer" / "scripts"))
     import init_project  # noqa: E402
 
     project_dir = tmp_path / "book2"
@@ -68,7 +68,7 @@ def test_json_string_params_parsed(tmp_path):
 
 
 def test_comma_separated_fallback(tmp_path):
-    sys.path.insert(0, str(ROOT / "ink-writer" / "scripts"))
+    # [FIX-11] removed: sys.path.insert(0, str(ROOT / "ink-writer" / "scripts"))
     import init_project  # noqa: E402
 
     project_dir = tmp_path / "book3"
@@ -84,7 +84,7 @@ def test_comma_separated_fallback(tmp_path):
 
 
 def test_list_params_direct(tmp_path):
-    sys.path.insert(0, str(ROOT / "ink-writer" / "scripts"))
+    # [FIX-11] removed: sys.path.insert(0, str(ROOT / "ink-writer" / "scripts"))
     import init_project  # noqa: E402
 
     project_dir = tmp_path / "book4"

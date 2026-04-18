@@ -10,11 +10,11 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-sys.path.insert(0, str(REPO_ROOT / "ink-writer" / "scripts"))
+# [FIX-11] removed: sys.path.insert(0, str(REPO_ROOT / "scripts"))
+# [FIX-11] removed: sys.path.insert(0, str(REPO_ROOT / "ink-writer" / "scripts"))
 
-from data_modules.config import DataModulesConfig
-from data_modules.index_manager import IndexManager
+from ink_writer.core.infra.config import DataModulesConfig
+from ink_writer.core.index.index_manager import IndexManager
 
 REQUIRED_TOP_KEYS = {"version", "timestamp", "git_sha", "project_root",
                      "chapter_count", "entity_count", "metrics", "detail",

@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
+# [FIX-11] removed: sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from build_reference_corpus import (
     analyze_book,

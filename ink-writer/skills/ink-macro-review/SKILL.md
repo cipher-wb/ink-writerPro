@@ -158,7 +158,7 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" status 
 ```bash
 python3 -X utf8 -c "
 import sys, json
-sys.path.insert(0, '${SCRIPTS_DIR}/data_modules')
+# [FIX-11] sys.path.insert no longer required — ink_writer is importable
 try:
     from style_anchor import save_anchor, check_drift
     from pathlib import Path

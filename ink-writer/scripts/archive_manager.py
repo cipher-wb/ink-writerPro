@@ -49,11 +49,11 @@ from project_locator import resolve_project_root
 
 # v5.1 引入: 使用 IndexManager 读取实体
 try:
-    from data_modules.index_manager import IndexManager
-    from data_modules.config import get_config
+    from ink_writer.core.index.index_manager import IndexManager
+    from ink_writer.core.infra.config import get_config
 except ImportError:
-    from scripts.data_modules.index_manager import IndexManager
-    from scripts.data_modules.config import get_config
+    from ink_writer.core.index.index_manager import IndexManager
+    from ink_writer.core.infra.config import get_config
 
 # Windows UTF-8 编码修复
 if sys.platform == "win32":
@@ -117,7 +117,7 @@ class ArchiveManager:
         失败会 raise StateWriteError（SQL 写失败时）或 logger.warning（JSON 视图写失败）。
         """
         # v14 US-012：走 StateManager SQL-first 流程，不再裸 atomic_write_json
-        from data_modules.state_manager import StateManager
+        from ink_writer.core.state.state_manager import StateManager
         sm = StateManager(self._config)
         sm.save_external_state(state)
         print(f"✅ state.json 已通过 StateManager SQL-first 更新")

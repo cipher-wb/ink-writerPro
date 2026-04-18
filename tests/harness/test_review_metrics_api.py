@@ -7,8 +7,8 @@ import pytest
 def test_read_review_metrics_returns_none_on_empty(tmp_path, monkeypatch):
     pytest.importorskip("data_modules.index_manager", reason="data_modules not available")
     monkeypatch.chdir(tmp_path)
-    from data_modules.config import DataModulesConfig
-    from data_modules.index_manager import IndexManager
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager
     cfg = DataModulesConfig.from_project_root(tmp_path)
     cfg.ensure_dirs()
     idx = IndexManager(cfg)
@@ -18,8 +18,8 @@ def test_read_review_metrics_returns_none_on_empty(tmp_path, monkeypatch):
 def test_read_review_metrics_roundtrip(tmp_path, monkeypatch):
     pytest.importorskip("data_modules.index_manager", reason="data_modules not available")
     monkeypatch.chdir(tmp_path)
-    from data_modules.config import DataModulesConfig
-    from data_modules.index_manager import IndexManager, ReviewMetrics
+    from ink_writer.core.infra.config import DataModulesConfig
+    from ink_writer.core.index.index_manager import IndexManager, ReviewMetrics
     cfg = DataModulesConfig.from_project_root(tmp_path)
     cfg.ensure_dirs()
     idx = IndexManager(cfg)
