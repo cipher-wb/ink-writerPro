@@ -38,10 +38,27 @@ Step 4 是写作流水线中唯一的质量修复步骤。本 Agent 消费 Step 
   "emotion_fix_prompt": "",
   "anti_detection_fix_prompt": "",
   "voice_fix_prompt": "",
+  "merged_fix_suggestion": {
+    "shot":     {"master_checker": "prose-impact-checker",      "violations": [], "fix_prompt": ""},
+    "sensory":  {"master_checker": "sensory-immersion-checker", "violations": [], "fix_prompt": ""},
+    "rhythm":   {"master_checker": "flow-naturalness-checker",  "violations": [], "fix_prompt": ""},
+    "voice":    {"master_checker": "ooc-checker",               "violations": [], "fix_prompt": ""},
+    "dialogue": {"master_checker": "flow-naturalness-checker",  "violations": [], "fix_prompt": ""}
+  },
   "style_references": "【人写参考】块（由 Style RAG 检索，Step 2.8 生成；为空则跳过）",
   "pass": true
 }
 ```
+
+> **文笔维度 merged_fix_suggestion（US-016 / F-011）**：Step 3 会调用
+> `ink_writer.checker_pipeline.merge_fix_suggestion.write_merged_fix_suggestion`
+> 按 [`references/checker-merge-matrix.md`](../references/checker-merge-matrix.md) 把
+> prose-impact / sensory-immersion / flow-naturalness / ooc / proofreading /
+> editor-wisdom 等**文笔维度** checker 的 violations 去重合并为 `merged_fix_suggestion.json`。
+> 本 Agent 在 Layer 9 只消费该合并后的 5 维（镜头/感官/句式节奏/voice/对话）结构，
+> **不再重复读取上述 checker 的原始 report**，避免 token 膨胀和冲突指令。
+> 其他维度（逻辑/连续性/大纲/钩子/情绪/anti-detection/voice-global）仍走
+> 原有的 `*_fix_prompt` 字段，单独传递。
 
 **执行前必须加载**（静态优先，最大化 cache 命中）：
 
@@ -330,6 +347,20 @@ Layer 9 完成后执行 proofreading-checker Layer 6A+6B 等价自检：
 未通过项返回对应子层修复（9a/9b/9c/9d），最多 1 轮。结果写入 `prose_impact_check: pass/fail`。
 
 **合并指令处理**：若 Step 3 审查报告含 `merged_fix_suggestion`（Layer 6A+6B 联合合并），Layer 9 优先读取该合并建议并在对应子层一次性修复，避免同问题收到冲突指令（详见 US-015 约定）。
+
+**US-016（F-011）文笔维度合并**：当输入含顶层 `merged_fix_suggestion` 对象（由
+`ink_writer/checker_pipeline/merge_fix_suggestion.py` 生成，结构见 References 的
+`checker-merge-matrix.md`）时，Layer 9 按维度依次消费：
+
+| 维度 key   | 主 checker                 | 在本 Agent 对应子层 |
+| ---------- | -------------------------- | ------------------- |
+| `shot`     | prose-impact-checker       | 9a（镜头修复）       |
+| `sensory`  | sensory-immersion-checker  | 9b（感官修复）       |
+| `rhythm`   | flow-naturalness-checker   | 9d（句式节奏）       |
+| `voice`    | ooc-checker                | voice 去 AI 味段   |
+| `dialogue` | flow-naturalness-checker   | 9d 对话子项         |
+
+对于每个维度：遍历 `violations[*].source_checkers` 作为诊断依据（无需重复读取原 checker report），以 `fix_prompt` 作为本维度修复指令。同一 type 在所有从 checker 的建议已被合并器 dedup 为一条，polish-agent **禁止**再重新读取原 checker JSON 造成重复修复。
 
 ### 5. No-Poison 毒点规避（5类）
 
