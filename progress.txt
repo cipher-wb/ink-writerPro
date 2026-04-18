@@ -45,3 +45,45 @@ Phase 7 (覆盖率阶梯) → [依赖所有前置]
 - **FIX-04 设计稿**: tasks/design-fix-04-step3-gate-orchestrator.md 已批准，按 Phase A/B/C 顺序
 
 ---
+
+## 2026-04-18 01:25 - US-001/002/003（P1 tests/editor_wisdom 修复三件套）
+- US-001 诊断：产出 tasks/audit-editor-wisdom-failures-2026-04-18.md。实测 4 failures（v5 审计的 6 errors 已消失）；全部 mock-stale（Step 2 US-006 改 get_retriever 后 mock 未同步）
+- US-002 修复：4 处 patch 对象 Retriever→get_retriever；加 clear_retriever_cache()；pytest.ini 纳入 tests/editor_wisdom
+- US-003 跳过：无深层 failure
+- Verification: tests/editor_wisdom 227 passed；全量 **2298 passed**（+227 激活）零回归
+- **Learnings for future iterations:**
+  - Step 2 US-006 的锅 — 单例化时未同步 testpaths 外 的测试 mock 策略。教训：改 public API 时必须 grep 所有 test 目录（含未在 testpaths 的）
+  - `clear_retriever_cache()` + `patch(get_retriever)` 是该模块 mock 的正确姿势
+  - testpaths 里"未包含的 test 目录"是暗雷，CI 不会跑但本地 pytest <dir> 会跑；Step 2 US-019 起就该有 meta-test 强制扫所有 tests/* 目录
+---
+
+## 2026-04-18 02:05 - Session B 完结（US-001~013 + US-030 = 14 US）
+- **P1 完成**：US-001/002/003 tests/editor_wisdom 修复（+227 dormant tests 激活）
+- **P2 完成**：US-004 read_review_metrics API + US-005~008 step3_runner Phase A（5 gate adapters + CLI + env mode）+ US-009~011 SKILL.md 集成 + Phase C 局部
+- **P3 完成**：US-012/013 archive_manager + update_state 走 StateManager SQL-first（FIX-03A 真正闭环）
+- **US-030 完成**：版本号 13.8.0→14.0.0 + README 版本历史
+- **Session B 基线变化**：2071 passed → **2310 passed**（+239 新/激活测试）零回归
+- **14 commits** on ralph/v14-audit-completion
+
+## Deferred to Next Session (US-014~029)
+- P4 FIX-17 反向传播（propagation 模块）5 US
+- P5 FIX-18 Progressions（动态进展追踪）5 US
+- P6 FIX-11 双 Python 包合并（含人工决策点）4 US
+- P7 覆盖率阶梯 30→50→70 2 US
+
+Reason：Session B scope 限于 P1/P2/P3 + US-030。上述 P4~P7 延后至下一会话执行。
+
+## Next Session Entry Point
+```bash
+cd /Users/cipher/AI/ink/ink-writer
+git checkout ralph/v14-audit-completion  # 或基于 master 新建
+./ralph/ralph.sh                         # Ralph 自动从 US-014 继续
+```
+
+## Session B Learnings
+- step3_runner Phase A 用 stub checker_fn/polish_fn 而非真 LLM，让 orchestration 基础设施先跑通；Phase B 迭代时再换
+- `StateManager.save_external_state(state_dict)` 是解决 archive_manager / update_state 这类"外部已修改 state dict"场景的 SQL-first 入口
+- sed 批量 print→logger（Step 2 US-018）和 import 重组（Step 3 US-006）是 mock stale 的常见源头；改 public API 必 grep 所有 tests/* 含未在 testpaths 的
+- FIX-04 完整 Phase A 用 shadow 模式是关键：不阻断生产、先收数据、再决策切 enforce
+- Ralph 人工决策点（US-024 FIX-11）在本 session 未触发（延后）
+---
