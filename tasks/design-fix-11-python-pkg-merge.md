@@ -193,12 +193,21 @@ ink-writer/scripts/data_modules/
 
 ---
 
-## 7. 决策请求（🛑 AWAITING USER DECISION）
+## 7. 决策请求（✅ APPROVED）
 
-请在下列任一处回复后我再继续：
+- [x] **APPROVED: 方向 A**（合到 `ink_writer/core/`）
+- [ ] ~~APPROVED: 方向 B~~
+- [ ] ~~REVISE~~
 
-- [ ] **APPROVED: 方向 A**（推荐，合到 `ink_writer/`）
-- [ ] **APPROVED: 方向 B**（合到 `data_modules/`）
-- [ ] **REVISE**：请调整设计（具体说明点）
+---
 
-批准后，我会在本文件末尾追加 `APPROVED BY USER: <方向>`，并进入 FIX-11 的实施 PRD（新开 ralph session）。
+## APPROVED BY USER: 方向 A
+
+- **批准时间**：2026-04-18
+- **批准人**：cipher-wb (insectwb@gmail.com)
+- **批准范围**：按本文档第 2.A 节目标结构 + 第 4 节 P0–P6 阶段实施
+- **后续动作**：
+  1. US-025 按此方向实施 Migration Script（`scripts/fix11_migrate.py` with `libcst` + `--dry-run`）
+  2. 每阶段独立 commit，前缀 `fix11-pA-N:`
+  3. 任一阶段失败执行 `git reset --hard HEAD~1`
+  4. 保留 `data_modules/__init__.py` transitional shim 一个 session 后再删
