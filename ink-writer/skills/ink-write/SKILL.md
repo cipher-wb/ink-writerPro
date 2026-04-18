@@ -1315,20 +1315,21 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
 - 当 `chapter <= 3` 时，`golden-three-checker` 未通过不得放行。
 - 未落库 `review_metrics` 不得进入 Step 5。
 
-#### Step 3.45: step3_runner（v14 FIX-04 Phase B，默认 shadow 模式）
+#### Step 3.45: step3_runner（v16 US-005 Phase B production，默认 enforce 模式）
 
-> 新的 Python 并行 gate 编排器，把 5 个 Python gate（reader_pull / emotion /
-> anti_detection / voice / plotline）统一接入生产链路。v13 设计孤儿问题修复。
+> Python 并行 gate 编排器，把 5 个 Python gate（reader_pull / emotion /
+> anti_detection / voice / plotline）统一接入生产链路。v16 切换为 enforce
+> 默认，hard gate fail 会真阻断并回退 Step 2A。
 
 ```bash
-# 默认 shadow 模式：跑 gates 但不阻断（观察假阳性率 1 周后切 enforce）
-INK_STEP3_RUNNER_MODE="${INK_STEP3_RUNNER_MODE:-shadow}" \
-    python3 -m ink_writer.checker_pipeline.step3_runner \
+# v16 US-005：默认 enforce 模式（hard fail 回退 Step 2A）。如需临时观察
+# 模式可通过 env 显式降级：INK_STEP3_RUNNER_MODE=shadow。
+python3 -m ink_writer.checker_pipeline.step3_runner \
     --chapter-id {chapter_num} --state-dir "$PROJECT_ROOT/.ink/" --json
 ```
 
-- **shadow**（默认）：跑 5 gate，结果写 `.ink/index.db.review_metrics`，exit 0
-- **enforce**：hard gate fail 真阻断，exit 1 回退 Step 2A
+- **enforce**（默认）：跑 5 gate，hard fail → exit 1 回退 Step 2A，`review_metrics` 落库
+- **shadow**：跑 gate 记录不阻断（观察用）
 - **off**：skip runner（紧急降级路径）
 
 设计稿：[tasks/design-fix-04-step3-gate-orchestrator.md](../../../tasks/design-fix-04-step3-gate-orchestrator.md)
@@ -1353,8 +1354,8 @@ python3 -X utf8 "$SCRIPTS_DIR/step3_harness_gate.py" \
 优先 `index.db.review_metrics` → fallback `.ink/reports/review_ch*.json`（legacy，
 打 warning） → 两者皆无时显式 FAIL（不再 silent PASS）。
 
-v14 FIX-04 Phase C 清理：shadow→enforce 验证 1 周后，本 Step 3.5 的职能可与
-Step 3.45 step3_runner 合并。当前保留兜底。
+v16 US-005 起 Step 3.45 已默认 enforce，本 Step 3.5 保留作为确定性兜底
+（不依赖 LLM 判断，防 step3_runner 意外异常时的 silent pass）。
 
 #### Step 3.51: 逻辑门禁（Logic Gate）
 

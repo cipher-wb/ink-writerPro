@@ -5,9 +5,9 @@
 Design: tasks/design-fix-04-step3-gate-orchestrator.md
 
 Mode（env INK_STEP3_RUNNER_MODE）:
-  - off：不跑 runner（退回原 LLM 自律流程）
-  - shadow：跑 runner 并写 review_metrics，但 exit 0 不阻断（默认）
-  - enforce：跑 runner，hard fail → exit 1 真阻断
+  - off：不跑 runner（退回原 LLM 自律流程；紧急降级路径）
+  - shadow：跑 runner 并写 review_metrics，但 exit 0 不阻断（观察用）
+  - enforce（默认 / v16 US-005）：跑 runner，hard fail → exit 1 真阻断
 
 CLI:
   python3 -m ink_writer.checker_pipeline.step3_runner \\
@@ -43,7 +43,7 @@ from ink_writer.checker_pipeline.polish_llm_fn import make_llm_polish
 logger = logging.getLogger(__name__)
 
 # v16 US-003（FIX-01 Phase B）：5 个 gate 的真 LLM checker 接入。
-# - env INK_STEP3_LLM_CHECKER=off → 保留 Phase A benign stub（用于 CI 零 token 回归）。
+# - env INK_STEP3_LLM_CHECKER=off → 退回 benign stub（用于 CI 零 token 回归）。
 # - 默认启用 LLM checker；具体模型在 llm_checker_factory.DEFAULT_CHECKER_MODEL。
 _CHECKER_PROMPTS_DIR = Path(__file__).parent / "prompts"
 
@@ -98,7 +98,7 @@ def _gate_checker(gate_name: str, prompt_filename: str) -> Callable:
     """统一工厂入口：Phase B 默认走 LLM，env 关则退回 benign stub。
 
     v16 US-003：stub 返回 score=100（0-100 量纲满分）以便 gate 内部的
-    ``passed = score >= threshold`` 判定为 pass，避免 Phase A stub 误阻断。
+    ``passed = score >= threshold`` 判定为 pass，避免 stub 误阻断。
     """
     if not _should_use_llm_checker():
 
@@ -113,7 +113,9 @@ MODE_ENV = "INK_STEP3_RUNNER_MODE"  # off / shadow / enforce
 MODE_OFF = "off"
 MODE_SHADOW = "shadow"
 MODE_ENFORCE = "enforce"
-DEFAULT_MODE = MODE_SHADOW
+# v16 US-005：切换为 enforce 默认。hard gate fail → exit 1 真阻断 Step 4。
+# 仍可通过 env INK_STEP3_RUNNER_MODE=shadow/off 显式降级。
+DEFAULT_MODE = MODE_ENFORCE
 VALID_MODES = {MODE_OFF, MODE_SHADOW, MODE_ENFORCE}
 
 
@@ -295,8 +297,8 @@ def _make_plotline_adapter(review_bundle: dict) -> Callable:
 def _build_review_bundle(chapter_id: int, state_dir: Path) -> dict:
     """Minimal review_bundle from state_dir + chapter text.
 
-    v14 Phase A：仅提取 step3_runner 基础 orchestration 需要的字段；
-    Phase B/C 按需扩展。
+    v16 Phase B production：仅提取 step3_runner 基础 orchestration 需要的字段；
+    后续按需扩展。
     """
     project_root = state_dir.parent if state_dir.name == ".ink" else state_dir
     db_path = str(state_dir / "index.db")
