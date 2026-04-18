@@ -29,6 +29,8 @@ ARCHITECTURE = ROOT / "docs" / "architecture.md"
 
 TEMPLATES_DIR = ROOT / "ink-writer" / "templates" / "genres"
 AGENTS_DIR = ROOT / "ink-writer" / "agents"
+SKILLS_DIR = ROOT / "ink-writer" / "skills"
+PIPELINE_MANAGER = ROOT / "ink_writer" / "parallel" / "pipeline_manager.py"
 
 
 class Finding:
@@ -76,6 +78,51 @@ def check_topology_agents() -> Finding:
     return Finding("agent_topology_v13.md", f"{claim} Agents", f"{actual}", claim == actual)
 
 
+CHAPTER_LOCK_FORBIDDEN_PATTERNS: tuple[str, ...] = (
+    r"ChapterLockManager\s*保护",
+    r"parallel\s*>\s*1\s*安全",
+)
+
+
+def check_chapter_lock_consistency(
+    skills_dir: Path = SKILLS_DIR,
+    pipeline_manager: Path = PIPELINE_MANAGER,
+) -> list[Finding]:
+    """v16 US-001：SKILL.md 如出现"ChapterLockManager 保护"或"parallel>1 安全"
+    等并发安全声明，必须与 ``ink_writer/parallel/pipeline_manager.py`` 诚实
+    降级段（"尚未接入"）同步——若 pipeline_manager 仍诚实声明未接入而 SKILL.md
+    却声称保护，视为文档-代码漂移，CI fail。
+    """
+    findings: list[Finding] = []
+    if not skills_dir.exists() or not pipeline_manager.exists():
+        return findings
+
+    pipeline_src = pipeline_manager.read_text(encoding="utf-8")
+    # "尚未接入" = pipeline_manager.py:10-17 诚实降级段关键词
+    pipeline_declares_not_integrated = "尚未接入" in pipeline_src
+
+    for skill_md in sorted(skills_dir.rglob("SKILL.md")):
+        content = skill_md.read_text(encoding="utf-8")
+        for pat in CHAPTER_LOCK_FORBIDDEN_PATTERNS:
+            if not re.search(pat, content):
+                continue
+            rel = skill_md.relative_to(ROOT) if skill_md.is_absolute() and ROOT in skill_md.parents else skill_md
+            ok = not pipeline_declares_not_integrated
+            findings.append(
+                Finding(
+                    str(rel),
+                    f"claim matches /{pat}/",
+                    (
+                        "pipeline_manager.py 仍含 '尚未接入' 诚实声明 → 文档与代码矛盾"
+                        if not ok
+                        else "pipeline_manager.py 已移除 '尚未接入' → 同步"
+                    ),
+                    ok,
+                )
+            )
+    return findings
+
+
 def check_architecture_checkers() -> Finding | None:
     """architecture.md 若声明 checker 数则校验（仅匹配 '+ N Checkers' 模式）。"""
     if not ARCHITECTURE.exists():
@@ -103,6 +150,7 @@ def main() -> int:
     arch = check_architecture_checkers()
     if arch is not None:
         findings.append(arch)
+    findings.extend(check_chapter_lock_consistency())
 
     if args.report:
         print("=== Docs numbers report ===")
