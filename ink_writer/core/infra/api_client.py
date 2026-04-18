@@ -511,7 +511,9 @@ def get_client(config=None) -> ModalAPIClient:
 # 在此层补齐显式 timeout；US-021 会在此层采集 prompt_cache usage。
 
 
-# v14 US-007：基于 task_type 的分层默认 timeout（秒）。超过 task_type 用 checker 基准。
+# v16 US-007：基于 task_type 的分层默认 timeout（秒）。超过 task_type 用
+# ``_FALLBACK_TIMEOUT``（与 AC 中的"全链路 ≥120s baseline"对齐）。
+# 首次加载后优先从 ``config/llm_timeouts.yaml`` 读取，缺失则用本模块内硬编码。
 _DEFAULT_TIMEOUTS_BY_TASK: dict[str, float] = {
     "writer": 300.0,
     "polish": 180.0,
@@ -519,6 +521,56 @@ _DEFAULT_TIMEOUTS_BY_TASK: dict[str, float] = {
     "classify": 60.0,
     "extract": 60.0,
 }
+_FALLBACK_TIMEOUT: float = 120.0
+
+# 延迟加载标记；首次调用 ``call_claude`` 时尝试加载一次，失败不再重试。
+_YAML_LOADED: bool = False
+
+
+def _config_path() -> "Path":
+    """``config/llm_timeouts.yaml`` 绝对路径（基于仓库根 = ink_writer 的父级）。"""
+    from pathlib import Path as _Path
+
+    # ink_writer/core/infra/api_client.py → parents[3] 为仓库根。
+    return _Path(__file__).resolve().parents[3] / "config" / "llm_timeouts.yaml"
+
+
+def _load_yaml_timeouts_once() -> None:
+    """仅首次调用时读一次 YAML；失败则保留内置默认值并 log 一次 warning。"""
+    global _YAML_LOADED, _FALLBACK_TIMEOUT
+    if _YAML_LOADED:
+        return
+    _YAML_LOADED = True
+    try:
+        path = _config_path()
+        if not path.exists():
+            return
+        import yaml  # PyYAML 已在 pyproject 依赖
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        task_timeouts = data.get("task_timeouts") or {}
+        if isinstance(task_timeouts, dict):
+            for k, v in task_timeouts.items():
+                try:
+                    _DEFAULT_TIMEOUTS_BY_TASK[str(k)] = float(v)
+                except (TypeError, ValueError):
+                    logger.warning(
+                        "llm_timeouts.yaml: task_timeouts.%s 无法转为 float（%r），忽略。",
+                        k,
+                        v,
+                    )
+        fallback = data.get("_fallback")
+        if fallback is not None:
+            try:
+                _FALLBACK_TIMEOUT = float(fallback)
+            except (TypeError, ValueError):
+                logger.warning(
+                    "llm_timeouts.yaml: _fallback 无法转为 float（%r），保留内置默认 %s。",
+                    fallback,
+                    _FALLBACK_TIMEOUT,
+                )
+    except Exception as exc:
+        # 解析异常不致命，静默降级到内置默认。
+        logger.warning("llm_timeouts.yaml 加载失败，沿用内置默认: %s", exc)
 
 
 def call_claude(
@@ -550,7 +602,9 @@ def call_claude(
         LLM 原始文本。
     """
     if timeout is None:
-        timeout = _DEFAULT_TIMEOUTS_BY_TASK.get(task_type, 90.0)
+        # v16 US-007：首次调用前加载 config/llm_timeouts.yaml；缺失则内置默认。
+        _load_yaml_timeouts_once()
+        timeout = _DEFAULT_TIMEOUTS_BY_TASK.get(task_type, _FALLBACK_TIMEOUT)
 
     # 延迟导入，避免 core.infra 被 editor_wisdom 循环导入。
     from ink_writer.editor_wisdom.llm_backend import call_llm

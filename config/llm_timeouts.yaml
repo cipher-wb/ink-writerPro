@@ -1,0 +1,26 @@
+# v16 US-007：LLM 调用分层 timeout 配置。
+#
+# 被 ``ink_writer.core.infra.api_client.call_claude`` 按 ``task_type`` 读取。
+# 单位：秒。``_fallback`` 在所有 task_type 都未匹配时兜底。
+#
+# 调整建议：若线上看到某类调用频繁超时，先定位是 model 慢还是网络抖动；
+# 调 timeout 前优先加 retry 或切 Haiku；timeout 过大会拖慢批处理。
+
+task_timeouts:
+  # 写作长文本，Opus/Sonnet 生成 3000-4000 字需要 3-5 分钟（含 extended thinking）。
+  writer: 300
+
+  # 定向润色输出接近原章字数，Sonnet 2-3 分钟。
+  polish: 180
+
+  # 单维度 checker，Haiku 返回 JSON 约 30-90 秒；给 90s 顶住个别慢点。
+  checker: 90
+
+  # 分类任务（编辑建议分桶等），短文本输出；60s 足够。
+  classify: 60
+
+  # 抽取任务（规则/实体等结构化抽取），类似 classify。
+  extract: 60
+
+# 所有 task_type 未匹配时的兜底值（与 PRD US-007 AC 对齐：最低 120s baseline）。
+_fallback: 120
