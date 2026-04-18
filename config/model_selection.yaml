@@ -1,0 +1,37 @@
+# v16 US-021：Claude 模型选型配置。
+#
+# 被 ``ink_writer.core.infra.api_client.call_claude`` 按 ``task_type`` 读取。
+# 未匹配 task_type 时走 ``_fallback`` 模型。调用方显式传 ``model=`` 时优先使用。
+#
+# 选型原则：
+# - writer/polish：长文本生成、需要高一致性 → Opus 4.7（旗舰）
+# - context/data：中等复杂度结构化处理（上下文装配、数据抽取中间件） → Sonnet 4.6
+# - checker/classify/extract：短任务、JSON 输出、成本敏感 → Haiku 4.5
+#
+# 调整建议：若 Haiku 在 checker 上 JSON 合规率不足（<92%），升级到 Sonnet；
+# 若 Opus 在 polish 上过度改写，降级到 Sonnet + 温度调低。
+
+task_models:
+  # 长文本生成（章节写作），需最高质量与长程一致性
+  writer: claude-opus-4-7
+
+  # 定向润色，输出接近原章字数，需强文本编辑能力
+  polish: claude-opus-4-7
+
+  # 上下文装配/组合（中等复杂度，中等成本）
+  context: claude-sonnet-4-6
+
+  # 数据抽取中间件（结构化处理，中等复杂度）
+  data: claude-sonnet-4-6
+
+  # 单维度 checker，短 JSON 输出（成本敏感）
+  checker: claude-haiku-4-5
+
+  # 分类任务（编辑建议分桶等），短输入/短输出
+  classify: claude-haiku-4-5
+
+  # 抽取任务（规则/实体抽取等），短 JSON 输出
+  extract: claude-haiku-4-5
+
+# 未匹配任何 task_type 时的兜底模型
+_fallback: claude-haiku-4-5
