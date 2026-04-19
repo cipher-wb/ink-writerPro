@@ -74,8 +74,8 @@
         "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "ink-writer/agents/writer-agent.md 在「## 输出」与「## 核心约束」之间新增整段 '## Primary Reference: Last 3 Chapters Full Text（US-004 硬约束）'：顶部挂 'PRIMARY REFERENCE — READ CAREFULLY BEFORE DRAFTING' 旗；四小节——(1)参考优先级硬约束（全文>章纲>摘要>设定，禁止大纲碾压前文）；(2)全文消费格式（=== CHAPTER N-x FULL TEXT === / === END CHAPTER N-x === 分隔符，禁止字符级裁剪，Token 超额由 US-006 处理）；(3)Pre-Draft Checklist 四项必填（位置/道具状态/未兑现伏笔/对白关键措辞）+ XML 标记 <pre-draft-checklist chapter=\"N\"> + 中间件持久化路径 `.ink/tmp/pre_draft_checklist_ch{NNNN}.md`（encoding=\"utf-8\"）+ N=1/2/3 兜底模板 + missing 兜底；(4)执行顺序 Pre-Draft→Draft→Self-Scan + 与下游 continuity-checker(US-005)/polish-agent/context_weights(US-006) 协同。同文件「## 禁止事项」追加一条违规总览（未通读/未生成 checklist/残留标记/与前三章矛盾）；「## 成功标准」新增第 11 项（US-004 硬约束）。全量回归 3008 passed / 23 skipped / 0 failed（baseline 3008，与 US-003 一致，纯 Markdown spec 改动零回归）。本 US 为 spec-only，dry-run 与 writer-agent 实际消费抽样验证并入 US-007（端到端回归）。"
     },
     {
       "id": "US-005",

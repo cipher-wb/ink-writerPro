@@ -90,3 +90,23 @@ Branch: ralph/chapter-context-injection
   - 文件缺失的降级策略分两层：`_load_recent_full_texts` 内层标 `missing=true`（结构性缺失，符合预期）；context-agent Step 4.3 外层在 `meta.warnings` 追加 `missing_full_text:chNNNN`（可观测），并对 IO 异常走 `full_text_injection_failed:<reason>` + Step 6 红线校验 fail。两层解耦，避免把"文件还没写"当成"IO 炸了"。
   - 新章节 4.3 放在 Step 4（摘要补全）之后、Step 4.5（演进摘要）之前，是因为执行依赖顺序：full_texts 不依赖摘要或 state.json 演进表，但与摘要是协同注入关系（一个覆盖 n-1~n-3，一个覆盖 n-4~n-10），放一起便于阅读时检查正交。
 ---
+
+## 2026-04-20 - US-004 - writer-agent 规格改造：前三章全文首要参考 + pre-draft checklist
+- `ink-writer/agents/writer-agent.md` 在「## 输出」与「## 核心约束」之间新增整段 `## Primary Reference: Last 3 Chapters Full Text（US-004 硬约束）`。四小节：
+  1. **参考优先级（硬约束）**：前三章全文 > 本章大纲 / MCC > n-4~n-10 摘要 > 全局设定；明确"大纲定义方向，前三章全文定义起点"双约束不得互相碾压。
+  2. **全文消费格式**：用 `=== CHAPTER N-3 FULL TEXT ===` / `=== END CHAPTER N-3 ===` 风格分隔符（N-3→N-2→N-1 升序），`missing:true` 留分隔符头尾并注明；禁止字符级裁剪；`injection_policy` 缺省按硬注入处理并内部记录降级。
+  3. **Pre-Draft Checklist**：XML 标记 `<pre-draft-checklist chapter="N">…</pre-draft-checklist>`，`chapter` 属性必填正整数；四项必填——(a)末尾位置、(b)道具与身体状态、(c)未兑现伏笔/承诺（来源章号+是否推进）、(d)最近一次对话关键措辞（带直接引用）；落盘至 `.ink/tmp/pre_draft_checklist_ch{NNNN}.md`（`encoding="utf-8"` 硬约束），**最终正文禁止残留标记块**；N=1/2/3 与 `missing:true` 双兜底模板。
+  4. **执行顺序 + 下游协同**：Pre-Draft → Draft（开场位置/状态连续、伏笔推进或延后、对话呼应）→ Self-Scan（前三章追溯自查）；与 continuity-checker (US-005) / polish-agent / context_weights (US-006) 的分工写明。
+- 同文件「## 禁止事项」追加新条目（未通读 / 未生成 checklist / 残留 `<pre-draft-checklist>` 标记 / 对前三章引用与 `recent_full_texts` 实际内容矛盾）。
+- 同文件「## 成功标准」新增第 11 项（US-004 硬约束判定规则）。
+- **Files changed**：
+  - `ink-writer/agents/writer-agent.md`（+~135 行：整段新章节 + 禁止事项 +1 条 + 成功标准 +1 条）
+  - `scripts/ralph/prd.json` (US-004 passes=true + notes)
+- **回归**：`python3 -m pytest --no-cov` → 3008 passed / 23 skipped / 0 failed（与 US-002/US-003 baseline 一致，纯 Markdown spec 改动无新增测试）。
+- **Learnings for future iterations:**
+  - `polish-agent.md` 当前**没有** `<pre-draft-checklist>` 剥离逻辑的任何引用（`grep "pre-draft\|checklist\|<pre-draft"` 全无命中）。本 US 只定义标记约定，**剥离实现是未来工作**——在执行 US-007 端到端抽样前，若不先补 polish 剥离，最终落盘正文会带该标记。下轮 US（或 polish 专项）必须在 `polish-agent.md` 新增"扫描并剥离 `<pre-draft-checklist>…</pre-draft-checklist>` 整段"的硬约束，否则会触发 US-004 禁止事项里的"残留标记块"违规。
+  - writer-agent 的 agent 规格通过 `{{PROMPT_TEMPLATE:...}}` 占位符复用 `references/shared/iron-laws.md` 等片段；本 US 新增内容是**直接写入规格**而非占位符化，因为目前 shared/ 下没有"primary reference" 这类通用片段，也只有 ink-writer 使用（非 webnovel-writer），符合 PRD "仅作用于 ink-writer" 约束。若未来 webnovel-writer 需要同款机制，再提取到 shared/ 比较合算。
+  - 规格中 `.ink/tmp/pre_draft_checklist_ch{NNNN}.md` 的命名与 MCC 自检（`mcc_selfcheck_ch{NNNN}.json`）/ 自洽回扫（`selfcheck_scan_ch{NNNN}.json`）保持同前缀对齐，便于后续一次性清理/归档；padded 为 4 位与正文文件 `第{chapter_padded}章` 的 padding 一致。
+  - 禁止事项 / 成功标准 / 主体章节三处的编号（US-004）用同一标签串联，方便后续做 PR 评审或文档索引时一次 grep 定位全部改动点（`grep -n "US-004" ink-writer/agents/writer-agent.md`）。未来 spec 改造建议沿用"US-XXX 标签 + 三地联动（主体 + 禁止 + 成功）"模式。
+  - spec-only US 的"dry-run 抽样 3 章" AC 条目在本项目里的实践：**不要在本 US 内强行构造假项目跑 writer-agent**（会污染 pytest 结果/消耗 API）。把它折入 US-007 端到端回归（已存在真实项目），这是 US-003 已经建立的先例。
+---
