@@ -3,11 +3,22 @@
 from __future__ import annotations
 
 import json
+import os
 import pathlib
 import sqlite3
 from unittest.mock import patch
 
 import pytest
+
+# US-018: when the caller explicitly asks for BM25-degraded mode (Windows CI
+# and offline runs), skip FAISS/SentenceTransformer tests that would otherwise
+# try to download a ~400MB model from HuggingFace. Mac/Linux default has the
+# env var unset, so behaviour is unchanged.
+if os.environ.get("INK_EMBED_BACKEND", "").strip().lower() == "bm25":
+    pytest.skip(
+        "Skipped in BM25-degraded mode (INK_EMBED_BACKEND=bm25)",
+        allow_module_level=True,
+    )
 
 faiss = pytest.importorskip("faiss")
 np = pytest.importorskip("numpy")

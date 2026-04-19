@@ -93,7 +93,7 @@ class TestBenchmarkResult:
         report_path = tmp_path / "v13_acceptance.md"
         generate_acceptance_report(result, report_path)
         assert report_path.exists()
-        content = report_path.read_text()
+        content = report_path.read_text(encoding="utf-8")
         assert "v13 验收报告" in content
         assert "PASS" in content
 
@@ -150,7 +150,7 @@ class TestBuildBlindTest:
         assert (output / "answer_key.json").exists()
         assert (output / "rating_sheet.md").exists()
 
-        manifest = json.loads((output / "manifest.json").read_text())
+        manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
         assert manifest["total_samples"] == 6
 
     def test_build_empty_project(self, tmp_path: Path):

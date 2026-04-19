@@ -19,6 +19,7 @@ import json
 import logging
 import os
 import shutil
+import sys
 import time
 from dataclasses import dataclass, field
 from enum import Enum
@@ -32,6 +33,11 @@ from ink_writer.editor_wisdom.arbitration import (
 from ink_writer.parallel.chapter_lock import ChapterLockManager
 
 logger = logging.getLogger(__name__)
+
+if sys.platform == "win32":  # pragma: no cover
+    _policy_cls = getattr(asyncio, "WindowsProactorEventLoopPolicy", None)
+    if _policy_cls is not None:
+        asyncio.set_event_loop_policy(_policy_cls())
 
 
 class ChapterStatus(Enum):
@@ -339,7 +345,7 @@ class PipelineManager:
         else:
             raise ValueError(f"不支持的平台: {platform}")
 
-        with open(log_file, "w") as lf:
+        with open(log_file, "w", encoding="utf-8") as lf:
             if platform == "gemini":
                 proc = await asyncio.create_subprocess_exec(
                     *cmd,
@@ -577,8 +583,10 @@ class PipelineManager:
         await asyncio.sleep(self.config.checkpoint_cooldown)
 
     async def _ink_py(self, *args: str) -> str:
+        # US-011: 用 sys.executable 而非硬编码 "python3"，Windows 上 PATH 里
+        # 通常没有 python3，而 sys.executable 指向当前解释器，跨平台稳定。
         proc = await asyncio.create_subprocess_exec(
-            "python3", "-X", "utf8",
+            sys.executable, "-X", "utf8",
             self.config.ink_py,
             "--project-root", str(self.config.project_root),
             *args,

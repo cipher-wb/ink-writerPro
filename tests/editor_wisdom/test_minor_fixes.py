@@ -128,7 +128,7 @@ class TestM5CleanHashReproducibility:
     def test_no_builtin_hash_in_clean_script(self):
         """02_clean.py must not use builtin hash() for minhash."""
         script_path = Path(__file__).resolve().parent.parent.parent / "scripts" / "editor-wisdom" / "02_clean.py"
-        source = script_path.read_text()
+        source = script_path.read_text(encoding="utf-8")
         import re as _re
         matches = _re.findall(r'\bhash\s*\(', source)
         assert len(matches) == 0, f"Found builtin hash() calls in 02_clean.py: {matches}"
@@ -136,7 +136,7 @@ class TestM5CleanHashReproducibility:
 
 class TestM7GitignoreLogsEditorWisdom:
     def test_logs_editor_wisdom_in_gitignore(self):
-        gitignore = (Path(__file__).resolve().parent.parent.parent / ".gitignore").read_text()
+        gitignore = (Path(__file__).resolve().parent.parent.parent / ".gitignore").read_text(encoding="utf-8")
         assert "logs/editor-wisdom/" in gitignore
 
 

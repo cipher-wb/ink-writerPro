@@ -52,7 +52,7 @@ class TestSearchSemanticRecall:
     def test_returns_none_when_disabled(self, tmp_path):
         config_dir = tmp_path / "config"
         config_dir.mkdir()
-        (config_dir / "semantic-recall.yaml").write_text("enabled: false\n")
+        (config_dir / "semantic-recall.yaml").write_text("enabled: false\n", encoding="utf-8")
 
         from ink_writer.semantic_recall.config import SemanticRecallConfig
 

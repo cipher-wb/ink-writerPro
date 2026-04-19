@@ -73,7 +73,7 @@ def test_state_json_roundtrip(tmp_path):
 
     state_file = tmp_path / "state.json"
     state_file.write_text(original.model_dump_json(), encoding="utf-8")
-    loaded = StateModel.model_validate(json.loads(state_file.read_text()))
+    loaded = StateModel.model_validate(json.loads(state_file.read_text(encoding="utf-8")))
 
     assert loaded.project_info.creative_fingerprint.meta_rules_hit == ["M02", "M05"]
     assert loaded.project_info.creative_fingerprint.style_voice == "V2"

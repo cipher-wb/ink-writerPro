@@ -1,0 +1,31 @@
+# Normalize line endings across platforms.
+# Mac/Linux-only shell scripts must stay LF; Windows scripts stay CRLF.
+# Applies to newly added/modified files. Existing content is not rewritten
+# unless `git add --renormalize .` is run explicitly.
+
+* text=auto
+
+# Unix shell
+*.sh    text eol=lf
+*.bash  text eol=lf
+
+# Windows shell
+*.ps1   text eol=crlf
+*.psm1  text eol=crlf
+*.psd1  text eol=crlf
+*.cmd   text eol=crlf
+*.bat   text eol=crlf
+
+# Binary-ish assets we never want normalized
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.db    binary
+*.sqlite binary
+*.zip   binary
+*.gz    binary
+*.tar   binary
+*.bin   binary

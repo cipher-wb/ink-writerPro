@@ -34,11 +34,11 @@ def fixture_project(tmp_path: Path) -> Path:
     """Create a minimal fake project with known cycles and agents."""
     pkg = tmp_path / "pkg"
     pkg.mkdir()
-    (pkg / "__init__.py").write_text("")
-    (pkg / "mod_a.py").write_text("import mod_b\n")
-    (pkg / "mod_b.py").write_text("import mod_c\n")
-    (pkg / "mod_c.py").write_text("import mod_a\n")
-    (pkg / "mod_d.py").write_text("import os\n")
+    (pkg / "__init__.py").write_text("", encoding="utf-8")
+    (pkg / "mod_a.py").write_text("import mod_b\n", encoding="utf-8")
+    (pkg / "mod_b.py").write_text("import mod_c\n", encoding="utf-8")
+    (pkg / "mod_c.py").write_text("import mod_a\n", encoding="utf-8")
+    (pkg / "mod_d.py").write_text("import os\n", encoding="utf-8")
 
     agents_dir = tmp_path / "agents"
     agents_dir.mkdir()
@@ -63,7 +63,7 @@ def fixture_project(tmp_path: Path) -> Path:
         ## 核心职责
         审查包中的正文和上章摘要进行质量检查。
         禁止读取 .db 文件和目录路径。
-    """))
+    """), encoding="utf-8")
     (agents_dir / "checker-b.md").write_text(textwrap.dedent("""\
         ---
         name: checker-b
@@ -85,7 +85,7 @@ def fixture_project(tmp_path: Path) -> Path:
         ## 核心职责
         审查包中的正文和上章摘要进行质量检查。
         禁止读取 .db 文件和目录路径。
-    """))
+    """), encoding="utf-8")
     (agents_dir / "writer.md").write_text(textwrap.dedent("""\
         ---
         name: writer
@@ -101,7 +101,7 @@ def fixture_project(tmp_path: Path) -> Path:
 
         ## 输出格式
         - 章节草稿文件
-    """))
+    """), encoding="utf-8")
     return tmp_path
 
 
@@ -110,9 +110,9 @@ def no_cycle_project(tmp_path: Path) -> Path:
     """Project with no import cycles."""
     pkg = tmp_path / "pkg"
     pkg.mkdir()
-    (pkg / "__init__.py").write_text("")
-    (pkg / "mod_a.py").write_text("import os\n")
-    (pkg / "mod_b.py").write_text("import mod_a\n")
+    (pkg / "__init__.py").write_text("", encoding="utf-8")
+    (pkg / "mod_a.py").write_text("import os\n", encoding="utf-8")
+    (pkg / "mod_b.py").write_text("import mod_a\n", encoding="utf-8")
     return tmp_path
 
 
@@ -238,7 +238,7 @@ class TestPromptDupes:
             ---
             # alpha
             Stars and galaxies in the cosmos.
-        """))
+        """), encoding="utf-8")
         (agents_dir / "beta.md").write_text(textwrap.dedent("""\
             ---
             name: beta
@@ -247,7 +247,7 @@ class TestPromptDupes:
             ---
             # beta
             Rivers and mountains on earth.
-        """))
+        """), encoding="utf-8")
         agents = parse_agents([agents_dir])
         dupes = find_repeated_prompt_fragments(agents, ngram_size=4)
         assert len(dupes) == 0
@@ -349,5 +349,5 @@ class TestLiveProject:
         assert result["modules_scanned"] > 0
         assert len(result["agents"]) >= 14
         assert output.exists()
-        content = output.read_text()
+        content = output.read_text(encoding="utf-8")
         assert "Agent IO Contract Table" in content

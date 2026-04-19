@@ -18,6 +18,13 @@ Setting policy: 先基于 init 产出的总纲+世界观补齐设定集基线；
 export INK_SKILL_NAME="ink-plan"
 source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.ps1 提供）：
+
+```powershell
+. "$env:CLAUDE_PLUGIN_ROOT/scripts/env-setup.ps1"
+```
+
 
 ## References（按步骤导航）
 

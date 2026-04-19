@@ -69,22 +69,22 @@ def fake_project(tmp_path: Path) -> Path:
     root = tmp_path
     pkg = root / "ink_writer"
     pkg.mkdir()
-    (pkg / "__init__.py").write_text("")
-    (pkg / "used_by_code.py").write_text("X = 1\n")
-    (pkg / "used_by_test.py").write_text("Y = 2\n")
-    (pkg / "used_by_md.py").write_text("Z = 3\n")
-    (pkg / "used_by_dash_m.py").write_text("W = 4\n")
+    (pkg / "__init__.py").write_text("", encoding="utf-8")
+    (pkg / "used_by_code.py").write_text("X = 1\n", encoding="utf-8")
+    (pkg / "used_by_test.py").write_text("Y = 2\n", encoding="utf-8")
+    (pkg / "used_by_md.py").write_text("Z = 3\n", encoding="utf-8")
+    (pkg / "used_by_dash_m.py").write_text("W = 4\n", encoding="utf-8")
     (pkg / "entry.py").write_text(
         "from ink_writer.used_by_code import X\n"
-    )
-    (pkg / "truly_unused.py").write_text("DEAD = 0\n")
+    , encoding="utf-8")
+    (pkg / "truly_unused.py").write_text("DEAD = 0\n", encoding="utf-8")
 
     tests_dir = root / "tests"
     tests_dir.mkdir()
-    (tests_dir / "__init__.py").write_text("")
+    (tests_dir / "__init__.py").write_text("", encoding="utf-8")
     (tests_dir / "test_it.py").write_text(
         "from ink_writer.used_by_test import Y\n"
-    )
+    , encoding="utf-8")
 
     skill_dir = root / "ink-writer" / "skills" / "my-skill"
     skill_dir.mkdir(parents=True)
@@ -102,7 +102,7 @@ def fake_project(tmp_path: Path) -> Path:
         ```bash
         python -m ink_writer.used_by_dash_m --flag
         ```
-    """))
+    """), encoding="utf-8")
 
     # run_audit needs an agents directory to iterate (even if empty)
     (root / "ink-writer" / "agents").mkdir(parents=True)
@@ -134,7 +134,7 @@ class TestExtractMdModuleReferences:
         _, known = build_import_graph([fake_project / "ink_writer"])
         # Write an MD file that imports a non-existent module
         stray = fake_project / "ink-writer" / "skills" / "stray.md"
-        stray.write_text("```python\nfrom ink_writer.ghost import foo\n```\n")
+        stray.write_text("```python\nfrom ink_writer.ghost import foo\n```\n", encoding="utf-8")
         refs = extract_md_module_references(
             [fake_project / "ink-writer"], known
         )
@@ -155,7 +155,7 @@ class TestExtractMdModuleReferences:
             python3 -m ink_writer.used_by_md sub command
             python   -m   ink_writer.used_by_dash_m
             ```
-        """))
+        """), encoding="utf-8")
         refs = extract_md_module_references(
             [fake_project / "ink-writer"], known
         )

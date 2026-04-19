@@ -192,5 +192,5 @@ class TestCLIEntryPoint:
         assert rc == 0
         assert (tmp_path / "r.md").exists()
         assert (tmp_path / "m.json").exists()
-        data = json.loads((tmp_path / "m.json").read_text())
+        data = json.loads((tmp_path / "m.json").read_text(encoding="utf-8"))
         assert data["chapters"] == 3

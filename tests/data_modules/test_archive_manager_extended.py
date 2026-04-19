@@ -206,7 +206,7 @@ class TestArchiveActions:
         count = am.archive_characters(inactive, dry_run=False)
         assert count >= 1
         assert am.characters_archive.exists()
-        archived = json.loads(am.characters_archive.read_text())
+        archived = json.loads(am.characters_archive.read_text(encoding="utf-8"))
         assert len(archived) >= 1
 
     def test_archive_plot_threads(self, tmp_path):

@@ -284,7 +284,7 @@ class TestCheckCharacterConflicts:
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
-        db_path.write_text("not a database")
+        db_path.write_text("not a database", encoding="utf-8")
 
         r = check_character_conflicts("text", tmp_path)
         assert r.passed is True
@@ -355,7 +355,7 @@ class TestCheckForeshadowing:
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
         db_path = ink_dir / "index.db"
-        db_path.write_text("corrupted")
+        db_path.write_text("corrupted", encoding="utf-8")
 
         r = check_foreshadowing_consistency(tmp_path, 50)
         assert r.passed is True

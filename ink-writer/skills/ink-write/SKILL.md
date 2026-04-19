@@ -278,6 +278,13 @@ export INK_SKILL_NAME="ink-write"
 export INK_PREFLIGHT=1
 source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.ps1 提供）：
+
+```powershell
+. "$env:CLAUDE_PLUGIN_ROOT/scripts/env-setup.ps1"
+```
+
 
 **硬门槛**：`preflight` 必须成功。它统一校验 `CLAUDE_PLUGIN_ROOT` 派生出的 `SKILL_ROOT` / `SCRIPTS_DIR`、`ink.py`、`extract_chapter_context.py`、解析出的 `PROJECT_ROOT`、以及 **RAG Embedding API 连通性**（v10.6.1 新增，必填项）。任一失败都立即阻断。
 

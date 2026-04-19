@@ -1473,7 +1473,12 @@ class RAGAdapter:
 
 def main():
     import argparse
+    import asyncio as _asyncio_for_policy
     import sys
+    if sys.platform == "win32":  # pragma: no cover
+        _policy_cls = getattr(_asyncio_for_policy, "WindowsProactorEventLoopPolicy", None)
+        if _policy_cls is not None:
+            _asyncio_for_policy.set_event_loop_policy(_policy_cls())
     from ink_writer.core.cli.cli_output import print_success, print_error
     from ink_writer.core.cli.cli_args import normalize_global_project_root, load_json_arg
 

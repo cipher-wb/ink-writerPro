@@ -290,7 +290,7 @@ class TestBuildReferenceCorpus:
 
     def test_too_few_books_raises(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         index_path = tmp_path / "corpus_index.json"
-        with open(index_path, "w") as f:
+        with open(index_path, "w", encoding="utf-8") as f:
             json.dump([
                 {"book_id": "1", "title": "A", "author": "x", "genre": "玄幻",
                  "collections": 100, "chapter_count": 5, "dir": "a"}

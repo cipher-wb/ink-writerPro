@@ -41,7 +41,7 @@ class TestPromptCacheConfig:
             "min_cacheable_tokens": 2048,
             "stable_segments": ["a", "b"],
             "volatile_segments": ["c"],
-        }))
+        }), encoding="utf-8")
         cfg = load_config(config_file)
         assert cfg.enabled is False
         assert cfg.min_cacheable_tokens == 2048
@@ -49,7 +49,7 @@ class TestPromptCacheConfig:
 
     def test_load_config_empty_file(self, tmp_path: Path):
         config_file = tmp_path / "prompt-cache.yaml"
-        config_file.write_text("")
+        config_file.write_text("", encoding="utf-8")
         cfg = load_config(config_file)
         assert cfg.enabled is True
 

@@ -65,7 +65,7 @@ class TestSchedulerConfig:
             "max_consecutive_no_hp": 3,
             "combo_window": 7,
             "milestone_window": 15,
-        }))
+        }), encoding="utf-8")
         cfg = SchedulerConfig.from_yaml(yaml_path)
         assert cfg.max_consecutive_no_hp == 3
         assert cfg.combo_window == 7
@@ -78,7 +78,7 @@ class TestSchedulerConfig:
 
     def test_from_yaml_empty_file(self, tmp_path: Path):
         yaml_path = tmp_path / "empty.yaml"
-        yaml_path.write_text("")
+        yaml_path.write_text("", encoding="utf-8")
         cfg = SchedulerConfig.from_yaml(yaml_path)
         assert cfg == SchedulerConfig()
 
@@ -423,7 +423,7 @@ class TestConfigFileIntegration:
         yaml_path.write_text(yaml.dump({
             "max_consecutive_no_hp": 1,
             "combo_window": 3,
-        }))
+        }), encoding="utf-8")
         cfg = SchedulerConfig.from_yaml(yaml_path)
         history = [
             _make_record(1, hp_type=None, had=False),

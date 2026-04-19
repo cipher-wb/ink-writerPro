@@ -1,0 +1,255 @@
+{
+  "project": "ink-writer",
+  "branchName": "ralph/ink-init-quick-creativity-upgrade",
+  "description": "优化 /ink-init --quick 的创意生成质量。核心改造：(1) 三层创意体系——Layer 1 元规则库（M01-M10 抽象法则）+ Layer 2 种子库（schema 骨架，1000 条内容由后续交互补充）+ Layer 3 扰动引擎（随机混搭稀缺元素对）；(2) 金手指三重硬约束（非战力维度 + 代价可视化 + 一句话爆点，至少 2 项通过）；(3) 4 档激进度（1 保守 / 2 平衡 / 3 激进 / 4 疯批），数字参数避免拼错；(4) 语言风格三档分级（V1 文学狂野 / V2 烟火接地气 / V3 江湖野气），允许适度粗口擦边但守 L3 红线；(5) 每次联网拉取起点+番茄双平台榜单做反向建模（带日内缓存）；(6) 书名加 7 种修辞标签（双关/谐音/对仗/反讽等）；(7) editor-wisdom RAG 创意条目纳入 Layer 1。本 PRD 只做 Ralph 可自动化的基础设施，种子库 1000 条内容由 Ralph 完成后的人工交互会话分 10 批生成（每批 20 条 review）。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Layer 1 元规则库 meta-creativity-rules.md",
+      "description": "As a 创作者, I want 一份抽象的创意元规则库作为系统硬约束检验标尺, so that quick 模式生成方案时不再靠随机拼贴。",
+      "acceptanceCriteria": [
+        "新建 ink-writer/skills/ink-init/references/creativity/meta-creativity-rules.md",
+        "文件 frontmatter 含 name/description/type/version 字段",
+        "定义 10 条元规则 M01-M10：M01 代价可视化 / M02 反向冲突 / M03 信息不对称 / M04 角色错位 / M05 时空错位 / M06 身份反差 / M07 欲望悖论 / M08 系统反噬 / M09 权力颗粒度 / M10 尺度跃迁",
+        "每条规则含 5 字段：规则名 / 核心定义 / 正例 2 个 / 反例 2 个 / 适配题材（仙侠/都市/末世/科幻/悬疑/游戏/历史/现实/恋爱至少覆盖 4 类）",
+        "SKILL.md（ink-writer/skills/ink-init/SKILL.md）Quick Step 0 加载列表新增该文件为 L1 必读",
+        "文件总字数 2000-4000 字（太短规则不清楚，太长影响 token 预算）",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "2056 汉字；10 条 M01-M10 齐全；SKILL.md Quick Step 0 已加入 L1 必读"
+    },
+    {
+      "id": "US-002",
+      "title": "Layer 2 种子库 schema + 空骨架 + roadmap",
+      "description": "As a 维护者, I want 种子库的 JSON schema 定义和空骨架文件就位, so that Ralph 完成后用户可启动交互会话分 10 批生成 1000 条内容。",
+      "acceptanceCriteria": [
+        "新建 ink-writer/skills/ink-init/references/creativity/anti-trope-seeds.json，含 frontmatter（version=v1.0-skeleton, total=0, categories=10 类 meta, changelog=[]），seeds 数组初始可含 10-20 条示例种子（每类 1-2 条，仅作 schema 展示，不是 1000 条完整内容）",
+        "新建 ink-writer/skills/ink-init/references/creativity/anti-trope-seeds-schema.json，JSON schema 定义 seed 字段：seed_id(string) / category(enum:职业/时代/冲突/世界观/情感/禁忌/神话/禁忌语言/身体特征/物件) / value(string) / rarity(1-5) / genre_tags(array) / example_pairing(string) / source(enum:llm/human/websearch_filtered)",
+        "新建 ink-writer/skills/ink-init/references/creativity/anti-trope-seeds-roadmap.md，明示 Phase-Seed-1（1000 条，10 类 × 100 条，分 10 批 × 每批 20 条 review，本 PRD 实施后交互完成）+ Phase-Seed-∞（增量补充触发条件）",
+        "roadmap 文档含 10 类 × 稀有度分布硬约束表（稀有度 4+5 合计 ≥50%，稀有度 5 ≥20%）",
+        "anti-trope-seeds.json 通过 anti-trope-seeds-schema.json 校验",
+        "SKILL.md Quick Step 0 加载该 JSON 文件为 L1 必读",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "schema/skeleton/roadmap 三件套就位；skeleton total=0 + 12 条示例 seed（覆盖全 10 类）；jsonschema Draft7 双向校验通过；SKILL.md Quick Step 0 加载列表第 6 条新增 anti-trope-seeds.json"
+    },
+    {
+      "id": "US-003",
+      "title": "Layer 3 扰动引擎 perturbation-engine.md",
+      "description": "As a 创作者, I want 一个强制混搭机制的规格文档, so that quick 生成方案时自动从种子库抽取稀缺元素对注入。",
+      "acceptanceCriteria": [
+        "新建 ink-writer/skills/ink-init/references/creativity/perturbation-engine.md",
+        "定义「扰动对」概念：每套方案必须注入 ≥N 对扰动（N 由激进度档位决定），从种子库 2 个不同 category 随机抽 1 条组成 1 对",
+        "定义 5 种扰动模式：时代错位 / 职业反差 / 尺度错位 / 规则颠倒 / 感官替换，每种模式含 3+ 示例",
+        "定义抽取算法伪代码：使用种子 hash(timestamp+genre) 固定随机种子（保证同秒内可复现）",
+        "3 套方案之间的扰动对完全不重复（schema 输出字段 perturbation_pairs 需标注）",
+        "SKILL.md Quick Step 0 加载该文件为 L1 必读",
+        "文件总字数 1500-3000 字",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "1579 汉字；5 模式 A-E 各 3 示例；档位 N=1/2/3/5 矩阵；hash(timestamp+genre+draft_index) 抽取算法；3 套整对去重；SKILL.md Quick Step 0 第 7 条加入"
+    },
+    {
+      "id": "US-004",
+      "title": "金手指三重硬约束 golden-finger-rules.md",
+      "description": "As a 创作者, I want 金手指必须通过非战力维度 + 代价可视化 + 一句话爆点三重校验, so that 生成的金手指不再是战力暴涨或系统签到俗套。",
+      "acceptanceCriteria": [
+        "新建 ink-writer/skills/ink-init/references/creativity/golden-finger-rules.md",
+        "定义 GF-1 非战力维度：禁用纯力量/资源类，必须是信息/时间/情感/社交/认知/概率/感知/规则 8 类之一",
+        "定义 GF-2 代价可视化：必须有明确、可量化、可被反派利用的成本（含 10+ 合格示例）",
+        "定义 GF-3 一句话爆点：20 字内能讲清楚且产生'这也行？'的惊讶感（含 10+ 合格/不合格对比）",
+        "金手指禁止词列表 ≥20 个高频俗套词：修为暴涨 / 无限金币 / 系统签到 / 作弊器 / 外挂 / 无限奖励 / 吞噬天赋 / 觉醒面板 / 签到一万年 / 熟练度+1 等",
+        "校验算法：gf_checks 字段输出三项 0/1 矩阵，至少 2 项为 1 方可通过，否则重新生成（最多 5 次）",
+        "生成失败降档逻辑：5 次仍未通过则自动降档（激进→平衡，平衡→保守）",
+        "SKILL.md Quick Step 1.5 新增金手指三重校验子步骤，并加载 golden-finger-rules.md 为 L1 必读",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "1104 汉字；GF-1 8 维度 + 禁用维度；GF-2 10 合格代价示例 + 校验伪代码；GF-3 10 组对比；禁止词 22 条；5 次重抽 + 降档逻辑；SKILL.md Quick Step 0 第 8 条加载 + Quick Step 1.5 插入"
+    },
+    {
+      "id": "US-005",
+      "title": "语言风格三档分级 style-voice-levels.md",
+      "description": "As a 创作者, I want 3 套方案分别采用 V1 文学狂野 / V2 烟火接地气 / V3 江湖野气三档风格, so that 用户能直观感受不同风格强度的差异。",
+      "acceptanceCriteria": [
+        "新建 ink-writer/skills/ink-init/references/creativity/style-voice-levels.md",
+        "定义 V1 文学狂野：意象粗粝有美感，示例书名《赤地一拳》《霓虹佛陀》，人名如「池冷灰」「陆无归」",
+        "定义 V2 烟火接地气：口语化方言感，示例书名《老子就是救世主》《外卖送到阎王殿》，人名如「王满仓」「赵二娃」",
+        "定义 V3 江湖野气：绰号感 + 轻度粗口，示例书名《卧槽这关没打过》《神仙打屁》，人名如「刀疤阿九」「臭嘴老七」",
+        "敏感词分级 4 级：L0 中性俚语（老子/丫的/瞎整）全档位允许 / L1 轻度粗口（卧槽/妈的/他娘的/龟儿子）V2+V3 允许 / L2 擦边暗示（腰软/眼神勾魂）V3+激进档允许 / L3 红线（具体生殖器官词/性行为描写/辱骂族群）全档禁止",
+        "密度矩阵：档位 1 保守=0% / 档位 2 平衡=0.2% / 档位 3 激进=0.5%-0.8% / 档位 4 疯批=0.8%-1.5%",
+        "SKILL.md Quick Step 1.6 新增语言风格分配子步骤，3 套方案强制 V1/V2/V3 各占一档",
+        "文件总字数 2000-3500 字",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "2497 汉字；V1/V2/V3 三档定义 + 人名/书名/句式库 + L0-L3 敏感词四级 + 档位×密度矩阵（0% / 0.2% / 0.5%-0.8% / 0.8%-1.5%）+ Quick Step 1.6 分配算法（stable_hash 洗牌、档位 1 V3→V1 回退、档位 4 至少一套 V3）；SKILL.md Quick Step 0 第 9 条加载 + Quick Step 1.6 插入"
+    },
+    {
+      "id": "US-006",
+      "title": "书名/人名算法升级（含 7 修辞标签）",
+      "description": "As a 创作者, I want 书名和人名不再落入「xx神帝/萧/林/叶 + 尘/风/寒/云」陈词模板, so that 3 套方案在命名上形成鲜明个性。",
+      "acceptanceCriteria": [
+        "更新 data/naming/given_names.json 新增风格标签 rough/smoky/jianghu，每标签至少对应 30+ 条名字素材",
+        "新建 data/naming/nicknames.json 江湖绰号库，≥100 条（刀疤/癞子/麻子/瘸子/秃子/哑巴/独眼/瞎子/烂命/臭嘴/二愣子/闷瓜等），每条含 rarity(1-5) 和 style_tags",
+        "新建 data/naming/book-title-patterns.json，按 V1/V2/V3 三档各 50+ 条模板，每条含 rhetoric_tags 字段（多选）",
+        "7 种修辞标签：pun 双关 / homophone 谐音 / antithesis 对仗 / irony 反讽 / oxymoron 矛盾修辞 / concrete_abstract 具象配抽象 / anachronism 时空错置，每种标签至少 10 条模板",
+        "扩展 data/naming/blacklist.json 禁用书名后缀（神帝/天帝/至尊/大帝/无敌/主宰/龙傲天/战神/剑神/丹帝/仙尊 等 ≥15 条）+ 书名前缀（我的/全球/无敌/最强/重生成 + 职业/身份类陈词 ≥10 条）",
+        "blacklist.json 人名陈词组合禁用：萧/林/叶/楚/顾/秦/陆 × 尘/风/寒/云/逸/辰/墨/天 全部组合",
+        "SKILL.md Quick Step 0 加载 nicknames.json + book-title-patterns.json 为 L1 必读；Quick Step 1.7 新增书名/人名校验子步骤",
+        "所有 JSON 文件通过 schema 校验，字段类型合法",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "given_names.json 新增 rough/smoky/jianghu 三桶（male=34 female=30 各 64 条）；nicknames.json 110 条含 rarity+style_tags；book-title-patterns.json V1=54/V2=57/V3=59 条（总 170+），7 修辞标签覆盖计数 pun=13/homophone=11/antithesis=13/irony=81/oxymoron=23/concrete_abstract=45/anachronism=56 全部 ≥10；blacklist.json 扩展后缀 19 条+前缀 14 条+name_combo_ban（7 姓×8 字末字笛卡儿积禁用）；SKILL.md Quick Step 0 加载列表新增第 10/11 条，第 12 条保留题材 anti-trope；Quick Step 1.7 书名/人名校验子步骤插入在 1.6 和 2 之间。"
+    },
+    {
+      "id": "US-007",
+      "title": "联网拉取起点+番茄双平台榜单（含缓存）",
+      "description": "As a 创作者, I want 系统每次 quick 前拉取起点和番茄当日榜单反向建模, so that 方案能显式规避当下高频套路。",
+      "acceptanceCriteria": [
+        "SKILL.md Quick Step 0 新增 WebSearch 子步骤，固定 2 个检索源（不可配置）：起点中文网月票榜 + 番茄小说热门新书",
+        "检索语硬编码：`起点中文网 月票榜 2026 热门 题材` / `起点 分类 月榜` / `番茄小说 爆款 套路 2026` / `番茄免费小说 热门 新书`",
+        "新建 data/market-trends/README.md 说明目录用途和缓存文件命名规则",
+        "缓存文件格式：data/market-trends/cache-YYYYMMDD.md，含日期 / 两平台各 Top 10 书名 / 各平台 5-8 热门套路关键词 / 两平台共通套路列表",
+        "当日共享缓存，跨日重新搜索；保留最近 90 天缓存",
+        "WebSearch 失败时 fallback 最近 7 天内缓存，输出提示「使用 N 天前榜单数据」",
+        "方案生成时必须规避两平台共通 Top 5 热门套路关键词（单平台榜单不强制规避）",
+        "联网延迟上限 15s（两平台并行搜索，超时 fallback）",
+        "SKILL.md allowed-tools 确认含 WebSearch（已有则跳过）",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "新建 data/market-trends/README.md 定义缓存格式（cache-YYYYMMDD.md）+ 90 天保留 + 7 天 fallback + 两平台共通 Top 5 规避规则；SKILL.md Quick Step 0 末尾插入「WebSearch 子步骤」含 4 条硬编码检索语（起点月票榜/起点分类月榜/番茄爆款套路/番茄免费热门新书）+ 15s 超时 + 当日缓存命中跳过逻辑 + fetch_status 三态（ok/fallback/none）+ market_avoid 字段供创意指纹消费；allowed-tools 已含 WebSearch（无需改动）。"
+    },
+    {
+      "id": "US-008",
+      "title": "方案输出新增创意指纹板块",
+      "description": "As a 创作者, I want 每套方案末尾显式标注它为什么不套路, so that 我能快速判断选哪一套。",
+      "acceptanceCriteria": [
+        "SKILL.md Quick Step 2 方案输出模板新增「🧬 创意指纹」板块",
+        "指纹含 5 个字段：命中元规则（列出 M01-M10 具体编号 + 一句话说明） / 使用扰动对（2 对起） / 金手指维度（GF-1/GF-2/GF-3 三项 0/1 矩阵） / 语言档位（V1/V2/V3 + 示例句） / 反向规避（明示规避的当日 Top 5 套路）",
+        "输出格式为 Markdown 列表，总字数 ≤200 字",
+        "3 套方案的创意指纹必须体现差异性（命中元规则、扰动对、语言档位至少三项全不同）",
+        "SKILL.md 同步更新示例输出模板段落",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Quick Step 1 输出模板尾部追加 #### 🧬 创意指纹 板块（5 字段：命中元规则 / 使用扰动对 / 金手指维度 / 语言档位 / 反向规避），含示例与 ≤200 字提示；Quick Step 2 开头新增「创意指纹板块规格」小节，表格定义 5 字段数据源（meta_rules_hit / perturbation_pairs / gf_checks / style_voice+sample_line / market_avoid）+ 档位下限；三项差异性硬约束（元规则编号两两无交集或≤1 + 扰动对完全不重叠 + 语言档位两两不同），违反退回 Quick Step 1 重抽。"
+    },
+    {
+      "id": "US-009",
+      "title": "激进度档位前置询问（Quick Step 0.5）",
+      "description": "As a 创作者, I want quick 调用时能先选创意激进度(1-4 档), so that 不用每次在随机结果里碰运气。",
+      "acceptanceCriteria": [
+        "SKILL.md Quick Step 0 与 Step 1 之间插入 Quick Step 0.5：激进度选择",
+        "使用 AskUserQuestion 工具，4 档选项：1 保守 / 2 平衡 / 3 激进 / 4 疯批，默认档位 2 平衡",
+        "支持 3 种命令格式（SKILL.md 明示）：`/ink-init --quick` 弹询问 / `/ink-init --quick 2` 位置参数（推荐） / `/ink-init --quick --档位=2` 命名参数",
+        "支持中文词容错：保守/平衡/激进/疯批 → 自动映射到 1/2/3/4",
+        "档位说明：档位 1 = ≥1 元规则 + 1 扰动对（稀有度 ≤3）；档位 2 = ≥2 + 2（≥1 稀有度 4）；档位 3 = ≥3 + 3（≥2 稀有度 4）；档位 4 = ≥5 + 5（≥3 稀有度 5，必须打破 ≥1 商业安全边界）",
+        "SKILL.md 输出日志显式标注本次档位（如「本次生成档位：3 激进」）",
+        "3 套方案均按该档位生成（不做梯度分离）",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "§模式分支新增「Quick 模式命令格式（激进度档位）」小节，含 3 命令格式 + 中文词容错映射表；Quick Step 0.5 在 Step 0 和 Step 1 之间插入：解析顺序（位置参数→命名参数→AskUserQuestion 兜底默认 2）+ 中文容错表（1/2/3/4/保守/平衡/激进/疯批/英文同义词）+ 档位矩阵表（元规则≥1/2/3/5 扰动 1/2/3/5 稀有度与约束行）+ AskUserQuestion 规范题干 + 日志标注格式「本次生成档位：N 名称」+ 3 套方案统一档位（无梯度）+ aggression_level/name 字段下传 Quick Step 1/1.5/1.6 + 降档日志规范 aggression_level_effective。"
+    },
+    {
+      "id": "US-010",
+      "title": "3 套方案按激进度档位生成（差异化+校验）",
+      "description": "As a 创作者, I want 3 套方案按选定档位统一调整创意强度, so that 生成结果的创意度可预期。",
+      "acceptanceCriteria": [
+        "SKILL.md Quick Step 1 更新方案生成逻辑，按档位确定：规则命中数下限 / 扰动对数量 / 稀有度下限 / 粗口密度",
+        "档位 4 疯批特殊约束：每套方案必须打破至少 1 个商业安全边界（如反派视角主角 / 悲剧结局主线 / 主角长期失败），SKILL.md 提供 10+ 边界示例供选",
+        "3 套方案之间两两不重复的维度：题材方向 / 元规则命中 / 扰动对 / 语言档位",
+        "生成时在 think 过程中自检规则命中数，未达标则重试（最多 3 次），仍失败则降档一级",
+        "SKILL.md Quick Step 1.5 金手指三重校验失败时调用降档逻辑",
+        "SKILL.md 同步更新 3 套方案的 Markdown 输出模板，含完整字段",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Quick Step 1 新增「档位驱动生成参数」表（档位 1-4 × 元规则下限/扰动对数/稀有度门槛/粗口密度/附加约束）+「疯批档商业安全边界打破」清单 B01-B12 共 12 条（反派视角/悲剧/长期失败/反爽点反转/无金手指逆袭/道德争议/禁忌关系/信仰崩塌/非人类视角/叙事反套路/现实阴暗/自我毁灭）+「差异化约束 4 维硬校验」（题材/元规则交集≤1/扰动对完全不重叠/V1V2V3 各占一档）+「自检与重试」（每维度 3 次重试→降档，复用 Quick Step 1.5 降档算法，写入 aggression_level_effective + aggression_downgrade_log）；字段表补充 meta_rules_hit/perturbation_pairs/market_avoid/safety_boundary_broken/aggression_level_effective 五字段；Markdown 示例追加「打破商业安全边界」示例行。SKILL.md 1034→1088 行（US-011 900 行精简在其自身迭代处理）。"
+    },
+    {
+      "id": "US-011",
+      "title": "SKILL.md Quick Mode 流程整合与清理",
+      "description": "As a 维护者, I want Quick Mode 的 8 步骤流程在 SKILL.md 中连贯呈现, so that 新增内容不与旧版描述冲突。",
+      "acceptanceCriteria": [
+        "SKILL.md Quick Mode 流程整理为 8 步骤：Step 0 加载（含三层创意+命名+WebSearch） / Step 0.5 档位询问 / Step 1 生成 3 套 / Step 1.5 金手指校验 / Step 1.6 语言档位分配 / Step 1.7 书名/人名校验 / Step 2 输出（含创意指纹） / Step 3 用户选择",
+        "删除或迁移旧版 Quick Step 描述（Step 0/1/2/3 原有内容）避免重复段落",
+        "allowed-tools 声明含 WebSearch / AskUserQuestion / Read / Write / Edit / Grep / Bash / Task",
+        "SKILL.md 总行数 ≤900 行（当前 806 行，控制膨胀）",
+        "SKILL.md 头部 frontmatter 的 description 字段更新，反映 4 档激进度 + 三层创意体系的升级",
+        "文档内链接有效，无悬空引用",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "SKILL.md 1088→895 行（≤900 达标）；frontmatter description 更新为 4 档激进度 + 三层创意体系；去重 Quick Step 1「档位驱动生成参数」与 Quick Step 0.5「档位矩阵」的重复表格（合并为粗口密度映射提示，指向 0.5 主表）；修复 `### 命名规则` 重复 heading；8 步骤流程齐备（Step 0/0.5/1/1.5/1.6/1.7/2/3），Step 2 heading 补注「方案输出（含创意指纹）与用户选择」对齐 PRD 8 步骤命名；内部数据模型从 80 行 JSON 压缩为紧凑字段列表（字段与类型保留完整）；执行生成 CLI 多行参数折叠为分组单行（语义不变）；References 逐文件清单由三行/条压缩为单行/条（anti-trope-* 九库合并为 brace 表达式，链接完整性经 `ls references/creativity/` 验证全存在）；RAG 配置引导 30 行示例压缩为 8 行三选一 + 验证命令；Quick Step 3 三个 US-xxx 自动填充块（US-001/002/003）合并为「自动填充三件套」编号列表（逻辑保留 auto_generated 标记/Y-N 确认/微调轮数/关键词匹配矩阵）；allowed-tools 已含 Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch 无需改动。"
+    },
+    {
+      "id": "US-012",
+      "title": "editor-wisdom 创意条目整合至 Layer 1",
+      "description": "As a 维护者, I want 把 editor-wisdom RAG 中与独创性相关的规则整合进 Layer 1 元规则, so that 两套规则系统统一不重复。",
+      "acceptanceCriteria": [
+        "从 data/editor-wisdom/rules.json 筛选所有与独创性/创意/套路规避/新意相关的规则条目，输出筛选清单（预估 15-30 条）",
+        "meta-creativity-rules.md 新增 Appendix 章节「M-EW 桥接规则」，列出被纳入的 EW 规则编号 + 原文 + 映射到 M01-M10 哪条（如有重叠以 M 为主）",
+        "若存在未被 M01-M10 覆盖的 EW 创意类规则，新增 M11+ 元规则收纳（如 EW 提到多模态一致性等独立维度）",
+        "更新 ink-writer/agents/editor-wisdom-checker.md 输出新增 creative_dimensions 字段（与 Layer 1 对齐）",
+        "现有 editor_wisdom 测试全部通过（不引入新的失败）",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "筛选 22 条 EW 创意类规则并映射到 M01-M11；meta-creativity-rules.md 升级 v1.1，新增 M11 熟悉×陌生耦合（吸收 EW-0131/0128/0104/0030 等 15 条），文件汉字 2056→3293（11 条 Mxx headings）；Appendix 含桥接映射表 + 覆盖验证（主映射分布 M01×1/M03×2/M05×2/M06×1/M10×1/M11×15）+ Quick 模式消费方式三步；未纳入 10 条经营/签约类 EW 规则（EW-0021/0054/0082/0098/0124/0126/0189/0320/0350/0364）明示走 checker 原通道；编辑 editor-wisdom-checker.md 输出 JSON 新增 creative_dimensions 六键（cost_visibility/info_asymmetry/temporal_displacement/identity_contrast/scale_leap/familiar_strange_coupling）+ 评分规则表；现有 editor_wisdom 228 测试全部通过（pytest -k editor_wisdom）。"
+    },
+    {
+      "id": "US-013",
+      "title": "Phase-Seed-∞ 增量补充规范",
+      "description": "As a 维护者, I want 种子库增量补充的触发条件和流程规范到位, so that 后续补充操作有章可循。",
+      "acceptanceCriteria": [
+        "anti-trope-seeds-roadmap.md 新增「Phase-Seed-∞ 增量补充」章节",
+        "触发条件：自动 A（某 category 抽取集中度 >30%）/ 自动 B（用户连续 3 次重随仍不满意）/ 手动（用户主动）",
+        "单次补充规模 100-200 条，流程同 Phase-Seed-1 的分批（生成 150 候选 → WebSearch 反查 → 去重 → 稀有度均衡 → 20 条 review → 入库 100 条）",
+        "补充后版本号规则：v1.0 → v1.1 → v1.2 ... 每次写入 anti-trope-seeds.json frontmatter 的 version + changelog",
+        "补充质量门槛：新增条目稀有度 ≥4 占比 ≥60%（比初版 50% 更严格）",
+        "roadmap 文档明示：OQ-10 `/ink-seeds add` 单条贡献命令不计入本 PRD，后续独立 PRD 实施",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "anti-trope-seeds-roadmap.md §Phase-Seed-∞ 验收全部达标：触发条件三路（自动 A 抽取集中度 >30% 且同一 seed 近 30 次 ≥10 次 / 自动 B 同一次 quick 会话内连续 3 次重随 / 手动）；单次补充 100-200 条，流程沿用 Phase-Seed-1 六步（150 候选→WebSearch 反查→去重→稀有度均衡→20 条 review→入库 100 条）；版本号 v1.0→v1.1→v1.2...，frontmatter version + changelog（四字段 version/date/delta/note）；质量门槛 rarity≥4 占比 ≥60%（高于初版 50%），且规避 market-trends 近 30 天共通套路词 + example_pairing 重复 ≤70%；§范围外显式标注 OQ-10 /ink-seeds add 单条贡献命令不计入本 PRD。本 US 在 US-002 roadmap 落地时已连带实现，本轮确认验收全项覆盖，不需正文改动。"
+    },
+    {
+      "id": "US-014",
+      "title": "自动化验收测试 test_quick_creativity.py",
+      "description": "As a 维护者, I want 一个静态 fixture 测试脚本持续验证创意质量指标, so that 后续代码修改不会退化。",
+      "acceptanceCriteria": [
+        "新建 tests/ink_init/test_quick_creativity.py + tests/ink_init/__init__.py",
+        "测试覆盖 6 项：(1) anti-trope-seeds-schema.json 合法性 / (2) meta-creativity-rules.md 至少含 M01-M10 十条规则 / (3) book-title-patterns.json 7 种修辞标签覆盖 / (4) blacklist.json 禁用词扩展 / (5) nicknames.json ≥100 条 / (6) given_names.json 新增 rough/smoky/jianghu 标签",
+        "测试使用 fixture 数据模拟，不实际调 LLM 也不发起 WebSearch",
+        "CI workflow（.github/workflows/ci-test.yml）paths 已含 tests/** 和 ink-writer/skills/**，无需额外改动",
+        "所有测试通过率 100%",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "tests/ink_init/{__init__.py,test_quick_creativity.py} 新建；13 项断言覆盖 6 大验收维度（schema合法+skeleton校验/M01-M10/7修辞标签≥10/黑名单扩展/nicknames≥100/给定名三风格桶）；pytest.ini testpaths 追加 tests/ink_init；python3 -m pytest tests/ink_init/ --no-cov → 13 passed。"
+    }
+  ]
+}

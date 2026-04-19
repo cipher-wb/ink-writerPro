@@ -199,7 +199,7 @@ class TestStats:
         (index_dir / "metadata.json").write_text(
             json.dumps([{"id": "EW-0001"}]), encoding="utf-8"
         )
-        (index_dir / "rules.faiss").write_text("dummy")
+        (index_dir / "rules.faiss").write_text("dummy", encoding="utf-8")
 
         with patch("ink_writer.editor_wisdom.cli.DATA_DIR", tmp_path):
             code = cmd_stats()
