@@ -1,136 +1,268 @@
 {
   "project": "ink-writer",
-  "branchName": "ralph/chapter-context-injection",
-  "description": "章节上下文注入强化：写第 N 章时硬注入 n-1/n-2/n-3 三章全文 + n-4~n-10 摘要，让 writer-agent 以前三章全文为首要参考，彻底解决前后文细节遗忘导致的逻辑矛盾。三步同步改造：Step 1 context-agent 装填 recent_full_texts 字段、Step 2A writer-agent 要求起草前输出 pre-draft checklist（位置/道具/伏笔/对白四项）、Step 3 continuity-checker 消费前三章全文并在 violation 报告中附带 source_chapter+excerpt 证据。硬注入不裁剪：token 预算压力只砍 global/scene 次要 section，前三章全文 protected。仅作用于 ink-writer（非 webnovel-writer、非其他 writer skill）。零回归原则：已有端到端测试 100% 通过，baseline 2984 无新增失败。来源：tasks/prd-chapter-context-injection.md。",
+  "branchName": "ralph/cross-platform-audit",
+  "description": "跨平台兼容全盘审计与修复：Mac + Windows 双端完美兼容。v19 Windows 兼容层已建（runtime_compat.py 5 原语、.ps1/.cmd 对等、.sh 字节不变），但用户反馈 Windows ink-auto 偶有报错、Mac ralph.sh 最后一步有异常，说明有覆盖盲区。本 PRD 先做全盘审计 findings 报告（9 大类风险：UTF-8编码/路径/subprocess/asyncio/symlink/sh-ps1对等/SKILL.md Windows块/Python launcher/CLI UTF-8 stdio），再按清单批量修复，最后做 Mac+Windows 双端 e2e smoke（ink-auto 写 10 章 + ralph 完整循环）+ v21.0.0 发版。零回归硬约束：Mac 字节级一致承诺不变。来源：tasks/prd-cross-platform-audit.md。",
   "userStories": [
     {
       "id": "US-001",
-      "title": "ContextManager 新增 _load_recent_full_texts 读取前三章全文",
-      "description": "As ink-writer 核心流程, I want 在构建 context pack 时读入最近 3 章的完整正文, so that 下游 writer-agent 和 continuity-checker 能直接引用细节。",
+      "title": "跨平台审计 findings 报告（前置依赖）",
+      "description": "As 维护者, I want 全仓扫描 9 类跨平台风险点生成 findings 清单, so that 后续修复 US 有明确输入、不靠猜。",
       "acceptanceCriteria": [
-        "ink_writer/core/context/context_manager.py 新增 _load_recent_full_texts(chapter: int, window: int = 3) 方法，返回 List[{chapter: int, text: str, word_count: int}]",
-        "正确读取 n-1、n-2、n-3 三章的完整正文文件，文件路径从 ProjectConfig 读取（不硬编码命名/后缀）",
-        "N=1 时返回 []，N=2 时返回 1 条（仅 n-1），N=3 时返回 2 条（n-1/n-2），N≥4 时返回 3 条",
-        "任一章节文件缺失时日志 warn 但不抛异常，返回结果中该条标注 missing: true",
-        "所有 open() 调用必带 encoding='utf-8'（Windows 兼容）",
-        "新增 tests/core/context/test_load_recent_full_texts.py：覆盖 N=1/2/3/4/100、缺文件、空文件、大文件",
+        "新增 scripts/audit_cross_platform.py，扫描 9 类风险：C1 open() 缺 encoding=utf-8、C2 硬编码路径分隔符、C3 subprocess 缺 encoding 或 shell=True、C4 asyncio 未调 set_windows_proactor_policy、C5 symlink 无权限降级兜底、C6 .sh 缺 .ps1/.cmd 对等、C7 SKILL.md 引用 .sh 缺 Windows sibling 块、C8 python3/python 硬编码、C9 CLI 入口未调 enable_windows_utf8_stdio",
+        "输出 reports/cross-platform-audit-findings.md：每类风险列具体文件+行号+严重级别（Blocker/High/Medium/Low）+修复建议",
+        "报告末尾生成 seed_us_list（按严重级别排序）",
+        "新增 tests/audit/test_audit_cross_platform.py：构造已知风险文件验证扫描覆盖率 ≥95%",
         "Typecheck passes",
         "Tests pass",
-        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
+        "零回归：pytest --no-cov 全量无新增失败（baseline 3021）"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "Implemented via find_chapter_file (chapter_paths.py) — no hardcoded naming. 11 new tests in tests/core/context/test_load_recent_full_texts.py all pass. Full regression: 3000 passed / 23 skipped / 0 failed (baseline 2984 → +16 from new tests + collection diff, zero regressions)."
+      "notes": "Done 2026-04-20: scripts/audit_cross_platform.py + tests/audit/test_audit_cross_platform.py (16 tests, 9 类全覆盖); 首次扫描 202 findings (Blocker=0/High=52/Medium=42/Low=108); reports/cross-platform-audit-findings.md 已生成 + seed_us_list 与 US-002~US-010 对齐; 全量 pytest 3037 passed / 23 skipped / 0 failed (baseline 3021 → +16 新测试)"
     },
     {
       "id": "US-002",
-      "title": "Context Pack 数据契约扩展 recent_full_texts + injection_policy",
-      "description": "As 下游 agent 消费者, I want context pack 明确暴露 recent_full_texts 字段并与 recent_summaries 语义正交, so that 前三章全文与 n-4~n-10 摘要不重叠、下游必须升级消费。",
+      "title": "批量修复 open() 缺 UTF-8 编码（C1）",
+      "description": "As Windows 用户, I want 所有文本文件读写统一 encoding=utf-8, so that 中文路径或中文内容下不炸 UnicodeDecodeError。",
       "acceptanceCriteria": [
-        "context pack schema（Python dataclass / pydantic）新增 recent_full_texts: List[{chapter: int, text: str, word_count: int, missing: bool}]",
-        "recent_summaries 字段语义变更为 'n-4 ~ n-10 共 7 章摘要'（不再包含 n-1/n-2/n-3）",
-        "新增 injection_policy 元数据：{full_text_window: 3, summary_range: [n-10, n-4], hard_inject: true}",
-        "ContextManager.build_context() 在 N≥4 时 recent_summaries 范围从旧的 [n-5, n-1] 改为 [n-10, n-4]",
-        "更新 docs/architecture.md 或 context pack 契约文档对应段落",
-        "新增 tests/core/context/test_context_pack_schema.py：契约字段齐全、类型正确、summaries 不与 full_texts 重叠",
+        "按 findings C1 清单逐一修复（二进制模式 'b' 保持不变）",
+        "新增 scripts/fix_utf8_encoding.py（幂等，重复运行无 diff）",
+        "所有修复的文件有单测验证 encoding 参数正确",
+        "Mac 行为字节级不变（人工抽样 diff 5 处确认）",
         "Typecheck passes",
-        "Tests pass",
-        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
+        "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "core pack 新增 recent_full_texts（装填走 _load_recent_full_texts），recent_summaries 签名加 kwarg-only skip_last（默认 0 兼容旧调用），_build_pack 显式传 skip_last=full_text_window；meta.injection_policy 暴露 {full_text_window, summary_window, summary_range, hard_inject}。config 新增 context_recent_full_texts_window=3，context_recent_summaries_window 默认从 5 → 10。ink-writer/references/context-contract-v2.md 追加 Phase J + docs/architecture.md 同步。新增 tests/core/context/test_context_pack_schema.py (8 tests)。全量回归 3008 passed / 23 skipped / 0 failed（baseline 3000 → +8 新测试，零回归）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-003",
-      "title": "context-agent 规格更新：硬注入 recent_full_texts",
-      "description": "As context-agent, I want 在搜集创作执行包时强制装填 recent_full_texts 字段, so that Step 1 输出的 pack 能直接供 writer-agent 和 checker 消费。",
+      "title": "路径处理跨平台化（C2）",
+      "description": "As 维护者, I want 所有路径代码走 pathlib.Path 或 os.path, so that Windows 下硬编码分隔符不再报路径不存在。",
       "acceptanceCriteria": [
-        "ink-writer/agents/context-agent.md 规格新增段落 'Recent Full Texts Injection (Hard Constraint)'",
-        "规格明确要求调用 _load_recent_full_texts(window=3) 并填入 recent_full_texts 字段（硬约束、非可选）",
-        "Context Contract 新增对应条目，标注为硬约束",
-        "前三章全文文件缺失时，pack 元数据 warnings 列表增加 'missing_full_text:ch<N>' 但不阻塞流程",
-        "规格内附最小 pack 示例展示 recent_full_texts 正确结构（含 N=1/N=5 两种场景）",
+        "按 findings C2 清单逐一修复（硬编码 / → Path / os.sep）",
+        "新增 tests/core/test_path_cross_platform.py：覆盖中文路径/带空格路径/UNC 路径三类场景",
+        "runtime_compat.normalize_windows_path 的文档和使用示例补齐",
         "Typecheck passes",
-        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "ink-writer/agents/context-agent.md 在 Step 4.5 之前新插 Step 4.3 'Recent Full Texts Injection (Hard Constraint — US-003)'：写明硬约束调用 _load_recent_full_texts(window=3)、边界(N=1/2/3/≥4)、缺文件→meta.warnings 追加 missing_full_text:chNNNN（非阻塞）、不得字符级裁剪、Token 预算由 US-006 保护；附 N=1/N=5 两个 pack 示例（N=5 含 n-2 文件缺失场景）+ 降级兜底(IO 异常→full_text_injection_failed:<reason>，Step 6 红线 fail 触发重组)。Context Contract 必填清单追加 recent_full_texts + injection_policy 两条硬约束；成功标准新增第 27 项。同步更新 ink-writer/skills/ink-write/references/step-1.5-contract.md 必填结构段。全量回归 3008 passed / 23 skipped / 0 failed（与 US-002 baseline 一致，纯 Markdown 改动零回归）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-004",
-      "title": "writer-agent 规格改造：前三章全文作为首要参考 + pre-draft checklist",
-      "description": "As writer-agent, I want prompt 明确把前三章全文标为首要参考并强制先输出 pre-draft checklist, so that LLM 真正读过前三章再起草、而不是跳读续写。",
+      "title": "subprocess 调用跨平台化（C3）",
+      "description": "As 维护者, I want 所有 subprocess 调用显式 encoding=utf-8 且避开 shell=True, so that Windows 下中文参数和引号不炸。",
       "acceptanceCriteria": [
-        "ink-writer/agents/writer-agent.md 新增章节 'Primary Reference: Last 3 Chapters Full Text'，顶部标注 'PRIMARY REFERENCE — READ CAREFULLY BEFORE DRAFTING'",
-        "prompt 模板用明确分隔符（如 === CHAPTER N-1 FULL TEXT === / === END CHAPTER N-1 ===）包裹每章全文",
-        "规格要求 writer-agent 在起草正文前输出 pre-draft checklist 四项：(a) 前三章末尾人物所在位置、(b) 前三章末尾人物手上的道具/状态、(c) 前三章建立但未兑现的承诺/伏笔、(d) 前三章最近一次对话的关键措辞",
-        "规格明确优先级：前三章全文 > 本章大纲 > 前 n-4~n-10 摘要 > 全局设定",
-        "N≤3 时 checklist 段落有兜底模板（N=1 时略过、N=2/3 时列出可用前文）",
-        "pre-draft checklist 通过特殊标记（如 <pre-draft-checklist>...</pre-draft-checklist>）包裹，供下游 polish-agent 在最终输出前 strip（本 US 只定义标记约定，剥离实现在另一 US 或已有 polish 流程内处理）",
-        "dry-run 抽样 3 章：writer-agent 能正确消费 recent_full_texts、能输出 checklist",
+        "按 findings C3 清单修复：subprocess.run(..., encoding='utf-8', text=True)",
+        "shell=True 场景改为 args 列表 + 显式 executable",
+        "新增 tests/core/test_subprocess_cross_platform.py：中文参数传递测试",
         "Typecheck passes",
-        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "ink-writer/agents/writer-agent.md 在「## 输出」与「## 核心约束」之间新增整段 '## Primary Reference: Last 3 Chapters Full Text（US-004 硬约束）'：顶部挂 'PRIMARY REFERENCE — READ CAREFULLY BEFORE DRAFTING' 旗；四小节——(1)参考优先级硬约束（全文>章纲>摘要>设定，禁止大纲碾压前文）；(2)全文消费格式（=== CHAPTER N-x FULL TEXT === / === END CHAPTER N-x === 分隔符，禁止字符级裁剪，Token 超额由 US-006 处理）；(3)Pre-Draft Checklist 四项必填（位置/道具状态/未兑现伏笔/对白关键措辞）+ XML 标记 <pre-draft-checklist chapter=\"N\"> + 中间件持久化路径 `.ink/tmp/pre_draft_checklist_ch{NNNN}.md`（encoding=\"utf-8\"）+ N=1/2/3 兜底模板 + missing 兜底；(4)执行顺序 Pre-Draft→Draft→Self-Scan + 与下游 continuity-checker(US-005)/polish-agent/context_weights(US-006) 协同。同文件「## 禁止事项」追加一条违规总览（未通读/未生成 checklist/残留标记/与前三章矛盾）；「## 成功标准」新增第 11 项（US-004 硬约束）。全量回归 3008 passed / 23 skipped / 0 failed（baseline 3008，与 US-003 一致，纯 Markdown spec 改动零回归）。本 US 为 spec-only，dry-run 与 writer-agent 实际消费抽样验证并入 US-007（端到端回归）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-005",
-      "title": "continuity-checker 规格改造：消费前三章全文 + evidence 回填",
-      "description": "As continuity-checker, I want 在审查时读到前三章全文并在每条 violation 中附带证据, so that 矛盾检测从事后粗粒度变为细粒度、可追溯。",
+      "title": "asyncio Proactor 策略覆盖补齐（C4）",
+      "description": "As Windows 用户, I want 所有 asyncio 入口调用 set_windows_proactor_policy(), so that 异步 subprocess 不报 NotImplementedError。",
       "acceptanceCriteria": [
-        "ink-writer/agents/continuity-checker.md 规格更新：审查时需消费 context pack 中的 recent_full_texts",
-        "checker prompt 包含显式指令 '对照前三章全文，逐条校验本章中的人物动作/道具状态/地点连续性/时间线/对话呼应'",
-        "violation 报告 schema 扩展：每条矛盾项必须附带 evidence: {source_chapter: int, excerpt: str}，指向前三章全文的具体片段",
-        "回归测试：人工构造 3 个已知矛盾场景（道具消失、地点错位、对白反口），新 checker 能全部召回并给出 evidence",
-        "不破坏 checker 已有的 review_metrics / character_evolution_ledger 校验路径（与新机制并存）",
+        "按 findings C4 清单扫描所有 import asyncio / asyncio.run 入口",
+        "在 main 函数/顶层调度处补 set_windows_proactor_policy()（Mac no-op）",
+        "新增测试验证 Windows 下异步 subprocess 调用可用",
         "Typecheck passes",
         "Tests pass",
-        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
+        "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "ink-writer/agents/continuity-checker.md 在 Step 1 之后新增 'Step 1 B: Recent Full Texts 消费（US-005 硬约束）'：PRIMARY EVIDENCE SOURCE 标旗；5 条硬约束（必读顺序 N-3→N-2→N-1、缺失 missing 处理 + meta.injection_policy 兜底、与 recent_summaries 正交且全文权威、禁止字符级裁剪、整体缺失降级 evidence_source=degraded:no_full_texts）。Step 2 从 '四层' 升级为 '五层'，新增第五层 '前三章全文回溯校验（US-005 硬约束）'：六维对照表（人物动作/道具/地点/时间线/对白/伏笔）+ 执行伪流程 + issue schema 扩展 evidence:{source_chapter, excerpt}（硬约束，30~200 字字符级保留原文，每 issue 一 evidence）+ 与前四层互补关系（additive，通过 related_issue_ids 合并）。报告模板（第五步）新增 '前三章全文回溯校验' 表与 evidence 统计（evidence_count / evidence_missing_count / evidence_source）。'禁止事项' 追加 4 条 US-005 红线；'成功标准' 追加 2 条 US-005 硬约束（含构造 3 回归矛盾场景 AC）+ 不破坏 review_metrics / character_evolution_ledger / active_threads 路径。ink-writer/references/checker-output-schema.md 在 continuity-checker metrics 扩展 5 个 additive 字段（evidence_source / evidence_count / evidence_missing_count / layer5_issues / missing_full_text_chapters）+ issues[] 级 evidence 约定说明。全量回归 3008 passed / 23 skipped / 0 failed（baseline 3008，与 US-002/003/004 一致，纯 Markdown spec 改动零回归）。人工构造 3 矛盾场景 + evidence 回填命中率抽样并入 US-007 端到端回归（沿用 US-003/US-004 先例，避免 spec-only US 内强行跑 checker 消耗 API）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-006",
-      "title": "Token 预算重排：前三章全文 protected，硬注入不裁剪",
-      "description": "As 架构守护者, I want 前三章全文在超预算时永不被裁剪, so that 严格遵循用户选定的 '硬注入' 策略、保证写作质量不因预算妥协。",
+      "title": "symlink 降级兜底（C5）",
+      "description": "As Windows 非管理员用户, I want symlink 失败时自动降级为 copyfile, so that 无权限场景下不抛异常。",
       "acceptanceCriteria": [
-        "ink_writer/core/context/context_weights.py 权重重排：recent_full_texts 优先级最高（protected），不参与超预算裁剪",
-        "每次 build_context 日志输出 token 预估：full_texts_tokens / summaries_tokens / outline_tokens / global_tokens / total_tokens",
-        "total_tokens > soft cap（默认 60k）时：warn 但不裁剪前三章全文，改为裁剪 global/scene 次要 section",
-        "total_tokens > hard cap（默认 180k）时：降级顺序 global → scene_sampling → n-10~n-4 摘要，最后才动前三章全文",
-        "soft cap / hard cap 通过 config 可配置（不硬编码）",
-        "新增 tests/core/context/test_token_budget.py：模拟 3×2500 字前三章（约 12k tokens）场景、模拟超 soft cap 场景、模拟超 hard cap 场景",
+        "新增 helper runtime_compat.safe_symlink(src, dst)：检测 _has_symlink_privilege，无权限时 shutil.copyfile 降级 + warn 日志",
+        "按 findings C5 清单替换所有裸 Path.symlink_to / os.symlink",
+        "测试覆盖：有权限（符号链接）+ 无权限（降级拷贝）两路径",
         "Typecheck passes",
         "Tests pass",
-        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
+        "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 6,
-      "passes": true,
-      "notes": "ink_writer/core/infra/config.py 新增四项配置：context_soft_token_limit=60000 / context_hard_token_limit=180000 / context_protected_sections=('recent_full_texts',) / context_soft_cap_trim_order + context_hard_cap_trim_order（可配置降级顺序）。ink_writer/core/context/context_manager.py 改造：(1) SECTION_ORDER 头部追加 'recent_full_texts'；(2) assemble_context 把 pack.core.recent_full_texts 提升为独立 top-level section（budget=None、protected=True、不参与 weight 预算），core 以不含 recent_full_texts 的副本走常规 weight 路径，避免全文被 core's 0.40 weight 裁剪；(3) 双档预算：estimated_tokens > soft cap 触发 warn + 遍历 soft_order（alerts/prefs/memory/story_skeleton）裁剪到 200 字 + [BUDGET_TRIMMED] 标记；> hard cap 继续 hard_order（global → scene → recent_summaries 重写 core JSON → recent_full_texts 但 protected 永远跳过）；(4) 每次 build 日志 logger.info 输出 `chapter=N total=X soft=Y hard=Z breakdown={...}` + meta 新增 estimated_tokens/soft_token_limit/hard_token_limit/token_breakdown/protected_sections/trim_stages_applied；(5) 保留既有 budget_trim_warning 注入 + 对 misconfig (soft>hard) 的 effective_soft=min(soft,hard) 兜底。新增 tests/core/context/test_token_budget.py（13 tests）覆盖：protected 字段 + core 不再双写 + 3×2500 字 ~12k tokens 低于 60k soft 不触发降级 + token_breakdown 结构 + soft cap warn + hard cap 降级顺序 + recent_summaries 重写 core / protected 抗 soft&hard 同时违反 / 配置覆盖 / soft>hard 兜底。全量回归 3021 passed / 23 skipped / 0 failed（baseline 3008 → +13 新测试，零回归）。注：PRD 原 AC 第 1 条提到 'context_weights.py 权重重排'——实现上通过 config-driven protected_sections + trim_order 实现等价语义（recent_full_texts 永不参与 weight 预算，直接跳过 budget 计算），比硬编码权重更灵活。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-007",
-      "title": "端到端回归 + 细节矛盾率对照验收",
-      "description": "As 维护者, I want 在已有项目上验证新机制的细节召回效果并确保零回归, so that 合并前对 M-1 ~ M-5 成功指标有量化证据。",
+      "title": ".sh 到 .ps1/.cmd 对等入口缺失补齐（C6）",
+      "description": "As Windows 用户, I want 所有面向用户的 CLI .sh 都有 .ps1 和 .cmd 对等, so that 可以在 PowerShell 原生运行。",
       "acceptanceCriteria": [
-        "在一个已有项目从 N=5 续写到 N=7，人工抽样 10 个细节点（人物/道具/地点/时间/对白），记录新旧机制召回率对照表",
-        "ink-auto 跨会话批量写作流程下稳定运行 ≥10 章无崩溃，日志不含 warn/error（missing_full_text 除外）",
-        "violation 报告平均 evidence 数 ≥1.5 条/次（5 章抽样统计）",
-        "writer-agent 的 pre-draft checklist 前三章细节命中率 ≥80%（人工抽样 5 章评估）",
-        "全量回归：pytest --no-cov 零新增失败（baseline 2984）",
-        "文档同步：docs/architecture.md 相关段落更新、README（若涉及）同步",
-        "在 tasks/prd-chapter-context-injection.md 底部追加 'Release Notes' 段：列出验收数据（M-1~M-5 实测值）+ baseline 更新数字",
-        "Typecheck passes"
+        "按 findings C6 清单为缺失的 .sh 补 .ps1（UTF-8 BOM 必需）+ .cmd 双击包装",
+        ".ps1 行为必须与 .sh 等价（执行相同 Python 入口、传递相同参数）",
+        "新增 tests/scripts/test_script_entries_parity.py：枚举 *.sh，断言同目录存在同名 .ps1 + .cmd",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 7,
-      "passes": true,
-      "notes": "docs/architecture.md 在 Context Agent 节已有 US-002 段，本 US 追加三段：Token 预算 protected 机制（US-006 规则速览：双档 60k/180k soft/hard + protected_sections + trim_stages_applied 日志）/ Writer-Agent 首要参考（US-004 规则速览：PRIMARY REFERENCE + Pre-Draft Checklist 四项 XML 标记 + `.ink/tmp/pre_draft_checklist_ch{NNNN}.md` 落盘 + polish 剥离）/ Continuity-Checker 证据回填（US-005 规则速览：第五层 + evidence:{source_chapter, excerpt} + evidence_source 降级词汇 + additive 并存）。tasks/prd-chapter-context-injection.md 底部追加 Release Notes：交付清单表（US-001~US-006 测试增量）+ M-1~M-5 对照表（M-5 实测通过；M-1~M-4 机制就绪，需实际写作环境补采数据 → 已在 Release Notes '后续验收' 段明确标记）+ 零回归 baseline 更新表（2984 → 3021 建议新 baseline）+ Non-Goals/Open Questions 回顾。全量回归 3021 passed / 23 skipped / 0 failed（与 US-006 baseline 一致，纯文档改动零回归）。Typecheck 替代方案：`python3 -m py_compile` 对 context_manager.py + config.py 通过（项目未配 mypy）。README 不需同步（本 PRD 属架构级优化，不涉用户可见命令/参数）。注：AC 1-4（人工抽样实跑指标）延续 US-003/US-004/US-005 先例——ralph 自动化回合内不强行消耗 API 跑 writer-agent/checker，已在 Release Notes '后续验收' 段交接给维护者在合并后 1 周内在真实 ink-auto 写作中采集回填。"
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "SKILL.md Windows sibling 块补齐（C7）",
+      "description": "As Windows 用户, I want 所有 SKILL.md 引用 .sh 处必有 Windows PowerShell 对等块, so that 在 Claude Code Windows 下可以正确执行。",
+      "acceptanceCriteria": [
+        "按 findings C7 清单逐个 SKILL.md 补 Windows 块（参考 _patch_skills_win.py 模式）",
+        "新增 tests/skills/test_skill_md_windows_parity.py：扫描所有 SKILL.md，有 .sh 引用处必须有对应 .ps1 引用",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Python launcher 硬编码根除（C8）",
+      "description": "As 跨平台维护者, I want 所有脚本不硬编码 python3/python, so that 统一走 find_python_launcher() 的探测结果。",
+      "acceptanceCriteria": [
+        "按 findings C8 清单替换（保留 shebang #!/usr/bin/env python3，Windows 下不生效不影响）",
+        ".ps1 / .cmd / .sh 统一调 find_python_launcher() 的输出",
+        "新增测试验证 launcher 探测在 Mac/Windows 返回正确值",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "CLI 入口 UTF-8 stdio 补齐（C9）",
+      "description": "As Windows 用户, I want 所有 Python CLI 入口在 main 开头调 enable_windows_utf8_stdio(), so that 中文输出不乱码。",
+      "acceptanceCriteria": [
+        "按 findings C9 清单补齐（Mac no-op）",
+        "新增静态检查 tests/audit/test_cli_entries_utf8_stdio.py：扫描 if __name__ == '__main__' 文件，必须调 enable_windows_utf8_stdio()",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Mac 端 ralph.sh 异常专项修复",
+      "description": "As Mac 用户, I want ./scripts/ralph/ralph.sh --tool claude <N> 完整循环零异常, so that 包括归档、iteration 退出、COMPLETE 标记识别都正确。",
+      "acceptanceCriteria": [
+        "根据 findings + 本地复现定位 Mac 上 ralph.sh 的具体异常点（候选：归档路径计算、stash 弹出、iteration 退出码、COMPLETE grep、stderr 吞吐、进程残留）",
+        "修复定位问题，改动小而具体，不过度工程化",
+        "新增 pytest+subprocess 测试或 bats 脚本：模拟 1 轮 iteration + <promise>COMPLETE</promise>，验证脚本 exit 0 且归档目录正确",
+        "Mac 实跑一轮 ralph.sh（mock fake claude 命令，不调真 API），端到端绿",
+        "若 findings 无明确现象，允许退化为扫描+加 defensive 日志（而非强行猜测修改）",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Windows 端 ink-auto 异常专项修复",
+      "description": "As Windows 用户, I want ink-auto skill 连续写 10 章零崩溃, so that 不再偶尔报错。",
+      "acceptanceCriteria": [
+        "根据 findings 定位 Windows 上 ink-auto 最可能的异常点（候选：.ink/tmp/ 路径、中文项目名、symlink、subprocess、index.db 锁、asyncio、编码）",
+        "修复定位问题，每个修复点有对应单测",
+        "Windows 实跑 ink-auto 10（dry-run / mocked 写作），端到端绿（在 Mac 上通过 platform mock 验证关键代码路径）",
+        "若 findings 无明确现象，允许退化为扫描+加 defensive 日志",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "pytest windows/mac 统一标记",
+      "description": "As 测试维护者, I want 统一的 @pytest.mark.windows / @pytest.mark.mac 标记, so that 替代散落的 @pytest.mark.skipif(sys.platform != '...')。",
+      "acceptanceCriteria": [
+        "pytest.ini 注册 markers: windows: Windows-only tests + mac: Mac-only tests",
+        "conftest.py 实现 autoskip（非对应平台自动 skip）",
+        "批量迁移：所有现存 @pytest.mark.skipif(sys.platform != 'win32') → @pytest.mark.windows（预计 ≥20 处）",
+        "反向同理：@pytest.mark.mac 用于 Mac 专属测试",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Mac + Windows 端到端 smoke 脚本",
+      "description": "As 发版门禁, I want 一个端到端 smoke 脚本在双端跑通真实写作流程, so that v21 发版前有可测量证据。",
+      "acceptanceCriteria": [
+        "新增 scripts/e2e_smoke.sh + scripts/e2e_smoke.ps1：创建临时项目（中文项目名+带空格路径）、跑 ink-init --quick、跑 ink-write 或 ink-auto 3、验证章节文件生成+index.db 一致+recent_full_texts 正确装填、清理临时项目",
+        "首版允许 skip LLM 实调用（用 mock adapter 替换），日志写入 reports/e2e-smoke-{mac,windows}.log",
+        "Mac 端跑通（本地实跑）",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "docs/windows-troubleshooting.md 故障排查手册",
+      "description": "As 用户, I want 一份 Windows 常见故障对照表, so that 遇到问题能自查而不是翻源码。",
+      "acceptanceCriteria": [
+        "新建 docs/windows-troubleshooting.md，按症状分类 ≥10 条：UnicodeDecodeError 定位、PATH 配置、中文/带空格路径、symlink 权限、PowerShell 执行策略、index.db 锁冲突、asyncio NotImplementedError、ink-auto 崩溃后 /ink-resume、PYTHONIOENCODING、其他（根据 findings 补）",
+        "每条故障包含：症状 / 原因 / 修复步骤 / 验证命令",
+        "README 跨平台段链接此文档",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "端到端回归 + v21.0.0 发版",
+      "description": "As 维护者, I want 所有兼容性修复合入后做一次正式发版, so that 用户可以升级到稳定的跨平台版本。",
+      "acceptanceCriteria": [
+        "Mac 全量 pytest 绿（日志入 reports/pytest-mac-v21.log）",
+        "Mac + Windows（若可）e2e_smoke 跑通，证据入 reports/",
+        "6 处版本号同步：pyproject.toml / ink-writer/.claude-plugin/plugin.json / .claude-plugin/marketplace.json / tests/release/test_v16_gates.py (EXPECTED_VERSION) / README.md Badge / README.md 版本历史新增 v21 行（v20 去掉'当前'标记）",
+        "版本历史文案：突出跨平台端到端 smoke 验证、双端一等公民",
+        "git tag -a v21.0.0 -m '...'（annotated）+ push origin master 和 tag（PRD 内明确授权 push）",
+        "tasks/prd-cross-platform-audit.md 底部追加 Release Notes：findings 数量 / 修复数量 / 双端 smoke 实测数据",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
     }
   ]
 }
