@@ -67,3 +67,26 @@ Branch: ralph/chapter-context-injection
   - 禁止 bump `context_contract_version` 到 v4：`context_ranker.py:48` 硬编码 v3 且多个测试硬断言 v3。新字段是 additive，与 v3 兼容；升版号留给后续可能的破坏性变更。
   - `DataModulesConfig.from_project_root(tmp_path) + ensure_dirs()` 之后，摘要要写到 `cfg.ink_dir/"summaries"/f"ch{NNNN:04d}.md"`（不是 chapters_dir！两者走的是不同的目录约定）。写测试时记住这条，否则 `_load_summary_text` 找不到文件默认返回 None 而不报错，假绿回归很难察觉。
 ---
+
+## 2026-04-20 - US-003 - context-agent 规格更新：硬注入 recent_full_texts
+- `ink-writer/agents/context-agent.md`：在 Step 4.5（角色演进摘要）之前新插 `Step 4.3: Recent Full Texts Injection (Hard Constraint — US-003)`。段内写明：
+  - 硬约束调用 `_load_recent_full_texts(window=3)`，读取 `context_recent_full_texts_window`
+  - 边界行为（N=1 空 / N=2 一条 / N=3 两条 / N≥4 三条）
+  - 缺文件 → 逐条 `missing=true` + `meta.warnings` 追加 `missing_full_text:chNNNN`（非阻塞）
+  - 必须字段表（`core.recent_full_texts` + `meta.injection_policy` + `meta.warnings`）
+  - Token 预算：protected（不得在此处字符级裁剪，超预算由 US-006 处理）
+  - N=1 / N=5（含 n-2 文件缺失）两个最小 pack 示例
+  - 降级兜底：IO 异常 → `full_text_injection_failed:<reason>` + `recent_full_texts=[]`，Step 6 红线 fail 触发重组
+- 同文件 Step 5 的 "Context Contract 必须字段（不可缺）" 追加两条硬约束：`recent_full_texts` + `injection_policy`；"成功标准" 追加第 27 项（Recent Full Texts Injection 完整性）。
+- `ink-writer/skills/ink-write/references/step-1.5-contract.md`：必填输出结构段追加 `recent_full_texts` + `injection_policy` 两条，语义与 context-agent.md 完全一致，强调旧快照兼容（`meta.get("injection_policy")` fallback）。
+- **Files changed**：
+  - `ink-writer/agents/context-agent.md`（+Step 4.3 整段 ~90 行 + Context Contract 列表 +2 条 + 成功标准 +1 条）
+  - `ink-writer/skills/ink-write/references/step-1.5-contract.md`（+2 条必填字段）
+  - `prd.json` (US-003 passes=true + notes)
+- **回归**：`python3 -m pytest --no-cov` → 3008 passed / 23 skipped / 0 failed（US-002 baseline = 3008，零新增失败；US-003 纯 Markdown/spec 改动无新增测试）。
+- **Learnings for future iterations:**
+  - 本 US 是 spec-only 改动，没有 Python 代码路径、没有新增测试，但仍需跑全量回归以证明"零回归"硬约束不被跳过（CLAUDE.md 写作质量守则 + 本项目 `feedback_no_regression` 要求）。
+  - Context Contract 的"必填字段"清单在 context-agent.md 出现了两次：Step 5 内嵌段（writer-oriented）+ `ink-writer/skills/ink-write/references/step-1.5-contract.md`（contract-template）。新增契约字段时两处必须同步，否则 writer-agent / checker 消费时字段来源不一致会造成断裂。
+  - 文件缺失的降级策略分两层：`_load_recent_full_texts` 内层标 `missing=true`（结构性缺失，符合预期）；context-agent Step 4.3 外层在 `meta.warnings` 追加 `missing_full_text:chNNNN`（可观测），并对 IO 异常走 `full_text_injection_failed:<reason>` + Step 6 红线校验 fail。两层解耦，避免把"文件还没写"当成"IO 炸了"。
+  - 新章节 4.3 放在 Step 4（摘要补全）之后、Step 4.5（演进摘要）之前，是因为执行依赖顺序：full_texts 不依赖摘要或 state.json 演进表，但与摘要是协同注入关系（一个覆盖 n-1~n-3，一个覆盖 n-4~n-10），放一起便于阅读时检查正交。
+---

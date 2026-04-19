@@ -475,6 +475,86 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" index get-chapte
   - 情绪底色 = 上章结束情绪 + 事件走向
   - 可用能力 = 当前境界 + 近期获得 + 设定禁用项
 
+### Step 4.3: Recent Full Texts Injection (Hard Constraint — US-003)
+
+> **硬约束，非可选**：写第 N 章时必须把最近 3 章（n-1 / n-2 / n-3）的完整正文装填进执行包的 `core.recent_full_texts` 字段，供 writer-agent 作为首要参考、continuity-checker 作为证据源。语义与 `core.recent_summaries`（覆盖 n-4 ~ n-10）严格正交，不重叠。
+
+**执行指令**：
+
+1. 读取 `context_recent_full_texts_window`（默认 3）。
+2. 调用 `ContextManager._load_recent_full_texts(chapter=N, window=3)`（内部通过 `chapter_paths.find_chapter_file` 定位正文文件，`encoding="utf-8"` 硬约束）。
+3. 返回结构：`List[{chapter: int, text: str, word_count: int, missing: bool}]`，按章节号升序。
+4. 边界行为：
+   - `N=1` → 返回 `[]`（无前章可注入）
+   - `N=2` → 返回 1 条（仅 n-1）
+   - `N=3` → 返回 2 条（n-1 / n-2）
+   - `N≥4` → 返回 3 条（n-1 / n-2 / n-3）
+5. 缺失文件不阻塞：
+   - `_load_recent_full_texts` 内部 `logger.warning(...)` 并在该条目标 `missing: true`
+   - 本步骤须在 `meta.warnings` 列表追加 `"missing_full_text:ch{NNNN}"` 字符串（每条缺失一个），供下游 checker 可观测
+6. 装填位置：`core.recent_full_texts`（必填字段；N=1 时为空数组但字段本身必须存在）。
+7. 透出元数据：`meta.injection_policy = {full_text_window, summary_window, summary_range, hard_inject: true}`，`summary_range` 从 `ContextManager._build_pack` 自动回填（见 Phase J）。
+
+**必须字段（硬约束）**：
+
+| 字段 | 类型 | 允许空 | 说明 |
+|------|------|-------|------|
+| `core.recent_full_texts` | list[object] | N=1 时可为 `[]` | 按章节升序；即使全缺失也必须是数组而非 `null` |
+| `meta.injection_policy` | object | 否 | `full_text_window / summary_window / summary_range / hard_inject` 四字段齐全 |
+| `meta.warnings` | list[str] | 是 | 所有 `missing_full_text:chNNNN` 在此聚合 |
+
+**Token 预算说明**：`recent_full_texts` 在 US-006 权重重排后为 **protected section**，超预算时先裁 `global/scene`、再裁 `recent_summaries`，最后才动它。本步骤**不得**在此处做字符级裁剪。
+
+**最小 pack 示例**：
+
+*场景一 — N=1（首章，无前文）：*
+
+```json
+{
+  "core": {
+    "recent_full_texts": [],
+    "recent_summaries": []
+  },
+  "meta": {
+    "injection_policy": {
+      "full_text_window": 3,
+      "summary_window": 10,
+      "summary_range": [0, 0],
+      "hard_inject": true
+    },
+    "warnings": []
+  }
+}
+```
+
+*场景二 — N=5（n-4 摘要 + n-1/n-2/n-3 全文，n-2 文件缺失）：*
+
+```json
+{
+  "core": {
+    "recent_full_texts": [
+      {"chapter": 2, "text": "……（ch2 正文省略）", "word_count": 2480, "missing": false},
+      {"chapter": 3, "text": "", "word_count": 0, "missing": true},
+      {"chapter": 4, "text": "……（ch4 正文省略）", "word_count": 2612, "missing": false}
+    ],
+    "recent_summaries": [
+      {"chapter": 1, "text": "……（ch1 摘要省略）"}
+    ]
+  },
+  "meta": {
+    "injection_policy": {
+      "full_text_window": 3,
+      "summary_window": 10,
+      "summary_range": [1, 1],
+      "hard_inject": true
+    },
+    "warnings": ["missing_full_text:ch0003"]
+  }
+}
+```
+
+**降级兜底**：`_load_recent_full_texts` 因 IO 异常抛错时（非文件缺失），本步骤须捕获、在 `meta.warnings` 追加 `"full_text_injection_failed:<reason>"` 并置 `recent_full_texts=[]`，保证 Step 5 不阻塞；但 Step 6 红线校验须对应 fail，触发重组或人工介入。
+
 #### Step 4.5: 角色演进摘要注入（FIX-18 P5c）
 
 目的：让 writer-agent 感知"本章之前"所有出场角色（尤其配角）在多维度（立场/关系/境界/知识/情绪/目标）的演进漂移，避免行为与既定进度冲突，或把长期未出场的配角写"掉线"。
@@ -791,6 +871,8 @@ Context Contract 必须字段（不可缺）：
 - `protagonist_knowledge_gate`（知识盲区清单，供 consistency-checker Layer 5 使用）
 - `active_negative_constraints`（活跃否定约束清单，供 writer-agent L6 铁律和 outline-compliance-checker O7 使用）
 - `character_progression_summary`（FIX-18 P5c）：出场角色"本章之前"的多维度演进切片（≤5 行/角色），由 Step 4.5 构造。无记录时保留字段并置 `"[本章之前无角色演进记录]"` 占位符，不可静默剔除
+- **`recent_full_texts`（US-003 硬约束）**：最近 n-1/n-2/n-3 三章完整正文数组（结构见 Step 4.3），由 Step 4.3 装填；N=1 时为 `[]` 但字段本身必须存在；缺文件时逐条标 `missing: true` 并在 `meta.warnings` 追加 `missing_full_text:chNNNN`
+- **`injection_policy`（US-003 硬约束）**：`{full_text_window, summary_window, summary_range, hard_inject: true}`，由 `ContextManager._build_pack` 自动填入 `meta.injection_policy`；下游消费者必须 `meta.get("injection_policy")` 做缺省 fallback（旧快照兼容）
 
 ### Step 5.5: 输出后处理 — 空值字段自适应裁剪（v13.1 新增）
 
@@ -894,3 +976,4 @@ Context Contract 必须字段（不可缺）：
 24. ✅ **裁剪日志已附加**：执行包末尾包含 `<!-- context-pack-trim: ... -->` 统计注释
 25. ✅ **第15板块（否定约束清单）完整**：活跃否定约束按实体分组展示，≤20 条，标注 ❌ 前缀和推翻条件；无约束时输出占位提示；`active_negative_constraints` 已注入 Context Contract
 26. ✅ **第16板块（上章退出快照）完整**：上一章每个出场角色的退出状态（位置/情绪/关系/联系方式/最后动作/未闭合事项）已展示，≤10 角色；首章时输出占位提示
+27. ✅ **Recent Full Texts Injection（US-003 硬约束）完整**：Step 4.3 已调用 `_load_recent_full_texts(window=3)`；`core.recent_full_texts` 字段在 pack 中存在（N=1 为 `[]`，N≥4 为 3 条）；每条缺失文件已在 `meta.warnings` 聚合为 `missing_full_text:chNNNN`；`meta.injection_policy` 四字段齐全且 `hard_inject=true`

@@ -18,6 +18,8 @@
 - 是否过渡章（true/false，必须按大纲判定，不按字数判定）
 - 追读力设计（钩子类型/强度、微兑现清单、爽点模式）
 - `character_progression_summary`（FIX-18 P5c）：出场角色在本章之前的多维度演进切片（≤5 行/角色，字段 `chapter_no/dimension/from_value/to_value/cause`）。writer-agent 据此感知配角立场/关系/境界/知识/情绪/目标的漂移，避免"掉线"或行为与既定演进冲突。若无记录，输出占位符 `[本章之前无角色演进记录]`。
+- `recent_full_texts`（US-003 硬约束）：最近 n-1/n-2/n-3 三章的完整正文数组，结构 `List[{chapter:int, text:str, word_count:int, missing:bool}]`，按章节升序，语义与 `recent_summaries`（n-4 ~ n-10）严格正交。N=1 时为 `[]` 但字段本身不得省略；文件缺失时该条 `missing=true` 且 `meta.warnings` 追加 `missing_full_text:chNNNN`（非阻塞）。下游 writer-agent 以此为首要参考、continuity-checker 以此做 evidence 回填。
+- `injection_policy`（US-003 硬约束）：元数据字段 `{full_text_window, summary_window, summary_range:[start,end], hard_inject:true}`，由 `ContextManager._build_pack` 自动填入 `meta.injection_policy`，消费者须用 `meta.get("injection_policy")` 做缺省 fallback 以兼容旧快照。
 
 过渡章判定规则（强制）：
 - 依据章纲/卷纲中的章节功能标签与目标（铺垫/转场/承接/回收等）。
