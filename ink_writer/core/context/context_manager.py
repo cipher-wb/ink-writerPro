@@ -78,6 +78,7 @@ class ContextManager:
         "writing_guidance",
         "story_skeleton",
         "memory",
+        "reflections",
         "preferences",
         "alerts",
     ]
@@ -327,6 +328,10 @@ class ContextManager:
         )
         memory = self._load_json_optional(self.config.project_memory_file)
         memory.update(self._load_structured_memory(chapter, state))
+        # US-008: reflections 由 _build_pack 显式注入，项目根路径显式传入避免后续
+        # 再去 config 里查；保留 memory["reflections"] 的旧位置做向后兼容（L1/L2
+        # 同源，consumer 二选一）。
+        reflections = self._load_reflections(project_root=self.config.project_root)
         story_skeleton = self._load_story_skeleton(chapter)
         alert_slice = max(0, int(self.config.context_alerts_slice))
         reader_signal = self._load_reader_signal(chapter)
@@ -349,6 +354,7 @@ class ContextManager:
             "story_skeleton": story_skeleton,
             "preferences": preferences,
             "memory": memory,
+            "reflections": reflections,
             "alerts": {
                 "disambiguation_warnings": (
                     state.get("disambiguation_warnings", [])[-alert_slice:] if alert_slice else []
@@ -576,7 +582,7 @@ class ContextManager:
             active_threads=active_threads,
         )
         candidate_facts = self._load_candidate_facts(previous_card, active_threads)
-        reflections = self._load_reflections()
+        reflections = self._load_reflections(project_root=self.config.project_root)
 
         return {
             "previous_chapter_memory_card": previous_card,
@@ -587,19 +593,24 @@ class ContextManager:
             "reflections": reflections,
         }
 
-    def _load_reflections(self) -> Dict[str, Any]:
-        """US-022: L2 memory layer — inject `.ink/reflections.json` bullets.
+    def _load_reflections(self, project_root: Optional[Path] = None) -> Dict[str, Any]:
+        """US-022 / US-008: L2 memory layer — inject `.ink/reflections.json` bullets.
+
+        US-008 change: 接受显式 ``project_root`` 参数（仍保留旧签名的无参用法，
+        此时 fallback 到 ``self.config.project_root``）。这样 ``_build_pack`` 可在
+        pack 装配时直观地传入 project root，便于测试与多项目同进程复用。
 
         Returns a compact dict with the latest reflection bullets.  Absent or
         corrupt files produce an empty payload so downstream consumers are
-        always safe.
+        always safe (bullets 为空 / reflections.json 不存在 / JSON 损坏皆不抛)。
         """
+        root = project_root if project_root is not None else self.config.project_root
         try:
             from ink_writer.reflection import load_reflections
         except ImportError:  # pragma: no cover — reflection module optional
             return {}
         try:
-            payload = load_reflections(self.config.project_root)
+            payload = load_reflections(root)
         except (OSError, ValueError):
             return {}
         if not payload:
