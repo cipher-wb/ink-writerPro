@@ -92,8 +92,8 @@
         "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "ink-writer/agents/continuity-checker.md 在 Step 1 之后新增 'Step 1 B: Recent Full Texts 消费（US-005 硬约束）'：PRIMARY EVIDENCE SOURCE 标旗；5 条硬约束（必读顺序 N-3→N-2→N-1、缺失 missing 处理 + meta.injection_policy 兜底、与 recent_summaries 正交且全文权威、禁止字符级裁剪、整体缺失降级 evidence_source=degraded:no_full_texts）。Step 2 从 '四层' 升级为 '五层'，新增第五层 '前三章全文回溯校验（US-005 硬约束）'：六维对照表（人物动作/道具/地点/时间线/对白/伏笔）+ 执行伪流程 + issue schema 扩展 evidence:{source_chapter, excerpt}（硬约束，30~200 字字符级保留原文，每 issue 一 evidence）+ 与前四层互补关系（additive，通过 related_issue_ids 合并）。报告模板（第五步）新增 '前三章全文回溯校验' 表与 evidence 统计（evidence_count / evidence_missing_count / evidence_source）。'禁止事项' 追加 4 条 US-005 红线；'成功标准' 追加 2 条 US-005 硬约束（含构造 3 回归矛盾场景 AC）+ 不破坏 review_metrics / character_evolution_ledger / active_threads 路径。ink-writer/references/checker-output-schema.md 在 continuity-checker metrics 扩展 5 个 additive 字段（evidence_source / evidence_count / evidence_missing_count / layer5_issues / missing_full_text_chapters）+ issues[] 级 evidence 约定说明。全量回归 3008 passed / 23 skipped / 0 failed（baseline 3008，与 US-002/003/004 一致，纯 Markdown spec 改动零回归）。人工构造 3 矛盾场景 + evidence 回填命中率抽样并入 US-007 端到端回归（沿用 US-003/US-004 先例，避免 spec-only US 内强行跑 checker 消耗 API）。"
     },
     {
       "id": "US-006",

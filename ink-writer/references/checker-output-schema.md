@@ -121,10 +121,24 @@
     "dormant_threads": 1,
     "forgotten_foreshadowing": 0,
     "logic_holes": 0,
-    "outline_deviations": 0
+    "outline_deviations": 0,
+    "evidence_source": "recent_full_texts",
+    "evidence_count": 4,
+    "evidence_missing_count": 0,
+    "layer5_issues": 3,
+    "missing_full_text_chapters": []
   }
 }
 ```
+
+> **US-005 扩展字段**（continuity-checker 专用，additive，旧快照缺省）：
+> - `evidence_source`: `"recent_full_texts"`（正常）/ `"degraded:no_full_texts"`（旧快照兜底）/ `"n1_no_prior"`（N=1 无前置）
+> - `evidence_count`: 带 `evidence` 字段的第五层 issue 条数
+> - `evidence_missing_count`: 命中第五层但缺 evidence 的 issue 数（应为 0，非 0 阻塞通过）
+> - `layer5_issues`: 第五层（前三章全文回溯）命中的 issue 总数
+> - `missing_full_text_chapters`: 本次 review 中 `recent_full_texts[k].missing=true` 的章节号数组
+>
+> **Issue 级扩展字段**（US-005）：第五层命中的每条 `issues[]` 条目允许附加 `evidence:{source_chapter:int, excerpt:str}` 字段，语义详见 `ink-writer/agents/continuity-checker.md` 第五层。
 
 ### pacing-checker
 ```json

@@ -110,3 +110,27 @@ Branch: ralph/chapter-context-injection
   - 禁止事项 / 成功标准 / 主体章节三处的编号（US-004）用同一标签串联，方便后续做 PR 评审或文档索引时一次 grep 定位全部改动点（`grep -n "US-004" ink-writer/agents/writer-agent.md`）。未来 spec 改造建议沿用"US-XXX 标签 + 三地联动（主体 + 禁止 + 成功）"模式。
   - spec-only US 的"dry-run 抽样 3 章" AC 条目在本项目里的实践：**不要在本 US 内强行构造假项目跑 writer-agent**（会污染 pytest 结果/消耗 API）。把它折入 US-007 端到端回归（已存在真实项目），这是 US-003 已经建立的先例。
 ---
+
+## 2026-04-20 - US-005 - continuity-checker 规格改造：消费前三章全文 + evidence 回填
+- `ink-writer/agents/continuity-checker.md` 三处同步改造（沿用 US-004 "主体 + 禁止 + 成功" 三地联动模式）：
+  - 在 "第一步: 加载上下文" 之后、"第二步" 之前新插 `第一步 B: Recent Full Texts 消费（US-005 硬约束）`：顶部挂 `PRIMARY EVIDENCE SOURCE — READ CAREFULLY BEFORE REVIEWING` 旗；5 条硬约束——(1) 必读顺序 N-3→N-2→N-1 再回本章正文；(2) `missing:true` 跳过并记 `metrics.missing_full_text_chapters`，`injection_policy` 旧快照用 `meta.get("injection_policy", {...})` 兜底；(3) 与 `recent_summaries` 正交，冲突以全文为权威；(4) 禁止字符级裁剪（由 US-006 处理）；(5) 整体缺失降级 `evidence_source=degraded:no_full_texts`，退化为仅四层检查并在 summary 说明。
+  - "第二步" 标题 "四层" → "五层"，在第四层后新增 **第五层: 前三章全文回溯校验（US-005 硬约束）**：
+    - 六维对照表（人物动作连续性 / 道具状态 / 地点连续性 / 时间线 / 对白呼应 / 伏笔承诺）+ 执行伪流程；
+    - issue schema 扩展 `evidence: {source_chapter, excerpt}` 硬约束——`source_chapter ∈ {N-1, N-2, N-3}`、`excerpt` 30~200 字字符级保留原文（含标点/引号/错别字）、每 issue 仅一 evidence、缺 evidence 的第五层 issue 不进 `issues[]` 而是计入 `metrics.evidence_missing_count`；
+    - 与前四层互补：additive 并存，同一矛盾优先保留带 evidence 的第五层 issue，前四层通过 `related_issue_ids` 合并。
+  - "第五步: 生成报告" 在 "逻辑一致性" 之后插入 "前三章全文回溯校验（第五层，US-005）" 表格（位置/类型/来源章/原文片段/严重度）+ evidence 统计段（evidence_count / evidence_missing_count / evidence_source）。
+  - "禁止事项" 追加 4 条 US-005 红线（未执行第五层、evidence 字段缺失/杜撰/超长、用摘要反驳全文、字符级裁剪）。
+  - "成功标准" 追加 2 条 US-005 硬约束（第五层执行条件 + N=1 跳过 / evidence 完整性 / 3 回归矛盾场景召回）+ 1 条兼容性声明（不破坏 review_metrics / character_evolution_ledger / active_threads / 前四层 metrics）。
+- `ink-writer/references/checker-output-schema.md` 在 continuity-checker metrics 块扩展 5 个 additive 字段：`evidence_source` / `evidence_count` / `evidence_missing_count` / `layer5_issues` / `missing_full_text_chapters`；并在下方新增 US-005 扩展字段说明段（含 issues[] 级 evidence 约定）。
+- **Files changed**：
+  - `ink-writer/agents/continuity-checker.md`（+~160 行：Step 1 B 整段 + 第五层整段 + 报告模板 +1 表 / +3 指标行 + 禁止 +4 条 + 成功 +3 条；标题 "四层" → "五层"）
+  - `ink-writer/references/checker-output-schema.md`（+11 行：continuity-checker metrics 扩展 5 字段 + US-005 说明段）
+  - `scripts/ralph/prd.json` (US-005 passes=true + notes)
+- **回归**：`python3 -m pytest --no-cov` → 3008 passed / 23 skipped / 0 failed（与 US-002/US-003/US-004 baseline 一致，纯 Markdown/spec 改动无新增测试）。
+- **Learnings for future iterations:**
+  - **Issue schema 扩展与 drift_detector 的并存约定**：`ink_writer/propagation/drift_detector.py:45` 的 `_CHAPTER_KEYS = ("target_chapter", "ref_chapter", "source_chapter", "chapter")` 已原生支持顶层 `source_chapter` 字段读取，所以第五层新增的 `evidence.source_chapter` 不冲突但也不会被 drift detector 读。规范要求 **同时保留顶层 `ref_chapter` / `source_chapter`**（供 drift_detector 反向传播）+ **额外附加 `evidence.{source_chapter, excerpt}`**（供 fix / review 做精准片段跳转），两者是互补关系，不是替代关系。未来扩展任何 checker schema 时，都要先 grep drift_detector 的 `_CHAPTER_KEYS` / `_DRIFT_CHECKERS` / `_CROSS_CHAPTER_TYPES` 确认向后兼容。
+  - **"降级兜底链"贯穿三 agent**：context-agent 的 `full_text_injection_failed:<reason>`（IO 异常） + `missing_full_text:chNNNN`（结构性缺文件）+ continuity-checker 的 `evidence_source=degraded:no_full_texts`（整体缺失）+ `n1_no_prior`（N=1 无前置）形成一致兜底链。消费者拿到 `evidence_source` 值就能判定是否信任 evidence；消费者看到 `missing_full_text_chapters` 就能判定第五层覆盖度。未来任何新 agent 接入 `recent_full_texts` 体系都应沿用这一兜底词汇表，不要另造新值。
+  - **"additive 不 bump 版本"继续有效**：与 US-002 一致，本 US 只向 `checker-output-schema.md` 的 continuity metrics 添加字段、向 issues[] 添加 evidence 子字段，不 bump `context_contract_version` 也不引入新 schema 版本号。消费者侧做 `metrics.get("evidence_source", "legacy")` / `issue.get("evidence")` 即可兼容老缓存。
+  - **"第五层而非替代四层"很关键**：AC 明确要求"不破坏 checker 已有的 review_metrics / character_evolution_ledger 校验路径（与新机制并存）"，规格里通过 "五层" 并排 + `related_issue_ids` 合并条款落实。如果把第五层写成"替代前四层"，会丢 active_threads 主线/支线的监控能力，对项目中段（50+ 章）影响巨大。未来类似 checker 升级记住：**新机制是加法，不是替换**。
+  - **spec-only US 的回归验证硬约束（延续）**：纯 Markdown 改动无新增测试仍必须跑全量 pytest 证明零回归（feedback_no_regression 硬规则）；US-005 回归输出与 US-004 逐位一致（3008/23/0），证明 spec 改动未触发任何 pytest 动态加载/模板渲染/CI 的意外路径。未来 spec-only 批量改动也应采用"baseline 位对位比对"作为通过阈值。
+---
