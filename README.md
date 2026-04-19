@@ -1,6 +1,6 @@
 # Ink Writer Pro
 
-[![Version](https://img.shields.io/badge/Version-16.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-18.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 
 **一条命令，自动写 10 章并审查修复。** AI 驱动的长篇网文写作工具，专为起点/番茄等平台的商业连载设计。
@@ -180,7 +180,7 @@ v15.9.0 引入 300 章 Shadow 压测骨架（US-017）+ Q1-Q8 质量仪表盘（
 
 2. **人感验证（推荐，无可替代）**：**压测后自己读 100 / 200 / 300 三章各 10 分钟**（共 ~30 min），关注 ① 剧情是否还记得 50 章前的伏笔 / 角色状态 ② 文笔是否 AI 味（重复句式 / 空洞形容词） ③ 爽点是否还在 ④ 主角行为是否 OOC。**这是替代 AI 审读员的唯一手段**——LLM 审读会被 checker 自己的偏见污染，只有读者大脑才是真 ground truth。
 
-3. **零回归守卫**：`pytest --no-cov` 须报 `2843 passed, 19 skipped`（v16.0.0 baseline，v15.9.0 为 2738）；任何新 US 只能让这个数字单调上涨。
+3. **零回归守卫**：`pytest --no-cov` 须报 `2984 passed, 19 skipped`（v18.0.0 baseline，v16.0.0 为 2843，v15.9.0 为 2738）；任何新 US 只能让这个数字单调上涨。
 
 ---
 
@@ -188,7 +188,8 @@ v15.9.0 引入 300 章 Shadow 压测骨架（US-017）+ Q1-Q8 质量仪表盘（
 
 | 版本 | 说明 |
 |------|------|
-| **v16.0.0 (当前)** | **Milestone C 收口（工程卫生 + 正式发版）** — US-020 Skill 规范 30/30 修复（ink-plan allowed-tools 补齐 + CI frontmatter 审计 `scripts/verify_docs.py` 扩展 skill/agent name/description/tools 必填守卫 + high-priv tools 未附理由 warn）；US-021 **Agent SDK 优化**（prompt_cache 命中率观测 + checker 模型选型 haiku/sonnet 分层 + batch API 骨架）；US-022 **长记忆范式升级**（BM25 关键词 + 向量双路召回 + 章级/卷级 2 层压缩 + reflection-agent 每 50 章回溯沉淀）；US-023 **architecture_audit 扫描扩展**（孤儿 Python/Markdown/agent 清理 + 死代码告警）；US-024 **日志规范化**（JSON 结构化日志 + DB/state.json 来源字段统一）；US-025 **import cycle 解构**（foreshadow/plotline tracker Python 合并，切断 state ↔ index 循环依赖）；US-026 章 1-3 checker 冲突仲裁表 + ANTHROPIC_API_KEY 入口守卫 + CLAUDE.md 精简；US-027 本次发版（reports/v16-release-audit.md + tests/release/test_v16_gates.py 版本一致性 + 全维度 sanity）。**本轮明确排除**：AI 审读员（F-010b，LLM 会被 checker 偏见污染，依旧走人读 100/200/300 章 SOP）+ 真 LLM 压测（FIX-16，成本高后续单独 PRD）。pytest 2738→2843 全绿零回归 |
+| **v18.0.0 (当前)** | **v17 审查 9 条 Red 全量收口（Green 合格 83.0/100）** — US-001 editor-wisdom retrieval_top_k 5→15；US-002 opening/taboo/hook 分类别召回各 ≥3 条（每章注入覆盖率 3.9% → 11.6%）；US-003 drift_detector IN+GROUP BY 分批查询（1000 章 <3s）；US-004 drift debt 增量持久化 `.ink/drift_debts.db`；US-005 PipelineManager 接入 ChapterLockManager（v15 F-003 真收口，`parallel>1` 安全）；US-006 asyncio 并发路径 10-task 持锁测试；US-007 progression/context_injection SQL ORDER BY DESC LIMIT 下推；US-008 reflection agent 消费链路显式 wire；US-009 editor-wisdom checker 解除 5000 字硬截断；US-010 creativity validator 真接入 ink-init Quick Mode（v15 F-007 真收口）；US-011 arbitrate_generic 扩展到章 ≥4；US-012 arbitration 合并矩阵配置化；US-013 anti_detection ZT 扩展到 8 条 + paired pos/neg 测试（v15 F-008 真收口）。**过审概率 [75%, 85%] → [90%, 100%]**（+15 pp），总分 71.1 → 83.0（+11.9），pytest 2843→2984 零回归。详见 `reports/audit-v18-pass-report.md` |
+| v16.0.0 | **Milestone C 收口（工程卫生 + 正式发版）** — US-020 Skill 规范 30/30 修复（ink-plan allowed-tools 补齐 + CI frontmatter 审计 `scripts/verify_docs.py` 扩展 skill/agent name/description/tools 必填守卫 + high-priv tools 未附理由 warn）；US-021 **Agent SDK 优化**（prompt_cache 命中率观测 + checker 模型选型 haiku/sonnet 分层 + batch API 骨架）；US-022 **长记忆范式升级**（BM25 关键词 + 向量双路召回 + 章级/卷级 2 层压缩 + reflection-agent 每 50 章回溯沉淀）；US-023 **architecture_audit 扫描扩展**（孤儿 Python/Markdown/agent 清理 + 死代码告警）；US-024 **日志规范化**（JSON 结构化日志 + DB/state.json 来源字段统一）；US-025 **import cycle 解构**（foreshadow/plotline tracker Python 合并，切断 state ↔ index 循环依赖）；US-026 章 1-3 checker 冲突仲裁表 + ANTHROPIC_API_KEY 入口守卫 + CLAUDE.md 精简；US-027 本次发版（reports/v16-release-audit.md + tests/release/test_v16_gates.py 版本一致性 + 全维度 sanity）。**本轮明确排除**：AI 审读员（F-010b，LLM 会被 checker 偏见污染，依旧走人读 100/200/300 章 SOP）+ 真 LLM 压测（FIX-16，成本高后续单独 PRD）。pytest 2738→2843 全绿零回归 |
 | v15.9.0 | **Milestone A+B 收口（止血 + creativity + 压测骨架）** — US-001~002 并发根治（ChapterLockManager 接入 PipelineManager，`parallel>1` 安全）；US-003~005 step3_runner **Phase B** 真 LLM 落地（5 gate checker_fn + polish_fn 接真 claude-sonnet-4-6，enforce E2E 阻断+降级审计）；US-006~008 FIX-11 残留清理+CI 门禁、LLM 显式 timeout、ink-auto 分层检查点 5/10/20/50/200 正式化；US-009~013 **creativity 子系统** Python 实装（name_validator 陈词+书名黑名单 / gf_validator 金手指三重约束 / sensitive_lexicon L0-L3 密度 / 扰动引擎+5 次重抽降档 / Quick Mode SKILL.md 集成）；US-014~016 anti-detection ZT 正则扩展+连接词密度、黄金三章阈值软化+整章重写逃生门、文笔维度 merged_fix_suggestion；US-017 **300 章 Shadow 压测骨架**（benchmark/e2e_shadow_300，G1-G5 性能指标，零 LLM 费）；US-018 **Q1-Q8 质量指标仪表盘**（SQL 直查，零费用，reports/quality-300ch-v15.md）；pytest 2310→2738 全绿零回归 |
 | v15.0.0 | v14 审计完结 + 架构统一（FIX-17 反向传播 + FIX-18 Progressions + FIX-11 双包合并 breaking + 覆盖率 30→70） |
 | v14.0.0 | **深度健康审计修复（v13 Step 2 + Step 3 合计 38 US）** — Blocker 全修（依赖声明 + pyproject + CI smoke + PipelineManager 诚实降级）；FIX-03A Memory v13 **SQL-first** 全链路闭环（StateManager.flush 顺序反转 + save_external_state + archive_manager / update_state / ink-resolve 全部迁移）；**FIX-04 step3_runner Phase A 上线**（5 个孤儿 Python gate 接入生产 + shadow 模式 + CLI + env mode 开关）；tests/editor_wisdom +227 dormant tests 激活；Step 3.5 Harness Gate 改读 index.db.review_metrics；Retriever 单例化；Style RAG 3 档降级（FAISS→subprocess 构建→SQLite fallback）；LLM + 章级 timeout；API Key 入口护栏；创意指纹 5 字段入库；孤儿表 / 僵尸 agent / 死代码清理 ~603KB；scripts/verify_docs.py CI 校验文档-代码数字一致性。pytest 2071→2310 全绿零回归 |

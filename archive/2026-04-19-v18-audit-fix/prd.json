@@ -1,0 +1,241 @@
+{
+  "project": "ink-writer",
+  "branchName": "ralph/v18-audit-fix",
+  "description": "v18 Audit Fix — 收口 v17 审查发现的 9 条 Red（14 US / 16 sessions 估算）。目标升分 71.1 → ≥80，过审概率 [75%, 85%] → ≥ [85%, 95%]，解锁 parallel>1 日产 3-5 万字。硬约束：零回归（baseline 2420 无新增失败）+ 保留 v17 审查 8 条 Green 亮点（NG-1~NG-8）。来源：reports/audit-v17-findings.md §7 prd_seed + tasks/prd-v18-audit-fix.md。三大主题：(1) editor-wisdom 覆盖率提升（top_k=5→15-20，分类别召回，coverage_metrics）(2) 800 章长记忆性能（drift_detector SQL 优化 + progression LIMIT 下推 + reflection wire）(3) 并发写一致性 & validator 真调用（ChapterLockManager 接入 + asyncio + creativity validator + anti_detection ZT 扩展 + arbitration 扩章）。US-014 收尾：全量回归 + v17 提示词重评 + v18.0.0 发版。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "提升 editor-wisdom retrieval_top_k 到 15-20",
+      "description": "As 业主, I want 每章编辑规则注入数量从 15 条提到 45-60 条, so that 过审概率从 [75%, 85%] 突破到 ≥ [85%, 95%]。",
+      "acceptanceCriteria": [
+        "config/editor-wisdom.yaml:3 retrieval_top_k 从 5 改为 15（或 20，评估 prompt 膨胀后定）",
+        "对比 A/B：top_k=5 vs 15 在 20 章样本上 writer-prompt token 膨胀 ≤30%",
+        "过审概率 f₂ 因子从 4 分提升到 ≥7 分（按 v17 提示词 §8.3 公式自验）",
+        "不破坏 prompt cache 命中率（测试 ink_writer/prompt_cache/metrics.py）",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "editor-wisdom 分类别召回（黄金三章 opening/taboo/hook 各 ≥3 条）",
+      "description": "As 业主, I want 黄金三章时每个关键类别（opening/taboo/hook）强制至少注入 3 条规则, so that 前 3 章过审概率独立达 ≥90%。",
+      "acceptanceCriteria": [
+        "ink_writer/editor_wisdom/writer_injection.py:76-85 新增分类别召回逻辑",
+        "章 1-3 时 opening 类 ≥3 条、taboo 类 ≥3 条、hook 类 ≥3 条",
+        "新增 ink_writer/editor_wisdom/coverage_metrics.py 每章统计覆盖率写 .ink/editor-wisdom-coverage.json",
+        "测试 tests/editor_wisdom/test_coverage_floor.py 覆盖率 <10%/章 即 fail",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "drift_detector 改用单条 IN 查询 + GROUP BY",
+      "description": "As 业主, I want drift_detector.py 把 800 次 SQL 合并为单条查询, so that 第 1000 章跨卷审计 15-30s → <3s。",
+      "acceptanceCriteria": [
+        "ink_writer/propagation/drift_detector.py:172-194 改用 WHERE start_chapter <= ? AND end_chapter >= ? 的 IN 查询 + GROUP BY",
+        "加 max_chapters_per_scan 参数（默认 50），超过则分批",
+        "_drifts_from_data 对 critical_issues 加 limit=20 早停",
+        "测试 tests/propagation/test_detect_drifts_scale.py 1000 章 fixture 执行 <3s",
+        "旧 O(n) 路径保留作为 legacy=True 参数，默认关闭但不删（零回归）",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "drift_detector 增量 debt 持久化（.ink/drift_debts.db）",
+      "description": "As 业主, I want drift_detector 把 debt 增量持久化到 SQLite, so that 第 2 次扫描不用重跑第 1 次扫过的章节。",
+      "acceptanceCriteria": [
+        "新建 .ink/drift_debts.db schema：CREATE TABLE drift_debts (chapter_id TEXT, debt_type TEXT, payload JSON, last_seen INTEGER, PRIMARY KEY(chapter_id, debt_type))",
+        "drift_detector.py 增量扫描：只扫 chapter_id > last_seen_max 的章节",
+        "手动 invalidate 命令：python -m ink_writer.propagation.drift_detector --reset",
+        "测试：800 章全扫一次 + 增量扫第 801 章，总时间 <5s",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "PipelineManager 接入 ChapterLockManager（v15 F-003 真收口）",
+      "description": "As 业主, I want parallel>1 下写 index.db / state.json 不丢数据, so that 并发写 3-5 章/轮解锁日产 3-5 万字。",
+      "acceptanceCriteria": [
+        "ink_writer/parallel/pipeline_manager.__init__ 实例化 ChapterLockManager(state_dir, ttl=300)",
+        "Step 5 data-agent 写 SQL 前 with lock.state_update_lock() 包裹",
+        "章节级任务启动前 lock.chapter_lock(chapter_id) 独占",
+        "ink-writer/skills/ink-auto/SKILL.md:40 的'⚠️ 当前仅 parallel=1 安全'声明改为'parallel≤4 已接 ChapterLockManager 验证安全'",
+        "测试 tests/parallel/test_chapter_lock_integration.py：4 并发 subprocess 写 index.db 验证无 lost update",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "chapter_lock.py threading.local() 改 asyncio.Lock",
+      "description": "As 业主, I want chapter_lock.py 支持 asyncio 场景, so that 未来异步 writer-agent 接入不用二次改造。",
+      "acceptanceCriteria": [
+        "ink_writer/parallel/chapter_lock.py:49-54 threading.local() 改 asyncio.Lock（或 hybrid：同步路径保留，异步路径新增）",
+        "兼容现有同步调用路径（US-005 的集成测试必须仍 passing）",
+        "新增 async 测试 tests/parallel/test_chapter_lock_async.py：10 个 asyncio task 并发持锁",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "progression/context_injection SQL LIMIT 下推",
+      "description": "As 业主, I want progression/context_injection.py 从 8 万行全量加载改为 SQL LIMIT 下推, so that 500+ 章 Python 侧 O(n²) 切片消失。",
+      "acceptanceCriteria": [
+        "ink_writer/progression/context_injection.py:58-65 切片改为 SQL 下推：WHERE char_id=? AND chapter_no<? ORDER BY chapter_no DESC LIMIT ?",
+        "建索引 CREATE INDEX idx_char_chapter ON character_evolution_ledger(char_id, chapter_no)",
+        "_ProgressionSource protocol 加 get_recent_progressions_for_character(char_id, before, limit) 方法",
+        "测试：mock 1 万 progression 下 build_progression_summary <100ms",
+        "保留 max_rows_per_char=5 默认值（Green G006/NG-6 不倒退约束）",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "reflection agent 消费链路显式 wire",
+      "description": "As 业主, I want reflection agent 50 章一次的 CPU 成本真的被 writer-agent 消费, so that 长程语义涌现不丢。",
+      "acceptanceCriteria": [
+        "ink_writer/core/context/context_manager.py:590 _build_pack 显式调 _load_reflections(project_root)",
+        "context_weights.py 给 reflections 最小权重 0.05",
+        "测试 tests/reflection/test_reflection_consumption.py 端到端验证 writer-agent prompt 含 reflection bullets",
+        "测试：若 .ink/reflections.json 为空，prompt 装配不 crash",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "editor-wisdom checker 解除 5000 字硬截断",
+      "description": "As 业主, I want editor-wisdom-checker 看到 4000+ 字章节的完整结尾（含章末钩子）, so that 钩子违规能被检出。",
+      "acceptanceCriteria": [
+        "ink_writer/editor_wisdom/checker.py:28 _build_user_prompt 加参数 max_chars=7500",
+        "ink_writer/editor_wisdom/checker.py:39 超限时分段：头部 3500 字 + 尾部 3500 字（保留章末钩子）",
+        "测试：4500 字章节断言 checker 看到尾段钩子（构造含'欲知后事'的结尾）",
+        "测试：8000 字章节断言分段不丢头尾关键信息",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "creativity validator 真接入 ink-init Quick Mode（v15 F-007 真收口）",
+      "description": "As 业主, I want ink-init Quick Mode 每次重抽书名/设定后调用 creativity validator, so that 反俗套承诺从 LLM 自律升级为 Python 硬校验。",
+      "acceptanceCriteria": [
+        "ink-writer/skills/ink-init/SKILL.md Quick Mode 每次重抽后加 bash 调用：python -m ink_writer.creativity.cli validate --book-title '...' --strict",
+        "validator exit code ≠ 0 → 触发降档重抽（2 次重抽失败后让用户手动选）",
+        "测试 tests/creativity/test_quick_mode_integration.py 模拟黑名单命中 → validator 真 fail",
+        "Green G004/NG-4 不倒退：creativity/{name_validator,gf_validator,sensitive_lexicon_validator}.py 三文件保留",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "arbitration 扩展到章 ≥4 的 generic 仲裁路径",
+      "description": "As 业主, I want 第 4 章起 prose-impact/sensory-immersion/flow-naturalness 三重叠 checker 冲突能被合并, so that polish-agent prompt 不膨胀 15-25%、300 章以上 API 成本不被炸。",
+      "acceptanceCriteria": [
+        "ink_writer/editor_wisdom/arbitration.py 新增 arbitrate_generic(chapter_id, issues) 路径",
+        "章 ≥4 时按 symptom_key（正则/关键词规范化）去重合并",
+        "references/checker-merge-matrix.md 加重叠 checker 合并规则条目",
+        "ink_writer/parallel/pipeline_manager.py review step 调 arbitrate_generic",
+        "测试：章 50 同时 3 个重叠 checker 产出 issues → 合并为单 fix_prompt",
+        "黄金三章原路径（arbitrate P0-P4）保留不动（Green G003/NG-3 不倒退约束）",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "arbitration 合并矩阵配置化 + 集成 pipeline",
+      "description": "As 业主, I want 合并规则从硬编码改为配置化, so that 新增 checker 只需加 matrix 条目不用改代码。",
+      "acceptanceCriteria": [
+        "config/arbitration.yaml 新建，定义 symptom_key_groups（e.g. flow_issue: [prose-impact, flow-naturalness, sensory-immersion]）",
+        "arbitrate_generic 读取 yaml，避免硬编码 checker 列表",
+        "tests/editor_wisdom/test_arbitration_matrix.py：加新 checker 条目后无需改 Python 代码即可合并",
+        "Green G003/NG-3 约束（不合并/删减 16 checker）写入 arbitration.yaml 顶部注释",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "anti_detection ZT 规则扩展到 8-10 条（v15 F-008 真收口）",
+      "description": "As 业主, I want 零容忍（ZT）AI 味规则从 2 条扩到 8-10 条, so that 起点编辑打回的'尽管如此/不仅……而且/与此同时'等连接词密集现象被拦截。",
+      "acceptanceCriteria": [
+        "ink_writer/anti_detection/config.py 扩 ZT 正则到 8-10 条（含连接词密集、长句滥用、转折堆叠等模式）",
+        "ink_writer/anti_detection/sentence_diversity.py 加 conjunction_density_max 指标",
+        "用 117 本起点标杆（参 memory/project_quality_upgrade.md）做 baseline 校准阈值",
+        "测试 tests/anti_detection/test_zt_extended.py 每条 ZT 给 positive（应拦截）+ negative（误伤样本）共 20+ case",
+        "参 memory/feedback_writing_quality.md：禁止'第 xx 日'时间标记开头已实装，本 US 不影响（零回归）",
+        "Typecheck passes",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "v18 集成回归 + v18.0.0 发版",
+      "description": "As 业主, I want v18 9 条 Red 修完后做一轮完整回归测试, so that 确认 Green 8 条亮点零倒退、baseline 2420 无新增失败、总分 ≥80。",
+      "acceptanceCriteria": [
+        "跑 pytest --no-cov 全量，通过数 ≥ 2420 + US-001~013 新增测试（估 20-30 个新 test）",
+        "手动跑 ink-auto 10 写 10 章，对比 v16 baseline 无新增 checker fail",
+        "按 v17 提示词 §8.3 重新计算过审概率 S 值，f₂ ≥7 分、f₅ ≥8 分、其他因子不倒退",
+        "按 v17 提示词 §5 重新打四维分，总分 ≥80 且所有维度 ≥5",
+        "生成 reports/audit-v18-pass-report.md 或 reports/audit-v18-findings.md（若仍不合格则追加 v19 PRD）",
+        "更新 ink-writer/.claude-plugin/plugin.json version → 18.0.0",
+        "合并 ralph/v18-audit-fix → master，git tag v18.0.0",
+        "更新 README.md version badge + 主要改动摘要",
+        "归档 archive/2026-XX-XX-v18-audit-fix/ 保留本轮 prd.json + progress.txt",
+        "Typecheck passes",
+        "零回归：最终 pytest 全量无新增失败（baseline 2420）"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

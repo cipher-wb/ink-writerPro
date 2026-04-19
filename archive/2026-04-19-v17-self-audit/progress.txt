@@ -1,0 +1,173 @@
+# Ralph Progress Log
+Started: 2026-04-19
+Feature: v17 Self-Audit Prompt Generation
+Source: tasks/prd-v17-self-audit.md
+Branch: ralph/v17-self-audit
+Baseline: v16.0.0 (merged via 2287539)
+
+## Codebase Patterns
+- v17 交付物是单一文件 `prompts/audit-prompt-v17.md`（800-1500 行）；所有 US 累积编辑同一文件
+- 参照骨架在 `reports/audit-prompt-v15.md`（v15 审查任务书，已验证好用）
+- PRD 源文件 `tasks/prd-v17-self-audit.md` §4 FR-2 定义 9 个顶层章节硬性要求
+- 审查产出路径由评分分支决定：不合格写 `reports/audit-v17-findings.md`，合格写 `reports/audit-v17-pass-report.md`
+- 条件触发必须输出"文本供业主手动复制"，不越权自动改仓库（参 memory/feedback_prd_ralph_workflow.md）
+- 本 PRD 周期不改代码、不跑审查，仅交付提示词工具（non-goals 明示）
+- **Git 约定**：`/ralph/`、`/prd.json`、`/progress.txt`（根）均在 .gitignore，但 `progress.txt` 根文件已被 tracked（老逻辑），Ralph 迭代要 append 到**项目根 `progress.txt`**（不是 `ralph/progress.txt`）；CI 仅监听 Python/agents/skills/tests 路径变更，纯 `.md` 修改自动绕过 typecheck
+- **锚点核实硬约束**：提示词里引用的每个 `file:line` / 目录路径，都要用 Glob 真验证；v15 骨架里的历史路径（如 `ink_writer/core/index/index_db.py`、`ink_writer/anti_cliche/`）在 v16 已重命名/迁移，直接照搬会导致锚点失效
+- **仓库双轨**：`ink_writer/` 是 Python 域包（17 个子包），`ink-writer/` 是 Claude Code plugin（skills/agents/plugin.json），锚点路径分清楚别混写；记忆链路在 `ink_writer/core/{state,index,context}/` + `semantic_recall/` + `reflection/`
+
+---
+
+## 2026-04-19 11:00 - US-001 起草审查提示词骨架（复用 v15）
+- 新建 `prompts/audit-prompt-v17.md`（836 行，位于 800-1500 范围内）
+- 顶部 6 行"给人类用户的使用说明"块（对应 v15 同位置风格）
+- 13 个编号章节 + 2 个 Appendix，9 个核心输出节全部覆盖：
+  1. 你的角色 | 2. 审查对象与版本锚定 | 3. 审查目标矩阵 | 4. 业主 8 诉求映射表
+  5. 四维评分卡 | 6. 业界对标矩阵（4 类参照系）| 7. 长记忆压力测试 | 8. 起点过审概率估算
+  9. 产出格式与条件触发 | 10. 审查方法论 | 11. 决策权表 | 12. 交付约束 | 13. 开工确认
+  附加：14. 常见误判与边界场景 | 15. 提示词元信息 | Appendix A 导读模板 | Appendix B 产物管理
+- 预留充足骨架空间供后续 US-002~US-010 填充具体内容（如映射表 v16 实际表现列、评分锚点、对标矩阵填格等）
+- 文件：prompts/audit-prompt-v17.md（new）、ralph/prd.json（US-001 passes=true）、progress.txt（log）
+- **Learnings for future iterations:**
+  - 长度 800+ 行骨架的关键：每节写 2-3 段"本节要求审查者做什么"的指导性文字，而非占位符
+  - §2.3 业主 8 诉求是全文骨干，其 1-8 编号被 §4 映射表、§5 评分卡、§6 对标矩阵反复引用——修改编号需全文同步
+  - `grep -c '^## '` 会把 code fence 里 template 示例的 `##` 也计入；核实章节数用 `grep -n '^## [0-9A-Z]'` 更准
+  - v15 原件 `reports/audit-prompt-v15.md` 是 v17 写作的唯一参照系，US 迭代过程中可随时对比
+  - 不要让 Edit 工具在 old_string 结尾处重叠已有后续节的起点（会生成重复 header）；Edit 精确到行尾换行
+---
+
+## 2026-04-19 12:40 - US-002 业主 8 诉求 → 可验证审查维度映射表
+- 重写 `prompts/audit-prompt-v17.md` §4 映射表（142-172 区间），把 US-001 骨架里的粗粒度锚点全部换成核实存在的真实代码路径
+- 8 行逐条对齐业主诉求 1-8，每行 5 数据列：诉求 / 审查维度 / 代码验证路径 / 硬指标（Red 触发线）/ 代理指标
+- 锚点核实（Glob 实测）与修正：
+  - 诉求 1：补齐至 9 锚点（`core/state/state_manager.py`、`core/index/index_manager.py`、`core/index/index_entity_mixin.py`、`core/context/memory_compressor.py`、`semantic_recall/retriever.py`、`semantic_recall/bm25.py`、`reflection/reflection_agent.py` + 两个 checker agent），修正 v15 老路径 `index_db.py` → `index_manager.py`
+  - 诉求 2：锁到 `editor_wisdom/{checker,arbitration,context_injection,config}.py` 四个具体文件
+  - 诉求 3：双版本 `golden_three.py` 全列（`editor_wisdom/` + `core/extract/`），补上 `ink-write/SKILL.md` 作为调用点
+  - 诉求 4：删除不存在的 `anti_cliche/`，替换为真实路径 `creativity/` + `cultural_lexicon/loader.py` + `cultural_lexicon/context_injection.py` + `core/extract/anti_ai_lint.py` + `anti_detection/`
+  - 诉求 5：对齐 v13→v16 PRD 历史，锚定 `ralph/progress.txt` + 项目根 `progress.txt` + v15 findings
+- 硬指标（Red 触发线）从一句话扩成 (a)(b)(c)(d) 多条具体可验证条款，附 grep/glob 命令模板
+- 代理指标具体化：反俗套 3 项（黑名单规模 / Shannon 熵 / L0-L3 档位），前情承接 3 项（修复率 / Yellow 转 US 比率 / archive 残留）
+- 新增 4 条表脚硬约束：锚点核实要求 / 反俗套代理指标判定规则 / 诉求 5 与 §3.4 回归表联动 / 诉求 8 自指性
+- 文件：prompts/audit-prompt-v17.md（836 → 842 行），ralph/prd.json（US-002 passes=true），progress.txt（本 log）
+- **Learnings for future iterations:**
+  - 直接照搬 v15 任务书里的路径会踩坑——`index_db.py` / `anti_cliche/` 都是 v15 时代命名，v16 已搬家；US-004 对标矩阵、US-006 压力测试引锚点前必须 Glob 真核实
+  - 所有 Red 硬指标都该分 (a)(b)(c)(d) 多条列清，避免"空洞判定"；审查者按条逐验评分才有据
+  - `ink_writer/semantic_recall/` 已有 retriever + bm25，hybrid 检索已落地 — US-006 压力测试 Q6 可直接引这两文件作证据
+  - `editor_wisdom/arbitration.py` + `context_injection.py` + `checker.py` 对应三种规则落地形态（硬拦截/前置注入/未落地），US-007 统计 288 条比例有直接代码载体
+  - ralph/progress.txt 是本地副本（gitignore），真正要 append 的是**项目根 `progress.txt`**；下次 US 迭代直接 Edit 根文件，别重复踩坑
+---
+
+## 2026-04-19 - US-007 起点过审概率估算（业务 KPI 核心）
+- 全面重写 `prompts/audit-prompt-v17.md` §8（1048 → 1138 行，+90），从 4 小节骨架扩为 6 小节完整可执行体系
+- **揭示关键差距**：业主原话"288 条星河规则"，但 `data/editor-wisdom/rules.json` 实测 388 条（225 hard / 144 soft / 19 info，13 类 category，317 all_chapters vs 183 golden_three）；§8.2 硬性要求审查者用 jq 核实并显式说明差距
+- **路径修正**：`reports/audit-editor-wisdom-failures-2026-04-18.md` 在仓库不存在，实际位于 `tasks/audit-editor-wisdom-failures-2026-04-18.md`——3 处同步修正：
+  - §4 映射表行 2（line 207）
+  - §8.1 必读文件表（line 542）
+  - §13 开工确认阅读清单（line 733）
+- §8.1 必读清单从 4 项扩为 13 项+6 条前置 bash 命令（jq 规则计数 / severity / category / applies_to + yq config + pytest failures 收口验证），stdout 必须原样贴报告
+- §8.2 三种落地形态表从 3 列扩为 5 列：形态 / 运行时定义 / 代码 file:line / K 计数 / 占比；5 条硬性要求覆盖 N 核实、K₁ 代理上界、K₂=retrieval_top_k×fan_out 公式、K₃ 集合差算法、Z%>30%→Red 阈值联动
+- §8.3 **新增 7 因子加权公式**（f₁规则KB完整性 0.15 / f₂前置注入覆盖率 0.25 / f₃硬拦截效能 0.20 / f₄兄弟checker一致性 0.15 / f₅failures收口 0.10 / f₆v15回归 0.10 / f₇诉求4协同 0.05），区间宽度固定 10pp，映射表 4 档 Red/Yellow/Green；每因子含 0/5/10 三档具体锚点
+- §8.4 禁止估算方式从 3 条扩为 7 条，覆盖感觉估算 / 单值 / 分母错 / 跳前置 / 单源证据 / f₂ 虚高 / 回避 288↔388 差距 六类陷阱
+- §8.5 **新增 TOP-5 起点打回风险场景**（黄金三章 / 雷点 / 节奏 / 人物崩坏 / 开篇）每条带 category × severity × 代码锚点三元组
+- §8.6 **新增 7 条交付自检**：前置命令粘贴 / 三形态数字 / 因子打分 / 区间宽度 / 风险点锚点 / 288 差距说明 / 禁用词零命中
+- 代码锚点全部真读核实（Read 工具 + 行号对照）：
+  - `checker.py:62-79` _compute_score（0.7^hard × 0.9^soft）✓
+  - `checker.py:107-112` empty-rules EditorWisdomIndexMissingError ✓
+  - `review_gate.py:94-123` _resolve_thresholds（dual-threshold US-015）✓
+  - `review_gate.py:179-246` 重试循环 + block 分支 ✓
+  - `writer_injection.py:43-91` build_writer_constraints（hard+soft filter）✓
+  - `context_injection.py:47-96` build_editor_wisdom_section（+ golden three 补召回）✓
+  - `polish_injection.py:54-81` build_polish_violations（severity filter）✓
+  - `arbitration.py:40` GOLDEN_THREE_CHAPTERS ✓
+  - `arbitration.py:70-143` arbitrate P0-P4 ✓
+- AC 逐条核对：
+  - AC#1「§8 统计硬拦截/前置注入/未落地比例」✅ §8.2 表 5 列 + 5 条硬性规则
+  - AC#2「查验 editor_wisdom/ 召回率，必读 failures 报告并引证」✅ §8.1 必读清单列首项 + §8.3 因子 f₅ 直接挂钩 failures 收口率
+  - AC#3「过审概率区间估算 + 关键风险点」✅ §8.3 7 因子公式 + P_high − P_low = 10pp + ≥3 条风险点（每条 file:line + ≤40 字）
+  - AC#4「Typecheck passes」✅ 纯 .md 修改，CI workflow `.github/workflows/ci-test.yml` 不监听 prompts/ 目录
+- 自清：禁用词 grep 扫 §8 节零命中（仅 §8.4/§8.6 列举禁用词清单本身，属 meta 引用，不算违规）
+- 文件：prompts/audit-prompt-v17.md（1048 → 1138 行，+90），ralph/prd.json（US-007 passes=true），progress.txt
+- **Learnings for future iterations:**
+  - Gotcha：PRD 老路径 `reports/audit-editor-wisdom-failures-2026-04-18.md` 实际在 `tasks/`——这类老路径错引**必须 Glob 真核实**后在提示词里修正，否则审查者跑前置命令会立刻 fail；US-008/009/010 引任何老路径前必须 find 真核实
+  - Gotcha：业主原话说 288 条规则，`data/editor-wisdom/rules.json` 实测 388 条（多出 100 条来自 US-017 的 prose_craft 4 类）；提示词不要直接用业主数字当分母，应强制审查者用 jq 核实并揭示差距——这种"业主认知 vs 代码现实"差距本身就是审查价值的核心
+  - Pattern：过审概率估算的 7 因子加权公式（f₁-f₇）是 **KPI 核心工具**——用加权平均避免单一维度失衡，用 10pp 区间避免虚假精确；未来所有"概率/比率"估算（如 US-008 工程合理性）都可套此模板
+  - Pattern：每个 editor_wisdom 子模块都要给出"行号范围 + 对应业务动作"的映射（`checker.py:62-79 _compute_score 指数衰减`），这比单纯列 file path 多一层"可验证真读"
+  - Useful context：`retrieval_top_k=5` + 388 条规则 = 单章前置注入覆盖率 ≤3.9%/章，**这是 KPI 最大瓶颈**；§8.3 f₂ 因子 0-10 打分锚点明确要求审查者识别这个瓶颈并给 ≤5 分
+  - Useful context：US-015（`review_gate.py` 双阈值 + escape_hatch）已在代码层达成，§8.3 f₃ 因子可以给 8-10 分；这是当前代码相对 v14 的明确进步
+  - Useful context：`arbitration.py` 的 P0-P4 优先级合并是 golden-three 专章路径，对应业主诉求 3 的"黄金三章铁律"——§8.5 TOP-5 场景的第 1 条直接引用该锚点；诉求 2 和诉求 3 在代码层强耦合
+  - Useful context：`tasks/audit-editor-wisdom-failures-2026-04-18.md` 4 个 mock-stale 均为 Retriever 单例化副作用，全部浅层（mock path 错）；审查者 f₅ 打分时须跑 `pytest tests/editor_wisdom -q` 验证是否已收口
+  - Useful context：1138 / 1500 = 75.9%，剩余 362 行给 US-008/009/010（平均 120 行/US），节奏仍可控
+---
+
+## 2026-04-19 - US-008 findings 报告结构标准化
+- 全面重写 `prompts/audit-prompt-v17.md` §9.1 / §9.2 / §9.5（1138 → 1258 行，+120），从骨架级描述扩为机器消费级 schema
+- **§9.1 7 节结构硬规范**：将老版本 `## §4 Red 问题清单 / ## §5 Yellow 问题清单（同上格式，ID 前缀 Y）/ ## §6 Green 亮点清单（同上格式，ID 前缀 G）` 全部展开
+  - 加一段强制前言："任一节缺失、顺序错、命名错，业主直接拒收；用 `## §N` 便于 `grep '^## §[1-7]'` 自检"
+  - §1-§3 保留原内容但补齐"加权总分 + Red/Yellow/Green 判定"硬要求
+  - §4/§5/§6 各自独立展开完整六字段表（标题 / 严重性 / 维度 / 代码锚点 / 影响描述 / 建议修复路径 / 预估工作量），避免"同上格式"导致机器消费失败
+  - ID 正则显式规定：Red `^AUDIT-V17-R\d{3}$` / Yellow `^AUDIT-V17-Y\d{3}$` / Green `^AUDIT-V17-G\d{3}$`；编号 001 起连续递增
+  - 锚点数量差异化：Red ≥2 处 / Yellow ≥1 处 / Green ≥2 处（Green 无锚点 = 无证据硬规则）
+  - 维度字段 D1-D8 8 档对齐业主诉求：D1 长记忆 / D2 过审 / D3 结构铁律 / D4 反俗套 / D5 工程 / D6 对标 / D7 苏格拉底 / D8 合格即停
+- **§9.2 YAML schema 机器消费化**：从 20 行骨架扩为 50+ 行字段合同
+  - 顶层必填字段 7 个：version_target / trigger_reason / suggested_us_count / priority_order / risk_if_skipped / estimated_sessions + red_items（满足 AC#3 的 4 个硬字段）
+  - 新增 yellow_items / green_items / open_questions 三个必填数组字段（mirror red_items 结构）
+  - 每条 item 字段合同：id / title / dimension / severity / anchors / impact / fix_steps / estimated_us（全部 required）
+  - 类型标注：required / optional + YAML 原生类型（string/int/list）+ 约束（length ≥ 1/2，正则 `^AUDIT-V17-R\d{3}$`，estimated_us 范围 1-5）
+  - **新增 4 条自跑机器校验命令**（yq 合法性 / ID 唯一性 / priority_order 引用完整性 / 必填 key 存在）—— 可直接复制到终端执行
+- **§9.5 自我验证清单扩展**：从 9 条扩为 20 条，分 6 组
+  - 结构硬校验（§9.1 7 节规范）：grep 命令返回 7 / 节名严格匹配 / 节顺序正确
+  - 问题 ID 与字段完整性：正则校验 / 编号连续性 / 字段齐全 / 锚点数量差异（Red≥2 / Yellow≥1 / Green≥2）/ Glob 真核实无 v15 老路径
+  - §3 对标矩阵：≥3 个 🟠 或 🔴 项
+  - §7 YAML 种子机器消费性：yq 无报错 / 10 个必填 key / priority_order 引用完整性 / 每条 red_items 8 字段齐 / yellow_items+green_items key 必存在（可空数组但不可缺 key）
+  - 全局约束：字数 ≥30000（Red/Yellow 少时放宽到 20000）/ 禁用词零命中 / v15 回归表已附 / Case A/B 指令原样附末
+- AC 逐条核对：
+  - AC#1「§9 明确要求 7 节结构」✅ §9.1 顶部硬规范 + `## §1` 至 `## §7` 全部展开 + grep 自检命令
+  - AC#2「Red/Yellow/Green 每条有唯一 ID」✅ 三种前缀独立正则 `R\d{3}` / `Y\d{3}` / `G\d{3}` + 整份报告唯一 + 连续递增不跳号
+  - AC#3「YAML 种子含 suggested_us_count / priority_order / risk_if_skipped / estimated_sessions」✅ 顶层必填字段 7 个全含 + 类型与约束注释齐
+  - AC#4「Red/Yellow 含 标题 / 严重性 / 代码锚点 / 影响描述 / 建议修复路径 / 预估工作量」✅ 各自独立六字段表 + 把「标题」从三级标题提出为独立表字段（避免机器消费误解）+ 锚点数量差异化
+  - AC#5「Typecheck passes」✅ 纯 .md 修改，CI workflow 不监听 prompts/ 目录
+- 自清：`grep -oE "AUDIT-V17-R[0-9]{3}" prompts/audit-prompt-v17.md` 返回 3 个示例 ID（R001/R002/R003）；Yellow/Green 示例各 1；无冲突编号
+- 文件：prompts/audit-prompt-v17.md（1138 → 1258 行，+120），ralph/prd.json（US-008 passes=true），progress.txt（本 log）
+- **Learnings for future iterations:**
+  - Pattern：**机器消费级字段合同**比骨架描述多做三件事：(a) 明确 required/optional 标签，(b) 明确 YAML 类型（string/int/list），(c) 附带可复制的 yq/grep 校验命令；US-009/010 若涉及机器消费段落（如 Case B 触发指令），也应按此 3 层规范产出
+  - Pattern：**ID 正则硬约束** + **整份唯一** + **编号连续性**三合一，可让审查者的报告直接喂给 Ralph/Cron/下游脚本；三要素缺一个，机器消费都会崩（如 sort -u 计数失效 / 正则 miss）
+  - Gotcha：YAML 种子里 `yellow_items` / `green_items` / `open_questions` 必须保留 key（即使为空数组 `[]`），否则下游 `yq '.prd_seed.yellow_items[]' | ...` 会直接报错；v17 提示词必须明确"可空但不可缺 key"这个隐式契约
+  - Gotcha：把「标题」字段从三级标题（`### AUDIT-V17-R001: <标题>`）同时 mirror 到表字段是刻意冗余——机器解析 markdown 表格的工具（比如 Ralph 的 md-to-json 转换）有时跳过三级标题直接抓表格，没有冗余就会丢标题；这类"对机器友好冗余"胜过"对人类友好简洁"
+  - Useful context：老版本 §9.5 只有 9 条自检；扩展到 20 条且分组后，审查者可逐条 [x] 覆盖，交付质量从 "抽查" 升级到 "穷举"；这种"清单分组 + 组内粒度均匀"的格式值得在 ink-writer 其他 SKILL.md 复用
+  - Useful context：1258 / 1500 = 83.9%，剩余 242 行给 US-009/010（平均 120 行/US），节奏仍在预期窗口内
+---
+
+## 2026-04-19 - US-009 自动对接 Ralph 工作流（条件触发）
+- 完善 `prompts/audit-prompt-v17.md` 的条件触发指令：两层落地（§9.4 报告格式层速览 + §16 方法论层分派+硬约束+自检）
+- **§9.4 扩写**（Case A / Case B 原样粘贴文本，1258 → 扩后）：
+  - Case A（合格）：补"理由：四维度独立分均 ≥5 且加权总分 ≥80"说明，让业主秒懂分派
+  - Case B（不合格）：/prd 指令文本从 4 行扩到 22 行，明确 6 字段契约（suggested_us_count / priority_order / red_items / yellow_items / green_items / risk_if_skipped → PRD 对应位置）；补"业主下一步工作流 Step A→E"指令块，覆盖 /prd → /ralph → ralph.sh 三段式
+- **新增 §16「条件触发与 Ralph 工作流衔接（提示词末尾硬性收尾）」**（放在 §15 之后、Appendix A 之前，153 行）：
+  - §16.1 解释三段式 Why（直接引用 memory/feedback_prd_ralph_workflow.md 的三步法）—— 落地 AC#5
+  - §16.2 分派决策树（if 总分≥80 且无偏科 → Case A；else → Case B），列出 **6 条严禁状态**（两块都贴 / 都不贴 / 合格却生成 findings / 不合格却生成 pass-report / 合格却 prd-v18 / 不合格却自动 /prd）
+  - §16.3 **prd_seed 字段消费契约表（7 行映射）** + **Red/Yellow 二分硬约束**（Yellow 塞 acceptance criteria / Red 降级 Open Questions 均禁止）—— 落地 AC#2
+  - §16.4 硬约束：Case A 审查员只做 2 件事、绝对不做 4 件事；Case B 只做 3 件事、绝对不做 5 件事；越权即报告作废
+  - §16.5 交付前 **3 条硬门禁自检**（分派判定一致性 / 触发文本 grep 锚点 / 越权动作 ls+git diff+git status 零输出）
+  - §16.6 业主下一步操作提示（审查员参考上下文，不代劳）
+- **更新 §15 self-metadata**：
+  - "条件触发下游"字段加引 §16 + feedback_prd_ralph_workflow.md
+  - 新增"条件触发层次"字段，明确 §9.4+§16 两层镜像机制
+- AC 逐条核对：
+  - AC#1「提示词末尾附条件触发指令块，含 /prd 含 §7 YAML 种子」✅ §16 位于 1214 行（文件末尾靠前 87% 位置，在 Appendix 之前，是主体末尾）；§9.4 Case B 文本显式引用"§7 的 prd_seed YAML 种子"
+  - AC#2「仅含 Red，Yellow 列入 Open Questions」✅ §9.4 Case B 规则 1 + §16.3 映射表 + §16.3 Red/Yellow 二分硬约束（三处冗余强调）
+  - AC#3「/prd 后业主手动 /ralph，不越权自动改仓库」✅ §9.4 Case B 规则 4 + §16.4 Case B 5 条绝对不做（第 1/2/3/4 条直接点名 /prd、/ralph、prd-v18-audit-fix.md、ralph/prd.json）
+  - AC#4「≥80 且 ≥5 产出 pass-report，不触发 /prd」✅ §16.2 决策树 if 分支 + §9.4 Case A 明确"业主无需触发 /prd"
+  - AC#5「三段式 PRD→Ralph→ralph.sh」✅ §16.1 专门一节论述 + §9.4 Case B 引用 memory/feedback_prd_ralph_workflow.md + §15 元信息加引
+  - AC#6「Typecheck passes」✅ 纯 .md 修改，CI workflow 不监听 prompts/ 目录（`.github/workflows/ci-test.yml` 仅监听 Python/agents/skills/tests）
+- 文件：prompts/audit-prompt-v17.md（1258 → 1411 行，+153），ralph/prd.json（US-009 passes=true，本地），progress.txt（本 log）
+- **Learnings for future iterations:**
+  - Pattern：**条件触发两层落地**（报告格式层 §9.4 + 方法论层 §16）——§9.4 给审查员写报告时的**原样粘贴文本**，§16 给审查员做**分派决策+硬约束+自检**；两层互为镜像，交付前都要过；避免"写了触发文本但分派错"和"分派对了但忘记粘贴文本"两类失误
+  - Pattern：**越权禁止清单正反都列**——"只做 X 件事"正向清单 + "绝对不做 Y 件事"反向清单，避免"忘写等于允许"的灰色地带；Case A 2 做 + 4 不做，Case B 3 做 + 5 不做，粒度对称
+  - Pattern：**字段映射契约表**（§16.3 的 7 行 prd_seed→PRD 映射表）替代"请按 YAML 种子生成 PRD"的泛泛描述，把 /prd 的工作从"自由发挥"锁为"字段搬运"，大幅降低 LLM 幻觉；未来凡涉及"上游数据喂下游生成"的 prompt 都该加字段契约表
+  - Pattern：**证据式自检三件套**（§16.5 第 3 条的 ls + git diff + git status）——不靠 AI 自律，靠 shell 命令兜底；未来其他 PRD 涉及"AI 不得越权改 X"的场景都可复用
+  - Gotcha：AC#1 的"提示词末尾附"容易被误解为"§9.4 够了"——§9.4 在 855 行但提示词有 1400+ 行；真正的"末尾"必须在 1200+ 行位置新增 §16；未来 AC 涉及"末尾"时都要核实是否真的靠近 EOF（主体末尾，不含 Appendix）
+  - Gotcha：分派决策树必须列"严禁状态"（两块都贴 / 合格却生成 findings / 不合格却自动 /prd）——否则 LLM 审查员很容易两块都给业主看"以防万一"，这是 AI 讨好行为的典型陷阱；显式列出"严禁"比隐式"选一"更可靠
+  - Gotcha：`ralph/prd.json` 和 `ralph/progress.txt` 都在 .gitignore（ralph/ 整体被忽略）；Ralph 迭代实际只能把进度写到项目根 `progress.txt`，这个约定已写入 root progress.txt 的 Codebase Patterns line 15
+  - Useful context：1411 / 1500 = 94.1%，剩余 89 行给 US-010（Appendix C 收尾）；US-010 必须紧凑，禁止再扩主体
+  - Useful context：§16 的结构（Why → 分派树 → 字段契约 → 硬约束 → 自检 → 业主 next-step）是**通用"AI 不越权交接下游工作流"的模板**——未来若新增其他触发场景（如自动触发 /review 或 /audit），可直接复用这 6 小节框架
+---
