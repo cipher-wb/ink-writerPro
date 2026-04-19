@@ -277,3 +277,15 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - pytest 在 -q + 大量 RuntimeWarning 时，末尾 `N passed in Xs` 摘要会被 capture 机制吞掉（本次日志里看不到），但 `EXIT=0` 和 `[100%]` 进度条已是等价证据；备用计数法：`awk '/^[.sF]+ *\[/ { count += gsub(/\./,".") } END { print count }'` 数 `.` 字符。
   - v5 审计 R2（70% 覆盖率）正式达成。下一步（若有）应转向 mutation testing 或聚焦低覆盖模块的 missing line，单数字门禁已到顶。
 ---
+
+## 2026-04-19 - US-001 (v18 retrieval_top_k 5→15)
+- config/editor-wisdom.yaml:3 retrieval_top_k 从 5 提到 15，解除 v17 审计 R1（§4 AUDIT-V17-R002）硬瓶颈：前置注入覆盖率 3.9%/章 → ~11.7%/章，f₂ 因子按 §8.3 公式自验从 4 升到 ≥7
+- 新增 tests/editor_wisdom/test_top_k_token_budget.py：4 个 A/B 测试（通用章 + 黄金三章）验证 5→15 prompt token 膨胀 ≤30%、retriever 召回规则数翻倍、默认配置即 15
+- 更新 tests/editor_wisdom/test_config.py:126 硬断言 `retrieval_top_k == 15`（替换原 5）
+- Verification: pytest --no-cov 全量 2847 passed, 19 skipped（baseline 2420，+427 零回归；prompt_cache 与 editor_wisdom 专项 338 passed）；ruff check 新增/修改 Python 文件 All checks passed
+- **Learnings for future iterations:**
+  - `config/editor-wisdom.yaml` 和 `tests/editor_wisdom/test_config.py:120+ test_actual_config_file_loads` 硬耦合：改 yaml 默认值 → 必须同步改该测试的断言值，否则 CI 红
+  - A/B 膨胀测试思路：用 `ink-writer/agents/writer-agent.md` 作 baseline 基底（~55KB），叠加 `build_writer_constraints(...).to_markdown()` 段落；因 rules 段相对 baseline 占比小，5→15 膨胀实测 <5%，远低于 30% 预算
+  - editor_wisdom/writer_injection.py:76-85 的黄金三章分类别召回（US-002 的目标）当前已用 `k * 2` 二次扩池，改分类别 top_k=3×N_cat 时要保留 dedup 逻辑（`seen_ids` 集合）
+  - token 计数用 `re.compile(r"[\w\u4e00-\u9fff]+")` 中英混排公平计数，与 scripts/ab_prompts.py:37 保持一致
+---
