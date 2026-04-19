@@ -10,6 +10,13 @@ from ink_writer.editor_wisdom.retriever import Rule
 
 GOLDEN_THREE_CATEGORIES = frozenset({"opening", "hook", "golden_finger", "character"})
 
+# v18 US-002：黄金三章（ch1-3）分类别召回下限。
+# opening/taboo/hook 三类编辑智慧为过审核心因子，无论向量检索排序如何，
+# 必须保证每类 ≥GOLDEN_THREE_FLOOR_PER_CATEGORY 条进入 writer prompt。
+# 定义在此模块（而非 writer_injection）以避免 coverage_metrics ↔ writer_injection 循环引用。
+GOLDEN_THREE_FLOOR_CATEGORIES: tuple[str, ...] = ("opening", "taboo", "hook")
+GOLDEN_THREE_FLOOR_PER_CATEGORY: int = 3
+
 
 @dataclass
 class GoldenThreeCheckResult:

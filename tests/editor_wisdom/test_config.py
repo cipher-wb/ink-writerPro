@@ -122,4 +122,5 @@ def test_actual_config_file_loads() -> None:
     if actual.exists():
         cfg = load_config(actual)
         assert cfg.enabled is True
-        assert cfg.retrieval_top_k == 5
+        # v18 US-001: top_k 提升 5 → 15 以提高过审概率 f2 因子
+        assert cfg.retrieval_top_k == 15

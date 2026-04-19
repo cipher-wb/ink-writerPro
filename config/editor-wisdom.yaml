@@ -1,6 +1,6 @@
 # 编辑星河写作智慧模块配置
 enabled: true
-retrieval_top_k: 5
+retrieval_top_k: 15
 hard_gate_threshold: 0.75
 # 黄金三章阈值：US-017 后从 0.85/0.90 提升至 0.92（加入文笔维度后总体标准提高）
 # US-015：拆分为硬阈值（hard，低于则阻断）+ 软阈值（soft，目标分），避免黄金三章因少量 soft 规则被反复阻断。

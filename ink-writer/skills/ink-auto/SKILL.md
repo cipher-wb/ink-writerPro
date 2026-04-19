@@ -37,7 +37,7 @@ allowed-tools: Bash Read
 
 并发模式委托给 `ink_writer.parallel.PipelineManager` asyncio 编排器：
 - 每批 N 章并发写作，使用独立 CLI 进程
-- ⚠️ 当前仅 `parallel=1`（串行）安全；`parallel>1` 未接 ChapterLockManager，并发写 `state.json` / `index.db` 存在数据损坏风险，会触发 `RuntimeWarning`（与 `ink_writer/parallel/pipeline_manager.py:10-17` 诚实降级声明同步）
+- ✅ `parallel ≤ 4` 已接 `ChapterLockManager` 验证安全：章节级 `async_chapter_lock` 独占 + Step 5 data-agent `state_update_lock` 串行化 `state.json` / `index.db` 写入；跨进程走 SQLite WAL + filelock 兜底（见 `ink_writer/parallel/chapter_lock.py`、`tests/parallel/test_chapter_lock_integration.py`）。`parallel > 4` 仍建议下调以平衡磁盘/LLM 限流。
 - 检查点在每批完成后统一运行
 - 单章失败触发重试，批次失败中止后续
 

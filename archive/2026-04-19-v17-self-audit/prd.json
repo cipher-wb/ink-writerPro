@@ -1,0 +1,165 @@
+{
+  "project": "ink-writer",
+  "branchName": "ralph/v17-self-audit",
+  "description": "v17 自审提示词生成。单一交付物：prompts/audit-prompt-v17.md — 一份专业级审查提示词，任何 AI 读完即可对 ink-writerPro v16.0.0 做四维审查（工程30% / 业务35% / 代码20% / 提示词15%），对标 4 类参照系（Claude SDK / LangGraph·CrewAI·AutoGen·Swarm / NovelCrafter·Sudowrite / 内部规范），合格线 80 分+每维 ≥5 分。不合格自动产出 YAML 种子对接 /prd→/ralph→ralph.sh。本 PRD 周期不改代码、不跑审查，仅交付提示词工具。来源：tasks/prd-v17-self-audit.md + 用户澄清（1A/2D/3D/4B/5B）。参照 reports/audit-prompt-v15.md 验证骨架。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "起草审查提示词骨架（复用 v15）",
+      "description": "As 业主, I want 新提示词继承 v15 审查任务书已验证好用的章节结构, so that 不用从零摸索。",
+      "acceptanceCriteria": [
+        "新建 prompts/audit-prompt-v17.md（路径必须是 prompts/，不是 reports/）",
+        "顶部保留 v15 风格的『给人类用户的使用说明』块（4-6 行）",
+        "章节骨架对齐 PRD §4 的 9 个核心输出节：(1)角色 (2)审查对象 (3)目标矩阵 (4)8诉求映射表 (5)四维评分卡 (6)业界对标矩阵 (7)长记忆压力测试 (8)起点过审概率 (9)产出格式与条件触发",
+        "提示词总长度 800-1500 行",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "业主 8 诉求 → 可验证审查维度映射表",
+      "description": "As 业主, I want 提示词里必须有『业主诉求 → 审查维度 → 代码验证路径』三列映射表, so that 审查者无法跳过任何一条业务诉求。",
+      "acceptanceCriteria": [
+        "在 prompts/audit-prompt-v17.md §4 插入三列映射表，至少 8 行对应原始诉求 1-8 条",
+        "每行『代码验证路径』给出 ≥1 个具体文件/目录锚点（例：诉求 3 黄金三章 → ink-writer/agents/golden-three-checker.md）",
+        "每行给出『判定不通过的硬指标』（例：诉求 1 → 若无跨章记忆压缩机制直接判 Red）",
+        "对无法量化的诉求（如反俗套），给出代理指标（陈词黑名单规模 / 书名库 Shannon 熵）",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "四维评分卡（0-10 分 × 权重）",
+      "description": "As 业主, I want 审查者对四大维度独立打分最终加权出总分, so that 一眼看到哪个维度拖后腿。",
+      "acceptanceCriteria": [
+        "在 §5 定义四维权重：工程架构30% / 业务目标35% / 代码质量20% / 提示词工程15%",
+        "每个维度展开 4-6 个子项（例『业务目标』子项：记忆不崩/一致性/黄金三章/反俗套/编辑规则落地/过审概率）",
+        "每个子项给出 0-10 分评分锚点（0=完全缺失 / 5=部分实现有缺陷 / 10=SOTA）",
+        "总分 ≥80 Green；60-80 Yellow；<60 Red",
+        "任一维度 <5 分强制触发修复（防偏科合格）",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "业界对标矩阵（4 类参照系）",
+      "description": "As 业主, I want 审查者把 ink-writerPro 和业界最新 AI agent 架构做横向对比, so that 避免闭门造车的错觉。",
+      "acceptanceCriteria": [
+        "§6 内置『4 类参照系 × N 对比维度』矩阵模板",
+        "Claude Agent SDK 维度：Subagent 调度 / Skill 发现 / Tool use / 上下文管理 / Session 持久化 / Plugin 分发",
+        "多 agent 框架维度：Plan-Act-Reflect / LangGraph 流控 / CrewAI 角色分工 / AutoGen 对话 / Swarm Handoff",
+        "长文本写作维度：Lorebook / 角色卡 / 语义检索 / 写审修循环 / 样式迁移",
+        "内部规范维度：CLAUDE.md 精简度 / memory/ 约束落地 / 288 条编辑规则召回率",
+        "每格必须给『当前实现位置 + 对标差距 + 是否需补齐』三字段",
+        "明确禁止『全方位领先』类结论，必须给 ≥3 个『对标明确落后』项",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "代码真读 & 引证硬约束",
+      "description": "As 业主, I want 提示词强制审查者『引用具体文件行号』, so that 避免 AI 胡编。",
+      "acceptanceCriteria": [
+        "§2 写入『禁止用语清单』：禁止『我猜/通常来说/可能是/应该/估计』",
+        "所有 Red 级问题必须附 file:line 格式引证，至少 2 处独立代码锚点",
+        "要求审查者开始前跑 `git log -1 --oneline` 和 `find ink_writer -name '*.py' | head`，把 HEAD sha 写进报告",
+        "提示词结尾附『自我验证清单』：6-8 条（含『每个 Red 问题是否有 ≥2 代码锚点』）",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "长记忆链路专项审查（300w 字不崩灵魂）",
+      "description": "As 业主, I want 提示词里把『300w 字不崩』拆成可验证的长记忆链路审查, so that 审查者无法含糊带过。",
+      "acceptanceCriteria": [
+        "§7 专节『长记忆压力测试清单』，≥8 个可验证问题",
+        "必含问题：index.db 哪张表存跨章实体状态？schema 可扩展吗？",
+        "必含问题：context-agent 在第 500 章装配 chapter_plan 时 token 预算如何控制？",
+        "必含问题：FIX-17 反向传播 + FIX-18 Progressions 在第 1000 章会退化吗？",
+        "必含问题：角色『记忆错乱』（知道不该知道的事）检测点在哪个 checker？",
+        "必含问题：伏笔超期/断更检测逻辑在 thread-lifecycle-tracker 哪段代码？",
+        "要求审查者做『800 章思想实验』：第 800 章新增角色 X → 第 900 章 X 再出场，链路每一步可能崩溃处列清",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "起点过审概率估算（业务 KPI 核心）",
+      "description": "As 业主, I want 审查者对『若真投起点，编辑星河标准下过审概率』给出量化估算, so that 对商业落地有信心。",
+      "acceptanceCriteria": [
+        "§8 要求审查者统计 288 条编辑规则中：硬拦截比例 / prompt 前置注入比例 / 未落地比例",
+        "要求审查者查验 ink_writer/editor_wisdom/ 模块召回率，必须读 reports/audit-editor-wisdom-failures-2026-04-18.md 并引证",
+        "要求审查者给出过审概率区间估算（如 65-75%）+ 关键风险点",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "§8 重写完成：三形态统计 + 7 因子加权公式 + TOP-5 风险场景 + 6 条前置命令；同步修正 failures 报告路径 reports/→tasks/（3 处）"
+    },
+    {
+      "id": "US-008",
+      "title": "findings 报告结构标准化",
+      "description": "As 业主, I want reports/audit-v17-findings.md 结构标准化, so that 下一步自动生成 PRD 时可直接机器消费。",
+      "acceptanceCriteria": [
+        "§9 明确要求产出文件 7 节结构：总评分卡 / 8诉求达成矩阵 / 业界对标矩阵 / Red 清单 / Yellow 清单 / Green 亮点 / 下轮 PRD 种子 YAML",
+        "Red/Yellow/Green 每条问题必须有唯一 ID（如 AUDIT-V17-R001）",
+        "§7 的 YAML 种子必须含字段：suggested_us_count / priority_order / risk_if_skipped / estimated_sessions",
+        "Red/Yellow 每条必须含：标题 / 严重性 / 代码锚点 / 影响描述 / 建议修复路径 / 预估工作量",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "自动对接 Ralph 工作流（条件触发）",
+      "description": "As 业主, I want 审查不合格时自动生成 tasks/prd-v18-audit-fix.md 并更新 ralph/prd.json, so that 无缝接入 PRD→Ralph 节奏。",
+      "acceptanceCriteria": [
+        "提示词末尾附『条件触发指令』块：总分 <80 或任一维度 <5 分 → 输出调用 /prd 的指令文本（含 §7 YAML 种子）",
+        "明确规定：生成的 prd-v18-audit-fix.md 只含 Red 问题，Yellow 列入 Open Questions 段",
+        "说明生成 PRD 后由业主手动触发 /ralph 转成 prd.json（不越权自动改仓库）",
+        "若总分 ≥80 且所有维度 ≥5 分：产出 reports/audit-v17-pass-report.md，不触发 /prd",
+        "参照 memory/feedback_prd_ralph_workflow.md 保持『PRD→Ralph→ralph.sh』三段式",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "提示词自检 & 可交付验证",
+      "description": "As 业主, I want 提示词本身也要被验证『可不可用』, so that 交付后不返工。",
+      "acceptanceCriteria": [
+        "在 docs/ 下新增或更新 audit-workflow.md（一页内）：什么时候触发 / 怎么喂给 AI / 结果看哪里",
+        "README.md 底部加一行（≤2 行）指向 docs/audit-workflow.md",
+        "提示词内置『自验证段』：要求 AI 审查者在提交报告前自检 6-8 条（所有 Red 问题有 ≥2 锚点 / 对标矩阵有 ≥3 落后项 / YAML 种子字段齐全等）",
+        "确认 prompts/audit-prompt-v17.md 可通过 @prompts/audit-prompt-v17.md 在 Claude Code 中被引用",
+        "grep -c '##' prompts/audit-prompt-v17.md 返回 ≥9（对应 9 个顶层章节）",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": ""
+    }
+  ]
+}

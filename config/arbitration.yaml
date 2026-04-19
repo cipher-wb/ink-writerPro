@@ -1,0 +1,48 @@
+# Arbitration matrix for overlapping checker output.
+#
+# Purpose (US-012, v18 AUDIT-V17-R008 follow-up):
+#   ``arbitrate_generic`` (chapter ≥ 4) folds overlapping checker output so
+#   polish-agent receives a single ``fix_prompt`` per ``symptom_key`` instead
+#   of N near-duplicates. Previously the overlap-prone checker list lived as
+#   a hardcoded tuple in ``ink_writer/editor_wisdom/arbitration.py``; this
+#   file moves it behind a matrix config so adding / removing an overlap
+#   group needs *zero* Python changes.
+#
+# Green G003 / NG-3 contract (DO NOT REMOVE):
+#   Adding or removing an entry here MUST NOT reduce the 16 independent
+#   checker spec files under ``ink-writer/agents/``. Those 16 checkers remain
+#   writable and independent — this matrix only deduplicates their *runtime
+#   output* when they all report the same ``symptom_key`` on the same chapter.
+#   See ``ink-writer/references/checker-merge-matrix.md`` for the full spec.
+#
+# Extending:
+#   1. Append a new entry to ``symptom_key_groups`` with a unique group key
+#      (e.g. ``emotion_issue``) and the list of checker names.
+#   2. No Python code changes required; ``arbitration.py`` picks up the new
+#      group automatically via ``load_arbitration_matrix()``.
+#   3. Add a row to ``checker-merge-matrix.md`` §"generic arbitration".
+#
+# Routing (unchanged):
+#   chapter 1-3 → ``arbitrate`` (golden-three path, not matrix-driven)
+#   chapter ≥ 4 → ``arbitrate_generic`` (uses this matrix)
+
+symptom_key_groups:
+  flow_issue:
+    description: >
+      文字流畅度重叠：``prose-impact`` / ``sensory-immersion`` /
+      ``flow-naturalness`` 同 ``symptom_key`` 时合并为单个 fix_prompt
+      （镜头单调、感官堆砌、节奏扁平等常并发命中）。
+    checkers:
+      - prose-impact-checker
+      - sensory-immersion-checker
+      - flow-naturalness-checker
+
+# Severity string → arbitration priority bucket. Keep lowercase keys (the
+# loader lowercases incoming severity before lookup).
+severity_priority:
+  critical: P2
+  high: P2
+  medium: P3
+  warning: P3
+  low: P3
+  info: P4

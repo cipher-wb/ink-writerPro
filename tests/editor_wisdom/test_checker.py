@@ -9,8 +9,11 @@ import jsonschema
 import pytest
 from ink_writer.editor_wisdom.config import EditorWisdomConfig
 from ink_writer.editor_wisdom.checker import (
+    HEAD_TAIL_SPLIT_MARKER,
     SCHEMA_PATH,
+    _build_user_prompt,
     _compute_score,
+    _excerpt_chapter_text,
     _validate_result,
     check_chapter,
 )
@@ -208,3 +211,103 @@ def test_agent_field_always_correct() -> None:
     client = _mock_llm_response([])
     result = check_chapter("正文", 1, [_make_rule()], anthropic_client=client)
     assert result["agent"] == "editor-wisdom-checker"
+
+
+# ---------------------------------------------------------------------------
+# US-009: 解除 5000 字硬截断，保留章末钩子
+# ---------------------------------------------------------------------------
+
+
+def test_excerpt_short_chapter_passes_through() -> None:
+    """4500 字章节（< 7500 上限）原样返回，章末钩子必须保留。"""
+    head = "正文开头。" * 300  # 1800 chars
+    body = "主干剧情。" * 400  # 2400 chars
+    tail = "主角猛然回头，只听一声炸响——欲知后事如何，且听下回分解。"
+    chapter = head + body + tail
+    assert len(chapter) < 7500
+
+    excerpt = _excerpt_chapter_text(chapter, 7500)
+    # 未超限：原样返回（未插入分隔 marker）
+    assert HEAD_TAIL_SPLIT_MARKER not in excerpt
+    assert excerpt == chapter
+    assert "欲知后事" in excerpt
+
+
+def test_excerpt_long_chapter_keeps_head_and_tail() -> None:
+    """8000 字章节分段：头部 3750 + 中段 marker + 尾部 3750，关键首尾信息无丢失。"""
+    head_marker = "【本章开篇】"
+    tail_marker = "欲知后事如何，请看下章。"
+    # 8000+ chars with stable head/tail markers
+    filler = "中段枯燥铺垫。" * 1200  # ~8400 chars
+    chapter = head_marker + filler + tail_marker
+    assert len(chapter) > 7500
+
+    excerpt = _excerpt_chapter_text(chapter, 7500)
+    assert HEAD_TAIL_SPLIT_MARKER in excerpt
+    assert head_marker in excerpt, "头部关键信息不能被丢弃"
+    assert tail_marker in excerpt, "章末钩子必须保留（US-009 核心）"
+    # 保留 head+tail 各 half = 3750，再加 marker 长度
+    expected_body_len = (7500 // 2) * 2 + len(HEAD_TAIL_SPLIT_MARKER)
+    assert len(excerpt) == expected_body_len
+
+
+def test_build_user_prompt_default_max_chars_is_7500() -> None:
+    """_build_user_prompt 的默认 max_chars 必须是 7500。"""
+    rules = [_make_rule()]
+    # 6000 字 < 7500：原文保留
+    chapter = "段落。" * 2000  # 6000 chars
+    prompt = _build_user_prompt(chapter, 1, rules)
+    assert HEAD_TAIL_SPLIT_MARKER not in prompt
+    assert chapter in prompt
+
+
+def test_build_user_prompt_sees_tail_hook_on_4500_chapter() -> None:
+    """4500 字章节 checker 必须看到尾段'欲知后事'钩子（AC 第 3 条）。"""
+    hook = "暮色四合，他握紧剑柄——欲知后事如何，下章揭晓。"
+    chapter = "正文段落。" * 1100 + hook  # ~5500 chars 正文 + hook
+    # 把长度压回 4500 以内：截短正文
+    chapter = ("正文段落。" * 800) + hook  # ~4000 + hook
+    assert len(chapter) < 7500
+
+    rules = [_make_rule("EW-0099", category="hook", rule="章末钩子不能平淡")]
+    client = _mock_llm_response([
+        {
+            "rule_id": "EW-0099",
+            "quote": "欲知后事如何，下章揭晓。",
+            "severity": "hard",
+            "fix_suggestion": "强化悬念。",
+        }
+    ])
+    result = check_chapter(chapter, 1, rules, anthropic_client=client)
+
+    # 断言 checker 实际发给 LLM 的 prompt 包含章末钩子
+    sent_prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert "欲知后事" in sent_prompt
+    assert result["violations"][0]["rule_id"] == "EW-0099"
+
+
+def test_build_user_prompt_keeps_endings_on_8000_chapter() -> None:
+    """8000 字章节分段不丢头尾关键信息（AC 第 4 条）。"""
+    opening = "【开篇标记·主角登场】"
+    ending = "【章末钩子·身影消失在夜色里】"
+    middle = "中段铺垫文字。" * 1200  # ~8400 chars
+    chapter = opening + middle + ending
+    assert len(chapter) > 8000
+
+    rules = [_make_rule()]
+    client = _mock_llm_response([])
+    check_chapter(chapter, 1, rules, anthropic_client=client)
+
+    sent_prompt = client.messages.create.call_args.kwargs["messages"][0]["content"]
+    assert opening in sent_prompt, "开篇关键信息被砍"
+    assert ending in sent_prompt, "章末钩子被砍（US-009 核心问题）"
+    assert HEAD_TAIL_SPLIT_MARKER in sent_prompt
+
+
+def test_build_user_prompt_explicit_max_chars_override() -> None:
+    """max_chars 是 kwarg-only 参数，可被调用方下调用于冒烟测试。"""
+    chapter = "正文。" * 2000  # ~6000 chars
+    prompt = _build_user_prompt(chapter, 1, [_make_rule()], max_chars=1000)
+    assert HEAD_TAIL_SPLIT_MARKER in prompt  # 1000 < 6000 触发截断
+    # head 500 + tail 500
+    assert prompt.count("正文。") < 2000  # 不再全文保留
