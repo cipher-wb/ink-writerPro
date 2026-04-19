@@ -992,6 +992,12 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
             cursor.execute(
                 "CREATE INDEX IF NOT EXISTS idx_char_prog_dimension ON character_progressions(dimension)"
             )
+            # US-007: 覆盖 (character_id, chapter_no) DESC 扫描，支撑 get_recent_progressions_for_character
+            # LIMIT 下推。主键覆盖 (character_id, chapter_no, dimension) 对等值+范围有效，但显式命名
+            # 索引便于 EXPLAIN 阅读和未来重构。
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_char_chapter ON character_progressions(character_id, chapter_no)"
+            )
 
             conn.commit()
 
@@ -1212,6 +1218,35 @@ class IndexManager(IndexChapterMixin, IndexEntityMixin, IndexDebtMixin, IndexRea
                     (char_id, int(before_chapter)),
                 ).fetchall()
             return [dict(row) for row in rows]
+
+    def get_recent_progressions_for_character(
+        self, char_id: str, before_chapter: int, limit: int
+    ) -> list:
+        """US-007: SQL LIMIT 下推版本。
+
+        相比 ``get_progressions_for_character``（全量回放再 Python 侧切片），此方法把
+        "保留最近 N 条"下推到 SQLite：``WHERE character_id = ? AND chapter_no < ?
+        ORDER BY chapter_no DESC LIMIT ?``。返回按章节升序排列（尾部为最近一条），
+        与上游 ``build_progression_summary`` 的 compact_row 顺序契约一致。
+
+        Complexity: O(log N + limit)（走 idx_char_chapter），500+ 章 8 万行场景下
+        Python 侧切片 O(n²) 消失。
+        """
+        if before_chapter is None or int(before_chapter) <= 0:
+            raise ValueError("before_chapter must be a positive int")
+        if limit <= 0:
+            raise ValueError("limit must be > 0")
+        with self._get_conn() as conn:
+            rows = conn.execute(
+                """SELECT character_id, chapter_no, dimension, from_value, to_value, cause, recorded_at
+                   FROM character_progressions
+                   WHERE character_id = ? AND chapter_no < ?
+                   ORDER BY chapter_no DESC, dimension DESC
+                   LIMIT ?""",
+                (char_id, int(before_chapter), int(limit)),
+            ).fetchall()
+        # DESC 取最近 N 条后反转为升序，保持和旧接口相同的 consumer 语义
+        return [dict(row) for row in reversed(rows)]
 
     def get_characters_evolution_summary(self, entity_ids: list, max_entries_per_char: int = 10) -> Dict[str, list]:
         """批量获取多个角色的演变摘要（单次SQL查询，避免N+1）"""

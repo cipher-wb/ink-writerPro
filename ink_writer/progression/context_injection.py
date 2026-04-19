@@ -24,6 +24,14 @@ class _ProgressionSource(Protocol):
     ) -> List[Dict[str, Any]]:
         ...
 
+    # US-007: SQL LIMIT 下推路径（可选）。实现了此方法的 source 会绕过 Python 侧切片，
+    # 将 "最近 N 条" 约束下推到 SQLite（WHERE ... ORDER BY chapter_no DESC LIMIT ?）。
+    # Protocol 允许缺省：build_progression_summary 用 hasattr 动态探测，未实现则 fallback。
+    def get_recent_progressions_for_character(  # pragma: no cover - Protocol only
+        self, char_id: str, before_chapter: int, limit: int
+    ) -> List[Dict[str, Any]]:
+        ...
+
 
 def _compact_row(row: Dict[str, Any]) -> Dict[str, Any]:
     """抽取注入所需字段，忽略 recorded_at 等低信号字段。"""
@@ -53,15 +61,29 @@ def build_progression_summary(
     if max_rows_per_char <= 0:
         raise ValueError("max_rows_per_char must be > 0")
 
+    # US-007: 优先走 SQL LIMIT 下推路径。source 实现了 get_recent_progressions_for_character
+    # 时，直接在 SQLite 侧返回"最近 N 条"，避免 500+ 章 8 万行场景下的 Python 侧 O(n²) 切片。
+    use_limit_pushdown = hasattr(source, "get_recent_progressions_for_character")
+
     out: Dict[str, List[Dict[str, Any]]] = {}
     for char_id in char_ids:
-        rows = source.get_progressions_for_character(
-            char_id, before_chapter=int(before_chapter)
-        ) or []
-        if not rows:
+        if use_limit_pushdown:
+            rows = source.get_recent_progressions_for_character(  # type: ignore[attr-defined]
+                char_id,
+                before_chapter=int(before_chapter),
+                limit=int(max_rows_per_char),
+            ) or []
+            trimmed = rows  # SQL 已限量，保序返回
+        else:
+            rows = source.get_progressions_for_character(
+                char_id, before_chapter=int(before_chapter)
+            ) or []
+            if not rows:
+                continue
+            # 章节升序下取最近 N 条 = 尾部 N
+            trimmed = rows[-max_rows_per_char:] if len(rows) > max_rows_per_char else rows
+        if not trimmed:
             continue
-        # 章节升序下取最近 N 条 = 尾部 N
-        trimmed = rows[-max_rows_per_char:] if len(rows) > max_rows_per_char else rows
         out[char_id] = [_compact_row(r) for r in trimmed]
     return out
 
