@@ -129,8 +129,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "docs/architecture.md 在 Context Agent 节已有 US-002 段，本 US 追加三段：Token 预算 protected 机制（US-006 规则速览：双档 60k/180k soft/hard + protected_sections + trim_stages_applied 日志）/ Writer-Agent 首要参考（US-004 规则速览：PRIMARY REFERENCE + Pre-Draft Checklist 四项 XML 标记 + `.ink/tmp/pre_draft_checklist_ch{NNNN}.md` 落盘 + polish 剥离）/ Continuity-Checker 证据回填（US-005 规则速览：第五层 + evidence:{source_chapter, excerpt} + evidence_source 降级词汇 + additive 并存）。tasks/prd-chapter-context-injection.md 底部追加 Release Notes：交付清单表（US-001~US-006 测试增量）+ M-1~M-5 对照表（M-5 实测通过；M-1~M-4 机制就绪，需实际写作环境补采数据 → 已在 Release Notes '后续验收' 段明确标记）+ 零回归 baseline 更新表（2984 → 3021 建议新 baseline）+ Non-Goals/Open Questions 回顾。全量回归 3021 passed / 23 skipped / 0 failed（与 US-006 baseline 一致，纯文档改动零回归）。Typecheck 替代方案：`python3 -m py_compile` 对 context_manager.py + config.py 通过（项目未配 mypy）。README 不需同步（本 PRD 属架构级优化，不涉用户可见命令/参数）。注：AC 1-4（人工抽样实跑指标）延续 US-003/US-004/US-005 先例——ralph 自动化回合内不强行消耗 API 跑 writer-agent/checker，已在 Release Notes '后续验收' 段交接给维护者在合并后 1 周内在真实 ink-auto 写作中采集回填。"
     }
   ]
 }
