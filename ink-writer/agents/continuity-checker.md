@@ -36,7 +36,25 @@ model: inherit
 
 先读取 `review_bundle_file`。只有 bundle 缺字段时才允许补读白名单内的绝对路径文件。
 
-### 第二步: 四层连贯性检查
+### 第一步 B: Recent Full Texts 消费（US-005 硬约束）
+
+> **PRIMARY EVIDENCE SOURCE — READ CAREFULLY BEFORE REVIEWING**
+
+**硬约束**：review_bundle 中 `context.core.recent_full_texts` 是细粒度矛盾检测的**首要证据源**，不得忽略、不得跳读。该字段结构：`List[{chapter:int, text:str, word_count:int, missing:bool}]`，按章节升序涵盖 n-1/n-2/n-3（N≥4 时三条；N=1 时为空；N=2/3 时补齐可用章）。
+
+**消费规则**：
+
+1. **必读顺序**：先整体通读 `recent_full_texts` 每条 `text`（N-3 → N-2 → N-1），再回到本章正文逐段校验。禁止只读本章/只读摘要。
+2. **缺失处理**：某条 `missing:true` 时跳过该章但记录在 `metrics.missing_full_text_chapters` 中；`injection_policy` 若缺失（旧快照）按 `meta.get("injection_policy", {"hard_inject": True, "full_text_window": 3})` 兜底。
+3. **正交关系**：`recent_summaries` 覆盖 n-4~n-10，仅用作远期上下文参考；当本章与 n-1/n-2/n-3 产生矛盾时，**必须以 `recent_full_texts` 的 text 为权威**，不得用摘要反驳全文。
+4. **禁止字符级裁剪**：即使全文超过 checker 本地 token 估算，也不得在 checker 侧截断；token 压力由 US-006 在 context_weights 侧处理。
+5. **降级兜底**：`recent_full_texts` 整体缺失（旧项目/旧快照）时，checker 退化为仅四层检查，report.metrics.evidence_source 标 `"degraded:no_full_texts"`，并在 summary 中说明"前三章全文未注入，证据链降级"。
+
+**与现有字段的关系**：
+- `context_summary` / `前序摘要` / `记忆卡` 仍读；但当它们与 `recent_full_texts` 冲突时，以全文为准。
+- `active_threads` 仍读；用于识别情节线名称，但伏笔是否真正"设置过"以全文为准。
+
+### 第二步: 五层连贯性检查
 
 #### 第一层: 场景转换流畅度（场景转换）
 
@@ -130,6 +148,65 @@ vs.
 判定：✓ 因果清晰
 ```
 
+#### 第五层: 前三章全文回溯校验（US-005 硬约束）
+
+**目标**：利用 `recent_full_texts` 把"事后粗粒度矛盾检测"升级为"细粒度、可追溯的证据校验"。本层是 US-005 引入的新检测路径，与第一~第四层**并存**（不是替代）。
+
+**对照维度**（逐章扫描 n-1/n-2/n-3 三条 `text`）：
+
+| 维度 | 校验动作 | 典型矛盾信号 |
+|------|----------|--------------|
+| 人物动作连续性 | 比对本章开场人物所处状态/体力/情绪与 n-1 章末尾是否衔接 | 前章重伤 → 本章凭空满血 |
+| 道具/物品状态 | 比对本章使用/提及的道具是否在前三章出现过、是否被移除/消耗 | 前章丢失的剑在本章仍挂腰间 |
+| 地点连续性 | 比对本章开场位置与 n-1 章末尾位置 | 前章在秘境深处 → 本章无过渡直接在宗门 |
+| 时间线 | 比对"日/夜/时辰/已过 X 日"叙述 | 前章"傍晚" → 本章"次日清晨"但事件应在当夜发生 |
+| 对白呼应 | 比对本章对前三章对白的引用/呼应是否与原文措辞一致 | 前章说"十日后见"→ 本章引用成"三日后" |
+| 伏笔/承诺 | 比对 n-1/n-2/n-3 明确设置但尚未回收的伏笔，本章是否忽略或反口 | 前章埋下"玉佩有秘密"→ 本章人物表现出从不知情 |
+
+**执行伪流程**：
+
+```
+for each prior in recent_full_texts (missing=false):
+    for each current_segment in 本章正文:
+        对照六维检查，命中即生成 issue，issue.evidence = {source_chapter: prior.chapter, excerpt: "<原文片段>"}
+```
+
+**Evidence 回填硬约束（issue schema 扩展）**：
+
+第五层检测到的每条 issue / violation **必须**附带 `evidence` 字段：
+
+```json
+{
+  "id": "CONT_005_001",
+  "type": "prop_state_mismatch | location_discontinuity | timeline_mismatch | dialogue_mismatch | foreshadow_contradiction | action_continuity_break",
+  "severity": "critical | high | medium | low",
+  "location": "本章第 <N> 段（段首 20 字：...）",
+  "description": "本章人物仍挂剑，与第 N-1 章末尾『剑已断折于秘境』矛盾",
+  "suggestion": "删除本章剑相关描写，或改写为替换武器的过渡段",
+  "can_override": false,
+  "ref_chapter": <N-x>,
+  "source_chapter": <N-x>,
+  "evidence": {
+    "source_chapter": <N-x>,
+    "excerpt": "<来自 recent_full_texts[k].text 的关键原文片段，30~200 字，保留引号/标点原样>"
+  }
+}
+```
+
+**Evidence 字段规则**：
+
+- `evidence.source_chapter` 必为 {N-1, N-2, N-3} 之一，且必须对应一条 `missing:false` 的 `recent_full_texts` 条目。
+- `evidence.excerpt` 来自该章 `text` 的**连续**片段（允许在两端加 `...` 表示省略），长度 30~200 字；不得杜撰、不得改写，**字符级保留原文**（含标点、引号、错别字）。
+- 每条 issue 仅允许一个 `evidence`（多证据时拆成多条 issue）。
+- 字段为**硬约束**：第五层命中但缺 `evidence` 的 issue 判定为**自身无效**，不进入最终 `issues[]`，而是记录在 `metrics.evidence_missing_count` 中并在 `summary` 中提示 checker 自我修复。
+- 与现有顶层 `ref_chapter` / `target_chapter` / `source_chapter` **并存不冲突**：`evidence.source_chapter` 额外暴露给下游 fix / review 流程做精准跳转；drift_detector 继续读顶层 `ref_chapter` / `target_chapter` 做反向传播（见 ink_writer/propagation/drift_detector.py 的 `_CHAPTER_KEYS`）。
+
+**与前四层的互补关系**：
+
+- 第一~第四层基于 `context_summary` / `active_threads` / `outline` 做章级粗粒度判定，不强制 evidence。
+- 第五层基于 `recent_full_texts` 做段级细粒度判定，**强制 evidence**。
+- 同一矛盾可能被多层同时命中；重复时优先保留带 evidence 的第五层 issue，前四层 issue 降级为"参考"或通过 `related_issue_ids` 合并。
+
 ### 第三步: 大纲一致性检查（大纲即法律）
 
 **将章节与大纲对照**:
@@ -220,6 +297,16 @@ vs.
 
 **发现逻辑漏洞**: {count}
 
+## 前三章全文回溯校验（第五层，US-005）
+| 本章位置 | 类型 | 来源章 | 原文片段（evidence.excerpt）| 严重度 |
+|----------|------|---------|-------------------------------|--------|
+| 第 3 段（段首"晨光照在……"） | prop_state_mismatch | N-1 | "剑已从中断折，弃于秘境深处" | high |
+| 第 7 段（段首"他又提起十日前……"） | dialogue_mismatch | N-2 | "'三日后，我们必见分晓'" | medium |
+
+**evidence 统计**: 共 {count} 条，覆盖 {chapters_covered} 章；平均 evidence 数 {avg_evidence_per_issue} 条/issue（目标 ≥1.0）
+**evidence_missing_count**: {count}（应为 0；非 0 时 checker 自我修复或降级标记）
+**evidence_source**: `recent_full_texts` / `degraded:no_full_texts`（旧快照/项目兜底时置后者）
+
 ## 大纲一致性
 | 章节 | 大纲 | 实际 | 偏差程度 |
 |------|------|------|---------|
@@ -256,6 +343,10 @@ vs.
 ❌ 忽略遗忘伏笔（10+ 章休眠）
 ❌ 接受突兀的场景转换（F 级）
 ❌ 忽视情节漏洞和前后矛盾
+❌ **（US-005）** `recent_full_texts` 已注入（非 `degraded:no_full_texts`）但未执行第五层回溯校验
+❌ **（US-005）** 第五层命中的矛盾 issue 缺 `evidence` 字段或 `evidence.excerpt` 非原文（杜撰、改写、超 200 字）
+❌ **（US-005）** 用 `recent_summaries` 摘要去反驳 `recent_full_texts` 原文（优先级倒置）
+❌ **（US-005）** 在 checker 侧对 `recent_full_texts[k].text` 做字符级裁剪（Token 预算由 US-006 处理）
 
 ## 成功标准
 
@@ -266,3 +357,9 @@ vs.
 - 大纲偏差已正确标记
 - 自创事件篇幅未超过核心事件篇幅（篇幅偏差量化检测通过）
 - 报告指出需修复的具体章节
+- **（US-005 硬约束）** 当 `recent_full_texts` 非空时：
+  - 第五层回溯校验必须执行（N=2/3 按可用条数降级，N=1 自动跳过且 `metrics.evidence_source` 标 `n1_no_prior`）
+  - 每条第五层 issue 必须带 `evidence:{source_chapter, excerpt}`，且 `evidence.source_chapter ∈ {N-1, N-2, N-3}`
+  - `metrics.evidence_missing_count` 应为 0；非 0 时 summary 明确提示并阻塞通过
+  - 构造的 3 个回归矛盾场景（道具消失 / 地点错位 / 对白反口，见 PRD US-005 AC）必须全部召回并给出 evidence
+- **（US-005）** 不破坏既有检测路径：`review_metrics` / `character_evolution_ledger` / `active_threads` / 前四层 metrics 继续输出（additive，不替代）

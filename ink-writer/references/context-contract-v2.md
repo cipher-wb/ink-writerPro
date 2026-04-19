@@ -107,3 +107,11 @@ Phase I:
 - `context_genre_profile_max_genres`
 - `context_genre_profile_separators`
 - 新增 `genre_profile.genres/composite/composite_hints`
+
+Phase J（章节上下文硬注入 — US-002）：
+- `context_recent_full_texts_window`（默认 3）：注入最近 N 章完整正文，作为首要参考；不参与预算裁剪。
+- `context_recent_summaries_window`（默认 10）：摘要回溯窗口上限；实际摘要仅覆盖 `[n-window, n-full_texts_window)`，与全文范围严格正交。
+- `core.recent_full_texts`：`List[{chapter: int, text: str, word_count: int, missing: bool}]`，按章节升序；文件缺失时 `missing=true` 但不抛异常。
+- `core.recent_summaries`：语义变更为 `[n-window, n-full_texts_window)` 区间（默认 n-10 ~ n-4，共 7 章），不再与 `recent_full_texts` 重叠。
+- `meta.injection_policy`：`{full_text_window, summary_window, summary_range: [start, end], hard_inject: true}`；`summary_range` 为实际覆盖的闭区间章节号（`chapter <= full_text_window` 时为 `[0, 0]` 表示暂无摘要）。
+- 硬注入约束：Token 预算超限时先裁剪 `global/scene`、再裁 `recent_summaries`，最后才动 `recent_full_texts`（US-006 实现）。

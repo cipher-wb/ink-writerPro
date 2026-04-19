@@ -73,6 +73,7 @@ Fragments appearing in 2+ agent specs (top 50):
 - **8x** in [consistency-checker, continuity-checker, flow-naturalness-checker, high-point-checker, ooc-checker, pacing-checker, prose-impact-checker, sensory-immersion-checker]: `检查范围 输入 单章或章节区间 如 45 45`
 - **8x** in [consistency-checker, continuity-checker, flow-naturalness-checker, high-point-checker, ooc-checker, pacing-checker, prose-impact-checker, sensory-immersion-checker]: `覆盖范围 第 n 章 第 m`
 - **4x** in [context-agent, high-point-checker, reader-pull-checker, reader-simulator]: `claude_plugin_root references reading power taxonomy md`
+- **3x** in [context-agent, continuity-checker, writer-agent]: `n 1 n 2 n 3`
 - **3x** in [data-agent, polish-agent, writer-agent]: `tools read write bash model inherit`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `本 agent 默认数据源 审查包中的正文 章纲 含`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, writer-agent]: `skills ink review references pacing control`
@@ -93,6 +94,9 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [context-agent, data-agent]: `章节编号规则 4位数字 如 0001 0099 0100`
 - **2x** in [context-agent, data-agent]: `cli 入口与脚本目录校验 必做 为避免 pythonpath cd`
 - **2x** in [context-agent, data-agent]: `index recent appearances limit 20 python3`
+- **2x** in [context-agent, writer-agent]: `3 章 n 1 n 2`
+- **2x** in [context-agent, continuity-checker]: `recent_summaries 覆盖 n 4 n 10`
+- **2x** in [context-agent, continuity-checker]: `list chapter int text str word_count`
 - **2x** in [context-agent, ooc-checker]: `立场 关系 境界 知识 情绪 目标`
 - **2x** in [context-agent, writer-agent]: `references shared scene craft index md`
 - **2x** in [context-agent, outline-compliance-checker]: `required_foreshadows id f 001 content 数字颜色从灰变红`
@@ -116,7 +120,3 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [logic-checker, outline-compliance-checker]: `第三步 must_not_pass 判定 硬阻断条件 满足任一则 pass`
 - **2x** in [logic-checker, outline-compliance-checker]: `false 存在任何 critical severity issue 存在`
 - **2x** in [logic-checker, outline-compliance-checker]: `true 但 medium low issue 仍传递给`
-- **2x** in [logic-checker, outline-compliance-checker]: `polish agent 处理 第四步 生成报告 markdown`
-- **2x** in [logic-checker, outline-compliance-checker]: `综合评分 结论 通过 未通过 简要说明 critical`
-- **2x** in [logic-checker, outline-compliance-checker]: `count high count medium count low`
-- **2x** in [logic-checker, outline-compliance-checker]: `是否触发 原因 第五步 输出 json json`
