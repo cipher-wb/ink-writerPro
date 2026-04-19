@@ -1,6 +1,6 @@
 # Ink Writer Pro
 
-[![Version](https://img.shields.io/badge/Version-19.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-20.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-blue.svg)]()
 
@@ -211,7 +211,8 @@ py -3 -c "import ink_writer; print('OK')"
 
 | 版本 | 说明 |
 |------|------|
-| **v19.0.0 (当前)** | **Windows 原生兼容** — macOS/Windows 双平台一等公民支持。新增 PowerShell 脚本（`.ps1` + `.cmd`）与 bash 脚本字节级等价；Python 全量 `encoding="utf-8"` 补齐 + asyncio Proactor 策略 + symlink 降级 + UTF-8 stdio 引导；CI 矩阵加 `windows-latest`；SKILL.md 双平台执行块；`.sh` 文件字节不变，Mac 零影响。pytest macOS 2984 passed / Windows 2890 passed，双平台零回归 |
+| **v20.0.0 (当前)** | **前三章全文注入 — 从根上消灭前后文细节遗忘** — 写第 N 章时硬注入 n-1/n-2/n-3 三章完整正文 + n-4~n-10 摘要，让 writer-agent 以前三章全文为首要参考，彻底解决摘要驱动写作的细节丢失。三 agent 同步改造：context-agent 硬注入 `recent_full_texts`、writer-agent 新增"首要参考"段与起草前 pre-draft checklist（位置/道具/伏笔/对白四项）、continuity-checker 五层校验并回填 `evidence:{source_chapter,excerpt}` 证据。Token 预算 protected sections 不参与超预算裁剪，双档阈值 soft 60k / hard 180k。pytest 2984 → 3021 passed（+37 新测试，零回归） |
+| v19.0.0 | **Windows 原生兼容** — macOS/Windows 双平台一等公民支持。新增 PowerShell 脚本（`.ps1` + `.cmd`）与 bash 脚本字节级等价；Python 全量 `encoding="utf-8"` 补齐 + asyncio Proactor 策略 + symlink 降级 + UTF-8 stdio 引导；CI 矩阵加 `windows-latest`；SKILL.md 双平台执行块；`.sh` 文件字节不变，Mac 零影响。pytest macOS 2984 passed / Windows 2890 passed，双平台零回归 |
 | v18.0.0 | v17 审查 9 条 Red 全量收口（Green 合格 83.0/100）— retrieval_top_k 5->15、分类别召回、drift_detector 分批查询、drift debt 增量持久化、ChapterLockManager 接入、asyncio 并发路径持锁测试、SQL ORDER BY DESC LIMIT 下推、reflection agent 消费链路、editor-wisdom 解除 5000 字硬截断、creativity validator 接入 Quick Mode、arbitrate_generic 扩展到章>=4。过审概率 [75%,85%]->[90%,100%]，总分 71.1->83.0 |
 | v16.0.0 | Milestone C 收口（工程卫生 + 正式发版）— Skill 规范 30/30、Agent SDK 优化、长记忆 BM25+2 层压缩+reflection、import cycle 消除、日志规范化、章 1-3 仲裁。pytest 2738->2843 |
 | v15.9.0 | Milestone A+B 收口（止血 + creativity + 压测骨架）— 并发根治、step3 Phase B 真 LLM、分层检查点 5/10/20/50/200、creativity 子系统、anti-detection ZT 扩展、300 章 Shadow 压测骨架、Q1-Q8 质量仪表盘。pytest 2310->2738 |
