@@ -338,6 +338,28 @@ vocabulary_allowlist: ["L0", "L1"?, "L2"?]
 3. 最终书名输出 `title_rhetoric_tags`（多选自 7 种修辞），取自该模板 `rhetoric_tags`；若模板标签数 <1 需自行推断至少 1 个合法标签。
 4. 3 套方案的 `title_rhetoric_tags` 两两不得完全相同（至少 1 个差异 tag）。
 
+### v18 US-010 硬校验（每次重抽后强制调用）
+
+上一步生成/重抽出候选书名后，必须调用 Python creativity validator 做最终 hard-check，避免 LLM 自律漂移：
+
+```bash
+python -m ink_writer.creativity.cli validate --book-title '<候选书名>' --strict
+```
+
+**消费规则**：
+
+- `exit 0` → 通过，写入方案。
+- `exit ≠ 0` → 判定为黑名单命中，**立即回到本步骤重抽**（同槽位）。
+- **单套方案最多重抽 2 次**；2 次仍失败 → 不再自动重抽，改为调用 `AskUserQuestion` 让用户从下列 3 个选项中手动裁决：
+  1. 手动输入一个书名（跳过 validator）。
+  2. 允许当前命中的书名放行（写入 `override_log` + 在 Quick Step 2 标注「⚠️ 书名校验被用户覆盖」）。
+  3. 触发 `aggression` 降档（档位 4→3→2→1；1 档再失败则本套方案放弃）。
+
+**日志产物**：
+
+- `name_retry_log` 追加每次重抽的 `(candidate, exit_code, reason)` 记录，Quick Step 2 末尾汇总。
+- 若走「手动裁决」分支，`book_title_manual_override` 字段记录用户选项编号与最终书名。
+
 ### 人名校验
 
 1. 主角/核心配角名继续走 Quick Step 1 的 `surnames.json + given_names.json`（`given_names.json` 新增 `rough/smoky/jianghu` 桶，与 V1/V2/V3 档位映射：V1→rough、V2→smoky、V3→jianghu，默认从对应桶抽字）。

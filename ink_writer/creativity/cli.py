@@ -1,12 +1,17 @@
-"""v16 US-013：creativity validator CLI 入口。
+"""v16 US-013 / v18 US-010：creativity validator CLI 入口。
 
 Quick Mode Step 1.5/1.6/1.7 通过 ``python -m ink_writer.creativity`` 调用本模块，
 一次性跑 book_title / character_names / golden_finger / sensitive_lexicon 全校验。
 
 用法::
 
+    # Scheme-level 校验（原 US-013 路径）
     python -m ink_writer.creativity validate --input draft.json --output validation.json
     python -m ink_writer.creativity validate --input draft.json    # 默认输出 stdout
+
+    # 单一书名硬校验（v18 US-010）
+    python -m ink_writer.creativity.cli validate --book-title '山风穿门' --strict
+    # exit 0 → 通过；exit 1 → 命中黑名单/空串，--strict 下转换为 shell 失败信号。
 
 draft.json schema::
 
@@ -129,22 +134,52 @@ def _validate_scheme(scheme: dict) -> dict:
     }
 
 
+def _validate_book_title_only(title: str) -> dict:
+    """v18 US-010：仅跑 book_title 校验，返回与 --input 同 schema 的 payload。"""
+    r_title = validate_book_title(title or "")
+    suggestion = f"[book_title] {r_title.suggestion}" if r_title.suggestion else ""
+    return {
+        "all_passed": bool(r_title.passed),
+        "results": [
+            {
+                "scheme_id": "(book_title_only)",
+                "passed": bool(r_title.passed),
+                "checks": {"book_title": r_title.to_dict()},
+                "suggestion": suggestion,
+            }
+        ],
+    }
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
-    input_path = Path(args.input)
-    if not input_path.exists():
-        print(f"ERROR: input 文件不存在: {input_path}", file=sys.stderr)
-        return 2
-    try:
-        data = json.loads(input_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        print(f"ERROR: input 非法 JSON: {exc}", file=sys.stderr)
-        return 2
+    # v18 US-010: --book-title 单项快校验路径（ink-init Quick Mode 每次重抽后调用）。
+    if getattr(args, "book_title", None) is not None:
+        if args.input:
+            print(
+                "ERROR: --book-title 与 --input 互斥，请只传一个。",
+                file=sys.stderr,
+            )
+            return 2
+        output = _validate_book_title_only(args.book_title)
+    else:
+        if not args.input:
+            print("ERROR: 必须提供 --input 或 --book-title 之一。", file=sys.stderr)
+            return 2
+        input_path = Path(args.input)
+        if not input_path.exists():
+            print(f"ERROR: input 文件不存在: {input_path}", file=sys.stderr)
+            return 2
+        try:
+            data = json.loads(input_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            print(f"ERROR: input 非法 JSON: {exc}", file=sys.stderr)
+            return 2
 
-    schemes = data.get("schemes") or []
-    results = [_validate_scheme(s) for s in schemes]
-    all_passed = bool(results) and all(r["passed"] for r in results)
+        schemes = data.get("schemes") or []
+        results = [_validate_scheme(s) for s in schemes]
+        all_passed = bool(results) and all(r["passed"] for r in results)
+        output = {"all_passed": all_passed, "results": results}
 
-    output = {"all_passed": all_passed, "results": results}
     payload = json.dumps(output, ensure_ascii=False, indent=2)
 
     if args.output:
@@ -152,8 +187,10 @@ def cmd_validate(args: argparse.Namespace) -> int:
     else:
         print(payload)
 
-    # exit 0 always（HARD 违规不走 shell exit，而靠 all_passed 字段）
-    # 方便 skill 层决定"拦下重抽"还是"仅警告"。
+    # v18 US-010: --strict 把业务 fail 转换为 shell exit 1，便于 bash 层 `|| 降档重抽`。
+    # 缺省模式（无 --strict）保持 US-013 行为：exit 0 always，由 all_passed 字段驱动。
+    if getattr(args, "strict", False) and not output["all_passed"]:
+        return 1
     return 0
 
 
@@ -167,9 +204,20 @@ def build_parser() -> argparse.ArgumentParser:
     p_validate = sub.add_parser(
         "validate", help="一次性跑 book_title/name/gf/lexicon 全校验"
     )
-    p_validate.add_argument("--input", required=True, help="draft.json 路径")
+    # --input 与 --book-title 必选其一（运行时互斥校验，避免 argparse 对 required 配置过严）
+    p_validate.add_argument("--input", default=None, help="draft.json 路径（scheme 模式）")
+    p_validate.add_argument(
+        "--book-title",
+        default=None,
+        help="v18 US-010：直接单书名校验，用于 ink-init Quick Mode 每次重抽",
+    )
     p_validate.add_argument(
         "--output", default=None, help="validation.json 路径（缺省则 stdout）"
+    )
+    p_validate.add_argument(
+        "--strict",
+        action="store_true",
+        help="v18 US-010：业务 fail 时 exit 1（缺省 exit 0 + all_passed=false）",
     )
     p_validate.set_defaults(func=cmd_validate)
     return parser
