@@ -8,12 +8,19 @@
    {"cross_chapter_conflict", "back_propagation"} 视为 drift
 2. checker_results["consistency-checker"|"continuity-checker"].violations
    中 target_chapter < chapter_detected 视为 drift
+
+US-004：增量 debt 持久化到 ``.ink/drift_debts.db``。当
+``detect_drifts(..., incremental=True)`` 时，仅扫描 ``chapter_id > last_seen_max``
+的章节，已扫过的章节直接读取 cache，返回合并结果。
+CLI ``python -m ink_writer.propagation.drift_detector --reset`` 清空 cache。
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import sqlite3
+import sys
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple, Union
 
@@ -25,6 +32,18 @@ _CHAPTER_KEYS = ("target_chapter", "ref_chapter", "source_chapter", "chapter")
 
 DEFAULT_MAX_CHAPTERS_PER_SCAN = 50
 DEFAULT_CRITICAL_ISSUE_LIMIT = 20
+DRIFT_DEBTS_DB_REL_PATH = Path(".ink") / "drift_debts.db"
+
+_DRIFT_DEBTS_SCHEMA_SQL = """
+CREATE TABLE IF NOT EXISTS drift_debts (
+    chapter_id TEXT NOT NULL,
+    debt_type TEXT NOT NULL,
+    payload JSON,
+    last_seen INTEGER,
+    PRIMARY KEY(chapter_id, debt_type)
+)
+"""
+_LAST_SEEN_META_KEY = "__last_seen_max__"
 
 
 ChapterRange = Union[Sequence[int], Iterable[int], Tuple[int, int]]
@@ -284,6 +303,107 @@ def _load_records_from_db(
     )
 
 
+def _drift_debts_db_path(project_root: Path) -> Path:
+    return project_root / DRIFT_DEBTS_DB_REL_PATH
+
+
+def _open_drift_debts_cache(project_root: Path) -> sqlite3.Connection:
+    """Open (or create) .ink/drift_debts.db with the US-004 schema."""
+    db_path = _drift_debts_db_path(project_root)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    conn.execute(_DRIFT_DEBTS_SCHEMA_SQL)
+    conn.commit()
+    return conn
+
+
+def _cache_last_seen_max(conn: sqlite3.Connection) -> int:
+    """Return the highest ``last_seen`` across all cached rows (0 if empty)."""
+    row = conn.execute(
+        "SELECT COALESCE(MAX(last_seen), 0) AS m FROM drift_debts"
+    ).fetchone()
+    if row is None:
+        return 0
+    value = row["m"] if isinstance(row, sqlite3.Row) else row[0]
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _cache_load_debts(conn: sqlite3.Connection) -> List[PropagationDebtItem]:
+    """Load all cached drift debts, skipping rows with missing/corrupt payload."""
+    debts: List[PropagationDebtItem] = []
+    cursor = conn.execute(
+        "SELECT payload FROM drift_debts "
+        "WHERE debt_type != ? "
+        "ORDER BY CAST(chapter_id AS INTEGER), debt_type",
+        (_LAST_SEEN_META_KEY,),
+    )
+    for row in cursor.fetchall():
+        payload = _safe_json_load(row["payload"])
+        if not isinstance(payload, Mapping):
+            continue
+        try:
+            debts.append(PropagationDebtItem.model_validate(dict(payload)))
+        except Exception:  # pragma: no cover - defensive only
+            continue
+    return debts
+
+
+def _cache_upsert_debts(
+    conn: sqlite3.Connection,
+    drifts: Sequence[PropagationDebtItem],
+    watermark: int,
+) -> None:
+    """Insert-or-replace drift rows keyed by (chapter_detected, debt_id) and
+    always refresh the watermark meta row so ``MAX(last_seen)`` reflects the
+    most recently scanned chapter range even when zero drifts landed."""
+    rows: List[Tuple[str, str, str, int]] = []
+    for d in drifts:
+        rows.append(
+            (
+                f"{int(d.chapter_detected):04d}",
+                d.debt_id,
+                json.dumps(d.model_dump(mode="json"), ensure_ascii=False),
+                int(watermark),
+            )
+        )
+    if rows:
+        conn.executemany(
+            "INSERT OR REPLACE INTO drift_debts(chapter_id, debt_type, payload, last_seen) "
+            "VALUES (?, ?, ?, ?)",
+            rows,
+        )
+    # Always write a meta row for the watermark so empty scans still bump it.
+    conn.execute(
+        "INSERT OR REPLACE INTO drift_debts(chapter_id, debt_type, payload, last_seen) "
+        "VALUES (?, ?, NULL, ?)",
+        (f"{int(watermark):04d}", _LAST_SEEN_META_KEY, int(watermark)),
+    )
+    conn.commit()
+
+
+def reset_drift_debts_cache(project_root: Union[str, Path]) -> bool:
+    """Drop the drift_debts table (keeps DB file for simplicity).
+
+    Returns True if a cache existed and was cleared, False if no DB file.
+    """
+    root = Path(project_root)
+    db_path = _drift_debts_db_path(root)
+    if not db_path.exists():
+        return False
+    try:
+        conn = sqlite3.connect(str(db_path))
+        conn.execute("DROP TABLE IF EXISTS drift_debts")
+        conn.commit()
+        conn.close()
+        return True
+    except sqlite3.Error:
+        return False
+
+
 def detect_drifts(
     project_root: Union[str, Path],
     chapter_range: ChapterRange,
@@ -292,6 +412,7 @@ def detect_drifts(
     max_chapters_per_scan: int = DEFAULT_MAX_CHAPTERS_PER_SCAN,
     critical_limit: Optional[int] = DEFAULT_CRITICAL_ISSUE_LIMIT,
     legacy: bool = False,
+    incremental: bool = False,
 ) -> List[PropagationDebtItem]:
     """扫描 chapter_range 内每章 review_metrics，返回 drift 列表。
 
@@ -304,8 +425,64 @@ def detect_drifts(
         critical_limit: 单章 critical_issues 最多生成多少条 drift（默认 20）；
             传 None 关闭早停。
         legacy: True 则走旧 O(n) 路径（1000 章 → 1000 次 SQL），默认 False。
+        incremental: True 则启用 US-004 增量 cache：仅扫 chapter_id >
+            last_seen_max 的章节，并把结果累加回 `.ink/drift_debts.db`。返回
+            cache 中全部历史 drift + 本轮新增（已按 chapter_detected 稳定排序）。
     """
     chapters = _normalize_range(chapter_range)
+
+    if incremental:
+        cache_conn = _open_drift_debts_cache(Path(project_root))
+        try:
+            last_seen_max = _cache_last_seen_max(cache_conn)
+            new_chapters = [c for c in chapters if c > last_seen_max]
+            # Preserve caller ordering for the scan but dedupe for DB filter.
+            if records is None:
+                if new_chapters:
+                    if legacy:
+                        new_records: Mapping[int, Mapping[str, Any]] = (
+                            _load_records_from_db_legacy(
+                                Path(project_root), new_chapters
+                            )
+                        )
+                    else:
+                        new_records = _load_records_from_db_batched(
+                            Path(project_root),
+                            new_chapters,
+                            max_chapters_per_scan=max_chapters_per_scan,
+                        )
+                else:
+                    new_records = {}
+            else:
+                new_records = {
+                    ch: records[ch] for ch in new_chapters if ch in records
+                }
+
+            new_drifts: List[PropagationDebtItem] = []
+            for ch in new_chapters:
+                data = new_records.get(ch)
+                if not data:
+                    continue
+                new_drifts.extend(
+                    _drifts_from_data(ch, data, critical_limit=critical_limit)
+                )
+
+            # Watermark = max chapter requested this call (so repeat calls with
+            # same range short-circuit even when zero drifts landed), capped by
+            # prior last_seen_max so non-incremental rescan ranges do not
+            # regress the cursor.
+            if chapters:
+                new_watermark = max(last_seen_max, max(chapters))
+            else:
+                new_watermark = last_seen_max
+            _cache_upsert_debts(cache_conn, new_drifts, new_watermark)
+
+            merged = _cache_load_debts(cache_conn)
+            merged.sort(key=lambda d: (d.chapter_detected, d.debt_id))
+            return merged
+        finally:
+            cache_conn.close()
+
     if records is None:
         if legacy:
             records = _load_records_from_db_legacy(Path(project_root), chapters)
@@ -322,3 +499,37 @@ def detect_drifts(
             continue
         drifts.extend(_drifts_from_data(ch, data, critical_limit=critical_limit))
     return drifts
+
+
+def _cli_main(argv: Optional[Sequence[str]] = None) -> int:
+    """CLI entry for US-004: python -m ink_writer.propagation.drift_detector --reset."""
+    parser = argparse.ArgumentParser(
+        prog="python -m ink_writer.propagation.drift_detector",
+        description="Drift-detector cache management (US-004).",
+    )
+    parser.add_argument(
+        "--reset",
+        action="store_true",
+        help="Clear .ink/drift_debts.db so the next incremental scan starts from chapter 1.",
+    )
+    parser.add_argument(
+        "--project-root",
+        default=".",
+        help="Project root holding .ink/ (default: current working directory).",
+    )
+    args = parser.parse_args(argv)
+    root = Path(args.project_root).resolve()
+    if args.reset:
+        cleared = reset_drift_debts_cache(root)
+        target = _drift_debts_db_path(root)
+        if cleared:
+            print(f"drift_debts cache cleared: {target}")
+        else:
+            print(f"no drift_debts cache at {target} (nothing to clear)")
+        return 0
+    parser.print_help()
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover - CLI thin wrapper
+    sys.exit(_cli_main())
