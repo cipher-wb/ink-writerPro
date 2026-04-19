@@ -1777,6 +1777,40 @@ class StateManager:
 
 # ==================== CLI 接口 ====================
 
+
+def _acquire_state_update_lock(project_root, *, owner: str, timeout: float = 60.0):
+    """返回 state_update_lock 上下文管理器；project_root 无效时返回 no-op。
+
+    v17 US-005：Step 5 data-agent（`process-chapter`）写 SQL/JSON 前调用。
+
+    - 使用 `ChapterLockManager.state_update_lock()`（同步版本），内部走
+      SQLite WAL + filelock 跨进程互斥，保证 parallel ≤ 4 下并发 CLI 进程
+      写 state.json / index.db 不丢数据。
+    - project_root 为 None 或路径不存在时返回 nullcontext（测试/最小化调用
+      场景不需要 cross-process 串行化，零回归）。
+    - 若 ChapterLockManager 初始化失败（如 `.ink/` 无写权限），降级为
+      nullcontext 并记录 warning，不阻断正文链路。
+    """
+    import contextlib
+    import logging
+
+    if project_root is None:
+        return contextlib.nullcontext()
+    try:
+        root = Path(project_root)
+        if not root.exists():
+            return contextlib.nullcontext()
+        from ink_writer.parallel.chapter_lock import ChapterLockManager
+
+        lock_mgr = ChapterLockManager(root, ttl=300)
+        return lock_mgr.state_update_lock(owner=owner, timeout=timeout)
+    except Exception as exc:  # pragma: no cover - defensive fallback
+        logging.getLogger(__name__).warning(
+            "state_update_lock 初始化失败，降级为无锁写入: %s", exc
+        )
+        return contextlib.nullcontext()
+
+
 def main():
     import argparse
     import sys
@@ -1899,8 +1933,16 @@ def main():
             emit_error(err["code"], err["message"], suggestion=err.get("suggestion"))
             return
 
-        warnings = manager.process_chapter_result(args.chapter, validated.model_dump(by_alias=True))
-        manager.save_state()
+        # v17 US-005：Step 5 data-agent 写 SQL 前用 state_update_lock 串行化，
+        # 保证并发 CLI 进程（parallel ≤ 4）同时处理不同章节时，不会丢失对
+        # state.json / index.db 的更新。project_root 缺失时（测试场景）静默跳过。
+        _state_lock_ctx = _acquire_state_update_lock(
+            manager.config.project_root if manager.config else None,
+            owner=f"process_chapter:ch{args.chapter}",
+        )
+        with _state_lock_ctx:
+            warnings = manager.process_chapter_result(args.chapter, validated.model_dump(by_alias=True))
+            manager.save_state()
         emit_success({"chapter": args.chapter, "warnings": warnings}, message="chapter_processed", chapter=args.chapter)
 
     else:
