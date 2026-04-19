@@ -3,11 +3,25 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from ink_writer.editor_wisdom.config import EditorWisdomConfig, load_config
 from ink_writer.editor_wisdom.exceptions import EditorWisdomIndexMissingError
-from ink_writer.editor_wisdom.golden_three import GOLDEN_THREE_CATEGORIES
+from ink_writer.editor_wisdom.golden_three import (
+    GOLDEN_THREE_CATEGORIES,
+    GOLDEN_THREE_FLOOR_CATEGORIES,
+    GOLDEN_THREE_FLOOR_PER_CATEGORY,
+)
 from ink_writer.editor_wisdom.retriever import Retriever, Rule, get_retriever
+
+# v18 US-002：分类别召回下限常量迁移到 golden_three.py，
+# 此处 re-export 便于既有调用方（含测试）继续通过 writer_injection 访问。
+__all__ = [
+    "WriterConstraintsSection",
+    "build_writer_constraints",
+    "GOLDEN_THREE_FLOOR_CATEGORIES",
+    "GOLDEN_THREE_FLOOR_PER_CATEGORY",
+]
 
 
 @dataclass
@@ -46,11 +60,13 @@ def build_writer_constraints(
     *,
     config: EditorWisdomConfig | None = None,
     retriever: Retriever | None = None,
+    project_root: Path | str | None = None,
 ) -> WriterConstraintsSection:
     """Build the 硬约束 section for writer-agent prompt injection.
 
     Groups rules by severity (hard first, soft next, info omitted).
-    When chapter_no <= 3, additionally injects rules whose applies_to includes 'golden_three'.
+    When chapter_no <= 3, additionally injects rules whose applies_to includes 'golden_three'
+    AND enforces a per-category floor (opening/taboo/hook each ≥3 rules) — v18 US-002.
     """
     if config is None:
         config = load_config()
@@ -84,8 +100,76 @@ def build_writer_constraints(
                 rules.append(r)
                 seen_ids.add(r.id)
 
+        # v18 US-002：分类别下限。openig/taboo/hook 每类 ≥ GOLDEN_THREE_FLOOR_PER_CATEGORY 条。
+        rules = _enforce_category_floor(
+            rules=rules,
+            retriever=retriever,
+            query=chapter_outline,
+            floor=GOLDEN_THREE_FLOOR_PER_CATEGORY,
+            categories=GOLDEN_THREE_FLOOR_CATEGORIES,
+        )
+
     filtered = [r for r in rules if r.severity in ("hard", "soft")]
+
+    # v18 US-002：覆盖率埋点。只在传入 project_root 时写出（生产链路传入；单元测试不传）。
+    if project_root is not None:
+        try:
+            from ink_writer.editor_wisdom.coverage_metrics import (
+                record_chapter_coverage,
+            )
+
+            record_chapter_coverage(
+                project_root=Path(project_root),
+                chapter_no=chapter_no,
+                rules=filtered,
+            )
+        except Exception:
+            # 覆盖率记录失败不阻断正文生产
+            pass
+
     if not filtered:
         return WriterConstraintsSection(chapter_no=chapter_no)
 
     return WriterConstraintsSection(rules=filtered, chapter_no=chapter_no)
+
+
+def _enforce_category_floor(
+    *,
+    rules: list[Rule],
+    retriever: Retriever,
+    query: str,
+    floor: int,
+    categories: tuple[str, ...],
+) -> list[Rule]:
+    """Top up each target category to at least `floor` rules via category-filtered retrieval.
+
+    Additions are appended after the existing rules (preserving ranking of the head),
+    deduplicated by rule id.
+    """
+    seen_ids: set[str] = {r.id for r in rules}
+    by_category: dict[str, int] = {}
+    for r in rules:
+        by_category[r.category] = by_category.get(r.category, 0) + 1
+
+    for cat in categories:
+        have = by_category.get(cat, 0)
+        if have >= floor:
+            continue
+        need = floor - have
+        # 取 floor + 已有数的两倍作为过采样上限，避免频繁补召回
+        over_k = max(floor * 2, have + need + floor)
+        extras = retriever.retrieve(query=query, k=over_k, category=cat)
+        added = 0
+        for r in extras:
+            if r.id in seen_ids:
+                continue
+            # 仅补 hard/soft；info 补了也会在 filter 阶段被去掉，浪费 prompt
+            if r.severity not in ("hard", "soft"):
+                continue
+            rules.append(r)
+            seen_ids.add(r.id)
+            added += 1
+            if added >= need:
+                break
+
+    return rules
