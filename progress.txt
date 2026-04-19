@@ -304,3 +304,17 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - `_bucketize_and_merge` 抽取保留了 `arbitrate` 的所有原有行为（issue_id 前缀、优先级排序、reverse_conflict drop、context_addendum join）；抽取重构时必须用原 test_chapter1_arbitration.py 7 测试快速验证
   - `asyncio.to_thread(self._arbitrate_chapter_issues, ch)` 包裹同步 DB 读写避免阻塞 event loop；checkpoint 是串行尾部，影响面小
 ---
+
+## 2026-04-19 - US-012 (v18 arbitration matrix 配置化)
+- 新建 `config/arbitration.yaml`：`symptom_key_groups` 定义 overlap 组（当前 flow_issue: prose-impact / sensory-immersion / flow-naturalness），`severity_priority` 映射独立；文件头显式写入 NG-3 / G003 不可减 16 checker 的约束
+- `ink_writer/editor_wisdom/arbitration.py` 新增 `load_arbitration_matrix(path=None)`：从 yaml 解析 checker 列表 + severity 映射，缺失/畸形 yaml 回退到 `_FALLBACK_CHECKERS`/`_FALLBACK_SEVERITY_PRIORITY`（best-effort，从不 raise）；模块级 `_GENERIC_CHECKERS` / `_GENERIC_SEVERITY_PRIORITY` 改为 `load_arbitration_matrix()` 的缓存结果，`__all__` 暴露 loader
+- `collect_issues_from_review_metrics(..., checkers=None)` 签名改为默认 None → 用模块缓存；调用点可覆盖（测试 / migration）
+- 新增 `tests/editor_wisdom/test_arbitration_matrix.py`（11 用例）：生产 yaml 解析 + NG-3 头注释规范 + 模块缓存一致性 + **新增 emotion-curve-checker 条目端到端不改 Python 代码就生效（核心 AC）** + severity yaml override + 缺失/畸形/空/无 groups 四档 fallback + NG-3 ch3 守卫 + 跨组去重
+- Verification: 新 tests 11/11 passed；全量 pytest --no-cov → **2951 passed, 19 skipped**（baseline 2940，+11 = 新测试计数，零回归）；ruff check 改动文件 All checks passed
+- **Learnings for future iterations:**
+  - `config/arbitration.yaml` 通过 `Path(__file__).resolve().parent.parent.parent / "config"` 定位；改 ink_writer 目录层级时需同步 `_CONFIG_PATH`
+  - yaml loader 用 *local import*（`import yaml` 放在函数内）而不是模块顶部：在没装 pyyaml 的环境下模块仍能 import（虽然本 repo 已依赖 pyyaml，但编辑器智慧模块被多处导入，局部 import 更鲁棒）
+  - 模块级缓存 `_GENERIC_CHECKERS = load_arbitration_matrix()` 在 import 时一次性读 yaml，生产调用零 I/O；测试显式传 `path=tmp_yaml` 绕过缓存
+  - `severity_priority` yaml 中未列出的键（如测试故意省略 `high`）**不会回退到 hardcoded default**；由此 `_severity_to_priority` 中未命中的 severity 落入 "P3" 默认分支——这是设计意图（yaml 覆盖必须完整），而非 bug
+  - NG-3 守卫规范化：test_ng3_guard_ch3_unchanged 证明即便 yaml 把任意 checker 纳入 matrix，arbitrate_generic 的 `ch < 4` 早返回仍然生效，golden-three 路径独立
+---

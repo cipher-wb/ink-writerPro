@@ -51,6 +51,7 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 GOLDEN_THREE_CHAPTERS = frozenset({1, 2, 3})
@@ -58,19 +59,23 @@ GOLDEN_THREE_CHAPTERS = frozenset({1, 2, 3})
 _PRIORITY_ORDER = ("P0", "P1", "P2", "P3")
 _PRIORITY_RANK = {p: i for i, p in enumerate(_PRIORITY_ORDER)}
 
-# US-011: overlapping prose-craft checkers whose runtime output is folded
-# by ``arbitrate_generic`` for chapter >= 4. NG-3 safe: the checker spec
-# files under ``ink-writer/agents/`` remain intact; only their emitted
-# issues are deduped post-review.
-_GENERIC_CHECKERS: tuple[str, ...] = (
+# US-012: matrix config path. Overlap groups + severity→priority map now
+# live in ``config/arbitration.yaml``; adding a new overlap group no longer
+# requires editing this file. NG-3 / Green G003 preserved: the 16 checker
+# spec files remain independent — only their *runtime output* is merged.
+_CONFIG_PATH = (
+    Path(__file__).resolve().parent.parent.parent / "config" / "arbitration.yaml"
+)
+
+# Hardcoded fallbacks (used when the yaml is missing or unparseable). These
+# mirror the v18 US-011 defaults so behavior is unchanged when config/ is
+# absent (e.g. running tests from a stripped checkout).
+_FALLBACK_CHECKERS: tuple[str, ...] = (
     "prose-impact-checker",
     "sensory-immersion-checker",
     "flow-naturalness-checker",
 )
-
-# Severity → priority for generic checkers (golden-three path retains its
-# own P0/P1 buckets via ``arbitrate``).
-_GENERIC_SEVERITY_PRIORITY: dict[str, str] = {
+_FALLBACK_SEVERITY_PRIORITY: dict[str, str] = {
     "critical": "P2",
     "high": "P2",
     "medium": "P3",
@@ -78,6 +83,68 @@ _GENERIC_SEVERITY_PRIORITY: dict[str, str] = {
     "low": "P3",
     "info": "P4",
 }
+
+
+def load_arbitration_matrix(
+    path: Path | str | None = None,
+) -> tuple[tuple[str, ...], dict[str, str]]:
+    """US-012: load overlap checker list + severity→priority map from yaml.
+
+    Returns ``(checkers, severity_priority)``. When the yaml is missing or
+    malformed, falls back to the v18 US-011 hardcoded defaults so callers
+    never crash — the arbitration pipeline is best-effort.
+
+    ``checkers`` aggregates every entry from ``symptom_key_groups.<g>.checkers``;
+    duplicates across groups are deduplicated while preserving first-seen
+    order so reading-stable diagnostics stay deterministic.
+    """
+    target = Path(path) if path is not None else _CONFIG_PATH
+    if not target.exists():
+        return _FALLBACK_CHECKERS, dict(_FALLBACK_SEVERITY_PRIORITY)
+    try:
+        import yaml  # local import so non-yaml callers stay lightweight
+
+        raw = yaml.safe_load(target.read_text(encoding="utf-8"))
+    except Exception:
+        return _FALLBACK_CHECKERS, dict(_FALLBACK_SEVERITY_PRIORITY)
+    if not isinstance(raw, Mapping):
+        return _FALLBACK_CHECKERS, dict(_FALLBACK_SEVERITY_PRIORITY)
+
+    seen: list[str] = []
+    groups = raw.get("symptom_key_groups") or {}
+    if isinstance(groups, Mapping):
+        for group in groups.values():
+            if not isinstance(group, Mapping):
+                continue
+            entries = group.get("checkers") or []
+            if not isinstance(entries, list):
+                continue
+            for name in entries:
+                if not isinstance(name, str):
+                    continue
+                if name and name not in seen:
+                    seen.append(name)
+
+    severity_raw = raw.get("severity_priority") or {}
+    severity: dict[str, str] = {}
+    if isinstance(severity_raw, Mapping):
+        for k, v in severity_raw.items():
+            if isinstance(k, str) and isinstance(v, str):
+                severity[k.lower()] = v
+
+    if not seen:
+        seen_tuple = _FALLBACK_CHECKERS
+    else:
+        seen_tuple = tuple(seen)
+    if not severity:
+        severity = dict(_FALLBACK_SEVERITY_PRIORITY)
+    return seen_tuple, severity
+
+
+# Cache the parsed matrix so repeated calls (pipeline loops) avoid re-reading
+# yaml. Tests can pass an explicit ``path=`` to ``load_arbitration_matrix`` to
+# bypass the cache.
+_GENERIC_CHECKERS, _GENERIC_SEVERITY_PRIORITY = load_arbitration_matrix()
 
 # Non-alnum → "_" for symptom_key normalization (stable across locales).
 _SYMPTOM_NORMALIZE_RE = re.compile(r"[^0-9A-Za-z\u4e00-\u9fff]+")
@@ -259,7 +326,7 @@ def _severity_to_priority(severity: str | None) -> str:
 def collect_issues_from_review_metrics(
     metrics: Mapping[str, Any] | None,
     *,
-    checkers: tuple[str, ...] = _GENERIC_CHECKERS,
+    checkers: tuple[str, ...] | None = None,
 ) -> list[Issue]:
     """US-011: extract ``Issue`` objects from an ``index.db.review_metrics``
     row (shape matches :meth:`IndexReadingMixin.read_review_metrics`).
@@ -269,7 +336,13 @@ def collect_issues_from_review_metrics(
     ``symptom_key`` normalized from the violation's ``type`` (falling back to
     ``symptom_key`` / ``category``) so ``arbitrate_generic`` can fold
     cross-checker duplicates.
+
+    US-012: when ``checkers`` is ``None`` the matrix is loaded from
+    ``config/arbitration.yaml`` (cached at import time). Callers wanting a
+    one-off override (tests, migrations) can still pass an explicit tuple.
     """
+    if checkers is None:
+        checkers = _GENERIC_CHECKERS
     if not metrics:
         return []
     issues: list[Issue] = []
@@ -360,4 +433,5 @@ __all__ = [
     "arbitrate",
     "arbitrate_generic",
     "collect_issues_from_review_metrics",
+    "load_arbitration_matrix",
 ]
