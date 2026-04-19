@@ -25,6 +25,10 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 
+from ink_writer.editor_wisdom.arbitration import (
+    arbitrate_generic,
+    collect_issues_from_review_metrics,
+)
 from ink_writer.parallel.chapter_lock import ChapterLockManager
 
 logger = logging.getLogger(__name__)
@@ -489,6 +493,75 @@ class PipelineManager:
             "ink-review",
             f"审查范围：第{start}章到第{end}章。审查深度：Core",
         )
+
+        # US-011: fold overlapping prose-craft checker output per chapter
+        # (ch >= 4 only). Golden-three (ch 1-3) keeps its existing
+        # ``arbitrate`` path upstream of this step — NG-3 guard.
+        for ch in range(start, end + 1):
+            if ch < 4:
+                continue
+            try:
+                await asyncio.to_thread(self._arbitrate_chapter_issues, ch)
+            except Exception:  # noqa: BLE001 - best-effort, never block checkpoint
+                logger.debug(
+                    "arbitrate_chapter_issues skipped for ch=%d", ch, exc_info=True
+                )
+
+    def _arbitrate_chapter_issues(self, chapter: int) -> dict | None:
+        """US-011: fold overlapping prose-craft checker output for ch ≥ 4.
+
+        Reads the ``review_metrics`` row from ``.ink/index.db``, collects
+        prose-impact / sensory-immersion / flow-naturalness violations, and
+        writes the merged arbitration payload to
+        ``.ink/arbitration/ch{:04d}.json`` for polish-agent to consume.
+
+        Dispatch gate is ``arbitrate_generic`` itself (returns None for
+        ch < 4). The golden-three ``arbitrate`` path remains upstream and
+        is unaffected (NG-3).
+
+        Best-effort: any DB / read error logs at DEBUG and returns None
+        (matches v17 pipeline's non-blocking philosophy).
+        """
+        db_path = self.config.project_root / ".ink" / "index.db"
+        if not db_path.exists():
+            return None
+
+        try:
+            from ink_writer.core.index.index_manager import IndexManager
+            from ink_writer.core.infra.config import DataModulesConfig
+
+            cfg = DataModulesConfig.from_project_root(self.config.project_root)
+            mgr = IndexManager(cfg)
+            metrics = mgr.read_review_metrics(chapter)
+        except Exception:
+            logger.debug(
+                "read_review_metrics failed for ch=%d", chapter, exc_info=True
+            )
+            return None
+        if metrics is None:
+            return None
+
+        issues = collect_issues_from_review_metrics(metrics)
+        if not issues:
+            return None
+
+        result = arbitrate_generic(chapter, issues)
+        if result is None:
+            return None
+
+        out_dir = self.config.project_root / ".ink" / "arbitration"
+        try:
+            out_dir.mkdir(parents=True, exist_ok=True)
+            out_path = out_dir / f"ch{chapter:04d}.json"
+            out_path.write_text(
+                json.dumps(result, ensure_ascii=False, indent=2),
+                encoding="utf-8",
+            )
+        except Exception:
+            logger.debug(
+                "arbitration write failed for ch=%d", chapter, exc_info=True
+            )
+        return result
 
     async def _run_skill_process(self, skill: str, detail: str) -> None:
         log_file = str(

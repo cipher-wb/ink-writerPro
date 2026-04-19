@@ -289,3 +289,18 @@ git checkout ralph/v14-audit-completion  # 或基于 master 新建
   - editor_wisdom/writer_injection.py:76-85 的黄金三章分类别召回（US-002 的目标）当前已用 `k * 2` 二次扩池，改分类别 top_k=3×N_cat 时要保留 dedup 逻辑（`seen_ids` 集合）
   - token 计数用 `re.compile(r"[\w\u4e00-\u9fff]+")` 中英混排公平计数，与 scripts/ab_prompts.py:37 保持一致
 ---
+
+## 2026-04-19 - US-011 (v18 AUDIT-V17-R008: arbitrate_generic 扩章 ≥4)
+- `ink_writer/editor_wisdom/arbitration.py` 新增 `arbitrate_generic(chapter_id, issues)`：章 ≥4 按 `symptom_key` 去重合并 3 个重叠 prose-craft checker（prose-impact / sensory-immersion / flow-naturalness）输出；共享内部 `_bucketize_and_merge` 辅助函数使 `arbitrate`/`arbitrate_generic` 两路径逻辑一致；输出多加 `mode` 字段（golden/generic），issue_id 前缀 ARB-/ARBG- 区分
+- 新增 `collect_issues_from_review_metrics(row)`：从 `index.db.review_metrics` 提取 3 重叠 checker 的 violations → `list[Issue]`；type 字段归一化（lower + 非 alnum→`_`）使不同拼法同桶
+- `ink_writer/parallel/pipeline_manager.py::_run_checkpoint` 末尾按 review_range 逐章调 `_arbitrate_chapter_issues(ch)`（ch ≥4 触发，ch<4 跳过保 NG-3）；新方法读 `IndexManager.read_review_metrics` → 调 `arbitrate_generic` → 写 `.ink/arbitration/ch{:04d}.json`（best-effort，异常 debug log 不阻塞）
+- `ink-writer/references/checker-merge-matrix.md` 新增 "Generic Arbitration" 章：重叠 checker 合并规则表 + severity→priority 映射 + 数据流 + NG-3 / 零回归约束 + 参考实现文件
+- 新增 `tests/harness/test_arbitrate_generic.py`（13 测试）：ch50 triple-checker → 1 fix_prompt（核心 AC）/ ch<4 返回 None / 反向冲突 drop / 黄金三章不回退（NG-3 守卫）/ P4 不合并 / type 归一化跨 checker / DB JSON string 反序列化 / 非重叠 checker 忽略 / pipeline_manager 端到端 sqlite fixture 读写
+- Verification: 新测试 13/13 passed；全量 pytest --no-cov → **2940 passed, 19 skipped**（baseline 2847，+93 零回归；+13 本 US 新增，+80 为 US-002~010 累积）；ruff check 改动文件 All checks passed；import smoke 通过
+- **Learnings for future iterations:**
+  - `IndexManager(config)` 不接受 `db_path` 关键字：生产代码需 `DataModulesConfig.from_project_root(root)` 再传入；直接 sqlite3.connect 比 IndexManager 初始化更快（测试 fixture 用原生 sqlite3 足矣，无需走 IndexManager init_db）
+  - polish-agent.md §仲裁消费 当前仍注明 "章节 ≥ 4 不适用"；本 US 把 arbitration.json 生成范围扩到 ch ≥ 4，polish-agent spec 更新留给下一个 US（US-012 也未覆盖此点，若过审关键需补）
+  - `arbitrate` 的输出本 US 新增 `mode: "golden"` 字段（之前无），测试 `test_polish_agent_contract_fields_present` 用 `in` 检查各 key 而非严格 dict eq，故零回归；若将来有外部消费者做 schema 严校验需留意
+  - `_bucketize_and_merge` 抽取保留了 `arbitrate` 的所有原有行为（issue_id 前缀、优先级排序、reverse_conflict drop、context_addendum join）；抽取重构时必须用原 test_chapter1_arbitration.py 7 测试快速验证
+  - `asyncio.to_thread(self._arbitrate_chapter_issues, ch)` 包裹同步 DB 读写避免阻塞 event loop；checkpoint 是串行尾部，影响面小
+---
