@@ -23,6 +23,9 @@ _CROSS_CHAPTER_TYPES = {"cross_chapter_conflict", "back_propagation", "canon_dri
 _DRIFT_CHECKERS = ("consistency-checker", "continuity-checker")
 _CHAPTER_KEYS = ("target_chapter", "ref_chapter", "source_chapter", "chapter")
 
+DEFAULT_MAX_CHAPTERS_PER_SCAN = 50
+DEFAULT_CRITICAL_ISSUE_LIMIT = 20
+
 
 ChapterRange = Union[Sequence[int], Iterable[int], Tuple[int, int]]
 
@@ -125,12 +128,18 @@ def _drift_from_entry(
     )
 
 
-def _drifts_from_data(chapter: int, data: Mapping[str, Any]) -> List[PropagationDebtItem]:
+def _drifts_from_data(
+    chapter: int,
+    data: Mapping[str, Any],
+    *,
+    critical_limit: Optional[int] = DEFAULT_CRITICAL_ISSUE_LIMIT,
+) -> List[PropagationDebtItem]:
     drifts: List[PropagationDebtItem] = []
     counter = 1
 
     critical = _safe_json_load(data.get("critical_issues")) or []
     if isinstance(critical, list):
+        critical_drift_count = 0
         for entry in critical:
             if not isinstance(entry, Mapping):
                 continue
@@ -138,6 +147,9 @@ def _drifts_from_data(chapter: int, data: Mapping[str, Any]) -> List[Propagation
             if drift is not None:
                 drifts.append(drift)
                 counter += 1
+                critical_drift_count += 1
+                if critical_limit is not None and critical_drift_count >= critical_limit:
+                    break
 
     checker_results = data.get("checker_results")
     if isinstance(checker_results, Mapping):
@@ -159,8 +171,21 @@ def _drifts_from_data(chapter: int, data: Mapping[str, Any]) -> List[Propagation
     return drifts
 
 
-def _load_records_from_db(project_root: Path, chapters: Sequence[int]) -> Dict[int, Dict[str, Any]]:
-    """从 .ink/index.db.review_metrics 读取覆盖指定章节的记录。"""
+def _row_to_data(row: sqlite3.Row) -> Dict[str, Any]:
+    data: Dict[str, Any] = {}
+    payload = _safe_json_load(row["review_payload_json"])
+    if isinstance(payload, Mapping):
+        data.update(payload)
+    critical = _safe_json_load(row["critical_issues"])
+    if critical is not None and "critical_issues" not in data:
+        data["critical_issues"] = critical
+    return data
+
+
+def _load_records_from_db_legacy(
+    project_root: Path, chapters: Sequence[int]
+) -> Dict[int, Dict[str, Any]]:
+    """旧 O(n) 路径：每章一次 SELECT，保留以便零回归回退。"""
     db_path = project_root / ".ink" / "index.db"
     records: Dict[int, Dict[str, Any]] = {}
     if not db_path.exists() or not chapters:
@@ -183,19 +208,80 @@ def _load_records_from_db(project_root: Path, chapters: Sequence[int]) -> Dict[i
             row = cur.fetchone()
             if row is None:
                 continue
-            data: Dict[str, Any] = {}
-            payload = _safe_json_load(row["review_payload_json"])
-            if isinstance(payload, Mapping):
-                data.update(payload)
-            # critical_issues 列始终保留（独立于 payload）
-            critical = _safe_json_load(row["critical_issues"])
-            if critical is not None and "critical_issues" not in data:
-                data["critical_issues"] = critical
-            records[ch] = data
+            records[ch] = _row_to_data(row)
         conn.close()
     except sqlite3.Error:
         return records
     return records
+
+
+def _load_records_from_db_batched(
+    project_root: Path,
+    chapters: Sequence[int],
+    *,
+    max_chapters_per_scan: int = DEFAULT_MAX_CHAPTERS_PER_SCAN,
+) -> Dict[int, Dict[str, Any]]:
+    """批量路径：每批一次范围重叠查询 + Python 端分配最新行至各章。
+
+    对 1000 章区间，查询次数从 ~1000 降到 ceil(1000/max_chapters_per_scan) ≤ 20。
+    """
+    db_path = project_root / ".ink" / "index.db"
+    records: Dict[int, Dict[str, Any]] = {}
+    if not db_path.exists() or not chapters:
+        return records
+    if max_chapters_per_scan < 1:
+        max_chapters_per_scan = DEFAULT_MAX_CHAPTERS_PER_SCAN
+    sorted_chapters = sorted({int(c) for c in chapters})
+    try:
+        conn = sqlite3.connect(str(db_path))
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        for start in range(0, len(sorted_chapters), max_chapters_per_scan):
+            batch = sorted_chapters[start : start + max_chapters_per_scan]
+            if not batch:
+                continue
+            min_ch, max_ch = batch[0], batch[-1]
+            # (start_chapter, end_chapter) 是 PRIMARY KEY，GROUP BY 语义等同
+            # 去重；ORDER BY updated_at DESC 保证后续 Python 端“先到先得”即选到
+            # 最新覆盖行。
+            cur.execute(
+                """
+                SELECT start_chapter, end_chapter, critical_issues, review_payload_json
+                FROM review_metrics
+                WHERE start_chapter <= ? AND end_chapter >= ?
+                GROUP BY start_chapter, end_chapter
+                ORDER BY updated_at DESC
+                """,
+                (max_ch, min_ch),
+            )
+            rows = cur.fetchall()
+            for row in rows:
+                s = int(row["start_chapter"])
+                e = int(row["end_chapter"])
+                for ch in batch:
+                    if ch in records:
+                        continue
+                    if s <= ch <= e:
+                        records[ch] = _row_to_data(row)
+        conn.close()
+    except sqlite3.Error:
+        return records
+    return records
+
+
+# 兼容别名：老代码 / 测试可能 import _load_records_from_db
+def _load_records_from_db(
+    project_root: Path,
+    chapters: Sequence[int],
+    *,
+    max_chapters_per_scan: int = DEFAULT_MAX_CHAPTERS_PER_SCAN,
+    legacy: bool = False,
+) -> Dict[int, Dict[str, Any]]:
+    if legacy:
+        return _load_records_from_db_legacy(project_root, chapters)
+    return _load_records_from_db_batched(
+        project_root, chapters, max_chapters_per_scan=max_chapters_per_scan
+    )
 
 
 def detect_drifts(
@@ -203,6 +289,9 @@ def detect_drifts(
     chapter_range: ChapterRange,
     *,
     records: Optional[Mapping[int, Mapping[str, Any]]] = None,
+    max_chapters_per_scan: int = DEFAULT_MAX_CHAPTERS_PER_SCAN,
+    critical_limit: Optional[int] = DEFAULT_CRITICAL_ISSUE_LIMIT,
+    legacy: bool = False,
 ) -> List[PropagationDebtItem]:
     """扫描 chapter_range 内每章 review_metrics，返回 drift 列表。
 
@@ -210,14 +299,26 @@ def detect_drifts(
         project_root: 项目根目录，期望 `.ink/index.db` 存在。
         chapter_range: 章节区间，支持 (start, end) 元组或 Iterable[int]。
         records: 可选 mock 数据，提供后跳过 DB 读取（测试友好）。
+        max_chapters_per_scan: 每批最多扫描章数（默认 50），超过则分批；仅
+            影响默认的批量路径，不影响 legacy=True。
+        critical_limit: 单章 critical_issues 最多生成多少条 drift（默认 20）；
+            传 None 关闭早停。
+        legacy: True 则走旧 O(n) 路径（1000 章 → 1000 次 SQL），默认 False。
     """
     chapters = _normalize_range(chapter_range)
     if records is None:
-        records = _load_records_from_db(Path(project_root), chapters)
+        if legacy:
+            records = _load_records_from_db_legacy(Path(project_root), chapters)
+        else:
+            records = _load_records_from_db_batched(
+                Path(project_root),
+                chapters,
+                max_chapters_per_scan=max_chapters_per_scan,
+            )
     drifts: List[PropagationDebtItem] = []
     for ch in chapters:
         data = records.get(ch)
         if not data:
             continue
-        drifts.extend(_drifts_from_data(ch, data))
+        drifts.extend(_drifts_from_data(ch, data, critical_limit=critical_limit))
     return drifts
