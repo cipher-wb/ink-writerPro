@@ -1740,6 +1740,12 @@ def _render_text(payload: Dict[str, Any]) -> str:
 
 
 def main():
+    import sys as _sys_for_policy
+    if _sys_for_policy.platform == "win32":  # pragma: no cover
+        import asyncio as _asyncio_for_policy
+        _policy_cls = getattr(_asyncio_for_policy, "WindowsProactorEventLoopPolicy", None)
+        if _policy_cls is not None:
+            _asyncio_for_policy.set_event_loop_policy(_policy_cls())
     parser = argparse.ArgumentParser(description="提取章节创作所需的精简上下文")
     parser.add_argument("--chapter", type=int, required=True, help="目标章节号")
     parser.add_argument("--project-root", type=str, help="项目根目录")

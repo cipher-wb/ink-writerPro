@@ -1,11 +1,26 @@
 """Tests for dashboard/path_guard.py — safe_resolve path traversal guard."""
 
+import sys
+
 import pytest
 
 fastapi = pytest.importorskip("fastapi")
 from fastapi import HTTPException
 
 from path_guard import safe_resolve
+
+# US-004: Windows 未启用开发者模式时 os.symlink 会抛 OSError；跳过 symlink
+# 相关测试避免 false negative。Mac/Linux 照常执行。
+try:
+    from runtime_compat import _has_symlink_privilege  # type: ignore
+    _SYMLINK_ALLOWED = _has_symlink_privilege()
+except Exception:  # pragma: no cover
+    _SYMLINK_ALLOWED = sys.platform != "win32"
+
+_symlink_required = pytest.mark.skipif(
+    not _SYMLINK_ALLOWED,
+    reason="symlink requires admin or Developer Mode on Windows",
+)
 
 
 # ---------------------------------------------------------------------------
@@ -97,13 +112,14 @@ class TestAbsolutePathsOutsideRoot:
 # 5. Paths with symlink potential
 # ---------------------------------------------------------------------------
 
+@_symlink_required
 class TestSymlinks:
     def test_symlink_escaping_root(self, tmp_path):
         """A symlink inside tmp_path that points outside should be rejected."""
         outside_dir = tmp_path.parent / "outside_target"
         outside_dir.mkdir(exist_ok=True)
         secret = outside_dir / "secret.txt"
-        secret.write_text("secret")
+        secret.write_text("secret", encoding="utf-8")
 
         link = tmp_path / "evil_link"
         link.symlink_to(outside_dir)
@@ -116,7 +132,7 @@ class TestSymlinks:
         """A symlink pointing to a location still inside root should succeed."""
         real_dir = tmp_path / "real"
         real_dir.mkdir()
-        (real_dir / "file.txt").write_text("ok")
+        (real_dir / "file.txt").write_text("ok", encoding="utf-8")
 
         link = tmp_path / "link_to_real"
         link.symlink_to(real_dir)

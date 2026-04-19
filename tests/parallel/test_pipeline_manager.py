@@ -24,7 +24,7 @@ from ink_writer.parallel.pipeline_manager import (
 def project_root(tmp_path: Path) -> Path:
     ink = tmp_path / ".ink"
     ink.mkdir()
-    (ink / "state.json").write_text('{"progress":{"current_chapter":0}}')
+    (ink / "state.json").write_text('{"progress":{"current_chapter":0}}', encoding="utf-8")
     (ink / "summaries").mkdir()
     (ink / "logs" / "auto").mkdir(parents=True)
     (tmp_path / "正文").mkdir()
@@ -35,7 +35,7 @@ def project_root(tmp_path: Path) -> Path:
 def plugin_root(tmp_path: Path) -> Path:
     scripts = tmp_path / "plugin" / "scripts"
     scripts.mkdir(parents=True)
-    (scripts / "ink.py").write_text("# stub")
+    (scripts / "ink.py").write_text("# stub", encoding="utf-8")
     return tmp_path / "plugin"
 
 
@@ -160,7 +160,7 @@ class TestPipelineManager:
         chapter_file.write_text("x" * 3000, encoding="utf-8")
 
         summary_dir = config.project_root / ".ink" / "summaries"
-        (summary_dir / "ch0001.md").write_text("summary")
+        (summary_dir / "ch0001.md").write_text("summary", encoding="utf-8")
 
         mgr = PipelineManager(config)
         assert await mgr._verify_chapter(1)
@@ -172,7 +172,7 @@ class TestPipelineManager:
         chapter_file.write_text("x" * 100, encoding="utf-8")
 
         summary_dir = config.project_root / ".ink" / "summaries"
-        (summary_dir / "ch0001.md").write_text("summary")
+        (summary_dir / "ch0001.md").write_text("summary", encoding="utf-8")
 
         mgr = PipelineManager(config)
         assert not await mgr._verify_chapter(1)

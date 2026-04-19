@@ -24,34 +24,34 @@ class TestThreadLifecycleTrackerExists:
         assert not (AGENTS_DIR / "plotline-tracker.md").exists()
 
     def test_unified_tracker_has_frontmatter(self):
-        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text()
+        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text(encoding="utf-8")
         assert "name: thread-lifecycle-tracker" in content
         assert "tools: Read" in content
 
     def test_unified_tracker_covers_both_thread_types(self):
-        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text()
+        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text(encoding="utf-8")
         assert "foreshadow" in content.lower()
         assert "plotline" in content.lower()
         assert "thread_type" in content
 
     def test_unified_tracker_has_state_machine(self):
-        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text()
+        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text(encoding="utf-8")
         assert "declared" in content or "planted" in content
         assert "active" in content
         assert "resolved" in content
 
     def test_unified_tracker_has_scoring(self):
-        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text()
+        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text(encoding="utf-8")
         assert "base_score = 100" in content
         assert "overall_score" in content
 
     def test_unified_tracker_has_forced_actions(self):
-        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text()
+        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text(encoding="utf-8")
         assert "forced_payoffs" in content
         assert "forced_advances" in content
 
     def test_unified_tracker_output_follows_checker_schema(self):
-        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text()
+        content = (AGENTS_DIR / "thread-lifecycle-tracker.md").read_text(encoding="utf-8")
         assert "checker-output-schema.md" in content or "checker-output-reference.md" in content
         for field in ["agent", "chapter", "overall_score", "pass", "issues", "metrics", "summary"]:
             assert f'"{field}"' in content
@@ -62,24 +62,24 @@ class TestSharedCheckerPreamble:
         assert (REFERENCES_DIR / "shared-checker-preamble.md").exists()
 
     def test_preamble_has_input_rules(self):
-        content = (REFERENCES_DIR / "shared-checker-preamble.md").read_text()
+        content = (REFERENCES_DIR / "shared-checker-preamble.md").read_text(encoding="utf-8")
         assert "review_bundle_file" in content
         assert "allowed_read_files" in content
         assert ".db" in content
 
     def test_preamble_has_output_rules(self):
-        content = (REFERENCES_DIR / "shared-checker-preamble.md").read_text()
+        content = (REFERENCES_DIR / "shared-checker-preamble.md").read_text(encoding="utf-8")
         assert "checker-output-schema.md" in content
 
     def test_preamble_has_scoring_rules(self):
-        content = (REFERENCES_DIR / "shared-checker-preamble.md").read_text()
+        content = (REFERENCES_DIR / "shared-checker-preamble.md").read_text(encoding="utf-8")
         assert "100" in content
         assert "critical" in content
 
 
 class TestCheckerOutputSchemaCompleteness:
     def test_schema_has_all_checker_metrics(self):
-        content = (REFERENCES_DIR / "checker-output-schema.md").read_text()
+        content = (REFERENCES_DIR / "checker-output-schema.md").read_text(encoding="utf-8")
         expected_checkers = [
             "reader-pull-checker",
             "high-point-checker",
@@ -98,7 +98,7 @@ class TestCheckerOutputSchemaCompleteness:
             assert checker in content, f"Missing metrics for {checker}"
 
     def test_summary_format_has_all_checkers(self):
-        content = (REFERENCES_DIR / "checker-output-schema.md").read_text()
+        content = (REFERENCES_DIR / "checker-output-schema.md").read_text(encoding="utf-8")
         assert "thread-lifecycle-tracker" in content
         assert "emotion-curve-checker" in content
         assert "anti-detection-checker" in content
@@ -110,27 +110,27 @@ class TestTopologyDocument:
         assert (DOCS_DIR / "agent_topology_v13.md").exists()
 
     def test_topology_has_before_after(self):
-        content = (DOCS_DIR / "agent_topology_v13.md").read_text()
+        content = (DOCS_DIR / "agent_topology_v13.md").read_text(encoding="utf-8")
         assert "Before" in content
         assert "After" in content
 
     def test_topology_documents_merge(self):
-        content = (DOCS_DIR / "agent_topology_v13.md").read_text()
+        content = (DOCS_DIR / "agent_topology_v13.md").read_text(encoding="utf-8")
         assert "thread-lifecycle-tracker" in content
         assert "MERGED" in content
 
     def test_topology_has_pipeline_diagram(self):
-        content = (DOCS_DIR / "agent_topology_v13.md").read_text()
+        content = (DOCS_DIR / "agent_topology_v13.md").read_text(encoding="utf-8")
         assert "Pipeline" in content
         assert "Step 0" in content
         assert "Step 3" in content
 
     def test_topology_has_responsibility_matrix(self):
-        content = (DOCS_DIR / "agent_topology_v13.md").read_text()
+        content = (DOCS_DIR / "agent_topology_v13.md").read_text(encoding="utf-8")
         assert "Responsibility Matrix" in content
 
     def test_topology_has_overlap_analysis(self):
-        content = (DOCS_DIR / "agent_topology_v13.md").read_text()
+        content = (DOCS_DIR / "agent_topology_v13.md").read_text(encoding="utf-8")
         assert "Overlap Analysis" in content
         assert "Keep separate" in content
 
@@ -168,7 +168,7 @@ class TestAgentDirectoryIntegrity:
 
     def test_all_agent_specs_have_frontmatter(self):
         for md_file in AGENTS_DIR.glob("*.md"):
-            content = md_file.read_text()
+            content = md_file.read_text(encoding="utf-8")
             assert content.startswith("---"), f"{md_file.name} missing frontmatter"
             assert "name:" in content.split("---")[1], f"{md_file.name} missing name in frontmatter"
 
@@ -176,5 +176,5 @@ class TestAgentDirectoryIntegrity:
 class TestInkPlanReferences:
     def test_ink_plan_references_unified_tracker(self):
         skill_file = Path(__file__).resolve().parents[2] / "ink-writer" / "skills" / "ink-plan" / "SKILL.md"
-        content = skill_file.read_text()
+        content = skill_file.read_text(encoding="utf-8")
         assert "thread-lifecycle-tracker" in content

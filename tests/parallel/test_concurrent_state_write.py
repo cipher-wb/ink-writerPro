@@ -154,7 +154,7 @@ class TestConcurrentStateWrite:
             async with lock.async_chapter_lock(ch, owner=name, timeout=5):
                 await asyncio.sleep(0.3)
 
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         t0 = loop.time()
         await asyncio.gather(work(1, "w1"), work(2, "w2"))
         elapsed = loop.time() - t0

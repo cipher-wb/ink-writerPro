@@ -13,6 +13,20 @@
 
 from __future__ import annotations
 
+# US-010: ensure Windows stdio is UTF-8 wrapped when launched directly.
+import os as _os_win_stdio
+import sys as _sys_win_stdio
+_ink_scripts = _os_win_stdio.path.join(
+    _os_win_stdio.path.dirname(_os_win_stdio.path.abspath(__file__)),
+    '../ink-writer/scripts',
+)
+if _os_win_stdio.path.isdir(_ink_scripts) and _ink_scripts not in _sys_win_stdio.path:
+    _sys_win_stdio.path.insert(0, _ink_scripts)
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+    _enable_utf8_stdio()
+except Exception:
+    pass
 import argparse
 import json
 import subprocess
@@ -219,7 +233,7 @@ def main():
         metrics_path = output_dir / "metrics.json"
         metrics_path.write_text(
             json.dumps(result.to_dict(), ensure_ascii=False, indent=2)
-        )
+        , encoding="utf-8")
         report_path = Path("reports/v13_acceptance.md")
         generate_acceptance_report(result, report_path)
         print(f"Dry-run complete. Metrics: {metrics_path}, Report: {report_path}")
@@ -242,7 +256,7 @@ def main():
     metrics_path = output_dir / "metrics.json"
     metrics_path.write_text(
         json.dumps(result.to_dict(), ensure_ascii=False, indent=2)
-    )
+    , encoding="utf-8")
 
     report_path = Path("reports/v13_acceptance.md")
     generate_acceptance_report(result, report_path)

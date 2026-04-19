@@ -9,6 +9,21 @@ ink-writer benchmark — 统计层分析引擎
     python3 benchmark/stat_analyzer.py --compare /path/to/inkwriter/chapters/      # 对比ink-writer产出
 """
 
+# US-010: ensure Windows stdio is UTF-8 wrapped when launched directly.
+import os as _os_win_stdio
+import sys as _sys_win_stdio
+_ink_scripts = _os_win_stdio.path.join(
+    _os_win_stdio.path.dirname(_os_win_stdio.path.abspath(__file__)),
+    '../ink-writer/scripts',
+)
+if _os_win_stdio.path.isdir(_ink_scripts) and _ink_scripts not in _sys_win_stdio.path:
+    _sys_win_stdio.path.insert(0, _ink_scripts)
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+    _enable_utf8_stdio()
+except Exception:
+    pass
+
 import argparse
 import json
 import math
@@ -417,7 +432,7 @@ def main():
                     print(f"\n{'指标':<35} {'标杆':>10} {'ink-writer':>12} {'差距':>10}")
                     print("-" * 70)
 
-                    benchmark_data = json.loads(pathlib.Path(output_path if args.output else str(input_path.parent / "style_benchmark.json")).read_text())
+                    benchmark_data = json.loads(pathlib.Path(output_path if args.output else str(input_path.parent / "style_benchmark.json")).read_text(encoding="utf-8"))
                     overall = benchmark_data.get("overall", {})
 
                     for key in numeric_keys:

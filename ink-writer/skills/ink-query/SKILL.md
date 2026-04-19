@@ -19,6 +19,13 @@ allowed-tools: Read Grep Bash AskUserQuestion
 export INK_SKILL_NAME="ink-query"
 source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.ps1 提供）：
+
+```powershell
+. "$env:CLAUDE_PLUGIN_ROOT/scripts/env-setup.ps1"
+```
+
 
 ## Workflow Checklist
 

@@ -16,6 +16,13 @@ allowed-tools: Read Grep Write Edit Bash Task AskUserQuestion
 export INK_SKILL_NAME="ink-review"
 source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.ps1 提供）：
+
+```powershell
+. "$env:CLAUDE_PLUGIN_ROOT/scripts/env-setup.ps1"
+```
+
 
 ## Step 0: 充分性闸门（Sufficiency Gate）
 

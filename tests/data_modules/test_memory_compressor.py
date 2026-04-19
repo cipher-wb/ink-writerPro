@@ -13,7 +13,7 @@ class TestCheckCompressionNeeded:
         # 创建最小项目结构
         ink_dir = tmp_path / ".ink"
         ink_dir.mkdir()
-        (ink_dir / "state.json").write_text('{"progress": {"current_chapter": 30}}')
+        (ink_dir / "state.json").write_text('{"progress": {"current_chapter": 30}}', encoding="utf-8")
         result = check_compression_needed(tmp_path, 30)
         assert result["needed"] is False
 
@@ -26,7 +26,7 @@ class TestCheckCompressionNeeded:
         summaries_dir.mkdir()
         # 创建 50 个章节摘要
         for i in range(1, 51):
-            (summaries_dir / f"ch{i:04d}.md").write_text(f"---\nchapter: {i}\n---\nSummary of chapter {i}")
+            (summaries_dir / f"ch{i:04d}.md").write_text(f"---\nchapter: {i}\n---\nSummary of chapter {i}", encoding="utf-8")
         result = check_compression_needed(tmp_path, 55)
         assert result["needed"] is True
         assert result["volume_to_compress"] == 1
@@ -39,8 +39,8 @@ class TestCheckCompressionNeeded:
         summaries_dir = ink_dir / "summaries"
         summaries_dir.mkdir()
         for i in range(1, 51):
-            (summaries_dir / f"ch{i:04d}.md").write_text(f"Summary {i}")
-        (summaries_dir / "vol1_mega.md").write_text("Volume 1 mega summary")
+            (summaries_dir / f"ch{i:04d}.md").write_text(f"Summary {i}", encoding="utf-8")
+        (summaries_dir / "vol1_mega.md").write_text("Volume 1 mega summary", encoding="utf-8")
         result = check_compression_needed(tmp_path, 55)
         assert result["needed"] is False
 
@@ -61,7 +61,7 @@ class TestCheckCompressionNeeded:
         summaries_dir.mkdir()
         # 用 chapters_per_volume=20, 创建 20 个章节摘要
         for i in range(1, 21):
-            (summaries_dir / f"ch{i:04d}.md").write_text(f"---\nchapter: {i}\n---\nSummary {i}")
+            (summaries_dir / f"ch{i:04d}.md").write_text(f"---\nchapter: {i}\n---\nSummary {i}", encoding="utf-8")
         result = check_compression_needed(tmp_path, 25, chapters_per_volume=20)
         assert result["needed"] is True
         assert result["volume_to_compress"] == 1
@@ -76,7 +76,7 @@ class TestLoadVolumeSummaries:
         for i in range(1, 6):
             (summaries_dir / f"ch{i:04d}.md").write_text(
                 f"---\nchapter: {i}\ntitle: Chapter {i}\n---\nContent of chapter {i}"
-            )
+            , encoding="utf-8")
         result = load_volume_summaries(tmp_path, 1)
         assert len(result) >= 5
 
@@ -88,7 +88,7 @@ class TestLoadVolumeSummaries:
         for i in range(1, 11):
             (summaries_dir / f"ch{i:04d}.md").write_text(
                 f"---\nchapter: {i}\n---\nContent {i}"
-            )
+            , encoding="utf-8")
         result = load_volume_summaries(tmp_path, 1, chapters_per_volume=10)
         assert len(result) == 10
 
@@ -115,7 +115,7 @@ class TestSaveMegaSummary:
         save_mega_summary(tmp_path, 1, "This is the mega summary for volume 1")
         mega_file = summaries_dir / "vol1_mega.md"
         assert mega_file.exists()
-        assert "mega summary" in mega_file.read_text()
+        assert "mega summary" in mega_file.read_text(encoding="utf-8")
 
 
 class TestDefaultChaptersPerVolumeEnvVar:

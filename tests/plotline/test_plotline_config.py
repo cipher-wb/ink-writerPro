@@ -57,7 +57,7 @@ class TestLoadConfig:
             "max_forced_advances_per_chapter: 3\n"
             "plan_injection_mode: warn\n"
             "active_plotline_warn_limit: 8\n"
-        )
+        , encoding="utf-8")
         cfg = load_config(yaml_path)
         assert cfg.enabled is False
         assert cfg.inactivity_rules.main_max_gap == 5
@@ -69,13 +69,13 @@ class TestLoadConfig:
 
     def test_empty_file_returns_defaults(self, tmp_path: Path):
         yaml_path = tmp_path / "empty.yaml"
-        yaml_path.write_text("")
+        yaml_path.write_text("", encoding="utf-8")
         cfg = load_config(yaml_path)
         assert cfg.enabled is True
 
     def test_invalid_yaml_returns_defaults(self, tmp_path: Path):
         yaml_path = tmp_path / "bad.yaml"
-        yaml_path.write_text("- just a list")
+        yaml_path.write_text("- just a list", encoding="utf-8")
         cfg = load_config(yaml_path)
         assert cfg.enabled is True
 

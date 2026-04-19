@@ -48,12 +48,26 @@ allowed-tools: Bash Read
 ```bash
 source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.ps1 提供）：
+
+```powershell
+. "$env:CLAUDE_PLUGIN_ROOT/scripts/env-setup.ps1"
+```
+
 
 解析用户参数（章数），然后执行：
 
 ```bash
 bash "${SCRIPTS_DIR}/ink-auto.sh" ${章数:-5}
 ```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.ps1 提供）：
+
+```powershell
+& "$env:SCRIPTS_DIR/ink-auto.ps1" $(if ($args[0]) { $args[0] } else { 5 })
+```
+
 
 ## 智能检查点系统
 

@@ -12,9 +12,24 @@ build_reference_corpus.py - 从已爬取语料中筛选 Top-N 爆款建立标准
 
 from __future__ import annotations
 
+# US-010: ensure Windows stdio is UTF-8 wrapped when launched directly.
+import os as _os_win_stdio
+import sys as _sys_win_stdio
+_ink_scripts = _os_win_stdio.path.join(
+    _os_win_stdio.path.dirname(_os_win_stdio.path.abspath(__file__)),
+    '../ink-writer/scripts',
+)
+if _os_win_stdio.path.isdir(_ink_scripts) and _ink_scripts not in _sys_win_stdio.path:
+    _sys_win_stdio.path.insert(0, _ink_scripts)
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+    _enable_utf8_stdio()
+except Exception:
+    pass
 import argparse
 import json
 import re
+import shutil
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -27,6 +42,25 @@ CORPUS_DIR = BENCHMARK_DIR / "corpus"
 CORPUS_INDEX = BENCHMARK_DIR / "corpus_index.json"
 REFERENCE_DIR = BENCHMARK_DIR / "reference_corpus"
 REFERENCE_STATS = BENCHMARK_DIR / "reference_stats.json"
+
+# US-004: 跨平台 symlink 兜底。Windows 未启用开发者模式时 os.symlink 会抛
+# OSError；此时降级为 shutil.copy2，避免脚本中断。Mac/Linux 始终 symlink。
+try:
+    sys.path.insert(0, str(REPO_ROOT / "ink-writer" / "scripts"))
+    from runtime_compat import _has_symlink_privilege as _has_symlink_priv  # type: ignore
+except Exception:  # pragma: no cover
+    def _has_symlink_priv() -> bool:
+        return sys.platform != "win32"
+
+
+def _link_or_copy(src: Path, dst: Path) -> None:
+    """symlink when allowed, else copy. Idempotent (skips if dst exists)."""
+    if dst.exists():
+        return
+    if _has_symlink_priv():
+        dst.symlink_to(src.resolve())
+    else:  # pragma: no cover
+        shutil.copy2(src, dst)
 
 DEFAULT_TOP_N = 50
 DEFAULT_MIN_CHAPTERS = 10
@@ -241,8 +275,7 @@ def build_reference_corpus(
             dst_chapters.mkdir(parents=True, exist_ok=True)
             for ch_file in sorted(src_chapters.glob("ch*.txt")):
                 dst = dst_chapters / ch_file.name
-                if not dst.exists():
-                    dst.symlink_to(ch_file.resolve())
+                _link_or_copy(ch_file, dst)
 
         analysis = analyze_book(book_dir, book.get("chapter_count", 30))
         if analysis["chapters_analyzed"] > 0:

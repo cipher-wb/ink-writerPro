@@ -20,6 +20,13 @@ allowed-tools: Read Grep Write Edit Bash
 export INK_SKILL_NAME="ink-fix"
 source "${CLAUDE_PLUGIN_ROOT}/scripts/env-setup.sh"
 ```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.ps1 提供）：
+
+```powershell
+. "$env:CLAUDE_PLUGIN_ROOT/scripts/env-setup.ps1"
+```
+
 
 ## 输入参数
 

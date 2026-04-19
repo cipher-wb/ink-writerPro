@@ -37,6 +37,28 @@ pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/re
 
 验证：打开 Claude Code，输入 `/ink-init`，看到引导界面即安装成功。
 
+#### Windows（Claude Code 专属）
+
+Windows 10/11 原生支持（无需 WSL）。前提：PowerShell 5.1+ 或 PowerShell 7+，已安装 Claude Code。
+
+```powershell
+# 1. 安装 Python 3.12+
+winget install Python.Python.3.12
+
+# 2. 安装依赖
+py -3 -m pip install -r https://raw.githubusercontent.com/cipher-wb/ink-writerPro/HEAD/requirements.txt
+
+# 3. 安装插件（与 Mac 完全相同）
+claude plugin marketplace add cipher-wb/ink-writerPro --scope user
+claude plugin install ink-writer@ink-writer-marketplace --scope user
+```
+
+可选 RAG 配置：在 `%USERPROFILE%\.claude\ink-writer\.env` 写入 `EMBED_API_KEY=...`（路径中 `%USERPROFILE%` 等价于 Mac 的 `~`）。
+
+> ⚠️ 仅支持 **Claude Code** 场景。Gemini CLI / Codex CLI 的 Windows 适配不在本次范围内。
+>
+> 底层由 `ink-auto.ps1` / `env-setup.ps1` 提供与 `.sh` 等价的流水线（同一仓库，SKILL.md 会按平台自动选择 bash 或 PowerShell 块）。`.cmd` 包装脚本用于无 PowerShell 执行策略配置的场景，可直接双击运行。
+
 ### Gemini CLI
 
 ```bash
@@ -177,6 +199,7 @@ v15.9.0 引入 300 章 Shadow 压测骨架（US-017）+ Q1-Q8 质量仪表盘（
    - `python3 -m benchmark.e2e_shadow_300 --chapters 300 --out reports/perf-300ch-v15.md` 跑 G1-G5 性能指标（单章耗时 / checkpoint 开销 / 内存峰值 / 崩溃率 / lock 争用）。
    - `python3 scripts/quality_dashboard.py --project <path> --out reports/quality-300ch-v15.md` 查 Q1-Q8（角色漂移 / 伏笔回收率 / 命名重复 / 爽点密度等，SQL 直查 index.db）。
    - `python3 scripts/verify_docs.py` 文档-代码数字一致性。
+   - Windows 用户将 `python3` 替换为 `py -3`（或 `python`），例如 `py -3 -m benchmark.e2e_shadow_300 ...`。
 
 2. **人感验证（推荐，无可替代）**：**压测后自己读 100 / 200 / 300 三章各 10 分钟**（共 ~30 min），关注 ① 剧情是否还记得 50 章前的伏笔 / 角色状态 ② 文笔是否 AI 味（重复句式 / 空洞形容词） ③ 爽点是否还在 ④ 主角行为是否 OOC。**这是替代 AI 审读员的唯一手段**——LLM 审读会被 checker 自己的偏见污染，只有读者大脑才是真 ground truth。
 

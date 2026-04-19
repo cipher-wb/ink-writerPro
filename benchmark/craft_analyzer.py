@@ -17,6 +17,21 @@ ink-writer benchmark — Craft 分析引擎
     python3 benchmark/craft_analyzer.py --compare /path/to/inkwriter/chapters/
 """
 
+# US-010: ensure Windows stdio is UTF-8 wrapped when launched directly.
+import os as _os_win_stdio
+import sys as _sys_win_stdio
+_ink_scripts = _os_win_stdio.path.join(
+    _os_win_stdio.path.dirname(_os_win_stdio.path.abspath(__file__)),
+    '../ink-writer/scripts',
+)
+if _os_win_stdio.path.isdir(_ink_scripts) and _ink_scripts not in _sys_win_stdio.path:
+    _sys_win_stdio.path.insert(0, _ink_scripts)
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+    _enable_utf8_stdio()
+except Exception:
+    pass
+
 import argparse
 import json
 import pathlib
@@ -36,7 +51,7 @@ def generate_opening_prompt(book_dir: pathlib.Path) -> str:
         return ""
 
     meta_path = book_dir / "metadata.json"
-    meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}
+    meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
     title = meta.get("title", book_dir.name)
 
     return f"""请分析《{title}》第1章的开篇技巧。
@@ -68,7 +83,7 @@ def generate_opening_prompt(book_dir: pathlib.Path) -> str:
 def generate_scene_prompt(book_dir: pathlib.Path, chapter_nums: list[int]) -> str:
     """生成场景分析prompt"""
     meta_path = book_dir / "metadata.json"
-    meta = json.loads(meta_path.read_text()) if meta_path.exists() else {}
+    meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
     title = meta.get("title", book_dir.name)
 
     ch_paths = []

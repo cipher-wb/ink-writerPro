@@ -54,7 +54,7 @@ class TestSkippedWithoutApiKey:
             assert rc == 0
             report = (tmp_path / "reports" / "editor-wisdom-smoke-report.md")
             assert report.exists()
-            content = report.read_text()
+            content = report.read_text(encoding="utf-8")
             assert "skipped" in content.lower()
             assert "ANTHROPIC_API_KEY" in content
 
@@ -65,7 +65,7 @@ class TestWriteReport:
             lines = ["- step A done", "- step B done"]
             path = smoke_module._write_report(lines, "PASS")
             assert path.exists()
-            content = path.read_text()
+            content = path.read_text(encoding="utf-8")
             assert "**Status**: PASS" in content
             assert "- step A done" in content
             assert "- step B done" in content

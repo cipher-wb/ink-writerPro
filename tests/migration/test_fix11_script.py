@@ -104,7 +104,7 @@ def test_markdown_rewrites_sys_path_example():
 @pytest.fixture()
 def fake_repo(tmp_path: Path) -> Path:
     (tmp_path / "pkg").mkdir()
-    (tmp_path / "pkg" / "__init__.py").write_text("")
+    (tmp_path / "pkg" / "__init__.py").write_text("", encoding="utf-8")
     (tmp_path / "pkg" / "app.py").write_text(
         "from data_modules.state_manager import StateManager\n"
         "print('ok')\n",

@@ -42,6 +42,10 @@ def _build_rules() -> list[dict]:
 
 @pytest.fixture(scope="module")
 def index_dir(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    # US-018: Windows/offline BM25-degraded mode skips model-download tests.
+    import os as _os_win_embed
+    if _os_win_embed.environ.get("INK_EMBED_BACKEND", "").strip().lower() == "bm25":
+        pytest.skip("Skipped in BM25-degraded mode (INK_EMBED_BACKEND=bm25)")
     d = tmp_path_factory.mktemp("cat_index")
     rules = _build_rules()
 
