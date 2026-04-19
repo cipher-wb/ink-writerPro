@@ -1,35 +1,41 @@
 {
   "project": "ink-writer",
-  "branchName": "ralph/windows-compat",
-  "description": "Windows 兼容性改造（仅 Claude Code 场景）：保留 Mac .sh 入口字节不变，新增 PowerShell/.cmd 对等入口，补齐 encoding=utf-8、asyncio Windows 事件循环策略、符号链接跨平台兜底、python3 硬编码根除，加 Windows 安装文档与 CI 矩阵，本地 pytest 零回归（baseline 2984 passed, 19 skipped）。改动全部汇总到 feat/windows-compat 分支，未经用户显式批准不 push 到 upstream cipher-wb/ink-writerPro:master。详见 tasks/prd-windows-compat.md。",
+  "branchName": "ralph/chapter-context-injection",
+  "description": "章节上下文注入强化：写第 N 章时硬注入 n-1/n-2/n-3 三章全文 + n-4~n-10 摘要，让 writer-agent 以前三章全文为首要参考，彻底解决前后文细节遗忘导致的逻辑矛盾。三步同步改造：Step 1 context-agent 装填 recent_full_texts 字段、Step 2A writer-agent 要求起草前输出 pre-draft checklist（位置/道具/伏笔/对白四项）、Step 3 continuity-checker 消费前三章全文并在 violation 报告中附带 source_chapter+excerpt 证据。硬注入不裁剪：token 预算压力只砍 global/scene 次要 section，前三章全文 protected。仅作用于 ink-writer（非 webnovel-writer、非其他 writer skill）。零回归原则：已有端到端测试 100% 通过，baseline 2984 无新增失败。来源：tasks/prd-chapter-context-injection.md。",
   "userStories": [
     {
       "id": "US-001",
-      "title": "添加 .gitattributes 固定 .sh LF / .ps1 CRLF",
-      "description": "As a 维护者, I want 仓库强制 .sh 用 LF、.ps1 用 CRLF, so that 跨平台贡献不会因行结尾破坏现有 Mac 脚本。",
+      "title": "ContextManager 新增 _load_recent_full_texts 读取前三章全文",
+      "description": "As ink-writer 核心流程, I want 在构建 context pack 时读入最近 3 章的完整正文, so that 下游 writer-agent 和 continuity-checker 能直接引用细节。",
       "acceptanceCriteria": [
-        "仓库根新增 .gitattributes 文件",
-        "内容包含：* text=auto、*.sh text eol=lf、*.bash text eol=lf、*.ps1 text eol=crlf、*.cmd text eol=crlf、*.bat text eol=crlf",
-        "不批量 renormalize 现有 .sh（git diff 对 ink-writer/scripts/ink-auto.sh 等既有 .sh 文件零输出）",
-        "README 贡献章节（若已存在）或新开小节追加：若本地存量文件行结尾异常，使用 git add --renormalize .",
-        "Typecheck passes"
+        "ink_writer/core/context/context_manager.py 新增 _load_recent_full_texts(chapter: int, window: int = 3) 方法，返回 List[{chapter: int, text: str, word_count: int}]",
+        "正确读取 n-1、n-2、n-3 三章的完整正文文件，文件路径从 ProjectConfig 读取（不硬编码命名/后缀）",
+        "N=1 时返回 []，N=2 时返回 1 条（仅 n-1），N=3 时返回 2 条（n-1/n-2），N≥4 时返回 3 条",
+        "任一章节文件缺失时日志 warn 但不抛异常，返回结果中该条标注 missing: true",
+        "所有 open() 调用必带 encoding='utf-8'（Windows 兼容）",
+        "新增 tests/core/context/test_load_recent_full_texts.py：覆盖 N=1/2/3/4/100、缺文件、空文件、大文件",
+        "Typecheck passes",
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented via find_chapter_file (chapter_paths.py) — no hardcoded naming. 11 new tests in tests/core/context/test_load_recent_full_texts.py all pass. Full regression: 3000 passed / 23 skipped / 0 failed (baseline 2984 → +16 from new tests + collection diff, zero regressions)."
     },
     {
       "id": "US-002",
-      "title": "扩展 runtime_compat.py：Proactor 策略 + symlink 权限探测 + python 启动器",
-      "description": "As a 维护者, I want runtime_compat 提供 Windows 特化的共享原语, so that 后续 US 可以复用同一套守卫而不是各处重复写 if sys.platform。",
+      "title": "Context Pack 数据契约扩展 recent_full_texts + injection_policy",
+      "description": "As 下游 agent 消费者, I want context pack 明确暴露 recent_full_texts 字段并与 recent_summaries 语义正交, so that 前三章全文与 n-4~n-10 摘要不重叠、下游必须升级消费。",
       "acceptanceCriteria": [
-        "ink-writer/scripts/runtime_compat.py 新增 set_windows_proactor_policy() 函数：Windows 下调用 asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())；非 Windows no-op；幂等可重复调用",
-        "新增 _has_symlink_privilege() -> bool：Windows 下用 tempfile 尝试 os.symlink，捕获 OSError 返回 False；非 Windows 恒 True",
-        "新增 find_python_launcher() -> str：Windows 下依次探测 'py -3' / 'python3' / 'python' 第一个可用者（shutil.which + subprocess --version 验证），非 Windows 返回 'python3'",
-        "所有新函数在 Mac/Linux 分支保持现有 runtime_compat 行为不变",
-        "新增对应 pytest 单元测试 tests/scripts/test_runtime_compat.py，覆盖三个函数的 Mac no-op 路径与 Windows 分支（用 monkeypatch 模拟 sys.platform）",
+        "context pack schema（Python dataclass / pydantic）新增 recent_full_texts: List[{chapter: int, text: str, word_count: int, missing: bool}]",
+        "recent_summaries 字段语义变更为 'n-4 ~ n-10 共 7 章摘要'（不再包含 n-1/n-2/n-3）",
+        "新增 injection_policy 元数据：{full_text_window: 3, summary_range: [n-10, n-4], hard_inject: true}",
+        "ContextManager.build_context() 在 N≥4 时 recent_summaries 范围从旧的 [n-5, n-1] 改为 [n-10, n-4]",
+        "更新 docs/architecture.md 或 context pack 契约文档对应段落",
+        "新增 tests/core/context/test_context_pack_schema.py：契约字段齐全、类型正确、summaries 不与 full_texts 重叠",
         "Typecheck passes",
-        "Tests pass"
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 2,
       "passes": false,
@@ -37,15 +43,16 @@
     },
     {
       "id": "US-003",
-      "title": "asyncio Windows 事件循环策略注入 pipeline_manager 与测试",
-      "description": "As a Windows 用户, I want 并发写作路径使用 ProactorEventLoop, so that subprocess / socket 行为与 Mac 一致不出隐性 bug。",
+      "title": "context-agent 规格更新：硬注入 recent_full_texts",
+      "description": "As context-agent, I want 在搜集创作执行包时强制装填 recent_full_texts 字段, so that Step 1 输出的 pack 能直接供 writer-agent 和 checker 消费。",
       "acceptanceCriteria": [
-        "ink_writer/parallel/pipeline_manager.py 模块顶部 import 后调用 runtime_compat.set_windows_proactor_policy()",
-        "其它显式 asyncio.run 的入口（扫描 scripts/ 与 ink-writer/scripts/ 下 .py 文件）同样注入",
-        "tests/parallel/test_concurrent_state_write.py 中 asyncio.get_event_loop() 改为 asyncio.new_event_loop() 或 asyncio.run 包裹",
-        "Mac 下该测试行为与改造前一致（pass 数不变）",
+        "ink-writer/agents/context-agent.md 规格新增段落 'Recent Full Texts Injection (Hard Constraint)'",
+        "规格明确要求调用 _load_recent_full_texts(window=3) 并填入 recent_full_texts 字段（硬约束、非可选）",
+        "Context Contract 新增对应条目，标注为硬约束",
+        "前三章全文文件缺失时，pack 元数据 warnings 列表增加 'missing_full_text:ch<N>' 但不阻塞流程",
+        "规格内附最小 pack 示例展示 recent_full_texts 正确结构（含 N=1/N=5 两种场景）",
         "Typecheck passes",
-        "Tests pass"
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 3,
       "passes": false,
@@ -53,15 +60,18 @@
     },
     {
       "id": "US-004",
-      "title": "符号链接跨平台兜底：build_reference_corpus.py + test_path_guard.py",
-      "description": "As a Windows 用户, I want 未开启开发者模式也能跑脚本与测试, so that 不因 symlink 权限中断。",
+      "title": "writer-agent 规格改造：前三章全文作为首要参考 + pre-draft checklist",
+      "description": "As writer-agent, I want prompt 明确把前三章全文标为首要参考并强制先输出 pre-draft checklist, so that LLM 真正读过前三章再起草、而不是跳读续写。",
       "acceptanceCriteria": [
-        "scripts/build_reference_corpus.py 中 dst.symlink_to(ch_file.resolve()) 包装：Windows 且 _has_symlink_privilege()==False 时降级为 shutil.copy2；Mac 维持 symlink_to",
-        "tests/data_modules/test_path_guard.py 内两处 link.symlink_to 对应 test 增加 @pytest.mark.skipif(sys.platform == 'win32' and not _has_symlink_privilege(), reason='symlink requires admin on Windows')",
-        "tests 里的 skipif 从 runtime_compat 导入 _has_symlink_privilege",
-        "Mac 下这些测试依旧执行（skipif 条件为 False）",
+        "ink-writer/agents/writer-agent.md 新增章节 'Primary Reference: Last 3 Chapters Full Text'，顶部标注 'PRIMARY REFERENCE — READ CAREFULLY BEFORE DRAFTING'",
+        "prompt 模板用明确分隔符（如 === CHAPTER N-1 FULL TEXT === / === END CHAPTER N-1 ===）包裹每章全文",
+        "规格要求 writer-agent 在起草正文前输出 pre-draft checklist 四项：(a) 前三章末尾人物所在位置、(b) 前三章末尾人物手上的道具/状态、(c) 前三章建立但未兑现的承诺/伏笔、(d) 前三章最近一次对话的关键措辞",
+        "规格明确优先级：前三章全文 > 本章大纲 > 前 n-4~n-10 摘要 > 全局设定",
+        "N≤3 时 checklist 段落有兜底模板（N=1 时略过、N=2/3 时列出可用前文）",
+        "pre-draft checklist 通过特殊标记（如 <pre-draft-checklist>...</pre-draft-checklist>）包裹，供下游 polish-agent 在最终输出前 strip（本 US 只定义标记约定，剥离实现在另一 US 或已有 polish 流程内处理）",
+        "dry-run 抽样 3 章：writer-agent 能正确消费 recent_full_texts、能输出 checklist",
         "Typecheck passes",
-        "Tests pass"
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 4,
       "passes": false,
@@ -69,17 +79,17 @@
     },
     {
       "id": "US-005",
-      "title": "encoding=utf-8 补齐：ink_writer/ 核心包（core/state/index/infra/extract/cli）",
-      "description": "As a Windows 中文用户, I want ink_writer 核心模块读写文本显式 UTF-8, so that cp936 默认编码不触发乱码或 UnicodeDecodeError。",
+      "title": "continuity-checker 规格改造：消费前三章全文 + evidence 回填",
+      "description": "As continuity-checker, I want 在审查时读到前三章全文并在每条 violation 中附带证据, so that 矛盾检测从事后粗粒度变为细粒度、可追溯。",
       "acceptanceCriteria": [
-        "扫描 ink_writer/core/、ink_writer/state/（如存在）、ink_writer/index/、ink_writer/infra/、ink_writer/extract/、ink_writer/cli/ 下所有 .py 文件",
-        "所有 open(...) 文本模式（未 'b'）且未显式 encoding= 的调用补 encoding='utf-8'",
-        "所有 pathlib.Path.read_text() / write_text() 未指定编码的补 encoding='utf-8'",
-        "二进制模式 'rb'/'wb' 保持不变",
-        "json.load/json.dump 本身不动（它们接受已打开 handle，由 open 处保证编码）",
-        "改动仅加参数，不改变读写逻辑；所有既有单元测试通过",
+        "ink-writer/agents/continuity-checker.md 规格更新：审查时需消费 context pack 中的 recent_full_texts",
+        "checker prompt 包含显式指令 '对照前三章全文，逐条校验本章中的人物动作/道具状态/地点连续性/时间线/对话呼应'",
+        "violation 报告 schema 扩展：每条矛盾项必须附带 evidence: {source_chapter: int, excerpt: str}，指向前三章全文的具体片段",
+        "回归测试：人工构造 3 个已知矛盾场景（道具消失、地点错位、对白反口），新 checker 能全部召回并给出 evidence",
+        "不破坏 checker 已有的 review_metrics / character_evolution_ledger 校验路径（与新机制并存）",
         "Typecheck passes",
-        "Tests pass"
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 5,
       "passes": false,
@@ -87,14 +97,18 @@
     },
     {
       "id": "US-006",
-      "title": "encoding=utf-8 补齐：ink_writer/ 其余特性子包",
-      "description": "As a Windows 中文用户, I want ink_writer 各特性模块（anti_detection、editor_wisdom、style_rag 等）读写文本显式 UTF-8, so that 全链路中文安全。",
+      "title": "Token 预算重排：前三章全文 protected，硬注入不裁剪",
+      "description": "As 架构守护者, I want 前三章全文在超预算时永不被裁剪, so that 严格遵循用户选定的 '硬注入' 策略、保证写作质量不因预算妥协。",
       "acceptanceCriteria": [
-        "扫描 ink_writer/ 下除 US-005 已处理外的所有子包（anti_detection、checker_pipeline、creativity、cultural_lexicon、editor_wisdom、emotion、foreshadow、pacing、parallel、plotline、progression、prompt_cache、propagation、quality_metrics、reader_pull、reflection、semantic_recall、style_rag、thread_lifecycle、voice_fingerprint）",
-        "同 US-005 规则补 encoding='utf-8'",
-        "只加参数，不改逻辑",
+        "ink_writer/core/context/context_weights.py 权重重排：recent_full_texts 优先级最高（protected），不参与超预算裁剪",
+        "每次 build_context 日志输出 token 预估：full_texts_tokens / summaries_tokens / outline_tokens / global_tokens / total_tokens",
+        "total_tokens > soft cap（默认 60k）时：warn 但不裁剪前三章全文，改为裁剪 global/scene 次要 section",
+        "total_tokens > hard cap（默认 180k）时：降级顺序 global → scene_sampling → n-10~n-4 摘要，最后才动前三章全文",
+        "soft cap / hard cap 通过 config 可配置（不硬编码）",
+        "新增 tests/core/context/test_token_budget.py：模拟 3×2500 字前三章（约 12k tokens）场景、模拟超 soft cap 场景、模拟超 hard cap 场景",
         "Typecheck passes",
-        "Tests pass"
+        "Tests pass",
+        "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 6,
       "passes": false,
@@ -102,222 +116,19 @@
     },
     {
       "id": "US-007",
-      "title": "encoding=utf-8 补齐：ink-writer/scripts/ 目录",
-      "description": "As a Windows 用户, I want ink-writer/scripts 下所有 Python CLI/helper 显式 UTF-8, so that 脚本在 Windows cp936 终端下不炸。",
+      "title": "端到端回归 + 细节矛盾率对照验收",
+      "description": "As 维护者, I want 在已有项目上验证新机制的细节召回效果并确保零回归, so that 合并前对 M-1 ~ M-5 成功指标有量化证据。",
       "acceptanceCriteria": [
-        "扫描 ink-writer/scripts/*.py 全量（包含 ink.py、update_state.py、init_project.py、slim_review_bundle.py、archive_manager.py 等）",
-        "按 US-005 规则补 encoding='utf-8'",
-        "runtime_compat.py、已显式指定编码的文件不重复改",
-        "Typecheck passes",
-        "Tests pass"
+        "在一个已有项目从 N=5 续写到 N=7，人工抽样 10 个细节点（人物/道具/地点/时间/对白），记录新旧机制召回率对照表",
+        "ink-auto 跨会话批量写作流程下稳定运行 ≥10 章无崩溃，日志不含 warn/error（missing_full_text 除外）",
+        "violation 报告平均 evidence 数 ≥1.5 条/次（5 章抽样统计）",
+        "writer-agent 的 pre-draft checklist 前三章细节命中率 ≥80%（人工抽样 5 章评估）",
+        "全量回归：pytest --no-cov 零新增失败（baseline 2984）",
+        "文档同步：docs/architecture.md 相关段落更新、README（若涉及）同步",
+        "在 tasks/prd-chapter-context-injection.md 底部追加 'Release Notes' 段：列出验收数据（M-1~M-5 实测值）+ baseline 更新数字",
+        "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-008",
-      "title": "encoding=utf-8 补齐：scripts/ + benchmark/",
-      "description": "As a Windows 用户, I want 根目录 scripts/ 与 benchmark/ 下 Python 文件显式 UTF-8。",
-      "acceptanceCriteria": [
-        "扫描 scripts/ 与 benchmark/ 下所有 .py（含子目录 audit/、migration/、editor-wisdom/、ralph/）",
-        "按 US-005 规则补 encoding='utf-8'",
-        "ralph/ralph.sh 等 shell 脚本不动",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 8,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-009",
-      "title": "encoding=utf-8 补齐：tests/ 全量",
-      "description": "As a Windows 维护者, I want 测试代码本身也显式 UTF-8, so that pytest 在 Windows 上不因测试 fixture 读文件乱码而失败。",
-      "acceptanceCriteria": [
-        "扫描 tests/ 下所有 .py，按 US-005 规则补 encoding='utf-8'",
-        "tmp_path fixture 相关写入统一 encoding='utf-8'",
-        "测试用例逻辑不动",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 9,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-010",
-      "title": "所有 Python 入口注入 enable_windows_utf8_stdio()",
-      "description": "As a Windows 用户, I want 终端日志的中文/emoji 不乱码, so that 观察进度时不用额外配置代码页。",
-      "acceptanceCriteria": [
-        "识别所有含 if __name__ == '__main__': 的入口脚本（ink-writer/scripts/ink.py、update_state.py、benchmark/e2e_shadow_300.py、scripts/quality_dashboard.py、scripts/verify_docs.py、scripts/verify_optimization_quality.py、scripts/audit_architecture.py、scripts/run_300chapter_benchmark.py 等）",
-        "在入口函数最开头调用 runtime_compat.enable_windows_utf8_stdio()（若 runtime_compat 不在 sys.path，使用相对 import 或 sys.path 注入）",
-        "Mac 下该函数 no-op，不影响 Mac 行为",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 10,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-011",
-      "title": "Python 源码内 subprocess 的 python3 硬编码改为 sys.executable",
-      "description": "As a Windows 用户, I want Python 代码里 spawn 子进程时调用当前解释器, so that 不依赖 PATH 中存在 python3 命令。",
-      "acceptanceCriteria": [
-        "grep 仓库 .py 文件中 subprocess.run / Popen / check_output 中的 \"python3\"、'python3 ' 字符串、shell=True 下的 python3 前缀",
-        "全部替换为 sys.executable 或 [sys.executable, ...]",
-        "shell 脚本（.sh）内 python3 不动（Mac 依赖）",
-        "文档 markdown 内 python3 示例不动（由 US-016 README 单独处理）",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 11,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-012",
-      "title": "新增 env-setup.ps1 + env-setup.cmd",
-      "description": "As a Windows 用户, I want env-setup 的 PowerShell 对等实现, so that 环境变量、路径、.env 加载与 Mac 等价。",
-      "acceptanceCriteria": [
-        "ink-writer/scripts/env-setup.ps1 新建；完整对应 env-setup.sh 行为（CLAUDE_PLUGIN_ROOT / SCRIPTS_DIR / .env 加载 / python 启动器探测）",
-        "顶部 $ErrorActionPreference = 'Stop'、Set-StrictMode -Version Latest",
-        "使用 runtime_compat.find_python_launcher 同逻辑的 PowerShell 版本：Get-Command py→python3→python",
-        "ink-writer/scripts/env-setup.cmd 新建，内容一行 powershell -NoProfile -ExecutionPolicy Bypass -File \"%~dp0env-setup.ps1\" %*",
-        "env-setup.sh 字节不变（git diff 零输出）",
-        "pwsh 7+ 与 windows powershell 5.1 均可 dot-source 或直接执行",
-        "Typecheck passes"
-      ],
-      "priority": 12,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-013",
-      "title": "新增 ink-auto.ps1 + ink-auto.cmd",
-      "description": "As a Windows 用户, I want /ink-auto 在 Windows 上跑通完整流水线, so that 每日写作流与 Mac 一致。",
-      "acceptanceCriteria": [
-        "ink-writer/scripts/ink-auto.ps1 新建；逐段对应 ink-auto.sh 的参数解析（N 章数）、checkpoint 调度（5/10/20/50/200）、日志前缀、退出码",
-        "调用 Python 统一通过 find_python_launcher 输出，并加 -X utf8 参数",
-        "终端宽度改用 $Host.UI.RawUI.WindowSize.Width，tput cols 不出现",
-        "ink-auto.cmd 新建，powershell -NoProfile -ExecutionPolicy Bypass -File \"%~dp0ink-auto.ps1\" %*",
-        "ink-auto.sh 字节不变（git diff 零输出）",
-        "手动用 ink-auto.cmd --help 或干跑 1 章，确认无报错（PR 描述中附输出）",
-        "Typecheck passes"
-      ],
-      "priority": 13,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-014",
-      "title": "新增 ralph.ps1 + ralph.cmd",
-      "description": "As a Windows 维护者, I want Ralph 自动执行脚本也能在 Windows 跑, so that 后续迭代不依赖 WSL。",
-      "acceptanceCriteria": [
-        "scripts/ralph/ralph.ps1 新建，对应 ralph.sh 的 agent 循环与归档逻辑",
-        "scripts/ralph/ralph.cmd 新建作为双击入口",
-        "ralph.sh 字节不变",
-        "脚本在无 Amp/Claude CLI 的环境下给出清晰报错（而非崩溃）",
-        "Typecheck passes"
-      ],
-      "priority": 14,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-015",
-      "title": "Claude Code commands/ skills/ 下 .sh 调用改为条件块",
-      "description": "As a Claude Code 用户, I want 一个 slash command 在 Mac 走 bash/.sh 在 Windows 走 powershell/.ps1, so that 使用体验跨平台透明。",
-      "acceptanceCriteria": [
-        "grep ink-writer/commands/ ink-writer/skills/ 下所有 markdown，找出直接写 bash ink-auto.sh / env-setup.sh / ralph.sh 的位置",
-        "每处改为条件块：Mac/Linux 段落保持原 bash 调用不动；新增同级 Windows 段落用 powershell 调用对应 .ps1 或 .cmd，附平台判断说明文字",
-        "不新建 Windows 专用副本 md（单文件内分支）",
-        "改动不破坏 frontmatter 与 allowed-tools 字段",
-        "scripts/verify_docs.py 跑通不报错（若它会校验 skill 规范）",
-        "Typecheck passes",
-        "Tests pass"
-      ],
-      "priority": 15,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-016",
-      "title": "README 新增 Windows 安装小节 + python3/py -3 双示例",
-      "description": "As a Windows 新手, I want README 有一段从零开始的 Windows 安装说明, so that 照着做就能开箱即用。",
-      "acceptanceCriteria": [
-        "README.md 「安装 → Claude Code」节下新增「Windows」子小节，与现有命令并列",
-        "内容包括：winget install Python.Python.3.12 / pip install -r requirements.txt / claude plugin marketplace add 原命令 / EMBED_API_KEY 写到 %USERPROFILE%\\.claude\\ink-writer\\.env",
-        "明确标注：仅支持 Claude Code；Gemini CLI / Codex CLI 的 Windows 路径不在本次范围",
-        "Mac / Claude Code 原段落一字不改（git diff 对这些行零输出）",
-        "「如何验证」章节 python3 -m ... 示例下方新增 Windows 平行示例 py -3 -m ...",
-        "Typecheck passes"
-      ],
-      "priority": 16,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-017",
-      "title": "CLAUDE.md 追加 Windows 开发守则",
-      "description": "As a 后续贡献者, I want CLAUDE.md 里明确告诉我写新代码时要怎么做 Windows 兼容, so that 不再反复踩同样坑。",
-      "acceptanceCriteria": [
-        "CLAUDE.md 「Top 3 注意事项」扩展或新增 Windows 小节",
-        "列出三条硬规则：(1) 新增 open() 必带 encoding='utf-8'；(2) 新增 Python 入口开头必调 runtime_compat.enable_windows_utf8_stdio()；(3) 新增面向用户的 CLI 入口需提供 .ps1 对等版本",
-        "AGENTS.md / GEMINI.md 不动",
-        "Typecheck passes"
-      ],
-      "priority": 17,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-018",
-      "title": "CI 矩阵加 windows-latest（BM25 降级模式）",
-      "description": "As a 维护者, I want 每次 PR 在 Windows 上也跑 pytest, so that 回归尽早暴露。",
-      "acceptanceCriteria": [
-        ".github/workflows/ci-test.yml matrix.os 增加 windows-latest",
-        "Windows job 环境变量 INK_EMBED_BACKEND=bm25，避免 FAISS/sentence-transformers 安装超时",
-        "Windows job 步骤使用 py -3 -m pip install -r requirements.txt",
-        "Ubuntu / macOS job 原配置一字不改（git diff 对应行零输出）",
-        "Windows job allowed 合理 skip 数略高于 Mac（符号链接等），但不允许 failed > 0",
-        "Typecheck passes"
-      ],
-      "priority": 18,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-019",
-      "title": "本地 Windows pytest 零回归验证 + 产出报告",
-      "description": "As a 需求方, I want 改完后在我的 Windows 本机跑完整 pytest, so that 证明零回归再决定是否 push。",
-      "acceptanceCriteria": [
-        "在 E:/AI/AI小说生成/ink-writerPro 执行 py -3 -m pytest --no-cov 并保存输出到 reports/windows-compat-pytest.txt",
-        "报告中包含 platform win32 / Python 版本 / collected 数 / 最终摘要行",
-        "failed 必须为 0；passed >= 2984 - (合理 skip 数，报告中单独列出清单)",
-        "对比 Mac 基线 skip 集合，新增 skip 均限于 symlink 相关测试",
-        "若出现 failed，修复到 0 才算完成本 US",
-        "Tests pass"
-      ],
-      "priority": 19,
-      "passes": false,
-      "notes": ""
-    },
-    {
-      "id": "US-020",
-      "title": "打包 changeset 报告 + 本地分支 feat/windows-compat 就绪（不 push）",
-      "description": "As a 需求方, I want 所有改动在一条分支上、附完整 changeset 报告, so that 我可以 review 后再决定是否提 PR 到 upstream。",
-      "acceptanceCriteria": [
-        "本地创建分支 feat/windows-compat，所有 US-001~US-019 改动已 commit",
-        "产出 reports/windows-compat-changeset.md：按文件类型分类（新增 .ps1/.cmd / 修改 .py / 修改 .md / 修改 .github）列出所有文件",
-        "报告内附 Mac 零影响证据：对 ink-writer/scripts/ink-auto.sh / env-setup.sh / scripts/ralph/ralph.sh / README.md 的 Mac 原段落跑 git diff，输出应为空或仅上下文",
-        "报告内附 PR 描述草稿（标题 / Summary / Test Plan / Risk / Rollback）",
-        "不执行 git push 到 upstream，也不执行 gh pr create",
-        "报告中明确告知：需用户说『可以 push』后才能推送",
-        "Typecheck passes"
-      ],
-      "priority": 20,
       "passes": false,
       "notes": ""
     }

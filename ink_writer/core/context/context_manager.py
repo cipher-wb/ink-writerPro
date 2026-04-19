@@ -1289,6 +1289,65 @@ class ContextManager:
                 summaries.append(summary)
         return summaries
 
+    def _load_recent_full_texts(
+        self, chapter: int, window: int = 3
+    ) -> List[Dict[str, Any]]:
+        """Load full body text of the previous ``window`` chapters.
+
+        Returns chapters in ascending order: for chapter N with window=3 the
+        result spans [N-3, N-2, N-1]. Missing chapter files emit a warning and
+        appear as ``{chapter, text: "", word_count: 0, missing: True}`` so the
+        caller can still see the gap.
+
+        Chapter file paths are resolved via ``find_chapter_file`` (which reads
+        from ``ProjectConfig.chapters_dir`` ── see ``CLAUDE.md`` Windows compat
+        守则: never hardcode chapter naming/suffix).
+        """
+        results: List[Dict[str, Any]] = []
+        if chapter <= 1 or window <= 0:
+            return results
+
+        try:
+            from chapter_paths import find_chapter_file  # noqa: WPS433
+        except ImportError:  # pragma: no cover
+            from scripts.chapter_paths import find_chapter_file  # noqa: WPS433
+
+        start_chapter = max(1, chapter - window)
+        for ch in range(start_chapter, chapter):
+            path = find_chapter_file(self.config.project_root, ch)
+            if path is None or not path.exists():
+                logger.warning(
+                    "recent_full_texts: chapter %d source file not found under %s",
+                    ch,
+                    self.config.chapters_dir,
+                )
+                results.append(
+                    {"chapter": ch, "text": "", "word_count": 0, "missing": True}
+                )
+                continue
+            try:
+                text = path.read_text(encoding="utf-8")
+            except OSError as exc:
+                logger.warning(
+                    "recent_full_texts: failed to read chapter %d at %s: %s",
+                    ch,
+                    path,
+                    exc,
+                )
+                results.append(
+                    {"chapter": ch, "text": "", "word_count": 0, "missing": True}
+                )
+                continue
+            results.append(
+                {
+                    "chapter": ch,
+                    "text": text,
+                    "word_count": len(text),
+                    "missing": False,
+                }
+            )
+        return results
+
     def _load_recent_meta(self, state: Dict[str, Any], chapter: int, window: int = 3) -> List[Dict[str, Any]]:
         meta = state.get("chapter_meta", {}) or {}
         results = []

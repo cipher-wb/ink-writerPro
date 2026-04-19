@@ -1,4 +1,45 @@
 # Ralph Progress Log
-Started: 2026-04-19
-Feature: Windows Compatibility for Claude Code
-Source: tasks/prd-windows-compat.md
+Started: 2026-04-19 (chapter-context-injection)
+Source PRD: tasks/prd-chapter-context-injection.md
+Branch: ralph/chapter-context-injection
+---
+
+## Codebase Patterns
+(承接自前轮 ralph runs，保留通用、适用本 PRD 的条目。逐轮新增追加到下方。)
+
+- **UTF-8 编码硬约束**：所有 `open()` / `Path.read_text()` / `Path.write_text()` 必须带 `encoding="utf-8"`（见 CLAUDE.md Windows 兼容守则第 1 条）。中文项目在 Windows 上不带参数会炸 UnicodeDecodeError。
+- **零回归守卫 baseline**：v18.0.0 发版后 `pytest --no-cov` 全量 baseline = 2984 passed / 19 skipped / 0 failed。本轮每个 US 完成前必须跑全量无新增失败。
+- **pytest.ini testpaths 同步**：新增的 `tests/核心模块/子目录/` 必须追加到 `pytest.ini:testpaths`，否则 `python3 -m pytest` 默认收集会漏掉。
+- **ProjectConfig 读取约定**：章节正文文件命名/后缀由 `ProjectConfig` 决定（`benchmark/reference_corpus/*/chapters` 使用 `ch###.txt`，实际项目可能不同）；新代码不硬编码命名，统一从 config 读取。
+- **ralph/ 是 gitignored**：`ralph/prd.json` 与 `ralph/progress.txt` 的状态翻转与 append 都不入 commit；正式归档副本在 `archive/YYYY-MM-DD-feature/` 下，受版本控制。
+- **kwarg-only 向后兼容**：给既有 public 函数新增参数时放到 `*` 之后（kwarg-only），避免破坏生产/测试调用方的位置参数假设。`ink_writer/editor_wisdom/writer_injection.py:build_writer_constraints` 是典型示例。
+- **章节文件查找统一入口**：定位章节正文文件必须用 `chapter_paths.find_chapter_file(project_root, chapter_num)`（lazy import，兼容两种导入路径 `chapter_paths` / `scripts.chapter_paths`），它已覆盖三种命名约定（`第NNNN章.md` 平坦布局、`第N卷/第NNN章-标题.md` 卷布局、rglob fallback）。新代码不要 hardcode `f"ch{n:04d}.txt"` 之类。
+
+## Context Contract（本 PRD 专属）
+
+- **核心数据契约**：context pack 新增 `recent_full_texts: List[{chapter, text, word_count, missing}]`，语义为 n-1/n-2/n-3 三章全文；`recent_summaries` 语义变更为 n-4~n-10（不再重叠全文范围）。
+- **硬注入原则**：前三章全文是 protected section，token 预算超标时优先裁剪 global/scene，最后才动全文（US-006 具体规则）。
+- **三 agent 同步**：context-agent（装填）+ writer-agent（首要参考 + pre-draft checklist）+ continuity-checker（evidence 回填）是本 PRD 的"三联动"——任何一环不到位都削弱效果。
+
+---
+
+## 2026-04-19 - US-001 - ContextManager 新增 _load_recent_full_texts
+- 在 `ink_writer/core/context/context_manager.py` 紧随 `_load_recent_summaries` 新增 `_load_recent_full_texts(chapter, window=3)`，返回 `[{chapter, text, word_count, missing}]`，按章节号升序。
+- 文件定位走 `chapter_paths.find_chapter_file(project_root, chapter_num)`：复用三种命名约定，绝不 hardcode 命名。
+- 缺失文件 → `logger.warning(...)` + `missing: True`，不抛异常；空文件 → `text=""` 但 `missing: False`（已找到，只是没内容）。
+- 边界：`chapter <= 1 or window <= 0 → []`；`window > N-1` 时被 `max(1, chapter - window)` 自动钳到 N-1。
+- 新增 `tests/core/context/test_load_recent_full_texts.py`（11 cases）：N=1/2/3/4/100、window=0、custom window=5、缺文件、空文件、UTF-8 中文、6000 字大文件。
+- 新增 `tests/core/__init__.py` + `tests/core/context/__init__.py`，并把 `tests/core` 追加到 `pytest.ini:testpaths`。
+- **Files changed**:
+  - `ink_writer/core/context/context_manager.py` (+62 lines: 新方法)
+  - `tests/core/context/test_load_recent_full_texts.py` (新建, 11 tests)
+  - `tests/core/__init__.py` / `tests/core/context/__init__.py` (新建空文件)
+  - `pytest.ini` (testpaths +tests/core)
+  - `prd.json` (US-001 passes=true)
+- **回归**：`python3 -m pytest --no-cov` → 3000 passed / 23 skipped / 0 failed（baseline 2984 → 11 new + 5 来自 testpaths 重新发现，零失败）。
+- **Learnings for future iterations:**
+  - `runtime_compat` 在 scripts/ 而非顶层包，python3 直接 import 会失败；只在 pytest（含 pythonpath）内能 import。后续 US 写 smoke 脚本前请先用 `PYTHONPATH=...:ink-writer/scripts:scripts python3 -c ...` 测试。
+  - `chapter_paths.find_chapter_file` 已涵盖三种历史命名约定（参见 ink-writer/scripts/chapter_paths.py:140-161）。新代码继续走它，不要再写新 finder。
+  - `tmp_path` + `DataModulesConfig.from_project_root(tmp_path) + cfg.ensure_dirs()` 是 ContextManager 测试的标准 fixture（已被 `tests/data_modules/test_context_manager.py:28-32` 沿用），新测试继续套用即可。
+  - testpaths 新增条目要谨慎核算 baseline：`tests/core` 同时新增了 `__init__.py`，pytest 会按 conftest 与 collection 规则重新计数；本轮 +16 ≈ 11 (new) + 5 (re-collected)，对照"零失败"硬约束方可放行。
+---
