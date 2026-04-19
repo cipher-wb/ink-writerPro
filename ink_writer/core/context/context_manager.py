@@ -69,6 +69,9 @@ class ContextManager:
         "golden_three_contract",
     }
     SECTION_ORDER = [
+        # US-006: recent_full_texts 作为独立 top-level section 置于最前，
+        # 便于 writer-agent 直接消费、且在 token 预算中 protected 不受裁剪。
+        "recent_full_texts",
         "core",
         "scene",
         "global",
@@ -175,66 +178,196 @@ class ContextManager:
             max_chars = max_chars
         extra_budget = int(self.config.context_extra_section_budget or 0)
 
-        sections = {}
+        # US-006: 把 pack.core.recent_full_texts 提升为独立 top-level section，
+        # 既避免与 core 的 weight 预算共享从而被静默裁剪，也允许 SECTION_ORDER 显式
+        # 将它置于最前（writer-agent / continuity-checker 首要参考）。
+        protected_sections = set(
+            getattr(self.config, "context_protected_sections", ("recent_full_texts",))
+        )
+        core_original = pack.get("core")
+        recent_full_texts: Optional[List[Dict[str, Any]]] = None
+        if isinstance(core_original, dict) and "recent_full_texts" in core_original:
+            recent_full_texts = core_original.get("recent_full_texts") or []
+            # 用不含 recent_full_texts 的 core 副本进入常规 weight/budget 路径，避免
+            # 同一段全文占据 core 预算被字符级裁剪（违反 US-006 "硬注入不裁剪"）。
+            core_for_render = {
+                k: v for k, v in core_original.items() if k != "recent_full_texts"
+            }
+        else:
+            core_for_render = core_original
+
+        sections: Dict[str, Any] = {}
         for section_name in self.SECTION_ORDER:
+            if section_name == "recent_full_texts":
+                if recent_full_texts is not None:
+                    sections["recent_full_texts"] = recent_full_texts
+                continue
+            if section_name == "core":
+                if core_for_render is not None:
+                    sections["core"] = core_for_render
+                continue
             if section_name in pack:
                 sections[section_name] = pack[section_name]
 
         assembled: Dict[str, Any] = {"meta": pack.get("meta", {}), "sections": {}}
         for name, content in sections.items():
-            weight = weights.get(name, 0.0)
-            if weight > 0:
-                budget = int(max_chars * weight)
-            elif name in self.EXTRA_SECTIONS and extra_budget > 0:
-                budget = extra_budget
+            if name in protected_sections:
+                # US-006: protected section 不参与 weight 预算，原样注入
+                budget: Optional[int] = None
             else:
-                budget = None
+                weight = weights.get(name, 0.0)
+                if weight > 0:
+                    budget = int(max_chars * weight)
+                elif name in self.EXTRA_SECTIONS and extra_budget > 0:
+                    budget = extra_budget
+                else:
+                    budget = None
             text = self._compact_json_text(content, budget)
-            assembled["sections"][name] = {"content": content, "text": text, "budget": budget}
+            assembled["sections"][name] = {
+                "content": content,
+                "text": text,
+                "budget": budget,
+                "protected": name in protected_sections,
+            }
 
         assembled["template"] = template
         assembled["weights"] = weights
         if chapter > 0:
             assembled.setdefault("meta", {})["context_weight_stage"] = self._resolve_context_stage(chapter)
 
-        # Token 预算硬上限：估算总 token 数，超出时按优先级裁剪
-        hard_token_limit = int(getattr(self.config, "context_hard_token_limit", 16000))
-        total_chars = sum(
-            len(s.get("text", ""))
-            for s in assembled.get("sections", {}).values()
+        # US-006: 双档 Token 预算 + 分层降级（soft → hard）+ recent_full_texts protected
+        soft_token_limit = int(getattr(self.config, "context_soft_token_limit", 60000))
+        hard_token_limit = int(getattr(self.config, "context_hard_token_limit", 180000))
+        # Guard: 用户若误配 soft > hard，以 hard 为共同上限
+        effective_soft = min(soft_token_limit, hard_token_limit)
+
+        def _estimate_total_tokens() -> int:
+            total_chars = sum(
+                len(s.get("text", ""))
+                for s in assembled.get("sections", {}).values()
+            )
+            return int(total_chars / 1.5)  # 中文 ≈ 1.5 chars/token
+
+        estimated_tokens = _estimate_total_tokens()
+
+        # 每个 section 的 token 估算，便于日志与下游观测
+        token_breakdown = {
+            name: int(len(sec.get("text", "")) / 1.5)
+            for name, sec in assembled.get("sections", {}).items()
+        }
+        meta = assembled.setdefault("meta", {})
+        meta["estimated_tokens"] = estimated_tokens
+        meta["soft_token_limit"] = soft_token_limit
+        meta["hard_token_limit"] = hard_token_limit
+        meta["token_breakdown"] = token_breakdown
+        meta["protected_sections"] = sorted(protected_sections)
+
+        logger.info(
+            "context build tokens chapter=%s total=%d soft=%d hard=%d breakdown=%s",
+            chapter or "?",
+            estimated_tokens,
+            soft_token_limit,
+            hard_token_limit,
+            token_breakdown,
         )
-        # 中文约 1.5 chars/token
-        estimated_tokens = int(total_chars / 1.5)
-        assembled.setdefault("meta", {})["estimated_tokens"] = estimated_tokens
-        assembled["meta"]["hard_token_limit"] = hard_token_limit
+
+        def _trim_section(name: str) -> bool:
+            """对单个 section 执行字符级裁剪；protected 跳过。返回是否实际裁剪。"""
+            if name in protected_sections:
+                return False
+            sec = assembled.get("sections", {}).get(name)
+            if sec is None:
+                return False
+            text = sec.get("text", "")
+            if len(text) <= 200:
+                return False
+            sec["text"] = text[:200] + "…[BUDGET_TRIMMED]"
+            sec["budget_trimmed"] = True
+            return True
+
+        soft_order = tuple(
+            getattr(
+                self.config,
+                "context_soft_cap_trim_order",
+                ("alerts", "preferences", "memory", "story_skeleton"),
+            )
+        )
+        hard_order = tuple(
+            getattr(
+                self.config,
+                "context_hard_cap_trim_order",
+                ("global", "scene", "recent_summaries", "recent_full_texts"),
+            )
+        )
+
+        trim_stages_applied: List[str] = []
+
+        if estimated_tokens > effective_soft:
+            # Soft-cap 阶段：warn 并裁剪次要 section（不含 protected）
+            logger.warning(
+                "Context pack exceeds soft token limit: %d > %d; trimming minor sections",
+                estimated_tokens, effective_soft,
+            )
+            for section_name in soft_order:
+                if _trim_section(section_name):
+                    trim_stages_applied.append(f"soft:{section_name}")
+                    estimated_tokens = _estimate_total_tokens()
+                    if estimated_tokens <= effective_soft:
+                        break
 
         if estimated_tokens > hard_token_limit:
-            # 按优先级从低到高裁剪：alerts → preferences → memory → story_skeleton → global
-            trim_order = ["alerts", "preferences", "memory", "story_skeleton", "global"]
-            sections = assembled.get("sections", {})
-            for section_name in trim_order:
-                if section_name not in sections:
+            # Hard-cap 阶段：按 global → scene → recent_summaries（core 内重写）→
+            # 最后才动 recent_full_texts（受 protected 保护则此步被跳过）降级。
+            logger.warning(
+                "Context pack exceeds hard token limit: %d > %d; degrading sections",
+                estimated_tokens, hard_token_limit,
+            )
+            for section_name in hard_order:
+                if section_name == "recent_summaries":
+                    # recent_summaries 嵌在 core 里：不改 pack 原始结构，只重写
+                    # assembled.sections.core.text 以移除该列表（last-resort 前的过渡）。
+                    core_sec = assembled.get("sections", {}).get("core")
+                    if core_sec is not None:
+                        core_text = core_sec.get("text", "")
+                        if core_text and "recent_summaries" in core_text:
+                            core_content = core_sec.get("content")
+                            if isinstance(core_content, dict):
+                                shrunk = {
+                                    k: ([] if k == "recent_summaries" else v)
+                                    for k, v in core_content.items()
+                                }
+                                new_text = self._compact_json_text(
+                                    shrunk, core_sec.get("budget")
+                                )
+                                if new_text != core_text:
+                                    core_sec["text"] = new_text
+                                    core_sec["budget_trimmed"] = True
+                                    trim_stages_applied.append("hard:recent_summaries")
+                                    estimated_tokens = _estimate_total_tokens()
+                                    if estimated_tokens <= hard_token_limit:
+                                        break
                     continue
-                section = sections[section_name]
-                text = section.get("text", "")
-                if len(text) > 200:
-                    trimmed = text[:200] + "…[BUDGET_TRIMMED]"
-                    section["text"] = trimmed
-                    section["budget_trimmed"] = True
-                    total_chars = sum(len(s.get("text", "")) for s in sections.values())
-                    estimated_tokens = int(total_chars / 1.5)
-                    assembled["meta"]["estimated_tokens"] = estimated_tokens
+                if _trim_section(section_name):
+                    trim_stages_applied.append(f"hard:{section_name}")
+                    estimated_tokens = _estimate_total_tokens()
                     if estimated_tokens <= hard_token_limit:
                         break
-            assembled["meta"]["budget_trimmed"] = estimated_tokens > hard_token_limit
-            if estimated_tokens > hard_token_limit:
-                logger.warning(
-                    "Context pack exceeds hard token limit: %d > %d (after trimming)",
-                    estimated_tokens, hard_token_limit,
-                )
+
+        meta["estimated_tokens"] = estimated_tokens
+        meta["budget_trimmed"] = any(
+            sec.get("budget_trimmed")
+            for sec in assembled.get("sections", {}).values()
+        )
+        meta["trim_stages_applied"] = trim_stages_applied
+
+        if estimated_tokens > hard_token_limit:
+            logger.warning(
+                "Context pack still exceeds hard token limit after degradation: %d > %d",
+                estimated_tokens, hard_token_limit,
+            )
 
         # 裁剪通知：让 writer-agent 知道上下文被截断了
-        if assembled.get("meta", {}).get("budget_trimmed"):
+        if meta.get("budget_trimmed"):
             trimmed_sections = [
                 name for name, sec in assembled.get("sections", {}).items()
                 if sec.get("budget_trimmed")
@@ -247,6 +380,7 @@ class ContextManager:
                 "text": warning_text,
                 "priority": "high",
                 "budget_trimmed": False,  # 不要裁剪这个警告本身
+                "protected": True,
             }
 
         return assembled

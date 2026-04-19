@@ -16,6 +16,8 @@ Branch: ralph/chapter-context-injection
 - **章节文件查找统一入口**：定位章节正文文件必须用 `chapter_paths.find_chapter_file(project_root, chapter_num)`（lazy import，兼容两种导入路径 `chapter_paths` / `scripts.chapter_paths`），它已覆盖三种命名约定（`第NNNN章.md` 平坦布局、`第N卷/第NNN章-标题.md` 卷布局、rglob fallback）。新代码不要 hardcode `f"ch{n:04d}.txt"` 之类。
 - **summary 文件命名约定**：`self.config.ink_dir / "summaries" / f"ch{chapter:04d}.md"`（见 `context_manager.py:_load_summary_text`），与正文章节文件命名完全不同；测试里 `_write_summary` 需要走 `ink_dir/summaries`，不要放到 `chapters_dir`。
 - **context_contract_version 锁死 v3**：`context_ranker.py:48` 硬编码 v3，多处测试断言 v3；本 PRD 新增字段一律**additive**，不要随手 bump v4 否则回归立刻炸。
+- **"硬注入 = protected section" 模式**：US-006 落地的规范——想实现"某 section 永不字符级裁剪"，**不要**给它 `TEMPLATE_WEIGHTS` 里配高权重（weight > 0 必然触发 budget = max_chars * weight 的字符级裁剪）；正确做法是把 section 名加入 `context_protected_sections` config → `assemble_context` 对 protected section 直接 budget=None，`_compact_json_text(content, None)` 返回原 JSON 不裁剪。trim 循环里 `_trim_section` 第一行 short-circuit 跳过 protected。未来任何"硬注入"字段都复用这套机制，别自造车轮。
+- **虚拟 top-level section（嵌套字段抬升）**：若要把 `pack.core.xxx` 这种嵌套字段在 assembled 输出里作为独立 section 呈现，在 `SECTION_ORDER` 里登记虚拟名（如 `recent_full_texts`）、在 assemble 循环里显式 `if section_name == "<virtual>": sections[...] = pack["core"].get("<virtual>", []); continue`，同时构造不含该字段的 `core_for_render` 副本走 weight 路径避免双重计算；pack 原始结构绝不修改（US-002 的外部消费者仍读原 schema）。本模式见 `context_manager.py:181-210`。
 
 ## Context Contract（本 PRD 专属）
 
@@ -133,4 +135,39 @@ Branch: ralph/chapter-context-injection
   - **"additive 不 bump 版本"继续有效**：与 US-002 一致，本 US 只向 `checker-output-schema.md` 的 continuity metrics 添加字段、向 issues[] 添加 evidence 子字段，不 bump `context_contract_version` 也不引入新 schema 版本号。消费者侧做 `metrics.get("evidence_source", "legacy")` / `issue.get("evidence")` 即可兼容老缓存。
   - **"第五层而非替代四层"很关键**：AC 明确要求"不破坏 checker 已有的 review_metrics / character_evolution_ledger 校验路径（与新机制并存）"，规格里通过 "五层" 并排 + `related_issue_ids` 合并条款落实。如果把第五层写成"替代前四层"，会丢 active_threads 主线/支线的监控能力，对项目中段（50+ 章）影响巨大。未来类似 checker 升级记住：**新机制是加法，不是替换**。
   - **spec-only US 的回归验证硬约束（延续）**：纯 Markdown 改动无新增测试仍必须跑全量 pytest 证明零回归（feedback_no_regression 硬规则）；US-005 回归输出与 US-004 逐位一致（3008/23/0），证明 spec 改动未触发任何 pytest 动态加载/模板渲染/CI 的意外路径。未来 spec-only 批量改动也应采用"baseline 位对位比对"作为通过阈值。
+---
+
+## 2026-04-20 - US-006 - Token 预算重排：前三章全文 protected，硬注入不裁剪
+- `ink_writer/core/infra/config.py`：新增 4 类配置
+  - `context_soft_token_limit: int = 60000` / `context_hard_token_limit: int = 180000`（可配置双档预算）
+  - `context_protected_sections: tuple = ("recent_full_texts",)`（标记永不裁剪）
+  - `context_soft_cap_trim_order: tuple = ("alerts", "preferences", "memory", "story_skeleton")`
+  - `context_hard_cap_trim_order: tuple = ("global", "scene", "recent_summaries", "recent_full_texts")`
+- `ink_writer/core/context/context_manager.py`：
+  - `SECTION_ORDER` 头部插入 `"recent_full_texts"`（显式最高优先级）。
+  - `assemble_context` 关键改造：
+    1. **lift full_texts**：从 `pack.core["recent_full_texts"]` 抬升为独立 top-level section；同时构造不含 full_texts 的 `core_for_render` 副本走常规 weight 预算，避免全文被 `core * 0.40 ≈ 3200 chars` 静默裁剪。
+    2. **protected budget=None**：protected section 不参与 `budget = int(max_chars * weight)` 计算，`_compact_json_text(content, None)` 返回原样 JSON，绝不加 `…[TRUNCATED]` 标记。
+    3. **双档降级**：`estimated_tokens > effective_soft(=min(soft, hard))` → 遍历 `soft_order` 裁剪次要 section → 若仍超 `hard` → 遍历 `hard_order`（`global → scene → recent_summaries 重写 core JSON → recent_full_texts` 但 protected 永远被 `_trim_section` 第一行 short-circuit 跳过）。
+    4. **逐 build 日志**：`logger.info` 输出 `chapter=N total=X soft=Y hard=Z breakdown={...}`；`meta` 暴露 `estimated_tokens` / `soft_token_limit` / `hard_token_limit` / `token_breakdown` / `protected_sections` / `trim_stages_applied` / `budget_trimmed`。
+    5. **misconfig 兜底**：soft > hard 时 `effective_soft = min(soft, hard)` 退化，不出现"软超标被漏掉"的漏洞（测试 `test_misconfigured_soft_greater_than_hard_uses_hard` 覆盖）。
+- 新增 `tests/core/context/test_token_budget.py`（13 tests，4 分组）：
+  - `TestRecentFullTextsProtected`：top-level section + budget=None + core 不再双写 + protected_sections meta。
+  - `TestTokenBreakdown`：per-section estimates + soft/hard caps 暴露 + 3×2500 字 ≈ 12k tokens 不触发降级。
+  - `TestSoftCapDegradation`：soft 超标 warn + 只裁次要不裁 full_texts + protected 即便被误配入 soft_order 仍被跳过。
+  - `TestHardCapDegradation`：hard 超标降级顺序（global/scene 先于 recent_full_texts）+ protected 在 soft&hard 双超标下完整保留 + recent_summaries 降级触发 core JSON 重写。
+  - `TestConfigurableCaps`：soft/hard 配置覆盖 + soft>hard misconfig 兜底。
+- **Files changed**：
+  - `ink_writer/core/infra/config.py`（+19 lines：4 类 US-006 配置）
+  - `ink_writer/core/context/context_manager.py`（+170/-40 lines：SECTION_ORDER + assemble_context 重排）
+  - `tests/core/context/test_token_budget.py`（新建, 13 tests）
+  - `scripts/ralph/prd.json` (US-006 passes=true + notes)
+- **回归**：`python3 -m pytest --no-cov` → 3021 passed / 23 skipped / 0 failed（US-005 baseline 3008 → +13 新测试，零新增失败）。既有 `tests/data_modules/test_context_manager_extended.py::TestTokenBudgetTrimming` 3 测试（用 `manager.config.context_hard_token_limit = 500/100/100000` 覆写默认值）沿用既有契约，不受 soft cap 新增影响。
+- **Learnings for future iterations:**
+  - **protected 语义 vs weight 语义**：原 PRD AC 提"context_weights.py 权重重排"，直觉上是改 `TEMPLATE_WEIGHTS` 给 recent_full_texts 配高权重。但 weight 机制本质是 `budget = max_chars * weight`，任何 `weight > 0` 都会触发字符级裁剪，无法表达"永不裁剪"。所以正确的"权重重排"是**绕过 weight 机制**：用 `context_protected_sections` 这个 config 告诉 assemble_context 直接 budget=None。未来任何 section 要"硬注入"都沿用这个约定，不要再试图用 weight=1.0 或 weight=很大数值 间接实现。
+  - **pack vs assembled 契约分离**：assemble_context 可以任意重写 `assembled.sections`（包括 lift、shrink、重写 text），但**绝不能修改原 pack**。本 US 在 lift full_texts 时特意 `{k: v for k, v in core_original.items() if k != "recent_full_texts"}` 做浅拷贝副本，确保 `pack.core.recent_full_texts` 不被破坏（US-002 schema 的外部消费者仍能读到）。测试 `test_core_section_no_longer_contains_full_texts` 断言了这一分离。
+  - **SECTION_ORDER 里的"虚拟顶层 section"**：`recent_full_texts` 在 SECTION_ORDER 中登场，但在 pack 里并**不**存在同名顶层键（它嵌套在 `core` 下）。assemble_context 循环里显式 `if section_name == "recent_full_texts": sections[...] = recent_full_texts; continue` 来处理这种"虚拟 section"。未来若有类似"嵌套字段想独立展示"的需求，沿用这套模式即可，不要把 pack 结构改扁平。
+  - **hard_cap 降级中 recent_summaries 的特殊处理**：recent_summaries 嵌在 `core.content` 里（与 chapter_outline/protagonist_snapshot 并列），直接 `_trim_section("recent_summaries")` 无从切入（没有同名顶层 section）。解法是在 hard_order 循环里给它特殊分支：读 `core_sec.content`（原生 dict）、构造 `shrunk = {..., "recent_summaries": []}`、用 `_compact_json_text(shrunk, core_sec.budget)` 重写 text。这样既保留了 core 的 text 结构，又精准去除了 summaries 数据。后续若有其他"嵌套字段单独降级"需求沿用这个模式。
+  - **trim_stages_applied 日志字段的诊断价值**：返回 `meta.trim_stages_applied = ["soft:alerts", "soft:preferences", "hard:global"]` 这种有前缀的字符串，比单纯 `budget_trimmed=True` boolean 更能帮运维/调试判断到底降级了多少。未来其它类似的"多阶段裁剪"机制（比如未来可能出现的 RAG 结果裁剪）都应沿用 `<tier>:<target>` 的命名。
+  - **默认 soft/hard 60k/180k 远高于现实 pack 大小**：3×2500 字全文 ≈ 7500 字 ≈ 5000 tokens；加上 summaries (~5k) + outline (~1k) + global (~2k) + 其他 ≈ 15k~20k tokens，远低于 60k soft。所以默认配置下，**绝大多数写作场景不会触发任何降级**——soft/hard 是"出现异常时的兜底"而非"日常工作机制"。未来如果看到大量 `meta.budget_trimmed=True` 报告，要先排查是不是 outline/scene 异常膨胀了，而非加激进降级。
 ---

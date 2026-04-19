@@ -208,6 +208,25 @@ class DataModulesConfig:
     context_recent_summaries_window: int = 10
     context_recent_full_texts_window: int = 3
     context_recent_meta_window: int = 3
+    # US-006: 前三章全文 protected 硬注入，token 预算分两档：
+    # - soft cap 触发 warn + 裁剪次要板块（alerts/prefs/memory/story_skeleton）；
+    # - hard cap 触发降级 global → scene → recent_summaries → 最后才动 recent_full_texts。
+    # 默认 60k / 180k tokens 充分覆盖 3×2500 字全文 + 摘要 + 全局设定。
+    context_soft_token_limit: int = 60000
+    context_hard_token_limit: int = 180000
+    context_protected_sections: tuple[str, ...] = ("recent_full_texts",)
+    context_soft_cap_trim_order: tuple[str, ...] = (
+        "alerts",
+        "preferences",
+        "memory",
+        "story_skeleton",
+    )
+    context_hard_cap_trim_order: tuple[str, ...] = (
+        "global",
+        "scene",
+        "recent_summaries",
+        "recent_full_texts",
+    )
     context_alerts_slice: int = 10
     context_max_appearing_characters: int = 10
     context_max_urgent_foreshadowing: int = 10

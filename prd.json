@@ -111,8 +111,8 @@
         "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "ink_writer/core/infra/config.py 新增四项配置：context_soft_token_limit=60000 / context_hard_token_limit=180000 / context_protected_sections=('recent_full_texts',) / context_soft_cap_trim_order + context_hard_cap_trim_order（可配置降级顺序）。ink_writer/core/context/context_manager.py 改造：(1) SECTION_ORDER 头部追加 'recent_full_texts'；(2) assemble_context 把 pack.core.recent_full_texts 提升为独立 top-level section（budget=None、protected=True、不参与 weight 预算），core 以不含 recent_full_texts 的副本走常规 weight 路径，避免全文被 core's 0.40 weight 裁剪；(3) 双档预算：estimated_tokens > soft cap 触发 warn + 遍历 soft_order（alerts/prefs/memory/story_skeleton）裁剪到 200 字 + [BUDGET_TRIMMED] 标记；> hard cap 继续 hard_order（global → scene → recent_summaries 重写 core JSON → recent_full_texts 但 protected 永远跳过）；(4) 每次 build 日志 logger.info 输出 `chapter=N total=X soft=Y hard=Z breakdown={...}` + meta 新增 estimated_tokens/soft_token_limit/hard_token_limit/token_breakdown/protected_sections/trim_stages_applied；(5) 保留既有 budget_trim_warning 注入 + 对 misconfig (soft>hard) 的 effective_soft=min(soft,hard) 兜底。新增 tests/core/context/test_token_budget.py（13 tests）覆盖：protected 字段 + core 不再双写 + 3×2500 字 ~12k tokens 低于 60k soft 不触发降级 + token_breakdown 结构 + soft cap warn + hard cap 降级顺序 + recent_summaries 重写 core / protected 抗 soft&hard 同时违反 / 配置覆盖 / soft>hard 兜底。全量回归 3021 passed / 23 skipped / 0 failed（baseline 3008 → +13 新测试，零回归）。注：PRD 原 AC 第 1 条提到 'context_weights.py 权重重排'——实现上通过 config-driven protected_sections + trim_order 实现等价语义（recent_full_texts 永不参与 weight 预算，直接跳过 budget 计算），比硬编码权重更灵活。"
     },
     {
       "id": "US-007",
