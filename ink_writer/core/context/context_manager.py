@@ -275,12 +275,23 @@ class ContextManager:
 
     def _build_pack(self, chapter: int) -> Dict[str, Any]:
         state = self._load_state()
+        full_text_window = int(
+            getattr(self.config, "context_recent_full_texts_window", 3)
+        )
+        summary_window = int(
+            getattr(self.config, "context_recent_summaries_window", 10)
+        )
         core = {
             "chapter_outline": self._load_outline(chapter),
             "protagonist_snapshot": state.get("protagonist_state", {}),
+            "recent_full_texts": self._load_recent_full_texts(
+                chapter,
+                window=full_text_window,
+            ),
             "recent_summaries": self._load_recent_summaries(
                 chapter,
-                window=self.config.context_recent_summaries_window,
+                window=summary_window,
+                skip_last=full_text_window,
             ),
             "recent_meta": self._load_recent_meta(
                 state,
@@ -289,7 +300,7 @@ class ContextManager:
             ),
             "volume_summaries": self._load_volume_summaries(
                 chapter,
-                window=self.config.context_recent_summaries_window,
+                window=summary_window,
             ),
             "key_chapter_summaries": self._load_key_chapter_summaries(chapter),
         }
@@ -342,8 +353,23 @@ class ContextManager:
             golden_three_contract=golden_three_contract,
         )
 
+        summary_range_end = max(0, chapter - full_text_window - 1)
+        summary_range_start = max(0, chapter - summary_window)
+        if chapter <= full_text_window:
+            summary_range_start = 0
+            summary_range_end = 0
+        injection_policy = {
+            "full_text_window": full_text_window,
+            "summary_window": summary_window,
+            "summary_range": [summary_range_start, summary_range_end],
+            "hard_inject": True,
+        }
+
         return {
-            "meta": {"chapter": chapter},
+            "meta": {
+                "chapter": chapter,
+                "injection_policy": injection_policy,
+            },
             "core": core,
             "scene": scene,
             "global": global_ctx,
@@ -1281,9 +1307,26 @@ class ContextManager:
 
         return results
 
-    def _load_recent_summaries(self, chapter: int, window: int = 5) -> List[Dict[str, Any]]:
+    def _load_recent_summaries(
+        self,
+        chapter: int,
+        window: int = 5,
+        *,
+        skip_last: int = 0,
+    ) -> List[Dict[str, Any]]:
+        """Load summary entries in the range ``[chapter - window, chapter - skip_last)``.
+
+        ``skip_last`` excludes the most-recent N chapters (covered elsewhere, e.g.
+        via ``_load_recent_full_texts``). Defaults keep legacy behavior when
+        callers do not opt in.
+        """
+        if window <= 0:
+            return []
+        skip_last = max(0, int(skip_last))
+        start = max(1, chapter - int(window))
+        end = max(start, chapter - skip_last)
         summaries = []
-        for ch in range(max(1, chapter - window), chapter):
+        for ch in range(start, end):
             summary = self._load_summary_text(ch)
             if summary:
                 summaries.append(summary)

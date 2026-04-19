@@ -54,6 +54,13 @@
 
 职责：在写作前构建“创作任务书”，提供本章上下文、约束和追读力策略。
 
+章节上下文硬注入（US-002）：context pack 的 `core` 段新增 `recent_full_texts`
+字段，默认装填最近 3 章完整正文（`context_recent_full_texts_window=3`）；
+`recent_summaries` 语义同步变更为 `[n-10, n-4]` 共 7 章摘要，与全文范围严格正交；
+`meta.injection_policy` 暴露 `{full_text_window, summary_window, summary_range,
+hard_inject}` 元数据供下游 agent 校验。详见
+`ink-writer/references/context-contract-v2.md` Phase J。
+
 ### Data Agent（写）
 
 职责：从正文提取实体与状态变化，更新 `state.json`、`index.db`、`vectors.db`，保证数据链闭环。

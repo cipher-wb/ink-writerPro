@@ -38,8 +38,8 @@
         "零回归：pytest --no-cov 全量无新增失败（baseline 2984）"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "core pack 新增 recent_full_texts（装填走 _load_recent_full_texts），recent_summaries 签名加 kwarg-only skip_last（默认 0 兼容旧调用），_build_pack 显式传 skip_last=full_text_window；meta.injection_policy 暴露 {full_text_window, summary_window, summary_range, hard_inject}。config 新增 context_recent_full_texts_window=3，context_recent_summaries_window 默认从 5 → 10。ink-writer/references/context-contract-v2.md 追加 Phase J + docs/architecture.md 同步。新增 tests/core/context/test_context_pack_schema.py (8 tests)。全量回归 3008 passed / 23 skipped / 0 failed（baseline 3000 → +8 新测试，零回归）。"
     },
     {
       "id": "US-003",

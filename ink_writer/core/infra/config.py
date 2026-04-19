@@ -203,7 +203,10 @@ class DataModulesConfig:
     chapter_meta_keep_recent: int = 10        # flush后保留最近N条
     max_strand_tracker_history: int = 100     # strand_tracker.history最多保留N条
 
-    context_recent_summaries_window: int = 5
+    # Summary window reaches back 10 chapters; the most-recent `context_recent_full_texts_window`
+    # chapters are delivered as full text instead (see US-002 context injection policy).
+    context_recent_summaries_window: int = 10
+    context_recent_full_texts_window: int = 3
     context_recent_meta_window: int = 3
     context_alerts_slice: int = 10
     context_max_appearing_characters: int = 10

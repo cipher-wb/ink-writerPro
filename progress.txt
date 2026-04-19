@@ -14,6 +14,8 @@ Branch: ralph/chapter-context-injection
 - **ralph/ 是 gitignored**：`ralph/prd.json` 与 `ralph/progress.txt` 的状态翻转与 append 都不入 commit；正式归档副本在 `archive/YYYY-MM-DD-feature/` 下，受版本控制。
 - **kwarg-only 向后兼容**：给既有 public 函数新增参数时放到 `*` 之后（kwarg-only），避免破坏生产/测试调用方的位置参数假设。`ink_writer/editor_wisdom/writer_injection.py:build_writer_constraints` 是典型示例。
 - **章节文件查找统一入口**：定位章节正文文件必须用 `chapter_paths.find_chapter_file(project_root, chapter_num)`（lazy import，兼容两种导入路径 `chapter_paths` / `scripts.chapter_paths`），它已覆盖三种命名约定（`第NNNN章.md` 平坦布局、`第N卷/第NNN章-标题.md` 卷布局、rglob fallback）。新代码不要 hardcode `f"ch{n:04d}.txt"` 之类。
+- **summary 文件命名约定**：`self.config.ink_dir / "summaries" / f"ch{chapter:04d}.md"`（见 `context_manager.py:_load_summary_text`），与正文章节文件命名完全不同；测试里 `_write_summary` 需要走 `ink_dir/summaries`，不要放到 `chapters_dir`。
+- **context_contract_version 锁死 v3**：`context_ranker.py:48` 硬编码 v3，多处测试断言 v3；本 PRD 新增字段一律**additive**，不要随手 bump v4 否则回归立刻炸。
 
 ## Context Contract（本 PRD 专属）
 
@@ -42,4 +44,26 @@ Branch: ralph/chapter-context-injection
   - `chapter_paths.find_chapter_file` 已涵盖三种历史命名约定（参见 ink-writer/scripts/chapter_paths.py:140-161）。新代码继续走它，不要再写新 finder。
   - `tmp_path` + `DataModulesConfig.from_project_root(tmp_path) + cfg.ensure_dirs()` 是 ContextManager 测试的标准 fixture（已被 `tests/data_modules/test_context_manager.py:28-32` 沿用），新测试继续套用即可。
   - testpaths 新增条目要谨慎核算 baseline：`tests/core` 同时新增了 `__init__.py`，pytest 会按 conftest 与 collection 规则重新计数；本轮 +16 ≈ 11 (new) + 5 (re-collected)，对照"零失败"硬约束方可放行。
+---
+
+## 2026-04-19 - US-002 - Context Pack 数据契约扩展 recent_full_texts + injection_policy
+- `ink_writer/core/infra/config.py` 新增 `context_recent_full_texts_window: int = 3`；`context_recent_summaries_window` 默认 5 → 10（语义变为"摘要回溯窗口上限"，而非"加载数"）。
+- `ink_writer/core/context/context_manager.py`:
+  - `_load_recent_summaries` 签名加 kwarg-only `skip_last: int = 0`，计算改为 `range(max(1, n-window), max(start, n-skip_last))`，默认 skip_last=0 保持向后兼容（与 Codebase Patterns 第 6 条 kwarg-only 原则一致）。
+  - `_build_pack`：`core` 新增 `recent_full_texts` 字段；`recent_summaries` 显式传 `skip_last=full_text_window`（= 3），从而默认覆盖 [n-10, n-4]；`meta.injection_policy` 暴露 `{full_text_window, summary_window, summary_range: [start, end], hard_inject: True}`；`chapter <= full_text_window` 时 `summary_range` 钳到 `[0, 0]`。
+- `ink-writer/references/context-contract-v2.md` 追加 Phase J 段落说明新契约；`docs/architecture.md` 在 Context Agent 节下同步一段指引，引用 Phase J。
+- 新增 `tests/core/context/test_context_pack_schema.py` (8 tests)：字段存在/类型、injection_policy 元数据、[n-10, n-4] 窗口实测、与 full_texts 正交性、早期章节空范围、build_context 透出。
+- **Files changed**:
+  - `ink_writer/core/infra/config.py` (+context_recent_full_texts_window, default bump)
+  - `ink_writer/core/context/context_manager.py` (~40 lines: skip_last, recent_full_texts in core, injection_policy in meta)
+  - `ink-writer/references/context-contract-v2.md` (+Phase J section)
+  - `docs/architecture.md` (+1 段落 Context Agent 节)
+  - `tests/core/context/test_context_pack_schema.py` (新建, 8 tests)
+  - `scripts/ralph/prd.json` (US-002 passes=true + notes)
+- **回归**：`python3 -m pytest --no-cov` → 3008 passed / 23 skipped / 0 failed（US-001 baseline 3000 → +8，零失败）。
+- **Learnings for future iterations:**
+  - `context_recent_summaries_window` 原本语义是"加载多少条"（=最终列表长度上限），改为"窗口上限 + skip_last 裁剪"后，`_load_volume_summaries` / `_load_key_chapter_summaries` 仍用它做 recent_start 判定，含义一致（都是"最早还能触及的章节号"），所以零副作用。未来若需让 volume/key 感知 skip_last，要单独传参，别复用。
+  - snapshot cache 存的是 `assemble_context()` 结果（处理后的 sections/meta），不是裸 pack；新字段（`meta.injection_policy`, `core.recent_full_texts`）自动随下一次 rebuild 进入快照。旧快照不会带这些字段，所以下游消费者务必 `meta.get("injection_policy")` 做缺省 fallback（避免老缓存命中时 KeyError）。
+  - 禁止 bump `context_contract_version` 到 v4：`context_ranker.py:48` 硬编码 v3 且多个测试硬断言 v3。新字段是 additive，与 v3 兼容；升版号留给后续可能的破坏性变更。
+  - `DataModulesConfig.from_project_root(tmp_path) + ensure_dirs()` 之后，摘要要写到 `cfg.ink_dir/"summaries"/f"ch{NNNN:04d}.md"`（不是 chapters_dir！两者走的是不同的目录约定）。写测试时记住这条，否则 `_load_summary_text` 找不到文件默认返回 None 而不报错，假绿回归很难察觉。
 ---
