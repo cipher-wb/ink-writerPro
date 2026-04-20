@@ -48,6 +48,9 @@ Prev run: chapter-context-injection → v20.0.0 released
 - **`# c8-ok` pragma 语义**（US-009 起）：detector primitive 的字面量（candidates 数组、返回字符串、变量赋值）用行尾 `# c8-ok: detector primitive` 或 `# noqa: c8` 标注，scanner 跳过。bash 和 PS 都以 `#` 起注释，`_C8_NOQA_RE` 单正则跨语言工作。与 US-006 的 `# noqa: c5` 同构——"基础 primitive 需要字面量" 类免检机制的统一处理。
 - **regex 抠出 bash 函数体注入子 shell 测语义**（US-009 起）：`_BASH_FUNC_RE = r'find_python_launcher_bash\s*\(\s*\)\s*\{.*?\n\}\n'`（DOTALL）从实文件抠出 detector 函数源码，通过 `bash -c "$SRC; find_python_launcher_bash; echo \$VAR"` 注入子 shell，模拟 `OSTYPE=darwin23/msys` 不同平台断言输出变量值。这比把函数源硬编码进 test 更抗漂移（源改测自动跟上），也比 `subprocess.run([./env-setup.sh])` 稳（规避 env-setup 的 side effects 如路径检测/export）。副作用风险：若函数大括号格式漂移（如末 `}` 不换行）需要更新 regex。可复用于其他 shell primitive 测试。
 - **OSTYPE 判别 Windows git-bash / Mac / Linux**（US-009 起）：bash 内置 `$OSTYPE`，Mac=`darwin*`、Linux=`linux-gnu*`、Windows git-bash=`msys`、Cygwin=`cygwin`、MinGW=`win32`。用 `case "${OSTYPE:-}" in msys*|cygwin*|win32*) ... ;; *) ... ;; esac` 做跨平台分支比 fork `uname` 子进程更快、比 `$OSTYPE` 全值相等匹配更稳（避免遗漏版本后缀如 `darwin23`）。
+- **CLI 入口 UTF-8 stdio 是单一强制规则**（US-010 起）：每个 `if __name__ == "__main__":` 文件都必须在源码中出现 `enable_windows_utf8_stdio` 字面量（import 或调用均可）。`tests/audit/test_cli_entries_utf8_stdio.py:test_repo_has_no_cli_entry_missing_utf8_stdio` 仓库红线调 `scan_c9_cli_utf8_stdio(collect_python_files(REPO_ROOT))` assert `== []`，新违规直接挂 CI。模式可复用：复用 scanner 写红线 > 测试里重写规则解析，与 C3/C4/C5/C8 同构。
+- **跨目录 CLI 入口的 runtime_compat 导入三段式**（US-010 起）：不在 `ink-writer/scripts/` 的 CLI 文件（benchmark/ / ink-writer/dashboard/ / scripts/）统一用 `_INK_SCRIPTS = _os_win_stdio.path.join(dirname(abspath(__file__)), <relative>)` + `sys.path.insert` + `try/except from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio; _enable_utf8_stdio()`。相对路径随位置变化（benchmark/ → `../ink-writer/scripts` / ink-writer/dashboard/ → `../scripts` / scripts/ → `../ink-writer/scripts`）但模板一致。用 `_os_win_stdio`/`_sys_win_stdio` 别名防与后续 `import os/sys` 重定义。
+- **pre-existing SyntaxError 会被 audit 漏过**（US-010 起）：`audit_cross_platform.py` 走 `ast.parse` + try/except SyntaxError 跳过整个文件——所以 FIX-11 orphan if-block 这类"身体被删光只剩注释"的文件从未被任何 Cx scanner 报告过。`scripts/build_chapter_index.py` 是典型案例（US-010 顺手修复）。下一个改动窗口可以把 `python3 -m compileall -q -f <root>` 全仓语法检测纳入 pre-commit 或 CI，作为 SyntaxError 守门。
 
 ## Context Contract（本 PRD 专属）
 
@@ -472,4 +475,35 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `reports/cross-platform-audit-findings.md` (regenerated: C8 37 → 0, 总数 44 → 7)
   - `prd.json` (US-009 passes:true + 详细 notes)
   - `progress.txt` (this entry + 4 new Codebase Patterns)
+---
+
+## 2026-04-20 - US-010 CLI 入口 UTF-8 stdio 补齐（C9）
+- C9 findings **4 → 0**（总报告 7 → 3，仅剩 3 个 C2 Low 是 US-004 记录的 `tests/core/test_path_cross_platform.py` 测试 fixture 合法字面量）
+- 修复 4 处真实 C9 finding（每处都让 scanner 看到 `enable_windows_utf8_stdio` 字面量 + 实际调用）：
+  - `ink-writer/dashboard/server.py`：顶部 docstring 后插入 US-010 stdio 块（`../scripts` sys.path 注入 + try/except import + 调用），复刻 `benchmark/scraper.py` 跨目录 CLI 模板
+  - `ink-writer/scripts/sync_plugin_version.py`：`from __future__` 后插入 stdio 块（与 runtime_compat 同目录，直接 try/except import）
+  - `scripts/build_chapter_index.py`：**发现并修复 pre-existing SyntaxError** —— FIX-11 migration（commit adc6b06）移除 `sys.path.insert(0, str(INK_WRITER_SCRIPTS))` 时未清理外层 `if str(INK_WRITER_SCRIPTS) not in sys.path:`，留下 if-body 只含注释的 `IndentationError`。本 US 删除死代码 + 换成 US-010 标准 stdio 块
+  - `tests/data_modules/test_data_modules.py`：在 `if __name__ == '__main__':` 块里 `pytest.main` 之前插入 try/except import + 调用（gate 到 __main__ 避免 pytest collect 时 side-effect）
+- **Red-line 测试 `tests/audit/test_cli_entries_utf8_stdio.py`** (8 tests)：
+  - `test_repo_has_no_cli_entry_missing_utf8_stdio`：调 `scan_c9_cli_utf8_stdio(collect_python_files(REPO_ROOT))` assert `== []` —— 未来新增 CLI 入口漏 helper 直接挂 CI
+  - 4 个参数化 `test_us010_fixed_file_references_helper`：逐一固化 4 处修复文件必须持续含字面量 `enable_windows_utf8_stdio`，防重构误删
+  - 3 个 scanner 语义反例：合成 CLI 缺 helper 必报 / 含 helper 不报 / 非 CLI 文件不报
+- Mac 字节级一致：4 处修改只走 `enable_windows_utf8_stdio` → 内部 `if sys.platform != 'win32': return False` 即返；`build_chapter_index.py` 删除的是原本就 SyntaxError 的死代码（Mac 上历来无法 import），删除后行为从『炸』变『可正常 import』是纯粹改善
+- 全量 pytest: **3171 passed / 23 skipped / 0 failed**（baseline 3163 → +8 新测试：1 repo 红线 + 4 参数化固化 + 3 scanner 反例，零回归）
+- **Learnings for future iterations:**
+  - **复用 scanner 作为红线测试**（与 C3/C4/C5/C8 同构）：红线测试不自己写规则解析，直接调 `scan_cN_xxx(collect_python_files(REPO_ROOT))` assert `== []`。规则演化只改一处（scanner），测试自动跟上
+  - **C9 用 `collect_python_files` 而非 `iter_files(root, ('.py',))`**：前者是 audit_cross_platform 暴露的公共 API，语义稳定；iter_files 是内部 helper，签名可能变
+  - **跨目录 CLI 入口的 runtime_compat 导入模板**：不在 `ink-writer/scripts/` 的 CLI 统一用 `_INK_SCRIPTS = os.path.join(dirname(abspath(__file__)), <relative>)` + `sys.path.insert` + `try/except from runtime_compat import ...` 三段式。相对路径随文件位置变：`benchmark/` → `../ink-writer/scripts` / `ink-writer/dashboard/` → `../scripts` / `scripts/` → `../ink-writer/scripts`
+  - **pre-existing SyntaxError 漏网**：`audit_cross_platform.py` 用 `ast.parse` + try/except SyntaxError 跳过，所以 orphan if-block 这类死代码不会被任何 C 类 scanner 扫出。FIX-11 migration 很可能还有其他遗留。下轮可把 `python3 -m compileall -q -f` 全仓编译检测纳入 CI 作为 SyntaxError 守门
+  - **`_os_win_stdio` / `_sys_win_stdio` 别名必要性**：在有 `import os` / `import sys` 的文件里，stdio bootstrap 块若直接用 `import os, sys` 会被 linter 标记 redefined-outer-name；用别名同时避免"bootstrap 阶段 os/sys 还没初始化"的错觉（其实 Python 的 import 机制完全能处理，但别名让意图更清晰）
+  - **下轮（US-011）执行要点**：Mac 端 `./scripts/ralph/ralph.sh --tool claude <N>` 循环最后一步有异常——候选清单 PRD 已列：归档路径计算 / stash 弹出 / iteration 退出码 / COMPLETE grep / stderr 吞吐 / 进程残留。建议先 mock fake `claude` 命令实跑一轮 ralph.sh 端到端 trace，再定位修复点（避免臆测）；写 pytest+subprocess 或 bats 脚本固化 1 轮 iteration + <promise>COMPLETE</promise> 的完整路径
+- Files changed:
+  - `ink-writer/dashboard/server.py` (+14 行 US-010 stdio bootstrap)
+  - `ink-writer/scripts/sync_plugin_version.py` (+7 行 US-010 stdio bootstrap)
+  - `scripts/build_chapter_index.py` (删除 4 行 SyntaxError 死代码 + 新增 17 行 US-010 stdio bootstrap)
+  - `tests/data_modules/test_data_modules.py` (+6 行 __main__ 内 stdio bootstrap)
+  - `tests/audit/test_cli_entries_utf8_stdio.py` (new, ~130 行, 8 tests)
+  - `reports/cross-platform-audit-findings.md` (regenerated: C9 4 → 0, 总数 7 → 3)
+  - `prd.json` (US-010 passes:true + 详细 notes)
+  - `progress.txt` (this entry + 3 new Codebase Patterns)
 ---

@@ -2,7 +2,7 @@
 
 扫描根目录: `/Users/cipher/AI/ink/ink-writer`
 
-**总 finding 数**: 7 (Blocker=0 / High=3 / Medium=1 / Low=3)
+**总 finding 数**: 3 (Blocker=0 / High=0 / Medium=0 / Low=3)
 
 ## 按类别汇总
 
@@ -16,7 +16,7 @@
 | C6 | 0 | US-007 |
 | C7 | 0 | US-008 |
 | C8 | 0 | US-009 |
-| C9 | 4 | US-010 |
+| C9 | 0 | US-010 |
 
 ## C2 — 硬编码路径分隔符（疑似）
 
@@ -28,24 +28,12 @@
 | `tests/core/test_path_cross_platform.py:144` | Low | 疑似硬编码路径字面量: '/d/desktop/foo' | 改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化 |
 | `tests/core/test_path_cross_platform.py:146` | Low | 疑似硬编码路径字面量: '/mnt/d/desktop/foo' | 改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化 |
 
-## C9 — Python CLI 入口未调 `enable_windows_utf8_stdio()`
-
-对应修复 US: **US-010**  数量: **4**
-
-| 文件:行 | 严重级别 | 现象 | 修复建议 |
-|---------|----------|------|----------|
-| `ink-writer/dashboard/server.py:70` | High | CLI 入口（__main__）未调 enable_windows_utf8_stdio() | 文件顶部 import runtime_compat 后，在 main 开头 enable_windows_utf8_stdio()（Mac no-op） |
-| `ink-writer/scripts/sync_plugin_version.py:348` | High | CLI 入口（__main__）未调 enable_windows_utf8_stdio() | 文件顶部 import runtime_compat 后，在 main 开头 enable_windows_utf8_stdio()（Mac no-op） |
-| `scripts/build_chapter_index.py:71` | High | CLI 入口（__main__）未调 enable_windows_utf8_stdio() | 文件顶部 import runtime_compat 后，在 main 开头 enable_windows_utf8_stdio()（Mac no-op） |
-| `tests/data_modules/test_data_modules.py:1428` | Medium | CLI 入口（__main__）未调 enable_windows_utf8_stdio() | 文件顶部 import runtime_compat 后，在 main 开头 enable_windows_utf8_stdio()（Mac no-op） |
-
 ## Seed US List（按严重级别排序）
 
 供下一轮 PRD 迭代直接消费。已与本 PRD 既有 US-002~US-010 对齐，
 数字列表为各类风险对应 US 的优先级再排序参考：
 
-1. **US-010**（C9, 4 处）— Python CLI 入口未调 `enable_windows_utf8_stdio()`
-2. **US-003**（C2, 3 处）— 硬编码路径分隔符（疑似）
+1. **US-003**（C2, 3 处）— 硬编码路径分隔符（疑似）
 
 ---
 
