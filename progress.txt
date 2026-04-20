@@ -25,6 +25,9 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
 - **editor-wisdom 新增规则 5 步标准流程**（US-004 起）：(1) 追加到 `data/editor-wisdom/rules.json` 遵循 `id/category/rule/why/severity/applies_to/source_files` 现存 schema；(2) 若引入新 category 同步 `scripts/editor-wisdom/05_extract_rules.py:CATEGORIES`；(3) 若引入新 applies_to 值同步 `VALID_APPLIES_TO`（否则 LLM 抽取会被过滤掉）；(4) 跑 `python3 scripts/editor-wisdom/06_build_index.py` 重建 FAISS + metadata（本地 BAAI 模型缓存 ~10s）；(5) 若要 scene-aware 召回更新 `config/editor-wisdom.yaml:directness_recall` 并在 `ink_writer/editor_wisdom/writer_injection.py` 的 `build_writer_constraints` 内加判定分支。
 - **agent prompt 顶部黄金位 + 结构性 gate 测试**（US-006 起）：新增硬约束章节（e.g. `## Directness Mode`）必须放在 agent `.md` 的 front-matter + 输出格式之后、第一个功能章节（如 `## 写作核心思维`）之前，这样 LLM 第一屏就读到。配套 spec-check 测试放 `tests/prose/` 或同域子目录，只 `assert "## xxx" in spec_text` + 用 `dm_idx < core_idx` 锁位置，<0.5s 跑完 15 用例；避免无意重构打乱优先级。模板参考 `tests/prose/test_writer_agent_directness_mode.py`。
 - **新增 agent/checker 三处 docs claim 联动**（US-005 起）：仓内有两处硬编码 agent 数量 + 一处脚本 regex 必须一起改：(1) `docs/agent_topology_v13.md` 的 "After (vXX): N Agents" + agents/ 清单 + 演进表行；(2) `docs/architecture.md` 的 ASCII "Agents (N个, vXX)" 框 + Checkers 计数；(3) `tests/prompts/test_prompt_templates.py::test_diff_all_runs` 的 `assert len(results) == N`。外加 `scripts/verify_docs.py:89` 的版本正则（已放宽成 `v[.\w]+`——新版本不必再改 regex）。漏任一处 `tests/release/test_v16_gates.py::test_verify_docs_exit_zero` 或 `TestABPrompts::test_diff_all_runs` 会红。
+- **场景激活判定单源**（US-007 起）：`ink_writer.prose.directness_checker.is_activated(scene_mode, chapter_no)` 是本 PRD 内所有 writer/checker/polish 的 canonical 激活判定。新增"场景感知 gate"时写薄 wrapper module（如 `prose/sensory_immersion_gate.py`）复用 `is_activated`，绝不自行实现判定逻辑——避免多处漂移。US-010 prose-impact / flow-naturalness 阈值微调同此。agent spec 内的门控章节须显式提到 `should_skip_*` 函数名，让"文字契约 ↔ 程序化契约"可追溯。
+- **agent spec 双向交叉引用**（US-007 起）：当在 writer-agent.md 增加"checker 侧 skipped"描述时，必须在对应 checker.md 里放一段对称"writer-agent 侧暂挂"回指（含 file path + section anchor）。single-sided spec drift 是 agent 协同最常见 bug 源。示例：writer-agent.md `## Directness Mode` ↔ sensory-immersion-checker.md `## 直白模式激活门控 (v22 US-007)`。
+- **向后兼容 kwarg-only 扩展模式**（US-007 起）：给公共 API（如 `collect_issues_from_review_metrics`）新增场景参数时，放到 `*,` 之后做 kwarg-only + sensible default（`None` / `0`）。现存调用方零代码改动仍保持原行为；新特性只在 caller 显式传参时启用——本轮让 US-009 context pack 上线前 sensory 过滤处于"待激活"状态，不提前影响生产。
 
 ## Context Contract（本 PRD 专属）
 
@@ -317,3 +320,38 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
   - **top-20 黑名单全部来自 abstract_adjectives[:20]**：不是从三大类各抽几条，而是单独抽取 abstract_adjectives 前 20——因为 US-003 notes 明确说"YAML 已按编辑最高频→中频排序，abstract_adjectives 开头就是'莫名/无尽/难以言喻/仿佛/似乎'这五个最毒的"。empty_phrases 和 pretentious_metaphors 只点名完整清单定位，避免 prompt 过长稀释优先级。
 ---
 
+
+## 2026-04-20 - US-007: writer-agent L10b/L10e 感官丰富度冲突解耦
+
+- 单源激活判定：新增 `ink_writer/prose/sensory_immersion_gate.py`（~40 行），暴露 `should_skip_sensory_immersion(scene_mode, chapter_no)` 与常量 `SENSORY_IMMERSION_CHECKER_NAME`，内部复用 `directness_checker.is_activated` ——writer / checker / arbitration 三端激活判定共享同一真相源；修改激活条件只需改 directness_checker 一处
+- `ink_writer/prose/__init__.py`：导出新符号（Blacklist/BlacklistEntry/clear_cache/load_blacklist + SENSORY_IMMERSION_CHECKER_NAME/should_skip_sensory_immersion）
+- writer-agent.md 冲突解耦标注：
+  - L10b / L10e 段首明确增加"**仅在非 Directness Mode 场景生效**"+"黄金三章 / 战斗 / 高潮 / 爽点场景整体暂挂"限定词
+  - 顶部 `## Directness Mode` 的暂挂协议小节扩写为硬原则（"不强求非视觉感官密度、不强求主导感官轮换，专注剧情/动作/对话"）+ 显式交叉指向 sensory-immersion-checker skipped 路径 + polish-agent US-008 精简 pass 联动
+- sensory-immersion-checker.md 激活门控：核心参考后、检查范围前新增 `## 直白模式激活门控 (v22 US-007)` 章节，含跳过条件（`scene_mode ∈ {golden_three, combat, climax, high_point}` 或 None+ch1-3）、正常检查条件（`slow_build`/`emotional`/`other` + ch≥4）、程序化对等提示、skipped JSON 契约（`status:"skipped"` / `reason:"directness_mode_active"` / `pass:true` / `issues:[]`）
+- arbitration.py：`collect_issues_from_review_metrics` 新增 kwarg-only `scene_mode` + `chapter_no` 参数，直白模式激活时从 checkers 元组中过滤掉 `sensory-immersion-checker` 源的 issues（critical + violations 双路径），非直白/缺省参数保持 v18 US-011 原行为（向后兼容）
+- 新增 `tests/prose/test_sensory_immersion_directness_gate.py`（28 用例全通过）：
+  - should_skip 场景矩阵 13 parametrize（4 个 active scene_mode × 任意章节 / 3 个 inactive scene_mode × ch1-3 / None fallback × ch0/1/2/3/4/42）
+  - SENSORY_IMMERSION_CHECKER_NAME 常量锁定 + ch0 fallback
+  - writer-agent L10b + L10e 段首 "仅在非 Directness Mode 场景生效" 文字门
+  - 暂挂协议小节关键词锚定（不强求 / 非视觉感官 / 主导感官轮换 / sensory-immersion-checker / skipped）
+  - sensory-immersion-checker.md 激活门控章节位置锚定（在 `## 核心参考` 之后、`## 检查范围` 之前）+ JSON 契约 + 跨文件回指 writer-agent.md
+  - collect_issues_from_review_metrics combat/黄金三章 fallback 过滤；slow_build 保留；默认参数向后兼容；multi-checker emotional 保留 sensory；multi-checker combat 端到端 arbitrate_generic 无 sensory merged_fixes；slow_build arbitrate_generic 保留 sensory（零退化）
+- 文件改动：
+  - `ink-writer/agents/writer-agent.md`（L10b/L10e 段首 + 暂挂协议小节）
+  - `ink-writer/agents/sensory-immersion-checker.md`（新增激活门控章节）
+  - `ink_writer/prose/sensory_immersion_gate.py`（新增）
+  - `ink_writer/prose/__init__.py`（导出扩展）
+  - `ink_writer/editor_wisdom/arbitration.py`（collect_issues scene_mode 过滤）
+  - `tests/prose/test_sensory_immersion_directness_gate.py`（新增）
+  - `scripts/ralph/prd.json`（US-007 passes=true + notes）
+  - `scripts/ralph/progress.txt`（本条）
+- 零回归验证：`pytest --no-cov -p no:randomly` = **3359 passed / 23 skipped / 0 failed**（baseline 3331 + 28 新用例 = 3359，无新增失败）。默认随机序下 style_rag 偶发 15 ERROR 为 pytest-randomly 与 sentence-transformers 全局状态交互的 pre-existing 耦合问题，单独运行 `pytest tests/style_rag` 27 用例全通过，与 US-007 无关
+- ruff 全绿
+- **Learnings for future iterations:**
+  - **新增"场景激活门控"单源模式**：directness_checker.is_activated 是本 PRD 的 canonical 激活判定。sensory_immersion_gate.should_skip_sensory_immersion 只是 wrapper，不自己实现判定逻辑——未来 US-010 的 prose-impact-checker / flow-naturalness-checker 阈值微调也应走这个模式（新 shim module 复用 is_activated），避免判定 drift
+  - **lazy import 规避循环依赖**：`editor_wisdom/arbitration.py` → `prose/sensory_immersion_gate.py` → `prose/directness_checker.py` 有潜在交叉导入风险，在函数体内 import 而非模块顶部 import 即可避开（Python 标准做法；性能代价仅一次函数调用内的小 import 查表）
+  - **pytest -p no:randomly 稳定排序**：全量回归验证首选 `pytest --no-cov -p no:randomly`。仓库有 pytest-randomly 安装；当 sentence-transformers 在 fixture session 中被提前初始化时，后到的 style_rag 初始化会失败。这是 pre-existing 耦合，非本 PR 引入
+  - **arbitration.collect_issues scene_mode kwarg 模式**：新加的两个 kwarg-only 参数 `scene_mode` + `chapter_no` 均有 sensible default（None / 0）→ 现存调用方零代码改动仍保持原行为，直到 US-009（context pack 暴露 scene_mode）把场景信号真正接进来才开始过滤
+  - **agent spec 交叉引用一致性**：每次在 writer-agent.md 增加一段"checker 侧会 skipped"的描述，就必须在对应 checker.md 里放一段对称的"writer-agent 侧会暂挂"回指。本轮用 `sensory-immersion-checker.md` → `writer-agent.md` 的 "Directness Mode" 超链+二者共同指向 should_skip_sensory_immersion 实现同步——avoid one-sided spec drift
+---

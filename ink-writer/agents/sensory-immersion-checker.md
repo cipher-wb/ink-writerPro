@@ -22,6 +22,39 @@ model: inherit
 - **悬疑感官**: `${CLAUDE_PLUGIN_ROOT}/references/scene-craft/suspense.md`
 - **writer-agent 铁律**: L10b（感官规则）/L10e（感官主导模态）/L10g（环境情绪共振）
 
+## 直白模式激活门控 (v22 US-007)
+
+> **冲突解耦**：本 checker 仅在**非 Directness Mode 场景**生效。直白模式下整体 **skipped**（返回"场景无需检查"而非 Red），由 `directness-checker` 接管该段文笔审查。writer-agent 的 L10b / L10e 在同等条件下暂挂（见 `ink-writer/agents/writer-agent.md` 顶部 "## Directness Mode"），两端规则保持一致。
+
+**跳过条件（任一满足即 skipped）**：
+
+- `review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}`
+- 或 `review_bundle.scene_mode` 缺省且 `chapter_no ∈ [1, 2, 3]`（黄金三章兜底）
+
+**正常检查条件（执行第一步至第九步）**：
+
+- `scene_mode ∈ {slow_build, emotional, other}` 或 `None` 且 `chapter_no ≥ 4`——抒情 / 慢节奏 / 铺垫章仍需完整五维感官沉浸审查，零退化硬约束
+
+**激活判定（程序化对等）**：等价于 `ink_writer.prose.sensory_immersion_gate.should_skip_sensory_immersion(scene_mode, chapter_no)` 的返回值。该函数复用 `directness_checker.is_activated` 语义，确保 writer / checker / arbitration 三端激活判定单源。
+
+**跳过时输出（短路第一步之前）**：
+
+```json
+{
+  "agent": "sensory-immersion-checker",
+  "chapter": 2,
+  "status": "skipped",
+  "reason": "directness_mode_active",
+  "scene_mode": "combat",
+  "pass": true,
+  "dimension_grades": {},
+  "issues": [],
+  "summary": "直白模式激活（scene_mode=combat），sensory-immersion 不参与本章审查。"
+}
+```
+
+跳过时 `pass=true`、`issues=[]`、`dimension_grades={}`，不产生任何 hard block 与 warning，不写入 arbitration。`arbitration.collect_issues_from_review_metrics` 会在检测到直白模式激活时主动过滤 `sensory-immersion-checker` 源的 issues——即便 checker 被配置错误留下残余输出，也不会反向触发 Red。
+
 ## 检查范围
 
 **输入**: 单章或章节区间（如 `45` / `"45-46"`）

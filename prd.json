@@ -123,8 +123,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "单源激活判定：新增 ink_writer/prose/sensory_immersion_gate.py（~40 行）暴露 should_skip_sensory_immersion(scene_mode, chapter_no) 复用 directness_checker.is_activated → writer / checker / arbitration 三端激活判定共享同一真相源；新增 SENSORY_IMMERSION_CHECKER_NAME 常量防拼写漂移。writer-agent.md：L10b / L10e 段首行明确标注'仅在非 Directness Mode 场景生效'；顶部 ## Directness Mode 的 L10b/L10e 暂挂协议小节扩写为硬原则（'不强求非视觉感官密度、不强求主导感官轮换，专注剧情/动作/对话'）+ 显式交叉指向 sensory-immersion-checker skipped 路径 + polish-agent US-008 精简 pass 联动。sensory-immersion-checker.md：核心参考之后、检查范围之前新增 ## 直白模式激活门控 (v22 US-007) 章节，含跳过条件（golden_three/combat/climax/high_point 或 None+ch1-3）、正常检查条件（slow_build/emotional/other + ch≥4）、程序化对等提示（should_skip_sensory_immersion 单源）、skipped JSON 契约（status:skipped / reason:directness_mode_active / pass:true / issues:[]）。arbitration.py:collect_issues_from_review_metrics 新增 kwarg-only scene_mode + chapter_no 参数：直白模式激活时从 checkers 元组中过滤掉 sensory-immersion-checker 源的 issues（critical + violations 双路径），非直白/缺省参数保持 v18 US-011 原行为（向后兼容）。新增 tests/prose/test_sensory_immersion_directness_gate.py（28 用例全通过）：should_skip 场景矩阵 13 parametrize / CHECKER_NAME 常量锁定 / ch0 fallback / writer-agent L10b + L10e 段首 '仅在非 Directness Mode 场景生效' 文字门 / 暂挂协议关键词（不强求/非视觉感官/主导感官轮换/sensory-immersion-checker/skipped）/ sensory-immersion-checker.md 激活门控章节位置（在 ## 核心参考 后、## 检查范围 前）+ JSON 契约 + 跨文件回指 / collect_issues combat/golden-three-fallback 过滤 / slow_build 保留 / 默认参数向后兼容 / multi-checker emotional 保留 sensory / combat 场景 arbitrate_generic 端到端无 sensory merged_fixes / slow_build 场景 sensory Red 正常走 arbitration（零退化）。-p no:randomly 全量 pytest 3359 passed / 23 skipped / 0 failed（baseline 3331 + 28 新 = 3359，零回归）。ruff 全绿。"
     },
     {
       "id": "US-008",
