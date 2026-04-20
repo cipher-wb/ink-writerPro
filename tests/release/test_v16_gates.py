@@ -23,7 +23,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-EXPECTED_VERSION = "20.0.0"
+EXPECTED_VERSION = "21.0.0"
 
 
 # ---------------------------------------------------------------------------

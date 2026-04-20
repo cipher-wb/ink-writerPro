@@ -261,8 +261,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Done 2026-04-20: v21.0.0 发版完成。\n\n**6 处版本号同步**：\n(1) pyproject.toml: 20.0.0 → 21.0.0\n(2) ink-writer/.claude-plugin/plugin.json: 20.0.0 → 21.0.0\n(3) .claude-plugin/marketplace.json (ink-writer plugin): 20.0.0 → 21.0.0\n(4) tests/release/test_v16_gates.py EXPECTED_VERSION: 20.0.0 → 21.0.0\n(5) README.md Badge: Version-20.0.0-green.svg → Version-21.0.0-green.svg\n(6) README.md 版本历史: 新增 v21.0.0 (当前) 行 + v20.0.0 去掉 (当前) 标记\n\n**版本历史文案**: 突出跨平台端到端审计（9 类风险 C1~C9 清零）+ 双端 e2e smoke 脚本（含中文+空格路径）+ ralph.sh COMPLETE 行锚定 + ink-auto run_cli_process 诊断日志 + pytest 跨平台 marker 统一 + Windows troubleshooting 手册；pytest 3021 → 3206（+185 新测试，零回归）。\n\n**双端 smoke 实测**:\n- Mac 本地实跑 `./scripts/e2e_smoke.sh 3` → init/write/verify/cleanup 全 ok，verify.extra={index_tables:34, state_chapter:3, db_chapter:3, recent_full_texts_count:3}；日志 reports/e2e-smoke-mac.log\n- Windows: 按 PRD 允许保留 mock LLM 路径；.ps1 / .cmd wrapper 已通过源码级红线（BOM + Find-PythonLauncher + harness 引用），实 Windows 机实跑留 v22 机会\n\n**全量 pytest**: 3206 passed / 23 skipped / 0 failed（baseline 3021 → +185 新测试，零回归；日志 reports/pytest-mac-v21.log）\n\n**tasks/prd-cross-platform-audit.md Release Notes 追加**：findings 总数 202 → 3 合法 fixture / 修复数量按 C1~C9 逐类列出 / 专项防御（US-011 ralph.sh + US-012 ink-auto 诊断日志）/ 测试统一（US-013 marker + 红线）/ e2e smoke（US-014 harness 架构）/ Windows 手册（US-015）/ 双端 smoke 实测 / Mac 字节级一致 5 处抽样验证 / 版本号 6 处同步清单\n\n**git tag**: annotated `v21.0.0 — 跨平台端到端审计与双端一等公民`；push origin master + tag（PRD 明确授权）\n\n**Mac 字节级一致承诺**: 所有 v21 新增代码走 `if sys.platform == 'win32':` 分支或新增 helper（safe_symlink / set_windows_proactor_policy / enable_windows_utf8_stdio / find_python_launcher_bash），Mac 上语义完全保留；抽样 5 处 diff 验证通过。"
     }
   ]
 }

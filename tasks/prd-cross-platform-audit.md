@@ -290,3 +290,61 @@ v19.0.0 引入了 Windows 原生兼容层（runtime_compat.py 暴露 5 个共享
 7. US-016 发版
 
 按 `/prd → /ralph → ralph.sh` 工作流：下一步 `/ralph tasks/prd-cross-platform-audit.md`。
+
+---
+
+## Release Notes — v21.0.0（2026-04-20）
+
+### 交付摘要
+
+- **审计覆盖**：9 类风险（C1~C9）首轮扫描共 **202 findings**（Blocker 0 / High 52 / Medium 42 / Low 108）；逐类清零后剩余 3 处 C2 Low 均为测试 fixture 合法字面量（`tests/core/test_path_cross_platform.py` 针对 `normalize_windows_path` 硬编码的反面用例），`scripts/audit_cross_platform.py --root . --output reports/cross-platform-audit-findings.md` 固化报告
+- **修复数量**：
+  - C1 open() UTF-8 编码：4 处真实 finding（scanner 消 2 类误报）
+  - C2 路径处理：全量 110 处（scanner 从字面量启发式改为 context-aware AST；`scripts/audit/scan_unused.py:47` 硬编码绝对路径改 `Path(__file__).resolve().parents[2]`）
+  - C3 subprocess：25 处真实修复 + 红线测试（仓库级禁止 `text=True` 无 `encoding=` 与禁止 `shell=True`）
+  - C4 asyncio Proactor：6 处生产入口统一走 `runtime_compat.set_windows_proactor_policy()`，4 处测试入口由 `tests/conftest.py` 模块级调用覆盖
+  - C5 symlink：`runtime_compat.safe_symlink()` 为单一入口；2 处 SUT 场景打 `# noqa: c5` pragma；scanner 由 line-regex 重写为 AST-based
+  - C6 `.sh` → `.ps1/.cmd` 对等：新增 `migrate_webnovel_to_ink.{ps1,cmd}`（.ps1 UTF-8 BOM）
+  - C7 SKILL.md Windows 块：v19 已补齐，本轮升级为 CI 级 stem 级 parity 红线
+  - C8 Python launcher：4 个 shell 入口（ink-auto.sh / env-setup.sh + .ps1）统一走 detector；4 处 primitive 加 `# c8-ok` pragma
+  - C9 CLI UTF-8 stdio：4 处真实补齐 + 顺手修复 `scripts/build_chapter_index.py` pre-existing SyntaxError
+- **专项防御（US-011 / US-012）**：
+  - `scripts/ralph/ralph.sh` + `.ps1`：COMPLETE 信号行锚定（`tail -n 50 | grep -qE '^[[:space:]]*<promise>COMPLETE</promise>[[:space:]]*$'`）+ `set -o pipefail` + `|| LLM_EXIT=$?` + `[ralph] iteration N tool=... llm_exit=...` stderr 日志
+  - `ink-writer/skills/ink-auto/ink-auto.sh` + `.ps1`：`run_cli_process` / `Invoke-CliProcess` 子进程非零退出主动打 `[ink-auto] llm_exit=<code> tool=<platform> log=<path>`；`run_auto_fix` 的 inline Python stderr 从 `/dev/null` 改到 `checkpoint-utils-debug.log`
+- **测试统一（US-013）**：
+  - `pytest.ini` 注册 `@pytest.mark.windows` / `@pytest.mark.mac` + `tests/conftest.py` autoskip
+  - 4 处装饰器级 `skipif(sys.platform …)` 迁移到 marker
+  - 仓库红线 `tests/audit/test_platform_markers.py:test_repo_has_no_platform_skipif_outside_conftest` 守护回退
+- **端到端 smoke（US-014）**：
+  - harness + 薄 wrapper 架构：`scripts/e2e_smoke_harness.py`（Python 核心）+ `.sh` / `.ps1` / `.cmd` 三平台 wrapper
+  - 覆盖中文项目名 + 带空格父目录场景；4 步 init/write/verify/cleanup 全 mock（无 LLM 调用）
+  - 首版 LLM 调用按 PRD 允许跳过（合成稳定中文章节正文 × N）
+- **Windows 故障手册（US-015）**：`docs/windows-troubleshooting.md` 12 条故障按"症状 / 原因 / 修复 / 验证"四段组织；README 跨平台段 + Windows Q&A 双处链接
+
+### 双端 smoke 实测
+
+- **Mac（本地实跑）**：`./scripts/e2e_smoke.sh 3`
+  - init/write/verify/cleanup **全 ok**
+  - verify.extra：`index_tables=34 state_chapter=3 db_chapter=3 recent_full_texts_count=3`
+  - 日志：`reports/e2e-smoke-mac.log`
+- **Windows**：按 PRD 允许保留 mock LLM 路径；`scripts/e2e_smoke.ps1` / `.cmd` 已验证存在 + UTF-8 BOM + `Find-PythonLauncher` 通过源码级红线 `tests/scripts/test_e2e_smoke.py`；真实 Windows 机实跑留 v22 机会
+
+### 测试数据
+
+- 全量 `pytest --no-cov`：**3206 passed / 23 skipped / 0 failed**（v20 baseline 3021 → +185 新测试，零回归）
+- 日志：`reports/pytest-mac-v21.log`
+
+### Mac 字节级一致承诺
+
+- 所有 Windows 特化代码走 `if sys.platform == "win32":` 分支；生产 `.sh` 文件语义 Mac 零差异
+- 本轮抽样 diff 5 处确认 Mac 上（`encoding="utf-8"` 为冗余 kwarg / `safe_symlink` POSIX 下等价 `os.symlink` / `set_windows_proactor_policy` Mac 返回 False 无副作用 / `find_python_launcher_bash` 在 Mac `OSTYPE=darwin*` 分支恒定 `python3` / Console.Error / stderr 仅失败路径打日志）语义完全保留
+
+### 版本号 6 处同步
+
+1. `pyproject.toml` → `21.0.0`
+2. `ink-writer/.claude-plugin/plugin.json` → `21.0.0`
+3. `.claude-plugin/marketplace.json`（ink-writer plugin） → `21.0.0`
+4. `tests/release/test_v16_gates.py:EXPECTED_VERSION` → `21.0.0`
+5. `README.md` Badge → `21.0.0`
+6. `README.md` 版本历史新增 v21 行（v20 去掉"当前"标记）
+

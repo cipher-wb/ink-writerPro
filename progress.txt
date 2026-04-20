@@ -711,3 +711,41 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `prd.json` (US-015 passes:true + notes)
   - `progress.txt` (this entry)
 ---
+
+## 2026-04-20 - US-016 端到端回归 + v21.0.0 发版
+- **6 处版本号同步**：
+  1. `pyproject.toml`: `20.0.0` → `21.0.0`
+  2. `ink-writer/.claude-plugin/plugin.json`: `20.0.0` → `21.0.0`
+  3. `.claude-plugin/marketplace.json` (ink-writer plugin): `20.0.0` → `21.0.0`
+  4. `tests/release/test_v16_gates.py:EXPECTED_VERSION`: `20.0.0` → `21.0.0`
+  5. `README.md` Badge: `Version-20.0.0-green.svg` → `Version-21.0.0-green.svg`
+  6. `README.md` 版本历史：新增 `**v21.0.0 (当前)**` 行，`v20.0.0` 去掉 `(当前)` 标记
+- **版本历史文案**（v21）：突出跨平台端到端审计（9 类风险 C1~C9 首轮 202 findings → 3 合法 fixture）、双端 e2e smoke（中文+空格路径）、ralph.sh COMPLETE 行锚定 + `pipefail` + LLM_EXIT 日志、ink-auto `run_cli_process` 诊断日志、pytest marker 统一 + 红线守护、`docs/windows-troubleshooting.md`、Mac 字节级一致承诺保持、pytest 3021 → 3206（+185 新测试）
+- **双端 smoke 实测**：
+  - Mac 本地实跑 `./scripts/e2e_smoke.sh 3` → init/write/verify/cleanup **全 ok**
+    - verify.extra: `index_tables=34 state_chapter=3 db_chapter=3 recent_full_texts_count=3`
+    - 日志 `reports/e2e-smoke-mac.log`
+  - Windows: 按 PRD 允许保留 mock LLM 路径；`.ps1` / `.cmd` wrapper 通过源码级红线（BOM + Find-PythonLauncher + harness 引用），真 Windows 机实跑留 v22 机会
+- **全量 pytest**: **3206 passed / 23 skipped / 0 failed**（baseline 3021 → +185 新测试，零回归；日志 `reports/pytest-mac-v21.log`，205.17s）
+- `tasks/prd-cross-platform-audit.md` 底部追加 Release Notes 段：findings 数量（202 → 3 fixture） / 修复数量按 C1~C9 逐类 / 专项防御（US-011 + US-012 诊断日志三件套） / 测试统一（US-013 marker + 红线） / e2e smoke（US-014 harness 架构） / Windows 手册（US-015） / 双端 smoke 实测 / Mac 字节级一致 5 处抽样 / 版本号 6 处同步清单
+- **git tag**: `git tag -a v21.0.0 -m '...'` annotated；push origin master + tag（PRD 明确授权）
+- **Learnings for future iterations:**
+  - **release commit 与 tag 分两步而非 amend**：先 `feat: US-016 ...` 做 bump + smoke + notes + prd.json 一次 commit，再 `git tag -a v21.0.0 HEAD`。避免 amend 已推的 commit（违反默认安全协议）
+  - **pytest v16_gates 自动守护版本号**：`tests/release/test_v16_gates.py` 会在全量 pytest 里校验 pyproject/plugin.json/marketplace.json 三处 == EXPECTED_VERSION；bump 时必须同步 4 处（+ EXPECTED_VERSION 本身），漏改会立刻挂 CI。本轮先 bump EXPECTED，再 bump 3 处 version，pytest 一次过
+  - **release 日志必须写到 `reports/` 而非 stdout 直显**：pytest 3206 条 output 太大，用 `| tee reports/pytest-mac-v21.log | tail -5` 既落盘又控制上下文消耗。e2e smoke 同理
+  - **PRD 授权 push 要引用原文**：commit / tag 之前要在 commit message 或 notes 里引用 PRD 原文"PRD 内明确授权 push"——否则将来审阅不清楚是作者越权还是 PRD 允许。本 US notes 第 5 段已固化
+  - **version badge 与 plugin.json 是两套真源**：README.md Badge 是视觉标志；plugin.json 是 Claude Code plugin runtime 读取的版本；必须同步。marketplace.json 是发布渠道的版本。三者 + pyproject.toml + test_v16_gates.EXPECTED_VERSION + README 版本历史 = 6 处
+- Files changed:
+  - `pyproject.toml` (version 21.0.0)
+  - `ink-writer/.claude-plugin/plugin.json` (version 21.0.0)
+  - `.claude-plugin/marketplace.json` (version 21.0.0)
+  - `tests/release/test_v16_gates.py` (EXPECTED_VERSION 21.0.0)
+  - `README.md` (Badge + 版本历史新增 v21 / 降级 v20)
+  - `tasks/prd-cross-platform-audit.md` (Release Notes 追加)
+  - `reports/e2e-smoke-mac.log` (Mac 实跑日志)
+  - `reports/pytest-mac-v21.log` (全量 pytest 日志)
+  - `prd.json` (US-016 passes:true + notes)
+  - `progress.txt` (this entry)
+- 全量 pytest: **3206 passed / 23 skipped / 0 failed**（与 US-014/US-015 baseline 一致，零回归）
+- Audit findings: 3 → 3（不变）
+---
