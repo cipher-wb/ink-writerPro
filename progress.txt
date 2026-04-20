@@ -51,6 +51,10 @@ Prev run: chapter-context-injection → v20.0.0 released
 - **CLI 入口 UTF-8 stdio 是单一强制规则**（US-010 起）：每个 `if __name__ == "__main__":` 文件都必须在源码中出现 `enable_windows_utf8_stdio` 字面量（import 或调用均可）。`tests/audit/test_cli_entries_utf8_stdio.py:test_repo_has_no_cli_entry_missing_utf8_stdio` 仓库红线调 `scan_c9_cli_utf8_stdio(collect_python_files(REPO_ROOT))` assert `== []`，新违规直接挂 CI。模式可复用：复用 scanner 写红线 > 测试里重写规则解析，与 C3/C4/C5/C8 同构。
 - **跨目录 CLI 入口的 runtime_compat 导入三段式**（US-010 起）：不在 `ink-writer/scripts/` 的 CLI 文件（benchmark/ / ink-writer/dashboard/ / scripts/）统一用 `_INK_SCRIPTS = _os_win_stdio.path.join(dirname(abspath(__file__)), <relative>)` + `sys.path.insert` + `try/except from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio; _enable_utf8_stdio()`。相对路径随位置变化（benchmark/ → `../ink-writer/scripts` / ink-writer/dashboard/ → `../scripts` / scripts/ → `../ink-writer/scripts`）但模板一致。用 `_os_win_stdio`/`_sys_win_stdio` 别名防与后续 `import os/sys` 重定义。
 - **pre-existing SyntaxError 会被 audit 漏过**（US-010 起）：`audit_cross_platform.py` 走 `ast.parse` + try/except SyntaxError 跳过整个文件——所以 FIX-11 orphan if-block 这类"身体被删光只剩注释"的文件从未被任何 Cx scanner 报告过。`scripts/build_chapter_index.py` 是典型案例（US-010 顺手修复）。下一个改动窗口可以把 `python3 -m compileall -q -f <root>` 全仓语法检测纳入 pre-commit 或 CI，作为 SyntaxError 守门。
+- **ralph.sh COMPLETE 信号检测：行锚定 + tail 限制**（US-011 起）：裸 `grep -q "<promise>COMPLETE</promise>"` 是过松检测——Claude 的 `--print` 输出里 prose 提及 sentinel（如 "I'll emit `<promise>COMPLETE</promise>` once done"）会误命中提前退出 loop。统一做法：① `| tail -n 50 | grep -qE '^[[:space:]]*<promise>COMPLETE</promise>[[:space:]]*$'`（bash）② `(?m)^\s*<promise>COMPLETE</promise>\s*$` 多行锚定（PowerShell）。sentinel 必须独占一行才算真的完成信号。`tests/scripts/test_ralph_sh_smoke.py:test_ralph_sh_sentinel_check_is_line_anchored` + `test_ralph_ps1_sentinel_check_is_multiline_anchored` 是源码级红线，后续 PR 把 grep 退回裸字面量直接挂 CI。
+- **ralph.sh defensive 退出码日志**（US-011 起）：`OUTPUT=$(... | tee /dev/stderr) || LLM_EXIT=$?` 替代 `|| true`——显式捕获 LLM 子进程退出码，然后 `echo "[ralph] iteration $i tool=$TOOL llm_exit=$LLM_EXIT" >&2` 到 stderr。集成终端/日志聚合立刻可见每轮是正常完成还是崩溃；模式对所有 long-running agent-loop 脚本通用（未来 ink-auto 等如需同等可观测性可复用）。
+- **bash `set -e` + `set -o pipefail` 的联动约束**（US-011 起）：只 `set -e` 不 `set -o pipefail` → `cmd | tee` 里 cmd 非零退出但 tee 成功时整条 pipeline 退出码 = 0，`|| LLM_EXIT=$?` 捕获不到真实失败。long-running agent-loop 脚本应默认开启 `pipefail`。两者联动后，`claude | tee /dev/stderr || LLM_EXIT=$?` 才能真正捕获 claude 的退出码——这是**行锚 grep + LLM_EXIT 日志 + pipefail** 三件套的关键闭环。
+- **fake-claude shim 走 shell 脚本 + PATH prepend 做 ralph.sh 端到端测**（US-011 起）：ralph.sh 调用的是 `claude` 命令，不是 Python 函数，所以 monkeypatch 不顶用。标准做法：tmpdir 下写一个 shell 脚本 `fake_bin/claude`（`cat > /dev/null` 吞 stdin 避免 SIGPIPE + heredoc 吐固定输出 + `exit $CODE`），chmod +x，然后 `env["PATH"] = f"{fake_bin}{os.pathsep}{env['PATH']}"` 前置到 PATH 最前面。对真实 API 零依赖，`skipif sys.platform=='win32' or shutil.which('bash') is None or shutil.which('jq') is None` 保护 Windows/缺 bash/缺 jq 环境。可复用于测任何 bash-driven agent loop（ink-auto.sh 等）。
 
 ## Context Contract（本 PRD 专属）
 
@@ -506,4 +510,35 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `reports/cross-platform-audit-findings.md` (regenerated: C9 4 → 0, 总数 7 → 3)
   - `prd.json` (US-010 passes:true + 详细 notes)
   - `progress.txt` (this entry + 3 new Codebase Patterns)
+---
+
+## 2026-04-20 - US-011 Mac 端 ralph.sh 异常专项修复
+- PRD 验收准则允许「若 findings 无明确现象，允许退化为扫描+加 defensive 日志」——本地无明确可复现 crash，走此退化路径：针对 PRD 候选异常点（COMPLETE grep / iteration 退出码 / stderr 吞吐）做可证伪的防御改进，每一处都有对应测试。
+- **scripts/ralph/ralph.sh** 三处改动：
+  1. 头部加 `set -o pipefail`——让 `cmd | tee /dev/stderr` 里 cmd 的非零退出能被下游 `|| LLM_EXIT=$?` 兜住；原先只有 `set -e` + 裸 `|| true` 会吞掉真实失败
+  2. `OUTPUT=$(... | tee /dev/stderr) || true` → `|| LLM_EXIT=$?` + `echo "[ralph] iteration $i tool=$TOOL llm_exit=$LLM_EXIT" >&2` defensive 日志
+  3. COMPLETE grep 收紧：`echo "$OUTPUT" | tail -n 50 | grep -qE '^[[:space:]]*<promise>COMPLETE</promise>[[:space:]]*$'`——行锚定防 prose 误命中 + tail 限制只看响应末尾
+- **scripts/ralph/ralph.ps1** 对等改动：`(?m)^\s*<promise>COMPLETE</promise>\s*$` 多行模式 + 只看最后 50 行（`Select-Object -Last 50`）保持双端语义一致
+- 新增 `tests/scripts/test_ralph_sh_smoke.py`（7 tests，全部通过）：
+  - `test_completes_when_sentinel_is_on_its_own_line`：独立行 sentinel → exit 0
+  - `test_does_not_false_positive_on_inline_sentinel_mention`：prose 里三次提字面量 → 跑满 max_iterations + exit 1（核心回归）
+  - `test_runs_full_iterations_without_sentinel`：纯无信号 → exit 1 + defensive 日志 `[ralph] iteration N tool=claude llm_exit=0` 两行齐全
+  - `test_nonzero_llm_exit_does_not_abort_ralph_loop`：fake claude exit 17 → ralph.sh 不崩 + `llm_exit=17` 日志 + 跑满 max_iterations（pipefail + `|| LLM_EXIT=$?` 联合验证）
+  - `test_archive_path_strips_ralph_prefix`：.last-branch=ralph/old-run + branchName=ralph/new-run → `archive/<date>-old-run` 子目录创建 + `.last-branch` 正确更新
+  - `test_ralph_sh_sentinel_check_is_line_anchored` / `test_ralph_ps1_sentinel_check_is_multiline_anchored`：源码级红线，防 PR 回退
+- 测试实现走 **fake-claude shim + PATH prepend** 模式：tmpdir 下写 `fake_bin/claude` shell 脚本（`cat > /dev/null` 吞 stdin 防 SIGPIPE + heredoc 吐固定输出 + `exit $CODE`），通过 `env["PATH"]` 前置。零 API 依赖。skipif 保护 Windows/缺 bash/缺 jq
+- Mac 字节级一致：`pipefail` 仅影响 pipeline 退出码继承，stdout/stderr 字节输出不变；grep 改行锚定 + tail 50 行——真实 Claude 响应里 sentinel 独占一行时 anchored match 同样命中；新增 `[ralph] ... llm_exit=...` 日志写 stderr 不写 stdout，OUTPUT 变量内容不变
+- 全量 pytest: **3178 passed / 23 skipped / 0 failed**（baseline 3171 → +7 新测试，零回归）。audit findings 3→3（无变化）
+- **Learnings for future iterations:**
+  - **PRD "退化为扫描+加 defensive 日志" 是合法路径**：US-011/US-012 这类"用户反馈偶发错误但难精确复现"的 US，硬猜异常点做定向修改反而危险；走"针对 PRD 候选清单做可证伪改进+防御日志+回归测试"是更稳的选择
+  - **COMPLETE 信号检测的行锚 + tail 是双层保险**：单独 anchored regex 已经能挡 99% prose 误命中，再加 `tail -n 50` 是保险杠——万一 Claude 响应某段独立打出 sentinel（比如回顾历史），tail 限制保证只看末尾
+  - **`|| true` 吞退出码是 bash 陷阱**：long-running loop 脚本里应改成 `|| CAPTURED_EXIT=$?` + 日志，否则用户无从得知子进程是正常完成还是崩溃。加 `set -o pipefail` 让 pipeline 继承真实退出码，是这个改动的关键前提
+  - **shell 脚本端到端测的标准套路**：fake 命令走 shell 脚本 + PATH prepend，`cat > /dev/null` 吞 stdin 防 SIGPIPE。比 monkeypatch 更自然，对真实 API 零依赖，skipif 保护缺依赖（bash/jq）环境
+  - **下轮（US-012）执行要点**：Windows ink-auto 的异常同样允许「扫描+defensive 日志」退化路径；候选异常点有 8 项（`.ink/tmp/` 路径/中文项目名/symlink/subprocess/index.db 锁/asyncio/编码）——优先写 tmp_path 下的 smoke 测试 + 关键 logger.info 日志点，每修一处配一个单测
+- Files changed:
+  - `scripts/ralph/ralph.sh` (3 edits: set -o pipefail / LLM_EXIT 日志 / anchored tail grep)
+  - `scripts/ralph/ralph.ps1` (多行锚定 + Select-Object -Last 50)
+  - `tests/scripts/test_ralph_sh_smoke.py` (new, 7 tests, ~180 行)
+  - `prd.json` (US-011 passes:true + notes)
+  - `progress.txt` (this entry + 4 new Codebase Patterns)
 ---

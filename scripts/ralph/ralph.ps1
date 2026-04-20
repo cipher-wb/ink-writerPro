@@ -124,7 +124,14 @@ for ($i = 1; $i -le $MaxIterations; $i++) {
 
     if ($output) { $output | Out-Host }
 
-    if ($output -and ($output -match '<promise>COMPLETE</promise>')) {
+    # US-011: 与 ralph.sh 保持字节级语义一致的 COMPLETE 检测——
+    #   1) 只看 OUTPUT 的最后 50 行（$tailText）避免早期 prompt 回显误触发；
+    #   2) (?m) 多行模式 + ^...$ 行锚定：sentinel 必须独占一行。
+    $outputText = if ($null -eq $output) { '' } else { ($output | Out-String) }
+    $lines = $outputText -split "`r?`n"
+    $tailLines = $lines | Select-Object -Last 50
+    $tailText = $tailLines -join "`n"
+    if ($tailText -match '(?m)^\s*<promise>COMPLETE</promise>\s*$') {
         Write-Host ''
         Write-Host 'Ralph completed all tasks!'
         Write-Host "Completed at iteration $i of $MaxIterations"
