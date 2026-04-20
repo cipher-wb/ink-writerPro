@@ -115,8 +115,8 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-21: 新增 tests/core/test_word_limits_e2e.py 5 用例，AC 场景（chapter_words=3000 × 3800/2800 字）全覆盖 + 零回归护栏（< 2200 字硬阻断 + 2200 floor 红线）。preferences-schema.md v23 语义段已含公式/默认值/3+ 组示例（US-002 已落）。README.md 新增 v23.0.0 版本条目记录字数硬上限变更。全仓 grep 4000/5000/3000 硬编码扫描：`ink_writer/core/preferences.py` 5000 = `DEFAULT_MAX_WORDS_HARD` 显式默认；`computational_checks.py::run_all_checks` 2200/5000 = load_word_limits import 失败时的安全过渡态 fallback；`ink-auto.sh/ps1` 5000 = Python 派生块 fallback 默认；其它 5000 命中属 sqlite busy_timeout ms 或 RAG pack chars，非字数阈值。零回归：`polish-agent.md` 70% floor + `ink-auto.sh:537 < 2200` + `computational_checks.py` min_words 硬下限路径全部字节级保留。全量 pytest 3593 passed / 23 skipped（baseline 3588 + 5 新增，零回归）。Typecheck/compile 通过。"
     }
   ]
 }

@@ -130,3 +130,23 @@ Prev run: prose-directness → v22.0.0 released (场景感知直白化)
   - 重试循环在 `set -uo pipefail`（无 `-e`）的主脚本里必须每个 bash 循环变量都预先显式初始化（`RETRY_ROUND=0` / `RETRY_VERIFIED=0`），否则 `while (( ... ))` 碰到未定义变量会被 `-u` 杀。
 ---
 
+## 2026-04-21 - US-006 全量回归 + preferences-schema 文档发版
+- `tests/core/test_word_limits_e2e.py`（新增 5 用例 E2E fixture）：
+  - `test_e2e_chapter_words_3000_3800_chars_hard_fail` — PRD 明示 AC 场景，chapter_words=3000 推导 (2500, 3500)，3800 字→ severity='hard'。
+  - `test_e2e_chapter_words_3000_2800_chars_pass` — PRD 明示 AC 场景，2800 字区间内通过。
+  - `test_e2e_chapter_words_3000_below_min_hard_fail` — 零回归：下限红线 2500 不得被弱化。
+  - `test_e2e_no_preferences_uses_default_2200_5000` — 默认 (2200, 5000) 对齐 US-001/002 默认态 + < 2200 仍 hard 阻断。
+  - `test_e2e_chapter_words_2000_clamped_to_2200_floor` — MIN_WORDS_FLOOR 护栏：chapter_words=2000 触发 min=2200 红线，2199 字仍以 hard 被阻断，2200 字边界通过。
+- `README.md` 版本历史表新增 v23.0.0 条目（v22.0.0 降级为非当前），汇总 US-001/002/003/004/005/006 全链路变更与测试数（pytest 3206 → 3593 累计 +40 新测试）。
+- `ink-writer/references/preferences-schema.md` v23 语义段在 US-002 已落地含推导公式、默认值、红线护栏与 4 组典型示例（未配置 / 3000 / 2500 / 4500），超额满足 AC #3 的"三组示例"要求。
+- 硬编码字数阈值全仓扫描确认：`ink_writer/core/preferences.py::DEFAULT_MAX_WORDS_HARD=5000`（显式默认）、`computational_checks.py::run_all_checks` 内的 (2200, 5000) 是 load_word_limits import 失败的安全过渡态 fallback、`ink-auto.sh/ps1` 5000 均为 Python 派生块 fallback——其它命中属于 sqlite busy_timeout（ms 单位）与 semantic_recall pack_chars（非章节字数），非字数阈值。
+- 零回归红线字节级验证：`polish-agent.md:393-395` 70% floor 保留、`ink-auto.sh:537` `char_count < 2200` 硬下限保留、`computational_checks.py::check_word_count` 的 min_words 硬失败分支保留、`SKILL.md 2A.5` 下限方向表述（补写 2 轮）保留。US-005 仅硬化上限方向，下限路径全部不动。
+- 回归：`pytest tests/ --no-cov` 全量 3593 passed / 23 skipped（baseline 3588 + 5 新增，耗时 157s）。`python3 -m py_compile` + `ast.parse` 对新增测试与 preferences.py 均通过。
+- **Learnings for future iterations:**
+  - 收尾型 US（"全量回归 + 文档发版"）的本质是把前面 US 已经做的事汇总验收 + 把孤立的 AC 场景固化成可重复测试。当发现 preferences-schema 文档内容已在 US-002 里做完，就别再重复写同样内容——直接把 AC 场景跑成 pytest 用例，提供可重复的 regression 护栏，价值大于改一遍文档措辞。
+  - README.md 版本历史表的"(当前)"标记必须随版本发布迁移：从 v22 → v23 时一次性把 v22 的 `**v22.0.0 (当前)**` 收敛成普通 `v22.0.0`，一次 Edit 覆盖整段描述行。
+  - AC 里的"手动场景验证"实际上最好转换成 pytest 用例——手动步骤极易遗漏，pytest 能在每次 regression 中自动跑一遍，是更负责任的交付方式。
+  - grep 4000/5000/3000 硬编码扫描时，sqlite `busy_timeout = 5000` 和 RAG `max_pack_chars: int = 3000` 是 false positive，注意单位（ms / chars）与语义（非字数阈值）区分。扫描脚本/注释里的默认值标注（`# 默认 5000`、`DEFAULT_MAX_WORDS_HARD = 5000`）属于"显式默认"合规匹配。
+  - README.md 版本历史行会非常长（有时数百字），比较适合用 Edit 一次性替换整段而不是手工缝合。版本表本身用竖线分隔，写成长文本没问题。
+---
+
