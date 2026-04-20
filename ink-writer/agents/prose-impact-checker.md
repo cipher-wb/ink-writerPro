@@ -23,6 +23,40 @@ model: inherit
 - **弱动词规则**: `${CLAUDE_PLUGIN_ROOT}/skills/ink-write/references/prose-craft-rules.md`
 - **writer-agent 铁律**: L10d（电影镜头切换）/L10f（情绪节奏句式）/L10g（环境情绪共振）
 
+## 直白模式阈值放宽 (v22 US-010)
+
+> **冲突解耦**：直白模式下"镜头多样性 / 感官丰富度"相关软规则被 arbitration 豁免（不升级为 Red），其他维度（句式节奏 / 动词锐度 / 环境情绪 / 特写缺失）保持原判定。hard-block 类规则（`SHOT_SINGLE_DOMINANCE` 等）不豁免，保留文笔硬伤护栏。非直白场景零退化。
+
+**激活条件（任一满足即放宽）**：
+
+- `review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}`
+- 或 `review_bundle.scene_mode` 缺省且 `chapter_no ∈ [1, 2, 3]`（黄金三章兜底）
+
+**激活判定（程序化对等）**：`ink_writer.prose.directness_threshold_gates.should_relax_prose_impact(scene_mode, chapter_no)`；与 `directness_checker.is_activated` 单源，避免多处漂移。
+
+**被豁免的 rule codes（白名单）**：
+
+| 维度 | rule code | 豁免后处置 |
+|-----|-----------|-----------|
+| 1 镜头多样性 | `SHOT_MONOTONY` | 不降级（战斗连续近景天然合理） |
+| 1 镜头多样性 | `COMBAT_THREE_STAGE_MISSING` | 不降级（短战斗允许两段式） |
+| 1 镜头多样性 | `SCENE_NO_SWITCH` | 不降级（高强度段保持单镜头） |
+| 1 镜头多样性 | `CLOSEUP_ABSENT` | 不降级（整章无特写 ≠ 失败，仍可通过动词锐度保证冲击力） |
+| 2 感官丰富度 | `VISUAL_OVERLOAD` | 不降级（directness-checker 接管） |
+| 2 感官丰富度 | `NON_VISUAL_SPARSE` | 不降级（L10b 暂挂已在 writer-agent 同步） |
+| 2 感官丰富度 | `SENSORY_PLAN_MISMATCH` | 不降级（直白模式章纲 sensory_plan 失效） |
+| 2 感官丰富度 | `SENSORY_DESERT` | 不降级（连续 800 字无感官描写在战斗里合理） |
+
+**仍保留的 hard-block / 其他维度规则**：
+
+- `SHOT_SINGLE_DOMINANCE`（critical，仍 hard block）
+- 维度 3 句式节奏（`CV_CRITICAL` / `SHORT_STREAK_NO_BREATH` 等）全保留
+- 维度 4 动词锐度（`WEAK_VERB_OVERLOAD` / `WEAK_VERB_SEVERE` / `DECISIVE_MOMENT_WEAK`）全保留——直白模式反而对动词锐度要求更高
+- 维度 5 环境-情绪共振（`ENV_EMOTION_DISSONANCE` / `CONTRAST_NO_DISCOMFORT`）全保留
+- 维度 6 特写缺失的 `CRITICAL_MOMENT_NO_CLOSEUP` / `COOL_POINT_NO_CLOSEUP` 保留（爽点兑现仍需要特写）
+
+**执行方式**：checker 照常跑六维并把完整 issues 写入 `review_metrics`；豁免发生在 `arbitration.collect_issues_from_review_metrics` 阶段——因此 checker 自身实现不用改，零退化风险最小。
+
 ## 检查范围
 
 **输入**: 单章或章节区间（如 `45` / `"45-46"`）

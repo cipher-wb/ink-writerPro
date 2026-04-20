@@ -351,6 +351,14 @@ def collect_issues_from_review_metrics(
     cannot reach polish-agent as Red in directness scenes. Non-directness
     scenes (``slow_build`` / ``emotional`` / ``other``) retain the full
     sensory-immersion pipeline — 零退化硬约束.
+
+    US-010: same activation signal additionally drops "镜头多样性 / 感官丰富度
+    / 对话比例" whitelisted rule codes from ``prose-impact-checker`` &
+    ``flow-naturalness-checker`` (see
+    :mod:`ink_writer.prose.directness_threshold_gates`). Other dimensions of
+    those two checkers keep firing normally — only the sensory-adjacent soft
+    rules are豁免; hard-block codes such as ``SHOT_SINGLE_DOMINANCE`` /
+    ``POV_INTRA_PARAGRAPH`` / ``CV_CRITICAL`` still reach arbitration.
     """
     if checkers is None:
         checkers = _GENERIC_CHECKERS
@@ -360,6 +368,15 @@ def collect_issues_from_review_metrics(
     # US-007: drop sensory-immersion-checker from checker list when directness
     # mode is active. Import lazily to avoid a hard dependency cycle between
     # editor_wisdom and the prose package at module-import time.
+    # US-010: relax 镜头多样性 / 感官丰富度 / 对话比例 相关 rule codes from
+    # prose-impact-checker & flow-naturalness-checker when directness mode is
+    # active. The checker themselves stay in the checker list (其他维度 still
+    # runs); only whitelisted rule codes get filtered.
+    from ink_writer.prose.directness_threshold_gates import (
+        is_relaxed_issue,
+        should_relax_flow_naturalness,
+        should_relax_prose_impact,
+    )
     from ink_writer.prose.sensory_immersion_gate import (
         SENSORY_IMMERSION_CHECKER_NAME,
         should_skip_sensory_immersion,
@@ -368,6 +385,9 @@ def collect_issues_from_review_metrics(
     _skip_sensory = should_skip_sensory_immersion(scene_mode, chapter_no)
     if _skip_sensory:
         checkers = tuple(c for c in checkers if c != SENSORY_IMMERSION_CHECKER_NAME)
+
+    _relax_prose_impact = should_relax_prose_impact(scene_mode, chapter_no)
+    _relax_flow_naturalness = should_relax_flow_naturalness(scene_mode, chapter_no)
 
     issues: list[Issue] = []
 
@@ -399,6 +419,14 @@ def collect_issues_from_review_metrics(
                     or v.get("category")
                     or ""
                 )
+                # US-010: drop whitelisted relaxed rule codes in directness mode.
+                if is_relaxed_issue(
+                    checker,
+                    str(vtype),
+                    relax_prose_impact=_relax_prose_impact,
+                    relax_flow_naturalness=_relax_flow_naturalness,
+                ):
+                    continue
                 fix = (
                     v.get("suggestion")
                     or v.get("fix_prompt")
@@ -434,6 +462,14 @@ def collect_issues_from_review_metrics(
             if checker not in checkers:
                 continue
             vtype = v.get("type") or v.get("symptom_key") or ""
+            # US-010: drop whitelisted relaxed rule codes in directness mode.
+            if is_relaxed_issue(
+                str(checker),
+                str(vtype),
+                relax_prose_impact=_relax_prose_impact,
+                relax_flow_naturalness=_relax_flow_naturalness,
+            ):
+                continue
             fix = v.get("suggestion") or v.get("fix_prompt") or ""
             if not fix:
                 continue

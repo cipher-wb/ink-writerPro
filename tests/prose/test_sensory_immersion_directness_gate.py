@@ -162,9 +162,9 @@ def _mk_metrics_multi_checker() -> dict:
             },
             {
                 "checker": "prose-impact-checker",
-                "type": "SHOT_MONOTONY",
-                "severity": "high",
-                "suggestion": "连续 4 段同类型镜头",
+                "type": "CV_CRITICAL",
+                "severity": "critical",
+                "suggestion": "章级 CV<0.35（句式节奏硬伤，US-010 仍保留）",
             },
         ],
         "review_payload_json": {

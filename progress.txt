@@ -30,6 +30,7 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
 - **向后兼容 kwarg-only 扩展模式**（US-007 起）：给公共 API（如 `collect_issues_from_review_metrics`）新增场景参数时，放到 `*,` 之后做 kwarg-only + sensible default（`None` / `0`）。现存调用方零代码改动仍保持原行为；新特性只在 caller 显式传参时启用——本轮让 US-009 context pack 上线前 sensory 过滤处于"待激活"状态，不提前影响生产。
 - **meta 字段是 chapter-level 信号归属**（US-009 起）：`pack["meta"]["scene_mode"]` 与 `pack["meta"]["chapter"]` / `pack["meta"]["injection_policy"]` 同级。后续再加 chapter-level 派生信号（例如 pov_mode / pacing_mode）一律挂 meta 而非 core/scene/global——保持 pack 消费者（writer/checker/polish）只需访问 `pack["meta"][...]` 即可拿到全部激活判定所需信号，不至于污染内容层（core/scene/global）。同时 pack 集成的最小 diff 模式 = 1 行 import + 1 行计算 + 1 个 key。
 - **scene_mode 优先级单源**（US-009 起）：`ink_writer/core/context/scene_classifier.py:resolve_scene_mode` 是 7 值 scene_mode 的 canonical 解析函数。新增 scene 感知特性时须以该函数输出为唯一入参，不允许 checker/writer/polish 各自实现"基于章节号或关键词推断"的独立判定——违反会直接破坏 US-005/US-007 已建立的激活一致性。未来若真的需要 LLM judge 进阶推断，也应该以该函数为 fallback，绝不替代。
+- **checker 行为豁免走 arbitration 而非改 spec 逻辑**（US-010 起）：当需要让既有 checker 在某场景软豁免特定 rule code 时，优先级策略是：(1) checker.md 只加一段 `## 直白模式阈值放宽 (v22 US-010)` 文字说明；(2) checker 自身实现保持不变（继续跑完整维度输出完整 issues）；(3) 豁免在 `arbitration.collect_issues_from_review_metrics` 阶段用白名单过滤完成。这样 (a) LLM checker 零 prompt drift 风险，(b) 回滚只需恢复 2 行 import，(c) 白名单集中在 `prose/directness_threshold_gates.py` 单源可 grep。适用于任何"场景感知但不改 checker 本体"的需求。
 
 ## Context Contract（本 PRD 专属）
 
@@ -445,4 +446,59 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
   - **is_activated 一致性测试跨模块锁定**：scene_classifier 输出的 scene_mode 必须 1:1 喂给 `directness_checker.is_activated` 得到预期激活结果。9 parametrize 直接绑定这两模块的契约——未来 directness_checker 增删 ACTIVATION_SCENE_MODES 或 scene_classifier 重排优先级都会第一时间红。
   - **US-010 入口**：现在已经可以在 step3_runner 里读 `context_pack["meta"]["scene_mode"]` 做 prose-impact/sensory-immersion/flow-naturalness 的阈值微调/skip 判定；无需新增任何字段。US-007 sensory_immersion_gate + US-005 directness_checker 已经全部基于 scene_mode 工作，剩下 3 个现存 checker 同步就完成 FR-7。
   - **meta 字段集成低成本模式**：给 `_build_pack` 加新 meta 字段的最小 diff = 1 行 import + 1 行计算 + 1 个 key——不需要动 `assemble_context` 或 `_compute_writing_checklist_score`。保持 pack 产出与消费解耦是关键。
+---
+
+## 2026-04-20 - US-010: 现有 checker 阈值微调避免误报
+
+- 新增 `ink_writer/prose/directness_threshold_gates.py`（~120 行）：US-010 激活门控单源模块。
+  - 常量：`PROSE_IMPACT_CHECKER_NAME` / `FLOW_NATURALNESS_CHECKER_NAME`
+  - 两个 frozenset 白名单：
+    - `PROSE_IMPACT_RELAXED_RULES`（8 条）：维度1 镜头多样性（SHOT_MONOTONY / COMBAT_THREE_STAGE_MISSING / SCENE_NO_SWITCH / CLOSEUP_ABSENT）+ 维度2 感官丰富度（VISUAL_OVERLOAD / NON_VISUAL_SPARSE / SENSORY_PLAN_MISMATCH / SENSORY_DESERT）
+    - `FLOW_NATURALNESS_RELAXED_RULES`（4 条）：维度5 对话黄金比例（RATIO_DEVIATION / DIALOGUE_STARVATION / DIALOGUE_FLOOD / INNER_MONOLOGUE_BLOAT）
+  - `should_relax_prose_impact(scene_mode, chapter_no)` / `should_relax_flow_naturalness(...)`：复用 `directness_checker.is_activated` 单源
+  - `is_relaxed_issue(checker, rule_code, *, relax_prose_impact, relax_flow_naturalness)`：case-insensitive rule code 归一 + 跨 checker 不互认 + 空 code / 未知 checker 返回 False
+  - `iter_relaxed_rules()` 内省钩子供测试 / spec 校验使用
+  - 明确排除豁免：`SHOT_SINGLE_DOMINANCE` / `POV_INTRA_PARAGRAPH` / `CV_CRITICAL` / `RATIO_DEVIATION_SEVERE` / `TABOO_VIOLATION` 等 hard-block 规则全保留；proofreading-checker 弱动词/AI 味检测 0 关联
+- `ink_writer/editor_wisdom/arbitration.py:collect_issues_from_review_metrics` 新增两处过滤：
+  - `checker_results.violations` 循环内在 vtype 提取后 / fix 读取前调用 `is_relaxed_issue`，命中白名单 → continue
+  - `critical_issues` 循环内在 vtype 提取后 / fix 读取前同样调用
+  - 与 US-007 sensory skip 并存：`_relax_prose_impact` / `_relax_flow_naturalness` 两个布尔 flag 在 `_skip_sensory` 计算后一起准备好，过滤逻辑正交不冲突
+  - docstring 追加 US-010 段：说明激活信号同 US-007，仅过滤白名单 rule code、其他维度继续触发 Red
+- `ink-writer/agents/prose-impact-checker.md`：`## 核心参考` 之后、`## 检查范围` 之前新增 `## 直白模式阈值放宽 (v22 US-010)` 章节——
+  - 激活条件 / 程序化对等 `should_relax_prose_impact`
+  - 8 条豁免 rule codes 表（维度 1+2）
+  - 保留的 hard-block 清单（SHOT_SINGLE_DOMINANCE + 维度 3/4/5/6 全保留列举）
+  - 执行方式说明：checker 照常跑六维，豁免只在 arbitration 阶段，零 checker behaviour drift
+- `ink-writer/agents/flow-naturalness-checker.md`：对称新增同名章节——
+  - 4 条豁免 rule codes 表（维度 5 对话比例）
+  - 保留的 hard-block 清单（POV_INTRA_PARAGRAPH / TRANSITION_HARD_CUT / INFO_BUDGET_OVERFLOW_GOLDEN / INFO_DUMP_SEVERE / TABOO_VIOLATION / VOICE_PROFILE_SEVERE / VOICE_ABRUPT_SHIFT / DIALOGUE_BLIND_FAIL / RATIO_DEVIATION_SEVERE ±20% 变体保留）
+- `ink_writer/prose/__init__.py` 新增 8 个导出符号；`__all__` 按字典序插入
+- 新增 `tests/prose/test_directness_threshold_gates.py`（68 用例全通过，7 section）：
+  - Section 1 常量完整性（checker 名称 / frozenset 类型 / dim1+dim2 覆盖 / dim5 subset / hard-block 未被豁免护栏 / iter_relaxed_rules）
+  - Section 2 activation 矩阵 parametrize 13x2 + cross-3-端一致性 56 笛卡儿积扫描（directness_checker / prose_impact gate / flow_naturalness gate / sensory_immersion gate）
+  - Section 3 is_relaxed_issue helper 8 用例：命中 / hard-block 不豁免 / non-directness 保持 / 空 code / None checker / 未知 checker / 大小写归一 / 跨 checker rule 不互认
+  - Section 4 arbitration 集成 12 用例：纯白名单 combat 全过滤 / 黄金三章兜底 / slow_build 保持 / default kwargs 保持 v21 / mixed 白名单+非白名单分流 / flow climax vs emotional 对比 / critical_issues 路径同 violations 路径 / arbitrate_generic 端到端 combat 零 merged_fix vs slow_build 正常 Red
+  - Section 5 agent spec 文字门：位置结构性断言（`## 核心参考 < ## 直白模式阈值放宽 < ## 检查范围`）/ 程序化对等文字锚点 / 4 条 relaxed rule code parametrize / hard-block 反例锁定
+  - Section 6 proofreading-checker 规则未被豁免护栏（WEAK_VERB / AI_SMELL / REPEATED_PHRASE / MODAL_ABUSE / TIME_STAMP_OPENER 全部不在白名单）
+  - Section 7 公共 API 导出一致性（ink_writer.prose 模块 hasattr + __all__）
+- 副作用：`tests/prose/test_sensory_immersion_directness_gate.py` 的 `_mk_metrics_multi_checker` fixture 微调：prose-impact critical 类型从 `SHOT_MONOTONY` 改为 `CV_CRITICAL`——避免 US-010 过滤器干扰既有 US-007 测试语义（SHOT_MONOTONY 新属于白名单被过滤；CV_CRITICAL 是维度 3 句式节奏硬伤仍保留）
+- 文件改动：
+  - `ink_writer/prose/directness_threshold_gates.py`（新增，~120 行）
+  - `ink_writer/prose/__init__.py`（+12 行导出）
+  - `ink_writer/editor_wisdom/arbitration.py`（+35 行过滤逻辑 + docstring 段）
+  - `ink-writer/agents/prose-impact-checker.md`（+32 行阈值放宽章节）
+  - `ink-writer/agents/flow-naturalness-checker.md`（+32 行阈值放宽章节）
+  - `tests/prose/test_directness_threshold_gates.py`（新增，~490 行）
+  - `tests/prose/test_sensory_immersion_directness_gate.py`（fixture 微调 +2 行）
+  - `prd.json`（US-010 passes=true + notes）
+  - `progress.txt`（本条）
+- 零回归验证：`pytest --no-cov -p no:randomly` = **3519 passed / 23 skipped / 0 failed**（baseline 3451 + 68 新用例 = 3519，无新增失败）
+- ruff check 全绿（1 处 I001 auto-fix + 2 处 SIM102/103 合并条件）
+- **Learnings for future iterations:**
+  - **豁免走 arbitration 而非改 checker .md 的决策依据**：(1) LLM checker 最怕 prompt 改动触发 behaviour drift，豁免只留文字说明、判定纯 programmatic 最稳；(2) arbitration filter 对 `violations` 和 `critical_issues` 两条路径都要做，checker_results 路径忘掉 critical_issues 会漏 DEFAULT_VISUAL_BIAS 这种 critical 级 issue；(3) 白名单集中在一个 frozenset 可 grep，回滚就是两行 import 恢复。
+  - **已有测试 fixture 的隐式依赖要排查**：US-007 的 `_mk_metrics_multi_checker` 用 SHOT_MONOTONY 做"prose-impact 仍产出"的守卫样本，US-010 把 SHOT_MONOTONY 加入豁免后该测试就会红。先全量 pytest -x 跑一遍找出隐式依赖、再定位哪些是测试意图要保留的（非本 US 回归）、哪些是真实回归；本例修复是把 fixture 的 rule code 改为非白名单的 CV_CRITICAL，保留 US-007 测试的"其他 checker 仍产出"语义不变。
+  - **ruff SIM102/SIM103 默认规则严格**：新写的"多个独立守卫 if"常被 ruff 建议合并成复合 `and` 条件或直接 return 表达式。首版代码优先可读性、ruff 再按 hint 合并即可；通常合并后可读性不降反升。
+  - **hard-block rule code 列表要在测试里枚举反向断言**：`test_prose_impact_hard_block_rules_not_relaxed` / `test_flow_naturalness_hard_block_rules_not_relaxed` 遍历 `SHOT_SINGLE_DOMINANCE` / `CV_CRITICAL` / `POV_INTRA_PARAGRAPH` / `RATIO_DEVIATION_SEVERE` 等硬伤规则名，`assert rule not in RELAXED_RULES`——未来有人误把 hard-block 加入豁免会立刻红；这是比正向"这些规则被豁免"更关键的护栏。
+  - **arbitration 过滤器默认参数必须保持 v21 行为**：`scene_mode=None, chapter_no=0` 默认组合下既不激活 sensory skip 也不激活 US-010 relax，所有现有调用方零代码改动透明升级。`test_collect_keeps_prose_impact_relaxed_when_scene_mode_omitted` 是该契约唯一守卫——未来 parallel.pipeline_manager 若要切到直白模式必须显式 kwarg 传参。
+  - **US-011 端到端验证的切入点**：现在三个现存 checker + directness-checker + polish-agent Simplification Pass 都已通过 scene_mode 激活。US-011 只需在测试项目上跑 ch1-3 + 一个 combat 章节，对比新旧字数/5 维度分均/黑名单命中即可出 M-1~M-6 数据表；基础设施 100% ready。
 ---
