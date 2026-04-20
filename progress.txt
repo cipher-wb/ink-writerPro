@@ -42,6 +42,8 @@ Prev run: chapter-context-injection → v20.0.0 released
   exit /b %ERRORLEVEL%
   ```
   `%~dp0` 是"本脚本所在目录含末尾斜杠"的批处理内置，比任何硬编码路径都稳。`tests/scripts/test_script_entries_parity.py:test_every_cmd_sibling_forwards_to_ps1` 做宽松校验（含 `powershell` + 对应 .ps1 文件名即可），不强绑参数细节以留未来定制空间。
+- **SKILL.md 的 stem 级 parity**（US-008 起）：每个被引用的 `foo.sh` 必须在同一 SKILL.md 内有同 stem `foo.ps1` 引用——只检查"引用了任一 .ps1"还不够，要防"标记对齐但 .sh 和 .ps1 不是一对"的漂移。`tests/skills/test_skill_md_windows_parity.py:test_every_sh_reference_has_matching_ps1_stem_in_same_skill_md` 是仓库级红线，新增 SKILL.md 加 `.sh` 块时必须同文件补同名 `.ps1` 引用（例：引入 `run.sh` 必须也出现 `run.ps1` 字面量，不能只靠 `env-setup.ps1` 顶替）。
+- **tests/skills/ 与 ink-writer/skills/ 的命名空间重名**（US-008 起）：pythonpath 含 `ink-writer`，而 `ink-writer/skills/` 是命名空间包；**不能**在 `tests/skills/` 创建 `__init__.py`——否则会覆盖前者。与 US-007 `tests/scripts` vs `scripts/` 的陷阱同源。Codebase Pattern "tests/<name>/ 不能与顶层包同名" 的完整适用范围现在应理解为"不能与任意 pythonpath 根下的包同名"。
 
 ## Context Contract（本 PRD 专属）
 
@@ -377,5 +379,37 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `pytest.ini` (testpaths 追加 tests/scripts)
   - `reports/cross-platform-audit-findings.md` (regenerated: 47 → 44 findings, C6: 2 → 0, C7: 1 → 0)
   - `prd.json` (US-007 passes:true + notes)
+  - `progress.txt` (this entry + 2 new Codebase Patterns)
+---
+
+## 2026-04-20 - US-008 SKILL.md Windows sibling 块补齐（C7）
+- C7 findings 在 US-007 的 scanner 修正后已降至 0（`_is_nested_git_repo_dir` 排除 `/ralph/` 外部 clone），仓库内 14 个 SKILL.md 全部已有 `<!-- windows-ps1-sibling -->` 标记 + `.ps1` 引用（v19 批量补齐的产物）。本 US 核心交付：把约束从"audit 一次性扫描"升级为"CI 级仓库红线测试"。
+- **新增 `tests/skills/test_skill_md_windows_parity.py` (17 tests)**：
+  - `test_every_skill_md_referencing_sh_has_windows_sibling_marker`：全仓 SKILL.md 引用 `.sh` 必须有标记
+  - `test_every_skill_md_referencing_sh_also_references_ps1`：必须同文件至少引用任一 `.ps1`
+  - `test_every_sh_reference_has_matching_ps1_stem_in_same_skill_md`：**更强约束**——stem 级 parity，每个 `foo.sh` 必须有同 stem `foo.ps1`
+  - 14 个参数化 `test_known_ink_skill_md_has_windows_sibling` 逐个固化 ink-writer/skills/*/SKILL.md
+- **扩展 `tests/audit/test_audit_cross_platform.py` (+3 C7 tests)**：
+  - `test_c7_reports_medium_when_marker_present_but_no_ps1_ref`：有标记无 .ps1 引用 → Medium（比缺标记的 High 弱一档）
+  - `test_c7_skips_skill_md_without_any_sh_reference`：纯 Python/JS skill 不归 C7 规则管
+  - `test_c7_skips_non_skill_md_files_referencing_sh`：仅 `SKILL.md` 名字走此规则
+- **pytest.ini testpaths 追加 `tests/skills`**。
+- **关键约束复用**（与 US-007 语义一致）：`_EXCLUDE_DIR_NAMES` 手动固化 14 项，`_is_nested_git_repo(path, root)` 本地实现一份等价于 `scripts/audit_cross_platform.py:_is_nested_git_repo_dir`。
+- **不创建 `tests/skills/__init__.py`**：pythonpath 含 `ink-writer`，`ink-writer/skills/` 是命名空间包——若 `tests/skills/__init__.py` 存在会覆盖它（同 US-007 `tests/scripts` 陷阱的延伸）。
+- Mac 字节级一致：零源代码改动，纯测试增量 + pytest.ini 一行。
+- 全量 pytest: **3149 passed / 23 skipped / 0 failed**（baseline 3129 → +20 新测试：17 parity + 3 audit C7，零回归）
+- **Learnings for future iterations:**
+  - **"audit scanner 0 finding"不等于"约束能阻止回退"**：scanner 是一次性视角，开发者加新 SKILL.md 并忘补 Windows sibling 只有下次 ralph 跑 audit 才发现。仓库级红线 pytest 让回退立即在 CI 挂掉——US-004/US-005/US-006/US-008 的约束都值得"双保险"（audit + pytest）
+  - **stem 级 parity > 文件级存在**：scanner 只判"有任一 .ps1"，但引用 `env-setup.ps1` 无法替代 `run.sh` 的 `run.ps1`。`test_every_sh_reference_has_matching_ps1_stem_in_same_skill_md` 比 scanner 严格一级，精准拦截"标记对但引用不对"的漂移
+  - **命名空间包冲突的普适规则**：`tests/<name>/` 不能与任意 pythonpath 根下的目录同名——不仅仅是顶层包。本仓库 pythonpath 含 4 个根（`.` / `ink-writer` / `ink-writer/scripts` / `ink-writer/dashboard` / `scripts`），`tests/skills` vs `ink-writer/skills`、`tests/scripts` vs `scripts`、将来 `tests/dashboard` vs `ink-writer/dashboard` 都会冲突。统一解：namespace package（无 `__init__.py`）
+  - **prd.json notes 里的内引号用【】不用 ASCII `"`**：JSON 字符串里嵌 ASCII 双引号必须转义为 `\"`，用中文全角【】 / 「」/ `（...）` 更安全——过往多次 notes 写作中被 `json.decoder.JSONDecodeError` 烧过
+  - **参数化测试 + 参数列表做"防误删快照"**：14 个 `test_known_ink_skill_md_has_windows_sibling` 每个对应一个 SKILL.md——哪天有人 rm 一个 SKILL.md 或误删 sibling 标记，测试直接 fail 定位到具体文件。比"扫全仓"的单个 test 更可读
+  - **下轮（US-009）执行要点**：C8 有 37 处 `.sh` / `.ps1` 里硬编码 `python3` / `py -3`。本地 `.sh` 用 `PY_LAUNCHER=$(...)` 或 `runtime_compat.find_python_launcher()` 的包装，`.ps1` 同理。注意 shebang `#!/usr/bin/env python3` 在 Windows 上不生效不影响——只修命令中的硬编码
+- Files changed:
+  - `tests/skills/test_skill_md_windows_parity.py` (new, ~180 行, 17 tests 含 3 个 global + 14 parametrized)
+  - `tests/audit/test_audit_cross_platform.py` (+55 行：3 新 C7 tests 覆盖 Medium / skip-no-sh / skip-non-SKILL)
+  - `pytest.ini` (testpaths 追加 `tests/skills`)
+  - `reports/cross-platform-audit-findings.md` (regenerated: C7 保持 0, 总数保持 44)
+  - `prd.json` (US-008 passes:true + notes；修复内引号 → 全角【】避免 JSONDecodeError)
   - `progress.txt` (this entry + 2 new Codebase Patterns)
 ---

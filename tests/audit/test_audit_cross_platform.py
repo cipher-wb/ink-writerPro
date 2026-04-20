@@ -676,6 +676,65 @@ def test_c7_detects_skill_md_missing_windows_block(tmp_path: Path) -> None:
     assert good_findings == []
 
 
+def test_c7_reports_medium_when_marker_present_but_no_ps1_ref(tmp_path: Path) -> None:
+    """存在 `<!-- windows-ps1-sibling -->` 标记但完全没引用任何 `.ps1` 文件时，
+    scanner 报 Medium 级（比"缺标记"的 High 级弱一档），提示补 PowerShell 命令块。
+    """
+    skill_dir = tmp_path / "half-skill"
+    skill_dir.mkdir()
+    (skill_dir / "SKILL.md").write_text(
+        textwrap.dedent(
+            """\
+            ## Run
+
+            ```bash
+            bash scripts/foo.sh 5
+            ```
+            <!-- windows-ps1-sibling -->
+            Windows 用户请自行翻译。
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c7_skill_md_windows_block(tmp_path)
+    assert len(findings) == 1
+    assert findings[0].category == "C7"
+    assert findings[0].severity == "Medium"
+
+
+def test_c7_skips_skill_md_without_any_sh_reference(tmp_path: Path) -> None:
+    """无 `.sh` 引用的 SKILL.md 不应被 C7 扫描器关注（纯 Python/JS skill 不归此规则管）。"""
+    skill_dir = tmp_path / "python-only-skill"
+    skill_dir.mkdir()
+    (skill_dir / "SKILL.md").write_text(
+        textwrap.dedent(
+            """\
+            ## Run
+
+            ```python
+            from foo import bar
+            bar.run()
+            ```
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c7_skill_md_windows_block(tmp_path)
+    assert findings == []
+
+
+def test_c7_skips_non_skill_md_files_referencing_sh(tmp_path: Path) -> None:
+    """仅 `SKILL.md` 名字的文件走 C7 规则；普通 README.md / notes.md 引用 .sh 不触发。"""
+    docs_dir = tmp_path / "docs"
+    docs_dir.mkdir()
+    (docs_dir / "README.md").write_text(
+        "How to run:\n```bash\nbash scripts/foo.sh\n```\n",
+        encoding="utf-8",
+    )
+    findings = scan_c7_skill_md_windows_block(tmp_path)
+    assert findings == []
+
+
 # ---------------------------------------------------------------------------
 # C8: 硬编码 python3
 # ---------------------------------------------------------------------------

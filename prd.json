@@ -128,8 +128,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Done 2026-04-20: C7 本轮无需再修源码——US-007 scanner 修正（`_is_nested_git_repo_dir` 排除外部 clone）已把 C7 finding 从 1 降为 0，且仓库内 14 个 SKILL.md 全部已有 `<!-- windows-ps1-sibling -->` 标记 + `.ps1` 引用（v19 批量补齐的产物）。本 US 的核心交付是把约束从【audit 一次性扫描】升级为【CI 级仓库红线测试】。\n\n**新增 `tests/skills/test_skill_md_windows_parity.py` (17 tests)**：\n- `test_every_skill_md_referencing_sh_has_windows_sibling_marker`：扫全仓 SKILL.md，引用 `.sh` 就必须有 `<!-- windows-ps1-sibling -->` 标记\n- `test_every_skill_md_referencing_sh_also_references_ps1`：引用 `.sh` 必须同文件也引用任一 `.ps1`\n- `test_every_sh_reference_has_matching_ps1_stem_in_same_skill_md`：**更强约束**——stem 级 parity，每个 `foo.sh` 必须有同 stem `foo.ps1` 引用（防止只引 `env-setup.ps1` 却漏 `run.ps1` 的漂移）\n- 14 个参数化 `test_known_ink_skill_md_has_windows_sibling`：逐个固化 ink-writer/skills/*/SKILL.md（ink-auto/ink-write/ink-plan/ink-review/ink-fix/ink-init/ink-resume/ink-dashboard/ink-query/ink-resolve/ink-audit/ink-migrate/ink-macro-review/ink-learn），v19 的补齐不会被误删\n\n**扩展 `tests/audit/test_audit_cross_platform.py` (+3 C7 tests)**：\n- `test_c7_reports_medium_when_marker_present_but_no_ps1_ref`：有标记无 .ps1 引用 → Medium finding（比缺标记的 High 弱一档）\n- `test_c7_skips_skill_md_without_any_sh_reference`：纯 Python/JS skill（无 .sh 引用）不归 C7 规则管\n- `test_c7_skips_non_skill_md_files_referencing_sh`：仅 `SKILL.md` 名字走此规则，README.md 等不触发\n\n**pytest.ini testpaths 追加 `tests/skills`**。\n\n**关键约束复用**（与 US-007 保持语义一致）：\n- `_EXCLUDE_DIR_NAMES` 手动固化（archive/.venv/__pycache__ 等 14 项），避免 import 副作用\n- `_is_nested_git_repo(path, root)` 本地实现一份，与 `scripts/audit_cross_platform.py:_is_nested_git_repo_dir` 语义等价——跳过 `/ralph/` 外部 clone，确保跨平台承诺仅覆盖 in-repo 资产\n- **不创建 `tests/skills/__init__.py`**：pythonpath 含 `ink-writer`，而 `ink-writer/skills/` 是命名空间包；若 `tests/skills/__init__.py` 存在会覆盖它（同 US-007 的 `tests/scripts` 陷阱）\n\n**Mac 字节级一致**：零源代码改动，只增测试 + pytest.ini 一行 + prd.json/progress.txt。\n\n全量 pytest: **3149 passed / 23 skipped / 0 failed**（baseline 3129 → +20 新测试：17 parity + 3 audit C7，零回归）。"
     },
     {
       "id": "US-009",
