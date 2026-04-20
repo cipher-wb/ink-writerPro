@@ -542,3 +542,45 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
   - **US-012 发版只需 6 处版本号 + tag + push**（见 PRD AC）：prd.json US-011 已完成 → 下一轮 ralph 直接 pick US-012；文档 `docs/architecture.md` 加"场景感知直白化"、`docs/editor-wisdom-integration.md` 补 simplicity 主题；README + pyproject + plugin.json + marketplace.json + EXPECTED_VERSION + Badge 同步 v21→v22；release notes 把本条 M-1~M-7 实测搬到 `tasks/prd-prose-directness.md` 底部
   - **`reports/prose-directness-verification.*` 两产物已入仓**：JSON 含 direct_chapter_scores + rhetoric_chapter_scores 每章完整 5 维度数据，后续 live 项目跑新章后可以 `json.load` 接入做增量对比；markdown 版本直接在 PR 里贴用
 ---
+
+## 2026-04-20 - US-012: 文档同步 + v22.0.0 发版
+
+- docs 同步两处：
+  - `docs/architecture.md`：新增 `## 场景感知直白化（v22）` 段（scene_mode 7 值 + 优先级 + 冲突解耦 + 激活判定单源 is_activated）；checker 表新增 `Directness Checker` 行（场景感知类型）
+  - `docs/editor-wisdom-integration.md`：主题域表新增 simplicity 行（v22）；新增 `### simplicity 域场景感知召回（v22）` 段（directness_recall 配置 + _enforce_category_floor 机制）；applies_to FAQ 扩展 combat/climax/high_point
+- 6 处版本号同步 v21.0.0 → v22.0.0：
+  1. `pyproject.toml:7`
+  2. `ink-writer/.claude-plugin/plugin.json:3`
+  3. `.claude-plugin/marketplace.json:13`
+  4. `tests/release/test_v16_gates.py:26` (EXPECTED_VERSION)
+  5. `README.md:3` Badge
+  6. `README.md:214` 版本历史新增 `**v22.0.0 (当前)**` 行，v21.0.0 去 `(当前)`
+- Release Notes 追加到 `tasks/prd-prose-directness.md` 底部：M-1~M-7 实测表（硬 6/6 GO）+ 基线数据 + 代码产物清单 + 零回归 + 6 处版本号 + docs 同步 + git 操作
+- 零回归验证：`pytest --no-cov -p no:randomly` = 3571 collected / 3548 passed / 23 skipped / 0 failed（baseline 3206 + 342 累计新测试，零回归）
+- `scripts/verify_docs.py` = 40/40 ok（regex 已放宽到 `v[.\w]+`，v22 自动兼容）
+- `test_v16_gates` 4 条 release 门禁：plugin / pyproject / marketplace / EXPECTED_VERSION 全绿
+- git 操作（PRD 明确授权 push）：
+  1. `feat: US-012 - 文档同步 + v22.0.0 发版` commit（所有改动一次性入）
+  2. `git tag -a v22.0.0 -m "..."` annotated
+  3. `git checkout master && git merge --no-ff ralph/prose-directness`
+  4. `git push origin master` + `git push origin v22.0.0`
+- 文件改动：
+  - `docs/architecture.md`（新增段 + checker 行）
+  - `docs/editor-wisdom-integration.md`（simplicity 域 + FAQ 扩展）
+  - `pyproject.toml`（21.0.0 → 22.0.0）
+  - `ink-writer/.claude-plugin/plugin.json`（同）
+  - `.claude-plugin/marketplace.json`（同）
+  - `tests/release/test_v16_gates.py`（EXPECTED_VERSION）
+  - `README.md`（Badge + 版本历史）
+  - `tasks/prd-prose-directness.md`（底部追加 Release Notes ~65 行）
+  - `prd.json`（US-012 passes=true + notes）
+  - `progress.txt`（本条）
+- **Learnings for future iterations:**
+  - **发版前后 commit 与 tag 分两步**：先做 `feat: US-012 ...` commit（bump + docs + notes + prd.json 一次性），再 `git tag -a v22.0.0 HEAD`。避免 amend 已推的 commit（默认安全协议禁）。v21.0.0 已验证过该模式，沿用
+  - **6 处版本号真源全量**：pyproject / plugin.json / marketplace.json / test_v16_gates.EXPECTED / README Badge / README 版本历史——漏任一处 `test_v16_gates::test_*_version_matches_expected` 或视觉标志会错位。bump 顺序：先 EXPECTED_VERSION 再 3 处 version 源，pytest 一次过
+  - **pytest 跑到中途不能 bump 版本**：v16_gates 会在测试运行时读取文件快照；mid-flight 改版本会导致测试看到不一致状态（文件=新/EXPECTED=旧 或反之）。按顺序：先完成所有 6 处 version bump 再跑 pytest
+  - **verify_docs.py regex 放宽已生效**：US-005 起 `scripts/verify_docs.py:89` 正则改成 `v[.\w]+`，v22/v23/v2.1.0-beta 等新版本字符串无需再改 regex。ad-hoc 检查：`python3 scripts/verify_docs.py && echo OK`
+  - **Release Notes 放 PRD 文件底部而非新建 CHANGELOG**：v21 / v22 都走 PRD 底部追加 `## Release Notes — vX.Y.Z` 段模式。优势：每轮 PRD 对应自己的 Release Notes，git blame 对齐 ralph 执行周期；README 版本历史是视觉 changelog，PRD 底部是详细 milestone 表
+  - **tag message 写 M-1~M-X 核心数字**：v22 tag 要带硬指标数字（字数缩短 26.91% / 5 维度均分 9.33 / +342 测试 / 零回归），让 `git tag -n99 v22.0.0` 一眼看懂版本意义
+  - **非直白场景零退化是 v22 最硬承诺**：README/architecture.md 都要写明"场景感知而非一刀切"。用户反馈源头是"文邹邹、读起来费劲"，若抒情/慢节奏章也被精简 = 打破承诺，直接导致用户信任丢失
+---

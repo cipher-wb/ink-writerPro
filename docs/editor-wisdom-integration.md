@@ -45,7 +45,7 @@ graph TB
 5. **规则抽取**（05_extract_rules）：Claude Sonnet 4.6 提取原子规则，输出 `rules.json`（80+ 条）
 6. **向量索引**（06_build_index）：BAAI/bge-small-zh-v1.5 本地编码 + FAISS 索引
 
-## 10 个主题域
+## 主题域
 
 | 域名 | 说明 |
 |------|------|
@@ -58,7 +58,18 @@ graph TB
 | taboo | 写作禁忌 |
 | genre | 类型/题材技巧 |
 | ops | 运营/更新策略 |
+| simplicity | 直白化（v22 新增）— 每句服务剧情/心理/冲突；禁抽象形容词堆叠、空境描写段、本体抽象的高级比喻；强动词+具体名词优先 |
 | misc | 其他 |
+
+### simplicity 域场景感知召回（v22）
+
+`config/editor-wisdom.yaml:directness_recall` 注册场景感知召回：当
+`chapter ∈ [1,3]` 或 `scene_mode ∈ {combat, climax, high_point}` 时，
+`ink_writer/editor_wisdom/writer_injection.py:_enforce_category_floor` 保证
+simplicity 类别召回条数不少于 5（与 opening/taboo/hook 同机制）；`applies_to`
+字段扩展支持 `combat` / `climax` / `high_point`，与既有 `golden_three` /
+`all_chapters` / `opening_only` 并存。scoring_dimensions 同步新增
+`directness` 维度，prose_categories 追加 simplicity 作为硬阻断类别。
 
 ## 如何添加新规则
 
@@ -107,6 +118,7 @@ A: 仅支持以下枚举值（定义在 `schemas/editor-rules.schema.json`）：
 - `all_chapters` — 适用于所有章节（默认）
 - `golden_three` — 仅适用于黄金三章（第 1-3 章）
 - `opening_only` — 仅适用于开篇
+- `combat` / `climax` / `high_point` — v22 新增，simplicity 域场景感知，随 `scene_mode` 激活
 
 LLM 抽取的自由文本值会被自动过滤，无效值回退为 `["all_chapters"]`。类别属于 `opening`、`hook`、`golden_finger`、`character` 的规则会自动添加 `golden_three` 标签。
 

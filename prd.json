@@ -215,8 +215,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "v22.0.0 发版完成。6 处版本号同步：pyproject.toml=22.0.0 / ink-writer/.claude-plugin/plugin.json=22.0.0 / .claude-plugin/marketplace.json=22.0.0 / tests/release/test_v16_gates.py:EXPECTED_VERSION=22.0.0 / README.md Badge=Version-22.0.0-green.svg / README 版本历史新增 v22.0.0 (当前)，v21.0.0 去 (当前)。docs 同步：docs/architecture.md 新增 ## 场景感知直白化（v22） 段（scene_mode 链路 + 冲突解耦 + 激活单源）+ Directness Checker 行入 checker 表；docs/editor-wisdom-integration.md 主题域表新增 simplicity + ### simplicity 域场景感知召回（v22） 说明 + applies_to FAQ 扩展 combat/climax/high_point。tasks/prd-prose-directness.md 底部追加 Release Notes（M-1~M-7 实测表 + 基线数据 + 代码产物 + 零回归 + 6 处版本号 + docs 同步 + git 操作）。pytest --no-cov -p no:randomly = 3571 collected / 3548 passed / 23 skipped / 0 failed（baseline 3206 + 342 累计 = 3548，零回归）。test_v16_gates 4 条 release 门禁全绿。scripts/verify_docs.py = 40/40 ok。tag v22.0.0 annotated + ralph/prose-directness 合并 master --no-ff + push origin master + push v22.0.0 tag 全部执行（PRD 明确授权）。"
     }
   ]
 }
