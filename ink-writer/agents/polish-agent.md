@@ -362,6 +362,95 @@ Layer 9 完成后执行 proofreading-checker Layer 6A+6B 等价自检：
 
 对于每个维度：遍历 `violations[*].source_checkers` 作为诊断依据（无需重复读取原 checker report），以 `fix_prompt` 作为本维度修复指令。同一 type 在所有从 checker 的建议已被合并器 dedup 为一条，polish-agent **禁止**再重新读取原 checker JSON 造成重复修复。
 
+## Simplification Pass (直白模式场景)
+
+> **US-008**：polish-agent 在直白模式场景（黄金三章 + 战斗/高潮/爽点）完成
+> Layer 9 之后、No-Poison 毒点规避之前额外执行一次精简 pass，自动删冗余 /
+> 拆长句 / 替抽象词。与 writer-agent `## Directness Mode` (US-006) + directness-checker
+> (US-005) + sensory-immersion-checker 直白模式门控 (US-007) 共享同一激活判定单源。
+
+**激活判定（与 directness-checker 同源）**：
+
+激活条件 = `chapter_no ∈ [1, 2, 3]`（黄金三章兜底） OR `scene_mode ∈ {combat, climax, high_point}`
+（context-agent 装填；US-009 上线后显式优先）。程序化对等：
+`ink_writer.prose.simplification_pass.should_activate_simplification(scene_mode, chapter_no)` —
+返回 `True` 才执行本章节；否则直接跳过（透明 PASS，不产生 diff）。
+
+非激活场景（`slow_build` / `emotional` / `other` + ch≥4）：Simplification Pass 全段
+skipped，L10b/L10e 感官丰富度约束照常生效，sensory-immersion-checker 正常审查 ——
+与 US-007 门控行为严格对齐。
+
+**精简规则（5 条，逐步执行）**：
+
+| 编号 | 规则 | 触发条件 | 处理策略 |
+|------|------|----------|---------|
+| S1 | 黑名单命中词删除 / 替换 | `prose-blacklist.yaml` 三类任一命中（`abstract_adjectives` / `empty_phrases` / `pretentious_metaphors`） | `abstract_adjectives` 可直接删除（如"莫名"/"无尽"/"仿佛"）；`empty_phrases` / `pretentious_metaphors` 按 `replacement` 字段的 showing 指引改写为具体动作/细节 |
+| S2 | 长句拆分 | 单句 > 35 字 | 按句中逗号/分号拆为两短句，目标单句 ≤ 20 字；若无自然断点则保留原句并上报 advisory |
+| S3 | 连续修辞压缩 | 同段内连续 ≥ 2 处修辞（仿佛 / 宛如 / 犹如 / 好似 / 恍若 / 仿若 / 如同 / 似乎 等标记词） | 保留第一处，删除后续；与 directness-checker D1 修辞密度维度呼应 |
+| S4 | 空描写段压缩 | 纯环境段落（无对话、无人称代词）超过 3 句 | 压缩到 2 句以内（保留首 + 末）或整段删除；过密空景直接推至下一段的人物动作 |
+| S5 | 形容词→动词+具体细节 | 章级形容词-动词比超 directness-checker D2 yellow_max 阈值 | 把形容词堆叠（"苍茫的 / 无边的 / 辽阔的"）替换为一个具体动作或空间关系（"目光扫过地平线，山脊在远处连成一条起伏的线"） |
+
+**70% 字数下限保护（硬约束）**：
+
+- 精简后全章字数 < 原文 70% 时**必须回滚**到精简前版本（Step 4.5 diff 校验也会
+  把 `wc_after / wc_before < 0.70` 标 `critical: 严重删减` 触发恢复）
+- 目标区间：字数减少 20-30%（`reduction_ratio ∈ [0.20, 0.30]`），超过 30% 即触发人工抽查
+- 程序化 floor：`SimplificationReport.rolled_back=True` 时 `simplified_text` 即原文，
+  polish-agent 必须记录 `simplification_pass: rolled_back (reason: below_70pct_floor)` 到润色报告
+
+**与其他层不冲突（并存原则）**：
+
+1. Simplification Pass 仅在激活场景跑一次，放在 Layer 9 之后 / No-Poison 之前
+2. 不替代 Layer 8（弱动词替换 / 感官沙漠补充）—— Layer 8 聚焦"填补缺失"，Simplification
+   聚焦"删除冗余"，两者互不覆盖
+3. 不改变剧情事实、角色决策、物理边界（润色红线沿用）
+4. 对 `editor_wisdom_violations` 中 `simplicity` 类别 `hard` 违规（US-004 新增 14 条
+   simplicity 规则）的修复优先级与本节并行 —— 先跑 Simplification Pass 机械删减，再
+   读 `fix_suggestion` 做 LLM 层改写
+5. 直白模式下 L10b/L10e 感官丰富度约束暂挂（US-006/US-007），Simplification Pass 不
+   会因"删减后非视觉感官不足"而触发二次补充
+
+**执行顺序（激活时）**：
+
+```
+Layer 9z 通过 → Simplification Pass S1 → S2 → S3 → S4 → S5
+             → 70% floor 校验 → 写入 simplified.md
+             → Step 5 No-Poison 毒点规避
+```
+
+**示例（冗余段 → 精简段）**：
+
+- 冗余原文（86 字）：
+  > 她莫名感到心头仿佛被无尽的寒意笼罩，宛如置身于一片苍茫无边的雪原之中，四周静得仿佛时间都已停滞，仿佛连呼吸都成了多余。
+- S1（删黑名单"莫名/无尽/仿佛/宛如"）：
+  > 她感到心头被的寒意笼罩，置身于一片苍茫无边的雪原之中，四周静得时间都已停滞，连呼吸都成了多余。
+- S3（保留首个"仿佛"，删后续）：同 S1（已无连续修辞）
+- S2 若超 35 字则按逗号拆 → 终稿 ≤ 60 字，reduction ≈ 30%，blacklist 命中 0
+
+**辅助模块 API**（`ink_writer.prose.simplification_pass`）：
+
+```python
+from ink_writer.prose.simplification_pass import (
+    should_activate_simplification,   # bool gate
+    simplify_text,                    # (text, *, blacklist=None) -> SimplificationReport
+    SimplificationReport,             # frozen dataclass：字数/命中/回滚/rules_fired
+)
+```
+
+polish-agent 可选用该辅助模块做机械层精简（S1/S3/S4 三条规则确定性实现），
+S2 拆句 / S5 形容词替换由 LLM 层消费 `entry.replacement` showing 提示完成。
+
+**润色报告追加字段**：
+
+```text
+- Simplification Pass:
+  - 激活: true/false (reason: golden_three / combat / ...)
+  - 规则触发: [S1, S3, ...]
+  - 字数变化: N → N (reduction X%)
+  - 黑名单命中: before=N / after=0
+  - 回滚: false (或 reason: below_70pct_floor)
+```
+
 ### 5. No-Poison 毒点规避（5类）
 
 1. 降智推进 2. 强行误会 3. 圣母无代价 4. 工具人配角 5. 双标裁决

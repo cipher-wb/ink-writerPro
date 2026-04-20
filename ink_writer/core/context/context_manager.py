@@ -42,6 +42,7 @@ from ink_writer.core.extract.golden_three import (
     build_golden_three_guidance,
     resolve_golden_three_contract,
 )
+from ink_writer.core.context.scene_classifier import resolve_scene_mode
 from ink_writer.core.context.writing_guidance_builder import (
     build_methodology_guidance_items,
     build_methodology_strategy_card,
@@ -499,9 +500,19 @@ class ContextManager:
             "hard_inject": True,
         }
 
+        # US-009: scene_mode 场景识别信号，供 writer-agent Directness Mode /
+        # directness-checker / sensory-immersion gate / polish-agent Simplification Pass
+        # 统一激活依据。优先级 golden_three > climax > high_point > combat > emotional
+        # > slow_build > other。chapter∈[1,3] 强制 golden_three，否则基于章节大纲关键词。
+        scene_mode = resolve_scene_mode(
+            chapter_no=chapter,
+            outline_text=core.get("chapter_outline") or "",
+        )
+
         return {
             "meta": {
                 "chapter": chapter,
+                "scene_mode": scene_mode,
                 "injection_policy": injection_policy,
             },
             "core": core,

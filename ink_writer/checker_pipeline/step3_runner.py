@@ -23,6 +23,7 @@ from __future__ import annotations
 # US-010: ensure Windows stdio is UTF-8 wrapped when launched directly.
 import os as _os_win_stdio
 import sys as _sys_win_stdio
+
 _ink_scripts = _os_win_stdio.path.join(
     _os_win_stdio.path.dirname(_os_win_stdio.path.abspath(__file__)),
     '../../ink-writer/scripts',
@@ -32,6 +33,8 @@ if _os_win_stdio.path.isdir(_ink_scripts) and _ink_scripts not in _sys_win_stdio
 try:
     from runtime_compat import (
         enable_windows_utf8_stdio as _enable_utf8_stdio,
+    )
+    from runtime_compat import (
         set_windows_proactor_policy as _set_proactor_policy,
     )
     _enable_utf8_stdio()
@@ -45,18 +48,18 @@ import logging
 import os
 import sys
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable
 
+from ink_writer.checker_pipeline.llm_checker_factory import make_llm_checker
+from ink_writer.checker_pipeline.polish_llm_fn import make_llm_polish
 from ink_writer.checker_pipeline.runner import (
     CheckerRunner,
     GateSpec,
     GateStatus,
     PipelineReport,
 )
-from ink_writer.checker_pipeline.llm_checker_factory import make_llm_checker
-from ink_writer.checker_pipeline.polish_llm_fn import make_llm_polish
 
 logger = logging.getLogger(__name__)
 
@@ -309,6 +312,61 @@ def _make_plotline_adapter(review_bundle: dict) -> Callable:
     return _adapter
 
 
+def _make_directness_adapter(review_bundle: dict) -> Callable:
+    """v22 US-005：directness-checker 程序化适配器（scene_mode 激活门控）。
+
+    激活条件（与 agent spec 同源）：
+      - review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}，或
+      - review_bundle.chapter_no ∈ [1, 3]（缺省 scene_mode 时按黄金三章兜底）
+
+    非激活场景 → 返回 (True, 1.0, "") 视为 PASS（本 gate 对非直白场景保持透明，
+    不影响其他 checker）。激活场景下按 5 维度打分；任一 dim <6 → FAILED + 修复提示。
+    """
+    async def _adapter():
+        from ink_writer.prose.directness_checker import (
+            is_activated,
+            run_directness_check,
+        )
+
+        chapter_text = review_bundle.get("chapter_text", "") or ""
+        chapter_no = int(review_bundle.get("chapter_no", 0) or 0)
+        scene_mode = review_bundle.get("scene_mode")
+
+        try:
+            if not is_activated(scene_mode, chapter_no):
+                return (True, 1.0, "")
+            if not chapter_text.strip():
+                # shadow-safe：章节文本缺失不阻断
+                return (True, 1.0, "")
+
+            report = await asyncio.to_thread(
+                run_directness_check,
+                chapter_text,
+                chapter_no=chapter_no,
+                scene_mode=scene_mode,
+            )
+            if report.skipped:
+                return (True, 1.0, "")
+
+            passed = report.passed
+            score = report.overall_score / 10.0
+            fix_prompt = ""
+            if not passed and report.issues:
+                fix_prompt = (
+                    "directness-checker: "
+                    + "; ".join(
+                        f"{i.dimension}={i.description}[{i.suggest_rewrite}]"
+                        for i in report.issues[:3]
+                    )
+                )
+            return (bool(passed), float(score), fix_prompt)
+        except Exception as exc:
+            logger.warning("directness adapter error (shadow safe): %s", exc)
+            return (True, 1.0, "")
+
+    return _adapter
+
+
 # ==================== Main runner ====================
 
 
@@ -428,10 +486,13 @@ async def run_step3(
     runner.add(GateSpec(name="anti_detection", fn=_make_anti_detection_adapter(bundle), is_hard_gate=True))
     runner.add(GateSpec(name="voice", fn=_make_voice_adapter(bundle), is_hard_gate=False))
     runner.add(GateSpec(name="plotline", fn=_make_plotline_adapter(bundle), is_hard_gate=True))
+    # v22 US-005: directness gate——仅黄金三章/战斗/高潮/爽点场景激活；其他场景透明返回 PASS。
+    # is_hard_gate=False：即便评分 Red，也不会 cancel 其他 gate；shadow/enforce 都先观察后阻断。
+    runner.add(GateSpec(name="directness", fn=_make_directness_adapter(bundle), is_hard_gate=False))
 
     try:
         report: PipelineReport = await asyncio.wait_for(runner.run(), timeout=timeout_s)
-    except asyncio.TimeoutError:
+    except TimeoutError:
         result.passed = False
         result.error = f"step3_runner timeout >{timeout_s}s"
         result.duration_ms = int((time.time() - t0) * 1000)

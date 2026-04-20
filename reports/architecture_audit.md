@@ -4,10 +4,10 @@
 
 ## Summary
 
-- **Python modules scanned**: 160
+- **Python modules scanned**: 167
 - **Import cycles found**: 0
 - **Unused module candidates**: 2
-- **Agents scanned**: 22
+- **Agents scanned**: 23
 - **Agent overlap pairs**: 8
 - **Repeated prompt fragments**: 50
 
@@ -29,6 +29,7 @@ No import cycles detected. ✓
 | context-agent | 上下文搜集Agent，内置 Context Contract，输出可被 Step 2A 直接消费的创作执行包。 | Read, Grep, Bash | ```json {   "chapter": 100,   "project_root": "D:/… | 输出必须是单一执行包，包含 3 层：  1. **任务书（10+6 板块）** - 本章核心任务（目… |
 | continuity-checker | 连贯性检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | data-agent | 数据处理Agent，负责 AI 实体提取、场景切片、索引构建，并记录钩子/模式/结束状态与章节摘要。 | Read, Write, Bash | ```json {   "chapter": 100,   "chapter_file": "正文/… | ### 输出格式硬约束（纯 JSON，零解释文字）  > **铁律**：Data Agent 的最终… |
+| directness-checker | 直白度（场景感知）检查器，5 维度量化评分（修辞/形动比/抽象词/句长/空描写），仅在黄金三章+战斗/高潮/爽点场景激活 | Read |  |  |
 | editor-wisdom-checker | 编辑智慧检查器，基于检索到的编辑规则对章节进行评分，输出违规列表和修复建议。 | Read | - `chapter_text`: 章节正文 - `chapter_no`: 章节号 - `rule… | ```json {   "agent": "editor-wisdom-checker",   "c… |
 | emotion-curve-checker | 情绪心电图检查，检测情绪曲线平淡/单调/与目标曲线偏差，输出结构化报告 | Read |  | ```json {   "agent": "emotion-curve-checker",   "c… |
 | flow-naturalness-checker | 自然流畅度检查器，量化评估信息节奏/融入方式/过渡流畅/对话辨识/对话黄金比例/语气一致/voice 一致七维 | Read |  |  |
@@ -73,14 +74,15 @@ Fragments appearing in 2+ agent specs (top 50):
 - **8x** in [consistency-checker, continuity-checker, flow-naturalness-checker, high-point-checker, ooc-checker, pacing-checker, prose-impact-checker, sensory-immersion-checker]: `检查范围 输入 单章或章节区间 如 45 45`
 - **8x** in [consistency-checker, continuity-checker, flow-naturalness-checker, high-point-checker, ooc-checker, pacing-checker, prose-impact-checker, sensory-immersion-checker]: `覆盖范围 第 n 章 第 m`
 - **4x** in [context-agent, high-point-checker, reader-pull-checker, reader-simulator]: `claude_plugin_root references reading power taxonomy md`
+- **4x** in [directness-checker, flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `review_bundle scene_mode golden_three combat climax high_point`
 - **3x** in [context-agent, continuity-checker, writer-agent]: `n 1 n 2 n 3`
 - **3x** in [data-agent, polish-agent, writer-agent]: `tools read write bash model inherit`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `本 agent 默认数据源 审查包中的正文 章纲 含`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, writer-agent]: `skills ink review references pacing control`
-- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `b c d 段落定位 修复建议 执行流程`
-- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `第一步 加载目标章节与锚定数据 从 review_bundle_file 读取当前章节正文 章纲`
+- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `golden_three combat climax high_point 或 review_bundle`
+- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `scene_mode 缺省且 chapter_no 1 2 3`
+- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `段落定位 修复建议 执行流程 第一步 加载目标章节与锚定数据 从`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `黄金三章加严 章节范围 规则 加严处置 ch1 3`
-- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `综合评分 平均评级 x 最低维度 维度 n`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `结论 通过 预警 未通过 简要说明 禁止事项`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `黄金三章无任何 critical 命中 报告包含可执行的段落级修复建议 输出格式增强 json`
 - **3x** in [golden-three-checker, high-point-checker, ooc-checker]: `hard block 回退 step 2a 重写`
@@ -91,10 +93,10 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [anti-detection-checker, proofreading-checker]: `输入 与其他 checker 相同 接收 review_bundle_file`
 - **2x** in [anti-detection-checker, proofreading-checker]: `output schema md 的统一格式 json checker`
 - **2x** in [context-agent, data-agent]: `project_root d wk 斗破苍穹 storage_path ink`
+- **2x** in [context-agent, writer-agent]: `golden_three combat climax high_point slow_build emotional`
 - **2x** in [context-agent, data-agent]: `章节编号规则 4位数字 如 0001 0099 0100`
 - **2x** in [context-agent, data-agent]: `cli 入口与脚本目录校验 必做 为避免 pythonpath cd`
 - **2x** in [context-agent, data-agent]: `index recent appearances limit 20 python3`
-- **2x** in [context-agent, writer-agent]: `3 章 n 1 n 2`
 - **2x** in [context-agent, continuity-checker]: `recent_summaries 覆盖 n 4 n 10`
 - **2x** in [context-agent, continuity-checker]: `list chapter int text str word_count`
 - **2x** in [context-agent, ooc-checker]: `立场 关系 境界 知识 情绪 目标`
@@ -102,21 +104,20 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [context-agent, outline-compliance-checker]: `required_foreshadows id f 001 content 数字颜色从灰变红`
 - **2x** in [data-agent, ooc-checker]: `catchphrases 斗之力 无处不在 speech_habits 喜欢用反问句 生气时用短句`
 - **2x** in [data-agent, ooc-checker]: `vocabulary_level 粗犷直接 tone 倔强不服输 dialect_markers forbidden_expressions`
+- **2x** in [directness-checker, writer-agent]: `ink writer assets prose blacklist yaml`
 - **2x** in [emotion-curve-checker, high-point-checker]: `本 agent 默认数据源 审查包中的正文 题材画像 最近章节摘要与`
 - **2x** in [flow-naturalness-checker, sensory-immersion-checker]: `与 prose impact checker 视觉冲击 电影感`
 - **2x** in [flow-naturalness-checker, golden-three-checker]: `理解 领悟 感悟 知道了 发现了 明白了`
 - **2x** in [flow-naturalness-checker, prose-impact-checker]: `md 句式节奏 claude_plugin_root skills ink review`
-- **2x** in [flow-naturalness-checker, high-point-checker]: `md 检查范围 输入 单章或章节区间 如 45`
+- **2x** in [flow-naturalness-checker, prose-impact-checker]: `直白模式阈值放宽 v22 us 010 冲突解耦 直白模式下`
+- **2x** in [flow-naturalness-checker, prose-impact-checker]: `非直白场景零退化 激活条件 任一满足即放宽 review_bundle scene_mode golden_three`
+- **2x** in [flow-naturalness-checker, prose-impact-checker]: `3 黄金三章兜底 激活判定 程序化对等 ink_writer prose`
+- **2x** in [flow-naturalness-checker, prose-impact-checker]: `被豁免的 rule codes 白名单 维度 rule`
+- **2x** in [flow-naturalness-checker, prose-impact-checker]: `issues 写入 review_metrics 豁免发生在 arbitration collect_issues_from_review_metrics`
+- **2x** in [flow-naturalness-checker, prose-impact-checker]: `阶段 因此 checker 自身实现不用改 零退化风险最小 检查范围`
 - **2x** in [flow-naturalness-checker, sensory-immersion-checker]: `critical 维度降至 d hard block 评级规则`
-- **2x** in [flow-naturalness-checker, prose-impact-checker]: `medium 维度降至 b 评级规则 维度 5`
 - **2x** in [flow-naturalness-checker, sensory-immersion-checker]: `升级为 high 普通为 warning ch1 3`
 - **2x** in [flow-naturalness-checker, sensory-immersion-checker]: `段落 p1 p2 具体描述 修复建议 可执行修复方向`
-- **2x** in [flow-naturalness-checker, prose-impact-checker]: `checker chapter 45 overall_score 82 pass`
+- **2x** in [flow-naturalness-checker, prose-impact-checker]: `chapter 45 overall_score 82 pass true`
 - **2x** in [high-point-checker, reader-pull-checker]: `核心参考 分类法 claude_plugin_root references reading power`
 - **2x** in [high-point-checker, reader-pull-checker]: `taxonomy md 题材画像 claude_plugin_root references genre`
-- **2x** in [high-point-checker, ooc-checker]: `判定条件 severity 处置 普通章节 处置 黄金三章`
-- **2x** in [high-point-checker, ooc-checker]: `high 允许 step 4 润色修复 hard`
-- **2x** in [logic-checker, outline-compliance-checker]: `json issues markdown 报告 执行流程 第一步`
-- **2x** in [logic-checker, outline-compliance-checker]: `第三步 must_not_pass 判定 硬阻断条件 满足任一则 pass`
-- **2x** in [logic-checker, outline-compliance-checker]: `false 存在任何 critical severity issue 存在`
-- **2x** in [logic-checker, outline-compliance-checker]: `true 但 medium low issue 仍传递给`

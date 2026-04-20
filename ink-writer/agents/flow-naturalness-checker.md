@@ -25,6 +25,38 @@ model: inherit
 - **对话技法**: `${CLAUDE_PLUGIN_ROOT}/skills/ink-write/references/writing/dialogue-writing.md`
 - **句式节奏**: `${CLAUDE_PLUGIN_ROOT}/skills/ink-review/references/pacing-control.md`
 
+## 直白模式阈值放宽 (v22 US-010)
+
+> **冲突解耦**：直白模式下"对话黄金比例"相关软规则被 arbitration 豁免——战斗/高潮/爽点章天然偏叙述或偏对话，原 40-50% / 30-40% / 10-20% 目标区间未必合理。既有的 `combat_heavy_chapter` 豁免语义被扩展到全部直白场景。其他六维（信息密度 / 融入方式 / 过渡流畅 / 对话辨识 / 语气一致 / voice 一致）保持原判定。非直白场景零退化。
+
+**激活条件（任一满足即放宽）**：
+
+- `review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}`
+- 或 `review_bundle.scene_mode` 缺省且 `chapter_no ∈ [1, 2, 3]`（黄金三章兜底）
+
+**激活判定（程序化对等）**：`ink_writer.prose.directness_threshold_gates.should_relax_flow_naturalness(scene_mode, chapter_no)`；与 `directness_checker.is_activated` 单源。
+
+**被豁免的 rule codes（白名单）**：
+
+| 维度 | rule code | 豁免后处置 |
+|-----|-----------|-----------|
+| 5 对话黄金比例 | `RATIO_DEVIATION` | 不降级（直白章三维占比偏离目标区间合理） |
+| 5 对话黄金比例 | `DIALOGUE_STARVATION` | 不降级（战斗/高潮段对话稀少合理） |
+| 5 对话黄金比例 | `DIALOGUE_FLOOD` | 不降级（爽点对话堆叠合理） |
+| 5 对话黄金比例 | `INNER_MONOLOGUE_BLOAT` | 不降级（主角心理占比高在直白模式可接受） |
+
+**仍保留的 hard-block / 其他维度规则**：
+
+- 维度 1 信息密度：`INFO_PARAGRAPH_OVERLOAD` / `INFO_BUDGET_OVERFLOW` / `INFO_BUDGET_OVERFLOW_GOLDEN` 全保留（信息节奏与直白模式正交）
+- 维度 2 信息融入：`INFO_DUMP_HEAVY` / `INFO_DUMP_SEVERE` 全保留（直白 ≠ 允许 info dump）
+- 维度 3 过渡流畅：`POV_INTRA_PARAGRAPH` / `TRANSITION_HARD_CUT` 全保留（POV 切换在任何模式都 hard block）
+- 维度 4 对话辨识：`DIALOGUE_BLIND_FAIL` / `DIALOGUE_GENERIC` 全保留（不因直白就允许对话同质）
+- 维度 5 的 `RATIO_DEVIATION_SEVERE`（±20% 偏离）保留——极端失衡仍需 arbitration 介入
+- 维度 6 语气一致：`VOICE_ABRUPT_SHIFT` / `VOICE_OSCILLATION` 全保留
+- 维度 7 voice 一致：`TABOO_VIOLATION` / `VOICE_PROFILE_SEVERE` 全保留
+
+**执行方式**：checker 照常跑七维并把完整 issues 写入 `review_metrics`；豁免发生在 `arbitration.collect_issues_from_review_metrics` 阶段——因此 checker 自身实现不用改，零退化风险最小。
+
 ## 检查范围
 
 **输入**: 单章或章节区间（如 `45` / `"45-46"`）

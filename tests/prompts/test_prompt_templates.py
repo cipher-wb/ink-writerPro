@@ -169,8 +169,9 @@ class TestABPrompts:
         import ab_prompts
 
         results = ab_prompts.diff_all_agents()
-        # v13 US-016：foreshadow-tracker + plotline-tracker 已合并删除（24→22）
-        assert len(results) == 22
+        # v13 US-016：foreshadow-tracker + plotline-tracker 合并删除（24→22）
+        # v22 US-005：新增 directness-checker（22→23）
+        assert len(results) == 23
         for r in results:
             assert "agent" in r
             assert "template_refs" in r
