@@ -18,7 +18,7 @@ import logging
 import shutil
 from pathlib import Path
 
-from runtime_compat import enable_windows_utf8_stdio
+from runtime_compat import enable_windows_utf8_stdio, set_windows_proactor_policy
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 from collections import Counter
@@ -1473,12 +1473,9 @@ class RAGAdapter:
 
 def main():
     import argparse
-    import asyncio as _asyncio_for_policy
     import sys
-    if sys.platform == "win32":  # pragma: no cover
-        _policy_cls = getattr(_asyncio_for_policy, "WindowsProactorEventLoopPolicy", None)
-        if _policy_cls is not None:
-            _asyncio_for_policy.set_event_loop_policy(_policy_cls())
+    # US-005: Windows asyncio subprocess support (no-op on Mac/Linux).
+    set_windows_proactor_policy()
     from ink_writer.core.cli.cli_output import print_success, print_error
     from ink_writer.core.cli.cli_args import normalize_global_project_root, load_json_arg
 

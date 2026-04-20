@@ -27,6 +27,8 @@ Prev run: chapter-context-injection → v20.0.0 released
 - **subprocess 文本模式硬约束**（US-004 起）：所有 `subprocess.run/Popen/check_output/check_call/call`，只要带了 `text=True` / `universal_newlines=True` / `encoding=`，就**必须**显式 `encoding="utf-8"`。Windows 默认 cp936 解码 git/python 子进程的中文 stdout/stderr 必乱码。`tests/core/test_subprocess_cross_platform.py:test_repo_has_no_text_mode_subprocess_without_encoding` 是仓库级红线测试，引入新违规会直接挂 CI。
 - **subprocess 禁用 shell=True**（US-004 起）：仓库当前 0 处真实使用；`test_repo_has_no_subprocess_shell_true` 守护这一约定。带空格路径或中文参数走 args 列表，`shell=True` 会导致 Windows 引号/拆词地狱。
 - **AST last-arg-position 插入法**（US-004 `fix_subprocess_encoding.py` 起）：subprocess 调用大多是多行，不能像 fix_utf8_encoding 那样保守跳过——需要在"最后一个 positional arg / keyword value 之后"插入 `, encoding="utf-8"`，绕过关闭括号位置不确定问题。`max((arg.end_lineno, arg.end_col_offset) for arg in call.args + [kw.value for kw in call.keywords])` 拿到的位置一定在 `)` 之前，trailing comma 风格也兼容（变成 `value, encoding="utf-8",\n)`，valid Python）。这种插入法适用所有"在 call 末尾追加 kwarg"的 fixer。
+- **asyncio Proactor 策略统一走 helper**（US-005 起）：所有生产入口调用 `runtime_compat.set_windows_proactor_policy()`（Mac 返回 False 无副作用，Windows 首次 True 并设 `_PROACTOR_POLICY_SET` 缓存，后续 True 幂等）。手写 `if sys.platform == "win32": asyncio.set_event_loop_policy(WindowsProactorEventLoopPolicy())` 等价块**不再允许**——scanner 按字面量检测 `set_windows_proactor_policy`，手写等价块会漏检。`tests/core/test_asyncio_proactor_policy.py:test_repo_non_test_asyncio_entries_declare_proactor_policy` 是仓库级红线测试，新入口缺字面量会直接挂 CI。
+- **tests/conftest.py 是 asyncio 策略的单一真源**（US-005 起）：`tests/conftest.py` 在 module 加载时调 `set_windows_proactor_policy()`，pytest 在 collect 阶段先加载 conftest，下游所有 test 文件的 `asyncio.run(...)` 自动继承策略——无需每个 test 文件重复 boilerplate。`scan_c4_asyncio` 走 `_ancestor_conftest_covers_proactor` 父目录链寻找 conftest 的 token 即判定已覆盖。若 token 在 conftest 里被别名 import（`as _x`），静态 contains 检测仍通过，但若想升级到严格 AST call 检测（参考 `tests/core/test_asyncio_proactor_policy.py:test_tests_conftest_declares_proactor_policy`），请**不要**在 conftest 里用 alias——保持 `from runtime_compat import set_windows_proactor_policy` 的命名可识别。
 
 ## Context Contract（本 PRD 专属）
 
@@ -202,4 +204,62 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `reports/cross-platform-audit-findings.md` (regenerated: 86 → 64 findings, C3: 25 → 0)
   - `prd.json` (US-004 passes:true + notes)
   - `progress.txt` (this entry + 3 new Codebase Patterns)
+---
+
+## 2026-04-20 - US-005 asyncio Proactor 策略覆盖补齐（C4）
+- C4 findings **10 → 0**（总报告 64 → 54）。
+- **策略（非逐条手写修）**：仓库内 6 处生产 asyncio 入口原本都手写了 `if sys.platform == "win32": asyncio.set_event_loop_policy(WindowsProactorEventLoopPolicy())` 等价块，功能正确但 scanner 按字面量检测 `set_windows_proactor_policy` token 导致全部报警。统一做法：把 6 处换成 `runtime_compat.set_windows_proactor_policy()` helper 调用（幂等 `_PROACTOR_POLICY_SET` 缓存 + Mac 返回 False 无副作用）。4 处测试入口则在 `tests/conftest.py` 加一行 module 级调用（pytest collect 时先加载 conftest，下游 test file 自动继承），scanner 配套新增 `_ancestor_conftest_covers_proactor` 走父目录链检索 conftest token。
+- **生产文件 6 处统一**：
+  - `benchmark/scraper.py:657` — `main()` 内手写块 → `_set_proactor_policy()`（imported as alias for bootstrap 兜底，顶部 try/except 捕获 ImportError）
+  - `ink-writer/scripts/extract_chapter_context.py:1742` — `main()` 内手写块 → `set_windows_proactor_policy()`
+  - `ink_writer/checker_pipeline/step3_runner.py:471` — `main()` 内手写块 → `_set_proactor_policy()`（with alias bootstrap）
+  - `ink_writer/core/cli/ink.py:367` — `main()` 内手写块 → `_set_proactor_policy()`（with alias bootstrap）
+  - `ink_writer/core/context/rag_adapter.py:1474` — `main()` 内手写块 → `set_windows_proactor_policy()`
+  - `ink_writer/parallel/pipeline_manager.py:37` — 模块级手写块 → try/except import + `_set_proactor_policy()`（module init 时设一次）
+- **测试入口 4 处由 conftest 统一覆盖**：
+  - `tests/checker_pipeline/test_step3_runner_real_checker.py`
+  - `tests/harness/test_step3_runner.py`
+  - `tests/infra/test_logging_migration.py`
+  - `tests/integration/test_step3_enforce_real_polish.py`
+  - 全部通过 `tests/conftest.py:12-16` 的 module-level `set_windows_proactor_policy()` 覆盖，scanner 通过 `_ancestor_conftest_covers_proactor` 识别并跳过
+- **Scanner 增强** (`scripts/audit_cross_platform.py`)：
+  - `scan_c4_asyncio(py_files, root=None)` 接受 root 参数，内置 `_ancestor_conftest_covers_proactor` 辅助走父目录链（bound 到 root）检索任一 `conftest.py` 是否含 `set_windows_proactor_policy` 字面量
+  - 父目录 lookup 结果按 dir 缓存（`_conftest_cache`）避免同目录多测试重复磁盘 IO
+  - `run_audit(root)` 显式传 root 给 scan_c4_asyncio
+- **新增 `tests/core/test_asyncio_proactor_policy.py` (8 tests)**：
+  - `test_set_windows_proactor_policy_is_idempotent_on_mac`：反复调不抛不改 policy
+  - `test_set_windows_proactor_policy_does_not_mutate_mac_policy`：policy 类名 before/after 一致（silence `DeprecationWarning`）
+  - `test_asyncio_create_subprocess_exec_returns_utf8_stdout`：跨平台启动 python 子进程，中文+emoji stdout UTF-8 解码
+  - `test_asyncio_create_subprocess_exec_with_chinese_arg`：中文 argv 透传
+  - `test_repo_non_test_asyncio_entries_declare_proactor_policy`：仓库红线 #1，扫全仓非 tests/ 文件，调 asyncio.run 但无 token 直接 fail
+  - `test_tests_conftest_declares_proactor_policy`：仓库红线 #2，AST 级验证 `tests/conftest.py` 真调 helper（不是 docstring 提及）
+  - `test_c4_scanner_honors_ancestor_conftest` / `test_c4_scanner_still_reports_when_no_ancestor_conftest`：scanner ancestor-conftest 正反路径
+- **扩展 `tests/audit/test_audit_cross_platform.py` (+2 tests)**：
+  - `test_c4_skips_when_ancestor_conftest_covers_policy`：嵌套 sub/deeper/test_async.py + root conftest policy 调用 → 无 finding
+  - `test_c4_reports_when_ancestor_conftest_mentions_but_does_not_call`：当前按 contains 判定（设计成保守策略），未来若升级 AST call 检测需调整此测试期望
+- **Mac 字节级一致**：6 处手写 `if sys.platform == "win32":` 块在 Mac 上本来就是 no-op（platform 判断短路），换成 helper 后 Mac 上 helper 也返回 False 无副作用——语义严格等价，事件循环策略不变
+- **conftest.py 不用别名 import**（重要）：`from runtime_compat import set_windows_proactor_policy`（直接导入，不 alias）——让 `test_tests_conftest_declares_proactor_policy` 的 AST call 检测能识别。生产文件可用 alias（底层靠 scanner 字面量扫描，不靠 AST）
+- 全量 pytest: **3108 passed / 23 skipped / 0 failed**（baseline 3098 → +10 新测试：2 audit + 8 core，零回归）
+- **Learnings for future iterations:**
+  - **手写 policy 块 ≠ 调 helper**：scanner 设计时按字面量检测，功能正确但 scanner 拿不到证据时仍报警。统一走 helper 让"证据 = 行为"——也让人类一眼看出该文件已处理策略，不用再看分支
+  - **conftest.py 是跨测试文件约束的理想载体**：pytest 先加载 conftest 再 collect testmodule，是黄金一次性 hook 点。`tests/conftest.py` 的 1 行 `set_windows_proactor_policy()` 替代 4 处 test 文件重复 boilerplate。US-009/US-010 同理可考虑收敛到 conftest
+  - **ancestor-conftest 扫描需 bound 到 root**：朴素 walk-up 会爬到 `/`，不仅慢还可能命中系统 Python 的 conftest。bound 到 audit root 是关键，防御逻辑写在 `_ancestor_conftest_covers_proactor` 里
+  - **contains vs AST call 的 trade-off**：contains 检测简单、误判成本低（"conftest 有 policy"的强 signal 是字符串 `set_windows_proactor_policy`），但 docstring 里提及会误判为已调用。升级到 AST call 需处理 alias/import from/直接调用三种形态——除非出现真实 false positive 否则不升级
+  - **`DeprecationWarning` 在测试里显式 silence**：`asyncio.get_event_loop_policy()` 在 Python 3.16 要移除。测试本身就是验证 "policy 不变"，用 `warnings.catch_warnings()` 局部静音避免警告淹没有用信号
+  - **Python -m pytest --no-cov 3108 是新 baseline**：下轮 US-006 起以 3108 为基线，不再用 3098
+  - **下轮（US-006）执行要点**：C5 有 7 处裸 symlink 调用。新建 `runtime_compat.safe_symlink(src, dst)`，检测 `_has_symlink_privilege`，无权限降级 `shutil.copyfile` + warn 日志。逐一替换 `Path.symlink_to` / `os.symlink`。测试覆盖两路径（Mac 始终有权限；Windows 无权限用 mock `_has_symlink_privilege=False` 验证 fallback）
+- Files changed:
+  - `scripts/audit_cross_platform.py` (+40 行：`_ancestor_conftest_covers_proactor` + `scan_c4_asyncio` 签名增 root + 缓存)
+  - `benchmark/scraper.py` (改 `main()` 用 helper + 顶部 import alias)
+  - `ink-writer/scripts/extract_chapter_context.py` (改 `main()` 用 helper + 顶部 import)
+  - `ink_writer/checker_pipeline/step3_runner.py` (改 `main()` 用 helper + 顶部 import alias)
+  - `ink_writer/core/cli/ink.py` (改 `main()` 用 helper + 顶部 import alias)
+  - `ink_writer/core/context/rag_adapter.py` (改 `main()` 用 helper + 顶部 import)
+  - `ink_writer/parallel/pipeline_manager.py` (模块级手写块换 helper)
+  - `tests/conftest.py` (+7 行：module-level `set_windows_proactor_policy()` 调用)
+  - `tests/core/test_asyncio_proactor_policy.py` (new, ~220 行, 8 tests)
+  - `tests/audit/test_audit_cross_platform.py` (+55 行：2 新 C4 tests)
+  - `reports/cross-platform-audit-findings.md` (regenerated: 64 → 54 findings, C4: 10 → 0)
+  - `prd.json` (US-005 passes:true + notes)
+  - `progress.txt` (this entry + 2 new Codebase Patterns)
 ---

@@ -34,10 +34,12 @@ from ink_writer.parallel.chapter_lock import ChapterLockManager
 
 logger = logging.getLogger(__name__)
 
-if sys.platform == "win32":  # pragma: no cover
-    _policy_cls = getattr(asyncio, "WindowsProactorEventLoopPolicy", None)
-    if _policy_cls is not None:
-        asyncio.set_event_loop_policy(_policy_cls())
+# US-005: Windows asyncio subprocess support (no-op on Mac/Linux, idempotent).
+try:
+    from runtime_compat import set_windows_proactor_policy as _set_proactor_policy
+    _set_proactor_policy()
+except Exception:  # pragma: no cover
+    pass
 
 
 class ChapterStatus(Enum):

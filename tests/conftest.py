@@ -12,6 +12,17 @@ import sys
 import pytest
 
 # ---------------------------------------------------------------------------
+# US-005: Windows asyncio subprocess support (no-op on Mac/Linux, idempotent).
+# Applied at conftest load so every test file under ``tests/`` inherits the
+# ProactorEventLoopPolicy without needing a per-file duplicate call.
+# ---------------------------------------------------------------------------
+try:
+    from runtime_compat import set_windows_proactor_policy
+    set_windows_proactor_policy()
+except Exception:  # pragma: no cover
+    pass
+
+# ---------------------------------------------------------------------------
 # Windows quarantine (US-019)
 # ---------------------------------------------------------------------------
 #

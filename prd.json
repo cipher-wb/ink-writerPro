@@ -81,8 +81,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Done 2026-04-20: C4 findings 10→0，总报告 64→54。策略：仓库内 6 处生产 asyncio 入口原本都手写了 `if sys.platform == 'win32': asyncio.set_event_loop_policy(WindowsProactorEventLoopPolicy())` 的等价块，但 scanner 按字面量检测 `set_windows_proactor_policy`，全部报警。统一做法是把这 6 处改成 `runtime_compat.set_windows_proactor_policy()` helper 调用（幂等，内部 `_PROACTOR_POLICY_SET` 缓存，Mac 返回 False 无副作用）；4 处测试入口的处理更优雅——`tests/conftest.py` 加一行 `set_windows_proactor_policy()` 模块级调用（pytest collect 阶段先加载 conftest，所有下游 test file 自动继承策略），配合 scanner `scan_c4_asyncio` 新增 `_ancestor_conftest_covers_proactor` 走父目录链寻找 conftest.py 的 token，避免每个 test 文件都要重复 boilerplate。\n\n生产文件 6 处统一为 helper 调用：benchmark/scraper.py / ink-writer/scripts/extract_chapter_context.py / ink_writer/checker_pipeline/step3_runner.py / ink_writer/core/cli/ink.py / ink_writer/core/context/rag_adapter.py / ink_writer/parallel/pipeline_manager.py。\n\n新增 `tests/core/test_asyncio_proactor_policy.py` (8 tests): helper 幂等性 / Mac 不改策略 / asyncio.create_subprocess_exec 跨平台 UTF-8 stdout + 中文参数透传（Mac 跑通验证 Windows 路径） / 仓库红线非测试入口必含 `set_windows_proactor_policy` 字面量 / 红线 tests/conftest.py 必显式 AST-call helper / scanner ancestor-conftest 覆盖正反两路径。\n\n扩展 `tests/audit/test_audit_cross_platform.py` (+2 tests): `test_c4_skips_when_ancestor_conftest_covers_policy` / `test_c4_reports_when_ancestor_conftest_mentions_but_does_not_call`.\n\nMac 字节级一致：所有手写 `if sys.platform == 'win32':` 块在 Mac 上本来就是 no-op，换成 helper（Mac 返回 False 无副作用）语义等价。\n\n全量 pytest: 3108 passed / 23 skipped / 0 failed (baseline 3098 → +10 新测试：8 core + 2 audit，零回归)。"
     },
     {
       "id": "US-006",

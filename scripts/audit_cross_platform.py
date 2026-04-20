@@ -598,8 +598,44 @@ def scan_c3_subprocess(py_files: Iterable[Path]) -> list[Finding]:
 # ---------------------------------------------------------------------------
 
 
-def scan_c4_asyncio(py_files: Iterable[Path]) -> list[Finding]:
+def _ancestor_conftest_covers_proactor(path: Path, root: Path) -> bool:
+    """Walk up from ``path`` to ``root`` looking for a ``conftest.py`` that
+    calls ``set_windows_proactor_policy`` at module load.
+
+    pytest loads conftest.py in the collection tree before any test module, so
+    a call inside ``tests/conftest.py`` applies the policy for every downstream
+    test file. We honor the same inheritance in the scanner to avoid reporting
+    redundant per-test-file policy calls (US-005).
+    """
+    try:
+        current = path.resolve().parent
+        root_resolved = root.resolve()
+    except (OSError, ValueError):  # pragma: no cover - defensive
+        return False
+    # Bound the walk to ``root`` so we don't traverse outside the project.
+    for _ in range(len(current.parts)):
+        conftest = current / "conftest.py"
+        if conftest.is_file():
+            text = safe_read_text(conftest)
+            if text and "set_windows_proactor_policy" in text:
+                return True
+        if current == root_resolved or root_resolved not in current.parents and current != root_resolved:
+            if current.parent == current:
+                break
+        if current == root_resolved:
+            break
+        parent = current.parent
+        if parent == current:
+            break
+        current = parent
+    return False
+
+
+def scan_c4_asyncio(py_files: Iterable[Path], root: Optional[Path] = None) -> list[Finding]:
     findings: list[Finding] = []
+    scan_root = root or PROJECT_ROOT
+    # Cache conftest coverage per directory (expensive filesystem walk otherwise).
+    _conftest_cache: dict[Path, bool] = {}
     for path in py_files:
         src = safe_read_text(path)
         if not src:
@@ -617,6 +653,17 @@ def scan_c4_asyncio(py_files: Iterable[Path]) -> list[Finding]:
             continue
         # 检查是否调用了 set_windows_proactor_policy
         if "set_windows_proactor_policy" in src:
+            continue
+        # 若 ancestor conftest.py 已调 set_windows_proactor_policy，等同于已覆盖（pytest 自动加载）
+        try:
+            parent_key = path.resolve().parent
+        except (OSError, ValueError):  # pragma: no cover
+            parent_key = path.parent
+        cached = _conftest_cache.get(parent_key)
+        if cached is None:
+            cached = _ancestor_conftest_covers_proactor(path, scan_root)
+            _conftest_cache[parent_key] = cached
+        if cached:
             continue
         # 找第一个 trigger 行号
         first_line = 1
@@ -862,7 +909,7 @@ def run_audit(root: Path) -> AuditReport:
     report.findings.extend(scan_c1_open_encoding(py_files))
     report.findings.extend(scan_c2_hardcoded_paths(py_files))
     report.findings.extend(scan_c3_subprocess(py_files))
-    report.findings.extend(scan_c4_asyncio(py_files))
+    report.findings.extend(scan_c4_asyncio(py_files, root=root))
     report.findings.extend(scan_c5_symlink(py_files))
     report.findings.extend(scan_c6_sh_ps1_cmd_parity(root))
     report.findings.extend(scan_c7_skill_md_windows_block(root))

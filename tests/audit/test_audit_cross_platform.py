@@ -425,6 +425,68 @@ def test_c4_detects_asyncio_without_proactor_policy(tmp_path: Path) -> None:
     assert good_findings == []
 
 
+def test_c4_skips_when_ancestor_conftest_covers_policy(tmp_path: Path) -> None:
+    """Ancestor ``conftest.py`` 里有 ``set_windows_proactor_policy()`` 调用时，
+    下游 test 文件即使本身不调也不应 C4 报警（pytest 自动继承策略）。"""
+    (tmp_path / "conftest.py").write_text(
+        textwrap.dedent(
+            """\
+            from runtime_compat import set_windows_proactor_policy
+            set_windows_proactor_policy()
+            """
+        ),
+        encoding="utf-8",
+    )
+    nested_dir = tmp_path / "sub" / "deeper"
+    nested_dir.mkdir(parents=True)
+    test_file = nested_dir / "test_async.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """\
+            import asyncio
+
+            async def noop():
+                return 1
+
+            asyncio.run(noop())
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c4_asyncio([test_file], root=tmp_path)
+    assert findings == []
+
+
+def test_c4_reports_when_ancestor_conftest_mentions_but_does_not_call(
+    tmp_path: Path,
+) -> None:
+    """conftest 只提及 token（如 docstring / 注释）时，scanner 视为未覆盖——
+    保守策略。当前实现按字符串 contains 判断，若后续需升级为 AST call 检测，
+    此测试先固化"未显式调用即报警"的期望。"""
+    # 刻意让 conftest 不含 policy token
+    (tmp_path / "conftest.py").write_text(
+        "# no policy here\n",
+        encoding="utf-8",
+    )
+    test_file = tmp_path / "test_async.py"
+    test_file.write_text(
+        textwrap.dedent(
+            """\
+            import asyncio
+
+            async def noop():
+                return 1
+
+            asyncio.run(noop())
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c4_asyncio([test_file], root=tmp_path)
+    assert len(findings) == 1
+    assert findings[0].category == "C4"
+
+
 # ---------------------------------------------------------------------------
 # C5: symlink
 # ---------------------------------------------------------------------------

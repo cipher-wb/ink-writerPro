@@ -30,10 +30,13 @@ _ink_scripts = _os_win_stdio.path.join(
 if _os_win_stdio.path.isdir(_ink_scripts) and _ink_scripts not in _sys_win_stdio.path:
     _sys_win_stdio.path.insert(0, _ink_scripts)
 try:
-    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+    from runtime_compat import (
+        enable_windows_utf8_stdio as _enable_utf8_stdio,
+        set_windows_proactor_policy as _set_proactor_policy,
+    )
     _enable_utf8_stdio()
 except Exception:
-    pass
+    _set_proactor_policy = None
 
 import argparse
 import asyncio
@@ -469,10 +472,9 @@ async def run_step3(
 
 
 def main() -> int:
-    if sys.platform == "win32":  # pragma: no cover
-        _policy_cls = getattr(asyncio, "WindowsProactorEventLoopPolicy", None)
-        if _policy_cls is not None:
-            asyncio.set_event_loop_policy(_policy_cls())
+    # US-005: Windows asyncio subprocess support (no-op on Mac/Linux).
+    if _set_proactor_policy is not None:
+        _set_proactor_policy()
     parser = argparse.ArgumentParser(description="Step 3 Gate Runner (FIX-04)")
     parser.add_argument("--chapter-id", type=int, required=True, help="target chapter number")
     parser.add_argument("--state-dir", type=Path, required=True, help=".ink/ dir")
