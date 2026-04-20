@@ -24,6 +24,9 @@ Prev run: chapter-context-injection → v20.0.0 released
 - **C2 scanner context-aware 准则**（US-003 起）：纯字面量启发式扫描会产 110+ 误报（HTTP route / 中文显示标签 / dict 配置值 / sys.path bootstrap）。正确做法：必须验证字符串**真的被当作 filesystem 路径使用**——只在 ① fs call 参数（`Path()` / `os.path.exists/.join` / `shutil.copy` / `os.remove` 等已知白名单）② path-named target（`*_PATH`/`*_DIR`/`*_FILE`/`*_ROOT`/`*_FOLDER`）时报告。`os.path.join` 的非首参数永不报告（Python 在 Windows 上 normpath 归一化）。识别 CJK 段直接判定为显示标签。
 - **`os.path.join` 跨平台安全保证**（US-003 起）：`os.path.join("/tmp", "a/b/c.txt")` 在 Windows 上 Python 会把 `a/b/c.txt` normalize 为 `a\b\c.txt`——所以 `os.path.join(..., '../ink-writer/scripts')` 这类 sys.path bootstrap 是 idiomatic 安全的，**不需要也不应该被 C2 报警**。`Path('a') / 'b/c'` 同理。
 - **Path-named target 命名约定**（US-003 起）：跨平台代码里凡是用 `_PATH` / `_DIR` / `_FILE` / `_ROOT` / `_FOLDER` 后缀命名 filesystem 路径变量，C2 scanner 会自动 audit；新代码请遵循此约定，让审计能覆盖到。
+- **subprocess 文本模式硬约束**（US-004 起）：所有 `subprocess.run/Popen/check_output/check_call/call`，只要带了 `text=True` / `universal_newlines=True` / `encoding=`，就**必须**显式 `encoding="utf-8"`。Windows 默认 cp936 解码 git/python 子进程的中文 stdout/stderr 必乱码。`tests/core/test_subprocess_cross_platform.py:test_repo_has_no_text_mode_subprocess_without_encoding` 是仓库级红线测试，引入新违规会直接挂 CI。
+- **subprocess 禁用 shell=True**（US-004 起）：仓库当前 0 处真实使用；`test_repo_has_no_subprocess_shell_true` 守护这一约定。带空格路径或中文参数走 args 列表，`shell=True` 会导致 Windows 引号/拆词地狱。
+- **AST last-arg-position 插入法**（US-004 `fix_subprocess_encoding.py` 起）：subprocess 调用大多是多行，不能像 fix_utf8_encoding 那样保守跳过——需要在"最后一个 positional arg / keyword value 之后"插入 `, encoding="utf-8"`，绕过关闭括号位置不确定问题。`max((arg.end_lineno, arg.end_col_offset) for arg in call.args + [kw.value for kw in call.keywords])` 拿到的位置一定在 `)` 之前，trailing comma 风格也兼容（变成 `value, encoding="utf-8",\n)`，valid Python）。这种插入法适用所有"在 call 末尾追加 kwarg"的 fixer。
 
 ## Context Contract（本 PRD 专属）
 
@@ -148,4 +151,55 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `reports/cross-platform-audit-findings.md` (regenerated: 196 → 86 findings, C2: 110 → 0)
   - `scripts/ralph/prd.json` (US-003 passes:true + notes)
   - `scripts/ralph/progress.txt` (this entry + 3 new Codebase Patterns)
+---
+
+## 2026-04-20 - US-004 subprocess 调用跨平台化（C3）
+- C3 findings **25 → 0**（总报告 86 → 64）。注意 C2 从 0 变 3：是 US-003 自身写的 `tests/core/test_path_cross_platform.py:140-146` 故意硬编码字面量（用于测 `normalize_windows_path` 透传），属测试 fixture 的合法用法，**非 US-004 引入**——下轮 baseline 用 64。
+- 抽样 25 处 finding 全部确认为真实"text=True 缺 encoding"模式，无误报，scanner 无需重构。仓库 0 处 `shell=True` 真实使用（grep 仅命中 scanner 自身和 fixture）。
+- 新增 `scripts/fix_subprocess_encoding.py`（~190 行）：
+  - 复用 `audit_cross_platform._resolve_call_target` / `_kw_value` / `_is_text_mode_subprocess` 判定
+  - 关键创新：**last-arg-position 插入法** —— `max((arg.end_lineno, arg.end_col_offset) ...)` 拿到最后一个 positional arg 或 keyword value 末尾，在它后面插入 `, encoding="utf-8"`。无论调用是单行还是多行（trailing-comma / 无 trailing-comma 都兼容），都不影响关闭括号
+  - 复用 `audit_cross_platform.iter_files` + `safe_read_text`，沿用 EXCLUDE_DIR_NAMES（archive 等不污染）
+  - CLI: `--root` / `--dry-run`；Mac/Windows 都能跑（顶部 `enable_windows_utf8_stdio()` Mac no-op）
+- 新增 `tests/audit/test_fix_subprocess_encoding.py` (15 tests)：
+  - 单行 / 多行（trailing comma / 无 trailing comma）补 encoding
+  - 二进制模式（无 text/encoding）跳过 / `text=False` 跳过 / 已有 encoding 跳过
+  - 同名非 subprocess 调用（如 `worker.run("cmd", text=True)`）不误命中
+  - `shell=True` 不在 fixer 范围（需人工拆 args 列表）
+  - 幂等（第二次 fix 0 changes）
+  - dry-run 不写回 + main CLI 入口（rc=0/2 + 输出格式）
+- 新增 `tests/core/test_subprocess_cross_platform.py` (7 tests)：
+  - 中文参数透传（`subprocess.run([..., "你好世界_测试"], encoding="utf-8")`）
+  - 中文 cwd 路径
+  - 带空格路径走 args 列表（防 shell=True 拆词）
+  - 子进程 UTF-8 stdout 跨平台解码（含 mathematical script + emoji）
+  - `subprocess.check_output` 同上验证
+  - **仓库自身红线**：`test_repo_has_no_text_mode_subprocess_without_encoding` AST 扫全仓，发现违规即 fail——守护后续 PR 不再回退
+  - **仓库自身红线 #2**：`test_repo_has_no_subprocess_shell_true` 同上守护 0 处 shell=True 假设
+- 批量修复 25 处真实 finding（19 文件）：
+  - `ink-writer/scripts/init_project.py` ×2（778 单行 / 981 多行）
+  - `ink-writer/scripts/security_utils.py:260` 多行 trailing comma
+  - `ink-writer/scripts/workflow_manager.py:834` 单行
+  - `ink_writer/editor_wisdom/llm_backend.py:123` 多行
+  - `ink_writer/style_rag/retriever.py:129` 多行 trailing comma
+  - `scripts/measure_baseline.py:59`
+  - 12 处 tests/（creativity/data_modules/editor_wisdom/harness/integration/parallel/release）
+- Mac 字节级一致抽样验证：5 处 diff（init_project / security_utils / workflow_manager / retriever / test_v16_gates）仅追加 `, encoding="utf-8"` kwarg，Mac locale UTF-8 下 `text=True` 默认就用 UTF-8 解码——语义完全等价
+- 幂等验证：第二次 `python3 scripts/fix_subprocess_encoding.py --dry-run` 输出 "would fix 0 call(s)"
+- 全量 pytest: **3098 passed / 23 skipped / 0 failed**（baseline 3076 → +22 新测试：15 fixer + 7 cross-platform，零回归）
+- **Learnings for future iterations:**
+  - **subprocess.run 90% 是多行调用**：fix_utf8_encoding 的"保守跳过多行"策略在 C3 不适用——会把 25 处缩成 ~8 处。改用 last-arg-position 插入法（max((arg.end_lineno, arg.end_col_offset)) 取最后参数末尾）才是通用解
+  - **trailing comma 是好朋友**：插入 `, encoding="utf-8"` 在最后参数后面，原有 trailing comma + `\n)` 会变成 `value, encoding="utf-8",\n)`——双逗号？不！`encoding="utf-8"` 后面的位置原本是逗号，所以拼出来是 `value, encoding="utf-8"` 接原 `,\n)`——valid Python。Python 允许 trailing comma 但不允许双逗号；本插入法天然规避
+  - **仓库级红线测试 vs 一次性扫描**：仅在 audit/fix 阶段扫一次不够，需要在 `tests/` 下加一个 AST 扫全仓的 pytest——后续 PR 引入新违规会直接 fail，不需要等 ralph 下次跑 audit。U-004 加了两条（缺 encoding + shell=True），US-005 起每个 C 类完成时都建议加同款守卫
+  - **跨平台测试可以"在 Mac 上写得逼真"**：subprocess 调用本身 cross-platform，关键是显式 `encoding="utf-8"`——Mac 上 default locale 是 UTF-8 所以测试通过，Windows 上 default cp936 但显式参数同样通过。中文参数 / 中文 cwd / 带空格路径 / mathematical script + emoji 这几个 case 在 Mac 上能完整覆盖 Windows 真实场景
+  - **C2 出现 +3 是 US-003 测试 fixture 的本质**：test_normalize_windows_path 必须用字面量调用，不可能"路径化"。下轮（US-005）扫到 C2=3 应识别这是已知测试用法，不要修
+  - **下轮（US-005）执行要点**：C4 有 10 处 asyncio 入口，需在每个 `asyncio.run` 调用之前补 `set_windows_proactor_policy()` 调用。注意：scanner 检测的是 import asyncio + 调 asyncio.run，不一定在 main()，可能在 module-level CLI 包装里（如 `if __name__ == "__main__": asyncio.run(...)`）——补的位置要紧贴 asyncio.run 上方，而不是 main 函数顶部
+- Files changed:
+  - `scripts/fix_subprocess_encoding.py` (new, ~190 lines)
+  - `tests/audit/test_fix_subprocess_encoding.py` (new, ~280 lines, 15 tests)
+  - `tests/core/test_subprocess_cross_platform.py` (new, ~210 lines, 7 tests)
+  - 19 处源文件批量补 `encoding="utf-8"` kwarg（4 ink-writer/scripts + 2 ink_writer + 1 scripts + 12 tests）
+  - `reports/cross-platform-audit-findings.md` (regenerated: 86 → 64 findings, C3: 25 → 0)
+  - `prd.json` (US-004 passes:true + notes)
+  - `progress.txt` (this entry + 3 new Codebase Patterns)
 ---

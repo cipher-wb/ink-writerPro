@@ -23,7 +23,7 @@ def _run_cli(args: list[str]) -> subprocess.CompletedProcess:
     env["PYTHONPATH"] = str(ROOT)
     return subprocess.run(
         [sys.executable, "-m", "ink_writer.creativity"] + args,
-        env=env, capture_output=True, text=True, timeout=30,
+        env=env, capture_output=True, text=True, timeout=30, encoding="utf-8",
     )
 
 

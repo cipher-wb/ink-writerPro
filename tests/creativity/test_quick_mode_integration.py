@@ -31,7 +31,7 @@ def _run_cli(args: list[str], timeout: int = 30) -> subprocess.CompletedProcess:
         env=env,
         capture_output=True,
         text=True,
-        timeout=timeout,
+        timeout=timeout, encoding="utf-8",
     )
 
 

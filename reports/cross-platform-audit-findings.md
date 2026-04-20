@@ -2,15 +2,15 @@
 
 扫描根目录: `/Users/cipher/AI/ink/ink-writer`
 
-**总 finding 数**: 86 (Blocker=0 / High=48 / Medium=38 / Low=0)
+**总 finding 数**: 64 (Blocker=0 / High=23 / Medium=38 / Low=3)
 
 ## 按类别汇总
 
 | 类别 | 数量 | 对应修复 US |
 |------|------|-------------|
 | C1 | 0 | US-002 |
-| C2 | 0 | US-003 |
-| C3 | 25 | US-004 |
+| C2 | 3 | US-003 |
+| C3 | 0 | US-004 |
 | C4 | 10 | US-005 |
 | C5 | 7 | US-006 |
 | C6 | 2 | US-007 |
@@ -18,37 +18,15 @@
 | C8 | 37 | US-009 |
 | C9 | 4 | US-010 |
 
-## C3 — `subprocess` 调用文本模式缺 encoding 或 `shell=True`
+## C2 — 硬编码路径分隔符（疑似）
 
-对应修复 US: **US-004**  数量: **25**
+对应修复 US: **US-003**  数量: **3**
 
 | 文件:行 | 严重级别 | 现象 | 修复建议 |
 |---------|----------|------|----------|
-| `ink-writer/scripts/init_project.py:778` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `ink-writer/scripts/init_project.py:981` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `ink-writer/scripts/security_utils.py:260` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `ink-writer/scripts/workflow_manager.py:834` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `ink_writer/editor_wisdom/llm_backend.py:123` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `ink_writer/style_rag/retriever.py:129` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `scripts/measure_baseline.py:59` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/creativity/test_cli.py:21` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/creativity/test_quick_mode_integration.py:29` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/data_modules/test_encoding_validator.py:91` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/data_modules/test_encoding_validator.py:104` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/data_modules/test_encoding_validator.py:116` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/data_modules/test_encoding_validator.py:133` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/editor_wisdom/test_api_key_guard.py:29` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/editor_wisdom/test_cli.py:229` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/harness/test_api_key_guard.py:27` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/harness/test_init_creative_fingerprint.py:108` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/harness/test_step3_runner.py:109` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/harness/test_step3_runner.py:122` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/harness/test_step3_runner.py:159` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/integration/test_quick_mode_validator_loop.py:24` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/integration/test_step3_enforce_all_pass.py:69` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/integration/test_step3_enforce_hard_fail_blocks.py:76` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/parallel/test_chapter_lock_integration.py:247` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
-| `tests/release/test_v16_gates.py:118` | High | `subprocess.run` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"，避免 Windows cp936 解码 |
+| `tests/core/test_path_cross_platform.py:141` | Low | 疑似硬编码路径字面量: '/Users/cipher/AI/ink/ink-writer' | 改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化 |
+| `tests/core/test_path_cross_platform.py:144` | Low | 疑似硬编码路径字面量: '/d/desktop/foo' | 改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化 |
+| `tests/core/test_path_cross_platform.py:146` | Low | 疑似硬编码路径字面量: '/mnt/d/desktop/foo' | 改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化 |
 
 ## C4 — asyncio 入口未调 `set_windows_proactor_policy()`
 
@@ -73,11 +51,11 @@
 
 | 文件:行 | 严重级别 | 现象 | 修复建议 |
 |---------|----------|------|----------|
-| `ink-writer/scripts/runtime_compat.py:116` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
-| `ink-writer/scripts/runtime_compat.py:130` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
+| `ink-writer/scripts/runtime_compat.py:139` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
+| `ink-writer/scripts/runtime_compat.py:153` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
 | `scripts/build_reference_corpus.py:61` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
-| `tests/audit/test_audit_cross_platform.py:281` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
-| `tests/audit/test_audit_cross_platform.py:284` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
+| `tests/audit/test_audit_cross_platform.py:442` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
+| `tests/audit/test_audit_cross_platform.py:445` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
 | `tests/data_modules/test_path_guard.py:125` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
 | `tests/data_modules/test_path_guard.py:138` | High | 裸 symlink 调用，Windows 非管理员会抛 OSError | 改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级 |
 
@@ -158,13 +136,13 @@
 供下一轮 PRD 迭代直接消费。已与本 PRD 既有 US-002~US-010 对齐，
 数字列表为各类风险对应 US 的优先级再排序参考：
 
-1. **US-004**（C3, 25 处）— `subprocess` 调用文本模式缺 encoding 或 `shell=True`
-2. **US-005**（C4, 10 处）— asyncio 入口未调 `set_windows_proactor_policy()`
-3. **US-006**（C5, 7 处）— 裸 `symlink` 调用未走 `safe_symlink()` 兜底
-4. **US-007**（C6, 2 处）— `*.sh` 缺同目录 `.ps1` / `.cmd` 对等入口
-5. **US-008**（C7, 1 处）— `SKILL.md` 引用 `.sh` 缺 Windows PowerShell sibling 块
-6. **US-010**（C9, 4 处）— Python CLI 入口未调 `enable_windows_utf8_stdio()`
-7. **US-009**（C8, 37 处）— 脚本硬编码 `python3` / `py -3`（未走 `find_python_launcher`）
+1. **US-005**（C4, 10 处）— asyncio 入口未调 `set_windows_proactor_policy()`
+2. **US-006**（C5, 7 处）— 裸 `symlink` 调用未走 `safe_symlink()` 兜底
+3. **US-007**（C6, 2 处）— `*.sh` 缺同目录 `.ps1` / `.cmd` 对等入口
+4. **US-008**（C7, 1 处）— `SKILL.md` 引用 `.sh` 缺 Windows PowerShell sibling 块
+5. **US-010**（C9, 4 处）— Python CLI 入口未调 `enable_windows_utf8_stdio()`
+6. **US-009**（C8, 37 处）— 脚本硬编码 `python3` / `py -3`（未走 `find_python_launcher`）
+7. **US-003**（C2, 3 处）— 硬编码路径分隔符（疑似）
 
 ---
 

@@ -128,7 +128,7 @@ class StyleRAGRetriever:
         try:
             result = subprocess.run(
                 [sys.executable, str(BUILD_SCRIPT)],
-                capture_output=True, text=True, timeout=600,
+                capture_output=True, text=True, timeout=600, encoding="utf-8",
             )
             if result.returncode == 0:
                 logger.info("Style RAG auto-build succeeded")

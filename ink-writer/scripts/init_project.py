@@ -775,7 +775,7 @@ def init_project(
         else:
             print("\nInitializing Git repository...")
             try:
-                subprocess.run(["git", "init"], cwd=project_path, check=True, capture_output=True, text=True)
+                subprocess.run(["git", "init"], cwd=project_path, check=True, capture_output=True, text=True, encoding="utf-8")
 
                 gitignore_file = project_path / ".gitignore"
                 if not gitignore_file.exists():
@@ -980,7 +980,7 @@ def _try_ensure_style_rag_index() -> None:
     try:
         result = subprocess.run(
             [_sys.executable, str(build_script)],
-            capture_output=True, text=True, timeout=600,
+            capture_output=True, text=True, timeout=600, encoding="utf-8",
         )
         if result.returncode == 0:
             print(f"✅ Style RAG 索引构建完成：{index_dir}", file=_sys.stderr)

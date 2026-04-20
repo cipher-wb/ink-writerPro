@@ -65,8 +65,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Done 2026-04-20: C3 findings 25→0，总报告 86→64（C2 +3 是 US-003 测试 fixture 故意硬编码字面量，非本 US 引入）。新增 scripts/fix_subprocess_encoding.py（~190 行，AST + last-arg-position 精确插入，单/多行调用通杀；复用 audit_cross_platform 的 _resolve_call_target/_kw_value/_is_text_mode_subprocess 判定）+ tests/audit/test_fix_subprocess_encoding.py (15 tests，覆盖单行/多行/trailing comma/二进制跳过/已有 encoding 跳过/text=False/同名非 subprocess/shell=True 不动/幂等/dry-run/main CLI)。批量修复 25 处真实 finding（19 文件：init_project ×2 / security_utils / workflow_manager / llm_backend / retriever / measure_baseline / 12 处 tests/）。新增 tests/core/test_subprocess_cross_platform.py (7 tests：中文参数透传/中文 cwd/带空格路径 args 列表/UTF-8 stdout 跨平台解码/check_output 同上 + 2 个仓库自身红线断言：'仓库内无 text-mode subprocess 缺 encoding' 与 '仓库内禁止 shell=True'，守护后续 PR 不再回退)。Mac 字节级一致：5 处抽样 diff 仅追加 encoding=\"utf-8\" kwarg，Mac locale UTF-8 下语义等价。仓库当前 0 处 shell=True 真实使用。幂等验证：第二次 dry-run 0 changes。全量 pytest 3098 passed / 23 skipped / 0 failed (baseline 3076 → +22 新测试：15 fixer + 7 cross-platform，零回归)。"
     },
     {
       "id": "US-005",

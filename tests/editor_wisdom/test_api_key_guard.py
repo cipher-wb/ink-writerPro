@@ -32,7 +32,7 @@ def _run_without_key(script_name: str) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         text=True,
         cwd=REPO_ROOT,
-        timeout=30,
+        timeout=30, encoding="utf-8",
     )
 
 

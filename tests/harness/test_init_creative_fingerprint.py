@@ -108,7 +108,7 @@ def test_cli_accepts_creative_args(tmp_path):
     result = subprocess.run(
         [sys.executable, str(INIT_SCRIPT), str(project_dir), "CLI测试", "玄幻",
          "--meta-rules-hit", '["M06"]', "--style-voice", "V2"],
-        env=env, capture_output=True, text=True, timeout=60,
+        env=env, capture_output=True, text=True, timeout=60, encoding="utf-8",
     )
     assert result.returncode == 0, f"CLI failed: {result.stderr}"
     state = _read_state(project_dir)

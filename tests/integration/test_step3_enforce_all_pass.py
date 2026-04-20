@@ -76,7 +76,7 @@ def test_enforce_default_passes_clean_chapter_exit_0(tmp_path: Path) -> None:
         env=env,
         capture_output=True,
         text=True,
-        timeout=120,
+        timeout=120, encoding="utf-8",
     )
 
     assert result.returncode == 0, (

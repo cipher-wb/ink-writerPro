@@ -260,7 +260,7 @@ class TestChapterLockCLIIntegration:
             capture_output=True,
             text=True,
             env=env,
-            timeout=60,
+            timeout=60, encoding="utf-8",
         )
         assert proc.returncode == 0, f"CLI 失败: stdout={proc.stdout}\nstderr={proc.stderr}"
         # parallel_locks.db 应已被 ChapterLockManager 初始化

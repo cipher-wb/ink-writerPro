@@ -228,7 +228,7 @@ class TestArgparse:
     def test_help_text_exists(self):
         subprocess.run(
             [sys.executable, "-c", "from ink_writer.core.cli.ink import main"],
-            capture_output=True, text=True, timeout=10, check=False,
+            capture_output=True, text=True, timeout=10, check=False, encoding="utf-8",
         )
 
     def test_pipeline_steps_match_scripts(self):

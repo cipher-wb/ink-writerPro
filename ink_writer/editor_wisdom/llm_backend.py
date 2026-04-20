@@ -125,7 +125,7 @@ def _call_llm_once(
         capture_output=True,
         text=True,
         timeout=max(timeout, 90),  # CLI 路径保底 90s 余量（启动慢）
-        check=True,
+        check=True, encoding="utf-8",
     )
     return result.stdout
 
