@@ -242,8 +242,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "新增 docs/windows-troubleshooting.md（12 条故障，每条按症状/原因/修复/验证四段组织，覆盖 UnicodeDecodeError/执行策略/PATH/中文空格路径/symlink/index.db 锁/asyncio Proactor/ink-auto 崩溃恢复/PYTHONIOENCODING/.ps1 BOM/Git Bash WSL 路径/.cmd 闪退）；README 跨平台段 + Windows Q&A 均添加链接；pytest 3206 passed / 23 skipped / 0 failed（零回归）。"
     },
     {
       "id": "US-016",

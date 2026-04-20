@@ -682,3 +682,32 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `prd.json` (US-014 passes:true + notes)
   - `progress.txt` (this entry + 新 Codebase Patterns)
 ---
+
+## 2026-04-20 - US-015 docs/windows-troubleshooting.md 故障排查手册
+- 新增 `docs/windows-troubleshooting.md`（~320 行 / 12 条故障 / 按症状→原因→修复→验证四段组织），覆盖验收要求的全部 10 类 + 2 条补充：
+  1. UnicodeDecodeError: 'gbk' codec / 'charmap' codec（C1 相关，指回 `scripts/audit_cross_platform.py --only C1` 自查）
+  2. PowerShell 执行策略拒绝运行 .ps1（`-ExecutionPolicy Bypass` 三档方案）
+  3. PATH 里找不到 python / py（回指 `runtime_compat.find_python_launcher()` + Microsoft Store 别名坑）
+  4. 含中文或空格的项目路径打开失败（`shell=True` 禁用 + Path 正确用法）
+  5. OSError: symbolic link privilege not held（指向 `runtime_compat.safe_symlink` 自动降级 + 开发人员模式开启步骤）
+  6. sqlite3.OperationalError: database is locked（index.db-shm/wal 清理 + 反病毒/OneDrive 白名单 + parallel ≤ 4）
+  7. asyncio NotImplementedError: subprocess_exec（指向 `set_windows_proactor_policy` + 禁止手写等价块的红线测试）
+  8. ink-auto 崩溃后用 /ink-resume（指向 `ink-auto.ps1:364` 的 `[ink-auto] llm_exit=` 诊断行）
+  9. PYTHONIOENCODING 未生效（Windows UTF-8 系统级开关 + 临时 env + `chcp 65001` + PowerShell profile 持久化）
+  10. .ps1 UTF-8 BOM 乱码（指向 `tests/scripts/test_script_entries_parity.py:test_every_ps1_sibling_has_utf8_bom` 红线 + Python 补 BOM 方法 + PowerShell 7 升级建议）
+  11. Git Bash / WSL 路径（`/d/...`、`/mnt/d/...`）归一化（指向 `runtime_compat.normalize_windows_path`）
+  12. .cmd 双击窗口秒闪退（推荐直接在 PowerShell 执行 .ps1 看完整输出）
+- README 双处链接：① 功能亮点"跨平台"bullet 末尾直接点到 troubleshooting 文档；② Q&A 段 "Windows 上怎么用" 回答末尾点到 troubleshooting 文档
+- 全量 pytest: **3206 passed / 23 skipped / 0 failed**（与 US-014 baseline 一致，零回归；纯文档变更无 Python 代码改动）
+- Audit findings: 3 → 3（不变）
+- **Learnings for future iterations:**
+  - **troubleshooting 文档依赖 Codebase Patterns 做 ground truth**：直接复制"坑 + 引用红线测试文件 + 引用 runtime_compat helper 函数名"构成每条故障的"修复"段——比泛泛说"配置环境变量"有可操作性。后续任何新增 Windows 特化逻辑都应同步在 troubleshooting 里补一条，保持"代码层红线 + 文档层速查"双通道。
+  - **每条故障都带可复制的验证命令**：最后一段"验证"必须是单行 PowerShell 命令用户能直接粘贴跑（`py -3 -c "..."` 或 `Get-ExecutionPolicy -List` 这种），不能只写"测一下看看"。这条模板也适用未来要写的 Mac/Linux troubleshooting 手册。
+  - **Windows 特有"反直觉项"要显式说破**：比如"`.ps1` 没有 BOM → PS 5.1 按 ANSI 解码 → 中文乱码"这个链式因果，用户自己复制粘贴时很容易踩（IDE 悄悄去掉 BOM），手册里不解释清楚只给修复命令用户下次还会踩。反直觉项占本文档约 30% 篇幅（BOM / Proactor / Microsoft Store 别名 / OneDrive 扫描 `.db`）——这是 Windows 版本重要补充价值所在。
+  - **下轮（US-016）执行要点**：端到端回归要点 = ① Mac 本地再跑一次 e2e_smoke.sh 3 ② Windows 若有机器跑 e2e_smoke.ps1 3（或用 fake LLM mock） ③ `pytest --no-cov` 全量再过一遍确认 0 failed ④ version bump 到 v21.0.0 同步 README + `ink-writer/.claude-plugin/plugin.json` + v21.0.0 changelog ⑤ git tag v21.0.0
+- Files changed:
+  - `docs/windows-troubleshooting.md` (new, ~320 行)
+  - `README.md` (两处加链接：跨平台亮点 bullet + Windows Q&A)
+  - `prd.json` (US-015 passes:true + notes)
+  - `progress.txt` (this entry)
+---
