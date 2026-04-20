@@ -1,0 +1,238 @@
+# prose-blacklist.yaml — 直白模式黑名单（US-003）
+#
+# 三大类禁用词，供 writer-agent 直白模式、polish-agent 精简 pass、
+# directness-checker 一并消费。每条都附一个 replacement 示例，用 showing
+# 具体词替代 telling 抽象词——不是"改写公式"，而是提醒作者：这里必须给细节。
+#
+# 分类约定：
+#   - abstract_adjectives  —— 抽象形容词/副词，空心化情绪或状态
+#   - empty_phrases        —— 套话 / 写作综合症的万能句
+#   - pretentious_metaphors—— 假比喻（本体为抽象概念，比喻成另一个抽象概念）
+#
+# 数量下限（PRD US-003 验收项）：abstract_adjectives ≥ 50 / empty_phrases ≥ 30 /
+# pretentious_metaphors ≥ 20；当前：52 / 32 / 22 = 合计 106 条。
+#
+# 格式：每条 `{word, replacement}`，加载器 `ink_writer/prose/blacklist_loader.py`
+# 统一消费，US-001 analyze_prose_directness 也可用 --blacklist 读取同文件。
+
+version: 1
+
+abstract_adjectives:
+  - word: 莫名
+    replacement: '具体情绪名词（如"一阵心慌"/"后颈发凉"），不要让读者自己猜'
+  - word: 无尽
+    replacement: '量化时长（如"一连三日"/"过了半个时辰"）'
+  - word: 难以言喻
+    replacement: '拆成味觉/嗅觉/触觉具体描写（如"甜得发齁"）'
+  - word: 仿佛
+    replacement: 多半可直接删除；保留也要接具体动作而非概念
+  - word: 似乎
+    replacement: '删除——让角色断言；真要表不确定就写"怀疑"'
+  - word: 似有若无
+    replacement: '量化（"三分的冷"）或删除'
+  - word: 若有若无
+    replacement: 同上；纯属凑字数
+  - word: 恍惚
+    replacement: '具体动作（"眼神飘开半秒"/"手指一松"）'
+  - word: 恍若
+    replacement: 换具体实物类比，禁 abstract→abstract
+  - word: 宛如
+    replacement: 用具体比喻；若本体已抽象，直接删掉这半句
+  - word: 犹如
+    replacement: '同"宛如"——网文里 9 成都是凑字'
+  - word: 隐隐
+    replacement: '量化（"约两分疼"/"每三息一阵"）'
+  - word: 淡淡
+    replacement: '换具体修饰（"一丝茶香"/"薄薄一层"）'
+  - word: 微微
+    replacement: '量化（"眉峰挑了半分"）——"微微"是形容词偷懒'
+  - word: 仿若
+    replacement: '同"仿佛"；直白场景一律删'
+  - word: 隐约
+    replacement: '换量化距离或可见度（"十步外还看得见"）'
+  - word: 朦胧
+    replacement: '给具体遮挡（"雾遮到腰"/"泪水糊了镜"）'
+  - word: 迷离
+    replacement: '具体表情（"眼皮半阖"/"焦点在三尺外"）'
+  - word: 空灵
+    replacement: '具体感受（"风穿过袖口，没挂到皮肤"）'
+  - word: 虚无
+    replacement: '网文毒瘤词；换"空荡"+具体画面（"桌上只剩半杯冷茶"）'
+  - word: 缥缈
+    replacement: '换具体距离感（"三里外的山影"）'
+  - word: 飘渺
+    replacement: '同"缥缈"；此字常被误写成"飘渺"，双错'
+  - word: 浩渺
+    replacement: '换具体尺度（"一眼望不到对岸"）'
+  - word: 深邃
+    replacement: '换具体反应（"瞳孔缩成一线"）'
+  - word: 莫测
+    replacement: '让角色说出顾虑；"高深莫测"= 作者偷懒'
+  - word: 不可名状
+    replacement: 直接命名——硬写不出就改剧情
+  - word: 难以名状
+    replacement: 同上；禁区词
+  - word: 不可思议
+    replacement: '具体反应（"他愣在原地"/"倒退半步"）'
+  - word: 难以形容
+    replacement: 写不出具体感受就不要写这一句
+  - word: 某种
+    replacement: '直接指代——"一种"/"某种"= 逃避描写'
+  - word: 不知为何
+    replacement: 作者知道就直说；不知道就换视角
+  - word: 不知不觉
+    replacement: '给时间坐标（"等回神时天已黑"）'
+  - word: 鬼使神差
+    replacement: '给具体动因（"他看见门缝里一线光，伸手推了过去"）'
+  - word: 无可奈何
+    replacement: '具体动作（"摆了摆手"/"把刀放回鞘里"）'
+  - word: 情不自禁
+    replacement: '删除——让动作自己说明"情不自禁"'
+  - word: 不由自主
+    replacement: 同上；动作足够具体就不需要标签
+  - word: 突如其来
+    replacement: '给触发点（"门外一声巨响"）'
+  - word: 蓦然
+    replacement: '换具体触发（"转头那一瞬"）'
+  - word: 骤然
+    replacement: '同"蓦然"；触发点要可见'
+  - word: 倏然
+    replacement: 同上；避免连用
+  - word: 陡然
+    replacement: '同上；"陡然一惊"换成具体反应'
+  - word: 猝然
+    replacement: '同"蓦然"；文言味重，直白场景慎用'
+  - word: 顿时
+    replacement: '具体反应代替副词（"脸一下涨红"）'
+  - word: 霎时
+    replacement: '同"顿时"；是副词偷懒'
+  - word: 愕然
+    replacement: '具体反应（"张开嘴又合上"）'
+  - word: 黯然
+    replacement: '具体表情（"眼角低了两分"）'
+  - word: 茫然
+    replacement: '具体动作（"盯着空碗"/"问题听了两遍才反应"）'
+  - word: 惘然
+    replacement: '同"茫然"；更抽象，更该换'
+  - word: 森然
+    replacement: '换具体感受（"颈后寒毛竖起"）'
+  - word: 悚然
+    replacement: '同"森然"；身体反应替代情绪形容'
+  - word: 泰然
+    replacement: '让角色做平常动作（"继续喝茶"）'
+  - word: 豁然
+    replacement: '换具体表情（"眉头松开"/"笑出半声"）'
+  - word: 漠然
+    replacement: '具体动作（"看了一眼，转身关门"）'
+
+empty_phrases:
+  - word: 此情此景
+    replacement: '直接描写画面——"她站在门外，雨顺屋檐砸进她袖口"'
+  - word: 仿佛回到了
+    replacement: 进入实际回忆场景，不要用这根拐杖
+  - word: 时间仿佛静止
+    replacement: '具体动作冻结（"他举着的茶杯没落下"）'
+  - word: 仿佛过了一个世纪
+    replacement: '量化（"三息后"/"两句话的工夫"）'
+  - word: 说不出的感觉
+    replacement: '具体感受（"胃里翻上一股酸"）'
+  - word: 一时间
+    replacement: 删除；直接写后续动作
+  - word: 不知过了多久
+    replacement: '给具体时间坐标（"等他回神，香已烧完半炷"）'
+  - word: 眼神变得复杂
+    replacement: '具体表情（"眉头皱起又松开，嘴角扯了一下"）'
+  - word: 心里五味杂陈
+    replacement: '列出具体情绪（"又气又怕，怕过又有点得意"）'
+  - word: 心中百感交集
+    replacement: '同上；"百感交集"= 一个也写不出'
+  - word: 脸色变得难看
+    replacement: '具体反应（"脸色发青"/"咬紧牙根"）'
+  - word: 仿佛被什么击中
+    replacement: '具体身体反应（"他后退半步，背靠在门框上"）'
+  - word: 心头一震
+    replacement: '具体反应（"手里的笔顿住"）'
+  - word: 内心翻江倒海
+    replacement: 删除——让具体动作替代
+  - word: 心情复杂
+    replacement: '同"心中百感交集"；写不出就先减一个形容'
+  - word: 说不清道不明
+    replacement: '剧情需要不清楚时，换成"他自己也没理清"+ 一句具体'
+  - word: 像是想起了什么
+    replacement: '说出想起的内容，或写动作（"他伸手摸向胸前布包"）'
+  - word: 似乎意识到了什么
+    replacement: 同上；别让读者猜
+  - word: 仿佛明白了什么
+    replacement: 同上；真明白就写出内容
+  - word: 眼里闪过一丝
+    replacement: '具体眼神（"眼角先动"/"瞳孔缩小"）'
+  - word: 脸上掠过一丝
+    replacement: '具体表情（"嘴角先扯动"）'
+  - word: 嘴角扯出一丝
+    replacement: '写笑法（"冷笑半声"/"抿了抿"）'
+  - word: 气氛变得凝重
+    replacement: '具体（"屋里没人说话，只听见窗外风撞瓦"）'
+  - word: 空气仿佛凝固
+    replacement: '具体（"一时连呼吸声都听得见"）'
+  - word: 场面一度陷入沉默
+    replacement: 同上；描写一个具体停滞动作
+  - word: 周围安静得可怕
+    replacement: '具体可听见的细节（"檐下滴水声变清"）'
+  - word: 心头涌起一种
+    replacement: 直接命名情绪+身体反应
+  - word: 一种难以言喻的
+    replacement: 能写就写，写不出就删这句
+  - word: 一股莫名的
+    replacement: 同上；禁区
+  - word: 不由得心头一紧
+    replacement: '具体动作（"右手攥紧袖口"）'
+  - word: 不禁皱起眉头
+    replacement: '直接"他皱眉"——去掉"不禁"'
+  - word: 忍不住笑了
+    replacement: '直接"他笑出声"——去"忍不住"'
+
+pretentious_metaphors:
+  - word: 宛如…一般
+    replacement: 换具体实物比喻，或直接删——本体抽象时一律删
+  - word: 犹如…似的
+    replacement: '同"宛如…一般"；两层标记叠加是自我怀疑'
+  - word: 恍若…之态
+    replacement: 文言味最重的一型；直白场景禁用
+  - word: 如…一般
+    replacement: '留"如"删"一般"；或者换强动词替比喻'
+  - word: 像…似的
+    replacement: '"像"后必须接具体实物+动作（"像被抽筋一样瘫下"）'
+  - word: 仿佛…一般
+    replacement: '"仿佛"和"一般"留一个就够；最好都删'
+  - word: 好似…般
+    replacement: 同上；套话感浓
+  - word: 恍如…般
+    replacement: 文言；直白场景一律换
+  - word: 如同…一般
+    replacement: '双重标记；留"如同"足矣'
+  - word: 犹若…一般
+    replacement: 文言；换现代具体比喻
+  - word: 若…之状
+    replacement: '直接写角色"看起来像 X"，不要"之状"'
+  - word: 宛若…之貌
+    replacement: '同上；"之貌"/"之态"是网文古风的拐杖'
+  - word: 比…还要
+    replacement: '给量化（"比平时快一倍"），不要比抽象'
+  - word: 如…那般
+    replacement: '"那般"可省；换具体'
+  - word: 像…那样
+    replacement: '"那样"后必须接可见动作，不要接形容词'
+  - word: 如同…那样
+    replacement: '同"像…那样"；双重指示省一个'
+  - word: 类似…一样
+    replacement: 双重语意；留一个
+  - word: 状若…一般
+    replacement: 文言+双标记；禁区
+  - word: 恍然…之间
+    replacement: '给具体时间点（"转身那一刻"）'
+  - word: 仿若…一般
+    replacement: '同"仿佛…一般"；双标记省一'
+  - word: 有如…之意
+    replacement: '"之意"是总结抽象的尾巴——删'
+  - word: 如梦如幻
+    replacement: '成语，几乎总是空的；换具体感官（"风一过，人就散了"）'

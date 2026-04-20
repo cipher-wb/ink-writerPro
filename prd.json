@@ -50,8 +50,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "ink-writer/assets/prose-blacklist.yaml（238 行）：abstract_adjectives 53 / empty_phrases 32 / pretentious_metaphors 22 = 合计 107 条（超过 PRD 下限 50/30/20=100）。每条附 replacement showing 具体词示例，禁 telling 套公式。新增 ink_writer/prose/blacklist_loader.py（~180 行）：Blacklist/BlacklistEntry dataclass + load_blacklist() 带 (resolved_path, mtime_ns) 缓存实现热加载 + match() 支持 `…` 软通配符 + clear_cache() 测试钩子。tests/prose/test_blacklist_loader.py（18 用例全通过）：覆盖 PRD 门禁 / 默认路径 / 字符串 & dict 条目解析 / 缺失 & 损坏 YAML fallback / 未知 category 过滤 / 非 list 段落过滤 / 热加载 & 缓存命中 / clear_cache 强制重解析 / match substring & wildcard / 类别过滤 & 未知类别报错 / 公开 API 导出一致。pytest.ini 新增 `tests/prose` testpath。全量 pytest 3253 passed / 23 skipped / 0 failed（baseline 3235 + 18 新用例 = 3253，零回归）。ruff 全绿。"
     },
     {
       "id": "US-004",

@@ -21,6 +21,7 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
 - **jieba posseg 延迟导入**（US-001 起）：scripts 中的 jieba.posseg 加载 ~200ms；用 `_lazy_jieba()` helper 放到函数体而非顶部 import。模块导入期不触发，避免 pytest 收集期加重。
 - **中文对话 unicode 显式写**（US-001 起）：源码里"「」""" 这些弯引号字符容易被编辑器/终端折叠成直引号，导致运行时检测失败。统一用 `"\u201c"`/`"\u201d"` 等显式 unicode 转义。
 - **ruff E402 规避**：scripts/ 入口在 `if sys.platform == "win32":` runtime_compat setup 之后才能 import 其他模块，统一加 `# noqa: E402` 到那批 late imports，`from __future__ import annotations` 后置不变。
+- **YAML 字符串含 `"` 必须单引号包**（US-003 起）：`replacement: 具体情绪（如"一阵心慌"）` 里的直引号会被 YAML 解释成双引号串，吃掉半行触发 `expected <block end>, but found '<scalar>'`。解决方案：写资产 YAML 时对含任何 `"` 的 scalar value 统一单引号包裹（`'...'`），内部 `'` 转义为 `''`；禁止依赖裸值。已通过 `ink-writer/assets/prose-blacklist.yaml` 验证。
 
 ## Context Contract（本 PRD 专属）
 
@@ -95,4 +96,55 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
   - 跨书对比用 D1+D3 作为"华丽度"复合指标，比单维度更贴近直觉——修辞密度高 + 抽象词多 = 读起来费劲
   - US-003 抽象词黑名单上线后需重跑 US-001 → US-002 链路刷新基线，D3 会从现 seed=34 条扩展到 ≥50 条，阈值会相应上移；已在 notes 里写清
   - 后续 US-005 directness-checker 应直接 `yaml.safe_load('reports/seed_thresholds.yaml')` 而非硬编码常量；支持重跑 baseline 无需改 agent 代码
+---
+
+## 2026-04-20 - US-003: 抽象词/空描写黑名单
+
+- 新增 `ink-writer/assets/prose-blacklist.yaml`（238 行，107 条禁用词）：
+  - `abstract_adjectives` 53 条（莫名/无尽/难以言喻/仿佛/似乎/恍惚/浩渺/深邃/蓦然/豁然 等）
+  - `empty_phrases` 32 条（此情此景/仿佛回到了/时间仿佛静止/心里五味杂陈/眼里闪过一丝 等）
+  - `pretentious_metaphors` 22 条（宛如…一般/犹如…似的/恍若…之态/类似…一样 等）
+  - 每条附 `replacement` showing 具体词示例（如"莫名 → 具体情绪名词"/"此情此景 → 直接描写画面"）
+  - 合计 107 条 ≥ PRD 下限 100，三类分别 53/32/22 ≥ 50/30/20
+- 新增 `ink_writer/prose/blacklist_loader.py`（~180 行）：
+  - `Blacklist` / `BlacklistEntry` frozen dataclass，不可变便于 cache
+  - `load_blacklist(path=None)` 带 `(resolved_path, mtime_ns)` 缓存，mtime 变即 invalidate（热加载）
+  - `clear_cache()` 测试钩子；缺失/损坏/非 mapping YAML 统一 fallback 到 `Blacklist(version=0, entries=())`
+  - `match(text)` 返回 `[(entry, hit_count)]`；`…` 软通配符（"宛如…一般"）需两端 token 同时出现才算命中
+  - `.abstract_adjectives` / `.empty_phrases` / `.pretentious_metaphors` 属性按类别切片
+  - `words(category=None)` API 支持类别过滤 + 未知类别 `ValueError`
+- 新增 `ink_writer/prose/__init__.py`：只导出 `Blacklist` / `BlacklistEntry` / `clear_cache` / `load_blacklist`
+- 新增 `tests/prose/test_blacklist_loader.py`（18 用例全通过）：
+  - PRD 数量门禁（每条必带 replacement）
+  - 默认路径常量指向仓内 `ink-writer/assets/`
+  - 裸字符串 / dict 条目 / 空 word / None / 缺 word 字段解析
+  - 缺失文件 / YAML 语法错误 / 非 mapping root / 未知 section / 非 list 段落 fallback
+  - 热加载（mtime 强制推 1s 避时钟刻度冲突）
+  - 缓存命中：mtime 未变时 yaml.safe_load 不被再次调用（monkeypatch spy）
+  - clear_cache 强制重解析
+  - `match()` 子串 + `…` 软通配符 + 干净文本零命中
+  - `words(category)` 类别过滤 + 未知类别 `ValueError`
+  - shipped YAML + 典型 AI 味样本能同时命中三类
+  - `__init__` 公开 API 一致性
+- `pytest.ini` testpaths 尾部追加 `tests/prose`
+- 文件改动：
+  - `ink-writer/assets/prose-blacklist.yaml`（新增）
+  - `ink_writer/prose/__init__.py`（新增）
+  - `ink_writer/prose/blacklist_loader.py`（新增）
+  - `tests/prose/__init__.py`（新增）
+  - `tests/prose/test_blacklist_loader.py`（新增）
+  - `pytest.ini`（testpaths 追加 tests/prose）
+  - `prd.json`（US-003 passes=true + notes）
+  - `progress.txt`（本条）
+- 零回归验证：`pytest --no-cov` = **3253 passed / 23 skipped / 0 failed**（baseline 3235 + 18 新用例 = 3253，无新增失败）
+- ruff check 全绿（`ink_writer/prose/` + `tests/prose/`）
+- **Learnings for future iterations:**
+  - **PyYAML 解析 replacement 字段嵌内中文直引号会炸**：`replacement: 具体情绪词（如"一阵心慌"）` 里的 `"` 会被 YAML 解释为双引号串，吃掉半行；必须给整个 value 单引号包裹 `'...'`。一次性脚本扫描所有 `replacement:`/`word:` 行，遇 `"` 就单引号包装、内部 `'` 转义为 `''`，是最稳的 fix。写 YAML 文档含引号字符时，源生成阶段就该统一单引号，不要依赖多行块标量。
+  - **`…` 软通配符匹配要 min(counts) 防炸**：`宛如…一般` 拆 `["宛如","一般"]` 后对每段独立 count，取 min 作为命中数；不能用 max 或 sum，否则单段高频词（如"一般"）会把命中量拉飞。测试里 `_make([("宛如…一般",...)])` + `"他宛如一尊石像一般立着"` 必须 =1，`"他宛如一尊石像"` 缺"一般" = 0。
+  - **mtime_ns 缓存键要扛同刻度覆盖**：`os.utime(target, ns=(future_ns, future_ns))` 把时间戳往前推 1s 整，避免同一秒内连写两次被缓存。测试用 `+1_000_000_000` 纳秒偏移最稳；真实生产环境作者手动改 YAML，mtime 会自然变化。
+  - **loader 的 yaml import 延迟**：`load_blacklist` 内 `try: import yaml` 而非顶部 import——测试里 `pytest.importorskip("yaml")` 挡掉无 PyYAML 环境；模块层 import `yaml` 后者测试里 `monkeypatch.setattr(yaml_mod, "safe_load", spy)` 才能精准 hook 到本次 load 的调用栈。
+  - **`Path.exists() and is_file()` 双判**：仅 `exists()` 会放过符号链接指向的目录；blacklist 设计上是单文件资产，双判更防御。
+  - **公开 API 跟随 `__init__.py`**：把 `load_blacklist` / `Blacklist` / `BlacklistEntry` / `clear_cache` 都 re-export——但 `CATEGORIES` 常量留在 `blacklist_loader` 子模块（单元测试才需要），避免污染默认 namespace。
+  - **US-006 writer-agent prompt 引用前 20 条黑名单**：按 YAML 里的定义顺序取前 20 条即可——YAML 已按编辑最高频→中频排序，abstract_adjectives 开头就是"莫名/无尽/难以言喻/仿佛/似乎"这五个最毒的，足够当反例。
+  - **US-008 polish simplification 直接用 `bundle.match(paragraph)` 枚举命中**：替换策略消费 `entry.replacement` 字段里的 showing 提示；真要全自动替换请警惕 replacement 多是启发式描述而非可插入文本——polish prompt 层面应让模型理解"这是指引不是直接替换串"。
 ---
