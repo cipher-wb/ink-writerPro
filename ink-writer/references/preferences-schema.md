@@ -47,6 +47,10 @@ max_words_hard = chapter_words + 500
   `severity='hard'` 直接阻断；没有“关键战斗章/高潮章/卷末章”类的 LLM 自行豁免路径
   （这是 US-005 收紧的重点）。
 - 程序入口：`from ink_writer.core.preferences import load_word_limits`。
+- **创作执行包传递（v23 US-003）**：`build_chapter_context_payload` 调用 `load_word_limits`
+  后，会把结果写入 payload 顶层字段 `target_words_min` / `target_words_max`；
+  `build_execution_pack_payload` 原样透出到创作执行包顶层，`writer-agent` 在 Step 2A
+  起草时消费 `target_words_max` 作为硬约束上限，生成完成前必须自检 `实际字数 <= target_words_max`。
 
 ### 三组典型示例
 

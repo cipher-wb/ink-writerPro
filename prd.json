@@ -57,8 +57,8 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-21: build_chapter_context_payload 注入 target_words_min/max（load_word_limits 驱动，双层兜底），build_execution_pack_payload 透传；终检清单与渲染文本均含字数硬区间提示。writer-agent.md 字数要求 / 硬性指标 / 禁止事项 / 成功标准 四处硬编码（2200-3000、上浮33%、硬上限4000）全改为引用 target_words_min/max 占位符。新增 7 个测试；全量 pytest 3574 passed / 23 skipped（baseline 3567 + 7，零回归）。"
     },
     {
       "id": "US-004",

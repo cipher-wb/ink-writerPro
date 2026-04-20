@@ -15,6 +15,7 @@ Prev run: prose-directness → v22.0.0 released (场景感知直白化)
 - **shell/ps1 双入口守则**：新增或修改 `ink-writer/scripts/*.sh` 必须同步 `.ps1`；PS 文件保持 UTF-8 BOM（PS 5.1 读中文需要）。复用 `ink-writer/scripts/runtime_compat.py` 已有原语，优先复用不重写。
 - **字数阈值来源统一**（v23 新增预期）：所有字数阈值（min/max_hard/max_soft）应通过 `load_word_limits(project_root)` 从 `.ink/preferences.json` 推导；禁止在新代码中硬编码 2200/4000/5000 作为字数阈值（作为默认值显式标注除外）。
 - **硬下限 2200 不可降红线**：无论 preferences 配置任何值，实际 min_words 永不低于 2200；这是跨 US 的全局护栏。
+- **创作执行包 target_words_* 字段**（v23 US-003）：`build_chapter_context_payload` 把 `load_word_limits` 结果写进 payload 顶层 `target_words_min` / `target_words_max`，`build_execution_pack_payload` 原样透传到执行包顶层；writer-agent 起草阶段消费 `target_words_max` 作为硬上限（无 LLM 自行豁免路径）。扩展 execution pack 字段时记得更新 `_render_execution_pack_text` 与 `tests/data_modules/test_extract_chapter_context.py`。
 
 ## Story-specific Learnings
 (每个 US 完成后在下方追加)
@@ -52,5 +53,33 @@ Prev run: prose-directness → v22.0.0 released (场景感知直白化)
   - `bool` 是 `int` 子类，验签时必须 `isinstance(raw, bool) or not isinstance(raw, int)` 双判断才能正确剔除；单用 `isinstance(raw, int)` 会让 `chapter_words: true` 蒙混过关。
   - `tmp_path.write_text(json.dumps(..., ensure_ascii=False), encoding="utf-8")` 是写含中文 JSON 测试 fixture 的惯用法；切勿省略 `encoding="utf-8"`（Windows 守则）。
   - `load_word_limits` 需要极度 defensive：所有 `open/json.load` 异常都必须被捕获到 fallback，否则一次损坏 preferences.json 就会把整个 comp-gate 炸掉；而 comp-gate 是 ink-write / ink-auto 的硬门禁，不能因配置文件 corrupt 就全线挂掉。
+---
+
+## 2026-04-21 - US-003 writer-agent 写前接收 target_words_max 硬约束
+- `ink-writer/scripts/extract_chapter_context.py`
+  - 新增 `_resolve_target_word_limits(project_root)` 双层兜底包装：`ink_writer.core.preferences.load_word_limits` import 失败或抛异常均 fallback 到 `(2200, 5000)`；避免 preferences 模块不可用时执行包构建失败。
+  - `build_chapter_context_payload` 在 payload 顶层注入 `target_words_min` / `target_words_max`。
+  - `build_execution_pack_payload` 从 payload 读取这两个字段，容错 int 转换后写入 pack 顶层；Step 2A 终检清单追加一行 `正文字数 ∈ [<min>, <max>]（preferences 驱动硬区间，超限必返工）`。
+  - `_render_execution_pack_text` 在 header 追加 `- 字数硬约束: [<min>, <max>]（... 任何情况不得越界，无 LLM 自行豁免路径）` 行，writer-agent 肉眼可读。
+- `ink-writer/agents/writer-agent.md` — 删除 4 处字数硬编码：
+  - 字数要求 section（原 2200-3000 / 上浮 33% / 硬上限 4000）→ 改为引用 `target_words_min` / `target_words_max`，新增"生成过程中的硬约束"段与"禁止越限后再靠事后精简兜底"红线。
+  - 硬性指标 → 改为 `字数 ∈ [target_words_min, target_words_max]` + 生成完成前自检 `实际字数 <= target_words_max`。
+  - 禁止事项 → "输出低于 2200 字" 改为 "低于 target_words_min / 高于 target_words_max"，标注无 LLM 自行豁免路径。
+  - 成功标准 → "正文 ≥ 2200 字" 改为区间表达式。
+- `ink-writer/references/preferences-schema.md` — 在 v23 语义段追加"创作执行包传递（v23 US-003）"子条，说明 payload → execution pack → writer-agent 的字段流动路径。
+- `tests/data_modules/test_extract_chapter_context.py` — 新增 7 个测试：
+  - `test_build_chapter_context_payload_injects_default_target_words` — 无 preferences.json 默认 (2200, 5000)
+  - `test_build_chapter_context_payload_derives_from_chapter_words` — chapter_words=3000 → (2500, 3500)
+  - `test_build_chapter_context_payload_floors_min_at_2200` — chapter_words=2000 触发 MIN_WORDS_FLOOR
+  - `test_build_execution_pack_payload_propagates_target_words_fields` — pack 顶层字段透传
+  - `test_build_execution_pack_payload_falls_back_when_target_words_missing` — 缺字段安全默认
+  - `test_execution_pack_final_checklist_contains_word_range_hardcap` — 终检清单含字数区间
+  - `test_render_execution_pack_text_includes_target_words_line` — 渲染文本含可读约束
+- 回归：`pytest tests/ --no-cov` 全量 3574 passed / 23 skipped（baseline 3567 + 7 新增，无既有测试 failed）。耗时 ≈ 194s。
+- **Learnings for future iterations:**
+  - `build_execution_pack_payload(payload)` 不接收 `project_root` 形参，所有 project-root-derived 信息必须先通过 `build_chapter_context_payload` 塞进 payload 顶层再传入——这是 v9.x 形成的 API 约定，不要破坏，否则所有下游调用点（extract_chapter_context.py 末尾 main、test suite、以及 skills/ink-write 管线）都要一起改。
+  - 渲染文本是 writer-agent 真正会读到的 UI 面——数据字段加进 pack 还不够，必须同时更新 `_render_execution_pack_text` 的字段展示，否则 LLM 根本看不到。Step 2A 终检清单尤其关键，它是生成完成前的最后一道自检锚点。
+  - writer-agent.md 中字数硬编码分布在 4 处（字数要求 / 硬性指标 / 禁止事项 / 成功标准），容易漏删。改 prompt 类指令文件时建议先 `grep -n "2200\|3000\|4000\|字数"` 全量列举再逐项替换。
+  - 测试 fixture 里若未显式写 preferences.json，`load_word_limits` 会走默认路径 (2200, 5000)——这其实是非常好的默认，可以让绝大多数现有 test case 无需改动就能跑通。
 ---
 

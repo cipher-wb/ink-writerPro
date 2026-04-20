@@ -46,6 +46,36 @@ REVIEW_SETTINGS_FILE_LIMIT = 8
 REVIEW_SETTINGS_SNIPPET_CHARS = 700
 REVIEW_CHAPTER_SNIPPET_CHARS = 900
 
+# v23 字数硬约束默认值 —— 与 ink_writer.core.preferences.load_word_limits 对齐。
+# 用于 load_word_limits 不可用（import 失败）时的安全回退。
+DEFAULT_TARGET_WORDS_MIN = 2200
+DEFAULT_TARGET_WORDS_MAX = 5000
+
+
+def _resolve_target_word_limits(project_root: Path) -> tuple[int, int]:
+    """Return derived (min, max_hard) from preferences.json with safe fallback.
+
+    v23 US-003 硬约束来源：统一从 ``preferences.json`` 的 ``pacing.chapter_words``
+    推导 ``[target_words_min, target_words_max]``，再由 build_chapter_context_payload
+    注入创作执行包，使 writer-agent 在起草阶段即受硬上限约束。
+
+    双层兜底：
+        1. import 失败 → 默认 (2200, 5000)
+        2. load_word_limits 异常 → 默认 (2200, 5000)
+    保证即便 preferences loader 完全不可用，执行包仍带合法字段而不炸链路。
+    """
+    try:
+        from ink_writer.core.preferences import load_word_limits
+    except Exception:  # pragma: no cover - defensive import
+        logger.debug("load_word_limits import failed; falling back to defaults", exc_info=True)
+        return DEFAULT_TARGET_WORDS_MIN, DEFAULT_TARGET_WORDS_MAX
+
+    try:
+        return load_word_limits(project_root)
+    except Exception:  # pragma: no cover - defensive
+        logger.debug("load_word_limits raised; falling back to defaults", exc_info=True)
+        return DEFAULT_TARGET_WORDS_MIN, DEFAULT_TARGET_WORDS_MAX
+
 
 def _ensure_scripts_path():
     scripts_dir = Path(__file__).resolve().parent
@@ -575,6 +605,7 @@ def build_chapter_context_payload(project_root: Path, chapter_num: int) -> Dict[
     contract_context = _load_contract_context(project_root, chapter_num)
     memory_context = contract_context.get("memory", {})
     rag_assist = _load_rag_assist(project_root, chapter_num, outline, memory_context)
+    target_words_min, target_words_max = _resolve_target_word_limits(project_root)
 
     return {
         "chapter": chapter_num,
@@ -593,6 +624,8 @@ def build_chapter_context_payload(project_root: Path, chapter_num: int) -> Dict[
         "writing_guidance": contract_context.get("writing_guidance", {}),
         "rag_assist": rag_assist,
         "alerts": contract_context.get("alerts", {}),
+        "target_words_min": target_words_min,
+        "target_words_max": target_words_max,
     }
 
 
@@ -1291,8 +1324,22 @@ def build_execution_pack_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         else:
             optional_check_items.append(label)
 
+    # v23 US-003：字数硬上限随创作执行包下发，writer-agent 生成完成前必自检
+    try:
+        _min_w = int(payload.get("target_words_min") or DEFAULT_TARGET_WORDS_MIN)
+    except (TypeError, ValueError):
+        _min_w = DEFAULT_TARGET_WORDS_MIN
+    try:
+        _max_w = int(payload.get("target_words_max") or DEFAULT_TARGET_WORDS_MAX)
+    except (TypeError, ValueError):
+        _max_w = DEFAULT_TARGET_WORDS_MAX
     final_checklist = _dedupe_preserve(
-        [*required_check_items[:4], *must_deliver[:3], "章末必须留下未闭合问题或更大驱动力"]
+        [
+            *required_check_items[:4],
+            *must_deliver[:3],
+            "章末必须留下未闭合问题或更大驱动力",
+            f"正文字数 ∈ [{_min_w}, {_max_w}]（preferences 驱动硬区间，超限必返工）",
+        ]
     )
     fail_conditions = _dedupe_preserve(
         [
@@ -1328,6 +1375,17 @@ def build_execution_pack_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         "timeline_issues": alerts.get("canary_timeline_issues") or [],
     }
 
+    # v23 US-003 字数硬约束：target_words_min/max 由 preferences.json 驱动，
+    # writer-agent 在 Step 2A 起草时即受硬上限约束，禁止自行豁免。
+    try:
+        target_words_min = int(payload.get("target_words_min") or DEFAULT_TARGET_WORDS_MIN)
+    except (TypeError, ValueError):
+        target_words_min = DEFAULT_TARGET_WORDS_MIN
+    try:
+        target_words_max = int(payload.get("target_words_max") or DEFAULT_TARGET_WORDS_MAX)
+    except (TypeError, ValueError):
+        target_words_max = DEFAULT_TARGET_WORDS_MAX
+
     return {
         "chapter": chapter_num,
         "title": title,
@@ -1336,6 +1394,8 @@ def build_execution_pack_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         "context_contract": contract_payload,
         "step_2a_prompt": step_2a_prompt,
         "canary_alerts": canary_alerts,
+        "target_words_min": target_words_min,
+        "target_words_max": target_words_max,
     }
 
 
@@ -1349,6 +1409,13 @@ def _render_execution_pack_text(pack: Dict[str, Any]) -> str:
     lines.append("")
     lines.append(f"- 标题: {title}")
     lines.append(f"- 模式: {mode}")
+    target_words_min = pack.get("target_words_min")
+    target_words_max = pack.get("target_words_max")
+    if isinstance(target_words_min, int) and isinstance(target_words_max, int):
+        lines.append(
+            f"- 字数硬约束: [{target_words_min}, {target_words_max}]（硬下限 / 硬上限，"
+            "由 preferences.pacing.chapter_words 推导；任何情况不得越界，无 LLM 自行豁免路径）"
+        )
     lines.append("")
 
     lines.append("## 任务书（8板块）")
