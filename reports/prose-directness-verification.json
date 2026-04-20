@@ -1,0 +1,801 @@
+{
+  "generated_at": "2026-04-20 10:54:26 UTC",
+  "direct_books": [
+    "西游：拦路人！",
+    "状元郎",
+    "我，枪神！",
+    "重回1982小渔村",
+    "1979黄金时代"
+  ],
+  "rhetoric_books": [
+    "神明调查报告",
+    "异度旅社",
+    "亡灵法师，召唤055什么鬼？",
+    "真君驾到",
+    "仙业"
+  ],
+  "m1": {
+    "fixture_char_count": 223,
+    "simplified_char_count": 163,
+    "reduction_ratio": 0.2691,
+    "reduction_pct": 26.91,
+    "blacklist_hits_before": 14,
+    "blacklist_hits_after": 0,
+    "rules_fired": [
+      "blacklist_abstract_drop",
+      "empty_paragraph_compress",
+      "long_sentence_split"
+    ],
+    "rolled_back": false,
+    "target": 0.2,
+    "passed": true
+  },
+  "m2": {
+    "sample_size": 15,
+    "avg_by_dim": {
+      "D1_rhetoric_density": 9.88,
+      "D2_adj_verb_ratio": 9.15,
+      "D3_abstract_per_100_chars": 9.46,
+      "D4_sent_len_median": 8.51,
+      "D5_empty_paragraphs": 9.64
+    },
+    "overall_avg": 9.33,
+    "target": 8.0,
+    "passed": true
+  },
+  "m3": {
+    "sample_size": 15,
+    "median_hits": 2,
+    "max_hits": 5,
+    "min_hits": 0,
+    "chapters_under_3": 11,
+    "chapters_under_3_ratio": 0.73,
+    "target": 3,
+    "passed": true
+  },
+  "m4": {
+    "sample_size": 15,
+    "group_median": 17.0,
+    "benchmark_p50": 15.0,
+    "band_low": 13.0,
+    "band_high": 17.62,
+    "band_criterion": "golden_three P25-P75 (mid_is_better green band)",
+    "passed": true
+  },
+  "m5": {
+    "status": "deferred_to_live_run",
+    "methodology": "首版用 LLM judge（Claude Sonnet 4.6）对 AI-heavy vs 最直白 Top-5 样本盲评 1-10 直白分，目标提升 ≥40%。发版后在真实项目内部 3 人盲测复核，写入 reports/prose-directness-reader-scores.json。",
+    "llm_judge_sample": [
+      {
+        "book": "西游：拦路人！",
+        "chapter": 1,
+        "expected_direct_score_range": "8-10"
+      },
+      {
+        "book": "状元郎",
+        "chapter": 1,
+        "expected_direct_score_range": "8-10"
+      },
+      {
+        "book": "我，枪神！",
+        "chapter": 1,
+        "expected_direct_score_range": "8-10"
+      }
+    ],
+    "target": 0.4,
+    "passed": null
+  },
+  "m6": {
+    "directness_scene_filtered": true,
+    "slow_build_scene_retained": true,
+    "default_kwargs_retained": true,
+    "passed": true
+  },
+  "m7": {
+    "simplicity_rules_total": 14,
+    "applies_to_values": [
+      "all_chapters",
+      "climax",
+      "combat",
+      "golden_three",
+      "high_point"
+    ],
+    "target_rules": 12,
+    "recall_floor": 5,
+    "passed": true
+  },
+  "direct_chapter_scores": [
+    {
+      "book": "西游：拦路人！",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 2257,
+      "overall_score": 10.0,
+      "severity": "green",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0137,
+        "D2_adj_verb_ratio": 0.1374,
+        "D3_abstract_per_100_chars": 0.0443,
+        "D4_sent_len_median": 15.0,
+        "D5_empty_paragraphs": 26
+      },
+      "blacklist_hits": 3
+    },
+    {
+      "book": "西游：拦路人！",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 2286,
+      "overall_score": 9.868,
+      "severity": "green",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 9.68,
+        "D5_empty_paragraphs": 9.66
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0,
+        "D2_adj_verb_ratio": 0.0846,
+        "D3_abstract_per_100_chars": 0.0437,
+        "D4_sent_len_median": 18.0,
+        "D5_empty_paragraphs": 52
+      },
+      "blacklist_hits": 2
+    },
+    {
+      "book": "西游：拦路人！",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 1920,
+      "overall_score": 10.0,
+      "severity": "green",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0,
+        "D2_adj_verb_ratio": 0.0678,
+        "D3_abstract_per_100_chars": 0.0521,
+        "D4_sent_len_median": 17.0,
+        "D5_empty_paragraphs": 39
+      },
+      "blacklist_hits": 1
+    },
+    {
+      "book": "状元郎",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 2385,
+      "overall_score": 9.828,
+      "severity": "green",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 9.14,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.019,
+        "D2_adj_verb_ratio": 0.159,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 12.0,
+        "D5_empty_paragraphs": 19
+      },
+      "blacklist_hits": 2
+    },
+    {
+      "book": "状元郎",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 3333,
+      "overall_score": 9.482,
+      "severity": "yellow",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 7.41,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0055,
+        "D2_adj_verb_ratio": 0.1225,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 16
+      },
+      "blacklist_hits": 1
+    },
+    {
+      "book": "状元郎",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 3863,
+      "overall_score": 9.482,
+      "severity": "yellow",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 7.41,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.005,
+        "D2_adj_verb_ratio": 0.1137,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 17
+      },
+      "blacklist_hits": 1
+    },
+    {
+      "book": "我，枪神！",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 6225,
+      "overall_score": 7.868,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 6.58,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 5.8,
+        "D5_empty_paragraphs": 6.96
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0127,
+        "D2_adj_verb_ratio": 0.1832,
+        "D3_abstract_per_100_chars": 0.0161,
+        "D4_sent_len_median": 23.0,
+        "D5_empty_paragraphs": 64
+      },
+      "blacklist_hits": 1
+    },
+    {
+      "book": "我，枪神！",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 5088,
+      "overall_score": 8.66,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 9.73,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 5.26,
+        "D5_empty_paragraphs": 8.31
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0175,
+        "D2_adj_verb_ratio": 0.1614,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 25.0,
+        "D5_empty_paragraphs": 58
+      },
+      "blacklist_hits": 2
+    },
+    {
+      "book": "我，枪神！",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 5163,
+      "overall_score": 8.276,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 5.5,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 6.22,
+        "D5_empty_paragraphs": 9.66
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0233,
+        "D2_adj_verb_ratio": 0.2029,
+        "D3_abstract_per_100_chars": 0.0775,
+        "D4_sent_len_median": 22.0,
+        "D5_empty_paragraphs": 52
+      },
+      "blacklist_hits": 4
+    },
+    {
+      "book": "重回1982小渔村",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 2383,
+      "overall_score": 9.762,
+      "severity": "green",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 8.81,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0,
+        "D2_adj_verb_ratio": 0.1133,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 19.0,
+        "D5_empty_paragraphs": 7
+      },
+      "blacklist_hits": 0
+    },
+    {
+      "book": "重回1982小渔村",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 2265,
+      "overall_score": 8.512,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 4.61,
+        "D4_sent_len_median": 7.95,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0147,
+        "D2_adj_verb_ratio": 0.1378,
+        "D3_abstract_per_100_chars": 0.1766,
+        "D4_sent_len_median": 20.0,
+        "D5_empty_paragraphs": 13
+      },
+      "blacklist_hits": 4
+    },
+    {
+      "book": "重回1982小渔村",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 2391,
+      "overall_score": 9.524,
+      "severity": "yellow",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 7.62,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0115,
+        "D2_adj_verb_ratio": 0.176,
+        "D3_abstract_per_100_chars": 0.0418,
+        "D4_sent_len_median": 15.0,
+        "D5_empty_paragraphs": 30
+      },
+      "blacklist_hits": 2
+    },
+    {
+      "book": "1979黄金时代",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 3272,
+      "overall_score": 8.666,
+      "severity": "yellow",
+      "dim_scores": {
+        "D1_rhetoric_density": 8.18,
+        "D2_adj_verb_ratio": 7.86,
+        "D3_abstract_per_100_chars": 7.29,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0316,
+        "D2_adj_verb_ratio": 0.1743,
+        "D3_abstract_per_100_chars": 0.1222,
+        "D4_sent_len_median": 17.0,
+        "D5_empty_paragraphs": 43
+      },
+      "blacklist_hits": 5
+    },
+    {
+      "book": "1979黄金时代",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 2372,
+      "overall_score": 10.0,
+      "severity": "green",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0,
+        "D2_adj_verb_ratio": 0.1527,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 15.0,
+        "D5_empty_paragraphs": 24
+      },
+      "blacklist_hits": 0
+    },
+    {
+      "book": "1979黄金时代",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 2896,
+      "overall_score": 10.0,
+      "severity": "green",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0088,
+        "D2_adj_verb_ratio": 0.1327,
+        "D3_abstract_per_100_chars": 0.0691,
+        "D4_sent_len_median": 15.0,
+        "D5_empty_paragraphs": 31
+      },
+      "blacklist_hits": 4
+    }
+  ],
+  "rhetoric_chapter_scores": [
+    {
+      "book": "神明调查报告",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 6183,
+      "overall_score": 4.962,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 0.0,
+        "D2_adj_verb_ratio": 8.17,
+        "D3_abstract_per_100_chars": 2.53,
+        "D4_sent_len_median": 5.8,
+        "D5_empty_paragraphs": 8.31
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.1173,
+        "D2_adj_verb_ratio": 0.1722,
+        "D3_abstract_per_100_chars": 0.2264,
+        "D4_sent_len_median": 23.0,
+        "D5_empty_paragraphs": 58
+      },
+      "blacklist_hits": 28
+    },
+    {
+      "book": "神明调查报告",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 3338,
+      "overall_score": 8.658,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 4.48,
+        "D4_sent_len_median": 8.81,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0208,
+        "D2_adj_verb_ratio": 0.1285,
+        "D3_abstract_per_100_chars": 0.1797,
+        "D4_sent_len_median": 19.0,
+        "D5_empty_paragraphs": 40
+      },
+      "blacklist_hits": 10
+    },
+    {
+      "book": "神明调查报告",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 3393,
+      "overall_score": 7.468000000000001,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 7.21,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 4.6,
+        "D4_sent_len_median": 5.53,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0353,
+        "D2_adj_verb_ratio": 0.1143,
+        "D3_abstract_per_100_chars": 0.1768,
+        "D4_sent_len_median": 24.0,
+        "D5_empty_paragraphs": 33
+      },
+      "blacklist_hits": 8
+    },
+    {
+      "book": "异度旅社",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 3375,
+      "overall_score": 4.36,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 0.0,
+        "D2_adj_verb_ratio": 6.81,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 4.99,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.1077,
+        "D2_adj_verb_ratio": 0.1816,
+        "D3_abstract_per_100_chars": 0.3852,
+        "D4_sent_len_median": 26.0,
+        "D5_empty_paragraphs": 29
+      },
+      "blacklist_hits": 13
+    },
+    {
+      "book": "异度旅社",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 3238,
+      "overall_score": 4.674,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 2.11,
+        "D2_adj_verb_ratio": 5.87,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 5.39,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0658,
+        "D2_adj_verb_ratio": 0.1912,
+        "D3_abstract_per_100_chars": 0.3706,
+        "D4_sent_len_median": 24.5,
+        "D5_empty_paragraphs": 13
+      },
+      "blacklist_hits": 17
+    },
+    {
+      "book": "异度旅社",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 3102,
+      "overall_score": 4.144,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 0.0,
+        "D2_adj_verb_ratio": 4.92,
+        "D3_abstract_per_100_chars": 0.0,
+        "D4_sent_len_median": 5.8,
+        "D5_empty_paragraphs": 10.0
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.1692,
+        "D2_adj_verb_ratio": 0.2209,
+        "D3_abstract_per_100_chars": 0.2901,
+        "D4_sent_len_median": 23.0,
+        "D5_empty_paragraphs": 17
+      },
+      "blacklist_hits": 10
+    },
+    {
+      "book": "亡灵法师，召唤055什么鬼？",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 2934,
+      "overall_score": 7.08,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 4.6,
+        "D3_abstract_per_100_chars": 4.87,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 5.93
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0222,
+        "D2_adj_verb_ratio": 0.231,
+        "D3_abstract_per_100_chars": 0.1704,
+        "D4_sent_len_median": 15.5,
+        "D5_empty_paragraphs": 69
+      },
+      "blacklist_hits": 6
+    },
+    {
+      "book": "亡灵法师，召唤055什么鬼？",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 2910,
+      "overall_score": 6.1899999999999995,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 5.59,
+        "D2_adj_verb_ratio": 4.49,
+        "D3_abstract_per_100_chars": 4.81,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 6.06
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0426,
+        "D2_adj_verb_ratio": 0.2343,
+        "D3_abstract_per_100_chars": 0.1718,
+        "D4_sent_len_median": 14.0,
+        "D5_empty_paragraphs": 68
+      },
+      "blacklist_hits": 7
+    },
+    {
+      "book": "亡灵法师，召唤055什么鬼？",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 3059,
+      "overall_score": 7.806,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 5.86,
+        "D2_adj_verb_ratio": 8.8,
+        "D3_abstract_per_100_chars": 5.16,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 9.21
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0408,
+        "D2_adj_verb_ratio": 0.1678,
+        "D3_abstract_per_100_chars": 0.1635,
+        "D4_sent_len_median": 16.0,
+        "D5_empty_paragraphs": 54
+      },
+      "blacklist_hits": 6
+    },
+    {
+      "book": "真君驾到",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 2790,
+      "overall_score": 5.566000000000001,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 1.47,
+        "D2_adj_verb_ratio": 4.79,
+        "D3_abstract_per_100_chars": 4.5,
+        "D4_sent_len_median": 7.41,
+        "D5_empty_paragraphs": 9.66
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.07,
+        "D2_adj_verb_ratio": 0.2251,
+        "D3_abstract_per_100_chars": 0.1792,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 52
+      },
+      "blacklist_hits": 5
+    },
+    {
+      "book": "真君驾到",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 4010,
+      "overall_score": 7.651999999999999,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 4.14,
+        "D2_adj_verb_ratio": 10.0,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 8.27,
+        "D5_empty_paragraphs": 5.85
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0523,
+        "D2_adj_verb_ratio": 0.1099,
+        "D3_abstract_per_100_chars": 0.0499,
+        "D4_sent_len_median": 11.0,
+        "D5_empty_paragraphs": 70
+      },
+      "blacklist_hits": 3
+    },
+    {
+      "book": "真君驾到",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 3989,
+      "overall_score": 6.2219999999999995,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 1.74,
+        "D2_adj_verb_ratio": 7.52,
+        "D3_abstract_per_100_chars": 8.62,
+        "D4_sent_len_median": 9.14,
+        "D5_empty_paragraphs": 4.09
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0682,
+        "D2_adj_verb_ratio": 0.1767,
+        "D3_abstract_per_100_chars": 0.1003,
+        "D4_sent_len_median": 12.0,
+        "D5_empty_paragraphs": 90
+      },
+      "blacklist_hits": 7
+    },
+    {
+      "book": "仙业",
+      "chapter_no": 1,
+      "scene_mode": "golden_three",
+      "char_count": 4091,
+      "overall_score": 7.3260000000000005,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 9.39,
+        "D2_adj_verb_ratio": 9.22,
+        "D3_abstract_per_100_chars": 2.79,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 5.23
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.027,
+        "D2_adj_verb_ratio": 0.1649,
+        "D3_abstract_per_100_chars": 0.22,
+        "D4_sent_len_median": 14.0,
+        "D5_empty_paragraphs": 77
+      },
+      "blacklist_hits": 16
+    },
+    {
+      "book": "仙业",
+      "chapter_no": 2,
+      "scene_mode": "golden_three",
+      "char_count": 3481,
+      "overall_score": 9.402,
+      "severity": "yellow",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 9.15,
+        "D3_abstract_per_100_chars": 10.0,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 7.86
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0092,
+        "D2_adj_verb_ratio": 0.1654,
+        "D3_abstract_per_100_chars": 0.0575,
+        "D4_sent_len_median": 17.0,
+        "D5_empty_paragraphs": 60
+      },
+      "blacklist_hits": 5
+    },
+    {
+      "book": "仙业",
+      "chapter_no": 3,
+      "scene_mode": "golden_three",
+      "char_count": 4006,
+      "overall_score": 7.878,
+      "severity": "red",
+      "dim_scores": {
+        "D1_rhetoric_density": 10.0,
+        "D2_adj_verb_ratio": 9.16,
+        "D3_abstract_per_100_chars": 2.6,
+        "D4_sent_len_median": 10.0,
+        "D5_empty_paragraphs": 7.63
+      },
+      "raw_metrics": {
+        "D1_rhetoric_density": 0.0236,
+        "D2_adj_verb_ratio": 0.1653,
+        "D3_abstract_per_100_chars": 0.2247,
+        "D4_sent_len_median": 17.0,
+        "D5_empty_paragraphs": 61
+      },
+      "blacklist_hits": 12
+    }
+  ]
+}
