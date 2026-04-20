@@ -97,8 +97,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-21: ink-write/SKILL.md:905 与 2A.5 判定表完全重写——字数区间改用 [MIN_WORDS, MAX_WORDS_HARD] 占位符（preferences 驱动，默认 [2200, 5000]），删除原 3501-4000 偏长分档与放行豁免条款；新增对齐 US-004 的精简循环 3 轮 / 补写循环 2 轮双路径表述。ink-fix/SKILL.md 四处字数守护（开头原则/Step 5.5/Step 3 验证/安全红线）与 ink-auto/SKILL.md 两处（安全边界/多重验证）全部收敛到区间 + 硬上限 SHRINK_MAX_ROUNDS=3 表述。writer-agent.md + preferences-schema.md 遗留的旧豁免文案清理为更抽象的否定表述。关键规则文件中已无 `关键.*章.*豁免|关键章.*放行|上浮 33%` 匹配（残留仅存于 scripts/ralph/archive/*、run.log、tasks/prd-*.md 等 spec/历史文档，非运行时消费路径）。全量 pytest 3588 passed / 23 skipped，零回归。"
     },
     {
       "id": "US-006",

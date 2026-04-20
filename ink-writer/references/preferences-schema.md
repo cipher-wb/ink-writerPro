@@ -44,8 +44,8 @@ max_words_hard = chapter_words + 500
 - **硬下限红线**：`min_words` 永不低于 2200，即便 `chapter_words` 配得很小（硬约束，
   写在 `ink_writer/core/preferences.py::MIN_WORDS_FLOOR`）。
 - **硬上限对等硬下限**：超过 `max_words_hard` 由 `check_word_count` 返回
-  `severity='hard'` 直接阻断；没有“关键战斗章/高潮章/卷末章”类的 LLM 自行豁免路径
-  （这是 US-005 收紧的重点）。
+  `severity='hard'` 直接阻断；不存在按章节类型、节拍标签或大纲标签级的 LLM 自行
+  豁免路径（这是 US-005 收紧的重点——历史版本按章型/百分比的放行条款全部删除）。
 - 程序入口：`from ink_writer.core.preferences import load_word_limits`。
 - **创作执行包传递（v23 US-003）**：`build_chapter_context_payload` 调用 `load_word_limits`
   后，会把结果写入 payload 顶层字段 `target_words_min` / `target_words_max`；

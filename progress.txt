@@ -17,9 +17,35 @@ Prev run: prose-directness → v22.0.0 released (场景感知直白化)
 - **硬下限 2200 不可降红线**：无论 preferences 配置任何值，实际 min_words 永不低于 2200；这是跨 US 的全局护栏。
 - **创作执行包 target_words_* 字段**（v23 US-003）：`build_chapter_context_payload` 把 `load_word_limits` 结果写进 payload 顶层 `target_words_min` / `target_words_max`，`build_execution_pack_payload` 原样透传到执行包顶层；writer-agent 起草阶段消费 `target_words_max` 作为硬上限（无 LLM 自行豁免路径）。扩展 execution pack 字段时记得更新 `_render_execution_pack_text` 与 `tests/data_modules/test_extract_chapter_context.py`。
 - **ink-auto 字数硬上限变量命名**（v23 US-004）：shell 用 `MAX_WORDS_HARD` / `SHRINK_MAX_ROUNDS`；PowerShell 用 `$MaxWordsHard` / `$ShrinkMaxRounds`。派生逻辑在脚本顶部 `LOG_DIR`/`$LogDir` 之后；`verify_chapter` / `Test-Chapter` 用 `>`（不是 `>=`）做上限判定，即 `chapter_words + 500` 本身算合格边界。上限超限触发精简循环 3 轮，下限/其它失败保持 1 轮重试——这是零回归红线。
+- **规则文档字数描述模板**（v23 US-005）：一切 SKILL.md / agent 指令在提到字数阈值时，统一用 `MIN_WORDS` / `MAX_WORDS_HARD`（或 `target_words_min` / `target_words_max`）占位符 + 默认括注 `(2200, 5000)`，禁止出现"2200-3000"、"3501-4000"、"上浮 33%"、"关键战斗章/高潮章/卷末章可放行"之类历史豁免表述。若确需描述"旧版已删除的豁免条款"，用抽象否定（"按章节类型级、节拍级、大纲标签级等任何 LLM 自行判定的豁免路径"）而非具体枚举，以通过 `grep '关键.*章.*豁免|关键章.*放行|上浮 33%'` 零匹配验收。
 
 ## Story-specific Learnings
 (每个 US 完成后在下方追加)
+
+## 2026-04-21 - US-005 SKILL.md + writer-agent.md 删除 LLM 自行豁免路径
+- `ink-writer/skills/ink-write/SKILL.md:905` 单句重写——字数区间改为 `target_words_min` / `target_words_max`（preferences 驱动，默认 `(2200, 5000)`），硬上限"任何情况不得超越"，指向 `pacing.chapter_words` 显式上调而非按章型豁免。
+- `ink-writer/skills/ink-write/SKILL.md:1024-1038` 2A.5 字数判定区大改：
+  - 判定表由 4 行（< 2200 / 2200-3500 / 3501-4000 / > 4000）收敛为 3 行（< MIN_WORDS / 区间内 / > MAX_WORDS_HARD），删除"3501-4000 偏长+大纲可放行"整档。
+  - 原"豁免条件"段整段重写为"无豁免条款"段，明确列出不设章型级/节拍级/大纲标签级 LLM 自判豁免路径，并加"历史版本允许的按百分比上浮或按章型放行条款，自 v23 起全部删除"追溯说明。
+  - 循环轮次拆双路径：补写 2 轮（下限方向零回归，与原表述一致）+ 精简 3 轮（与 US-004 `SHRINK_MAX_ROUNDS=3` / ink-auto 对齐）。新增"阈值来源"小节开头对接 preferences。
+- `ink-writer/skills/ink-fix/SKILL.md` 四处收敛：
+  - 开头原则 5 字数守护 `≥ 2200` → `∈ [MIN_WORDS, MAX_WORDS_HARD]（默认 [2200, 5000]，preferences 驱动）`
+  - Step 5.5 字数验证 bash 注释同上
+  - Step 3 修复验证 "字数 ≥ 2200" → 区间表达
+  - 安全红线 4 字数下限 2200 → 字数硬区间 + 硬上限无豁免
+- `ink-writer/skills/ink-auto/SKILL.md` 两处：
+  - 修复流程安全边界 "字数 ≥ 2200" → 完整区间 + v23 US-005 引用
+  - 主循环多重验证第 7 项 → 区间 + 低于下限 1 轮补写 / 高于上限 3 轮精简循环对称表述
+- `ink-writer/agents/writer-agent.md:467` + `ink-writer/references/preferences-schema.md:46-48` 旧 US-003 残留的"关键战斗章/高潮章/卷末章可放行"具体枚举改为"按章节类型级/节拍级/大纲标签级 LLM 自行判定的豁免路径"抽象否定表述，过 grep 零匹配验收。
+- 残留：`scripts/ralph/run.log`、`scripts/ralph/archive/*`、`tasks/prd-*.md` 仍有匹配——这些是 PRD spec / 历史运行日志 / 归档 PRD，非运行时消费路径，保留以维护项目历史。
+- 回归：`pytest tests/ --no-cov` 全量 3588 passed / 23 skipped（与 US-004 基线字节级一致，零新增 fail；本 US 纯文档修改无代码变更，pytest 结果符合预期）。耗时 164s。
+- **Learnings for future iterations:**
+  - 本 US 的验收关键是"grep 零残留"。写否定文案时非常容易顺手复述"不是 X、不是 Y、不是 Z"，但这些枚举本身会被 grep 命中、反而让验收失败。务必用抽象否定（"不存在按 A-level/B-level/C-level 的豁免路径"）替代具体举例。
+  - 判定表/循环表述类文档改动要同时考虑下游消费者是 LLM（看文档文本）而非程序（读阈值字段）——所以一定要在文档里留 `MIN_WORDS` / `MAX_WORDS_HARD` 占位符 + 默认值括注，既不硬编码数字也让 LLM 知道"遇到具体项目时去哪里看实际值"。
+  - ink-fix/SKILL.md 的字数守护分布在 4 个位置（原则 / 验证 / Step 3 / 安全红线），ink-auto/SKILL.md 在 2 个位置——这类规则文档改字数阈值时一定要先 grep 全文再逐一替换，否则极容易漏一处。通用 grep 模式：`2200|4000|5000|字数|上限|MAX_WORDS|SHRINK`。
+  - US-005 是本 PRD 里唯一纯文档类 US，无代码改动，pytest 数值应与前一 US 完全一致（3588）。这是下一个纯文档类 US（如 US-006 的 preferences-schema 文档发版）的基线参考。
+---
+
 
 ## 2026-04-21 - US-001 check_word_count 支持硬/软双阈值上限
 - 为 `ink-writer/scripts/computational_checks.py::check_word_count` 新增 `max_words_hard:int=5000` / `max_words_soft:Optional[int]=None` 参数；`max_words` 保留为 deprecated alias（仅在未显式指定 `max_words_hard` 时生效）。

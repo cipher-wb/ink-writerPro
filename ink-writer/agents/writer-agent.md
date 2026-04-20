@@ -464,7 +464,7 @@ cat "${SKILL_ROOT}/references/prose-craft-rules.md"
 
 - **硬约束来源（v23 起）**：创作执行包顶层字段 `target_words_min` / `target_words_max`（由 `preferences.pacing.chapter_words` 推导），默认 `(2200, 5000)`
 - **硬下限**：`target_words_min`（不低于 2200），任何情况不得低于此值（含过渡章）
-- **硬上限**：`target_words_max`，**任何情况不得超越**。删除旧版"关键战斗章 / 高潮章 / 卷末章可放行"豁免条款（US-005）—— LLM 无自行豁免路径
+- **硬上限**：`target_words_max`，**任何情况不得超越**。v23 US-005 起删除旧版按章节类型放行的豁免条款—— LLM 无自行豁免路径
 - **默认范围**：`[target_words_min, target_words_max]`；无 preferences 配置时为 2200–5000
 - 生成过程中的硬约束：写作阶段实时自估字数，接近 `target_words_max` 必须立即收束；**禁止越限后再靠事后精简兜底**
 - 禁止占位符正文（`[TODO]`、`[待补充]`）
