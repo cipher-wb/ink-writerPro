@@ -6,7 +6,6 @@ monkeypatching ``sys.platform`` where appropriate.
 from __future__ import annotations
 
 import asyncio
-import sys
 
 import pytest
 
@@ -57,7 +56,7 @@ class TestFindPythonLauncher:
         assert first == second == "python3"
 
 
-@pytest.mark.skipif(sys.platform != "win32", reason="Windows-only probe")
+@pytest.mark.windows
 class TestWindowsBranches:  # pragma: no cover
     def test_proactor_policy_applies(self) -> None:
         assert rc.set_windows_proactor_policy() is True

@@ -24,7 +24,6 @@ import os
 import shutil
 import stat
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -34,7 +33,7 @@ RALPH_SH = REPO_ROOT / "scripts" / "ralph" / "ralph.sh"
 
 
 pytestmark = [
-    pytest.mark.skipif(sys.platform == "win32", reason="ralph.sh 是 Unix 入口，Windows 走 ralph.ps1"),
+    pytest.mark.mac,  # ralph.sh 是 Unix 入口，Windows 走 ralph.ps1（US-013: autoskip via conftest）
     pytest.mark.skipif(shutil.which("bash") is None, reason="需要 bash 可执行"),
     pytest.mark.skipif(shutil.which("jq") is None, reason="ralph.sh 依赖 jq 解析 prd.json"),
 ]

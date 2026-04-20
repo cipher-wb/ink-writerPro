@@ -209,10 +209,8 @@ class TestRepoRedLineC8:
         )
 
 
-@pytest.mark.skipif(
-    shutil.which("bash") is None or sys.platform == "win32",
-    reason="Mac/Linux only: verify byte-level behavior preserved",
-)
+@pytest.mark.mac  # US-013: Mac/Linux only — verify byte-level behavior preserved
+@pytest.mark.skipif(shutil.which("bash") is None, reason="bash not available")
 class TestMacByteLevelParity:
     """Mac 字节级一致：$PY_LAUNCHER 展开后与原来 python3 行为等价。"""
 

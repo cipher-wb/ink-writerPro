@@ -59,6 +59,9 @@ Prev run: chapter-context-injection → v20.0.0 released
 - **bash 内联 Python 的 stderr 吞吐红线**（US-012 起）：`python -c '...' 2>/dev/null` 是跨平台诊断黑洞——Windows 下 Python 崩溃（import/编码/路径）会静默消失，外层 `if !` 判定 exit != 0 却不知根因。规则：只要 `if !` 或 `|| default` 语境的 inline Python，stderr 必须进 debug log（`2>>"$LOG_DIR/xxx-debug.log"`），不能 /dev/null。`tests/scripts/test_ink_auto_smoke.py:test_ink_auto_sh_checkpoint_utils_stderr_not_swallowed` 通过"源码窗口扫描"（每处 `report_has_issues` 附近 200 字符内禁止 `2>/dev/null`）守护。
 - **bash 函数体抠取注入子 shell 测语义**（US-009 立 / US-012 再用）：`re.compile(r'^' + fn_name + r'\s*\(\s*\)\s*\{\s*\n(?P<body>.*?)\n\}\s*\n', DOTALL|MULTILINE)` 抠单函数体；依赖结尾 `}` 独占一行（ink-auto.sh / env-setup.sh 风格一致）。需要伴随依赖时可写最小 stub（US-012 用 `parse_progress_output() { cat >> "$1"; }` 替代真实的 INK-PROGRESS 解析）。测 shell 函数语义时优先此法——比跑整个脚本稳、比静态 grep 强。
 - **PowerShell stderr 写法**（US-012 起）：`[Console]::Error.WriteLine(...)` 才是真正的 stderr；`Write-Error` 会被 PS 视为 error record 并可能终止 pipeline / 被 `*>$null` 捕获。long-running 脚本打 defensive 日志一律用 `[Console]::Error.WriteLine`——保证与 bash `>&2` 语义对等。
+- **平台 marker = 声明式 + 仓库红线**（US-013 起）：跨平台门禁统一走 `@pytest.mark.windows` / `@pytest.mark.mac`，autoskip 在 `tests/conftest.py:pytest_collection_modifyitems` 里。`mac` 语义是『Mac/Linux 非 Windows POSIX』（仓库内所有 Unix-only 场景在 Linux 上也能跑）。环境依赖（bash/jq）仍走 skipif——marker 表达不了『依赖存在性』，两者语义互补。`tests/audit/test_platform_markers.py:test_repo_has_no_platform_skipif_outside_conftest` 仓库红线 AST 扫 tests/**/*.py 检测 skipif args 里是否含 `sys.platform`，有则违规。新 PR 用 `skipif(sys.platform ...)` CI 直接挂，逼作者改 marker。
+- **subprocess.run 起小 pytest 验证 conftest 集成**（US-013 起）：比 pytester fixture 轻量无全局污染——顶层 conftest.py 不 opt-in `pytest_plugins = ['pytester']`。标准做法：`(tmp_path / 'conftest.py').write_text(TESTS_CONFTEST.read_text(encoding='utf-8'))` + 写最小 `pytest.ini` + 注入合成 test file + `subprocess.run([sys.executable, '-m', 'pytest', '-v', '--no-cov', ...], cwd=tmp_path)`，grep stdout/stderr 做断言。与 US-011/US-012 fake-claude 子进程 pattern 同构——『隔离进程验证集成行为』在不同层级反复复用。
+- **prd.json 语法把关**（US-013 踩坑）：prd.json 的 notes 里若用裸 ASCII `"` 做引号（如 `走进"X"分支` / `|| echo "False"`），会让 JSON 解析崩（虽然 ralph.sh 走 jq 勉强兼容）。规则：notes 引号优先用中文全角 `「...」` 或 `"..."` (U+201C/U+201D)，次选 `\"...\"` 转义；commit 前 `jq -e . prd.json > /dev/null && python3 -c "import json; json.load(open('prd.json'))"` 双验证。未来可把这个 double-check 加到 pre-commit hook。
 
 ## Context Contract（本 PRD 专属）
 
@@ -583,5 +586,46 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `scripts/ralph/prd.json` (US-012 passes:true + notes)
   - `scripts/ralph/progress.txt` (this entry + 4 new Codebase Patterns)
 - 全量 pytest: **3188 passed / 23 skipped / 0 failed**（baseline 3178 → +10 新测试，零回归）
+- Audit findings: 3 → 3（不变，都是 US-004/US-010 已记录的 C2 Low 测试 fixture 合法用法）
+
+---
+
+## 2026-04-20 - US-013 pytest windows/mac 统一标记
+
+- **pytest.ini**：`markers` 段新增 `windows: Windows-only tests (auto-skipped on sys.platform != "win32")` + `mac: Mac/Linux (non-Windows POSIX) only tests (auto-skipped on sys.platform == "win32")`
+- **tests/conftest.py**：`pytest_collection_modifyitems` 扩展为两条独立 rule：
+  - Rule 1 (always) 平台 marker autoskip：`@pytest.mark.windows` 在非 win32 skip；`@pytest.mark.mac` 在 win32 skip。`continue` 防重复加 marker
+  - Rule 2 (only win32) 原 Windows quarantine 逻辑保留，语义不变
+- **批量迁移 4 处装饰器级 skipif**（PRD 预计 ≥20 高估——仓库真实 skipif-at-decorator 只有 4 处）：
+  1. `tests/infra/test_runtime_compat.py:60` — `@pytest.mark.skipif(sys.platform != 'win32')` → `@pytest.mark.windows`；移除不再用到的 `import sys`
+  2. `tests/scripts/test_ralph_sh_smoke.py:37` — pytestmark 列表平台那项 → `pytest.mark.mac`，bash/jq 环境 gate 保留；移除 `import sys`
+  3. `tests/scripts/test_ink_auto_smoke.py:39` — 同 pattern；移除 `import sys`
+  4. `tests/core/test_python_launcher.py:212` — 复合 `shutil.which('bash') is None or sys.platform == 'win32'` 拆成 `@pytest.mark.mac` + `@pytest.mark.skipif(shutil.which('bash') is None, ...)` 两个装饰器（叠加生效、语义完全一致）
+- **新增 `tests/audit/test_platform_markers.py` (10 tests)**：
+  - Rule 1 marker 注册 (2 tests)：解析 pytest.ini `[pytest] markers` 段断言 `windows` / `mac` 都在
+  - Rule 2 autoskip 行为 (3 tests)：subprocess.run 起独立 pytest 实例，复制 conftest.py + 最小 pytest.ini，注入合成 test 源码验证 `@windows` 在 Mac skip / `@mac` 在 Mac 运行 / skip reason 含 marker 字面量。subprocess.run 而非 pytester fixture 的理由：顶层 conftest.py 不 opt-in `pytest_plugins = ['pytester']`，加进去有全局副作用；subprocess 隔离与 US-011/US-012 的 fake-claude 子进程 pattern 同构
+  - Rule 3 仓库红线 (1 test)：AST 扫 tests/**/*.py（排除 conftest.py）检测 `pytest.mark.skipif(...)` 调用的 args 里是否出现 `sys.platform` / `_sys.platform` 属性访问，有则违规。未来 PR 若用 skipif 门 sys.platform，CI 直接挂
+  - Rule 4 固化已迁移文件 (4 参数化 tests)：每个已迁移文件必须出现 `pytest.mark.windows` 或 `pytest.mark.mac` 字面量，防止 revert
+- **mac 语义明确覆盖 Linux**：仓库内所有『Unix only』场景（bash / ralph.sh / POSIX symlink）在 Linux 上同样能跑；docstring 里写明『Mac/Linux (non-Windows POSIX) only』。未来要区分 darwin-only / linux-only 再新增专门 marker
+- **保留环境性 skipif**：`shutil.which('bash') is None` / `shutil.which('jq') is None` 是依赖存在性，marker 表达不了（marker 是 boolean flag，skipif 是 boolean expression），继续走 skipif。红线测试只门 `sys.platform` 出现，不拦 `shutil.which`
+- **顺手修复 US-012 JSON 语法错误**：US-012 notes 里有若干未转义的 `"`（如 `走进"有问题要修复"分支`、`|| echo "False"`、`cat > "$1"`、`"源码窗口扫描"` 等），commit 后 `json.loads(prd.json)` 一直失败但没人发现（ralph.sh 走 jq，本轮我直接调 json.load 才暴露）。本 US 顺手把 `"..."` 替换为 `「...」`（中文全角括号）+ 剩余裸 `"` 转义为 `\"`，prd.json 现在 `json.loads` 和 `jq -e .` 双通过
+- **Learnings for future iterations:**
+  - **声明式 marker + 仓库红线守护 = 防漂移的 CI 级保障**：统一 API（`@pytest.mark.windows` / `@pytest.mark.mac`）+ autoskip 在 conftest.py + 红线测试扫 skipif(sys.platform) 回退。环境依赖（bash/jq/network）仍走 skipif——marker 和 skipif 语义互补，不冲突
+  - **subprocess.run 起小 pytest 验证 conftest 集成行为**：比 pytester fixture 轻量无全局污染。复制 conftest.py + 最小 pytest.ini 到 tmp_path → 注入合成 test 源码 → `subprocess.run([sys.executable, '-m', 'pytest', ...])` → grep stdout 断言。与 US-011 ralph.sh fake-claude shim 同构——『隔离进程验证集成行为』模式在不同层级反复复用
+  - **AST 扫 pytest.mark.skipif 的 args**：判定 skipif 是否门 sys.platform，用 `_is_skipif_call` 匹配 Call 的 func 是 `Attribute(attr='skipif')` 或 `Name(id='skipif')`，然后 `ast.walk(arg)` 在每个 arg 子树里找 `sys.platform` / `_sys.platform` Attribute 访问。这种『Call args 里是否出现某 Attribute』检测模板复用性强
+  - **注释式提醒比盲迁移强**：迁移时在 pytestmark 列表那行加 `# US-013: autoskip via conftest` 尾注释，后续维护者一眼知道为什么不用 `skipif(sys.platform == 'win32')` 写法。Code review 时也更快过
+  - **PRD 预估偏差不等于 US 无价值**：PRD 说「预计 ≥20 处」实际只 4 处。本 US 实际价值不在『批量』而在『统一 API + 防漂移红线』——即便未来有新的平台门 skipif 被提交，CI 会立刻挂逼作者用 marker
+  - **JSON 与人类可读文本的权衡**：prd.json 里 US-012 notes 用裸 `"` 当作引号，人读好但违反 JSON 语法。规则：notes 里引号优先用中文 `「」` 或 `"..."`，次选 `\"..."`。jq 能解析的 JSON 永远比"好看的文本"重要——下次 commit 前应该 `jq -e . prd.json > /dev/null` 一键验证
+- Files changed:
+  - `pytest.ini` (+2 行 markers 注册)
+  - `tests/conftest.py` (扩展 pytest_collection_modifyitems：marker autoskip rule + 保留 Windows quarantine rule)
+  - `tests/infra/test_runtime_compat.py` (skipif → @pytest.mark.windows)
+  - `tests/scripts/test_ralph_sh_smoke.py` (skipif → @pytest.mark.mac)
+  - `tests/scripts/test_ink_auto_smoke.py` (skipif → @pytest.mark.mac)
+  - `tests/core/test_python_launcher.py` (复合 skipif 拆成 @mac + 环境 skipif)
+  - `tests/audit/test_platform_markers.py` (new, 10 tests)
+  - `prd.json` (US-013 passes:true + notes 追加 + 修 US-012 JSON 语法)
+  - `progress.txt` (this entry + 新 Codebase Patterns)
+- 全量 pytest: **3198 passed / 23 skipped / 0 failed**（baseline 3188 → +10 新测试，零回归）
 - Audit findings: 3 → 3（不变，都是 US-004/US-010 已记录的 C2 Low 测试 fixture 合法用法）
 ---

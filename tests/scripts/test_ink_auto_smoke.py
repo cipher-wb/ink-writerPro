@@ -26,7 +26,6 @@ import re
 import shutil
 import stat
 import subprocess
-import sys
 from pathlib import Path
 
 import pytest
@@ -36,7 +35,7 @@ INK_AUTO_SH = REPO_ROOT / "ink-writer" / "scripts" / "ink-auto.sh"
 INK_AUTO_PS1 = REPO_ROOT / "ink-writer" / "scripts" / "ink-auto.ps1"
 
 pytestmark = [
-    pytest.mark.skipif(sys.platform == "win32", reason="bash 子 shell 注入测 Unix only"),
+    pytest.mark.mac,  # bash 子 shell 注入测 Unix only（US-013: autoskip via conftest）
     pytest.mark.skipif(shutil.which("bash") is None, reason="需要 bash 可执行"),
 ]
 
