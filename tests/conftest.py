@@ -12,6 +12,17 @@ import sys
 import pytest
 
 # ---------------------------------------------------------------------------
+# US-005: Windows asyncio subprocess support (no-op on Mac/Linux, idempotent).
+# Applied at conftest load so every test file under ``tests/`` inherits the
+# ProactorEventLoopPolicy without needing a per-file duplicate call.
+# ---------------------------------------------------------------------------
+try:
+    from runtime_compat import set_windows_proactor_policy
+    set_windows_proactor_policy()
+except Exception:  # pragma: no cover
+    pass
+
+# ---------------------------------------------------------------------------
 # Windows quarantine (US-019)
 # ---------------------------------------------------------------------------
 #
@@ -94,10 +105,45 @@ _WINDOWS_QUARANTINE: dict[str, str] = {
 
 
 def pytest_collection_modifyitems(config, items):
-    """Attach a ``skip`` marker to each quarantined test, only on Windows."""
-    if sys.platform != "win32":
-        return
+    """Attach a ``skip`` marker to platform-gated and quarantined tests.
+
+    Two independent rules:
+
+    1. **US-013 platform autoskip** (always applied, both OSes):
+
+       - ``@pytest.mark.windows`` → skipped unless ``sys.platform == "win32"``
+       - ``@pytest.mark.mac``     → skipped when ``sys.platform == "win32"``
+         (includes Linux, i.e. any non-Windows POSIX platform)
+
+       This replaces the散落的 ``@pytest.mark.skipif(sys.platform != "win32")``
+       boilerplate, giving callers a declarative unified API. pytest.ini registers
+       both markers so ``--strict-markers`` doesn't warn.
+
+    2. **US-019 Windows quarantine** (only applied on win32): skip tests listed
+       in ``_WINDOWS_QUARANTINE`` with a structured reason code.
+    """
+    is_windows = sys.platform == "win32"
+
     for item in items:
+        # Rule 1: platform markers
+        if item.get_closest_marker("windows") is not None and not is_windows:
+            item.add_marker(
+                pytest.mark.skip(
+                    reason="@pytest.mark.windows: Windows-only (sys.platform != 'win32')"
+                )
+            )
+            continue
+        if item.get_closest_marker("mac") is not None and is_windows:
+            item.add_marker(
+                pytest.mark.skip(
+                    reason="@pytest.mark.mac: Mac/Linux-only (sys.platform == 'win32')"
+                )
+            )
+            continue
+
+        # Rule 2: Windows quarantine (no-op on Mac/Linux)
+        if not is_windows:
+            continue
         reason_code = _WINDOWS_QUARANTINE.get(item.nodeid)
         if reason_code is None:
             continue

@@ -3,6 +3,9 @@
 # Usage: ./ralph.sh [--tool amp|claude] [max_iterations]
 
 set -e
+# US-011: pipefail 让 `cmd | tee ...` 里 cmd 的非零退出也能被 `|| true` 正常捕获，
+# 避免「claude 失败但 tee 成功 → 整条 pipeline 算 0」的错觉。
+set -o pipefail
 
 # Parse arguments
 TOOL="amp"  # Default to amp for backwards compatibility
@@ -88,21 +91,29 @@ for i in $(seq 1 $MAX_ITERATIONS); do
   echo "==============================================================="
 
   # Run the selected tool with the ralph prompt
+  LLM_EXIT=0
   if [[ "$TOOL" == "amp" ]]; then
-    OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || true
+    OUTPUT=$(cat "$SCRIPT_DIR/prompt.md" | amp --dangerously-allow-all 2>&1 | tee /dev/stderr) || LLM_EXIT=$?
   else
     # Claude Code: use --dangerously-skip-permissions for autonomous operation, --print for output
-    OUTPUT=$(claude --dangerously-skip-permissions --print < "$SCRIPT_DIR/CLAUDE.md" 2>&1 | tee /dev/stderr) || true
+    OUTPUT=$(claude --dangerously-skip-permissions --print < "$SCRIPT_DIR/CLAUDE.md" 2>&1 | tee /dev/stderr) || LLM_EXIT=$?
   fi
-  
-  # Check for completion signal
-  if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
+
+  # US-011: defensive 日志——把 LLM 子进程退出码显式写到 stderr（集成终端/日志聚合可见），
+  # 上游再用 `|| LLM_EXIT=...` 兜底，脚本本身不因 LLM 非零退出而中断。
+  echo "[ralph] iteration $i tool=$TOOL llm_exit=$LLM_EXIT" >&2
+
+  # US-011: COMPLETE 信号检测收紧：
+  #   1) 只扫描 OUTPUT 的最后 50 行，避免早期 prompt 回显里被讨论过的字面量误命中；
+  #   2) 行锚定（^...$）——sentinel 必须独占一行才算真的完成信号，防止 prose 里
+  #      出现 "I will emit <promise>COMPLETE</promise> once all done" 之类的散文触发。
+  if echo "$OUTPUT" | tail -n 50 | grep -qE '^[[:space:]]*<promise>COMPLETE</promise>[[:space:]]*$'; then
     echo ""
     echo "Ralph completed all tasks!"
     echo "Completed at iteration $i of $MAX_ITERATIONS"
     exit 0
   fi
-  
+
   echo "Iteration $i complete. Continuing..."
   sleep 2
 done

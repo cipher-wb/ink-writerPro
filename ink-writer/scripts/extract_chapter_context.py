@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 from chapter_outline_loader import load_chapter_outline
 
-from runtime_compat import enable_windows_utf8_stdio
+from runtime_compat import enable_windows_utf8_stdio, set_windows_proactor_policy
 
 try:
     from chapter_paths import find_chapter_file
@@ -1740,12 +1740,8 @@ def _render_text(payload: Dict[str, Any]) -> str:
 
 
 def main():
-    import sys as _sys_for_policy
-    if _sys_for_policy.platform == "win32":  # pragma: no cover
-        import asyncio as _asyncio_for_policy
-        _policy_cls = getattr(_asyncio_for_policy, "WindowsProactorEventLoopPolicy", None)
-        if _policy_cls is not None:
-            _asyncio_for_policy.set_event_loop_policy(_policy_cls())
+    # US-005: Windows asyncio subprocess support (no-op on Mac/Linux).
+    set_windows_proactor_policy()
     parser = argparse.ArgumentParser(description="提取章节创作所需的精简上下文")
     parser.add_argument("--chapter", type=int, required=True, help="目标章节号")
     parser.add_argument("--project-root", type=str, help="项目根目录")

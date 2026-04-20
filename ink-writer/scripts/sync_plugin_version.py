@@ -1,5 +1,12 @@
 ﻿from __future__ import annotations
 
+# US-010: ensure Windows stdio is UTF-8 wrapped when launched directly.
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+    _enable_utf8_stdio()
+except Exception:
+    pass
+
 import argparse
 import json
 import re

@@ -43,24 +43,27 @@ CORPUS_INDEX = BENCHMARK_DIR / "corpus_index.json"
 REFERENCE_DIR = BENCHMARK_DIR / "reference_corpus"
 REFERENCE_STATS = BENCHMARK_DIR / "reference_stats.json"
 
-# US-004: 跨平台 symlink 兜底。Windows 未启用开发者模式时 os.symlink 会抛
-# OSError；此时降级为 shutil.copy2，避免脚本中断。Mac/Linux 始终 symlink。
+# US-006: 跨平台 symlink 兜底。统一走 runtime_compat.safe_symlink，
+# 它在无 symlink 权限时自动 shutil.copyfile 降级并 WARNING 日志。
 try:
     sys.path.insert(0, str(REPO_ROOT / "ink-writer" / "scripts"))
-    from runtime_compat import _has_symlink_privilege as _has_symlink_priv  # type: ignore
+    from runtime_compat import safe_symlink as _safe_symlink  # type: ignore
 except Exception:  # pragma: no cover
-    def _has_symlink_priv() -> bool:
-        return sys.platform != "win32"
+    def _safe_symlink(src, dst, **_kwargs) -> bool:  # type: ignore
+        Path(dst).parent.mkdir(parents=True, exist_ok=True)
+        if sys.platform != "win32":
+            import os as _os
+            _os.symlink(Path(src), Path(dst))
+            return True
+        shutil.copyfile(src, dst)
+        return False
 
 
 def _link_or_copy(src: Path, dst: Path) -> None:
-    """symlink when allowed, else copy. Idempotent (skips if dst exists)."""
+    """Symlink when allowed, else copy. Idempotent (skips if dst exists)."""
     if dst.exists():
         return
-    if _has_symlink_priv():
-        dst.symlink_to(src.resolve())
-    else:  # pragma: no cover
-        shutil.copy2(src, dst)
+    _safe_symlink(src.resolve(), dst)
 
 DEFAULT_TOP_N = 50
 DEFAULT_MIN_CHAPTERS = 10

@@ -105,7 +105,7 @@ $ReportFile = Join-Path $ReportDir ("auto-{0}.md" -f $startTime.ToString('yyyyMM
 function Find-PythonLauncher {
     $candidates = @(
         @{ Cmd = 'py';      Args = @('-3', '--version') },
-        @{ Cmd = 'python3'; Args = @('--version')       },
+        @{ Cmd = 'python3'; Args = @('--version')       },  # c8-ok: detector primitive
         @{ Cmd = 'python';  Args = @('--version')       }
     )
     foreach ($c in $candidates) {
@@ -359,6 +359,13 @@ function Invoke-CliProcess {
         Write-Host "CLI 异常：$_"
         $exitCode = 1
     }
+
+    # US-012 defensive 日志：CLI 子进程非零退出时显式打到 stderr
+    # （与 ink-auto.sh:run_cli_process 的 LLM_EXIT 模式对等；成功时静默）
+    if ($exitCode -ne 0) {
+        [Console]::Error.WriteLine("[ink-auto] llm_exit=$exitCode tool=$Platform log=$LogFile")
+    }
+
     return $exitCode
 }
 

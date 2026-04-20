@@ -12,6 +12,7 @@
 #   WORKSPACE_ROOT, CLAUDE_PLUGIN_ROOT, SCRIPTS_DIR, PROJECT_ROOT
 #   SKILL_ROOT (如果设置了 INK_SKILL_NAME)
 #   DASHBOARD_DIR (如果设置了 INK_DASHBOARD=1)
+#   PYTHON_LAUNCHER（Mac/Linux → "python3"；Windows git-bash → 探测 py -3/python3/python）
 # ============================================================
 
 # Step 1: Workspace root
@@ -58,10 +59,40 @@ if [ "${INK_DASHBOARD:-0}" = "1" ]; then
   export DASHBOARD_DIR="${CLAUDE_PLUGIN_ROOT}/dashboard"
 fi
 
+# Step 5.5: Python launcher detection
+# Mac/Linux 走 "python3"（与历史行为字节级一致）；Windows git-bash / msys / cygwin
+# 下探测 py -3 → python3 → python，首个成功响应 --version 的候选胜出。
+# 与 env-setup.ps1:Find-PythonLauncher 保持语义对等。
+find_python_launcher_bash() {
+  case "${OSTYPE:-}" in
+    msys*|cygwin*|win32*)
+      local _cand _head
+      for _cand in "py -3" "python3" "python"; do  # c8-ok: detector primitive
+        _head="${_cand%% *}"
+        if command -v "$_head" >/dev/null 2>&1; then
+          if $_cand --version >/dev/null 2>&1; then
+            PYTHON_LAUNCHER="$_cand"
+            return 0
+          fi
+        fi
+      done
+      PYTHON_LAUNCHER="python"
+      ;;
+    *)
+      PYTHON_LAUNCHER="python3"  # c8-ok: detector primitive (Mac/Linux 定值)
+      ;;
+  esac
+}
+
+if [ -z "${PYTHON_LAUNCHER:-}" ]; then
+  find_python_launcher_bash
+fi
+export PYTHON_LAUNCHER
+
 # Step 6: Preflight check (optional, driven by INK_PREFLIGHT=1)
 if [ "${INK_PREFLIGHT:-0}" = "1" ]; then
-  python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" preflight
+  $PYTHON_LAUNCHER -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" preflight
 fi
 
 # Step 7: Resolve PROJECT_ROOT via ink.py
-export PROJECT_ROOT="$(python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"
+export PROJECT_ROOT="$($PYTHON_LAUNCHER -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${WORKSPACE_ROOT}" where)"

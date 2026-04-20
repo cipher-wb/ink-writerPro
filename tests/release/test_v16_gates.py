@@ -23,7 +23,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-EXPECTED_VERSION = "20.0.0"
+EXPECTED_VERSION = "21.0.0"
 
 
 # ---------------------------------------------------------------------------
@@ -120,7 +120,7 @@ def test_verify_docs_exit_zero() -> None:
         cwd=str(ROOT),
         capture_output=True,
         text=True,
-        timeout=120,
+        timeout=120, encoding="utf-8",
     )
     assert result.returncode == 0, (
         f"verify_docs.py failed with exit {result.returncode}\n"

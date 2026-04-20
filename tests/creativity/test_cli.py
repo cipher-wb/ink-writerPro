@@ -20,7 +20,7 @@ def _run_cli(args: list[str], env_extra: dict | None = None) -> subprocess.Compl
         env.update(env_extra)
     return subprocess.run(
         [sys.executable, "-m", "ink_writer.creativity"] + args,
-        env=env, capture_output=True, text=True, timeout=30,
+        env=env, capture_output=True, text=True, timeout=30, encoding="utf-8",
     )
 
 

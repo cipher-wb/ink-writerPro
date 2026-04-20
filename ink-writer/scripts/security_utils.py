@@ -261,7 +261,7 @@ def is_git_available() -> bool:
             ["git", "--version"],
             capture_output=True,
             text=True,
-            timeout=GIT_VERSION_CHECK_TIMEOUT
+            timeout=GIT_VERSION_CHECK_TIMEOUT, encoding="utf-8"
         )
         _git_available = result.returncode == 0
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):

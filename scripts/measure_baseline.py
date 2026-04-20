@@ -58,7 +58,7 @@ def _git_sha() -> str:
     try:
         result = subprocess.run(
             ["git", "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True, text=True, timeout=10, encoding="utf-8",
         )
         return result.stdout.strip() if result.returncode == 0 else "unknown"
     except Exception:

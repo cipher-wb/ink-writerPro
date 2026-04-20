@@ -110,7 +110,7 @@ def test_cli_off_mode_exit_0(tmp_path):
         [sys.executable, "-m", "ink_writer.checker_pipeline.step3_runner",
          "--chapter-id", "1", "--state-dir", str(project / ".ink"),
          "--mode", "off"],
-        env=env, capture_output=True, text=True, timeout=30,
+        env=env, capture_output=True, text=True, timeout=30, encoding="utf-8",
     )
     assert result.returncode == 0, f"expected 0, got {result.returncode}; stderr={result.stderr}"
 
@@ -123,7 +123,7 @@ def test_cli_shadow_mode_exit_0(tmp_path):
         [sys.executable, "-m", "ink_writer.checker_pipeline.step3_runner",
          "--chapter-id", "1", "--state-dir", str(project / ".ink"),
          "--mode", "shadow", "--dry-run", "--json"],
-        env=env, capture_output=True, text=True, timeout=120,
+        env=env, capture_output=True, text=True, timeout=120, encoding="utf-8",
     )
     assert result.returncode == 0, f"shadow should always exit 0; stderr={result.stderr}"
     # --json 输出到 stdout
@@ -159,7 +159,7 @@ def test_env_mode_override(tmp_path, monkeypatch):
     result = subprocess.run(
         [sys.executable, "-m", "ink_writer.checker_pipeline.step3_runner",
          "--chapter-id", "1", "--state-dir", str(project / ".ink")],
-        env=env, capture_output=True, text=True, timeout=30,
+        env=env, capture_output=True, text=True, timeout=30, encoding="utf-8",
     )
     assert result.returncode == 0
     assert "mode=off" in result.stderr

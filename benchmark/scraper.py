@@ -21,10 +21,13 @@ _ink_scripts = _os_win_stdio.path.join(
 if _os_win_stdio.path.isdir(_ink_scripts) and _ink_scripts not in _sys_win_stdio.path:
     _sys_win_stdio.path.insert(0, _ink_scripts)
 try:
-    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+    from runtime_compat import (
+        enable_windows_utf8_stdio as _enable_utf8_stdio,
+        set_windows_proactor_policy as _set_proactor_policy,
+    )
     _enable_utf8_stdio()
 except Exception:
-    pass
+    _set_proactor_policy = None
 
 import argparse
 import asyncio
@@ -655,11 +658,9 @@ class QidianScraper:
 # ============================================================
 
 def main():
-    import sys as _sys_for_policy
-    if _sys_for_policy.platform == "win32":  # pragma: no cover
-        _policy_cls = getattr(asyncio, "WindowsProactorEventLoopPolicy", None)
-        if _policy_cls is not None:
-            asyncio.set_event_loop_policy(_policy_cls())
+    # US-005: Windows asyncio subprocess support (no-op on Mac/Linux).
+    if _set_proactor_policy is not None:
+        _set_proactor_policy()
     parser = argparse.ArgumentParser(description="起点中文网热门小说爬虫")
     parser.add_argument("--test", action="store_true", help="测试模式（爬1本验证）")
     parser.add_argument("--limit", type=int, help="测试模式爬取数量限制")

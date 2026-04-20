@@ -29,7 +29,7 @@ def test_missing_api_key_fails_fast(script: Path):
         env=env,
         capture_output=True,
         text=True,
-        timeout=10,
+        timeout=10, encoding="utf-8",
     )
     assert result.returncode != 0, f"expected non-zero exit, got 0; stdout={result.stdout}"
     combined = result.stdout + result.stderr

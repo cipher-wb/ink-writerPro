@@ -831,7 +831,7 @@ def cleanup_artifacts(chapter_num, *, confirm: bool = False):
         artifacts_cleaned.append(str(chapter_path.relative_to(project_root)))
         artifacts_cleaned.append(f"章节备份已保存: {backup_path.relative_to(project_root)}")
 
-    result = subprocess.run(["git", "reset", "HEAD", "."], cwd=project_root, capture_output=True, text=True)
+    result = subprocess.run(["git", "reset", "HEAD", "."], cwd=project_root, capture_output=True, text=True, encoding="utf-8")
     if result.returncode == 0:
         artifacts_cleaned.append("Git 暂存区已清理（project）")
     else:

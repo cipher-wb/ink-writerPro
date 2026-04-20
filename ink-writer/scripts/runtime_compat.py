@@ -7,6 +7,7 @@ Runtime compatibility helpers.
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import re
 import shutil
@@ -19,6 +20,8 @@ from typing import Optional, Union
 _PROACTOR_POLICY_SET = False
 _SYMLINK_PRIVILEGE_CACHE: Optional[bool] = None
 _PYTHON_LAUNCHER_CACHE: Optional[str] = None
+
+_logger = logging.getLogger(__name__)
 
 
 def enable_windows_utf8_stdio(*, skip_in_pytest: bool = False) -> bool:
@@ -61,7 +64,30 @@ def normalize_windows_path(value: Union[str, Path]) -> Path:
     - Git Bash / MSYS:  /d/desktop/...  => D:/desktop/...
     - WSL:             /mnt/d/desktop/... => D:/desktop/...
 
-    非 Windows 平台直接返回 Path(value)。
+    非 Windows 平台直接返回 Path(value)（透传，不改语义）。
+    既接受 str 也接受 Path 输入。
+
+    使用场景（US-003 / 跨平台审计）：
+
+    1. 接收用户在 Git Bash / WSL 终端粘贴的项目路径：
+
+        >>> from runtime_compat import normalize_windows_path
+        >>> p = normalize_windows_path("/d/projects/我的小说")
+        >>> # Mac/Linux:  Path('/d/projects/我的小说')
+        >>> # Windows:    Path('D:/projects/我的小说')
+
+    2. 配合 ``ink_writer/cli`` 解析 ``--project`` 参数：
+
+        >>> args.project_dir = normalize_windows_path(args.project_dir)
+        >>> # 之后 args.project_dir / ".ink" / "state.json" 在两个平台都正确
+
+    3. 处理跨工具传递的混合分隔符路径（用户 / config / env var）：
+
+        >>> normalize_windows_path("/mnt/c/Users/me/project")
+        >>> # Windows: Path('C:/Users/me/project')
+
+    幂等性：对已经是盘符形态（``D:/...``）或非 POSIX 风格的路径，
+    返回 ``Path(value)`` 不变。
     """
     if sys.platform != "win32":
         return Path(value)
@@ -132,6 +158,68 @@ def _has_symlink_privilege() -> bool:
     except (OSError, NotImplementedError, AttributeError):  # pragma: no cover
         _SYMLINK_PRIVILEGE_CACHE = False
     return bool(_SYMLINK_PRIVILEGE_CACHE)
+
+
+def safe_symlink(
+    src: Union[str, Path],
+    dst: Union[str, Path],
+    *,
+    target_is_directory: bool = False,
+    overwrite: bool = False,
+) -> bool:
+    """Create a symlink ``dst → src``; fall back to ``shutil.copy`` on
+    Windows when the current process lacks symlink privilege.
+
+    On POSIX (Mac/Linux), :func:`_has_symlink_privilege` always returns True,
+    so this helper behaves exactly like ``os.symlink`` — byte-level
+    compatible. On Windows without Developer Mode / Administrator rights,
+    symlink creation raises ``OSError``; we catch that by probing permission
+    first and gracefully degrading to a copy plus a ``WARNING`` log, so the
+    calling script keeps running.
+
+    Args:
+        src: Target path the link should point at (must exist if falling
+            back to copy).
+        dst: Link path to create (must not exist unless ``overwrite=True``).
+        target_is_directory: Hint passed to :func:`os.symlink` on Windows;
+            also used to pick ``copytree`` vs ``copyfile`` when falling back.
+        overwrite: If True, remove an existing ``dst`` first. A directory
+            ``dst`` that is not itself a symlink is removed via
+            ``shutil.rmtree``; anything else goes through ``unlink``.
+
+    Returns:
+        True if a real symlink was created (POSIX always, or Windows with
+        privilege); False if a copy fallback was used.
+
+    Raises:
+        FileExistsError: If ``dst`` already exists and ``overwrite`` is
+            False.
+    """
+    src_path = Path(src)
+    dst_path = Path(dst)
+
+    if dst_path.exists() or dst_path.is_symlink():
+        if not overwrite:
+            raise FileExistsError(f"dst already exists: {dst_path}")
+        if dst_path.is_dir() and not dst_path.is_symlink():
+            shutil.rmtree(dst_path)
+        else:
+            dst_path.unlink()
+
+    if _has_symlink_privilege():
+        os.symlink(src_path, dst_path, target_is_directory=target_is_directory)
+        return True
+
+    _logger.warning(  # pragma: no cover
+        "safe_symlink: no symlink privilege on Windows; copying %s -> %s",
+        src_path,
+        dst_path,
+    )
+    if src_path.is_dir() or target_is_directory:  # pragma: no cover
+        shutil.copytree(src_path, dst_path)
+    else:  # pragma: no cover
+        shutil.copyfile(src_path, dst_path)
+    return False  # pragma: no cover
 
 
 def _probe_launcher(cmd: list[str]) -> bool:

@@ -91,7 +91,7 @@ class TestCLI:
         result = subprocess.run(
             [sys.executable, str(SCRIPTS_DIR / "encoding_validator.py"), "--file", str(f)],
             capture_output=True,
-            text=True,
+            text=True, encoding="utf-8",
         )
         assert result.returncode == 0
         data = json.loads(result.stdout)
@@ -104,7 +104,7 @@ class TestCLI:
         result = subprocess.run(
             [sys.executable, str(SCRIPTS_DIR / "encoding_validator.py"), "--file", str(f)],
             capture_output=True,
-            text=True,
+            text=True, encoding="utf-8",
         )
         assert result.returncode == 1
         data = json.loads(result.stdout)
@@ -121,7 +121,7 @@ class TestCLI:
                 str(tmp_path / "nonexistent.md"),
             ],
             capture_output=True,
-            text=True,
+            text=True, encoding="utf-8",
         )
         assert result.returncode == 2
 
@@ -140,7 +140,7 @@ class TestCLI:
                 "3",
             ],
             capture_output=True,
-            text=True,
+            text=True, encoding="utf-8",
         )
         assert result.returncode == 1
         data = json.loads(result.stdout)
