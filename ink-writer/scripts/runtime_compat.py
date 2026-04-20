@@ -61,7 +61,30 @@ def normalize_windows_path(value: Union[str, Path]) -> Path:
     - Git Bash / MSYS:  /d/desktop/...  => D:/desktop/...
     - WSL:             /mnt/d/desktop/... => D:/desktop/...
 
-    非 Windows 平台直接返回 Path(value)。
+    非 Windows 平台直接返回 Path(value)（透传，不改语义）。
+    既接受 str 也接受 Path 输入。
+
+    使用场景（US-003 / 跨平台审计）：
+
+    1. 接收用户在 Git Bash / WSL 终端粘贴的项目路径：
+
+        >>> from runtime_compat import normalize_windows_path
+        >>> p = normalize_windows_path("/d/projects/我的小说")
+        >>> # Mac/Linux:  Path('/d/projects/我的小说')
+        >>> # Windows:    Path('D:/projects/我的小说')
+
+    2. 配合 ``ink_writer/cli`` 解析 ``--project`` 参数：
+
+        >>> args.project_dir = normalize_windows_path(args.project_dir)
+        >>> # 之后 args.project_dir / ".ink" / "state.json" 在两个平台都正确
+
+    3. 处理跨工具传递的混合分隔符路径（用户 / config / env var）：
+
+        >>> normalize_windows_path("/mnt/c/Users/me/project")
+        >>> # Windows: Path('C:/Users/me/project')
+
+    幂等性：对已经是盘符形态（``D:/...``）或非 POSIX 风格的路径，
+    返回 ``Path(value)`` 不变。
     """
     if sys.platform != "win32":
         return Path(value)

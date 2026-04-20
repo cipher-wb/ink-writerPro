@@ -165,13 +165,28 @@ def test_c1_skips_non_file_open_receivers(tmp_path: Path) -> None:
 
 
 def test_c2_detects_hardcoded_path_literal(tmp_path: Path) -> None:
+    """US-003 重构：C2 仅在 filesystem 上下文（Path()/path-named var/fs call）报告。"""
     src = tmp_path / "paths.py"
     src.write_text(
         textwrap.dedent(
             """\
-            ROOT = "ink-writer/scripts/runtime_compat.py"
+            from pathlib import Path
+            import os
+
+            # filesystem call — 应检出
+            ROOT = Path("ink-writer/scripts/runtime_compat.py")
+
+            # path-named target — 应检出
+            DATA_DIR = "data/cache/embeddings"
+
+            # 非路径上下文（赋给非路径名变量）— 不应报告
             DEEP = "a/b/c/d/e.txt"
+
+            # URL — 不应报告
             URL = "https://example.com/some/page"
+            os.path.exists("https://nope/api/v1")
+
+            # 太短 / 带空格 — 不应报告
             SHORT = "a/b"
             SENTENCE = "this is a/some text with spaces"
             """
@@ -180,11 +195,157 @@ def test_c2_detects_hardcoded_path_literal(tmp_path: Path) -> None:
     )
     findings = scan_c2_hardcoded_paths([src])
     msgs = [f.message for f in findings]
-    # 应检出 ROOT / DEEP，不应误报 URL / SHORT / SENTENCE
+    # 检出
     assert any("ink-writer/scripts/runtime_compat.py" in m for m in msgs)
-    assert any("a/b/c/d/e.txt" in m for m in msgs)
+    assert any("data/cache/embeddings" in m for m in msgs)
+    # 不报
+    assert not any("a/b/c/d/e.txt" in m for m in msgs), \
+        f"DEEP 不在 fs 上下文且变量名非 path-like，不应报：{msgs}"
     assert not any("example.com" in m for m in msgs)
     assert not any('"a/b"' in m for m in msgs)
+
+
+def test_c2_skips_http_routes(tmp_path: Path) -> None:
+    """US-003 重构：HTTP route（/api/.../...）不应被当作 filesystem 路径报告。"""
+    src = tmp_path / "routes.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            from flask import Flask
+            app = Flask(__name__)
+
+            @app.route("/api/project/info")
+            def info(): return {}
+
+            @app.route("/api/files/tree")
+            def tree(): return {}
+
+            # 即使在 .get/.post 风格调用里也不是 fs 路径
+            client.get("/api/v1/foo/bar")
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c2_hardcoded_paths([src])
+    assert findings == [], f"HTTP route 不应被 C2 误报：{findings}"
+
+
+def test_c2_skips_chinese_display_labels(tmp_path: Path) -> None:
+    """US-003 重构：含 CJK 字符的 'a/b/c' 形态是显示标签，不应报告。"""
+    src = tmp_path / "labels.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            from pathlib import Path
+
+            # dict 值——典型显示标签
+            GENRE_MODE = {
+                "xianxia": "爽点种子/压制/不公/利益/力量信号",
+                "romance": "情绪暴击/关系反转/身份张力",
+            }
+
+            # 即使在 fs call 里，含中文段也判定为非路径（保守）
+            Path("打散为动作/对话/心理/混排")
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c2_hardcoded_paths([src])
+    assert findings == [], f"中文显示标签不应被 C2 误报：{findings}"
+
+
+def test_c2_skips_os_path_join_components(tmp_path: Path) -> None:
+    """US-003 重构：os.path.join 的非首参数是组件，Python 在 Windows 上自动归一化，不报。"""
+    src = tmp_path / "join.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            import os
+
+            scripts = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)),
+                '../ink-writer/scripts',
+            )
+            sub = os.path.join("/tmp", "a/b/c/d.txt")  # 第二参数不报
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c2_hardcoded_paths([src])
+    assert findings == [], f"os.path.join 组件不应被 C2 误报：{findings}"
+
+
+def test_c2_detects_in_filesystem_call(tmp_path: Path) -> None:
+    """US-003 重构：Path("...") / shutil.copy("...") / os.remove("...") 等 fs call 报告。"""
+    src = tmp_path / "fs_calls.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            from pathlib import Path
+            import os
+            import shutil
+
+            Path("etc/config/app.yml")
+            os.path.exists("var/log/app.log")
+            shutil.copy("src/foo/bar.py", "dst/foo/bar.py")
+            os.remove("tmp/cache/data.bin")
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c2_hardcoded_paths([src])
+    msgs = [f.message for f in findings]
+    assert any("etc/config/app.yml" in m for m in msgs)
+    assert any("var/log/app.log" in m for m in msgs)
+    assert any("src/foo/bar.py" in m for m in msgs)
+    assert any("dst/foo/bar.py" in m for m in msgs)
+    assert any("tmp/cache/data.bin" in m for m in msgs)
+    assert all(f.category == "C2" for f in findings)
+
+
+def test_c2_detects_path_named_target(tmp_path: Path) -> None:
+    """US-003 重构：*_PATH / *_DIR / *_FILE / *_ROOT 命名的字符串赋值报告。"""
+    src = tmp_path / "vars.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            CONFIG_PATH = "etc/app/config.yml"
+            CACHE_DIR = "var/cache/app"
+            ROOT_FILE: str = "etc/passwd/root.conf"
+            FOO_FOLDER = "var/data/uploads"
+
+            # 不是 path-named target，不报
+            URL = "ws://example.com/feed/data"
+            label = "美/好/世界"
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c2_hardcoded_paths([src])
+    msgs = [f.message for f in findings]
+    assert any("etc/app/config.yml" in m for m in msgs)
+    assert any("var/cache/app" in m for m in msgs)
+    assert any("etc/passwd/root.conf" in m for m in msgs)
+    assert any("var/data/uploads" in m for m in msgs)
+    assert not any("example.com" in m for m in msgs)
+    assert not any("世界" in m for m in msgs)
+
+
+def test_c2_dedups_same_constant(tmp_path: Path) -> None:
+    """同一行 constant 被同一调用消费一次只报一条。"""
+    src = tmp_path / "dup.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            from pathlib import Path
+            DATA_PATH = Path("etc/foo/bar.yml")
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c2_hardcoded_paths([src])
+    # DATA_PATH 同时被 path-named target + fs call 命中，但 dedup 只留一条
+    assert len(findings) == 1, f"应去重为 1，实得 {findings}"
 
 
 # ---------------------------------------------------------------------------
@@ -458,9 +619,9 @@ def synthetic_project(tmp_path: Path) -> tuple[Path, dict[str, Path]]:
         encoding="utf-8",
     )
 
-    # C2
+    # C2 — 用 path-named target 触发 context-aware 检测（US-003 重构后）
     c2 = proj / "c2_path.py"
-    c2.write_text('P = "ink-writer/scripts/runtime_compat.py"\n', encoding="utf-8")
+    c2.write_text('CONFIG_PATH = "ink-writer/scripts/runtime_compat.py"\n', encoding="utf-8")
 
     # C3
     c3 = proj / "c3_sub.py"

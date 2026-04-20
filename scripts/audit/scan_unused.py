@@ -44,7 +44,7 @@ from typing import Dict, List, Set, Tuple
 # 路径配置
 # ----------------------------------------------------------------------
 
-PROJECT_ROOT = Path("/Users/cipher/AI/ink/ink-writer")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 INK_WRITER_PKG = PROJECT_ROOT / "ink_writer"           # python 包
 AGENTS_DIR = PROJECT_ROOT / "ink-writer" / "agents"    # agent 规格目录
 REFERENCES_DIR = PROJECT_ROOT / "ink-writer" / "references"

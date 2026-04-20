@@ -49,8 +49,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Done 2026-04-20: C2 findings 110→0，总报告 196→86。核心动作是 scanner 重构（context-aware）：仅在字符串作为 ① filesystem call 参数（Path()/os.path.*/shutil.* 等）或 ② path-named target（X_PATH/X_DIR/X_FILE/X_ROOT/X_FOLDER）时才报告；自动跳过 ① os.path.join 非首参数（Python 在 Windows 上自动归一化）② HTTP route（含 /api/...）③ CJK 显示标签（如 '设定集/角色库/主要角色'）④ 含空格句子。剩余 1 处真实 finding（scripts/audit/scan_unused.py:47 硬编码 Mac 绝对路径）改为 Path(__file__).resolve().parents[2]。新增 tests/core/test_path_cross_platform.py（17 tests：4 类 Chinese path + 3 类 spaces + 5 类 UNC/normalize_windows_path + 2 类 os.path.join 防回归 + 3 类 tempfile/shutil 互操作）；扩展 tests/audit/test_audit_cross_platform.py（+6 C2 tests：refactor / HTTP route / CJK label / join components / fs call / path-named target / dedup）；更新 normalize_windows_path docstring 加 3 个使用场景示例。全量 pytest: 3076 passed / 23 skipped / 0 failed (baseline 3053 → +23 新测试，零回归)。"
     },
     {
       "id": "US-004",

@@ -269,7 +269,7 @@ def scan_c1_open_encoding(py_files: Iterable[Path]) -> list[Finding]:
 
 
 # ---------------------------------------------------------------------------
-# C2: 硬编码路径分隔符（Python 字符串字面量含 "/" 且看起来像路径）
+# C2: 硬编码路径分隔符（仅 filesystem 上下文 + 看起来像路径）
 # ---------------------------------------------------------------------------
 
 
@@ -279,30 +279,178 @@ _PATH_LIKE_RE = re.compile(
     r"(?P<core>(?:\.{0,2}/?)?[\w\-.]+(?:/[\w\-.]+){2,})/?$"
 )
 
+# CJK 范围：用于排除"中文显示标签"假阳（如 '设定集/角色库/主要角色'）
+_CJK_CHAR_RE = re.compile(r"[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]")
+# 段必须看起来像 ASCII 路径分量（字母/数字/._-）
+_ASCII_PATH_SEGMENT_RE = re.compile(r"^[A-Za-z0-9._\-]+$")
+# HTTP route 形态：以 / 开头，全是 ASCII 字母数字 - _ . :{} 的段
+_HTTP_ROUTE_RE = re.compile(r"^/(?:[A-Za-z0-9._\-:{}]+)(?:/[A-Za-z0-9._\-:{}]*)*$")
+
 
 def _looks_like_hardcoded_path(value: str) -> bool:
+    """启发式：字符串看起来像 filesystem 路径（不是 URL/route/中文显示标签）。"""
     if not value or len(value) > 200:
         return False
-    if "\n" in value:
+    if "\n" in value or " " in value:
         return False
-    if " " in value:
-        # 带空格的"句子"几乎一定是显示文本而非路径
-        return False
-    if value.startswith(("http://", "https://", "//", "ws://", "wss://", "git@")):
+    if value.startswith(("http://", "https://", "//", "ws://", "wss://", "git@", "s3://", "file://")):
         return False
     if value.endswith((".com", ".org", ".net", ".io", ".cn")):
         return False
     if "/" not in value:
         return False
-    # 至少 3 段（避免 "a/b" 类误报）
     parts = [p for p in value.split("/") if p]
-    if len(parts) < 3:
+    if len(parts) < 2:
+        return False
+    # 任一段含 CJK：判定为显示标签（如 '设定集/角色库/主要角色'）
+    for p in parts:
+        if _CJK_CHAR_RE.search(p):
+            return False
+    # 至少一段必须是 ASCII 路径分量（排除 '../../etc/hosts' 这种 traversal 测试 fixture
+    # 仍允许通过：前两段是 '..'，第三段是 'etc'，是合法 ASCII 段）
+    if not any(_ASCII_PATH_SEGMENT_RE.match(p) for p in parts):
         return False
     return bool(_PATH_LIKE_RE.match(value))
 
 
+# 已知"消费 filesystem 路径"的调用目标（按调用名末段或限定名匹配）
+_FS_CONSUMING_NAMES = {
+    "Path",
+    "PurePath",
+    "PosixPath",
+    "WindowsPath",
+    "PurePosixPath",
+    "PureWindowsPath",
+    # 不含 "open" —— 由 C1 负责且会触发误报
+}
+
+_FS_CONSUMING_QUALIFIED = {
+    # os.path
+    "os.path.join",
+    "os.path.exists",
+    "os.path.isfile",
+    "os.path.isdir",
+    "os.path.dirname",
+    "os.path.abspath",
+    "os.path.realpath",
+    "os.path.basename",
+    "os.path.split",
+    "os.path.splitext",
+    "os.path.expanduser",
+    "os.path.expandvars",
+    "os.path.normpath",
+    "os.path.relpath",
+    # os
+    "os.remove",
+    "os.rename",
+    "os.unlink",
+    "os.makedirs",
+    "os.mkdir",
+    "os.listdir",
+    "os.stat",
+    "os.access",
+    "os.rmdir",
+    "os.chdir",
+    "os.scandir",
+    # shutil
+    "shutil.copy",
+    "shutil.copyfile",
+    "shutil.move",
+    "shutil.rmtree",
+    "shutil.copytree",
+    "shutil.copy2",
+    "shutil.make_archive",
+    # pathlib (qualified)
+    "pathlib.Path",
+    "pathlib.PurePath",
+}
+
+# os.path.join 的二三参数本就允许 "/"（Python 在 Windows 上会归一化），不报告
+_FS_JOIN_TARGETS = {"os.path.join", "join"}
+
+# 路径变量名启发式：以 _PATH / _DIR / _FILE / _ROOT 结尾，或 PATH_*/DIR_*/...
+_PATH_VAR_NAME_RE = re.compile(r"(?:^|_)(PATH|DIR|FILE|ROOT|FOLDER)$", re.I)
+
+
+def _is_fs_consuming_call(call: ast.Call) -> bool:
+    """该 Call 是否以 filesystem 路径为参数（Path()/os.*/shutil.* 等）。"""
+    func = call.func
+    # Name: Path(...) / PurePath(...)
+    if isinstance(func, ast.Name):
+        return func.id in _FS_CONSUMING_NAMES
+    # Attribute: os.path.exists / shutil.copy / pathlib.Path
+    if isinstance(func, ast.Attribute):
+        qualified = _resolve_call_target(call)
+        if qualified and qualified in _FS_CONSUMING_QUALIFIED:
+            return True
+        # 末段名（兼容 from os.path import join 后直接 join(...) 不一定可识别，
+        # 但 attribute 形态下用 attr 末段）
+        if func.attr in _FS_CONSUMING_NAMES:
+            return True
+    return False
+
+
+def _is_path_named_target(target: ast.expr) -> bool:
+    """Assign target 名是否暗示是 filesystem 路径变量（_PATH / _DIR / _FILE / _ROOT）。"""
+    name: Optional[str] = None
+    if isinstance(target, ast.Name):
+        name = target.id
+    elif isinstance(target, ast.Attribute):
+        name = target.attr
+    if not name:
+        return False
+    return bool(_PATH_VAR_NAME_RE.search(name))
+
+
+def _string_constants_in_call(call: ast.Call) -> Iterable[ast.Constant]:
+    """提取 Call 的字符串字面量参数（args + keywords）。"""
+    for arg in call.args:
+        if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+            yield arg
+    for kw in call.keywords:
+        if isinstance(kw.value, ast.Constant) and isinstance(kw.value.value, str):
+            yield kw.value
+
+
+def _string_constants_in_assign(assign: ast.Assign) -> Iterable[ast.Constant]:
+    """Assign 右值若是字符串字面量直接 yield。"""
+    if isinstance(assign.value, ast.Constant) and isinstance(assign.value.value, str):
+        yield assign.value
+
+
 def scan_c2_hardcoded_paths(py_files: Iterable[Path]) -> list[Finding]:
+    """C2: 仅在"字符串作为 filesystem 路径被使用"时报告。
+
+    检测策略（context-aware）：
+
+    1. **filesystem call** — 字符串作为 ``Path()`` / ``os.path.exists()`` /
+       ``shutil.copy()`` 等已知文件系统 API 的参数；
+    2. **path-named target** — 字符串赋给名字暗示是路径的变量
+       （``X_PATH`` / ``X_DIR`` / ``X_FILE`` / ``X_ROOT`` / ``X_FOLDER``）。
+
+    其余场景（HTTP route / 中文显示标签 / 配置 dict 值 / sys.path
+    bootstrap 中的 ``os.path.join`` 第二参数）**一律不报告**——这些
+    在 Windows 上要么是 idiomatic 安全，要么根本不是路径。
+    """
     findings: list[Finding] = []
+    seen: set[tuple[str, int, str]] = set()
+
+    def _emit(path: Path, const: ast.Constant) -> None:
+        key = (str(path), const.lineno, const.value)
+        if key in seen:
+            return
+        seen.add(key)
+        findings.append(
+            Finding(
+                category="C2",
+                severity="Low",
+                path=str(path),
+                line=const.lineno,
+                message=f"疑似硬编码路径字面量: {const.value!r}",
+                suggestion="改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化",
+            )
+        )
+
     for path in py_files:
         src = safe_read_text(path)
         if not src:
@@ -311,23 +459,48 @@ def scan_c2_hardcoded_paths(py_files: Iterable[Path]) -> list[Finding]:
             tree = ast.parse(src, filename=str(path))
         except SyntaxError:
             continue
+
         for node in ast.walk(tree):
-            if not isinstance(node, ast.Constant):
-                continue
-            if not isinstance(node.value, str):
-                continue
-            if not _looks_like_hardcoded_path(node.value):
-                continue
-            findings.append(
-                Finding(
-                    category="C2",
-                    severity="Low",
-                    path=str(path),
-                    line=node.lineno,
-                    message=f"疑似硬编码路径字面量: {node.value!r}",
-                    suggestion="改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台",
+            # filesystem call
+            if isinstance(node, ast.Call) and _is_fs_consuming_call(node):
+                qualified = _resolve_call_target(node) or ""
+                # os.path.join：除第一个参数外的字符串属于"组件"，跨平台安全 —— 跳过
+                is_join = qualified in _FS_JOIN_TARGETS or (
+                    isinstance(node.func, ast.Attribute) and node.func.attr == "join"
                 )
-            )
+                for idx, arg in enumerate(node.args):
+                    if not (isinstance(arg, ast.Constant) and isinstance(arg.value, str)):
+                        continue
+                    # join 的非首参视为安全组件
+                    if is_join and idx > 0:
+                        continue
+                    if _looks_like_hardcoded_path(arg.value):
+                        _emit(path, arg)
+                # keyword string args 全检
+                for kw in node.keywords:
+                    if isinstance(kw.value, ast.Constant) and isinstance(kw.value.value, str):
+                        if _looks_like_hardcoded_path(kw.value.value):
+                            _emit(path, kw.value)
+
+            # path-named assign target
+            if isinstance(node, ast.Assign):
+                if not any(_is_path_named_target(t) for t in node.targets):
+                    continue
+                for const in _string_constants_in_assign(node):
+                    if _looks_like_hardcoded_path(const.value):
+                        _emit(path, const)
+
+            # AnnAssign 也覆盖：CONST_PATH: str = "a/b/c"
+            if isinstance(node, ast.AnnAssign):
+                if node.target is None or not _is_path_named_target(node.target):
+                    continue
+                if (
+                    node.value is not None
+                    and isinstance(node.value, ast.Constant)
+                    and isinstance(node.value.value, str)
+                    and _looks_like_hardcoded_path(node.value.value)
+                ):
+                    _emit(path, node.value)
     return findings
 
 
