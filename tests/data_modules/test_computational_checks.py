@@ -108,12 +108,45 @@ class TestCheckWordCount:
         assert r.severity == "hard"
         assert "100" in r.message
 
-    def test_soft_warning_too_long(self):
+    def test_hard_failure_too_long_default(self):
+        """v23: default max_words_hard=5000，超出即硬失败（替代旧的 soft 警告）."""
         text = "字" * 6000
         r = check_word_count(text)
         assert r.passed is False
-        assert r.severity == "soft"
+        assert r.severity == "hard"
         assert "6000" in r.message
+
+    def test_word_count_hard_upper_limit(self):
+        """显式 max_words_hard：超过即硬失败，passed=False."""
+        text = "字" * 4500
+        r = check_word_count(text, max_words_hard=4000)
+        assert r.passed is False
+        assert r.severity == "hard"
+        assert "4500" in r.message
+        assert "4000" in r.message
+
+    def test_word_count_soft_buffer(self):
+        """缓冲带：max_words_hard < count <= max_words_soft 返回 soft 警告."""
+        text = "字" * 4200  # > 4000, ≤ 4500
+        r = check_word_count(text, max_words_hard=4000, max_words_soft=4500)
+        assert r.passed is False
+        assert r.severity == "soft"
+        assert "4200" in r.message
+
+    def test_word_count_soft_buffer_overflow_is_hard(self):
+        """超出缓冲带上限 → 硬失败."""
+        text = "字" * 4600
+        r = check_word_count(text, max_words_hard=4000, max_words_soft=4500)
+        assert r.passed is False
+        assert r.severity == "hard"
+
+    def test_word_count_backward_compat_max_words_alias(self):
+        """deprecated max_words 别名：自动映射到 max_words_hard，行为对齐硬上限."""
+        text = "字" * 4800
+        r = check_word_count(text, max_words=4500)
+        assert r.passed is False
+        assert r.severity == "hard"
+        assert "4800" in r.message
 
     def test_markdown_headings_stripped(self):
         heading = "# 第一章 标题\n## 小节\n"
@@ -575,8 +608,9 @@ class TestRunAllChecks:
 
     def test_soft_warning_does_not_block(self, tmp_path):
         chapter_file = Path("第0001章.md")
-        # Generate text that's over max_words (>5000) but has adequate dialogue
-        text = self._make_text_with_dialogue(narrative_chars=4000, dialogue_count=80)
+        # v23: 字数硬上限收紧后，依靠 vocab/emotion 等检查产出软警告即可，
+        # 字数本身保持在 ≤5000 硬上限内。
+        text = self._make_text_with_dialogue(narrative_chars=3600, dialogue_count=60)
         result = run_all_checks(tmp_path, 1, chapter_file, text)
 
         assert result["pass"] is True
@@ -675,10 +709,10 @@ class TestMain:
 
     def test_text_output_with_soft_warnings(self, tmp_path, capsys):
         chapter_file = tmp_path / "第0001章.md"
-        # Generate text > 5000 chars with adequate dialogue ratio
-        narrative = "叙述" * 2000
-        dialogues = "".join(f"\u201c角色对话内容第{i}句话\u201d" for i in range(80))
-        chapter_file.write_text(narrative + dialogues, encoding="utf-8")  # soft warning: too long
+        # v23: 字数硬上限收紧后，依靠词汇多样性/情感标点等检查产生软警告。
+        narrative = "叙述" * 1800  # 3600 chars，触发 vocab/emotion soft 警告
+        dialogues = "".join(f"\u201c角色对话内容第{i}句话\u201d" for i in range(60))
+        chapter_file.write_text(narrative + dialogues, encoding="utf-8")
 
         with patch(
             "sys.argv",
