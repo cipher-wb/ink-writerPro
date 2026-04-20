@@ -142,8 +142,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "ink-writer/agents/polish-agent.md 顶部新增 ## Simplification Pass (直白模式场景) 章节（置于 Layer 9 之后、Step 5 No-Poison 之前，PRD 要求的执行顺序落位）：(1) 激活判定与 directness-checker 同源（chapter_no ∈ [1,2,3] OR scene_mode ∈ {combat,climax,high_point}，程序化对等 should_activate_simplification）；(2) 五条精简规则 S1-S5 全覆盖 PRD AC（S1 黑名单命中删除/替换消费 prose-blacklist.yaml 三类、S2 句长>35字拆≤20字、S3 连续≥2修辞保留首删其余、S4 空描写段>3句压至2句、S5 形容词→动词+具体细节）；(3) 70% 字数下限硬约束 + 目标区间 20-30%；(4) 与其他层并存 5 条约束（不替代 Layer 8 / 润色红线沿用 / editor_wisdom simplicity 并行 / L10b L10e 暂挂协议复用 US-006/US-007）；(5) 执行顺序流程图 + 冗余段→精简段示例；(6) 润色报告追加 Simplification Pass 字段。新增 ink_writer/prose/simplification_pass.py（~350 行）确定性辅助实现：should_activate_simplification（复用 directness_checker.is_activated 单源）、SimplificationReport frozen dataclass（字数/命中/回滚/rules_fired + reduction_ratio property）、simplify_text 核心入口（S1 _strip_abstract_adjectives 长词优先 literal 删除、S3 _collapse_consecutive_rhetoric 单句内 marker 去重保首、S4 _compress_empty_paragraphs 无对话+无代词>3 句压至首末两句、S2 _split_long_sentences 按逗号/分号靠中点拆分、70% floor 低于即回滚并返回原文）。ink_writer/prose/__init__.py 新增 SimplificationReport / should_activate_simplification / simplify_text 三符号导出。新增 tests/prose/test_simplification_pass.py（49 用例全通过）：spec-level 14 parametrize 锁关键词（五条规则 S1-S5 / 8 个规则概念 / 激活 5 关键词 / 70% floor / 并存 / helper API / 黑名单资产 / Layer 9 位置 / No-Poison 位置）+ activation 矩阵 13 parametrize + should_activate 与 directness_checker.is_activated 一致性 56 case 笛卡儿积扫描 + PRD AC 主锚点 test_redundant_paragraph_reduced_and_blacklist_cleared（6 命中→0 命中 + reduction ≥20%）+ 长句拆分 / 修辞压缩单句内保首 / 70% floor 回滚 / 宽 floor 空描写压缩 / 清洁文本零改 / reduction_ratio 代数边界 / 自定义 blacklist 覆盖 / 公开 API 导出一致。pytest --no-cov -p no:randomly = 3408 passed / 23 skipped / 0 failed（baseline 3359 + 49 新用例 = 3408，零回归）。ruff 全绿（3 处 I001 auto-fix）。"
     },
     {
       "id": "US-009",

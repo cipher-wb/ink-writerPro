@@ -4,7 +4,7 @@
 
 ## Summary
 
-- **Python modules scanned**: 164
+- **Python modules scanned**: 165
 - **Import cycles found**: 0
 - **Unused module candidates**: 2
 - **Agents scanned**: 23

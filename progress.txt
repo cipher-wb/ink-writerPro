@@ -321,6 +321,8 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
 ---
 
 
+
+
 ## 2026-04-20 - US-007: writer-agent L10b/L10e 感官丰富度冲突解耦
 
 - 单源激活判定：新增 `ink_writer/prose/sensory_immersion_gate.py`（~40 行），暴露 `should_skip_sensory_immersion(scene_mode, chapter_no)` 与常量 `SENSORY_IMMERSION_CHECKER_NAME`，内部复用 `directness_checker.is_activated` ——writer / checker / arbitration 三端激活判定共享同一真相源；修改激活条件只需改 directness_checker 一处
@@ -354,4 +356,49 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
   - **pytest -p no:randomly 稳定排序**：全量回归验证首选 `pytest --no-cov -p no:randomly`。仓库有 pytest-randomly 安装；当 sentence-transformers 在 fixture session 中被提前初始化时，后到的 style_rag 初始化会失败。这是 pre-existing 耦合，非本 PR 引入
   - **arbitration.collect_issues scene_mode kwarg 模式**：新加的两个 kwarg-only 参数 `scene_mode` + `chapter_no` 均有 sensible default（None / 0）→ 现存调用方零代码改动仍保持原行为，直到 US-009（context pack 暴露 scene_mode）把场景信号真正接进来才开始过滤
   - **agent spec 交叉引用一致性**：每次在 writer-agent.md 增加一段"checker 侧会 skipped"的描述，就必须在对应 checker.md 里放一段对称的"writer-agent 侧会暂挂"回指。本轮用 `sensory-immersion-checker.md` → `writer-agent.md` 的 "Directness Mode" 超链+二者共同指向 should_skip_sensory_immersion 实现同步——avoid one-sided spec drift
+---
+## 2026-04-20 - US-008: polish-agent 精简 pass
+
+- `ink-writer/agents/polish-agent.md` 新增 `## Simplification Pass (直白模式场景)` 章节（位于 Layer 9 `### 4.6 Layer 9 文笔冲击力润色` 之后、`### 5. No-Poison 毒点规避` 之前——符合 PRD 执行顺序 "Layer 9z 通过 → Simplification Pass → Step 5 No-Poison"）：
+  - 激活判定与 directness-checker 单源（chapter_no ∈ [1,2,3] OR scene_mode ∈ {combat,climax,high_point}），程序化对等 `ink_writer.prose.simplification_pass.should_activate_simplification`
+  - **五条精简规则（S1-S5 全覆盖 PRD AC）**：
+    - S1 黑名单命中词删除/替换（消费 US-003 `prose-blacklist.yaml` 三类：abstract_adjectives / empty_phrases / pretentious_metaphors）
+    - S2 长句拆分（>35 字 → 目标 ≤20 字短句，按逗号/分号自然断点；无断点则保留原句 + advisory）
+    - S3 连续修辞压缩（仿佛/宛如/犹如/好似/恍若/仿若/如同/似乎 等标记词同段连续 ≥2 处时保留第一处删后续）
+    - S4 空描写段压缩（纯环境段无对话/无人称代词 >3 句 → 压至 2 句或整段删除）
+    - S5 形容词→动词+具体细节（章级形容词-动词比超 directness-checker D2 yellow_max 时 LLM 层改写）
+  - **70% 字数下限硬约束**：精简后 wc_after/wc_before <0.70 必须回滚；目标区间字数减少 20-30%；Step 4.5 diff 校验同步该阈值
+  - **与其他层并存**：不替代 Layer 8（Layer 8=填补缺失、Simplification=删除冗余，互不覆盖）；沿用润色红线（不改剧情事实/物理边界）；editor_wisdom simplicity 类 hard 违规（US-004 EW-0389~EW-0402）并行处理；L10b/L10e 暂挂协议复用 US-006/US-007 声明
+  - 执行顺序流程图 + 冗余段→精简段示例（86 字 → 60 字，reduction ≈30%, 6 命中 → 0 命中）+ 润色报告追加字段（激活/规则触发/字数变化/黑名单命中/回滚）
+- 新增 `ink_writer/prose/simplification_pass.py`（~350 行）——确定性辅助实现：
+  - `should_activate_simplification(scene_mode, chapter_no)` 复用 `directness_checker.is_activated` 单源（见 Codebase Patterns "场景激活判定单源"）
+  - `SimplificationReport` frozen dataclass：simplified_text / original_char_count / simplified_char_count / blacklist_hits_before / blacklist_hits_after / rolled_back / rules_fired + `reduction_ratio` property
+  - `simplify_text(text, *, blacklist=None, max_sentence_len=35, split_target_len=20, empty_paragraph_sentence_floor=3, min_retention_ratio=0.70)` 核心入口——kwarg-only 扩展模式，默认走 YAML 装载的 107 条黑名单；应用顺序：S1 删 abstract_adjectives → S4 压空描写 → S3 去重修辞 → S2 拆长句 → 70% floor 校验 → 触发则回滚返原文
+  - S1 `_strip_abstract_adjectives`: 长词优先 literal 删除（避免"无尽"子串命中后吞掉更长的"无尽的"）
+  - S2 `_split_long_sentences`: 按句终符切 → 对 >max_len 的 body 找最靠近中点的 `，/,/；/;` 断点 → 两半均 ≤target_len 优先；否则 fallback 任一合法断点
+  - S3 `_collapse_consecutive_rhetoric`: 单句内按 (position, marker) 排序扫描，首次出现的 marker 保留，后续 marker 实例删除
+  - S4 `_compress_empty_paragraphs`: 双换行分段 → 无 `"/"/「/」/他/她/我/你/咱/它/们` 且 >3 句 → 压至首末 2 句；含人称代词/对话的段落原样保留
+  - `__init__.py` 新导出 `SimplificationReport` / `should_activate_simplification` / `simplify_text`
+- 新增 `tests/prose/test_simplification_pass.py`（49 用例全通过）：
+  - Spec-level gate: section 存在性 + Layer 9 之后位置 + No-Poison 之前位置 + 激活关键词 5 parametrize + 五条规则 S1-S5 parametrize + 8 个规则概念 parametrize + 70% floor + 回滚 + 并存 5 处既有章节零回归 + 辅助模块 API 引用 + 黑名单资产路径
+  - Activation helper: `should_activate_simplification` 13 场景 parametrize（4 active scene_mode × 任意 ch / 3 inactive scene_mode × 黄金三章 / None × ch[0,1,2,3,4,42] 兜底）+ 与 `directness_checker.is_activated` 7×6=42 笛卡儿积一致性守卫（确保 wrapper 永不 drift）
+  - Core helper: 空文本 → zero report / **PRD AC 主锚点 `test_redundant_paragraph_reduced_and_blacklist_cleared`**（6 命中 → 0 命中 + reduction ≥20%）/ 长句拆分触发 / 修辞压缩单句内保首（使用不在 abstract_adjectives 里的 "如同" 隔离 S3）/ 70% floor 回滚（rolled_back=True 时 simplified=原文）/ 宽 floor=0.5 下空描写段被压缩（保留含 "小明" 代词段）/ 清洁文本零修改 / `reduction_ratio` property 代数边界 / `ink_writer.prose.__all__` 导出一致 / 自定义 Blacklist 覆盖 literal 删除
+- 文件改动：
+  - `ink-writer/agents/polish-agent.md`（+~80 行 `## Simplification Pass` 章节）
+  - `ink_writer/prose/simplification_pass.py`（新增，~350 行）
+  - `ink_writer/prose/__init__.py`（3 个符号导出扩展）
+  - `tests/prose/test_simplification_pass.py`（新增 49 用例，~300 行）
+  - `scripts/ralph/prd.json`（US-008 passes=true + notes）
+  - `scripts/ralph/progress.txt`（本条）
+- 零回归验证：`pytest --no-cov -p no:randomly` = **3408 passed / 23 skipped / 0 failed**（baseline 3359 + 49 新用例 = 3408，无新增失败）
+- ruff check 全绿（`ink_writer/prose/` + `tests/prose/`；3 处 I001 auto-fix 已应用）
+- **Learnings for future iterations:**
+  - **确定性 helper 与 LLM prompt 分工**：US-008 的 AC 同时涉及"程序化精简"（S1 黑名单删除、S2 拆长句、S3 修辞去重、S4 空景压缩）和"LLM 改写"（S1 empty_phrases/pretentious_metaphors 的 replacement 启发式提示、S5 形容词→动词+细节）。拆分原则：**字面替换 = 程序化可行**（S1 abstract_adjectives / S3 marker 去重 / S2 comma 拆分 / S4 段级裁剪），**语义改写 = LLM 专属**（blacklist.replacement 字段是 "showing 具体情绪" 这类启发式，不能当字符串直接 replace）。程序化 helper 只做 "safe deletion"，不试图替换出更好的文本——那是 polish-agent 读 `entry.replacement` 消费 LLM 做的。
+  - **长词优先 literal 删除防子串吞噬**：blacklist 里同时有 "无尽" 和 "无尽的" 时，按字典序遍历先命中 "无尽" 后，长版本 "无尽的" 就找不到了——必须 `sorted(words, key=len, reverse=True)` 先删长的再删短的。类似的坑适用于任何"字典 replace 批处理"。测试时用小规模 fixture 能快速验证此陷阱。
+  - **段落边界用 `\n\n` 而非 `\n`**：S4 `_compress_empty_paragraphs` 必须按双换行分段——否则正文的"段落 1 换行 段落 2" 会被当作同段，S4 可能错误压缩含对话的段。写同类段级规则时都该严格区分 inline-newline（连接）和 paragraph-break（分隔）。
+  - **70% floor 的目的是"防止误删剧情"**：如果 S1-S4 累计删太多（比如大段空景 + 大量 abstract_adjectives 堆叠），回滚返回原文由 LLM 做 judgment call——因为机械规则无法判断"这段其实是重要的场景铺垫"。实际业务中 `min_retention_ratio=0.70` 是安全垫，真实目标是 20-30% 减少；若测试里要验证 S4 能压缩空景，须传 `min_retention_ratio=0.5`（`test_loose_floor_allows_empty_desc_compression` 即这样做的）。
+  - **wrapper 与单源 is_activated 的一致性守卫**：US-007 给了 sensory_immersion_gate 模式（薄 wrapper），US-008 延续同一模式。`test_should_activate_matches_directness_checker` 用 7×6 = 42 case 笛卡儿积扫描确保 wrapper 永远等于单源——未来有 developer 在 wrapper 里写"特殊场景除外"这种 drift，测试第一时间红。这种 "contract consistency" 测试对维护"单源激活"架构极其重要，任何新增 gate wrapper 都该跟进。
+  - **spec-level test 锁定位置而非内容**：polish-agent.md 有 500+ 行，内容会因后续 PRD 大幅改写；但"Simplification Pass 必须在 Layer 9 之后 / No-Poison 之前"是 PRD 硬要求。用 `spec.index("## Simplification Pass") > spec.index("### 4.6 Layer 9")` 锁位置而非锁整段文字，后续改写正文不会误红，真挪位置才红——这是给大型 agent spec 加结构约束的低成本手段。
+  - **ruff I001 对"pytest + 同包 import 裸空行"敏感**：`import pytest\n\nfrom ink_writer... import ...` 里空行导致 I001；修复就是去空行 `import pytest\nfrom ink_writer... import ...`。ruff --fix 一键解决，但新增测试文件都该跑一次 `ruff check --fix` 再提交。
+  - **Iterable 导入路径**：Python 3.14 + ruff 新规要求 `from collections.abc import Iterable` 而非 `from typing import Iterable`（ruff 自动 fix 过来）。凡旧代码 copy-paste 到新模块都会被 linter 强制升级到 collections.abc。
 ---
