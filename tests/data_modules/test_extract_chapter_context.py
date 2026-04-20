@@ -764,3 +764,157 @@ def test_render_text_contains_rag_assist_section_when_hits_exist(tmp_path):
     assert "- 模式: auto" in text
     assert "[graph_hybrid]" in text
     assert "萧炎与药老" in text
+
+
+# --- v23 US-003: target_words_min/max 在创作执行包中的注入 ---------------------
+
+
+def test_build_chapter_context_payload_injects_default_target_words(tmp_path):
+    """无 preferences.json 时 payload 含默认 (2200, 5000)。"""
+    from extract_chapter_context import build_chapter_context_payload
+
+    (tmp_path / ".ink").mkdir(parents=True, exist_ok=True)
+    # 不写 preferences.json，触发 load_word_limits 默认路径
+
+    payload = build_chapter_context_payload(tmp_path, 1)
+    assert payload["target_words_min"] == 2200
+    assert payload["target_words_max"] == 5000
+
+
+def test_build_chapter_context_payload_derives_from_chapter_words(tmp_path):
+    """pacing.chapter_words=3000 → (2500, 3500)。"""
+    from extract_chapter_context import build_chapter_context_payload
+
+    ink_dir = tmp_path / ".ink"
+    ink_dir.mkdir(parents=True, exist_ok=True)
+    (ink_dir / "preferences.json").write_text(
+        json.dumps(
+            {"pacing": {"chapter_words": 3000}},
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    payload = build_chapter_context_payload(tmp_path, 1)
+    assert payload["target_words_min"] == 2500
+    assert payload["target_words_max"] == 3500
+
+
+def test_build_chapter_context_payload_floors_min_at_2200(tmp_path):
+    """chapter_words=2000 触发 MIN_WORDS_FLOOR=2200 硬红线。"""
+    from extract_chapter_context import build_chapter_context_payload
+
+    ink_dir = tmp_path / ".ink"
+    ink_dir.mkdir(parents=True, exist_ok=True)
+    (ink_dir / "preferences.json").write_text(
+        json.dumps({"pacing": {"chapter_words": 2000}}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    payload = build_chapter_context_payload(tmp_path, 1)
+    # MIN_WORDS_FLOOR=2200 永不低于；max = 2000 + 500 = 2500
+    assert payload["target_words_min"] == 2200
+    assert payload["target_words_max"] == 2500
+
+
+def test_build_execution_pack_payload_propagates_target_words_fields():
+    """execution pack 顶层必须含 target_words_min / target_words_max 并原样透传。"""
+    from extract_chapter_context import build_execution_pack_payload
+
+    payload = {
+        "chapter": 5,
+        "outline": "### 第5章：测试\n- 本章目标：检验字数字段注入",
+        "previous_summaries": [],
+        "state_summary": "",
+        "core_context": {},
+        "scene_context": {},
+        "memory_context": {},
+        "reader_signal": {},
+        "genre_profile": {},
+        "golden_three_contract": {},
+        "writing_guidance": {},
+        "rag_assist": {"hits": []},
+        "target_words_min": 2500,
+        "target_words_max": 3500,
+    }
+
+    pack = build_execution_pack_payload(payload)
+    assert pack["target_words_min"] == 2500
+    assert pack["target_words_max"] == 3500
+
+
+def test_build_execution_pack_payload_falls_back_when_target_words_missing():
+    """payload 未包含 target_words_* 时，execution pack 使用安全默认值。"""
+    from extract_chapter_context import build_execution_pack_payload
+
+    payload = {
+        "chapter": 5,
+        "outline": "### 第5章：测试",
+        "previous_summaries": [],
+        "state_summary": "",
+        "core_context": {},
+        "scene_context": {},
+        "memory_context": {},
+        "reader_signal": {},
+        "genre_profile": {},
+        "golden_three_contract": {},
+        "writing_guidance": {},
+        "rag_assist": {"hits": []},
+        # 刻意不设 target_words_min / target_words_max
+    }
+
+    pack = build_execution_pack_payload(payload)
+    assert pack["target_words_min"] == 2200
+    assert pack["target_words_max"] == 5000
+
+
+def test_execution_pack_final_checklist_contains_word_range_hardcap():
+    """Step 2A 终检清单必须出现字数硬区间提示，writer-agent 才会在生成前自检。"""
+    from extract_chapter_context import build_execution_pack_payload
+
+    payload = {
+        "chapter": 3,
+        "outline": "### 第3章：测试",
+        "previous_summaries": [],
+        "state_summary": "",
+        "core_context": {},
+        "scene_context": {},
+        "memory_context": {},
+        "reader_signal": {},
+        "genre_profile": {},
+        "golden_three_contract": {},
+        "writing_guidance": {
+            "checklist": [{"label": "回应首章钩子", "required": True}],
+        },
+        "rag_assist": {"hits": []},
+        "target_words_min": 2500,
+        "target_words_max": 3500,
+    }
+
+    pack = build_execution_pack_payload(payload)
+    checklist = pack["step_2a_prompt"]["终检清单"]
+    assert any(
+        "正文字数" in row and "2500" in row and "3500" in row for row in checklist
+    ), f"终检清单缺失字数硬区间提示，实际：{checklist}"
+
+
+def test_render_execution_pack_text_includes_target_words_line():
+    """文本渲染必须显式包含字数硬约束行，writer-agent 肉眼可读。"""
+    from extract_chapter_context import _render_execution_pack_text
+
+    pack = {
+        "chapter": 7,
+        "title": "测试标题",
+        "mode": "standard",
+        "taskbook": {},
+        "context_contract": {},
+        "step_2a_prompt": {},
+        "canary_alerts": {},
+        "target_words_min": 2500,
+        "target_words_max": 3500,
+    }
+
+    text = _render_execution_pack_text(pack)
+    assert "字数硬约束" in text
+    assert "[2500, 3500]" in text
+    assert "LLM 自行豁免" in text  # 明确禁止 LLM 自行豁免的语义必须落在文案里

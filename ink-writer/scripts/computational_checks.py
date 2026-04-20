@@ -49,7 +49,7 @@ import sqlite3
 import sys
 from contextlib import closing
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -84,8 +84,38 @@ class CheckResult:
 # Individual checks
 # ---------------------------------------------------------------------------
 
-def check_word_count(chapter_text: str, min_words: int = 2200, max_words: int = 5000) -> CheckResult:
-    """检查章节字数是否在允许区间内"""
+def check_word_count(
+    chapter_text: str,
+    min_words: int = 2200,
+    max_words_hard: int = 5000,
+    max_words_soft: Optional[int] = None,
+    max_words: Optional[int] = None,
+) -> CheckResult:
+    """检查章节字数是否在允许区间内。
+
+    硬上限对等硬下限：超过 ``max_words_hard`` 即视为硬失败，comp-gate 必须阻断。
+
+    Parameters
+    ----------
+    chapter_text:
+        章节正文（已去 markdown 标题与空白后参与计数）。
+    min_words:
+        硬下限。低于此值始终硬失败。零回归红线：默认 2200，全链路不得弱化。
+    max_words_hard:
+        硬上限。严格大于此值返回 ``severity='hard'`` 且 ``passed=False``。
+    max_words_soft:
+        可选缓冲带上限（必须 ``> max_words_hard`` 才有意义）。
+        当 ``max_words_hard < count <= max_words_soft`` 时返回
+        ``severity='soft'`` 且 ``passed=False``，供下游决定是否触发精简循环。
+        未提供则不存在缓冲带——一旦超过 ``max_words_hard`` 即硬失败。
+    max_words:
+        Deprecated 别名，向后兼容。若调用方传入 ``max_words=N`` 且未显式
+        传 ``max_words_hard``，则以 ``max_words`` 覆盖 ``max_words_hard``。
+        新代码应直接使用 ``max_words_hard`` / ``max_words_soft``。
+    """
+    if max_words is not None and max_words_hard == 5000:
+        max_words_hard = max_words
+
     # 去除 markdown 标题行，再去除空白
     cleaned = re.sub(r'^#+\s.*$', '', chapter_text, flags=re.MULTILINE)
     cleaned = re.sub(r'[\s\n\r]', '', cleaned)
@@ -97,11 +127,17 @@ def check_word_count(chapter_text: str, min_words: int = 2200, max_words: int = 
             f"章节字数 {count} < 下限 {min_words}",
             f"当前 {count} 字，需要至少 {min_words} 字"
         )
-    if count > max_words:
+    if count > max_words_hard:
+        if max_words_soft is not None and count <= max_words_soft:
+            return CheckResult(
+                "word_count", False, "soft",
+                f"章节字数 {count} > 硬上限 {max_words_hard}（缓冲带 ≤ {max_words_soft}）",
+                f"超出硬上限 {count - max_words_hard} 字，建议精简后再发"
+            )
         return CheckResult(
-            "word_count", False, "soft",
-            f"章节字数 {count} > 建议上限 {max_words}",
-            f"超出 {count - max_words} 字，可能过长"
+            "word_count", False, "hard",
+            f"章节字数 {count} > 硬上限 {max_words_hard}",
+            f"超出 {count - max_words_hard} 字，必须精简至 ≤ {max_words_hard}"
         )
     return CheckResult("word_count", True, "soft", f"字数 {count}，在合理范围内")
 
@@ -642,8 +678,20 @@ def run_all_checks(
 ) -> Dict[str, Any]:
     """执行所有计算型检查，返回汇总结果"""
 
+    # US-002: 字数阈值统一来源于 .ink/preferences.json 的 pacing.chapter_words
+    # ±500 推导区间；读不到或损坏时 fallback 到默认 (2200, 5000)。
+    try:
+        from ink_writer.core.preferences import load_word_limits
+        min_words, max_words_hard = load_word_limits(project_root)
+    except Exception:
+        min_words, max_words_hard = 2200, 5000
+
     results: List[CheckResult] = [
-        check_word_count(chapter_text),
+        check_word_count(
+            chapter_text,
+            min_words=min_words,
+            max_words_hard=max_words_hard,
+        ),
         check_file_naming(chapter_file, chapter_num),
         check_opening_pattern(chapter_text),       # v10.6: 开头时间标记检测
         check_dialogue_ratio(chapter_text),         # v10.6: 对话占比检测

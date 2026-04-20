@@ -198,6 +198,35 @@ mkdir -p "$LOG_DIR" "$REPORT_DIR"
 REPORT_FILE="${REPORT_DIR}/auto-$(date +%Y%m%d-%H%M%S).md"
 
 # ═══════════════════════════════════════════
+# 字数硬上限（US-004）：从 preferences.json 的 pacing.chapter_words 推导 +500
+# 读取失败/损坏/未配置 → 默认 5000（与 load_word_limits 默认一致）。
+# MAX_WORDS_HARD 是 verify_chapter 上限阻断阈值；MIN_WORDS_FLOOR=2200 硬下限不可降。
+# ═══════════════════════════════════════════
+
+MAX_WORDS_HARD=$(
+    "${PY_LAUNCHER}" -X utf8 -c "
+import json, sys
+try:
+    with open(r'${PROJECT_ROOT}/.ink/preferences.json', encoding='utf-8') as f:
+        data = json.load(f)
+    cw = data.get('pacing', {}).get('chapter_words') if isinstance(data, dict) else None
+    if isinstance(cw, bool) or not isinstance(cw, int) or cw <= 0:
+        print(5000)
+    else:
+        print(cw + 500)
+except Exception:
+    print(5000)
+" 2>/dev/null || echo 5000
+)
+# 防御：解析异常/非数字 → 兜底 5000
+if ! [[ "$MAX_WORDS_HARD" =~ ^[0-9]+$ ]] || (( MAX_WORDS_HARD < 2200 )); then
+    MAX_WORDS_HARD=5000
+fi
+
+# 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
+SHRINK_MAX_ROUNDS=3
+
+# ═══════════════════════════════════════════
 # 报告系统
 # ═══════════════════════════════════════════
 
@@ -506,6 +535,10 @@ verify_chapter() {
     local char_count
     char_count=$(wc -m < "$file" | tr -d ' ')
     if (( char_count < 2200 )); then
+        return 1
+    fi
+    # US-004：字数硬上限对称阻断（MAX_WORDS_HARD 由 preferences.json 推导，默认 5000）
+    if (( char_count > MAX_WORDS_HARD )); then
         return 1
     fi
 
@@ -1268,20 +1301,42 @@ for i in $(seq 1 "$N"); do
             exit 0
         fi
     else
-        echo "[$i/$N] ⚠️  验证失败，重试中..."
-        report_event "⚠️" "写作验证失败" "第${NEXT_CH}章，启动重试"
-
-        if ! retry_chapter "$NEXT_CH"; then
-            echo "[$i/$N] ⚠️  重试进程也异常退出"
+        # US-004：根据失败原因分流
+        #   - 字数超限 (> MAX_WORDS_HARD) → 精简循环最多 SHRINK_MAX_ROUNDS（3 轮）
+        #   - 其它失败（含 < 2200 / 文件缺失 / 摘要缺失）→ 保持原 1 轮补写，零回归
+        WC_FAIL=$(get_chapter_wordcount "$NEXT_CH")
+        if (( WC_FAIL > MAX_WORDS_HARD )); then
+            MAX_RETRIES=$SHRINK_MAX_ROUNDS
+            FAIL_REASON="字数超限(${WC_FAIL}>${MAX_WORDS_HARD})"
+        else
+            MAX_RETRIES=1
+            FAIL_REASON="验证失败"
         fi
-        sleep "$COOLDOWN"
+        echo "[$i/$N] ⚠️  ${FAIL_REASON}，启动重试（最多 ${MAX_RETRIES} 轮）..."
+        report_event "⚠️" "写作验证失败" "第${NEXT_CH}章 ${FAIL_REASON}，最多 ${MAX_RETRIES} 轮"
 
-        if verify_chapter "$NEXT_CH"; then
+        RETRY_ROUND=0
+        RETRY_VERIFIED=0
+        while (( RETRY_ROUND < MAX_RETRIES )); do
+            RETRY_ROUND=$((RETRY_ROUND + 1))
+            echo "[$i/$N] 🔄 第${RETRY_ROUND}/${MAX_RETRIES}轮重试..."
+            if ! retry_chapter "$NEXT_CH"; then
+                echo "[$i/$N] ⚠️  重试进程也异常退出"
+            fi
+            sleep "$COOLDOWN"
+
+            if verify_chapter "$NEXT_CH"; then
+                RETRY_VERIFIED=1
+                break
+            fi
+        done
+
+        if (( RETRY_VERIFIED == 1 )); then
             WC=$(get_chapter_wordcount "$NEXT_CH")
             COMPLETED=$((COMPLETED + 1))
             echo "[$i/$N] ✅ 第${NEXT_CH}章完成（重试成功）| ${WC}字"
             print_chapter_progress "$COMPLETED" "$N"
-            report_event "✅" "重试成功" "第${NEXT_CH}章 ${WC}字"
+            report_event "✅" "重试成功" "第${NEXT_CH}章 ${WC}字（${RETRY_ROUND}轮）"
 
             run_checkpoint "$NEXT_CH"
         else
@@ -1289,8 +1344,8 @@ for i in $(seq 1 "$N"); do
             echo "═══════════════════════════════════════"
             echo "  ❌ 第${NEXT_CH}章写作失败，批量写作中止"
             echo "═══════════════════════════════════════"
-            EXIT_REASON="第${NEXT_CH}章写作失败（重试后仍未通过验证）"
-            report_event "❌" "批量写作中止" "第${NEXT_CH}章写作失败，已完成${COMPLETED}章"
+            EXIT_REASON="第${NEXT_CH}章写作失败（${FAIL_REASON}，${MAX_RETRIES}轮重试仍未通过）"
+            report_event "❌" "批量写作中止" "第${NEXT_CH}章 ${FAIL_REASON}，已完成${COMPLETED}章"
             print_summary
             write_report
             exit 1
