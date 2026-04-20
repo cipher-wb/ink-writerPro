@@ -227,8 +227,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "实现：(1) scripts/e2e_smoke_harness.py 内聚核心逻辑（init_project → 合成 3 章中文正文 → IndexManager.add_chapter → state 推进 → ContextManager._load_recent_full_texts 验证 + index.db 完整性 + state/db 游标一致）；(2) scripts/e2e_smoke.sh（set -euo pipefail + find_python_launcher_bash，US-009/US-011 模板）；(3) scripts/e2e_smoke.ps1（UTF-8 BOM + Find-PythonLauncher，US-007 红线自动覆盖）；(4) scripts/e2e_smoke.cmd 四行转发模板。(5) 8 个 pytest 守护：真实跑一轮 smoke（@pytest.mark.mac）+ 路径中文+空格断言 + 脚本存在/BOM/shebang/launcher/CLI入口/日志命名 6 条源码级红线。LLM 调用按 PRD 允许跳过——首版合成中文正文替代 writer-agent，验证数据流水线跨平台健康度；真实 writer 链路由 ralph loop/ink-auto 集成阶段验证。Pointer snapshot/restore 防污染 .claude/.ink-current-project。Mac 本地实跑：`./scripts/e2e_smoke.sh 3` → init/write/verify/cleanup 全 ok，verify.extra={index_tables:34,state_chapter:3,db_chapter:3,recent_full_texts_count:3}，日志 reports/e2e-smoke-mac.log 已写出。全量 pytest --no-cov: 3206 passed / 23 skipped / 0 failed（baseline 3198 → +8 新测试，零回归）。Audit findings 3 → 3（不变）。"
     },
     {
       "id": "US-015",

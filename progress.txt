@@ -62,6 +62,9 @@ Prev run: chapter-context-injection → v20.0.0 released
 - **平台 marker = 声明式 + 仓库红线**（US-013 起）：跨平台门禁统一走 `@pytest.mark.windows` / `@pytest.mark.mac`，autoskip 在 `tests/conftest.py:pytest_collection_modifyitems` 里。`mac` 语义是『Mac/Linux 非 Windows POSIX』（仓库内所有 Unix-only 场景在 Linux 上也能跑）。环境依赖（bash/jq）仍走 skipif——marker 表达不了『依赖存在性』，两者语义互补。`tests/audit/test_platform_markers.py:test_repo_has_no_platform_skipif_outside_conftest` 仓库红线 AST 扫 tests/**/*.py 检测 skipif args 里是否含 `sys.platform`，有则违规。新 PR 用 `skipif(sys.platform ...)` CI 直接挂，逼作者改 marker。
 - **subprocess.run 起小 pytest 验证 conftest 集成**（US-013 起）：比 pytester fixture 轻量无全局污染——顶层 conftest.py 不 opt-in `pytest_plugins = ['pytester']`。标准做法：`(tmp_path / 'conftest.py').write_text(TESTS_CONFTEST.read_text(encoding='utf-8'))` + 写最小 `pytest.ini` + 注入合成 test file + `subprocess.run([sys.executable, '-m', 'pytest', '-v', '--no-cov', ...], cwd=tmp_path)`，grep stdout/stderr 做断言。与 US-011/US-012 fake-claude 子进程 pattern 同构——『隔离进程验证集成行为』在不同层级反复复用。
 - **prd.json 语法把关**（US-013 踩坑）：prd.json 的 notes 里若用裸 ASCII `"` 做引号（如 `走进"X"分支` / `|| echo "False"`），会让 JSON 解析崩（虽然 ralph.sh 走 jq 勉强兼容）。规则：notes 引号优先用中文全角 `「...」` 或 `"..."` (U+201C/U+201D)，次选 `\"...\"` 转义；commit 前 `jq -e . prd.json > /dev/null && python3 -c "import json; json.load(open('prd.json'))"` 双验证。未来可把这个 double-check 加到 pre-commit hook。
+- **harness + 薄 shell wrapper 架构**（US-014 起）：跨平台 dev tool 脚本（e2e smoke / benchmark / reindex / migrate）统一 pattern——核心 Python 放 `scripts/<name>_harness.py`（含 `enable_windows_utf8_stdio(skip_in_pytest=True)` + `run_<name>(...)` 可被 pytest 直接 import 的公共 API + `main() -> int` CLI 入口），bash/PS 只负责 launcher 探测 + 参数归一化 + exec 转发。两端行为等价 100% 由 Python 核心保证，shell 层只做 1 次性 thin invocation，测试用 `@pytest.mark.mac` / `@pytest.mark.windows` + `run_<name>(...)` 直接调 Python API 即可验证等价。`tests/scripts/test_e2e_smoke.py` 是参考实现
+- **init_project 副作用防污染模板**（US-014 起）：`ink-writer/scripts/init_project.init_project()` / `project_locator.write_current_project_pointer(...)` 会写 `.claude/.ink-current-project` + `~/.claude/ink-writer/registry.json`——任何在测试/smoke/dev 上下文里调这些副作用函数的代码必须 snapshot/restore 两个 pointer，否则跑完后用户 CI/本地的"当前项目"会被指到一个已删除的 tmp 路径，导致所有 `ink-*` 命令后续报 `Not an ink project root`。复用 `scripts/e2e_smoke_harness.py:_snapshot_pointer_files` + `_restore_pointer_files` + finally 还原（成败都必须还原）。另外预建 `<project>/.git/` 能让 init_project 跳过内部 `git init` 子进程节省时间
+- **importlib.util 动态加载 + sys.modules 预注册**（US-014 起）：用 `spec_from_file_location(name, path)` 从任意 `.py` 加载模块时，必须在 `spec.loader.exec_module(module)` **之前** 把 `sys.modules[name] = module`——否则 Python 3.14 下任何 `@dataclass` 类会在解析 `__module__` 时走到 `sys.modules.get(cls.__module__).__dict__` → `NoneType has no __dict__` 崩。标准模板：预注册 + try/except 里 pop（`sys.modules.pop(name, None)`）保证失败回滚。适用于『测试想动态加载 harness/ scripts 但不污染正常 import 路径』的场景
 
 ## Context Contract（本 PRD 专属）
 
@@ -628,4 +631,54 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `progress.txt` (this entry + 新 Codebase Patterns)
 - 全量 pytest: **3198 passed / 23 skipped / 0 failed**（baseline 3188 → +10 新测试，零回归）
 - Audit findings: 3 → 3（不变，都是 US-004/US-010 已记录的 C2 Low 测试 fixture 合法用法）
+---
+
+## 2026-04-20 - US-014 Mac + Windows 端到端 smoke 脚本
+
+- 新增 `scripts/e2e_smoke_harness.py`（~320 行）：四阶段（init/write/verify/cleanup）的跨平台核心逻辑
+  - `run_init`: 预建 `.git/` 让 `init_project.init_project()` 跳 git init；调真实 `init_project` 生成带中文 + 空格路径的项目骨架（`测试项目`、`大纲/总纲.md`、`设定集/世界观.md` 等）
+  - `run_write`: PRD 允许的首版 mock 路径——合成 N 章稳定中文正文（`_chinese_chapter_body(ch)`，约 250 字/章）写到 `正文/第NNNN章.md`；调 `IndexManager.add_chapter(ChapterMeta)` 装 `chapters` 表；推进 `state.json:progress.current_chapter`
+  - `run_verify`: 4 条断言 ①`IndexManager.check_integrity()` ok=True ②N 章文件均可 `find_chapter_file` 命中 ③`state.current_chapter == max(chapters table) == N` ④`ContextManager._load_recent_full_texts(chapter=N+1, window=N)` 返回 N 条、每条 `missing=False` + `text` 非空
+  - `run_cleanup`: 默认 `shutil.rmtree(tmp parent holder)`，`--keep` 保留调试
+  - `_snapshot_pointer_files` / `_restore_pointer_files`: 前后快照 + 无论成败 finally 还原 `.claude/.ink-current-project` 与用户级 `~/.claude/ink-writer/registry.json`，避免 smoke 污染用户当前项目指针
+  - CLI 入口含 `enable_windows_utf8_stdio(skip_in_pytest=True)`（US-010 C9 红线自动覆盖）
+- 新增 `scripts/e2e_smoke.sh`（~55 行）：`set -euo pipefail` + 内嵌 `find_python_launcher_bash`（US-009 复用模板，含 `# c8-ok` pragma）+ 第一个正整数自动 `--chapters N`、其他参数透传；`exec $PYTHON_LAUNCHER -X utf8 harness "${ARGS[@]}"` 以 exec 避免残留子进程
+- 新增 `scripts/e2e_smoke.ps1`（~65 行，UTF-8 BOM）：`Set-StrictMode -Version Latest` + `$ErrorActionPreference='Stop'` + `Find-PythonLauncher` 函数 + `Push/Pop-Location` + 正整数自动 `--chapters` + `exit $LASTEXITCODE` 保证退出码透传；所有 `# c8-ok: detector primitive` 注释对齐 US-009 模板
+- 新增 `scripts/e2e_smoke.cmd`（4 行）：双击入口标准模板（US-007 验证脚本宽松匹配 `powershell` + 同名 .ps1）
+- 新增 `tests/scripts/test_e2e_smoke.py`（8 tests）：
+  - `test_harness_runs_end_to_end`（@mac）：真实跑一轮 smoke，断言整体 ok + 4 step 全 ok + `recent_full_texts_count=3`/state-db 游标一致 + 日志含 5 条状态行
+  - `test_harness_generates_chinese_and_space_path`（@mac）：`create_temp_project_root` 产物同时含空格 + CJK（PRD 硬性要求）
+  - `test_smoke_wrappers_present`：四个文件必须存在
+  - `test_sh_wrapper_has_safety_header`：`#!/bin/bash` + `set -euo pipefail` + `find_python_launcher_bash` + `e2e_smoke_harness.py` 字面量
+  - `test_ps1_wrapper_has_utf8_bom_and_launcher`：头 3 字节 `efbbbf` + `Find-PythonLauncher` + `$ErrorActionPreference` + harness 引用
+  - `test_cmd_wrapper_forwards_to_ps1`：`powershell` + `e2e_smoke.ps1`
+  - `test_harness_exposes_cli_entry`：`__main__` + `enable_windows_utf8_stdio` + `run_smoke` 公共 API
+  - `test_log_filename_template_stable`：`f"e2e-smoke-{tag}.log"` 字面量固化（PRD 契约）
+- 测试 loader 用 `importlib.util.spec_from_file_location` + **先注册 sys.modules 再 exec_module**——否则 `@dataclass` 解析 `StepResult.__module__` 会拿到 `None` 继而崩 `sys.modules.get(None).__dict__`。踩坑纪要见 Codebase Patterns
+- Mac 字节级一致验证：
+  - `scripts/` 下新 `.sh` 无既有等价物（纯新增，无对比基线需要保留）
+  - `.ink/state.json` 写入路径、章节文件命名、`IndexManager.add_chapter` SQL 全走既有 API，smoke 只是读写；无任何既有代码被修改
+  - `_snapshot_pointer_files/_restore_pointer_files` 只保护 runtime 指针，项目目录本身依旧受 `shutil.rmtree` 清理
+- Mac 本地实跑验证：`./scripts/e2e_smoke.sh 3` → init/write/verify/cleanup 全 ok
+  - verify.extra: `index_tables=34 state_chapter=3 db_chapter=3 recent_full_texts_count=3`
+  - 日志 `reports/e2e-smoke-mac.log` 写出 5 条状态行（含 `step=summary status=ok`）
+- 全量 pytest: **3206 passed / 23 skipped / 0 failed**（baseline 3198 → +8 新测试，零回归）
+- Audit findings: 3 → 3（不变）
+- **Learnings for future iterations:**
+  - **用 init_project 直接构造 smoke 项目骨架**：`init_project.init_project()` 是纯文件/模板生成无 LLM 调用，smoke 不需要走 `ink-init` skill 的苏格拉底式交互；预建 `.git/` 跳过 git init 子进程耗时。Quick mode 的 LLM 交互是 skill 层行为，init_project 本身不依赖
+  - **合成章节正文是 PRD 允许的 mock 路径**：`_chinese_chapter_body(ch)` 产出稳定内容（含古诗+固定描述，每章 ~250 字汉字），既模拟真实正文字节量又免除 LLM 费用。后续如需真实 writer 路径覆盖，可扩展 `run_write` 支持 `--use-real-writer` 走 ralph/ink-auto
+  - **pointer snapshot/restore 防污染**：凡调用 `init_project`、`use` 等会写 `.claude/.ink-current-project` + `~/.claude/ink-writer/registry.json` 的测试入口，必须 snapshot/restore 两者，否则 smoke 跑完 CI/user 环境的"当前项目"会被指到一个已删除的 tmp 路径——后续所有 `ink-*` 命令都会爆 `Not an ink project root`。`_snapshot_pointer_files` 模板可被任何『调 init_project 类副作用函数的测试』复用
+  - **harness + 薄 wrapper 架构**：核心 Python 在 `*_harness.py`，bash/PowerShell 只负责 launcher 探测 + 参数归一化 + exec 转发——两端行为等价 100% 由 Python 保证，shell 层只做 1 次性 thin invocation。这个模式对任何"需要 Mac + Windows 等价跑"的 dev tool 脚本都适用（e2e test / benchmark / reindex / migrate）
+  - **importlib spec_from_file_location + sys.modules 预注册陷阱**：Python 3.14 `@dataclass` 在解析 `__module__` 时会走到 `sys.modules.get(cls.__module__).__dict__`；若用 `spec_from_file_location(name, path)` 但没先 `sys.modules[name] = module` 再 `spec.loader.exec_module(module)`，dataclass 类就崩在 `NoneType has no __dict__`。标准做法：预注册 + try/except pop。未来任何"从 .py 文件动态导入 harness 做测试"的模式都适用
+  - **第一个正整数当 `--chapters`**：bash/PS 都用 `[0-9]+` 正则 + 首次命中 flag，让 `smoke.sh 3` 等价于 `smoke.sh --chapters 3`，符合 ink-auto 既有 `ink-auto 5` 的位置参约定
+  - **reports/e2e-smoke-{mac,windows}.log 命名契约**：PRD 明确要求双端日志区分；harness 根据 `sys.platform == "win32"` 自动选后缀，测试 `test_log_filename_template_stable` 固化此字面量防未来 rename
+  - **下轮（US-015）执行要点**：`docs/windows-troubleshooting.md` 需基于已累积的 Codebase Patterns 产出——涵盖 UTF-8 BOM 乱码 / Python launcher 找不到 / symlink 降级 / subprocess cp936 / asyncio Proactor 缺失 / `.claude/.ink-current-project` 指针污染 / Windows 路径反斜杠各一章节。每条故障都配"症状→诊断→修复"三段式
+- Files changed:
+  - `scripts/e2e_smoke_harness.py` (new, ~320 行)
+  - `scripts/e2e_smoke.sh` (new, ~55 行)
+  - `scripts/e2e_smoke.ps1` (new, ~65 行, UTF-8 BOM)
+  - `scripts/e2e_smoke.cmd` (new, 4 行)
+  - `tests/scripts/test_e2e_smoke.py` (new, 8 tests)
+  - `prd.json` (US-014 passes:true + notes)
+  - `progress.txt` (this entry + 新 Codebase Patterns)
 ---
