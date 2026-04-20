@@ -359,6 +359,13 @@ function Invoke-CliProcess {
         Write-Host "CLI 异常：$_"
         $exitCode = 1
     }
+
+    # US-012 defensive 日志：CLI 子进程非零退出时显式打到 stderr
+    # （与 ink-auto.sh:run_cli_process 的 LLM_EXIT 模式对等；成功时静默）
+    if ($exitCode -ne 0) {
+        [Console]::Error.WriteLine("[ink-auto] llm_exit=$exitCode tool=$Platform log=$LogFile")
+    }
+
     return $exitCode
 }
 

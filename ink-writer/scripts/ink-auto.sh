@@ -670,6 +670,12 @@ run_cli_process() {
             ;;
     esac
 
+    # US-012 defensive 日志：CLI 子进程非零退出时显式打到 stderr
+    # （模仿 US-011 ralph.sh 的 LLM_EXIT 模式；成功时静默避免污染）
+    if (( exit_code != 0 )); then
+        echo "[ink-auto] llm_exit=$exit_code tool=$PLATFORM log=$log_file" >&2
+    fi
+
     return $exit_code
 }
 
@@ -780,7 +786,9 @@ run_auto_fix() {
 
     # 检查报告中是否有需要修复的问题（委托 Python 模块，比 Bash 正则更可靠）
     # v16 US-006：从 data_modules.checkpoint_utils 迁移到 ink_writer.core.cli.checkpoint_utils。
-    if ! PYTHONPATH="$REPO_ROOT:${PYTHONPATH:-}" $PY_LAUNCHER -X utf8 -c "from ink_writer.core.cli.checkpoint_utils import report_has_issues; import sys; sys.exit(0 if report_has_issues('$report_path') else 1)" 2>/dev/null; then
+    # US-012：stderr 不再吞到 /dev/null，改为附加到 debug 日志
+    # （Windows 下 Python 崩溃/import 错误/编码问题可追踪，不再静默）
+    if ! PYTHONPATH="$REPO_ROOT:${PYTHONPATH:-}" $PY_LAUNCHER -X utf8 -c "from ink_writer.core.cli.checkpoint_utils import report_has_issues; import sys; sys.exit(0 if report_has_issues('$report_path') else 1)" 2>>"$LOG_DIR/checkpoint-utils-debug.log"; then
         echo "    ✅ 报告无需修复的问题"
         report_event "✅" "${fix_type}修复" "${scope} — 无需修复"
         return 0
@@ -804,14 +812,14 @@ run_auto_fix() {
         STILL_HAS_CRITICAL=$($PY_LAUNCHER -X utf8 -c "
 import json, sys
 try:
-    with open('$report_path', 'r') as f:
+    with open('$report_path', 'r', encoding='utf-8') as f:
         data = json.load(f)
     issues = data.get('issues', [])
     critical = [i for i in issues if i.get('severity') == 'critical']
     print('True' if critical else 'False')
 except:
     print('False')
-" 2>/dev/null || echo "False")
+" 2>>"$LOG_DIR/checkpoint-utils-debug.log" || echo "False")
         if [ "$STILL_HAS_CRITICAL" = "True" ]; then
             echo "    ⚠️  WARNING: audit critical 问题修复后仍存在，继续写作可能在错误状态上累积"
             report_event "⚠️" "修复不完全" "audit critical 问题仍存在"
