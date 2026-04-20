@@ -38,8 +38,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-21: 新增 ink_writer/core/preferences.py::load_word_limits；computational_checks.py::run_all_checks 已注入推导结果。preferences-schema.md 追加 v23 语义说明。新增 14 个测试，全量 pytest 3567 passed / 23 skipped（zero regression）。"
     },
     {
       "id": "US-003",

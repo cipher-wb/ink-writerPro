@@ -8,7 +8,7 @@ Prev run: prose-directness → v22.0.0 released (场景感知直白化)
 (承接自前轮 ralph runs，保留跨 PRD 通用条目。逐轮新增追加到下方。)
 
 - **UTF-8 编码硬约束**：所有 `open()` / `Path.read_text()` / `Path.write_text()` 必须带 `encoding="utf-8"`。scripts/fix_utf8_encoding.py 可批量修复；scripts/audit_cross_platform.py 是 9 类风险单一扫描入口。
-- **零回归守卫 baseline**：v23 baseline = `pytest tests/ --no-cov` 全量 3553 passed / 23 skipped（US-001 完成后实测，Python 3.14）。本轮后续每个 US 完成前必须跑全量无新增失败。
+- **零回归守卫 baseline**：v23 baseline = `pytest tests/ --no-cov` 全量 3567 passed / 23 skipped（US-002 完成后实测，Python 3.14）。本轮后续每个 US 完成前必须跑全量无新增失败。
 - **pytest.ini testpaths 同步**：新增的 `tests/核心模块/子目录/` 必须追加到 `pytest.ini:testpaths`，否则默认收集会漏掉。
 - **pytest 跨平台标记**（v21 起）：用 `@pytest.mark.windows` / `@pytest.mark.mac` 而非 `@pytest.mark.skipif(sys.platform != "...")`。`conftest.py` autoskip；仓库红线禁止回退到 skipif。
 - **ProjectConfig 读取约定**：章节正文文件命名/后缀由 `ProjectConfig` 决定；新代码不硬编码命名。
@@ -31,3 +31,26 @@ Prev run: prose-directness → v22.0.0 released (场景感知直白化)
   - `check_word_count(text, max_words=N)` 旧调用点在线搜索上只命中 `computational_checks.py:646` 本身，US-002 之后 run_all_checks 需传 load_word_limits 结果进来；当前默认值保持 (2200, 5000) 与旧行为对齐，是安全过渡态。
   - Python 3.14 全量 pytest 基线耗时 ≈ 218s；后续 US 若跑全量要给 timeout ≥ 300s。
 ---
+
+## 2026-04-21 - US-002 preferences.json 驱动字数阈值加载器
+- 新增 `ink_writer/core/preferences.py`，提供 `load_word_limits(project_root) -> tuple[int, int]`：
+  - 无 preferences.json / JSON 损坏 / 字段缺失 → 默认 `(2200, 5000)`
+  - `pacing.chapter_words = N` → `(max(2200, N-500), N+500)`；硬下限 2200 永不降（红线常量 `MIN_WORDS_FLOOR`）
+  - 类型不匹配（bool/字符串/非正数）均 fallback 默认，不抛异常
+- `ink-writer/scripts/computational_checks.py::run_all_checks` 改为先调用 `load_word_limits`，再把推导结果传给 `check_word_count(min_words=, max_words_hard=)`；`from ink_writer.core.preferences import load_word_limits` 为 lazy 导入 + `try/except` 双兜底，保证即便 import 失败也保留原 (2200, 5000) 默认。
+- 文档更新：`ink-writer/references/preferences-schema.md` 新增「pacing.chapter_words 语义」章节，含推导公式、默认值、红线说明与三组典型示例。
+- 测试：新增 `tests/core/test_word_limits_preferences.py` 14 用例，覆盖无配置/无 .ink 目录/chapter_words=3000 /=2000（触发红线）/=4500/损坏 JSON/无 pacing/非 int/bool/零负/pacing 非 dict/返回类型契约/中文 UTF-8 编码。
+- 文件改动：
+  - `ink_writer/core/preferences.py`（新增）
+  - `ink-writer/scripts/computational_checks.py`（run_all_checks 仅改 check_word_count 一处调用）
+  - `ink-writer/references/preferences-schema.md`（追加 v23 语义段落）
+  - `tests/core/test_word_limits_preferences.py`（新增 14 测试用例）
+- 回归：`pytest tests/ --no-cov` 全量 3567 passed / 23 skipped（baseline 3553 + 新增 14，无任何现有测试失败）。
+- **Learnings for future iterations:**
+  - `ink_writer.core.*` 是 Python 包（`/Users/cipher/AI/ink/ink-writer/ink_writer/core/`），与 `ink-writer/scripts/` 是两个不同路径空间；pytest.ini 的 `pythonpath` 已同时加入 `.` 与 `ink-writer` 允许两者共存。新模块优先放 `ink_writer/core/`（Python 包惯例），`ink-writer/scripts/` 保留给 skills/agents 直接调用的 CLI 壳。
+  - `check_word_count` 默认值 `(2200, 5000)` 与 `load_word_limits` 默认返回值刻意对齐——即便 US-002 的 run_all_checks 注入失败，也能保证全链路字数行为与 US-001 后一致，这是安全过渡态的核心设计。
+  - `bool` 是 `int` 子类，验签时必须 `isinstance(raw, bool) or not isinstance(raw, int)` 双判断才能正确剔除；单用 `isinstance(raw, int)` 会让 `chapter_words: true` 蒙混过关。
+  - `tmp_path.write_text(json.dumps(..., ensure_ascii=False), encoding="utf-8")` 是写含中文 JSON 测试 fixture 的惯用法；切勿省略 `encoding="utf-8"`（Windows 守则）。
+  - `load_word_limits` 需要极度 defensive：所有 `open/json.load` 异常都必须被捕获到 fallback，否则一次损坏 preferences.json 就会把整个 comp-gate 炸掉；而 comp-gate 是 ink-write / ink-auto 的硬门禁，不能因配置文件 corrupt 就全线挂掉。
+---
+

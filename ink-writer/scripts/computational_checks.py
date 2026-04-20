@@ -678,8 +678,20 @@ def run_all_checks(
 ) -> Dict[str, Any]:
     """执行所有计算型检查，返回汇总结果"""
 
+    # US-002: 字数阈值统一来源于 .ink/preferences.json 的 pacing.chapter_words
+    # ±500 推导区间；读不到或损坏时 fallback 到默认 (2200, 5000)。
+    try:
+        from ink_writer.core.preferences import load_word_limits
+        min_words, max_words_hard = load_word_limits(project_root)
+    except Exception:
+        min_words, max_words_hard = 2200, 5000
+
     results: List[CheckResult] = [
-        check_word_count(chapter_text),
+        check_word_count(
+            chapter_text,
+            min_words=min_words,
+            max_words_hard=max_words_hard,
+        ),
         check_file_naming(chapter_file, chapter_num),
         check_opening_pattern(chapter_text),       # v10.6: 开头时间标记检测
         check_dialogue_ratio(chapter_text),         # v10.6: 对话占比检测
