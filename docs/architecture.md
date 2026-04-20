@@ -34,13 +34,13 @@
 │    resume / learn / dashboard / auto / audit / resolve /    │
 │    macro-review / migrate / 5(弃用桩)                      │
 ├─────────────────────────────────────────────────────────────┤
-│  Agents (22个, v13.8): Context / Writer / Polish / Data     │
-│    + 16 Checkers (v13.2 Logic Fortress + v13.7 文笔沉浸感)  │
+│  Agents (23个, v22.0): Context / Writer / Polish / Data     │
+│    + 17 Checkers (v13.2 Logic + v13.7 文笔 + v22 直白)      │
 │    Consistency / Continuity / OOC / Golden-three /          │
 │    Logic / Outline-compliance / Anti-detection /            │
 │    Reader-pull / High-point / Pacing / Proofreading /       │
 │    Emotion-curve / Editor-wisdom / Prose-impact /           │
-│    Sensory-immersion / Flow-naturalness                     │
+│    Sensory-immersion / Flow-naturalness / Directness        │
 │    + Reader-simulator + Thread-lifecycle-tracker            │
 ├─────────────────────────────────────────────────────────────┤
 │  Data Layer: state.json + index.db (30+ 表, v10 schema) │

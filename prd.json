@@ -87,8 +87,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "ink_writer/prose/directness_checker.py（~490 行）：5 维度 0-10 分打分（lower_is_better / mid_is_better 两类 piecewise-linear）、阈值分桶（golden_three 直用 / combat+climax+high_point 走 combat→golden_three inherits fallback）、激活判定 is_activated(scene_mode, chapter_no)、阈值 YAML 热加载带 (resolved, mtime_ns) 缓存、paragraph-level issue 定位（D1/D3/D5 按段扫描 top-2，D2/D4 章级）、checker-output-schema 输出映射 to_checker_output()。ink-writer/agents/directness-checker.md（~160 行）agent spec：激活硬门禁（scene_mode ∈ {golden_three,combat,climax,high_point} 或 ch∈[1,3] 兜底）、5 维度表 + Green/Yellow/Red 评级（GREEN_SCORE=8 / RED_SCORE=6）、skipped/red 两态 JSON 输出、与 prose-impact/sensory-immersion/flow-naturalness/editor-wisdom 的职责边界矩阵。ink_writer/checker_pipeline/step3_runner.py 新增 _make_directness_adapter：非激活透明 PASS、章节文本缺失 shadow-safe、激活时跑 run_directness_check → (passed, score/10, fix_prompt 含 top 3 issues 摘要)，is_hard_gate=False 保初期稳。tests/checker_pipeline/test_directness_checker.py（41 用例全通过）：激活矩阵 parametrize 全 scene_mode + ch1-3 覆盖 / 打分曲线边界（green_max/yellow_max/yellow 中点 → 10/6/8 / mid_is_better 双边 yellow 带 / 分数 clamp [0,10] / 未知 direction fallback）/ 阈值 loader 缺失/损坏/真实 YAML / 端到端 3 fixture（_DIRECT_GREEN 无 red + passed、_RHETORIC_RED 明确 D1/D3 red + issues 带 excerpt+suggest_rewrite、_EMPTY_DESC_RED repeat×20 触发 D5 red）/ checker_output skipped 与 red 两形态 / step3_runner 集成（ch50 非激活 gate=passed / ch1 激活 + 修辞堆砌 → gate=failed 且 is_hard_gate=False / soft_fail 不入 hard_fails）。副作用：docs/agent_topology_v13.md（22→23 + v22 行）+ docs/architecture.md（22→23，16→17 checker）+ tests/prompts/test_prompt_templates.py（22→23 + comment）+ scripts/verify_docs.py regex 放宽接受任意版本前缀。全量 pytest 3316 passed / 23 skipped / 0 failed（baseline 3275 + 41 新用例 = 3316，零回归）。ruff 对新/改文件全绿。"
     },
     {
       "id": "US-006",

@@ -85,8 +85,8 @@ def check_topology_agents() -> Finding:
     if not TOPOLOGY.exists():
         return Finding("agent_topology_v13.md", "N/A", f"{actual}", False)
     content = TOPOLOGY.read_text(encoding="utf-8")
-    # 匹配 "After (v13.X): N Agents" 或 "N Agents, Single Directory"
-    m = re.search(r"(?:After\s*\(v13[.\w]*\):|^)\s*(\d+)\s*Agents", content, re.MULTILINE)
+    # 匹配 "After (v<version>): N Agents" 或 "N Agents, Single Directory"
+    m = re.search(r"(?:After\s*\(v[.\w]+\):|^)\s*(\d+)\s*Agents", content, re.MULTILINE)
     if not m:
         return Finding("agent_topology_v13.md", "no match for 'N Agents'", f"{actual}", False)
     claim = int(m.group(1))
