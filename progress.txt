@@ -23,6 +23,7 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
 - **ruff E402 规避**：scripts/ 入口在 `if sys.platform == "win32":` runtime_compat setup 之后才能 import 其他模块，统一加 `# noqa: E402` 到那批 late imports，`from __future__ import annotations` 后置不变。
 - **YAML 字符串含 `"` 必须单引号包**（US-003 起）：`replacement: 具体情绪（如"一阵心慌"）` 里的直引号会被 YAML 解释成双引号串，吃掉半行触发 `expected <block end>, but found '<scalar>'`。解决方案：写资产 YAML 时对含任何 `"` 的 scalar value 统一单引号包裹（`'...'`），内部 `'` 转义为 `''`；禁止依赖裸值。已通过 `ink-writer/assets/prose-blacklist.yaml` 验证。
 - **editor-wisdom 新增规则 5 步标准流程**（US-004 起）：(1) 追加到 `data/editor-wisdom/rules.json` 遵循 `id/category/rule/why/severity/applies_to/source_files` 现存 schema；(2) 若引入新 category 同步 `scripts/editor-wisdom/05_extract_rules.py:CATEGORIES`；(3) 若引入新 applies_to 值同步 `VALID_APPLIES_TO`（否则 LLM 抽取会被过滤掉）；(4) 跑 `python3 scripts/editor-wisdom/06_build_index.py` 重建 FAISS + metadata（本地 BAAI 模型缓存 ~10s）；(5) 若要 scene-aware 召回更新 `config/editor-wisdom.yaml:directness_recall` 并在 `ink_writer/editor_wisdom/writer_injection.py` 的 `build_writer_constraints` 内加判定分支。
+- **agent prompt 顶部黄金位 + 结构性 gate 测试**（US-006 起）：新增硬约束章节（e.g. `## Directness Mode`）必须放在 agent `.md` 的 front-matter + 输出格式之后、第一个功能章节（如 `## 写作核心思维`）之前，这样 LLM 第一屏就读到。配套 spec-check 测试放 `tests/prose/` 或同域子目录，只 `assert "## xxx" in spec_text` + 用 `dm_idx < core_idx` 锁位置，<0.5s 跑完 15 用例；避免无意重构打乱优先级。模板参考 `tests/prose/test_writer_agent_directness_mode.py`。
 - **新增 agent/checker 三处 docs claim 联动**（US-005 起）：仓内有两处硬编码 agent 数量 + 一处脚本 regex 必须一起改：(1) `docs/agent_topology_v13.md` 的 "After (vXX): N Agents" + agents/ 清单 + 演进表行；(2) `docs/architecture.md` 的 ASCII "Agents (N个, vXX)" 框 + Checkers 计数；(3) `tests/prompts/test_prompt_templates.py::test_diff_all_runs` 的 `assert len(results) == N`。外加 `scripts/verify_docs.py:89` 的版本正则（已放宽成 `v[.\w]+`——新版本不必再改 regex）。漏任一处 `tests/release/test_v16_gates.py::test_verify_docs_exit_zero` 或 `TestABPrompts::test_diff_all_runs` 会红。
 
 ## Context Contract（本 PRD 专属）
@@ -274,5 +275,45 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
   - **DirectnessReport 用 tuple 不用 list**：`dimensions: tuple[DimensionScore, ...]` + frozen dataclass 保证不可变，to_dict 时统一 list 化；避免 caller 改到内部 state。同 US-004 DirectnessRecall 设计呼应。
   - **PyYAML 延迟 import**：`load_thresholds` 内 `try: import yaml`，而非顶层——CI 离线环境即便 PyYAML 未装，checker 也能走 fallback 不崩；单元测试用 `pytest.importorskip("yaml")` 挡掉真实 YAML 路径。
   - **jieba 加载只占首次 import 的 200ms**：测试模块首次调用 `run_directness_check`（内调 `compute_metrics` 走 jieba.posseg）约 200ms；后续全部用例共享已加载的 dict。整套 41 用例 0.4s 内跑完，成本可接受。未来若测试数量 × 10，考虑 module-scoped fixture 显式共享 pseg。
+---
+
+## 2026-04-20 - US-006: writer-agent 场景门控直白模式
+
+- `ink-writer/agents/writer-agent.md` 顶部（紧跟 front-matter + 输出格式声明之后，`## 写作核心思维` 之前）新增 `## Directness Mode (场景激活硬约束)` 章节（~75 行）：
+  - **激活条件**：`chapter_no ∈ [1,2,3]`（黄金三章兜底）OR `scene_mode ∈ {combat, climax, high_point}`（context-agent 装填，US-009 上线后显式优先）
+  - **五条硬原则**（按 PRD 优先序）：
+    1. 每句服务 剧情推进 / 角色心理 / 冲突升级 三选一
+    2. 禁用抽象形容词堆叠（同句 ≥2 个 Red）
+    3. 禁用空境描写段（>3 句纯环境 Red；解法拆散进人物行动）
+    4. 禁用高级比喻（本体为抽象概念全 Red；每段 ≤ 1 处具体比喻）
+    5. 首选强动词 + 具体名词，减少形容词与副词
+  - **L10b/L10e 暂挂协议小节**：直白模式不强求非视觉感官配额 / 主导感官轮换；非直白模式保持原约束；指向 US-007 的 sensory-immersion-checker skipped 行为（实际耦合代码由 US-007 交付）
+  - **top-20 禁区词反例表**（消费 `ink-writer/assets/prose-blacklist.yaml` `abstract_adjectives[:20]`，YAML 定义顺序即编辑最高频→中频）：莫名/无尽/难以言喻/仿佛/似乎/似有若无/若有若无/恍惚/恍若/宛如/犹如/隐隐/淡淡/微微/仿若/隐约/朦胧/迷离/空灵/虚无——每条附替换原则；同时点名 `empty_phrases` 与 `pretentious_metaphors` 完整清单定位
+  - **激活时起草自检** 5 项（写完每段 5 秒抽查）
+- `ink-writer/agents/writer-agent.md` 的 L10b / L10e 法则首行追加 `（场景感知——Directness Mode 激活时暂挂，详见顶部 ## Directness Mode 与 US-007）` 交叉标注——不动 L10b/L10e 原有配额规则，只在首行标明场景感知属性；真正的 sensory-immersion-checker skipped 行为留给 US-007
+- 新增 `tests/prose/test_writer_agent_directness_mode.py`（15 用例全通过）：
+  - section 存在性 + prompt-top 位置（Directness Mode 必须在 `## 写作核心思维` 之前）
+  - 激活条件（chapter_no 符号 + combat/climax/high_point 三值）
+  - 五条硬原则关键词 parametrize（剧情推进 / 角色心理 / 冲突升级 / 抽象形容词堆叠 / 空境描写段 / 高级比喻 / 强动词 / 具体名词）—— 共 8 个 parametrize case 覆盖 5 条原则的语义锚点
+  - L10b / L10e bullet heading line（`L10b 感官锚点法则` / `L10e 感官主导模态法则`）首行必须交叉引用 Directness Mode + 暂挂 —— 精准 anchor 避免与顶部 `L10b/L10e 暂挂协议` 小节冲突
+  - top-level Directness Mode 必须包含 `L10b/L10e 暂挂` 小节 + 指向 `sensory-immersion-checker`
+  - top-20 黑名单词全部 verbatim 出现（module-scoped fixture 实时读 shipped YAML，避免硬编码飘移）
+  - 资产路径 `ink-writer/assets/prose-blacklist.yaml` 引用
+  - L10 家族（L10a-g）+ L11 存在性 —— 零回归防守
+- 文件改动：
+  - `ink-writer/agents/writer-agent.md`（+~75 行顶部 Directness Mode 章节 + L10b/L10e 首行 2 处交叉引用）
+  - `tests/prose/test_writer_agent_directness_mode.py`（新增 15 用例）
+  - `scripts/ralph/prd.json`（US-006 passes=true + notes）
+  - `scripts/ralph/progress.txt`（本条）
+- 零回归验证：`pytest --no-cov` = **3331 passed / 23 skipped / 0 failed**（baseline 3316 + 15 新用例 = 3331，无新增失败）
+- ruff check 全绿（新测试文件）
+- **Learnings for future iterations:**
+  - **prompt-top 高优先级的落位点**：`front-matter + > 定位/输出格式` 之后、`## 写作核心思维` 之前是写手 agent prompt 的"顶部黄金位"。新增 scene-aware 硬约束放这里能优先被 LLM 读到，实际加分钟效远高于放中段。测试用 `dm_idx < core_idx` 作为结构性 gate 锁死位置，防止后续 PR 误挪到中段。
+  - **L10b/L10e 首行 anchor 要精准**：L10 家族有 7 条（a-g），简单 `find("L10b")` 会命中顶部 Directness Mode 章节里"L10b/L10e 暂挂协议"这种 meta 引用。测试 anchor 必须用 `L10b 感官锚点法则` / `L10e 感官主导模态法则` 这种含法则名的完整 bullet heading——一次 `find` + `find("\n", idx)` 取首行即可精准落到 bullet 本体。
+  - **blacklist 测试用 module fixture 实时读 YAML 而非 hardcode 20 词**：YAML 将来编辑高频词排序会微调（例如从 US-003 的 53 条扩展到 80+），把 `abstract_adjectives[:20]` 读为 fixture 后，测试只断言"这 20 个当前 YAML 规定的高频词全部出现在 prompt 里"——YAML 改动会同步传导到 prompt 合规性。作者改 YAML 时会被测试提醒"writer-agent.md 也要改"。
+  - **US-007 暂挂耦合只做 prompt 声明，行为层由 US-007 交付**：US-006 的任务边界是 prompt 标注"直白模式下 L10b/L10e 暂挂"，但 sensory-immersion-checker 代码层面的 skipped 返回、scene_mode 参数传导这些行为性实现归 US-007。prd.json 里 US-007 的 AC 写明"在直白模式下 skipped（返回场景无需检查而非 Red）"——两者通过 prompt 交叉引用保持对齐，实现顺序 decouple。
+  - **prompt 修改的测试成本极低**：纯 spec-check（读 .md + assert 子串）不需要 agent harness / LLM 调用，15 用例 <0.5s 跑完。给网文写作 agent 加"结构性门禁"的合理策略就是：每个大硬约束章节都配一份轻量级 markdown-assertion test（`assert "关键字" in spec_text`），防止后续无意中删减或改写。
+  - **直白模式下的禁用比喻规则极为保守**：PRD 写"禁用高级比喻（本体为抽象概念）"——落地为"本体是时间/命运/情感/宿命/虚空/孤独/绝望 全 Red"+"每段 ≤ 1 处具体比喻"。比单纯禁"抽象→抽象"更激进，是对当前文邹邹产出的强力纠偏。US-008 polish 精简 pass 需要与此一致（比喻段落超 1 处即压缩）。
+  - **top-20 黑名单全部来自 abstract_adjectives[:20]**：不是从三大类各抽几条，而是单独抽取 abstract_adjectives 前 20——因为 US-003 notes 明确说"YAML 已按编辑最高频→中频排序，abstract_adjectives 开头就是'莫名/无尽/难以言喻/仿佛/似乎'这五个最毒的"。empty_phrases 和 pretentious_metaphors 只点名完整清单定位，避免 prompt 过长稀释优先级。
 ---
 

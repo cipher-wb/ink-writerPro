@@ -103,6 +103,7 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [context-agent, outline-compliance-checker]: `required_foreshadows id f 001 content 数字颜色从灰变红`
 - **2x** in [data-agent, ooc-checker]: `catchphrases 斗之力 无处不在 speech_habits 喜欢用反问句 生气时用短句`
 - **2x** in [data-agent, ooc-checker]: `vocabulary_level 粗犷直接 tone 倔强不服输 dialect_markers forbidden_expressions`
+- **2x** in [directness-checker, writer-agent]: `ink writer assets prose blacklist yaml`
 - **2x** in [emotion-curve-checker, high-point-checker]: `本 agent 默认数据源 审查包中的正文 题材画像 最近章节摘要与`
 - **2x** in [flow-naturalness-checker, sensory-immersion-checker]: `与 prose impact checker 视觉冲击 电影感`
 - **2x** in [flow-naturalness-checker, golden-three-checker]: `理解 领悟 感悟 知道了 发现了 明白了`
@@ -120,4 +121,3 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [logic-checker, outline-compliance-checker]: `json issues markdown 报告 执行流程 第一步`
 - **2x** in [logic-checker, outline-compliance-checker]: `第三步 must_not_pass 判定 硬阻断条件 满足任一则 pass`
 - **2x** in [logic-checker, outline-compliance-checker]: `false 存在任何 critical severity issue 存在`
-- **2x** in [logic-checker, outline-compliance-checker]: `true 但 medium low issue 仍传递给`

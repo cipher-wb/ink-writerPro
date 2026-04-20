@@ -105,8 +105,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "ink-writer/agents/writer-agent.md 顶部（位于 ## 写作核心思维 之前，实现 PRD '最高优先级' 要求）新增 ## Directness Mode (场景激活硬约束) 章节，包含：(1) 激活判定（chapter_no ∈ [1,2,3] OR scene_mode ∈ {combat,climax,high_point}），兜底 + 显式 scene_mode 覆盖；(2) 五条硬原则（每句服务剧情推进/角色心理/冲突升级、禁用抽象形容词堆叠、禁用空境描写段>3 句、禁用本体为抽象的高级比喻、首选强动词+具体名词）；(3) L10b/L10e 暂挂协议小节（US-007 协同；sensory-immersion-checker 直白场景 skipped）；(4) 禁区词 top-20 反例表（abstract_adjectives 前 20 条：莫名/无尽/难以言喻/仿佛/似乎/似有若无/若有若无/恍惚/恍若/宛如/犹如/隐隐/淡淡/微微/仿若/隐约/朦胧/迷离/空灵/虚无），附替换原则；(5) 激活时起草自检 5 项（≤ 5 秒）。同步在 L10b/L10e 法则首行追加 '(场景感知——Directness Mode 激活时暂挂，详见顶部 ## Directness Mode 与 US-007)' 以交叉指向。新增 tests/prose/test_writer_agent_directness_mode.py（15 用例全通过）：section 存在性 + prompt-top 位置 / 激活条件 / 五条硬原则关键词 parametrize / L10b-L10e bullet 首行交叉引用 / L10b-L10e 暂挂协议小节 / sensory-immersion-checker 协同 / top-20 黑名单词全部 verbatim 出现 / 资产路径引用 / L10 家族零回归。全量 pytest 3331 passed / 23 skipped / 0 failed（baseline 3316 + 15 新用例 = 3331，零回归）。ruff 全绿。US-007 将处理 sensory-immersion-checker 行为层面对 skipped 状态的实际实现。"
     },
     {
       "id": "US-007",
