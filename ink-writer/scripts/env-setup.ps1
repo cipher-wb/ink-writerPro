@@ -67,7 +67,7 @@ if (-not (Test-Path $env:SCRIPTS_DIR -PathType Container)) {
 function Find-PythonLauncher {
     $candidates = @(
         @{ Cmd = 'py';      Args = @('-3', '--version') },
-        @{ Cmd = 'python3'; Args = @('--version')       },
+        @{ Cmd = 'python3'; Args = @('--version')       },  # c8-ok: detector primitive
         @{ Cmd = 'python';  Args = @('--version')       }
     )
     foreach ($c in $candidates) {
@@ -75,7 +75,7 @@ function Find-PythonLauncher {
         try {
             $null = & $c.Cmd @($c.Args) 2>&1
             if ($LASTEXITCODE -eq 0) {
-                if ($c.Cmd -eq 'py') { return 'py -3' }
+                if ($c.Cmd -eq 'py') { return 'py -3' }  # c8-ok: detector primitive
                 return $c.Cmd
             }
         } catch {

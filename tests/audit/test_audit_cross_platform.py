@@ -771,6 +771,58 @@ def test_c8_detects_hardcoded_python(tmp_path: Path) -> None:
     assert all(f.category == "C8" for f in findings)
 
 
+def test_c8_honors_noqa_pragma(tmp_path: Path) -> None:
+    """US-009: detector primitive 场景通过 `# c8-ok` / `# noqa: c8` 显式抑制。"""
+    sh = tmp_path / "detector.sh"
+    sh.write_text(
+        textwrap.dedent(
+            """\
+            #!/bin/bash
+            PY_LAUNCHER="python3"  # c8-ok: detector primitive
+            _cand="py -3"  # noqa: c8
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c8_python_launcher(tmp_path)
+    assert findings == []
+
+
+def test_c8_still_reports_without_pragma(tmp_path: Path) -> None:
+    """pragma 缺失时必须仍然报警（守护 pragma 不能误开大门）。"""
+    sh = tmp_path / "bad.sh"
+    sh.write_text(
+        textwrap.dedent(
+            """\
+            #!/bin/bash
+            python3 -X utf8 foo.py
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c8_python_launcher(tmp_path)
+    assert len(findings) == 1
+    assert findings[0].line == 2
+
+
+def test_c8_pragma_in_ps1_works(tmp_path: Path) -> None:
+    """PS 也以 `#` 起注释 —— pragma 语义跨 shell/PS 一致。"""
+    ps = tmp_path / "detector.ps1"
+    ps.write_text(
+        textwrap.dedent(
+            """\
+            function Find-PythonLauncher {
+                @{ Cmd = 'python3'; Args = @('--version') },  # c8-ok: detector primitive
+                if ($c.Cmd -eq 'py') { return 'py -3' }  # c8-ok: detector primitive
+            }
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c8_python_launcher(tmp_path)
+    assert findings == []
+
+
 # ---------------------------------------------------------------------------
 # C9: CLI 入口缺 enable_windows_utf8_stdio
 # ---------------------------------------------------------------------------

@@ -105,7 +105,7 @@ $ReportFile = Join-Path $ReportDir ("auto-{0}.md" -f $startTime.ToString('yyyyMM
 function Find-PythonLauncher {
     $candidates = @(
         @{ Cmd = 'py';      Args = @('-3', '--version') },
-        @{ Cmd = 'python3'; Args = @('--version')       },
+        @{ Cmd = 'python3'; Args = @('--version')       },  # c8-ok: detector primitive
         @{ Cmd = 'python';  Args = @('--version')       }
     )
     foreach ($c in $candidates) {

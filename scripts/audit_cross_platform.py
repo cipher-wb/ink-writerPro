@@ -911,6 +911,11 @@ _PYTHON_HARDCODE_RE = re.compile(
     r"(?:(?<![\w/])python3(?![\w/])|(?<![\w/])py\s+-3(?![\w]))"
 )
 
+# 行尾 pragma 显式抑制（shell/PS 都用 `#` 起始）。命中 detector primitive 场景：
+#   PYTHON_LAUNCHER="python3"  # c8-ok: detector primitive
+# 或 `# noqa: c8`。
+_C8_NOQA_RE = re.compile(r"#\s*(?:noqa\s*:\s*[cC]8|[cC]8-ok)\b")
+
 
 def scan_c8_python_launcher(root: Path) -> list[Finding]:
     findings: list[Finding] = []
@@ -930,6 +935,9 @@ def scan_c8_python_launcher(root: Path) -> list[Finding]:
                 continue
             # 已经在调用 find_python_launcher 的行跳过
             if "find_python_launcher" in line:
+                continue
+            # 行尾 pragma 显式抑制（Find-PythonLauncher / find_python_launcher_bash 的 primitive）
+            if _C8_NOQA_RE.search(line):
                 continue
             findings.append(
                 Finding(

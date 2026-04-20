@@ -44,6 +44,10 @@ Prev run: chapter-context-injection → v20.0.0 released
   `%~dp0` 是"本脚本所在目录含末尾斜杠"的批处理内置，比任何硬编码路径都稳。`tests/scripts/test_script_entries_parity.py:test_every_cmd_sibling_forwards_to_ps1` 做宽松校验（含 `powershell` + 对应 .ps1 文件名即可），不强绑参数细节以留未来定制空间。
 - **SKILL.md 的 stem 级 parity**（US-008 起）：每个被引用的 `foo.sh` 必须在同一 SKILL.md 内有同 stem `foo.ps1` 引用——只检查"引用了任一 .ps1"还不够，要防"标记对齐但 .sh 和 .ps1 不是一对"的漂移。`tests/skills/test_skill_md_windows_parity.py:test_every_sh_reference_has_matching_ps1_stem_in_same_skill_md` 是仓库级红线，新增 SKILL.md 加 `.sh` 块时必须同文件补同名 `.ps1` 引用（例：引入 `run.sh` 必须也出现 `run.ps1` 字面量，不能只靠 `env-setup.ps1` 顶替）。
 - **tests/skills/ 与 ink-writer/skills/ 的命名空间重名**（US-008 起）：pythonpath 含 `ink-writer`，而 `ink-writer/skills/` 是命名空间包；**不能**在 `tests/skills/` 创建 `__init__.py`——否则会覆盖前者。与 US-007 `tests/scripts` vs `scripts/` 的陷阱同源。Codebase Pattern "tests/<name>/ 不能与顶层包同名" 的完整适用范围现在应理解为"不能与任意 pythonpath 根下的包同名"。
+- **Python launcher 统一走 bash/PS detector**（US-009 起）：`.sh` 内统一用 inline `find_python_launcher_bash` 函数 + `$PY_LAUNCHER` / `$PYTHON_LAUNCHER` 变量（`case OSTYPE` — `msys*/cygwin*/win32*` 探测 py -3 → python3 → python；`*)` 分支恒定 `python3` 保证 Mac/Linux 字节级一致）。`.ps1` 内用 `Find-PythonLauncher` 函数 + `$env:PYTHON_LAUNCHER`。**禁止**在这些 detector 函数体之外裸调 `python3` / `py -3`——`tests/core/test_python_launcher.py:TestRepoRedLineC8` 仓库红线直接跑 scanner 守护，新违规立即挂 CI。新增 `.sh`/`.ps1` 加 python 调用时必须先取到 launcher 变量再调。
+- **`# c8-ok` pragma 语义**（US-009 起）：detector primitive 的字面量（candidates 数组、返回字符串、变量赋值）用行尾 `# c8-ok: detector primitive` 或 `# noqa: c8` 标注，scanner 跳过。bash 和 PS 都以 `#` 起注释，`_C8_NOQA_RE` 单正则跨语言工作。与 US-006 的 `# noqa: c5` 同构——"基础 primitive 需要字面量" 类免检机制的统一处理。
+- **regex 抠出 bash 函数体注入子 shell 测语义**（US-009 起）：`_BASH_FUNC_RE = r'find_python_launcher_bash\s*\(\s*\)\s*\{.*?\n\}\n'`（DOTALL）从实文件抠出 detector 函数源码，通过 `bash -c "$SRC; find_python_launcher_bash; echo \$VAR"` 注入子 shell，模拟 `OSTYPE=darwin23/msys` 不同平台断言输出变量值。这比把函数源硬编码进 test 更抗漂移（源改测自动跟上），也比 `subprocess.run([./env-setup.sh])` 稳（规避 env-setup 的 side effects 如路径检测/export）。副作用风险：若函数大括号格式漂移（如末 `}` 不换行）需要更新 regex。可复用于其他 shell primitive 测试。
+- **OSTYPE 判别 Windows git-bash / Mac / Linux**（US-009 起）：bash 内置 `$OSTYPE`，Mac=`darwin*`、Linux=`linux-gnu*`、Windows git-bash=`msys`、Cygwin=`cygwin`、MinGW=`win32`。用 `case "${OSTYPE:-}" in msys*|cygwin*|win32*) ... ;; *) ... ;; esac` 做跨平台分支比 fork `uname` 子进程更快、比 `$OSTYPE` 全值相等匹配更稳（避免遗漏版本后缀如 `darwin23`）。
 
 ## Context Contract（本 PRD 专属）
 
@@ -412,4 +416,60 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `reports/cross-platform-audit-findings.md` (regenerated: C7 保持 0, 总数保持 44)
   - `prd.json` (US-008 passes:true + notes；修复内引号 → 全角【】避免 JSONDecodeError)
   - `progress.txt` (this entry + 2 new Codebase Patterns)
+---
+
+## 2026-04-20 - US-009 Python launcher 硬编码根除（C8）
+- C8 findings **37 → 0**（总报告 44 → 7；仅剩 C2×3 Low fixtures + C9×4 归 US-010）
+- **核心交付：两层 detector 层叠**
+  - Python 层：`runtime_compat.find_python_launcher()`（v19 已存在，Mac 恒返回 "python3"，Windows 探测 py -3/python3/python）
+  - Shell/PS 层（本轮新增）：bash inline `find_python_launcher_bash` + PS `Find-PythonLauncher`——因 `.sh` / `.ps1` 无法直接 import Python helper，需在各自语言内复制检测逻辑，语义严格对等
+- **ink-auto.sh 修复**（32 处 python3 → $PY_LAUNCHER）
+  - 顶部路径检测后（line 149）新增 `find_python_launcher_bash()`：`case OSTYPE in msys*|cygwin*|win32*) 探测链 ;; *) PY_LAUNCHER="python3" ;; esac`
+  - sed 批量 `s/python3 -/$PY_LAUNCHER -/g` 通杀 `python3 -X utf8` 和 `python3 -c` 两种形态（-` 后缀避免匹配 detector 内的字符串字面量 `"python3"`）
+  - detector 内 3 处字面量（注释 + candidates 数组 + 赋值）带 `# c8-ok: detector primitive` 行尾 pragma 跳过 scanner
+  - `bash -n` 语法检查通过
+- **env-setup.sh 修复**（2 处 python3 → $PYTHON_LAUNCHER）
+  - Step 5.5 新增同构 detector（变量名 `PYTHON_LAUNCHER`），追加 `export PYTHON_LAUNCHER` 让下游 skill 脚本继承
+  - Step 6（preflight）+ Step 7（resolve PROJECT_ROOT）的 2 处 python3 调用替换
+- **env-setup.ps1 + ink-auto.ps1 修复**（零逻辑变更，仅加 pragma）
+  - `Find-PythonLauncher` 函数体内共 3 处 python3/py -3 字面量（candidates 数组 + 'py -3' 返回字符串）属 detector primitive
+  - 行尾加 `# c8-ok: detector primitive`，PS 解析忽略注释
+  - BOM 保留验证 `xxd` 头 3 字节 `efbbbf` ✓
+- **scanner 扩展**（`scripts/audit_cross_platform.py` +7 行）
+  - `_C8_NOQA_RE = re.compile(r"#\s*(?:noqa\s*:\s*[cC]8|[cC]8-ok)\b")` 与 C5 同构
+  - `scan_c8_python_launcher` 在匹配硬编码后、finding 追加前新增 `if _C8_NOQA_RE.search(line): continue`
+- **新增 `tests/core/test_python_launcher.py`（11 tests）**
+  - `TestBashDetectorEnvSetup` 3 tests：`_extract_bash_detector` 用 regex 抠出实文件中的函数体，注入 `bash -c` 子 shell 模拟 `OSTYPE=darwin23/linux-gnu/msys` 三路径，断言 `PYTHON_LAUNCHER` 取值
+  - `TestBashDetectorInkAuto` 2 tests：同理覆盖 `PY_LAUNCHER`（Mac → "python3"；msys → {py -3, python3, python} 三候选之一）
+  - `TestSourceLevelInvariants` 4 tests：env-setup.sh 含 `export PYTHON_LAUNCHER` + `$PYTHON_LAUNCHER -X utf8` / ink-auto.sh 无未打 pragma 的裸 python3 / env-setup.ps1 非注释 python3 字面量必有 c8-ok / ink-auto.ps1 同理
+  - `TestRepoRedLineC8` 1 test：直接调 `scan_c8_python_launcher(REPO_ROOT)` 断言 `findings == []`——仓库级红线，未来新增硬编码立即挂 CI
+  - `TestMacByteLevelParity` 1 test（Mac/Linux only）：实跑 `$PY_LAUNCHER -c 'import sys; print(sys.version_info[0])'` 返回 `3`，证明 Mac 上字节级行为与原 python3 调用等价
+- **扩展 `tests/audit/test_audit_cross_platform.py`（+3 C8 tests）**
+  - `test_c8_honors_noqa_pragma`：构造含 `# c8-ok` 和 `# noqa: c8` 两种语法的 .sh，断言 `findings == []`
+  - `test_c8_still_reports_without_pragma`：构造无 pragma 的硬编码，断言仍然报 1 处——守护 pragma 不误开大门
+  - `test_c8_pragma_in_ps1_works`：PS 也以 `#` 起注释，pragma 跨 shell/PS 一致
+- **Mac 字节级一致（形式化证明 + 实测对比）**
+  - case 语句 `*)` 分支直接 `PY_LAUNCHER=python3`，`$PY_LAUNCHER -X utf8 <args>` word-split 后完全等价于原 `python3 -X utf8 <args>`（无条件分支、无函数调用开销）
+  - `bash -n` 语法检查 env-setup.sh + ink-auto.sh 全绿
+  - 实测：`$PY_LAUNCHER -c 'print(42)'` 输出 `42` == `python3 -c 'print(42)'` 输出 `42`
+- 全量 pytest: **3163 passed / 23 skipped / 0 failed**（baseline 3149 → +14 新测试：11 launcher + 3 audit C8，零回归）
+- **Learnings for future iterations:**
+  - **inline 重用 vs 共享 helper 文件**：两个 .sh 的 detector 函数体几乎一致（15 行），选择 inline 重复而非引入新 source 链路——理由：ink-auto.sh 的 bootstrap 已很重，再 source env-setup.sh 会耦合 CLAUDE_PLUGIN_ROOT 检测等副作用；dup 15 行换零耦合、零新文件。**未来若 detector 还需出现在第 3 个 .sh**，可提取 `_launcher_primitive.sh` 单独 source
+  - **OSTYPE 判别优于 uname**：bash 内置 `$OSTYPE`（darwin*/linux-gnu*/msys/cygwin/win32），无需 fork 子进程。`case "${OSTYPE:-}" in msys*|cygwin*|win32*) ...` 是 Windows git-bash/WSL 的典型分支
+  - **Mac 字节级一致证明形式化**：case `*)` 分支恒值 `PY_LAUNCHER=python3` → `$PY_LAUNCHER <args>` word-split 后与 `python3 <args>` 完全等价。这种"两分支中一支恒定"的 detector 结构是零回归的核心形式
+  - **sed 批量替换语法陷阱**：`s/python3 -/$PY_LAUNCHER -/g` 的 `python3 -` 尾随 `-` 是关键——只替换调用（后面必跟 flag），不替换字符串字面量 `"python3"`（不带 `-`）。如果匹配 `python3 ` (trailing space) 会误伤 detector 内 `"py -3" "python3" "python"` 数组行的 `python3 "`
+  - **regex 抠出函数体注入子 shell 是通用范式**：`_BASH_FUNC_RE = r'find_python_launcher_bash\s*\(\s*\)\s*\{.*?\n\}\n'` (DOTALL) 直接从实文件抠源码，比"把函数源硬编码进 test"更抗漂移。这个范式也可用于测 env-setup.sh 的其他 function（format_duration / find_project_root 等）
+  - **`# c8-ok` pragma 跨语言统一**：bash 和 PS 都以 `#` 起注释，单 `_C8_NOQA_RE` 正则覆盖两者——与 C5 的 `# noqa: c5` 同构，"基础 primitive 需要字面量" 类免检机制的统一处理方式
+  - **下轮（US-010）执行要点**：C9 有 4 处 Python CLI 入口（`ink-writer/dashboard/server.py:70` / `ink-writer/scripts/sync_plugin_version.py:348` / `scripts/build_chapter_index.py:71` / `tests/data_modules/test_data_modules.py:1428`）缺 `enable_windows_utf8_stdio()`。在各自 main 开头补调即可（Mac no-op）。配合静态检查 `tests/audit/test_cli_entries_utf8_stdio.py` 扫描所有 `if __name__ == "__main__"` 必调该 helper
+- Files changed:
+  - `ink-writer/scripts/ink-auto.sh` (+27 行 detector 块；32 处 python3 → $PY_LAUNCHER)
+  - `ink-writer/scripts/env-setup.sh` (+24 行 detector 块；2 处 python3 → $PYTHON_LAUNCHER + export)
+  - `ink-writer/scripts/env-setup.ps1` (+2 处 `# c8-ok: detector primitive` pragma)
+  - `ink-writer/scripts/ink-auto.ps1` (+1 处 `# c8-ok: detector primitive` pragma)
+  - `scripts/audit_cross_platform.py` (+7 行 `_C8_NOQA_RE` + scan_c8 新增 pragma 跳过)
+  - `tests/core/test_python_launcher.py` (new, ~190 行, 11 tests)
+  - `tests/audit/test_audit_cross_platform.py` (+55 行, +3 C8 tests)
+  - `reports/cross-platform-audit-findings.md` (regenerated: C8 37 → 0, 总数 44 → 7)
+  - `prd.json` (US-009 passes:true + 详细 notes)
+  - `progress.txt` (this entry + 4 new Codebase Patterns)
 ---
