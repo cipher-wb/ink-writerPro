@@ -286,43 +286,51 @@ class TestStripProjectRootArgs:
 class TestRunDataModule:
     """_run_data_module 的行为测试。"""
 
+    def test_unknown_module_raises(self):
+        module = _load_ink_module()
+        with pytest.raises(RuntimeError, match="未知的数据模块"):
+            module._run_data_module("not_in_mapping", [])
+
     def test_missing_main_raises(self, monkeypatch):
         module = _load_ink_module()
         import types
 
-        fake_mod = types.ModuleType("data_modules.no_main")
+        import_path = module._DATA_MODULE_MAPPING["index_manager"]
+        fake_mod = types.ModuleType(import_path)
         monkeypatch.setattr(
             "importlib.import_module",
-            lambda name: fake_mod if name == "data_modules.no_main" else __import__(name),
+            lambda name: fake_mod if name == import_path else __import__(name),
         )
         with pytest.raises(RuntimeError, match="缺少可调用的 main"):
-            module._run_data_module("no_main", [])
+            module._run_data_module("index_manager", [])
 
     def test_successful_main_returns_zero(self, monkeypatch):
         module = _load_ink_module()
         import types
 
-        fake_mod = types.ModuleType("data_modules.ok_mod")
+        import_path = module._DATA_MODULE_MAPPING["index_manager"]
+        fake_mod = types.ModuleType(import_path)
         fake_mod.main = lambda: None
         monkeypatch.setattr(
             "importlib.import_module",
-            lambda name: fake_mod if name == "data_modules.ok_mod" else __import__(name),
+            lambda name: fake_mod if name == import_path else __import__(name),
         )
-        assert module._run_data_module("ok_mod", ["--flag"]) == 0
+        assert module._run_data_module("index_manager", ["--flag"]) == 0
 
     def test_system_exit_returns_code(self, monkeypatch):
         module = _load_ink_module()
         import types
 
-        fake_mod = types.ModuleType("data_modules.exit_mod")
+        import_path = module._DATA_MODULE_MAPPING["index_manager"]
+        fake_mod = types.ModuleType(import_path)
         def _exit_main():
             raise SystemExit(42)
         fake_mod.main = _exit_main
         monkeypatch.setattr(
             "importlib.import_module",
-            lambda name: fake_mod if name == "data_modules.exit_mod" else __import__(name),
+            lambda name: fake_mod if name == import_path else __import__(name),
         )
-        assert module._run_data_module("exit_mod", []) == 42
+        assert module._run_data_module("index_manager", []) == 42
 
 
 class TestRunScript:

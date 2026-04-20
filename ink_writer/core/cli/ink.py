@@ -53,8 +53,11 @@ from project_locator import resolve_project_root, write_current_project_pointer,
 
 
 def _scripts_dir() -> Path:
-    # data_modules/ink.py -> data_modules -> scripts
-    return Path(__file__).resolve().parent.parent
+    # __file__ is ink-writer/ink_writer/core/cli/ink.py
+    # repo_root is ink-writer/ (4 levels up)
+    # scripts are at ink-writer/ink-writer/scripts/
+    repo_root = Path(__file__).resolve().parent.parent.parent.parent
+    return repo_root / "ink-writer" / "scripts"
 
 
 def _resolve_root(explicit_project_root: Optional[str]) -> Path:
@@ -84,18 +87,35 @@ def _strip_project_root_args(argv: list[str]) -> list[str]:
     return out
 
 
+# Mapping from module name to (import_path, class_or_module_name)
+# After migration from data_modules to ink_writer.core
+_DATA_MODULE_MAPPING = {
+    "index_manager": "ink_writer.core.index.index_manager",
+    "state_manager": "ink_writer.core.state.state_manager",
+    "rag_adapter": "ink_writer.core.context.rag_adapter",
+    "style_sampler": "ink_writer.core.extract.style_sampler",
+    "entity_linker": "ink_writer.core.extract.entity_linker",
+    "context_manager": "ink_writer.core.context.context_manager",
+    "migrate_state_to_sqlite": "ink_writer.core.state.migrate_state_to_sqlite",
+}
+
+
 def _run_data_module(module: str, argv: list[str]) -> int:
     """
-    Import `data_modules.<module>` and call its main(), while isolating sys.argv.
+    Import `ink_writer.core.<subdir>.<module>` and call its main(), while isolating sys.argv.
     """
-    mod = importlib.import_module(f"data_modules.{module}")
+    if module not in _DATA_MODULE_MAPPING:
+        raise RuntimeError(f"未知的数据模块: {module}，请检查迁移是否完成")
+
+    import_path = _DATA_MODULE_MAPPING[module]
+    mod = importlib.import_module(import_path)
     main = getattr(mod, "main", None)
     if not callable(main):
-        raise RuntimeError(f"data_modules.{module} 缺少可调用的 main()")
+        raise RuntimeError(f"{import_path} 缺少可调用的 main()")
 
     old_argv = sys.argv
     try:
-        sys.argv = [f"data_modules.{module}"] + argv
+        sys.argv = [import_path] + argv
         try:
             main()
             return 0

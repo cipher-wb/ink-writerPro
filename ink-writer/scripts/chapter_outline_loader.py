@@ -93,6 +93,9 @@ def _find_volume_outline_file(project_root: Path, chapter_num: int) -> Path | No
         outline_dir / f"第{volume_num}卷-详细大纲.md",
         outline_dir / f"第{volume_num}卷 - 详细大纲.md",
         outline_dir / f"第{volume_num}卷 详细大纲.md",
+        outline_dir / f"第{volume_num}卷-章节大纲.md",
+        outline_dir / f"第{volume_num}卷 - 章节大纲.md",
+        outline_dir / f"第{volume_num}卷 章节大纲.md",
     ]
     return next((path for path in candidates if path.exists()), None)
 
