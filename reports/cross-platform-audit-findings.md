@@ -2,7 +2,7 @@
 
 扫描根目录: `/Users/cipher/AI/ink/ink-writer`
 
-**总 finding 数**: 47 (Blocker=0 / High=6 / Medium=38 / Low=3)
+**总 finding 数**: 44 (Blocker=0 / High=3 / Medium=38 / Low=3)
 
 ## 按类别汇总
 
@@ -13,8 +13,8 @@
 | C3 | 0 | US-004 |
 | C4 | 0 | US-005 |
 | C5 | 0 | US-006 |
-| C6 | 2 | US-007 |
-| C7 | 1 | US-008 |
+| C6 | 0 | US-007 |
+| C7 | 0 | US-008 |
 | C8 | 37 | US-009 |
 | C9 | 4 | US-010 |
 
@@ -27,23 +27,6 @@
 | `tests/core/test_path_cross_platform.py:141` | Low | 疑似硬编码路径字面量: '/Users/cipher/AI/ink/ink-writer' | 改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化 |
 | `tests/core/test_path_cross_platform.py:144` | Low | 疑似硬编码路径字面量: '/d/desktop/foo' | 改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化 |
 | `tests/core/test_path_cross_platform.py:146` | Low | 疑似硬编码路径字面量: '/mnt/d/desktop/foo' | 改用 pathlib.Path 拼接，让分隔符在 Windows 上自动归一化 |
-
-## C6 — `*.sh` 缺同目录 `.ps1` / `.cmd` 对等入口
-
-对应修复 US: **US-007**  数量: **2**
-
-| 文件:行 | 严重级别 | 现象 | 修复建议 |
-|---------|----------|------|----------|
-| `ink-writer/scripts/migrate_webnovel_to_ink.sh:1` | High | .sh 缺对等入口: .ps1, .cmd | .ps1 必须 UTF-8 BOM；.cmd 双击包装。参考 ink-auto.ps1 / ink-auto.cmd（如已有） |
-| `ralph/ralph.sh:1` | High | .sh 缺对等入口: .ps1, .cmd | .ps1 必须 UTF-8 BOM；.cmd 双击包装。参考 ink-auto.ps1 / ink-auto.cmd（如已有） |
-
-## C7 — `SKILL.md` 引用 `.sh` 缺 Windows PowerShell sibling 块
-
-对应修复 US: **US-008**  数量: **1**
-
-| 文件:行 | 严重级别 | 现象 | 修复建议 |
-|---------|----------|------|----------|
-| `ralph/skills/ralph/SKILL.md:244` | High | SKILL.md 引用 .sh 但缺 <!-- windows-ps1-sibling --> 标记 | 在 .sh 代码块下方追加 sibling 标记 + PowerShell 等价块（参考 ink-auto/SKILL.md:51） |
 
 ## C8 — 脚本硬编码 `python3` / `py -3`（未走 `find_python_launcher`）
 
@@ -105,11 +88,9 @@
 供下一轮 PRD 迭代直接消费。已与本 PRD 既有 US-002~US-010 对齐，
 数字列表为各类风险对应 US 的优先级再排序参考：
 
-1. **US-007**（C6, 2 处）— `*.sh` 缺同目录 `.ps1` / `.cmd` 对等入口
-2. **US-008**（C7, 1 处）— `SKILL.md` 引用 `.sh` 缺 Windows PowerShell sibling 块
-3. **US-010**（C9, 4 处）— Python CLI 入口未调 `enable_windows_utf8_stdio()`
-4. **US-009**（C8, 37 处）— 脚本硬编码 `python3` / `py -3`（未走 `find_python_launcher`）
-5. **US-003**（C2, 3 处）— 硬编码路径分隔符（疑似）
+1. **US-010**（C9, 4 处）— Python CLI 入口未调 `enable_windows_utf8_stdio()`
+2. **US-009**（C8, 37 处）— 脚本硬编码 `python3` / `py -3`（未走 `find_python_launcher`）
+3. **US-003**（C2, 3 处）— 硬编码路径分隔符（疑似）
 
 ---
 

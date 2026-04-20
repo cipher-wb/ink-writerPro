@@ -113,8 +113,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Done 2026-04-20: C6 findings 2→0（总报告 47→44，C6+C7 同步减少）。动作分两头：(1) **scanner 修正（核心）**：原 C6 finding 里 `ralph/ralph.sh` 指向顶级 `/ralph/` 下 snarktank/ralph 外部 clone（.gitignore:63 `/ralph/`，有自己的 `.git/`），不属于本仓库跨平台承诺范围，audit 把它报为缺 .ps1/.cmd 是假 finding。新增 `_is_nested_git_repo_dir(entry, root)` 沿父目录链检测含 `.git/` 子目录的嵌套 git 仓库（root 自身的 .git 不计入），`iter_files` 调用它自动跳过——同一改动也消除了 `ralph/skills/ralph/SKILL.md` 那条 C7 finding（同样是外部 clone）。in-repo 真实入口 `scripts/ralph/ralph.sh` 在 v19 就已有 `.ps1` + `.cmd`，本轮无需新增。(2) **真实新增 2 个 Windows 对等入口**：`ink-writer/scripts/migrate_webnovel_to_ink.ps1` + `.cmd`，覆盖唯一真实 C6 缺口。`.ps1` 以 UTF-8 BOM 开头（Python `path.write_bytes(b'\\xef\\xbb\\xbf' + text)` 确保），`.cmd` 走 4 行 `powershell -NoProfile -ExecutionPolicy Bypass -File %~dp0<name>.ps1 %*` 转发模板（与 env-setup.cmd / ink-auto.cmd 字节级一致）。ps1 翻译 bash 迁移逻辑：CmdletBinding + StrictMode + ErrorActionPreference='Stop'，Move-Item 重命名 .webnovel→.ink / Get-ChildItem -Filter '第*卷' 枚举 / Move-Item 扁平章节 / Resolve-Path 绝对路径 / Read-Host 确认。(3) **仓库红线测试** `tests/scripts/test_script_entries_parity.py` (5 tests)：全仓 .sh 枚举后断言同目录 .ps1+.cmd 存在 / .ps1 前 3 字节必须是 `0xEF 0xBB 0xBF` / .cmd 含 `powershell` + 对应 .ps1 文件名（宽松校验留定制空间）/ 参数化固化 migrate_webnovel_to_ink.sh + scripts/ralph/ralph.sh。测试复用 `_is_nested_git_repo` 跳过外部 clone，与 scanner 语义一致。pytest.ini testpaths 追加 `tests/scripts`。**关键坑点**：首次给 tests/scripts 加 `__init__.py` 导致 pytest collection 把 tests/scripts 作为 `scripts` 命名空间包副本覆盖顶层 `scripts/`，触发 `tests/migration/test_fix11_script.py:15 ModuleNotFoundError: No module named 'scripts.migration'`——改成 namespace package（无 `__init__.py`）即解决。Mac 字节级一致：零 .sh 改动；scanner 增强在 Mac 上同样生效（跳过嵌套 repo 是跨平台行为）。全量 pytest: **3129 passed / 23 skipped / 0 failed**（baseline 3124 → +5 新测试，零回归）。"
     },
     {
       "id": "US-008",

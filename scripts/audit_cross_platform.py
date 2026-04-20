@@ -121,8 +121,38 @@ class AuditReport:
 # ---------------------------------------------------------------------------
 
 
+def _is_nested_git_repo_dir(entry: Path, root: Path) -> bool:
+    """判断 entry 是否位于 root 下某个"嵌套 git 仓库"内部。
+
+    嵌套 git 仓库的典型场景是把 snarktank/ralph 一类外部项目 clone 进子目录做参考。
+    这类目录**不属于本仓库版本控制范围**（一般被 .gitignore），审计报告里扫到它们
+    会产生"假 finding"（如 `ralph/ralph.sh` 缺 `.ps1` —— 但这是上游项目的事，与
+    本仓库跨平台承诺无关）。
+
+    判定规则：沿 entry 父目录链走到 root，只要中间任一目录含 `.git/` 子目录，就视为
+    嵌套 git 仓库。root 自身的 `.git/` 不计入（那是当前仓库的根）。
+    """
+    try:
+        root_resolved = root.resolve()
+    except OSError:
+        root_resolved = root
+    current = entry.parent
+    while True:
+        try:
+            current_resolved = current.resolve()
+        except OSError:
+            return False
+        if current_resolved == root_resolved:
+            return False
+        if (current / ".git").exists():
+            return True
+        if current.parent == current:
+            return False
+        current = current.parent
+
+
 def iter_files(root: Path, suffixes: tuple[str, ...]) -> Iterable[Path]:
-    """递归遍历 root，跳过 EXCLUDE_DIR_NAMES。"""
+    """递归遍历 root，跳过 EXCLUDE_DIR_NAMES 和嵌套 git 仓库。"""
     if not root.exists():
         return
     for entry in sorted(root.rglob("*")):
@@ -130,6 +160,9 @@ def iter_files(root: Path, suffixes: tuple[str, ...]) -> Iterable[Path]:
             continue
         # 跳过位于排除目录下的文件
         if any(part in EXCLUDE_DIR_NAMES for part in entry.parts):
+            continue
+        # 跳过嵌套 git 仓库（如 /ralph/ 下 clone 的 snarktank/ralph）
+        if _is_nested_git_repo_dir(entry, root):
             continue
         if entry.suffix.lower() in suffixes:
             yield entry

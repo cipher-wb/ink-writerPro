@@ -31,6 +31,17 @@ Prev run: chapter-context-injection → v20.0.0 released
 - **tests/conftest.py 是 asyncio 策略的单一真源**（US-005 起）：`tests/conftest.py` 在 module 加载时调 `set_windows_proactor_policy()`，pytest 在 collect 阶段先加载 conftest，下游所有 test 文件的 `asyncio.run(...)` 自动继承策略——无需每个 test 文件重复 boilerplate。`scan_c4_asyncio` 走 `_ancestor_conftest_covers_proactor` 父目录链寻找 conftest 的 token 即判定已覆盖。若 token 在 conftest 里被别名 import（`as _x`），静态 contains 检测仍通过，但若想升级到严格 AST call 检测（参考 `tests/core/test_asyncio_proactor_policy.py:test_tests_conftest_declares_proactor_policy`），请**不要**在 conftest 里用 alias——保持 `from runtime_compat import set_windows_proactor_policy` 的命名可识别。
 - **safe_symlink 是 symlink 的单一入口**（US-006 起）：所有生产/一般 test 代码调用 `runtime_compat.safe_symlink(src, dst)`（Mac/Linux 走真实 `os.symlink` 保持字节级一致；Windows 无特权自动 `shutil.copyfile`/`copytree` 降级 + WARNING 日志）。**两个例外**：`_has_symlink_privilege` 的 probe 实现（本身就是探测 os.symlink 是否可用）+ `safe_symlink` 自己的实现——scanner 走 `_C5_PRIMITIVE_FUNCS` 跳过这两个函数体。**symlink 是 SUT 的场景**（如 test_path_guard 测 escape 拦截）用 `# noqa: c5` 或 `# c5-ok` pragma 显式标注，说明为何不用 helper——替换成 copy 会让 symlink 相关断言失效。`tests/core/test_safe_symlink.py:test_repo_has_no_bare_symlink_calls_outside_primitives` 是仓库红线，新违规直接挂 CI。
 - **AST scanner 天然免疫字符串字面量误报**（US-006 起）：C5 从 line-regex 重写为 AST-based 后，`textwrap.dedent("""os.symlink(...)...""")` 这类 fixture 源码不再被扫到（ast.Constant 节点不参与 Call 匹配）；docstring 里的 ```os.symlink``` 文本同理跳过。**此改造模板可复用**——C8（Python launcher 硬编码）若将来发现 docstring 误报，同样可以考虑 AST 重写。line-regex 的适用边界：纯脚本（.sh/.ps1/.md）或 Python AST 无法表达的格式（如 Makefile）。
+- **`.ps1` 必须 UTF-8 BOM 且用 bytes 写入**（US-007 起）：PS 5.1 默认 ANSI 解码 `.ps1`，没有 `0xEF 0xBB 0xBF` 头部会让中文乱码。Write tool 不写 BOM，必须走 `path.write_bytes(b'\\xef\\xbb\\xbf' + content_bytes)`。`tests/scripts/test_script_entries_parity.py:test_every_ps1_sibling_has_utf8_bom` 是仓库红线，新 `.sh` 对等 .ps1 缺 BOM 会直接挂 CI。验证：`xxd <file> | head -1` 头 3 字节 `efbbbf`。
+- **`tests/<name>/` 不能与顶层包同名**（US-007 起）：`tests/scripts/__init__.py` 存在时 pytest collection 会让 `tests/scripts` 成为 `scripts` 命名空间包的副本，覆盖顶层 `scripts/` 并让 `from scripts.migration import ...` 炸 `ModuleNotFoundError`。解决：`tests/scripts/` **不放** `__init__.py`（namespace package 形式）。未来若想建 `tests/ink_writer/` / `tests/benchmark/`（已存在）等同名目录必须遵循此约定。其他无同名冲突的目录（如 `tests/core/` vs 无 `core/` 顶层包）不受影响。
+- **嵌套 git 仓库自动排除**（US-007 起）：`scripts/audit_cross_platform.py:_is_nested_git_repo_dir` + `tests/scripts/test_script_entries_parity.py:_is_nested_git_repo` 沿父目录链检测含 `.git/` 子目录的嵌套 clone（root 自身 .git 不计入），让审计跳过。**触发场景**：顶级 `/ralph/` 是 snarktank/ralph 外部参考 clone（`.gitignore:63 /ralph/`），不在本仓库跨平台承诺范围——不加此判定 audit 会报 `ralph/ralph.sh` 缺 .ps1 / `ralph/skills/ralph/SKILL.md` 缺 windows-ps1-sibling 等假 finding。未来再引入外部 clone 无需额外配置，只要它有自己的 `.git/` 就自动跳过。
+- **.cmd 双击包装骨架**（US-007 起）：所有 `.sh` 的 `.cmd` 对等统一 4 行模板（与 env-setup.cmd / ink-auto.cmd 完全一致），新增 .sh 直接复用：
+  ```
+  @echo off
+  REM <name>.cmd — Windows 双击/CMD 入口，转发到 PowerShell 版本
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0<name>.ps1" %*
+  exit /b %ERRORLEVEL%
+  ```
+  `%~dp0` 是"本脚本所在目录含末尾斜杠"的批处理内置，比任何硬编码路径都稳。`tests/scripts/test_script_entries_parity.py:test_every_cmd_sibling_forwards_to_ps1` 做宽松校验（含 `powershell` + 对应 .ps1 文件名即可），不强绑参数细节以留未来定制空间。
 
 ## Context Contract（本 PRD 专属）
 
@@ -314,5 +325,57 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `tests/audit/test_audit_cross_platform.py` (+80 行：4 新 C5 tests)
   - `reports/cross-platform-audit-findings.md` (regenerated: 54 → 47 findings, C5: 7 → 0)
   - `prd.json` (US-006 passes:true + notes)
+  - `progress.txt` (this entry + 2 new Codebase Patterns)
+---
+
+## 2026-04-20 - US-007 .sh 到 .ps1/.cmd 对等入口补齐（C6）
+- C6 findings **2 → 0**（总报告 47 → 44；C7 同步从 1 → 0 因为同一类"外部 clone 假 finding"）。
+- **核心动作是 scanner 修正**（非单纯 4 文件新增）：原 C6 finding 里 `ralph/ralph.sh` 指向顶级 `/ralph/` 下 snarktank/ralph 外部 clone（`.gitignore:63 /ralph/`，含自己的 `.git/`），不属于本仓库跨平台承诺。新增 `_is_nested_git_repo_dir(entry, root)` 沿父目录链检测嵌套 git 仓库并跳过，同步消除了 C7 里 `ralph/skills/ralph/SKILL.md` 的同类假 finding。in-repo 真实 ralph 入口 `scripts/ralph/ralph.sh` 在 v19 已有 `.ps1 + .cmd`，无需本轮再动。
+- **真实新增 2 个 Windows 对等入口**（唯一真实 C6 缺口）：
+  - `ink-writer/scripts/migrate_webnovel_to_ink.ps1` (UTF-8 BOM + ~200 行 CmdletBinding)
+  - `ink-writer/scripts/migrate_webnovel_to_ink.cmd` (4 行包装)
+- **`.ps1` 必须 UTF-8 BOM**（CLAUDE.md Windows 守则第 3 条 + 参考 ink-auto.ps1/env-setup.ps1 既有 BOM）：Write 工具默认不写 BOM，改走 Python 一行 `if not src.startswith(b'\\xef\\xbb\\xbf'): src = b'\\xef\\xbb\\xbf' + src; dst.write_bytes(src)` 确保 3 字节 BOM 在头部。xxd 验证 `00000000: efbb bf23` 成功。
+- **`.cmd` 统一双击包装**（4 行骨架，与既有 env-setup.cmd/ink-auto.cmd 完全一致）：
+  ```
+  @echo off
+  REM <name>.cmd — Windows 双击/CMD 入口，转发到 PowerShell 版本
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0<name>.ps1" %*
+  exit /b %ERRORLEVEL%
+  ```
+- **`migrate_webnovel_to_ink.ps1` 功能翻译**（~200 行，CmdletBinding + StrictMode + ErrorActionPreference='Stop'）：
+  - 预检：`.webnovel` 存在 / `.ink` 不存在 / state.json / index.db / 大纲/ / 正文/（Test-Path 替换 bash `[ -f ]` / `[ -d ]`）
+  - 章节计数：`Get-ChildItem -Recurse -File -Filter '第*.md'` 替换 `find -name`
+  - 卷目录枚举：`Get-ChildItem -Directory -Filter '第*卷'`
+  - 确认：`Read-Host '确认迁移？(y/N)'`（非 y/Y 退出 0）
+  - Step 1：`Move-Item` 重命名 `.webnovel` → `.ink`
+  - Step 2：遍历卷目录 `Move-Item` 扁平化 md 文件到正文根；空目录 `Remove-Item -Force`（Get-ChildItem -Force 含隐藏）
+  - Step 3：验证 `.ink/` 子树 + 扁平章节数 + 残留卷目录检查 + `.webnovel/` 已移除
+- **注意：`ralph.ps1 / ralph.cmd` 本轮未新增**（被 scanner 修正吸收）：顶级 `/ralph/` 是外部 clone，不纳入审计；in-repo 的 `scripts/ralph/ralph.{ps1,cmd}` 早在 v19 已有。ralph.ps1 的翻译代码我在 scratch 里写了一份 demo（参数解析含 `--tool=*` substring / Read-BranchNameFromPrd 用 ConvertFrom-Json 替换 jq / Tee-Object 替换 `tee /dev/stderr` / `-match '<promise>COMPLETE</promise>'`），但因目标路径位于 gitignored 的外部 clone 内，**未落到仓库**。若将来需要把外部 clone 纳管，可以从 git 历史挖回。
+- **`tests/scripts/test_script_entries_parity.py` (5 tests)** — 仓库红线：
+  - `test_every_sh_has_ps1_and_cmd_sibling` 枚举所有 .sh（排除 archive/.venv/__pycache__ 等 14 个目录 **+ 嵌套 git 仓库**），断言同目录 .ps1+.cmd 存在
+  - `test_every_ps1_sibling_has_utf8_bom` 只检查属于 .sh sibling 的 .ps1（保持最小作用域），前 3 字节必须是 0xEF 0xBB 0xBF
+  - `test_every_cmd_sibling_forwards_to_ps1` .cmd 内容小写包含 `powershell` 且包含同名 .ps1 文件名（允许未来自定义转发策略）
+  - `test_newly_added_siblings_exist` 参数化 `ink-writer/scripts/migrate_webnovel_to_ink.sh`（本轮新增）+ `scripts/ralph/ralph.sh`（in-repo ralph，v19 已有 sibling，固化防误删）
+  - 测试顶部 `_is_nested_git_repo(path, root)` 与 scanner `_is_nested_git_repo_dir` 语义等价——两处各自实现一份，避免 test 直接 import audit 脚本带来的 path 副作用
+- **坑点（记入 Codebase Patterns）**：`tests/scripts/__init__.py` **不能**创建——pytest collection 会让 `tests/scripts` 作为 `scripts` 的命名空间副本覆盖顶层 `scripts/` 包，导致 `tests/migration/test_fix11_script.py:15: from scripts.migration import fix11_merge_packages` 抛 `ModuleNotFoundError: No module named 'scripts.migration'`。改为 **namespace package（无 `__init__.py`）** 避免冲突；其他 tests/* 目录名不与顶层包同名所以无此问题。
+- **pytest.ini testpaths 追加 `tests/scripts`**。
+- Mac 字节级一致：零 .sh 改动，4 个新文件都是 Windows-only（.ps1/.cmd）——Mac 侧运行路径完全不变。
+- 全量 pytest: **3129 passed / 23 skipped / 0 failed**（baseline 3124 → +5 新测试，零回归）
+- **Learnings for future iterations:**
+  - **UTF-8 BOM 必须走 bytes 写入**：Write tool 默认不写 BOM；Python `read_bytes` → 手动 `b'\\xef\\xbb\\xbf' +` → `write_bytes` 是唯一可靠做法。xxd 验证 `efbbbf` 必须是前 3 字节，否则 PS 5.1 读中文会乱码
+  - **`tests/<name>/` 不能与顶层包名撞名**：`tests/scripts/` vs `scripts/` 会触发 pytest collection 的命名空间包接管。解决：tests/scripts 下**不放** `__init__.py`（namespace package）。同样的陷阱对未来 `tests/ink_writer/` / `tests/ink-writer/` 也适用（如果以后想建）
+  - **.cmd 双击包装骨架已标准化**：4 行模板就够，新 .sh 直接复用。`%~dp0` 是批处理里"本脚本所在目录含末尾斜杠"的内置变量，比硬编码路径优雅得多
+  - **PowerShell 字符串插值里变量名后直接接冒号要 `${var}:`**：`"${volName}:"`（我用了，否则 `$volName:` 会被解析成 variable scope）。测试过前已确认
+  - **Tee-Object 替换 `tee /dev/stderr`**：原 bash 写法是保留输出继续 grep；PS 里 `| Tee-Object -FilePath x.log` 写文件同时让 pipe 继续流。与 `| & amp` 命令组合时要小心 try/catch 因 `$ErrorActionPreference = 'Stop'` 会在命令 nonzero 时抛，恰好是 `|| true` 等价语义（在 catch 里赋值 $output 不中断循环）
+  - **ConvertFrom-Json 的 PSObject 属性判断**：`$json.PSObject.Properties.Name -contains 'branchName'` 比直接访问 `$json.branchName`（Strict mode 下会抛）稳，且不依赖 null 检测
+  - **下轮（US-008）执行要点**：C7 剩 1 处 `ralph/skills/ralph/SKILL.md:244` 引用 .sh 缺 `<!-- windows-ps1-sibling -->` 标记 + PowerShell 等价块。参考 ink-auto/SKILL.md:51 现成模式。同时新增 `tests/skills/test_skill_md_windows_parity.py` 扫所有 SKILL.md 做仓库红线
+- Files changed:
+  - `ink-writer/scripts/migrate_webnovel_to_ink.ps1` (new, UTF-8 BOM, ~200 行)
+  - `ink-writer/scripts/migrate_webnovel_to_ink.cmd` (new, 4 行包装)
+  - `scripts/audit_cross_platform.py` (+30 行：`_is_nested_git_repo_dir` + `iter_files` 调用它跳过嵌套 git 仓库)
+  - `tests/scripts/test_script_entries_parity.py` (new, 5 tests, namespace package；含 `_is_nested_git_repo` helper)
+  - `pytest.ini` (testpaths 追加 tests/scripts)
+  - `reports/cross-platform-audit-findings.md` (regenerated: 47 → 44 findings, C6: 2 → 0, C7: 1 → 0)
+  - `prd.json` (US-007 passes:true + notes)
   - `progress.txt` (this entry + 2 new Codebase Patterns)
 ---
