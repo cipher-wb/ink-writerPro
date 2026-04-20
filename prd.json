@@ -160,8 +160,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "ink_writer/core/context/scene_classifier.py（~185 行）：scene_mode 识别器单源实现。7 种固定取值常量（GOLDEN_THREE/CLIMAX/HIGH_POINT/COMBAT/EMOTIONAL/SLOW_BUILD/OTHER）+ SCENE_MODES tuple；_PRIORITY_ORDER 锁定优先级 golden_three > climax > high_point > combat > emotional > slow_build > other；_SCENE_KEYWORDS 五类命中词（climax 8 / high_point 9 / combat 14 / emotional 10 / slow_build 10，合计 51）；classify_scene(chapter_no, outline_text) 主入口：chapter∈[1,3] 硬锁 golden_three、否则按 _PRIORITY_ORDER 顺序扫描关键词、全部未命中回落 other；resolve_scene_mode(chapter_no, outline_text, explicit_scene_mode) 支持外部显式覆盖（未知值静默回落 classifier，golden_three 不可被覆盖）。ink_writer/core/context/context_manager.py:_build_pack 集成：import resolve_scene_mode；计算 scene_mode=resolve_scene_mode(chapter, core.chapter_outline)；注入到 meta.scene_mode（与 injection_policy 同级 meta 字段）。ink-writer/agents/context-agent.md 新增 ### Scene Mode 字段（v22 US-009，硬约束）段落（在 Step 2A 直写提示词之后、要求之前）：7 值契约 / 判定优先级链 / 程序化单源 resolve_scene_mode 引用 / 下游 4 消费者（writer-agent / directness-checker / sensory-immersion-checker / polish-agent）统一激活链 / 禁止事项。新增 tests/core/context/test_scene_classifier.py（43 用例全通过）：schema 常量锁定（7 值 + ACTIVATION_SCENE_MODES 子集对齐）+ classify_scene 11 parametrize 场景覆盖 + 4 条优先级矩阵（climax>hp / hp>combat / combat>emotional / emotional>slow）+ golden_three 硬覆盖 + resolve_scene_mode 显式输入（valid→honor / golden_three 锁 / unknown 回落 / no explicit→classifier）+ is_activated 一致性 9 parametrize + 输入鲁棒性（chapter<=0 / 空/None outline）+ context pack 集成（_build_pack 暴露 meta.scene_mode 4 场景测试，golden_three/combat/other/mixed）+ context-agent.md spec 文字契约 3 锚点（Scene Mode / scene_classifier + resolve_scene_mode / 4 消费者全部提及）。pytest --no-cov -p no:randomly 全量 = 3451 passed / 23 skipped / 0 failed（baseline 3408 + 43 新用例 = 3451，零回归）。ruff 对新/改文件全绿。US-010 可以直接消费 meta.scene_mode 做 checker 阈值微调判定。"
     },
     {
       "id": "US-010",

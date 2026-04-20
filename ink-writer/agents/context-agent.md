@@ -65,6 +65,35 @@ model: inherit
 - 禁止事项（越级能力、无因果跳转、设定冲突、剧情硬拐）
 - 终检清单（本章必须满足项 + fail 条件）
 
+### Scene Mode 字段（v22 US-009，硬约束）
+
+context pack 的 `meta.scene_mode` **必须**暴露以下 7 种取值之一：
+
+```
+golden_three | combat | climax | high_point | slow_build | emotional | other
+```
+
+判定链路（`ink_writer/core/context/scene_classifier.py:resolve_scene_mode`，程序化单源）：
+
+1. `chapter ∈ [1, 2, 3]` → 强制 `golden_three`（黄金三章硬激活，不可被外部覆盖）
+2. 其他章节基于章节大纲文本关键词命中，优先级 **高→低**：
+   - `climax`  命中"大结局 / 终局 / 最终战 / 决战 / 高潮"等
+   - `high_point`  命中"爽点 / 反转 / 打脸 / 掉马 / 震撼 / 碾压"等
+   - `combat`  命中"战斗 / 对战 / 厮杀 / 激战 / 对决 / 出手"等
+   - `emotional`  命中"告别 / 离别 / 悲痛 / 痛哭 / 心碎"等
+   - `slow_build`  命中"日常 / 铺垫 / 闲聊 / 修炼 / 过渡"等
+3. 全部未命中 → `other`
+
+下游统一激活依据：
+- `writer-agent` → Directness Mode（`## Directness Mode` 章节，见 writer-agent.md）
+- `directness-checker` → ACTIVATION_SCENE_MODES 判定（见 directness-checker.md）
+- `sensory-immersion-checker` → 直白模式激活门控（skipped 判定，见 sensory-immersion-checker.md）
+- `polish-agent` → Simplification Pass（见 polish-agent.md）
+
+禁止事项：
+- 不得输出 7 值之外的自定义 scene_mode（writer/checker 会按 `other` 处理，激活失效）
+- 不得跳过 `meta.scene_mode` 字段（下游消费者假设该字段常驻）
+
 要求：
 - 三层信息必须一致；若冲突，以“设定 > 大纲 > 风格偏好”优先。
 - 输出内容必须能直接给 Step 2A 开写，不再依赖额外补问。

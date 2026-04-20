@@ -4,7 +4,7 @@
 
 ## Summary
 
-- **Python modules scanned**: 165
+- **Python modules scanned**: 166
 - **Import cycles found**: 0
 - **Unused module candidates**: 2
 - **Agents scanned**: 23
@@ -92,10 +92,10 @@ Fragments appearing in 2+ agent specs (top 50):
 - **2x** in [anti-detection-checker, proofreading-checker]: `输入 与其他 checker 相同 接收 review_bundle_file`
 - **2x** in [anti-detection-checker, proofreading-checker]: `output schema md 的统一格式 json checker`
 - **2x** in [context-agent, data-agent]: `project_root d wk 斗破苍穹 storage_path ink`
+- **2x** in [context-agent, writer-agent]: `golden_three combat climax high_point slow_build emotional`
 - **2x** in [context-agent, data-agent]: `章节编号规则 4位数字 如 0001 0099 0100`
 - **2x** in [context-agent, data-agent]: `cli 入口与脚本目录校验 必做 为避免 pythonpath cd`
 - **2x** in [context-agent, data-agent]: `index recent appearances limit 20 python3`
-- **2x** in [context-agent, writer-agent]: `3 章 n 1 n 2`
 - **2x** in [context-agent, continuity-checker]: `recent_summaries 覆盖 n 4 n 10`
 - **2x** in [context-agent, continuity-checker]: `list chapter int text str word_count`
 - **2x** in [context-agent, ooc-checker]: `立场 关系 境界 知识 情绪 目标`
