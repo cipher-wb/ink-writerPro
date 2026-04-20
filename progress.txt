@@ -59,3 +59,40 @@ Prev run: cross-platform-audit → v21.0.0 released (+185 tests, zero regression
   - D5 "无人物动作/对话" 启发式：代词(他/她/我/你/咱) + 对话标记两条路径已够用；想再细化可接 jieba 的 content verb 计数，但验证集显示简单规则已给出合理的相对基线
   - US-002 的阈值（Green/Yellow/Red）要用真实基线 P25/P50/P75，请先跑一次 `python3 scripts/analyze_prose_directness.py` 全量 corpus，取 stats.json 作为输入
 ---
+
+## 2026-04-20 - US-002: 基线报告生成
+
+- 全量 corpus 扫描（US-001 脚本）：1487 章 / 50 本书 → `reports/prose-directness-stats.json`
+  - scene 分布：golden_three=150 / combat=0 / other=1337
+  - combat 0 样本原因：US-001 启发式靠 `path.stem` 作标题匹配，但文件名都是 `ch###.txt`，标题关键词永不命中；动词密度 fallback 阈值 0.18 也未触发
+- 新增 `scripts/gen_directness_baseline_report.py`（~340 行）：
+  - `load_records` → `bucket_by_scene` → `compute_scene_percentiles` → `recommend_thresholds`
+  - `render_markdown` / `render_yaml` 手写 YAML（无 PyYAML 依赖），字段顺序稳定方便 diff review
+  - CLI 暴露 `--stats / --markdown / --yaml / --generated`
+- 产出物：
+  - `reports/prose-directness-baseline.md`（118 行）：场景分布 + 5 维度 P25/P50/P75 表 + Green/Yellow/Red 阈值表 + Python 常量代码块 + 跨书对比 Top 5（最直白 vs 最华丽）
+  - `reports/seed_thresholds.yaml`（140 行）：每 scene × 每 metric 完整 percentile + thresholds 块；combat 场景写 `inherits_from: golden_three` 指向 fallback
+- 关键阈值（golden_three）：
+  - D1 rhetoric_density: green ≤ 0.0247 / red > 0.0399
+  - D3 abstract_per_100_chars: green ≤ 0.0776 / red > 0.1434
+  - D4 sent_len_median (mid_is_better): green [13, 17.62] / yellow ±IQR
+  - D5 empty_paragraphs: green ≤ 50.5 / red > 68.25
+- 新增 `tests/scripts/test_gen_directness_baseline_report.py`（12 用例全通过）：覆盖 percentiles 空/单/多值 + scene 分桶 + 两种 direction 阈值映射 + markdown/yaml 渲染 + PyYAML 可解析断言 + generate_reports end-to-end + 空语料壳文件保护
+- 文件改动：
+  - `scripts/gen_directness_baseline_report.py`（新增）
+  - `tests/scripts/test_gen_directness_baseline_report.py`（新增）
+  - `reports/prose-directness-stats.json`（US-001 脚本产出，1487 行 JSONL，新增）
+  - `reports/prose-directness-baseline.md`（新增）
+  - `reports/seed_thresholds.yaml`（新增）
+  - `prd.json`（US-002 passes=true + notes）
+  - `progress.txt`（本条）
+- 零回归验证：`pytest --no-cov` = **3235 passed / 23 skipped / 0 failed**（baseline 3223 + 12 新用例 = 3235，无新增失败）
+- **Learnings for future iterations:**
+  - `statistics.quantiles(vals, n=4)` 返回 `[p25, p50, p75]`；单元素序列直接抛错，必须手动 degenerate 判断
+  - 手写 YAML 比 PyYAML 便于 diff：固定字段顺序 + 无 `!!python/tuple` 等特殊标签，下游 parse 稳定；测试里 `pytest.importorskip("yaml")` + `yaml.safe_load` 可以双向验证
+  - ruff 对 f-string 无占位符场景会报 F541，`f"version: 1"` 要去掉 f 前缀
+  - combat 0 样本的 fallback 设计：YAML 写 `inherits_from: golden_three`（而非直接复制数值），下游 checker 消费时可读 fallback 决定策略；直接继承更抗 benchmark 变化
+  - 跨书对比用 D1+D3 作为"华丽度"复合指标，比单维度更贴近直觉——修辞密度高 + 抽象词多 = 读起来费劲
+  - US-003 抽象词黑名单上线后需重跑 US-001 → US-002 链路刷新基线，D3 会从现 seed=34 条扩展到 ≥50 条，阈值会相应上移；已在 notes 里写清
+  - 后续 US-005 directness-checker 应直接 `yaml.safe_load('reports/seed_thresholds.yaml')` 而非硬编码常量；支持重跑 baseline 无需改 agent 代码
+---

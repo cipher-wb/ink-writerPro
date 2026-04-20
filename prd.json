@@ -33,8 +33,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "scripts/gen_directness_baseline_report.py + tests/scripts/test_gen_directness_baseline_report.py（12 用例全通过）。全量 corpus stats.json 已生成（1487 章 / 50 本），产出 reports/prose-directness-baseline.md（118 行）+ reports/seed_thresholds.yaml（140 行）。阈值规则：lower_is_better 用 P50/P75 当 Green/Yellow/Red 分界；D4 mid_is_better 用 [P25, P75] 当 green band，外扩 1 IQR 为 yellow。Combat 0 样本（US-001 启发式无法识别 ch###.txt 文件名）→ YAML 写入 inherits_from: golden_three，报告内也有显式提示。全量 pytest 3235 passed / 23 skipped / 0 failed（baseline 3223 + 12 新用例 = 3235，零回归）。"
     },
     {
       "id": "US-003",
