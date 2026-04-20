@@ -122,7 +122,7 @@ class TestSymlinks:
         secret.write_text("secret", encoding="utf-8")
 
         link = tmp_path / "evil_link"
-        link.symlink_to(outside_dir)
+        link.symlink_to(outside_dir)  # noqa: c5 — symlink is the subject under test
 
         with pytest.raises(HTTPException) as exc_info:
             safe_resolve(tmp_path, "evil_link/secret.txt")
@@ -135,7 +135,7 @@ class TestSymlinks:
         (real_dir / "file.txt").write_text("ok", encoding="utf-8")
 
         link = tmp_path / "link_to_real"
-        link.symlink_to(real_dir)
+        link.symlink_to(real_dir)  # noqa: c5 — symlink is the subject under test
 
         result = safe_resolve(tmp_path, "link_to_real/file.txt")
         assert result == (real_dir / "file.txt").resolve()

@@ -97,8 +97,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Done 2026-04-20: C5 findings 7→0，总报告 54→47。两线并行：(1) 新增 runtime_compat.safe_symlink(src, dst, *, target_is_directory=False, overwrite=False)（~60 行，Mac/Linux 走真实 os.symlink 保持字节级一致，Windows 无特权时自动 shutil.copyfile/copytree + WARNING 日志；dst 存在且 overwrite=False 抛 FileExistsError；overwrite=True 先 rmtree 或 unlink 再创建）。(2) 把 scan_c5_symlink 从 line-regex 重写为 AST-based：走 ast.NodeVisitor 维护 func_stack，对 ast.Call 检测 os.symlink / <expr>.symlink_to——天然跳过 docstring 和字符串字面量里的 `os.symlink` 文本；新增 _C5_PRIMITIVE_FUNCS={'_has_symlink_privilege','safe_symlink'} 跳过 primitive 函数体；新增 _line_has_c5_noqa 支持 `# noqa: c5` / `# c5-ok` pragma（symlink 是 SUT 的场景）。真实修复：scripts/build_reference_corpus.py._link_or_copy 改走 safe_symlink 统一；tests/data_modules/test_path_guard.py 的 2 处 symlink SUT 加 `# noqa: c5` pragma（symlink 本身是 SUT，复制无法测 escape 行为）。原扫到的 runtime_compat.py:139 (docstring) + :153 (probe) 都自动跳过（AST + primitive skip）；test_audit_cross_platform.py:504/507 都在 textwrap.dedent 字符串字面量里，AST 不进入字符串自动跳过。新增 tests/core/test_safe_symlink.py (11 tests)：创建真实 symlink / str+Path 输入 / 已存在 dst 抛 FileExistsError / overwrite file / overwrite 目录(rmtree) / mock 无特权时 copyfile 降级 / 无特权目录 copytree 降级 / 降级 WARNING 日志 / overwrite+降级组合 / 仓库红线 test_repo_has_no_bare_symlink_calls_outside_primitives（AST 扫全仓 + primitive skip + noqa 识别）/ POSIX _has_symlink_privilege=True / POSIX 字节级 parity（safe_symlink vs os.symlink 同 readlink）。扩展 tests/audit/test_audit_cross_platform.py (+4 C5 tests)：skips_docstring_mentions / skips_primitive_funcs / honors_noqa_pragma / skips_string_literals。Mac 字节级一致：safe_symlink 在 POSIX 上等价 os.symlink(target_is_directory=False 默认)——parity test 已固化。全量 pytest: 3124 passed / 23 skipped / 0 failed (baseline 3108 → +16 新测试：4 audit + 11 core + 1 parity，零回归)。"
     },
     {
       "id": "US-007",

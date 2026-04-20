@@ -518,6 +518,103 @@ def test_c5_detects_raw_symlink(tmp_path: Path) -> None:
     assert all(f.category == "C5" for f in findings)
 
 
+def test_c5_skips_docstring_mentions(tmp_path: Path) -> None:
+    """C5 scanner 必须 AST-based —— docstring / 注释里的 ``os.symlink`` 字面量
+    不应触发 finding（US-006 回归）。"""
+    src = tmp_path / "mentions.py"
+    src.write_text(
+        textwrap.dedent(
+            '''\
+            """Module docstring: explains that os.symlink is used below.
+
+            Also mentions .symlink_to in prose. These are not calls.
+            """
+
+            def noop():
+                """This helper does NOT call os.symlink / path.symlink_to."""
+                return 0
+            '''
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c5_symlink([src])
+    assert findings == []
+
+
+def test_c5_skips_primitive_funcs(tmp_path: Path) -> None:
+    """scanner 必须识别 ``_has_symlink_privilege`` / ``safe_symlink`` 函数体
+    内的裸 symlink 是文档化的 primitive，不应误报（US-006 回归）。"""
+    src = tmp_path / "primitives.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            import os
+            from pathlib import Path
+
+            def _has_symlink_privilege():
+                # probe, must use raw os.symlink
+                os.symlink("a", "b")
+                return True
+
+            def safe_symlink(s, d):
+                os.symlink(s, d)
+                Path(s).symlink_to(d)
+                return True
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c5_symlink([src])
+    assert findings == []
+
+
+def test_c5_honors_noqa_pragma(tmp_path: Path) -> None:
+    """行尾 ``# noqa: c5`` 或 ``# c5-ok`` pragma 应显式抑制 C5 finding
+    （symlink 是 SUT 的测试场景）。"""
+    src = tmp_path / "noqa.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            import os
+            from pathlib import Path
+
+            def make():
+                os.symlink("a", "b")  # noqa: c5 — symlink is the SUT
+                Path("a").symlink_to("b")  # c5-ok — explicit opt-out
+                Path("c").symlink_to("d")  # 裸调用，应报
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c5_symlink([src])
+    # 前两行被 pragma 抑制，仅最后一行命中
+    assert len(findings) == 1
+    assert findings[0].line >= 7
+
+
+def test_c5_skips_string_literals(tmp_path: Path) -> None:
+    """字符串字面量内的 ``os.symlink`` 文本（例如 textwrap 构造的 fixture
+    源码）不是真实调用，AST scanner 必须跳过（US-006 回归）。"""
+    src = tmp_path / "fixture.py"
+    src.write_text(
+        textwrap.dedent(
+            '''\
+            import textwrap
+
+            SAMPLE = textwrap.dedent("""\\
+                import os
+                from pathlib import Path
+                os.symlink("a", "b")
+                Path("a").symlink_to("b")
+            """)
+            '''
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c5_symlink([src])
+    assert findings == []
+
+
 # ---------------------------------------------------------------------------
 # C6: .sh / .ps1 / .cmd 对等
 # ---------------------------------------------------------------------------

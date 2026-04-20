@@ -689,36 +689,94 @@ def scan_c4_asyncio(py_files: Iterable[Path], root: Optional[Path] = None) -> li
 # ---------------------------------------------------------------------------
 
 
+# 这些函数体内的裸 symlink 是文档化的底层 primitive（privilege 探测 / helper
+# 自身实现），不应报 C5。
+_C5_PRIMITIVE_FUNCS = {"_has_symlink_privilege", "safe_symlink"}
+
+# 允许在行尾用 pragma 显式抑制（例如 symlink 是测试 SUT 时）
+_C5_NOQA_RE = re.compile(r"#\s*(?:noqa\s*:\s*[cC]5|[cC]5-ok)\b")
+
+
+def _is_raw_symlink_call(call: ast.Call) -> bool:
+    """Return True for ``os.symlink(...)`` or ``<expr>.symlink_to(...)``.
+
+    AST-based detection 天然跳过 docstring/字符串字面量 —— 相比旧的 line-regex
+    扫描，不会把 ``'…os.symlink…'`` 这类字面量当作真实调用。
+    """
+    func = call.func
+    if not isinstance(func, ast.Attribute):
+        return False
+    if func.attr == "symlink_to":
+        # Path(...).symlink_to(...) / self.link.symlink_to(...)
+        return True
+    if func.attr == "symlink":
+        # os.symlink(...)，含 x.os.symlink(...) 链式属性
+        receiver = func.value
+        if isinstance(receiver, ast.Name) and receiver.id == "os":
+            return True
+        if isinstance(receiver, ast.Attribute) and receiver.attr == "os":
+            return True
+    return False
+
+
+def _line_has_c5_noqa(source: str, lineno: int) -> bool:
+    lines = source.splitlines()
+    if 1 <= lineno <= len(lines):
+        return bool(_C5_NOQA_RE.search(lines[lineno - 1]))
+    return False
+
+
 def scan_c5_symlink(py_files: Iterable[Path]) -> list[Finding]:
     findings: list[Finding] = []
-    # 注意: `\.symlink_to\b` 前面不能加 `\b`（`)` → `.` 都是非词符，无边界）
-    pattern = re.compile(r"(?:\bos\.symlink|\.symlink_to)\b")
     for path in py_files:
         src = safe_read_text(path)
         if not src:
             continue
-        # runtime_compat.py 自身或 safe_symlink 实现处跳过
-        if "safe_symlink" in src and "def safe_symlink" in src:
+        try:
+            tree = ast.parse(src, filename=str(path))
+        except SyntaxError:
             continue
-        for idx, line in enumerate(src.splitlines(), start=1):
-            if not pattern.search(line):
-                continue
-            stripped = line.lstrip()
-            if stripped.startswith("#"):
-                continue
-            # 已经是 safe_symlink 调用则跳过
-            if "safe_symlink" in line:
-                continue
-            findings.append(
-                Finding(
-                    category="C5",
-                    severity="High",
-                    path=str(path),
-                    line=idx,
-                    message="裸 symlink 调用，Windows 非管理员会抛 OSError",
-                    suggestion="改走 runtime_compat.safe_symlink(src, dst)，无权限自动 copyfile 降级",
+
+        func_stack: list[str] = []
+        file_findings: list[Finding] = []
+
+        class _Visitor(ast.NodeVisitor):
+            def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+                func_stack.append(node.name)
+                self.generic_visit(node)
+                func_stack.pop()
+
+            def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+                func_stack.append(node.name)
+                self.generic_visit(node)
+                func_stack.pop()
+
+            def visit_Call(self, node: ast.Call) -> None:
+                self.generic_visit(node)
+                if not _is_raw_symlink_call(node):
+                    return
+                # primitive 函数体内的裸 symlink 是有意为之
+                if any(fn in _C5_PRIMITIVE_FUNCS for fn in func_stack):
+                    return
+                # 行尾 pragma 显式抑制
+                if _line_has_c5_noqa(src, node.lineno):
+                    return
+                file_findings.append(
+                    Finding(
+                        category="C5",
+                        severity="High",
+                        path=str(path),
+                        line=node.lineno,
+                        message="裸 symlink 调用，Windows 非管理员会抛 OSError",
+                        suggestion=(
+                            "改走 runtime_compat.safe_symlink(src, dst)，"
+                            "无权限自动 copyfile 降级"
+                        ),
+                    )
                 )
-            )
+
+        _Visitor().visit(tree)
+        findings.extend(file_findings)
     return findings
 
 
