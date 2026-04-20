@@ -12,6 +12,26 @@ inject_into:
   writer: true
   polish: true
 
+# v22 US-004：主题域注册表。列出 rules.json 允许出现的 category 值，
+# 供加载器校验和 writer-injection 分类别召回逻辑消费。新增 simplicity 主题域
+# 承载黄金三章+战斗/高潮/爽点场景的文笔直白化硬约束（详见 data/editor-wisdom/rules.json EW-0389~EW-0402）。
+categories:
+  - opening
+  - hook
+  - golden_finger
+  - character
+  - pacing
+  - highpoint
+  - taboo
+  - genre
+  - ops
+  - misc
+  - prose_shot
+  - prose_sensory
+  - prose_rhythm
+  - prose_density
+  - simplicity
+
 # US-017：RAG 知识库新增文笔规则来源
 rule_sources:
   base:
@@ -27,6 +47,7 @@ rule_sources:
       categories: ["prose_rhythm"]
 
 # US-017：editor-wisdom-checker 评分维度（在原编辑规则评分之外，新增文笔四维）
+# v22 US-004：新增 directness 维度，对应 simplicity 主题域，供 directness-checker 消费
 scoring_dimensions:
   - id: shot_diversity
     label: 镜头多样性
@@ -40,10 +61,23 @@ scoring_dimensions:
   - id: info_density_uniformity
     label: 信息密度均匀度
     rule_categories: ["prose_density"]
+  - id: directness
+    label: 文笔直白度
+    rule_categories: ["simplicity"]
 
 # US-017：文笔规则触发的黄金三章硬阻断类别（hard severity 自动 hard block）
+# v22 US-004：simplicity 同列入硬阻断，黄金三章与战斗/高潮/爽点场景直接消费
 prose_categories:
   - prose_shot
   - prose_sensory
   - prose_rhythm
   - prose_density
+  - simplicity
+
+# v22 US-004：writer-injection 分类别召回下限（黄金三章 + 战斗/高潮/爽点场景激活）
+# writer_injection.py 通过 scene_mode 入参激活 directness 场景；激活后 simplicity 类 ≥5 条。
+# 非激活章节维持 golden_three 既有下限（opening/taboo/hook）。
+directness_recall:
+  scene_modes: ["combat", "climax", "high_point"]
+  floor_categories: ["simplicity"]
+  floor_per_category: 5

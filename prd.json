@@ -68,8 +68,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "data/editor-wisdom/rules.json 新增 14 条 simplicity 规则（EW-0389~EW-0402，超过 PRD 下限 12）。每条覆盖 category/rule/why/severity/applies_to/source_files 六字段（按仓内 schema：why=rationale、applies_to=applies_when），applies_to 值覆盖 golden_three/combat/climax/high_point/all_chapters。scripts/editor-wisdom/05_extract_rules.py 的 CATEGORIES 添加 'simplicity'；VALID_APPLIES_TO 扩展加入 combat/climax/high_point。config/editor-wisdom.yaml 新增顶层 categories 注册表（15 类含 simplicity）+ scoring_dimensions 增加 directness 维度 + prose_categories 追加 simplicity（硬阻断）+ 新增 directness_recall 节（scene_modes=combat/climax/high_point, floor_categories=simplicity, floor_per_category=5）。ink_writer/editor_wisdom/config.py 新增 DirectnessRecall dataclass + load_config 兼容缺失/损坏节 fallback。ink_writer/editor_wisdom/writer_injection.py 新增 kwarg-only scene_mode 入参 + DIRECTNESS_SCENE_MODES 常量；directness_active=(chapter_no<=3) OR (scene_mode in directness_scene_modes) 时追加 _enforce_category_floor 补召 simplicity≥5。FAISS vector_index 已重建（402 rules, 14 simplicity）。新增 tests/editor_wisdom/test_simplicity_theme.py（22 用例全通过）：rules.json 门禁 + config loader + MockSceneRetriever 驱动的场景感知召回（golden_three + 三种 scene_mode 分别≥5；slow_build/emotional/other/None ≤5 不触发）。全量 pytest 3275 passed / 23 skipped / 0 failed（baseline 3253 + 22 新用例 = 3275，零回归）。ruff 对新/改文件全绿。"
     },
     {
       "id": "US-005",

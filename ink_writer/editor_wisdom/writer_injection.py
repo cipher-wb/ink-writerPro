@@ -21,7 +21,12 @@ __all__ = [
     "build_writer_constraints",
     "GOLDEN_THREE_FLOOR_CATEGORIES",
     "GOLDEN_THREE_FLOOR_PER_CATEGORY",
+    "DIRECTNESS_SCENE_MODES",
 ]
+
+# v22 US-004：directness 模式 scene_mode 取值。golden_three（chapter ∈ [1,3]）在
+# build_writer_constraints 里按 chapter_no 直接判；这里仅列明显式的 scene_mode 值。
+DIRECTNESS_SCENE_MODES: frozenset[str] = frozenset({"combat", "climax", "high_point"})
 
 
 @dataclass
@@ -61,12 +66,18 @@ def build_writer_constraints(
     config: EditorWisdomConfig | None = None,
     retriever: Retriever | None = None,
     project_root: Path | str | None = None,
+    scene_mode: str | None = None,
 ) -> WriterConstraintsSection:
     """Build the 硬约束 section for writer-agent prompt injection.
 
     Groups rules by severity (hard first, soft next, info omitted).
     When chapter_no <= 3, additionally injects rules whose applies_to includes 'golden_three'
     AND enforces a per-category floor (opening/taboo/hook each ≥3 rules) — v18 US-002.
+
+    v22 US-004: when chapter_no ∈ [1,3] OR scene_mode ∈ {combat, climax, high_point},
+    additionally enforce a per-category floor for simplicity rules (default ≥5) so the
+    writer-agent prompt always carries directness-mode constraints for those scenes.
+    Non-directness scenes are unaffected — 零退化硬约束保留 sensory-immersion 流程。
     """
     if config is None:
         config = load_config()
@@ -89,6 +100,12 @@ def build_writer_constraints(
     k = config.retrieval_top_k
     rules = retriever.retrieve(query=chapter_outline, k=k)
 
+    # v22 US-004：directness 激活判定——黄金三章 chapter∈[1,3] 或显式 scene_mode 命中
+    directness_scene_modes = frozenset(config.directness_recall.scene_modes)
+    directness_active = (chapter_no <= 3) or (
+        scene_mode is not None and scene_mode in directness_scene_modes
+    )
+
     if chapter_no <= 3:
         golden_rules = [
             r for r in retriever.retrieve(query=chapter_outline, k=k * 2)
@@ -107,6 +124,17 @@ def build_writer_constraints(
             query=chapter_outline,
             floor=GOLDEN_THREE_FLOOR_PER_CATEGORY,
             categories=GOLDEN_THREE_FLOOR_CATEGORIES,
+        )
+
+    if directness_active:
+        # v22 US-004：simplicity 类分类别下限（默认 ≥5），独立于 golden-three 的 opening/taboo/hook 下限。
+        # 非 directness 场景（scene_mode in {slow_build, emotional, other}, chapter>3）完全不进入。
+        rules = _enforce_category_floor(
+            rules=rules,
+            retriever=retriever,
+            query=chapter_outline,
+            floor=config.directness_recall.floor_per_category,
+            categories=tuple(config.directness_recall.floor_categories),
         )
 
     filtered = [r for r in rules if r.severity in ("hard", "soft")]

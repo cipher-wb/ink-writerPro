@@ -37,13 +37,23 @@ DEFAULT_DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "edi
 CATEGORIES = [
     "opening", "hook", "golden_finger", "character", "pacing",
     "highpoint", "taboo", "genre", "ops", "misc",
+    # v22 US-004: simplicity 主题域，服务黄金三章 + 战斗/高潮/爽点场景的文笔直白化
+    "simplicity",
 ]
 
 GOLDEN_THREE_CATEGORIES = frozenset({"opening", "hook", "golden_finger", "character"})
 
 SEVERITY_VALUES = ["hard", "soft", "info"]
 
-VALID_APPLIES_TO = frozenset({"all_chapters", "golden_three", "opening_only"})
+# v22 US-004: 新增 scene_mode 派生的 applies_to 值，对齐 directness-checker 激活条件。
+VALID_APPLIES_TO = frozenset({
+    "all_chapters",
+    "golden_three",
+    "opening_only",
+    "combat",
+    "climax",
+    "high_point",
+})
 
 SYSTEM_PROMPT = """\
 你是一名网文写作规则提取器。给定一篇编辑建议文章及其分类，你需要提取出具体的、可执行的写作规则。
