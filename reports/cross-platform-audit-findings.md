@@ -2,13 +2,13 @@
 
 扫描根目录: `/Users/cipher/AI/ink/ink-writer`
 
-**总 finding 数**: 202 (Blocker=0 / High=50 / Medium=42 / Low=110)
+**总 finding 数**: 196 (Blocker=0 / High=48 / Medium=38 / Low=110)
 
 ## 按类别汇总
 
 | 类别 | 数量 | 对应修复 US |
 |------|------|-------------|
-| C1 | 6 | US-002 |
+| C1 | 0 | US-002 |
 | C2 | 110 | US-003 |
 | C3 | 25 | US-004 |
 | C4 | 10 | US-005 |
@@ -17,19 +17,6 @@
 | C7 | 1 | US-008 |
 | C8 | 37 | US-009 |
 | C9 | 4 | US-010 |
-
-## C1 — `open()` / `read_text()` / `write_text()` 缺 UTF-8 编码
-
-对应修复 US: **US-002**  数量: **6**
-
-| 文件:行 | 严重级别 | 现象 | 修复建议 |
-|---------|----------|------|----------|
-| `ink-writer/dashboard/server.py:65` | High | `open()` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"（二进制模式 "b" 保持不变） |
-| `tests/release/test_v16_gates.py:42` | High | `open()` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"（二进制模式 "b" 保持不变） |
-| `tests/benchmark/test_benchmark_tools.py:136` | Medium | `write_text()` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"（二进制模式 "b" 保持不变） |
-| `tests/benchmark/test_benchmark_tools.py:142` | Medium | `write_text()` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"（二进制模式 "b" 保持不变） |
-| `tests/data_modules/test_dashboard_app.py:105` | Medium | `write_text()` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"（二进制模式 "b" 保持不变） |
-| `tests/data_modules/test_dashboard_app.py:106` | Medium | `write_text()` 文本模式缺 encoding=utf-8 | 补 encoding="utf-8"（二进制模式 "b" 保持不变） |
 
 ## C2 — 硬编码路径分隔符（疑似）
 
@@ -122,11 +109,11 @@
 | `tests/audit/test_audit_cross_platform.py:139` | Low | 疑似硬编码路径字面量: 'a/b/c/d/e.txt' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
 | `tests/baseline/test_slim_review_bundle.py:27` | Low | 疑似硬编码路径字面量: '/tmp/test_project/正文/第0005章.md' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
 | `tests/baseline/test_slim_review_bundle.py:31` | Low | 疑似硬编码路径字面量: '/tmp/test_project/正文/第0005章.md' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
-| `tests/data_modules/test_dashboard_app.py:133` | Low | 疑似硬编码路径字面量: '/api/project/info' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
-| `tests/data_modules/test_dashboard_app.py:143` | Low | 疑似硬编码路径字面量: '/api/project/info' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
-| `tests/data_modules/test_dashboard_app.py:177` | Low | 疑似硬编码路径字面量: '/api/entities/xiao_yan' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
-| `tests/data_modules/test_dashboard_app.py:182` | Low | 疑似硬编码路径字面量: '/api/entities/nonexistent' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
-| `tests/data_modules/test_dashboard_app.py:272` | Low | 疑似硬编码路径字面量: '/api/files/tree' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
+| `tests/data_modules/test_dashboard_app.py:135` | Low | 疑似硬编码路径字面量: '/api/project/info' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
+| `tests/data_modules/test_dashboard_app.py:145` | Low | 疑似硬编码路径字面量: '/api/project/info' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
+| `tests/data_modules/test_dashboard_app.py:179` | Low | 疑似硬编码路径字面量: '/api/entities/xiao_yan' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
+| `tests/data_modules/test_dashboard_app.py:184` | Low | 疑似硬编码路径字面量: '/api/entities/nonexistent' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
+| `tests/data_modules/test_dashboard_app.py:274` | Low | 疑似硬编码路径字面量: '/api/files/tree' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
 | `tests/data_modules/test_dashboard_watcher.py:24` | Low | 疑似硬编码路径字面量: '/a/.ink/state.json' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
 | `tests/data_modules/test_dashboard_watcher.py:32` | Low | 疑似硬编码路径字面量: '/project/.ink/state.json' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
 | `tests/data_modules/test_dashboard_watcher.py:34` | Low | 疑似硬编码路径字面量: '/project/.ink/state.json' | 改用 pathlib.Path 拼接，或用 os.path.join 让分隔符跨平台 |
@@ -288,15 +275,14 @@
 供下一轮 PRD 迭代直接消费。已与本 PRD 既有 US-002~US-010 对齐，
 数字列表为各类风险对应 US 的优先级再排序参考：
 
-1. **US-002**（C1, 6 处）— `open()` / `read_text()` / `write_text()` 缺 UTF-8 编码
-2. **US-004**（C3, 25 处）— `subprocess` 调用文本模式缺 encoding 或 `shell=True`
-3. **US-005**（C4, 10 处）— asyncio 入口未调 `set_windows_proactor_policy()`
-4. **US-006**（C5, 7 处）— 裸 `symlink` 调用未走 `safe_symlink()` 兜底
-5. **US-007**（C6, 2 处）— `*.sh` 缺同目录 `.ps1` / `.cmd` 对等入口
-6. **US-008**（C7, 1 处）— `SKILL.md` 引用 `.sh` 缺 Windows PowerShell sibling 块
-7. **US-010**（C9, 4 处）— Python CLI 入口未调 `enable_windows_utf8_stdio()`
-8. **US-009**（C8, 37 处）— 脚本硬编码 `python3` / `py -3`（未走 `find_python_launcher`）
-9. **US-003**（C2, 110 处）— 硬编码路径分隔符（疑似）
+1. **US-004**（C3, 25 处）— `subprocess` 调用文本模式缺 encoding 或 `shell=True`
+2. **US-005**（C4, 10 处）— asyncio 入口未调 `set_windows_proactor_policy()`
+3. **US-006**（C5, 7 处）— 裸 `symlink` 调用未走 `safe_symlink()` 兜底
+4. **US-007**（C6, 2 处）— `*.sh` 缺同目录 `.ps1` / `.cmd` 对等入口
+5. **US-008**（C7, 1 处）— `SKILL.md` 引用 `.sh` 缺 Windows PowerShell sibling 块
+6. **US-010**（C9, 4 处）— Python CLI 入口未调 `enable_windows_utf8_stdio()`
+7. **US-009**（C8, 37 处）— 脚本硬编码 `python3` / `py -3`（未走 `find_python_launcher`）
+8. **US-003**（C2, 110 处）— 硬编码路径分隔符（疑似）
 
 ---
 

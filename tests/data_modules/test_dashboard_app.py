@@ -102,8 +102,10 @@ def project(tmp_path):
     for name in ("正文", "大纲", "设定集"):
         d = tmp_path / name
         d.mkdir()
-    (tmp_path / "正文" / "第0001章-天才少年.md").write_text("# 天才少年\n正文内容")
-    (tmp_path / "设定集" / "人物.md").write_text("# 角色设定")
+    (tmp_path / "正文" / "第0001章-天才少年.md").write_text(
+        "# 天才少年\n正文内容", encoding="utf-8"
+    )
+    (tmp_path / "设定集" / "人物.md").write_text("# 角色设定", encoding="utf-8")
 
     return tmp_path
 

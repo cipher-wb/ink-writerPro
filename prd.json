@@ -33,8 +33,8 @@
         "零回归：pytest --no-cov 全量无新增失败"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Done 2026-04-20: C1 findings 6→0。新增 scripts/fix_utf8_encoding.py（AST+end_col_offset 精确插入，幂等）+ tests/audit/test_fix_utf8_encoding.py (14 tests)；修复 4 处真实 finding（tests/benchmark/test_benchmark_tools.py ×2 + tests/data_modules/test_dashboard_app.py ×2）；C1 扫描器修正 2 类误报（_is_binary_mode 区分 builtin open vs Path.open 的 mode 位置 + _is_non_file_open_call 跳过 webbrowser.open/os.open/socket.open 等）+ 追加 2 个测试固化；Mac 行为字节级不变（仅新增 kwarg，不改语义）；总 findings 202→196；全量 pytest 3053 passed / 23 skipped / 0 failed (baseline 3037 → +16 新测试：2 scanner + 14 fixer)"
     },
     {
       "id": "US-003",

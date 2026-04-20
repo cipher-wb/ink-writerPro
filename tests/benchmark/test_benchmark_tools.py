@@ -133,13 +133,15 @@ class TestBuildBlindTest:
         project = tmp_path / "novel"
         (project / "正文").mkdir(parents=True)
         for i in range(5):
-            (project / "正文" / f"第{i+1:04d}章测试.md").write_text(f"内容{i}")
+            (project / "正文" / f"第{i+1:04d}章测试.md").write_text(
+                f"内容{i}", encoding="utf-8"
+            )
 
         corpus = tmp_path / "corpus"
         book = corpus / "book1"
         book.mkdir(parents=True)
         for i in range(5):
-            (book / f"ch{i+1}.md").write_text(f"参考{i}")
+            (book / f"ch{i+1}.md").write_text(f"参考{i}", encoding="utf-8")
 
         output = tmp_path / "blind_test"
         cfg = BlindTestConfig(samples_per_source=3, seed=42)

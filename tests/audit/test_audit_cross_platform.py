@@ -113,6 +113,52 @@ def test_c1_skips_binary_open_with_keyword(tmp_path: Path) -> None:
     assert scan_c1_open_encoding([src]) == []
 
 
+def test_c1_skips_path_open_binary_mode(tmp_path: Path) -> None:
+    """Path.open("rb") —— 首位置参数即 mode，不得误报（US-002 修复）。"""
+    src = tmp_path / "path_bin.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            from pathlib import Path
+
+            def load():
+                with Path("x.bin").open("rb") as fh:
+                    return fh.read()
+            """
+        ),
+        encoding="utf-8",
+    )
+    assert scan_c1_open_encoding([src]) == []
+
+
+def test_c1_skips_non_file_open_receivers(tmp_path: Path) -> None:
+    """webbrowser.open / os.open / socket.open 等非文件 I/O 不得误报（US-002 修复）。"""
+    src = tmp_path / "non_file.py"
+    src.write_text(
+        textwrap.dedent(
+            """\
+            import webbrowser
+            import os
+            import socket
+
+            def nav():
+                webbrowser.open("https://example.com")
+
+            def fd():
+                return os.open("/tmp/x", os.O_RDONLY)
+
+            class Wrapper:
+                def run(self, conn):
+                    self.driver.open("/page")
+                    conn.open()
+            """
+        ),
+        encoding="utf-8",
+    )
+    findings = scan_c1_open_encoding([src])
+    assert findings == [], f"不应误报非文件 I/O 的 .open()，实得 {findings}"
+
+
 # ---------------------------------------------------------------------------
 # C2: 硬编码路径
 # ---------------------------------------------------------------------------

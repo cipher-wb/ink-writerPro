@@ -19,6 +19,8 @@ Prev run: chapter-context-injection → v20.0.0 released
 - **跨平台审计单一入口**（US-001 起）：`scripts/audit_cross_platform.py --root <path> --output <md>` 是 9 类风险（C1~C9）的唯一权威扫描器；US-002~US-010 修复完成后必须重跑此脚本验证 finding 数下降，不能引入新类别。
 - **C5 symlink 正则坑点**：检测裸 symlink 用 `(?:\bos\.symlink|\.symlink_to)\b`，**不能在 `\.symlink_to` 前加 `\b`**——`)` → `.` 都是非词符，`\b` 不会匹配（test_c5 已固化此用法）。
 - **AST 扫描器统一接收 `Iterable[Path]`**：审计脚本各 scan_cN_xxx 函数对 `.py` 文件采用 `safe_read_text` + `ast.parse`，捕获 `SyntaxError` 跳过，避免单文件阻断全量扫描。
+- **C1 误报区分点**（US-002 起）：`_is_binary_mode` 必须按"builtin `open` vs 方法调用 `.open`"切换 mode 参数位置——前者 `args[1]`，后者 `args[0]`；另有 `_NON_FILE_OPEN_RECEIVERS` 白名单跳过 `webbrowser.open` / `os.open` / `socket.open` 等非文件 I/O，避免把浏览器导航/低级 fd 调用当文本 I/O 误报。
+- **AST 精确插入法**（US-002 `fix_utf8_encoding.py` 起）：修复 C1 用 `end_col_offset - 1` 定位闭合 `)`，插入 `, encoding="utf-8"`（有参）或 `encoding="utf-8"`（无参）；多行调用（`node.lineno != node.end_lineno`）一律保守跳过——避免破坏格式。幂等由复用 scanner 的 `_needs_encoding` 保证：修完后 `_has_encoding_kw` 返回 True。
 
 ## Context Contract（本 PRD 专属）
 
@@ -58,4 +60,43 @@ Prev run: chapter-context-injection → v20.0.0 released
   - `reports/cross-platform-audit-findings.md` (new, auto-generated)
   - `prd.json` (US-001 passes:true + notes)
   - `progress.txt` (this entry + 3 new Codebase Patterns)
+---
+
+## 2026-04-20 - US-002 批量修复 open() 缺 UTF-8 编码（C1）
+- C1 findings 6 → 0（报告总数 202 → 196）
+- 修复 **4 处真实 C1 finding**（`.write_text()` 缺 encoding）：
+  - `tests/benchmark/test_benchmark_tools.py:136, 142` 补 `encoding="utf-8"`
+  - `tests/data_modules/test_dashboard_app.py:105, 106` 补 `encoding="utf-8"`
+- 识别并消除 **2 处误报**（无需修改源码，而是修正 scanner 逻辑）：
+  - `ink-writer/dashboard/server.py:65` 是 `webbrowser.open(url)` —— 浏览器导航，不是文件 I/O
+  - `tests/release/test_v16_gates.py:42` 是 `py.open("rb")` —— Path.open 首位即 mode，是二进制模式
+- 扫描器 `audit_cross_platform.py` 强化：
+  - `_is_binary_mode` 根据 `isinstance(call.func, ast.Attribute)` 切换 mode 参数位置（`args[0]` vs `args[1]`）
+  - 新增 `_is_non_file_open_call` + `_NON_FILE_OPEN_RECEIVERS` 白名单（`webbrowser`/`os`/`socket`/`urllib`/`connection`/`conn`/`db`/`cursor`/`engine`/`driver`/`browser`/`page`/`tab`/`dialog`/`window`）
+  - 在 `scan_c1_open_encoding` 主循环里先后应用两个跳过条件
+- 新增 `scripts/fix_utf8_encoding.py`（~170 行）：
+  - 复用 scanner 的 `_needs_encoding` 判定 → **零误改**
+  - 基于 `ast.Call.end_col_offset` 精确插入，不动其他字符
+  - 多行调用保守跳过，合成样例/仓库实测验证**幂等**（第二次运行 0 diff）
+  - CLI：`--root` / `--dry-run`，Mac/Windows 都能跑（顶部 `enable_windows_utf8_stdio()` Mac no-op）
+- 新增 `tests/audit/test_fix_utf8_encoding.py`（14 测试）+ 扩展 `tests/audit/test_audit_cross_platform.py`（+2 测试：`test_c1_skips_path_open_binary_mode` / `test_c1_skips_non_file_open_receivers`）
+- Mac 字节级一致抽样验证：diff 4 处真实修复仅追加 `, encoding="utf-8"` kwarg，语义在 Mac 上完全等价（Mac `write_text` 默认 locale 是 UTF-8）
+- 全量 pytest: **3053 passed / 23 skipped / 0 failed**（baseline 3037 → +16 新测试：2 scanner + 14 fixer，零回归）
+- **Learnings for future iterations:**
+  - **`open` 有两套调用形态**：builtin `open(file, mode)` 和方法调用 `x.open(mode)`——mode 参数位置差一位；_is_binary_mode 如果只看 args[1] 会漏判所有 `Path.open("rb")`，反之只看 args[0] 又会漏判所有 `open("f.txt", "r")`。正确做法：靠 `ast.Attribute` 判定方法调用
+  - **AST end_col_offset 是精确插入的利器**：比行内 regex 找 `)` 靠谱（后者易被字符串字面量里的 `)` 误命中）。Python 3.8+ 所有 `ast.Call` 节点都有此属性
+  - **幂等性白送**：复用 scanner 的判定函数写 fixer，修完后下次扫描同一个节点 `_has_encoding_kw` 返回 True 自动跳过——零写法重复
+  - **多行调用保守跳过 ≠ 偷懒**：`write_text(\n  data,\n  mode="...",\n)` 这种格式，插入逗号位置非平凡，错改比不改代价高。宁愿让人工一次，比批量改错强
+  - **C1 和 C9 修复顺序无强依赖**：C1 不涉及 `enable_windows_utf8_stdio` —— 纯 AST 级文本替换；但 C9（US-010）修完后本脚本顶部 stdio 会更稳，反之亦然
+  - **下轮（US-003）执行要点**：C2 有 110 处但全是 Low，需用启发式判定"真正会在 Windows 下炸"的硬编码路径——字符串里 `/` 不等于路径，很多是正则/URL/slash-separated tag；重点放在 `Path(...)` / `open(...)` / `os.*` 的字符串参数
+- Files changed:
+  - `scripts/audit_cross_platform.py` (+44 lines: `_NON_FILE_OPEN_RECEIVERS`, `_is_non_file_open_call`, `_is_binary_mode` 增强, scan_c1 追加两个 skip 条件)
+  - `scripts/fix_utf8_encoding.py` (new, ~170 lines)
+  - `tests/audit/test_audit_cross_platform.py` (+50 lines: 2 new tests)
+  - `tests/audit/test_fix_utf8_encoding.py` (new, ~200 lines, 14 tests)
+  - `tests/benchmark/test_benchmark_tools.py` (2 write_text 补 encoding)
+  - `tests/data_modules/test_dashboard_app.py` (2 write_text 补 encoding)
+  - `reports/cross-platform-audit-findings.md` (regenerated: 202 → 196 findings, C1: 6 → 0)
+  - `scripts/ralph/prd.json` (US-002 passes:true + notes)
+  - `scripts/ralph/progress.txt` (this entry + 2 new Codebase Patterns)
 ---

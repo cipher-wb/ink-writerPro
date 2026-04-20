@@ -154,11 +154,17 @@ _TEXT_BINARY_FLAGS = re.compile(r"['\"][^'\"]*b[^'\"]*['\"]")
 
 
 def _is_binary_mode(call: ast.Call) -> bool:
-    """判断 open() 调用是否在二进制模式（mode 参数包含 'b'）。"""
-    # open(file, mode, ...) — mode 是第 2 个位置参数或 keyword="mode"
+    """判断 open() 调用是否在二进制模式（mode 参数包含 'b'）。
+
+    区分两种形态：
+    - 内建 ``open(file, mode, ...)`` —— ``ast.Name('open')``，mode 在 args[1]
+    - 方法调用 ``path.open(mode, ...)`` —— ``ast.Attribute(attr='open')``，mode 在 args[0]
+    """
+    is_method_call = isinstance(call.func, ast.Attribute)
+    mode_idx = 0 if is_method_call else 1
     mode_node: Optional[ast.expr] = None
-    if len(call.args) >= 2:
-        mode_node = call.args[1]
+    if len(call.args) > mode_idx:
+        mode_node = call.args[mode_idx]
     for kw in call.keywords:
         if kw.arg == "mode":
             mode_node = kw.value
@@ -166,6 +172,42 @@ def _is_binary_mode(call: ast.Call) -> bool:
         return False
     if isinstance(mode_node, ast.Constant) and isinstance(mode_node.value, str):
         return "b" in mode_node.value
+    return False
+
+
+# 已知非文件 I/O 的 ``.open()`` 接收者（模块名 / 对象名）——全部跳过。
+# 这些调用语义与编码无关，不应触发 C1。
+_NON_FILE_OPEN_RECEIVERS = {
+    "webbrowser",
+    "os",  # os.open 是低级 fd，无 encoding 参数
+    "socket",
+    "urllib",
+    "connection",
+    "conn",
+    "db",
+    "cursor",
+    "engine",
+    "driver",
+    "browser",
+    "page",
+    "tab",
+    "dialog",
+    "window",
+}
+
+
+def _is_non_file_open_call(call: ast.Call) -> bool:
+    """识别 webbrowser.open / os.open / socket.open 等非文件 I/O 的 ``.open()`` 调用。"""
+    func = call.func
+    if not isinstance(func, ast.Attribute) or func.attr != "open":
+        return False
+    receiver = func.value
+    # 直接的 Name：webbrowser.open / os.open / driver.open
+    if isinstance(receiver, ast.Name) and receiver.id in _NON_FILE_OPEN_RECEIVERS:
+        return True
+    # 链式属性：x.webbrowser.open / self.driver.open —— 看最后一段
+    if isinstance(receiver, ast.Attribute) and receiver.attr in _NON_FILE_OPEN_RECEIVERS:
+        return True
     return False
 
 
@@ -203,8 +245,11 @@ def scan_c1_open_encoding(py_files: Iterable[Path]) -> list[Finding]:
             name = _call_func_name(node)
             if name not in targets:
                 continue
-            # open() 二进制模式跳过
+            # open() 二进制模式跳过（区分 builtin open 与 path.open 的 mode 位置）
             if name == "open" and _is_binary_mode(node):
+                continue
+            # 非文件 I/O 的 .open() 跳过（webbrowser.open / os.open / socket.open 等）
+            if name == "open" and _is_non_file_open_call(node):
                 continue
             if _has_encoding_kw(node):
                 continue
