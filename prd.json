@@ -77,8 +77,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-21: ink-auto.sh 顶部注入 MAX_WORDS_HARD（preferences.json→pacing.chapter_words+500，默认 5000）；verify_chapter 增补 `char_count > MAX_WORDS_HARD` 对称上限分支；主重试流程按失败原因分流：over-limit 走 SHRINK_MAX_ROUNDS=3 精简循环，下限/其它失败保持 1 轮补写（零回归）。ink-auto.ps1 同步注入 $MaxWordsHard/$ShrinkMaxRounds，Test-Chapter 与主循环 PS 对等实现；UTF-8 BOM 保留。新增 tests/scripts/test_ink_auto_word_limit.py 14 测试（5 黑盒 + 9 源码级守护）。全量 pytest 3588 passed / 23 skipped（baseline 3574 + 14，零回归）。"
     },
     {
       "id": "US-005",

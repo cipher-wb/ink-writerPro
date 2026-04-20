@@ -16,6 +16,7 @@ Prev run: prose-directness → v22.0.0 released (场景感知直白化)
 - **字数阈值来源统一**（v23 新增预期）：所有字数阈值（min/max_hard/max_soft）应通过 `load_word_limits(project_root)` 从 `.ink/preferences.json` 推导；禁止在新代码中硬编码 2200/4000/5000 作为字数阈值（作为默认值显式标注除外）。
 - **硬下限 2200 不可降红线**：无论 preferences 配置任何值，实际 min_words 永不低于 2200；这是跨 US 的全局护栏。
 - **创作执行包 target_words_* 字段**（v23 US-003）：`build_chapter_context_payload` 把 `load_word_limits` 结果写进 payload 顶层 `target_words_min` / `target_words_max`，`build_execution_pack_payload` 原样透传到执行包顶层；writer-agent 起草阶段消费 `target_words_max` 作为硬上限（无 LLM 自行豁免路径）。扩展 execution pack 字段时记得更新 `_render_execution_pack_text` 与 `tests/data_modules/test_extract_chapter_context.py`。
+- **ink-auto 字数硬上限变量命名**（v23 US-004）：shell 用 `MAX_WORDS_HARD` / `SHRINK_MAX_ROUNDS`；PowerShell 用 `$MaxWordsHard` / `$ShrinkMaxRounds`。派生逻辑在脚本顶部 `LOG_DIR`/`$LogDir` 之后；`verify_chapter` / `Test-Chapter` 用 `>`（不是 `>=`）做上限判定，即 `chapter_words + 500` 本身算合格边界。上限超限触发精简循环 3 轮，下限/其它失败保持 1 轮重试——这是零回归红线。
 
 ## Story-specific Learnings
 (每个 US 完成后在下方追加)
@@ -81,5 +82,25 @@ Prev run: prose-directness → v22.0.0 released (场景感知直白化)
   - 渲染文本是 writer-agent 真正会读到的 UI 面——数据字段加进 pack 还不够，必须同时更新 `_render_execution_pack_text` 的字段展示，否则 LLM 根本看不到。Step 2A 终检清单尤其关键，它是生成完成前的最后一道自检锚点。
   - writer-agent.md 中字数硬编码分布在 4 处（字数要求 / 硬性指标 / 禁止事项 / 成功标准），容易漏删。改 prompt 类指令文件时建议先 `grep -n "2200\|3000\|4000\|字数"` 全量列举再逐项替换。
   - 测试 fixture 里若未显式写 preferences.json，`load_word_limits` 会走默认路径 (2200, 5000)——这其实是非常好的默认，可以让绝大多数现有 test case 无需改动就能跑通。
+---
+
+## 2026-04-21 - US-004 ink-auto.sh/.ps1 对称上限阻断 + 精简循环
+- `ink-writer/scripts/ink-auto.sh`：
+  - 顶部（`REPORT_FILE` 定义之后）新增 MAX_WORDS_HARD 派生块：内联 `$PY_LAUNCHER -X utf8 -c` 读 `.ink/preferences.json`，`pacing.chapter_words+500` 推导；corrupt JSON / 无文件 / 字段缺失 / bool / 非正数均 fallback 5000。额外正则校验 `[0-9]+` 且 ≥2200，防止上层 Python 输出污染。
+  - `SHRINK_MAX_ROUNDS=3` 常量（与 SKILL.md 2A.5 对齐，US-005 将同步 SKILL.md）。
+  - `verify_chapter` 在 `< 2200 return 1` 之后立即增补 `> MAX_WORDS_HARD return 1` 对称分支；硬下限分支字节级保留。
+  - 主重试流程按失败原因分流：获取 `WC_FAIL=$(get_chapter_wordcount)`，`> MAX_WORDS_HARD` → `MAX_RETRIES=$SHRINK_MAX_ROUNDS` 走精简循环 3 轮；其它失败 → `MAX_RETRIES=1` 保持原 1 轮补写（零回归红线）。`FAIL_REASON` 同步进 report_event / EXIT_REASON 便于运行报告追溯。
+- `ink-writer/scripts/ink-auto.ps1`：PowerShell 对等实现。`$MaxWordsHard` 用 `ConvertFrom-Json` + `$cw -is [int] -and $cw -gt 0` 拒绝 bool / 非正数；`$ShrinkMaxRounds=3`。`Test-Chapter` 补 `$chars -gt $MaxWordsHard`，主循环 `$wcFail` / `$maxRetries` / `$retryRound` / `$retryVerified` 语义一一对应 bash 版。UTF-8 BOM 字节级保留（ef bb bf）。
+- `tests/scripts/test_ink_auto_word_limit.py`（新增）：14 测试。
+  - 黑盒（5）：`_run_verify` harness 抠 `verify_chapter` 函数体 + stub `get_current_chapter` + 构造 `正文/第XXXX章*.md` + `.ink/summaries/chXXXX.md` fixture；矩阵覆盖合格 / 低于下限 / 超出上限（默认 5000 与自定义 3500）/ 上限边界（`==` 视作合格，因为 `>` 非 `>=`）。
+  - 源码级守护（9）：守护 `char_count < 2200` 硬下限不被弱化、`char_count > MAX_WORDS_HARD` 必须存在、`SHRINK_MAX_ROUNDS=3` / `$ShrinkMaxRounds=3` 常量、重试分流逻辑（`MAX_RETRIES=$SHRINK_MAX_ROUNDS` + `MAX_RETRIES=1` 并存），以及 PS 的 `$MaxWordsHard=5000` 默认 + BOM。
+- 手动冒烟：`chapter_words=3000` → 3500；corrupt JSON → 5000；missing file → 5000（命令行直接跑 Python 派生块确认）。
+- 回归：`pytest tests/ --no-cov` 全量 3588 passed / 23 skipped（baseline 3574 + 14 新增，耗时 ≈ 167s）。
+- **Learnings for future iterations:**
+  - Shell 内嵌 Python 派生配置值时，一定要在 bash 侧再做一层正则 `[0-9]+` 校验——Python 侧任何报错（包括 stderr 被意外 merge 到 stdout）都可能污染 `$(...)` 输出，让 `(( ... ))` 触发 set -euo pipefail 下的 fatal。当前实现用 `|| echo 5000` + `[[ =~ ]]` 双兜底，够稳。
+  - PowerShell `ConvertFrom-Json` 访问 `$prefData.pacing.chapter_words` 时若上层缺字段会直接 null dereference；`Set-StrictMode -Version Latest` 下更凶。目前用 `if ($prefData -and $prefData.pacing -and $prefData.pacing.chapter_words)` 三层 null-gate；若以后字段名/层级调整，记得全部 null-gate 一起改。
+  - 抠 bash function 做黑盒测试（`_extract_bash_function`）是 ink-auto 测试的通用模式（US-012 起已用）；新加 function 要保证 `^fn_name() {` 独占一行 + `\n}\n` 收尾，否则正则抠不到。
+  - 用 `ascii 'a' * (N-1) + '\n'` 可精确让 `wc -m` 返回 N（纯 ASCII 文件 char == byte）；CJK 测试需要用 UTF-8 字节/字符区分的场景另议。
+  - 重试循环在 `set -uo pipefail`（无 `-e`）的主脚本里必须每个 bash 循环变量都预先显式初始化（`RETRY_ROUND=0` / `RETRY_VERIFIED=0`），否则 `while (( ... ))` 碰到未定义变量会被 `-u` 杀。
 ---
 
