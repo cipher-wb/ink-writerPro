@@ -56,6 +56,7 @@
       "priority": 3,
       "passes": true,
       "notes": "Completed 2026-04-23. schemas/case_schema.json mirrors spec §3.2 (case_id pattern ^CASE-[0-9]{4}-[0-9]{4}$, status/severity/domain/layer/source.type enums, required fields at object & sub-object level, additionalProperties false). ink_writer/case_library/{errors.py,schema.py}: CaseLibraryError / CaseValidationError / CaseNotFoundError / DuplicateCaseError; validate_case_dict uses Draft202012Validator with @lru_cache-loaded schema and raises CaseValidationError(f'{json_pointer}: {message}'). tests/case_library/{conftest.py,test_schema.py}: 7 passed. Full pytest --no-cov: 3605 passed, 23 skipped (was 3598, +7 new). Coverage 82.72% (gate 70). Audit red-lines (tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py) green; ruff + py_compile clean."
+    },
     {
       "id": "US-004",
       "title": "Case Models（dataclass + 枚举）",
@@ -91,8 +92,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-23. ink_writer/case_library/store.py: CaseStore(library_root) auto-creates library_root/cases; save(case) runs case.to_dict() -> validate_case_dict() before yaml.safe_dump(allow_unicode=True, sort_keys=False, default_flow_style=False); load(case_id) validates before Case.from_dict and raises CaseNotFoundError; list_ids() sorted CASE-*.yaml stems; iter_cases() generator in ascending case_id order; pack_jsonl(out_path) emits one ensure_ascii=False line per case and auto-mkdirs parent; append_ingest_log(event) appends one JSON per line to library_root/ingest_log.jsonl. tests/case_library/test_store.py: 7 passed (save_then_load / save_writes_yaml_with_utf8 / load_missing_raises / save_invalid_case_raises / list_returns_all_case_ids / pack_jsonl_emits_one_line_per_case / append_ingest_log). Full pytest --no-cov: 3615 passed, 23 skipped (US-004 baseline 3608 + 7). Coverage 82.72% (gate 70). Ruff + py_compile clean; audit red-lines green. Note: test_save_invalid_case_raises sets case.failure_pattern.observable=[] to trip schema minItems=1 without tripping StrEnum value guard during to_dict()."
     },
     {
       "id": "US-006",
