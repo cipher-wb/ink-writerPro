@@ -30,7 +30,7 @@ def _make_broken_symlink(
     chapter_dir.mkdir(parents=True, exist_ok=True)
     link = chapter_dir / chapter
     # dangling_target doesn't need to exist — that's the whole point of the fix.
-    link.symlink_to(dangling_target)
+    link.symlink_to(dangling_target)  # c5-ok: intentional dangling symlink is the SUT fixture
     return link
 
 
@@ -134,4 +134,7 @@ def test_fix_returns_empty_report_when_reference_root_absent(tmp_path: Path) -> 
 
 
 if __name__ == "__main__":  # pragma: no cover
+    from runtime_compat import enable_windows_utf8_stdio
+
+    enable_windows_utf8_stdio()
     raise SystemExit(pytest.main([__file__, "-v"]))

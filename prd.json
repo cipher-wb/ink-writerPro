@@ -36,8 +36,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-23. qdrant-client 1.17.1 installed (satisfies ~=1.12 per PEP 440 >=1.12,<2.0; PRD prose '输出 1.12.x' was an outdated estimate). Empty skeletons: ink_writer/{case_library,qdrant,preflight}/__init__.py + tests/{case_library,qdrant,preflight}/__init__.py. pytest.ini testpaths appended with tests/{case_library,qdrant,preflight,maintenance}. Full pytest -q: 3598 passed, 0 failed, coverage 82.72% (>=70 gate). Also fixed 2 latent US-001 audit failures in tests/maintenance/test_fix_reference_corpus_symlinks.py (c5-ok marker on intentional dangling symlink + enable_windows_utf8_stdio import in __main__)."
     },
     {
       "id": "US-003",

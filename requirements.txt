@@ -13,3 +13,4 @@ PyYAML~=6.0                   # 配置文件解析（import yaml）
 jsonschema~=4.26              # Schema 校验（creative fingerprint / anti-trope-seeds）
 sentence-transformers~=5.4    # 本地 Embedding（BAAI/bge-small-zh-v1.5）
 anthropic~=0.89               # Claude API 客户端（editor_wisdom classify / extract）
+qdrant-client~=1.12           # Vector DB（M1 起替换 FAISS，详见 docs/superpowers/specs/2026-04-23-case-library-driven-quality-overhaul-design.md §8）
