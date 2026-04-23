@@ -1,0 +1,152 @@
+# Ralph Progress Log
+Started: 2026-04-20 (chapter-word-limit-hard-cap)
+Source PRD: tasks/prd-chapter-word-limit-hard-cap.md
+Branch: ralph/chapter-word-limit-hard-cap
+Prev run: prose-directness → v22.0.0 released (场景感知直白化)
+
+## Codebase Patterns
+(承接自前轮 ralph runs，保留跨 PRD 通用条目。逐轮新增追加到下方。)
+
+- **UTF-8 编码硬约束**：所有 `open()` / `Path.read_text()` / `Path.write_text()` 必须带 `encoding="utf-8"`。scripts/fix_utf8_encoding.py 可批量修复；scripts/audit_cross_platform.py 是 9 类风险单一扫描入口。
+- **零回归守卫 baseline**：v23 baseline = `pytest tests/ --no-cov` 全量 3567 passed / 23 skipped（US-002 完成后实测，Python 3.14）。本轮后续每个 US 完成前必须跑全量无新增失败。
+- **pytest.ini testpaths 同步**：新增的 `tests/核心模块/子目录/` 必须追加到 `pytest.ini:testpaths`，否则默认收集会漏掉。
+- **pytest 跨平台标记**（v21 起）：用 `@pytest.mark.windows` / `@pytest.mark.mac` 而非 `@pytest.mark.skipif(sys.platform != "...")`。`conftest.py` autoskip；仓库红线禁止回退到 skipif。
+- **ProjectConfig 读取约定**：章节正文文件命名/后缀由 `ProjectConfig` 决定；新代码不硬编码命名。
+- **shell/ps1 双入口守则**：新增或修改 `ink-writer/scripts/*.sh` 必须同步 `.ps1`；PS 文件保持 UTF-8 BOM（PS 5.1 读中文需要）。复用 `ink-writer/scripts/runtime_compat.py` 已有原语，优先复用不重写。
+- **字数阈值来源统一**（v23 新增预期）：所有字数阈值（min/max_hard/max_soft）应通过 `load_word_limits(project_root)` 从 `.ink/preferences.json` 推导；禁止在新代码中硬编码 2200/4000/5000 作为字数阈值（作为默认值显式标注除外）。
+- **硬下限 2200 不可降红线**：无论 preferences 配置任何值，实际 min_words 永不低于 2200；这是跨 US 的全局护栏。
+- **创作执行包 target_words_* 字段**（v23 US-003）：`build_chapter_context_payload` 把 `load_word_limits` 结果写进 payload 顶层 `target_words_min` / `target_words_max`，`build_execution_pack_payload` 原样透传到执行包顶层；writer-agent 起草阶段消费 `target_words_max` 作为硬上限（无 LLM 自行豁免路径）。扩展 execution pack 字段时记得更新 `_render_execution_pack_text` 与 `tests/data_modules/test_extract_chapter_context.py`。
+- **ink-auto 字数硬上限变量命名**（v23 US-004）：shell 用 `MAX_WORDS_HARD` / `SHRINK_MAX_ROUNDS`；PowerShell 用 `$MaxWordsHard` / `$ShrinkMaxRounds`。派生逻辑在脚本顶部 `LOG_DIR`/`$LogDir` 之后；`verify_chapter` / `Test-Chapter` 用 `>`（不是 `>=`）做上限判定，即 `chapter_words + 500` 本身算合格边界。上限超限触发精简循环 3 轮，下限/其它失败保持 1 轮重试——这是零回归红线。
+- **规则文档字数描述模板**（v23 US-005）：一切 SKILL.md / agent 指令在提到字数阈值时，统一用 `MIN_WORDS` / `MAX_WORDS_HARD`（或 `target_words_min` / `target_words_max`）占位符 + 默认括注 `(2200, 5000)`，禁止出现"2200-3000"、"3501-4000"、"上浮 33%"、"关键战斗章/高潮章/卷末章可放行"之类历史豁免表述。若确需描述"旧版已删除的豁免条款"，用抽象否定（"按章节类型级、节拍级、大纲标签级等任何 LLM 自行判定的豁免路径"）而非具体枚举，以通过 `grep '关键.*章.*豁免|关键章.*放行|上浮 33%'` 零匹配验收。
+
+## Story-specific Learnings
+(每个 US 完成后在下方追加)
+
+## 2026-04-21 - US-005 SKILL.md + writer-agent.md 删除 LLM 自行豁免路径
+- `ink-writer/skills/ink-write/SKILL.md:905` 单句重写——字数区间改为 `target_words_min` / `target_words_max`（preferences 驱动，默认 `(2200, 5000)`），硬上限"任何情况不得超越"，指向 `pacing.chapter_words` 显式上调而非按章型豁免。
+- `ink-writer/skills/ink-write/SKILL.md:1024-1038` 2A.5 字数判定区大改：
+  - 判定表由 4 行（< 2200 / 2200-3500 / 3501-4000 / > 4000）收敛为 3 行（< MIN_WORDS / 区间内 / > MAX_WORDS_HARD），删除"3501-4000 偏长+大纲可放行"整档。
+  - 原"豁免条件"段整段重写为"无豁免条款"段，明确列出不设章型级/节拍级/大纲标签级 LLM 自判豁免路径，并加"历史版本允许的按百分比上浮或按章型放行条款，自 v23 起全部删除"追溯说明。
+  - 循环轮次拆双路径：补写 2 轮（下限方向零回归，与原表述一致）+ 精简 3 轮（与 US-004 `SHRINK_MAX_ROUNDS=3` / ink-auto 对齐）。新增"阈值来源"小节开头对接 preferences。
+- `ink-writer/skills/ink-fix/SKILL.md` 四处收敛：
+  - 开头原则 5 字数守护 `≥ 2200` → `∈ [MIN_WORDS, MAX_WORDS_HARD]（默认 [2200, 5000]，preferences 驱动）`
+  - Step 5.5 字数验证 bash 注释同上
+  - Step 3 修复验证 "字数 ≥ 2200" → 区间表达
+  - 安全红线 4 字数下限 2200 → 字数硬区间 + 硬上限无豁免
+- `ink-writer/skills/ink-auto/SKILL.md` 两处：
+  - 修复流程安全边界 "字数 ≥ 2200" → 完整区间 + v23 US-005 引用
+  - 主循环多重验证第 7 项 → 区间 + 低于下限 1 轮补写 / 高于上限 3 轮精简循环对称表述
+- `ink-writer/agents/writer-agent.md:467` + `ink-writer/references/preferences-schema.md:46-48` 旧 US-003 残留的"关键战斗章/高潮章/卷末章可放行"具体枚举改为"按章节类型级/节拍级/大纲标签级 LLM 自行判定的豁免路径"抽象否定表述，过 grep 零匹配验收。
+- 残留：`scripts/ralph/run.log`、`scripts/ralph/archive/*`、`tasks/prd-*.md` 仍有匹配——这些是 PRD spec / 历史运行日志 / 归档 PRD，非运行时消费路径，保留以维护项目历史。
+- 回归：`pytest tests/ --no-cov` 全量 3588 passed / 23 skipped（与 US-004 基线字节级一致，零新增 fail；本 US 纯文档修改无代码变更，pytest 结果符合预期）。耗时 164s。
+- **Learnings for future iterations:**
+  - 本 US 的验收关键是"grep 零残留"。写否定文案时非常容易顺手复述"不是 X、不是 Y、不是 Z"，但这些枚举本身会被 grep 命中、反而让验收失败。务必用抽象否定（"不存在按 A-level/B-level/C-level 的豁免路径"）替代具体举例。
+  - 判定表/循环表述类文档改动要同时考虑下游消费者是 LLM（看文档文本）而非程序（读阈值字段）——所以一定要在文档里留 `MIN_WORDS` / `MAX_WORDS_HARD` 占位符 + 默认值括注，既不硬编码数字也让 LLM 知道"遇到具体项目时去哪里看实际值"。
+  - ink-fix/SKILL.md 的字数守护分布在 4 个位置（原则 / 验证 / Step 3 / 安全红线），ink-auto/SKILL.md 在 2 个位置——这类规则文档改字数阈值时一定要先 grep 全文再逐一替换，否则极容易漏一处。通用 grep 模式：`2200|4000|5000|字数|上限|MAX_WORDS|SHRINK`。
+  - US-005 是本 PRD 里唯一纯文档类 US，无代码改动，pytest 数值应与前一 US 完全一致（3588）。这是下一个纯文档类 US（如 US-006 的 preferences-schema 文档发版）的基线参考。
+---
+
+
+## 2026-04-21 - US-001 check_word_count 支持硬/软双阈值上限
+- 为 `ink-writer/scripts/computational_checks.py::check_word_count` 新增 `max_words_hard:int=5000` / `max_words_soft:Optional[int]=None` 参数；`max_words` 保留为 deprecated alias（仅在未显式指定 `max_words_hard` 时生效）。
+- 超出硬上限默认返回 `severity='hard', passed=False`；若同时提供 `max_words_soft` 且 `max_words_hard < count <= max_words_soft`，回落为 `severity='soft', passed=False` 形成缓冲带。
+- 硬下限 2200 与原 min_words 分支字节级保持；未传 `max_words_soft` 时无任何 soft 路径可被 LLM 滥用——这是本次硬化的核心。
+- 文件改动：
+  - `ink-writer/scripts/computational_checks.py` — 扩签名 + 分支逻辑 + typing.Optional 补充
+  - `tests/data_modules/test_computational_checks.py` — 替换旧 `test_soft_warning_too_long`（6000 现在 hard）；新增 `test_word_count_hard_upper_limit` / `test_word_count_soft_buffer` / `test_word_count_soft_buffer_overflow_is_hard` / `test_word_count_backward_compat_max_words_alias`；调整 `test_soft_warning_does_not_block` 与 `test_text_output_with_soft_warnings` 使正文 ≤5000 字，让软警告由 vocab/emotion 贡献而不再依赖 word_count soft。
+- **Learnings for future iterations:**
+  - 旧测试 `TestRunAllChecks::test_soft_warning_does_not_block` / `TestMain::test_text_output_with_soft_warnings` 原本用 >5000 字文本依赖 word_count 的软警告；US-001 收紧后须改用 vocab/emotion 等 soft 通道——类似语义修正以后也要同步审查。
+  - `check_word_count(text, max_words=N)` 旧调用点在线搜索上只命中 `computational_checks.py:646` 本身，US-002 之后 run_all_checks 需传 load_word_limits 结果进来；当前默认值保持 (2200, 5000) 与旧行为对齐，是安全过渡态。
+  - Python 3.14 全量 pytest 基线耗时 ≈ 218s；后续 US 若跑全量要给 timeout ≥ 300s。
+---
+
+## 2026-04-21 - US-002 preferences.json 驱动字数阈值加载器
+- 新增 `ink_writer/core/preferences.py`，提供 `load_word_limits(project_root) -> tuple[int, int]`：
+  - 无 preferences.json / JSON 损坏 / 字段缺失 → 默认 `(2200, 5000)`
+  - `pacing.chapter_words = N` → `(max(2200, N-500), N+500)`；硬下限 2200 永不降（红线常量 `MIN_WORDS_FLOOR`）
+  - 类型不匹配（bool/字符串/非正数）均 fallback 默认，不抛异常
+- `ink-writer/scripts/computational_checks.py::run_all_checks` 改为先调用 `load_word_limits`，再把推导结果传给 `check_word_count(min_words=, max_words_hard=)`；`from ink_writer.core.preferences import load_word_limits` 为 lazy 导入 + `try/except` 双兜底，保证即便 import 失败也保留原 (2200, 5000) 默认。
+- 文档更新：`ink-writer/references/preferences-schema.md` 新增「pacing.chapter_words 语义」章节，含推导公式、默认值、红线说明与三组典型示例。
+- 测试：新增 `tests/core/test_word_limits_preferences.py` 14 用例，覆盖无配置/无 .ink 目录/chapter_words=3000 /=2000（触发红线）/=4500/损坏 JSON/无 pacing/非 int/bool/零负/pacing 非 dict/返回类型契约/中文 UTF-8 编码。
+- 文件改动：
+  - `ink_writer/core/preferences.py`（新增）
+  - `ink-writer/scripts/computational_checks.py`（run_all_checks 仅改 check_word_count 一处调用）
+  - `ink-writer/references/preferences-schema.md`（追加 v23 语义段落）
+  - `tests/core/test_word_limits_preferences.py`（新增 14 测试用例）
+- 回归：`pytest tests/ --no-cov` 全量 3567 passed / 23 skipped（baseline 3553 + 新增 14，无任何现有测试失败）。
+- **Learnings for future iterations:**
+  - `ink_writer.core.*` 是 Python 包（`/Users/cipher/AI/ink/ink-writer/ink_writer/core/`），与 `ink-writer/scripts/` 是两个不同路径空间；pytest.ini 的 `pythonpath` 已同时加入 `.` 与 `ink-writer` 允许两者共存。新模块优先放 `ink_writer/core/`（Python 包惯例），`ink-writer/scripts/` 保留给 skills/agents 直接调用的 CLI 壳。
+  - `check_word_count` 默认值 `(2200, 5000)` 与 `load_word_limits` 默认返回值刻意对齐——即便 US-002 的 run_all_checks 注入失败，也能保证全链路字数行为与 US-001 后一致，这是安全过渡态的核心设计。
+  - `bool` 是 `int` 子类，验签时必须 `isinstance(raw, bool) or not isinstance(raw, int)` 双判断才能正确剔除；单用 `isinstance(raw, int)` 会让 `chapter_words: true` 蒙混过关。
+  - `tmp_path.write_text(json.dumps(..., ensure_ascii=False), encoding="utf-8")` 是写含中文 JSON 测试 fixture 的惯用法；切勿省略 `encoding="utf-8"`（Windows 守则）。
+  - `load_word_limits` 需要极度 defensive：所有 `open/json.load` 异常都必须被捕获到 fallback，否则一次损坏 preferences.json 就会把整个 comp-gate 炸掉；而 comp-gate 是 ink-write / ink-auto 的硬门禁，不能因配置文件 corrupt 就全线挂掉。
+---
+
+## 2026-04-21 - US-003 writer-agent 写前接收 target_words_max 硬约束
+- `ink-writer/scripts/extract_chapter_context.py`
+  - 新增 `_resolve_target_word_limits(project_root)` 双层兜底包装：`ink_writer.core.preferences.load_word_limits` import 失败或抛异常均 fallback 到 `(2200, 5000)`；避免 preferences 模块不可用时执行包构建失败。
+  - `build_chapter_context_payload` 在 payload 顶层注入 `target_words_min` / `target_words_max`。
+  - `build_execution_pack_payload` 从 payload 读取这两个字段，容错 int 转换后写入 pack 顶层；Step 2A 终检清单追加一行 `正文字数 ∈ [<min>, <max>]（preferences 驱动硬区间，超限必返工）`。
+  - `_render_execution_pack_text` 在 header 追加 `- 字数硬约束: [<min>, <max>]（... 任何情况不得越界，无 LLM 自行豁免路径）` 行，writer-agent 肉眼可读。
+- `ink-writer/agents/writer-agent.md` — 删除 4 处字数硬编码：
+  - 字数要求 section（原 2200-3000 / 上浮 33% / 硬上限 4000）→ 改为引用 `target_words_min` / `target_words_max`，新增"生成过程中的硬约束"段与"禁止越限后再靠事后精简兜底"红线。
+  - 硬性指标 → 改为 `字数 ∈ [target_words_min, target_words_max]` + 生成完成前自检 `实际字数 <= target_words_max`。
+  - 禁止事项 → "输出低于 2200 字" 改为 "低于 target_words_min / 高于 target_words_max"，标注无 LLM 自行豁免路径。
+  - 成功标准 → "正文 ≥ 2200 字" 改为区间表达式。
+- `ink-writer/references/preferences-schema.md` — 在 v23 语义段追加"创作执行包传递（v23 US-003）"子条，说明 payload → execution pack → writer-agent 的字段流动路径。
+- `tests/data_modules/test_extract_chapter_context.py` — 新增 7 个测试：
+  - `test_build_chapter_context_payload_injects_default_target_words` — 无 preferences.json 默认 (2200, 5000)
+  - `test_build_chapter_context_payload_derives_from_chapter_words` — chapter_words=3000 → (2500, 3500)
+  - `test_build_chapter_context_payload_floors_min_at_2200` — chapter_words=2000 触发 MIN_WORDS_FLOOR
+  - `test_build_execution_pack_payload_propagates_target_words_fields` — pack 顶层字段透传
+  - `test_build_execution_pack_payload_falls_back_when_target_words_missing` — 缺字段安全默认
+  - `test_execution_pack_final_checklist_contains_word_range_hardcap` — 终检清单含字数区间
+  - `test_render_execution_pack_text_includes_target_words_line` — 渲染文本含可读约束
+- 回归：`pytest tests/ --no-cov` 全量 3574 passed / 23 skipped（baseline 3567 + 7 新增，无既有测试 failed）。耗时 ≈ 194s。
+- **Learnings for future iterations:**
+  - `build_execution_pack_payload(payload)` 不接收 `project_root` 形参，所有 project-root-derived 信息必须先通过 `build_chapter_context_payload` 塞进 payload 顶层再传入——这是 v9.x 形成的 API 约定，不要破坏，否则所有下游调用点（extract_chapter_context.py 末尾 main、test suite、以及 skills/ink-write 管线）都要一起改。
+  - 渲染文本是 writer-agent 真正会读到的 UI 面——数据字段加进 pack 还不够，必须同时更新 `_render_execution_pack_text` 的字段展示，否则 LLM 根本看不到。Step 2A 终检清单尤其关键，它是生成完成前的最后一道自检锚点。
+  - writer-agent.md 中字数硬编码分布在 4 处（字数要求 / 硬性指标 / 禁止事项 / 成功标准），容易漏删。改 prompt 类指令文件时建议先 `grep -n "2200\|3000\|4000\|字数"` 全量列举再逐项替换。
+  - 测试 fixture 里若未显式写 preferences.json，`load_word_limits` 会走默认路径 (2200, 5000)——这其实是非常好的默认，可以让绝大多数现有 test case 无需改动就能跑通。
+---
+
+## 2026-04-21 - US-004 ink-auto.sh/.ps1 对称上限阻断 + 精简循环
+- `ink-writer/scripts/ink-auto.sh`：
+  - 顶部（`REPORT_FILE` 定义之后）新增 MAX_WORDS_HARD 派生块：内联 `$PY_LAUNCHER -X utf8 -c` 读 `.ink/preferences.json`，`pacing.chapter_words+500` 推导；corrupt JSON / 无文件 / 字段缺失 / bool / 非正数均 fallback 5000。额外正则校验 `[0-9]+` 且 ≥2200，防止上层 Python 输出污染。
+  - `SHRINK_MAX_ROUNDS=3` 常量（与 SKILL.md 2A.5 对齐，US-005 将同步 SKILL.md）。
+  - `verify_chapter` 在 `< 2200 return 1` 之后立即增补 `> MAX_WORDS_HARD return 1` 对称分支；硬下限分支字节级保留。
+  - 主重试流程按失败原因分流：获取 `WC_FAIL=$(get_chapter_wordcount)`，`> MAX_WORDS_HARD` → `MAX_RETRIES=$SHRINK_MAX_ROUNDS` 走精简循环 3 轮；其它失败 → `MAX_RETRIES=1` 保持原 1 轮补写（零回归红线）。`FAIL_REASON` 同步进 report_event / EXIT_REASON 便于运行报告追溯。
+- `ink-writer/scripts/ink-auto.ps1`：PowerShell 对等实现。`$MaxWordsHard` 用 `ConvertFrom-Json` + `$cw -is [int] -and $cw -gt 0` 拒绝 bool / 非正数；`$ShrinkMaxRounds=3`。`Test-Chapter` 补 `$chars -gt $MaxWordsHard`，主循环 `$wcFail` / `$maxRetries` / `$retryRound` / `$retryVerified` 语义一一对应 bash 版。UTF-8 BOM 字节级保留（ef bb bf）。
+- `tests/scripts/test_ink_auto_word_limit.py`（新增）：14 测试。
+  - 黑盒（5）：`_run_verify` harness 抠 `verify_chapter` 函数体 + stub `get_current_chapter` + 构造 `正文/第XXXX章*.md` + `.ink/summaries/chXXXX.md` fixture；矩阵覆盖合格 / 低于下限 / 超出上限（默认 5000 与自定义 3500）/ 上限边界（`==` 视作合格，因为 `>` 非 `>=`）。
+  - 源码级守护（9）：守护 `char_count < 2200` 硬下限不被弱化、`char_count > MAX_WORDS_HARD` 必须存在、`SHRINK_MAX_ROUNDS=3` / `$ShrinkMaxRounds=3` 常量、重试分流逻辑（`MAX_RETRIES=$SHRINK_MAX_ROUNDS` + `MAX_RETRIES=1` 并存），以及 PS 的 `$MaxWordsHard=5000` 默认 + BOM。
+- 手动冒烟：`chapter_words=3000` → 3500；corrupt JSON → 5000；missing file → 5000（命令行直接跑 Python 派生块确认）。
+- 回归：`pytest tests/ --no-cov` 全量 3588 passed / 23 skipped（baseline 3574 + 14 新增，耗时 ≈ 167s）。
+- **Learnings for future iterations:**
+  - Shell 内嵌 Python 派生配置值时，一定要在 bash 侧再做一层正则 `[0-9]+` 校验——Python 侧任何报错（包括 stderr 被意外 merge 到 stdout）都可能污染 `$(...)` 输出，让 `(( ... ))` 触发 set -euo pipefail 下的 fatal。当前实现用 `|| echo 5000` + `[[ =~ ]]` 双兜底，够稳。
+  - PowerShell `ConvertFrom-Json` 访问 `$prefData.pacing.chapter_words` 时若上层缺字段会直接 null dereference；`Set-StrictMode -Version Latest` 下更凶。目前用 `if ($prefData -and $prefData.pacing -and $prefData.pacing.chapter_words)` 三层 null-gate；若以后字段名/层级调整，记得全部 null-gate 一起改。
+  - 抠 bash function 做黑盒测试（`_extract_bash_function`）是 ink-auto 测试的通用模式（US-012 起已用）；新加 function 要保证 `^fn_name() {` 独占一行 + `\n}\n` 收尾，否则正则抠不到。
+  - 用 `ascii 'a' * (N-1) + '\n'` 可精确让 `wc -m` 返回 N（纯 ASCII 文件 char == byte）；CJK 测试需要用 UTF-8 字节/字符区分的场景另议。
+  - 重试循环在 `set -uo pipefail`（无 `-e`）的主脚本里必须每个 bash 循环变量都预先显式初始化（`RETRY_ROUND=0` / `RETRY_VERIFIED=0`），否则 `while (( ... ))` 碰到未定义变量会被 `-u` 杀。
+---
+
+## 2026-04-21 - US-006 全量回归 + preferences-schema 文档发版
+- `tests/core/test_word_limits_e2e.py`（新增 5 用例 E2E fixture）：
+  - `test_e2e_chapter_words_3000_3800_chars_hard_fail` — PRD 明示 AC 场景，chapter_words=3000 推导 (2500, 3500)，3800 字→ severity='hard'。
+  - `test_e2e_chapter_words_3000_2800_chars_pass` — PRD 明示 AC 场景，2800 字区间内通过。
+  - `test_e2e_chapter_words_3000_below_min_hard_fail` — 零回归：下限红线 2500 不得被弱化。
+  - `test_e2e_no_preferences_uses_default_2200_5000` — 默认 (2200, 5000) 对齐 US-001/002 默认态 + < 2200 仍 hard 阻断。
+  - `test_e2e_chapter_words_2000_clamped_to_2200_floor` — MIN_WORDS_FLOOR 护栏：chapter_words=2000 触发 min=2200 红线，2199 字仍以 hard 被阻断，2200 字边界通过。
+- `README.md` 版本历史表新增 v23.0.0 条目（v22.0.0 降级为非当前），汇总 US-001/002/003/004/005/006 全链路变更与测试数（pytest 3206 → 3593 累计 +40 新测试）。
+- `ink-writer/references/preferences-schema.md` v23 语义段在 US-002 已落地含推导公式、默认值、红线护栏与 4 组典型示例（未配置 / 3000 / 2500 / 4500），超额满足 AC #3 的"三组示例"要求。
+- 硬编码字数阈值全仓扫描确认：`ink_writer/core/preferences.py::DEFAULT_MAX_WORDS_HARD=5000`（显式默认）、`computational_checks.py::run_all_checks` 内的 (2200, 5000) 是 load_word_limits import 失败的安全过渡态 fallback、`ink-auto.sh/ps1` 5000 均为 Python 派生块 fallback——其它命中属于 sqlite busy_timeout（ms 单位）与 semantic_recall pack_chars（非章节字数），非字数阈值。
+- 零回归红线字节级验证：`polish-agent.md:393-395` 70% floor 保留、`ink-auto.sh:537` `char_count < 2200` 硬下限保留、`computational_checks.py::check_word_count` 的 min_words 硬失败分支保留、`SKILL.md 2A.5` 下限方向表述（补写 2 轮）保留。US-005 仅硬化上限方向，下限路径全部不动。
+- 回归：`pytest tests/ --no-cov` 全量 3593 passed / 23 skipped（baseline 3588 + 5 新增，耗时 157s）。`python3 -m py_compile` + `ast.parse` 对新增测试与 preferences.py 均通过。
+- **Learnings for future iterations:**
+  - 收尾型 US（"全量回归 + 文档发版"）的本质是把前面 US 已经做的事汇总验收 + 把孤立的 AC 场景固化成可重复测试。当发现 preferences-schema 文档内容已在 US-002 里做完，就别再重复写同样内容——直接把 AC 场景跑成 pytest 用例，提供可重复的 regression 护栏，价值大于改一遍文档措辞。
+  - README.md 版本历史表的"(当前)"标记必须随版本发布迁移：从 v22 → v23 时一次性把 v22 的 `**v22.0.0 (当前)**` 收敛成普通 `v22.0.0`，一次 Edit 覆盖整段描述行。
+  - AC 里的"手动场景验证"实际上最好转换成 pytest 用例——手动步骤极易遗漏，pytest 能在每次 regression 中自动跑一遍，是更负责任的交付方式。
+  - grep 4000/5000/3000 硬编码扫描时，sqlite `busy_timeout = 5000` 和 RAG `max_pack_chars: int = 3000` 是 false positive，注意单位（ms / chars）与语义（非字数阈值）区分。扫描脚本/注释里的默认值标注（`# 默认 5000`、`DEFAULT_MAX_WORDS_HARD = 5000`）属于"显式默认"合规匹配。
+  - README.md 版本历史行会非常长（有时数百字），比较适合用 Edit 一次性替换整段而不是手工缝合。版本表本身用竖线分隔，写成长文本没问题。
+---
+

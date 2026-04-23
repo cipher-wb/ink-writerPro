@@ -1,122 +1,324 @@
 {
   "project": "ink-writer",
-  "branchName": "ralph/chapter-word-limit-hard-cap",
-  "description": "章节字数硬上限强制执行。当前 ink-writer 只有硬下限 2200 字多处阻断，但上限仅是 prompt 文字建议，严重非对称：(1) computational_checks.py 的 check_word_count 对超 max_words 仅返回 severity='soft' 警告；(2) ink-auto.sh 只卡 <2200 return 1，无对称上限阻断；(3) SKILL.md 2A.5 的 >4000 字规则有'关键战斗/高潮/卷末章可放行'豁免条款被 LLM 自我滥用；(4) 用户写入 preferences.json 的 pacing.chapter_words 无任何 caller 读取注入；(5) writer-agent 生成时未收到 target_words_max 硬约束。实际事故：第 1 章写出 1 万字，审查仅产生软警告放行。本次让字数上限与下限对等硬约束，彻底删除 LLM 自行豁免路径（用户选项 4D），让 preferences.json 的 chapter_words 通过 ±500 推导驱动 [min, max] 区间，精简循环最多 3 轮。零回归红线：硬下限 2200 全链路字节级不得弱化，补写循环 2 轮不变。来源：tasks/prd-chapter-word-limit-hard-cap.md。",
+  "branchName": "ralph/m1-case-library-foundation",
+  "description": "M1 Case Library 基础设施 + Qdrant 替换 FAISS + Preflight Health Checker + reference_corpus 软链接修复。落地 spec §9 M1（详见 docs/superpowers/specs/2026-04-23-case-library-driven-quality-overhaul-design.md），打通病例创建—查询—健康检查—infra 自愈闭环，让 ink-write 启动前必跑 6 项 preflight 健康检查、任一失败自动建 infra_health 病例。本期不做：M2-M5 内容（segmenter / writer-self-check / ink-init checker / dashboard）；不替换 Embedding/Reranker；不动现有 23 checker；不删 FAISS（M2 切换）。来源：tasks/prd-m1-case-library-foundation.md。详细 17-task TDD plan：docs/superpowers/plans/2026-04-23-m1-foundation-and-qdrant-migration.md。",
   "userStories": [
     {
       "id": "US-001",
-      "title": "check_word_count 支持硬/软双阈值上限",
-      "description": "作为写作流水线，我需要 check_word_count 对超出硬上限返回 severity='hard'，使 comp-gate 能真正阻断放行而非仅打软警告。",
+      "title": "修复 reference_corpus 断链（方案 A 硬拷贝）",
+      "description": "作为运维者，我需要一个幂等脚本把 benchmark/reference_corpus/<书名>/chapters/*.txt 里所有指向 /Users/cipher/AI/ink/...（无\"小说\"层级）的断链替换为来自 benchmark/corpus/<书名>/chapters/*.txt 的硬拷贝，让 corpus 重新可读。",
       "acceptanceCriteria": [
-        "ink-writer/scripts/computational_checks.py:87 的 check_word_count 新增参数 max_words_hard:int=5000 和 max_words_soft:Optional[int]=None",
-        "字数 > max_words_hard → 返回 CheckResult(severity='hard', passed=False)",
-        "若提供 max_words_soft 且 max_words_hard < count <= max_words_soft → 返回 severity='soft', passed=False（缓冲带）",
-        "保留原 max_words 参数作为 deprecated alias 映射到 max_words_hard，实现零回归",
-        "硬下限 min_words=2200 行为与返回 severity 完全不变",
-        "tests/data_modules/test_computational_checks.py 新增 test_word_count_hard_upper_limit / test_word_count_soft_buffer / test_word_count_backward_compat_max_words_alias 三个用例",
-        "pytest tests/data_modules/ 全绿，无现有测试被破坏",
+        "新增 scripts/maintenance/__init__.py + scripts/maintenance/fix_reference_corpus_symlinks.py",
+        "暴露 fix_reference_corpus_symlinks(reference_root: Path, corpus_root: Path) -> FixReport 函数 + main(argv) CLI",
+        "处理三种文件状态：断链（删除 + cp 原文）、已是真实文件（跳过）、原文不存在（记录到 missing_paths）",
+        "默认参数：--reference-root benchmark/reference_corpus、--corpus-root benchmark/corpus",
+        "新增 tests/maintenance/__init__.py + tests/maintenance/test_fix_reference_corpus_symlinks.py 至少 3 用例：test_fix_replaces_broken_symlinks_with_hard_copies / test_fix_skips_already_real_files / test_fix_records_missing_source",
+        "实跑 python scripts/maintenance/fix_reference_corpus_symlinks.py 输出 fixed=N skipped=0 missing_source=0，N 等于实际章节文件数；head -c 80 benchmark/reference_corpus/诡秘之主/chapters/ch001.txt 输出真实中文正文",
+        "所有新增 open() 带 encoding=\"utf-8\"（CLAUDE.md Windows 兼容守则）",
+        "pytest tests/maintenance -q --no-cov 全绿",
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": true,
-      "notes": "2026-04-21: signature 扩展 max_words_hard/max_words_soft，超出 hard 返回 severity='hard'；max_words deprecated alias 保持向后兼容。全量 pytest 3553 passed / 23 skipped。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-002",
-      "title": "preferences.json 驱动字数阈值加载器",
-      "description": "作为流水线，我需要一个 load_word_limits 函数读取 .ink/preferences.json 的 pacing.chapter_words 单值配置，推导 [min, max_hard] 区间；未配置时使用默认 (2200, 5000)。",
+      "title": "测试基础设施（pytest.ini + qdrant-client 依赖 + 包骨架）",
+      "description": "作为开发者，我需要把新增的 case_library / qdrant / preflight / maintenance 测试目录注册到 pytest，把 qdrant-client 加入依赖，并准备好空的包骨架，让后续 task 的 TDD 步骤能直接跑测试。",
       "acceptanceCriteria": [
-        "新增 ink_writer/core/preferences.py（或定位到现有加载模块）提供 load_word_limits(project_root:Path) -> tuple[int,int]",
-        "无 pacing.chapter_words 配置 → 返回 (2200, 5000)",
-        "有 pacing.chapter_words:N → 返回 (max(2200, N-500), N+500)；硬下限永不低于 2200",
-        "处理 preferences.json 不存在/JSON 损坏场景，回退到默认值不抛异常",
-        "Step 2C comp-gate（computational_checks.py:646 及其调用点）调用 check_word_count 时必须传入 load_word_limits 结果",
-        "ink-writer/references/preferences-schema.md 文档更新，说明 chapter_words 推导 [min, max] 的语义",
-        "新增 tests/core/test_word_limits_preferences.py 覆盖：无配置、chapter_words=3000、chapter_words=2000（低于硬下限）、chapter_words=4500、preferences.json 损坏 五个场景",
-        "所有新增 open() 带 encoding='utf-8'（按 CLAUDE.md Windows 兼容守则）",
-        "pytest tests/core/ 全绿",
+        "pytest.ini 的 testpaths 行尾追加 tests/case_library tests/qdrant tests/preflight tests/maintenance（保持单行不换行）",
+        "requirements.txt 末尾新增一行：qdrant-client~=1.12 注释 # Vector DB（M1 起替换 FAISS，详见 docs/superpowers/specs/2026-04-23-...md §8）",
+        "本机 pip install \"qdrant-client~=1.12\" 成功；python -c \"import qdrant_client; print(qdrant_client.__version__)\" 输出 1.12.x",
+        "创建空文件：ink_writer/case_library/__init__.py、ink_writer/qdrant/__init__.py、ink_writer/preflight/__init__.py",
+        "创建空文件：tests/case_library/__init__.py、tests/qdrant/__init__.py、tests/preflight/__init__.py",
+        "pytest -q --no-cov 在不引入新失败的前提下通过（M1 之前已知失败可保留）",
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": true,
-      "notes": "2026-04-21: 新增 ink_writer/core/preferences.py::load_word_limits；computational_checks.py::run_all_checks 已注入推导结果。preferences-schema.md 追加 v23 语义说明。新增 14 个测试，全量 pytest 3567 passed / 23 skipped（zero regression）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-003",
-      "title": "writer-agent 写前接收 target_words_max 硬约束",
-      "description": "作为 writer-agent，我在 Step 2A 起草阶段即应收到明确的 target_words_min/max 字段，在生成时就受约束而非依赖写后阻断兜底。",
+      "title": "Case JSON Schema + validate_case_dict",
+      "description": "作为 Case 库使用者，我需要一份权威的 JSON Schema 描述 Case 的结构，并提供 validate_case_dict() 在保存/加载/摄入前强制校验，错误信息含 JSON 指针。",
       "acceptanceCriteria": [
-        "ink-writer/scripts/extract_chapter_context.py:674 附近在创作执行包新增 target_words_min 和 target_words_max 字段，值由 US-002 的 load_word_limits 提供",
-        "ink-writer/agents/writer-agent.md 指令段落新增：必须读取创作包的 target_words_max 作为生成过程中的硬约束上限",
-        "writer-agent.md 的字数自检清单新增：生成完成前自检 当前字数 <= target_words_max，超限必须自行精简再输出",
-        "Step 2A 指令中字数目标的硬编码数字（2200-3000 / 4000）改为引用 target_words_min/max 占位符",
-        "执行包 schema 文档（ink-writer/references/ 下相关文件）同步更新新字段说明",
-        "现有 preferences_file 路径注入保持不变，仅新增字段不改既有字段",
-        "新增或扩展 tests/scripts/test_extract_chapter_context.py 验证新字段注入",
-        "pytest 相关测试全绿",
+        "新增 schemas/case_schema.json，遵守 spec §3.2 字段：case_id（pattern ^CASE-[0-9]{4}-[0-9]{4}$）、title、status enum（pending/active/resolved/regressed/retired）、severity enum（P0-P3）、domain enum（writing_quality/infra_health）、layer array of enum（upstream/downstream/reference_gap/infra_health, minItems:1）、tags、scope.{genre,chapter,trigger}、source.{type,reviewer,raw_text,ingested_at,ingested_from} (required: type/raw_text/ingested_at)、failure_pattern.{description,observable}（required: 全部，observable minItems:1）、bound_assets.{rules,corpus_chunks,checkers}、resolution.{introduced_at,validation_chapters,regressed_at,related_cases}、evidence_links array",
+        "新增 ink_writer/case_library/errors.py 含 CaseLibraryError、CaseValidationError、CaseNotFoundError、DuplicateCaseError",
+        "新增 ink_writer/case_library/schema.py 提供 validate_case_dict(case: dict) -> None，使用 jsonschema.Draft202012Validator，失败 raise CaseValidationError 含 JSON 指针（如 /source/raw_text: 'raw_text' is a required property）",
+        "schema 文件只加载一次（@lru_cache），路径用 Path(__file__).resolve().parent.parent.parent / \"schemas\" / \"case_schema.json\"",
+        "新增 tests/case_library/conftest.py 提供 sample_case_dict 和 tmp_case_dir fixtures",
+        "新增 tests/case_library/test_schema.py 含 7 用例：test_minimum_valid_case_passes / test_missing_required_case_id_raises / test_invalid_status_raises / test_invalid_severity_raises / test_invalid_domain_raises / test_layer_must_be_array / test_case_id_pattern_enforced",
+        "pytest tests/case_library/test_schema.py -v --no-cov 输出 7 passed",
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "2026-04-21: build_chapter_context_payload 注入 target_words_min/max（load_word_limits 驱动，双层兜底），build_execution_pack_payload 透传；终检清单与渲染文本均含字数硬区间提示。writer-agent.md 字数要求 / 硬性指标 / 禁止事项 / 成功标准 四处硬编码（2200-3000、上浮33%、硬上限4000）全改为引用 target_words_min/max 占位符。新增 7 个测试；全量 pytest 3574 passed / 23 skipped（baseline 3567 + 7，零回归）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-004",
-      "title": "ink-auto.sh 与 ink-auto.ps1 对称上限阻断 + 精简循环",
-      "description": "作为自动化批量写作，我需要 ink-auto 在检测章节文件时对称检测上限超标并触发精简循环（最多 3 轮），对齐现有补写循环。",
+      "title": "Case Models（dataclass + 枚举）",
+      "description": "作为内存表示，我需要 Case dataclass 和对应枚举（CaseStatus / CaseSeverity / CaseDomain / CaseLayer / SourceType），以及 from_dict / to_dict 供 YAML 与 JSON 间无损往返。",
       "acceptanceCriteria": [
-        "ink-writer/scripts/ink-auto.sh:508 附近在 <2200 return 1 分支后增加 > MAX_WORDS_HARD return 1 分支",
-        "MAX_WORDS_HARD 变量从 .ink/preferences.json 的 pacing.chapter_words 推导（+500），读不到则默认 5000",
-        "ink-writer/scripts/ink-auto.ps1:409 附近同步增加等价上限判定，PowerShell 变量与 bash 语义一致",
-        "精简回退循环最多 3 轮（与 SKILL.md Step 2A.5 对齐）；3 轮仍超限则 return 1 并输出错误",
-        "精简后字数 ≥ 2200 校验必须保留（防精简过度）",
-        "Mac/Linux 下 ink-auto.sh 除新增上限分支外字节级一致，不动其他代码",
-        "ink-auto.ps1 保持 UTF-8 BOM（PS 5.1 兼容）",
-        "手动冒烟脚本：构造 > 5000 字章节文件调用 get_chapter_wordcount 验证返回码",
-        "新增或扩展 tests/scripts/ 单元测试覆盖上限分支",
+        "新增 ink_writer/case_library/models.py 定义：CaseStatus、CaseSeverity、CaseDomain、CaseLayer、SourceType（皆继承 str, Enum），Scope（genre/chapter/trigger 三字段）、Source（type/raw_text/ingested_at + reviewer/ingested_from optional）、FailurePattern（description/observable）、Case（含 case_id/title/status/severity/domain/layer/tags/scope/source/failure_pattern/bound_assets/resolution/evidence_links）",
+        "Case.from_dict(data) 接受 schema 验证过的 dict 还原 dataclass；Case.to_dict() 反向，要求 round-trip 后再过 validate_case_dict 仍通过",
+        "to_dict() 对 None optional 字段（trigger/reviewer/ingested_from）省略不写出",
+        "枚举接受任意未知字符串构造时 raise ValueError（验证 CaseStatus(\"unknown\") 抛错）",
+        "新增 tests/case_library/test_models.py 含 3 用例：test_case_round_trip / test_case_unknown_status_rejected / test_case_to_dict_omits_empty_optional_blocks",
+        "pytest tests/case_library/test_models.py -v --no-cov 输出 3 passed",
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "2026-04-21: ink-auto.sh 顶部注入 MAX_WORDS_HARD（preferences.json→pacing.chapter_words+500，默认 5000）；verify_chapter 增补 `char_count > MAX_WORDS_HARD` 对称上限分支；主重试流程按失败原因分流：over-limit 走 SHRINK_MAX_ROUNDS=3 精简循环，下限/其它失败保持 1 轮补写（零回归）。ink-auto.ps1 同步注入 $MaxWordsHard/$ShrinkMaxRounds，Test-Chapter 与主循环 PS 对等实现；UTF-8 BOM 保留。新增 tests/scripts/test_ink_auto_word_limit.py 14 测试（5 黑盒 + 9 源码级守护）。全量 pytest 3588 passed / 23 skipped（baseline 3574 + 14，零回归）。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-005",
-      "title": "SKILL.md + writer-agent.md 删除 LLM 自行豁免路径",
-      "description": "作为指令规范维护者，我要收紧 SKILL.md 2A.5 字数判定，删除'关键战斗章/高潮章/卷末章可放行'豁免条款，使 LLM 无法自行判定豁免。",
+      "title": "Case Store（YAML 一案一文件 + jsonl 打包 + ingest_log）",
+      "description": "作为持久化层，我需要 CaseStore 把 Case 一案一文件写到 library_root/cases/CASE-YYYY-NNNN.yaml，并提供加载、列出、jsonl 打包、追加 ingest_log.jsonl 等功能。",
       "acceptanceCriteria": [
-        "ink-writer/skills/ink-write/SKILL.md:1028-1038 的字数判定表改写：删除'关键战斗章/高潮章/卷末章允许上浮 33%'表述",
-        "SKILL.md:1033-1035 的豁免条款中'若大纲标注为关键战斗章/高潮章/卷末章，可放行'整条删除",
-        "SKILL.md 明确新规则：'硬上限由 preferences.json 的 pacing.chapter_words+500 决定，默认 5000，任何情况不得超限放行'",
-        "SKILL.md 精简循环最大轮次更新为 3 轮（与 US-004 对齐）",
-        "ink-writer/agents/writer-agent.md:467/622/851/875 等'硬上限 4000'表述更新为'由 preferences 驱动的硬上限，默认 5000'",
-        "保留'补写循环最多 2 轮'现有表述（下限方向零回归）",
-        "ink-writer/skills/ink-fix/SKILL.md 等下游文档中提及'上限'字眼一并对齐",
-        "ink-writer/skills/ink-auto/SKILL.md 提及的字数规则同步",
-        "全仓 grep '关键.*章.*豁免|关键章.*放行|上浮 33%' 无残留匹配",
+        "新增 ink_writer/case_library/store.py，含 CaseStore(library_root: Path) 类，自动 mkdir -p library_root/cases",
+        "save(case)：写入 cases/{case_id}.yaml，使用 yaml.safe_dump(allow_unicode=True, sort_keys=False, default_flow_style=False)，写前再过 validate_case_dict()；返回写入路径",
+        "load(case_id)：读 yaml（encoding=\"utf-8\"），过 schema 校验，返回 Case；不存在 raise CaseNotFoundError",
+        "list_ids()：返回 cases/CASE-*.yaml 的 stem 列表",
+        "iter_cases()：generator，按 case_id 升序 yield 全量 Case",
+        "pack_jsonl(out_path)：导出全量为 jsonl（一行一案，ensure_ascii=False），返回写入条数",
+        "append_ingest_log(event: dict)：追加 library_root/ingest_log.jsonl，每行 JSON",
+        "所有 open() 带 encoding=\"utf-8\"",
+        "新增 tests/case_library/test_store.py 含 7 用例：test_save_then_load / test_save_writes_yaml_with_utf8 / test_load_missing_raises / test_save_invalid_case_raises / test_list_returns_all_case_ids / test_pack_jsonl_emits_one_line_per_case / test_append_ingest_log",
+        "pytest tests/case_library/test_store.py -v --no-cov 输出 7 passed",
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "2026-04-21: ink-write/SKILL.md:905 与 2A.5 判定表完全重写——字数区间改用 [MIN_WORDS, MAX_WORDS_HARD] 占位符（preferences 驱动，默认 [2200, 5000]），删除原 3501-4000 偏长分档与放行豁免条款；新增对齐 US-004 的精简循环 3 轮 / 补写循环 2 轮双路径表述。ink-fix/SKILL.md 四处字数守护（开头原则/Step 5.5/Step 3 验证/安全红线）与 ink-auto/SKILL.md 两处（安全边界/多重验证）全部收敛到区间 + 硬上限 SHRINK_MAX_ROUNDS=3 表述。writer-agent.md + preferences-schema.md 遗留的旧豁免文案清理为更抽象的否定表述。关键规则文件中已无 `关键.*章.*豁免|关键章.*放行|上浮 33%` 匹配（残留仅存于 scripts/ralph/archive/*、run.log、tasks/prd-*.md 等 spec/历史文档，非运行时消费路径）。全量 pytest 3588 passed / 23 skipped，零回归。"
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-006",
-      "title": "全量回归测试 + preferences-schema 文档发版",
-      "description": "作为质量守门员，我需要跑全量测试验证零回归，并在 preferences-schema.md 给出完整示例与推导说明，供用户理解新机制。",
+      "title": "Case Index（sqlite 倒排查询）",
+      "description": "作为查询层，我需要 CaseIndex 在 library_root/index.sqlite 维护 tag/layer/genre/chapter/status 的倒排表，build 是 destructive 重建（DROP+CREATE）以保持权威数据是 YAML 文件。",
       "acceptanceCriteria": [
-        "pytest tests/ --no-cov 全量通过，passed 数 ≥ 前轮 baseline 3206 + 本次新增（US-001/002/003/004 新增用例累计）",
-        "无任何现有测试新增 failed",
-        "ink-writer/references/preferences-schema.md 新增完整段落：chapter_words 推导 [min, max] 的数学公式、默认值 (2200, 5000)、硬下限 2200 永不降的护栏规则、三组示例（未配置 / chapter_words=3000 / chapter_words=2500）",
-        "新增 CHANGELOG 或 docs 条目记录本次 v23.0.0 字数硬上限变更（与 US-005 文档语义一致）",
-        "全仓字数硬编码数字扫描：grep 搜索 4000/5000/3000 在代码中作为字数阈值的位置，确认均由 load_word_limits 或 preferences 驱动（或作为默认值显式标注）",
-        "手动场景验证：创建 test fixture 项目 preferences.json 配置 chapter_words=3000，构造 3800 字章节正文，走 check_word_count 应得 severity='hard'；构造 2800 字应通过",
-        "零回归验证：硬下限 2200 的所有现有阻断点（computational_checks.py / ink-auto.sh:508 / SKILL.md 2A.5 / polish-agent.md 70% 保护）行为字节级保留",
+        "新增 ink_writer/case_library/index.py，含 CaseIndex(sqlite_path: Path) 类",
+        "build(store)：执行 schema (DROP+CREATE 5 张表 cases / case_tags / case_layers / case_genres / case_chapters，含 column index)，逐案 INSERT，返回索引案数",
+        "query_by_tag(tag) -> list[str]、query_by_layer(layer)、query_by_genre(genre)、query_by_chapter(chapter)、query_by_status(status)：各返回排序 case_id 列表",
+        "重复 build 是幂等的（DROP+CREATE 保证）",
+        "新增 tests/case_library/test_index.py 含 6 用例：test_build_index_creates_sqlite / test_query_by_tag / test_query_by_layer / test_query_by_genre / test_query_by_status / test_rebuild_is_idempotent；用 fixture 装 2 个 case（不同 status/layer/genre/tags）覆盖各倒排",
+        "pytest tests/case_library/test_index.py -v --no-cov 输出 6 passed",
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": true,
-      "notes": "2026-04-21: 新增 tests/core/test_word_limits_e2e.py 5 用例，AC 场景（chapter_words=3000 × 3800/2800 字）全覆盖 + 零回归护栏（< 2200 字硬阻断 + 2200 floor 红线）。preferences-schema.md v23 语义段已含公式/默认值/3+ 组示例（US-002 已落）。README.md 新增 v23.0.0 版本条目记录字数硬上限变更。全仓 grep 4000/5000/3000 硬编码扫描：`ink_writer/core/preferences.py` 5000 = `DEFAULT_MAX_WORDS_HARD` 显式默认；`computational_checks.py::run_all_checks` 2200/5000 = load_word_limits import 失败时的安全过渡态 fallback；`ink-auto.sh/ps1` 5000 = Python 派生块 fallback 默认；其它 5000 命中属 sqlite busy_timeout ms 或 RAG pack chars，非字数阈值。零回归：`polish-agent.md` 70% floor + `ink-auto.sh:537 < 2200` + `computational_checks.py` min_words 硬下限路径全部字节级保留。全量 pytest 3593 passed / 23 skipped（baseline 3588 + 5 新增，零回归）。Typecheck/compile 通过。"
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Case Ingest（sha256 去重 + 自动分配 case_id）",
+      "description": "作为摄入入口，我需要 ingest_case() 按 raw_text 的 SHA-256 去重；首次创建分配下一个 CASE-YYYY-NNNN id，重复调用返回已存在的 case_id 且不修改文件；并写入 ingest_log 审计。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/case_library/ingest.py 暴露 IngestResult(case_id, created, raw_text_hash) 与 ingest_case(store, *, title, raw_text, domain, layer, severity, tags, source_type, ingested_at, failure_description, observable, reviewer=None, ingested_from=None, scope_genre=None, scope_chapter=None, initial_status=\"active\")",
+        "_hash_raw_text(raw_text) 用 sha256(raw_text.encode(\"utf-8\")).hexdigest()",
+        "_find_existing_by_hash 遍历 store.iter_cases() 比对 source.raw_text hash；命中返回 case_id",
+        "_allocate_case_id：扫描已有 CASE-YYYY- 前缀，取最大流水 +1；若无则从 0001 开始（zero-case 0000 不冲突）",
+        "新案：构造 Case → store.save() → store.append_ingest_log({event:ingest, case_id, raw_text_hash, at: iso_utc_now})",
+        "重复案：返回 IngestResult(case_id=existing, created=False) 且不写 store / 不写 log",
+        "新增 tests/case_library/test_ingest.py 含 3 用例：test_ingest_creates_case（assert created=True 且 case_id 形如 CASE-2026-NNNN）/ test_ingest_same_text_is_deduplicated（同 raw_text 二次调用 created=False 且 case_id 一致）/ test_ingest_appends_ingest_log",
+        "pytest tests/case_library/test_ingest.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "ink case CLI（list / show / create / status / rebuild-index）",
+      "description": "作为人类操作者，我需要一个 ink case 子命令族能列出全部病例、显示单案、按状态过滤、创建新案、重建 sqlite 索引。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/case_library/cli.py 暴露 main(argv) -> int，永不 raise（错误时返回非 0 + 写 stderr）",
+        "argparse 顶层支持 --library-root <path> 默认 data/case_library",
+        "子命令 list：调 store.list_ids()，按字母序逐行打印 case_id；返回 0",
+        "子命令 show <case_id>：load 后用 yaml.safe_dump(allow_unicode=True, sort_keys=False) 打印；NotFound 返回 2 + stderr",
+        "子命令 status <pending|active|resolved|regressed|retired>：迭代全量，过滤 case.status.value == status 的 case_id 输出",
+        "子命令 create：必须接收 --title --raw-text --domain --layer --severity --tags --source-type --ingested-at --failure-description --observable（layer/tags/observable/scope-genre/scope-chapter 用 action=\"append\"），可选 --reviewer --ingested-from --scope-genre --scope-chapter --initial-status；调 ingest_case()，新案打印 case_id，重复打印 <case_id> (already existed; raw_text dedup)；CaseValidationError 返回 3",
+        "子命令 rebuild-index：构造 CaseIndex(library_root/index.sqlite) 并 build，打印 indexed=<n>",
+        "新增 tests/case_library/test_cli.py 含 3 用例：test_cli_create_then_list_then_show / test_cli_status_filters_by_status / test_cli_rebuild_index_creates_sqlite",
+        "pytest tests/case_library/test_cli.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "CASE-2026-0000 零号病例（infra_health 第一案）",
+      "description": "作为产线吃自己狗粮的示范，我需要一个幂等脚本登记 CASE-2026-0000——记录 reference_corpus 软链接全断的事故，对应 P0 / infra_health domain / infra_health layer，并绑定 preflight-reference-corpus-readable checker。",
+      "acceptanceCriteria": [
+        "新增 scripts/case_library/__init__.py + scripts/case_library/init_zero_case.py 暴露 init_zero_case(library_root: Path) -> bool（True=新建，False=已存在）+ main(argv) CLI（默认 --library-root data/case_library）",
+        "case_id=CASE-2026-0000、status=ACTIVE、severity=P0、domain=INFRA_HEALTH、layer=[INFRA_HEALTH]、tags=[reference_corpus, symlink, silent_degradation]、source.type=INFRA_CHECK、source.reviewer=\"self\"、source.ingested_at=\"2026-04-23\"、source.ingested_from=\"benchmark/reference_corpus/\"",
+        "failure_pattern.observable 至少含 2 条：broken symlink count under reference_corpus/*/chapters > 0、corpus_root readable file count < min_files threshold",
+        "bound_assets.checkers 含 {checker_id: preflight-reference-corpus-readable, version: v1, created_for_this_case: True}",
+        "二次调用 init 是 no-op（不抛错，store.list_ids() 中 CASE-2026-0000 仅出现一次）",
+        "新增 tests/case_library/test_zero_case.py 含 2 用例：test_zero_case_is_infra_health_active / test_zero_case_init_is_idempotent",
+        "实跑 python scripts/case_library/init_zero_case.py 打印 created；产物 data/case_library/cases/CASE-2026-0000.yaml 存在且能被 validate_case_dict 通过",
+        "pytest tests/case_library/test_zero_case.py -v --no-cov 输出 2 passed",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Qdrant Docker 部署 + 启动/停止脚本（Mac + Windows）",
+      "description": "作为运维者，我需要 docker compose 启动 Qdrant 1.12.4 单机服务（端口 6333 REST + 6334 gRPC），并提供对称的 .sh / .ps1 启停脚本（PS 必须 UTF-8 BOM）。",
+      "acceptanceCriteria": [
+        "新增 scripts/qdrant/docker-compose.yml：qdrant/qdrant:v1.12.4 镜像，container_name ink-writer-qdrant，restart unless-stopped，映射 6333:6333、6334:6334，volume ./storage:/qdrant/storage，env QDRANT__LOG_LEVEL: INFO",
+        "新增 scripts/qdrant/start.sh（chmod +x）：docker compose up -d + 30 秒 ready 轮询（curl http://127.0.0.1:6333/readyz），ready 后打印 Qdrant is ready. 退 0；超时退 1",
+        "新增 scripts/qdrant/stop.sh（chmod +x）：docker compose down",
+        "新增 scripts/qdrant/start.ps1（UTF-8 BOM，PS 5.1 兼容）：等价语义，使用 Invoke-WebRequest -UseBasicParsing + Start-Sleep -Seconds 1 轮询",
+        "新增 scripts/qdrant/stop.ps1（UTF-8 BOM）",
+        "新增 scripts/qdrant/README.md：写明启动命令（mac/win 双语）、端点 (6333/6334)、storage 持久化目录提醒",
+        ".gitignore 追加 scripts/qdrant/storage/（确认 grep -n scripts/qdrant/storage .gitignore 命中）",
+        "实跑 scripts/qdrant/start.sh 后 curl -s http://127.0.0.1:6333/readyz 返回 200，curl -s http://127.0.0.1:6333/collections 返回 {result:{collections:[]}, status:ok, ...}",
+        "本任务无 pytest（基础设施任务），靠 curl 验证",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Qdrant 客户端封装（client.py + 错误类）",
+      "description": "作为 Python 调用层，我需要 get_client_from_config(QdrantConfig) 在连接失败时立即 raise QdrantUnreachableError（force get_collections() 探活），并提供进程级单例 get_qdrant_client()。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/qdrant/errors.py 含 QdrantError、QdrantUnreachableError",
+        "新增 ink_writer/qdrant/client.py 暴露：QdrantConfig dataclass（host=\"127.0.0.1\", port=6333, timeout=5.0, memory=False, api_key=None）、get_client_from_config(config)、get_qdrant_client(config=None)（singleton）、reset_singleton_for_tests()",
+        "get_client_from_config：memory=True 返 QdrantClient(\":memory:\")；否则构造 HTTP client 并立刻调 get_collections()，捕获 (ResponseHandlingException, UnexpectedResponse, ConnectionError, OSError) 转 QdrantUnreachableError",
+        "新增 tests/qdrant/conftest.py 提供 in_memory_client fixture（QdrantClient(\":memory:\")）",
+        "新增 tests/qdrant/test_client.py 含 2 用例：test_in_memory_client_via_helper（assert get_collections().collections == []）/ test_unreachable_raises（用 port=1 强制连接失败，pytest.raises QdrantUnreachableError）",
+        "pytest tests/qdrant/test_client.py -v --no-cov 输出 2 passed",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Qdrant Payload Schema（collection 定义）",
+      "description": "作为索引契约，我需要冻结生产 collection 名称与 payload 索引字段，让 M2 chunker 与 FAISS 迁移脚本目标一致。两个 collection：editor_wisdom_rules 和 corpus_chunks，dim=4096（Qwen3-Embedding-8B），cosine。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/qdrant/payload_schema.py 暴露：CollectionSpec(name, vector_size, indexed_payload_fields, distance=Distance.COSINE) frozen dataclass、EDITOR_WISDOM_RULES_SPEC、CORPUS_CHUNKS_SPEC、ensure_collection(client, spec) -> bool",
+        "EDITOR_WISDOM_RULES_SPEC.name == editor_wisdom_rules，vector_size == 4096，indexed_payload_fields = {category:keyword, applies_to:keyword, scoring_dimensions:keyword}",
+        "CORPUS_CHUNKS_SPEC.name == corpus_chunks，vector_size == 4096，indexed_payload_fields = {genre:keyword, scene_type:keyword, quality_score:float, source_type:keyword, source_book:keyword, case_ids:keyword}",
+        "ensure_collection：collection 已存在 → 返 False；不存在 → client.create_collection(name, vectors_config=VectorParams(size, distance)) + 对每个 payload field 调 create_payload_index，返 True",
+        "字段类型映射 _FIELD_TYPE_MAP = {keyword: KEYWORD, float: FLOAT, integer: INTEGER, bool: BOOL}",
+        "新增 tests/qdrant/test_payload_schema.py 含 3 用例：test_collection_specs_have_expected_names_and_dims / test_corpus_chunks_payload_has_filter_fields / test_ensure_collection_creates_then_skips（用 in_memory_client fixture）",
+        "pytest tests/qdrant/test_payload_schema.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "FAISS → Qdrant 迁移脚本（含幂等支持）",
+      "description": "作为一次性迁移工具，我需要把 FAISS index + metadata.jsonl 升级到 Qdrant collection，使用 UUID5 衍生 point id 保证重跑幂等。支持 preset (editor_wisdom_rules, corpus_chunks) 与自定义 spec。",
+      "acceptanceCriteria": [
+        "新增 scripts/qdrant/__init__.py + scripts/qdrant/migrate_faiss_to_qdrant.py",
+        "暴露 MigrationReport(collection, uploaded, skipped=0) + migrate_faiss_index(client, spec, faiss_index_path, metadata_jsonl, batch_size=256) -> MigrationReport + main(argv) -> int",
+        "CLI 必填 --preset {editor_wisdom_rules,corpus_chunks} --faiss-index --metadata，可选 --qdrant-host (默认127.0.0.1) --qdrant-port (默认6333)",
+        "流程：ensure_collection → 加载 FAISS index 与 metadata.jsonl → 校验 index.ntotal == len(metadata) 否则 raise ValueError（不允许半迁移）→ index.reconstruct_n(0, n, vectors) 还原向量 → 分批 upsert",
+        "point id 用 uuid.uuid5(NAMESPACE_URL, original_id) 字符串；payload 复制 metadata 全字段并新增 original_id（防 metadata 缺 id 时 raise ValueError）",
+        "新增 tests/scripts/test_migrate_faiss_to_qdrant.py 含 2 用例：test_migration_uploads_all_vectors（用 fake faiss index + jsonl + in-memory client，assert points_count == n）/ test_migration_is_idempotent（连续两次跑 points_count 不变）",
+        "所有 open() 带 encoding=\"utf-8\"",
+        "pytest tests/scripts/test_migrate_faiss_to_qdrant.py -v --no-cov 输出 2 passed",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "6 个独立 preflight check 函数",
+      "description": "作为 preflight 基础，我需要 6 个独立 check 函数：check_reference_corpus_readable / check_case_library_loadable / check_editor_wisdom_index_loadable / check_qdrant_connection / check_embedding_api_reachable / check_rerank_api_reachable，每个返回 CheckResult(name, passed, detail)，永不 raise。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/preflight/errors.py 含 PreflightError(failed_check_names: list[str], message: str)",
+        "新增 ink_writer/preflight/checks.py 暴露 CheckResult dataclass + 6 个 check 函数",
+        "check_reference_corpus_readable(reference_root, *, min_files=100)：扫 *.txt，断链（is_symlink() and not exists()）→ 失败 + {n} broken symlink(s)；可读数 < min_files → 失败；通过 → {n} files readable",
+        "check_case_library_loadable(library_root)：library_root / cases 必须存在且为目录；通过则返 {n} cases on disk",
+        "check_editor_wisdom_index_loadable(rules_path)：文件必须存在且 JSON 可解析；通过返 {n} rules indexed",
+        "check_qdrant_connection(*, client=None, config=None)：调 get_client_from_config(config or QdrantConfig()) + get_collections()；QdrantUnreachableError → 失败；其他异常 → 失败 unexpected error: {err}（# noqa: BLE001 必须，因为 preflight 永不向上抛）",
+        "check_embedding_api_reachable()：os.environ.get(\"EMBED_API_KEY\") 缺失 → 失败 EMBED_API_KEY not set",
+        "check_rerank_api_reachable()：同上，RERANK_API_KEY",
+        "新增 tests/preflight/conftest.py 通过 from tests.qdrant.conftest import in_memory_client  # noqa: F401 共享 fixture",
+        "新增 tests/preflight/test_checks.py 含 10 用例：test_reference_corpus_pass / test_reference_corpus_fail_when_below_min / test_reference_corpus_fail_when_broken_symlink / test_case_library_loadable_pass / test_case_library_loadable_fail_when_missing / test_editor_wisdom_index_loadable_pass / test_editor_wisdom_index_loadable_fail_when_missing / test_qdrant_connection_pass_with_in_memory_client / test_embedding_api_reachable_no_key（用 monkeypatch.delenv）/ test_rerank_api_reachable_no_key",
+        "pytest tests/preflight/test_checks.py -v --no-cov 输出 10 passed",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Preflight checker 聚合 + 自动建 infra_health case",
+      "description": "作为编排层，我需要 run_preflight(config, *, raise_on_fail=False, auto_create_infra_cases=False) 跑齐 6 项检查产 PreflightReport；可选地让失败自动调 ingest_case() 建 infra_health 病例（sha256 去重防重复）；可选地 raise PreflightError。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/preflight/checker.py 暴露 PreflightConfig（reference_root/case_library_root/editor_wisdom_rules_path/qdrant_config/qdrant_in_memory/require_embedding_key/require_rerank_key/min_corpus_files=100）+ PreflightReport(results, all_passed property, failed property) + run_preflight(config, *, raise_on_fail=False, auto_create_infra_cases=False)",
+        "qdrant_in_memory=True 时构造 QdrantConfig(memory=True) 注入 check_qdrant_connection",
+        "顺序跑：reference_corpus / case_library / editor_wisdom_index / qdrant；按 require_embedding_key/require_rerank_key 决定是否追加 embedding/rerank 检查",
+        "auto_create_infra_cases=True 且有失败时：对每个失败 check 调 ingest_case(store, title=preflight failure: {check.name}, raw_text=preflight check failed: {check.name}: {check.detail}, domain=infra_health, layer=[infra_health], severity=P0, tags=[preflight, check.name], source_type=infra_check, ingested_at=date.today().isoformat(), failure_description=check.detail, observable=[{check.name}.passed == False])，sha256 去重保证重复运行不会膨胀",
+        "raise_on_fail=True 且有失败 → raise PreflightError(failed_names, preflight failed: {failed_names})",
+        "新增 tests/preflight/test_checker.py 含 3 用例：test_all_pass_returns_clean_report / test_failed_check_creates_infra_case（assert 至少一个新案 domain==infra_health 且 title 含 editor_wisdom_index_loadable）/ test_failed_check_without_raise_returns_failed_report",
+        "pytest tests/preflight/test_checker.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "ink preflight CLI + 集成到 ink-write SKILL.md（Step 0）",
+      "description": "作为 ink-write 的启动门禁，我需要 python -m ink_writer.preflight.cli --auto-create-infra-cases --raise-on-fail 命令，并把它写入 ink-writer/skills/ink-write/SKILL.md 的 Step 0（含 PowerShell sibling 块）。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/preflight/cli.py 暴露 main(argv) -> int，永不 raise（顶层 try/except Exception 转 stderr + 返 2）",
+        "argparse 支持：--reference-root（默认 benchmark/reference_corpus）、--case-library-root（默认 data/case_library）、--editor-wisdom-rules（默认 data/editor-wisdom/rules.json）、--qdrant-in-memory（store_true）、--qdrant-host（默认 127.0.0.1）、--qdrant-port（默认 6333）、--require-embedding-key/--no-require-embedding-key（默认 True）、--require-rerank-key/--no-require-rerank-key（默认 True）、--min-corpus-files（默认 100）、--auto-create-infra-cases（store_true）、--raise-on-fail（store_true）",
+        "输出格式首行 all_passed=True|False，后续每行 [OK ] <name>: <detail> 或 [FAIL] <name>: <detail>",
+        "返回值：all_passed=True 返 0；False 返 1；顶层异常返 2",
+        "修改 ink-writer/skills/ink-write/SKILL.md：在 Project Root Guard 环境设置块之后插入 ## Step 0 — Preflight Health Check（M1 起强制） 章节，包含 bash 命令块 + <!-- windows-ps1-sibling --> + powershell 命令块；要求退出码非 0 时不要继续后续 step",
+        "新增 tests/preflight/test_cli.py 含 2 用例：test_cli_runs_in_minimal_mode（all 通过，rc=0，stdout 含 all_passed=True）/ test_cli_failed_returns_nonzero（缺 rules.json，rc!=0，stdout 含 all_passed=False）",
+        "grep -n ink_writer.preflight.cli ink-writer/skills/ink-write/SKILL.md 至少匹配 2 行（bash + ps1）",
+        "pytest tests/preflight/test_cli.py -v --no-cov 输出 2 passed",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "M1 端到端集成测试 + 验收",
+      "description": "作为发布门禁，我需要一个 end-to-end 测试覆盖 preflight 失败 → 自动建 infra_health 病例 → ink case list 能看到 的完整链路；并跑全量 pytest 确保零回归；最后打 tag m1-foundation。",
+      "acceptanceCriteria": [
+        "新增 tests/integration/test_m1_e2e.py 含 2 用例：test_preflight_fail_creates_infra_case_visible_via_cli（故意不创建 reference_root 触发 check 失败 → 调 preflight CLI 用 --auto-create-infra-cases rc!=0 输出 all_passed=False → 调 case CLI list 能看到至少 1 个 case_id → 每个新 case 必须 domain.value==infra_health 且 severity.value==P0）/ test_preflight_pass_creates_no_new_cases（清洁环境跑 preflight rc=0 输出 all_passed=True，调 case CLI list stdout 为空）",
+        "pytest tests/case_library tests/qdrant tests/preflight tests/maintenance tests/scripts/test_migrate_faiss_to_qdrant.py tests/integration/test_m1_e2e.py -v --no-cov M1 全套绿（约 35-40 测试）",
+        "pytest -q 项目全量绿，覆盖率 ≥ 70（pytest.ini 现行门禁不被破坏）",
+        "实跑 scripts/qdrant/start.sh + python -m ink_writer.preflight.cli --auto-create-infra-cases --no-require-embedding-key --no-require-rerank-key 输出 all_passed=True",
+        "验收 6 项全过：(1) pytest -q 通过 + 覆盖率 ≥ 70；(2) Qdrant readyz 200；(3) fix_reference_corpus_symlinks.py 报 missing_source=0；(4) preflight CLI 全过；(5) init_zero_case.py 输出 created 或 already_exists；(6) grep -n ink_writer.preflight.cli ink-writer/skills/ink-write/SKILL.md 命中",
+        "打 tag git tag -a m1-foundation -m M1 complete: case_library + qdrant + preflight + symlink fix",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
     }
   ]
 }

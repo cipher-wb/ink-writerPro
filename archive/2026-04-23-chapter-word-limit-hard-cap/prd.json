@@ -1,0 +1,122 @@
+{
+  "project": "ink-writer",
+  "branchName": "ralph/chapter-word-limit-hard-cap",
+  "description": "章节字数硬上限强制执行。当前 ink-writer 只有硬下限 2200 字多处阻断，但上限仅是 prompt 文字建议，严重非对称：(1) computational_checks.py 的 check_word_count 对超 max_words 仅返回 severity='soft' 警告；(2) ink-auto.sh 只卡 <2200 return 1，无对称上限阻断；(3) SKILL.md 2A.5 的 >4000 字规则有'关键战斗/高潮/卷末章可放行'豁免条款被 LLM 自我滥用；(4) 用户写入 preferences.json 的 pacing.chapter_words 无任何 caller 读取注入；(5) writer-agent 生成时未收到 target_words_max 硬约束。实际事故：第 1 章写出 1 万字，审查仅产生软警告放行。本次让字数上限与下限对等硬约束，彻底删除 LLM 自行豁免路径（用户选项 4D），让 preferences.json 的 chapter_words 通过 ±500 推导驱动 [min, max] 区间，精简循环最多 3 轮。零回归红线：硬下限 2200 全链路字节级不得弱化，补写循环 2 轮不变。来源：tasks/prd-chapter-word-limit-hard-cap.md。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "check_word_count 支持硬/软双阈值上限",
+      "description": "作为写作流水线，我需要 check_word_count 对超出硬上限返回 severity='hard'，使 comp-gate 能真正阻断放行而非仅打软警告。",
+      "acceptanceCriteria": [
+        "ink-writer/scripts/computational_checks.py:87 的 check_word_count 新增参数 max_words_hard:int=5000 和 max_words_soft:Optional[int]=None",
+        "字数 > max_words_hard → 返回 CheckResult(severity='hard', passed=False)",
+        "若提供 max_words_soft 且 max_words_hard < count <= max_words_soft → 返回 severity='soft', passed=False（缓冲带）",
+        "保留原 max_words 参数作为 deprecated alias 映射到 max_words_hard，实现零回归",
+        "硬下限 min_words=2200 行为与返回 severity 完全不变",
+        "tests/data_modules/test_computational_checks.py 新增 test_word_count_hard_upper_limit / test_word_count_soft_buffer / test_word_count_backward_compat_max_words_alias 三个用例",
+        "pytest tests/data_modules/ 全绿，无现有测试被破坏",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "2026-04-21: signature 扩展 max_words_hard/max_words_soft，超出 hard 返回 severity='hard'；max_words deprecated alias 保持向后兼容。全量 pytest 3553 passed / 23 skipped。"
+    },
+    {
+      "id": "US-002",
+      "title": "preferences.json 驱动字数阈值加载器",
+      "description": "作为流水线，我需要一个 load_word_limits 函数读取 .ink/preferences.json 的 pacing.chapter_words 单值配置，推导 [min, max_hard] 区间；未配置时使用默认 (2200, 5000)。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/core/preferences.py（或定位到现有加载模块）提供 load_word_limits(project_root:Path) -> tuple[int,int]",
+        "无 pacing.chapter_words 配置 → 返回 (2200, 5000)",
+        "有 pacing.chapter_words:N → 返回 (max(2200, N-500), N+500)；硬下限永不低于 2200",
+        "处理 preferences.json 不存在/JSON 损坏场景，回退到默认值不抛异常",
+        "Step 2C comp-gate（computational_checks.py:646 及其调用点）调用 check_word_count 时必须传入 load_word_limits 结果",
+        "ink-writer/references/preferences-schema.md 文档更新，说明 chapter_words 推导 [min, max] 的语义",
+        "新增 tests/core/test_word_limits_preferences.py 覆盖：无配置、chapter_words=3000、chapter_words=2000（低于硬下限）、chapter_words=4500、preferences.json 损坏 五个场景",
+        "所有新增 open() 带 encoding='utf-8'（按 CLAUDE.md Windows 兼容守则）",
+        "pytest tests/core/ 全绿",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "2026-04-21: 新增 ink_writer/core/preferences.py::load_word_limits；computational_checks.py::run_all_checks 已注入推导结果。preferences-schema.md 追加 v23 语义说明。新增 14 个测试，全量 pytest 3567 passed / 23 skipped（zero regression）。"
+    },
+    {
+      "id": "US-003",
+      "title": "writer-agent 写前接收 target_words_max 硬约束",
+      "description": "作为 writer-agent，我在 Step 2A 起草阶段即应收到明确的 target_words_min/max 字段，在生成时就受约束而非依赖写后阻断兜底。",
+      "acceptanceCriteria": [
+        "ink-writer/scripts/extract_chapter_context.py:674 附近在创作执行包新增 target_words_min 和 target_words_max 字段，值由 US-002 的 load_word_limits 提供",
+        "ink-writer/agents/writer-agent.md 指令段落新增：必须读取创作包的 target_words_max 作为生成过程中的硬约束上限",
+        "writer-agent.md 的字数自检清单新增：生成完成前自检 当前字数 <= target_words_max，超限必须自行精简再输出",
+        "Step 2A 指令中字数目标的硬编码数字（2200-3000 / 4000）改为引用 target_words_min/max 占位符",
+        "执行包 schema 文档（ink-writer/references/ 下相关文件）同步更新新字段说明",
+        "现有 preferences_file 路径注入保持不变，仅新增字段不改既有字段",
+        "新增或扩展 tests/scripts/test_extract_chapter_context.py 验证新字段注入",
+        "pytest 相关测试全绿",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "2026-04-21: build_chapter_context_payload 注入 target_words_min/max（load_word_limits 驱动，双层兜底），build_execution_pack_payload 透传；终检清单与渲染文本均含字数硬区间提示。writer-agent.md 字数要求 / 硬性指标 / 禁止事项 / 成功标准 四处硬编码（2200-3000、上浮33%、硬上限4000）全改为引用 target_words_min/max 占位符。新增 7 个测试；全量 pytest 3574 passed / 23 skipped（baseline 3567 + 7，零回归）。"
+    },
+    {
+      "id": "US-004",
+      "title": "ink-auto.sh 与 ink-auto.ps1 对称上限阻断 + 精简循环",
+      "description": "作为自动化批量写作，我需要 ink-auto 在检测章节文件时对称检测上限超标并触发精简循环（最多 3 轮），对齐现有补写循环。",
+      "acceptanceCriteria": [
+        "ink-writer/scripts/ink-auto.sh:508 附近在 <2200 return 1 分支后增加 > MAX_WORDS_HARD return 1 分支",
+        "MAX_WORDS_HARD 变量从 .ink/preferences.json 的 pacing.chapter_words 推导（+500），读不到则默认 5000",
+        "ink-writer/scripts/ink-auto.ps1:409 附近同步增加等价上限判定，PowerShell 变量与 bash 语义一致",
+        "精简回退循环最多 3 轮（与 SKILL.md Step 2A.5 对齐）；3 轮仍超限则 return 1 并输出错误",
+        "精简后字数 ≥ 2200 校验必须保留（防精简过度）",
+        "Mac/Linux 下 ink-auto.sh 除新增上限分支外字节级一致，不动其他代码",
+        "ink-auto.ps1 保持 UTF-8 BOM（PS 5.1 兼容）",
+        "手动冒烟脚本：构造 > 5000 字章节文件调用 get_chapter_wordcount 验证返回码",
+        "新增或扩展 tests/scripts/ 单元测试覆盖上限分支",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "2026-04-21: ink-auto.sh 顶部注入 MAX_WORDS_HARD（preferences.json→pacing.chapter_words+500，默认 5000）；verify_chapter 增补 `char_count > MAX_WORDS_HARD` 对称上限分支；主重试流程按失败原因分流：over-limit 走 SHRINK_MAX_ROUNDS=3 精简循环，下限/其它失败保持 1 轮补写（零回归）。ink-auto.ps1 同步注入 $MaxWordsHard/$ShrinkMaxRounds，Test-Chapter 与主循环 PS 对等实现；UTF-8 BOM 保留。新增 tests/scripts/test_ink_auto_word_limit.py 14 测试（5 黑盒 + 9 源码级守护）。全量 pytest 3588 passed / 23 skipped（baseline 3574 + 14，零回归）。"
+    },
+    {
+      "id": "US-005",
+      "title": "SKILL.md + writer-agent.md 删除 LLM 自行豁免路径",
+      "description": "作为指令规范维护者，我要收紧 SKILL.md 2A.5 字数判定，删除'关键战斗章/高潮章/卷末章可放行'豁免条款，使 LLM 无法自行判定豁免。",
+      "acceptanceCriteria": [
+        "ink-writer/skills/ink-write/SKILL.md:1028-1038 的字数判定表改写：删除'关键战斗章/高潮章/卷末章允许上浮 33%'表述",
+        "SKILL.md:1033-1035 的豁免条款中'若大纲标注为关键战斗章/高潮章/卷末章，可放行'整条删除",
+        "SKILL.md 明确新规则：'硬上限由 preferences.json 的 pacing.chapter_words+500 决定，默认 5000，任何情况不得超限放行'",
+        "SKILL.md 精简循环最大轮次更新为 3 轮（与 US-004 对齐）",
+        "ink-writer/agents/writer-agent.md:467/622/851/875 等'硬上限 4000'表述更新为'由 preferences 驱动的硬上限，默认 5000'",
+        "保留'补写循环最多 2 轮'现有表述（下限方向零回归）",
+        "ink-writer/skills/ink-fix/SKILL.md 等下游文档中提及'上限'字眼一并对齐",
+        "ink-writer/skills/ink-auto/SKILL.md 提及的字数规则同步",
+        "全仓 grep '关键.*章.*豁免|关键章.*放行|上浮 33%' 无残留匹配",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "2026-04-21: ink-write/SKILL.md:905 与 2A.5 判定表完全重写——字数区间改用 [MIN_WORDS, MAX_WORDS_HARD] 占位符（preferences 驱动，默认 [2200, 5000]），删除原 3501-4000 偏长分档与放行豁免条款；新增对齐 US-004 的精简循环 3 轮 / 补写循环 2 轮双路径表述。ink-fix/SKILL.md 四处字数守护（开头原则/Step 5.5/Step 3 验证/安全红线）与 ink-auto/SKILL.md 两处（安全边界/多重验证）全部收敛到区间 + 硬上限 SHRINK_MAX_ROUNDS=3 表述。writer-agent.md + preferences-schema.md 遗留的旧豁免文案清理为更抽象的否定表述。关键规则文件中已无 `关键.*章.*豁免|关键章.*放行|上浮 33%` 匹配（残留仅存于 scripts/ralph/archive/*、run.log、tasks/prd-*.md 等 spec/历史文档，非运行时消费路径）。全量 pytest 3588 passed / 23 skipped，零回归。"
+    },
+    {
+      "id": "US-006",
+      "title": "全量回归测试 + preferences-schema 文档发版",
+      "description": "作为质量守门员，我需要跑全量测试验证零回归，并在 preferences-schema.md 给出完整示例与推导说明，供用户理解新机制。",
+      "acceptanceCriteria": [
+        "pytest tests/ --no-cov 全量通过，passed 数 ≥ 前轮 baseline 3206 + 本次新增（US-001/002/003/004 新增用例累计）",
+        "无任何现有测试新增 failed",
+        "ink-writer/references/preferences-schema.md 新增完整段落：chapter_words 推导 [min, max] 的数学公式、默认值 (2200, 5000)、硬下限 2200 永不降的护栏规则、三组示例（未配置 / chapter_words=3000 / chapter_words=2500）",
+        "新增 CHANGELOG 或 docs 条目记录本次 v23.0.0 字数硬上限变更（与 US-005 文档语义一致）",
+        "全仓字数硬编码数字扫描：grep 搜索 4000/5000/3000 在代码中作为字数阈值的位置，确认均由 load_word_limits 或 preferences 驱动（或作为默认值显式标注）",
+        "手动场景验证：创建 test fixture 项目 preferences.json 配置 chapter_words=3000，构造 3800 字章节正文，走 check_word_count 应得 severity='hard'；构造 2800 字应通过",
+        "零回归验证：硬下限 2200 的所有现有阻断点（computational_checks.py / ink-auto.sh:508 / SKILL.md 2A.5 / polish-agent.md 70% 保护）行为字节级保留",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "2026-04-21: 新增 tests/core/test_word_limits_e2e.py 5 用例，AC 场景（chapter_words=3000 × 3800/2800 字）全覆盖 + 零回归护栏（< 2200 字硬阻断 + 2200 floor 红线）。preferences-schema.md v23 语义段已含公式/默认值/3+ 组示例（US-002 已落）。README.md 新增 v23.0.0 版本条目记录字数硬上限变更。全仓 grep 4000/5000/3000 硬编码扫描：`ink_writer/core/preferences.py` 5000 = `DEFAULT_MAX_WORDS_HARD` 显式默认；`computational_checks.py::run_all_checks` 2200/5000 = load_word_limits import 失败时的安全过渡态 fallback；`ink-auto.sh/ps1` 5000 = Python 派生块 fallback 默认；其它 5000 命中属 sqlite busy_timeout ms 或 RAG pack chars，非字数阈值。零回归：`polish-agent.md` 70% floor + `ink-auto.sh:537 < 2200` + `computational_checks.py` min_words 硬下限路径全部字节级保留。全量 pytest 3593 passed / 23 skipped（baseline 3588 + 5 新增，零回归）。Typecheck/compile 通过。"
+    }
+  ]
+}
