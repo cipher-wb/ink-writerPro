@@ -54,9 +54,8 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
-    },
+      "passes": true,
+      "notes": "Completed 2026-04-23. schemas/case_schema.json mirrors spec §3.2 (case_id pattern ^CASE-[0-9]{4}-[0-9]{4}$, status/severity/domain/layer/source.type enums, required fields at object & sub-object level, additionalProperties false). ink_writer/case_library/{errors.py,schema.py}: CaseLibraryError / CaseValidationError / CaseNotFoundError / DuplicateCaseError; validate_case_dict uses Draft202012Validator with @lru_cache-loaded schema and raises CaseValidationError(f'{json_pointer}: {message}'). tests/case_library/{conftest.py,test_schema.py}: 7 passed. Full pytest --no-cov: 3605 passed, 23 skipped (was 3598, +7 new). Coverage 82.72% (gate 70). Audit red-lines (tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py) green; ruff + py_compile clean."
     {
       "id": "US-004",
       "title": "Case Models（dataclass + 枚举）",
@@ -71,8 +70,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-23. ink_writer/case_library/models.py: 5 StrEnums (CaseStatus / CaseSeverity / CaseDomain / CaseLayer / SourceType) + 4 dataclasses (Scope / Source / FailurePattern / Case). Unknown enum values raise ValueError (StrEnum native). from_dict reads schema-valid dict; to_dict omits Scope.trigger / Source.reviewer / Source.ingested_from when None; Scope.to_dict also omits empty genre / chapter lists. Round-trip Case.from_dict(d).to_dict() re-validates via validate_case_dict. Note: used StrEnum (Python 3.11+) instead of literal `str, Enum` to satisfy ruff UP042; StrEnum preserves identical user-facing semantics (ValueError on unknown, str equality). tests/case_library/test_models.py: 3 passed (test_case_round_trip / test_case_unknown_status_rejected / test_case_to_dict_omits_empty_optional_blocks). Full pytest --no-cov: 3608 passed, 23 skipped (+3 from US-003 baseline 3605). Coverage 82.72% (gate 70). Ruff + py_compile clean; audit red-lines 23 passed."
     },
     {
       "id": "US-005",
