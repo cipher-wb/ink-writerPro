@@ -109,8 +109,8 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-23. ink_writer/case_library/index.py: CaseIndex(sqlite_path) auto-mkdirs parent; build(store) runs DROP IF EXISTS on children-before-parent order then executescript creates 5 tables (cases / case_tags / case_layers / case_genres / case_chapters) with column indexes on status/severity/domain/tag/layer/genre/chapter; iterates store.iter_cases() issuing 1 INSERT into cases + 4 executemany INSERTs into inverted tables per case; returns indexed count. query_by_{tag,layer,genre,chapter,status} share _select_sorted which dedupes via set and returns sorted list. tests/case_library/test_index.py: 6 passed (build_index_creates_sqlite / query_by_tag / query_by_layer / query_by_genre / query_by_status / rebuild_is_idempotent) with a reusable two_case_store fixture that seeds 2 cases spanning different status/layer/genre/tags via deepcopy(sample_case_dict). Full pytest --no-cov: 3621 passed, 23 skipped (US-005 baseline 3615 + 6 new). Coverage 82.72% (gate 70). Ruff clean after auto-fix on I001 (test import ordering); py_compile clean; audit red-lines 20 passed."
     },
     {
       "id": "US-007",
