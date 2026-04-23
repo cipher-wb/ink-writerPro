@@ -19,8 +19,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-23. Real run: fixed=1487 skipped=0 missing_source=0. Second run idempotent (fixed=0 skipped=1487). pytest tests/maintenance green (5 passed). Files: scripts/maintenance/{__init__.py,fix_reference_corpus_symlinks.py}, tests/maintenance/{__init__.py,test_fix_reference_corpus_symlinks.py}."
     },
     {
       "id": "US-002",
