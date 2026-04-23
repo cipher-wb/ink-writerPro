@@ -128,8 +128,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/case_library/ingest.py: IngestResult(case_id, created, raw_text_hash) frozen dataclass; _hash_raw_text uses sha256(raw_text.encode('utf-8')).hexdigest(); _find_existing_by_hash iterates store.iter_cases() comparing hash(case.source.raw_text); _allocate_case_id scans list_ids() for CASE-{current_year}- prefix, parses serial suffix (skipping malformed ids), picks max+1 zero-padded to 4 digits (starts at 0001 so CASE-YYYY-0000 never collides with auto-allocated ids). New case path: builds Case via enum constructors (CaseStatus/CaseSeverity/CaseDomain/CaseLayer/SourceType) + Scope / Source / FailurePattern, calls store.save() (which re-validates) then store.append_ingest_log({event: 'ingest', case_id, raw_text_hash, at: datetime.now(UTC).isoformat()}). Dedup path returns IngestResult(existing_id, created=False) without mutating store (no YAML write, no log append). tests/case_library/test_ingest.py: 3 passed (test_ingest_creates_case asserts created=True + case_id regex CASE-2026-\\\\d{4} + raw_text_hash==sha256 + disk load; test_ingest_same_text_is_deduplicated verifies created=False + same case_id + list_ids() length 1 even with different title; test_ingest_appends_ingest_log verifies ingest_log.jsonl has 1 line with expected fields and second dedup call does NOT add a line). Full pytest --no-cov: 3624 passed, 23 skipped (+3 from US-006 baseline 3621). Ruff + py_compile clean; audit red-lines 20 passed."
     },
     {
       "id": "US-008",
