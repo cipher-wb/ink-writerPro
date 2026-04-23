@@ -148,8 +148,8 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/case_library/cli.py: main(argv) never raises; argparse top-level --library-root (default data/case_library); subcommands list/show/create/status/rebuild-index. list prints sorted case_ids; show runs store.load() then yaml.safe_dump(allow_unicode=True, sort_keys=False, default_flow_style=False) (returns 2 + stderr on CaseNotFoundError); status iterates and filters on case.status.value; create wires to ingest_case (action='append' on --layer/--tags/--observable/--scope-genre/--scope-chapter), catches CaseValidationError AND ValueError (unknown StrEnum values) and returns 3, prints case_id for new case / '<case_id> (already existed; raw_text dedup)' for dedup; rebuild-index builds CaseIndex(library_root/index.sqlite) and prints indexed=<n>. Top-level try/except catches CaseLibraryError (rc=2) + Exception (rc=2, # noqa: BLE001); SystemExit from argparse propagated as rc=code (so --help returns 0, bad args returns 2). Includes runtime_compat.enable_windows_utf8_stdio() call in main() (Mac no-op) to satisfy repo audit red-line. tests/case_library/test_cli.py: 3 passed (test_cli_create_then_list_then_show / test_cli_status_filters_by_status / test_cli_rebuild_index_creates_sqlite), capsys-based assertions on stdout. Full pytest --no-cov: 3627 passed, 23 skipped (US-007 baseline 3624 + 3). Coverage 82.72% (gate 70). Ruff + py_compile clean; audit red-lines 20 passed."
     },
     {
       "id": "US-009",
