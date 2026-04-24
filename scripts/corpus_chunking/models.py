@@ -69,10 +69,11 @@ class TaggedChunk:
     quality_breakdown: QualityBreakdown
     source_type: SourceType
     ingested_at: str  # ISO date
+    quality_weights: tuple[float, float, float, float] = (0.3, 0.3, 0.2, 0.2)
 
     @property
     def quality_score(self) -> float:
-        return self.quality_breakdown.weighted_score()
+        return self.quality_breakdown.weighted_score(self.quality_weights)
 
     def to_dict(self) -> dict[str, Any]:
         d = self.raw.to_dict()
