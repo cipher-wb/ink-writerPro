@@ -41,3 +41,22 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
 **当前 M（M2）目标**：场景级切片 + 病例库种子（≥ 2500 chunks + ≥ 200 active cases）
 **下一 M（M3）目标**：P1 下游闭环（writer-self-check + 阻断重写 + 2 个新 checker）— 30→50 分质量拐点
 **最终 M（M5）目标**：Dashboard + 自进化闭环 + 用户扩展接口
+
+## 2026-04-24 - US-001 corpus_chunking 包骨架 + config + 测试目录
+- 新增 scripts/corpus_chunking/{__init__.py, models.py, prompts/.gitkeep}
+  - models.py 暴露 RawChunk / TaggedChunk / QualityBreakdown / IngestReport / SourceType（StrEnum）
+  - TaggedChunk.quality_score 用 4 维加权（默认 30/30/20/20）从 QualityBreakdown.weighted_score() 算
+  - TaggedChunk.to_dict() 组合 raw.to_dict() + 11 个 tagged 字段 + quality_breakdown dict
+  - IngestReport.success_rate 单元化，chunks_raw=0 时返 0.0 不抛 ZeroDivision
+- 新增 config/corpus_chunking.yaml 三段配置（scene_segmenter / chunk_tagger / chunk_indexer），spec §3.5 权威版
+- 新增 tests/corpus_chunking/{__init__.py, conftest.py, test_models.py}
+  - conftest.py 提供 sample_chapter_text / sample_raw_chunk / sample_tagged_chunk fixtures
+  - test_models.py 3 用例全绿（serialize / round-trip 验加权 / report aggregate）
+- pytest.ini testpaths 行尾追加 tests/corpus_chunking（保持单行）
+- 验收：pytest tests/corpus_chunking/test_models.py -v --no-cov → 3 passed；tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py → 20 passed；ruff check scripts/corpus_chunking/ tests/corpus_chunking/ → All checks passed
+- **Learnings for future iterations:**
+  - **StrEnum 优于 str+Enum 双继承**：M1 case_library/models.py 已用 StrEnum（Python 3.11+），ruff UP042 会强制这一风格。新写 enum 直接 `class X(StrEnum)` 避免走弯路。
+  - **ruff I001 会自动排序 `import pytest` 与 `from scripts...` 混合 block**：写测试 import 时先写 `from __future__ import annotations`，空行，再 import pytest 与项目模块；--fix 会把 pytest 提到 project module 之上（stdlib → third-party → first-party 顺序）。
+  - **三段配置 YAML schema** 直接按 spec §3.5 原样落盘：model 用字符串（后续 US-002 从 cfg["scene_segmenter"]["model"] 读），quality_weights 用 dict 形式便于 US-003 cfg.quality_weights[key] 取值。
+  - **TaggedChunk dataclass 内嵌 RawChunk**：tagged.raw 可取原始字段（chunk_id/source_book/...），to_dict 合并字段，保 Qdrant payload 扁平。后续 chunk_indexer upsert 直接用 tagged.to_dict() 当 payload。
+---
