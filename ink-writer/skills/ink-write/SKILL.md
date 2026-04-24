@@ -285,6 +285,21 @@ Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.p
 . "$env:CLAUDE_PLUGIN_ROOT/scripts/env-setup.ps1"
 ```
 
+#### Step 0.0 — Preflight Health Check（M1 起强制）
+
+**在进入后续所有 Step 之前，必须先跑以下 preflight 命令，退出码非 0 时一律阻断后续流程。** 失败会被 `--auto-create-infra-cases` 自动落盘为 `infra_health` 病例（去重到 `data/case_library/cases/CASE-YYYY-NNNN.yaml`），便于运维用 `ink case list` 查看。
+
+```bash
+python3 -m ink_writer.preflight.cli --auto-create-infra-cases --raise-on-fail
+```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价）：
+
+```powershell
+python -m ink_writer.preflight.cli --auto-create-infra-cases --raise-on-fail
+```
+
+退出码约定：`0` 全部通过 → 继续；`1` 至少一项失败（stdout 已列出 `[FAIL] <name>: <detail>`，且失败项已入病例库）；`2` 顶层异常。非 0 退出时**禁止继续后续 Step**。
 
 **硬门槛**：`preflight` 必须成功。它统一校验 `CLAUDE_PLUGIN_ROOT` 派生出的 `SKILL_ROOT` / `SCRIPTS_DIR`、`ink.py`、`extract_chapter_context.py`、解析出的 `PROJECT_ROOT`、以及 **RAG Embedding API 连通性**（v10.6.1 新增，必填项）。任一失败都立即阻断。
 
