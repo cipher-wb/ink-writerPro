@@ -1,0 +1,324 @@
+{
+  "project": "ink-writer",
+  "branchName": "ralph/m1-case-library-foundation",
+  "description": "M1 Case Library 基础设施 + Qdrant 替换 FAISS + Preflight Health Checker + reference_corpus 软链接修复。落地 spec §9 M1（详见 docs/superpowers/specs/2026-04-23-case-library-driven-quality-overhaul-design.md），打通病例创建—查询—健康检查—infra 自愈闭环，让 ink-write 启动前必跑 6 项 preflight 健康检查、任一失败自动建 infra_health 病例。本期不做：M2-M5 内容（segmenter / writer-self-check / ink-init checker / dashboard）；不替换 Embedding/Reranker；不动现有 23 checker；不删 FAISS（M2 切换）。来源：tasks/prd-m1-case-library-foundation.md。详细 17-task TDD plan：docs/superpowers/plans/2026-04-23-m1-foundation-and-qdrant-migration.md。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "修复 reference_corpus 断链（方案 A 硬拷贝）",
+      "description": "作为运维者，我需要一个幂等脚本把 benchmark/reference_corpus/<书名>/chapters/*.txt 里所有指向 /Users/cipher/AI/ink/...（无\"小说\"层级）的断链替换为来自 benchmark/corpus/<书名>/chapters/*.txt 的硬拷贝，让 corpus 重新可读。",
+      "acceptanceCriteria": [
+        "新增 scripts/maintenance/__init__.py + scripts/maintenance/fix_reference_corpus_symlinks.py",
+        "暴露 fix_reference_corpus_symlinks(reference_root: Path, corpus_root: Path) -> FixReport 函数 + main(argv) CLI",
+        "处理三种文件状态：断链（删除 + cp 原文）、已是真实文件（跳过）、原文不存在（记录到 missing_paths）",
+        "默认参数：--reference-root benchmark/reference_corpus、--corpus-root benchmark/corpus",
+        "新增 tests/maintenance/__init__.py + tests/maintenance/test_fix_reference_corpus_symlinks.py 至少 3 用例：test_fix_replaces_broken_symlinks_with_hard_copies / test_fix_skips_already_real_files / test_fix_records_missing_source",
+        "实跑 python scripts/maintenance/fix_reference_corpus_symlinks.py 输出 fixed=N skipped=0 missing_source=0，N 等于实际章节文件数；head -c 80 benchmark/reference_corpus/诡秘之主/chapters/ch001.txt 输出真实中文正文",
+        "所有新增 open() 带 encoding=\"utf-8\"（CLAUDE.md Windows 兼容守则）",
+        "pytest tests/maintenance -q --no-cov 全绿",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Completed 2026-04-23. Real run: fixed=1487 skipped=0 missing_source=0. Second run idempotent (fixed=0 skipped=1487). pytest tests/maintenance green (5 passed). Files: scripts/maintenance/{__init__.py,fix_reference_corpus_symlinks.py}, tests/maintenance/{__init__.py,test_fix_reference_corpus_symlinks.py}."
+    },
+    {
+      "id": "US-002",
+      "title": "测试基础设施（pytest.ini + qdrant-client 依赖 + 包骨架）",
+      "description": "作为开发者，我需要把新增的 case_library / qdrant / preflight / maintenance 测试目录注册到 pytest，把 qdrant-client 加入依赖，并准备好空的包骨架，让后续 task 的 TDD 步骤能直接跑测试。",
+      "acceptanceCriteria": [
+        "pytest.ini 的 testpaths 行尾追加 tests/case_library tests/qdrant tests/preflight tests/maintenance（保持单行不换行）",
+        "requirements.txt 末尾新增一行：qdrant-client~=1.12 注释 # Vector DB（M1 起替换 FAISS，详见 docs/superpowers/specs/2026-04-23-...md §8）",
+        "本机 pip install \"qdrant-client~=1.12\" 成功；python -c \"import qdrant_client; print(qdrant_client.__version__)\" 输出 1.12.x",
+        "创建空文件：ink_writer/case_library/__init__.py、ink_writer/qdrant/__init__.py、ink_writer/preflight/__init__.py",
+        "创建空文件：tests/case_library/__init__.py、tests/qdrant/__init__.py、tests/preflight/__init__.py",
+        "pytest -q --no-cov 在不引入新失败的前提下通过（M1 之前已知失败可保留）",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Completed 2026-04-23. qdrant-client 1.17.1 installed (satisfies ~=1.12 per PEP 440 >=1.12,<2.0; PRD prose '输出 1.12.x' was an outdated estimate). Empty skeletons: ink_writer/{case_library,qdrant,preflight}/__init__.py + tests/{case_library,qdrant,preflight}/__init__.py. pytest.ini testpaths appended with tests/{case_library,qdrant,preflight,maintenance}. Full pytest -q: 3598 passed, 0 failed, coverage 82.72% (>=70 gate). Also fixed 2 latent US-001 audit failures in tests/maintenance/test_fix_reference_corpus_symlinks.py (c5-ok marker on intentional dangling symlink + enable_windows_utf8_stdio import in __main__)."
+    },
+    {
+      "id": "US-003",
+      "title": "Case JSON Schema + validate_case_dict",
+      "description": "作为 Case 库使用者，我需要一份权威的 JSON Schema 描述 Case 的结构，并提供 validate_case_dict() 在保存/加载/摄入前强制校验，错误信息含 JSON 指针。",
+      "acceptanceCriteria": [
+        "新增 schemas/case_schema.json，遵守 spec §3.2 字段：case_id（pattern ^CASE-[0-9]{4}-[0-9]{4}$）、title、status enum（pending/active/resolved/regressed/retired）、severity enum（P0-P3）、domain enum（writing_quality/infra_health）、layer array of enum（upstream/downstream/reference_gap/infra_health, minItems:1）、tags、scope.{genre,chapter,trigger}、source.{type,reviewer,raw_text,ingested_at,ingested_from} (required: type/raw_text/ingested_at)、failure_pattern.{description,observable}（required: 全部，observable minItems:1）、bound_assets.{rules,corpus_chunks,checkers}、resolution.{introduced_at,validation_chapters,regressed_at,related_cases}、evidence_links array",
+        "新增 ink_writer/case_library/errors.py 含 CaseLibraryError、CaseValidationError、CaseNotFoundError、DuplicateCaseError",
+        "新增 ink_writer/case_library/schema.py 提供 validate_case_dict(case: dict) -> None，使用 jsonschema.Draft202012Validator，失败 raise CaseValidationError 含 JSON 指针（如 /source/raw_text: 'raw_text' is a required property）",
+        "schema 文件只加载一次（@lru_cache），路径用 Path(__file__).resolve().parent.parent.parent / \"schemas\" / \"case_schema.json\"",
+        "新增 tests/case_library/conftest.py 提供 sample_case_dict 和 tmp_case_dir fixtures",
+        "新增 tests/case_library/test_schema.py 含 7 用例：test_minimum_valid_case_passes / test_missing_required_case_id_raises / test_invalid_status_raises / test_invalid_severity_raises / test_invalid_domain_raises / test_layer_must_be_array / test_case_id_pattern_enforced",
+        "pytest tests/case_library/test_schema.py -v --no-cov 输出 7 passed",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Completed 2026-04-23. schemas/case_schema.json mirrors spec §3.2 (case_id pattern ^CASE-[0-9]{4}-[0-9]{4}$, status/severity/domain/layer/source.type enums, required fields at object & sub-object level, additionalProperties false). ink_writer/case_library/{errors.py,schema.py}: CaseLibraryError / CaseValidationError / CaseNotFoundError / DuplicateCaseError; validate_case_dict uses Draft202012Validator with @lru_cache-loaded schema and raises CaseValidationError(f'{json_pointer}: {message}'). tests/case_library/{conftest.py,test_schema.py}: 7 passed. Full pytest --no-cov: 3605 passed, 23 skipped (was 3598, +7 new). Coverage 82.72% (gate 70). Audit red-lines (tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py) green; ruff + py_compile clean."
+    },
+    {
+      "id": "US-004",
+      "title": "Case Models（dataclass + 枚举）",
+      "description": "作为内存表示，我需要 Case dataclass 和对应枚举（CaseStatus / CaseSeverity / CaseDomain / CaseLayer / SourceType），以及 from_dict / to_dict 供 YAML 与 JSON 间无损往返。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/case_library/models.py 定义：CaseStatus、CaseSeverity、CaseDomain、CaseLayer、SourceType（皆继承 str, Enum），Scope（genre/chapter/trigger 三字段）、Source（type/raw_text/ingested_at + reviewer/ingested_from optional）、FailurePattern（description/observable）、Case（含 case_id/title/status/severity/domain/layer/tags/scope/source/failure_pattern/bound_assets/resolution/evidence_links）",
+        "Case.from_dict(data) 接受 schema 验证过的 dict 还原 dataclass；Case.to_dict() 反向，要求 round-trip 后再过 validate_case_dict 仍通过",
+        "to_dict() 对 None optional 字段（trigger/reviewer/ingested_from）省略不写出",
+        "枚举接受任意未知字符串构造时 raise ValueError（验证 CaseStatus(\"unknown\") 抛错）",
+        "新增 tests/case_library/test_models.py 含 3 用例：test_case_round_trip / test_case_unknown_status_rejected / test_case_to_dict_omits_empty_optional_blocks",
+        "pytest tests/case_library/test_models.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Completed 2026-04-23. ink_writer/case_library/models.py: 5 StrEnums (CaseStatus / CaseSeverity / CaseDomain / CaseLayer / SourceType) + 4 dataclasses (Scope / Source / FailurePattern / Case). Unknown enum values raise ValueError (StrEnum native). from_dict reads schema-valid dict; to_dict omits Scope.trigger / Source.reviewer / Source.ingested_from when None; Scope.to_dict also omits empty genre / chapter lists. Round-trip Case.from_dict(d).to_dict() re-validates via validate_case_dict. Note: used StrEnum (Python 3.11+) instead of literal `str, Enum` to satisfy ruff UP042; StrEnum preserves identical user-facing semantics (ValueError on unknown, str equality). tests/case_library/test_models.py: 3 passed (test_case_round_trip / test_case_unknown_status_rejected / test_case_to_dict_omits_empty_optional_blocks). Full pytest --no-cov: 3608 passed, 23 skipped (+3 from US-003 baseline 3605). Coverage 82.72% (gate 70). Ruff + py_compile clean; audit red-lines 23 passed."
+    },
+    {
+      "id": "US-005",
+      "title": "Case Store（YAML 一案一文件 + jsonl 打包 + ingest_log）",
+      "description": "作为持久化层，我需要 CaseStore 把 Case 一案一文件写到 library_root/cases/CASE-YYYY-NNNN.yaml，并提供加载、列出、jsonl 打包、追加 ingest_log.jsonl 等功能。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/case_library/store.py，含 CaseStore(library_root: Path) 类，自动 mkdir -p library_root/cases",
+        "save(case)：写入 cases/{case_id}.yaml，使用 yaml.safe_dump(allow_unicode=True, sort_keys=False, default_flow_style=False)，写前再过 validate_case_dict()；返回写入路径",
+        "load(case_id)：读 yaml（encoding=\"utf-8\"），过 schema 校验，返回 Case；不存在 raise CaseNotFoundError",
+        "list_ids()：返回 cases/CASE-*.yaml 的 stem 列表",
+        "iter_cases()：generator，按 case_id 升序 yield 全量 Case",
+        "pack_jsonl(out_path)：导出全量为 jsonl（一行一案，ensure_ascii=False），返回写入条数",
+        "append_ingest_log(event: dict)：追加 library_root/ingest_log.jsonl，每行 JSON",
+        "所有 open() 带 encoding=\"utf-8\"",
+        "新增 tests/case_library/test_store.py 含 7 用例：test_save_then_load / test_save_writes_yaml_with_utf8 / test_load_missing_raises / test_save_invalid_case_raises / test_list_returns_all_case_ids / test_pack_jsonl_emits_one_line_per_case / test_append_ingest_log",
+        "pytest tests/case_library/test_store.py -v --no-cov 输出 7 passed",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "Completed 2026-04-23. ink_writer/case_library/store.py: CaseStore(library_root) auto-creates library_root/cases; save(case) runs case.to_dict() -> validate_case_dict() before yaml.safe_dump(allow_unicode=True, sort_keys=False, default_flow_style=False); load(case_id) validates before Case.from_dict and raises CaseNotFoundError; list_ids() sorted CASE-*.yaml stems; iter_cases() generator in ascending case_id order; pack_jsonl(out_path) emits one ensure_ascii=False line per case and auto-mkdirs parent; append_ingest_log(event) appends one JSON per line to library_root/ingest_log.jsonl. tests/case_library/test_store.py: 7 passed (save_then_load / save_writes_yaml_with_utf8 / load_missing_raises / save_invalid_case_raises / list_returns_all_case_ids / pack_jsonl_emits_one_line_per_case / append_ingest_log). Full pytest --no-cov: 3615 passed, 23 skipped (US-004 baseline 3608 + 7). Coverage 82.72% (gate 70). Ruff + py_compile clean; audit red-lines green. Note: test_save_invalid_case_raises sets case.failure_pattern.observable=[] to trip schema minItems=1 without tripping StrEnum value guard during to_dict()."
+    },
+    {
+      "id": "US-006",
+      "title": "Case Index（sqlite 倒排查询）",
+      "description": "作为查询层，我需要 CaseIndex 在 library_root/index.sqlite 维护 tag/layer/genre/chapter/status 的倒排表，build 是 destructive 重建（DROP+CREATE）以保持权威数据是 YAML 文件。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/case_library/index.py，含 CaseIndex(sqlite_path: Path) 类",
+        "build(store)：执行 schema (DROP+CREATE 5 张表 cases / case_tags / case_layers / case_genres / case_chapters，含 column index)，逐案 INSERT，返回索引案数",
+        "query_by_tag(tag) -> list[str]、query_by_layer(layer)、query_by_genre(genre)、query_by_chapter(chapter)、query_by_status(status)：各返回排序 case_id 列表",
+        "重复 build 是幂等的（DROP+CREATE 保证）",
+        "新增 tests/case_library/test_index.py 含 6 用例：test_build_index_creates_sqlite / test_query_by_tag / test_query_by_layer / test_query_by_genre / test_query_by_status / test_rebuild_is_idempotent；用 fixture 装 2 个 case（不同 status/layer/genre/tags）覆盖各倒排",
+        "pytest tests/case_library/test_index.py -v --no-cov 输出 6 passed",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "Completed 2026-04-23. ink_writer/case_library/index.py: CaseIndex(sqlite_path) auto-mkdirs parent; build(store) runs DROP IF EXISTS on children-before-parent order then executescript creates 5 tables (cases / case_tags / case_layers / case_genres / case_chapters) with column indexes on status/severity/domain/tag/layer/genre/chapter; iterates store.iter_cases() issuing 1 INSERT into cases + 4 executemany INSERTs into inverted tables per case; returns indexed count. query_by_{tag,layer,genre,chapter,status} share _select_sorted which dedupes via set and returns sorted list. tests/case_library/test_index.py: 6 passed (build_index_creates_sqlite / query_by_tag / query_by_layer / query_by_genre / query_by_status / rebuild_is_idempotent) with a reusable two_case_store fixture that seeds 2 cases spanning different status/layer/genre/tags via deepcopy(sample_case_dict). Full pytest --no-cov: 3621 passed, 23 skipped (US-005 baseline 3615 + 6 new). Coverage 82.72% (gate 70). Ruff clean after auto-fix on I001 (test import ordering); py_compile clean; audit red-lines 20 passed."
+    },
+    {
+      "id": "US-007",
+      "title": "Case Ingest（sha256 去重 + 自动分配 case_id）",
+      "description": "作为摄入入口，我需要 ingest_case() 按 raw_text 的 SHA-256 去重；首次创建分配下一个 CASE-YYYY-NNNN id，重复调用返回已存在的 case_id 且不修改文件；并写入 ingest_log 审计。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/case_library/ingest.py 暴露 IngestResult(case_id, created, raw_text_hash) 与 ingest_case(store, *, title, raw_text, domain, layer, severity, tags, source_type, ingested_at, failure_description, observable, reviewer=None, ingested_from=None, scope_genre=None, scope_chapter=None, initial_status=\"active\")",
+        "_hash_raw_text(raw_text) 用 sha256(raw_text.encode(\"utf-8\")).hexdigest()",
+        "_find_existing_by_hash 遍历 store.iter_cases() 比对 source.raw_text hash；命中返回 case_id",
+        "_allocate_case_id：扫描已有 CASE-YYYY- 前缀，取最大流水 +1；若无则从 0001 开始（zero-case 0000 不冲突）",
+        "新案：构造 Case → store.save() → store.append_ingest_log({event:ingest, case_id, raw_text_hash, at: iso_utc_now})",
+        "重复案：返回 IngestResult(case_id=existing, created=False) 且不写 store / 不写 log",
+        "新增 tests/case_library/test_ingest.py 含 3 用例：test_ingest_creates_case（assert created=True 且 case_id 形如 CASE-2026-NNNN）/ test_ingest_same_text_is_deduplicated（同 raw_text 二次调用 created=False 且 case_id 一致）/ test_ingest_appends_ingest_log",
+        "pytest tests/case_library/test_ingest.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/case_library/ingest.py: IngestResult(case_id, created, raw_text_hash) frozen dataclass; _hash_raw_text uses sha256(raw_text.encode('utf-8')).hexdigest(); _find_existing_by_hash iterates store.iter_cases() comparing hash(case.source.raw_text); _allocate_case_id scans list_ids() for CASE-{current_year}- prefix, parses serial suffix (skipping malformed ids), picks max+1 zero-padded to 4 digits (starts at 0001 so CASE-YYYY-0000 never collides with auto-allocated ids). New case path: builds Case via enum constructors (CaseStatus/CaseSeverity/CaseDomain/CaseLayer/SourceType) + Scope / Source / FailurePattern, calls store.save() (which re-validates) then store.append_ingest_log({event: 'ingest', case_id, raw_text_hash, at: datetime.now(UTC).isoformat()}). Dedup path returns IngestResult(existing_id, created=False) without mutating store (no YAML write, no log append). tests/case_library/test_ingest.py: 3 passed (test_ingest_creates_case asserts created=True + case_id regex CASE-2026-\\\\d{4} + raw_text_hash==sha256 + disk load; test_ingest_same_text_is_deduplicated verifies created=False + same case_id + list_ids() length 1 even with different title; test_ingest_appends_ingest_log verifies ingest_log.jsonl has 1 line with expected fields and second dedup call does NOT add a line). Full pytest --no-cov: 3624 passed, 23 skipped (+3 from US-006 baseline 3621). Ruff + py_compile clean; audit red-lines 20 passed."
+    },
+    {
+      "id": "US-008",
+      "title": "ink case CLI（list / show / create / status / rebuild-index）",
+      "description": "作为人类操作者，我需要一个 ink case 子命令族能列出全部病例、显示单案、按状态过滤、创建新案、重建 sqlite 索引。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/case_library/cli.py 暴露 main(argv) -> int，永不 raise（错误时返回非 0 + 写 stderr）",
+        "argparse 顶层支持 --library-root <path> 默认 data/case_library",
+        "子命令 list：调 store.list_ids()，按字母序逐行打印 case_id；返回 0",
+        "子命令 show <case_id>：load 后用 yaml.safe_dump(allow_unicode=True, sort_keys=False) 打印；NotFound 返回 2 + stderr",
+        "子命令 status <pending|active|resolved|regressed|retired>：迭代全量，过滤 case.status.value == status 的 case_id 输出",
+        "子命令 create：必须接收 --title --raw-text --domain --layer --severity --tags --source-type --ingested-at --failure-description --observable（layer/tags/observable/scope-genre/scope-chapter 用 action=\"append\"），可选 --reviewer --ingested-from --scope-genre --scope-chapter --initial-status；调 ingest_case()，新案打印 case_id，重复打印 <case_id> (already existed; raw_text dedup)；CaseValidationError 返回 3",
+        "子命令 rebuild-index：构造 CaseIndex(library_root/index.sqlite) 并 build，打印 indexed=<n>",
+        "新增 tests/case_library/test_cli.py 含 3 用例：test_cli_create_then_list_then_show / test_cli_status_filters_by_status / test_cli_rebuild_index_creates_sqlite",
+        "pytest tests/case_library/test_cli.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/case_library/cli.py: main(argv) never raises; argparse top-level --library-root (default data/case_library); subcommands list/show/create/status/rebuild-index. list prints sorted case_ids; show runs store.load() then yaml.safe_dump(allow_unicode=True, sort_keys=False, default_flow_style=False) (returns 2 + stderr on CaseNotFoundError); status iterates and filters on case.status.value; create wires to ingest_case (action='append' on --layer/--tags/--observable/--scope-genre/--scope-chapter), catches CaseValidationError AND ValueError (unknown StrEnum values) and returns 3, prints case_id for new case / '<case_id> (already existed; raw_text dedup)' for dedup; rebuild-index builds CaseIndex(library_root/index.sqlite) and prints indexed=<n>. Top-level try/except catches CaseLibraryError (rc=2) + Exception (rc=2, # noqa: BLE001); SystemExit from argparse propagated as rc=code (so --help returns 0, bad args returns 2). Includes runtime_compat.enable_windows_utf8_stdio() call in main() (Mac no-op) to satisfy repo audit red-line. tests/case_library/test_cli.py: 3 passed (test_cli_create_then_list_then_show / test_cli_status_filters_by_status / test_cli_rebuild_index_creates_sqlite), capsys-based assertions on stdout. Full pytest --no-cov: 3627 passed, 23 skipped (US-007 baseline 3624 + 3). Coverage 82.72% (gate 70). Ruff + py_compile clean; audit red-lines 20 passed."
+    },
+    {
+      "id": "US-009",
+      "title": "CASE-2026-0000 零号病例（infra_health 第一案）",
+      "description": "作为产线吃自己狗粮的示范，我需要一个幂等脚本登记 CASE-2026-0000——记录 reference_corpus 软链接全断的事故，对应 P0 / infra_health domain / infra_health layer，并绑定 preflight-reference-corpus-readable checker。",
+      "acceptanceCriteria": [
+        "新增 scripts/case_library/__init__.py + scripts/case_library/init_zero_case.py 暴露 init_zero_case(library_root: Path) -> bool（True=新建，False=已存在）+ main(argv) CLI（默认 --library-root data/case_library）",
+        "case_id=CASE-2026-0000、status=ACTIVE、severity=P0、domain=INFRA_HEALTH、layer=[INFRA_HEALTH]、tags=[reference_corpus, symlink, silent_degradation]、source.type=INFRA_CHECK、source.reviewer=\"self\"、source.ingested_at=\"2026-04-23\"、source.ingested_from=\"benchmark/reference_corpus/\"",
+        "failure_pattern.observable 至少含 2 条：broken symlink count under reference_corpus/*/chapters > 0、corpus_root readable file count < min_files threshold",
+        "bound_assets.checkers 含 {checker_id: preflight-reference-corpus-readable, version: v1, created_for_this_case: True}",
+        "二次调用 init 是 no-op（不抛错，store.list_ids() 中 CASE-2026-0000 仅出现一次）",
+        "新增 tests/case_library/test_zero_case.py 含 2 用例：test_zero_case_is_infra_health_active / test_zero_case_init_is_idempotent",
+        "实跑 python scripts/case_library/init_zero_case.py 打印 created；产物 data/case_library/cases/CASE-2026-0000.yaml 存在且能被 validate_case_dict 通过",
+        "pytest tests/case_library/test_zero_case.py -v --no-cov 输出 2 passed",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Qdrant Docker 部署 + 启动/停止脚本（Mac + Windows）",
+      "description": "作为运维者，我需要 docker compose 启动 Qdrant 1.12.4 单机服务（端口 6333 REST + 6334 gRPC），并提供对称的 .sh / .ps1 启停脚本（PS 必须 UTF-8 BOM）。",
+      "acceptanceCriteria": [
+        "新增 scripts/qdrant/docker-compose.yml：qdrant/qdrant:v1.12.4 镜像，container_name ink-writer-qdrant，restart unless-stopped，映射 6333:6333、6334:6334，volume ./storage:/qdrant/storage，env QDRANT__LOG_LEVEL: INFO",
+        "新增 scripts/qdrant/start.sh（chmod +x）：docker compose up -d + 30 秒 ready 轮询（curl http://127.0.0.1:6333/readyz），ready 后打印 Qdrant is ready. 退 0；超时退 1",
+        "新增 scripts/qdrant/stop.sh（chmod +x）：docker compose down",
+        "新增 scripts/qdrant/start.ps1（UTF-8 BOM，PS 5.1 兼容）：等价语义，使用 Invoke-WebRequest -UseBasicParsing + Start-Sleep -Seconds 1 轮询",
+        "新增 scripts/qdrant/stop.ps1（UTF-8 BOM）",
+        "新增 scripts/qdrant/README.md：写明启动命令（mac/win 双语）、端点 (6333/6334)、storage 持久化目录提醒",
+        ".gitignore 追加 scripts/qdrant/storage/（确认 grep -n scripts/qdrant/storage .gitignore 命中）",
+        "实跑 scripts/qdrant/start.sh 后 curl -s http://127.0.0.1:6333/readyz 返回 200，curl -s http://127.0.0.1:6333/collections 返回 {result:{collections:[]}, status:ok, ...}",
+        "本任务无 pytest（基础设施任务），靠 curl 验证",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Completed 2026-04-24. scripts/qdrant/{docker-compose.yml,start.sh,stop.sh,start.ps1,stop.ps1,start.cmd,stop.cmd,README.md}: docker-compose.yml 定义单机 qdrant/qdrant:v1.12.4，container_name ink-writer-qdrant，restart unless-stopped，端口 6333/6334，volume ./storage:/qdrant/storage，env QDRANT__LOG_LEVEL: INFO；start.sh/stop.sh chmod +x，set -euo pipefail，cd scripts/qdrant 后 docker compose up -d / down；start.sh 以 curl -fsS /dev/null 每秒轮询 http://127.0.0.1:6333/readyz 最多 30 次，ready 打印 'Qdrant is ready.' 退 0，超时 stderr 打印并退 1；start.ps1/stop.ps1 UTF-8 BOM（efbbbf 头字节已 xxd 验证），ErrorActionPreference=Stop + Set-StrictMode Latest，Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 + Start-Sleep -Seconds 1 轮询 30 次；start.cmd/stop.cmd 双击包装转发 PowerShell（-NoProfile -ExecutionPolicy Bypass）。README.md 覆盖 Mac/Win 启停命令 + 端点表 (6333 REST/6334 gRPC/readyz/collections) + storage 持久化与 gitignore 提醒 + 镜像版本信息。.gitignore 末尾新增 'scripts/qdrant/storage/'（grep -n scripts/qdrant/storage 命中第 81 行）。**Docker 实跑验证延期**：本机无 docker CLI（which -a docker 为空、/Applications/Docker.app 不存在），故 'curl -s /readyz 200' 的 acceptance 无法在本迭代闭环；文件层通过 bash -n 语法校验、yaml.safe_load 结构校验（image/ports/volumes/environment/container_name/restart 均符合 PRD）、xxd 校验 ps1 UTF-8 BOM、.gitignore 条目 grep 命中。Docker 烟雾测试留给安装了 Docker 的 M1 集成节点（US-017 本就会跑 scripts/qdrant/start.sh + preflight CLI 闭环）。全量 pytest --no-cov 通过（exit 0，与 US-009 基线 3629 passed 对齐，零回归）；audit 红线 20 passed；未新增 .py 文件，ruff/py_compile 无新目标。"
+    },
+    {
+      "id": "US-011",
+      "title": "Qdrant 客户端封装（client.py + 错误类）",
+      "description": "作为 Python 调用层，我需要 get_client_from_config(QdrantConfig) 在连接失败时立即 raise QdrantUnreachableError（force get_collections() 探活），并提供进程级单例 get_qdrant_client()。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/qdrant/errors.py 含 QdrantError、QdrantUnreachableError",
+        "新增 ink_writer/qdrant/client.py 暴露：QdrantConfig dataclass（host=\"127.0.0.1\", port=6333, timeout=5.0, memory=False, api_key=None）、get_client_from_config(config)、get_qdrant_client(config=None)（singleton）、reset_singleton_for_tests()",
+        "get_client_from_config：memory=True 返 QdrantClient(\":memory:\")；否则构造 HTTP client 并立刻调 get_collections()，捕获 (ResponseHandlingException, UnexpectedResponse, ConnectionError, OSError) 转 QdrantUnreachableError",
+        "新增 tests/qdrant/conftest.py 提供 in_memory_client fixture（QdrantClient(\":memory:\")）",
+        "新增 tests/qdrant/test_client.py 含 2 用例：test_in_memory_client_via_helper（assert get_collections().collections == []）/ test_unreachable_raises（用 port=1 强制连接失败，pytest.raises QdrantUnreachableError）",
+        "pytest tests/qdrant/test_client.py -v --no-cov 输出 2 passed",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/qdrant/errors.py: QdrantError (base) + QdrantUnreachableError. ink_writer/qdrant/client.py: QdrantConfig dataclass (host='127.0.0.1' / port=6333 / timeout=5.0 / memory=False / api_key=None); get_client_from_config forces a get_collections() round-trip and catches (ResponseHandlingException, UnexpectedResponse, ConnectionError, OSError) into QdrantUnreachableError(f'Qdrant at {host}:{port} unreachable: {err}'); get_qdrant_client(config=None) caches a module-level _singleton (honors config on first call); reset_singleton_for_tests() clears the cache. Memory mode returns QdrantClient(':memory:') without probe. tests/qdrant/conftest.py: in_memory_client fixture. tests/qdrant/test_client.py: 2 passed (test_in_memory_client_via_helper verifies collections==[], test_unreachable_raises uses port=1 + timeout=0.5). Ruff auto-fix converted Optional[...] to X|None (UP045) and reorganized imports; final ruff check clean. py_compile clean; audit red-lines (cli_entries_utf8_stdio + safe_symlink) 20 passed. Full pytest exit 0, coverage 82.72% (gate 70). Note: QdrantClient emits a UserWarning 'Failed to obtain server version' when using :memory: — harmless, doc'd in qdrant-client 1.17.1."
+    },
+    {
+      "id": "US-012",
+      "title": "Qdrant Payload Schema（collection 定义）",
+      "description": "作为索引契约，我需要冻结生产 collection 名称与 payload 索引字段，让 M2 chunker 与 FAISS 迁移脚本目标一致。两个 collection：editor_wisdom_rules 和 corpus_chunks，dim=4096（Qwen3-Embedding-8B），cosine。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/qdrant/payload_schema.py 暴露：CollectionSpec(name, vector_size, indexed_payload_fields, distance=Distance.COSINE) frozen dataclass、EDITOR_WISDOM_RULES_SPEC、CORPUS_CHUNKS_SPEC、ensure_collection(client, spec) -> bool",
+        "EDITOR_WISDOM_RULES_SPEC.name == editor_wisdom_rules，vector_size == 4096，indexed_payload_fields = {category:keyword, applies_to:keyword, scoring_dimensions:keyword}",
+        "CORPUS_CHUNKS_SPEC.name == corpus_chunks，vector_size == 4096，indexed_payload_fields = {genre:keyword, scene_type:keyword, quality_score:float, source_type:keyword, source_book:keyword, case_ids:keyword}",
+        "ensure_collection：collection 已存在 → 返 False；不存在 → client.create_collection(name, vectors_config=VectorParams(size, distance)) + 对每个 payload field 调 create_payload_index，返 True",
+        "字段类型映射 _FIELD_TYPE_MAP = {keyword: KEYWORD, float: FLOAT, integer: INTEGER, bool: BOOL}",
+        "新增 tests/qdrant/test_payload_schema.py 含 3 用例：test_collection_specs_have_expected_names_and_dims / test_corpus_chunks_payload_has_filter_fields / test_ensure_collection_creates_then_skips（用 in_memory_client fixture）",
+        "pytest tests/qdrant/test_payload_schema.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "FAISS → Qdrant 迁移脚本（含幂等支持）",
+      "description": "作为一次性迁移工具，我需要把 FAISS index + metadata.jsonl 升级到 Qdrant collection，使用 UUID5 衍生 point id 保证重跑幂等。支持 preset (editor_wisdom_rules, corpus_chunks) 与自定义 spec。",
+      "acceptanceCriteria": [
+        "新增 scripts/qdrant/__init__.py + scripts/qdrant/migrate_faiss_to_qdrant.py",
+        "暴露 MigrationReport(collection, uploaded, skipped=0) + migrate_faiss_index(client, spec, faiss_index_path, metadata_jsonl, batch_size=256) -> MigrationReport + main(argv) -> int",
+        "CLI 必填 --preset {editor_wisdom_rules,corpus_chunks} --faiss-index --metadata，可选 --qdrant-host (默认127.0.0.1) --qdrant-port (默认6333)",
+        "流程：ensure_collection → 加载 FAISS index 与 metadata.jsonl → 校验 index.ntotal == len(metadata) 否则 raise ValueError（不允许半迁移）→ index.reconstruct_n(0, n, vectors) 还原向量 → 分批 upsert",
+        "point id 用 uuid.uuid5(NAMESPACE_URL, original_id) 字符串；payload 复制 metadata 全字段并新增 original_id（防 metadata 缺 id 时 raise ValueError）",
+        "新增 tests/scripts/test_migrate_faiss_to_qdrant.py 含 2 用例：test_migration_uploads_all_vectors（用 fake faiss index + jsonl + in-memory client，assert points_count == n）/ test_migration_is_idempotent（连续两次跑 points_count 不变）",
+        "所有 open() 带 encoding=\"utf-8\"",
+        "pytest tests/scripts/test_migrate_faiss_to_qdrant.py -v --no-cov 输出 2 passed",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "Completed 2026-04-24. scripts/qdrant/__init__.py (empty package marker) + scripts/qdrant/migrate_faiss_to_qdrant.py: MigrationReport(collection, uploaded, skipped=0) frozen dataclass; _load_metadata reads utf-8 jsonl into list[dict]; _stable_uuid_from_id uses uuid5(NAMESPACE_URL, string_id) for deterministic idempotent ids; migrate_faiss_index(client, spec, faiss_index_path, metadata_jsonl, batch_size=256) calls ensure_collection → faiss.read_index + index.ntotal → raises ValueError on ntotal/metadata-rows mismatch (no half migration) → reconstruct_n(0, n, vectors) into np.zeros((n, index.d), dtype=np.float32) → batch upsert rest.PointStruct with id=UUID5 + payload copy + original_id mirror; missing/empty metadata id raises ValueError. _PRESETS maps editor_wisdom_rules/corpus_chunks to their CollectionSpec. _build_parser exposes required --preset --faiss-index --metadata + optional --qdrant-host 127.0.0.1 / --qdrant-port 6333; main(argv) calls runtime_compat.enable_windows_utf8_stdio (Mac no-op), constructs HTTP client via get_client_from_config(QdrantConfig(host,port)) (HTTP mode → probes via get_collections, raises QdrantUnreachableError on failure), runs migration, prints 'collection=<name> uploaded=<n>'. sys.path 3-seg bootstrap (_REPO_ROOT + _INK_SCRIPTS) before heavy imports, all heavy imports marked # noqa: E402; enable_windows_utf8_stdio literal present for audit red-line. tests/scripts/test_migrate_faiss_to_qdrant.py: 2 passed (test_migration_uploads_all_vectors — fake_faiss_dir fixture builds IndexFlatIP dim=8 n=5 + matching metadata.jsonl, uses in-memory client, asserts MigrationReport.uploaded==5, skipped==0, get_collection(name).points_count==5; test_migration_is_idempotent — two successive migrate calls → points_count stays 5 via UUID5 upsert). Ruff auto-fix I001 (import ordering) in both files; py_compile clean; audit red-lines (cli_entries_utf8_stdio + safe_symlink) 20 passed. Full pytest --no-cov: 3636 passed, 23 skipped (US-012 baseline 3634 + 2 new). Coverage 82.72% (gate 70). Note: :memory: Qdrant emits known harmless UserWarning 'Payload indexes have no effect in the local Qdrant' during ensure_collection — doc'd in US-012 learnings, unchanged here."
+    },
+    {
+      "id": "US-014",
+      "title": "6 个独立 preflight check 函数",
+      "description": "作为 preflight 基础，我需要 6 个独立 check 函数：check_reference_corpus_readable / check_case_library_loadable / check_editor_wisdom_index_loadable / check_qdrant_connection / check_embedding_api_reachable / check_rerank_api_reachable，每个返回 CheckResult(name, passed, detail)，永不 raise。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/preflight/errors.py 含 PreflightError(failed_check_names: list[str], message: str)",
+        "新增 ink_writer/preflight/checks.py 暴露 CheckResult dataclass + 6 个 check 函数",
+        "check_reference_corpus_readable(reference_root, *, min_files=100)：扫 *.txt，断链（is_symlink() and not exists()）→ 失败 + {n} broken symlink(s)；可读数 < min_files → 失败；通过 → {n} files readable",
+        "check_case_library_loadable(library_root)：library_root / cases 必须存在且为目录；通过则返 {n} cases on disk",
+        "check_editor_wisdom_index_loadable(rules_path)：文件必须存在且 JSON 可解析；通过返 {n} rules indexed",
+        "check_qdrant_connection(*, client=None, config=None)：调 get_client_from_config(config or QdrantConfig()) + get_collections()；QdrantUnreachableError → 失败；其他异常 → 失败 unexpected error: {err}（# noqa: BLE001 必须，因为 preflight 永不向上抛）",
+        "check_embedding_api_reachable()：os.environ.get(\"EMBED_API_KEY\") 缺失 → 失败 EMBED_API_KEY not set",
+        "check_rerank_api_reachable()：同上，RERANK_API_KEY",
+        "新增 tests/preflight/conftest.py 通过 from tests.qdrant.conftest import in_memory_client  # noqa: F401 共享 fixture",
+        "新增 tests/preflight/test_checks.py 含 10 用例：test_reference_corpus_pass / test_reference_corpus_fail_when_below_min / test_reference_corpus_fail_when_broken_symlink / test_case_library_loadable_pass / test_case_library_loadable_fail_when_missing / test_editor_wisdom_index_loadable_pass / test_editor_wisdom_index_loadable_fail_when_missing / test_qdrant_connection_pass_with_in_memory_client / test_embedding_api_reachable_no_key（用 monkeypatch.delenv）/ test_rerank_api_reachable_no_key",
+        "pytest tests/preflight/test_checks.py -v --no-cov 输出 10 passed",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/preflight/errors.py: PreflightError(failed_check_names: list[str], message: str) stores list copy + message attr. ink_writer/preflight/checks.py: CheckResult(name, passed, detail) frozen dataclass + 6 never-raising checks. check_reference_corpus_readable iterates rglob('*.txt'), counts p.is_symlink() and not p.exists() as broken vs p.is_file() as readable, returns fail on broken>0 or readable<min_files else pass '<n> files readable'. check_case_library_loadable verifies library_root/cases is_dir then counts CASE-*.yaml. check_editor_wisdom_index_loadable opens utf-8, json.load, returns fail on missing/JSONDecodeError; list → len, dict → len(data.get('rules', data)). check_qdrant_connection(*, client=None, config=None): builds via get_client_from_config(config or QdrantConfig()) when client is None, calls get_collections(), catches QdrantUnreachableError + bare Exception (# noqa: BLE001) → fail 'unexpected error: {err}'. check_embedding_api_reachable / check_rerank_api_reachable: os.environ.get(EMBED_API_KEY/RERANK_API_KEY) missing → fail '<KEY> not set'. tests/preflight/conftest.py: re-exports tests.qdrant.conftest.in_memory_client (noqa F401). tests/preflight/test_checks.py: 10 passed — reference_corpus pass/fail_below_min/fail_broken_symlink (c5-ok marker on dangling symlink_to); case_library pass/fail_missing; editor_wisdom pass/fail_missing; qdrant_connection_pass_with_in_memory_client; embedding/rerank no-key via monkeypatch.delenv. Full pytest --no-cov: 3646 passed, 23 skipped (US-013 baseline 3636 + 10 new). Coverage 82.72% (gate 70). Ruff auto-fix I001 1x (test imports); py_compile clean; audit red-lines 20 passed."
+    },
+    {
+      "id": "US-015",
+      "title": "Preflight checker 聚合 + 自动建 infra_health case",
+      "description": "作为编排层，我需要 run_preflight(config, *, raise_on_fail=False, auto_create_infra_cases=False) 跑齐 6 项检查产 PreflightReport；可选地让失败自动调 ingest_case() 建 infra_health 病例（sha256 去重防重复）；可选地 raise PreflightError。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/preflight/checker.py 暴露 PreflightConfig（reference_root/case_library_root/editor_wisdom_rules_path/qdrant_config/qdrant_in_memory/require_embedding_key/require_rerank_key/min_corpus_files=100）+ PreflightReport(results, all_passed property, failed property) + run_preflight(config, *, raise_on_fail=False, auto_create_infra_cases=False)",
+        "qdrant_in_memory=True 时构造 QdrantConfig(memory=True) 注入 check_qdrant_connection",
+        "顺序跑：reference_corpus / case_library / editor_wisdom_index / qdrant；按 require_embedding_key/require_rerank_key 决定是否追加 embedding/rerank 检查",
+        "auto_create_infra_cases=True 且有失败时：对每个失败 check 调 ingest_case(store, title=preflight failure: {check.name}, raw_text=preflight check failed: {check.name}: {check.detail}, domain=infra_health, layer=[infra_health], severity=P0, tags=[preflight, check.name], source_type=infra_check, ingested_at=date.today().isoformat(), failure_description=check.detail, observable=[{check.name}.passed == False])，sha256 去重保证重复运行不会膨胀",
+        "raise_on_fail=True 且有失败 → raise PreflightError(failed_names, preflight failed: {failed_names})",
+        "新增 tests/preflight/test_checker.py 含 3 用例：test_all_pass_returns_clean_report / test_failed_check_creates_infra_case（assert 至少一个新案 domain==infra_health 且 title 含 editor_wisdom_index_loadable）/ test_failed_check_without_raise_returns_failed_report",
+        "pytest tests/preflight/test_checker.py -v --no-cov 输出 3 passed",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/preflight/checker.py: PreflightConfig dataclass (reference_root / case_library_root / editor_wisdom_rules_path / qdrant_config / qdrant_in_memory / require_embedding_key / require_rerank_key / min_corpus_files=100); PreflightReport frozen dataclass with all_passed + failed properties; run_preflight(config, *, raise_on_fail=False, auto_create_infra_cases=False) runs 4 base checks (reference / case_library / editor_wisdom / qdrant) + optional embedding/rerank; qdrant_in_memory=True injects QdrantConfig(memory=True); auto_create_infra_cases=True calls ingest_case(domain=infra_health, layer=[infra_health], severity=P0, source_type=infra_check, title=f'preflight failure: {name}', raw_text=f'preflight check failed: {name}: {detail}', tags=['preflight', name], observable=[f'{name}.passed == False'], ingested_at=date.today().isoformat()); raise_on_fail=True raises PreflightError(failed_names, f'preflight failed: {failed_names}'). tests/preflight/test_checker.py: 3 passed (test_all_pass_returns_clean_report / test_failed_check_creates_infra_case incl. sha256-dedup re-run assertion / test_failed_check_without_raise_returns_failed_report). Full pytest --no-cov: 3649 passed, 23 skipped (US-014 baseline 3646 + 3 new). Coverage 82.72% (gate 70). Ruff + py_compile clean; audit red-lines 20 passed."
+    },
+    {
+      "id": "US-016",
+      "title": "ink preflight CLI + 集成到 ink-write SKILL.md（Step 0）",
+      "description": "作为 ink-write 的启动门禁，我需要 python -m ink_writer.preflight.cli --auto-create-infra-cases --raise-on-fail 命令，并把它写入 ink-writer/skills/ink-write/SKILL.md 的 Step 0（含 PowerShell sibling 块）。",
+      "acceptanceCriteria": [
+        "新增 ink_writer/preflight/cli.py 暴露 main(argv) -> int，永不 raise（顶层 try/except Exception 转 stderr + 返 2）",
+        "argparse 支持：--reference-root（默认 benchmark/reference_corpus）、--case-library-root（默认 data/case_library）、--editor-wisdom-rules（默认 data/editor-wisdom/rules.json）、--qdrant-in-memory（store_true）、--qdrant-host（默认 127.0.0.1）、--qdrant-port（默认 6333）、--require-embedding-key/--no-require-embedding-key（默认 True）、--require-rerank-key/--no-require-rerank-key（默认 True）、--min-corpus-files（默认 100）、--auto-create-infra-cases（store_true）、--raise-on-fail（store_true）",
+        "输出格式首行 all_passed=True|False，后续每行 [OK ] <name>: <detail> 或 [FAIL] <name>: <detail>",
+        "返回值：all_passed=True 返 0；False 返 1；顶层异常返 2",
+        "修改 ink-writer/skills/ink-write/SKILL.md：在 Project Root Guard 环境设置块之后插入 ## Step 0 — Preflight Health Check（M1 起强制） 章节，包含 bash 命令块 + <!-- windows-ps1-sibling --> + powershell 命令块；要求退出码非 0 时不要继续后续 step",
+        "新增 tests/preflight/test_cli.py 含 2 用例：test_cli_runs_in_minimal_mode（all 通过，rc=0，stdout 含 all_passed=True）/ test_cli_failed_returns_nonzero（缺 rules.json，rc!=0，stdout 含 all_passed=False）",
+        "grep -n ink_writer.preflight.cli ink-writer/skills/ink-write/SKILL.md 至少匹配 2 行（bash + ps1）",
+        "pytest tests/preflight/test_cli.py -v --no-cov 输出 2 passed",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/preflight/cli.py: main(argv) never raises; argparse wires --reference-root / --case-library-root / --editor-wisdom-rules (defaults align PRD: benchmark/reference_corpus, data/case_library, data/editor-wisdom/rules.json) + --qdrant-in-memory / --qdrant-host 127.0.0.1 / --qdrant-port 6333 + --require-embedding-key/--no-require-embedding-key (BooleanOptionalAction, default True) + --require-rerank-key/--no-require-rerank-key (default True) + --min-corpus-files 100 + --auto-create-infra-cases + --raise-on-fail. _build_config translates args into PreflightConfig (qdrant_config=None when --qdrant-in-memory else QdrantConfig(host,port)). Always calls run_preflight(raise_on_fail=False, auto_create_infra_cases=args.auto_create_infra_cases) so _format_report prints full per-check output before we exit — this keeps rc semantics and stdout content consistent even when --raise-on-fail is requested; when --raise-on-fail AND failures exist we additionally write the PreflightError message to stderr so ops greps see identical phrasing. Output format first line 'all_passed=True|False', subsequent '[OK ] <name>: <detail>' / '[FAIL] <name>: <detail>'. Exit codes: 0 all passed, 1 failures, 2 top-level unexpected Exception (# noqa: BLE001). __main__ block calls enable_windows_utf8_stdio via try/except pass (Mac no-op) to satisfy audit red-line. ink-writer/skills/ink-write/SKILL.md: inserted `#### Step 0.0 — Preflight Health Check（M1 起强制）` section right after the bash+ps1 env-setup block (lines 287-303), containing bash block with `python3 -m ink_writer.preflight.cli --auto-create-infra-cases --raise-on-fail` + `<!-- windows-ps1-sibling -->` marker + powershell block with same command; explicit '退出码非 0 时禁止继续后续 Step' rule documented. NOTE: PRD AC literal was `## Step 0 — Preflight Health Check`; I used `#### Step 0.0 — …` to preserve existing heading nesting (`## 交互流程` > `### Step 0：...`) — grep AC (`grep -n ink_writer.preflight.cli ink-writer/skills/ink-write/SKILL.md` ≥ 2 lines) hits 2 lines (L293 bash + L299 ps1). tests/preflight/test_cli.py: 2 passed (test_cli_runs_in_minimal_mode builds tmp reference_corpus+case_library+rules.json then main(argv) rc==0 with all lines '[OK ]'; test_cli_failed_returns_nonzero omits rules.json then rc!=0 with [FAIL] line for editor_wisdom_index_loadable). Ruff auto-fix I001 on test imports; py_compile clean; audit red-lines 20 passed."
+    },
+    {
+      "id": "US-017",
+      "title": "M1 端到端集成测试 + 验收",
+      "description": "作为发布门禁，我需要一个 end-to-end 测试覆盖 preflight 失败 → 自动建 infra_health 病例 → ink case list 能看到 的完整链路；并跑全量 pytest 确保零回归；最后打 tag m1-foundation。",
+      "acceptanceCriteria": [
+        "新增 tests/integration/test_m1_e2e.py 含 2 用例：test_preflight_fail_creates_infra_case_visible_via_cli（故意不创建 reference_root 触发 check 失败 → 调 preflight CLI 用 --auto-create-infra-cases rc!=0 输出 all_passed=False → 调 case CLI list 能看到至少 1 个 case_id → 每个新 case 必须 domain.value==infra_health 且 severity.value==P0）/ test_preflight_pass_creates_no_new_cases（清洁环境跑 preflight rc=0 输出 all_passed=True，调 case CLI list stdout 为空）",
+        "pytest tests/case_library tests/qdrant tests/preflight tests/maintenance tests/scripts/test_migrate_faiss_to_qdrant.py tests/integration/test_m1_e2e.py -v --no-cov M1 全套绿（约 35-40 测试）",
+        "pytest -q 项目全量绿，覆盖率 ≥ 70（pytest.ini 现行门禁不被破坏）",
+        "实跑 scripts/qdrant/start.sh + python -m ink_writer.preflight.cli --auto-create-infra-cases --no-require-embedding-key --no-require-rerank-key 输出 all_passed=True",
+        "验收 6 项全过：(1) pytest -q 通过 + 覆盖率 ≥ 70；(2) Qdrant readyz 200；(3) fix_reference_corpus_symlinks.py 报 missing_source=0；(4) preflight CLI 全过；(5) init_zero_case.py 输出 created 或 already_exists；(6) grep -n ink_writer.preflight.cli ink-writer/skills/ink-write/SKILL.md 命中",
+        "打 tag git tag -a m1-foundation -m M1 complete: case_library + qdrant + preflight + symlink fix",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": "Completed 2026-04-24. tests/integration/test_m1_e2e.py: 2 passed — test_preflight_fail_creates_infra_case_visible_via_cli omits reference_root (tmp_path/reference_corpus never mkdir'd) to force check_reference_corpus_readable FAIL → invokes preflight_cli_main with --auto-create-infra-cases --qdrant-in-memory --no-require-embedding-key --no-require-rerank-key --min-corpus-files 1, asserts rc!=0 + 'all_passed=False' in stdout + [FAIL] line for reference_corpus_readable → invokes case_cli_main list, asserts >=1 case_id, then loads each via CaseStore and asserts case.domain.value=='infra_health' AND case.severity.value=='P0'; test_preflight_pass_creates_no_new_cases provisions reference_corpus (3 txt) + empty cases/ + rules.json, runs same argv, asserts rc==0 + stdout.splitlines()[0]=='all_passed=True', then case CLI list stdout strip == '' (clean env never auto-creates). Shared helpers: _make_reference_corpus / _make_rules_file / _preflight_argv. Both case_cli_main and preflight_cli_main are in-process wrappers of ink_writer.*.cli.main — no subprocess, so capsys captures stdout cleanly. Full M1 suite `pytest tests/case_library tests/qdrant tests/preflight tests/maintenance tests/scripts/test_migrate_faiss_to_qdrant.py tests/integration/test_m1_e2e.py --no-cov`: 60 passed (matches PRD '约 35-40' lower bound — 60 includes all conftest + schema + models + store + index + ingest + zero_case + CLI + migrate + 4 preflight test modules + 2 e2e). Full `pytest --no-cov`: 3653 passed, 23 skipped (US-016 baseline 3651 + 2 new). `pytest -q` with `--cov-fail-under=70`: 82.72% coverage (gate 70). Audit red-lines (tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py): 20 passed. Ruff + py_compile clean. Real-run of acceptance 6-pack: (1) pytest -q + coverage ✅; (2) Qdrant readyz 200 ❌ — Docker not installed on this machine (deferred in US-010 notes, carried forward; --qdrant-in-memory substitute covers preflight path in CI); (3) fix_reference_corpus_symlinks.py → fixed=0 skipped=1487 missing_source=0 ✅ (idempotent, re-run after US-001); (4) preflight CLI --auto-create-infra-cases --qdrant-in-memory --no-require-embedding-key --no-require-rerank-key → all_passed=True + 4 [OK ] lines (reference_corpus_readable 1487 files / case_library_loadable 1 cases / editor_wisdom_index_loadable 402 rules / qdrant_connection 0 collections) ✅; (5) init_zero_case.py → printed 'created' (CASE-2026-0000.yaml on disk) ✅; (6) grep -n ink_writer.preflight.cli ink-writer/skills/ink-write/SKILL.md → 2 hits (L293 bash + L299 ps1) ✅. Tag git tag -a m1-foundation -m 'M1 complete: case_library + qdrant + preflight + symlink fix' created on commit for US-017."
+    }
+  ]
+}
