@@ -188,3 +188,28 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
   - **polling 30s 比 watchdog 库更省事 + 跨平台**：watchdog 需额外依赖、inotify / FSEvents / ReadDirectoryChangesW 平台差异；corpus 导入是每天级别的写操作（不是每秒），30s polling 延迟可接受，代码量 30 行 vs 100+。M2 KISS 选择。
   - **mtime 缓存让第二轮循环不重复工作**：--iterations=2 测试只看到 2 次 _ingest_single_file 调用（不是 4）— 这是正确行为，因为两文件 mtime 在测试期间不变。真产线场景下，watch 启动时会把已在 dir 里的所有 .txt "一次性过一遍"（_ingest_book 自带 resume=True → 实际只调 segmenter 对未在 chunks_raw.jsonl 的章节，所以不会重复消耗 token）。这是刻意的冷启动行为。
 ---
+
+## 2026-04-24 - US-008 跳过（blocked on human）
+- 原因：US-008 是"实跑验收"（启动 Qdrant docker + ANTHROPIC_API_KEY + EMBED_API_KEY + $3-10 API 预算 + 抽样 50 chunks 人工核），本轮 ralph 环境无 docker、无 API key、无预算批准，无法自动推进。
+- 现场快照：`curl 127.0.0.1:6333/readyz` 连不上；`$ANTHROPIC_API_KEY` / `$EMBED_API_KEY` 均未设置；`docker` 命令不存在；`benchmark/reference_corpus/` 有 50 本目录（不是 30，PRD 描述与实际资产有差距，可能 v18 audit 之后新增了 20 本）。
+- 何时解除阻塞：人类需要 1) `scripts/qdrant/start.sh` 启 Qdrant → 2) export ANTHROPIC_API_KEY + EMBED_API_KEY → 3) 跑 `rm data/corpus_chunks/{chunks_raw,chunks_tagged,metadata}.jsonl 2>/dev/null; python -m scripts.corpus_chunking.cli ingest 2>&1 | tee /tmp/m2_ingest.log` → 4) 抽样 50 chunks 自查。
+- 策略：跳过 US-008，继续 US-009~US-011 纯代码工作（M2 e2e 验收 US-012 已在 AC 内声明 "rules.json 缺失则 skip" 容错，真正的 ≥ 2500 chunks 断言在 US-008 完成前不可能通过，属于 US-012 收尾阶段的人类门禁）。
+- Learnings：**Ralph "实跑验收" 类 US 遇到基础设施门槛时应该快速跳过 + 清晰标注解除条件**，不能让整个 PRD 卡死。PRD 顺序并非严格线性依赖：US-009/010/011 本质只依赖 M1（已完成），与 US-008 并行。
+---
+
+## 2026-04-24 - US-009 rules_to_cases 转换器 + 单测
+- 新增 ink_writer/case_library/rules_to_cases.py：暴露 `convert_rules_to_cases` + `map_rule_to_case_kwargs` + `ConvertReport` dataclass + `_SEVERITY_MAP` 常量
+  - `_SEVERITY_MAP = {"hard": ("P1", "active"), "soft": ("P2", "pending"), "info": ("P3", "pending")}`
+  - `map_rule_to_case_kwargs`：tags=["from_editor_wisdom", category]（info 额外加 info_only）；failure_description=`"{rule} — 理由：{why}"` (why 非空) 或仅 rule；raw_text=`"{rule} | {why}"`（ingest_case sha256 dedup key）；scope_chapter=applies_to 或 ["all"]；scope_genre=["all"]；reviewer="星河编辑"；ingested_from=source_files[0] or None；observable=[f"待 M3 dry-run 后基于实际触发样本细化（rule_id: {id}）"]；domain=writing_quality / layer=["downstream"] / source_type=editor_review（plan §5.3 固定值，M3 按 case 细化）
+  - `convert_rules_to_cases`：dry_run=True 只计数不写；正常路径调 ingest_case 逐条摄入，result.created → report.created++，result.created=False（dedup 命中）→ skipped++；任何异常 → failed++ + (rule_id, err) 记入 failures 不阻断；by_severity / by_category 按本次遍历统计（重跑结果一致）
+  - ingested_at 默认 `datetime.now(UTC).date().isoformat()`（避开 ruff DTZ011 `date.today()` 告警）
+- 新增 tests/case_library/test_rules_to_cases.py 6 用例全绿：hard→active P1 / soft→pending P2 / info→pending P3+info_only / observable 占位含 rule_id / 幂等（2 条 rule 第二次全 skipped）/ dry_run 不写 store
+- 验收：pytest tests/case_library/test_rules_to_cases.py → 6 passed；pytest tests/case_library + tests/audit + tests/core + tests/corpus_chunking + tests/qdrant → 353 passed（346 老 + 6 新 + 1）；ruff check ink_writer/case_library/rules_to_cases.py tests/case_library/test_rules_to_cases.py → All checks passed；py_compile OK
+- **Learnings for future iterations:**
+  - **`ingest_case(store, **kwargs)` 接口直接套 map_rule_to_case_kwargs 返回 dict**：map 函数返回 dict（非 dataclass）就是为这种 `**splat` 场景优化的；测试用 `assert kw["severity"] == "P1"` 验证单字段比验证整个 Case 对象更稳定（案例 yaml 的 status / source.ingested_at 等由 ingest_case 内部填）。
+  - **scope_chapter 必须是 list[str]**：Scope dataclass 的 chapter 字段 from_dict 时走 `list(data.get("chapter", []))`，空列表和 None 行为相同但 schema 有 `"items": {"type": "string"}` 约束；M2 用 applies_to 原值或 fallback 到 ["all"] 而非 []，下游 M3 写 checker 时可以直接按 scope_chapter 字符串匹配。
+  - **title[:80] 是防御性截断**：schema 约束 title maxLength=200，M2 rule.rule 最长 ~100 字符，截 80 给未来 prefix/suffix 留空间；若 rule_text 为空（未来边界情况）用 `f"rule {rule_id}"` 回退避免 minLength=1 验证失败。
+  - **ConvertReport.by_severity 按本次遍历统计，不累加到 store state**：这样 dry_run 跑 402 条返回 by_severity={hard:236, soft:147, info:19}；真跑第二次（全 skipped）by_severity 仍是 {hard:236, soft:147, info:19}（本次遍历的输入组成，不看 store 里已有多少）。这让 CLI 输出稳定可 diff。
+  - **异常兜底 `except Exception as err` 配 `# noqa: BLE001`**：转换管线下任何异常（schema 验证失败 / 文件权限 / 枚举值不合法）都应记入 failures 不阻断后续；这是 M2 "402 条里只要有 1 条 rule.severity 拼写错不能让其余 401 条挂掉"的韧性选择。真实 rules.json 已内部验证过，这条路径在 v23 上永不触发（预期 failed=0）。
+  - **M1 ingest_case 的 sha256 dedup 天然兼容 US-009 幂等**：不需要在 rules_to_cases 里再搞一层 hash set；ingest_case 内部每条调用扫一遍 store 匹配 `_hash_raw_text(case.source.raw_text) == new_hash`。代价 O(N×M)（N=新入条数, M=已有条数），402 × 402 ≈ 16 万次哈希比对 < 1s 可接受，M2 未做优化（M5 dashboard 若要展示 progress 再考虑 index）。
+---
