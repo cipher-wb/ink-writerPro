@@ -214,6 +214,34 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
   - **M1 ingest_case 的 sha256 dedup 天然兼容 US-009 幂等**：不需要在 rules_to_cases 里再搞一层 hash set；ingest_case 内部每条调用扫一遍 store 匹配 `_hash_raw_text(case.source.raw_text) == new_hash`。代价 O(N×M)（N=新入条数, M=已有条数），402 × 402 ≈ 16 万次哈希比对 < 1s 可接受，M2 未做优化（M5 dashboard 若要展示 progress 再考虑 index）。
 ---
 
+## 2026-04-24 - US-011 ink case approve --batch <yaml> CLI
+- 新增 schemas/case_approval_batch_schema.json：`approvals` 数组 minItems=1；每项 required `case_id` (pattern ^CASE-[0-9]{4}-[0-9]{4}$) + `action` enum [approve/reject/defer]，可选 `note`，两层 `additionalProperties: false`
+- 新增 ink_writer/case_library/approval.py：`apply_batch_yaml(*, yaml_path, library_root) -> ApprovalReport` + `ApprovalReport(applied, failed, failures)` dataclass
+  - `_ACTION_TO_STATUS = {approve: ACTIVE, reject: RETIRED, defer: PENDING}`
+  - `Draft202012Validator(_load_schema()).validate(data)` 失败时 raise `jsonschema.ValidationError`（不捕获，交给 CLI 顶层决策 rc=3）
+  - 单 case 流程：`store.load → case.status = _ACTION_TO_STATUS[action] → store.save → store.append_ingest_log({event: "approval", case_id, action, at: utc_iso, [note if present]})`
+  - `CaseNotFoundError` 单独 catch 记 `failures` 列表；其他 `Exception` 统一兜底（`# noqa: BLE001` + batch-level guard），**不阻断后续 entries**
+  - schema 加载：`_repo_root() / "schemas" / "case_approval_batch_schema.json"` + `lru_cache(maxsize=1)`（与 schema.py `_load_schema` 相同模式，`open()` 带 `encoding="utf-8"`）
+- 修改 ink_writer/case_library/cli.py：
+  - 顶部 import `jsonschema.ValidationError` + `from ink_writer.case_library.approval import apply_batch_yaml`
+  - `_build_parser()` 新增 `approve` 子命令：`--batch <Path>`（required=True）
+  - 新增 `_cmd_approve(library_root, batch_path)`：batch_path 不存在 rc=2；`ValidationError` rc=3 + stderr "approval batch schema violation"；否则打印 `applied=N failed=N` + 失败前 10 条到 stderr + rc=0 if failed==0 else 1
+  - main() dispatch 追加 `if args.command == "approve"` 分支
+- 新增 tests/case_library/test_cli_approve.py 3 用例全绿：
+  - test_approve_batch_three_actions：ingest 3 pending case → yaml 含 approve/reject/defer → assert 3 case status active/retired/pending + 验 ingest_log.jsonl 含 3 条 approval 事件（note 保留在 approve/defer，reject 无 note 行不写 note 字段）
+  - test_approve_batch_invalid_yaml_returns_3：缺 action 字段 → rc=3 + stderr 含 "schema violation"
+  - test_approve_batch_unknown_case_records_failure_continues：CASE-2026-9999 不存在 + 1 个真实 case → rc=1 + applied=1 + failed=1 + stderr 含未知 id + 真实 case.status == active（失败不阻断后续）
+- 验收：pytest tests/case_library/test_cli_approve.py -v --no-cov → 3 passed；pytest tests/case_library + tests/audit + tests/core + tests/corpus_chunking + tests/qdrant --no-cov → 359 passed；pytest -q（全量 + cov）→ coverage 82.72% (≥ 70)；ruff check ink_writer/case_library/{approval,cli}.py tests/case_library/test_cli_approve.py → All checks passed；py_compile OK；`python3 -m ink_writer.case_library.cli approve --help` 输出正确
+- **Learnings for future iterations:**
+  - **jsonschema `Draft202012Validator.validate(data)` 与 `iter_errors(...)` 的取舍**：前者在第一个错误就 raise `ValidationError`（fail-fast、给 CLI 顶层 catch），后者返生成器可枚举全部错误。批量 YAML 场景"哪怕一个字段不合法都拒绝整批"→ validate() 即可，不需要也不该收集子错误（单 entry 缺 action 意味 YAML 结构不可信，全批拒绝比选择性应用安全）。
+  - **"fail one entry, continue batch" 语义通过两层 try/except 实现**：顶层 `apply_batch_yaml` 里 `validate(data)` 让 schema 错误直接抛；per-entry 循环内 try 所有副作用（store.load/save/append_ingest_log），`CaseNotFoundError` 单独 catch 出更友好的 err 文案，其他异常走 `except Exception` 兜底 + `noqa: BLE001`。这样"100 entries 里 1 个 case_id 打错"不会让其他 99 挂掉。
+  - **note 字段"有值时才写入 ingest_log event"**：若未传 note 则 event dict 无 "note" 键（而非 `"note": null`），jsonl 往 grep 里塞 null 会让下游统计误识 — 这种"只在有值时写入"模式比"null 表不存在"更友好。测试里 `assert "note" not in next(ev ...)` 固化这一契约。
+  - **跨包 JSON schema 加载统一走 `_repo_root() / schemas / ...`**：approval.py 与 schema.py 都有各自的 `_repo_root()`（因路径层级相同都是 `parent.parent.parent`），相同 `lru_cache(maxsize=1)` 模式避免重复 IO。未来若要再加 schema，考虑抽到 `schemas/__init__.py` 做统一 loader（M5 再评估，M2 维持分散）。
+  - **CLI `--batch` 用 `type=Path`**：argparse 直接把 str 转 Path，避免 `_cmd_approve` 内再转；`required=True` 让 argparse 自动报错 "error: the following arguments are required: --batch"，rc=2 不用手写 else 路径。
+  - **approval.py 不需要 CLI 入口 → 不触发 audit 红线**：纯 library 无 `if __name__ == "__main__":`，因此 audit 的 `enable_windows_utf8_stdio` 检查不扫它（同 US-009 rules_to_cases.py）。audit 红线只扫含 main guard 的 .py。
+  - **`store.load(case.case_id)` 返回新 Case 对象，修改后必须 `store.save(case)` 重写 YAML**：Case dataclass 是 value object，`case.status = new_status` 只改内存副本，磁盘文件不动直到 save。这是 CaseStore 设计的显式契约（load + mutate + save 三段式），与 ORM 的 autoflush 语义不同。
+---
+
 ## 2026-04-24 - US-010 ink case convert-from-editor-wisdom CLI 集成
 - 修改 ink_writer/case_library/cli.py：
   - import convert_rules_to_cases + 新增常量 DEFAULT_RULES_PATH=Path("data/editor-wisdom/rules.json")

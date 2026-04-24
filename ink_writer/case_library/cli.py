@@ -33,7 +33,9 @@ from collections.abc import Sequence
 from pathlib import Path
 
 import yaml
+from jsonschema import ValidationError
 
+from ink_writer.case_library.approval import apply_batch_yaml
 from ink_writer.case_library.errors import (
     CaseLibraryError,
     CaseNotFoundError,
@@ -103,6 +105,17 @@ def _build_parser() -> argparse.ArgumentParser:
         "--dry-run",
         action="store_true",
         help="Count would-create cases without writing to store",
+    )
+
+    approve = sub.add_parser(
+        "approve",
+        help="Apply a batch YAML of case approvals (approve/reject/defer)",
+    )
+    approve.add_argument(
+        "--batch",
+        type=Path,
+        required=True,
+        help="Path to approvals YAML (schema: case_approval_batch_schema.json)",
     )
 
     return parser
@@ -202,6 +215,23 @@ def _cmd_convert_from_editor_wisdom(
     return 0 if report.failed == 0 else 1
 
 
+def _cmd_approve(library_root: Path, batch_path: Path) -> int:
+    if not batch_path.exists():
+        print(f"batch file not found: {batch_path}", file=sys.stderr)
+        return 2
+    try:
+        report = apply_batch_yaml(yaml_path=batch_path, library_root=library_root)
+    except ValidationError as exc:
+        print(f"approval batch schema violation: {exc.message}", file=sys.stderr)
+        return 3
+    print(f"applied={report.applied} failed={report.failed}")
+    if report.failures:
+        print("first failures (up to 10):", file=sys.stderr)
+        for case_id, err in report.failures[:10]:
+            print(f"  {case_id}: {err}", file=sys.stderr)
+    return 0 if report.failed == 0 else 1
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Top-level entry point. Never raises — returns non-zero on error."""
     try:
@@ -236,6 +266,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _cmd_convert_from_editor_wisdom(
                 args.library_root, args.rules, args.dry_run
             )
+        if args.command == "approve":
+            return _cmd_approve(args.library_root, args.batch)
         print(f"unknown command: {args.command}", file=sys.stderr)
         return 2
     except CaseLibraryError as exc:

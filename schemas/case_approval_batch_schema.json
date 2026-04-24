@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ink-writer/case_approval_batch_schema",
+  "title": "CaseApprovalBatch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["approvals"],
+  "properties": {
+    "approvals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["case_id", "action"],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "pattern": "^CASE-[0-9]{4}-[0-9]{4}$"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["approve", "reject", "defer"]
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
