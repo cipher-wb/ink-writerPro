@@ -213,3 +213,23 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
   - **异常兜底 `except Exception as err` 配 `# noqa: BLE001`**：转换管线下任何异常（schema 验证失败 / 文件权限 / 枚举值不合法）都应记入 failures 不阻断后续；这是 M2 "402 条里只要有 1 条 rule.severity 拼写错不能让其余 401 条挂掉"的韧性选择。真实 rules.json 已内部验证过，这条路径在 v23 上永不触发（预期 failed=0）。
   - **M1 ingest_case 的 sha256 dedup 天然兼容 US-009 幂等**：不需要在 rules_to_cases 里再搞一层 hash set；ingest_case 内部每条调用扫一遍 store 匹配 `_hash_raw_text(case.source.raw_text) == new_hash`。代价 O(N×M)（N=新入条数, M=已有条数），402 × 402 ≈ 16 万次哈希比对 < 1s 可接受，M2 未做优化（M5 dashboard 若要展示 progress 再考虑 index）。
 ---
+
+## 2026-04-24 - US-010 ink case convert-from-editor-wisdom CLI 集成
+- 修改 ink_writer/case_library/cli.py：
+  - import convert_rules_to_cases + 新增常量 DEFAULT_RULES_PATH=Path("data/editor-wisdom/rules.json")
+  - _build_parser() 新增 `convert-from-editor-wisdom` 子命令：--rules（默认 DEFAULT_RULES_PATH）+ --dry-run
+  - 新增 _cmd_convert_from_editor_wisdom(library_root, rules_path, dry_run)：rules_path 不存在 rc=2；调 convert_rules_to_cases → stdout 打印 `created=N skipped=N failed=N by_severity={...}` → failures 非空时 stderr 打印前 10 条 → rc=0 if failed==0 else 1
+  - main() dispatch 内追加 `convert-from-editor-wisdom` 分支
+- 新增 tests/case_library/test_cli_convert.py 3 用例全绿：
+  - test_convert_subcommand_creates_cases（2 条 rule hard+soft → created=2 + skipped=0 + by_severity={hard:1, soft:1} + store.list_ids() len=2）
+  - test_convert_idempotent（1 条 rule 连跑 2 次：第一次 created=1；第二次 skipped=1 store len=1）
+  - test_convert_dry_run（1 条 rule dry-run → stdout created=1 + store.list_ids()==[]）
+- 实跑 smoke：`python -m ink_writer.case_library.cli --library-root /tmp/m2_smoke convert-from-editor-wisdom --dry-run` 输出 `created=402 skipped=0 failed=0 by_severity={'soft': 147, 'hard': 236, 'info': 19}`（v23 rules.json）
+- 验收：pytest tests/case_library/test_cli_convert.py → 3 passed；pytest tests/case_library + tests/audit + tests/core + tests/corpus_chunking + tests/qdrant → 356 passed（353 + 3）；ruff check + py_compile OK
+- **Learnings for future iterations:**
+  - **CLI 子命令 help 字符串若含 "sha256 dedup" 等技术细节，argparse 不会乱码 Unicode**：但 Windows cp936 stdout 可能截断 — 凡 argparse help 里含中文都应倚赖已调用的 `enable_windows_utf8_stdio()`（main 顶层已调）。M2 子命令 help 全英文是保守选择。
+  - **by_severity 字典在 dict[str, int] 下 print 顺序是 insertion order**：`'soft': 147, 'hard': 236, 'info': 19` 与 by_severity.setdefault() 入队顺序一致；测试用 `"'hard': 1" in out` 字段级断言比全量比较更稳（Python dict repr 格式变化风险低）。
+  - **子命令 "rules file not found" rc=2 路径不单测**：AC 未要求，跳过写 `test_convert_missing_rules_returns_2` — YAGNI 原则下 smoke 命令下手观察足够。若 US-012 e2e 要覆盖再补。
+  - **`--dry-run` action="store_true" 默认 False**：与 US-005/006/007 cli.py 里 ingest 子命令的 --dry-run 语义一致，不用 `--dry-run=true` 显式形式。
+  - **CLI 入口 rc=0 vs rc=1 分叉点是 `report.failed == 0`**：convert-from-editor-wisdom 的 "soft error"（单条 rule 异常）由 convert_rules_to_cases 内部捕获到 failures 列表，不阻断；整个管线正常结束后根据 failed 数决定 exit code。这与 `_cmd_create`（CaseValidationError rc=3，单条操作）不同——**批量转换是"尽力完成 + 末端统计"，单条 create 是"All-or-nothing"**。
+---

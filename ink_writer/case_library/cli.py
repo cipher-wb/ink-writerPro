@@ -41,9 +41,11 @@ from ink_writer.case_library.errors import (
 )
 from ink_writer.case_library.index import CaseIndex
 from ink_writer.case_library.ingest import ingest_case
+from ink_writer.case_library.rules_to_cases import convert_rules_to_cases
 from ink_writer.case_library.store import CaseStore
 
 DEFAULT_LIBRARY_ROOT = Path("data/case_library")
+DEFAULT_RULES_PATH = Path("data/editor-wisdom/rules.json")
 STATUS_CHOICES = ("pending", "active", "resolved", "regressed", "retired")
 
 
@@ -86,6 +88,22 @@ def _build_parser() -> argparse.ArgumentParser:
     create.add_argument("--scope-genre", action="append", default=None)
     create.add_argument("--scope-chapter", action="append", default=None)
     create.add_argument("--initial-status", default="active")
+
+    convert = sub.add_parser(
+        "convert-from-editor-wisdom",
+        help="Convert editor-wisdom rules.json into cases (severity split + sha256 dedup)",
+    )
+    convert.add_argument(
+        "--rules",
+        type=Path,
+        default=DEFAULT_RULES_PATH,
+        help="Path to rules.json (default: data/editor-wisdom/rules.json)",
+    )
+    convert.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Count would-create cases without writing to store",
+    )
 
     return parser
 
@@ -162,6 +180,28 @@ def _cmd_rebuild_index(library_root: Path, store: CaseStore) -> int:
     return 0
 
 
+def _cmd_convert_from_editor_wisdom(
+    library_root: Path, rules_path: Path, dry_run: bool
+) -> int:
+    if not rules_path.exists():
+        print(f"rules file not found: {rules_path}", file=sys.stderr)
+        return 2
+    report = convert_rules_to_cases(
+        rules_path=rules_path,
+        library_root=library_root,
+        dry_run=dry_run,
+    )
+    print(
+        f"created={report.created} skipped={report.skipped} "
+        f"failed={report.failed} by_severity={report.by_severity}"
+    )
+    if report.failures:
+        print("first failures (up to 10):", file=sys.stderr)
+        for rule_id, err in report.failures[:10]:
+            print(f"  {rule_id}: {err}", file=sys.stderr)
+    return 0 if report.failed == 0 else 1
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Top-level entry point. Never raises — returns non-zero on error."""
     try:
@@ -192,6 +232,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _cmd_create(store, args)
         if args.command == "rebuild-index":
             return _cmd_rebuild_index(args.library_root, store)
+        if args.command == "convert-from-editor-wisdom":
+            return _cmd_convert_from_editor_wisdom(
+                args.library_root, args.rules, args.dry_run
+            )
         print(f"unknown command: {args.command}", file=sys.stderr)
         return 2
     except CaseLibraryError as exc:
