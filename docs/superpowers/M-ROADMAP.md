@@ -1,6 +1,6 @@
 # 病例库驱动的质量治理 — 5 周 Milestone Roadmap
 
-**Status**: 持续跟踪（M1 进行中）
+**Status**: 持续跟踪（M1 ✅ 完成 2026-04-24；下一步推进 M2）
 **Origin spec**: `docs/superpowers/specs/2026-04-23-case-library-driven-quality-overhaul-design.md`
 **Goal**: 起点编辑评分 30 → 60-70（6 个月内验证）
 
@@ -19,7 +19,7 @@
 
 | Milestone | 状态 | PRD | Plan | ralph branch | 完成日期 |
 |---|---|---|---|---|---|
-| **M1** 基础设施 + Qdrant + symlink 修复 | 🟢 进行中 | `tasks/prd-m1-case-library-foundation.md` | `docs/superpowers/plans/2026-04-23-m1-foundation-and-qdrant-migration.md` | `ralph/m1-case-library-foundation` | — |
+| **M1** 基础设施 + Qdrant + symlink 修复 | ✅ 完成 | `tasks/prd-m1-case-library-foundation.md` | `docs/superpowers/plans/2026-04-23-m1-foundation-and-qdrant-migration.md` | `ralph/m1-case-library-foundation` | 2026-04-24 |
 | **M2** 数据资产（切片 + 病例种子） | ⚪ 未开始 | TBD | TBD | TBD | — |
 | **M3** P1 下游闭环（**质量拐点**）| ⚪ 未开始 | TBD | TBD | TBD | — |
 | **M4** P0 上游策划层 | ⚪ 未开始 | TBD | TBD | TBD | — |
