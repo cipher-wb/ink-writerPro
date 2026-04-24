@@ -263,8 +263,8 @@
         "Typecheck passes"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/preflight/errors.py: PreflightError(failed_check_names: list[str], message: str) stores list copy + message attr. ink_writer/preflight/checks.py: CheckResult(name, passed, detail) frozen dataclass + 6 never-raising checks. check_reference_corpus_readable iterates rglob('*.txt'), counts p.is_symlink() and not p.exists() as broken vs p.is_file() as readable, returns fail on broken>0 or readable<min_files else pass '<n> files readable'. check_case_library_loadable verifies library_root/cases is_dir then counts CASE-*.yaml. check_editor_wisdom_index_loadable opens utf-8, json.load, returns fail on missing/JSONDecodeError; list → len, dict → len(data.get('rules', data)). check_qdrant_connection(*, client=None, config=None): builds via get_client_from_config(config or QdrantConfig()) when client is None, calls get_collections(), catches QdrantUnreachableError + bare Exception (# noqa: BLE001) → fail 'unexpected error: {err}'. check_embedding_api_reachable / check_rerank_api_reachable: os.environ.get(EMBED_API_KEY/RERANK_API_KEY) missing → fail '<KEY> not set'. tests/preflight/conftest.py: re-exports tests.qdrant.conftest.in_memory_client (noqa F401). tests/preflight/test_checks.py: 10 passed — reference_corpus pass/fail_below_min/fail_broken_symlink (c5-ok marker on dangling symlink_to); case_library pass/fail_missing; editor_wisdom pass/fail_missing; qdrant_connection_pass_with_in_memory_client; embedding/rerank no-key via monkeypatch.delenv. Full pytest --no-cov: 3646 passed, 23 skipped (US-013 baseline 3636 + 10 new). Coverage 82.72% (gate 70). Ruff auto-fix I001 1x (test imports); py_compile clean; audit red-lines 20 passed."
     },
     {
       "id": "US-015",
