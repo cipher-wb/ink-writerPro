@@ -22,6 +22,7 @@ import argparse
 import json
 import os
 import sys
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -416,11 +417,75 @@ def _cmd_rebuild(args: argparse.Namespace, cfg: dict[str, Any]) -> int:
     return _cmd_ingest(ing_args, cfg)
 
 
+def _ingest_single_file(file_path: Path, cfg: dict[str, Any]) -> None:
+    """Ingest one chapter file via ``_ingest_book`` in resume mode.
+
+    ``book_dir`` is inferred as ``file_path.parent.parent`` (convention:
+    ``<corpus>/<book>/chapters/ch###.txt``). Resume=True skips already-
+    indexed chapters so a single-file trigger only processes the new file.
+    """
+    book_dir = file_path.parent.parent
+    data_dir = DEFAULT_DATA_DIR
+    seg_cfg = _build_segmenter_config(cfg)
+    tag_cfg = _build_tagger_config(cfg)
+    idx_cfg = _build_indexer_config(cfg)
+
+    anthropic_client = _build_anthropic_client()
+    qdrant_client = _build_qdrant_client()
+    embedder = _build_embedding_client(cfg)
+
+    _ingest_book(
+        book_dir=book_dir,
+        data_dir=data_dir,
+        anthropic_client=anthropic_client,
+        qdrant_client=qdrant_client,
+        embedder=embedder,
+        seg_cfg=seg_cfg,
+        tag_cfg=tag_cfg,
+        idx_cfg=idx_cfg,
+        resume=True,
+        dry_run=False,
+    )
+
+
 def _cmd_watch(args: argparse.Namespace, cfg: dict[str, Any]) -> int:
-    # Full implementation lands in US-007.
-    del args, cfg
-    print("watch: not implemented yet (US-007)", file=sys.stderr)
-    return 2
+    """Polling watcher: detect new/changed ``*.txt`` under ``--dir``.
+
+    ``--iterations`` defaults to -1 (infinite loop). Finite values are for
+    tests only so the loop terminates deterministically.
+    """
+    watch_dir = Path(args.dir)
+    if not watch_dir.exists():
+        print(f"watch dir does not exist: {watch_dir}", file=sys.stderr)
+        return 2
+
+    interval = max(0, int(args.interval))
+    iterations = int(args.iterations)
+    seen: dict[Path, float] = {}
+    loops = 0
+
+    try:
+        while iterations < 0 or loops < iterations:
+            for txt_path in watch_dir.rglob("*.txt"):
+                try:
+                    mtime = txt_path.stat().st_mtime
+                except OSError:
+                    continue
+                if seen.get(txt_path) == mtime:
+                    continue
+                seen[txt_path] = mtime
+                try:
+                    _ingest_single_file(txt_path, cfg)
+                except Exception as err:  # noqa: BLE001 — never abort watcher
+                    print(f"warn: ingest failed for {txt_path}: {err}", file=sys.stderr)
+            loops += 1
+            if iterations < 0 or loops < iterations:
+                time.sleep(interval)
+    except KeyboardInterrupt:
+        print("watch: interrupted, exiting gracefully", file=sys.stderr)
+        return 0
+
+    return 0
 
 
 # --- argparse scaffolding ---------------------------------------------------

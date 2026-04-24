@@ -144,3 +144,47 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
   - **`_already_indexed` 以 chunks_raw.jsonl 作为 resume 游标而非 metadata.jsonl**：chunks_raw 在 segmenter 成功后立即写入（tag/index 失败不影响），resume 时不应因 tag/index 失败而反复跑 segmenter（调 LLM 贵）。原则：**resume 游标应放在最便宜工序的输出之后**，防止重试的 cost 放大。
   - **`_build_*_client` helper 存在的意义就是测试用 monkeypatch**：不要把 `import anthropic; client = anthropic.Anthropic()` 直接写进 `_cmd_ingest`（这样 test 只能走 sys.modules 替换，脆）。helper 函数让 test 可以一行 `monkeypatch.setattr(cli_mod, "_build_anthropic_client", ...)` 精确隔离。
 ---
+
+## 2026-04-24 - US-006 ink corpus rebuild CLI
+- 替换 scripts/corpus_chunking/cli.py 中 _cmd_rebuild stub → 完整实现
+  - 无 --yes：stderr "ERROR: rebuild is destructive; pass --yes to confirm." + rc=2（防误触）
+  - --yes 全量：删 5 个 jsonl（chunks_raw / chunks_tagged / metadata / failures / unindexed）→ _build_qdrant_client() → qdrant.delete_collection(name=配置 qdrant_collection，容错 except Exception 提示 warn 不阻断) → ensure_collection(qd, CORPUS_CHUNKS_SPEC)（从 ink_writer.qdrant.payload_schema lazy import，保 import-time 零 qdrant 依赖）→ argparse.Namespace + _cmd_ingest 重跑
+  - --yes --book <name>：仅 _filter_jsonl_drop_book 重写 3 个 jsonl（chunks_raw/tagged/metadata），failures + unindexed 不动；绝不调 _build_qdrant_client / delete_collection / ensure_collection；仍走 _cmd_ingest(--book) 单本再摄入
+  - _filter_jsonl_drop_book 对 JSONDecodeError 行保留原样（silent data loss 比误删更危险）
+- 新增常量 _FULL_REBUILD_FILES (5) / _PER_BOOK_FILTER_FILES (3) 保证行为可验 + 易改
+- 追加 3 用例到 tests/corpus_chunking/test_cli.py（AC 要求 2，多补 per-book 单书清理 1 用例以固化 AC3）：
+  - test_rebuild_without_yes_refuses（monkeypatch _build_qdrant_client side_effect=AssertionError 确保未进入 rebuild 路径 + 断言 rc=2 + stderr 含 "--yes"）
+  - test_rebuild_with_yes_clears_collection（预置 5 jsonl + mock qdrant + mock _cmd_ingest → 断言 delete_collection(collection_name="corpus_chunks") 被调 + collection_exists 被调（ensure_collection 走了）+ ingest 被调 1 次 + 5 个 jsonl 全删）
+  - test_rebuild_with_yes_and_book_filters_jsonl_only（2 书 3 行 chunks_raw + 1 行 failures → rebuild --book 诡秘之主 → chunks_raw 剩另一本书 1 行 + failures 原样 + _build_qdrant_client 绝未被调 + ingest 走 1 次）
+- 验收：pytest tests/corpus_chunking/test_cli.py → 5 passed（2 老 US-005 + 3 新）；pytest tests/corpus_chunking + tests/audit + tests/core → 43 passed；pytest tests/audit tests/core tests/corpus_chunking tests/case_library tests/qdrant → 346 passed；ruff check scripts/corpus_chunking/ tests/corpus_chunking/ → All checks passed；py_compile cli.py OK
+- **Learnings for future iterations:**
+  - **`_build_qdrant_client` 设 `side_effect=AssertionError(msg)` 是"负向断言"的最硬写法**：比事后 `assert not build.called` 语义更强——只要误进入了本不该走的分支，调用立刻炸出 stack trace（指向具体误触发行），而不是无声通过。适合 CLI "某参数组合绝对不应触发 X 副作用" 类测试。
+  - **lazy import `from ink_writer.qdrant.payload_schema import CORPUS_CHUNKS_SPEC, ensure_collection` 放 _cmd_rebuild 函数内**：避免 import-time 就加载 qdrant_client 依赖（module-level import 会让未装 qdrant 的轻量测试环境炸）。代价：test 若要 patch ensure_collection 得 patch 源模块 `ink_writer.qdrant.payload_schema.ensure_collection` 而非 `cli_mod.ensure_collection`。本轮测试走 MagicMock qdrant client 让 ensure_collection 自然无副作用跑过（collection_exists 返 MagicMock truthy → 提前 return False），不需要 patch。
+  - **单书清理策略：只过滤 jsonl，不动 collection**：因为 Qdrant upsert 幂等（UUID5 from chunk_id），单书重跑 ingest 会用相同 point id 覆盖旧 point，等价于"更新"。若删 collection 会连其他 29 本的 chunks 一起炸，违反 "--book 只动一本" 的契约。若想彻底删单书 points 需要 `qd.delete(filter=source_book=X)` — M2 暂不做（成本 vs 收益不划算，下游可通过 ingest 覆盖实现同样效果）。
+  - **`_filter_jsonl_drop_book` 的"保留 JSONDecodeError 行"策略**：corrupted lines 可能是前一次意外中断留下的半写行，rebuild 时扔掉等于永久数据丢失。保留原样 + stderr 不打 warn（静默）让 ingest 重跑覆盖同 chunk_id 行时自然归位。如果要严格模式可加 `--strict` flag 拒绝 corrupt 行 rc!=0 — M2 暂不做。
+  - **`_PER_BOOK_FILTER_FILES` 只含 3 个（不含 failures + unindexed）**：failures/unindexed 不按 source_book 索引（failures 只有 book 字段对，unindexed 是 chunk_id + error），且这俩是"下次 ingest 要处理的待办"，per-book 清理不该误删其他书的待办。这也是 AC 明确要求的契约。
+  - **`argparse.Namespace(dir=DEFAULT_CORPUS_DIR, book=..., resume=False, dry_run=False)` 构造 ingest args**：不能用 `dir=None`，因为 _cmd_ingest 第一行就 `Path(args.dir)` 会炸 TypeError。默认用 DEFAULT_CORPUS_DIR 保持与 US-005 smoke run 一致行为。
+  - **ensure_collection(MagicMock, spec) 安全跑过**：因为 `if client.collection_exists(...)` 中 MagicMock() 是 truthy → 返 False 不触发 create 分支。这让 rebuild 测试无需任何 patch ensure_collection，是 MagicMock 天然友好的副产品。
+---
+
+## 2026-04-24 - US-007 ink corpus watch CLI（polling 30s）
+- 替换 scripts/corpus_chunking/cli.py 中 _cmd_watch stub → 完整实现 + 新增 _ingest_single_file helper
+  - 顶层加 `import time`；_cmd_watch 与测试共用 module 级 `time.sleep`，方便 monkeypatch
+  - `_ingest_single_file(file_path, cfg) -> None`：book_dir = file_path.parent.parent；调 _build_{anthropic,qdrant,embedding}_client → _ingest_book(resume=True, dry_run=False)
+  - _cmd_watch：`--dir` 必填（argparse 已在 US-005 注册好）/ `--interval` 默认 30 / `--iterations` 默认 -1（无限）；watch_dir 不存在 rc=2 + stderr
+  - polling 循环：`seen: dict[Path, float]` 缓存 mtime；每轮 rglob *.txt 对比 mtime，新增或 mtime 变化 → _ingest_single_file；stat 失败 continue（不崩溃）
+  - 退出条件：iterations < 0 无限 / 否则 loops < iterations；`time.sleep(interval)` 放循环尾 + 最后一轮前也跳过防多睡
+  - `_ingest_single_file` 抛 Exception → stderr warn 不阻断后续循环（`except Exception as err` + BLE001 豁免）
+  - KeyboardInterrupt → stderr "watch: interrupted, exiting gracefully" + return 0
+- 追加 1 用例到 tests/corpus_chunking/test_cli.py：test_watch_detects_new_file_and_triggers_ingest
+  - watch_dir/sample_book/chapters 预置 ch001.txt + ch002.txt；monkeypatch _ingest_single_file 只 append path；monkeypatch cli_mod.time.sleep → no-op
+  - main(["watch", "--dir", ..., "--interval", "0", "--iterations", "2"]) → rc=0 + len(ingest_calls)==2（mtime 缓存让第 2 轮跳过，首轮各触发一次）+ filenames 覆盖 {ch001.txt, ch002.txt}
+- 验收：pytest tests/corpus_chunking/test_cli.py → 6 passed（5 老 + 1 新）；tests/audit + tests/core + tests/corpus_chunking → 44 passed；tests/audit + tests/core + tests/corpus_chunking + tests/case_library + tests/qdrant → 347 passed；ruff check scripts/corpus_chunking/ tests/corpus_chunking/ → All checks passed；py_compile cli.py OK
+- **Learnings for future iterations:**
+  - **polling loop sleep 应放尾部 + 最后一轮前也跳过**：`while ...: do_work(); if 还有下一轮: time.sleep(interval)` — 避免最后一次循环白白 block interval 秒（测试 --iterations=2 --interval=0 时不重要，但真 30s interval 下这是 UX 差异）。若 sleep 放头部则第一次循环也会 block。
+  - **`seen: dict[Path, float]` 用 Path 做 key 需一致性**：rglob 返 Path 对象，stat.st_mtime 是 float。若传进来的 file_path 在某些 OS 是 symlink 而 rglob 返 real path，`seen[symlink] != seen[real]` 会导致同一文件识别成两个 → M2 corpus 已无 symlink（M1 US-009 修好），不是问题。未来若 reintroduce symlink 需 `resolve()` 统一。
+  - **ingest 失败只 warn 不阻断**：watch 是长驻进程，单文件 LLM 错不能把整个 watcher 搞死（运维半夜起来重启 vs 第二天看 log 发现少了几 chunks → 后者更好）。符合 M2 "failures < 30 章" 可接受契约。
+  - **monkeypatch `cli_mod.time.sleep` 而非 `time.sleep`**：因为 cli.py 里 `import time` 后写 `time.sleep(...)`，测试 patch 必须点到 cli_mod namespace（`monkeypatch.setattr(cli_mod.time, "sleep", ...)`）才起作用。patch `time.sleep` 则只改全局标准库引用，在 `from time import sleep` 或某些 import 顺序下无效。
+  - **polling 30s 比 watchdog 库更省事 + 跨平台**：watchdog 需额外依赖、inotify / FSEvents / ReadDirectoryChangesW 平台差异；corpus 导入是每天级别的写操作（不是每秒），30s polling 延迟可接受，代码量 30 行 vs 100+。M2 KISS 选择。
+  - **mtime 缓存让第二轮循环不重复工作**：--iterations=2 测试只看到 2 次 _ingest_single_file 调用（不是 4）— 这是正确行为，因为两文件 mtime 在测试期间不变。真产线场景下，watch 启动时会把已在 dir 里的所有 .txt "一次性过一遍"（_ingest_book 自带 resume=True → 实际只调 segmenter 对未在 chunks_raw.jsonl 的章节，所以不会重复消耗 token）。这是刻意的冷启动行为。
+---

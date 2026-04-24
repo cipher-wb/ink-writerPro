@@ -155,6 +155,50 @@ def test_rebuild_with_yes_clears_collection(
         assert not (data_dir / fname).exists(), f"{fname} should have been deleted"
 
 
+def test_watch_detects_new_file_and_triggers_ingest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Polling watcher fires ``_ingest_single_file`` on new / changed files.
+
+    Uses ``--iterations 2 --interval 0`` + ``time.sleep`` stubbed out so the
+    test runs synchronously. Two chapter files staged before the call → we
+    expect ``_ingest_single_file`` called once per file (2 total).
+    """
+    watch_dir = tmp_path / "corpus"
+    chapters = watch_dir / "sample_book" / "chapters"
+    chapters.mkdir(parents=True)
+    (chapters / "ch001.txt").write_text("hello", encoding="utf-8")
+    (chapters / "ch002.txt").write_text("world", encoding="utf-8")
+
+    ingest_calls: list[Path] = []
+
+    def _fake_ingest(file_path: Path, _cfg: dict[str, object]) -> None:
+        ingest_calls.append(file_path)
+
+    monkeypatch.setattr(cli_mod, "_ingest_single_file", _fake_ingest)
+    # Avoid real sleeping regardless of --interval.
+    monkeypatch.setattr(cli_mod.time, "sleep", lambda _s: None)
+
+    rc = cli_mod.main(
+        [
+            "--config",
+            str(_REAL_CONFIG),
+            "watch",
+            "--dir",
+            str(watch_dir),
+            "--interval",
+            "0",
+            "--iterations",
+            "2",
+        ]
+    )
+
+    assert rc == 0
+    # Both files processed once (mtime cache suppresses 2nd loop iteration).
+    assert len(ingest_calls) == 2
+    assert {p.name for p in ingest_calls} == {"ch001.txt", "ch002.txt"}
+
+
 def test_rebuild_with_yes_and_book_filters_jsonl_only(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
