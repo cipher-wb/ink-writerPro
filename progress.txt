@@ -77,3 +77,47 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
   - **`_rechunk_oversize` 的句末边界阈值 `last_period > 100`**：保证切分点不过于靠近起始（否则第一块可能 < 200 违反 min_chunk_chars 语义）。如果最后一段（`cursor + last_period + 1 >= len(text)`）也要走 `cut=end` 避免把剩余拼成长尾。
   - **Haiku 入口不需要 `__main__`**：scene_segmenter.py 纯 library，无 CLI 入口，因此不需要 `enable_windows_utf8_stdio()` 调用；audit 红线只扫含 `if __name__ == "__main__":` 的 .py。
 ---
+
+## 2026-04-24 - US-003 chunk_tagger（Haiku 打 6 标签 + 4 维加权 quality_score）
+- 新增 scripts/corpus_chunking/chunk_tagger.py：暴露 `tag_chunk(*, client, cfg, chunk, genre, ingested_at, source_type) -> TaggedChunk` + `TaggerConfig` dataclass
+  - TaggerConfig.weights_tuple() 把 YAML `quality_weights` dict 转 `(tension, originality, language_density, readability)` 四元组
+  - 4 维加权由 tagger 内部完成：把 cfg.quality_weights 存入 TaggedChunk.quality_weights 字段，由 `quality_score` property 按权重计算
+  - genre 从 caller 传入；payload 里若 LLM 返 genre 一律丢弃（防跨书漂移）
+  - LLM 失败（JSON 解析失败或缺 quality_breakdown 字段）重试 max_retries 次；仍失败 → 返回 scene_type=tagging_failed + QualityBreakdown(0,0,0,0)（quality_score=0）+ borrowable_aspects=[tagging_failed]
+  - _parse_json 含 markdown unwrap 容错（复用 scene_segmenter 同款正则）
+  - KeyError/TypeError/ValueError 在解析后兜底 → 退回 tagging_failed（不炸）
+- 新增 scripts/corpus_chunking/prompts/chunk_tagger.txt：6 标签 + 4 维独立打分，严格 JSON schema，显式要求不要输出 genre/总加权分
+- 更新 scripts/corpus_chunking/models.py：TaggedChunk 增 `quality_weights: tuple[float,float,float,float] = (0.3, 0.3, 0.2, 0.2)` 字段；`quality_score` property 改用 self.quality_weights 计算（默认值与老行为字节级一致）
+- 新增 tests/corpus_chunking/test_chunk_tagger.py 3 用例全绿：happy（验 0.9*0.3+0.8*0.3+0.7*0.2+0.9*0.2=0.83）/ failure_returns_zero_quality（max_retries=2 验 call_count=2 + scene_type=tagging_failed + quality_score=0 + borrowable=[tagging_failed]）/ uses_passed_genre_not_llm（LLM 返 ["LLM-guessed-genre"] → 最终 genre=["都市"]）
+- 验收：pytest tests/corpus_chunking/test_chunk_tagger.py → 3 passed；pytest tests/corpus_chunking → 10 passed（含 US-001/US-002 老用例无回归）；audit 2 项 20 passed；ruff check → All checks passed；py_compile OK
+- **Learnings for future iterations:**
+  - **给 dataclass 加字段必须带 default 且放末尾**：TaggedChunk 已有 4 个无 default 字段（raw/scene_type/...），新加 `quality_weights` 必须有 default 否则破坏所有 caller；放 `ingested_at` 之后保序。这样 `test_tagged_chunk_round_trip` 的老构造方式（无 quality_weights kwarg）仍工作。
+  - **quality_weights 存到 TaggedChunk 而非 tagger 外部**：这样序列化回读后 quality_score property 仍给对的值，Qdrant payload / metadata.jsonl 下游不需要记 weights。权衡：相当于每个 TaggedChunk 多存 4 浮点（≈32B），可接受。
+  - **LLM "返回加权后总分" 是常见污染**：prompt 必须**显式要求不要输出加权总分**（"不要输出 genre；不要输出加权后的总分"）。tagger 拿到 raw 4 维再自己算。否则不同批次权重漂移、不同 LLM 版本实现差异会污染召回排序。
+  - **退路 tagging_failed 的 quality_score=0 靠 QualityBreakdown(0,0,0,0)**：无需给 TaggedChunk 加特殊 "failed" flag，只要四维全零则加权和一定 0，天然拒绝被索引（chunk_indexer 可过滤 quality_score<threshold）。
+  - **TaggerConfig max_retries=3 意味 **最多调 3 次**（不是 3 次重试后再跑一次）**：循环用 `for _ in range(cfg.max_retries)`；失败 case 的 `call_count == cfg.max_retries`。PRD 一行说 "max_retries 次" 就是总次数。跟 scene_segmenter 保持一致。
+  - **prompt 文件占位符只有一个 `{chunk_text}`**：tagger 不需要 book/chapter context（LLM 评估切片本身足矣）；scene_segmenter 则需要 3 个（book/chapter/chapter_text）。简单占位符 `.replace("{chunk_text}", text)` 不用 format（防 `{` `}` 误触 KeyError）。
+---
+
+## 2026-04-24 - US-004 embedding_client + chunk_indexer
+- 新增 scripts/corpus_chunking/embedding_client.py：暴露 `EmbeddingClient` + `EmbeddingConfig` + `EmbeddingError`
+  - `EmbeddingClient(cfg, _client=None)`：未注入 `_client` 时懒建 `openai.OpenAI(base_url, api_key)`；`openai` 包缺失时在显式构造路径抛 `RuntimeError`（测试走 `_client=MagicMock` 不触发）
+  - `embed_batch(texts, *, _sleep=time.sleep)`：按 `cfg.batch_size` 切片 → 每批调 `_call_with_retry`；总次数 `max_retries+1`（初次 + N 次重试），退避 `2**attempt` 秒（1s/2s/4s）
+  - 耗尽重试抛 `EmbeddingError` 含最后一次异常文案
+- 新增 scripts/corpus_chunking/chunk_indexer.py：暴露 `index_chunks(...)` + `IndexerConfig` + `_stable_uuid_from_id(chunk_id)`
+  - point id = `uuid.uuid5(NAMESPACE_URL, chunk_id)` 字符串化 → 同 chunk_id 重跑覆盖同 point（幂等）
+  - payload 用 `chunk.to_dict()` 全量（TaggedChunk.to_dict 已扁平化 raw+tagged+quality_breakdown+source_type+ingested_at）
+  - 成功批次 → append 到 `metadata_path` jsonl（ensure_ascii=False）；Qdrant upsert 失败批次 → 每 chunk 单行 `{chunk_id, error}` 写 `unindexed_path` jsonl，**不阻断后续 batches**
+  - `_build_point` 用 `qdrant_client.http.models.PointStruct` 懒导入（兼容 in-memory 测试路径，不强制 test env 预装）
+  - `zip(batch, vectors, strict=False)`：vectors 条数与 batch 不等也容错走短的
+- 新增 tests/corpus_chunking/test_embedding_client.py（4 用例）+ tests/corpus_chunking/test_chunk_indexer.py（4 用例）
+  - embedding: happy 返向量 / batch_size=2 对 5 条文本 3 次 call / 429 重试 2 次后第 3 次成功 / max_retries=3 全失败后 raise + call_count=4
+  - indexer: upsert 调用 + points 数对 / metadata.jsonl 含 chunk_id + 反序列化后 scene_type 正确 / qdrant 抛错后 unindexed.jsonl 写入 + returns 0 / UUID5 稳定（同 id 相同 / 不同 id 不同）
+- 验收：pytest tests/corpus_chunking → 18 passed（不含 US-001/US-002/US-003 的 10 个，新增 8 个）；tests/audit + tests/core → 20 passed；ruff check（--fix I001 一次）+ py_compile OK；pytest tests/audit tests/core tests/corpus_chunking tests/case_library tests/qdrant → 325 passed
+- **Learnings for future iterations:**
+  - **openai 包可选 import 的守卫写法**：`try: from openai import OpenAI / except ImportError: OpenAI = None` + 显式构造路径下再 `if OpenAI is None: raise RuntimeError`。这样 import-time 零副作用（本机未装 openai），测试注入 `_client=MagicMock` 跳过构造路径。M2 新轮 mac 本机无 openai 也能跑测试 → 上线前 `pip install openai` 即用。
+  - **`inner.embeddings.create.side_effect = [ok1, ok2, ok3]` 消耗性 side_effect vs `.return_value = obj` 固定**：batching 测试里 3 次 call 每次拿不同 MagicMock 更安全；若全 `return_value` 则 3 批各收 2 向量 → `out.extend(resp.data)` 会多累 1 向量触发断言 `len(vectors) == 5` 但 mock 每次返 2 ⇒ 6。用 side_effect 给最后一批返 size-1 data 与 len(batch)=1 对齐。
+  - **qdrant PointStruct 懒 import 的理由**：`from qdrant_client.http import models as rest` 放 `_build_point` 函数内 → 若测试 env 未装 qdrant-client（极少，但可能），import-time 不炸；产线路径自然装（M1 `~=1.12`）。这是 M1 preflight/payload_schema 相同模式。
+  - **`zip(..., strict=False)`**：Python 3.14 默认 `strict=False` 但显式写出避免 ruff 警告 B905。实际场景下 embedder 正常时 len(vectors)==len(batch)；异常场景交给 try/except Exception 兜底到 unindexed.jsonl。
+  - **不需要 CLI 入口 → 不触发 audit 红线**：两个文件都是 library（无 `if __name__ == "__main__":`），`enable_windows_utf8_stdio()` / `safe_symlink` 均不需要。后续 US-005 CLI 才要加。
+---
