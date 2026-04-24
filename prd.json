@@ -204,8 +204,8 @@
         "Typecheck passes"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/qdrant/errors.py: QdrantError (base) + QdrantUnreachableError. ink_writer/qdrant/client.py: QdrantConfig dataclass (host='127.0.0.1' / port=6333 / timeout=5.0 / memory=False / api_key=None); get_client_from_config forces a get_collections() round-trip and catches (ResponseHandlingException, UnexpectedResponse, ConnectionError, OSError) into QdrantUnreachableError(f'Qdrant at {host}:{port} unreachable: {err}'); get_qdrant_client(config=None) caches a module-level _singleton (honors config on first call); reset_singleton_for_tests() clears the cache. Memory mode returns QdrantClient(':memory:') without probe. tests/qdrant/conftest.py: in_memory_client fixture. tests/qdrant/test_client.py: 2 passed (test_in_memory_client_via_helper verifies collections==[], test_unreachable_raises uses port=1 + timeout=0.5). Ruff auto-fix converted Optional[...] to X|None (UP045) and reorganized imports; final ruff check clean. py_compile clean; audit red-lines (cli_entries_utf8_stdio + safe_symlink) 20 passed. Full pytest exit 0, coverage 82.72% (gate 70). Note: QdrantClient emits a UserWarning 'Failed to obtain server version' when using :memory: — harmless, doc'd in qdrant-client 1.17.1."
     },
     {
       "id": "US-012",
