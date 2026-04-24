@@ -281,8 +281,8 @@
         "Typecheck passes"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Completed 2026-04-24. ink_writer/preflight/checker.py: PreflightConfig dataclass (reference_root / case_library_root / editor_wisdom_rules_path / qdrant_config / qdrant_in_memory / require_embedding_key / require_rerank_key / min_corpus_files=100); PreflightReport frozen dataclass with all_passed + failed properties; run_preflight(config, *, raise_on_fail=False, auto_create_infra_cases=False) runs 4 base checks (reference / case_library / editor_wisdom / qdrant) + optional embedding/rerank; qdrant_in_memory=True injects QdrantConfig(memory=True); auto_create_infra_cases=True calls ingest_case(domain=infra_health, layer=[infra_health], severity=P0, source_type=infra_check, title=f'preflight failure: {name}', raw_text=f'preflight check failed: {name}: {detail}', tags=['preflight', name], observable=[f'{name}.passed == False'], ingested_at=date.today().isoformat()); raise_on_fail=True raises PreflightError(failed_names, f'preflight failed: {failed_names}'). tests/preflight/test_checker.py: 3 passed (test_all_pass_returns_clean_report / test_failed_check_creates_infra_case incl. sha256-dedup re-run assertion / test_failed_check_without_raise_returns_failed_report). Full pytest --no-cov: 3649 passed, 23 skipped (US-014 baseline 3646 + 3 new). Coverage 82.72% (gate 70). Ruff + py_compile clean; audit red-lines 20 passed."
     },
     {
       "id": "US-016",
