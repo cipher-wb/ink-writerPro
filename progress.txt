@@ -121,3 +121,26 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
   - **`zip(..., strict=False)`**：Python 3.14 默认 `strict=False` 但显式写出避免 ruff 警告 B905。实际场景下 embedder 正常时 len(vectors)==len(batch)；异常场景交给 try/except Exception 兜底到 unindexed.jsonl。
   - **不需要 CLI 入口 → 不触发 audit 红线**：两个文件都是 library（无 `if __name__ == "__main__":`），`enable_windows_utf8_stdio()` / `safe_symlink` 均不需要。后续 US-005 CLI 才要加。
 ---
+
+## 2026-04-24 - US-005 ink corpus ingest CLI
+- 新增 scripts/corpus_chunking/cli.py：暴露 `main(argv) -> int`（never raises）+ argparse 三子命令（ingest 完整实现；rebuild/watch 为 rc=2 stub 留给 US-006/007）
+  - sys.path 三段式 bootstrap（_SCRIPT_DIR / _REPO_ROOT / _INK_SCRIPTS）复用 scripts/qdrant/migrate_faiss_to_qdrant.py 同款 pattern
+  - main 开头调 `runtime_compat.enable_windows_utf8_stdio()`（audit 红线要求）
+  - 顶层 argparse：`--config`（默认 config/corpus_chunking.yaml）+ subparsers ingest/rebuild/watch
+  - ingest 子命令 args：`--dir`（默认 benchmark/reference_corpus）/ `--book` / `--resume` / `--dry-run`
+  - helper 矩阵：`_load_config` / `_build_{segmenter,tagger,indexer,embedding}_config` / `_build_{anthropic,qdrant,embedding}_client` / `_read_manifest_genre` / `_already_indexed` / `_ingest_book` / `_append_jsonl` / `_append_failure` / `_BookStats` dataclass
+  - 单本摄入流程：_read_manifest_genre(book_dir) → 顺序 chapters/ch*.txt → segment_chapter → (失败 → failures.jsonl 不阻断) → 逐 chunk tag_chunk → index_chunks（除非 --dry-run）→ append 5 个 jsonl
+  - `--resume` 调 `_already_indexed(book, chapter, chunks_raw.jsonl)` 跳过已 indexed 章节
+  - `_build_qdrant_client` / `_build_embedding_client` 只在 **非 dry-run** 才调用（test 核心断言）
+  - 输出格式：每书一行 `[i/N] {book:25s} chunks=N tagged=N indexed=N failures=N` + 末尾 `TOTAL chunks=N tagged=N indexed=N failures=N`（flush=True 以便 tee 实时）
+- 新增 tests/corpus_chunking/test_cli.py 2 用例：test_ingest_dry_run_does_not_call_qdrant（monkeypatch 3 个 `_build_*_client` + 空 segment mock + DEFAULT_DATA_DIR 重定向到 tmp）/ test_ingest_resume_skips_indexed_chapters（直接驱动 `_already_indexed` 四种情况：命中/不同章/不同书/文件缺失）
+- 验收：pytest tests/corpus_chunking/test_cli.py → 2 passed；pytest tests/corpus_chunking → 20 passed（含 US-001/002/003/004 老 18 用例零回归）；pytest tests/audit/test_cli_entries_utf8_stdio.py tests/core/test_safe_symlink.py → 20 passed（audit 红线含新 cli.py）；pytest tests/audit tests/core tests/corpus_chunking tests/case_library tests/qdrant → 343 passed；ruff check → 1 I001 auto-fixed + All checks passed；py_compile OK
+- **Learnings for future iterations:**
+  - **CLI 测试核心断言不是"跑通"而是"未触发某分支"**：`build_qdrant = MagicMock(side_effect=AssertionError(...))` 让 side_effect 抛错来保证 dry-run 路径**根本不该调** — 比事后 `assert not called` 语义更强（即便覆盖率工具误报，side_effect 也会让错误路径立刻炸出 stack trace）。
+  - **`DEFAULT_DATA_DIR` 必须放 module 级别以便 test monkeypatch**：如果内嵌在 _cmd_ingest 函数里则 test 无法干预输出路径，会污染真实 `data/corpus_chunks/` 目录（非 idempotent 副作用）。遵循的通用模式：**所有"默认相对路径"常量都放 module top-level**，方便 tests monkeypatch 到 tmp_path。
+  - **`datetime.now(UTC)` 替代 `datetime.utcnow()`**：Python 3.12+ 弃用 `datetime.utcnow()`，ruff DTZ003 会警告。改用 `from datetime import UTC, datetime` + `datetime.now(UTC).strftime("%Y-%m-%d")`。
+  - **argparse subparsers `required=True` 默认不弹**：Python 3.7+ subparsers 缺省 `required=False`，必须显式 `sub = parser.add_subparsers(dest="command", required=True)` 才会在 `python -m x.cli`（无子命令）时 rc=2 报错。
+  - **rebuild/watch 先留 stub（返 rc=2 + stderr 提示）再分别由 US-006/US-007 补实现**：比一次性实现再测试路径耦合风险低。stub 返 2 而非 0 便于 CLI 级 smoke test 捕获遗漏。
+  - **`_already_indexed` 以 chunks_raw.jsonl 作为 resume 游标而非 metadata.jsonl**：chunks_raw 在 segmenter 成功后立即写入（tag/index 失败不影响），resume 时不应因 tag/index 失败而反复跑 segmenter（调 LLM 贵）。原则：**resume 游标应放在最便宜工序的输出之后**，防止重试的 cost 放大。
+  - **`_build_*_client` helper 存在的意义就是测试用 monkeypatch**：不要把 `import anthropic; client = anthropic.Anthropic()` 直接写进 `_cmd_ingest`（这样 test 只能走 sys.modules 替换，脆）。helper 函数让 test 可以一行 `monkeypatch.setattr(cli_mod, "_build_anthropic_client", ...)` 精确隔离。
+---
