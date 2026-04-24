@@ -1,0 +1,29 @@
+你是网文场景边界识别器。给定一章正文，识别 8 种场景边界并切成 200-800 字的 chunks。
+
+8 种 scene_type：
+- opening: 开篇引入（章节起始的场景介绍 / 主角登场）
+- face_slap: 打脸（主角胜过对手 / 反派服软）
+- flexing: 装逼（主角能力 / 身份 / 资源展示）
+- emotional_climax: 情感升华（亲情 / 爱情 / 友情高峰）
+- twist: 反转（剧情 / 身份 / 结果意外）
+- combat: 战斗（武力对抗 / 法术对决）
+- crisis: 危机（主角陷入险境 / 困局）
+- chapter_hook: 章末钩子（悬念结尾 / 卖关子）
+
+切片规则：
+1. 每个 chunk 200-800 字（< 200 合并到相邻；> 800 在场景内按句号/段落切分）
+2. 一章内多个场景按出现顺序切片
+3. 必须输出 char_range（chunk 在原文中的字符起止位置，0-indexed）
+
+输出严格 JSON（不要 markdown 包裹）：
+{
+  "chunks": [
+    {"scene_type": "opening", "char_range": [0, 580], "text": "..."},
+    {"scene_type": "combat", "char_range": [580, 1340], "text": "..."}
+  ]
+}
+
+输入章节（书名: {book}, 章节: {chapter}）：
+---
+{chapter_text}
+---

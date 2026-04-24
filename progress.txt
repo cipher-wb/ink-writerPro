@@ -60,3 +60,20 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
   - **三段配置 YAML schema** 直接按 spec §3.5 原样落盘：model 用字符串（后续 US-002 从 cfg["scene_segmenter"]["model"] 读），quality_weights 用 dict 形式便于 US-003 cfg.quality_weights[key] 取值。
   - **TaggedChunk dataclass 内嵌 RawChunk**：tagged.raw 可取原始字段（chunk_id/source_book/...），to_dict 合并字段，保 Qdrant payload 扁平。后续 chunk_indexer upsert 直接用 tagged.to_dict() 当 payload。
 ---
+
+## 2026-04-24 - US-002 scene_segmenter（Haiku 切场景边界）
+- 新增 scripts/corpus_chunking/scene_segmenter.py：暴露 `segment_chapter(*, client, cfg, book, chapter, text) -> list[RawChunk]` + `SegmenterConfig` dataclass
+  - JSON 解析失败重试 `cfg.max_retries` 次；仍失败返 `[]`（caller 决定写 failures.jsonl）
+  - _parse_json 含 markdown unwrap 容错（`re.search(r"\{.*\}", re.DOTALL)`）
+  - _rechunk_oversize 按句号/感叹号/问号边界切分超长 chunk（`> max_chunk_chars`）
+  - chunk_id 规则：`CHUNK-{book}-{chapter}-§{N}`（章节内顺序 1..M）
+  - 非超长 chunk 直接保留 LLM 原始 char_range；超长切分时按 sub.len 累加 sub_start
+- 新增 scripts/corpus_chunking/prompts/scene_segmenter.txt（8 种 scene_type + 切片规则 + 严格 JSON 输出格式）
+- 新增 tests/corpus_chunking/test_scene_segmenter.py 4 用例全绿：happy / retry-on-invalid-json / empty-after-max-retries / rechunk-oversize
+- 验收：pytest tests/corpus_chunking/test_scene_segmenter.py → 4 passed；tests/audit+tests/core → 20 passed；ruff check scripts/corpus_chunking/ tests/corpus_chunking/ → All checks passed；py_compile OK
+- **Learnings for future iterations:**
+  - **LLM 返回 char_range 与 text 长度不一致是常态**：LLM 可能返 `text_len < char_range[1]-char_range[0]`（截断）或相反。非超长情况下**保留 LLM 原始 char_range**（信任 LLM 的源定位），只有超长切分时才按 sub.len 累加 sub_start。错误做法是一律从 text_len 重算，会让 happy path 测试失败（char_range[1] 被改成 len(text)）。
+  - **`re.search(r"\{.*\}", text, re.DOTALL)` 是 LLM JSON 恢复的"双保险"**：许多 LLM（含 Haiku）偶尔会在 JSON 外包 ```json ... ``` 或前置解释文字。先 `json.loads(raw)` 快路径；失败再正则抓第一个 `{...}`；都失败才 None 进入重试。
+  - **`_rechunk_oversize` 的句末边界阈值 `last_period > 100`**：保证切分点不过于靠近起始（否则第一块可能 < 200 违反 min_chunk_chars 语义）。如果最后一段（`cursor + last_period + 1 >= len(text)`）也要走 `cut=end` 避免把剩余拼成长尾。
+  - **Haiku 入口不需要 `__main__`**：scene_segmenter.py 纯 library，无 CLI 入口，因此不需要 `enable_windows_utf8_stdio()` 调用；audit 红线只扫含 `if __name__ == "__main__":` 的 .py。
+---
