@@ -76,3 +76,6 @@ scripts/ralph/progress.txt
 /prd.json
 /progress.txt
 ink_writer.egg-info/
+
+# Qdrant local volume (M1 起替换 FAISS；scripts/qdrant/docker-compose.yml 挂载此目录)
+scripts/qdrant/storage/

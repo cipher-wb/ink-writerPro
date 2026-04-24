@@ -1,0 +1,20 @@
+# Qdrant 单机 Docker 部署（M1 起替换 FAISS，详见 docs/superpowers/specs/2026-04-23-case-library-driven-quality-overhaul-design.md §8）
+#
+# 启动：
+#   Mac/Linux:   scripts/qdrant/start.sh
+#   Windows PS:  scripts\qdrant\start.ps1  或双击 start.cmd
+#
+# 数据持久化到 ./storage（已在 .gitignore 排除）。
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    container_name: ink-writer-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ./storage:/qdrant/storage
+    environment:
+      QDRANT__LOG_LEVEL: INFO
