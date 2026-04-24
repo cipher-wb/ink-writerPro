@@ -330,11 +330,90 @@ def _cmd_ingest(args: argparse.Namespace, cfg: dict[str, Any]) -> int:
     return 0
 
 
+_FULL_REBUILD_FILES = (
+    "chunks_raw.jsonl",
+    "chunks_tagged.jsonl",
+    "metadata.jsonl",
+    "failures.jsonl",
+    "unindexed.jsonl",
+)
+_PER_BOOK_FILTER_FILES = (
+    "chunks_raw.jsonl",
+    "chunks_tagged.jsonl",
+    "metadata.jsonl",
+)
+
+
+def _filter_jsonl_drop_book(path: Path, book: str) -> None:
+    """Rewrite ``path`` keeping only rows where ``source_book != book``.
+
+    Unparseable rows are preserved as-is (safer than silent data loss).
+    """
+    kept: list[str] = []
+    with open(path, encoding="utf-8") as fp:
+        for line in fp:
+            stripped = line.rstrip("\n")
+            if not stripped.strip():
+                continue
+            try:
+                row = json.loads(stripped)
+            except json.JSONDecodeError:
+                kept.append(stripped)
+                continue
+            if row.get("source_book") != book:
+                kept.append(stripped)
+    with open(path, "w", encoding="utf-8") as fp:
+        for line in kept:
+            fp.write(line)
+            fp.write("\n")
+
+
 def _cmd_rebuild(args: argparse.Namespace, cfg: dict[str, Any]) -> int:
-    # Full implementation lands in US-006.
-    del args, cfg
-    print("rebuild: not implemented yet (US-006)", file=sys.stderr)
-    return 2
+    if not args.yes:
+        print(
+            "ERROR: rebuild is destructive; pass --yes to confirm.",
+            file=sys.stderr,
+        )
+        return 2
+
+    data_dir = DEFAULT_DATA_DIR
+
+    if args.book:
+        # Per-book path: only filter 3 jsonl files; leave Qdrant collection alone.
+        for fname in _PER_BOOK_FILTER_FILES:
+            path = data_dir / fname
+            if path.is_file():
+                _filter_jsonl_drop_book(path, args.book)
+    else:
+        # Full rebuild: delete 5 jsonl, drop + re-create Qdrant collection.
+        for fname in _FULL_REBUILD_FILES:
+            path = data_dir / fname
+            if path.is_file():
+                path.unlink()
+
+        qd = _build_qdrant_client()
+        collection = (cfg.get("chunk_indexer") or {}).get(
+            "qdrant_collection", "corpus_chunks"
+        )
+        try:
+            qd.delete_collection(collection_name=collection)
+        except Exception as err:  # noqa: BLE001 — collection may not exist
+            print(f"warn: delete_collection: {err}", file=sys.stderr)
+        from ink_writer.qdrant.payload_schema import (
+            CORPUS_CHUNKS_SPEC,
+            ensure_collection,
+        )
+
+        ensure_collection(qd, CORPUS_CHUNKS_SPEC)
+
+    # Re-trigger ingest (full or per-book depending on args.book).
+    ing_args = argparse.Namespace(
+        dir=DEFAULT_CORPUS_DIR,
+        book=args.book,
+        resume=False,
+        dry_run=False,
+    )
+    return _cmd_ingest(ing_args, cfg)
 
 
 def _cmd_watch(args: argparse.Namespace, cfg: dict[str, Any]) -> int:

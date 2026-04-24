@@ -99,3 +99,110 @@ def test_ingest_resume_skips_indexed_chapters(tmp_path: Path) -> None:
     assert cli_mod._already_indexed("另一本书", "ch001", raw_path) is False
     # Missing raw_path → not indexed.
     assert cli_mod._already_indexed("any", "any", tmp_path / "nope.jsonl") is False
+
+
+def test_rebuild_without_yes_refuses(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(cli_mod, "DEFAULT_DATA_DIR", tmp_path / "data")
+    # Guard: _build_qdrant_client must NOT be invoked when --yes is absent.
+    monkeypatch.setattr(
+        cli_mod,
+        "_build_qdrant_client",
+        MagicMock(side_effect=AssertionError("qdrant must not be built without --yes")),
+    )
+    rc = cli_mod.main(["--config", str(_REAL_CONFIG), "rebuild"])
+    err = capsys.readouterr().err
+    assert rc == 2
+    assert "--yes" in err
+
+
+def test_rebuild_with_yes_clears_collection(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    # Pre-populate the 5 jsonl files so we can verify they're deleted.
+    expected_files = (
+        "chunks_raw.jsonl",
+        "chunks_tagged.jsonl",
+        "metadata.jsonl",
+        "failures.jsonl",
+        "unindexed.jsonl",
+    )
+    for fname in expected_files:
+        (data_dir / fname).write_text("{}\n", encoding="utf-8")
+
+    qdrant_mock = MagicMock()
+    ingest_mock = MagicMock(return_value=0)
+
+    monkeypatch.setattr(cli_mod, "DEFAULT_DATA_DIR", data_dir)
+    monkeypatch.setattr(cli_mod, "_build_qdrant_client", lambda: qdrant_mock)
+    monkeypatch.setattr(cli_mod, "_cmd_ingest", ingest_mock)
+
+    rc = cli_mod.main(["--config", str(_REAL_CONFIG), "rebuild", "--yes"])
+
+    assert rc == 0
+    qdrant_mock.delete_collection.assert_called_once_with(collection_name="corpus_chunks")
+    # ensure_collection(qd, CORPUS_CHUNKS_SPEC) must have run against the mock.
+    assert qdrant_mock.collection_exists.called
+    # Re-ingest was triggered exactly once.
+    assert ingest_mock.call_count == 1
+    # All 5 jsonl files removed.
+    for fname in expected_files:
+        assert not (data_dir / fname).exists(), f"{fname} should have been deleted"
+
+
+def test_rebuild_with_yes_and_book_filters_jsonl_only(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    # chunks_raw.jsonl: 2 books × 2 rows — keep only non-target book rows.
+    raw_path = data_dir / "chunks_raw.jsonl"
+    raw_path.write_text(
+        "\n".join(
+            json.dumps(row, ensure_ascii=False)
+            for row in [
+                {"chunk_id": "c1", "source_book": "诡秘之主", "source_chapter": "ch001"},
+                {"chunk_id": "c2", "source_book": "诡秘之主", "source_chapter": "ch002"},
+                {"chunk_id": "c3", "source_book": "另一本书", "source_chapter": "ch001"},
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    # failures.jsonl must be left untouched (per AC: only 3 jsonl are filtered).
+    failures_path = data_dir / "failures.jsonl"
+    failures_path.write_text("{\"book\": \"诡秘之主\"}\n", encoding="utf-8")
+
+    qdrant_mock = MagicMock(
+        side_effect=AssertionError("per-book rebuild must not touch collection")
+    )
+    ingest_mock = MagicMock(return_value=0)
+
+    monkeypatch.setattr(cli_mod, "DEFAULT_DATA_DIR", data_dir)
+    monkeypatch.setattr(cli_mod, "_build_qdrant_client", qdrant_mock)
+    monkeypatch.setattr(cli_mod, "_cmd_ingest", ingest_mock)
+
+    rc = cli_mod.main(
+        ["--config", str(_REAL_CONFIG), "rebuild", "--yes", "--book", "诡秘之主"]
+    )
+
+    assert rc == 0
+    # Only non-target book rows remain.
+    remaining = [
+        json.loads(line)
+        for line in raw_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    assert len(remaining) == 1
+    assert remaining[0]["source_book"] == "另一本书"
+    # failures.jsonl was not touched.
+    assert failures_path.read_text(encoding="utf-8") == '{"book": "诡秘之主"}\n'
+    # No Qdrant client was built (side_effect would have fired).
+    assert qdrant_mock.call_count == 0
+    # Per-book re-ingest still runs.
+    assert ingest_mock.call_count == 1
