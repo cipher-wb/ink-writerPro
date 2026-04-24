@@ -261,3 +261,25 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
   - **`--dry-run` action="store_true" 默认 False**：与 US-005/006/007 cli.py 里 ingest 子命令的 --dry-run 语义一致，不用 `--dry-run=true` 显式形式。
   - **CLI 入口 rc=0 vs rc=1 分叉点是 `report.failed == 0`**：convert-from-editor-wisdom 的 "soft error"（单条 rule 异常）由 convert_rules_to_cases 内部捕获到 failures 列表，不阻断；整个管线正常结束后根据 failed 数决定 exit code。这与 `_cmd_create`（CaseValidationError rc=3，单条操作）不同——**批量转换是"尽力完成 + 末端统计"，单条 create 是"All-or-nothing"**。
 ---
+
+## 2026-04-24 - US-012 M2 e2e 集成测试（代码可交付部分）
+- 新增 tests/integration/test_m2_e2e.py 5 用例全绿（覆盖 spec §6.2）：
+  1. test_rules_conversion_creates_402_cases_with_severity_split — 实跑 v23 rules.json：created=402 + by_severity={hard:236, soft:147, info:19}（rules.json 缺失 → skip）
+  2. test_active_pending_counts_after_conversion — convert 后 active=236（hard→P1）+ pending=166（soft 147 + info 19）
+  3. test_approve_batch_yaml_changes_status — ingest 5 pending case + yaml 含 approve/reject/defer/approve/reject → 5 case status 正确迁移（active/retired/pending/active/retired）
+  4. test_corpus_ingest_resume_skips_indexed_chapters — 直接驱动 `_already_indexed` 四种情况
+  5. test_chunking_pipeline_e2e_with_one_chapter_mocked — in-memory Qdrant 8 维 test collection + mock anthropic（side_effect 双响应）+ mock embedder → 1 章 → segment → tag → index → `collection.points_count == 1` + metadata.jsonl 单行
+- 验收：pytest tests/integration/test_m2_e2e.py -v --no-cov → 5 passed；全量回归 pytest -q → 3694 passed / 23 skipped / coverage **82.72%** (≥ 70)；tests/audit + tests/core → 20 passed；ruff check tests/integration/test_m2_e2e.py → All checks passed（--fix 一次 I001 auto-fixed）；py_compile OK
+- **被 US-008 阻塞的 AC 项**（需人类运维接力才能关闭 M2）：
+  - (2) Qdrant readyz HTTP 200 — 需启 docker `scripts/qdrant/start.sh`
+  - (3) corpus_chunks points_count ≥ 2500 — 需实跑 ingest（ANTHROPIC_API_KEY + EMBED_API_KEY + $3-10 预算）
+  - (4/5/6) data/case_library/cases/ ≥ 400 yaml + status active ≥ 200 / pending ≈ 166 — 需人类执行 `python -m ink_writer.case_library.cli convert-from-editor-wisdom` 后 `git add data/case_library/` （若选择提交物化的病例 yaml）— 技术上 ralph 可跑，但成千上百 yaml commit 到 repo 需人类决策
+  - tag m2-data-assets + 更新 M-ROADMAP.md M2 → ✅ — 两项"收尾仪式"应在 US-008 实跑数据到位后一次性完成
+- **US-012 passes 维持 false**：代码可交付部分已完成，但 "tag + roadmap ✅" 两项 AC 本质上必须等 US-008 先解除阻塞；承袭 US-008 跳过时同款处理（passes=false + 详细阻塞条件标注），下一轮 ralph 无自动化工作可做 — 将在人类完成 US-008 后由人类或新 AI 会话关单
+- **Learnings for future iterations:**
+  - **In-memory Qdrant 对 e2e 测试足够**：`QdrantClient(":memory:")` 自然支持 `create_collection` / `upsert` / `get_collection(name).points_count`；vector_size 选 8（而非 production 4096）是 3 倍速 + 测试向量构造简单（`[0.1] * 8`）。M3 若要加更重的 collection 级测试可沿用此模式。
+  - **mock anthropic 在 segment + tag 双调用场景用 `side_effect=[seg_resp, tag_resp]` 列表**：M2 的 `_ingest_book` 对同一 `anthropic_client` 先调 segment（1 次）再调 tag（N 次），单个 MagicMock 依靠 `.return_value` 会让两阶段都拿到同一个 payload（segmenter JSON 被送去 tagger 解析 → KeyError）。side_effect 列表精确按调用顺序返不同 payload，是"同一 mock 走多阶段"的干净写法。超出列表的调用会抛 StopIteration 兜底暴露 bug。
+  - **ruff I001 对函数内局部 import 也会管**：`def test_foo(): from qdrant_client import QdrantClient ... from scripts.xxx import yyy` 若未按 stdlib → third-party → first-party 分组会报 I001。解决：两组 import 中间加空行；third-party (qdrant_client) 先、first-party (scripts.corpus_chunking) 后。不要压到一起。
+  - **PRD "acceptance commands" 分两类：代码级（pytest / cov）+ 人类级（Qdrant docker / API cost）**：ralph 只能可靠处理代码级。未来 PRD 若想被 ralph 全自动关掉，应把"需要 $ 预算 / docker / 外部依赖"的 US 单独拆出（像 US-008 这样），把纯代码 US 放一起 — 避免 US-012 这种"10 条 AC 里 6 条可自动 + 4 条必须人类"的尴尬。M3 规划可参考。
+  - **convert_rules_to_cases 实跑一次写 402 个 yaml ≈ 20s（本机 Mac M1）**：两个 e2e 测试各跑一次实际转换，整个 test_m2_e2e.py 文件 83s 主要由此二项占用。若后续想减速可把第二个测试改为用第一个的 fixture 产物（`@pytest.fixture(scope="module")`）但要注意 tmp_path 是 function-scoped — 需 `tmp_path_factory` + session 级 fixture。M2 暂保 function-scoped（简单清晰）。
+---
