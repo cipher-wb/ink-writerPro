@@ -1,46 +1,43 @@
 # Ralph Progress Log
-Started: 2026-04-25 (m3-p1-loop)
-Source PRD: tasks/prd-m3-p1-loop.md
-Branch: ralph/m3-p1-loop
-Prev run: m2-data-assets → m2-data-assets-partial tag (10/12 ✅ + 403 cases real run，US-008 corpus_chunks deferred 智谱 GLM API stall，coverage 82.72%)
+Started: 2026年 4月25日 星期六 11时30分01秒 CST
+---
 
 ## Codebase Patterns
-(承接自前轮 ralph runs，保留跨 PRD 通用条目。逐轮新增追加到下方。)
+- YAML loaders 模式：参考 `ink_writer/reader_pull/config.py`，用 `Path(__file__).resolve().parent.parent.parent / "config" / "<name>.yaml"` 定位默认路径
+- `open()` 全部带 `encoding="utf-8"`（CLAUDE.md Windows 兼容守则强制）
+- ruff isort 格式：`import pytest` 与第一方 import 之间不留空行（同段视为一组）
+- pytest.ini testpaths 单行追加新目录；不重复添加已有目录
+- 项目无 mypy/pyright；typecheck 等价于 `ruff check` 通过
+- `python3` 而非 `python`（macOS 默认 alias）
+- ruff 默认开 UP017：`from datetime import timezone; timezone.utc` 必须改为 `from datetime import UTC; UTC`（Py 3.11+ alias）
+- M3 期 evidence_chain 写盘：默认 base_dir 是 `Path("data")`；测试传 tmp_path 隔离
 
-- **UTF-8 编码硬约束**：所有 `open()` / `Path.read_text()` / `Path.write_text()` 必须带 `encoding="utf-8"`。scripts/fix_utf8_encoding.py 可批量修复；scripts/audit_cross_platform.py 是 9 类风险单一扫描入口。
-- **Windows 兼容守则**：新增 .sh 必须配 .ps1（UTF-8 BOM）+ .cmd 双击包装；新增带 `if __name__ == "__main__":` 的脚本在 main 开头调用 `runtime_compat.enable_windows_utf8_stdio()`（Mac no-op）。详见 CLAUDE.md。
-- **agent 规格统一目录**：所有 agent 规格在 `ink-writer/agents/`（非 `ink_writer/`，US-402 已消除双目录）。
-- **pytest.ini testpaths 必须显式注册**：新建 `tests/<module>/` 目录后必须追加到 `pytest.ini` 的 `testpaths` 行，否则 pytest 不收集；项目覆盖率门禁 `--cov-fail-under=70`。运行时可用 `pytest tests/<new-dir>` 直接目标调用绕过 testpaths，适合 pre-US-002 的单任务验证。
-- **Python 包 vs 插件目录命名**：`ink_writer/` 是 Python 包（pyproject.toml 注册），`ink-writer/` 是 Claude Code 插件（agents / skills / scripts）；不可混用。
-- **Ruff 是 lint gate**（`python3 -m ruff check`）。常见自动修复：UP009（去 `# -*- coding: utf-8 -*-`）、UP035（`typing.Sequence` → `collections.abc.Sequence`）、I001（import ordering）。新增 .py 提交前先跑 `ruff check --fix <paths>`。
-- **无 mypy/pyright 配置** — PRD "Typecheck passes" 的实际含义：`python3 -m py_compile <file>` + `ruff check` 同时干净。
-- **断链检测标准写法**：`p.is_symlink() and not p.exists()`（`Path.exists()` 会 follow 符号链接，所以返 False 即 target 丢失）。
-- **仓库级 audit 红线会扫全仓 .py**：`tests/audit/test_cli_entries_utf8_stdio.py::test_repo_has_no_cli_entry_missing_utf8_stdio`（任何含 `__main__` 的 .py 必须出现 `enable_windows_utf8_stdio` 字面量）与 `tests/core/test_safe_symlink.py::test_repo_has_no_bare_symlink_calls_outside_primitives`（禁止 `os.symlink` / `Path.symlink_to` 裸调用，须走 `runtime_compat.safe_symlink`；测试 fixture 处用 `# c5-ok: 原因` 豁免）。**新增任何 .py 之后一定要跑这两个测试**，不能只依赖子目录 pytest 绿灯。
-- **PEP 440 `~=X.Y` 语义**：`>=X.Y, <(X+1).0`（允许次版本号上升到 `(X+1).0` 之前），不是"只允许 X.Y.z"。要锁次版本号写 `~=X.Y.0`。PRD 里的"输出 1.12.x"类措辞是估值，判合规看约束不看措辞。
-- **跨目录 CLI 入口三段式 sys.path bootstrap**：`scripts/<sub>/*.py` 下的 CLI 用 `_REPO_ROOT = Path(__file__).resolve().parent.parent.parent` + `_INK_SCRIPTS = _REPO_ROOT / "ink-writer" / "scripts"` 两个 `sys.path.insert(0, ...)` bootstrap，然后在 imports 上加 `# noqa: E402` 抑制 ruff "import not at top"。M3 不新增独立 CLI 入口（通过 ink-write SKILL.md 间接调用），无需这个模板。
-- **M2 LLM 选型实战教训**：智谱 GLM-5.1 RPM 配额过低（1302 rate limit 死锁），glm-4.6 单本 chunking 9min 仅 4 chunks 太慢；M2 切片管线终选 glm-4-flash + LLM_MIN_INTERVAL=0.2s throttle。M3 调用量小（每章 9 调用 vs 切片每章 ~6 调用 × 30 章），可用 glm-4.6 提质量；通过 `~/.claude/ink-writer/.env` 的 `LLM_MODEL` 字段切换 (Q14)。
-- **LLMClient wrapper 形态**：scripts/corpus_chunking/llm_client.py 提供 anthropic-shaped `client.messages.create(max_tokens=, messages=...)` 接口，内部走 OpenAI SDK 调智谱 BigModel。新代码（如 M3 writer-self-check / 2 个 checker / polish-agent）若调 LLM，复用同样的 anthropic-shaped wrapper，便于后续切换 LLM provider 不动业务代码。
-- **M1+M2 已建组件 (M3 起复用，不要重建)**:
-  - `ink_writer/case_library/{store, schema, ingest, models}` — `CaseStore` / `CaseIndex` / `ingest_case(sha256 dedup)` / `Case dataclass + 5 enums`
-  - `ink_writer/case_library/cases/CASE-2026-{0000..0402}.yaml` — 403 active+pending cases (236 active hard + 147 soft pending + 19 info pending + zero-case)
-  - `ink_writer/qdrant/{client, payload_schema}` — CORPUS_CHUNKS_SPEC vector_size 2048 (智谱 embedding-3) / `ensure_collection`
-  - `ink_writer/preflight/{checks, checker, cli}` — 6 项健康检查 + auto-create infra_health case
-  - `scripts/corpus_chunking/llm_client.LLMClient` — anthropic-shaped wrapper over OpenAI-compatible client
-  - `data/editor-wisdom/rules.json` — 402 条规则（原始数据）
-  - `data/case_library/cases/` — M3 read-only 输入（writer-self-check 评估时 query active cases）
+## [2026-04-25 11:35] - US-001
+- 实现 `config/checker-thresholds.yaml`（8 段：writer_self_check / reader_pull / sensory_immersion / high_point / conflict_skeleton / protagonist_agency / rewrite_loop / dry_run）
+- 新增 `ink_writer/checker_pipeline/thresholds_loader.py` 暴露 `load_thresholds()` + `ThresholdsConfigError` + `DEFAULT_CONFIG_PATH`
+- 新增 `tests/checker_pipeline/test_thresholds_loader.py` 4 用例全绿
+- pytest.ini testpaths 追加 `tests/writer_self_check tests/checkers tests/rewrite_loop tests/evidence_chain`（tests/checker_pipeline 已在）
+- 验证：tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py 20 passed；ruff 无错
+- **Learnings for future iterations:**
+  - `DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent.parent.parent / "config" / "<name>.yaml"`：从 `ink_writer/<sub>/<file>.py` 上溯 3 层到仓库根
+  - `yaml.YAMLError` 是 yaml.safe_load 抛的解析异常基类，不是 ValueError
+  - 新建 `tests/<新目录>` 时记得在 pytest.ini testpaths 单行追加，否则 collect 不到
+  - `tests/checker_pipeline/__init__.py` 已存在（不要重复创建）
+- Next: US-002 evidence_chain.json schema + 写入工具
+---
 
-## ⚠️ Long-Term Roadmap Reminder（每轮 ralph 启动新 AI 实例时必读）
-
-本 PRD 是 **5 周 M1-M5 roadmap 的第 3 步（30 → 50 分质量拐点）**。完成本轮所有 user stories 后，**绝不能停下**——必须继续推进 M4-M5（或回头补 M2 corpus_chunks）。
-
-**完整 roadmap**：`docs/superpowers/M-ROADMAP.md`（cat 这个文件了解全貌）
-
-**M3 之后下一步（给完成本 PRD 的最后一个 AI 实例 / 给打开新会话的人类）**：
-1. 验证 M3 收尾：`git tag m3-p1-loop` + 把 `M-ROADMAP.md` 中 M3 状态从 🟢 改为 ✅ + 填完成日期 2026-04-25
-2. 启动 M4：在新会话里说"基于 docs/superpowers/specs/2026-04-23-...md §3 P0 上游 + §9 M4 + M-ROADMAP.md，brainstorm M4 design"
-3. 或回头补 M2 corpus_chunks：参考 docs/superpowers/M2-FOLLOWUP-NOTES.md A 选项（换 LLM provider 重跑 ingest）
-4. 走标准流程：brainstorm spec → writing-plans → /prd → /ralph → bash scripts/ralph/ralph.sh
-
-**当前 M（M3）目标**：writer-self-check + 阻断重写 + 2 个新 checker + evidence_chain + dry-run 5 章观察 — 30→50 分质量拐点
-**下一 M（M4）目标**：P0 上游策划层（4 ink-init checker + 3 ink-plan checker + 起点 top200 简介库 + LLM 高频起名词典）
-**最终 M（M5）目标**：Dashboard + 自进化闭环 + 用户扩展接口
+## [2026-04-25 11:50] - US-002
+- 实现 `ink_writer/evidence_chain/__init__.py`（导出 EvidenceChain / EvidenceChainMissingError / require_evidence_chain / write_evidence_chain）
+- 新增 `ink_writer/evidence_chain/models.py`：`EvidenceChain` dataclass + 4 helper（record_self_check / record_checkers / record_polish / record_case_update）+ to_dict() 输出 spec §6.1 schema（含 $schema URI / phase_evidence 三段 / chunk_borrowing 兼容字段保 null）
+- 新增 `ink_writer/evidence_chain/writer.py`：`write_evidence_chain` 写到 `<base_dir>/<book>/chapters/<chapter>.evidence.json` (JSON ensure_ascii=False, indent=2) + `require_evidence_chain` 缺则 raise `EvidenceChainMissingError`
+- 新增 `tests/evidence_chain/__init__.py` + `tests/evidence_chain/test_writer.py` 4 用例全绿（round_trip / phase_evidence / missing_raises / present_returns_path）
+- ruff auto-fix UP017：`timezone.utc` → `UTC`（Py 3.11+ datetime alias）
+- 验证：tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py 20 passed
+- **Learnings for future iterations:**
+  - dataclass helper 方法用 keyword-only args (`*, round_idx=...`) 强制调用方写明字段，避免 polish/self_check round 顺序错位
+  - `record_checkers` 用赋值而非 append（每章只跑一次 checker pipeline）；`record_self_check` / `record_polish` 用 append（多轮）
+  - `to_dict()` 调用 `dict(item)` 拷贝列表元素，避免外部修改污染内存对象
+  - `produced_at=""` 在 to_dict 时回退到 `_utc_now_iso()`（避免每次 dataclass 构造都拍时间戳，便于测试）
+  - `EvidenceChainMissingError(RuntimeError)` 而非 FileNotFoundError，让 ink-write 能精确捕获该业务异常
+- Next: US-003 writer-self-check agent
+---
