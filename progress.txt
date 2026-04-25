@@ -109,3 +109,20 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - 单元测试不需要 mock case_store；案件查询路径让 US-008 orchestrator 集成测试覆盖
 - Next: US-007 polish-agent 改 prompt 接收 case_id 驱动
 ---
+
+## [2026-04-25 13:30] - US-007
+- 实现 `ink_writer/rewrite_loop/__init__.py`（空，包入口）+ `ink_writer/rewrite_loop/polish_prompt.py`：`build_polish_prompt(*, chapter_text, case_id, case_failure_description, case_observable, related_chunks)` 返回字符串
+- prompt 顶部含 `case_id` + `failure_description` + observable 列表 + 章节正文 + 输出要求（"只重写最小必要段落 / 不输出 diff / 末尾附 1 行修改说明 / 不包裹 markdown / 不得改变剧情事实"）
+- `related_chunks=None` 时 prompt 含 "无相关范文 / no related chunks available — M3 期 chunk_borrowing deferred"
+- `related_chunks` 非空时 prompt 含 `[chunk_id] 文本预览（≤120 字 + 省略号）`，避免 prompt 过长
+- 修改 `ink-writer/agents/polish-agent.md` 末尾追加 `## M3 改造（2026-04-25 起）：case_id 驱动重写` 章节，引用 `build_polish_prompt`，保留原 Step 1.x~Step 6 流程作 backward compat
+- 新增 `tests/rewrite_loop/__init__.py` + `conftest.py`（`sample_chapter_text` / `sample_case` / `sample_chunks` fixture）+ `test_polish_prompt.py` 3 用例全绿
+- 验证：tests/rewrite_loop/test_polish_prompt.py 3 passed；regression utf8_stdio + safe_symlink 23 passed；ruff 无错
+- **Learnings for future iterations:**
+  - `Sequence[dict[str, Any]] | None` + `from collections.abc import Sequence`：list/tuple 都能传，比 list 更友好；类型注解走 PEP 604（Py 3.10+）
+  - chunk text 预览裁剪到 ≤120 字 + 省略号，比让 LLM 看全文 prompt 更省 token；`text[:N]` 切片不需要 `len(text) > N` 判断也安全（短文本切片返回原文）
+  - polish-agent.md 追加章节而不删原内容：M3 `rewrite_loop` 与 ink-write 主链路的 Step 1.x~Step 6 是两套流程并存，避免破坏现有产线；后续 M4+ 再统一收口
+  - prompt 中"不包裹 markdown" 关键词必须明写否则 LLM 会自动加 ```（实测 GLM-4.6 / Claude 都会）
+  - 测试断言中文短语命中即可，不必死磕完整句子；fixture 用真实可读样本（"主角站在街口张望"）便于排错时一眼看出 prompt 形态
+- Next: US-008 rewrite_loop orchestrator（用本 step 的 build_polish_prompt 作 polish_fn 默认实现）
+---

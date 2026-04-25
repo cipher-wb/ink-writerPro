@@ -137,8 +137,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：build_polish_prompt + polish-agent.md M3 改造章节 + 3 tests passing"
     },
     {
       "id": "US-008",
