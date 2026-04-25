@@ -11,11 +11,11 @@ from qdrant_client.http.models import Distance
 
 def test_collection_specs_have_expected_names_and_dims() -> None:
     assert EDITOR_WISDOM_RULES_SPEC.name == "editor_wisdom_rules"
-    assert EDITOR_WISDOM_RULES_SPEC.vector_size == 4096
+    assert EDITOR_WISDOM_RULES_SPEC.vector_size == 2048
     assert EDITOR_WISDOM_RULES_SPEC.distance == Distance.COSINE
 
     assert CORPUS_CHUNKS_SPEC.name == "corpus_chunks"
-    assert CORPUS_CHUNKS_SPEC.vector_size == 4096
+    assert CORPUS_CHUNKS_SPEC.vector_size == 2048
     assert CORPUS_CHUNKS_SPEC.distance == Distance.COSINE
 
 

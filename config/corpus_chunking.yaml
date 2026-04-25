@@ -1,10 +1,12 @@
+# M2 (2026-04-24) 修订：原 spec 假设 Anthropic Haiku + Qwen3-Embedding-8B，
+# 但实际可用 key 是 ZhipuAI BigModel；改用 GLM-5.1 (LLM) + embedding-3 (2048 维)。
 scene_segmenter:
-  model: claude-haiku-4-5-20251001
+  model: glm-4-flash  # 终选：glm-5.1 RPM 死锁、glm-4.6 单本 2.5h 太慢、glm-4-flash 0.54s/call
   min_chunk_chars: 200
   max_chunk_chars: 800
   max_retries: 3
 chunk_tagger:
-  model: claude-haiku-4-5-20251001
+  model: glm-4-flash  # 终选：glm-5.1 RPM 死锁、glm-4.6 单本 2.5h 太慢、glm-4-flash 0.54s/call
   batch_size: 5
   quality_weights:
     tension: 0.3
@@ -13,8 +15,8 @@ chunk_tagger:
     readability: 0.2
   max_retries: 3
 chunk_indexer:
-  embedding_model: Qwen/Qwen3-Embedding-8B
-  embedding_base_url: https://api-inference.modelscope.cn/v1
+  embedding_model: embedding-3
+  embedding_base_url: https://open.bigmodel.cn/api/paas/v4
   qdrant_collection: corpus_chunks
   upsert_batch_size: 256
   embed_batch_size: 32

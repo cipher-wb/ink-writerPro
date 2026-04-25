@@ -6,10 +6,15 @@ target identical schemas.
 
 Two production collections:
 
-- ``editor_wisdom_rules`` — 288 editor rules embedded for rule retrieval.
+- ``editor_wisdom_rules`` — editor rules embedded for rule retrieval.
 - ``corpus_chunks`` — scene-level paragraph chunks from 30 reference books.
 
-Both use Qwen3-Embedding-8B (dim=4096) with cosine distance.
+Both use ZhipuAI GLM ``embedding-3`` (dim=2048) with cosine distance.
+
+Vector dim history:
+- v23 spec §8 originally assumed Qwen3-Embedding-8B (dim=4096) via modelscope.
+- Real ``~/.claude/ink-writer/.env`` ships ZhipuAI ``embedding-3`` instead.
+- M2 (2026-04-24) switched to dim=2048 to match the actual EMBED_API_KEY.
 """
 from __future__ import annotations
 
@@ -46,7 +51,7 @@ class CollectionSpec:
 
 EDITOR_WISDOM_RULES_SPEC = CollectionSpec(
     name="editor_wisdom_rules",
-    vector_size=4096,
+    vector_size=2048,  # ZhipuAI GLM embedding-3 (M2 修订；spec §8 原假设 Qwen3 4096)
     indexed_payload_fields=MappingProxyType(
         {
             "category": "keyword",
@@ -59,7 +64,7 @@ EDITOR_WISDOM_RULES_SPEC = CollectionSpec(
 
 CORPUS_CHUNKS_SPEC = CollectionSpec(
     name="corpus_chunks",
-    vector_size=4096,
+    vector_size=2048,  # ZhipuAI GLM embedding-3 (M2 修订；spec §8 原假设 Qwen3 4096)
     indexed_payload_fields=MappingProxyType(
         {
             "genre": "keyword",

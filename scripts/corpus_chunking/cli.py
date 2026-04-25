@@ -112,9 +112,30 @@ def _build_embedding_config(cfg: dict[str, Any]) -> EmbeddingConfig:
 
 
 def _build_anthropic_client() -> Any:
-    import anthropic  # type: ignore[import-not-found]
+    """Build the LLM client for scene_segmenter / chunk_tagger.
 
-    return anthropic.Anthropic()
+    M2 (2026-04-24) 改造：原本调 anthropic.Anthropic() 走 Haiku，但实际
+    ANTHROPIC_API_KEY 未配置；切换到 LLMClient（OpenAI 兼容 wrapper），
+    通过 LLM_BASE_URL/LLM_API_KEY/LLM_MODEL env 走智谱 BigModel GLM。
+
+    函数名保留 ``_build_anthropic_client`` 作为兼容 alias（test_cli.py 依赖
+    monkey-patch 这个名字）。新代码可调 ``_build_llm_client`` 别名。
+    """
+    return _build_llm_client()
+
+
+def _build_llm_client() -> Any:
+    base_url = os.environ.get("LLM_BASE_URL", "https://open.bigmodel.cn/api/paas/v4")
+    api_key = os.environ.get("LLM_API_KEY") or os.environ.get("EMBED_API_KEY", "")
+    model = os.environ.get("LLM_MODEL", "glm-5.1")
+    if not api_key:
+        raise RuntimeError(
+            "LLM_API_KEY (or EMBED_API_KEY fallback) not set; "
+            "configure ~/.claude/ink-writer/.env"
+        )
+    from scripts.corpus_chunking.llm_client import LLMClient
+
+    return LLMClient(base_url=base_url, api_key=api_key, default_model=model)
 
 
 def _build_qdrant_client() -> Any:
