@@ -165,8 +165,8 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：data/case_library/user_corpus/history-travel/{_meta.yaml, 2 个 synthetic_excerpt .txt 节选 (~700 字/篇), user_genres.yaml 索引}；M2 corpus_chunks 仍 deferred 不真跑切片。3 用例全绿（meta schema / 文件大小 100-2000 字 / user_genres 索引）；全量 pytest 3794 passed / 23 skipped / 0 failed（忽略预存 dashboard.app 模块路径冲突的 3 个 collection error，不在 US-008 范围）。"
     },
     {
       "id": "US-009",

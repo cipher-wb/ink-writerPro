@@ -1,0 +1,12 @@
+genre: history-travel
+license: fair_use_excerpt
+description: 历史穿越类网文示例语料 — 用于 case_library 用户扩展接口验证（M5 P3）。
+  当前为 synthetic_excerpt（LLM 仿写历史叙事文体片段），不直接复制公开作品正文，避免版权风险。
+files:
+  - path: 明朝那些事儿_节选_第一章.txt
+    source: synthetic_excerpt
+    note: 仿《明朝那些事儿》白话历史叙事文体的合成片段（章末王朝兴替开篇）；非原文，标 synthetic_excerpt 以避版权。
+  - path: 明朝那些事儿_节选_第二章.txt
+    source: synthetic_excerpt
+    note: 仿《明朝那些事儿》白话历史叙事文体的合成片段（朱元璋少年遭难）；非原文，标 synthetic_excerpt 以避版权。
+created_at: 2026-04-25

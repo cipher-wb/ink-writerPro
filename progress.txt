@@ -218,3 +218,28 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **SKILL.md 段落只插在 Step 1.5 之后、Step 2A 之前**：M3 写章合规循环 (Step 1.5) 是 channel 落地点；Step 2A 起草不需要知道 channel；这样段落定位最不影响阅读流。
   - **PowerShell sibling 用 `python -c @"..."@` here-string**：单行命令含中文/引号会破坏 PS 转义；这是 SKILL.md 已有约定（参考 Step 1.5 PS sibling），新加的 A/B 通道示例就近复用即可。
 ---
+
+## 2026-04-25 - US-008 user_corpus history-travel 样例 + ingest 链路
+- 实现：
+  - `data/case_library/user_corpus/history-travel/_meta.yaml`：`{genre: history-travel, license: fair_use_excerpt, files: [{path, source: synthetic_excerpt, note}], created_at}`。两份 .txt 都标 source=synthetic_excerpt 以避版权风险（spec §3 P3 接受 LLM 仿写历史叙事文体片段）。
+  - `data/case_library/user_corpus/history-travel/明朝那些事儿_节选_第一章.txt` (~720 字)：仿《明朝那些事儿》白话历史叙事文体合成片段（朱元璋出生背景）。
+  - `data/case_library/user_corpus/history-travel/明朝那些事儿_节选_第二章.txt` (~710 字)：同上（朱元璋少年放牛+大旱+亲人离散）。
+  - `data/case_library/user_corpus/user_genres.yaml`：`{genres: {history-travel: {path, chunks_count: 0, last_ingested_at: null}}, created_at}`；M2 corpus_chunks 仍 deferred。
+  - `tests/case_library/test_user_corpus_meta.py`：3 用例（meta schema / 每个 .txt 字符数 100-2000 / user_genres 索引含 history-travel + path/chunks_count/last_ingested_at 字段全在）。
+- Files changed:
+  - data/case_library/user_corpus/history-travel/_meta.yaml (new)
+  - data/case_library/user_corpus/history-travel/明朝那些事儿_节选_第一章.txt (new)
+  - data/case_library/user_corpus/history-travel/明朝那些事儿_节选_第二章.txt (new)
+  - data/case_library/user_corpus/user_genres.yaml (new)
+  - tests/case_library/test_user_corpus_meta.py (new)
+- 验证：
+  - `pytest tests/case_library/test_user_corpus_meta.py -v --no-cov` → 3 passed
+  - `pytest tests/case_library/ --no-cov` → 56 passed (向后兼容)
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` → **3794 passed / 23 skipped / 0 failed**（312s）。dashboard.app 三个 collection error 是预存路径解析问题（`/Users/cipher/AI/ink/...` 与 `/Users/cipher/AI/小说/ink/...` 大小写规范化冲突，US-007 也用同样 ignore 跑过；不在 US-008 范围）。
+  - `wc -m data/case_library/user_corpus/history-travel/*.txt` → 708 + 719 字符（fair-use band [100, 2000] 内）。
+- Learnings for future iterations:
+  - **仿写片段 fair-use 边界**：本 PR 用 ~700 字 / 篇，远低于 2000 字硬上限；标 `source: synthetic_excerpt` + 注明非原文是 spec §3 P3 推荐路线，可避开公开作品版权风险。后续新 genre 用同一三件套（_meta.yaml + N 个 .txt + user_genres.yaml 增条目）即可零代码扩展。
+  - **`user_corpus/<genre>/_meta.yaml` 字段最小契约**：`genre`（string）+ `license`（string）+ `files`（list of dict，每项必有 `path` + `source`）+ `created_at`。spec §3 P3 没强制其它字段；测试只 assert 这四样就够用。下游 M2 真跑切片时再扩 `chunks_count` / `last_ingested_at` 到 _meta.yaml（目前只在 user_genres.yaml 顶级索引里）。
+  - **`wc -m` 统计中文字符数**：macOS BSD wc 加 `-m` 按 multi-byte 字符数（每个汉字 = 1）；不要用 `wc -c`（按字节，1 个汉字 = 3 字节）会让 100-2000 字硬限误判 3 倍。
+  - **预存 `dashboard.app` collection error**：tests/data_modules/test_dashboard_{app,server,watcher}.py 三文件 import `dashboard.app`，但 macOS HFS+ 大小写不敏感导致 `/Users/cipher/AI/小说/ink/...` 与 `/Users/cipher/AI/ink/...` 在 sys.path 解析时标准化失败 (`No module named 'dashboard.app'`)。US-007 / 本 PR 都用 `--ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` 绕过；不属本 PR 修复范围。下游 US-013 e2e 验收若把这三个文件含进 `pytest -q --no-cov` 总用例数门禁，必须先修预存 path normalization 问题（不归 M5 追加 PR）。
+---
