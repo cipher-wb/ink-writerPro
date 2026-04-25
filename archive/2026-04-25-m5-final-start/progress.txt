@@ -1,0 +1,300 @@
+# Ralph Progress Log
+Started: 2026年 4月25日 星期六 15时15分45秒 CST
+
+## Codebase Patterns
+- 评估 evidence_chain 字段时优先扩展现有 dataclass（默认值保证向后兼容），不要新建并行 dataclass
+- 写盘函数统一带 `encoding="utf-8"`，目录用 `Path.parent.mkdir(parents=True, exist_ok=True)`
+- ink_writer/evidence_chain/__init__.py 是单一导出口，新增 API 同步在此导出 + 加到 __all__
+- 测试 fixtures 走 tests/<area>/conftest.py，fixture 命名 `<area>_base_dir` + `sample_<area>_<scenario>`
+- 阶段性输出（ink-init / ink-plan）合并到同一 JSON 时按 stage 名去重再追加，overall_passed 用 all() 聚合
+- pytest.ini testpaths 是单行（极长但不能换行），新加测试目录追加到末尾
+- 新 checker 完全照 M3 protagonist_agency 模式：`ink_writer/checkers/<name>/{__init__,models,checker}.py + prompts/check.txt`，dataclass 含 score/blocked/cases_hit/notes + to_dict()，cases_hit 默认 []（由编排层注入），LLM/JSON 失败统一降级为 score=0.0/blocked=True/notes 含 "checker_failed"
+- 双层（regex + LLM）checker 模式：先用 `re.escape(kw)` 拼 OR pattern 字面扫描，命中直通不调 LLM；regex miss 才走 LLM 语义判断；report 同时暴露 `regex_match: bool` + `llm_match: bool|None`，让 evidence_chain 调试时一眼看出走的哪条路径
+- 纯规则 checker（无 LLM）跳过 prompts/ 目录与 mock_llm_client；保守阻断契约：依赖文件缺失 → score=0.0 + blocked=True + notes 含 'missing'，让 planning_review 拿到失败信号
+- LLM 响应统一用 _extract_json* helper：先 try fence ```json ... ```，再退化为 raw "{ ... }" / "[ ... ]" 子串解析；失败抛 ValueError 让 except 捕获重试
+- 跨 checker 复用 tests/checkers/conftest.py 的 FakeLLMClient（queue + calls + .messages.create stub），不要在 sub-area 新建 fixture
+- agent spec 落 ink-writer/agents/<name>-checker.md，frontmatter 含 name/description/tools=Read/model=inherit；包含来源 spec/PRD、Python 调用示例、字段表、阻断行为、与下游衔接段
+- 数据爬虫脚本：scripts/<area>/__init__.py（空）+ fetch_*.py（UA 含联系邮箱、_check_robots_txt、RATE_LIMIT_SECONDS=1.0、_load_progress/_save_progress_one 续爬、_fetch_*_page → list[(rank, id)]、_fetch_one_* max_retries 失败 return None、enable_windows_utf8_stdio()）；测试用 autouse fixture monkeypatch OUTPUT_PATH/PROGRESS_PATH 到 tmp_path 隔离仓库 data/
+- 编排层模式：ink_writer/planning_review/<stage>_review.py 复用 EvidenceChain（phase=planning + stage=...），dry-run 计数独立路径 data/.planning_dry_run_counter 走 dry_run.py helpers；effective_blocked = blocked_any AND not dry_run，dry-run 跑后 increment；skip 路径只写 outcome=skipped 不调 checker；blocked 时按 thresholds yaml case_ids 注入 cases_hit；CLI argparse + enable_windows_utf8_stdio() + 退出码 1/0；测试用 FakeLLMClient（tests/checkers/conftest.py）+ tmp_path 隔离 base_dir + 显式 dry_run_counter_path 控制 dry/real 模式
+- case_id 正则扩展规则：schemas/case_schema.json + schemas/case_approval_batch_schema.json 两处必须**同步修改**（approval batch 先于 store.save 校验）；扩展用可选段 `(M[0-9]+-)?` 保持向后兼容旧 CASE-YYYY-NNNN；PRD 描述 schema 与实际 schemas/*.json 不一致时以 jsonschema validator + additionalProperties=false 为准
+- M4 上游 seed case 模式：layer=['upstream']（与 M3 downstream 区分）+ tags 含 m4_p0_planning + ink_{init,plan}_step99；source.ingested_at 用 'YYYY-MM-DD' 单引号字串（schema format=date）；failure_pattern.observable minItems=1 必须列 checker 触发条件；status: pending 写盘后通过 m4_seed_approval_batch.yaml 走 cli approve --batch 一次性 active 7 条；CaseStore 没有 iter_active()，过滤 `c.status.value == 'active'` + `c.case_id.startswith('CASE-2026-M4')`
+
+---
+
+## 2026-04-25 - US-002
+- 实现 planning_evidence_chain.json schema + writer + 向后兼容
+- Files changed:
+  - ink_writer/evidence_chain/models.py（EvidenceChain 加 phase: str = 'writing' + stage: str | None = None；to_dict() 输出新字段）
+  - ink_writer/evidence_chain/planning_writer.py（新增；暴露 write_planning_evidence_chain / require_planning_evidence_chain / PlanningEvidenceChainMissingError + PLANNING_SCHEMA_VERSION='1.0'）
+  - ink_writer/evidence_chain/__init__.py（导出 planning API）
+  - tests/planning_review/__init__.py（新增）
+  - tests/planning_review/conftest.py（fixtures planning_base_dir + sample_planning_evidence_init）
+  - tests/planning_review/test_planning_writer.py（4 用例：test_write_creates_new_file / test_write_merges_ink_plan_after_ink_init / test_require_raises_when_missing / test_write_rejects_non_planning_phase）
+- 测试：tests/planning_review/test_planning_writer.py 4 passed；tests/evidence_chain/ 7 passed（M3 向后兼容）；ruff lint 全过
+- **Learnings for future iterations:**
+  - EvidenceChain 默认 phase='writing' 让 M3 章节代码不需任何改动，新加 planning 用法显式传 phase='planning'
+  - planning_writer 写盘路径 `<base_dir>/<book>/planning_evidence_chain.json`，与章节级 evidence `<base_dir>/<book>/chapters/<chapter>.evidence.json` 不同目录，不会冲撞
+  - 合并 stage 时用 `[s for s in stages if s.get("stage") != evidence.stage]` 实现 upsert，避免重跑 ink-init 后产生重复条目
+  - DEFAULT_BASE_DIR 复用自 writer.py，不要重复定义；其他模块需要默认 base_dir 时直接 import
+  - require_*_evidence_chain 的返回类型不一致是历史包袱：chapter 版返回 Path，planning 版返回 dict（解析后的 JSON）；US-012 调用方需要 dict 来做后续 stage 合并判断
+---
+
+## 2026-04-25 - US-003
+- 实现 genre-novelty-checker（M4 ink-init 策划期题材新颖度检查 spec §3.1）
+- Files changed:
+  - ink_writer/checkers/genre_novelty/__init__.py（导出 GenreNoveltyReport / check_genre_novelty）
+  - ink_writer/checkers/genre_novelty/models.py（GenreNoveltyReport dataclass：score / blocked / top5_similar / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/genre_novelty/checker.py（check_genre_novelty + _build_prompt + _extract_json_array + _enrich_top5；score=1.0-max(top5 sim)，block_threshold=0.40；empty top200 跳过；LLM 失败重试 max_retries 后 blocked+notes='checker_failed: <err>'）
+  - ink_writer/checkers/genre_novelty/prompts/check.txt（{genre_tags} / {main_plot_one_liner} / {top200_json} 占位符；要求 JSON 数组输出）
+  - tests/checkers/genre_novelty/__init__.py（新增）
+  - tests/checkers/genre_novelty/test_checker.py（4 用例：test_high_similarity_blocks / test_low_similarity_passes / test_empty_top200_skipped / test_llm_failure_blocks）
+  - ink-writer/agents/genre-novelty-checker.md（agent spec：来源 spec/PRD + Python 调用 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/genre_novelty/ 4 passed；tests/checkers/ 整体 16 passed（M3 章节级 checker 向后兼容）；ruff lint 通过
+- **Learnings for future iterations:**
+  - genre_novelty 的 score 反向（与 M3 章节级 checker 同向）：低 score = 高相似 = 阻断；spec §3.1 是 1.0 - max(sim)，不要写成 mean(sim)
+  - top5 array 输出时显式按 similarity 降序排序后 [:5]：LLM 偶尔会返回多于/少于 5 条或排序错乱，用 `enriched.sort(key=lambda x: x["similarity"], reverse=True)` 兜底，确保 top5_similar[0] 即 max
+  - top5 dict 里 title 不依赖 LLM 返回（LLM 可能漏填）：用 by_rank = {item.get("rank"): item} 索引 + 后端注入 title，避免 LLM hallucination 题名
+  - prompts/check.txt 用 {{ }} 转义 .format() 占位符里的 JSON 例子（`{{"rank": ...}}`），否则 KeyError；只有 {genre_tags} / {main_plot_one_liner} / {top200_json} 是真正的 placeholder
+  - notes='checker_failed' 在 M3 是固定字串，M4 spec 要求 'checker_failed: <err>' 含原始异常信息（便于 evidence_chain 调试）；测试用 `report.notes.startswith("checker_failed:")` 而不是 `==`
+  - max_retries 默认 2（M4 上游层 spec），与 M3 章节级 checker 默认 3 不同——抄 protagonist_agency 时记得改默认值
+---
+
+## 2026-04-25 - US-004
+- 实现 golden-finger-spec-checker（M4 ink-init 策划期金手指规格检查 spec §3.2）
+- Files changed:
+  - ink_writer/checkers/golden_finger_spec/__init__.py（导出 GoldenFingerSpecReport / check_golden_finger_spec）
+  - ink_writer/checkers/golden_finger_spec/models.py（GoldenFingerSpecReport dataclass：score / blocked / dim_scores (4 dim 各 0-1) / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/golden_finger_spec/checker.py（check_golden_finger_spec + _build_prompt + _extract_json_object + _normalize_dim_scores；score=mean(4 dim)，block_threshold=0.65；description strip 后 < 20 字直接 blocked + notes='description_too_short' 不调 LLM；LLM 失败重试 max_retries 后 blocked + notes='checker_failed: <err>'）
+  - ink_writer/checkers/golden_finger_spec/prompts/check.txt（{description} 占位符；要求 JSON 对象输出 4 个 dim + notes）
+  - tests/checkers/golden_finger_spec/__init__.py（新增）
+  - tests/checkers/golden_finger_spec/test_checker.py（4 用例：test_high_score_passes / test_low_score_blocks / test_short_description_blocks / test_llm_failure_blocks）
+  - ink-writer/agents/golden-finger-spec-checker.md（agent spec：来源 spec/PRD + Python 调用 + 4 维度说明 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/golden_finger_spec/ 4 passed；tests/checkers/ 整体 20 passed（M3 + M4 genre_novelty 向后兼容）；ruff lint 通过
+- **Learnings for future iterations:**
+  - golden_finger_spec 输出是 JSON **对象** 而非数组（与 genre_novelty 不同）：用 `_extract_json_object` 抓 `\{.*\}`，与 genre_novelty 的 `_extract_json_array` 区分；后续 protagonist_motive 也是对象，naming_style 无 LLM
+  - 4 个维度键名用模块级常量 `_DIMENSIONS = ("clarity", "falsifiability", "boundary", "growth_curve")` 固化：normalize 时按这个 tuple 遍历，缺失 / 类型错的 dim 一律降级为 0.0；不要相信 LLM 返回的键集合
+  - `_MIN_DESCRIPTION_LEN = 20` 用 `description.strip()` 后判断长度（spec §3.2）：避免 LLM 在 `"主角有金手指。      "` 这种 padding 字串上浪费一次调用；测试 `mock_llm_client.calls == []` 校验未调用
+  - dim_scores 用 `dict[str, float]`（而非 list of dict），便于下游 evidence_chain 直接渲染 `{"clarity": 0.9, ...}`，不需要再按 dim 名查找
+  - notes 字段双重用途：normal path 是 LLM 给的中文简短说明（"边界模糊"），异常 path 是固定前缀（"description_too_short" / "checker_failed: <err>"）；下游过滤时用 `startswith("checker_failed:")` 而非 `==`
+  - 抄 genre_novelty 时记得改 `_DEFAULT_BLOCK_THRESHOLD = 0.65`、`_DEFAULT_MAX_TOKENS = 1024`（而非 2048，因输出是单 JSON 对象较短）
+---
+
+## 2026-04-25 - US-005
+- 实现 naming-style-checker（M4 ink-init 策划期纯规则角色起名风格 spec §3.3）
+- Files changed:
+  - ink_writer/checkers/naming_style/__init__.py（导出 NamingStyleReport / check_naming_style）
+  - ink_writer/checkers/naming_style/models.py（NamingStyleReport：score / blocked / per_name_scores / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/naming_style/checker.py（无 prompts/；按优先级短路打分 exact > double_char > single_char > clean；多名 mean；block_threshold=0.70；空名单→1.0/no_names；词典缺失→0.0/blocked/'blacklist_missing'）
+  - tests/checkers/naming_style/__init__.py（新增）
+  - tests/checkers/naming_style/test_checker.py（6 用例：test_exact_match_zero / test_double_char_pattern / test_single_char_pattern / test_clean_name_passes / test_multiple_names_average / test_blacklist_missing_blocks；用 tmp_path 写假词典 fixture，无 mock_llm_client）
+  - ink-writer/agents/naming-style-checker.md（agent spec：来源 spec/PRD + Python 调用 + 评分规则表 + 词典格式 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/naming_style/ 6 passed；tests/checkers/ 整体 26 passed（M3 + M4 genre_novelty + golden_finger_spec 全向后兼容）；ruff lint 通过
+- **Learnings for future iterations:**
+  - 纯规则 checker 不要新建 prompts/ 目录、不要 import _extract_json_*，与 LLM checker 形态明显区分；测试 fixture 写假 JSON 文件即可
+  - "双字模式" 解读为 **首字 first_char 列表 AND 末字 second_char 列表均命中**，非"任意两个连续字"；"单字模式" 是 **首字或末字其一命中**；按 exact > double > single > clean 短路顺序判定，不要做布尔组合
+  - 词典默认路径硬编码 `Path('data/market_intelligence/llm_naming_blacklist.json')`：`blacklist_path=None` 走默认，`blacklist_path=tmp_path/...` 走自定义；测试时务必传自定义 path 避免依赖 US-008 词典文件
+  - 词典缺失采用保守阻断（score=0.0 + blocked=True + notes 含 'blacklist_missing'），与 LLM checker 的 'checker_failed' 同源思路：拒绝在没有真相源的情况下放行
+  - per_name_scores 是 list of dict（不是 dict of list）：每条 `{role, name, score, hit_type}`，便于 evidence_chain 渲染表格；entry 缺 name / 非 dict 跳过不计入 mean
+  - 名字取 `name[0]` 作首字、`name[-1]` 作末字，2 字 / 3 字 / 单字（首末同字）一致处理；不要按字符串完整切分
+---
+
+## 2026-04-25 - US-006
+- 实现 protagonist-motive-checker（M4 ink-init 策划期主角动机检查 spec §3.4）
+- Files changed:
+  - ink_writer/checkers/protagonist_motive/__init__.py（导出 ProtagonistMotiveReport / check_protagonist_motive）
+  - ink_writer/checkers/protagonist_motive/models.py（ProtagonistMotiveReport：score / blocked / dim_scores (3 dim) / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/protagonist_motive/checker.py（check_protagonist_motive + _build_prompt + _extract_json_object + _normalize_dim_scores；score=mean(3 dim)，block_threshold=0.65；description strip 后 < 20 字直接 blocked + notes='description_too_short' 不调 LLM；LLM 失败重试 max_retries 后 blocked + notes='checker_failed: <err>'）
+  - ink_writer/checkers/protagonist_motive/prompts/check.txt（{description} 占位符；要求 JSON 对象输出 3 个 dim + notes）
+  - tests/checkers/protagonist_motive/__init__.py（新增）
+  - tests/checkers/protagonist_motive/test_checker.py（4 用例：test_high_score_passes / test_low_score_blocks / test_short_description_blocks / test_llm_failure_blocks）
+  - ink-writer/agents/protagonist-motive-checker.md（agent spec：来源 spec/PRD + Python 调用 + 3 维度说明 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/protagonist_motive/ 4 passed；tests/checkers/ 整体 30 passed（M3 + M4 genre_novelty/golden_finger_spec/naming_style 全向后兼容）；ruff lint 通过
+- **Learnings for future iterations:**
+  - protagonist_motive 与 golden_finger_spec 形态完全同构（LLM JSON 对象 + dim_scores mean），唯一差别是 3 dim 而不是 4 dim 以及 _DIMENSIONS 常量；抄模板时只改 (a) `_DIMENSIONS` tuple、(b) prompt 中的维度描述、(c) GOOD_DESCRIPTION 测试样例
+  - 3 dim 的 score = sum(dim_scores.values()) / len(_DIMENSIONS)，写成 `len(_DIMENSIONS)` 而非硬编码 3 / 4，方便未来再加新 dim 时只动一处常量
+  - test_low_score_blocks 用 `pytest.approx(0.4666666, abs=1e-3)` 处理 3 dim 平均的浮点不整除（4 dim 时是整除 0.45 不需要 abs）
+  - prompt 占位符 .format() 转义：JSON 例子中的所有 `{` `}` 都要写成 `{{` `}}`，只有真实 placeholder（这里只有 `{description}`）保持单层；多了就 KeyError
+---
+
+## 2026-04-25 - US-007
+- 实现 起点 top200 爬虫（M4 genre-novelty-checker 数据后端 spec §4.1）
+- Files changed:
+  - scripts/market_intelligence/__init__.py（新增；空）
+  - scripts/market_intelligence/fetch_qidian_top200.py（新增；UA 含 educational/non-commercial 声明 + insectwb@gmail.com；_check_robots_txt 起始检查；RATE_LIMIT_SECONDS=1.0 全程节流；_load_progress/_save_progress_one 用 .qidian_top200_progress 续爬；_fetch_rank_page → [(rank, book_id), ...]；_fetch_one_book max_retries=3 返回 dict|None；CLI --target/--max-retries + enable_windows_utf8_stdio()）
+  - tests/market_intelligence/__init__.py（新增）
+  - tests/market_intelligence/test_fetch_qidian_top200.py（2 用例：test_fetch_one_book_parses_html / test_fetch_one_book_returns_none_after_retries；fixture monkeypatch OUTPUT_PATH/PROGRESS_PATH 到 tmp_path）
+  - data/market_intelligence/qidian_top200.jsonl（新增；空文件，标 [manual-fallback-needed]）
+  - data/market_intelligence/README.md（新增；schema 文档 + manual-fallback 说明）
+- 测试：tests/market_intelligence/ 2 passed；tests/checker_pipeline/ 144 passed 向后兼容；ruff lint 通过
+- 实跑：起点 /rank/yuepiao/page1/ 返回 HTTP 202 + JavaScript 反爬挑战（probe.js / buid 注入），纯 requests 抓不到榜单；按 PRD 失败路径 commit 空 jsonl + manual-fallback README，US-014 e2e 用 fixture
+- **Learnings for future iterations:**
+  - 起点已部署 JS 反爬挑战（GET 返回 status=202 + 209 字节空 body 仅含 probe.js），requests/curl 拿不到数据；后续要么换 Playwright/Selenium，要么换第三方 API/RSS（PRD 失败路径已设计好兜底）
+  - genre-novelty-checker 已有 `empty top200 → score=1.0 skipped` 分支，空 jsonl 不阻塞 ink-init 策划链路；US-014 e2e 必须用 fixture top200 而非真实文件
+  - 测试用 monkeypatch 重定向 OUTPUT_PATH/PROGRESS_PATH 到 tmp_path autouse fixture 是隔离仓库 data/ 的标准模式（避免 pytest 副作用污染 git status）；新增 scripts/<area>/ 写文件函数的测试都该照此办理
+  - `_fetch_one_book` 重试间隔走指数退避 `RATE_LIMIT_SECONDS * (attempt + 1)`，比固定 1s 更礼貌；reuses `time.sleep` 模块属性方便 monkeypatch
+  - `from datetime import UTC` 是 Python 3.11+ 现代写法（ruff `UP017` 规则）；`datetime.timezone.utc` 已被 `UP017` flag 为 deprecated alias
+  - PRD 验收 "实跑 ≥ 150 / 失败 commit 空 jsonl 标 manual-fallback" 的 OR 路径设计是亮点：让 M4 验收不被外部反爬阻塞；类似数据爬取任务都该照此设计验收
+---
+
+## 2026-04-25 - US-008
+- 实现 LLM 高频起名词典（M4 naming-style-checker 数据后端 spec §4.2）
+- Files changed:
+  - data/market_intelligence/llm_naming_blacklist.json（新增；331 条 exact_blacklist + first_char_overused 24 + second_char_overused 24；schema {version, updated_at, exact_blacklist, char_patterns: {first/second_char_overused}, notes}）
+  - tests/market_intelligence/test_naming_blacklist.py（4 用例：test_blacklist_schema / test_blacklist_no_duplicates / test_blacklist_chinese_only / test_naming_style_checker_blocks_yefan_with_real_blacklist）
+- 测试：tests/market_intelligence/test_naming_blacklist.py 4 passed；checkers + market_intelligence + planning_review + evidence_chain 47 passed 向后兼容；ruff 通过
+- **Learnings for future iterations:**
+  - 词典构造采用 manual_required（PRD 必含 24 条）+ manual_extra（网文主角扩充）+ first × core_seconds cross-product 去重的三段式：保证既覆盖 PRD 显式要求，又有大量 cross-product 兜底（cross-product 用 12 个 core_seconds 子集，避开 first==second 的怪名）
+  - 测试 schema 的 must_include 用 set 字面量（`set("叶林陈...")`）声明 PRD 必含字根，不要用 list 比较顺序；assert `must_set.issubset(actual_set)` 给出明确 missing diff
+  - 中文校验范围用 `"一" <= ch <= "鿿"`（U+4E00–U+9FFF 基本汉字区），单字符比较直接；不要用 `re.fullmatch(r"[一-龥]+", ...)` 因为汉字扩展 B 区会被漏判
+  - 测试不要在 fixture 里 mutate filesystem：用 `scope="module"` 加载真实 data/ 词典 + 单独用例 `check_naming_style(blacklist_path=_BLACKLIST_PATH, ...)` 跑端到端验证
+  - JSON 写盘用 `ensure_ascii=False` 让中文可读，diff/review 友好；schema 版本字段（version + updated_at）方便后续扩充时做 migration 标记
+---
+
+## 2026-04-25 - US-009
+- 实现 golden-finger-timing-checker（M4 ink-plan 策划期金手指出场时机 spec §3.5；regex 主 + LLM 回退双层）
+- Files changed:
+  - ink_writer/checkers/golden_finger_timing/__init__.py（导出 GoldenFingerTimingReport / check_golden_finger_timing）
+  - ink_writer/checkers/golden_finger_timing/models.py（GoldenFingerTimingReport：score / blocked / regex_match / llm_match / matched_chapter / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/golden_finger_timing/checker.py（_first_n_chapters / _scan_regex / _build_prompt / _extract_json_object / _call_llm + check_golden_finger_timing 流水线；硬阻断 block_threshold=1.0；max_retries 默认 2；matched_chapter 范围限制 1~3）
+  - ink_writer/checkers/golden_finger_timing/prompts/check.txt（{keywords} / {summaries_text} 占位符；要求 JSON 对象输出 {matched, matched_chapter, reason}）
+  - tests/checkers/golden_finger_timing/__init__.py（新增）
+  - tests/checkers/golden_finger_timing/test_checker.py（5 用例：regex_hit_passes / regex_miss_llm_hit_passes / regex_miss_llm_miss_blocks / outline_too_short_blocks / empty_keywords_blocks）
+  - ink-writer/agents/golden-finger-timing-checker.md（agent spec：来源 spec/PRD + 流水线 5 步 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/golden_finger_timing/ 5 passed；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 190 passed 向后兼容；ruff 通过
+- **Learnings for future iterations:**
+  - 双层 checker 的 regex 扫描必须**只在前 N 章 summary** 上跑，不要扩到全 outline（spec §3.5 明确 "前 3 章"）；helper `_first_n_chapters(skeleton[:3])` 是单一真相源
+  - `re.escape(kw)` 拼 `|` OR pattern 是关键：金手指关键词可能含正则元字符（如 `[]` `()`），不 escape 会炸 `re.error`；编译一次 pattern 后顺序扫 entry 取首个命中的 `chapter_idx`
+  - LLM 返回 `matched_chapter` 必须做范围校验 `1 <= mc <= 3`，否则 LLM 偶尔会返回 `4` 或 `null` 让 `report.matched_chapter` 不可信；超界一律降级为 `matched_chapter=None + blocked=True`
+  - `block_threshold` 在硬阻断 checker 里其实是**形参装饰**——只要 `score < 1.0` 就阻断，所以接收 `block_threshold` 但不用比较；标 `# noqa: ARG001` 保留 API 兼容（后续 thresholds_loader 注入需要）
+  - report 同时暴露 `regex_match: bool` + `llm_match: bool|None` 让 evidence_chain 一眼看出走的哪条路径：`regex_match=True / llm_match=None` = regex 直通；`regex_match=False / llm_match=True` = LLM 救回；`regex_match=False / llm_match=False` = 双层都 miss
+  - PRD 用例数严格按 `输出 5 passed` 验收，不要在测试里加额外 LLM 失败测试（虽然代码有 fallback 路径）；US-014 e2e 会再覆盖
+  - `bool(matched_raw) if isinstance(matched_raw, (bool, int)) else False` 防御 LLM 返回字符串 `"true"`/`"false"`：JSON 严格 boolean 不会有这种问题，但 prompt 改写后偶尔会漂；isinstance 判一手保底
+---
+
+## 2026-04-25 - US-010
+- 实现 protagonist-agency-skeleton-checker（M4 ink-plan 策划期主角能动性骨架检查 spec §3.6）
+- Files changed:
+  - ink_writer/checkers/protagonist_agency_skeleton/__init__.py（导出 ProtagonistAgencySkeletonReport / check_protagonist_agency_skeleton）
+  - ink_writer/checkers/protagonist_agency_skeleton/models.py（ProtagonistAgencySkeletonReport：score / blocked / per_chapter / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/protagonist_agency_skeleton/checker.py（check_protagonist_agency_skeleton + _build_prompt + _extract_json_array + _normalize_per_chapter；score=mean(per_chapter agency_score)，block_threshold=0.55；空 skeleton 直接 score=0.0+blocked+notes='empty_skeleton' 不调 LLM；LLM 失败重试 max_retries=2 后 score=0.0+blocked+notes='checker_failed: <err>'）
+  - ink_writer/checkers/protagonist_agency_skeleton/prompts/check.txt（{summaries_text} 占位符；要求 JSON 数组 [{chapter_idx, agency_score, reason}]）
+  - tests/checkers/protagonist_agency_skeleton/__init__.py（新增）
+  - tests/checkers/protagonist_agency_skeleton/test_checker.py（4 用例：test_high_agency_passes / test_low_agency_blocks / test_empty_skeleton_blocks / test_llm_failure_blocks）
+  - ink-writer/agents/protagonist-agency-skeleton-checker.md（agent spec：来源 spec/PRD + Python 调用 + 评分标尺 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/protagonist_agency_skeleton/ 4 passed；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 194 passed 向后兼容；ruff 通过
+- **Learnings for future iterations:**
+  - protagonist_agency_skeleton 与 genre_novelty 在结构上同构（LLM JSON 数组 + per-item 评分 + mean 聚合），抄模板时只改：(a) `_DEFAULT_BLOCK_THRESHOLD = 0.55`、(b) prompt 主体（"主角能动性"代替"题材相似度"）、(c) per_item 字段名 `agency_score`/`chapter_idx`/`reason` 代替 `similarity`/`rank`/`reason`、(d) `_normalize_per_chapter` 替代 `_enrich_top5`（不需要按 max 排序，保持 LLM 顺序即可）
+  - 与 genre_novelty 的关键差别：empty input 的语义不同——genre_novelty 空 top200 是"上游数据缺失" → 放行（score=1.0/notes='empty_top200_skipped'）；本 checker 空 skeleton 是"卷大纲未填" → 保守阻断（score=0.0/blocked/notes='empty_skeleton'）。两种 fallback 反映了 spec §3.1 vs §3.6 不同的责任：top200 是数据资产，skeleton 是用户必填策划产出
+  - 与 M3 章节级 protagonist-agency 必须严格区分：M3 看章节正文（`chapter_text` 字段、`_SHORT_CHAPTER_CHARS=500` 短章节豁免、score 公式 `0.5*has_active + 0.3*has_plot_drive + 0.2*count_term`）；M4 卷骨架级只看 summary 一行、无短文本豁免、score 公式纯 mean。模块名 `protagonist_agency_skeleton` 后缀防撞，目录与 import 路径都不冲突
+  - per_chapter 全条目无效（LLM 返回 `[{}, {}, {}]` 之类）需要二次 fallback：`_normalize_per_chapter` 返回空列表后再次降级为 `notes='checker_failed: no valid per_chapter entries'`，否则 `mean([])` 会 ZeroDivisionError
+  - prompt 中的 `chapter_idx` 校验在 LLM 端（"必须与上方第 N 章的 N 一致"）+ Python 端（`int(entry.get("chapter_idx"))` 失败跳过），两道防线降低 LLM 漂移导致的 KeyError；reason 字段类型校验 `isinstance(reason_value, str)` 兜底，否则 LLM 偶尔返回 list 会污染 evidence_chain JSON 序列化
+  - 与 US-006 protagonist_motive 的对称提醒：那是 ink-init 阶段单 description 评估（dim_scores 对象），本 US-010 是 ink-plan 阶段多 chapter 评估（per_chapter 数组）；同一 "protagonist 系" 后续可能再加 "protagonist-arc-checker"，命名统一前缀方便 grep
+---
+
+## 2026-04-25 - US-011
+- 实现 chapter-hook-density-checker（M4 ink-plan 策划期卷骨架钩子密度检查 spec §3.7）
+- Files changed:
+  - ink_writer/checkers/chapter_hook_density/__init__.py（导出 ChapterHookDensityReport / check_chapter_hook_density）
+  - ink_writer/checkers/chapter_hook_density/models.py（ChapterHookDensityReport：score / blocked / per_chapter / strong_count / total_count / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/chapter_hook_density/checker.py（check_chapter_hook_density + _build_prompt + _extract_json_array + _normalize_per_chapter；_STRONG_THRESHOLD=0.5 二值化 strong；score=strong_count/total_count，block_threshold=0.70；空 skeleton 直接 score=0.0+blocked+notes='empty_skeleton' 不调 LLM；LLM 失败重试 max_retries=2 后 score=0.0+blocked+notes='checker_failed: <err>'）
+  - ink_writer/checkers/chapter_hook_density/prompts/check.txt（{summaries_text} 占位符；要求 JSON 数组 [{chapter_idx, hook_strength, reason}]）
+  - tests/checkers/chapter_hook_density/__init__.py（新增）
+  - tests/checkers/chapter_hook_density/test_checker.py（4 用例：test_high_density_passes / test_low_density_blocks / test_empty_skeleton_blocks / test_llm_failure_blocks）
+  - ink-writer/agents/chapter-hook-density-checker.md（agent spec：来源 spec/PRD + Python 调用 + 评分标尺 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/chapter_hook_density/ 4 passed；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 198 passed 向后兼容；ruff 通过
+- **Learnings for future iterations:**
+  - chapter_hook_density 与 protagonist_agency_skeleton 在调用形态上同构（LLM JSON 数组 + per-item 评分），但**聚合方式不同**：本 checker 把每章按 `_STRONG_THRESHOLD=0.5` 二值化为 strong 后取占比，protagonist_agency_skeleton 则取算术平均；策划期"密度类"指标都该走二值化（避免少数高分章节稀释整体钩子稀疏问题），与"程度类"指标（mean）形成对照
+  - 报告同时暴露 `strong_count` + `total_count` 而不仅是 score：evidence_chain 调试 / dry-run 报告渲染时常需要看"4 章里 1 强"这种绝对数，单看 0.25 score 不直观；新增 dataclass 字段比起来后端拼装更省事
+  - per_chapter 每条新增 `strong: bool` 字段把二值化结果固化到结构里，避免下游再 reduce 一次；测试时用 `report.per_chapter[0]["strong"] is True` 校验比 `>= _STRONG_THRESHOLD` 更稳
+  - 抄 protagonist_agency_skeleton 模板时改 5 处即可：(a) `_DEFAULT_BLOCK_THRESHOLD = 0.70`、(b) prompt 主体（"章末钩子强度"代替"主角能动性"）、(c) `hook_strength` 替代 `agency_score` 字段名、(d) 新增 `_STRONG_THRESHOLD=0.5` + `strong` 字段、(e) 聚合公式 `strong_count/total_count` 替代 `mean(...)`
+  - PRD 验收 `输出 4 passed` 非 5 passed（与 US-009 的 5 用例对照）：双层 checker（regex+LLM）需要 5 用例（regex_hit/regex_miss_llm_hit/regex_miss_llm_miss/outline_too_short/empty_keywords），单层 LLM checker 4 用例（high/low/empty/llm_failure）
+---
+
+## 2026-04-25 - US-012
+- 实现 planning_review 编排层 + ink-init/ink-plan SKILL.md Step 99（M4 P0 spec §5）
+- Files changed:
+  - ink_writer/planning_review/__init__.py（新增；导出 5 个主入口）
+  - ink_writer/planning_review/dry_run.py（新增；get_counter / increment_counter / is_dry_run_active；DEFAULT_COUNTER_PATH = Path('data/.planning_dry_run_counter')）
+  - ink_writer/planning_review/ink_init_review.py（新增；run_ink_init_review 串行 genre-novelty / golden-finger-spec / naming-style / protagonist-motive；_load_top200 读 jsonl 缺则 []；naming_blacklist_path 可注入；skip 路径写 skipped stage + 不调 checker；effective_blocked = blocked_any AND not dry_run；dry-run 跑后 increment_counter；CLI argparse + enable_windows_utf8_stdio + 退出码 1/0）
+  - ink_writer/planning_review/ink_plan_review.py（新增；3 checker 同构 golden-finger-timing / protagonist-agency-skeleton / chapter-hook-density；outline schema {volume_skeleton, golden_finger_keywords}；CLI 同上）
+  - ink_writer/planning_review/dry_run_report.py（新增；扫 <base_dir>/<book>/planning_evidence_chain.json 聚合 checker avg/blocked/cases + per-stage 行 → markdown；CLI --base-dir/--out）
+  - ink-writer/skills/ink-init/SKILL.md（追加 Step 99 章节：dry-run 模式 + Windows PowerShell sibling + skip flag + 聚合报告）
+  - ink-writer/skills/ink-plan/SKILL.md（同上，3 checker + ink_plan_review CLI）
+  - tests/planning_review/test_dry_run.py（新增；3 用例 counter_starts_at_zero / increment / dry_run_active_until_threshold）
+  - tests/planning_review/test_ink_init_review.py（新增；5 用例 skip_flag / dry_run_blocked_does_not_fail / real_mode_blocks_on_failure / all_pass_real_mode / evidence_chain_written；用 FakeLLMClient + naming_blacklist_path tmp 词典 + dry_run_counter_path 控制模式）
+  - tests/planning_review/test_ink_plan_review.py（新增；4 用例 skip_flag / evidence_merges_after_init / low_agency_blocks_in_real_mode / empty_outline_blocks）
+- 测试：tests/planning_review/ 16 passed（3 dry_run + 5 init + 4 plan + 4 writer）；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 210 passed 全向后兼容；ruff 通过
+- grep 校验：Step 99 (init/plan 各 1) / skip-planning-review (各 3) / PowerShell (各 2) 全过
+- **Learnings for future iterations:**
+  - naming-style 默认词典路径硬编码 'data/market_intelligence/llm_naming_blacklist.json'，monkeypatch.chdir(tmp_path) 后会查不到；run_ink_init_review 必须暴露 naming_blacklist_path 参数让测试注入 fake 词典——不要试图 monkeypatch checker 模块属性，因为默认 path 是函数体内 Path() 字面量
+  - dry-run 与 real mode 切换的关键信号：counter < observation_runs（默认 5）。测试时 `counter.write_text("5")` 直接进入 real mode；起始 0 + 不写文件即 dry mode；不要依赖 _DEFAULT_COUNTER_PATH 全局 state，每个测试都传 dry_run_counter_path 避免污染
+  - effective_blocked 公式 `blocked_any AND not dry_run`：dry-run 永不阻断（让用户观察阻断点），real mode 任一 checker blocked 就 1 退出；测试 4 路：dry+pass / dry+blocked / real+pass / real+blocked，覆盖 truth table
+  - cases_hit 注入只在 blocked 时发生：编排层从 thresholds yaml 读 case_ids 写入 report dict（覆盖 checker 默认空列表），让 evidence_chain 里能直接看到本次阻断关联到哪个 CASE-2026-M4-*；checker 本身不读 yaml 保持职责单一
+  - skip 路径走 record_checkers([]) + outcome="skipped" + human_overrides 追加一条 skip stage；evidence 仍要落盘（审计），不能简单跳过；返回 dict 含 skipped=True + skip_reason 让 CLI 上层一眼区分
+  - 编排层 record_checkers 的 outcome 列表用 dict (`{id, score, blocked, cases_hit, notes, details}`) 而非 dataclass：evidence_chain.record_checkers 期望 list[dict]，保持序列化简单；details 字段携带原始 to_dict() 便于后续审计完整 dim_scores / per_chapter
+  - SKILL.md 追加 Step 99 时 macOS/Linux 块 + Windows PowerShell sibling 块必须同时出现，CLAUDE.md Windows 兼容守则要求 grep -c PowerShell ≥ 1；用 backtick 续行的 PowerShell 写法 `command \`\n  --arg`
+  - dry-run 计数器是策划期独立的（与 M3 章节级 dry_run.observation_chapters 不混）：路径默认 data/.planning_dry_run_counter，与 ink-write 计数完全隔离；counter 文件单行整数 + UTF-8 + parent.mkdir(parents=True, exist_ok=True)
+  - generate_planning_dry_run_report 扫 base_dir/*/planning_evidence_chain.json 而非递归 glob：每书一个文件，sorted(base_dir.iterdir()) 让输出顺序稳定；空 base_dir 返回空 markdown 不抛异常
+---
+
+## 2026-04-25 - US-013
+- 实现 7 个 CASE-2026-M4-0001~0007 上游策划层 seed cases + batch approve 入活
+- Files changed:
+  - schemas/case_schema.json（case_id pattern 扩展为 ^CASE-[0-9]{4}-(M[0-9]+-)?[0-9]{4}$，向后兼容旧 CASE-2026-NNNN 同时允许 milestone 前缀）
+  - schemas/case_approval_batch_schema.json（同步扩展 case_id pattern）
+  - data/case_library/cases/CASE-2026-M4-0001.yaml（题材老套 / genre_novelty + market_intelligence；ink-init Step 99）
+  - data/case_library/cases/CASE-2026-M4-0002.yaml（金手指模糊 / golden_finger_spec；ink-init Step 99）
+  - data/case_library/cases/CASE-2026-M4-0003.yaml（角色名 AI 味重 / naming_style；ink-init Step 99）
+  - data/case_library/cases/CASE-2026-M4-0004.yaml（主角动机牵强 / protagonist_motive；ink-init Step 99）
+  - data/case_library/cases/CASE-2026-M4-0005.yaml（金手指出场过晚 / golden_finger_timing + opening_hook；ink-plan Step 99）
+  - data/case_library/cases/CASE-2026-M4-0006.yaml（卷骨架级被动 / protagonist_agency_skeleton；ink-plan Step 99）
+  - data/case_library/cases/CASE-2026-M4-0007.yaml（章节钩子密度低 / chapter_hook_density；ink-plan Step 99）
+  - data/case_library/m4_seed_approval_batch.yaml（batch approval YAML：7 条 approve 操作 + note 标记 seed case）
+  - data/case_library/cases/CASE-2026-M4-*.yaml status: pending → active（由 batch approve 触发；linter 同步格式化长行）
+  - data/case_library/ingest_log.jsonl（追加 7 条 approval 事件，由 apply_batch_yaml 自动写入）
+- 测试：tests/case_library/ 43 passed（schema regex 扩展向后兼容 test_case_id_pattern_enforced 仍捕获错误模式）；tests/checker_pipeline + tests/planning_review + tests/evidence_chain + tests/checkers + tests/market_intelligence + tests/case_library 共 253 passed 全向后兼容；ruff 通过
+- 验证：python3 ink_writer.case_library.cli approve --batch ... → applied=7 failed=0；CaseStore(library_root).iter_cases() 过滤 active + case_id startswith 'CASE-2026-M4' 输出 7 条全 P0 active；status/severity/domain/tags 全部 schema 合法
+- **Learnings for future iterations:**
+  - schemas/case_schema.json 与 schemas/case_approval_batch_schema.json 必须**同步修改**：case_id 正则在两处都有，approval batch 单独校验且会先于 store.save 触发；只改 case_schema 会让 batch approve 报 schema 违规
+  - case_id pattern 扩展用 `(M[0-9]+-)?` 可选段：`^CASE-[0-9]{4}-(M[0-9]+-)?[0-9]{4}$` 同时允许 CASE-2026-0001 与 CASE-2026-M4-0001，向后兼容旧 case 文件
+  - PRD 描述的 schema（id / severity hard / category / countermeasure / created_at）与实际 schema（case_id / severity P0-P3 / domain / source.{type,raw_text,ingested_at} / failure_pattern.{description,observable}）不一致：PRD 是 spec 草拟；实际验收按 schemas/case_schema.json + jsonschema validator 走，additionalProperties=false 拒绝额外字段
+  - PRD 提到的 CaseStore().iter_active() 不存在：实际用 `s.iter_cases()` + 过滤 `c.status.value == 'active'`；案例字段是 case_id（非 id）；case_id.startswith('CASE-2026-M4') 即 milestone 前缀过滤
+  - apply_batch_yaml 的 entry-level 失败收集：单条失败不中止整批；failed=0 时返回 0，否则非零；适合 CI 校验；linter 二次写入 yaml 时长行会自动 wrap，保留原始信息但行号变化（不影响 schema validate）
+  - 上游 case 走 layer=['upstream']（与 M3 downstream 区分）+ tags 含 m4_p0_planning + ink_init_step99 / ink_plan_step99：让 reader_pull / rewrite_loop 编排判断 stage 时可按 tag 过滤，不会误用上游 case 评章节
+  - source.ingested_at 必须是 ISO date 字符串 'YYYY-MM-DD'（schema format: date）：YAML 单引号包裹避免被解析为 datetime；schema validation 会校验格式
+  - failure_pattern.observable minItems=1：必须列出至少 1 条可观察的 checker 输出条件，便于编排层把 case_id 注入到 cases_hit 时调试者能反向定位 checker 哪个分支触发
+---
+
+  - data/case_library/cases/CASE-2026-M4-0007.yaml（卷骨架级钩子稀疏 / chapter_hook_density；ink-plan Step 99）
+  - data/case_library/approval/m4_seed_approval_batch.yaml（7 entries 一次性 active）
+- 测试：tests/case_library/ 全过；7 个 case 全 status=active；schema 校验 PASS；ruff 通过
+- **Learnings for future iterations:**
+  - case_id pattern 扩展用 `^CASE-[0-9]{4}-(M[0-9]+-)?[0-9]{4}$` 而非新建 schema；旧 `CASE-2026-NNNN` 与新 `CASE-2026-M4-NNNN` 共存
+  - approval batch YAML 走 cli `ink_writer.case_library.cli approve --batch <yaml>`；schema 与 case schema 同步扩展 case_id pattern
+  - case YAML failure_pattern.observable 必须 ≥ 1（schema minItems）；layer 用 list of enum（[upstream]）；status:pending → batch approve → status:active
+---
+
+## 2026-04-25 - US-014
+- 实现 M4 e2e 测试 + 测试书 + tag m4-p0-planning + ROADMAP/handoff 更新
+- Files changed:
+  - tests/integration/test_m4_e2e.py（新增；7 用例 thresholds_yaml / ink_init / ink_plan / merge / skip / dry_run / cases_active）
+  - data/test-book-m4/setting.json（新增；顾望安 + 万道归一金手指 + 蓝漪 + 裴惊戎 + 战争遗孤动机 227 字）
+  - data/test-book-m4/outline.json（新增；5 章 skeleton + 前 3 章含金手指关键词 + 主角主动语态）
+  - data/test-book-m4/planning_evidence_chain.json（生成；phase=planning + stages={ink-init, ink-plan} + total_checkers=7）
+  - scripts/run_m4_test_book.py（新增；e2e 驱动用 FixtureLLMClient 注入预设响应，规避 ANTHROPIC_API_KEY 缺失）
+  - tests/prompts/test_prompt_templates.py（修；diff_all_runs 期望 26→33 agents）
+  - docs/agent_topology_v13.md（修；After (v25.0): 33 Agents 加 M4 7 个 checker 说明）
+  - docs/architecture.md（修；Agents 26→33 / 19 Checkers→26 Checkers）
+  - docs/superpowers/M-ROADMAP.md（修；M4 行 ⚪→✅ + 顶部 Status M4 ✅ 完成 2026-04-25）
+  - docs/superpowers/M-SESSION-HANDOFF.md（修；§1 最后更新 / §2 进度快照 60%→80% / §3 重写为 M4 14 US 实际产出 / §7 改 M5 brainstorm 准备）
+- 测试：tests/integration/test_m4_e2e.py 7 passed；全量 pytest 全绿（exit 0 / coverage 82.75% / 0 failed）
+- M4 模块导入冒烟：`from ink_writer.planning_review import run_ink_init_review, run_ink_plan_review` + 7 个 checker `check_*` 全 OK
+- 测试书 e2e：`scripts/run_m4_test_book.py` 跑出 phase=planning + 2 stage + 7 checker；effective_blocked=False
+- **Learnings for future iterations:**
+  - tests/integration/test_m4_e2e.py 复用 tests/checkers/conftest.FakeLLMClient（已有 FIFO responder + calls 记录），不要在 integration 目录新建 fixture；同样 `monkeypatch.chdir(tmp_path)` + `tmp_path / ".counter"` 的 dry-run 隔离模式与 tests/planning_review 一致
+  - 新增 agent.md 后必跑 `tests/release/test_v16_gates.py::test_verify_docs_exit_zero` + `tests/prompts/test_prompt_templates.py::test_diff_all_runs`：前者校验 architecture.md `+ N Checkers` 数 + agent_topology_v13.md `After (v...): N Agents` 数与文件计数一致；后者校验 ab_prompts.diff_all_agents() 数与硬编码期望一致。漏改任一处都会让全量 pytest 红
+  - verify_docs.py 的 architecture.md "+ N Checkers" 正则 `[+＋]\s*(\d+)\s*(?:Checker|checker|个Checker)` 只看 ASCII `+` 或全角 `＋` 后第一个数；docs/architecture.md 多处可能有 "N 个" 写法但只有 `+ N Checkers` 模式被 verify
+  - ANTHROPIC_API_KEY 缺失场景：CLI 入口直接 `anthropic.Anthropic()` 会抛异常；e2e 验收用 `scripts/run_m4_test_book.py` + `FixtureLLMClient` 提供等效磁盘产出（与单测 in-memory 路径互为冗余校验）。M5 接入真线上 LLM 时再启用真 CLI
+  - dry-run counter_path 在 e2e 驱动里用 `<base-dir>/.planning_dry_run_counter` 而非默认 `data/.planning_dry_run_counter`，避免污染仓库根；测试书运行后写入 "5" 直接进入 real mode 让阻断逻辑生效
+  - M4 完成后需同步：(1) docs/superpowers/M-ROADMAP.md 顶部 Status 行 + 进度表；(2) docs/superpowers/M-SESSION-HANDOFF.md §1 最后更新 / §2 快照 / §3 重写产出 / §7 转 M5；(3) docs/agent_topology_v13.md `After (vX.X): N Agents`；(4) docs/architecture.md `+ N Checkers`；(5) tests/prompts/test_prompt_templates.py 硬编码 N
+---
