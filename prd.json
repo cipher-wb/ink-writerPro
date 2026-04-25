@@ -18,8 +18,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：Case 加 3 字段；schema 加 3 optional；5 用例全绿；case_library 48/48；全量 pytest exit=0。"
     },
     {
       "id": "US-002",

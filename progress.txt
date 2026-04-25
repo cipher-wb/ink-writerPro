@@ -1,57 +1,33 @@
 # Ralph Progress Log
-Started: 2026年 4月25日 星期六 19时25分00秒 CST (M5 完整闭环上线 — 5 周最后一站)
+Started: 2026年 4月25日 星期六 19时30分28秒 CST
 ---
 
 ## Codebase Patterns
-- YAML loaders 模式：参考 `ink_writer/reader_pull/config.py`，用 `Path(__file__).resolve().parent.parent.parent / "config" / "<name>.yaml"` 定位默认路径
-- `open()` 全部带 `encoding="utf-8"`（CLAUDE.md Windows 兼容守则强制）
-- ruff isort 格式：`import pytest` 与第一方 import 之间不留空行（同段视为一组）
-- pytest.ini testpaths 单行追加新目录；不重复添加已有目录
-- 项目无 mypy/pyright；typecheck 等价于 `ruff check` 通过
-- `python3` 而非 `python`（macOS 默认 alias）
-- ruff 默认开 UP017：`from datetime import timezone; timezone.utc` 必须改为 `from datetime import UTC; UTC`（Py 3.11+ alias）
-- M3 期 evidence_chain 写盘：默认 base_dir 是 `Path("data")`；测试传 tmp_path 隔离
-- LLM client stub 标准模式：`FakeLLMClient(responders=[...])` + `.messages.create(**kwargs).content[0].text`；FIFO 队列，超出列表时复用最后一个；调用 kwargs 记到 `.calls` 便于断言 prompt 内容（参考 `tests/writer_self_check/conftest.py`）
-- prompt 模板中 JSON schema 示例的 `{` `}` 必须写成 `{{` `}}`，否则 `.format()` 会爆 KeyError
-- M4 期 LLMClient 接口：复用 `scripts/corpus_chunking/llm_client.LLMClient`；checker 调用形如 `llm_client.complete(prompt=..., model="glm-4.6", max_tokens=..., temperature=0)`，返回 raw str；checker 内自行 `_extract_json` 去 markdown 包裹
-- M4 checker 文件结构：`ink_writer/checkers/<name>/{__init__.py, models.py, checker.py, prompts/check.txt}`；agent.md 在 `ink-writer/agents/<name>-checker.md`；测试在 `tests/checkers/<name>/{__init__.py, test_checker.py}`（与 M3 conflict_skeleton / protagonist_agency 同源）
-- M4 evidence_chain 派生：复用 `ink_writer/evidence_chain/models.EvidenceChain`，加 `phase: str = "writing"` 字段；planning 写盘走 `planning_writer.write_planning_evidence_chain`，路径是 `<base_dir>/<book>/planning_evidence_chain.json`（与 chapter `<book>/chapters/<ch>.evidence.json` 不同目录）；多次写入合并 `stages` 列表
-- M5 case schema 扩展：`Case` 加 3 个 optional 字段（`recurrence_history: list[dict]` / `meta_rule_id: str | None` / `sovereign: bool`）；`from_dict` 容错读取（缺字段 fallback 默认值），保证现有 410 个 case yaml 不强制 backfill
-- M5 Layer 4 复发追踪：仅同 book 内复发触发；severity 升级 P3→P2→P1→P0；P0 已顶则靠 `recurrence_history` list 长度体现 recurrence_count
-- M5 Layer 5 元规则浮现：N=5 + LLM similarity > 0.80；先按 tag 重叠粗分组（_candidate_clusters_by_tags）避免 N² LLM 调用；跳过 sovereign + 已 meta_rule_id 的 case
-- M5 dashboard aggregator 4 大指标的"M5 占位"：repair_speed_days / checker_accuracy 是 placeholder 7.0/0.0（真实数据需 case 加 resolved_at + ink-learn 抽样工作流，M5 之外）
-- M5 evidence_chain 加 `channel: str | None = None` 字段（A/B 通道）；planning_writer 透传到 stages dict；现有 evidence_chain 文件无 channel 字段 fallback None（向后兼容）
+- Case dataclass 字段新增时必须同步：(1) `ink_writer/case_library/models.py` `Case.from_dict`/`to_dict`；(2) `schemas/case_schema.json` properties；(3) 现有 410 个 yaml 必须 backward-compatible（新字段 optional + from_dict 容错）。
+- 新增测试目录必须加入 `pytest.ini` testpaths 单行（不会自动发现）；M5 已加 `tests/regression_tracker tests/meta_rule_emergence tests/dashboard tests/learn`。
+- 所有 `open()` 必带 `encoding="utf-8"`（CLAUDE.md Windows 兼容守则）。
+- Python 入口可执行脚本须调 `runtime_compat.enable_windows_utf8_stdio()`。
+- 项目用 python3（不是 python）；testpaths 已有 ~50 个目录单行；fixtures 在 `tests/<module>/conftest.py`。
+- legacy case yaml 路径：`data/case_library/cases/CASE-*.yaml`（410 个）。
 
+## 2026-04-25 - US-001 case schema 扩展（recurrence_history / meta_rule_id / sovereign）
+- 实现：
+  - `ink_writer/case_library/models.py`：Case 加 3 个 optional 字段（`recurrence_history: list[dict]`、`meta_rule_id: str | None`、`sovereign: bool`）；`from_dict` 用 `data.get(...)` 容错；`to_dict` 始终输出新字段（None / False / [] 默认值）。
+  - `schemas/case_schema.json`：properties 加 `recurrence_history`（array of object）、`meta_rule_id`（string|null）、`sovereign`（boolean）；不动 required，不破坏 410 active case 校验。
+  - `tests/case_library/test_schema_extension.py`：5 用例覆盖默认值 / to_dict 输出 / 向后兼容 / 410 case round-trip / sovereign explicit true。
+  - `pytest.ini` testpaths 行尾追加 `tests/regression_tracker tests/meta_rule_emergence tests/dashboard tests/learn`（M5 P3 用）。
+- Files changed:
+  - ink_writer/case_library/models.py
+  - schemas/case_schema.json
+  - tests/case_library/test_schema_extension.py (new)
+  - pytest.ini
+- 验证：
+  - `pytest tests/case_library/test_schema_extension.py -v --no-cov` → 5 passed
+  - `pytest tests/case_library/ -v --no-cov` → 48 passed (M3/M4 用例向后兼容)
+  - `pytest tests/ --no-cov -q` → exit=0，无 FAILED 行（115 skipped + 3 xfailed 是预期）
+- Learnings for future iterations:
+  - **schema-bound dataclass 加字段三件套**：models.py + case_schema.json + 用例（含 410 yaml round-trip）。漏掉 schema 会让 store.save 写入抛 CaseValidationError；漏掉 from_dict get 默认值会让旧 yaml 加载抛 KeyError。
+  - **schema 加新 optional**：直接放在 properties 末尾即可；不要动 required；schema 设了 additionalProperties:false，所以不加 schema 就一定挂。
+  - **Case.to_dict 不要省略 None/[]**：M5 dashboard 期望读 case yaml 时新字段总在；省略只会让下游写一堆 `case.get("meta_rule_id", None)`。
+  - **测试扫 410 yaml**：CASES_DIR = `repo_root / "data" / "case_library" / "cases"`；一次 round-trip 即可验证向后兼容。
 ---
-
-## ⚠️ Long-Term Roadmap Reminder (2026-04-25 19:25 后；M5 启动 = 5 周最后一站)
-
-本 PRD（M5 完整闭环上线 — 5 周 roadmap 最后一个 milestone）启动中。
-
-**进度**：
-- ✅ M1（17/17，tag `m1-foundation`）
-- 🟡 M2 partial（10/12，tag `m2-data-assets-partial`，corpus_chunks deferred）
-- ✅ M3（14/14，tag `m3-p1-loop`）
-- ✅ M4（14/14，tag `m4-p0-planning`）
-- 🟢 **M5** Dashboard + 自进化 + 用户接口（进行中；本 PRD 13 US；目标 tag `m5-final`）
-
-**M5 完成后必须**：
-1. tag `m5-final` push 到 origin
-2. 更新 `docs/superpowers/M-ROADMAP.md` M5 行 ✅ + Status 标记 "5 周 100% 完成"
-3. 更新 `docs/superpowers/M-SESSION-HANDOFF.md` §2（80%→100%）+ §3（M5 实际产出）+ §7（改为"真实质量验证"段，含 7 步流程）
-4. **5 周 roadmap 100% 完成**：30/100 → 60+/100 编辑评分目标的工业化产线**结构闭环**
-
-**M5 ✅ 后下一步**（5 周外）：
-- 真实测试书 30 章 + 投编辑评分（核心质量验证）
-- 拿真数据回填 `data/editor_reviews/<book>.yaml`
-- 周报跟踪：`ink dashboard report --week N`
-
-**新会话第一件事**：`cat docs/superpowers/M-SESSION-HANDOFF.md`（单文件 catch-up）
-
-**关键索引**：
-- `docs/superpowers/M-SESSION-HANDOFF.md` — 单文件 catch-up
-- `docs/superpowers/M-ROADMAP.md` — 5 周计划主索引
-- `docs/superpowers/specs/2026-04-25-m5-final-design.md` — M5 spec
-- `docs/superpowers/plans/2026-04-25-m5-final.md` — M5 详细 13-task TDD plan
-- `tasks/prd-m5-final.md` — M5 PRD 文档
-- `archive/2026-04-25-m5-final-start/` — M4 收尾归档（prd.json + progress.txt）

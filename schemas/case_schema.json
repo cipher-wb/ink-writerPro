@@ -147,6 +147,26 @@
           }
         }
       }
+    },
+    "recurrence_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "chapter": {"type": ["string", "null"]},
+          "evidence_chain_path": {"type": "string"},
+          "regressed_at": {"type": "string"},
+          "severity_before": {"type": "string"},
+          "severity_after": {"type": "string"}
+        }
+      }
+    },
+    "meta_rule_id": {
+      "type": ["string", "null"]
+    },
+    "sovereign": {
+      "type": "boolean"
     }
   }
 }

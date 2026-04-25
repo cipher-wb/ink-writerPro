@@ -137,6 +137,10 @@ class Case:
     bound_assets: dict[str, Any] = field(default_factory=dict)
     resolution: dict[str, Any] = field(default_factory=dict)
     evidence_links: list[dict[str, Any]] = field(default_factory=list)
+    # M5 fields — optional, backward-compatible with the 410 active cases.
+    recurrence_history: list[dict[str, Any]] = field(default_factory=list)
+    meta_rule_id: str | None = None
+    sovereign: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Case:
@@ -154,10 +158,13 @@ class Case:
             bound_assets=dict(data.get("bound_assets", {})),
             resolution=dict(data.get("resolution", {})),
             evidence_links=[dict(item) for item in data.get("evidence_links", [])],
+            recurrence_history=[dict(item) for item in data.get("recurrence_history", [])],
+            meta_rule_id=data.get("meta_rule_id"),
+            sovereign=bool(data.get("sovereign", False)),
         )
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "case_id": self.case_id,
             "title": self.title,
             "status": self.status.value,
@@ -171,4 +178,8 @@ class Case:
             "bound_assets": dict(self.bound_assets),
             "resolution": dict(self.resolution),
             "evidence_links": [dict(item) for item in self.evidence_links],
+            "recurrence_history": [dict(item) for item in self.recurrence_history],
+            "meta_rule_id": self.meta_rule_id,
+            "sovereign": self.sovereign,
         }
+        return out
