@@ -95,3 +95,17 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - decision_summaries 用 `decision → consequence` 拼接（与 conflict_summaries 用 friction → escalation → interim 不同），按字段语义而非死板复制
 - Next: US-006 block_threshold_wrapper（升级现有 3 prompt-based checker 为 CheckerOutcome 包装）
 ---
+
+## [2026-04-25 13:10] - US-006
+- 实现 `ink_writer/checker_pipeline/block_threshold_wrapper.py`：`CheckerOutcome` dataclass(checker_id/score/block_threshold/blocked/would_have_blocked/cases_hit/notes) + `apply_block_threshold(*, checker_id, score, cfg, is_dry_run, case_store)` + `_query_cases_by_tags` helper
+- 行为契约：未配置 checker → blocked=False + notes 含 "not in thresholds yaml"；is_dry_run=True 时 blocked=False 但 would_have_blocked 留痕；cases_hit 仅 raw_blocked 时查询 case_store.list_ids_by_tag(tag)
+- 兼容 `bound_cases` (list[dict])（plan/test fixture 用）+ `bound_cases_tags` (list[str])（实际 config/checker-thresholds.yaml 用）双 yaml 形态
+- 新增 `tests/checker_pipeline/test_block_threshold_wrapper.py` 4 用例全绿
+- 验证：tests/checker_pipeline 整目录 157 passed；ruff 无错
+- **Learnings for future iterations:**
+  - acceptance criteria 与 plan test fixture 之间的 yaml schema 可能有差异（实际 config 用 `bound_cases_tags: [str]`，plan fixture 用 `bound_cases: [{tag: str}]`）；wrapper 同时支持两种 key + 两种 entry 形态可避免后续整合时的 schema 漂移
+  - `would_have_blocked` 必须独立于 `blocked` 计算：dry-run=True 时 blocked=False 但 would_have_blocked 反映真实判定，dry_run_report 才能统计"如果开启阻断会拦多少"
+  - cases_hit 查询用 `hasattr(case_store, "list_ids_by_tag")` 防御：当前 `case_library.store` 只有 list_ids()，等到该方法上线再实际生效；现阶段返 [] 不阻塞 orchestrator
+  - 单元测试不需要 mock case_store；案件查询路径让 US-008 orchestrator 集成测试覆盖
+- Next: US-007 polish-agent 改 prompt 接收 case_id 驱动
+---
