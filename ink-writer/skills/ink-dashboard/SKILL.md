@@ -78,3 +78,33 @@ python3 -m dashboard.server --project-root "${PROJECT_ROOT}" --no-browser
 - Dashboard 为纯只读面板，所有 API 仅 GET，不提供任何修改接口。
 - 文件读取严格限制在 `PROJECT_ROOT` 范围内，防止路径穿越。
 - 如需自定义端口，添加 `--port 9000` 参数。
+
+## M5 Case 治理（M5 P3 必跑）
+
+M5 标签页聚合 4 大指标（recurrence_rate / repair_speed_days / editor_score_trend / checker_accuracy），并展示 dry-run 切真推荐、pending 元规则与复发 case 列表。
+
+```bash
+# 启动 dashboard（带 M5 标签页）
+python3 -m dashboard.server --project-root "${PROJECT_ROOT}" --m5
+
+# 直接拉 JSON 后端数据
+curl -s http://127.0.0.1:8765/api/m5-overview | jq
+
+# 一次性周报（写到 reports/weekly/<year>-W<NN>.md，US-006 提供）
+python3 -m ink_writer.dashboard report --week 17 --year 2026
+```
+
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价）：
+
+```powershell
+python3 -m dashboard.server --project-root $env:PROJECT_ROOT --m5
+Invoke-RestMethod http://127.0.0.1:8765/api/m5-overview | ConvertTo-Json -Depth 8
+python3 -m ink_writer.dashboard report --week 17 --year 2026
+```
+
+读法速记：
+- `metrics.recurrence_rate` = `regressed / (resolved + regressed)`，0.0 = 没有 resolved case 或全部稳定。
+- `dry_run.{m3,m4}.recommendation` = `continue`（观察期未满）/ `investigate`（通过率 < 60%）/ `switch`（可切真阻断）。
+- `pending_meta_rules` 非空时跑 `ink meta-rule list --status pending` + `ink meta-rule approve MR-NNNN` 审批。
+- `recurrent_cases` 含 case_id + recurrence_count，是 Layer 4 复发追踪的实时输出。

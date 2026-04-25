@@ -18,6 +18,9 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
 - LLM 输出 JSON 解析容错（`_parse_llm_json`）：先 strip ```json ... ``` 围栏 → `json.loads` → 失败再 regex `\{.*\}` 抓最大块；M5 后续 LLM 调用都建议复用此模式。
 - M5 子命令模块 (`meta_rule_cli` / 后续 dashboard/learn) 接入 `case_library/cli.py` 的标准模式：(1) 模块自带 `register_subparsers(parent_sub)` 注册嵌套子命令 + `dispatch(args)` 解 namespace；(2) cli.py 顶部 import + `_build_parser` 末尾调一次 `register_..._subparsers(sub)` + main() if 链多一行 dispatch 路由；(3) 自身仍保留独立 `_build_parser/main` 以便 `python -m ...` 直跑。这样新增子命令对 cli.py 的入侵 ≤ 4 行。
 - meta-rule 提议 yaml 持久化字段：`status: pending|approved|rejected` + 仅在 approve/reject 时分别加 `approved_at`/`rejected_at`（YYYY-MM-DD UTC）；`covered_cases` 是 case_id 列表，approve 时遍历 store.load → 写 `case.meta_rule_id` → store.save。幂等：第二次 approve 看到 status != pending 直接 rc=1 + stderr 报错；不会重写 cases。
+- dashboard 数据布局（M5 P3 起 aggregator 假定的 base_dir layout）：`<base_dir>/.dry_run_counter`（M3 章节）+ `<base_dir>/.planning_dry_run_counter`（M4 策划期）+ `<base_dir>/<book>/chapters/*.evidence.json`（chapter 级 outcome=delivered/needs_human_review/blocked）+ `<base_dir>/<book>/planning_evidence_chain.json`（含 stages list + overall_passed）+ `<base_dir>/case_library/meta_rules/MR-*.yaml`（status: pending|approved|rejected）+ `<base_dir>/editor_reviews/*.yaml`（编辑评分 trend）。M5 dashboard / 周报 / overview JSON 都按这一布局工作；测试用 `tmp_path / "data"` 现造同形布局即可零耦合验证。
+- chapter evidence pass 判定：`outcome == "delivered"` = 通过；`needs_human_review` 与 `blocked` 都不计 pass。M3 周报 / 切换推荐 都用此契约。
+- planning evidence pass 判定：每个 stage `outcome != "blocked"` = 通过（M4 与 §6.2 一致；spec 注 outcome=blocked → 切真阻断阻塞）。
 
 ## 2026-04-25 - US-001 case schema 扩展（recurrence_history / meta_rule_id / sovereign）
 - 实现：
@@ -124,4 +127,39 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **proposal 幂等接口**：approve 第二次返回 1 + stderr `not pending` —— 让批量脚本 (后续编辑评分自动审批) 可以 try/再读 status 判别成功还是 already-done。reject 同样守门，避免误覆盖 approved。
   - **YAML 顶级字段 status/approved_at/rejected_at**：用 `yaml.safe_dump(..., sort_keys=False)` 保持插入顺序；下游 dashboard 只 `data.get("status")` 不假设顺序，但人工 diff 看顺序很重要。
   - **`approved_at = datetime.now(UTC).strftime("%Y-%m-%d")`**：UTC 日期字符串（Python 3.14 `datetime.UTC`），与 case_schema.json `ingested_at` 保持同形；不混 ISO 时间戳避免 yaml `2026-04-25T..` 干扰 grep。
+---
+
+## 2026-04-25 - US-005 dashboard M5 Case 治理 标签页 + 4 大指标 aggregator
+- 实现：
+  - `ink_writer/dashboard/{__init__,aggregator,m5_overview}.py`：
+    - aggregator 暴露 `compute_recurrence_rate` (regressed/(resolved+regressed) 空集→0.0)、`compute_repair_speed` (M5 占位 7.0；备注 case schema 缺 resolved_at)、`compute_editor_score_trend` (扫 yaml→list[{date,score,book}]，支持单条 dict 与含 reviews list 两种 schema；坏 yaml 静默 skip)、`compute_checker_accuracy` (占位 0.0；缺目录返 0.0)、`recommend_dry_run_switch` (continue<thr_runs / investigate<thr_pass_rate / switch)、`compute_m3_dry_run_pass_rate` (读 .dry_run_counter + 扫 base/<book>/chapters/*.evidence.json outcome==delivered)、`compute_m4_dry_run_pass_rate` (读 .planning_dry_run_counter + 扫 base/<book>/planning_evidence_chain.json stages outcome!=blocked)。
+    - m5_overview.get_m5_overview(*, base_dir, case_store=None) 返回 {metrics, dry_run, pending_meta_rules, recurrent_cases} 完整 dict；case_store 缺时 fallback `CaseStore(base/case_library)`；编辑评分目录在 `base/editor_reviews/`；元规则目录在 `base/case_library/meta_rules/`；recurrent_cases 来自 store.iter_all() 过滤 recurrence_history 非空。
+  - `ink-writer/skills/ink-dashboard/SKILL.md`：末尾追加 ## M5 Case 治理（M5 P3 必跑） 段，含 3 行 bash 命令（启动 dashboard --m5 / curl /api/m5-overview / 周报 CLI）+ 等价 PowerShell sibling 块（windows-ps1-sibling 注释）+ 读法速记说明（4 指标 + 切换推荐 + meta-rule approve 链路）。
+  - `tests/dashboard/{__init__,conftest}.py`：fixtures `make_case` (含 recurrence_history)、`write_chapter_evidence` (outcome 任意)、`write_planning_evidence` (stage outcomes list)、`write_meta_rule_proposal` (status 任意)、`write_counter` (写一行整数)、`case_store` fixture。
+  - `tests/dashboard/test_aggregator.py`：7 用例（recurrence_rate 空集 / 基础 1/3 / recommend continue/investigate/switch / m3 pass rate 2/4 + counter 4 / m4 pass rate 3/4 + counter 3）。
+  - `tests/dashboard/test_m5_overview.py`：3 用例（结构 4 顶层 key + metrics 4 子 key + dry_run.m3 3 子 key / pending meta 过滤 approved + 复发 case 含 recurrence_count / counter=10 + pass_rate=0.8 → recommendation=switch）。
+- Files changed:
+  - ink_writer/dashboard/__init__.py (new)
+  - ink_writer/dashboard/aggregator.py (new)
+  - ink_writer/dashboard/m5_overview.py (new)
+  - ink-writer/skills/ink-dashboard/SKILL.md
+  - tests/dashboard/__init__.py (new)
+  - tests/dashboard/conftest.py (new)
+  - tests/dashboard/test_aggregator.py (new)
+  - tests/dashboard/test_m5_overview.py (new)
+- 验证：
+  - `pytest tests/dashboard/test_aggregator.py tests/dashboard/test_m5_overview.py -v --no-cov` → 10 passed
+  - `pytest tests/dashboard/ tests/case_library/ tests/regression_tracker/ tests/meta_rule_emergence/ tests/evidence_chain/ --no-cov` → 81 passed (M3/M4/M5 全模块向后兼容)
+  - `python3 -m pytest --no-cov` → **3784 passed / 23 skipped / 0 failed / 3 warnings** (344s)（已 --ignore 三个 pre-existing dashboard server 测试 collection 错误；与本 PR 无关，git stash 验证过同样错）
+  - `grep -c 'M5 Case 治理' ink-writer/skills/ink-dashboard/SKILL.md` → 1
+  - `grep -c 'PowerShell' ink-writer/skills/ink-dashboard/SKILL.md` → 2
+  - `python3 -c "from ink_writer.dashboard import compute_recurrence_rate, compute_m3_dry_run_pass_rate, compute_m4_dry_run_pass_rate, get_m5_overview; print('OK')"` → import OK
+  - `ruff check ink_writer/dashboard/` → All checks passed
+- Learnings for future iterations:
+  - **dashboard 数据布局已写进 Codebase Patterns**：US-006 周报 CLI 直接复用同 layout（`base/<book>/...` + `base/.dry_run_counter` + `base/case_library/meta_rules/`）；不要再发明新路径。
+  - **`get_m5_overview` 是 dashboard 与周报的唯一入口**：US-006 weekly_report.generate_weekly_report 直接调用 get_m5_overview() 拼 markdown，不要重复实现指标计算。
+  - **`compute_repair_speed` 是 M5 占位**：返回常量 7.0；真要算需 Case schema 加 `resolved_at` 字段（spec 后续 quality validation 阶段做）。本 PR 备注已说明，US-013 e2e 不要把 7.0 当真实值断言。
+  - **`compute_editor_score_trend` 接受两种 yaml 形式**：单条 dict（key 在顶层）/ 含 `reviews:` list 的 dict。docs/EDITOR_FEEDBACK_GUIDE.md (US-012) 落地哪种 schema 都已兼容。
+  - **dry-run pass 判定 contract**：chapter outcome==delivered 才算过；planning stage outcome!=blocked 即算过。两者不同别混用。
+  - **dashboard 模块导入对 sys.path 不敏感**：`from ink_writer.dashboard import ...` 通过 ink_writer namespace；不要走 ink-writer/dashboard (那个是 React 后端 server，dashboard.server 入口)。两者并存，命名相同但完全无关。
 ---

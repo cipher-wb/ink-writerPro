@@ -108,8 +108,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：dashboard 模块（aggregator + m5_overview）+ ink-dashboard SKILL.md M5 章节（含 PowerShell sibling）；10 用例全绿（aggregator 7 + m5_overview 3）；touched-area 81/81；全量 pytest 3784 passed / 23 skipped / 0 failed；ruff check 全绿。"
     },
     {
       "id": "US-006",
