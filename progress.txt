@@ -230,3 +230,22 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - tests/integration 目录已在 pytest.ini testpaths（不需追加）；testpaths 单行已超 700 字符建议 M5 拆分
 - Next: US-014 M3 验收 + tag m3-p1-loop + 更新 M-ROADMAP
 ---
+
+## [2026-04-25 15:10] - US-014
+- M3 验收 6 项全过：
+  1. pytest -q：全量收敛，coverage = **82.75% ≥ 70**（仅 2 个 pre-existing fail：tests/prompts/test_prompt_templates.py::test_diff_all_runs + tests/release/test_v16_gates.py::test_verify_docs_exit_zero — US-013 已 stash 验证 master 同样失败，与 M3 无关）
+  2. M3 全模块 import：writer_self_check / checkers.{conflict_skeleton,protagonist_agency} / rewrite_loop.{orchestrator,dry_run,human_review,polish_prompt} / evidence_chain.{models,writer,dry_run_report,EvidenceChainMissingError} / checker_pipeline.{thresholds_loader,block_threshold_wrapper} 全部 OK
+  3. load_thresholds()：rule_compliance_threshold=0.7 / max_rounds=3 / dry_run.enabled=True ✅
+  4. 4 个 agent.md 存在 + polish-agent.md 含 "M3 改造" ✅
+  5. SKILL.md 含 rewrite_loop|require_evidence_chain = 12 处 ≥ 3 ✅
+- 更新 docs/superpowers/M-ROADMAP.md：顶部 Status → "M1 ✅ + M2 🟡 partial + M3 ✅ 完成 2026-04-25 ..."；进度表 M3 行 ⚪ → ✅ + PRD/Plan/branch/完成日期 全部填实
+- 修改 prd.json：US-014 passes=True
+- 待打 tag：`git tag -a m3-p1-loop -m "M3 complete: writer-self-check + 阻断重写循环 + evidence_chain"`（在 commit 后执行）
+- **Learnings for future iterations:**
+  - 验收类 story 不写代码也要走完整 pytest（防止收尾时回归被忽略）；本次 coverage 82.75% 是 M3 累积的副作用——14 story 系统性补测的结果
+  - pre-existing failures 入库前必须用 `git stash + 跑同套测试` 复核；US-013 已为 US-014 留好"差分清单"，本次直接复用结论无需再验
+  - `tail -25` 不一定包含 pytest 末尾 summary（输出长时被截）；下次想确认 N passed/M failed 应改用 `grep -E "[0-9]+ passed|[0-9]+ failed"` 或 `--no-cov` + `--tb=no` 控长
+  - 收尾流程顺序：(1) 跑 pytest (2) 改 M-ROADMAP + prd.json (3) commit (4) git tag —— tag 必须在 commit 之后，否则指向旧 HEAD
+  - M3 完成 = 30→50 分关键节点已铺好；下一会话开 M4 时同样的"先 cat M-ROADMAP"流程
+- M3 收尾完成；下一会话开 M4 上游策划层
+---

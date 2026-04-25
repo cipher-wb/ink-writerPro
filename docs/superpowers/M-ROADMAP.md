@@ -1,6 +1,6 @@
 # 病例库驱动的质量治理 — 5 周 Milestone Roadmap
 
-**Status**: 持续跟踪（M1 ✅ + M2 🟡 部分完成 2026-04-25 — cases 完整 / corpus_chunks 待续；下一步推进 US-008 实跑或开 M3）
+**Status**: 持续跟踪（M1 ✅ + M2 🟡 partial + M3 ✅ 完成 2026-04-25 — writer-self-check + 阻断重写 + evidence_chain 全链路落档；下一步开 M4 上游策划层）
 **Origin spec**: `docs/superpowers/specs/2026-04-23-case-library-driven-quality-overhaul-design.md`
 **Goal**: 起点编辑评分 30 → 60-70（6 个月内验证）
 
@@ -21,7 +21,7 @@
 |---|---|---|---|---|---|
 | **M1** 基础设施 + Qdrant + symlink 修复 | ✅ 完成 | `tasks/prd-m1-case-library-foundation.md` | `docs/superpowers/plans/2026-04-23-m1-foundation-and-qdrant-migration.md` | `ralph/m1-case-library-foundation` | 2026-04-24 |
 | **M2** 数据资产（切片 + 病例种子） | 🟡 部分完成 | `tasks/prd-m2-data-assets.md` | `docs/superpowers/plans/2026-04-24-m2-data-assets.md` | `ralph/m2-data-assets` | 2026-04-25 (cases 完整；corpus_chunks 待续) |
-| **M3** P1 下游闭环（**质量拐点**）| ⚪ 未开始 | TBD | TBD | TBD | — |
+| **M3** P1 下游闭环（**质量拐点**）| ✅ 完成 | `tasks/prd-m3-p1-loop.md` | `docs/superpowers/plans/2026-04-25-m3-p1-loop.md` | `ralph/m3-p1-loop` | 2026-04-25 |
 | **M4** P0 上游策划层 | ⚪ 未开始 | TBD | TBD | TBD | — |
 | **M5** Dashboard + 自进化 + 用户接口 | ⚪ 未开始 | TBD | TBD | TBD | — |
 
