@@ -126,8 +126,8 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — 新增 ink_writer/checkers/protagonist_motive/{__init__,models,checker}.py + prompts/check.txt；ProtagonistMotiveReport 含 score/blocked/dim_scores/cases_hit/notes；check_protagonist_motive 3 维度 LLM 评估（resonance/specific_goal/inner_conflict）算术平均，block_threshold=0.65；description strip 后 < 20 字直接 blocked + notes='description_too_short'，不调 LLM；LLM 失败重试 max_retries 后 score=0.0+blocked+notes='checker_failed: <err>'；markdown ``` 自动剥离；tests/checkers/protagonist_motive/ 4 用例全过；tests/checkers/ 整体 30 passed 向后兼容；ink-writer/agents/protagonist-motive-checker.md agent spec 落档；ruff 通过"
     },
     {
       "id": "US-007",
