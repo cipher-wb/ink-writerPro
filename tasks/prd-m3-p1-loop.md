@@ -1,0 +1,292 @@
+# PRD: M3 P1 下游闭环 — writer-self-check + 阻断重写
+
+## Introduction
+
+落地 spec §9 M3（详见 `docs/superpowers/specs/2026-04-25-m3-p1-loop-design.md`）：把 M2 备齐的 403 cases 注入 writer 链路，建立"写完比对 → 阻断 → 病例驱动重写"循环 + 每章自带 evidence_chain.json，彻底消灭"靠感觉判断库有没有生效"痛点（**30 → 50 分质量拐点**）。
+
+本期不做：M4-M5 内容（P0 上游策划层 / dashboard / 自进化 / user_corpus）；不补 M2 chunks；不退役 FAISS。
+
+详细 plan：`docs/superpowers/plans/2026-04-25-m3-p1-loop.md`（3330 行 / 14-task TDD）。
+
+## Goals
+
+- 每章交付必走"writer-self-check → 阻断 → polish-loop → evidence_chain"循环
+- 每章产出 `data/<book>/chapters/<chapter>.evidence.json`（schema 强制必带，缺则 ink-write 退出）
+- 现有 3 个 checker（reader-pull / sensory-immersion / high-point）升级阻断模式（block_threshold + cases_hit）
+- 新增 2 个章节级 checker：conflict-skeleton + protagonist-agency（LLM 主观判断 + score 公式 0.5+0.3+0.2 加权）
+- polish-agent 接收 case_id 驱动定向重写（一次一个 case 按 severity 排序，最多 3 轮）
+- needs_human_review.jsonl 兜底 + 4 版保留（不删稿）
+- dry-run 5 章 auto-switch 真阻断 + 自动出 dry_run_report 报告
+- 复用 M1+M2 已建组件（CaseStore / LLMClient / ingest_case），不重建任何基础设施
+
+## User Stories
+
+### US-001: config/checker-thresholds.yaml + 加载器
+**Description:** 作为开发者，我需要 config/checker-thresholds.yaml 集中管理 M3 全部阈值（writer_self_check / 5 个 checker / rewrite_loop / dry_run）+ load_thresholds() 加载器，让 ink-write 启动时读一次（Q13）。
+
+**Acceptance Criteria:**
+- [ ] pytest.ini 的 testpaths 行尾追加 `tests/writer_self_check tests/checkers tests/rewrite_loop tests/evidence_chain tests/checker_pipeline`（保持单行）
+- [ ] 新增 `config/checker-thresholds.yaml` 含 8 段：writer_self_check（rule_compliance_threshold 0.70）/ reader_pull (block 60 + warn 75 + bound_cases tags) / sensory_immersion (65/78) / high_point (70/80) / conflict_skeleton (0.60) / protagonist_agency (0.60) / rewrite_loop (max_rounds 3 + needs_human_review_path) / dry_run (enabled true + observation_chapters 5 + switch_to_block_after true)
+- [ ] 新增 `ink_writer/checker_pipeline/thresholds_loader.py` 暴露 `load_thresholds(path=None) -> dict` + `ThresholdsConfigError`；默认读 `config/checker-thresholds.yaml`；缺文件 raise `not found`；yaml 解析失败 raise `parse`
+- [ ] 新增 `tests/checker_pipeline/__init__.py` + `tests/checker_pipeline/test_thresholds_loader.py` 含 4 用例：`test_load_thresholds_default_path` / `test_load_thresholds_missing_file_raises` / `test_load_thresholds_invalid_yaml_raises` / `test_load_thresholds_real_default_yaml_exists`
+- [ ] `pytest tests/checker_pipeline/test_thresholds_loader.py -v --no-cov` 输出 4 passed
+- [ ] `pytest tests/audit/test_cli_entries_utf8_stdio.py tests/core/test_safe_symlink.py -v --no-cov` 全绿
+- [ ] 所有 `open()` 带 `encoding="utf-8"`
+- [ ] Typecheck passes
+**Priority:** 1
+
+### US-002: evidence_chain.json schema + 写入工具
+**Description:** 作为产线可观测性的核心，我需要 `EvidenceChain` dataclass + `write_evidence_chain` 写盘 + `require_evidence_chain` 强制必带（缺则 raise EvidenceChainMissingError），让 ink-write 章节交付时必产 evidence_chain.json（spec §6 + Q5）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/evidence_chain/__init__.py` 导出 `EvidenceChain` / `EvidenceChainMissingError` / `require_evidence_chain` / `write_evidence_chain`
+- [ ] 新增 `ink_writer/evidence_chain/models.py` 定义 `EvidenceChain` dataclass：字段 book/chapter/dry_run/outcome/produced_at + context_recalled_{rules,chunks,cases} + writer_prompt_hash/model + writer_rounds + checker_results + polish_rounds + case_updates + human_overrides；helper 方法 `record_self_check / record_checkers / record_polish / record_case_update`；`to_dict()` 输出 spec §6.1 schema（含 `chunk_borrowing` 在 compliance 内 = null 兼容 M2 follow-up）
+- [ ] 新增 `ink_writer/evidence_chain/writer.py` 暴露 `write_evidence_chain(*, book, chapter, evidence, base_dir=None) -> Path` + `require_evidence_chain(*, book, chapter, base_dir=None) -> Path`（缺 raise `EvidenceChainMissingError`）
+- [ ] 写盘路径：`<base_dir>/<book>/chapters/<chapter>.evidence.json`（默认 base_dir=Path("data")）；JSON `ensure_ascii=False, indent=2`
+- [ ] 新增 `tests/evidence_chain/__init__.py` + `tests/evidence_chain/test_writer.py` 含 4 用例：`test_evidence_chain_round_trip` / `test_evidence_chain_includes_phase_evidence` / `test_require_evidence_chain_missing_raises` / `test_require_evidence_chain_present_returns_path`
+- [ ] `pytest tests/evidence_chain/test_writer.py -v --no-cov` 输出 4 passed
+- [ ] 所有 `open()` 带 `encoding="utf-8"`
+- [ ] Typecheck passes
+**Priority:** 2
+
+### US-003: writer-self-check agent
+**Description:** 作为 writer 链路的关键合规检查，我需要 `writer_self_check()` 计算 rule_compliance（每条 rule 0-1 算术平均）+ cases_addressed/violated 二分；chunk_borrowing 在 M3 期为 None（M2 chunks deferred 兼容）；overall_passed = rule_compliance >= 0.70 且 cases_violated 为空（spec §3 + Q1+Q2+Q15）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/writer_self_check/__init__.py` 导出 `writer_self_check` + `ComplianceReport`
+- [ ] 新增 `ink_writer/writer_self_check/models.py` 定义 `ComplianceReport(rule_compliance, chunk_borrowing, cases_addressed, cases_violated, raw_scores, overall_passed, notes)`
+- [ ] 新增 `ink_writer/writer_self_check/prompts/self_check.txt` prompt 模板含 `{chapter_text}` / `{injected_rules}` / `{applicable_cases}` 占位符；要求严格 JSON 输出 含 `rule_scores` (每条 0-1) + `case_evaluation` (addressed bool + evidence) + notes
+- [ ] 新增 `ink_writer/writer_self_check/checker.py` 暴露 `writer_self_check(*, chapter_text, injected_rules, injected_chunks, applicable_cases, book, chapter, llm_client, max_retries=3) -> ComplianceReport`
+- [ ] rule_compliance 计算：mean(rule_scores 含漏给的按 0 计)；若 injected_rules=[] → rule_compliance=1.0
+- [ ] cases 二分：漏给的 case 默认 addressed=False（保守）
+- [ ] chunk_borrowing 始终 None（M3 期）
+- [ ] LLM JSON 解析失败重试 max_retries 次；仍失败 → `overall_passed=False, notes="self_check_failed", cases_violated=全 applicable_cases, raw_scores={"missing": 全 rule_ids}`
+- [ ] 新增 `ink-writer/agents/writer-self-check.md` agent spec
+- [ ] 新增 `tests/writer_self_check/__init__.py` + conftest.py + `tests/writer_self_check/test_checker.py` 含 7 用例：test_self_check_happy_path / test_self_check_threshold_passes_at_0_70 / test_self_check_case_violated_blocks_pass / test_self_check_chunk_borrowing_is_none_in_m3 / test_self_check_llm_failure_returns_failed_report / test_self_check_missing_rule_score_treated_as_zero / test_self_check_empty_cases_skips_case_block
+- [ ] `pytest tests/writer_self_check/test_checker.py -v --no-cov` 输出 7 passed
+- [ ] Typecheck passes
+**Priority:** 3
+
+### US-004: conflict-skeleton-checker
+**Description:** 作为章节级 checker，我需要 `check_conflict_skeleton()` LLM 主观判断章节是否有 ≥ 1 个显式冲突 + 三段结构（摩擦点→升级→临时收尾），score = 0.5 * has_conflict + 0.3 * has_three_stage + 0.2 * min(count/2, 1)，block_threshold=0.60；短章节 (< 500 字) 跳过（spec §4.1 + Q6+Q7）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/checkers/__init__.py` (空) + `ink_writer/checkers/conflict_skeleton/__init__.py` 导出 `check_conflict_skeleton` + `ConflictReport`
+- [ ] 新增 `ink_writer/checkers/conflict_skeleton/models.py` 定义 `ConflictReport(has_explicit_conflict / conflict_count / has_three_stage_structure / conflict_summaries / score / block_threshold / blocked / cases_hit / notes)`
+- [ ] 新增 `ink_writer/checkers/conflict_skeleton/prompts/check.txt` 含 8 种 scene_type 不需要（这里只判冲突 + 三段）+ 严格 JSON 输出
+- [ ] 新增 `ink_writer/checkers/conflict_skeleton/checker.py` 暴露 `check_conflict_skeleton(*, chapter_text, book, chapter, llm_client, max_retries=3) -> ConflictReport`
+- [ ] 短章节 (< 500 字) 直接返回 `score=0.0, blocked=False, notes="skipped_short_chapter"`，不调 LLM
+- [ ] LLM JSON 解析失败重试 → 仍失败 `score=0.0, blocked=True, notes="checker_failed"`
+- [ ] block_threshold = 0.60；blocked = score < threshold；cases_hit=[] (rewrite_loop 注入)
+- [ ] 新增 `tests/checkers/__init__.py` + conftest.py（含 mock_llm_client fixture）+ `tests/checkers/conflict_skeleton/__init__.py` + `test_checker.py` 含 6 用例：test_happy_path_with_clear_conflict / test_no_explicit_conflict_blocks / test_partial_three_stage_structure / test_score_threshold_boundary / test_llm_json_failure_blocks_with_score_zero / test_short_chapter_skips_check
+- [ ] `pytest tests/checkers/conflict_skeleton/test_checker.py -v --no-cov` 输出 6 passed
+- [ ] 新增 `ink-writer/agents/conflict-skeleton-checker.md` agent spec
+- [ ] `pytest tests/audit/test_cli_entries_utf8_stdio.py tests/core/test_safe_symlink.py -v --no-cov` 全绿
+- [ ] Typecheck passes
+**Priority:** 4
+
+### US-005: protagonist-agency-checker
+**Description:** 作为章节级 checker，我需要 `check_protagonist_agency()` LLM 主观判断主角是否做出 ≥ 1 个主动决策 + ≥ 1 次推动剧情，反"主角当摄像头"（直接对应 spec §1.3 都市书扣分）；score 公式与 conflict-skeleton 同结构 + block_threshold=0.60（spec §4.2 + Q8）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/checkers/protagonist_agency/{__init__,models,checker}.py` + `prompts/check.txt`
+- [ ] `AgencyReport` dataclass 字段：has_active_decision / has_plot_drive / decision_count / decision_summaries / score / block_threshold / blocked / cases_hit / notes
+- [ ] prompt 含 `{protagonist_name}` + `{chapter_text}` 占位符；要求 JSON 输出 has_active_decision + has_plot_drive + decision_count + decisions list + notes
+- [ ] `check_protagonist_agency(*, chapter_text, protagonist_name, book, chapter, llm_client, max_retries=3) -> AgencyReport`
+- [ ] score = 0.5 * has_active + 0.3 * has_plot_drive + 0.2 * min(count/2, 1)；blocked = score < 0.60
+- [ ] 短章节 (< 500 字) 跳过；LLM 失败 → score=0 + blocked=True + notes="checker_failed"
+- [ ] 新增 `tests/checkers/protagonist_agency/__init__.py` + `test_checker.py` 含 6 用例：test_happy_path / test_no_active_decision_blocks / test_partial_passes / test_score_threshold_boundary / test_llm_json_failure_blocks_with_score_zero / test_short_chapter_skips_check
+- [ ] `pytest tests/checkers/protagonist_agency/test_checker.py -v --no-cov` 输出 6 passed
+- [ ] 新增 `ink-writer/agents/protagonist-agency-checker.md` agent spec
+- [ ] Typecheck passes
+**Priority:** 5
+
+### US-006: block_threshold_wrapper（升级现有 3 checker）
+**Description:** 作为升级路径，我需要 `apply_block_threshold()` 把现有 prompt-based reader_pull / sensory_immersion / high_point checker 的 score 包装成 `CheckerOutcome(blocked + cases_hit + would_have_blocked)`，dry-run 期间 blocked=False 但 would_have_blocked 留痕（spec §5.1 + Q9）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/checker_pipeline/block_threshold_wrapper.py` 暴露 `CheckerOutcome` + `apply_block_threshold(*, checker_id, score, cfg, is_dry_run, case_store) -> CheckerOutcome`
+- [ ] `CheckerOutcome` 字段：checker_id / score / block_threshold / blocked / would_have_blocked / cases_hit / notes
+- [ ] `is_dry_run=True` 时 blocked=False 但 would_have_blocked 反映真实判定
+- [ ] 未配置的 checker_id → blocked=False + notes 含 "not in thresholds yaml"
+- [ ] cases_hit 通过 `case_store.list_ids_by_tag(tag)` 查询（如果 case_store 不为 None）；该方法不存在则返 []
+- [ ] 新增 `tests/checker_pipeline/test_block_threshold_wrapper.py` 含 4 用例：test_apply_block_threshold_passes / test_apply_block_threshold_blocks / test_apply_block_threshold_dry_run_does_not_block / test_apply_block_threshold_unknown_checker_uses_defaults
+- [ ] `pytest tests/checker_pipeline/test_block_threshold_wrapper.py -v --no-cov` 输出 4 passed
+- [ ] Typecheck passes
+**Priority:** 6
+
+### US-007: polish-agent 改 prompt 接收 case_id 驱动
+**Description:** 作为 polish-agent 改造，我需要 `build_polish_prompt()` 构造 case_id 驱动的重写 prompt，含病例 failure_description + observable + 相关 chunks（M3 期 None），要求 LLM 只重写最小必要段落（spec §5.3 + Q12）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/rewrite_loop/__init__.py` (空)
+- [ ] 新增 `ink_writer/rewrite_loop/polish_prompt.py` 暴露 `build_polish_prompt(*, chapter_text, case_id, case_failure_description, case_observable, related_chunks)` 返 prompt 字符串
+- [ ] prompt 含 case_id + case_failure_description + observable list + chapter_text + 要求"只重写最小必要段落 / 不输出 diff / 末尾附 1 行修改说明 / 不包裹 markdown"
+- [ ] related_chunks=None 时 prompt 含 "no related chunks available" 或 "无相关范文" 文本
+- [ ] related_chunks 非空时 prompt 含 chunk_id 与 text 摘要
+- [ ] 修改 `ink-writer/agents/polish-agent.md` 末尾追加 "M3 改造（2026-04-25 起）：case_id 驱动重写" 章节，引用 `build_polish_prompt`，不删除原 prompt 保留 backward compat
+- [ ] 新增 `tests/rewrite_loop/__init__.py` + conftest.py + `test_polish_prompt.py` 含 3 用例：test_polish_prompt_contains_case_failure_pattern / test_polish_prompt_handles_empty_chunks / test_polish_prompt_includes_chunks_when_present
+- [ ] `pytest tests/rewrite_loop/test_polish_prompt.py -v --no-cov` 输出 3 passed
+- [ ] Typecheck passes
+**Priority:** 7
+
+### US-008: rewrite_loop orchestrator
+**Description:** 作为 M3 核心调度，我需要 `run_rewrite_loop()` 主循环：write → self_check → checkers → 收集阻断 case → polish (1 case/round 按 severity 排序) → max 3 轮 → 仍失败 outcome="needs_human_review"，全部依赖通过 callable 注入便于测试（spec §5.2 + Q3+Q4+Q12）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/rewrite_loop/orchestrator.py` 暴露 `RewriteLoopResult` + `collect_blocking_cases` + `run_rewrite_loop`
+- [ ] `RewriteLoopResult(final_text, evidence, outcome, rounds, history)` dataclass
+- [ ] `collect_blocking_cases(compliance, check_results, case_store)`：从 cases_violated + checker.cases_hit 收集，去重，按 severity P0→P3 排序
+- [ ] `run_rewrite_loop(*, book, chapter, chapter_text, cfg, case_store, self_check_fn, checkers_fn, polish_fn, is_dry_run, base_dir=None) -> RewriteLoopResult`
+- [ ] 主循环：max_rounds = cfg["rewrite_loop"]["max_rounds"]；每轮调 self_check_fn + checkers_fn + 记 evidence；如 blocking_cases 空 → outcome="delivered" 退出；如 round_idx >= max_rounds → outcome="needs_human_review" 退出；否则取 blocking_cases[0] 调 polish_fn 重写
+- [ ] polish_fn 调用必传 `case_id` + `case_failure_description` + `case_observable` + `related_chunks=None`
+- [ ] history 记录每轮 chapter_text 版本（含初始 r0 共 4 版）
+- [ ] evidence.record_self_check / record_checkers / record_polish 逐轮记录
+- [ ] 新增 `tests/rewrite_loop/test_orchestrator.py` 含 5 用例：test_collect_blocking_cases_dedupes_and_sorts_by_severity / test_orchestrator_passes_when_all_clear / test_orchestrator_rewrites_until_pass / test_orchestrator_3_rounds_then_human_review / test_orchestrator_one_case_per_round
+- [ ] `pytest tests/rewrite_loop/test_orchestrator.py -v --no-cov` 输出 5 passed
+- [ ] Typecheck passes
+**Priority:** 8
+
+### US-009: dry-run 模式控制 + counter + auto-switch
+**Description:** 作为 dry-run 5 章观察护栏，我需要 `is_dry_run(cfg)` + `increment_dry_run_counter()` + `read_dry_run_counter()`，实现 cfg.dry_run.enabled + counter < observation_chapters 共同决定，counter >= observation_chapters 且 switch_to_block_after=True 时自动切真阻断（spec §5.6 + Q10）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/rewrite_loop/dry_run.py` 暴露 `is_dry_run(cfg, *, base_dir=None) -> bool` + `increment_dry_run_counter(*, base_dir=None) -> int` + `read_dry_run_counter(*, base_dir=None) -> int`
+- [ ] counter 持久化到 `<base_dir>/.dry_run_counter`（默认 base_dir=Path("data")）
+- [ ] `is_dry_run` 逻辑：`cfg.dry_run.enabled=False → False；counter >= cfg.dry_run.observation_chapters 且 switch_to_block_after=True → False；否则 True`
+- [ ] read_counter：文件不存在或解析失败返 0
+- [ ] increment：原子地 +1 写回（counter+1，mkdir parents）
+- [ ] 新增 `tests/rewrite_loop/test_dry_run.py` 含 3 用例：test_dry_run_disabled_returns_false / test_dry_run_enabled_returns_true_until_threshold（5 章后 auto-switch 验证）/ test_dry_run_no_auto_switch（switch_to_block_after=False 时不切）
+- [ ] `pytest tests/rewrite_loop/test_dry_run.py -v --no-cov` 输出 3 passed
+- [ ] 所有 `open()` / `read_text` / `write_text` 带 `encoding="utf-8"`
+- [ ] Typecheck passes
+**Priority:** 9
+
+### US-010: needs_human_review.jsonl 兜底 + 4 版保留
+**Description:** 作为 3 轮重写仍失败的兜底，我需要 `save_rewrite_history()` 写 4 版 r0-r3.txt + `write_human_review_record()` 追加 jsonl 含 blocking_cases / rewrite_attempts / history paths / evidence_chain_path / marked_at（spec §5.5 + Q4）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/rewrite_loop/human_review.py` 暴露 `save_rewrite_history(*, book, chapter, history, base_dir=None) -> list[Path]` + `write_human_review_record(*, book, chapter, blocking_cases, rewrite_attempts, rewrite_history_paths, evidence_chain_path, base_dir=None) -> Path`
+- [ ] `save_rewrite_history` 写 `<base_dir>/data/<book>/chapters/<chapter>.r{i}.txt` (i 0..N)，每版独立文件不删稿
+- [ ] `write_human_review_record` append jsonl 一行到 `<base_dir>/data/<book>/needs_human_review.jsonl`，含 marked_at (UTC ISO)
+- [ ] append 模式不覆盖：连续两次 write 后 jsonl 有 2 行
+- [ ] 新增 `tests/rewrite_loop/test_human_review.py` 含 3 用例：test_save_rewrite_history_writes_4_versions / test_write_human_review_record_appends_jsonl / test_write_human_review_appends_not_overwrites
+- [ ] `pytest tests/rewrite_loop/test_human_review.py -v --no-cov` 输出 3 passed
+- [ ] 所有 `open()` 带 `encoding="utf-8"`
+- [ ] Typecheck passes
+**Priority:** 10
+
+### US-011: ink-write SKILL.md 集成新循环
+**Description:** 作为产线集成入口，我需要 ink-write SKILL.md 文档化 M3 写章合规循环（run_rewrite_loop + dry_run + write_evidence_chain + require_evidence_chain 调用流程），含 Windows PowerShell sibling 块（spec §5）。
+
+**Acceptance Criteria:**
+- [ ] 修改 `ink-writer/skills/ink-write/SKILL.md` 在已有 Step 0 (preflight) 之后插入 `## Step 1.5 — M3 写章合规循环（2026-04-25 起强制）` 章节
+- [ ] Step 1.5 含 Python 代码块示例：load_thresholds → run_rewrite_loop → write_evidence_chain → require_evidence_chain → is_dry_run/increment_dry_run_counter
+- [ ] 含 `<!-- windows-ps1-sibling -->` + Windows PowerShell sibling 块
+- [ ] 文档明确"退出码非 0 时不要继续后续 step"+"evidence_chain.json 缺失会让 ink-write 直接退出"
+- [ ] `grep -n "rewrite_loop\|require_evidence_chain" ink-writer/skills/ink-write/SKILL.md` ≥ 3 行命中
+- [ ] Typecheck passes
+**Priority:** 11
+
+### US-012: dry-run 5 章 smoke + 切换报告生成
+**Description:** 作为 dry-run 5 章观察后的人工 review 输入，我需要 `aggregate_dry_run_metrics()` + `generate_dry_run_report()` 扫 `data/<book>/chapters/*.evidence.json` 出 markdown 报告，含 outcomes / rewrite_rate / case_hit_top10 / rule_compliance_avg（spec §6.3）。
+
+**Acceptance Criteria:**
+- [ ] 新增 `ink_writer/evidence_chain/dry_run_report.py` 暴露 `aggregate_dry_run_metrics(*, book, base_dir) -> dict` + `generate_dry_run_report(*, book, base_dir=None) -> Path`
+- [ ] aggregate 字段：total_chapters / delivered / needs_human_review / rewrite_rounds_total / rewrite_rate / human_review_rate / case_hit_top10 / rule_compliance_avg
+- [ ] generate_dry_run_report 写 `<base_dir>/data/dry_run_report_<UTC_TIMESTAMP>.md`，含 # M3 Dry-Run Report 标题 + Outcomes 段 + Top 10 Case Hits 段
+- [ ] 0 章节 → 报告含 "0 chapters yet" 或 "no chapters" 提示
+- [ ] 新增 `tests/evidence_chain/test_dry_run_report.py` 含 3 用例：test_aggregate_metrics_counts_outcomes（5 章 4 delivered 1 human_review）/ test_generate_dry_run_report_writes_md / test_generate_report_handles_no_evidence
+- [ ] `pytest tests/evidence_chain/test_dry_run_report.py -v --no-cov` 输出 3 passed
+- [ ] 所有 `open()` 带 `encoding="utf-8"`
+- [ ] Typecheck passes
+**Priority:** 12
+
+### US-013: M3 e2e 集成测试
+**Description:** 作为发布门禁前置，我需要 8 用例 e2e 集成测试覆盖 spec §6.5：first_round_pass / polish_then_pass / 3_rounds_human_review + 4 版保留 / dry_run 标记 evidence / dry_run counter switch / evidence_chain required / polish_prompt carries failure_pattern / 5chapter dry_run report generated。
+
+**Acceptance Criteria:**
+- [ ] 新增 `tests/integration/test_m3_e2e.py` 含 8 用例：test_e2e_chapter_passes_first_round_when_clear / test_e2e_chapter_polishes_then_passes / test_e2e_chapter_3_rounds_fails_then_human_review (验证 4 版保留 + jsonl record) / test_e2e_dry_run_records_blocked_but_does_not_polish / test_e2e_dry_run_counter_switches_after_5 / test_e2e_evidence_chain_strict_required (raises EvidenceChainMissingError) / test_e2e_polish_prompt_carries_case_failure_pattern / test_e2e_5chapter_dry_run_report_generated (验证 4 delivered + 1 human_review 计入报告)
+- [ ] `pytest tests/integration/test_m3_e2e.py -v --no-cov` 输出 8 passed
+- [ ] 全量回归 `pytest -q` 全绿，覆盖率 ≥ 70（M2 baseline 82.72%）
+- [ ] Typecheck passes
+**Priority:** 13
+
+### US-014: M3 验收 + tag m3-p1-loop + 更新 M-ROADMAP
+**Description:** 作为 M3 收尾仪式，我需要 6 项验收命令全过 + 打 tag m3-p1-loop + 更新 M-ROADMAP.md（M3 ⚪ → ✅）+ Status 行更新。
+
+**Acceptance Criteria:**
+- [ ] 验收命令全过：(1) `pytest -q` 全绿 + cov ≥ 70；(2) M3 全部模块导入成功（writer_self_check / 2 checkers / rewrite_loop.{orchestrator,dry_run,human_review,polish_prompt} / evidence_chain.{models,writer,dry_run_report,EvidenceChainMissingError} / checker_pipeline.{thresholds_loader,block_threshold_wrapper}）；(3) load_thresholds() 加载 ok 且 writer_self_check.rule_compliance_threshold==0.70 + rewrite_loop.max_rounds==3 + dry_run.enabled is True；(4) 4 个新 agent.md 存在 + polish-agent.md 含 "M3 改造" 字符串；(5) `grep -c "rewrite_loop\|require_evidence_chain" ink-writer/skills/ink-write/SKILL.md` ≥ 3
+- [ ] 打 tag：`git tag -a m3-p1-loop -m "M3 complete: writer-self-check + 阻断重写循环 + evidence_chain"`
+- [ ] 更新 `docs/superpowers/M-ROADMAP.md`：顶部 Status 改为含 "M1 ✅ + M2 🟡 partial + M3 ✅ 完成 2026-04-25"；进度表 M3 行 ⚪ → ✅ + 完成日期 + PRD/Plan/branch 列填实际路径
+- [ ] Typecheck passes
+**Priority:** 14
+
+## Functional Requirements
+
+- FR-1: `config/checker-thresholds.yaml` 是 M3 全部阈值的唯一来源，ink-write 启动时读一次（Q13）
+- FR-2: `EvidenceChain.to_dict()` 输出符合 spec §6.1 schema（含 chunk_borrowing 字段保留为 null 兼容 M2 follow-up）
+- FR-3: `write_evidence_chain` 写到 `data/<book>/chapters/<chapter>.evidence.json`，强制必带；`require_evidence_chain` 缺则 raise `EvidenceChainMissingError`
+- FR-4: `writer_self_check` 输出 `ComplianceReport` 含 rule_compliance（mean of rule_scores 含漏给的按 0 计）+ cases_addressed/violated 二分 + chunk_borrowing=None（M3 期）+ overall_passed = (rule_compliance >= 0.70 且 cases_violated 为空)
+- FR-5: `writer_self_check` LLM 失败兜底：`overall_passed=False, notes="self_check_failed", cases_violated=全 cases, raw_scores={"missing": 全 rule_ids}`
+- FR-6: `check_conflict_skeleton` 用 LLM 主观判断 + score 公式 0.5 * has_conflict + 0.3 * has_three_stage + 0.2 * min(count/2, 1)；block_threshold=0.60；短章节 (< 500 字) 跳过
+- FR-7: `check_protagonist_agency` 用 LLM 主观判断 + 同结构 score 公式；block_threshold=0.60；短章节跳过
+- FR-8: 现有 reader_pull / sensory_immersion / high_point checker 通过 `apply_block_threshold` wrapper 加 blocked + cases_hit + would_have_blocked 字段，dry-run 期 blocked=False 但 would_have_blocked 留痕
+- FR-9: `build_polish_prompt` 构造 case_id 驱动重写 prompt，含 failure_description + observable + chapter_text；related_chunks=None 时 prompt 含 "no related chunks available"
+- FR-10: `run_rewrite_loop` 主循环 max 3 轮 + 一次一个 case 按 severity P0→P3 排序 + needs_human_review 兜底；`history` 字段含 4 版（r0 + 3 rewrite）
+- FR-11: `is_dry_run(cfg)` 逻辑：cfg.dry_run.enabled=False → False；counter >= observation_chapters 且 switch_to_block_after=True → False；否则 True
+- FR-12: `save_rewrite_history` 写 `<book>/chapters/<chapter>.r{i}.txt` 4 版独立文件，不删稿
+- FR-13: `write_human_review_record` append 模式追加 `data/<book>/needs_human_review.jsonl`，不覆盖
+- FR-14: ink-write SKILL.md Step 1.5 必须有 bash + Windows PowerShell sibling 块
+- FR-15: `aggregate_dry_run_metrics` 聚合 outcomes / rewrite_rate / case_hit_top10 / rule_compliance_avg；`generate_dry_run_report` 写 markdown 到 `data/dry_run_report_<UTC>.md`
+- FR-16: 所有新增 Python 文件 `open()` / `Path.read_text` / `Path.write_text` 必带 `encoding="utf-8"`
+- FR-17: 新增任何 .py 不能用 `os.symlink` / `Path.symlink_to` 裸调用（audit 红线）
+- FR-18: 新增 testpaths `tests/writer_self_check tests/checkers tests/rewrite_loop tests/evidence_chain tests/checker_pipeline` 必须注册到 `pytest.ini`
+- FR-19: M3 完成时 `pytest -q` 全绿 + 覆盖率 ≥ 70（M2 baseline 82.72% 不被破坏）
+- FR-20: M3 完成时 `git tag m3-p1-loop` 已打 + `docs/superpowers/M-ROADMAP.md` M3 行 ⚪ → ✅
+
+## Non-Goals (Out of Scope)
+
+- M4 内容：4 个 ink-init checker（genre-novelty / golden-finger-spec / naming-style / protagonist-motive）/ 3 个 ink-plan checker / LLM 高频起名词典 / 起点 top200 简介库
+- M5 内容：dashboard 扩展 / Layer 4 复发追踪 / Layer 5 元规则浮现 / `data/case_library/user_corpus/` 接口 / A/B 通道 / `ink case approve --interactive` 模式
+- 不补 M2 corpus_chunks 实跑（M2-FOLLOWUP-NOTES.md A 选项；chunk_borrowing 字段保留为 null）
+- 不动现有 20 个其他 checker 的算法或阈值（仅 reader_pull / sensory_immersion / high_point 3 个升级阻断）
+- 不实现病例反向召回的实际接线（router.py case_aware 模式；留 M3 之外 follow-up）
+- 不退役 FAISS（M2 双写策略保持）
+- 不动 v22 simplicity 域 / 场景感知召回
+- 不引入新 LLM provider（继续用智谱 GLM）
+- 不实现 chunk_borrowing 实际计算（schema 字段保留 null 兼容 M2 follow-up）
+
+## Design Considerations
+
+- **复用 M1+M2 已建组件**：`CaseStore` / `ingest_case` / `LLMClient` wrapper 全部直接用，不重建
+- **dependency injection**：`run_rewrite_loop` 通过 `self_check_fn / checkers_fn / polish_fn` callable 注入，便于测试 mock
+- **dry-run 与 orchestrator 解耦**：orchestrator 不读 dry_run cfg，由上层 ink-write 调用方判断 + 注入 is_dry_run；evidence_chain 标记 dry_run 字段
+- **EvidenceChain helper API**：record_self_check / record_checkers / record_polish / record_case_update 让上层调用代码不需要直接操作内部字段
+- **跨目录 sys.path**：M3 不新增独立 CLI 入口（通过 ink-write SKILL.md 间接调用），无需 sys.path 三段式 bootstrap
+
+## Technical Considerations
+
+- **依赖**：仅复用 M1+M2 已装（pyyaml / jsonschema / openai / qdrant-client）；不新增任何 pip package
+- **LLM model**：M3 默认改 `~/.claude/ink-writer/.env` 的 `LLM_MODEL=glm-4.6`（Q14；调用量小不撞 RPM）；如需 dry-run 验证可改 `glm-4-flash`（M2 已实测可用）
+- **跨平台**：所有 Python 文件 `encoding="utf-8"`；ink-write SKILL.md Step 1.5 含 Windows PowerShell sibling 块；本 plan 不新增 .sh / .ps1
+- **测试隔离**：所有 LLM 调用通过 `mock_llm_client` fixture mock；`tmp_path` 隔离文件 IO；不依赖外部 docker / Qdrant
+- **覆盖率门禁**：`pytest.ini` 当前 `--cov-fail-under=70`；M3 新模块必须自带测试，避免覆盖率拖低
+- **API 成本预算**：dry-run 5 章 + e2e 测试 ≈ $5（GLM-4.6）；测试本身不调真实 LLM
+- **幂等性**：`write_evidence_chain` 覆盖写（同一 book/chapter 重跑覆盖前次）；`save_rewrite_history` 覆盖写；`write_human_review_record` append 模式（多次跑追加多行）
+- **chunks 缺席兼容**：所有涉及 `injected_chunks` 或 `related_chunks` 的接口都必须接受 None 并优雅处理；evidence_chain.json 的 `chunk_borrowing` 字段始终 null
+
+## Success Metrics
+
+- 14 个 user story 全部 `passes: true`
+- `pytest -q` 全绿，覆盖率 ≥ 70（M2 baseline 82.72%）
+- M3 新增测试 ≥ 30 个全绿
+- 验收 6 项全过：pytest / 模块导入 / 配置加载 / agent.md 文件 / SKILL.md 集成 / `git tag m3-p1-loop`
+- ROADMAP M3 行更新 ⚪ → ✅
+- M3 完成后下一步可立即开 M4 brainstorm（依赖 M1+M2 不依赖 M3）或回头补 M2 corpus_chunks（M2-FOLLOWUP-NOTES.md A 选项）
+
+## Open Questions
+
+- Q-1: M3 dry-run 5 章后如果 case 命中率 > 80%（重写率过高），是否需要批量退回 case 到 pending？预期通过 `ink case approve --batch` (M2 US-011) 反向操作 yaml（action: defer）解决；若大批量退回则后续可 follow-up 加 case-level 自动降级机制（M5 自进化 Layer 4）。
+- Q-2: protagonist_name 来源未在本 PRD 强制（默认从 .ink/project.yaml 读，缺则降级让 LLM 自识别多 1 次调用）；M3 dry-run 阶段如发现 protagonist_name 频繁误判，可加 case-level scope.character_focus 字段（spec §7.3 风险 5）。
+- Q-3: 是否需要在 M3 中加 needs_human_review 章节的 dashboard 入口？建议本期不做（M5 dashboard 配套）；本期 jsonl 是 single source of truth。
