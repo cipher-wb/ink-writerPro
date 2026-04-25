@@ -1,0 +1,32 @@
+case_id: CASE-2026-M4-0007
+title: 大纲钩子密度低强钩子比例不足（chapter-hook-density 阻断）
+status: active
+severity: P0
+domain: writing_quality
+layer:
+- upstream
+tags:
+- m4_p0_planning
+- chapter_hook_density
+- ink_plan_step99
+scope:
+  genre:
+  - all
+  trigger: ink-plan Step 99 / chapter-hook-density-checker
+source:
+  type: editor_review
+  raw_text: 卷骨架每章必须有强钩子（hook_strength ≥ 0.5），strong_count / total_count ≥ 0.70。来源：M4
+    spec §1.3 / §4.3 + 编辑星河编辑案例：网文章末必须留悬念 / 反转 / 名场面预告，章节 hook 不足 70% 必扑街。
+  ingested_at: '2026-04-25'
+  reviewer: M4 P0 planning spec
+  ingested_from: docs/superpowers/specs/2026-04-25-m4-p0-planning-design.md
+failure_pattern:
+  description: 卷骨架 chapter summary 中强钩子（hook_strength ≥ 0.5）章节占比 < 70%，章末悬念 / 反转 /
+    名场面预告不足，无法支撑追读引擎。
+  observable:
+  - chapter-hook-density-checker 输出 score = strong_count / total_count < 0.70
+  - per_chapter 多条 strong=False（hook_strength < 0.5）
+  - 空 skeleton → blocked + notes='empty_skeleton'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,22 @@
+approvals:
+- case_id: CASE-2026-M4-0001
+  action: approve
+  note: M4 P0 上游策划层 seed case (genre-novelty)
+- case_id: CASE-2026-M4-0002
+  action: approve
+  note: M4 P0 上游策划层 seed case (golden-finger-spec)
+- case_id: CASE-2026-M4-0003
+  action: approve
+  note: M4 P0 上游策划层 seed case (naming-style)
+- case_id: CASE-2026-M4-0004
+  action: approve
+  note: M4 P0 上游策划层 seed case (protagonist-motive)
+- case_id: CASE-2026-M4-0005
+  action: approve
+  note: M4 P0 上游策划层 seed case (golden-finger-timing)
+- case_id: CASE-2026-M4-0006
+  action: approve
+  note: M4 P0 上游策划层 seed case (protagonist-agency-skeleton)
+- case_id: CASE-2026-M4-0007
+  action: approve
+  note: M4 P0 上游策划层 seed case (chapter-hook-density)

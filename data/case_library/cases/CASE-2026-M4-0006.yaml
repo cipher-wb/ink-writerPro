@@ -1,0 +1,34 @@
+case_id: CASE-2026-M4-0006
+title: 大纲主角骨架级被动缺主动决策（protagonist-agency-skeleton 阻断）
+status: active
+severity: P0
+domain: writing_quality
+layer:
+- upstream
+tags:
+- m4_p0_planning
+- protagonist_agency_skeleton
+- ink_plan_step99
+scope:
+  genre:
+  - all
+  trigger: ink-plan Step 99 / protagonist-agency-skeleton-checker
+source:
+  type: editor_review
+  raw_text: 卷骨架每章 summary 必须体现主角主动决策，agency_score 平均 ≥ 0.55。来源：M4 spec §1.3 / §4.2
+    + 编辑星河编辑案例：被动主角（被推着走 / 工具人主角 / 圣母性格）在 ink-plan 期就该被打回；与 M3 章节级 protagonist-agency
+    不同，本案专攻骨架级被动模式。
+  ingested_at: '2026-04-25'
+  reviewer: M4 P0 planning spec
+  ingested_from: docs/superpowers/specs/2026-04-25-m4-p0-planning-design.md
+failure_pattern:
+  description: 卷骨架 chapter summary 多数章节主角处于被动响应状态（被剧情推 / 被反派打 / 被配角带），LLM 打分 agency_score
+    均分 < 0.55。
+  observable:
+  - protagonist-agency-skeleton-checker 输出 score = mean(per_chapter agency_score)
+    < 0.55
+  - per_chapter 至少半数 agency_score < 0.5（典型被动语态 / 缺主动目标 / 缺决策点）
+  - 空 skeleton → blocked + notes='empty_skeleton'
+bound_assets: {}
+resolution: {}
+evidence_links: []

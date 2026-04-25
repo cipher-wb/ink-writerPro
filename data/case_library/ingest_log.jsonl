@@ -400,3 +400,10 @@
 {"event": "ingest", "case_id": "CASE-2026-0400", "raw_text_hash": "4c4aeffbb866c71da7c753c50fcd3957588c719af725db877d2a99fa1934f94b", "at": "2026-04-25T01:08:36.772141+00:00"}
 {"event": "ingest", "case_id": "CASE-2026-0401", "raw_text_hash": "9f27a9caaa935f77bee0b71615165772f7425f906204c3645d158ce74bda882a", "at": "2026-04-25T01:08:36.980259+00:00"}
 {"event": "ingest", "case_id": "CASE-2026-0402", "raw_text_hash": "191d0a0cdf54d104f15e4c8a18ce4249892d12d6d514a1fac16ba76e4111e58c", "at": "2026-04-25T01:08:37.189214+00:00"}
+{"event": "approval", "case_id": "CASE-2026-M4-0001", "action": "approve", "at": "2026-04-25T09:00:06.203924+00:00", "note": "M4 P0 上游策划层 seed case (genre-novelty)"}
+{"event": "approval", "case_id": "CASE-2026-M4-0002", "action": "approve", "at": "2026-04-25T09:00:06.207836+00:00", "note": "M4 P0 上游策划层 seed case (golden-finger-spec)"}
+{"event": "approval", "case_id": "CASE-2026-M4-0003", "action": "approve", "at": "2026-04-25T09:00:06.208998+00:00", "note": "M4 P0 上游策划层 seed case (naming-style)"}
+{"event": "approval", "case_id": "CASE-2026-M4-0004", "action": "approve", "at": "2026-04-25T09:00:06.210128+00:00", "note": "M4 P0 上游策划层 seed case (protagonist-motive)"}
+{"event": "approval", "case_id": "CASE-2026-M4-0005", "action": "approve", "at": "2026-04-25T09:00:06.211356+00:00", "note": "M4 P0 上游策划层 seed case (golden-finger-timing)"}
+{"event": "approval", "case_id": "CASE-2026-M4-0006", "action": "approve", "at": "2026-04-25T09:00:06.212488+00:00", "note": "M4 P0 上游策划层 seed case (protagonist-agency-skeleton)"}
+{"event": "approval", "case_id": "CASE-2026-M4-0007", "action": "approve", "at": "2026-04-25T09:00:06.213576+00:00", "note": "M4 P0 上游策划层 seed case (chapter-hook-density)"}

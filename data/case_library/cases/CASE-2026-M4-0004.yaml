@@ -1,0 +1,32 @@
+case_id: CASE-2026-M4-0004
+title: 主角动机牵强缺共情（protagonist-motive 阻断）
+status: active
+severity: P0
+domain: writing_quality
+layer:
+- upstream
+tags:
+- m4_p0_planning
+- protagonist_motive
+- ink_init_step99
+scope:
+  genre:
+  - all
+  trigger: ink-init Step 99 / protagonist-motive-checker
+source:
+  type: editor_review
+  raw_text: 主角动机必须 3 维度（resonance / specific_goal / inner_conflict）平均 ≥ 0.65，否则缺乏共情驱动力需返工。来源：M4
+    spec §1.3 / §3.4 + 编辑星河编辑案例：主角动机若仅"为了变强"/"逆袭打脸"，读者前 5 章必弃书，必须在 ink-init 卡死。
+  ingested_at: '2026-04-25'
+  reviewer: M4 P0 planning spec
+  ingested_from: docs/superpowers/specs/2026-04-25-m4-p0-planning-design.md
+failure_pattern:
+  description: 主角动机 description 在 3 维度（resonance 读者共情 / specific_goal 具体目标 / inner_conflict
+    内在冲突）均分 < 0.65，或 description < 20 字直接判定描述不足。
+  observable:
+  - protagonist-motive-checker 输出 score = mean(3 dim) < 0.65
+  - dim_scores 至少 1 项 < 0.5（最常见 inner_conflict 缺失或 resonance 太低）
+  - description.strip() < 20 字 → blocked + notes='description_too_short'
+bound_assets: {}
+resolution: {}
+evidence_links: []

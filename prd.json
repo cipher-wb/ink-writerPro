@@ -289,8 +289,8 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — 扩展 schemas/case_schema.json + schemas/case_approval_batch_schema.json case_id pattern 为 ^CASE-[0-9]{4}-(M[0-9]+-)?[0-9]{4}$ 同时允许旧 CASE-2026-NNNN 与新 CASE-2026-M4-NNNN（向后兼容 tests/case_library/test_schema.py::test_case_id_pattern_enforced）；新增 7 个 yaml data/case_library/cases/CASE-2026-M4-0001~0007.yaml（layer=upstream + severity=P0 + status=pending + domain=writing_quality + tags 含 m4_p0_planning + ink_init/plan_step99 + scope.trigger 标 checker 名 + source.ingested_at='2026-04-25' + failure_pattern.{description, observable} 列 checker 触发条件）；新增 data/case_library/m4_seed_approval_batch.yaml 7 条 approve 操作；跑 python3 -m ink_writer.case_library.cli approve --batch ... → applied=7 failed=0 全部 status: pending → active；CaseStore.iter_cases() 过滤 active + startswith 'CASE-2026-M4' 输出 7 条 P0 active；tests/case_library/ 43 passed 向后兼容；checker_pipeline + planning_review + evidence_chain + checkers + market_intelligence + case_library 共 253 passed 全过；ruff 通过"
     },
     {
       "id": "US-014",

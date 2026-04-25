@@ -1,0 +1,32 @@
+case_id: CASE-2026-M4-0002
+title: 金手指描述模糊缺规格（golden-finger-spec 阻断）
+status: active
+severity: P0
+domain: writing_quality
+layer:
+- upstream
+tags:
+- m4_p0_planning
+- golden_finger_spec
+- ink_init_step99
+scope:
+  genre:
+  - all
+  trigger: ink-init Step 99 / golden-finger-spec-checker
+source:
+  type: editor_review
+  raw_text: 金手指必须 4 维度（清晰度 / 可证伪 / 边界 / 成长曲线）平均 ≥ 0.65，否则属规格不合格需返工。来源：M4 spec §1.3
+    / §3.2 + 编辑星河编辑案例：金手指若读者用一句话讲不清，前 3 章必扑街；"主角有特殊能力" 这种描述在策划期就该被打回。
+  ingested_at: '2026-04-25'
+  reviewer: M4 P0 planning spec
+  ingested_from: docs/superpowers/specs/2026-04-25-m4-p0-planning-design.md
+failure_pattern:
+  description: 金手指 description 在 4 维度（clarity / falsifiability / boundary / growth_curve）均分
+    < 0.65，规格模糊导致后续章节无法兑现，或长度 < 20 字直接被判定描述不足。
+  observable:
+  - golden-finger-spec-checker 输出 score = mean(4 dim) < 0.65
+  - dim_scores 至少 1 项 < 0.5（最常见 boundary 缺失或 falsifiability 太低）
+  - description.strip() < 20 字 → blocked + notes='description_too_short'
+bound_assets: {}
+resolution: {}
+evidence_links: []

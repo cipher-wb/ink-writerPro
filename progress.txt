@@ -16,6 +16,8 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
 - agent spec 落 ink-writer/agents/<name>-checker.md，frontmatter 含 name/description/tools=Read/model=inherit；包含来源 spec/PRD、Python 调用示例、字段表、阻断行为、与下游衔接段
 - 数据爬虫脚本：scripts/<area>/__init__.py（空）+ fetch_*.py（UA 含联系邮箱、_check_robots_txt、RATE_LIMIT_SECONDS=1.0、_load_progress/_save_progress_one 续爬、_fetch_*_page → list[(rank, id)]、_fetch_one_* max_retries 失败 return None、enable_windows_utf8_stdio()）；测试用 autouse fixture monkeypatch OUTPUT_PATH/PROGRESS_PATH 到 tmp_path 隔离仓库 data/
 - 编排层模式：ink_writer/planning_review/<stage>_review.py 复用 EvidenceChain（phase=planning + stage=...），dry-run 计数独立路径 data/.planning_dry_run_counter 走 dry_run.py helpers；effective_blocked = blocked_any AND not dry_run，dry-run 跑后 increment；skip 路径只写 outcome=skipped 不调 checker；blocked 时按 thresholds yaml case_ids 注入 cases_hit；CLI argparse + enable_windows_utf8_stdio() + 退出码 1/0；测试用 FakeLLMClient（tests/checkers/conftest.py）+ tmp_path 隔离 base_dir + 显式 dry_run_counter_path 控制 dry/real 模式
+- case_id 正则扩展规则：schemas/case_schema.json + schemas/case_approval_batch_schema.json 两处必须**同步修改**（approval batch 先于 store.save 校验）；扩展用可选段 `(M[0-9]+-)?` 保持向后兼容旧 CASE-YYYY-NNNN；PRD 描述 schema 与实际 schemas/*.json 不一致时以 jsonschema validator + additionalProperties=false 为准
+- M4 上游 seed case 模式：layer=['upstream']（与 M3 downstream 区分）+ tags 含 m4_p0_planning + ink_{init,plan}_step99；source.ingested_at 用 'YYYY-MM-DD' 单引号字串（schema format=date）；failure_pattern.observable minItems=1 必须列 checker 触发条件；status: pending 写盘后通过 m4_seed_approval_batch.yaml 走 cli approve --batch 一次性 active 7 条；CaseStore 没有 iter_active()，过滤 `c.status.value == 'active'` + `c.case_id.startswith('CASE-2026-M4')`
 
 ---
 
@@ -233,5 +235,33 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - SKILL.md 追加 Step 99 时 macOS/Linux 块 + Windows PowerShell sibling 块必须同时出现，CLAUDE.md Windows 兼容守则要求 grep -c PowerShell ≥ 1；用 backtick 续行的 PowerShell 写法 `command \`\n  --arg`
   - dry-run 计数器是策划期独立的（与 M3 章节级 dry_run.observation_chapters 不混）：路径默认 data/.planning_dry_run_counter，与 ink-write 计数完全隔离；counter 文件单行整数 + UTF-8 + parent.mkdir(parents=True, exist_ok=True)
   - generate_planning_dry_run_report 扫 base_dir/*/planning_evidence_chain.json 而非递归 glob：每书一个文件，sorted(base_dir.iterdir()) 让输出顺序稳定；空 base_dir 返回空 markdown 不抛异常
+---
+
+## 2026-04-25 - US-013
+- 实现 7 个 CASE-2026-M4-0001~0007 上游策划层 seed cases + batch approve 入活
+- Files changed:
+  - schemas/case_schema.json（case_id pattern 扩展为 ^CASE-[0-9]{4}-(M[0-9]+-)?[0-9]{4}$，向后兼容旧 CASE-2026-NNNN 同时允许 milestone 前缀）
+  - schemas/case_approval_batch_schema.json（同步扩展 case_id pattern）
+  - data/case_library/cases/CASE-2026-M4-0001.yaml（题材老套 / genre_novelty + market_intelligence；ink-init Step 99）
+  - data/case_library/cases/CASE-2026-M4-0002.yaml（金手指模糊 / golden_finger_spec；ink-init Step 99）
+  - data/case_library/cases/CASE-2026-M4-0003.yaml（角色名 AI 味重 / naming_style；ink-init Step 99）
+  - data/case_library/cases/CASE-2026-M4-0004.yaml（主角动机牵强 / protagonist_motive；ink-init Step 99）
+  - data/case_library/cases/CASE-2026-M4-0005.yaml（金手指出场过晚 / golden_finger_timing + opening_hook；ink-plan Step 99）
+  - data/case_library/cases/CASE-2026-M4-0006.yaml（卷骨架级被动 / protagonist_agency_skeleton；ink-plan Step 99）
+  - data/case_library/cases/CASE-2026-M4-0007.yaml（章节钩子密度低 / chapter_hook_density；ink-plan Step 99）
+  - data/case_library/m4_seed_approval_batch.yaml（batch approval YAML：7 条 approve 操作 + note 标记 seed case）
+  - data/case_library/cases/CASE-2026-M4-*.yaml status: pending → active（由 batch approve 触发；linter 同步格式化长行）
+  - data/case_library/ingest_log.jsonl（追加 7 条 approval 事件，由 apply_batch_yaml 自动写入）
+- 测试：tests/case_library/ 43 passed（schema regex 扩展向后兼容 test_case_id_pattern_enforced 仍捕获错误模式）；tests/checker_pipeline + tests/planning_review + tests/evidence_chain + tests/checkers + tests/market_intelligence + tests/case_library 共 253 passed 全向后兼容；ruff 通过
+- 验证：python3 ink_writer.case_library.cli approve --batch ... → applied=7 failed=0；CaseStore(library_root).iter_cases() 过滤 active + case_id startswith 'CASE-2026-M4' 输出 7 条全 P0 active；status/severity/domain/tags 全部 schema 合法
+- **Learnings for future iterations:**
+  - schemas/case_schema.json 与 schemas/case_approval_batch_schema.json 必须**同步修改**：case_id 正则在两处都有，approval batch 单独校验且会先于 store.save 触发；只改 case_schema 会让 batch approve 报 schema 违规
+  - case_id pattern 扩展用 `(M[0-9]+-)?` 可选段：`^CASE-[0-9]{4}-(M[0-9]+-)?[0-9]{4}$` 同时允许 CASE-2026-0001 与 CASE-2026-M4-0001，向后兼容旧 case 文件
+  - PRD 描述的 schema（id / severity hard / category / countermeasure / created_at）与实际 schema（case_id / severity P0-P3 / domain / source.{type,raw_text,ingested_at} / failure_pattern.{description,observable}）不一致：PRD 是 spec 草拟；实际验收按 schemas/case_schema.json + jsonschema validator 走，additionalProperties=false 拒绝额外字段
+  - PRD 提到的 CaseStore().iter_active() 不存在：实际用 `s.iter_cases()` + 过滤 `c.status.value == 'active'`；案例字段是 case_id（非 id）；case_id.startswith('CASE-2026-M4') 即 milestone 前缀过滤
+  - apply_batch_yaml 的 entry-level 失败收集：单条失败不中止整批；failed=0 时返回 0，否则非零；适合 CI 校验；linter 二次写入 yaml 时长行会自动 wrap，保留原始信息但行号变化（不影响 schema validate）
+  - 上游 case 走 layer=['upstream']（与 M3 downstream 区分）+ tags 含 m4_p0_planning + ink_init_step99 / ink_plan_step99：让 reader_pull / rewrite_loop 编排判断 stage 时可按 tag 过滤，不会误用上游 case 评章节
+  - source.ingested_at 必须是 ISO date 字符串 'YYYY-MM-DD'（schema format: date）：YAML 单引号包裹避免被解析为 datetime；schema validation 会校验格式
+  - failure_pattern.observable minItems=1：必须列出至少 1 条可观察的 checker 输出条件，便于编排层把 case_id 注入到 cases_hit 时调试者能反向定位 checker 哪个分支触发
 ---
 
