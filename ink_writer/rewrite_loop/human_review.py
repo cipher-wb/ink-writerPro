@@ -19,6 +19,8 @@ US-010 (2026-04-25 起)：
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -66,6 +68,34 @@ def _serialize_case(case: Any) -> Any:
     return repr(case)
 
 
+def _atomic_write_text(path: Path, content: str) -> None:
+    """temp file → fsync → os.replace 原子覆盖（review §二 P1#3）。
+
+    避免进程在写入中途崩溃留下半截 .rN.txt 让人工 review 误判 r0..r3 完整。
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent)
+    )
+    tmp_path = Path(tmp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fh.write(content)
+            fh.flush()
+            try:
+                os.fsync(fh.fileno())
+            except OSError:
+                pass
+        os.replace(tmp_path, path)
+    except Exception:
+        if tmp_path.exists():
+            try:
+                tmp_path.unlink()
+            except OSError:
+                pass
+        raise
+
+
 def save_rewrite_history(
     *,
     book: str,
@@ -73,7 +103,7 @@ def save_rewrite_history(
     history: Sequence[str],
     base_dir: Path | str | None = None,
 ) -> list[Path]:
-    """把 history 每版写到 ``<base_dir>/data/<book>/chapters/<chapter>.r{i}.txt``。
+    """把 history 每版**原子**写到 ``<base_dir>/data/<book>/chapters/<chapter>.r{i}.txt``。
 
     Args:
         book: 书 slug。
@@ -82,7 +112,8 @@ def save_rewrite_history(
         base_dir: 目录前缀，默认 ``Path(".")``（项目根）。
 
     Returns:
-        每版写盘后的绝对/相对路径列表，顺序与 ``history`` 一致。
+        每版写盘后的绝对/相对路径列表，顺序与 ``history`` 一致。每个文件用
+        temp+os.replace 原子写，保证不会出现半截 .rN.txt。
     """
     chapters_dir = _chapters_dir(base_dir, book)
     chapters_dir.mkdir(parents=True, exist_ok=True)
@@ -90,8 +121,7 @@ def save_rewrite_history(
     paths: list[Path] = []
     for i, text in enumerate(history):
         out_path = chapters_dir / f"{chapter}.r{i}.txt"
-        with open(out_path, "w", encoding="utf-8") as fh:
-            fh.write(text)
+        _atomic_write_text(out_path, text)
         paths.append(out_path)
     return paths
 
