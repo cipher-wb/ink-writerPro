@@ -240,8 +240,8 @@
         "Typecheck passes"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：docs/EDITOR_FEEDBACK_GUIDE.md 166 行 / 4 个 H2（3 节 + 跨手册导航附录）；§1 评分录入含 yaml schema 完整字段（含 severity_hint）+ 文件命名约定 + ink case ingest 触发链路；§2 case 提案审批含 ink case list/approve/--batch/reject + CASE-LEARN-NNNN（每周 5 限流）/ CASE-PROMOTE-NNNN（短期记忆 count≥3）+ ink meta-rule list/approve/reject 幂等保护；§3 复发申诉含 sovereign 字段语义（Layer 4 跳过升级 + meta_rule_emergence 跳过候选）+ ink case mark-resolved + 元规则误合并申诉路径。验收：行数 166 ≥ 70；H2 段数 4 ≥ 3；test -f 通过。"
     },
     {
       "id": "US-013",

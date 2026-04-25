@@ -332,3 +332,25 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **应急绕过共同契约（spec §5）**：所有 `--skip*` flag 落盘 `outcome=skipped` + `skip_reason` + 可审计；恢复后由 ink-learn `--auto-case-from-failure`（US-009）自动补登 case 或人工补跑正式审查。这是 US-012 编辑反馈手册"复发申诉"段的接续点。
   - **dashboard 4 大指标默认值与占位说明**：`repair_speed_days` 当前是 M5 占位 7.0，待 case 加 `resolved_at` 字段后才有真实值；`checker_accuracy` 缺 `data/checker_accuracy_samples/` 目录直接 0.0；用户手册需明示这两点避免误读。
 ---
+
+## 2026-04-25 - US-012 docs/EDITOR_FEEDBACK_GUIDE.md（编辑反馈手册 3 节）
+- 实现：
+  - `docs/EDITOR_FEEDBACK_GUIDE.md`（166 行 / 4 个 H2：3 主节 + 跨手册导航）。
+  - §1 评分如何录入：文件位置约定（`data/editor_reviews/<book>.yaml`，与 `data/<book>/` 目录名一致；同书追加而非按周拆文件）+ yaml schema（chapter / date / score / reviewer / pros / cons / suggestions / severity_hint）+ 录入流程 3 步（追加 yaml → ink case ingest → dashboard 自动消费 trend）。
+  - §2 case 提案审批：`ink case list --status pending [--book]` + `ink case approve` 单条/`--batch`/`reject --reason` 必填 + 自动学习 case 表（`CASE-LEARN-NNNN` 每周限 5 / `CASE-PROMOTE-NNNN` 短期记忆 count≥3）+ `ink meta-rule list/approve/reject`（含 approve 幂等 rc=1 + 写 `meta_rule_id` 到 covered_cases）。
+  - §3 复发申诉：复发定义（resolved → cases_violated 命中 → severity 升级 + recurrence_history + status=regressed） + `sovereign: true` 语义（Layer 4 不升 severity / meta_rule_emergence 跳过候选 / dashboard 淡色显示）+ `ink case mark-resolved --book --chapter --note` + 元规则误合并申诉路径（手动改 `meta_rule_id: null` + `sovereign: true`；revoke 子命令 M5 范围外，临时手改 yaml + `revoked_at`/`revoke_reason`）。
+  - 附跨手册导航段链接 `docs/USER_MANUAL.md` / `docs/superpowers/M-ROADMAP.md` / 根 `CLAUDE.md` Windows 兼容守则。
+- Files changed:
+  - docs/EDITOR_FEEDBACK_GUIDE.md (new)
+  - scripts/ralph/prd.json
+- 验证：
+  - `wc -l docs/EDITOR_FEEDBACK_GUIDE.md` → 166 行（≥ 70 ✓）
+  - `grep -cE '^## ' docs/EDITOR_FEEDBACK_GUIDE.md` → 4（≥ 3 ✓）
+  - `test -f docs/EDITOR_FEEDBACK_GUIDE.md` → 0 ✓
+  - 纯文档变更，无 Python 代码与 open() 调用；Typecheck N/A（项目无 mypy/pyright；ruff exclude 不覆盖 `docs/`）。
+- Learnings for future iterations:
+  - **双手册分工守则**：USER_MANUAL = 作者主线（开新书 / 写章 / 看 dashboard / 录反馈 / 应急绕过），EDITOR_FEEDBACK_GUIDE = 编辑/产品支线（评分录入 / case 审批 / 复发申诉）。两者通过附录"跨手册导航"互链，不重复完整 yaml schema —— EDITOR_FEEDBACK_GUIDE 给的是字段释义（severity_hint / reviewer），USER_MANUAL §4.2 给的是最小录入示例。
+  - **sovereign 字段全链路语义**：标 `sovereign: true` 后必须满足 3 处行为：(1) `regression_tracker.apply_recurrence` 仍记 history 但不升 severity；(2) `meta_rule_emergence._candidate_clusters_by_tags` 主动跳过候选；(3) dashboard 复发列表淡色显示。新增任何处理 case 流程前先 grep `sovereign` 检查是否需要新分支。
+  - **元规则审批幂等性必须记入手册**：`ink meta-rule approve MR-NNNN` 第二次 rc=1 + stderr 报错的契约要写明，避免编辑误以为审批失败重试导致手动绕过；同样 reject 也是一次性。M5 不提供 `revoke` 子命令，需要手动编辑 yaml + 加 `revoke_reason` 字段（与 `rejected_at` 区分）以保留审计痕迹。
+  - **自动学习 case 节流 throttle 也是文档契约**：CASE-LEARN-NNNN 每周限 5、reject 后 7 天不再提议；这些数字由 `config/ink_learn_throttle.yaml` 控制，不要硬编码到文档；后续节流参数变更只需改配置即可。
+---
