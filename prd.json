@@ -170,8 +170,8 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — data/market_intelligence/llm_naming_blacklist.json 共 331 条 exact_blacklist + first_char_overused 24 + second_char_overused 24（必含 24 字根全覆盖）；含 24 个 PRD 必含人名（叶凡 / 林夜 / 陈青山 / 李逍遥 / 沈墨 / 苏寒 / 顾寒 / 韩立 / 罗峰 / 秦尘 / 楚尘 / 白逸 / 王腾 / 唐三 / 萧炎 / 云澈 / 夜辰 / 风尘 / 凌天 / 墨尘 / 玄武 / 九天 / 易天 / 古辰）+ 网文主角扩充 + first×core_seconds cross-product 去重；全中文，无重复；新增 tests/market_intelligence/test_naming_blacklist.py 4 用例（schema / no_duplicates / chinese_only / 真词典 + naming-style-checker 对 '叶凡' 命中 exact 0.0/blocked/hit_type='exact'）；pytest 4 passed；checker_pipeline + market_intelligence + planning_review + evidence_chain 47 passed 向后兼容；ruff 通过"
     },
     {
       "id": "US-009",

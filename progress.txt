@@ -131,3 +131,17 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - `from datetime import UTC` 是 Python 3.11+ 现代写法（ruff `UP017` 规则）；`datetime.timezone.utc` 已被 `UP017` flag 为 deprecated alias
   - PRD 验收 "实跑 ≥ 150 / 失败 commit 空 jsonl 标 manual-fallback" 的 OR 路径设计是亮点：让 M4 验收不被外部反爬阻塞；类似数据爬取任务都该照此设计验收
 ---
+
+## 2026-04-25 - US-008
+- 实现 LLM 高频起名词典（M4 naming-style-checker 数据后端 spec §4.2）
+- Files changed:
+  - data/market_intelligence/llm_naming_blacklist.json（新增；331 条 exact_blacklist + first_char_overused 24 + second_char_overused 24；schema {version, updated_at, exact_blacklist, char_patterns: {first/second_char_overused}, notes}）
+  - tests/market_intelligence/test_naming_blacklist.py（4 用例：test_blacklist_schema / test_blacklist_no_duplicates / test_blacklist_chinese_only / test_naming_style_checker_blocks_yefan_with_real_blacklist）
+- 测试：tests/market_intelligence/test_naming_blacklist.py 4 passed；checkers + market_intelligence + planning_review + evidence_chain 47 passed 向后兼容；ruff 通过
+- **Learnings for future iterations:**
+  - 词典构造采用 manual_required（PRD 必含 24 条）+ manual_extra（网文主角扩充）+ first × core_seconds cross-product 去重的三段式：保证既覆盖 PRD 显式要求，又有大量 cross-product 兜底（cross-product 用 12 个 core_seconds 子集，避开 first==second 的怪名）
+  - 测试 schema 的 must_include 用 set 字面量（`set("叶林陈...")`）声明 PRD 必含字根，不要用 list 比较顺序；assert `must_set.issubset(actual_set)` 给出明确 missing diff
+  - 中文校验范围用 `"一" <= ch <= "鿿"`（U+4E00–U+9FFF 基本汉字区），单字符比较直接；不要用 `re.fullmatch(r"[一-龥]+", ...)` 因为汉字扩展 B 区会被漏判
+  - 测试不要在 fixture 里 mutate filesystem：用 `scope="module"` 加载真实 data/ 词典 + 单独用例 `check_naming_style(blacklist_path=_BLACKLIST_PATH, ...)` 跑端到端验证
+  - JSON 写盘用 `ensure_ascii=False` 让中文可读，diff/review 友好；schema 版本字段（version + updated_at）方便后续扩充时做 migration 标记
+---
