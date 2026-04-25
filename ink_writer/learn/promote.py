@@ -15,6 +15,7 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
+from ink_writer.case_library._id_alloc import allocate_case_id
 from ink_writer.case_library.models import (
     Case,
     CaseDomain,
@@ -30,13 +31,8 @@ from ink_writer.case_library.store import CaseStore
 
 
 def _next_promote_id(cases_dir: Path) -> str:
-    cases_dir.mkdir(parents=True, exist_ok=True)
-    max_seen = 0
-    for path in cases_dir.glob("CASE-PROMOTE-*.yaml"):
-        suffix = path.stem.removeprefix("CASE-PROMOTE-")
-        if suffix.isdigit():
-            max_seen = max(max_seen, int(suffix))
-    return f"CASE-PROMOTE-{max_seen + 1:04d}"
+    """并发安全分配 ``CASE-PROMOTE-NNNN``（review §二 P1#6 修复）。"""
+    return allocate_case_id(cases_dir, "CASE-PROMOTE-")
 
 
 def _severity_for_kind(kind: str) -> CaseSeverity:
@@ -78,6 +74,10 @@ def _make_promote_case(
             description=text,
             observable=[text],
         ),
+        # M5 三字段显式赋默认值（review §二 P1#5）。
+        recurrence_history=[],
+        meta_rule_id=None,
+        sovereign=False,
     )
 
 

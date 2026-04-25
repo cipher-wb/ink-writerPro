@@ -19,6 +19,7 @@ from pathlib import Path
 
 import yaml
 
+from ink_writer.case_library._id_alloc import allocate_case_id
 from ink_writer.case_library.models import (
     Case,
     CaseDomain,
@@ -119,13 +120,8 @@ def _scan_blocked_evidence(
 
 
 def _next_learn_id(cases_dir: Path) -> str:
-    cases_dir.mkdir(parents=True, exist_ok=True)
-    max_seen = 0
-    for path in cases_dir.glob("CASE-LEARN-*.yaml"):
-        suffix = path.stem.removeprefix("CASE-LEARN-")
-        if suffix.isdigit():
-            max_seen = max(max_seen, int(suffix))
-    return f"CASE-LEARN-{max_seen + 1:04d}"
+    """并发安全分配 ``CASE-LEARN-NNNN``（review §二 P1#6 修复）。"""
+    return allocate_case_id(cases_dir, "CASE-LEARN-")
 
 
 def _count_existing_learn_this_week(cases_dir: Path, now: datetime) -> int:
@@ -183,6 +179,11 @@ def _make_learn_case(
             ),
             observable=list(pattern_list),
         ),
+        # M5 三字段显式赋默认值（review §二 P1#5）：避免依赖 dataclass 默认导致
+        # dashboard 复发率聚合 / regression_tracker 难判"无复发数据" vs "无复发"。
+        recurrence_history=[],
+        meta_rule_id=None,
+        sovereign=False,
     )
 
 

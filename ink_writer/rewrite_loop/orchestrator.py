@@ -36,20 +36,54 @@ class RewriteLoopResult:
     history: list[str] = field(default_factory=list)
 
 
+def _case_in_scope(case: Any, scope_filter: dict | None) -> bool:
+    """判断 case 是否落在 ``scope_filter`` 限定的 genre/chapter 范围内。
+
+    规则（review §二 P1#4）：
+      * scope_filter 为 None 或空 → 所有 case 通过（向后兼容）。
+      * case.scope.genre 为空列表 → universal case，对任意 genre 都通过。
+      * case.scope.genre 非空 → 必须包含 scope_filter['genre']。
+      * chapter 同理：case.scope.chapter 空 → 通过；非空 → 必须包含或匹配 scope_filter['chapter']。
+    """
+    if not scope_filter:
+        return True
+    case_scope = getattr(case, "scope", None)
+    if case_scope is None:
+        return True
+
+    genre_filter = scope_filter.get("genre")
+    if genre_filter:
+        case_genres = list(getattr(case_scope, "genre", []) or [])
+        if case_genres and genre_filter not in case_genres:
+            return False
+
+    chapter_filter = scope_filter.get("chapter")
+    if chapter_filter:
+        case_chapters = list(getattr(case_scope, "chapter", []) or [])
+        if case_chapters and chapter_filter not in case_chapters:
+            return False
+
+    return True
+
+
 def collect_blocking_cases(
     compliance: Any,
     check_results: list[Any],
     case_store: Any,
+    scope_filter: dict | None = None,
 ) -> list[Any]:
-    """聚合 + 去重 + 按 severity 排序阻断 case（spec §5.4 + Q3）。
+    """聚合 + 去重 + scope 过滤 + 按 severity 排序阻断 case（spec §5.4 + Q3 + review P1#4）。
 
     Args:
         compliance: writer_self_check.ComplianceReport-like，读 ``cases_violated``
             （仅当 ``overall_passed=False``）。
         check_results: list of CheckerOutcome-like，读 ``cases_hit``（仅当 ``blocked=True``）。
         case_store: CaseStore 风格对象，``load(case_id)`` 返回 case 实例。
+        scope_filter: 可选 ``{"genre": str, "chapter": str}`` 限定召回范围；防止
+            悬疑书被推荐言情 case，也降低 410 case 全量比对的噪声。None 时不过滤
+            （向后兼容）。
 
-    缺失/load 失败的 case 静默跳过，保证一个坏 case 不会阻断整个 polish 流程。
+    缺失/load 失败的 case 静默跳过；scope 不匹配的 case 也静默跳过。
     """
 
     all_ids: list[str] = []
@@ -66,9 +100,12 @@ def collect_blocking_cases(
             continue
         seen.add(cid)
         try:
-            unique_cases.append(case_store.load(cid))
+            case = case_store.load(cid)
         except Exception:  # noqa: BLE001 — 一个坏 case 不应阻断整个聚合
             continue
+        if not _case_in_scope(case, scope_filter):
+            continue
+        unique_cases.append(case)
 
     def _severity_idx(case: Any) -> int:
         sev = getattr(getattr(case, "severity", None), "value", "P3")
@@ -90,6 +127,7 @@ def run_rewrite_loop(
     polish_fn: Callable[..., str],
     is_dry_run: bool,
     base_dir: Path | None = None,  # noqa: ARG001 — US-010 写 history 时启用
+    scope_filter: dict | None = None,
 ) -> RewriteLoopResult:
     """主循环（spec §5.2）。
 
@@ -144,7 +182,7 @@ def run_rewrite_loop(
         )
 
         blocking_cases = collect_blocking_cases(
-            compliance, check_results, case_store
+            compliance, check_results, case_store, scope_filter=scope_filter
         )
         if not blocking_cases:
             evidence.outcome = "delivered"
