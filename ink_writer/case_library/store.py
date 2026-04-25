@@ -24,8 +24,15 @@ from typing import Any
 import yaml
 
 from ink_writer.case_library.errors import CaseNotFoundError
-from ink_writer.case_library.models import Case
+from ink_writer.case_library.models import Case, CaseSeverity, CaseStatus
 from ink_writer.case_library.schema import validate_case_dict
+
+_SEVERITY_LADDER: tuple[CaseSeverity, ...] = (
+    CaseSeverity.P3,
+    CaseSeverity.P2,
+    CaseSeverity.P1,
+    CaseSeverity.P0,
+)
 
 
 class CaseStore:
@@ -84,6 +91,40 @@ class CaseStore:
         """Yield every case sorted by case_id ascending."""
         for case_id in self.list_ids():
             yield self.load(case_id)
+
+    def iter_all(self) -> Iterator[Case]:
+        """Alias of ``iter_cases`` — explicit name for M5 dashboard call sites."""
+        return self.iter_cases()
+
+    def iter_resolved(self) -> Iterator[Case]:
+        """Yield cases whose status is ``resolved`` (M5 Layer 4 source set)."""
+        for case in self.iter_cases():
+            if case.status == CaseStatus.RESOLVED:
+                yield case
+
+    def record_recurrence(self, case_id: str, record: dict[str, Any]) -> Case:
+        """Append a recurrence record + upgrade severity + flip status to ``regressed``.
+
+        - ``severity`` ladder: P3 → P2 → P1 → P0; once at P0 we stay there
+          (the recurrence count is reflected by ``len(recurrence_history)``).
+        - ``status`` is forced to ``regressed`` regardless of prior value.
+        - The merged ``record`` always carries the upgraded ``severity_after``.
+        """
+        case = self.load(case_id)
+        before = case.severity
+        try:
+            idx = _SEVERITY_LADDER.index(before)
+            after = _SEVERITY_LADDER[min(idx + 1, len(_SEVERITY_LADDER) - 1)]
+        except ValueError:  # pragma: no cover — enum guarantees presence
+            after = before
+        merged = dict(record)
+        merged.setdefault("severity_before", before.value)
+        merged["severity_after"] = after.value
+        case.recurrence_history.append(merged)
+        case.severity = after
+        case.status = CaseStatus.REGRESSED
+        self.save(case)
+        return case
 
     def pack_jsonl(self, out_path: Path) -> int:
         """Export all cases as newline-delimited JSON; returns the number written."""

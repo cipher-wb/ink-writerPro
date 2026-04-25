@@ -9,6 +9,10 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
 - Python 入口可执行脚本须调 `runtime_compat.enable_windows_utf8_stdio()`。
 - 项目用 python3（不是 python）；testpaths 已有 ~50 个目录单行；fixtures 在 `tests/<module>/conftest.py`。
 - legacy case yaml 路径：`data/case_library/cases/CASE-*.yaml`（410 个）。
+- `__main__.py` Windows UTF-8 引导块（参考 `ink_writer/creativity/__main__.py`）：先 `import os/sys` 把 `ink-writer/scripts` 加到 `sys.path`，try/except 调 `runtime_compat.enable_windows_utf8_stdio()`，然后才能 import 业务模块。pyproject 根 `exclude` 已豁免 ruff E402/I001 风险（`tests*`/`ink-writer*` 都不入 ruff，`ink_writer/**/__main__.py` 同 pattern 已有先例可参照）。
+- `pyproject.toml` 顶层 `exclude` 排除了 `tests*`，所以 ruff 只 lint `ink_writer/**`；新增模块只需保证主代码 `ruff check` 全绿。
+- 严重程度阶梯（regression_tracker / record_recurrence 共用）：`P3 → P2 → P1 → P0`，到 P0 不再升；累计次数靠 `len(recurrence_history)`。常量 `_SEVERITY_LADDER` 在 `ink_writer/case_library/store.py`。
+- evidence_chain 检查器命中 case_id 至少 4 种载体：`checkers[].cases_hit` / `checkers[].cases_violated` / `checkers[].details.cases_hit` / `checkers[].details.cases_violated`；既支持 `["CASE-..."]` 字符串，也支持 `[{"case_id": "CASE-..."}]` dict。M5 解析器须把这些分支都覆盖（见 `regression_tracker/tracker.py::_hit_case_ids`）。
 
 ## 2026-04-25 - US-001 case schema 扩展（recurrence_history / meta_rule_id / sovereign）
 - 实现：
@@ -30,4 +34,32 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **schema 加新 optional**：直接放在 properties 末尾即可；不要动 required；schema 设了 additionalProperties:false，所以不加 schema 就一定挂。
   - **Case.to_dict 不要省略 None/[]**：M5 dashboard 期望读 case yaml 时新字段总在；省略只会让下游写一堆 `case.get("meta_rule_id", None)`。
   - **测试扫 410 yaml**：CASES_DIR = `repo_root / "data" / "case_library" / "cases"`；一次 round-trip 即可验证向后兼容。
+---
+
+## 2026-04-25 - US-002 Layer 4 regression_tracker 模块
+- 实现：
+  - `ink_writer/regression_tracker/{__init__,models,tracker,__main__}.py`：`RecurrenceRecord` dataclass + `scan_evidence_chains` (按 (book, case_id) dedup，支持 `--since` 过滤) + `apply_recurrence` + dry-run/`--apply` CLI。
+  - `ink_writer/case_library/store.py`：暴露 `iter_all` / `iter_resolved` / `record_recurrence(case_id, record)`；新增 `_SEVERITY_LADDER` 常量给 tracker 复用，避免严重程度升级语义重复实现。`record_recurrence` 自动写 `severity_before/after`、`status=regressed`、追加 history、save 持久化。
+  - `tests/regression_tracker/{__init__,test_tracker}.py`：5 用例覆盖 chapter evidence 检测 / 跳过 pending / 同 book dedup / planning evidence (chapter=None) / severity 升级到 P0 后稳定。fixtures 直接 `_make_case` + `_write_chapter_evidence` 写临时 evidence json。
+- Files changed:
+  - ink_writer/case_library/store.py
+  - ink_writer/regression_tracker/__init__.py (new)
+  - ink_writer/regression_tracker/models.py (new)
+  - ink_writer/regression_tracker/tracker.py (new)
+  - ink_writer/regression_tracker/__main__.py (new)
+  - tests/regression_tracker/__init__.py (new)
+  - tests/regression_tracker/test_tracker.py (new)
+- 验证：
+  - `pytest tests/regression_tracker/ -v --no-cov` → 5 passed
+  - `pytest tests/case_library/ tests/evidence_chain/ -v --no-cov` → 55 passed (向后兼容)
+  - `python3 -m pytest --no-cov` → **3821 passed / 23 skipped / 0 failed / 3 warnings**（371s）
+  - `python3 -m ink_writer.regression_tracker --base-dir data` → exit 0 + JSON `{detected: 0, applied: 0, dry_run: true, records: []}`
+  - `python3 -c "from ink_writer.regression_tracker import scan_evidence_chains, apply_recurrence, RecurrenceRecord"` → import OK
+  - `ruff check ink_writer/regression_tracker/tracker.py ink_writer/case_library/store.py` → All checks passed
+- Learnings for future iterations:
+  - **`store.record_recurrence` 单次完成 4 件事**：load → 升 severity → status=regressed → 追加 history → save。tracker 一行调用即可；下游 US-005 dashboard 计数也直接读 `case.recurrence_history` 长度。
+  - **scan dedup 必须按 (book, case_id)**：spec §4 Q3 默认只看同书内复发，跨书允许同 case 各自一条。第一次遇到的 evidence path 即被记录，避免后续同 book 同 case 重复升级。
+  - **evidence checker hits 4 种位置**：`cases_hit` / `cases_violated`（顶层 + `details` 内）；M3/M4 章节 / 策划期 evidence 都用同一个 `_hit_case_ids` 解析器。新增 checker 时按这个 contract 写就自动接入 Layer 4。
+  - **`__main__.py` Windows 引导**：复制 `ink_writer/creativity/__main__.py` 第 1-15 行原样使用；ruff 顶层 `exclude` 不会 lint `ink-writer*`，但 `ink_writer/**/__main__.py` 走的是同样模式且只触 I001 — 跟现有约定保持一致即可。
+  - **测试不依赖 410 真实 case**：`tmp_path / "case_library"` 现造一个空 store，用 `_make_case` helper 构 in-memory Case 喂进去，速度 < 0.1s；evidence 也写 tmp_path 下 fake JSON。整张测试图与生产数据零耦合。
 ---

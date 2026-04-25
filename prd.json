@@ -39,8 +39,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：regression_tracker 模块（models/tracker/__main__）+ store.iter_resolved/iter_all/record_recurrence + 5 用例全绿；CLI dry-run 输出 detected=0 退出 0；全量 pytest 3821 passed / 23 skipped / 0 failed。"
     },
     {
       "id": "US-003",
