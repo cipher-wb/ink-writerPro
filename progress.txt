@@ -306,3 +306,29 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **缺文件优雅返回空 list**：spec 明确"缺 project_memory.json 时返回空 list 不抛错"——也包含 OSError/JSONDecodeError 容错。下游 ink-learn CLI 调时不需要 try/except 包裹。
   - **失败/成功模式严重程度映射**：failure → P2（短期重复证据强烈，宜较高优先级）；success → P3（成功模式重复值得记录但不 blocking）。tags 双标 `m5_promote` + kind 让 dashboard 切片快。
 ---
+
+## 2026-04-25 - US-011 docs/USER_MANUAL.md（作者使用手册 5 节）
+- 实现：
+  - 新增 `docs/USER_MANUAL.md`，6 个 H2（5 节正文 + 1 个跨手册导航附录），229 行（≥ 130 验收线）。
+  - §1 开新书（ink-init）：含 1.1 quick 模式（4 档激进度 + Quick Step 1.5 金手指三重校验）+ 1.2 detailed 苏格拉底式深度提问 + 1.3 Step 99 策划期审查（M4 P0 必跑命令样例）+ 1.4 `--skip-planning-review` 紧急绕过。
+  - §2 写章（ink-write）：含 2.1 主流程 6 个 Step + 2.2 Step 1.5 M3 写章合规循环（dry-run vs 真阻断）+ 2.3 A/B 通道 M5（含 ab_channels.yaml 配置块 + `--channel A` 命令示例）+ 2.4 `--skip-compliance` 紧急绕过。
+  - §3 看 dashboard：含 3.1 启动命令 + 3.2 4 大指标解读表（recurrence_rate / repair_speed_days / editor_score_trend / checker_accuracy 各自算法 + 阈值）+ 3.3 切换推荐算法（counter < 5 → continue / pass_rate < 0.60 → investigate / 否则 switch）+ 3.4 周报命令（macOS/Linux + PowerShell sibling 双版本）。
+  - §4 录编辑反馈：含 4.1 ink case ingest CLI + 4.2 editor_reviews yaml schema（含 chapter/date/score/pros/cons/suggestions 完整示例）+ 4.3 ink case approve/reject（含 `--batch` 多个 + reject 加 reason）。
+  - §5 应急绕过：列 6 项（5 个 `--skip` flag：planning-review / compliance / preflight / dry-run / channel A|B + git checkout tag rollback）+ 共同契约（落盘 outcome=skipped + 可审计 + 恢复后补跑或交 ink-learn auto_case）。
+  - 附录提供跨手册导航（EDITOR_FEEDBACK_GUIDE / M-ROADMAP / Windows 兼容守则）。
+- Files changed:
+  - docs/USER_MANUAL.md (new, 229 lines)
+  - prd.json (US-011 passes=true + notes)
+- 验证：
+  - `wc -l docs/USER_MANUAL.md` → 229（≥ 130 ✓）
+  - `grep -cE '^## ' docs/USER_MANUAL.md` → 6（≥ 5 ✓）
+  - `test -f docs/USER_MANUAL.md` → exit 0
+  - 5 节标题完整：grep `## 1\.|## 2\.|## 3\.|## 4\.|## 5\.` 全部命中
+  - prd.json json.load 通过
+- Learnings for future iterations:
+  - **手册 ≠ tutorial**：spec §11.3 明确"不写'教程'，不重复 SKILL.md 内容；每节 ~200-400 字"。手册定位是索引 + 最小工作流 + 关键参数表，详尽参数引导用户回看 SKILL.md。
+  - **5 节验收 = 5 个 H2 + 子节齐全**：grep 必须覆盖 `## 1.` ... `## 5.`；每节内 H3 子节按"主流程 → 关键参数 → 紧急绕过"三段式排布，便于快速跳转。
+  - **PowerShell sibling 块**：dashboard 周报 / 写章 / 开新书任何 CLI 命令示例都建议双版本（macOS/Linux + PowerShell 5.1）；不强制 BOM 但要给提示，参考 CLAUDE.md Windows 兼容守则。
+  - **应急绕过共同契约（spec §5）**：所有 `--skip*` flag 落盘 `outcome=skipped` + `skip_reason` + 可审计；恢复后由 ink-learn `--auto-case-from-failure`（US-009）自动补登 case 或人工补跑正式审查。这是 US-012 编辑反馈手册"复发申诉"段的接续点。
+  - **dashboard 4 大指标默认值与占位说明**：`repair_speed_days` 当前是 M5 占位 7.0，待 case 加 `resolved_at` 字段后才有真实值；`checker_accuracy` 缺 `data/checker_accuracy_samples/` 目录直接 0.0；用户手册需明示这两点避免误读。
+---

@@ -223,8 +223,8 @@
         "Typecheck passes"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：docs/USER_MANUAL.md 229 行 / 6 个 H2（5 节 + 跨手册导航附录）；§1 开新书含 quick/detailed 两模式 + Step 99 策划期审查（M4） + --skip-planning-review；§2 写章含 Step 1.5 写章合规循环（M3） + A/B 通道（M5 §2.3 含 PowerShell sibling） + --skip-compliance 紧急绕过；§3 dashboard 含 4 大指标解读表 + 切换推荐算法 + 周报命令（macOS/PowerShell 双版本）；§4 录编辑反馈含 ink case ingest + editor_reviews yaml schema 完整示例 + ink case approve/reject/--batch；§5 应急绕过列出 6 项（5 个 --skip flag + git checkout tag rollback）。验收：行数 229 ≥ 130；H2 段数 6 ≥ 5；test -f 通过。"
     },
     {
       "id": "US-012",
