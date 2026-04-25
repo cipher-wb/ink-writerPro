@@ -211,8 +211,8 @@
         "Typecheck passes"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：ink-write SKILL.md 新增 Step 1.5 — M3 写章合规循环（含 Python 示例 + Windows PowerShell sibling + 退出码硬门槛 + evidence_chain 必带语义）；grep rewrite_loop|require_evidence_chain 命中 12 行 ≥ 3"
     },
     {
       "id": "US-012",

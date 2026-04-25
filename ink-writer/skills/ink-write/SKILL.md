@@ -902,6 +902,79 @@ python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" extract
 - 若所有检查均为空，则不追加”金丝雀写作约束”板块（执行包保持原样）。
 - 注入完成后，执行包的最终版本即为 Step 2A 消费的输入。
 
+### Step 1.5 — M3 写章合规循环（2026-04-25 起强制）
+
+本步骤把 Step 2A 起草后的章节文本送入 M3 写章合规循环：`load_thresholds` → `run_rewrite_loop`（内部 self_check + 5 个 checker + polish 重写，最多 3 轮）→ `write_evidence_chain` → `require_evidence_chain` 强制校验。dry-run 期间 `is_dry_run`/`increment_dry_run_counter` 控制阈值是否真阻断。
+
+**硬门槛**：
+- 任一子调用退出码非 0 或 raise，**不要继续后续 step**（含 Step 2C 计算闸门、Step 3 审查、Step 4 润色、Step 5 Data Agent、Step 6 Git 备份），直接终止本章流程并由人工介入。
+- `evidence_chain.json` 缺失会让 ink-write 直接退出（`require_evidence_chain` raise `EvidenceChainMissingError`），任何分支都不得绕过该校验。
+
+```python
+# Step 1.5 reference flow（在 Step 2A 起草后立刻执行）
+from pathlib import Path
+
+from ink_writer.checker_pipeline.thresholds_loader import load_thresholds
+from ink_writer.evidence_chain import (
+    EvidenceChain,
+    require_evidence_chain,
+    write_evidence_chain,
+)
+from ink_writer.rewrite_loop.dry_run import increment_dry_run_counter, is_dry_run
+from ink_writer.rewrite_loop.orchestrator import run_rewrite_loop
+
+cfg = load_thresholds()  # 读 config/checker-thresholds.yaml；缺文件 raise
+
+dry_run = is_dry_run(cfg)  # cfg.dry_run.enabled 且 counter < observation_chapters
+
+result = run_rewrite_loop(
+    book=book,
+    chapter=chapter,
+    chapter_text=draft_text,
+    cfg=cfg,
+    case_store=case_store,
+    self_check_fn=self_check_fn,
+    checkers_fn=checkers_fn,
+    polish_fn=polish_fn,
+    is_dry_run=dry_run,
+    base_dir=Path("."),
+)
+
+# outcome ∈ {"delivered", "needs_human_review"}；后者会有 4 版 r0..r3 留底
+write_evidence_chain(
+    book=book,
+    chapter=chapter,
+    evidence=result.evidence,
+    base_dir=Path("data"),
+)
+
+# 强制校验：缺文件 raise EvidenceChainMissingError，本步骤直接退出
+require_evidence_chain(book=book, chapter=chapter, base_dir=Path("data"))
+
+if dry_run:
+    increment_dry_run_counter()  # 持久化到 data/.dry_run_counter；达 observation_chapters 后 auto-switch 真阻断
+```
+
+<!-- windows-ps1-sibling -->
+```powershell
+# Windows PowerShell sibling — Step 1.5 入口（PS 5.1 兼容；UTF-8 BOM 必需）
+$env:PYTHONIOENCODING = "utf-8"
+python -c @"
+from pathlib import Path
+from ink_writer.checker_pipeline.thresholds_loader import load_thresholds
+from ink_writer.evidence_chain import require_evidence_chain, write_evidence_chain
+from ink_writer.rewrite_loop.dry_run import increment_dry_run_counter, is_dry_run
+from ink_writer.rewrite_loop.orchestrator import run_rewrite_loop
+
+cfg = load_thresholds()
+dry_run = is_dry_run(cfg)
+# run_rewrite_loop / write_evidence_chain / require_evidence_chain 调用同上 *.py 示例
+"@
+if ($LASTEXITCODE -ne 0) { throw "Step 1.5 failed; do not proceed to Step 2C/3/4/5/6." }
+```
+
+> 失败语义：`run_rewrite_loop` 在 3 轮重写仍失败时返回 `outcome="needs_human_review"` 并在 `data/<book>/needs_human_review.jsonl` append 一行；`evidence_chain.json` 仍会写盘以保留全链路审计；后续 step 只在 `outcome="delivered"` 时继续。
+
 ### Step 2A：正文起草
 
 执行前必须加载（静态优先，最大化 cache 命中）：

@@ -176,3 +176,18 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - test_appends_not_overwrites 用 `**common` + `{**common, "chapter": "ch002"}` 模式简化重复 kwargs，2 行就能验证 append 语义
 - Next: US-011 ink-write SKILL.md 集成 M3 写章合规循环 + Windows PowerShell sibling
 ---
+
+## [2026-04-25 14:30] - US-011
+- 修改 `ink-writer/skills/ink-write/SKILL.md`：在 Step 1（执行包构建）章节末尾、Step 2A 之前插入 `### Step 1.5 — M3 写章合规循环（2026-04-25 起强制）` 章节
+- Step 1.5 内容：硬门槛说明 + Python reference flow（load_thresholds → run_rewrite_loop → write_evidence_chain → require_evidence_chain → is_dry_run/increment_dry_run_counter）+ `<!-- windows-ps1-sibling -->` PowerShell 块 + 失败语义注释
+- 明确"退出码非 0 时不要继续后续 step (Step 2C/3/4/5/6)"+"evidence_chain.json 缺失会让 ink-write 直接退出（EvidenceChainMissingError）"
+- 验证：`grep -c "rewrite_loop\|require_evidence_chain" ink-writer/skills/ink-write/SKILL.md` = 12 ≥ 3
+- 验证 regression：tests/audit + tests/core + tests/rewrite_loop + tests/evidence_chain + tests/checker_pipeline 175 passed
+- **Learnings for future iterations:**
+  - 文档插入 Step 1.5 用 `### Step 1.5` (level 3) 与现有 Step 同级；PRD AC 写"## Step 1.5"是简写，按文档结构选 level 3 才一致
+  - SKILL.md 的 Step 编号是非阻塞的 sibling 序列（Step 0 / 0.5 / 0.6 / 0.7 / 0.8 / 1 / 1.5 / 2A / 2A.1 / 2A.5 / 2B / 2C / 3 / 4 / 4.5 / 5 / 5.5 / 6）；插入新 step 直接选小数点中段不与已有冲突
+  - Windows PowerShell sibling 的 `<!-- windows-ps1-sibling -->` 注释是 _patch_skills_win.py 工具识别锚点；后续新增 .sh 入口的 SKILL.md 都要带这一行 + 紧跟一个 ```powershell 代码块
+  - 文档变更不需要跑 typecheck（项目无 mypy/pyright，纯 .md 改动 ruff 不扫）；只需 grep + 回归测试套件即可
+  - PRD AC 的 grep 数 ≥ N 类约束很轻松满足：在 Python import 块、调用块、PowerShell sibling 块、失败语义段落散布关键字 4-5 处即可破 10
+- Next: US-012 dry-run 5 章 smoke + 切换报告生成
+---
