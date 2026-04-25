@@ -1,8 +1,8 @@
 # Ralph Progress Log
-Started: 2026-04-24 (m2-data-assets)
-Source PRD: tasks/prd-m2-data-assets.md
-Branch: ralph/m2-data-assets
-Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17/17 ✅, coverage 82.72%)
+Started: 2026-04-25 (m3-p1-loop)
+Source PRD: tasks/prd-m3-p1-loop.md
+Branch: ralph/m3-p1-loop
+Prev run: m2-data-assets → m2-data-assets-partial tag (10/12 ✅ + 403 cases real run，US-008 corpus_chunks deferred 智谱 GLM API stall，coverage 82.72%)
 
 ## Codebase Patterns
 (承接自前轮 ralph runs，保留跨 PRD 通用条目。逐轮新增追加到下方。)
@@ -17,269 +17,30 @@ Prev run: m1-case-library-foundation → m1-foundation tag, merged to master (17
 - **断链检测标准写法**：`p.is_symlink() and not p.exists()`（`Path.exists()` 会 follow 符号链接，所以返 False 即 target 丢失）。
 - **仓库级 audit 红线会扫全仓 .py**：`tests/audit/test_cli_entries_utf8_stdio.py::test_repo_has_no_cli_entry_missing_utf8_stdio`（任何含 `__main__` 的 .py 必须出现 `enable_windows_utf8_stdio` 字面量）与 `tests/core/test_safe_symlink.py::test_repo_has_no_bare_symlink_calls_outside_primitives`（禁止 `os.symlink` / `Path.symlink_to` 裸调用，须走 `runtime_compat.safe_symlink`；测试 fixture 处用 `# c5-ok: 原因` 豁免）。**新增任何 .py 之后一定要跑这两个测试**，不能只依赖子目录 pytest 绿灯。
 - **PEP 440 `~=X.Y` 语义**：`>=X.Y, <(X+1).0`（允许次版本号上升到 `(X+1).0` 之前），不是"只允许 X.Y.z"。要锁次版本号写 `~=X.Y.0`。PRD 里的"输出 1.12.x"类措辞是估值，判合规看约束不看措辞。
-- **跨目录 CLI 入口三段式 sys.path bootstrap**（M1 US-009 patterns）：`scripts/<sub>/*.py` 下的 CLI 用 `_REPO_ROOT = Path(__file__).resolve().parent.parent.parent` + `_INK_SCRIPTS = _REPO_ROOT / "ink-writer" / "scripts"` 两个 `sys.path.insert(0, ...)` bootstrap，然后在 imports 上加 `# noqa: E402` 抑制 ruff "import not at top"。深度更深的目录（如 `scripts/foo/bar/*.py`）相应加 parent 层级。
-- **M1 已建组件 (M2 起复用，不要重建)**:
+- **跨目录 CLI 入口三段式 sys.path bootstrap**：`scripts/<sub>/*.py` 下的 CLI 用 `_REPO_ROOT = Path(__file__).resolve().parent.parent.parent` + `_INK_SCRIPTS = _REPO_ROOT / "ink-writer" / "scripts"` 两个 `sys.path.insert(0, ...)` bootstrap，然后在 imports 上加 `# noqa: E402` 抑制 ruff "import not at top"。M3 不新增独立 CLI 入口（通过 ink-write SKILL.md 间接调用），无需这个模板。
+- **M2 LLM 选型实战教训**：智谱 GLM-5.1 RPM 配额过低（1302 rate limit 死锁），glm-4.6 单本 chunking 9min 仅 4 chunks 太慢；M2 切片管线终选 glm-4-flash + LLM_MIN_INTERVAL=0.2s throttle。M3 调用量小（每章 9 调用 vs 切片每章 ~6 调用 × 30 章），可用 glm-4.6 提质量；通过 `~/.claude/ink-writer/.env` 的 `LLM_MODEL` 字段切换 (Q14)。
+- **LLMClient wrapper 形态**：scripts/corpus_chunking/llm_client.py 提供 anthropic-shaped `client.messages.create(max_tokens=, messages=...)` 接口，内部走 OpenAI SDK 调智谱 BigModel。新代码（如 M3 writer-self-check / 2 个 checker / polish-agent）若调 LLM，复用同样的 anthropic-shaped wrapper，便于后续切换 LLM provider 不动业务代码。
+- **M1+M2 已建组件 (M3 起复用，不要重建)**:
   - `ink_writer/case_library/{store, schema, ingest, models}` — `CaseStore` / `CaseIndex` / `ingest_case(sha256 dedup)` / `Case dataclass + 5 enums`
-  - `ink_writer/qdrant/{client, payload_schema}` — `get_client_from_config(QdrantConfig)` / `EDITOR_WISDOM_RULES_SPEC` + `CORPUS_CHUNKS_SPEC` (4096 维 cosine, payload_index `genre/scene_type/quality_score/source_type/source_book/case_ids`) / `ensure_collection(client, spec)` 幂等
+  - `ink_writer/case_library/cases/CASE-2026-{0000..0402}.yaml` — 403 active+pending cases (236 active hard + 147 soft pending + 19 info pending + zero-case)
+  - `ink_writer/qdrant/{client, payload_schema}` — CORPUS_CHUNKS_SPEC vector_size 2048 (智谱 embedding-3) / `ensure_collection`
   - `ink_writer/preflight/{checks, checker, cli}` — 6 项健康检查 + auto-create infra_health case
-  - `scripts/maintenance/fix_reference_corpus_symlinks.py` — 已修 1487 章节断链
-  - `scripts/qdrant/{docker-compose.yml, start.sh/.ps1, stop.sh/.ps1}` — Qdrant 1.12.4 单机 docker
-  - `scripts/case_library/init_zero_case.py` — CASE-2026-0000 (infra_health zero-case)
-  - `data/editor-wisdom/rules.json` — 402 条规则（hard 236 / soft 147 / info 19），M2 转换器输入
+  - `scripts/corpus_chunking/llm_client.LLMClient` — anthropic-shaped wrapper over OpenAI-compatible client
+  - `data/editor-wisdom/rules.json` — 402 条规则（原始数据）
+  - `data/case_library/cases/` — M3 read-only 输入（writer-self-check 评估时 query active cases）
 
 ## ⚠️ Long-Term Roadmap Reminder（每轮 ralph 启动新 AI 实例时必读）
 
-本 PRD 是 **5 周 M1-M5 roadmap 的第 2 步**。完成本轮所有 user stories 后，**绝不能停下**——必须继续推进 M3-M5。
+本 PRD 是 **5 周 M1-M5 roadmap 的第 3 步（30 → 50 分质量拐点）**。完成本轮所有 user stories 后，**绝不能停下**——必须继续推进 M4-M5（或回头补 M2 corpus_chunks）。
 
 **完整 roadmap**：`docs/superpowers/M-ROADMAP.md`（cat 这个文件了解全貌）
 
-**M2 之后下一步（给完成本 PRD 的最后一个 AI 实例 / 给打开新会话的人类）**：
-1. 验证 M2 收尾：`git tag m2-data-assets` + 把 `M-ROADMAP.md` 中 M2 状态从 🟢 改为 ✅ + 填完成日期 2026-04-24
-2. 启动 M3：在新会话里说"基于 docs/superpowers/specs/2026-04-23-...md §6 P1 + §9 M3 + M-ROADMAP.md，brainstorm M3 design"
-3. 走标准流程：brainstorm spec → writing-plans → /prd → /ralph → bash scripts/ralph/ralph.sh
+**M3 之后下一步（给完成本 PRD 的最后一个 AI 实例 / 给打开新会话的人类）**：
+1. 验证 M3 收尾：`git tag m3-p1-loop` + 把 `M-ROADMAP.md` 中 M3 状态从 🟢 改为 ✅ + 填完成日期 2026-04-25
+2. 启动 M4：在新会话里说"基于 docs/superpowers/specs/2026-04-23-...md §3 P0 上游 + §9 M4 + M-ROADMAP.md，brainstorm M4 design"
+3. 或回头补 M2 corpus_chunks：参考 docs/superpowers/M2-FOLLOWUP-NOTES.md A 选项（换 LLM provider 重跑 ingest）
+4. 走标准流程：brainstorm spec → writing-plans → /prd → /ralph → bash scripts/ralph/ralph.sh
 
-**当前 M（M2）目标**：场景级切片 + 病例库种子（≥ 2500 chunks + ≥ 200 active cases）
-**下一 M（M3）目标**：P1 下游闭环（writer-self-check + 阻断重写 + 2 个新 checker）— 30→50 分质量拐点
+**当前 M（M3）目标**：writer-self-check + 阻断重写 + 2 个新 checker + evidence_chain + dry-run 5 章观察 — 30→50 分质量拐点
+**下一 M（M4）目标**：P0 上游策划层（4 ink-init checker + 3 ink-plan checker + 起点 top200 简介库 + LLM 高频起名词典）
 **最终 M（M5）目标**：Dashboard + 自进化闭环 + 用户扩展接口
-
-## 2026-04-24 - US-001 corpus_chunking 包骨架 + config + 测试目录
-- 新增 scripts/corpus_chunking/{__init__.py, models.py, prompts/.gitkeep}
-  - models.py 暴露 RawChunk / TaggedChunk / QualityBreakdown / IngestReport / SourceType（StrEnum）
-  - TaggedChunk.quality_score 用 4 维加权（默认 30/30/20/20）从 QualityBreakdown.weighted_score() 算
-  - TaggedChunk.to_dict() 组合 raw.to_dict() + 11 个 tagged 字段 + quality_breakdown dict
-  - IngestReport.success_rate 单元化，chunks_raw=0 时返 0.0 不抛 ZeroDivision
-- 新增 config/corpus_chunking.yaml 三段配置（scene_segmenter / chunk_tagger / chunk_indexer），spec §3.5 权威版
-- 新增 tests/corpus_chunking/{__init__.py, conftest.py, test_models.py}
-  - conftest.py 提供 sample_chapter_text / sample_raw_chunk / sample_tagged_chunk fixtures
-  - test_models.py 3 用例全绿（serialize / round-trip 验加权 / report aggregate）
-- pytest.ini testpaths 行尾追加 tests/corpus_chunking（保持单行）
-- 验收：pytest tests/corpus_chunking/test_models.py -v --no-cov → 3 passed；tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py → 20 passed；ruff check scripts/corpus_chunking/ tests/corpus_chunking/ → All checks passed
-- **Learnings for future iterations:**
-  - **StrEnum 优于 str+Enum 双继承**：M1 case_library/models.py 已用 StrEnum（Python 3.11+），ruff UP042 会强制这一风格。新写 enum 直接 `class X(StrEnum)` 避免走弯路。
-  - **ruff I001 会自动排序 `import pytest` 与 `from scripts...` 混合 block**：写测试 import 时先写 `from __future__ import annotations`，空行，再 import pytest 与项目模块；--fix 会把 pytest 提到 project module 之上（stdlib → third-party → first-party 顺序）。
-  - **三段配置 YAML schema** 直接按 spec §3.5 原样落盘：model 用字符串（后续 US-002 从 cfg["scene_segmenter"]["model"] 读），quality_weights 用 dict 形式便于 US-003 cfg.quality_weights[key] 取值。
-  - **TaggedChunk dataclass 内嵌 RawChunk**：tagged.raw 可取原始字段（chunk_id/source_book/...），to_dict 合并字段，保 Qdrant payload 扁平。后续 chunk_indexer upsert 直接用 tagged.to_dict() 当 payload。
----
-
-## 2026-04-24 - US-002 scene_segmenter（Haiku 切场景边界）
-- 新增 scripts/corpus_chunking/scene_segmenter.py：暴露 `segment_chapter(*, client, cfg, book, chapter, text) -> list[RawChunk]` + `SegmenterConfig` dataclass
-  - JSON 解析失败重试 `cfg.max_retries` 次；仍失败返 `[]`（caller 决定写 failures.jsonl）
-  - _parse_json 含 markdown unwrap 容错（`re.search(r"\{.*\}", re.DOTALL)`）
-  - _rechunk_oversize 按句号/感叹号/问号边界切分超长 chunk（`> max_chunk_chars`）
-  - chunk_id 规则：`CHUNK-{book}-{chapter}-§{N}`（章节内顺序 1..M）
-  - 非超长 chunk 直接保留 LLM 原始 char_range；超长切分时按 sub.len 累加 sub_start
-- 新增 scripts/corpus_chunking/prompts/scene_segmenter.txt（8 种 scene_type + 切片规则 + 严格 JSON 输出格式）
-- 新增 tests/corpus_chunking/test_scene_segmenter.py 4 用例全绿：happy / retry-on-invalid-json / empty-after-max-retries / rechunk-oversize
-- 验收：pytest tests/corpus_chunking/test_scene_segmenter.py → 4 passed；tests/audit+tests/core → 20 passed；ruff check scripts/corpus_chunking/ tests/corpus_chunking/ → All checks passed；py_compile OK
-- **Learnings for future iterations:**
-  - **LLM 返回 char_range 与 text 长度不一致是常态**：LLM 可能返 `text_len < char_range[1]-char_range[0]`（截断）或相反。非超长情况下**保留 LLM 原始 char_range**（信任 LLM 的源定位），只有超长切分时才按 sub.len 累加 sub_start。错误做法是一律从 text_len 重算，会让 happy path 测试失败（char_range[1] 被改成 len(text)）。
-  - **`re.search(r"\{.*\}", text, re.DOTALL)` 是 LLM JSON 恢复的"双保险"**：许多 LLM（含 Haiku）偶尔会在 JSON 外包 ```json ... ``` 或前置解释文字。先 `json.loads(raw)` 快路径；失败再正则抓第一个 `{...}`；都失败才 None 进入重试。
-  - **`_rechunk_oversize` 的句末边界阈值 `last_period > 100`**：保证切分点不过于靠近起始（否则第一块可能 < 200 违反 min_chunk_chars 语义）。如果最后一段（`cursor + last_period + 1 >= len(text)`）也要走 `cut=end` 避免把剩余拼成长尾。
-  - **Haiku 入口不需要 `__main__`**：scene_segmenter.py 纯 library，无 CLI 入口，因此不需要 `enable_windows_utf8_stdio()` 调用；audit 红线只扫含 `if __name__ == "__main__":` 的 .py。
----
-
-## 2026-04-24 - US-003 chunk_tagger（Haiku 打 6 标签 + 4 维加权 quality_score）
-- 新增 scripts/corpus_chunking/chunk_tagger.py：暴露 `tag_chunk(*, client, cfg, chunk, genre, ingested_at, source_type) -> TaggedChunk` + `TaggerConfig` dataclass
-  - TaggerConfig.weights_tuple() 把 YAML `quality_weights` dict 转 `(tension, originality, language_density, readability)` 四元组
-  - 4 维加权由 tagger 内部完成：把 cfg.quality_weights 存入 TaggedChunk.quality_weights 字段，由 `quality_score` property 按权重计算
-  - genre 从 caller 传入；payload 里若 LLM 返 genre 一律丢弃（防跨书漂移）
-  - LLM 失败（JSON 解析失败或缺 quality_breakdown 字段）重试 max_retries 次；仍失败 → 返回 scene_type=tagging_failed + QualityBreakdown(0,0,0,0)（quality_score=0）+ borrowable_aspects=[tagging_failed]
-  - _parse_json 含 markdown unwrap 容错（复用 scene_segmenter 同款正则）
-  - KeyError/TypeError/ValueError 在解析后兜底 → 退回 tagging_failed（不炸）
-- 新增 scripts/corpus_chunking/prompts/chunk_tagger.txt：6 标签 + 4 维独立打分，严格 JSON schema，显式要求不要输出 genre/总加权分
-- 更新 scripts/corpus_chunking/models.py：TaggedChunk 增 `quality_weights: tuple[float,float,float,float] = (0.3, 0.3, 0.2, 0.2)` 字段；`quality_score` property 改用 self.quality_weights 计算（默认值与老行为字节级一致）
-- 新增 tests/corpus_chunking/test_chunk_tagger.py 3 用例全绿：happy（验 0.9*0.3+0.8*0.3+0.7*0.2+0.9*0.2=0.83）/ failure_returns_zero_quality（max_retries=2 验 call_count=2 + scene_type=tagging_failed + quality_score=0 + borrowable=[tagging_failed]）/ uses_passed_genre_not_llm（LLM 返 ["LLM-guessed-genre"] → 最终 genre=["都市"]）
-- 验收：pytest tests/corpus_chunking/test_chunk_tagger.py → 3 passed；pytest tests/corpus_chunking → 10 passed（含 US-001/US-002 老用例无回归）；audit 2 项 20 passed；ruff check → All checks passed；py_compile OK
-- **Learnings for future iterations:**
-  - **给 dataclass 加字段必须带 default 且放末尾**：TaggedChunk 已有 4 个无 default 字段（raw/scene_type/...），新加 `quality_weights` 必须有 default 否则破坏所有 caller；放 `ingested_at` 之后保序。这样 `test_tagged_chunk_round_trip` 的老构造方式（无 quality_weights kwarg）仍工作。
-  - **quality_weights 存到 TaggedChunk 而非 tagger 外部**：这样序列化回读后 quality_score property 仍给对的值，Qdrant payload / metadata.jsonl 下游不需要记 weights。权衡：相当于每个 TaggedChunk 多存 4 浮点（≈32B），可接受。
-  - **LLM "返回加权后总分" 是常见污染**：prompt 必须**显式要求不要输出加权总分**（"不要输出 genre；不要输出加权后的总分"）。tagger 拿到 raw 4 维再自己算。否则不同批次权重漂移、不同 LLM 版本实现差异会污染召回排序。
-  - **退路 tagging_failed 的 quality_score=0 靠 QualityBreakdown(0,0,0,0)**：无需给 TaggedChunk 加特殊 "failed" flag，只要四维全零则加权和一定 0，天然拒绝被索引（chunk_indexer 可过滤 quality_score<threshold）。
-  - **TaggerConfig max_retries=3 意味 **最多调 3 次**（不是 3 次重试后再跑一次）**：循环用 `for _ in range(cfg.max_retries)`；失败 case 的 `call_count == cfg.max_retries`。PRD 一行说 "max_retries 次" 就是总次数。跟 scene_segmenter 保持一致。
-  - **prompt 文件占位符只有一个 `{chunk_text}`**：tagger 不需要 book/chapter context（LLM 评估切片本身足矣）；scene_segmenter 则需要 3 个（book/chapter/chapter_text）。简单占位符 `.replace("{chunk_text}", text)` 不用 format（防 `{` `}` 误触 KeyError）。
----
-
-## 2026-04-24 - US-004 embedding_client + chunk_indexer
-- 新增 scripts/corpus_chunking/embedding_client.py：暴露 `EmbeddingClient` + `EmbeddingConfig` + `EmbeddingError`
-  - `EmbeddingClient(cfg, _client=None)`：未注入 `_client` 时懒建 `openai.OpenAI(base_url, api_key)`；`openai` 包缺失时在显式构造路径抛 `RuntimeError`（测试走 `_client=MagicMock` 不触发）
-  - `embed_batch(texts, *, _sleep=time.sleep)`：按 `cfg.batch_size` 切片 → 每批调 `_call_with_retry`；总次数 `max_retries+1`（初次 + N 次重试），退避 `2**attempt` 秒（1s/2s/4s）
-  - 耗尽重试抛 `EmbeddingError` 含最后一次异常文案
-- 新增 scripts/corpus_chunking/chunk_indexer.py：暴露 `index_chunks(...)` + `IndexerConfig` + `_stable_uuid_from_id(chunk_id)`
-  - point id = `uuid.uuid5(NAMESPACE_URL, chunk_id)` 字符串化 → 同 chunk_id 重跑覆盖同 point（幂等）
-  - payload 用 `chunk.to_dict()` 全量（TaggedChunk.to_dict 已扁平化 raw+tagged+quality_breakdown+source_type+ingested_at）
-  - 成功批次 → append 到 `metadata_path` jsonl（ensure_ascii=False）；Qdrant upsert 失败批次 → 每 chunk 单行 `{chunk_id, error}` 写 `unindexed_path` jsonl，**不阻断后续 batches**
-  - `_build_point` 用 `qdrant_client.http.models.PointStruct` 懒导入（兼容 in-memory 测试路径，不强制 test env 预装）
-  - `zip(batch, vectors, strict=False)`：vectors 条数与 batch 不等也容错走短的
-- 新增 tests/corpus_chunking/test_embedding_client.py（4 用例）+ tests/corpus_chunking/test_chunk_indexer.py（4 用例）
-  - embedding: happy 返向量 / batch_size=2 对 5 条文本 3 次 call / 429 重试 2 次后第 3 次成功 / max_retries=3 全失败后 raise + call_count=4
-  - indexer: upsert 调用 + points 数对 / metadata.jsonl 含 chunk_id + 反序列化后 scene_type 正确 / qdrant 抛错后 unindexed.jsonl 写入 + returns 0 / UUID5 稳定（同 id 相同 / 不同 id 不同）
-- 验收：pytest tests/corpus_chunking → 18 passed（不含 US-001/US-002/US-003 的 10 个，新增 8 个）；tests/audit + tests/core → 20 passed；ruff check（--fix I001 一次）+ py_compile OK；pytest tests/audit tests/core tests/corpus_chunking tests/case_library tests/qdrant → 325 passed
-- **Learnings for future iterations:**
-  - **openai 包可选 import 的守卫写法**：`try: from openai import OpenAI / except ImportError: OpenAI = None` + 显式构造路径下再 `if OpenAI is None: raise RuntimeError`。这样 import-time 零副作用（本机未装 openai），测试注入 `_client=MagicMock` 跳过构造路径。M2 新轮 mac 本机无 openai 也能跑测试 → 上线前 `pip install openai` 即用。
-  - **`inner.embeddings.create.side_effect = [ok1, ok2, ok3]` 消耗性 side_effect vs `.return_value = obj` 固定**：batching 测试里 3 次 call 每次拿不同 MagicMock 更安全；若全 `return_value` 则 3 批各收 2 向量 → `out.extend(resp.data)` 会多累 1 向量触发断言 `len(vectors) == 5` 但 mock 每次返 2 ⇒ 6。用 side_effect 给最后一批返 size-1 data 与 len(batch)=1 对齐。
-  - **qdrant PointStruct 懒 import 的理由**：`from qdrant_client.http import models as rest` 放 `_build_point` 函数内 → 若测试 env 未装 qdrant-client（极少，但可能），import-time 不炸；产线路径自然装（M1 `~=1.12`）。这是 M1 preflight/payload_schema 相同模式。
-  - **`zip(..., strict=False)`**：Python 3.14 默认 `strict=False` 但显式写出避免 ruff 警告 B905。实际场景下 embedder 正常时 len(vectors)==len(batch)；异常场景交给 try/except Exception 兜底到 unindexed.jsonl。
-  - **不需要 CLI 入口 → 不触发 audit 红线**：两个文件都是 library（无 `if __name__ == "__main__":`），`enable_windows_utf8_stdio()` / `safe_symlink` 均不需要。后续 US-005 CLI 才要加。
----
-
-## 2026-04-24 - US-005 ink corpus ingest CLI
-- 新增 scripts/corpus_chunking/cli.py：暴露 `main(argv) -> int`（never raises）+ argparse 三子命令（ingest 完整实现；rebuild/watch 为 rc=2 stub 留给 US-006/007）
-  - sys.path 三段式 bootstrap（_SCRIPT_DIR / _REPO_ROOT / _INK_SCRIPTS）复用 scripts/qdrant/migrate_faiss_to_qdrant.py 同款 pattern
-  - main 开头调 `runtime_compat.enable_windows_utf8_stdio()`（audit 红线要求）
-  - 顶层 argparse：`--config`（默认 config/corpus_chunking.yaml）+ subparsers ingest/rebuild/watch
-  - ingest 子命令 args：`--dir`（默认 benchmark/reference_corpus）/ `--book` / `--resume` / `--dry-run`
-  - helper 矩阵：`_load_config` / `_build_{segmenter,tagger,indexer,embedding}_config` / `_build_{anthropic,qdrant,embedding}_client` / `_read_manifest_genre` / `_already_indexed` / `_ingest_book` / `_append_jsonl` / `_append_failure` / `_BookStats` dataclass
-  - 单本摄入流程：_read_manifest_genre(book_dir) → 顺序 chapters/ch*.txt → segment_chapter → (失败 → failures.jsonl 不阻断) → 逐 chunk tag_chunk → index_chunks（除非 --dry-run）→ append 5 个 jsonl
-  - `--resume` 调 `_already_indexed(book, chapter, chunks_raw.jsonl)` 跳过已 indexed 章节
-  - `_build_qdrant_client` / `_build_embedding_client` 只在 **非 dry-run** 才调用（test 核心断言）
-  - 输出格式：每书一行 `[i/N] {book:25s} chunks=N tagged=N indexed=N failures=N` + 末尾 `TOTAL chunks=N tagged=N indexed=N failures=N`（flush=True 以便 tee 实时）
-- 新增 tests/corpus_chunking/test_cli.py 2 用例：test_ingest_dry_run_does_not_call_qdrant（monkeypatch 3 个 `_build_*_client` + 空 segment mock + DEFAULT_DATA_DIR 重定向到 tmp）/ test_ingest_resume_skips_indexed_chapters（直接驱动 `_already_indexed` 四种情况：命中/不同章/不同书/文件缺失）
-- 验收：pytest tests/corpus_chunking/test_cli.py → 2 passed；pytest tests/corpus_chunking → 20 passed（含 US-001/002/003/004 老 18 用例零回归）；pytest tests/audit/test_cli_entries_utf8_stdio.py tests/core/test_safe_symlink.py → 20 passed（audit 红线含新 cli.py）；pytest tests/audit tests/core tests/corpus_chunking tests/case_library tests/qdrant → 343 passed；ruff check → 1 I001 auto-fixed + All checks passed；py_compile OK
-- **Learnings for future iterations:**
-  - **CLI 测试核心断言不是"跑通"而是"未触发某分支"**：`build_qdrant = MagicMock(side_effect=AssertionError(...))` 让 side_effect 抛错来保证 dry-run 路径**根本不该调** — 比事后 `assert not called` 语义更强（即便覆盖率工具误报，side_effect 也会让错误路径立刻炸出 stack trace）。
-  - **`DEFAULT_DATA_DIR` 必须放 module 级别以便 test monkeypatch**：如果内嵌在 _cmd_ingest 函数里则 test 无法干预输出路径，会污染真实 `data/corpus_chunks/` 目录（非 idempotent 副作用）。遵循的通用模式：**所有"默认相对路径"常量都放 module top-level**，方便 tests monkeypatch 到 tmp_path。
-  - **`datetime.now(UTC)` 替代 `datetime.utcnow()`**：Python 3.12+ 弃用 `datetime.utcnow()`，ruff DTZ003 会警告。改用 `from datetime import UTC, datetime` + `datetime.now(UTC).strftime("%Y-%m-%d")`。
-  - **argparse subparsers `required=True` 默认不弹**：Python 3.7+ subparsers 缺省 `required=False`，必须显式 `sub = parser.add_subparsers(dest="command", required=True)` 才会在 `python -m x.cli`（无子命令）时 rc=2 报错。
-  - **rebuild/watch 先留 stub（返 rc=2 + stderr 提示）再分别由 US-006/US-007 补实现**：比一次性实现再测试路径耦合风险低。stub 返 2 而非 0 便于 CLI 级 smoke test 捕获遗漏。
-  - **`_already_indexed` 以 chunks_raw.jsonl 作为 resume 游标而非 metadata.jsonl**：chunks_raw 在 segmenter 成功后立即写入（tag/index 失败不影响），resume 时不应因 tag/index 失败而反复跑 segmenter（调 LLM 贵）。原则：**resume 游标应放在最便宜工序的输出之后**，防止重试的 cost 放大。
-  - **`_build_*_client` helper 存在的意义就是测试用 monkeypatch**：不要把 `import anthropic; client = anthropic.Anthropic()` 直接写进 `_cmd_ingest`（这样 test 只能走 sys.modules 替换，脆）。helper 函数让 test 可以一行 `monkeypatch.setattr(cli_mod, "_build_anthropic_client", ...)` 精确隔离。
----
-
-## 2026-04-24 - US-006 ink corpus rebuild CLI
-- 替换 scripts/corpus_chunking/cli.py 中 _cmd_rebuild stub → 完整实现
-  - 无 --yes：stderr "ERROR: rebuild is destructive; pass --yes to confirm." + rc=2（防误触）
-  - --yes 全量：删 5 个 jsonl（chunks_raw / chunks_tagged / metadata / failures / unindexed）→ _build_qdrant_client() → qdrant.delete_collection(name=配置 qdrant_collection，容错 except Exception 提示 warn 不阻断) → ensure_collection(qd, CORPUS_CHUNKS_SPEC)（从 ink_writer.qdrant.payload_schema lazy import，保 import-time 零 qdrant 依赖）→ argparse.Namespace + _cmd_ingest 重跑
-  - --yes --book <name>：仅 _filter_jsonl_drop_book 重写 3 个 jsonl（chunks_raw/tagged/metadata），failures + unindexed 不动；绝不调 _build_qdrant_client / delete_collection / ensure_collection；仍走 _cmd_ingest(--book) 单本再摄入
-  - _filter_jsonl_drop_book 对 JSONDecodeError 行保留原样（silent data loss 比误删更危险）
-- 新增常量 _FULL_REBUILD_FILES (5) / _PER_BOOK_FILTER_FILES (3) 保证行为可验 + 易改
-- 追加 3 用例到 tests/corpus_chunking/test_cli.py（AC 要求 2，多补 per-book 单书清理 1 用例以固化 AC3）：
-  - test_rebuild_without_yes_refuses（monkeypatch _build_qdrant_client side_effect=AssertionError 确保未进入 rebuild 路径 + 断言 rc=2 + stderr 含 "--yes"）
-  - test_rebuild_with_yes_clears_collection（预置 5 jsonl + mock qdrant + mock _cmd_ingest → 断言 delete_collection(collection_name="corpus_chunks") 被调 + collection_exists 被调（ensure_collection 走了）+ ingest 被调 1 次 + 5 个 jsonl 全删）
-  - test_rebuild_with_yes_and_book_filters_jsonl_only（2 书 3 行 chunks_raw + 1 行 failures → rebuild --book 诡秘之主 → chunks_raw 剩另一本书 1 行 + failures 原样 + _build_qdrant_client 绝未被调 + ingest 走 1 次）
-- 验收：pytest tests/corpus_chunking/test_cli.py → 5 passed（2 老 US-005 + 3 新）；pytest tests/corpus_chunking + tests/audit + tests/core → 43 passed；pytest tests/audit tests/core tests/corpus_chunking tests/case_library tests/qdrant → 346 passed；ruff check scripts/corpus_chunking/ tests/corpus_chunking/ → All checks passed；py_compile cli.py OK
-- **Learnings for future iterations:**
-  - **`_build_qdrant_client` 设 `side_effect=AssertionError(msg)` 是"负向断言"的最硬写法**：比事后 `assert not build.called` 语义更强——只要误进入了本不该走的分支，调用立刻炸出 stack trace（指向具体误触发行），而不是无声通过。适合 CLI "某参数组合绝对不应触发 X 副作用" 类测试。
-  - **lazy import `from ink_writer.qdrant.payload_schema import CORPUS_CHUNKS_SPEC, ensure_collection` 放 _cmd_rebuild 函数内**：避免 import-time 就加载 qdrant_client 依赖（module-level import 会让未装 qdrant 的轻量测试环境炸）。代价：test 若要 patch ensure_collection 得 patch 源模块 `ink_writer.qdrant.payload_schema.ensure_collection` 而非 `cli_mod.ensure_collection`。本轮测试走 MagicMock qdrant client 让 ensure_collection 自然无副作用跑过（collection_exists 返 MagicMock truthy → 提前 return False），不需要 patch。
-  - **单书清理策略：只过滤 jsonl，不动 collection**：因为 Qdrant upsert 幂等（UUID5 from chunk_id），单书重跑 ingest 会用相同 point id 覆盖旧 point，等价于"更新"。若删 collection 会连其他 29 本的 chunks 一起炸，违反 "--book 只动一本" 的契约。若想彻底删单书 points 需要 `qd.delete(filter=source_book=X)` — M2 暂不做（成本 vs 收益不划算，下游可通过 ingest 覆盖实现同样效果）。
-  - **`_filter_jsonl_drop_book` 的"保留 JSONDecodeError 行"策略**：corrupted lines 可能是前一次意外中断留下的半写行，rebuild 时扔掉等于永久数据丢失。保留原样 + stderr 不打 warn（静默）让 ingest 重跑覆盖同 chunk_id 行时自然归位。如果要严格模式可加 `--strict` flag 拒绝 corrupt 行 rc!=0 — M2 暂不做。
-  - **`_PER_BOOK_FILTER_FILES` 只含 3 个（不含 failures + unindexed）**：failures/unindexed 不按 source_book 索引（failures 只有 book 字段对，unindexed 是 chunk_id + error），且这俩是"下次 ingest 要处理的待办"，per-book 清理不该误删其他书的待办。这也是 AC 明确要求的契约。
-  - **`argparse.Namespace(dir=DEFAULT_CORPUS_DIR, book=..., resume=False, dry_run=False)` 构造 ingest args**：不能用 `dir=None`，因为 _cmd_ingest 第一行就 `Path(args.dir)` 会炸 TypeError。默认用 DEFAULT_CORPUS_DIR 保持与 US-005 smoke run 一致行为。
-  - **ensure_collection(MagicMock, spec) 安全跑过**：因为 `if client.collection_exists(...)` 中 MagicMock() 是 truthy → 返 False 不触发 create 分支。这让 rebuild 测试无需任何 patch ensure_collection，是 MagicMock 天然友好的副产品。
----
-
-## 2026-04-24 - US-007 ink corpus watch CLI（polling 30s）
-- 替换 scripts/corpus_chunking/cli.py 中 _cmd_watch stub → 完整实现 + 新增 _ingest_single_file helper
-  - 顶层加 `import time`；_cmd_watch 与测试共用 module 级 `time.sleep`，方便 monkeypatch
-  - `_ingest_single_file(file_path, cfg) -> None`：book_dir = file_path.parent.parent；调 _build_{anthropic,qdrant,embedding}_client → _ingest_book(resume=True, dry_run=False)
-  - _cmd_watch：`--dir` 必填（argparse 已在 US-005 注册好）/ `--interval` 默认 30 / `--iterations` 默认 -1（无限）；watch_dir 不存在 rc=2 + stderr
-  - polling 循环：`seen: dict[Path, float]` 缓存 mtime；每轮 rglob *.txt 对比 mtime，新增或 mtime 变化 → _ingest_single_file；stat 失败 continue（不崩溃）
-  - 退出条件：iterations < 0 无限 / 否则 loops < iterations；`time.sleep(interval)` 放循环尾 + 最后一轮前也跳过防多睡
-  - `_ingest_single_file` 抛 Exception → stderr warn 不阻断后续循环（`except Exception as err` + BLE001 豁免）
-  - KeyboardInterrupt → stderr "watch: interrupted, exiting gracefully" + return 0
-- 追加 1 用例到 tests/corpus_chunking/test_cli.py：test_watch_detects_new_file_and_triggers_ingest
-  - watch_dir/sample_book/chapters 预置 ch001.txt + ch002.txt；monkeypatch _ingest_single_file 只 append path；monkeypatch cli_mod.time.sleep → no-op
-  - main(["watch", "--dir", ..., "--interval", "0", "--iterations", "2"]) → rc=0 + len(ingest_calls)==2（mtime 缓存让第 2 轮跳过，首轮各触发一次）+ filenames 覆盖 {ch001.txt, ch002.txt}
-- 验收：pytest tests/corpus_chunking/test_cli.py → 6 passed（5 老 + 1 新）；tests/audit + tests/core + tests/corpus_chunking → 44 passed；tests/audit + tests/core + tests/corpus_chunking + tests/case_library + tests/qdrant → 347 passed；ruff check scripts/corpus_chunking/ tests/corpus_chunking/ → All checks passed；py_compile cli.py OK
-- **Learnings for future iterations:**
-  - **polling loop sleep 应放尾部 + 最后一轮前也跳过**：`while ...: do_work(); if 还有下一轮: time.sleep(interval)` — 避免最后一次循环白白 block interval 秒（测试 --iterations=2 --interval=0 时不重要，但真 30s interval 下这是 UX 差异）。若 sleep 放头部则第一次循环也会 block。
-  - **`seen: dict[Path, float]` 用 Path 做 key 需一致性**：rglob 返 Path 对象，stat.st_mtime 是 float。若传进来的 file_path 在某些 OS 是 symlink 而 rglob 返 real path，`seen[symlink] != seen[real]` 会导致同一文件识别成两个 → M2 corpus 已无 symlink（M1 US-009 修好），不是问题。未来若 reintroduce symlink 需 `resolve()` 统一。
-  - **ingest 失败只 warn 不阻断**：watch 是长驻进程，单文件 LLM 错不能把整个 watcher 搞死（运维半夜起来重启 vs 第二天看 log 发现少了几 chunks → 后者更好）。符合 M2 "failures < 30 章" 可接受契约。
-  - **monkeypatch `cli_mod.time.sleep` 而非 `time.sleep`**：因为 cli.py 里 `import time` 后写 `time.sleep(...)`，测试 patch 必须点到 cli_mod namespace（`monkeypatch.setattr(cli_mod.time, "sleep", ...)`）才起作用。patch `time.sleep` 则只改全局标准库引用，在 `from time import sleep` 或某些 import 顺序下无效。
-  - **polling 30s 比 watchdog 库更省事 + 跨平台**：watchdog 需额外依赖、inotify / FSEvents / ReadDirectoryChangesW 平台差异；corpus 导入是每天级别的写操作（不是每秒），30s polling 延迟可接受，代码量 30 行 vs 100+。M2 KISS 选择。
-  - **mtime 缓存让第二轮循环不重复工作**：--iterations=2 测试只看到 2 次 _ingest_single_file 调用（不是 4）— 这是正确行为，因为两文件 mtime 在测试期间不变。真产线场景下，watch 启动时会把已在 dir 里的所有 .txt "一次性过一遍"（_ingest_book 自带 resume=True → 实际只调 segmenter 对未在 chunks_raw.jsonl 的章节，所以不会重复消耗 token）。这是刻意的冷启动行为。
----
-
-## 2026-04-24 - US-008 跳过（blocked on human）
-- 原因：US-008 是"实跑验收"（启动 Qdrant docker + ANTHROPIC_API_KEY + EMBED_API_KEY + $3-10 API 预算 + 抽样 50 chunks 人工核），本轮 ralph 环境无 docker、无 API key、无预算批准，无法自动推进。
-- 现场快照：`curl 127.0.0.1:6333/readyz` 连不上；`$ANTHROPIC_API_KEY` / `$EMBED_API_KEY` 均未设置；`docker` 命令不存在；`benchmark/reference_corpus/` 有 50 本目录（不是 30，PRD 描述与实际资产有差距，可能 v18 audit 之后新增了 20 本）。
-- 何时解除阻塞：人类需要 1) `scripts/qdrant/start.sh` 启 Qdrant → 2) export ANTHROPIC_API_KEY + EMBED_API_KEY → 3) 跑 `rm data/corpus_chunks/{chunks_raw,chunks_tagged,metadata}.jsonl 2>/dev/null; python -m scripts.corpus_chunking.cli ingest 2>&1 | tee /tmp/m2_ingest.log` → 4) 抽样 50 chunks 自查。
-- 策略：跳过 US-008，继续 US-009~US-011 纯代码工作（M2 e2e 验收 US-012 已在 AC 内声明 "rules.json 缺失则 skip" 容错，真正的 ≥ 2500 chunks 断言在 US-008 完成前不可能通过，属于 US-012 收尾阶段的人类门禁）。
-- Learnings：**Ralph "实跑验收" 类 US 遇到基础设施门槛时应该快速跳过 + 清晰标注解除条件**，不能让整个 PRD 卡死。PRD 顺序并非严格线性依赖：US-009/010/011 本质只依赖 M1（已完成），与 US-008 并行。
----
-
-## 2026-04-24 - US-009 rules_to_cases 转换器 + 单测
-- 新增 ink_writer/case_library/rules_to_cases.py：暴露 `convert_rules_to_cases` + `map_rule_to_case_kwargs` + `ConvertReport` dataclass + `_SEVERITY_MAP` 常量
-  - `_SEVERITY_MAP = {"hard": ("P1", "active"), "soft": ("P2", "pending"), "info": ("P3", "pending")}`
-  - `map_rule_to_case_kwargs`：tags=["from_editor_wisdom", category]（info 额外加 info_only）；failure_description=`"{rule} — 理由：{why}"` (why 非空) 或仅 rule；raw_text=`"{rule} | {why}"`（ingest_case sha256 dedup key）；scope_chapter=applies_to 或 ["all"]；scope_genre=["all"]；reviewer="星河编辑"；ingested_from=source_files[0] or None；observable=[f"待 M3 dry-run 后基于实际触发样本细化（rule_id: {id}）"]；domain=writing_quality / layer=["downstream"] / source_type=editor_review（plan §5.3 固定值，M3 按 case 细化）
-  - `convert_rules_to_cases`：dry_run=True 只计数不写；正常路径调 ingest_case 逐条摄入，result.created → report.created++，result.created=False（dedup 命中）→ skipped++；任何异常 → failed++ + (rule_id, err) 记入 failures 不阻断；by_severity / by_category 按本次遍历统计（重跑结果一致）
-  - ingested_at 默认 `datetime.now(UTC).date().isoformat()`（避开 ruff DTZ011 `date.today()` 告警）
-- 新增 tests/case_library/test_rules_to_cases.py 6 用例全绿：hard→active P1 / soft→pending P2 / info→pending P3+info_only / observable 占位含 rule_id / 幂等（2 条 rule 第二次全 skipped）/ dry_run 不写 store
-- 验收：pytest tests/case_library/test_rules_to_cases.py → 6 passed；pytest tests/case_library + tests/audit + tests/core + tests/corpus_chunking + tests/qdrant → 353 passed（346 老 + 6 新 + 1）；ruff check ink_writer/case_library/rules_to_cases.py tests/case_library/test_rules_to_cases.py → All checks passed；py_compile OK
-- **Learnings for future iterations:**
-  - **`ingest_case(store, **kwargs)` 接口直接套 map_rule_to_case_kwargs 返回 dict**：map 函数返回 dict（非 dataclass）就是为这种 `**splat` 场景优化的；测试用 `assert kw["severity"] == "P1"` 验证单字段比验证整个 Case 对象更稳定（案例 yaml 的 status / source.ingested_at 等由 ingest_case 内部填）。
-  - **scope_chapter 必须是 list[str]**：Scope dataclass 的 chapter 字段 from_dict 时走 `list(data.get("chapter", []))`，空列表和 None 行为相同但 schema 有 `"items": {"type": "string"}` 约束；M2 用 applies_to 原值或 fallback 到 ["all"] 而非 []，下游 M3 写 checker 时可以直接按 scope_chapter 字符串匹配。
-  - **title[:80] 是防御性截断**：schema 约束 title maxLength=200，M2 rule.rule 最长 ~100 字符，截 80 给未来 prefix/suffix 留空间；若 rule_text 为空（未来边界情况）用 `f"rule {rule_id}"` 回退避免 minLength=1 验证失败。
-  - **ConvertReport.by_severity 按本次遍历统计，不累加到 store state**：这样 dry_run 跑 402 条返回 by_severity={hard:236, soft:147, info:19}；真跑第二次（全 skipped）by_severity 仍是 {hard:236, soft:147, info:19}（本次遍历的输入组成，不看 store 里已有多少）。这让 CLI 输出稳定可 diff。
-  - **异常兜底 `except Exception as err` 配 `# noqa: BLE001`**：转换管线下任何异常（schema 验证失败 / 文件权限 / 枚举值不合法）都应记入 failures 不阻断后续；这是 M2 "402 条里只要有 1 条 rule.severity 拼写错不能让其余 401 条挂掉"的韧性选择。真实 rules.json 已内部验证过，这条路径在 v23 上永不触发（预期 failed=0）。
-  - **M1 ingest_case 的 sha256 dedup 天然兼容 US-009 幂等**：不需要在 rules_to_cases 里再搞一层 hash set；ingest_case 内部每条调用扫一遍 store 匹配 `_hash_raw_text(case.source.raw_text) == new_hash`。代价 O(N×M)（N=新入条数, M=已有条数），402 × 402 ≈ 16 万次哈希比对 < 1s 可接受，M2 未做优化（M5 dashboard 若要展示 progress 再考虑 index）。
----
-
-## 2026-04-24 - US-011 ink case approve --batch <yaml> CLI
-- 新增 schemas/case_approval_batch_schema.json：`approvals` 数组 minItems=1；每项 required `case_id` (pattern ^CASE-[0-9]{4}-[0-9]{4}$) + `action` enum [approve/reject/defer]，可选 `note`，两层 `additionalProperties: false`
-- 新增 ink_writer/case_library/approval.py：`apply_batch_yaml(*, yaml_path, library_root) -> ApprovalReport` + `ApprovalReport(applied, failed, failures)` dataclass
-  - `_ACTION_TO_STATUS = {approve: ACTIVE, reject: RETIRED, defer: PENDING}`
-  - `Draft202012Validator(_load_schema()).validate(data)` 失败时 raise `jsonschema.ValidationError`（不捕获，交给 CLI 顶层决策 rc=3）
-  - 单 case 流程：`store.load → case.status = _ACTION_TO_STATUS[action] → store.save → store.append_ingest_log({event: "approval", case_id, action, at: utc_iso, [note if present]})`
-  - `CaseNotFoundError` 单独 catch 记 `failures` 列表；其他 `Exception` 统一兜底（`# noqa: BLE001` + batch-level guard），**不阻断后续 entries**
-  - schema 加载：`_repo_root() / "schemas" / "case_approval_batch_schema.json"` + `lru_cache(maxsize=1)`（与 schema.py `_load_schema` 相同模式，`open()` 带 `encoding="utf-8"`）
-- 修改 ink_writer/case_library/cli.py：
-  - 顶部 import `jsonschema.ValidationError` + `from ink_writer.case_library.approval import apply_batch_yaml`
-  - `_build_parser()` 新增 `approve` 子命令：`--batch <Path>`（required=True）
-  - 新增 `_cmd_approve(library_root, batch_path)`：batch_path 不存在 rc=2；`ValidationError` rc=3 + stderr "approval batch schema violation"；否则打印 `applied=N failed=N` + 失败前 10 条到 stderr + rc=0 if failed==0 else 1
-  - main() dispatch 追加 `if args.command == "approve"` 分支
-- 新增 tests/case_library/test_cli_approve.py 3 用例全绿：
-  - test_approve_batch_three_actions：ingest 3 pending case → yaml 含 approve/reject/defer → assert 3 case status active/retired/pending + 验 ingest_log.jsonl 含 3 条 approval 事件（note 保留在 approve/defer，reject 无 note 行不写 note 字段）
-  - test_approve_batch_invalid_yaml_returns_3：缺 action 字段 → rc=3 + stderr 含 "schema violation"
-  - test_approve_batch_unknown_case_records_failure_continues：CASE-2026-9999 不存在 + 1 个真实 case → rc=1 + applied=1 + failed=1 + stderr 含未知 id + 真实 case.status == active（失败不阻断后续）
-- 验收：pytest tests/case_library/test_cli_approve.py -v --no-cov → 3 passed；pytest tests/case_library + tests/audit + tests/core + tests/corpus_chunking + tests/qdrant --no-cov → 359 passed；pytest -q（全量 + cov）→ coverage 82.72% (≥ 70)；ruff check ink_writer/case_library/{approval,cli}.py tests/case_library/test_cli_approve.py → All checks passed；py_compile OK；`python3 -m ink_writer.case_library.cli approve --help` 输出正确
-- **Learnings for future iterations:**
-  - **jsonschema `Draft202012Validator.validate(data)` 与 `iter_errors(...)` 的取舍**：前者在第一个错误就 raise `ValidationError`（fail-fast、给 CLI 顶层 catch），后者返生成器可枚举全部错误。批量 YAML 场景"哪怕一个字段不合法都拒绝整批"→ validate() 即可，不需要也不该收集子错误（单 entry 缺 action 意味 YAML 结构不可信，全批拒绝比选择性应用安全）。
-  - **"fail one entry, continue batch" 语义通过两层 try/except 实现**：顶层 `apply_batch_yaml` 里 `validate(data)` 让 schema 错误直接抛；per-entry 循环内 try 所有副作用（store.load/save/append_ingest_log），`CaseNotFoundError` 单独 catch 出更友好的 err 文案，其他异常走 `except Exception` 兜底 + `noqa: BLE001`。这样"100 entries 里 1 个 case_id 打错"不会让其他 99 挂掉。
-  - **note 字段"有值时才写入 ingest_log event"**：若未传 note 则 event dict 无 "note" 键（而非 `"note": null`），jsonl 往 grep 里塞 null 会让下游统计误识 — 这种"只在有值时写入"模式比"null 表不存在"更友好。测试里 `assert "note" not in next(ev ...)` 固化这一契约。
-  - **跨包 JSON schema 加载统一走 `_repo_root() / schemas / ...`**：approval.py 与 schema.py 都有各自的 `_repo_root()`（因路径层级相同都是 `parent.parent.parent`），相同 `lru_cache(maxsize=1)` 模式避免重复 IO。未来若要再加 schema，考虑抽到 `schemas/__init__.py` 做统一 loader（M5 再评估，M2 维持分散）。
-  - **CLI `--batch` 用 `type=Path`**：argparse 直接把 str 转 Path，避免 `_cmd_approve` 内再转；`required=True` 让 argparse 自动报错 "error: the following arguments are required: --batch"，rc=2 不用手写 else 路径。
-  - **approval.py 不需要 CLI 入口 → 不触发 audit 红线**：纯 library 无 `if __name__ == "__main__":`，因此 audit 的 `enable_windows_utf8_stdio` 检查不扫它（同 US-009 rules_to_cases.py）。audit 红线只扫含 main guard 的 .py。
-  - **`store.load(case.case_id)` 返回新 Case 对象，修改后必须 `store.save(case)` 重写 YAML**：Case dataclass 是 value object，`case.status = new_status` 只改内存副本，磁盘文件不动直到 save。这是 CaseStore 设计的显式契约（load + mutate + save 三段式），与 ORM 的 autoflush 语义不同。
----
-
-## 2026-04-24 - US-010 ink case convert-from-editor-wisdom CLI 集成
-- 修改 ink_writer/case_library/cli.py：
-  - import convert_rules_to_cases + 新增常量 DEFAULT_RULES_PATH=Path("data/editor-wisdom/rules.json")
-  - _build_parser() 新增 `convert-from-editor-wisdom` 子命令：--rules（默认 DEFAULT_RULES_PATH）+ --dry-run
-  - 新增 _cmd_convert_from_editor_wisdom(library_root, rules_path, dry_run)：rules_path 不存在 rc=2；调 convert_rules_to_cases → stdout 打印 `created=N skipped=N failed=N by_severity={...}` → failures 非空时 stderr 打印前 10 条 → rc=0 if failed==0 else 1
-  - main() dispatch 内追加 `convert-from-editor-wisdom` 分支
-- 新增 tests/case_library/test_cli_convert.py 3 用例全绿：
-  - test_convert_subcommand_creates_cases（2 条 rule hard+soft → created=2 + skipped=0 + by_severity={hard:1, soft:1} + store.list_ids() len=2）
-  - test_convert_idempotent（1 条 rule 连跑 2 次：第一次 created=1；第二次 skipped=1 store len=1）
-  - test_convert_dry_run（1 条 rule dry-run → stdout created=1 + store.list_ids()==[]）
-- 实跑 smoke：`python -m ink_writer.case_library.cli --library-root /tmp/m2_smoke convert-from-editor-wisdom --dry-run` 输出 `created=402 skipped=0 failed=0 by_severity={'soft': 147, 'hard': 236, 'info': 19}`（v23 rules.json）
-- 验收：pytest tests/case_library/test_cli_convert.py → 3 passed；pytest tests/case_library + tests/audit + tests/core + tests/corpus_chunking + tests/qdrant → 356 passed（353 + 3）；ruff check + py_compile OK
-- **Learnings for future iterations:**
-  - **CLI 子命令 help 字符串若含 "sha256 dedup" 等技术细节，argparse 不会乱码 Unicode**：但 Windows cp936 stdout 可能截断 — 凡 argparse help 里含中文都应倚赖已调用的 `enable_windows_utf8_stdio()`（main 顶层已调）。M2 子命令 help 全英文是保守选择。
-  - **by_severity 字典在 dict[str, int] 下 print 顺序是 insertion order**：`'soft': 147, 'hard': 236, 'info': 19` 与 by_severity.setdefault() 入队顺序一致；测试用 `"'hard': 1" in out` 字段级断言比全量比较更稳（Python dict repr 格式变化风险低）。
-  - **子命令 "rules file not found" rc=2 路径不单测**：AC 未要求，跳过写 `test_convert_missing_rules_returns_2` — YAGNI 原则下 smoke 命令下手观察足够。若 US-012 e2e 要覆盖再补。
-  - **`--dry-run` action="store_true" 默认 False**：与 US-005/006/007 cli.py 里 ingest 子命令的 --dry-run 语义一致，不用 `--dry-run=true` 显式形式。
-  - **CLI 入口 rc=0 vs rc=1 分叉点是 `report.failed == 0`**：convert-from-editor-wisdom 的 "soft error"（单条 rule 异常）由 convert_rules_to_cases 内部捕获到 failures 列表，不阻断；整个管线正常结束后根据 failed 数决定 exit code。这与 `_cmd_create`（CaseValidationError rc=3，单条操作）不同——**批量转换是"尽力完成 + 末端统计"，单条 create 是"All-or-nothing"**。
----
-
-## 2026-04-24 - US-012 M2 e2e 集成测试（代码可交付部分）
-- 新增 tests/integration/test_m2_e2e.py 5 用例全绿（覆盖 spec §6.2）：
-  1. test_rules_conversion_creates_402_cases_with_severity_split — 实跑 v23 rules.json：created=402 + by_severity={hard:236, soft:147, info:19}（rules.json 缺失 → skip）
-  2. test_active_pending_counts_after_conversion — convert 后 active=236（hard→P1）+ pending=166（soft 147 + info 19）
-  3. test_approve_batch_yaml_changes_status — ingest 5 pending case + yaml 含 approve/reject/defer/approve/reject → 5 case status 正确迁移（active/retired/pending/active/retired）
-  4. test_corpus_ingest_resume_skips_indexed_chapters — 直接驱动 `_already_indexed` 四种情况
-  5. test_chunking_pipeline_e2e_with_one_chapter_mocked — in-memory Qdrant 8 维 test collection + mock anthropic（side_effect 双响应）+ mock embedder → 1 章 → segment → tag → index → `collection.points_count == 1` + metadata.jsonl 单行
-- 验收：pytest tests/integration/test_m2_e2e.py -v --no-cov → 5 passed；全量回归 pytest -q → 3694 passed / 23 skipped / coverage **82.72%** (≥ 70)；tests/audit + tests/core → 20 passed；ruff check tests/integration/test_m2_e2e.py → All checks passed（--fix 一次 I001 auto-fixed）；py_compile OK
-- **被 US-008 阻塞的 AC 项**（需人类运维接力才能关闭 M2）：
-  - (2) Qdrant readyz HTTP 200 — 需启 docker `scripts/qdrant/start.sh`
-  - (3) corpus_chunks points_count ≥ 2500 — 需实跑 ingest（ANTHROPIC_API_KEY + EMBED_API_KEY + $3-10 预算）
-  - (4/5/6) data/case_library/cases/ ≥ 400 yaml + status active ≥ 200 / pending ≈ 166 — 需人类执行 `python -m ink_writer.case_library.cli convert-from-editor-wisdom` 后 `git add data/case_library/` （若选择提交物化的病例 yaml）— 技术上 ralph 可跑，但成千上百 yaml commit 到 repo 需人类决策
-  - tag m2-data-assets + 更新 M-ROADMAP.md M2 → ✅ — 两项"收尾仪式"应在 US-008 实跑数据到位后一次性完成
-- **US-012 passes 维持 false**：代码可交付部分已完成，但 "tag + roadmap ✅" 两项 AC 本质上必须等 US-008 先解除阻塞；承袭 US-008 跳过时同款处理（passes=false + 详细阻塞条件标注），下一轮 ralph 无自动化工作可做 — 将在人类完成 US-008 后由人类或新 AI 会话关单
-- **Learnings for future iterations:**
-  - **In-memory Qdrant 对 e2e 测试足够**：`QdrantClient(":memory:")` 自然支持 `create_collection` / `upsert` / `get_collection(name).points_count`；vector_size 选 8（而非 production 4096）是 3 倍速 + 测试向量构造简单（`[0.1] * 8`）。M3 若要加更重的 collection 级测试可沿用此模式。
-  - **mock anthropic 在 segment + tag 双调用场景用 `side_effect=[seg_resp, tag_resp]` 列表**：M2 的 `_ingest_book` 对同一 `anthropic_client` 先调 segment（1 次）再调 tag（N 次），单个 MagicMock 依靠 `.return_value` 会让两阶段都拿到同一个 payload（segmenter JSON 被送去 tagger 解析 → KeyError）。side_effect 列表精确按调用顺序返不同 payload，是"同一 mock 走多阶段"的干净写法。超出列表的调用会抛 StopIteration 兜底暴露 bug。
-  - **ruff I001 对函数内局部 import 也会管**：`def test_foo(): from qdrant_client import QdrantClient ... from scripts.xxx import yyy` 若未按 stdlib → third-party → first-party 分组会报 I001。解决：两组 import 中间加空行；third-party (qdrant_client) 先、first-party (scripts.corpus_chunking) 后。不要压到一起。
-  - **PRD "acceptance commands" 分两类：代码级（pytest / cov）+ 人类级（Qdrant docker / API cost）**：ralph 只能可靠处理代码级。未来 PRD 若想被 ralph 全自动关掉，应把"需要 $ 预算 / docker / 外部依赖"的 US 单独拆出（像 US-008 这样），把纯代码 US 放一起 — 避免 US-012 这种"10 条 AC 里 6 条可自动 + 4 条必须人类"的尴尬。M3 规划可参考。
-  - **convert_rules_to_cases 实跑一次写 402 个 yaml ≈ 20s（本机 Mac M1）**：两个 e2e 测试各跑一次实际转换，整个 test_m2_e2e.py 文件 83s 主要由此二项占用。若后续想减速可把第二个测试改为用第一个的 fixture 产物（`@pytest.fixture(scope="module")`）但要注意 tmp_path 是 function-scoped — 需 `tmp_path_factory` + session 级 fixture。M2 暂保 function-scoped（简单清晰）。
----
