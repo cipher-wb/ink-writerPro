@@ -33,6 +33,9 @@ class EvidenceChain:
     outcome: str = "pending"
     produced_at: str = ""
 
+    phase: str = "writing"
+    stage: str | None = None
+
     context_recalled_rules: int = 0
     context_recalled_chunks: int = 0
     context_recalled_cases: int = 0
@@ -91,6 +94,8 @@ class EvidenceChain:
             "$schema": SCHEMA_URI,
             "book": self.book,
             "chapter": self.chapter,
+            "phase": self.phase,
+            "stage": self.stage,
             "produced_at": produced_at,
             "dry_run": self.dry_run,
             "outcome": self.outcome,

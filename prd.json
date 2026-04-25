@@ -38,8 +38,8 @@
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — EvidenceChain 加 phase/stage 字段（默认 phase='writing'，向后兼容 M3 章节用法）+ 新增 ink_writer/evidence_chain/planning_writer.py（write_planning_evidence_chain / require_planning_evidence_chain / PlanningEvidenceChainMissingError）+ __init__.py 导出新 API；写盘路径 <base_dir>/<book>/planning_evidence_chain.json，文件存在时按 stage 名去重合并、overall_passed = all(stages 未 blocked)；非 planning phase 直接 ValueError；新增 tests/planning_review/{__init__,conftest,test_planning_writer}.py 4 用例全过；M3 evidence_chain 7 用例全绿向后兼容；ruff 通过"
     },
     {
       "id": "US-003",

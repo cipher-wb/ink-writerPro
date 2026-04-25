@@ -1,3 +1,30 @@
 # Ralph Progress Log
 Started: 2026年 4月25日 星期六 15时15分45秒 CST
+
+## Codebase Patterns
+- 评估 evidence_chain 字段时优先扩展现有 dataclass（默认值保证向后兼容），不要新建并行 dataclass
+- 写盘函数统一带 `encoding="utf-8"`，目录用 `Path.parent.mkdir(parents=True, exist_ok=True)`
+- ink_writer/evidence_chain/__init__.py 是单一导出口，新增 API 同步在此导出 + 加到 __all__
+- 测试 fixtures 走 tests/<area>/conftest.py，fixture 命名 `<area>_base_dir` + `sample_<area>_<scenario>`
+- 阶段性输出（ink-init / ink-plan）合并到同一 JSON 时按 stage 名去重再追加，overall_passed 用 all() 聚合
+- pytest.ini testpaths 是单行（极长但不能换行），新加测试目录追加到末尾
+
+---
+
+## 2026-04-25 - US-002
+- 实现 planning_evidence_chain.json schema + writer + 向后兼容
+- Files changed:
+  - ink_writer/evidence_chain/models.py（EvidenceChain 加 phase: str = 'writing' + stage: str | None = None；to_dict() 输出新字段）
+  - ink_writer/evidence_chain/planning_writer.py（新增；暴露 write_planning_evidence_chain / require_planning_evidence_chain / PlanningEvidenceChainMissingError + PLANNING_SCHEMA_VERSION='1.0'）
+  - ink_writer/evidence_chain/__init__.py（导出 planning API）
+  - tests/planning_review/__init__.py（新增）
+  - tests/planning_review/conftest.py（fixtures planning_base_dir + sample_planning_evidence_init）
+  - tests/planning_review/test_planning_writer.py（4 用例：test_write_creates_new_file / test_write_merges_ink_plan_after_ink_init / test_require_raises_when_missing / test_write_rejects_non_planning_phase）
+- 测试：tests/planning_review/test_planning_writer.py 4 passed；tests/evidence_chain/ 7 passed（M3 向后兼容）；ruff lint 全过
+- **Learnings for future iterations:**
+  - EvidenceChain 默认 phase='writing' 让 M3 章节代码不需任何改动，新加 planning 用法显式传 phase='planning'
+  - planning_writer 写盘路径 `<base_dir>/<book>/planning_evidence_chain.json`，与章节级 evidence `<base_dir>/<book>/chapters/<chapter>.evidence.json` 不同目录，不会冲撞
+  - 合并 stage 时用 `[s for s in stages if s.get("stage") != evidence.stage]` 实现 upsert，避免重跑 ink-init 后产生重复条目
+  - DEFAULT_BASE_DIR 复用自 writer.py，不要重复定义；其他模块需要默认 base_dir 时直接 import
+  - require_*_evidence_chain 的返回类型不一致是历史包袱：chapter 版返回 Path，planning 版返回 dict（解析后的 JSON）；US-012 调用方需要 dict 来做后续 stage 合并判断
 ---
