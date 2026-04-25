@@ -34,9 +34,12 @@
 │    resume / learn / dashboard / auto / audit / resolve /    │
 │    macro-review / migrate / 5(弃用桩)                      │
 ├─────────────────────────────────────────────────────────────┤
-│  Agents (26个, M3): Context / Writer / Polish / Data        │
-│    + Writer-self-check (M3) + 19 Checkers (含 M3 新 2 个    │
-│    conflict-skeleton + protagonist-agency)                  │
+│  Agents (33个, M4): Context / Writer / Polish / Data        │
+│    + Writer-self-check (M3) + 26 Checkers (含 M3 新 2 个    │
+│    conflict-skeleton + protagonist-agency；M4 新 7 个       │
+│    genre-novelty / golden-finger-spec / naming-style /      │
+│    protagonist-motive / golden-finger-timing /              │
+│    protagonist-agency-skeleton / chapter-hook-density)      │
 │    Consistency / Continuity / OOC / Golden-three /          │
 │    Logic / Outline-compliance / Anti-detection /            │
 │    Reader-pull / High-point / Pacing / Proofreading /       │

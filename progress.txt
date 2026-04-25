@@ -265,3 +265,36 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - failure_pattern.observable minItems=1：必须列出至少 1 条可观察的 checker 输出条件，便于编排层把 case_id 注入到 cases_hit 时调试者能反向定位 checker 哪个分支触发
 ---
 
+  - data/case_library/cases/CASE-2026-M4-0007.yaml（卷骨架级钩子稀疏 / chapter_hook_density；ink-plan Step 99）
+  - data/case_library/approval/m4_seed_approval_batch.yaml（7 entries 一次性 active）
+- 测试：tests/case_library/ 全过；7 个 case 全 status=active；schema 校验 PASS；ruff 通过
+- **Learnings for future iterations:**
+  - case_id pattern 扩展用 `^CASE-[0-9]{4}-(M[0-9]+-)?[0-9]{4}$` 而非新建 schema；旧 `CASE-2026-NNNN` 与新 `CASE-2026-M4-NNNN` 共存
+  - approval batch YAML 走 cli `ink_writer.case_library.cli approve --batch <yaml>`；schema 与 case schema 同步扩展 case_id pattern
+  - case YAML failure_pattern.observable 必须 ≥ 1（schema minItems）；layer 用 list of enum（[upstream]）；status:pending → batch approve → status:active
+---
+
+## 2026-04-25 - US-014
+- 实现 M4 e2e 测试 + 测试书 + tag m4-p0-planning + ROADMAP/handoff 更新
+- Files changed:
+  - tests/integration/test_m4_e2e.py（新增；7 用例 thresholds_yaml / ink_init / ink_plan / merge / skip / dry_run / cases_active）
+  - data/test-book-m4/setting.json（新增；顾望安 + 万道归一金手指 + 蓝漪 + 裴惊戎 + 战争遗孤动机 227 字）
+  - data/test-book-m4/outline.json（新增；5 章 skeleton + 前 3 章含金手指关键词 + 主角主动语态）
+  - data/test-book-m4/planning_evidence_chain.json（生成；phase=planning + stages={ink-init, ink-plan} + total_checkers=7）
+  - scripts/run_m4_test_book.py（新增；e2e 驱动用 FixtureLLMClient 注入预设响应，规避 ANTHROPIC_API_KEY 缺失）
+  - tests/prompts/test_prompt_templates.py（修；diff_all_runs 期望 26→33 agents）
+  - docs/agent_topology_v13.md（修；After (v25.0): 33 Agents 加 M4 7 个 checker 说明）
+  - docs/architecture.md（修；Agents 26→33 / 19 Checkers→26 Checkers）
+  - docs/superpowers/M-ROADMAP.md（修；M4 行 ⚪→✅ + 顶部 Status M4 ✅ 完成 2026-04-25）
+  - docs/superpowers/M-SESSION-HANDOFF.md（修；§1 最后更新 / §2 进度快照 60%→80% / §3 重写为 M4 14 US 实际产出 / §7 改 M5 brainstorm 准备）
+- 测试：tests/integration/test_m4_e2e.py 7 passed；全量 pytest 全绿（exit 0 / coverage 82.75% / 0 failed）
+- M4 模块导入冒烟：`from ink_writer.planning_review import run_ink_init_review, run_ink_plan_review` + 7 个 checker `check_*` 全 OK
+- 测试书 e2e：`scripts/run_m4_test_book.py` 跑出 phase=planning + 2 stage + 7 checker；effective_blocked=False
+- **Learnings for future iterations:**
+  - tests/integration/test_m4_e2e.py 复用 tests/checkers/conftest.FakeLLMClient（已有 FIFO responder + calls 记录），不要在 integration 目录新建 fixture；同样 `monkeypatch.chdir(tmp_path)` + `tmp_path / ".counter"` 的 dry-run 隔离模式与 tests/planning_review 一致
+  - 新增 agent.md 后必跑 `tests/release/test_v16_gates.py::test_verify_docs_exit_zero` + `tests/prompts/test_prompt_templates.py::test_diff_all_runs`：前者校验 architecture.md `+ N Checkers` 数 + agent_topology_v13.md `After (v...): N Agents` 数与文件计数一致；后者校验 ab_prompts.diff_all_agents() 数与硬编码期望一致。漏改任一处都会让全量 pytest 红
+  - verify_docs.py 的 architecture.md "+ N Checkers" 正则 `[+＋]\s*(\d+)\s*(?:Checker|checker|个Checker)` 只看 ASCII `+` 或全角 `＋` 后第一个数；docs/architecture.md 多处可能有 "N 个" 写法但只有 `+ N Checkers` 模式被 verify
+  - ANTHROPIC_API_KEY 缺失场景：CLI 入口直接 `anthropic.Anthropic()` 会抛异常；e2e 验收用 `scripts/run_m4_test_book.py` + `FixtureLLMClient` 提供等效磁盘产出（与单测 in-memory 路径互为冗余校验）。M5 接入真线上 LLM 时再启用真 CLI
+  - dry-run counter_path 在 e2e 驱动里用 `<base-dir>/.planning_dry_run_counter` 而非默认 `data/.planning_dry_run_counter`，避免污染仓库根；测试书运行后写入 "5" 直接进入 real mode 让阻断逻辑生效
+  - M4 完成后需同步：(1) docs/superpowers/M-ROADMAP.md 顶部 Status 行 + 进度表；(2) docs/superpowers/M-SESSION-HANDOFF.md §1 最后更新 / §2 快照 / §3 重写产出 / §7 转 M5；(3) docs/agent_topology_v13.md `After (vX.X): N Agents`；(4) docs/architecture.md `+ N Checkers`；(5) tests/prompts/test_prompt_templates.py 硬编码 N
+---

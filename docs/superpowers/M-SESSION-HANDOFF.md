@@ -1,6 +1,6 @@
 # 🔁 M-SESSION-HANDOFF.md — 新会话单文件 catch-up
 
-**最后更新**：2026-04-25（M3 完成后）
+**最后更新**：2026-04-25（M4 完成后）
 **用途**：新 Claude Code 会话开始时**第一件事 cat 这份文件**，5 分钟接上完整上下文
 
 ---
@@ -11,9 +11,9 @@
 
 | 用户说 | 你的第一动作 |
 |---|---|
-| "继续" / "接着干" / "推 M4" / "开 M4" | 调 `superpowers:brainstorming` skill → cat `docs/superpowers/M4-PREPARATION-NOTES.md` → 按 PRE-NOTES 的 brainstorm 题逐题问用户 |
-| "看进度" / "M4 怎么样了" / "进度如何" | 跑 `jq -r '.userStories[] | "\(.id) \(if .passes then "✅" else "⬜" end)"' prd.json + git log --oneline -8 + ps -ef | grep ralph` 给当前快照 |
-| "M3 跑完没" / 想看回顾 | cat `docs/superpowers/M-ROADMAP.md` 顶部 Status 行 + cat 本文件 §3 快照 |
+| "继续" / "接着干" / "推 M5" / "开 M5" | 调 `superpowers:brainstorming` skill → 创建 `docs/superpowers/M5-PREPARATION-NOTES.md` → 按 spec §9 M5 列出题逐题问用户 |
+| "看进度" / "M5 怎么样了" / "进度如何" | 跑 `jq -r '.userStories[] | "\(.id) \(if .passes then "✅" else "⬜" end)"' prd.json + git log --oneline -8 + ps -ef | grep ralph` 给当前快照 |
+| "M4 跑完没" / 想看回顾 | cat `docs/superpowers/M-ROADMAP.md` 顶部 Status 行 + cat 本文件 §3 快照 |
 | 提到具体 case / chunk / agent | 这些是 ink-writer 项目的核心概念；详见本文件 §4 |
 | "重新开始" / "新功能" | 不要打断 5 周 roadmap，先确认这是 roadmap 内还是 roadmap 外的需求 |
 
@@ -28,50 +28,54 @@
 
 ---
 
-## §2 当前进度快照（2026-04-25 12:50 PM）
+## §2 当前进度快照（2026-04-25 M4 完成后）
 
 | Milestone | 状态 | 完成日期 | branch / tag | commit count |
 |---|---|---|---|---|
 | **M1** 基础设施 + Qdrant + symlink 修复 | ✅ | 2026-04-24 | `m1-foundation` | 17 US |
 | **M2** 数据资产（cases 完整 / corpus_chunks deferred）| 🟡 partial | 2026-04-25 | `m2-data-assets-partial` | 12 US |
 | **M3** P1 下游闭环（**质量拐点**）| ✅ | 2026-04-25 | `m3-p1-loop` | 14 US |
-| **M4** P0 上游策划层 | ⚪ 待启动 | — | TBD | TBD |
+| **M4** P0 上游策划层 | ✅ | 2026-04-25 | `m4-p0-planning` | 14 US |
 | **M5** Dashboard + 自进化 + 用户接口 | ⚪ 待启动 | — | TBD | TBD |
 
-**60% 进度（3/5 milestone 完成 + 1 partial）**。
+**80% 进度（4/5 milestone 完成 + 1 partial）**。
 
 **全部 push 到 GitHub**（remote: `https://github.com/cipher-wb/ink-writerPro.git`）。
 
 ---
 
-## §3 M3 实际产出（最近一次完成）
+## §3 M4 实际产出（最近一次完成）
 
 ### 已交付的 14 个 US
 
 | US | 实际产出 | 关键 commit |
 |---|---|---|
-| US-001 | `config/checker-thresholds.yaml` + `thresholds_loader.py` | `1261ad9` |
-| US-002 | `evidence_chain.json` schema + writer + `EvidenceChainMissingError` | `7072ca9` |
-| US-003 | `ink_writer/writer_self_check/` agent | `f502226` |
-| US-004 | `ink_writer/checkers/conflict_skeleton/` LLM 主观判断 | `1ed5c7d` |
-| US-005 | `ink_writer/checkers/protagonist_agency/` LLM 主观判断 | `4b29ed9` |
-| US-006 | `block_threshold_wrapper` 升级现有 3 checker | `859d2ff` |
-| US-007 | `polish-agent` 改 prompt 接收 case_id 驱动 | `c2c0738` |
-| US-008 | `rewrite_loop/orchestrator` 主调度 | `b404e36` |
-| US-009 | `dry_run.py` counter + auto-switch | `5b89fa5` |
-| US-010 | `human_review.py` 4 版保留 + needs_human_review.jsonl | `f30274a` |
-| US-011 | `ink-write SKILL.md` Step 1.5 集成新循环 | `29ed915` |
-| US-012 | `dry_run_report.py` 5 章后聚合报告 | `270838c` |
-| US-013 | `tests/integration/test_m3_e2e.py` 8 用例 | `4564984` |
-| US-014 | tag `m3-p1-loop` + ROADMAP 更新 | `8c395c3` |
-| Followup | baseline doc/test 同步（23→26 agents, 17→19 checkers）| `3e5dc19` |
+| US-001 | `config/checker-thresholds.yaml` 加 7 section + `planning_dry_run` | `cfe3fca` |
+| US-002 | `planning_evidence_chain.json` schema + writer + 向后兼容 | `90fab82` |
+| US-003 | `ink_writer/checkers/genre_novelty/` LLM 题材新颖度 | `c1b8f1f` |
+| US-004 | `ink_writer/checkers/golden_finger_spec/` 4 维 LLM | `9820723` |
+| US-005 | `ink_writer/checkers/naming_style/` 纯规则起名风格 | `0ef3006` |
+| US-006 | `ink_writer/checkers/protagonist_motive/` 3 维 LLM | `229e487` |
+| US-007 | `scripts/market_intelligence/fetch_qidian_top200.py` + `qidian_top200.jsonl` (manual-fallback) | `8886857` |
+| US-008 | `data/market_intelligence/llm_naming_blacklist.json` 331 条 | `8c2d76a` |
+| US-009 | `ink_writer/checkers/golden_finger_timing/` regex+LLM 双层 | `fe5f285` |
+| US-010 | `ink_writer/checkers/protagonist_agency_skeleton/` 卷骨架级 | `4559455` |
+| US-011 | `ink_writer/checkers/chapter_hook_density/` 卷骨架级 | `406970b` |
+| US-012 | `ink_writer/planning_review/` 编排层 + ink-init/ink-plan SKILL.md Step 99 | `1a242ba` |
+| US-013 | 7 个 `CASE-2026-M4-0001~0007` seed cases + batch approve + schema 扩展 | `aed5fb7` |
+| US-014 | `tests/integration/test_m4_e2e.py` 7 用例 + 测试书 + tag `m4-p0-planning` + ROADMAP/handoff 更新 | (本次提交) |
 
-### M3 关键产物（M4/M5 复用）
+### M4 关键产物（M5 复用）
 
-- **新增 7 个 Python 子包**：`writer_self_check / checkers/{conflict_skeleton,protagonist_agency} / rewrite_loop / evidence_chain / checker_pipeline.{thresholds_loader,block_threshold_wrapper}`
-- **新增 4 个 agent.md**：writer-self-check / conflict-skeleton-checker / protagonist-agency-checker + polish-agent.md M3 改造章节
-- **新增 1 个 config**：`config/checker-thresholds.yaml`（M3 全部阈值 + dry-run 控制）
-- **全量 pytest**：3700+ passed / 0 failed / coverage **82.75%**（M2 baseline 82.72% 略升）
+- **新增 7 个 checker 子包**：genre_novelty / golden_finger_spec / naming_style / protagonist_motive（ink-init 4 个）+ golden_finger_timing / protagonist_agency_skeleton / chapter_hook_density（ink-plan 3 个）
+- **新增 1 个编排子包**：`ink_writer/planning_review/`（dry_run + ink_init_review + ink_plan_review + dry_run_report）
+- **新增 7 个 agent.md**：每个 checker 一份 spec（ink-writer/agents/*-checker.md）
+- **新增 1 个数据资产**：`data/market_intelligence/llm_naming_blacklist.json`（331 exact + first/second_char_overused）
+- **新增 1 个数据资产（manual-fallback）**：`data/market_intelligence/qidian_top200.jsonl` 空文件 + README（起点 JS 反爬阻断 → 兜底）
+- **新增 7 个 case**：`data/case_library/cases/CASE-2026-M4-0001~0007.yaml`（layer=upstream, status=active）
+- **新增 2 个 SKILL.md Step 99 章节**：`ink-writer/skills/{ink-init,ink-plan}/SKILL.md` 强制策划期审查
+- **测试书 e2e 驱动**：`scripts/run_m4_test_book.py` + `data/test-book-m4/{setting,outline}.json` + `planning_evidence_chain.json`（4+3=7 checker 全过 + 2 stage 合并）
+- **全量 pytest**：≥ 3700 passed / 0 failed / coverage 维持 ~82%
 
 ---
 
@@ -154,17 +158,23 @@ bash scripts/ralph/ralph.sh --tool claude <US 数> > scripts/ralph/run.log 2>&1 
 
 ---
 
-## §7 M4 brainstorm 准备（已完成）
+## §7 M5 brainstorm 准备
 
-**预备文件**：`docs/superpowers/M4-PREPARATION-NOTES.md`（如不存在请第一时间创建——内容详见 spec §3 P0 + §9 M4）
+**待启动**：M5 Dashboard + 自进化 + 用户接口（5 周 roadmap 最后一个 milestone）
 
-**M4 摘要**：
-- **范围**：4 个 ink-init checker + 3 个 ink-plan checker + LLM 高频起名词典 + 起点 top200 简介库
-- **核心解决**：spec §1.3 诊断的 5/8 上游策划期扣分（题材老套 / 凹设定 / 起名 AI 味 / 金手指出场太晚 / 金手指能力不清晰）
-- **依赖**：M1 case_library + M2 LLMClient（不依赖 M3 / 不依赖 M2 chunks）
-- **可与 M3 dry-run 并行**：M3 跑下游章节，M4 跑上游策划期；M3 dry-run 5 章后 review 报告才决定切真阻断
+**M5 摘要**（依赖 M1 + M2 + M3 + M4 全部已落档）：
+- **范围**：`ink dashboard` 扩展（病例复发率 / 修复速度 / 编辑分趋势 / checker 准确率）+ Layer 4 复发追踪（resolved → regressed 升级 severity）+ Layer 5 元规则浮现（5 个相似 case 自动建议合并）+ `data/case_library/user_corpus/` + history-travel 样例 + A/B 通道（可选 50% 章节生效）+ 文档：作者使用手册 + 编辑反馈录入手册
+- **核心解决**：完整闭环 + 周报自动产出 + history-travel 用户案例
+- **依赖**：M3 evidence_chain（章节级）+ M4 planning_evidence_chain（策划期）+ M2 cases active 列表
 
-**预期 14-15 US**（与 M3 节奏一致，估 5 小时）。
+**启动流程**（用户说 "继续" / "开 M5" 时）：
+1. cat `docs/superpowers/M-ROADMAP.md` 顶部 Status 行
+2. cat 本文件 §3 M4 实际产出 + §6 标准流程
+3. 调 `superpowers:brainstorming` skill → 创建 `docs/superpowers/M5-PREPARATION-NOTES.md`
+4. brainstorm 完成后写 spec → plan → /prd → /ralph 五步流程
+5. 启动后台 ralph：bash scripts/ralph/ralph.sh --tool claude
+
+**M3 dry-run 切真阻断时机**：M3 / M4 各自有 5 次观察期独立计数（`data/.dry_run_counter` / `data/.planning_dry_run_counter`），观察期满后 `switch_to_block_after=true` 自动切真阻断；M5 启动前可 review 两个 dry_run 报告决定是否调阈值。
 
 ---
 
