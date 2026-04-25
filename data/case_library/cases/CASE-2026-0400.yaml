@@ -1,0 +1,30 @@
+case_id: CASE-2026-0400
+title: 黄金三章每 100 字必须推进一个主线事件（人物登场、冲突升级、信息披露或决策转折）
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 黄金三章每 100 字必须推进一个主线事件（人物登场、冲突升级、信息披露或决策转折） | PRD 数据：起点黄金三章段落事件密度高于后续章；100
+    字无推进 = 读者弃文概率骤升，编辑 A/B 测试验证
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 黄金三章每 100 字必须推进一个主线事件（人物登场、冲突升级、信息披露或决策转折） — 理由：PRD 数据：起点黄金三章段落事件密度高于后续章；100
+    字无推进 = 读者弃文概率骤升，编辑 A/B 测试验证
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0400）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

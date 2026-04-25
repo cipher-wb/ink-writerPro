@@ -1,0 +1,28 @@
+case_id: CASE-2026-0324
+title: 对话情绪要通过遣词造句自然拉满，多用感叹号和问号强化语感，而非靠剧情说明情绪
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 对话情绪要通过遣词造句自然拉满，多用感叹号和问号强化语感，而非靠剧情说明情绪 | Q月文风证明：行文层面的情绪密度比剧情层面更直接影响读者体验，语感来自日常对话积累
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 399_untitled.md
+failure_pattern:
+  description: 对话情绪要通过遣词造句自然拉满，多用感叹号和问号强化语感，而非靠剧情说明情绪 — 理由：Q月文风证明：行文层面的情绪密度比剧情层面更直接影响读者体验，语感来自日常对话积累
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0324）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0074
+title: 以最终呈现质量为唯一衡量标准，平台打击的是低质量灌水，而非AI辅助本身
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 以最终呈现质量为唯一衡量标准，平台打击的是低质量灌水，而非AI辅助本身 | 平台封禁的根本原因是内容伤害用户体验和破坏算法，质量过关的内容无论用何种工具创作都不会被打击
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 012_AI写网文违规吗_第134集AI写作的上限，能否使用.md
+failure_pattern:
+  description: 以最终呈现质量为唯一衡量标准，平台打击的是低质量灌水，而非AI辅助本身 — 理由：平台封禁的根本原因是内容伤害用户体验和破坏算法，质量过关的内容无论用何种工具创作都不会被打击
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0074）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0226
+title: 主动用AI激发灵感和脑洞，而非仅将其用于段落润色或场景描写等表层修辞
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 主动用AI激发灵感和脑洞，而非仅将其用于段落润色或场景描写等表层修辞 | 顶级作者（万订大神）已将AI用于训练灵感和脑洞开发，停留在文笔修辞层面是对工具的浪费，也无法形成竞争优势
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 229_关于deepseek对网文的影响_起点编辑星河小聊几句人工智能和写小说.md
+failure_pattern:
+  description: 主动用AI激发灵感和脑洞，而非仅将其用于段落润色或场景描写等表层修辞 — 理由：顶级作者（万订大神）已将AI用于训练灵感和脑洞开发，停留在文笔修辞层面是对工具的浪费，也无法形成竞争优势
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0226）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,33 @@
+case_id: CASE-2026-0392
+title: 比喻/拟人的本体不得为抽象概念（时间/情绪/意识/命运）；抽象概念只允许用具体动作或物件喻依
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 比喻/拟人的本体不得为抽象概念（时间/情绪/意识/命运）；抽象概念只允许用具体动作或物件喻依 | PRD US-006 硬原则：'时间如流水'类套喻是
+    AI 味重灾区，编辑直接打回；要么换成具体动作（他数着自己的呼吸），要么删除
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 比喻/拟人的本体不得为抽象概念（时间/情绪/意识/命运）；抽象概念只允许用具体动作或物件喻依 — 理由：PRD US-006 硬原则：'时间如流水'类套喻是
+    AI 味重灾区，编辑直接打回；要么换成具体动作（他数着自己的呼吸），要么删除
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0392）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

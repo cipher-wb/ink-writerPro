@@ -1,0 +1,28 @@
+case_id: CASE-2026-0221
+title: 遗憾感要分散展开：碰到哪个角色就写该角色带来的遗憾，禁止一次性全部倾倒
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- highpoint
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 遗憾感要分散展开：碰到哪个角色就写该角色带来的遗憾，禁止一次性全部倾倒 | 情绪集中爆发会让读者感到刻意煽情；分散展开能持续制造小爽点，维持章节间的追读动力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 221_起点编辑星河直播时拆书_重生文为何非得谈恋爱.md
+failure_pattern:
+  description: 遗憾感要分散展开：碰到哪个角色就写该角色带来的遗憾，禁止一次性全部倾倒 — 理由：情绪集中爆发会让读者感到刻意煽情；分散展开能持续制造小爽点，维持章节间的追读动力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0221）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

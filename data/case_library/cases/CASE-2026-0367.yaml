@@ -1,0 +1,28 @@
+case_id: CASE-2026-0367
+title: 远景用于场景开场和环境交代，近景用于人物动作和微表情，特写用于决定性瞬间；三种镜头职能不可错配
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_shot
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 远景用于场景开场和环境交代，近景用于人物动作和微表情，特写用于决定性瞬间；三种镜头职能不可错配 | 镜头职能错配（如用远景写关键拳头接触）会让读者感受不到张力，等同于'电影把高潮拍成航拍'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: combat-scenes.md
+failure_pattern:
+  description: 远景用于场景开场和环境交代，近景用于人物动作和微表情，特写用于决定性瞬间；三种镜头职能不可错配 — 理由：镜头职能错配（如用远景写关键拳头接触）会让读者感受不到张力，等同于'电影把高潮拍成航拍'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0367）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

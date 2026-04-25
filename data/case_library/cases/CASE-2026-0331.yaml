@@ -1,0 +1,29 @@
+case_id: CASE-2026-0331
+title: 开头必须一口气写完，不要分天写再拼接，确保剧情衔接流畅无割裂感
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头必须一口气写完，不要分天写再拼接，确保剧情衔接流畅无割裂感 | 分批拼接的开头往往存在节奏断层，读者会在衔接处流失；流畅感是留住读者的基本要求
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 403_untitled.md
+failure_pattern:
+  description: 开头必须一口气写完，不要分天写再拼接，确保剧情衔接流畅无割裂感 — 理由：分批拼接的开头往往存在节奏断层，读者会在衔接处流失；流畅感是留住读者的基本要求
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0331）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0025
+title: 不要在开头几万字里消耗所有精华设定，将核心亮点和脑洞分散分布于全书各阶段
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不要在开头几万字里消耗所有精华设定，将核心亮点和脑洞分散分布于全书各阶段 | 前期精华耗尽后剧情难以为继，追订数据持续下滑，作者心态崩溃，最终导致断更或烂尾
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 031_起点编辑星河谈网文断更烂尾切书.md
+failure_pattern:
+  description: 不要在开头几万字里消耗所有精华设定，将核心亮点和脑洞分散分布于全书各阶段 — 理由：前期精华耗尽后剧情难以为继，追订数据持续下滑，作者心态崩溃，最终导致断更或烂尾
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0025）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0104
+title: 禁止将多个不相关题材（赛博+克苏鲁+灵异+废土+科幻）随意拼凑，创新须建立在熟悉各类型核心梗的基础上
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 禁止将多个不相关题材（赛博+克苏鲁+灵异+废土+科幻）随意拼凑，创新须建立在熟悉各类型核心梗的基础上 | 新人所谓创新实为杂糅乱来，不了解各类型核心吸引力就混写，读者无法产生共鸣
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 075_起点编辑星河谈你根本就不会写网文_第90集写小说写网文最基本的底层逻辑，很多人在冒充一个作家.md
+failure_pattern:
+  description: 禁止将多个不相关题材（赛博+克苏鲁+灵异+废土+科幻）随意拼凑，创新须建立在熟悉各类型核心梗的基础上 — 理由：新人所谓创新实为杂糅乱来，不了解各类型核心吸引力就混写，读者无法产生共鸣
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0104）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

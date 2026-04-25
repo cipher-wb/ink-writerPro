@@ -1,0 +1,29 @@
+case_id: CASE-2026-0375
+title: 每章至少出现1处通感描写（跨感官比喻，如'声音像碎冰渣子'、'目光像被烫了一下'）
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_sensory
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 每章至少出现1处通感描写（跨感官比喻，如'声音像碎冰渣子'、'目光像被烫了一下'） | 通感是文笔高级感的标志，编辑在精品分析中常引用通感句作为'笔力天花板'示例
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: desire-description.md
+failure_pattern:
+  description: 每章至少出现1处通感描写（跨感官比喻，如'声音像碎冰渣子'、'目光像被烫了一下'） — 理由：通感是文笔高级感的标志，编辑在精品分析中常引用通感句作为'笔力天花板'示例
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0375）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0188
+title: 冲月票榜等竞榜行为需以稳定均订作为前提门槛（至少万级均订），否则上榜也无法带来有效转化
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 冲月票榜等竞榜行为需以稳定均订作为前提门槛（至少万级均订），否则上榜也无法带来有效转化 | 读者来平台是为了内容，榜单排名吸引不了对内容不感兴趣的读者，实力不到位冲榜投入产出比极低
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 171_起点编辑星河讲写小说刷榜_新人写小说需不需要运营，盟主真的有用吗.md
+failure_pattern:
+  description: 冲月票榜等竞榜行为需以稳定均订作为前提门槛（至少万级均订），否则上榜也无法带来有效转化 — 理由：读者来平台是为了内容，榜单排名吸引不了对内容不感兴趣的读者，实力不到位冲榜投入产出比极低
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0188）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

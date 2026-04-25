@@ -1,0 +1,33 @@
+case_id: CASE-2026-0390
+title: 同句禁用两个及以上抽象形容词堆叠（如'莫名而无尽的恐惧'），必须用具体动作或场景替代
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 同句禁用两个及以上抽象形容词堆叠（如'莫名而无尽的恐惧'），必须用具体动作或场景替代 | PRD US-006 硬原则：抽象形容词堆叠=AI
+    味 + 信息密度塌陷；改写为'她的指甲在掌心掐出月牙'直接给画面
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 同句禁用两个及以上抽象形容词堆叠（如'莫名而无尽的恐惧'），必须用具体动作或场景替代 — 理由：PRD US-006 硬原则：抽象形容词堆叠=AI
+    味 + 信息密度塌陷；改写为'她的指甲在掌心掐出月牙'直接给画面
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0390）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

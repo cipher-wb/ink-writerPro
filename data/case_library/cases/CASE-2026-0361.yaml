@@ -1,0 +1,28 @@
+case_id: CASE-2026-0361
+title: 同等实力下优先选受众最广的主流题材，慎入小众类型起步
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 同等实力下优先选受众最广的主流题材，慎入小众类型起步 | 市场收缩后小众题材读者基数不足，新人难以获得正反馈坚持下去
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 【合集】编辑星河_抖音全部视频内容.md
+failure_pattern:
+  description: 同等实力下优先选受众最广的主流题材，慎入小众类型起步 — 理由：市场收缩后小众题材读者基数不足，新人难以获得正反馈坚持下去
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0361）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

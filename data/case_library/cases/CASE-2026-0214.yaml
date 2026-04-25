@@ -1,0 +1,28 @@
+case_id: CASE-2026-0214
+title: 不得使用AI凑字数或水文骗全勤，AI只能作为灵感辅助工具
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不得使用AI凑字数或水文骗全勤，AI只能作为灵感辅助工具 | 用AI水文骗全勤是最低级用法，平台明确区分辅助创作与投机取巧
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 207_起点编辑星河聊一聊ai写作_ai写小说真.md
+failure_pattern:
+  description: 不得使用AI凑字数或水文骗全勤，AI只能作为灵感辅助工具 — 理由：用AI水文骗全勤是最低级用法，平台明确区分辅助创作与投机取巧
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0214）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

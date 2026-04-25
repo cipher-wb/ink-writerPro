@@ -1,0 +1,28 @@
+case_id: CASE-2026-0207
+title: 坚持每日稳定更新以获取全勤激励，视完本为最低义务
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 坚持每日稳定更新以获取全勤激励，视完本为最低义务 | 普通合约五五分成+完成更新后有全勤稿费20%作半年奖，实际收益接近六四开；断更直接损失这部分激励收入
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 201_起点编辑星河谈网文圈十大谣言_网文圈十大谣言（中）.md
+failure_pattern:
+  description: 坚持每日稳定更新以获取全勤激励，视完本为最低义务 — 理由：普通合约五五分成+完成更新后有全勤稿费20%作半年奖，实际收益接近六四开；断更直接损失这部分激励收入
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0207）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0183
+title: 新人书名必须包含明确卖点或脑洞噱头，不得使用简短传统书名
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 新人书名必须包含明确卖点或脑洞噱头，不得使用简短传统书名 | 起点推荐位晋级是PK制，新书期主要服务喜欢免费书的读者，这类读者靠书名判断是否点进去，无卖点书名直接死在前期
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 169_起点编辑星河谈小说书名_为什么榜单上都是短书名，编辑还是建议你写脑洞长书名.md
+failure_pattern:
+  description: 新人书名必须包含明确卖点或脑洞噱头，不得使用简短传统书名 — 理由：起点推荐位晋级是PK制，新书期主要服务喜欢免费书的读者，这类读者靠书名判断是否点进去，无卖点书名直接死在前期
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0183）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

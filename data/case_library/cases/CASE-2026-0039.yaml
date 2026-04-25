@@ -1,0 +1,28 @@
+case_id: CASE-2026-0039
+title: 战斗场面及暴力画面须一笔带过，禁止详细描写血腥细节、校园暴力过程、涉黑涉恐情节
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 战斗场面及暴力画面须一笔带过，禁止详细描写血腥细节、校园暴力过程、涉黑涉恐情节 | 血腥暴力细节是平台审核重点，过度描写会导致章节被屏蔽，涉黑涉恐属于绝对禁区
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 039_起点编辑星河谈网文审核尺度.md
+failure_pattern:
+  description: 战斗场面及暴力画面须一笔带过，禁止详细描写血腥细节、校园暴力过程、涉黑涉恐情节 — 理由：血腥暴力细节是平台审核重点，过度描写会导致章节被屏蔽，涉黑涉恐属于绝对禁区
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0039）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

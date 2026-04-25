@@ -1,0 +1,29 @@
+case_id: CASE-2026-0290
+title: 金手指系统设计须能直接驱动主线剧情，而非单纯赋能
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 金手指系统设计须能直接驱动主线剧情，而非单纯赋能 | 主线型金手指可在第一时间锁定故事走向，让读者明确追读目标
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 331_untitled.md
+failure_pattern:
+  description: 金手指系统设计须能直接驱动主线剧情，而非单纯赋能 — 理由：主线型金手指可在第一时间锁定故事走向，让读者明确追读目标
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0290）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

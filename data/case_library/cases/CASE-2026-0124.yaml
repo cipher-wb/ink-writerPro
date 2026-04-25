@@ -1,0 +1,28 @@
+case_id: CASE-2026-0124
+title: 慢热题材（玄幻仙侠、代入感年代文、重原创人设文）首订低不代表失败，安心熬字数
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 慢热题材（玄幻仙侠、代入感年代文、重原创人设文）首订低不代表失败，安心熬字数 | 此类题材靠口碑和世界观积累，字数上来后成绩翻倍轻松，不能用同等标准判断
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 095_写小说完本必神是真的吗_第82集起点编辑星河谈写网文到底要不要坚持，如何判断自己要不要开新书.md
+failure_pattern:
+  description: 慢热题材（玄幻仙侠、代入感年代文、重原创人设文）首订低不代表失败，安心熬字数 — 理由：此类题材靠口碑和世界观积累，字数上来后成绩翻倍轻松，不能用同等标准判断
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0124）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

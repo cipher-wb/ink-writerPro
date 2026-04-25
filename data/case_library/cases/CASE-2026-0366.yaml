@@ -1,0 +1,28 @@
+case_id: CASE-2026-0366
+title: 战斗或冲突场景必须采用'远景→近景→特写'三段式镜头节奏，决定性瞬间（拳头接触、武器碰撞、表情凝固）必须配特写镜头
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_shot
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 战斗或冲突场景必须采用'远景→近景→特写'三段式镜头节奏，决定性瞬间（拳头接触、武器碰撞、表情凝固）必须配特写镜头 | 决定性瞬间没有特写=爆发感泄气；编辑在多本爆款拆解中强调'打斗看的是关键帧的特写定格'，缺特写直接削弱爽点冲击
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: combat-scenes.md
+failure_pattern:
+  description: 战斗或冲突场景必须采用'远景→近景→特写'三段式镜头节奏，决定性瞬间（拳头接触、武器碰撞、表情凝固）必须配特写镜头 — 理由：决定性瞬间没有特写=爆发感泄气；编辑在多本爆款拆解中强调'打斗看的是关键帧的特写定格'，缺特写直接削弱爽点冲击
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0366）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

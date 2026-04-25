@@ -1,0 +1,28 @@
+case_id: CASE-2026-0102
+title: 开头不得堆砌世界观设定、能力体系分级或大段景物描写，先把读者留下来再展开设定
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头不得堆砌世界观设定、能力体系分级或大段景物描写，先把读者留下来再展开设定 | 设定说明书无法产生期待感和代入感，精力应放在人物和剧情上而非无关紧要的设定上
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 075_起点编辑星河谈你根本就不会写网文_第90集写小说写网文最基本的底层逻辑，很多人在冒充一个作家.md
+failure_pattern:
+  description: 开头不得堆砌世界观设定、能力体系分级或大段景物描写，先把读者留下来再展开设定 — 理由：设定说明书无法产生期待感和代入感，精力应放在人物和剧情上而非无关紧要的设定上
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0102）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

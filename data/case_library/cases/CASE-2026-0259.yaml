@@ -1,0 +1,28 @@
+case_id: CASE-2026-0259
+title: 不得以色情或低俗内容替代剧情驱动力，即使有'系统奖励'包装也无法通过审核
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不得以色情或低俗内容替代剧情驱动力，即使有'系统奖励'包装也无法通过审核 | 编辑发现系统奖励后紧接着又是擦边，说明作者用奖励机制掩盖无剧情问题，编辑看穿了这一技巧
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 287_起点编辑星河直播审稿之绕了网文圈吧_起点金牌编辑星河直播审稿，大哥绕了网文圈.md
+failure_pattern:
+  description: 不得以色情或低俗内容替代剧情驱动力，即使有'系统奖励'包装也无法通过审核 — 理由：编辑发现系统奖励后紧接着又是擦边，说明作者用奖励机制掩盖无剧情问题，编辑看穿了这一技巧
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0259）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

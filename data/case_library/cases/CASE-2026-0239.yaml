@@ -1,0 +1,29 @@
+case_id: CASE-2026-0239
+title: 同一篇文章的词汇风格必须统一，不可在日常白话文中突然插入「面若灵芝、流露英气」等文艺书面词
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 同一篇文章的词汇风格必须统一，不可在日常白话文中突然插入「面若灵芝、流露英气」等文艺书面词 | 编辑直接吐槽「跟你前面的风格完全不搭」，风格断层会打破沉浸感，暴露作者积累不足
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 243_起点编辑星河直播审稿_偶遇万一大哥，万一白金了呢.md
+failure_pattern:
+  description: 同一篇文章的词汇风格必须统一，不可在日常白话文中突然插入「面若灵芝、流露英气」等文艺书面词 — 理由：编辑直接吐槽「跟你前面的风格完全不搭」，风格断层会打破沉浸感，暴露作者积累不足
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0239）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

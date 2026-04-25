@@ -1,0 +1,28 @@
+case_id: CASE-2026-0019
+title: 听从编辑建议，冷起来的书果断完结或切掉，不要死磕扑街书
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 听从编辑建议，冷起来的书果断完结或切掉，不要死磕扑街书 | 时间成本极高，有实力的作者死磕扑街书是在浪费最宝贵的创作时间
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 025_起点编辑星河谈如何月稿费七万.md
+failure_pattern:
+  description: 听从编辑建议，冷起来的书果断完结或切掉，不要死磕扑街书 — 理由：时间成本极高，有实力的作者死磕扑街书是在浪费最宝贵的创作时间
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0019）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

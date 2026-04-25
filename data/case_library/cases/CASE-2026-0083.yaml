@@ -1,0 +1,28 @@
+case_id: CASE-2026-0083
+title: 新人入行前先研究榜单和编辑推荐题材，不要闷头码字
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新人入行前先研究榜单和编辑推荐题材，不要闷头码字 | 题材选择决定起点，市场已验证的方向签约率更高，盲目创作浪费时间成本
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 059_写网文如何一年内月稿费破七万_第96集新人写网文，半年月入破万，一年月入七万，有哪些诀窍，编辑星河谈.md
+failure_pattern:
+  description: 新人入行前先研究榜单和编辑推荐题材，不要闷头码字 — 理由：题材选择决定起点，市场已验证的方向签约率更高，盲目创作浪费时间成本
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0083）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

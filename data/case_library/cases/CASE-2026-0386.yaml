@@ -1,0 +1,30 @@
+case_id: CASE-2026-0386
+title: 第1-3章 max_new_concepts 上限为2，max_named_characters 第1章上限为2、第2-3章上限为3；超出视为信息密度违规
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_density
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 第1-3章 max_new_concepts 上限为2，max_named_characters 第1章上限为2、第2-3章上限为3；超出视为信息密度违规
+    | 黄金三章配额来自爆款逆推数据，超额章节追读率显著下降
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: scene-craft-index.md
+failure_pattern:
+  description: 第1-3章 max_new_concepts 上限为2，max_named_characters 第1章上限为2、第2-3章上限为3；超出视为信息密度违规
+    — 理由：黄金三章配额来自爆款逆推数据，超额章节追读率显著下降
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0386）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0152
+title: 禁止书写带有性癖色彩的恋物、气味、体液等变态行为，此类内容违反起点平台规范
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 禁止书写带有性癖色彩的恋物、气味、体液等变态行为，此类内容违反起点平台规范 | 编辑明确说'网文不是法外之地'，该书因主角对员工鞋袜产生畸形癖好、吸原味袜子等内容被判定发错了网站（即不适合起点）
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 135_起点编辑星河直播审稿_大哥收一收神通吧，新人写小说都是天才.md
+failure_pattern:
+  description: 禁止书写带有性癖色彩的恋物、气味、体液等变态行为，此类内容违反起点平台规范 — 理由：编辑明确说'网文不是法外之地'，该书因主角对员工鞋袜产生畸形癖好、吸原味袜子等内容被判定发错了网站（即不适合起点）
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0152）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

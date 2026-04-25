@@ -1,0 +1,29 @@
+case_id: CASE-2026-0271
+title: 避免将两句诗或简短意象扩写成大段抒情文字，保持原有信息密度
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 避免将两句诗或简短意象扩写成大段抒情文字，保持原有信息密度 | 编辑批评作者把两句诗扩写成两百字，属于无效文字堆砌，拖慢节奏却不增加信息量
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 297_起点编辑星河审稿之慢热开头_起点编辑星河直播审稿之慢热开头，大哥别怀念爹娘了，赶紧下山吧.md
+failure_pattern:
+  description: 避免将两句诗或简短意象扩写成大段抒情文字，保持原有信息密度 — 理由：编辑批评作者把两句诗扩写成两百字，属于无效文字堆砌，拖慢节奏却不增加信息量
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0271）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

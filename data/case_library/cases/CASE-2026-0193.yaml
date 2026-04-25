@@ -1,0 +1,28 @@
+case_id: CASE-2026-0193
+title: 初稿遇到推敲不定的词语或描述时，先用任意词语带过，全部写完后再回头修改润色
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 初稿遇到推敲不定的词语或描述时，先用任意词语带过，全部写完后再回头修改润色 | 在写作流程中停下来纠结单个词语会打断思路、降低速度，初稿的首要任务是把内容写出来，而非追求每句话的完美
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 175_起点编辑星河谈写小说码字速度_大神白金写小说时速如何，新人怎么提升速度.md
+failure_pattern:
+  description: 初稿遇到推敲不定的词语或描述时，先用任意词语带过，全部写完后再回头修改润色 — 理由：在写作流程中停下来纠结单个词语会打断思路、降低速度，初稿的首要任务是把内容写出来，而非追求每句话的完美
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0193）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

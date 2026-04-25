@@ -1,0 +1,28 @@
+case_id: CASE-2026-0205
+title: 扎实研究市场和题材受众，不要被AI冲击等外部因素分散注意力
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 扎实研究市场和题材受众，不要被AI冲击等外部因素分散注意力 | 编辑明确表示：只要有真实写作实力，五年内不必担心AI冲击；市场研究和提升写作能力才是核心竞争力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 189_起点编辑星河谈网文圈十大八卦_写小说去起点还是番茄？ai写小说有什么影响，星河到底喜欢谁.md
+failure_pattern:
+  description: 扎实研究市场和题材受众，不要被AI冲击等外部因素分散注意力 — 理由：编辑明确表示：只要有真实写作实力，五年内不必担心AI冲击；市场研究和提升写作能力才是核心竞争力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0205）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

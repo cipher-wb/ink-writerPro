@@ -1,0 +1,34 @@
+case_id: CASE-2026-0395
+title: 禁用空心形容词：莫名、无尽、难以言喻、仿佛、似乎、恍惚、浩渺、深邃、蓦然、豁然（引用 prose-blacklist.yaml）
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 禁用空心形容词：莫名、无尽、难以言喻、仿佛、似乎、恍惚、浩渺、深邃、蓦然、豁然（引用 prose-blacklist.yaml） | US-003
+    黑名单最毒 10 词——这些词把具体情绪/动作糊成一团，读者收不到信号；直接删或替换为具体动词
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 禁用空心形容词：莫名、无尽、难以言喻、仿佛、似乎、恍惚、浩渺、深邃、蓦然、豁然（引用 prose-blacklist.yaml） —
+    理由：US-003 黑名单最毒 10 词——这些词把具体情绪/动作糊成一团，读者收不到信号；直接删或替换为具体动词
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0395）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

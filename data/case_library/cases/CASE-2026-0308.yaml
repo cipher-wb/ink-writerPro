@@ -1,0 +1,29 @@
+case_id: CASE-2026-0308
+title: 新人严禁单独写纯灵异/规则怪谈分类，应以玄幻仙侠为主类型包裹
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 新人严禁单独写纯灵异/规则怪谈分类，应以玄幻仙侠为主类型包裹 | 纯灵异追读留存差，且极易被举报下架（《神秘复苏》作者佛爷亲证），新人资源有限无法承受这一风险
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 353_untitled.md
+failure_pattern:
+  description: 新人严禁单独写纯灵异/规则怪谈分类，应以玄幻仙侠为主类型包裹 — 理由：纯灵异追读留存差，且极易被举报下架（《神秘复苏》作者佛爷亲证），新人资源有限无法承受这一风险
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0308）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

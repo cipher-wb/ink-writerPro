@@ -1,0 +1,28 @@
+case_id: CASE-2026-0058
+title: 开头几十字内必须交代主角核心处境、关键人物关系和主要遗憾/期待，禁止用一两章铺垫前世或背景
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头几十字内必须交代主角核心处境、关键人物关系和主要遗憾/期待，禁止用一两章铺垫前世或背景 | 读者上来就是找信息，无效信息堆砌会让读者失去耐心直接划走
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 001_小说开头吸引人的具体实操分析.md
+failure_pattern:
+  description: 开头几十字内必须交代主角核心处境、关键人物关系和主要遗憾/期待，禁止用一两章铺垫前世或背景 — 理由：读者上来就是找信息，无效信息堆砌会让读者失去耐心直接划走
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0058）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

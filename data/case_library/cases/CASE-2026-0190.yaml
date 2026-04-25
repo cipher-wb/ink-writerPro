@@ -1,0 +1,28 @@
+case_id: CASE-2026-0190
+title: 开头必须精心雕琢，掌握切入人设和剧情卡点的技巧，而非随意起笔
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头必须精心雕琢，掌握切入人设和剧情卡点的技巧，而非随意起笔 | 编辑筛选时首看开头，基本功和卡点技巧是从20本中脱颖而出的关键门槛
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 173_起点编辑星河谈新人写小说签约_写小说想签约起点到底难不难？.md
+failure_pattern:
+  description: 开头必须精心雕琢，掌握切入人设和剧情卡点的技巧，而非随意起笔 — 理由：编辑筛选时首看开头，基本功和卡点技巧是从20本中脱颖而出的关键门槛
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0190）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

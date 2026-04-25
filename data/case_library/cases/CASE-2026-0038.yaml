@@ -1,0 +1,28 @@
+case_id: CASE-2026-0038
+title: 禁止在文中夹带黑化国家体制、涉及民族宗教矛盾等私货内容
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止在文中夹带黑化国家体制、涉及民族宗教矛盾等私货内容 | 属于平台政治红线，无论以何种隐晦方式植入均构成违规，是影响签约和上架的硬封禁项
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 039_起点编辑星河谈网文审核尺度.md
+failure_pattern:
+  description: 禁止在文中夹带黑化国家体制、涉及民族宗教矛盾等私货内容 — 理由：属于平台政治红线，无论以何种隐晦方式植入均构成违规，是影响签约和上架的硬封禁项
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0038）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

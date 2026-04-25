@@ -1,0 +1,29 @@
+case_id: CASE-2026-0105
+title: 发书前先调查同类题材在目标平台的市场表现，确认有读者群再动笔
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 发书前先调查同类题材在目标平台的市场表现，确认有读者群再动笔 | 网文平台有明确的受众偏好，脱离市场需求的小众写法（如传统科幻、赛博风格传记）注定无人问津
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 077_起点编辑星河谈写小说开书之前_第89集准备写网文的作者看完这六条肺腑之言再动笔.md
+failure_pattern:
+  description: 发书前先调查同类题材在目标平台的市场表现，确认有读者群再动笔 — 理由：网文平台有明确的受众偏好，脱离市场需求的小众写法（如传统科幻、赛博风格传记）注定无人问津
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0105）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

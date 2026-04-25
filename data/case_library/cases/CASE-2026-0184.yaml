@@ -1,0 +1,29 @@
+case_id: CASE-2026-0184
+title: 书名须在3秒内传达核心爽点或奇特设定，让目标读者产生'这本我要看'的冲动
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 书名须在3秒内传达核心爽点或奇特设定，让目标读者产生'这本我要看'的冲动 | 免费书读者判断标准是'有趣/不有趣'，慢节奏或看不懂就不会点，书名是第一道筛选
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 169_起点编辑星河谈小说书名_为什么榜单上都是短书名，编辑还是建议你写脑洞长书名.md
+failure_pattern:
+  description: 书名须在3秒内传达核心爽点或奇特设定，让目标读者产生'这本我要看'的冲动 — 理由：免费书读者判断标准是'有趣/不有趣'，慢节奏或看不懂就不会点，书名是第一道筛选
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0184）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

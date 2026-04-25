@@ -1,0 +1,28 @@
+case_id: CASE-2026-0020
+title: 上架后成绩短期下滑时保持心态稳定，不要轻易切书或陷入焦虑
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 上架后成绩短期下滑时保持心态稳定，不要轻易切书或陷入焦虑 | 前期积累需要时间发酵，智能推爆发需要心态稳定才能接住流量
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 025_起点编辑星河谈如何月稿费七万.md
+failure_pattern:
+  description: 上架后成绩短期下滑时保持心态稳定，不要轻易切书或陷入焦虑 — 理由：前期积累需要时间发酵，智能推爆发需要心态稳定才能接住流量
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0020）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

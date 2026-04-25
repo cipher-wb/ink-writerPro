@@ -1,0 +1,28 @@
+case_id: CASE-2026-0049
+title: 开头禁止写楔子、序章或大段世界观铺设，直接切入核心冲突或人物
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头禁止写楔子、序章或大段世界观铺设，直接切入核心冲突或人物 | 现代网文读者耐心极低，开篇的世界观轰炸会直接劝退读者，导致追读率崩塌
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 051_编辑星河讲新人写小说十大容易踩的坑.md
+failure_pattern:
+  description: 开头禁止写楔子、序章或大段世界观铺设，直接切入核心冲突或人物 — 理由：现代网文读者耐心极低，开篇的世界观轰炸会直接劝退读者，导致追读率崩塌
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0049）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

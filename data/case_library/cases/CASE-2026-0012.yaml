@@ -1,0 +1,29 @@
+case_id: CASE-2026-0012
+title: 遇到不熟悉的题材细节，查资料或用AI工具补充，不要封闭式创作
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 遇到不熟悉的题材细节，查资料或用AI工具补充，不要封闭式创作 | 写都市不需要真的有某领域经验，主动获取外部知识比放弃题材或凭空想象更有效
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 011_新人最容易月入五万的网文小说分类.md
+failure_pattern:
+  description: 遇到不熟悉的题材细节，查资料或用AI工具补充，不要封闭式创作 — 理由：写都市不需要真的有某领域经验，主动获取外部知识比放弃题材或凭空想象更有效
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0012）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

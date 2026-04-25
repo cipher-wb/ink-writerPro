@@ -1,0 +1,29 @@
+case_id: CASE-2026-0329
+title: 主角性格要有'杨过式邪气'：本质正义但行事出人意料，用反常举动制造趣味反差
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角性格要有'杨过式邪气'：本质正义但行事出人意料，用反常举动制造趣味反差 | 纯粹正派主角缺乏张力，邪气能让主角干出意料之外的事，制造爽感和阅读期待
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 403_untitled.md
+failure_pattern:
+  description: 主角性格要有'杨过式邪气'：本质正义但行事出人意料，用反常举动制造趣味反差 — 理由：纯粹正派主角缺乏张力，邪气能让主角干出意料之外的事，制造爽感和阅读期待
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0329）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

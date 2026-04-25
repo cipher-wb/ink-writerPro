@@ -1,0 +1,30 @@
+case_id: CASE-2026-0016
+title: 架空历史不加修炼/武侠/奇情卖点直写谋商战，属于「不接地气又没代入感」的死亡组合，新人应至少叠加一个网文化元素（锦衣卫、武侠、典故人头）才有可读性
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 架空历史不加修炼/武侠/奇情卖点直写谋商战，属于「不接地气又没代入感」的死亡组合，新人应至少叠加一个网文化元素（锦衣卫、武侠、典故人头）才有可读性
+    | 纯架空谋商战版权IP价值大，大神早已占据，新人既无实力竞争又受众极窄，费力不讨好
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 017_编辑星河谈最不推荐的七大网文题材排名.md
+failure_pattern:
+  description: 架空历史不加修炼/武侠/奇情卖点直写谋商战，属于「不接地气又没代入感」的死亡组合，新人应至少叠加一个网文化元素（锦衣卫、武侠、典故人头）才有可读性
+    — 理由：纯架空谋商战版权IP价值大，大神早已占据，新人既无实力竞争又受众极窄，费力不讨好
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0016）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

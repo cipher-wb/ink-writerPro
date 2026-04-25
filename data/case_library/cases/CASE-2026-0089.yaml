@@ -1,0 +1,28 @@
+case_id: CASE-2026-0089
+title: 军事、民国历史、零亿等题材写作前需预判平台审核红线，提前规避敏感情节设计
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 军事、民国历史、零亿等题材写作前需预判平台审核红线，提前规避敏感情节设计 | 这些题材最容易出报款书但也最容易踩审核红线，平台规范后发展空间大幅压缩，若不提前规避会在关键节点被卡
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 063_起点编辑星河谈网文同质化严重_第95集为什么现在找好书难，网文不好看吗？问题在哪.md
+failure_pattern:
+  description: 军事、民国历史、零亿等题材写作前需预判平台审核红线，提前规避敏感情节设计 — 理由：这些题材最容易出报款书但也最容易踩审核红线，平台规范后发展空间大幅压缩，若不提前规避会在关键节点被卡
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0089）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

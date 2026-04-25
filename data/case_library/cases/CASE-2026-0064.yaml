@@ -1,0 +1,29 @@
+case_id: CASE-2026-0064
+title: 书名必须具备独立吸引力，书名差则读者连简介都不会看
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 书名必须具备独立吸引力，书名差则读者连简介都不会看 | 读者决策链是：书名→简介→第一页，任一环节失去兴趣即流失，书名是最前置的过滤器
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 002_网文的开头，一句话吸引读者？.md
+failure_pattern:
+  description: 书名必须具备独立吸引力，书名差则读者连简介都不会看 — 理由：读者决策链是：书名→简介→第一页，任一环节失去兴趣即流失，书名是最前置的过滤器
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0064）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

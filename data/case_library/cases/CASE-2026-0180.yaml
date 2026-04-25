@@ -1,0 +1,29 @@
+case_id: CASE-2026-0180
+title: 反派冲突必须通过主角的合理职业身份和铺垫引出，禁止直接嘲讽触发打脸
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 反派冲突必须通过主角的合理职业身份和铺垫引出，禁止直接嘲讽触发打脸 | 无铺垫的'斗之气三段'式打脸是起点明确点名的老套路，缺乏逻辑性和代入感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 165_起点编辑星河谈新人为什么在起点签约不了_新人得注意起点风格的改变.md
+failure_pattern:
+  description: 反派冲突必须通过主角的合理职业身份和铺垫引出，禁止直接嘲讽触发打脸 — 理由：无铺垫的'斗之气三段'式打脸是起点明确点名的老套路，缺乏逻辑性和代入感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0180）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

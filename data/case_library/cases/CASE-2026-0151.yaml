@@ -1,0 +1,28 @@
+case_id: CASE-2026-0151
+title: 主角设定必须保留至少一项正面特质，禁止将主角塑造成纯粹的猥琐屌丝形象
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角设定必须保留至少一项正面特质，禁止将主角塑造成纯粹的猥琐屌丝形象 | 编辑明确指出该主角每天沉迷手艺活、肥胖、看小电影，完全没有读者可以认同或期待的正面特质，导致直接被拒
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 135_起点编辑星河直播审稿_大哥收一收神通吧，新人写小说都是天才.md
+failure_pattern:
+  description: 主角设定必须保留至少一项正面特质，禁止将主角塑造成纯粹的猥琐屌丝形象 — 理由：编辑明确指出该主角每天沉迷手艺活、肥胖、看小电影，完全没有读者可以认同或期待的正面特质，导致直接被拒
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0151）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0167
+title: 开头禁止写楔子式大世界观铺垫，直接切入人物与冲突
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头禁止写楔子式大世界观铺垫，直接切入人物与冲突 | 现代读者耐心极低，开局大量世界观说明会直接劝退读者，无法形成追读惯性
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 151_起点编辑星河谈新人写小说_新人写小说容易中的十大坑，看下你踩了几个.md
+failure_pattern:
+  description: 开头禁止写楔子式大世界观铺垫，直接切入人物与冲突 — 理由：现代读者耐心极低，开局大量世界观说明会直接劝退读者，无法形成追读惯性
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0167）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

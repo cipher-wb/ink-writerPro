@@ -1,0 +1,28 @@
+case_id: CASE-2026-0150
+title: 主角穿越/转生的载体必须具备读者代入可能性，禁止设定为排泄物、蛆虫等令人作呕的存在
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角穿越/转生的载体必须具备读者代入可能性，禁止设定为排泄物、蛆虫等令人作呕的存在 | 读者代入感是网文的基础，主角若是'被天道拉的屎撞死再转生为女神排泄物'，代入感归零且无法挽回
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 133_起点编辑星河直播审稿切片系列_害圈神作，三分的qu真人来了.md
+failure_pattern:
+  description: 主角穿越/转生的载体必须具备读者代入可能性，禁止设定为排泄物、蛆虫等令人作呕的存在 — 理由：读者代入感是网文的基础，主角若是'被天道拉的屎撞死再转生为女神排泄物'，代入感归零且无法挽回
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0150）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0091
+title: 写章节时先将人物描述、景物描写、战斗、煽情等类型分区标注，通篇写完后再逐类润色填充
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- misc
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 写章节时先将人物描述、景物描写、战斗、煽情等类型分区标注，通篇写完后再逐类润色填充 | 分化章节类型可保持叙事主干流畅推进，避免在细节润色上过早耗时导致整体进度停滞
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 065_起点编辑星河谈网文作者码字时速问题_第94集码字速度如何加快？三个诀窍成为触手怪.md
+failure_pattern:
+  description: 写章节时先将人物描述、景物描写、战斗、煽情等类型分区标注，通篇写完后再逐类润色填充 — 理由：分化章节类型可保持叙事主干流畅推进，避免在细节润色上过早耗时导致整体进度停滞
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0091）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

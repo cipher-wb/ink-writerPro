@@ -1,0 +1,28 @@
+case_id: CASE-2026-0371
+title: 每个场景必须指定主导感官（非默认视觉），相邻两个场景的主导感官必须轮换；连续2个场景同主导感官视为感官停滞
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_sensory
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 每个场景必须指定主导感官（非默认视觉），相邻两个场景的主导感官必须轮换；连续2个场景同主导感官视为感官停滞 | 全章只用视觉=感官沙漠；主导感官轮换是沉浸感的结构性来源，编辑指出'好的开篇让读者听见、闻到、摸到'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: desire-description.md
+failure_pattern:
+  description: 每个场景必须指定主导感官（非默认视觉），相邻两个场景的主导感官必须轮换；连续2个场景同主导感官视为感官停滞 — 理由：全章只用视觉=感官沙漠；主导感官轮换是沉浸感的结构性来源，编辑指出'好的开篇让读者听见、闻到、摸到'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0371）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

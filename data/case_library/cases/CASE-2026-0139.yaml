@@ -1,0 +1,28 @@
+case_id: CASE-2026-0139
+title: 不因签约后数据不佳就放弃更新，坚持写完当前作品再开新书
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不因签约后数据不佳就放弃更新，坚持写完当前作品再开新书 | 网文正反馈机制依赖积累，第一本→第二本→第三本才是实力提升的正常路径，中途放弃等于清零
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 127_第66集起点编辑星河谈网文现状_写小说得改变下思路了，最重要的两个点.md
+failure_pattern:
+  description: 不因签约后数据不佳就放弃更新，坚持写完当前作品再开新书 — 理由：网文正反馈机制依赖积累，第一本→第二本→第三本才是实力提升的正常路径，中途放弃等于清零
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0139）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

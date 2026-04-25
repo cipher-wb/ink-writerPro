@@ -1,0 +1,30 @@
+case_id: CASE-2026-0355
+title: 在轻松场景中有意使用字面义契合场景的成语或词语，并通过旁白或配角点破，制造文字游戏式的小高潮
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 在轻松场景中有意使用字面义契合场景的成语或词语，并通过旁白或配角点破，制造文字游戏式的小高潮 | 编辑特意解释'歡呼雀躍'因麻雀在场而用对了，这类文字游戏能在不打断节奏的前提下增加阅读愉悦感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 439_untitled.md
+failure_pattern:
+  description: 在轻松场景中有意使用字面义契合场景的成语或词语，并通过旁白或配角点破，制造文字游戏式的小高潮 — 理由：编辑特意解释'歡呼雀躍'因麻雀在场而用对了，这类文字游戏能在不打断节奏的前提下增加阅读愉悦感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0355）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

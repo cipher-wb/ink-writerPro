@@ -1,0 +1,29 @@
+case_id: CASE-2026-0292
+title: 书名和简介要预埋身份暗示与期待感，用关键词组合直接锁定目标读者
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 书名和简介要预埋身份暗示与期待感，用关键词组合直接锁定目标读者 | 读者在点击前已通过书名简介完成第一层筛选，身份词+关系词的组合能在一句话内拉满期待
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 331_untitled.md
+failure_pattern:
+  description: 书名和简介要预埋身份暗示与期待感，用关键词组合直接锁定目标读者 — 理由：读者在点击前已通过书名简介完成第一层筛选，身份词+关系词的组合能在一句话内拉满期待
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0292）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

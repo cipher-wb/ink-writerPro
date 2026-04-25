@@ -1,0 +1,28 @@
+case_id: CASE-2026-0224
+title: 女配角不要符号化（白月光/拜金女），应赋予真实反应和细节行为
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- highpoint
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 女配角不要符号化（白月光/拜金女），应赋予真实反应和细节行为 | 符号化配角缺乏深度，读者不信服；真实的刮目相看行为（如眨眼、迷惑表情）比程式化打脸更有代入感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 221_起点编辑星河直播时拆书_重生文为何非得谈恋爱.md
+failure_pattern:
+  description: 女配角不要符号化（白月光/拜金女），应赋予真实反应和细节行为 — 理由：符号化配角缺乏深度，读者不信服；真实的刮目相看行为（如眨眼、迷惑表情）比程式化打脸更有代入感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0224）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

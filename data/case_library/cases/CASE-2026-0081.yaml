@@ -1,0 +1,28 @@
+case_id: CASE-2026-0081
+title: 新书题材选择要贴近当前读者口味，题材或内容出现重大问题时必须果断切书，不可恋战
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 新书题材选择要贴近当前读者口味，题材或内容出现重大问题时必须果断切书，不可恋战 | 哪怕大神白金，新书铺街、月入极低甚至退圈的案例比比皆是；题材踩雷比文笔差更致命
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 028_万订网文作者被逼进厂打工？聊聊全职写书那些事.md
+failure_pattern:
+  description: 新书题材选择要贴近当前读者口味，题材或内容出现重大问题时必须果断切书，不可恋战 — 理由：哪怕大神白金，新书铺街、月入极低甚至退圈的案例比比皆是；题材踩雷比文笔差更致命
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0081）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0303
+title: 开头必须让读者和编辑产生继续读下去的欲望，哪怕题材、文笔、切入脑洞存在明显不足
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头必须让读者和编辑产生继续读下去的欲望，哪怕题材、文笔、切入脑洞存在明显不足 | 编辑星河明确指出：开头能吸引人就是天赋横溢的体现，其他缺陷可后天弥补；开头吸引力是判断故事潜力的最核心指标
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 347_untitled.md
+failure_pattern:
+  description: 开头必须让读者和编辑产生继续读下去的欲望，哪怕题材、文笔、切入脑洞存在明显不足 — 理由：编辑星河明确指出：开头能吸引人就是天赋横溢的体现，其他缺陷可后天弥补；开头吸引力是判断故事潜力的最核心指标
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0303）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

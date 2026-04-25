@@ -1,0 +1,29 @@
+case_id: CASE-2026-0079
+title: 线性叙事段落中必须穿插内心独白、情感铺垫或背景交代，避免纯粹平铺直叙，防止读者中途弃书
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 线性叙事段落中必须穿插内心独白、情感铺垫或背景交代，避免纯粹平铺直叙，防止读者中途弃书 | 纯平铺直叙是线性叙事最常见的劣化形态，缺乏情感锚点会让读者感觉枯燥、节奏拖沓
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 024_如何流畅写作，冒充顶级作者，讲一讲ai时代的写作技巧.md
+failure_pattern:
+  description: 线性叙事段落中必须穿插内心独白、情感铺垫或背景交代，避免纯粹平铺直叙，防止读者中途弃书 — 理由：纯平铺直叙是线性叙事最常见的劣化形态，缺乏情感锚点会让读者感觉枯燥、节奏拖沓
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0079）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

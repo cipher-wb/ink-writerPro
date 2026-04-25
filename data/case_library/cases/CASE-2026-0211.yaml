@@ -1,0 +1,28 @@
+case_id: CASE-2026-0211
+title: 当前赛道连续两本无法突破时，应主动研究并切换到更适合自己的类型，而非无限重试
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 当前赛道连续两本无法突破时，应主动研究并切换到更适合自己的类型，而非无限重试 | 案例七显示第一二本被喷，第三本转赛道才扬名立万；赛道匹配度影响上限
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 205_起点编辑星河讲一讲起点大神和白金作家_坚持写小说.md
+failure_pattern:
+  description: 当前赛道连续两本无法突破时，应主动研究并切换到更适合自己的类型，而非无限重试 — 理由：案例七显示第一二本被喷，第三本转赛道才扬名立万；赛道匹配度影响上限
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0211）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

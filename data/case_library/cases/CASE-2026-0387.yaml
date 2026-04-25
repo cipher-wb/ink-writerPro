@@ -1,0 +1,30 @@
+case_id: CASE-2026-0387
+title: info_budget.natural_delivery_hints 5种融入方式（行动展示/对话揭示/后果倒推/误读制造/环境映射）必须按章纲规划消费，至少使
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_density
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: info_budget.natural_delivery_hints 5种融入方式（行动展示/对话揭示/后果倒推/误读制造/环境映射）必须按章纲规划消费，至少使用其中3种以保持信息节奏多样
+    | 5种方式仅用1-2种=读者识别为'信息块'，混合使用能让设定隐形
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: scene-craft-index.md
+failure_pattern:
+  description: info_budget.natural_delivery_hints 5种融入方式（行动展示/对话揭示/后果倒推/误读制造/环境映射）必须按章纲规划消费，至少使用其中3种以保持信息节奏多样
+    — 理由：5种方式仅用1-2种=读者识别为'信息块'，混合使用能让设定隐形
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0387）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

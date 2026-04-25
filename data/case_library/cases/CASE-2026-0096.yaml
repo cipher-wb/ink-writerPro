@@ -1,0 +1,28 @@
+case_id: CASE-2026-0096
+title: 开头几章必须具备时间、人物、地点、主角代入感、主线这五个基本元素，缺一不可
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头几章必须具备时间、人物、地点、主角代入感、主线这五个基本元素，缺一不可 | 编辑和资深读者一眼能看出不符合市场的开头，缺乏这些基本元素会直接导致签约失败
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 071_起点编辑星河谈签约听意见_第93集写网文要不要听别人的建议，为什么不签你的书.md
+failure_pattern:
+  description: 开头几章必须具备时间、人物、地点、主角代入感、主线这五个基本元素，缺一不可 — 理由：编辑和资深读者一眼能看出不符合市场的开头，缺乏这些基本元素会直接导致签约失败
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0096）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

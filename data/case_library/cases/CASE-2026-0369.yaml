@@ -1,0 +1,28 @@
+case_id: CASE-2026-0369
+title: 黄金三章每章至少出现2次特写镜头（关键情绪/冲突/金手指激活点），缺失特写视为爽点视觉化失败
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_shot
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 黄金三章每章至少出现2次特写镜头（关键情绪/冲突/金手指激活点），缺失特写视为爽点视觉化失败 | 黄金三章读者扫读速度最快，特写是抓住视觉注意力的最强信号；编辑反复强调'前三章必须有让读者停留的画面'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: combat-scenes.md
+failure_pattern:
+  description: 黄金三章每章至少出现2次特写镜头（关键情绪/冲突/金手指激活点），缺失特写视为爽点视觉化失败 — 理由：黄金三章读者扫读速度最快，特写是抓住视觉注意力的最强信号；编辑反复强调'前三章必须有让读者停留的画面'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0369）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

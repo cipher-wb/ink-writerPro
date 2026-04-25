@@ -1,0 +1,28 @@
+case_id: CASE-2026-0344
+title: 主角与IP原著知名角色在第一章内产生直接互动，蹭原著热度
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角与IP原著知名角色在第一章内产生直接互动，蹭原著热度 | 令狐冲、青城派等原著人物直接出现并互动，不仅帮助发书，还能拿到推荐位
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 421_untitled.md
+failure_pattern:
+  description: 主角与IP原著知名角色在第一章内产生直接互动，蹭原著热度 — 理由：令狐冲、青城派等原著人物直接出现并互动，不仅帮助发书，还能拿到推荐位
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0344）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

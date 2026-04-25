@@ -1,0 +1,31 @@
+case_id: CASE-2026-0398
+title: 高潮/爽点段落抒情与心理描写总字数占比不得超过 20%，其余交给动作与对白
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 高潮/爽点段落抒情与心理描写总字数占比不得超过 20%，其余交给动作与对白 | 爽点的核心是'发生了什么'而非'我感觉到什么'；心理描写超
+    20% 就会稀释爆点，读者追文会划走
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 高潮/爽点段落抒情与心理描写总字数占比不得超过 20%，其余交给动作与对白 — 理由：爽点的核心是'发生了什么'而非'我感觉到什么'；心理描写超
+    20% 就会稀释爆点，读者追文会划走
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0398）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

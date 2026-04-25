@@ -1,0 +1,28 @@
+case_id: CASE-2026-0031
+title: 可用AI生成参考书目的大纲脉络和人设介绍，但须对比自身内容进行差异化雕琢，不得照搬节奏安排
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 可用AI生成参考书目的大纲脉络和人设介绍，但须对比自身内容进行差异化雕琢，不得照搬节奏安排 | 编辑星河明确指出此为可接受的辅助方式，前提是用于启发而非直接使用
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 035_起点编辑星河谈AI写作写网文.md
+failure_pattern:
+  description: 可用AI生成参考书目的大纲脉络和人设介绍，但须对比自身内容进行差异化雕琢，不得照搬节奏安排 — 理由：编辑星河明确指出此为可接受的辅助方式，前提是用于启发而非直接使用
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0031）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

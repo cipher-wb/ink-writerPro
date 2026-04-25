@@ -1,0 +1,29 @@
+case_id: CASE-2026-0246
+title: 灵异文不能通篇只写吓人和民俗，必须融入人与人/人与鬼的对抗和明确的驱动目标
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 灵异文不能通篇只写吓人和民俗，必须融入人与人/人与鬼的对抗和明确的驱动目标 | 小说本质是人与人的对抗，纯粹堆砌恐怖元素无法构成叙事驱动力，读者会疲倦
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 249_起点编辑星河直播拆书。从《幽冥画皮卷》开头讲诡异修仙和灵异小说切入.md
+failure_pattern:
+  description: 灵异文不能通篇只写吓人和民俗，必须融入人与人/人与鬼的对抗和明确的驱动目标 — 理由：小说本质是人与人的对抗，纯粹堆砌恐怖元素无法构成叙事驱动力，读者会疲倦
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0246）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

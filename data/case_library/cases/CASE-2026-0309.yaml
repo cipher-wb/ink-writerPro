@@ -1,0 +1,29 @@
+case_id: CASE-2026-0309
+title: 避免堆砌强噱头和老套路换来短期流量，应以融合内容打造持续追读
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 避免堆砌强噱头和老套路换来短期流量，应以融合内容打造持续追读 | 小白文强噱头读者看一阵即流失，融合诡异民俗的玄幻文追读留存显著更高，商业价值更持久
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 353_untitled.md
+failure_pattern:
+  description: 避免堆砌强噱头和老套路换来短期流量，应以融合内容打造持续追读 — 理由：小白文强噱头读者看一阵即流失，融合诡异民俗的玄幻文追读留存显著更高，商业价值更持久
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0309）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

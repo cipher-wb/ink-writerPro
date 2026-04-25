@@ -1,0 +1,30 @@
+case_id: CASE-2026-0014
+title: 避免套路化严重的已烂题材：传统玄幻的「少年崛起+戒指老爷爷」、高武的「高中开局测灵根+对抗怪兽」、都市异能的「奥特曼打怪兽无铺垫」，读者比作者更清楚后续剧情时即
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 避免套路化严重的已烂题材：传统玄幻的「少年崛起+戒指老爷爷」、高武的「高中开局测灵根+对抗怪兽」、都市异能的「奥特曼打怪兽无铺垫」，读者比作者更清楚后续剧情时即为死局
+    | 套路化题材导致读者审美疲劳，无法产生新鲜感，新人写法更难突破前辈的经典框架
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 017_编辑星河谈最不推荐的七大网文题材排名.md
+failure_pattern:
+  description: 避免套路化严重的已烂题材：传统玄幻的「少年崛起+戒指老爷爷」、高武的「高中开局测灵根+对抗怪兽」、都市异能的「奥特曼打怪兽无铺垫」，读者比作者更清楚后续剧情时即为死局
+    — 理由：套路化题材导致读者审美疲劳，无法产生新鲜感，新人写法更难突破前辈的经典框架
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0014）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0121
+title: 故事需具备与短剧、短视频竞争的吸引力，开篇即要让读者有看下去的欲望
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 故事需具备与短剧、短视频竞争的吸引力，开篇即要让读者有看下去的欲望 | 当前娱乐方式多元，网文必须靠好内容好故事才能留住读者；签约门槛的最低标准是'流畅且吸引人看下去'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 087_起点编辑星河谈起点签约和番茄小说区别_第84集为什么起点签约模式不能学番茄.md
+failure_pattern:
+  description: 故事需具备与短剧、短视频竞争的吸引力，开篇即要让读者有看下去的欲望 — 理由：当前娱乐方式多元，网文必须靠好内容好故事才能留住读者；签约门槛的最低标准是'流畅且吸引人看下去'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0121）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0240
+title: 女主对男主的称呼可以随关系递进逐步软化（大色狼→臭流氓→小坏蛋），用称呼变化暗示感情进展
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 女主对男主的称呼可以随关系递进逐步软化（大色狼→臭流氓→小坏蛋），用称呼变化暗示感情进展 | 编辑主动预测称呼变化并表示「好看爱看」，这种细节设计能让读者产生期待感，是高效的情感推进技巧
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 243_起点编辑星河直播审稿_偶遇万一大哥，万一白金了呢.md
+failure_pattern:
+  description: 女主对男主的称呼可以随关系递进逐步软化（大色狼→臭流氓→小坏蛋），用称呼变化暗示感情进展 — 理由：编辑主动预测称呼变化并表示「好看爱看」，这种细节设计能让读者产生期待感，是高效的情感推进技巧
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0240）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

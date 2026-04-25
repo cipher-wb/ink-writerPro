@@ -1,0 +1,28 @@
+case_id: CASE-2026-0141
+title: 写作计划中必须同步安排复盘时间，每章/每卷结束后主动总结得失
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 写作计划中必须同步安排复盘时间，每章/每卷结束后主动总结得失 | 学而不思则罔——光码字不思考无法进步；思考必须落地到具体写作行为上才有效
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 127_第66集起点编辑星河谈网文现状_写小说得改变下思路了，最重要的两个点.md
+failure_pattern:
+  description: 写作计划中必须同步安排复盘时间，每章/每卷结束后主动总结得失 — 理由：学而不思则罔——光码字不思考无法进步；思考必须落地到具体写作行为上才有效
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0141）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

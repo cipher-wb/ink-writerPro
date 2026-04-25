@@ -1,0 +1,29 @@
+case_id: CASE-2026-0251
+title: 上架初期数据拉垮时，优先埋头更新而非纠结成绩数据
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 上架初期数据拉垮时，优先埋头更新而非纠结成绩数据 | 新书期PK数据差不代表书的潜力已定，读者积累和平台推荐都需要时间，过度关注数据会动摇创作信心并导致更新频率下降
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 281_起点编辑星河讲一讲新人坚持的重要性_从首订两三百到精品，月稿费三四万，坚持就是王道.md
+failure_pattern:
+  description: 上架初期数据拉垮时，优先埋头更新而非纠结成绩数据 — 理由：新书期PK数据差不代表书的潜力已定，读者积累和平台推荐都需要时间，过度关注数据会动摇创作信心并导致更新频率下降
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0251）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

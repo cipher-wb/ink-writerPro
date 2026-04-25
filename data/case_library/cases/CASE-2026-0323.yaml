@@ -1,0 +1,28 @@
+case_id: CASE-2026-0323
+title: 有仇当场必报，三章内解决一个反派，绝不拖沓
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有仇当场必报，三章内解决一个反派，绝不拖沓 | 快节奏是爽文的核心卖点，拖沓会让小白读者流失，强情绪需要即时兑现
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 399_untitled.md
+failure_pattern:
+  description: 有仇当场必报，三章内解决一个反派，绝不拖沓 — 理由：快节奏是爽文的核心卖点，拖沓会让小白读者流失，强情绪需要即时兑现
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0323）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

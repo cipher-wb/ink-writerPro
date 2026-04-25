@@ -1,0 +1,31 @@
+case_id: CASE-2026-0393
+title: 优先使用强动词 + 具体名词；能用动词表达的禁止用'形容词 + 的 + 名词'结构
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 优先使用强动词 + 具体名词；能用动词表达的禁止用'形容词 + 的 + 名词'结构 | 编辑星河反复强调：强动词带画面，'缓慢而沉重地走过去'不如'拖着步子'；直白化的核心就是动词密度
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 优先使用强动词 + 具体名词；能用动词表达的禁止用'形容词 + 的 + 名词'结构 — 理由：编辑星河反复强调：强动词带画面，'缓慢而沉重地走过去'不如'拖着步子'；直白化的核心就是动词密度
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0393）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

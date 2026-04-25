@@ -1,0 +1,28 @@
+case_id: CASE-2026-0080
+title: 每次更新都必须保持质量水准，杜绝水更；读者耐心已大幅缩短，一旦更新质量下滑，追订立刻流失
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 每次更新都必须保持质量水准，杜绝水更；读者耐心已大幅缩短，一旦更新质量下滑，追订立刻流失 | 短视频和AI时代读者没耐心，更新水了就会狂掉追订，甚至连大神白金也无法幸免
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 028_万订网文作者被逼进厂打工？聊聊全职写书那些事.md
+failure_pattern:
+  description: 每次更新都必须保持质量水准，杜绝水更；读者耐心已大幅缩短，一旦更新质量下滑，追订立刻流失 — 理由：短视频和AI时代读者没耐心，更新水了就会狂掉追订，甚至连大神白金也无法幸免
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0080）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0008
+title: 允许通过作者群、贴吧、读者群等渠道进行真实宣传，吸引真实读者追读
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 允许通过作者群、贴吧、读者群等渠道进行真实宣传，吸引真实读者追读 | 真实读者产生的追读数据对编辑推荐和平台算法均有正向帮助，是合规的有效运营手段
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 007_网文圈刷票运营，新人写小说需要吗.md
+failure_pattern:
+  description: 允许通过作者群、贴吧、读者群等渠道进行真实宣传，吸引真实读者追读 — 理由：真实读者产生的追读数据对编辑推荐和平台算法均有正向帮助，是合规的有效运营手段
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0008）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

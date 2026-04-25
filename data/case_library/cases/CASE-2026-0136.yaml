@@ -1,0 +1,28 @@
+case_id: CASE-2026-0136
+title: 奇葩设定（如尿液武器、王八拳）必须有完整的世界观逻辑支撑，不能用猎奇代替合理性
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 奇葩设定（如尿液武器、王八拳）必须有完整的世界观逻辑支撑，不能用猎奇代替合理性 | 纯靠猎奇博眼球而无内在逻辑的设定会被编辑归类为哗众取宠，影响作品质量评级
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 107_起点编辑星河直播审稿害圈top5第七期_新人大哥有哪些天才脑洞呢.md
+failure_pattern:
+  description: 奇葩设定（如尿液武器、王八拳）必须有完整的世界观逻辑支撑，不能用猎奇代替合理性 — 理由：纯靠猎奇博眼球而无内在逻辑的设定会被编辑归类为哗众取宠，影响作品质量评级
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0136）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

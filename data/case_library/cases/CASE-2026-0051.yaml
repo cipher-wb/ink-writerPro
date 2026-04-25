@@ -1,0 +1,28 @@
+case_id: CASE-2026-0051
+title: 禁止使用AI生成的文笔直接上稿，开头必须亲自认真撰写
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止使用AI生成的文笔直接上稿，开头必须亲自认真撰写 | AI味文笔是编辑识别新人稿件的核心信号，会被直接打回；读者也能感知并流失
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 051_编辑星河讲新人写小说十大容易踩的坑.md
+failure_pattern:
+  description: 禁止使用AI生成的文笔直接上稿，开头必须亲自认真撰写 — 理由：AI味文笔是编辑识别新人稿件的核心信号，会被直接打回；读者也能感知并流失
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0051）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

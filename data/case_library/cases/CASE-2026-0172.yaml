@@ -1,0 +1,28 @@
+case_id: CASE-2026-0172
+title: 用隐喻和双关语嵌入禁忌内容，确保字面意思完全正常可通过平台审核
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 用隐喻和双关语嵌入禁忌内容，确保字面意思完全正常可通过平台审核 | 编辑星河给出满分十分，正是因为作者将擦边内容藏得极为高明，审核人员看不出来但懂行的编辑能读懂，这种技巧可规避封禁风险同时保留吸引力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 159_起点编辑星河直播审稿_看新人写小说开头，偶遇女作者写男频高分神作，鸟姐新书开头，虽然她不会发.md
+failure_pattern:
+  description: 用隐喻和双关语嵌入禁忌内容，确保字面意思完全正常可通过平台审核 — 理由：编辑星河给出满分十分，正是因为作者将擦边内容藏得极为高明，审核人员看不出来但懂行的编辑能读懂，这种技巧可规避封禁风险同时保留吸引力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0172）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0350
+title: 选题材时优先选择市场已验证的热门类型，而非押注冷门创新
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 选题材时优先选择市场已验证的热门类型，而非押注冷门创新 | 编辑明确指出'题材找对'是普通作者实现月入万元的关键因素，顶级大神的天赋优势无法复制，但选对赛道可以弥补天赋不足
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 429_untitled.md
+failure_pattern:
+  description: 选题材时优先选择市场已验证的热门类型，而非押注冷门创新 — 理由：编辑明确指出'题材找对'是普通作者实现月入万元的关键因素，顶级大神的天赋优势无法复制，但选对赛道可以弥补天赋不足
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0350）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0256
+title: 禁止在正文中使用'雪白''血白'等擦边描写，此类内容在当前平台审核环境下绝对无法签约
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止在正文中使用'雪白''血白'等擦边描写，此类内容在当前平台审核环境下绝对无法签约 | 起点编辑明确指出，当前审核环境与古代不同，《金瓶梅》式写法在现代平台不可行，含大量擦边内容的书稿直接拒签
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 287_起点编辑星河直播审稿之绕了网文圈吧_起点金牌编辑星河直播审稿，大哥绕了网文圈.md
+failure_pattern:
+  description: 禁止在正文中使用'雪白''血白'等擦边描写，此类内容在当前平台审核环境下绝对无法签约 — 理由：起点编辑明确指出，当前审核环境与古代不同，《金瓶梅》式写法在现代平台不可行，含大量擦边内容的书稿直接拒签
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0256）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

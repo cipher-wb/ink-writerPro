@@ -1,0 +1,28 @@
+case_id: CASE-2026-0173
+title: 开头前几句话必须具备足够强的钩子，让编辑产生停不下来继续找亮点的冲动
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头前几句话必须具备足够强的钩子，让编辑产生停不下来继续找亮点的冲动 | 编辑审稿时间极短，星河看了几句就给出高分评价，说明开头的抓取力直接决定编辑对全篇的期待值和评分上限
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 159_起点编辑星河直播审稿_看新人写小说开头，偶遇女作者写男频高分神作，鸟姐新书开头，虽然她不会发.md
+failure_pattern:
+  description: 开头前几句话必须具备足够强的钩子，让编辑产生停不下来继续找亮点的冲动 — 理由：编辑审稿时间极短，星河看了几句就给出高分评价，说明开头的抓取力直接决定编辑对全篇的期待值和评分上限
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0173）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0288
+title: 爽点要犹抱琵琶半遮面，用拉扯感替代直接展示，忌开头就全部抛出
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 爽点要犹抱琵琶半遮面，用拉扯感替代直接展示，忌开头就全部抛出 | 路边摊式的直接喊爽点无人搭理；藏着掖着、制造拉扯感才能让读者欲罢不能，收费也有人抢
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 331_untitled.md
+failure_pattern:
+  description: 爽点要犹抱琵琶半遮面，用拉扯感替代直接展示，忌开头就全部抛出 — 理由：路边摊式的直接喊爽点无人搭理；藏着掖着、制造拉扯感才能让读者欲罢不能，收费也有人抢
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0288）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0024
+title: 使用专注码字软件（如作家助手、大神码字）锁屏隔离干扰，保持全神贯注状态写作
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- misc
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 使用专注码字软件（如作家助手、大神码字）锁屏隔离干扰，保持全神贯注状态写作 | 外部干扰是码字效率的主要杀手，强制专注环境可显著提升时速
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 027_起点编辑星河谈网文作者码字速度如何提升.md
+failure_pattern:
+  description: 使用专注码字软件（如作家助手、大神码字）锁屏隔离干扰，保持全神贯注状态写作 — 理由：外部干扰是码字效率的主要杀手，强制专注环境可显著提升时速
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0024）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

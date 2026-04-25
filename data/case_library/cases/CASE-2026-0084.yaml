@@ -1,0 +1,28 @@
+case_id: CASE-2026-0084
+title: 同等写作实力下优先选择蓝海题材，避开已饱和的白海方向
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 同等写作实力下优先选择蓝海题材，避开已饱和的白海方向 | 实力不变的情况下题材选择对错结果天差地别，西游/雪白无人看但红楼女角色有自然受众
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 059_写网文如何一年内月稿费破七万_第96集新人写网文，半年月入破万，一年月入七万，有哪些诀窍，编辑星河谈.md
+failure_pattern:
+  description: 同等写作实力下优先选择蓝海题材，避开已饱和的白海方向 — 理由：实力不变的情况下题材选择对错结果天差地别，西游/雪白无人看但红楼女角色有自然受众
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0084）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

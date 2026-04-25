@@ -1,0 +1,29 @@
+case_id: CASE-2026-0078
+title: 根据题材决定两种叙事的比例：大长篇玄幻/仙侠/重生文以线性叙事为主；脑洞爽文、短剧/漫剧改编以分镜式叙事为主
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 根据题材决定两种叙事的比例：大长篇玄幻/仙侠/重生文以线性叙事为主；脑洞爽文、短剧/漫剧改编以分镜式叙事为主 | 不同商业形态对沉浸感与节奏密度的需求不同，用错比例会导致长篇失去代入或爽文节奏拖沓
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 024_如何流畅写作，冒充顶级作者，讲一讲ai时代的写作技巧.md
+failure_pattern:
+  description: 根据题材决定两种叙事的比例：大长篇玄幻/仙侠/重生文以线性叙事为主；脑洞爽文、短剧/漫剧改编以分镜式叙事为主 — 理由：不同商业形态对沉浸感与节奏密度的需求不同，用错比例会导致长篇失去代入或爽文节奏拖沓
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0078）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

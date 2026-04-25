@@ -1,0 +1,29 @@
+case_id: CASE-2026-0352
+title: 章节名应同时包含时间、地点、人物三要素，并在标题层面埋下悬念钩子，让读者在点开正文前已产生好奇心
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 章节名应同时包含时间、地点、人物三要素，并在标题层面埋下悬念钩子，让读者在点开正文前已产生好奇心 | 编辑明确指出该书章节名'时间、地点、人物都有了，章节名也很吸引人'，三要素+悬念是让读者立刻点击的前置条件
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 439_untitled.md
+failure_pattern:
+  description: 章节名应同时包含时间、地点、人物三要素，并在标题层面埋下悬念钩子，让读者在点开正文前已产生好奇心 — 理由：编辑明确指出该书章节名'时间、地点、人物都有了，章节名也很吸引人'，三要素+悬念是让读者立刻点击的前置条件
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0352）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0174
+title: 女作者写男频时，需精准把握男性读者的核心爽点和语言习惯，而非照搬女频逻辑
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 女作者写男频时，需精准把握男性读者的核心爽点和语言习惯，而非照搬女频逻辑 | 编辑从文中几句话即判断出作者是女性（"这句话真是女作者，暴露了"），说明性别视角差异会在写作中留下痕迹，需刻意校准
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 159_起点编辑星河直播审稿_看新人写小说开头，偶遇女作者写男频高分神作，鸟姐新书开头，虽然她不会发.md
+failure_pattern:
+  description: 女作者写男频时，需精准把握男性读者的核心爽点和语言习惯，而非照搬女频逻辑 — 理由：编辑从文中几句话即判断出作者是女性（"这句话真是女作者，暴露了"），说明性别视角差异会在写作中留下痕迹，需刻意校准
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0174）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

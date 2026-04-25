@@ -1,0 +1,29 @@
+case_id: CASE-2026-0182
+title: 写作前必须确认题材方向符合当前市场，题材错误时文笔和努力无法弥补
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 写作前必须确认题材方向符合当前市场，题材错误时文笔和努力无法弥补 | 编辑明确指出题材选错是白费力气的根本原因，故事性和题材适配度优先于文笔质量
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 165_起点编辑星河谈新人为什么在起点签约不了_新人得注意起点风格的改变.md
+failure_pattern:
+  description: 写作前必须确认题材方向符合当前市场，题材错误时文笔和努力无法弥补 — 理由：编辑明确指出题材选错是白费力气的根本原因，故事性和题材适配度优先于文笔质量
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0182）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

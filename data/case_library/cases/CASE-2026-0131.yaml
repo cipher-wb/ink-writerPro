@@ -1,0 +1,28 @@
+case_id: CASE-2026-0131
+title: 用「熟悉元素×陌生组合」公式制造新鲜感，如将主角放入已有IP世界或换种族视角
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 用「熟悉元素×陌生组合」公式制造新鲜感，如将主角放入已有IP世界或换种族视角 | 完全陌生的设定门槛高，完全熟悉的设定无吸引力；已有IP世界降低理解成本，新切入点制造好奇
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 105_起点编辑星河谈新人写小说的思路_第77集写小说和做自媒体一些小感悟改变.md
+failure_pattern:
+  description: 用「熟悉元素×陌生组合」公式制造新鲜感，如将主角放入已有IP世界或换种族视角 — 理由：完全陌生的设定门槛高，完全熟悉的设定无吸引力；已有IP世界降低理解成本，新切入点制造好奇
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0131）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

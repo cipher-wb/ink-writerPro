@@ -1,0 +1,28 @@
+case_id: CASE-2026-0273
+title: 主角在第一章中必须展现出主动性和行动力，不得表现为磨蹭、懦弱、反复犹豫
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角在第一章中必须展现出主动性和行动力，不得表现为磨蹭、懦弱、反复犹豫 | 编辑总结'主角太懦夫了'，主角性格缺陷在开篇直接劝退读者，无法建立代入感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 297_起点编辑星河审稿之慢热开头_起点编辑星河直播审稿之慢热开头，大哥别怀念爹娘了，赶紧下山吧.md
+failure_pattern:
+  description: 主角在第一章中必须展现出主动性和行动力，不得表现为磨蹭、懦弱、反复犹豫 — 理由：编辑总结'主角太懦夫了'，主角性格缺陷在开篇直接劝退读者，无法建立代入感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0273）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

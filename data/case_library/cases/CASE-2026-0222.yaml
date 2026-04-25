@@ -1,0 +1,28 @@
+case_id: CASE-2026-0222
+title: 人前显圣（装逼）场景必须安排女性角色在场见证
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- highpoint
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 人前显圣（装逼）场景必须安排女性角色在场见证 | 食色性也是网文核心驱动力，有女性视角的惊艳/刮目相看本身就是爽点，缺少见证者会削弱装逼场景的情绪反馈
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 221_起点编辑星河直播时拆书_重生文为何非得谈恋爱.md
+failure_pattern:
+  description: 人前显圣（装逼）场景必须安排女性角色在场见证 — 理由：食色性也是网文核心驱动力，有女性视角的惊艳/刮目相看本身就是爽点，缺少见证者会削弱装逼场景的情绪反馈
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0222）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

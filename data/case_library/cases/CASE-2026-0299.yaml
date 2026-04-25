@@ -1,0 +1,29 @@
+case_id: CASE-2026-0299
+title: 先引出危机，再让金手指登场，再用金手指解决危机
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 先引出危机，再让金手指登场，再用金手指解决危机 | 顺序颠倒会让金手指显得廉价，危机在先才能让读者感受到金手指的价值和爽点
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 343_untitled.md
+failure_pattern:
+  description: 先引出危机，再让金手指登场，再用金手指解决危机 — 理由：顺序颠倒会让金手指显得廉价，危机在先才能让读者感受到金手指的价值和爽点
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0299）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,31 @@
+case_id: CASE-2026-0389
+title: 每句话必须服务剧情推进、角色心理或冲突升级三选一；无功能句立即删除
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 每句话必须服务剧情推进、角色心理或冲突升级三选一；无功能句立即删除 | PRD US-006 硬原则：直白模式下'故事 > 文字'——读者付费买推进感，凡不服务三者之一的句子都在浪费阅读预算
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 每句话必须服务剧情推进、角色心理或冲突升级三选一；无功能句立即删除 — 理由：PRD US-006 硬原则：直白模式下'故事 > 文字'——读者付费买推进感，凡不服务三者之一的句子都在浪费阅读预算
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0389）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

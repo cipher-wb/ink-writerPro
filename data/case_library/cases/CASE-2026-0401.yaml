@@ -1,0 +1,32 @@
+case_id: CASE-2026-0401
+title: 对话前后的心理/动作夹叙不超过 2 句；对话密度高的场景允许裸对白 + 极简动作标签
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 对话前后的心理/动作夹叙不超过 2 句；对话密度高的场景允许裸对白 + 极简动作标签 | 战斗与爽点段对白是信息爆点，夹叙超过 2 句就打断节奏；裸对白
+    + '他挑眉'这类单句标签已够塑造人物
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 对话前后的心理/动作夹叙不超过 2 句；对话密度高的场景允许裸对白 + 极简动作标签 — 理由：战斗与爽点段对白是信息爆点，夹叙超过
+    2 句就打断节奏；裸对白 + '他挑眉'这类单句标签已够塑造人物
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0401）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

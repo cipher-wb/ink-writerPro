@@ -1,0 +1,28 @@
+case_id: CASE-2026-0132
+title: 禁止写涉及审核红线的露骨描写，即使有铺垫也不能详写，需用隐笔或跳过处理
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止写涉及审核红线的露骨描写，即使有铺垫也不能详写，需用隐笔或跳过处理 | 平台审核机制会直接拦截明确的违禁内容，导致作品无法上架或被下架
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 107_起点编辑星河直播审稿害圈top5第七期_新人大哥有哪些天才脑洞呢.md
+failure_pattern:
+  description: 禁止写涉及审核红线的露骨描写，即使有铺垫也不能详写，需用隐笔或跳过处理 — 理由：平台审核机制会直接拦截明确的违禁内容，导致作品无法上架或被下架
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0132）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

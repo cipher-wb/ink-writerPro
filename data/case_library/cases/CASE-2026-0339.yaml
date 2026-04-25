@@ -1,0 +1,29 @@
+case_id: CASE-2026-0339
+title: 开局同时存在的中期目标不超过两个，超出即为喂毒，节奏崩坏
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开局同时存在的中期目标不超过两个，超出即为喂毒，节奏崩坏 | 信息量过大会刺激读者神经，造成阅读疲劳；精准的两个目标足以支撑前期张力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 415_untitled.md
+failure_pattern:
+  description: 开局同时存在的中期目标不超过两个，超出即为喂毒，节奏崩坏 — 理由：信息量过大会刺激读者神经，造成阅读疲劳；精准的两个目标足以支撑前期张力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0339）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

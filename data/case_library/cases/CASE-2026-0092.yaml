@@ -1,0 +1,29 @@
+case_id: CASE-2026-0092
+title: 不要把所有精华设定和卖点集中在开头几万字，为上架后的章节保留足够的高潮素材和剧情爆发点
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 不要把所有精华设定和卖点集中在开头几万字，为上架后的章节保留足够的高潮素材和剧情爆发点 | 前期透支精华会导致上架后剧情难以为继，追订从万级一路崩到几百，作者心态崩溃进而太监
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 069_起点编辑星河谈网文为什么那么多太监_第92集为什么很多小说不更新，更新差甚至是太监，原因在这了.md
+failure_pattern:
+  description: 不要把所有精华设定和卖点集中在开头几万字，为上架后的章节保留足够的高潮素材和剧情爆发点 — 理由：前期透支精华会导致上架后剧情难以为继，追订从万级一路崩到几百，作者心态崩溃进而太监
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0092）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

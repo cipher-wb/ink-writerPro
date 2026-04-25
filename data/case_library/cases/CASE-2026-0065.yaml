@@ -1,0 +1,29 @@
+case_id: CASE-2026-0065
+title: 禁止以'慢热''铺垫''深度'为借口忽视开头吸引力
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止以'慢热''铺垫''深度'为借口忽视开头吸引力 | 网文竞争对手是抖音、游戏等全部泛娱乐产品，慢热在快节奏阅读场景中等同于主动放弃读者，是傲慢而非深度
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 002_网文的开头，一句话吸引读者？.md
+failure_pattern:
+  description: 禁止以'慢热''铺垫''深度'为借口忽视开头吸引力 — 理由：网文竞争对手是抖音、游戏等全部泛娱乐产品，慢热在快节奏阅读场景中等同于主动放弃读者，是傲慢而非深度
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0065）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

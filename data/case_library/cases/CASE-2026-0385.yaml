@@ -1,0 +1,28 @@
+case_id: CASE-2026-0385
+title: 第1章信息带宽锁死：金手指核心机制 + 1个核心设定 + 2个有名角色，其他信息必须通过留白/悬念推后
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_density
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 第1章信息带宽锁死：金手指核心机制 + 1个核心设定 + 2个有名角色，其他信息必须通过留白/悬念推后 | 第1章是信息焦虑高发区，超带宽会让读者短期记忆崩溃；编辑指出'第1章每多1个名字读者就少1%往下翻'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: scene-craft-index.md
+failure_pattern:
+  description: 第1章信息带宽锁死：金手指核心机制 + 1个核心设定 + 2个有名角色，其他信息必须通过留白/悬念推后 — 理由：第1章是信息焦虑高发区，超带宽会让读者短期记忆崩溃；编辑指出'第1章每多1个名字读者就少1%往下翻'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0385）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0263
+title: 世界观/设定资料（地图、插画、年表等）不可替代正文剧情
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 世界观/设定资料（地图、插画、年表等）不可替代正文剧情 | 案例中作者用极专业的地图、插画、视频代替写作本体，编辑评价'开头基本是零分'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 289_起点编辑星河直播审稿偶遇天才大哥_起点编辑星河直播审稿，偶遇单开境界的大哥.md
+failure_pattern:
+  description: 世界观/设定资料（地图、插画、年表等）不可替代正文剧情 — 理由：案例中作者用极专业的地图、插画、视频代替写作本体，编辑评价'开头基本是零分'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0263）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

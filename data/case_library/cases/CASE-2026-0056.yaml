@@ -1,0 +1,28 @@
+case_id: CASE-2026-0056
+title: 不要发红包或刷假追读数据来凑成绩，只争取真实读者
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不要发红包或刷假追读数据来凑成绩，只争取真实读者 | 网站后台能一眼区分真假追读，假数据不仅无用反而影响编辑对作品的正常判断
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 【合集】编辑星河_全部视频内容.md
+failure_pattern:
+  description: 不要发红包或刷假追读数据来凑成绩，只争取真实读者 — 理由：网站后台能一眼区分真假追读，假数据不仅无用反而影响编辑对作品的正常判断
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0056）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

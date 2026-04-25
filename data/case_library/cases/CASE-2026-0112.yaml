@@ -1,0 +1,28 @@
+case_id: CASE-2026-0112
+title: 禁止复制粘贴、洗稿、抄大纲等直接挪用他人内容的行为，这是最低级且破坏创作能力的捷径
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止复制粘贴、洗稿、抄大纲等直接挪用他人内容的行为，这是最低级且破坏创作能力的捷径 | 抄袭侵犯著作权，轻则下架扣分，重则封号连带责任；且长期依赖会荒废自身创作能力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 081_起点编辑星河谈ai写作，抄袭判定，封闭式创作_AI写作有什么影响，为什么不能抄袭.md
+failure_pattern:
+  description: 禁止复制粘贴、洗稿、抄大纲等直接挪用他人内容的行为，这是最低级且破坏创作能力的捷径 — 理由：抄袭侵犯著作权，轻则下架扣分，重则封号连带责任；且长期依赖会荒废自身创作能力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0112）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0370
+title: 镜头切换必须为剧情服务（情绪转折/视角变化/危机升级），禁止为切换而切换（仅为追求节奏机械跳镜头）
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_shot
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 镜头切换必须为剧情服务（情绪转折/视角变化/危机升级），禁止为切换而切换（仅为追求节奏机械跳镜头） | 无意义切镜头让读者跟丢叙事线，编辑批评'有些作者强行切镜头反而把节奏打散'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: scene-craft-index.md
+failure_pattern:
+  description: 镜头切换必须为剧情服务（情绪转折/视角变化/危机升级），禁止为切换而切换（仅为追求节奏机械跳镜头） — 理由：无意义切镜头让读者跟丢叙事线，编辑批评'有些作者强行切镜头反而把节奏打散'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0370）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

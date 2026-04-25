@@ -1,0 +1,28 @@
+case_id: CASE-2026-0109
+title: 用奇幻/修仙等设定映射现实压力（升学内卷、职场压榨），而非直白描写现实
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 用奇幻/修仙等设定映射现实压力（升学内卷、职场压榨），而非直白描写现实 | 读者对现实压力感同身受但又需要距离感，荒诞外壳+真实情绪的组合能最大化情感共鸣与追读动力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 079_2025年，写什么题材稿费最高最火_第88集起点编辑星河题材推荐，写网文写小说赚稿费的好题材.md
+failure_pattern:
+  description: 用奇幻/修仙等设定映射现实压力（升学内卷、职场压榨），而非直白描写现实 — 理由：读者对现实压力感同身受但又需要距离感，荒诞外壳+真实情绪的组合能最大化情感共鸣与追读动力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0109）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

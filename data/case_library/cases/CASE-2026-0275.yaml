@@ -1,0 +1,28 @@
+case_id: CASE-2026-0275
+title: 反派打压主角的台词要写得自然，避免直接说出'你这个废物/大专怎么了'之类过于刻意的嘲讽
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 反派打压主角的台词要写得自然，避免直接说出'你这个废物/大专怎么了'之类过于刻意的嘲讽 | 编辑现场模拟并嘲笑了这类台词，称其'太毒、太小白'；真实的嘲讽往往更隐晦，直白的降维攻击反而让读者觉得假
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 309_起点编辑星河直播审稿系列_起点编辑星河直播审稿之大专生退婚流，好的985不比大专差.md
+failure_pattern:
+  description: 反派打压主角的台词要写得自然，避免直接说出'你这个废物/大专怎么了'之类过于刻意的嘲讽 — 理由：编辑现场模拟并嘲笑了这类台词，称其'太毒、太小白'；真实的嘲讽往往更隐晦，直白的降维攻击反而让读者觉得假
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0275）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

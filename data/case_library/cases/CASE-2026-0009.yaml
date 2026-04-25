@@ -1,0 +1,29 @@
+case_id: CASE-2026-0009
+title: 不要寄望于营销弥补质量短板，写作水平才是决定收入上限的根本因素
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不要寄望于营销弥补质量短板，写作水平才是决定收入上限的根本因素 | 起点读者需真金白银订阅，质量不足时再多营销投入也无法提升核心数据，应将精力首先投入提升写作质量
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 007_网文圈刷票运营，新人写小说需要吗.md
+failure_pattern:
+  description: 不要寄望于营销弥补质量短板，写作水平才是决定收入上限的根本因素 — 理由：起点读者需真金白银订阅，质量不足时再多营销投入也无法提升核心数据，应将精力首先投入提升写作质量
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0009）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

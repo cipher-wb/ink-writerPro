@@ -1,0 +1,29 @@
+case_id: CASE-2026-0289
+title: 东京文中禁止女主主动出击，男主设定为假正经，女主设定为羞涩或妩媚
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 东京文中禁止女主主动出击，男主设定为假正经，女主设定为羞涩或妩媚 | 东京文核心是「似是而非」张力，女主主动会破坏拉扯感和读者期待结构
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 331_untitled.md
+failure_pattern:
+  description: 东京文中禁止女主主动出击，男主设定为假正经，女主设定为羞涩或妩媚 — 理由：东京文核心是「似是而非」张力，女主主动会破坏拉扯感和读者期待结构
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0289）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

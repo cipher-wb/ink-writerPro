@@ -1,0 +1,28 @@
+case_id: CASE-2026-0272
+title: 开篇第一章禁止使用'父母双亡+老头传功+少年下山'的全套传统起点开篇套路
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开篇第一章禁止使用'父母双亡+老头传功+少年下山'的全套传统起点开篇套路 | 编辑直言'套路太传统了'并建议全部推翻重写，此类开篇已无法通过编辑审核
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 297_起点编辑星河审稿之慢热开头_起点编辑星河直播审稿之慢热开头，大哥别怀念爹娘了，赶紧下山吧.md
+failure_pattern:
+  description: 开篇第一章禁止使用'父母双亡+老头传功+少年下山'的全套传统起点开篇套路 — 理由：编辑直言'套路太传统了'并建议全部推翻重写，此类开篇已无法通过编辑审核
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0272）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

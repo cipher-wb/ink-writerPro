@@ -1,0 +1,28 @@
+case_id: CASE-2026-0158
+title: 大量阅读并拆解同类优秀作品，提炼结构和爆点规律后再动笔
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大量阅读并拆解同类优秀作品，提炼结构和爆点规律后再动笔 | 看书拆书是编辑认可的新人进步路径，能快速内化商业文的节奏和读者预期
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 139_起点编辑星河谈网文_网文是不是凉了，新人现在写小说还来得及吗.md
+failure_pattern:
+  description: 大量阅读并拆解同类优秀作品，提炼结构和爆点规律后再动笔 — 理由：看书拆书是编辑认可的新人进步路径，能快速内化商业文的节奏和读者预期
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0158）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

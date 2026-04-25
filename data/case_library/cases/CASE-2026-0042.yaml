@@ -1,0 +1,29 @@
+case_id: CASE-2026-0042
+title: 禁止将真实宗教神明（如如来佛祖、玉皇大帝）直接用作主角或重要角色的姓名
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止将真实宗教神明（如如来佛祖、玉皇大帝）直接用作主角或重要角色的姓名 | 编辑明确指出此做法「骇人听闻」，属于触碰平台禁忌的违规行为，可能导致直接打回
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 043_起点编辑星河直播审稿系列.md
+failure_pattern:
+  description: 禁止将真实宗教神明（如如来佛祖、玉皇大帝）直接用作主角或重要角色的姓名 — 理由：编辑明确指出此做法「骇人听闻」，属于触碰平台禁忌的违规行为，可能导致直接打回
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0042）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

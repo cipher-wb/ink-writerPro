@@ -1,0 +1,30 @@
+case_id: CASE-2026-0368
+title: 起草前应在内部生成 shot_plan（镜头规划），按场景节拍标注镜头序列；shot_plan 不输出到正文但用于自检镜头多样性
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_shot
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 起草前应在内部生成 shot_plan（镜头规划），按场景节拍标注镜头序列；shot_plan 不输出到正文但用于自检镜头多样性 | 无规划起草是镜头单一的根因；编辑指出'有镜头预设的作者，画面感稳定碾压无预设的'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: scene-craft-index.md
+failure_pattern:
+  description: 起草前应在内部生成 shot_plan（镜头规划），按场景节拍标注镜头序列；shot_plan 不输出到正文但用于自检镜头多样性 —
+    理由：无规划起草是镜头单一的根因；编辑指出'有镜头预设的作者，画面感稳定碾压无预设的'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0368）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

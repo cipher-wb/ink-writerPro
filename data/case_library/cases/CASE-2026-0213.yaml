@@ -1,0 +1,28 @@
+case_id: CASE-2026-0213
+title: 禁止将AI生成内容原封不动照抄提交，包括DeepSeek等模型的深度思考过程
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止将AI生成内容原封不动照抄提交，包括DeepSeek等模型的深度思考过程 | 直接照抄AI内容违反平台合约，同时伤害读者感情，属于违规行为
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 207_起点编辑星河聊一聊ai写作_ai写小说真.md
+failure_pattern:
+  description: 禁止将AI生成内容原封不动照抄提交，包括DeepSeek等模型的深度思考过程 — 理由：直接照抄AI内容违反平台合约，同时伤害读者感情，属于违规行为
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0213）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

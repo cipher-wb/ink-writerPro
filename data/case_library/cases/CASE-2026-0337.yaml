@@ -1,0 +1,28 @@
+case_id: CASE-2026-0337
+title: 开头通过行动和对话展现主角'玩世不恭、聪明、不按常理出牌'的人设，避免纯善良主角
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头通过行动和对话展现主角'玩世不恭、聪明、不按常理出牌'的人设，避免纯善良主角 | 编辑反复强调当前读者偏好'有点小邪恶但又善良'的主角，纯善良人设缺乏读者吸引力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 409_起点编辑星河，直播时，即兴拆书点评《天才俱乐部》开头.md
+failure_pattern:
+  description: 开头通过行动和对话展现主角'玩世不恭、聪明、不按常理出牌'的人设，避免纯善良主角 — 理由：编辑反复强调当前读者偏好'有点小邪恶但又善良'的主角，纯善良人设缺乏读者吸引力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0337）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

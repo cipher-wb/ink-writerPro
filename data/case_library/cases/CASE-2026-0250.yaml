@@ -1,0 +1,28 @@
+case_id: CASE-2026-0250
+title: 有条件时坚持日更万字，利用平台智能推荐算法抓取流量
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有条件时坚持日更万字，利用平台智能推荐算法抓取流量 | 日更万字能触发起点等平台的智能推荐机制，显著提升稿费，案例显示从4000字/天到10000字/天稿费可从3000提升至8000
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 281_起点编辑星河讲一讲新人坚持的重要性_从首订两三百到精品，月稿费三四万，坚持就是王道.md
+failure_pattern:
+  description: 有条件时坚持日更万字，利用平台智能推荐算法抓取流量 — 理由：日更万字能触发起点等平台的智能推荐机制，显著提升稿费，案例显示从4000字/天到10000字/天稿费可从3000提升至8000
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0250）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

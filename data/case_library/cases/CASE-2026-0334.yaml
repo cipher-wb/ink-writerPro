@@ -1,0 +1,28 @@
+case_id: CASE-2026-0334
+title: 第一章内埋下的小悬念必须在第一章内给出解答，不要把悬念拖到第二章
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 第一章内埋下的小悬念必须在第一章内给出解答，不要把悬念拖到第二章 | 大神白金的共同规律：章内悬念章内解，让读者有满足感，同时用大钩子牵引下一章
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 409_起点编辑星河，直播时，即兴拆书点评《天才俱乐部》开头.md
+failure_pattern:
+  description: 第一章内埋下的小悬念必须在第一章内给出解答，不要把悬念拖到第二章 — 理由：大神白金的共同规律：章内悬念章内解，让读者有满足感，同时用大钩子牵引下一章
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0334）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

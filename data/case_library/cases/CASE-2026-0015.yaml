@@ -1,0 +1,30 @@
+case_id: CASE-2026-0015
+title: 受审核限制严重的题材（灵异、都市异能）新人慎写：平台审核导致爽感上限受压，签约率极低，应将灵异/异能元素融入其他大热品类作为辅助元素而非主线
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 受审核限制严重的题材（灵异、都市异能）新人慎写：平台审核导致爽感上限受压，签约率极低，应将灵异/异能元素融入其他大热品类作为辅助元素而非主线
+    | 都市背景下审核限制难以写爽，灵异悬疑新人榜常年凑不满；但灵异元素融入其他题材可成为爆款加分项
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 017_编辑星河谈最不推荐的七大网文题材排名.md
+failure_pattern:
+  description: 受审核限制严重的题材（灵异、都市异能）新人慎写：平台审核导致爽感上限受压，签约率极低，应将灵异/异能元素融入其他大热品类作为辅助元素而非主线
+    — 理由：都市背景下审核限制难以写爽，灵异悬疑新人榜常年凑不满；但灵异元素融入其他题材可成为爆款加分项
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0015）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0243
+title: 灵异恐怖感来源于'未知'而非明确实体，描写时只写主角的主观感受和模糊迹象，不要让怪物太早完整出现
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 灵异恐怖感来源于'未知'而非明确实体，描写时只写主角的主观感受和模糊迹象，不要让怪物太早完整出现 | 明确告知读者有鬼反而不吓人，'我觉得可能有'的不确定感才是恐惧核心
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 249_起点编辑星河直播拆书。从《幽冥画皮卷》开头讲诡异修仙和灵异小说切入.md
+failure_pattern:
+  description: 灵异恐怖感来源于'未知'而非明确实体，描写时只写主角的主观感受和模糊迹象，不要让怪物太早完整出现 — 理由：明确告知读者有鬼反而不吓人，'我觉得可能有'的不确定感才是恐惧核心
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0243）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0283
+title: 配角行为必须有可理解的动机，神秘老人一掌拍头传承的设计若无动机解释，读者会感到荒诞而非神秘
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 配角行为必须有可理解的动机，神秘老人一掌拍头传承的设计若无动机解释，读者会感到荒诞而非神秘 | 编辑称这些人'像精神病院跑出来的'，人物行为无动机是人设崩塌的直接信号
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 317_起点编辑星河审稿系列之国足？.md
+failure_pattern:
+  description: 配角行为必须有可理解的动机，神秘老人一掌拍头传承的设计若无动机解释，读者会感到荒诞而非神秘 — 理由：编辑称这些人'像精神病院跑出来的'，人物行为无动机是人设崩塌的直接信号
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0283）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

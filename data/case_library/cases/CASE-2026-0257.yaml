@@ -1,0 +1,28 @@
+case_id: CASE-2026-0257
+title: 第一章前2000字内必须呈现清晰的主线剧情，不得让擦边或系统奖励占据主体篇幅
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 第一章前2000字内必须呈现清晰的主线剧情，不得让擦边或系统奖励占据主体篇幅 | 编辑审稿时看了两千字才找到一点剧情，判定'剧情信息量太少'，直接影响签约意愿
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 287_起点编辑星河直播审稿之绕了网文圈吧_起点金牌编辑星河直播审稿，大哥绕了网文圈.md
+failure_pattern:
+  description: 第一章前2000字内必须呈现清晰的主线剧情，不得让擦边或系统奖励占据主体篇幅 — 理由：编辑审稿时看了两千字才找到一点剧情，判定'剧情信息量太少'，直接影响签约意愿
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0257）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

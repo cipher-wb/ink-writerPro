@@ -1,0 +1,28 @@
+case_id: CASE-2026-0047
+title: 参考学习时优先使用「签约作者新书榜」前50和各分类「新书畅销榜」前30的书目，避免参考三江榜和超过两年的老书
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 参考学习时优先使用「签约作者新书榜」前50和各分类「新书畅销榜」前30的书目，避免参考三江榜和超过两年的老书 | 三江有品类保护倾斜会误导新人高估冷门题材可行性；老书题材和写法存在时效性问题，不代表当前市场审美
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 047_新人写小说赚稿费扫榜技巧.md
+failure_pattern:
+  description: 参考学习时优先使用「签约作者新书榜」前50和各分类「新书畅销榜」前30的书目，避免参考三江榜和超过两年的老书 — 理由：三江有品类保护倾斜会误导新人高估冷门题材可行性；老书题材和写法存在时效性问题，不代表当前市场审美
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0047）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

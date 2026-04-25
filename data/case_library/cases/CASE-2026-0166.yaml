@@ -1,0 +1,28 @@
+case_id: CASE-2026-0166
+title: 读者追读习惯稳定后再将章节放大到四千字以上
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 读者追读习惯稳定后再将章节放大到四千字以上 | 老读者已养成追读习惯，跳订风险低，此时加长章节可以防跳订同时提高单章收益
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 147_起点编辑星河谈写小说如何更新_发书时间怎么选择，怎样更新小说流量大.md
+failure_pattern:
+  description: 读者追读习惯稳定后再将章节放大到四千字以上 — 理由：老读者已养成追读习惯，跳订风险低，此时加长章节可以防跳订同时提高单章收益
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0166）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

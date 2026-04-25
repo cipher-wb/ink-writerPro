@@ -1,0 +1,28 @@
+case_id: CASE-2026-0310
+title: 禁止将单句拆成多个段落，每段至少包含完整的语义单元，避免极度碎片化排版
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止将单句拆成多个段落，每段至少包含完整的语义单元，避免极度碎片化排版 | 起点编辑直播点名批评：一句话分三段导致阅读极度疲劳，形同「骗稿费」，是被直接退稿的硬性问题
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 355_untitled.md
+failure_pattern:
+  description: 禁止将单句拆成多个段落，每段至少包含完整的语义单元，避免极度碎片化排版 — 理由：起点编辑直播点名批评：一句话分三段导致阅读极度疲劳，形同「骗稿费」，是被直接退稿的硬性问题
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0310）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

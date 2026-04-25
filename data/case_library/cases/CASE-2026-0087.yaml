@@ -1,0 +1,28 @@
+case_id: CASE-2026-0087
+title: 避免血腥暴力、封建迷信、官场腐败、现实影射等内容，这类题材在大平台审核严格，写了也难通过
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 避免血腥暴力、封建迷信、官场腐败、现实影射等内容，这类题材在大平台审核严格，写了也难通过 | 大平台审核尺度远比小网站严格，血腥、迷信、官场、影射等内容会被直接卡审，都市修仙等曾经爆火的类型也因此废掉了一半
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 063_起点编辑星河谈网文同质化严重_第95集为什么现在找好书难，网文不好看吗？问题在哪.md
+failure_pattern:
+  description: 避免血腥暴力、封建迷信、官场腐败、现实影射等内容，这类题材在大平台审核严格，写了也难通过 — 理由：大平台审核尺度远比小网站严格，血腥、迷信、官场、影射等内容会被直接卡审，都市修仙等曾经爆火的类型也因此废掉了一半
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0087）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

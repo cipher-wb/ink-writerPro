@@ -1,0 +1,28 @@
+case_id: CASE-2026-0115
+title: 可用AI分析热门书籍前几百章大纲和人物节奏，但须与自己内容对比后独立创作，不得直接套用
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 可用AI分析热门书籍前几百章大纲和人物节奏，但须与自己内容对比后独立创作，不得直接套用 | 学习成功作品结构是合理的参考方式，对比差距有助于提升自身叙事节奏感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 081_起点编辑星河谈ai写作，抄袭判定，封闭式创作_AI写作有什么影响，为什么不能抄袭.md
+failure_pattern:
+  description: 可用AI分析热门书籍前几百章大纲和人物节奏，但须与自己内容对比后独立创作，不得直接套用 — 理由：学习成功作品结构是合理的参考方式，对比差距有助于提升自身叙事节奏感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0115）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

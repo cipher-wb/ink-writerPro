@@ -1,0 +1,28 @@
+case_id: CASE-2026-0122
+title: 新人务必坚持写到11万字再评估成绩，不要在几万字时因数据差而切书
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新人务必坚持写到11万字再评估成绩，不要在几万字时因数据差而切书 | 内部数据显示试水推送太早效果极差，多数题材需要6万字以上读者才有兴趣，10万字智能推后才可能起飞
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 095_写小说完本必神是真的吗_第82集起点编辑星河谈写网文到底要不要坚持，如何判断自己要不要开新书.md
+failure_pattern:
+  description: 新人务必坚持写到11万字再评估成绩，不要在几万字时因数据差而切书 — 理由：内部数据显示试水推送太早效果极差，多数题材需要6万字以上读者才有兴趣，10万字智能推后才可能起飞
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0122）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

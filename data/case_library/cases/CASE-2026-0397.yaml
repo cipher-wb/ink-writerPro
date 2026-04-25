@@ -1,0 +1,33 @@
+case_id: CASE-2026-0397
+title: 每章形容词-动词比不得超过 0.6；超过即用动词 + 具体细节替代形容词
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 每章形容词-动词比不得超过 0.6；超过即用动词 + 具体细节替代形容词 | benchmark 起点基线 golden_three D2
+    p50≈0.45，> 0.6 即显华丽；directness-checker D2 维度直接按此计分
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 每章形容词-动词比不得超过 0.6；超过即用动词 + 具体细节替代形容词 — 理由：benchmark 起点基线 golden_three
+    D2 p50≈0.45，> 0.6 即显华丽；directness-checker D2 维度直接按此计分
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0397）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

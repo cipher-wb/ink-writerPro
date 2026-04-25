@@ -1,0 +1,28 @@
+case_id: CASE-2026-0382
+title: 黄金三章 CV 不低于 0.40，第1章首次爽点段必须出现至少一组短句节奏（≤15字×3句）
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_rhythm
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 黄金三章 CV 不低于 0.40，第1章首次爽点段必须出现至少一组短句节奏（≤15字×3句） | 前三章节奏决定追读率，爽点段没有短句=读者扫读时感受不到爆点
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: pacing-control.md
+failure_pattern:
+  description: 黄金三章 CV 不低于 0.40，第1章首次爽点段必须出现至少一组短句节奏（≤15字×3句） — 理由：前三章节奏决定追读率，爽点段没有短句=读者扫读时感受不到爆点
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0382）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

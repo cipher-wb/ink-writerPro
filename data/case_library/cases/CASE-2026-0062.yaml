@@ -1,0 +1,29 @@
+case_id: CASE-2026-0062
+title: 开头第一句话必须抛出一个让读者产生疑问或想继续看的信息钩子，不得以平铺直叙的身份介绍起笔
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头第一句话必须抛出一个让读者产生疑问或想继续看的信息钩子，不得以平铺直叙的身份介绍起笔 | 《百年孤独》《了不起的盖茨比》等经典均以制造悬念的钩子句开篇，万法相通，网文同理
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 001_小说开头吸引人的具体实操分析.md
+failure_pattern:
+  description: 开头第一句话必须抛出一个让读者产生疑问或想继续看的信息钩子，不得以平铺直叙的身份介绍起笔 — 理由：《百年孤独》《了不起的盖茨比》等经典均以制造悬念的钩子句开篇，万法相通，网文同理
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0062）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

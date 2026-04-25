@@ -1,0 +1,28 @@
+case_id: CASE-2026-0209
+title: 灵异、僵尸、官场等题材在主流平台受限，如需涉及需改用悬疑等合规分类包装处理
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 灵异、僵尸、官场等题材在主流平台受限，如需涉及需改用悬疑等合规分类包装处理 | 起点已将灵异分类改为悬疑，官场文、僵尸文在主流平台实际绝迹，强行使用原标签会影响上架和推荐
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 203_起点编辑星河，谈网文圈十大经典谣言_网文圈那些经典谣言（上）.md
+failure_pattern:
+  description: 灵异、僵尸、官场等题材在主流平台受限，如需涉及需改用悬疑等合规分类包装处理 — 理由：起点已将灵异分类改为悬疑，官场文、僵尸文在主流平台实际绝迹，强行使用原标签会影响上架和推荐
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0209）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

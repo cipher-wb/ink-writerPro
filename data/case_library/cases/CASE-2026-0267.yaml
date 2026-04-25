@@ -1,0 +1,29 @@
+case_id: CASE-2026-0267
+title: 主角名字必须符合书写类型的气质，避免含义消极或令读者困惑的命名
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角名字必须符合书写类型的气质，避免含义消极或令读者困惑的命名 | 编辑星河质疑主角名'无爽'——字面意思是'从来没爽过'，与爽文读者心理预期完全相反，名字是读者对主角第一印象的重要组成
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 293_起点编辑星河直播审稿之图穷匕见了_起点编辑星河直播审稿，大哥你这燕国地图有点长啊，终于图穷匕见了.md
+failure_pattern:
+  description: 主角名字必须符合书写类型的气质，避免含义消极或令读者困惑的命名 — 理由：编辑星河质疑主角名'无爽'——字面意思是'从来没爽过'，与爽文读者心理预期完全相反，名字是读者对主角第一印象的重要组成
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0267）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0110
+title: 设计核心冲突时，优先选取每个人都经历过的人性议题（考试、晋升、被压榨、互相算计）
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 设计核心冲突时，优先选取每个人都经历过的人性议题（考试、晋升、被压榨、互相算计） | 读者只对自身经历有强烈代入感；越普遍的经历，潜在读者基数越大，首订/日销越高
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 079_2025年，写什么题材稿费最高最火_第88集起点编辑星河题材推荐，写网文写小说赚稿费的好题材.md
+failure_pattern:
+  description: 设计核心冲突时，优先选取每个人都经历过的人性议题（考试、晋升、被压榨、互相算计） — 理由：读者只对自身经历有强烈代入感；越普遍的经历，潜在读者基数越大，首订/日销越高
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0110）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

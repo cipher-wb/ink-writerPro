@@ -1,0 +1,29 @@
+case_id: CASE-2026-0103
+title: 动笔前必须明确所写题材的核心梗：都市重生=挽回遗憾，末日文=人性与生存，架空历史=蹭历史事件
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 动笔前必须明确所写题材的核心梗：都市重生=挽回遗憾，末日文=人性与生存，架空历史=蹭历史事件 | 题材能决定新人90%的成绩，不清楚核心看点就写，等于盲目杂糅浪费几十万字
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 075_起点编辑星河谈你根本就不会写网文_第90集写小说写网文最基本的底层逻辑，很多人在冒充一个作家.md
+failure_pattern:
+  description: 动笔前必须明确所写题材的核心梗：都市重生=挽回遗憾，末日文=人性与生存，架空历史=蹭历史事件 — 理由：题材能决定新人90%的成绩，不清楚核心看点就写，等于盲目杂糅浪费几十万字
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0103）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

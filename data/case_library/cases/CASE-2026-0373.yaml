@@ -1,0 +1,28 @@
+case_id: CASE-2026-0373
+title: 情感场景优先触觉+温度，战斗场景优先触觉+嗅觉，悬疑场景优先听觉+触觉；场景类型与主导感官需匹配
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_sensory
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 情感场景优先触觉+温度，战斗场景优先触觉+嗅觉，悬疑场景优先听觉+触觉；场景类型与主导感官需匹配 | 感官选错=情绪不对位；编辑在情感戏拆解中反复强调'体温、心跳、呼吸频率比眼神更能传递情绪浓度'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: desire-description.md
+failure_pattern:
+  description: 情感场景优先触觉+温度，战斗场景优先触觉+嗅觉，悬疑场景优先听觉+触觉；场景类型与主导感官需匹配 — 理由：感官选错=情绪不对位；编辑在情感戏拆解中反复强调'体温、心跳、呼吸频率比眼神更能传递情绪浓度'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0373）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

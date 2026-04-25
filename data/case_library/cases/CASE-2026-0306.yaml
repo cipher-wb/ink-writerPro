@@ -1,0 +1,29 @@
+case_id: CASE-2026-0306
+title: 将诡异或民俗元素融入玄幻/仙侠/都市题材，而非单独写纯灵异分类
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 将诡异或民俗元素融入玄幻/仙侠/都市题材，而非单独写纯灵异分类 | 纯灵异分类追读留存低、易被封禁举报；融合写法兼顾流量与安全，头部作者已验证（耳根《光阴之外》、辰东《夜无疆》等）
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 353_untitled.md
+failure_pattern:
+  description: 将诡异或民俗元素融入玄幻/仙侠/都市题材，而非单独写纯灵异分类 — 理由：纯灵异分类追读留存低、易被封禁举报；融合写法兼顾流量与安全，头部作者已验证（耳根《光阴之外》、辰东《夜无疆》等）
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0306）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0388
+title: 环境描写必须与场景情绪共振或形成有意识对照；对照型环境必须被视角角色'注意到并产生认知不适'，禁止装饰性反讽
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_density
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 环境描写必须与场景情绪共振或形成有意识对照；对照型环境必须被视角角色'注意到并产生认知不适'，禁止装饰性反讽 | 环境-情绪脱节=场景悬浮；对照型缺角色反应=反讽变装饰，编辑批评'葬礼写大太阳但没人皱眉=作者炫技'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: scene-craft-index.md
+failure_pattern:
+  description: 环境描写必须与场景情绪共振或形成有意识对照；对照型环境必须被视角角色'注意到并产生认知不适'，禁止装饰性反讽 — 理由：环境-情绪脱节=场景悬浮；对照型缺角色反应=反讽变装饰，编辑批评'葬礼写大太阳但没人皱眉=作者炫技'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0388）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

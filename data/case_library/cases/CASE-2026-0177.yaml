@@ -1,0 +1,28 @@
+case_id: CASE-2026-0177
+title: 阅读时必须带目的性：做章纲、写拆书笔记，明确学哪类小说的哪种技巧
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 阅读时必须带目的性：做章纲、写拆书笔记，明确学哪类小说的哪种技巧 | 纯娱乐阅读只记住人设剧情，对开新书帮助极小；有目的的拆书才能内化技巧
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 161_起点编辑星河谈新人写小说怎么扫榜_新人写网文，扫榜学习三个技巧.md
+failure_pattern:
+  description: 阅读时必须带目的性：做章纲、写拆书笔记，明确学哪类小说的哪种技巧 — 理由：纯娱乐阅读只记住人设剧情，对开新书帮助极小；有目的的拆书才能内化技巧
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0177）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0336
+title: 开头只保留主线，删除所有次要描写，做到'根本没有次要的，全都是主线'
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头只保留主线，删除所有次要描写，做到'根本没有次要的，全都是主线' | 编辑后台数据：超过一半不喜欢的读者扫一眼第一页就离开，开头每一句话都必须是主线推进
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 409_起点编辑星河，直播时，即兴拆书点评《天才俱乐部》开头.md
+failure_pattern:
+  description: 开头只保留主线，删除所有次要描写，做到'根本没有次要的，全都是主线' — 理由：编辑后台数据：超过一半不喜欢的读者扫一眼第一页就离开，开头每一句话都必须是主线推进
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0336）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

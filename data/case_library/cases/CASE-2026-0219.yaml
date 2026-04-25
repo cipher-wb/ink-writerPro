@@ -1,0 +1,28 @@
+case_id: CASE-2026-0219
+title: 可以用AI辅助润色词藻或查找资料，但故事内容和题材选择必须自己把控
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 可以用AI辅助润色词藻或查找资料，但故事内容和题材选择必须自己把控 | AI提供题材缺乏市场判断力，直接使用会导致题材不适合当前市场
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 209_最近ai投稿确实多，小说几句_ai写小说润色辅助没问题，但deepseek也是讲方法的.md
+failure_pattern:
+  description: 可以用AI辅助润色词藻或查找资料，但故事内容和题材选择必须自己把控 — 理由：AI提供题材缺乏市场判断力，直接使用会导致题材不适合当前市场
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0219）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

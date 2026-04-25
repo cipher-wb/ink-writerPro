@@ -1,0 +1,28 @@
+case_id: CASE-2026-0144
+title: 主角装逼时让旁人夸其他人，不要直接夸主角；主角只在内心思考，不动声色隐藏实力
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 主角装逼时让旁人夸其他人，不要直接夸主角；主角只在内心思考，不动声色隐藏实力 | 直接夸主角是旧套路，读者已免疫；主角有智商地压住实力，读者对后续更强表现的期待值更高
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 129_起点编辑星河直播拆书_拆书奇幻新书榜第一，新人写西幻需要注意.md
+failure_pattern:
+  description: 主角装逼时让旁人夸其他人，不要直接夸主角；主角只在内心思考，不动声色隐藏实力 — 理由：直接夸主角是旧套路，读者已免疫；主角有智商地压住实力，读者对后续更强表现的期待值更高
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0144）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

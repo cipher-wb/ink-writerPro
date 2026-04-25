@@ -1,0 +1,29 @@
+case_id: CASE-2026-0098
+title: 新人作者不得在未获成绩之前尝试偏实体文学或任性化开头，须严格遵守网文市场套路
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 新人作者不得在未获成绩之前尝试偏实体文学或任性化开头，须严格遵守网文市场套路 | 大神白金的任性写法是成功后的尝试，新人这样写只会浪费时间成本，无法签约
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 071_起点编辑星河谈签约听意见_第93集写网文要不要听别人的建议，为什么不签你的书.md
+failure_pattern:
+  description: 新人作者不得在未获成绩之前尝试偏实体文学或任性化开头，须严格遵守网文市场套路 — 理由：大神白金的任性写法是成功后的尝试，新人这样写只会浪费时间成本，无法签约
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0098）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

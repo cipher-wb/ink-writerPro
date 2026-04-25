@@ -1,0 +1,28 @@
+case_id: CASE-2026-0200
+title: 开头要接地气、有代入感，避免华丽辞藻和大量世界观设定，以读者能快速代入为标准
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头要接地气、有代入感，避免华丽辞藻和大量世界观设定，以读者能快速代入为标准 | 新人常犯的错误是把网文当名著写，过度设定和文学化表达会让开头失去吸引力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 187_起点编辑星河谈写小说之前注意三件事_写小说拿稿费，新人得有哪些认知和准备.md
+failure_pattern:
+  description: 开头要接地气、有代入感，避免华丽辞藻和大量世界观设定，以读者能快速代入为标准 — 理由：新人常犯的错误是把网文当名著写，过度设定和文学化表达会让开头失去吸引力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0200）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

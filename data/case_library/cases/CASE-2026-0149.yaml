@@ -1,0 +1,28 @@
+case_id: CASE-2026-0149
+title: 猎奇/禁忌设定必须保留基本观赏性，不能让读者无法直视画面
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 猎奇/禁忌设定必须保留基本观赏性，不能让读者无法直视画面 | 编辑审稿时若产生'这怎么看'的反应，稿件直接出局；猎奇的边界是刺激感官而非引发生理反感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 133_起点编辑星河直播审稿切片系列_害圈神作，三分的qu真人来了.md
+failure_pattern:
+  description: 猎奇/禁忌设定必须保留基本观赏性，不能让读者无法直视画面 — 理由：编辑审稿时若产生'这怎么看'的反应，稿件直接出局；猎奇的边界是刺激感官而非引发生理反感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0149）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

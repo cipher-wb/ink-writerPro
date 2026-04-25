@@ -1,0 +1,28 @@
+case_id: CASE-2026-0258
+title: 开篇设定（原本选秀、邻国、魅术之乱等）若与主线无关，需精简或删除，避免堆砌无用世界观
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开篇设定（原本选秀、邻国、魅术之乱等）若与主线无关，需精简或删除，避免堆砌无用世界观 | 编辑指出该书设定'没眼看'，魅术/原本等元素虽可用，但主剧情太少导致设定失去意义
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 287_起点编辑星河直播审稿之绕了网文圈吧_起点金牌编辑星河直播审稿，大哥绕了网文圈.md
+failure_pattern:
+  description: 开篇设定（原本选秀、邻国、魅术之乱等）若与主线无关，需精简或删除，避免堆砌无用世界观 — 理由：编辑指出该书设定'没眼看'，魅术/原本等元素虽可用，但主剧情太少导致设定失去意义
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0258）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

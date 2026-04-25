@@ -1,0 +1,28 @@
+case_id: CASE-2026-0374
+title: 禁止用'他感到悲伤/愤怒/惊讶/紧张'等抽象情绪词替代具体感官描写；情绪必须通过身体反应、外部环境、动作细节传递
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_sensory
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止用'他感到悲伤/愤怒/惊讶/紧张'等抽象情绪词替代具体感官描写；情绪必须通过身体反应、外部环境、动作细节传递 | 抽象情绪词是AI味的核心特征；编辑指出'所有抽象情绪词都可以也应该被身体细节替换'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: desire-description.md
+failure_pattern:
+  description: 禁止用'他感到悲伤/愤怒/惊讶/紧张'等抽象情绪词替代具体感官描写；情绪必须通过身体反应、外部环境、动作细节传递 — 理由：抽象情绪词是AI味的核心特征；编辑指出'所有抽象情绪词都可以也应该被身体细节替换'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0374）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

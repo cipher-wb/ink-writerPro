@@ -1,0 +1,28 @@
+case_id: CASE-2026-0040
+title: 以当前平台最新审核尺度为准，禁止参照过去宽松标准写作；不同平台男频女频要求不同，投稿前需确认目标站点规则
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 以当前平台最新审核尺度为准，禁止参照过去宽松标准写作；不同平台男频女频要求不同，投稿前需确认目标站点规则 | 网文审核尺度持续收紧，用旧尺度写当下内容极易触雷，且各平台要求存在差异
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 039_起点编辑星河谈网文审核尺度.md
+failure_pattern:
+  description: 以当前平台最新审核尺度为准，禁止参照过去宽松标准写作；不同平台男频女频要求不同，投稿前需确认目标站点规则 — 理由：网文审核尺度持续收紧，用旧尺度写当下内容极易触雷，且各平台要求存在差异
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0040）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

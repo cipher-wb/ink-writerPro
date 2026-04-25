@@ -1,0 +1,28 @@
+case_id: CASE-2026-0044
+title: 招式、功法、剑式名称须有明确的意象逻辑，禁止堆砌无意义汉字组合
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 招式、功法、剑式名称须有明确的意象逻辑，禁止堆砌无意义汉字组合 | 编辑朗读「双兔剑飞草浅，同国爱静帆卓涛侠剑锤天和，倒挂玉壶纺形」并嘲讽「我全看懂了怎么办」，表明此类命名是低质标志
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 043_起点编辑星河直播审稿系列.md
+failure_pattern:
+  description: 招式、功法、剑式名称须有明确的意象逻辑，禁止堆砌无意义汉字组合 — 理由：编辑朗读「双兔剑飞草浅，同国爱静帆卓涛侠剑锤天和，倒挂玉壶纺形」并嘲讽「我全看懂了怎么办」，表明此类命名是低质标志
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0044）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

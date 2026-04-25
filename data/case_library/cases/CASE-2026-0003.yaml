@@ -1,0 +1,28 @@
+case_id: CASE-2026-0003
+title: 禁止用AI大段生成正文水字数，AI输出的文字必须经过人工深度改写，否则极易触发平台违规判定
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止用AI大段生成正文水字数，AI输出的文字必须经过人工深度改写，否则极易触发平台违规判定 | 编辑明确指出'只知道水文混字数的AI使用方式是最低级、最容易被网站判定违规的'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 001_AI写小说是否可行，编辑星河观点分享.md
+failure_pattern:
+  description: 禁止用AI大段生成正文水字数，AI输出的文字必须经过人工深度改写，否则极易触发平台违规判定 — 理由：编辑明确指出'只知道水文混字数的AI使用方式是最低级、最容易被网站判定违规的'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0003）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

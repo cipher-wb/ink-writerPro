@@ -79,3 +79,8 @@ ink_writer.egg-info/
 
 # Qdrant local volume (M1 起替换 FAISS；scripts/qdrant/docker-compose.yml 挂载此目录)
 scripts/qdrant/storage/
+# M2 ingest 运行期产物（partial data，由 ink corpus ingest 重生成）
+data/corpus_chunks/
+# Case Library 派生物（YAML 是权威，sqlite/jsonl 可由 yaml 重建）
+data/case_library/index.sqlite
+data/case_library/cases.jsonl

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0007
+title: 禁止用发红包或购买月票的方式刷假追读数据，平台后台可清晰识别真假追读
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止用发红包或购买月票的方式刷假追读数据，平台后台可清晰识别真假追读 | 平台后台数据全面，假追读一目了然，刷票不仅无效，还会干扰编辑对作品质量的正常判断，得不偿失
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 007_网文圈刷票运营，新人写小说需要吗.md
+failure_pattern:
+  description: 禁止用发红包或购买月票的方式刷假追读数据，平台后台可清晰识别真假追读 — 理由：平台后台数据全面，假追读一目了然，刷票不仅无效，还会干扰编辑对作品质量的正常判断，得不偿失
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0007）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

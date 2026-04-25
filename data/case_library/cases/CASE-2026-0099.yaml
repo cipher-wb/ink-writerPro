@@ -1,0 +1,29 @@
+case_id: CASE-2026-0099
+title: 动笔前广泛听取编辑和圈内读者意见，开头与题材须经多轮修改后再确定
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 动笔前广泛听取编辑和圈内读者意见，开头与题材须经多轮修改后再确定 | 白金大神开新书都会找好友看稿改N个版本，闭门造车是新人最常见的失败原因
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 071_起点编辑星河谈签约听意见_第93集写网文要不要听别人的建议，为什么不签你的书.md
+failure_pattern:
+  description: 动笔前广泛听取编辑和圈内读者意见，开头与题材须经多轮修改后再确定 — 理由：白金大神开新书都会找好友看稿改N个版本，闭门造车是新人最常见的失败原因
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0099）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

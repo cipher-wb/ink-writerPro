@@ -1,0 +1,28 @@
+case_id: CASE-2026-0232
+title: 黄金三章开局禁止使用上帝视角介绍世界观或修炼体系，必须让主角直接陷入事件或危机中
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 黄金三章开局禁止使用上帝视角介绍世界观或修炼体系，必须让主角直接陷入事件或危机中 | 读者需要代入感，说明书式开头无人爱看，危机/悬疑/反转开局法能快速钩住读者
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 235_连麦《大奉打更人》作者卖报小郎君录播精简版上_起点编辑星河，连麦卖报小郎君，讲网文干货的录播精简版上.md
+failure_pattern:
+  description: 黄金三章开局禁止使用上帝视角介绍世界观或修炼体系，必须让主角直接陷入事件或危机中 — 理由：读者需要代入感，说明书式开头无人爱看，危机/悬疑/反转开局法能快速钩住读者
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0232）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

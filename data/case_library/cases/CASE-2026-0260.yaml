@@ -1,0 +1,28 @@
+case_id: CASE-2026-0260
+title: 开头前1000字内必须出现主角并展开剧情，禁止全篇铺垫历史背景
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头前1000字内必须出现主角并展开剧情，禁止全篇铺垫历史背景 | 编辑星河审稿案例：2500字无主角无剧情，全是历史论文式铺垫，直接无法签约
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 289_起点编辑星河直播审稿偶遇天才大哥_起点编辑星河直播审稿，偶遇单开境界的大哥.md
+failure_pattern:
+  description: 开头前1000字内必须出现主角并展开剧情，禁止全篇铺垫历史背景 — 理由：编辑星河审稿案例：2500字无主角无剧情，全是历史论文式铺垫，直接无法签约
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0260）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

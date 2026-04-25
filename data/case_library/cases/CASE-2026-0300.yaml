@@ -1,0 +1,28 @@
+case_id: CASE-2026-0300
+title: 前三章必须明确交代小目标、中期目标、大目标三个层级
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 前三章必须明确交代小目标、中期目标、大目标三个层级 | 三层目标给读者清晰的追读动力：近期悬念驱动当下、中期目标维持中段、大目标绑定长期追读
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 343_untitled.md
+failure_pattern:
+  description: 前三章必须明确交代小目标、中期目标、大目标三个层级 — 理由：三层目标给读者清晰的追读动力：近期悬念驱动当下、中期目标维持中段、大目标绑定长期追读
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0300）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

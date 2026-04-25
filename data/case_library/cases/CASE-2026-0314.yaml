@@ -1,0 +1,29 @@
+case_id: CASE-2026-0314
+title: 给角色取名前自问「这个名字现实中的父母会给孩子起吗」，通过此测试才可使用
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 给角色取名前自问「这个名字现实中的父母会给孩子起吗」，通过此测试才可使用 | 编辑星河在直播中明确用「你爸爸会给你起这样的名字吗」作为判断标准，说明现实合理性是命名的基础门槛
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 387_起点编辑星河深夜直播审稿，惊现炸裂小说和炸裂主角名，大傻春你在干什么？.md
+failure_pattern:
+  description: 给角色取名前自问「这个名字现实中的父母会给孩子起吗」，通过此测试才可使用 — 理由：编辑星河在直播中明确用「你爸爸会给你起这样的名字吗」作为判断标准，说明现实合理性是命名的基础门槛
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0314）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0229
+title: 烧脑悬疑剧情的视角必须死跟主角，不得中途切换到幕后反派视角加戏
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- highpoint
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 烧脑悬疑剧情的视角必须死跟主角，不得中途切换到幕后反派视角加戏 | 切给反派会提前泄露信息、破坏悬疑感，读者失去推理期待后追读下降
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 233_连麦《大奉打更人》《灵境行者》作者卖报小郎君_起点编辑星河，连麦起点顶级白金作者卖报小郎君，录播精简.md
+failure_pattern:
+  description: 烧脑悬疑剧情的视角必须死跟主角，不得中途切换到幕后反派视角加戏 — 理由：切给反派会提前泄露信息、破坏悬疑感，读者失去推理期待后追读下降
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0229）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

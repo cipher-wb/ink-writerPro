@@ -1,0 +1,29 @@
+case_id: CASE-2026-0354
+title: 系统金手指要设计成'能预判主角预判'的智慧感，而非被动响应，展现系统与主角之间的博弈趣味
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 系统金手指要设计成'能预判主角预判'的智慧感，而非被动响应，展现系统与主角之间的博弈趣味 | 编辑专门点评'系统预判了癞蛤蟆的预判，就问你系统聪不聪明'，主动型系统比工具型系统更能制造爽点
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 439_untitled.md
+failure_pattern:
+  description: 系统金手指要设计成'能预判主角预判'的智慧感，而非被动响应，展现系统与主角之间的博弈趣味 — 理由：编辑专门点评'系统预判了癞蛤蟆的预判，就问你系统聪不聪明'，主动型系统比工具型系统更能制造爽点
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0354）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

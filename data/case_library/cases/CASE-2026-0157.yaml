@@ -1,0 +1,28 @@
+case_id: CASE-2026-0157
+title: 持续打磨开头，反复修改直到抓住读者，而非一次写完就不改
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 持续打磨开头，反复修改直到抓住读者，而非一次写完就不改 | 编辑审稿直播间的成功新人都以打磨开头为核心训练方式，开头质量直接决定签约和追读
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 139_起点编辑星河谈网文_网文是不是凉了，新人现在写小说还来得及吗.md
+failure_pattern:
+  description: 持续打磨开头，反复修改直到抓住读者，而非一次写完就不改 — 理由：编辑审稿直播间的成功新人都以打磨开头为核心训练方式，开头质量直接决定签约和追读
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0157）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

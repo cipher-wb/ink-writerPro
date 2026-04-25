@@ -1,0 +1,29 @@
+case_id: CASE-2026-0088
+title: 不要照搬当前爆款的套路框架写八股文，编辑最头疼套路文，有新鲜劳动和题材反而更容易被扶持签约
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 不要照搬当前爆款的套路框架写八股文，编辑最头疼套路文，有新鲜劳动和题材反而更容易被扶持签约 | 编辑主动压低签约门槛扶持有意思的小众题材，巴不得出现破圈爆款，套路文同质化太严重只会被淹没在同仁作品里
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 063_起点编辑星河谈网文同质化严重_第95集为什么现在找好书难，网文不好看吗？问题在哪.md
+failure_pattern:
+  description: 不要照搬当前爆款的套路框架写八股文，编辑最头疼套路文，有新鲜劳动和题材反而更容易被扶持签约 — 理由：编辑主动压低签约门槛扶持有意思的小众题材，巴不得出现破圈爆款，套路文同质化太严重只会被淹没在同仁作品里
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0088）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

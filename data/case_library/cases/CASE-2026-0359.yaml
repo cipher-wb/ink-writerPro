@@ -1,0 +1,28 @@
+case_id: CASE-2026-0359
+title: 将聊天/吹水时间严格控制在码字之后，日更字数达标前不进写作群
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 将聊天/吹水时间严格控制在码字之后，日更字数达标前不进写作群 | 群聊高度消耗创作注意力，案例显示34小时零码字与高频群聊直接相关，是产量崩塌的主因
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 455_视频_73581224.md
+failure_pattern:
+  description: 将聊天/吹水时间严格控制在码字之后，日更字数达标前不进写作群 — 理由：群聊高度消耗创作注意力，案例显示34小时零码字与高频群聊直接相关，是产量崩塌的主因
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0359）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

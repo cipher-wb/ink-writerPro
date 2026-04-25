@@ -1,0 +1,28 @@
+case_id: CASE-2026-0030
+title: 禁止直接抄袭他人剧情、复制大纲脉络或剽窃点子创意，借鉴须经融合举一反三转化为自身内容
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止直接抄袭他人剧情、复制大纲脉络或剽窃点子创意，借鉴须经融合举一反三转化为自身内容 | 抄袭侵犯著作权属违法行为，轻则下架扣收入，重则追回稿费及连带责任
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 035_起点编辑星河谈AI写作写网文.md
+failure_pattern:
+  description: 禁止直接抄袭他人剧情、复制大纲脉络或剽窃点子创意，借鉴须经融合举一反三转化为自身内容 — 理由：抄袭侵犯著作权属违法行为，轻则下架扣收入，重则追回稿费及连带责任
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0030）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

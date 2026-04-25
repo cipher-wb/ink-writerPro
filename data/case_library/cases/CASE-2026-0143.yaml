@@ -1,0 +1,28 @@
+case_id: CASE-2026-0143
+title: 测试场景不要提前揭示主角结果好坏，保持悬念让读者和主角一样不知道测出来是什么
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 测试场景不要提前揭示主角结果好坏，保持悬念让读者和主角一样不知道测出来是什么 | 读者若已知主角是天才，期待感极弱；若结果未知，读者才会想看接下来的反应，期待感更强
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 129_起点编辑星河直播拆书_拆书奇幻新书榜第一，新人写西幻需要注意.md
+failure_pattern:
+  description: 测试场景不要提前揭示主角结果好坏，保持悬念让读者和主角一样不知道测出来是什么 — 理由：读者若已知主角是天才，期待感极弱；若结果未知，读者才会想看接下来的反应，期待感更强
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0143）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

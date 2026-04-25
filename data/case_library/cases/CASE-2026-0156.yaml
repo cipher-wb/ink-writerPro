@@ -1,0 +1,28 @@
+case_id: CASE-2026-0156
+title: 深耕细分赛道，把自己打造成某一题材类型的专家，而非泛泛尝试多个方向
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 深耕细分赛道，把自己打造成某一题材类型的专家，而非泛泛尝试多个方向 | 存量市场下泛化写法难以突围，专精某一细分赛道（如都市神豪、东京人设）能形成竞争壁垒，让稿费自然提升
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 139_起点编辑星河谈网文_网文是不是凉了，新人现在写小说还来得及吗.md
+failure_pattern:
+  description: 深耕细分赛道，把自己打造成某一题材类型的专家，而非泛泛尝试多个方向 — 理由：存量市场下泛化写法难以突围，专精某一细分赛道（如都市神豪、东京人设）能形成竞争壁垒，让稿费自然提升
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0156）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

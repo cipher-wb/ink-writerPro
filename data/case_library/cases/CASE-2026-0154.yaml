@@ -1,0 +1,29 @@
+case_id: CASE-2026-0154
+title: 避免使用废柴流、学院大比、测灵根、测斗气等已令读者审美疲劳的老套路作为核心卖点
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- highpoint
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 避免使用废柴流、学院大比、测灵根、测斗气等已令读者审美疲劳的老套路作为核心卖点 | 现代读者见过大量同类套路，再写只会被评为'小白无聊'；爽点阈值已整体上移，旧模板无法产生新鲜感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 137_起点编辑星河谈网文变化_现在的小说是不是不好看了，网文质量没以前高了吗.md
+failure_pattern:
+  description: 避免使用废柴流、学院大比、测灵根、测斗气等已令读者审美疲劳的老套路作为核心卖点 — 理由：现代读者见过大量同类套路，再写只会被评为'小白无聊'；爽点阈值已整体上移，旧模板无法产生新鲜感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0154）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

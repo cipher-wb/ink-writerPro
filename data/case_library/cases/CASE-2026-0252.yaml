@@ -1,0 +1,28 @@
+case_id: CASE-2026-0252
+title: 禁止使用模仿现实AI助手（小爱同学、Siri等）口吻的拟人化系统设定，避免被认定为蹭热度
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止使用模仿现实AI助手（小爱同学、Siri等）口吻的拟人化系统设定，避免被认定为蹭热度 | 编辑明确吐槽此类设定泛滥，「现在的小说怎么全都是智能系统」，同质化严重会直接让编辑失去阅读兴趣
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 283_起点编辑星河直播审稿之新系统_现在的小说.md
+failure_pattern:
+  description: 禁止使用模仿现实AI助手（小爱同学、Siri等）口吻的拟人化系统设定，避免被认定为蹭热度 — 理由：编辑明确吐槽此类设定泛滥，「现在的小说怎么全都是智能系统」，同质化严重会直接让编辑失去阅读兴趣
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0252）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

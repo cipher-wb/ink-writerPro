@@ -1,0 +1,29 @@
+case_id: CASE-2026-0340
+title: 钩子和目标必须无限套娃，任何一个目标达成后立即引出更大的目标
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 钩子和目标必须无限套娃，任何一个目标达成后立即引出更大的目标 | 目标链断裂是读者弃书的直接原因；小反派→大斗者→海皇的循环结构是保持追读的核心机制
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 415_untitled.md
+failure_pattern:
+  description: 钩子和目标必须无限套娃，任何一个目标达成后立即引出更大的目标 — 理由：目标链断裂是读者弃书的直接原因；小反派→大斗者→海皇的循环结构是保持追读的核心机制
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0340）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

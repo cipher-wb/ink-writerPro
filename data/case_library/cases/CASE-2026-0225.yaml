@@ -1,0 +1,28 @@
+case_id: CASE-2026-0225
+title: 将综合讲故事能力作为核心竞争力，而非单纯依赖文笔、人设或设定等局部技巧
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 将综合讲故事能力作为核心竞争力，而非单纯依赖文笔、人设或设定等局部技巧 | AI在文笔、人设、题材、灵感、大纲设定等单项能力上会持续追赶，但长篇连载所需的综合叙事能力仍是优秀作者的护城河
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 229_关于deepseek对网文的影响_起点编辑星河小聊几句人工智能和写小说.md
+failure_pattern:
+  description: 将综合讲故事能力作为核心竞争力，而非单纯依赖文笔、人设或设定等局部技巧 — 理由：AI在文笔、人设、题材、灵感、大纲设定等单项能力上会持续追赶，但长篇连载所需的综合叙事能力仍是优秀作者的护城河
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0225）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0072
+title: 不要为了追读数据选择自己驾驭不了的题材，宁可写熟悉的慢热也不强行堆砌精华
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 不要为了追读数据选择自己驾驭不了的题材，宁可写熟悉的慢热也不强行堆砌精华 | 题材超出驾驭能力会导致开头虚高、后劲不足，早崩比晚崩更伤成绩
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 010_小说网文如何写长不崩，七个技巧分享.md
+failure_pattern:
+  description: 不要为了追读数据选择自己驾驭不了的题材，宁可写熟悉的慢热也不强行堆砌精华 — 理由：题材超出驾驭能力会导致开头虚高、后劲不足，早崩比晚崩更伤成绩
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0072）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

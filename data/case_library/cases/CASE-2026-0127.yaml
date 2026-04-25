@@ -1,0 +1,29 @@
+case_id: CASE-2026-0127
+title: 在竞争激烈的市场中，作品质量和作者坚持缺一不可，不能仅靠赛道红利
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 在竞争激烈的市场中，作品质量和作者坚持缺一不可，不能仅靠赛道红利 | 2007-2009年神仙打架年代，顶级IP云集，凡人能杀出来靠的是质量+坚持，任何一项缺失都不会成功
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 097_起点编辑星河谈凡人修仙传当年_凡人修仙传为什么一开始没签约，这本书成绩如何.md
+failure_pattern:
+  description: 在竞争激烈的市场中，作品质量和作者坚持缺一不可，不能仅靠赛道红利 — 理由：2007-2009年神仙打架年代，顶级IP云集，凡人能杀出来靠的是质量+坚持，任何一项缺失都不会成功
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0127）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

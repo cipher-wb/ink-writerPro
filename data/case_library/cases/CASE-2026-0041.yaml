@@ -1,0 +1,28 @@
+case_id: CASE-2026-0041
+title: 禁止使用明显失真的身体比例数据（如腰围54、胸围108、臀围为腰围两倍），女性角色体型描写须符合基本生理常识
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止使用明显失真的身体比例数据（如腰围54、胸围108、臀围为腰围两倍），女性角色体型描写须符合基本生理常识 | 编辑直播中点名批评此类数字描写，认为作者「没见过妹子」，严重破坏读者代入感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 043_起点编辑星河直播审稿系列.md
+failure_pattern:
+  description: 禁止使用明显失真的身体比例数据（如腰围54、胸围108、臀围为腰围两倍），女性角色体型描写须符合基本生理常识 — 理由：编辑直播中点名批评此类数字描写，认为作者「没见过妹子」，严重破坏读者代入感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0041）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

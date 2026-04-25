@@ -1,0 +1,29 @@
+case_id: CASE-2026-0261
+title: 背景设定须嵌入剧情推进，不得独立成段做百科式介绍
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 背景设定须嵌入剧情推进，不得独立成段做百科式介绍 | 编辑明确指出'这是历史论文不是网络小说'，信息堆砌无法产生代入感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 289_起点编辑星河直播审稿偶遇天才大哥_起点编辑星河直播审稿，偶遇单开境界的大哥.md
+failure_pattern:
+  description: 背景设定须嵌入剧情推进，不得独立成段做百科式介绍 — 理由：编辑明确指出'这是历史论文不是网络小说'，信息堆砌无法产生代入感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0261）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

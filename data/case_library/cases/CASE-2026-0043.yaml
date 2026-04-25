@@ -1,0 +1,28 @@
+case_id: CASE-2026-0043
+title: 仙侠/玄幻背景中禁止出现现代地球的具体参照物或强烈违和感的现实元素，保持世界观内部一致
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 仙侠/玄幻背景中禁止出现现代地球的具体参照物或强烈违和感的现实元素，保持世界观内部一致 | 编辑吐槽「在茫茫仙侠中居然找到了地球的感觉」，跨次元违和感是破坏沉浸度的硬伤
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 043_起点编辑星河直播审稿系列.md
+failure_pattern:
+  description: 仙侠/玄幻背景中禁止出现现代地球的具体参照物或强烈违和感的现实元素，保持世界观内部一致 — 理由：编辑吐槽「在茫茫仙侠中居然找到了地球的感觉」，跨次元违和感是破坏沉浸度的硬伤
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0043）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

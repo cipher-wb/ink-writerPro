@@ -1,0 +1,28 @@
+case_id: CASE-2026-0191
+title: 不要沉浸在自嗨式创作中，始终以读者付费意愿和市场反应为写作导向
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不要沉浸在自嗨式创作中，始终以读者付费意愿和市场反应为写作导向 | 自嗨内容与读者需求脱节，无法获得付费读者认可，签约后也会迅速扑街
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 173_起点编辑星河谈新人写小说签约_写小说想签约起点到底难不难？.md
+failure_pattern:
+  description: 不要沉浸在自嗨式创作中，始终以读者付费意愿和市场反应为写作导向 — 理由：自嗨内容与读者需求脱节，无法获得付费读者认可，签约后也会迅速扑街
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0191）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

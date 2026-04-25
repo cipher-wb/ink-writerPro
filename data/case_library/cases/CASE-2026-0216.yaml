@@ -1,0 +1,28 @@
+case_id: CASE-2026-0216
+title: 避免长期不动脑完全依赖AI写作，保持独立创作思维和写作能力的训练
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 避免长期不动脑完全依赖AI写作，保持独立创作思维和写作能力的训练 | 不动脑的AI写作会持续降低作者自身写作能力，损害长远发展
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 207_起点编辑星河聊一聊ai写作_ai写小说真.md
+failure_pattern:
+  description: 避免长期不动脑完全依赖AI写作，保持独立创作思维和写作能力的训练 — 理由：不动脑的AI写作会持续降低作者自身写作能力，损害长远发展
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0216）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

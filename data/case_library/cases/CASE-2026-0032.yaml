@@ -1,0 +1,28 @@
+case_id: CASE-2026-0032
+title: 发书前必须找编辑或作者朋友看过开头并收到具体修改意见，不要贸然发出未经审视的开头
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 发书前必须找编辑或作者朋友看过开头并收到具体修改意见，不要贸然发出未经审视的开头 | 开头错了改动成本仅一两天，但发出糟糕开头会浪费几周甚至几个月时间，时间是最大成本
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 037_起点编辑星河谈写网文之前的准备工作.md
+failure_pattern:
+  description: 发书前必须找编辑或作者朋友看过开头并收到具体修改意见，不要贸然发出未经审视的开头 — 理由：开头错了改动成本仅一两天，但发出糟糕开头会浪费几周甚至几个月时间，时间是最大成本
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0032）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

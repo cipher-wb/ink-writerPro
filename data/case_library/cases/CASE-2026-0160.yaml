@@ -1,0 +1,28 @@
+case_id: CASE-2026-0160
+title: 意淫/爽文向内容必须植入精神内核，不能纯靠欲望幻想撑全篇
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 意淫/爽文向内容必须植入精神内核，不能纯靠欲望幻想撑全篇 | 编辑评价该稿'潜力无限'但'没有精神内核'，纯意淫只是'肥宅临死前的幻想'，无法走远
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 143_起点编辑直播审稿偶遇新人强者_大哥害圈境强者，肥宅学生的幻想.md
+failure_pattern:
+  description: 意淫/爽文向内容必须植入精神内核，不能纯靠欲望幻想撑全篇 — 理由：编辑评价该稿'潜力无限'但'没有精神内核'，纯意淫只是'肥宅临死前的幻想'，无法走远
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0160）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

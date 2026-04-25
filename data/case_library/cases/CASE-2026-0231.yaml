@@ -1,0 +1,28 @@
+case_id: CASE-2026-0231
+title: 无限流副本须写成短关卡节奏，单副本控制在二三十章内完结
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- highpoint
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 无限流副本须写成短关卡节奏，单副本控制在二三十章内完结 | 过长的副本让读者感到烦躁，短副本制造关卡感，每个新副本都能拉升期待和追读
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 233_连麦《大奉打更人》《灵境行者》作者卖报小郎君_起点编辑星河，连麦起点顶级白金作者卖报小郎君，录播精简.md
+failure_pattern:
+  description: 无限流副本须写成短关卡节奏，单副本控制在二三十章内完结 — 理由：过长的副本让读者感到烦躁，短副本制造关卡感，每个新副本都能拉升期待和追读
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0231）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

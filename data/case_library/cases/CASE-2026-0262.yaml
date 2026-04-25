@@ -1,0 +1,28 @@
+case_id: CASE-2026-0262
+title: 开头必须制造爽感或悬念钩子，让读者感受到'带入'而非'学习'
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头必须制造爽感或悬念钩子，让读者感受到'带入'而非'学习' | 编辑原话：'网络小说是个爽玩意，就是要有爽感的，要有带入的'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 289_起点编辑星河直播审稿偶遇天才大哥_起点编辑星河直播审稿，偶遇单开境界的大哥.md
+failure_pattern:
+  description: 开头必须制造爽感或悬念钩子，让读者感受到'带入'而非'学习' — 理由：编辑原话：'网络小说是个爽玩意，就是要有爽感的，要有带入的'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0262）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

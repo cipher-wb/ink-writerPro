@@ -1,0 +1,28 @@
+case_id: CASE-2026-0125
+title: 新人开书前先调研市场主流方向，找准题材赛道再写自己想讲的故事
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新人开书前先调研市场主流方向，找准题材赛道再写自己想讲的故事 | 没有市场意识的过度自嗨会导致一开始就方向错误，前期投入全部浪费
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 095_写小说完本必神是真的吗_第82集起点编辑星河谈写网文到底要不要坚持，如何判断自己要不要开新书.md
+failure_pattern:
+  description: 新人开书前先调研市场主流方向，找准题材赛道再写自己想讲的故事 — 理由：没有市场意识的过度自嗨会导致一开始就方向错误，前期投入全部浪费
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0125）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

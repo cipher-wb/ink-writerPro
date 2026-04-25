@@ -1,0 +1,28 @@
+case_id: CASE-2026-0057
+title: 主角人设应参照当前流行的性格模板，研究近期爆款主角的性格特征再塑造
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 主角人设应参照当前流行的性格模板，研究近期爆款主角的性格特征再塑造 | 网文主角人设随时代变化，早期老实敦厚型→苟发育型→口才智商型→极端利益化，偏离当前主流人设会降低读者代入感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 【合集】编辑星河_全部视频内容.md
+failure_pattern:
+  description: 主角人设应参照当前流行的性格模板，研究近期爆款主角的性格特征再塑造 — 理由：网文主角人设随时代变化，早期老实敦厚型→苟发育型→口才智商型→极端利益化，偏离当前主流人设会降低读者代入感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0057）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

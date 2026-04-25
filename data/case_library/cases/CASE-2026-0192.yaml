@@ -1,0 +1,28 @@
+case_id: CASE-2026-0192
+title: 把提升整体讲故事能力放在首位，而非急于投稿签约
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 把提升整体讲故事能力放在首位，而非急于投稿签约 | 讲故事能力不足而侥幸签约，后续无读者追读的痛苦远大于未签约
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 173_起点编辑星河谈新人写小说签约_写小说想签约起点到底难不难？.md
+failure_pattern:
+  description: 把提升整体讲故事能力放在首位，而非急于投稿签约 — 理由：讲故事能力不足而侥幸签约，后续无读者追读的痛苦远大于未签约
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0192）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

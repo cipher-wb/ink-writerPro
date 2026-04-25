@@ -1,0 +1,28 @@
+case_id: CASE-2026-0155
+title: 设计爽点时以《诡秘之主》《大奉打更人》等当代头部作品为基准，而非以十年前的神作为参照
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- highpoint
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 设计爽点时以《诡秘之主》《大奉打更人》等当代头部作品为基准，而非以十年前的神作为参照 | 读者的比较对象是同期头部作品，人物塑造和写作技巧硬实力必须达到当代竞品水准才不会被淘汰
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 137_起点编辑星河谈网文变化_现在的小说是不是不好看了，网文质量没以前高了吗.md
+failure_pattern:
+  description: 设计爽点时以《诡秘之主》《大奉打更人》等当代头部作品为基准，而非以十年前的神作为参照 — 理由：读者的比较对象是同期头部作品，人物塑造和写作技巧硬实力必须达到当代竞品水准才不会被淘汰
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0155）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

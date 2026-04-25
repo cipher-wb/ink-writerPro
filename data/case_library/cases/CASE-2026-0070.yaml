@@ -1,0 +1,28 @@
+case_id: CASE-2026-0070
+title: 开头多埋钩子和伏笔，不要急于兑现正反馈；藏比直给更能拉住追读
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头多埋钩子和伏笔，不要急于兑现正反馈；藏比直给更能拉住追读 | 过早兑现导致精华前置，后期无牌可打；钩子制造悬念，让读者主动追更
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 010_小说网文如何写长不崩，七个技巧分享.md
+failure_pattern:
+  description: 开头多埋钩子和伏笔，不要急于兑现正反馈；藏比直给更能拉住追读 — 理由：过早兑现导致精华前置，后期无牌可打；钩子制造悬念，让读者主动追更
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0070）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

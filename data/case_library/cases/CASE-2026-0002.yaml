@@ -1,0 +1,28 @@
+case_id: CASE-2026-0002
+title: 输入角色的性格与习惯设定，让AI列出配角（尤其女配）遭遇关键事件时的多种反应方式，挑选最合理吸引人的方案加以改编
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 输入角色的性格与习惯设定，让AI列出配角（尤其女配）遭遇关键事件时的多种反应方式，挑选最合理吸引人的方案加以改编 | 用AI穷举角色行为可能性，能快速发现超出作者惯性思维的人物弧光，同时保证最终选择由人审美判断
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 001_AI写小说是否可行，编辑星河观点分享.md
+failure_pattern:
+  description: 输入角色的性格与习惯设定，让AI列出配角（尤其女配）遭遇关键事件时的多种反应方式，挑选最合理吸引人的方案加以改编 — 理由：用AI穷举角色行为可能性，能快速发现超出作者惯性思维的人物弧光，同时保证最终选择由人审美判断
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0002）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

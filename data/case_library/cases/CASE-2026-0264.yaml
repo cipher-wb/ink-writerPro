@@ -1,0 +1,29 @@
+case_id: CASE-2026-0264
+title: 用最简洁的场景描写替代堆砌辞藻：'主角在燥热的屋子里咳嗽'胜过三段环境铺垫
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 用最简洁的场景描写替代堆砌辞藻：'主角在燥热的屋子里咳嗽'胜过三段环境铺垫 | 编辑星河指出：能用一句话交代清楚的场景信息，反复用大量描写堆砌只会让读者失去耐心，开篇冗长是被打回的首要原因
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 293_起点编辑星河直播审稿之图穷匕见了_起点编辑星河直播审稿，大哥你这燕国地图有点长啊，终于图穷匕见了.md
+failure_pattern:
+  description: 用最简洁的场景描写替代堆砌辞藻：'主角在燥热的屋子里咳嗽'胜过三段环境铺垫 — 理由：编辑星河指出：能用一句话交代清楚的场景信息，反复用大量描写堆砌只会让读者失去耐心，开篇冗长是被打回的首要原因
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0264）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

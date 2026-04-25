@@ -1,0 +1,28 @@
+case_id: CASE-2026-0204
+title: 新人练笔优先选择门槛低的免费平台积累经验，待形成稳定读者群后再考虑付费平台
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新人练笔优先选择门槛低的免费平台积累经验，待形成稳定读者群后再考虑付费平台 | 番茄等免费平台签约标准低、受众更广，适合新人打磨作品；起点等付费平台上限更高但要求也更高，循序渐进可降低失败风险
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 189_起点编辑星河谈网文圈十大八卦_写小说去起点还是番茄？ai写小说有什么影响，星河到底喜欢谁.md
+failure_pattern:
+  description: 新人练笔优先选择门槛低的免费平台积累经验，待形成稳定读者群后再考虑付费平台 — 理由：番茄等免费平台签约标准低、受众更广，适合新人打磨作品；起点等付费平台上限更高但要求也更高，循序渐进可降低失败风险
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0204）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

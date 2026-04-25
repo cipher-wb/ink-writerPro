@@ -1,0 +1,28 @@
+case_id: CASE-2026-0021
+title: 新人应充分发挥自身特长（如写人设、写女角色）而非追求全面均衡
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新人应充分发挥自身特长（如写人设、写女角色）而非追求全面均衡 | 特长鲜明的作品追订更稳，上架即能形成差异化竞争优势
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 025_起点编辑星河谈如何月稿费七万.md
+failure_pattern:
+  description: 新人应充分发挥自身特长（如写人设、写女角色）而非追求全面均衡 — 理由：特长鲜明的作品追订更稳，上架即能形成差异化竞争优势
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0021）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

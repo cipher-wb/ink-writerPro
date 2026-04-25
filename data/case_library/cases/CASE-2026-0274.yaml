@@ -1,0 +1,28 @@
+case_id: CASE-2026-0274
+title: 配角反派的台词和行为必须符合其人设智商，不得为制造冲突而降智
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 配角反派的台词和行为必须符合其人设智商，不得为制造冲突而降智 | 编辑指出'考上清华北大的女神'不应像短剧中'没智商的女的'一样行事，角色降智会让读者出戏，直接打破沉浸感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 309_起点编辑星河直播审稿系列_起点编辑星河直播审稿之大专生退婚流，好的985不比大专差.md
+failure_pattern:
+  description: 配角反派的台词和行为必须符合其人设智商，不得为制造冲突而降智 — 理由：编辑指出'考上清华北大的女神'不应像短剧中'没智商的女的'一样行事，角色降智会让读者出戏，直接打破沉浸感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0274）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

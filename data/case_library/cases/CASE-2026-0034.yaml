@@ -1,0 +1,29 @@
+case_id: CASE-2026-0034
+title: 发书前确认每天具备稳定更新4000字以上的客观条件，否则先存稿再发书
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 发书前确认每天具备稳定更新4000字以上的客观条件，否则先存稿再发书 | 开工没有回头箭，发书后必须稳定更新才能维持读者黏性和平台推荐资格
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 037_起点编辑星河谈写网文之前的准备工作.md
+failure_pattern:
+  description: 发书前确认每天具备稳定更新4000字以上的客观条件，否则先存稿再发书 — 理由：开工没有回头箭，发书后必须稳定更新才能维持读者黏性和平台推荐资格
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0034）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

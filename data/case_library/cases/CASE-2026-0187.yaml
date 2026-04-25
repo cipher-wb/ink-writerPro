@@ -1,0 +1,28 @@
+case_id: CASE-2026-0187
+title: 新人不要花钱刷榜、打赏盟主或购买好评/推荐票套餐，专注提升写作实力才是正道
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新人不要花钱刷榜、打赏盟主或购买好评/推荐票套餐，专注提升写作实力才是正道 | 虚假数据掩盖不了真实订阅和追读的低迷，短期运营效果消退后数据会打回原形，只会浪费金钱
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 171_起点编辑星河讲写小说刷榜_新人写小说需不需要运营，盟主真的有用吗.md
+failure_pattern:
+  description: 新人不要花钱刷榜、打赏盟主或购买好评/推荐票套餐，专注提升写作实力才是正道 — 理由：虚假数据掩盖不了真实订阅和追读的低迷，短期运营效果消退后数据会打回原形，只会浪费金钱
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0187）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

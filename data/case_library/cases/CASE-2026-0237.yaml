@@ -1,0 +1,29 @@
+case_id: CASE-2026-0237
+title: 主角名字不能让编辑产生歧义或尴尬联想，避免使用日常口语词汇或谚语中的词作为人名
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角名字不能让编辑产生歧义或尴尬联想，避免使用日常口语词汇或谚语中的词作为人名 | 编辑每天阅读大量稿件，奇葩命名会直接劝退——「一百个编辑里99个都跑了」，第一印象决定编辑是否继续读
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 243_起点编辑星河直播审稿_偶遇万一大哥，万一白金了呢.md
+failure_pattern:
+  description: 主角名字不能让编辑产生歧义或尴尬联想，避免使用日常口语词汇或谚语中的词作为人名 — 理由：编辑每天阅读大量稿件，奇葩命名会直接劝退——「一百个编辑里99个都跑了」，第一印象决定编辑是否继续读
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0237）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0116
+title: 将内容质量而非平台流量作为创作核心，好作品自有市场，不必受唱衰言论干扰
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 将内容质量而非平台流量作为创作核心，好作品自有市场，不必受唱衰言论干扰 | 阅文年报显示付费用户依然增长，证明优质内容始终有读者愿意付费，焦虑平台前景是浪费精力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 083_浅谈阅文这次年报，网文的未来_第86集起点编辑星河聊网文最近的情况，阅文年报，起点的月活.md
+failure_pattern:
+  description: 将内容质量而非平台流量作为创作核心，好作品自有市场，不必受唱衰言论干扰 — 理由：阅文年报显示付费用户依然增长，证明优质内容始终有读者愿意付费，焦虑平台前景是浪费精力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0116）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

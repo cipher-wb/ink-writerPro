@@ -1,0 +1,29 @@
+case_id: CASE-2026-0077
+title: 在情绪爆发、打斗高潮等强节点处插入分镜式叙事：用碎片化视觉细节（呼吸、青筋、配角反应）替代心理陈述，快速堆积情绪画面感
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 在情绪爆发、打斗高潮等强节点处插入分镜式叙事：用碎片化视觉细节（呼吸、青筋、配角反应）替代心理陈述，快速堆积情绪画面感 | 分镜式写法能让节奏瞬间提速、情绪爆棚，单纯线性叙事高潮段落容易写得平淡拖沓
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 024_如何流畅写作，冒充顶级作者，讲一讲ai时代的写作技巧.md
+failure_pattern:
+  description: 在情绪爆发、打斗高潮等强节点处插入分镜式叙事：用碎片化视觉细节（呼吸、青筋、配角反应）替代心理陈述，快速堆积情绪画面感 — 理由：分镜式写法能让节奏瞬间提速、情绪爆棚，单纯线性叙事高潮段落容易写得平淡拖沓
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0077）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

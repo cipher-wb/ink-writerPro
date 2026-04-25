@@ -1,0 +1,28 @@
+case_id: CASE-2026-0358
+title: 禁止用离谱借口（女友、炒股、重返校园等）逃避更新，编辑催更时必须正面回应
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止用离谱借口（女友、炒股、重返校园等）逃避更新，编辑催更时必须正面回应 | 借口只会透支编辑耐心和平台信用额度，网文作者的核心资产是更新信用，一旦崩塌极难恢复
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 455_视频_73581224.md
+failure_pattern:
+  description: 禁止用离谱借口（女友、炒股、重返校园等）逃避更新，编辑催更时必须正面回应 — 理由：借口只会透支编辑耐心和平台信用额度，网文作者的核心资产是更新信用，一旦崩塌极难恢复
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0358）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

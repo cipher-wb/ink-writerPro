@@ -1,0 +1,28 @@
+case_id: CASE-2026-0165
+title: 新书期单章字数控制在两千到三千字，不发大章节
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新书期单章字数控制在两千到三千字，不发大章节 | 章节过长读者看着累或觉得订阅贵，降低订阅转化率；新书期核心目标是积累追读用户而非提高单章收益
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 147_起点编辑星河谈写小说如何更新_发书时间怎么选择，怎样更新小说流量大.md
+failure_pattern:
+  description: 新书期单章字数控制在两千到三千字，不发大章节 — 理由：章节过长读者看着累或觉得订阅贵，降低订阅转化率；新书期核心目标是积累追读用户而非提高单章收益
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0165）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

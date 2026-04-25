@@ -1,0 +1,28 @@
+case_id: CASE-2026-0137
+title: 以热爱和自我取悦为写作的首要驱动力，商业目标可后置，避免过早被市场压力扭曲写作初心
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- misc
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 以热爱和自我取悦为写作的首要驱动力，商业目标可后置，避免过早被市场压力扭曲写作初心 | 编辑星河指出，纯粹的热爱才能让作者在无人问津时仍坚持更新，且最初的情感真实性往往是打动读者的核心竞争力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 121_起点编辑星河谈写小说的意义_第70集新人写小说迷茫期，要不要去尝试，听听我的看法.md
+failure_pattern:
+  description: 以热爱和自我取悦为写作的首要驱动力，商业目标可后置，避免过早被市场压力扭曲写作初心 — 理由：编辑星河指出，纯粹的热爱才能让作者在无人问津时仍坚持更新，且最初的情感真实性往往是打动读者的核心竞争力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0137）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

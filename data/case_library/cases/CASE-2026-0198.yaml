@@ -1,0 +1,28 @@
+case_id: CASE-2026-0198
+title: 早期成绩差时，保持稳定更新节奏，不要频繁焦虑切书或谋划换题材换风格
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 早期成绩差时，保持稳定更新节奏，不要频繁焦虑切书或谋划换题材换风格 | 多位百万稿费作者首订仅几百，前期成绩不代表终局；心态稳定才能持续输出积累口碑
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 179_起点编辑星河谈新人写小说要不要坚持_写网文坚持还是不坚持，网文作者的故事.md
+failure_pattern:
+  description: 早期成绩差时，保持稳定更新节奏，不要频繁焦虑切书或谋划换题材换风格 — 理由：多位百万稿费作者首订仅几百，前期成绩不代表终局；心态稳定才能持续输出积累口碑
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0198）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

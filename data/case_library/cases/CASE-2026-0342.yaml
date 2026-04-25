@@ -1,0 +1,29 @@
+case_id: CASE-2026-0342
+title: 简介只写开头两三万字内发生的内容，不要写后期剧情
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 简介只写开头两三万字内发生的内容，不要写后期剧情 | 简介与正文前两章必须紧密对应；写太远导致读者进入正文后产生落差感，首章留存率下降
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 415_untitled.md
+failure_pattern:
+  description: 简介只写开头两三万字内发生的内容，不要写后期剧情 — 理由：简介与正文前两章必须紧密对应；写太远导致读者进入正文后产生落差感，首章留存率下降
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0342）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

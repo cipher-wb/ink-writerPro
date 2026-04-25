@@ -1,0 +1,29 @@
+case_id: CASE-2026-0203
+title: 初期目标是稳定月入，暂缓文学价值输出和个人表达追求，先完成商业闭环再考虑上限
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 初期目标是稳定月入，暂缓文学价值输出和个人表达追求，先完成商业闭环再考虑上限 | 过早追求文学感悟会让作者在商业化和艺术化之间两头落空，影响更新和市场适应
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 187_起点编辑星河谈写小说之前注意三件事_写小说拿稿费，新人得有哪些认知和准备.md
+failure_pattern:
+  description: 初期目标是稳定月入，暂缓文学价值输出和个人表达追求，先完成商业闭环再考虑上限 — 理由：过早追求文学感悟会让作者在商业化和艺术化之间两头落空，影响更新和市场适应
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0203）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

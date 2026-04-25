@@ -1,0 +1,29 @@
+case_id: CASE-2026-0196
+title: 慢热型题材应以「写长」为目标，早期低订阅不等于写作失败，坚持推进主线
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 慢热型题材应以「写长」为目标，早期低订阅不等于写作失败，坚持推进主线 | 编辑举例说明冷门题材追读可以后期起来，平台也为此提供保底扶持；作者不应因新书期曝光不足就切书，慢热故事需要足够篇幅才能发酵
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 177_起点编辑星河讲起点新出福利_新出五千稿费扶持福利，利好想讲故事的新人，加油.md
+failure_pattern:
+  description: 慢热型题材应以「写长」为目标，早期低订阅不等于写作失败，坚持推进主线 — 理由：编辑举例说明冷门题材追读可以后期起来，平台也为此提供保底扶持；作者不应因新书期曝光不足就切书，慢热故事需要足够篇幅才能发酵
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0196）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

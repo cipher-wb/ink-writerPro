@@ -1,0 +1,28 @@
+case_id: CASE-2026-0338
+title: 开局前三百字内必须同时抛出一个短期目标和一个中期目标，节奏才算及格
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开局前三百字内必须同时抛出一个短期目标和一个中期目标，节奏才算及格 | 读者在开头决定去留，双目标并行既让节奏显快，又给读者继续读下去的理由
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 415_untitled.md
+failure_pattern:
+  description: 开局前三百字内必须同时抛出一个短期目标和一个中期目标，节奏才算及格 — 理由：读者在开头决定去留，双目标并行既让节奏显快，又给读者继续读下去的理由
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0338）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0327
+title: 以小白读者为主要目标，不以老白读者的复杂口味为准
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 以小白读者为主要目标，不以老白读者的复杂口味为准 | 市场趋势是小白读者持续增加，老白读者逐渐减少，迎合老白会丧失更大市场
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 399_untitled.md
+failure_pattern:
+  description: 以小白读者为主要目标，不以老白读者的复杂口味为准 — 理由：市场趋势是小白读者持续增加，老白读者逐渐减少，迎合老白会丧失更大市场
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0327）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

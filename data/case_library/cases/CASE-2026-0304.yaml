@@ -1,0 +1,29 @@
+case_id: CASE-2026-0304
+title: 优先保证故事逻辑通顺和情节吸引力，不要过度打磨文笔
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 优先保证故事逻辑通顺和情节吸引力，不要过度打磨文笔 | 文笔是写作天赋中最不重要的部分，九年义务教育已保证基本功；快速讲好一个故事的能力才是核心竞争力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 347_untitled.md
+failure_pattern:
+  description: 优先保证故事逻辑通顺和情节吸引力，不要过度打磨文笔 — 理由：文笔是写作天赋中最不重要的部分，九年义务教育已保证基本功；快速讲好一个故事的能力才是核心竞争力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0304）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

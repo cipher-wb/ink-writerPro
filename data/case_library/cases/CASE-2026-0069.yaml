@@ -1,0 +1,29 @@
+case_id: CASE-2026-0069
+title: 塑造让读者能无缝代入行为逻辑的主角人设，哪怕情节跑偏读者也不会弃书
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 塑造让读者能无缝代入行为逻辑的主角人设，哪怕情节跑偏读者也不会弃书 | 强人设是长期追读的核心锚点，读者追的是人物而非情节，郭靖杨过无论做什么读者都愿意看
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 010_小说网文如何写长不崩，七个技巧分享.md
+failure_pattern:
+  description: 塑造让读者能无缝代入行为逻辑的主角人设，哪怕情节跑偏读者也不会弃书 — 理由：强人设是长期追读的核心锚点，读者追的是人物而非情节，郭靖杨过无论做什么读者都愿意看
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0069）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0126
+title: 开创新流派时预期平台和编辑的保守态度，用推荐票与评论数据主动证明作品价值，而非等待认可
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 开创新流派时预期平台和编辑的保守态度，用推荐票与评论数据主动证明作品价值，而非等待认可 | 凡人流在2008年属于格格不入的新写法，编辑有所顾虑是常态；但凡人在未签约期间靠数据追上主页榜单，最终用成绩说服平台
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 097_起点编辑星河谈凡人修仙传当年_凡人修仙传为什么一开始没签约，这本书成绩如何.md
+failure_pattern:
+  description: 开创新流派时预期平台和编辑的保守态度，用推荐票与评论数据主动证明作品价值，而非等待认可 — 理由：凡人流在2008年属于格格不入的新写法，编辑有所顾虑是常态；但凡人在未签约期间靠数据追上主页榜单，最终用成绩说服平台
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0126）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

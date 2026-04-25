@@ -1,0 +1,28 @@
+case_id: CASE-2026-0381
+title: 内心独白与回忆段禁止删除连词，删连词只在紧张/战斗段允许；内心戏需保持思维连贯
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_rhythm
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 内心独白与回忆段禁止删除连词，删连词只在紧张/战斗段允许；内心戏需保持思维连贯 | 内心戏删连词=思维断片，破坏角色心理逻辑；编辑指出'回忆段是节奏减速带，不是加速带'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: pacing-control.md
+failure_pattern:
+  description: 内心独白与回忆段禁止删除连词，删连词只在紧张/战斗段允许；内心戏需保持思维连贯 — 理由：内心戏删连词=思维断片，破坏角色心理逻辑；编辑指出'回忆段是节奏减速带，不是加速带'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0381）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

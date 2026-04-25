@@ -1,0 +1,29 @@
+case_id: CASE-2026-0280
+title: 俗套剧情元素（学妹送水、超短裙、手软又白）必须有新意或功能性，不能纯堆砌意淫素材
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 俗套剧情元素（学妹送水、超短裙、手软又白）必须有新意或功能性，不能纯堆砌意淫素材 | 编辑指出'这种桥段是为屌丝写的'，纯堆砌媚俗元素会让编辑直接判定文章档次低
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 317_起点编辑星河审稿系列之国足？.md
+failure_pattern:
+  description: 俗套剧情元素（学妹送水、超短裙、手软又白）必须有新意或功能性，不能纯堆砌意淫素材 — 理由：编辑指出'这种桥段是为屌丝写的'，纯堆砌媚俗元素会让编辑直接判定文章档次低
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0280）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

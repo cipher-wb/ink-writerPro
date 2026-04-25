@@ -1,0 +1,29 @@
+case_id: CASE-2026-0302
+title: 长篇网文要多埋伏笔，每个大伏笔后续必须填坑
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 长篇网文要多埋伏笔，每个大伏笔后续必须填坑 | 伏笔是追读的锚点，读者为了看填坑会持续追更；但只埋不填会透支信任
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 343_untitled.md
+failure_pattern:
+  description: 长篇网文要多埋伏笔，每个大伏笔后续必须填坑 — 理由：伏笔是追读的锚点，读者为了看填坑会持续追更；但只埋不填会透支信任
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0302）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

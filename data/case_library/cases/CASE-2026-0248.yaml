@@ -1,0 +1,28 @@
+case_id: CASE-2026-0248
+title: 中后期章节质量必须与前期保持一致，不能前期精彩后期崩
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 中后期章节质量必须与前期保持一致，不能前期精彩后期崩 | 编辑评价天王标准之一是'成绩稳'，能长成绩的作者靠的是中后期能力；前期好看后期奔完只能冲首月，无法积累高均订
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 259_起点编辑星河点评起点十二天王_看看这次十二天王的一字小八卦吧.md
+failure_pattern:
+  description: 中后期章节质量必须与前期保持一致，不能前期精彩后期崩 — 理由：编辑评价天王标准之一是'成绩稳'，能长成绩的作者靠的是中后期能力；前期好看后期奔完只能冲首月，无法积累高均订
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0248）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

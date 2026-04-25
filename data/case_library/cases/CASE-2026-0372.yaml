@@ -1,0 +1,28 @@
+case_id: CASE-2026-0372
+title: 每800字至少出现1处非视觉感官描写（听觉/嗅觉/触觉/味觉/温度/体感）；战斗与情感场景密度加倍
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_sensory
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 每800字至少出现1处非视觉感官描写（听觉/嗅觉/触觉/味觉/温度/体感）；战斗与情感场景密度加倍 | 非视觉感官是把读者从'看故事'拉到'在故事里'的关键；编辑明确'纯视觉描写是AI味的第一信号'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: desire-description.md
+failure_pattern:
+  description: 每800字至少出现1处非视觉感官描写（听觉/嗅觉/触觉/味觉/温度/体感）；战斗与情感场景密度加倍 — 理由：非视觉感官是把读者从'看故事'拉到'在故事里'的关键；编辑明确'纯视觉描写是AI味的第一信号'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0372）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

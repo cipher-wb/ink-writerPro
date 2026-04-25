@@ -1,0 +1,28 @@
+case_id: CASE-2026-0266
+title: 不要为了后期爽点而在开篇做大量无效铺垫，'为了这盘醋包整盘饺子'是结构失败
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 不要为了后期爽点而在开篇做大量无效铺垫，'为了这盘醋包整盘饺子'是结构失败 | 编辑星河指出：作者铺垫极长（写诗、写玉、写爷爷家谱）才切入真实剧情，读者早已流失；爽点前置、铺垫精简是网文开篇的基本要求
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 293_起点编辑星河直播审稿之图穷匕见了_起点编辑星河直播审稿，大哥你这燕国地图有点长啊，终于图穷匕见了.md
+failure_pattern:
+  description: 不要为了后期爽点而在开篇做大量无效铺垫，'为了这盘醋包整盘饺子'是结构失败 — 理由：编辑星河指出：作者铺垫极长（写诗、写玉、写爷爷家谱）才切入真实剧情，读者早已流失；爽点前置、铺垫精简是网文开篇的基本要求
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0266）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

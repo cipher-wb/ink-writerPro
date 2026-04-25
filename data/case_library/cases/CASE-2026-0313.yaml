@@ -1,0 +1,29 @@
+case_id: CASE-2026-0313
+title: 主角名必须符合正常命名逻辑，避免使用怪异、低俗或让人尴尬的名字
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角名必须符合正常命名逻辑，避免使用怪异、低俗或让人尴尬的名字 | 编辑审稿时会直接以名字判断作者的创作态度；「回家养猪吧」类名字会让编辑第一印象极差，直接影响过稿率
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 387_起点编辑星河深夜直播审稿，惊现炸裂小说和炸裂主角名，大傻春你在干什么？.md
+failure_pattern:
+  description: 主角名必须符合正常命名逻辑，避免使用怪异、低俗或让人尴尬的名字 — 理由：编辑审稿时会直接以名字判断作者的创作态度；「回家养猪吧」类名字会让编辑第一印象极差，直接影响过稿率
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0313）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

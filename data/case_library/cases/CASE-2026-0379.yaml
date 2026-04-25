@@ -1,0 +1,28 @@
+case_id: CASE-2026-0379
+title: 情感与日常场景句均25-40字，情绪高潮必须采用'连续短句→突然长句'的断层效果
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_rhythm
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 情感与日常场景句均25-40字，情绪高潮必须采用'连续短句→突然长句'的断层效果 | 断层是把情绪推到喉咙的句法手段，编辑认为'高潮全是中长句=情绪在脑子里转，短句突然长句=情绪砸到胸口'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: pacing-control.md
+failure_pattern:
+  description: 情感与日常场景句均25-40字，情绪高潮必须采用'连续短句→突然长句'的断层效果 — 理由：断层是把情绪推到喉咙的句法手段，编辑认为'高潮全是中长句=情绪在脑子里转，短句突然长句=情绪砸到胸口'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0379）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

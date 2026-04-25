@@ -1,0 +1,28 @@
+case_id: CASE-2026-0101
+title: 开头必须在最短篇幅内交代清楚时间、地点、人物、期待感、代入感五大要素，像讲童话故事一样简单直接
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开头必须在最短篇幅内交代清楚时间、地点、人物、期待感、代入感五大要素，像讲童话故事一样简单直接 | 读者在短视频时代没有耐心，开头信息密度必须高于设定描写，五要素是留住读者的最低门槛
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 075_起点编辑星河谈你根本就不会写网文_第90集写小说写网文最基本的底层逻辑，很多人在冒充一个作家.md
+failure_pattern:
+  description: 开头必须在最短篇幅内交代清楚时间、地点、人物、期待感、代入感五大要素，像讲童话故事一样简单直接 — 理由：读者在短视频时代没有耐心，开头信息密度必须高于设定描写，五要素是留住读者的最低门槛
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0101）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

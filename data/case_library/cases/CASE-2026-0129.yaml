@@ -1,0 +1,29 @@
+case_id: CASE-2026-0129
+title: 在细分赛道做到极致，不要一开始就对标头部白金作者的大众题材
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 在细分赛道做到极致，不要一开始就对标头部白金作者的大众题材 | 正面竞争头部等于以己之短攻人之长；细分赛道竞争少，坚持即可突破5万订阅门槛
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 105_起点编辑星河谈新人写小说的思路_第77集写小说和做自媒体一些小感悟改变.md
+failure_pattern:
+  description: 在细分赛道做到极致，不要一开始就对标头部白金作者的大众题材 — 理由：正面竞争头部等于以己之短攻人之长；细分赛道竞争少，坚持即可突破5万订阅门槛
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0129）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0075
+title: AI的使用效果与作者自身写作审美能力成正比，须持续提升个人写作鉴赏力而非单纯依赖工具
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: AI的使用效果与作者自身写作审美能力成正比，须持续提升个人写作鉴赏力而非单纯依赖工具 | 写作审美低的作者即使用AI也写不出精品；工具只是放大器，核心竞争力仍在作者本身的审美判断
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 012_AI写网文违规吗_第134集AI写作的上限，能否使用.md
+failure_pattern:
+  description: AI的使用效果与作者自身写作审美能力成正比，须持续提升个人写作鉴赏力而非单纯依赖工具 — 理由：写作审美低的作者即使用AI也写不出精品；工具只是放大器，核心竞争力仍在作者本身的审美判断
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0075）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

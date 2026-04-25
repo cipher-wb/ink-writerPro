@@ -1,0 +1,28 @@
+case_id: CASE-2026-0052
+title: 摒弃华丽辞藻堆砌的'文青病'写法，始终以人物塑造和剧情推进为写作核心
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 摒弃华丽辞藻堆砌的'文青病'写法，始终以人物塑造和剧情推进为写作核心 | 网文的核心竞争力是人物和剧情，而非文笔炫技；晦涩词汇只会增加阅读门槛
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 051_编辑星河讲新人写小说十大容易踩的坑.md
+failure_pattern:
+  description: 摒弃华丽辞藻堆砌的'文青病'写法，始终以人物塑造和剧情推进为写作核心 — 理由：网文的核心竞争力是人物和剧情，而非文笔炫技；晦涩词汇只会增加阅读门槛
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0052）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

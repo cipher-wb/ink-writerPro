@@ -1,0 +1,28 @@
+case_id: CASE-2026-0215
+title: 卡文或剧情想象力不足时，可用AI扩散思维、寻找灵感，但必须经过自己的再创作
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 卡文或剧情想象力不足时，可用AI扩散思维、寻找灵感，但必须经过自己的再创作 | 借助AI辅助构思是被允许的正当用法，关键在于最终输出需经过作者的思考加工
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 207_起点编辑星河聊一聊ai写作_ai写小说真.md
+failure_pattern:
+  description: 卡文或剧情想象力不足时，可用AI扩散思维、寻找灵感，但必须经过自己的再创作 — 理由：借助AI辅助构思是被允许的正当用法，关键在于最终输出需经过作者的思考加工
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0215）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0023
+title: 将章节预先拆分为人物描述、景物描写、战斗、陈述等模块标注，写完后再润色填充
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- misc
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 将章节预先拆分为人物描述、景物描写、战斗、陈述等模块标注，写完后再润色填充 | 模块化写作让作者专注于叙事推进，避免同时处理细节导致思路中断
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 027_起点编辑星河谈网文作者码字速度如何提升.md
+failure_pattern:
+  description: 将章节预先拆分为人物描述、景物描写、战斗、陈述等模块标注，写完后再润色填充 — 理由：模块化写作让作者专注于叙事推进，避免同时处理细节导致思路中断
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0023）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

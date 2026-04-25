@@ -1,0 +1,29 @@
+case_id: CASE-2026-0206
+title: 直接在网站后台发书并积累真实追读数据，比担心编辑口味更重要
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 直接在网站后台发书并积累真实追读数据，比担心编辑口味更重要 | 起点采用多编辑交叉审核+市场数据双重机制，真实读者追读才是最终评判标准，口味问题不会导致全部编辑放弃一本数据好的书
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 201_起点编辑星河谈网文圈十大谣言_网文圈十大谣言（中）.md
+failure_pattern:
+  description: 直接在网站后台发书并积累真实追读数据，比担心编辑口味更重要 — 理由：起点采用多编辑交叉审核+市场数据双重机制，真实读者追读才是最终评判标准，口味问题不会导致全部编辑放弃一本数据好的书
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0206）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

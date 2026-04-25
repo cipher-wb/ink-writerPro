@@ -1,0 +1,28 @@
+case_id: CASE-2026-0284
+title: 用群像配角反衬主角处境，以他人的成功映照主角的落差，将情绪张力拉满
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 用群像配角反衬主角处境，以他人的成功映照主角的落差，将情绪张力拉满 | 编辑指出该作通过八人同穿越只有主角未过关的设定，极大强化了孤立无援的情绪压迫感，是本章被直接签约的核心原因
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 325_起点编辑星河直播审稿，仙侠一章签约.md
+failure_pattern:
+  description: 用群像配角反衬主角处境，以他人的成功映照主角的落差，将情绪张力拉满 — 理由：编辑指出该作通过八人同穿越只有主角未过关的设定，极大强化了孤立无援的情绪压迫感，是本章被直接签约的核心原因
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0284）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

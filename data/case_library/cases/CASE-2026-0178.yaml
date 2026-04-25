@@ -1,0 +1,28 @@
+case_id: CASE-2026-0178
+title: 看到好创意要立即发散：同题材换壳/换角度能否成立，好词句摘抄后尝试化用
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 看到好创意要立即发散：同题材换壳/换角度能否成立，好词句摘抄后尝试化用 | 网文创作需要持续思考和举一反三，直接复用是抄袭，消化后再输出才是学习
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 161_起点编辑星河谈新人写小说怎么扫榜_新人写网文，扫榜学习三个技巧.md
+failure_pattern:
+  description: 看到好创意要立即发散：同题材换壳/换角度能否成立，好词句摘抄后尝试化用 — 理由：网文创作需要持续思考和举一反三，直接复用是抄袭，消化后再输出才是学习
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0178）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

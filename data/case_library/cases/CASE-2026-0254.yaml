@@ -1,0 +1,28 @@
+case_id: CASE-2026-0254
+title: 脑洞设定必须有内在逻辑支撑，不得堆砌炸裂元素；每个荒诞前提需埋下可信的因果链
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 脑洞设定必须有内在逻辑支撑，不得堆砌炸裂元素；每个荒诞前提需埋下可信的因果链 | 编辑称「大哥的脑洞就是这样炸裂了，全是肯尼迪级别的战役」，无逻辑的炸裂脑洞不会让读者觉得爽，只会觉得随意
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 283_起点编辑星河直播审稿之新系统_现在的小说.md
+failure_pattern:
+  description: 脑洞设定必须有内在逻辑支撑，不得堆砌炸裂元素；每个荒诞前提需埋下可信的因果链 — 理由：编辑称「大哥的脑洞就是这样炸裂了，全是肯尼迪级别的战役」，无逻辑的炸裂脑洞不会让读者觉得爽，只会觉得随意
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0254）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

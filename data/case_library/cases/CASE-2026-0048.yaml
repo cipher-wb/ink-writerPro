@@ -1,0 +1,28 @@
+case_id: CASE-2026-0048
+title: 看竞品书时须带目的性地拆书做笔记，明确记录「开头钩子」「人物塑造手法」「节奏安排」等具体技巧，而非娱乐性阅读
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 看竞品书时须带目的性地拆书做笔记，明确记录「开头钩子」「人物塑造手法」「节奏安排」等具体技巧，而非娱乐性阅读 | 纯享受性阅读只能记住情节和人设，无法提炼可迁移的写作技法，等于白看
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 047_新人写小说赚稿费扫榜技巧.md
+failure_pattern:
+  description: 看竞品书时须带目的性地拆书做笔记，明确记录「开头钩子」「人物塑造手法」「节奏安排」等具体技巧，而非娱乐性阅读 — 理由：纯享受性阅读只能记住情节和人设，无法提炼可迁移的写作技法，等于白看
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0048）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

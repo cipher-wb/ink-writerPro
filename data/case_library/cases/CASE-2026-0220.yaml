@@ -1,0 +1,28 @@
+case_id: CASE-2026-0220
+title: 重生文开局不要集中倾倒前世苦难，用日常场景自然渗透遗憾感
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- highpoint
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 重生文开局不要集中倾倒前世苦难，用日常场景自然渗透遗憾感 | 苦大仇深式开局让读者产生距离感；通过同学聚会、日常对话等场景淡淡引出遗憾，代入感更强，且节奏更自然
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 221_起点编辑星河直播时拆书_重生文为何非得谈恋爱.md
+failure_pattern:
+  description: 重生文开局不要集中倾倒前世苦难，用日常场景自然渗透遗憾感 — 理由：苦大仇深式开局让读者产生距离感；通过同学聚会、日常对话等场景淡淡引出遗憾，代入感更强，且节奏更自然
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0220）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

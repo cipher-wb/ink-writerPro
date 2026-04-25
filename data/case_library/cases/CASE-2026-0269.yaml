@@ -1,0 +1,28 @@
+case_id: CASE-2026-0269
+title: 开篇主角必须快速离开情绪铺垫场景，切入主线剧情，父母坟前/离别场景不得超过500字
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开篇主角必须快速离开情绪铺垫场景，切入主线剧情，父母坟前/离别场景不得超过500字 | 编辑星河明确指出主角在坟前停留过长导致节奏拖沓，读者和编辑都会急躁，直接影响留存
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 297_起点编辑星河审稿之慢热开头_起点编辑星河直播审稿之慢热开头，大哥别怀念爹娘了，赶紧下山吧.md
+failure_pattern:
+  description: 开篇主角必须快速离开情绪铺垫场景，切入主线剧情，父母坟前/离别场景不得超过500字 — 理由：编辑星河明确指出主角在坟前停留过长导致节奏拖沓，读者和编辑都会急躁，直接影响留存
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0269）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

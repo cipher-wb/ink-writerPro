@@ -1,0 +1,28 @@
+case_id: CASE-2026-0114
+title: 广泛阅读书籍、影视剧、纪录片后，将吸收的设定和脉络融合转化为自己的故事，而非照搬情节
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 广泛阅读书籍、影视剧、纪录片后，将吸收的设定和脉络融合转化为自己的故事，而非照搬情节 | 借鉴学习是正当的创作方式，关键是举一反三形成原创，而非剽窃具体情节或点子
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 081_起点编辑星河谈ai写作，抄袭判定，封闭式创作_AI写作有什么影响，为什么不能抄袭.md
+failure_pattern:
+  description: 广泛阅读书籍、影视剧、纪录片后，将吸收的设定和脉络融合转化为自己的故事，而非照搬情节 — 理由：借鉴学习是正当的创作方式，关键是举一反三形成原创，而非剽窃具体情节或点子
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0114）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

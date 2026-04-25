@@ -1,0 +1,29 @@
+case_id: CASE-2026-0319
+title: 打脸反转要快：反派先高调自吹，立刻接主角碾压，中间不得插入无关剧情
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 打脸反转要快：反派先高调自吹，立刻接主角碾压，中间不得插入无关剧情 | 对比反差是爽点的核心结构，拉长铺垫会稀释爽感；吴承恩的节奏示范是反派出场即被秒
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 389_untitled.md
+failure_pattern:
+  description: 打脸反转要快：反派先高调自吹，立刻接主角碾压，中间不得插入无关剧情 — 理由：对比反差是爽点的核心结构，拉长铺垫会稀释爽感；吴承恩的节奏示范是反派出场即被秒
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0319）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

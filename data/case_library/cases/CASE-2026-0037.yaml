@@ -1,0 +1,28 @@
+case_id: CASE-2026-0037
+title: 禁止主角蔑视、屠杀无辜普通人；复仇等暗黑动机须有正当边界，不得写价值观扭曲的暗黑主角
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止主角蔑视、屠杀无辜普通人；复仇等暗黑动机须有正当边界，不得写价值观扭曲的暗黑主角 | 平台审核'不良导向'要求主角三观端正，主线行为动机需符合正向价值观，否则整本书面临违规风险
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 039_起点编辑星河谈网文审核尺度.md
+failure_pattern:
+  description: 禁止主角蔑视、屠杀无辜普通人；复仇等暗黑动机须有正当边界，不得写价值观扭曲的暗黑主角 — 理由：平台审核'不良导向'要求主角三观端正，主线行为动机需符合正向价值观，否则整本书面临违规风险
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0037）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

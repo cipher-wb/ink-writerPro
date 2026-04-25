@@ -1,0 +1,28 @@
+case_id: CASE-2026-0326
+title: 前五章写成连贯一口气的剧情，每章卡点全用情绪而非信息
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 前五章写成连贯一口气的剧情，每章卡点全用情绪而非信息 | 黄金前五章决定留存，连贯情绪流比世界观铺垫更能抓住小白读者
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 399_untitled.md
+failure_pattern:
+  description: 前五章写成连贯一口气的剧情，每章卡点全用情绪而非信息 — 理由：黄金前五章决定留存，连贯情绪流比世界观铺垫更能抓住小白读者
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0326）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

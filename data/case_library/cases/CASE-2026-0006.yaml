@@ -1,0 +1,28 @@
+case_id: CASE-2026-0006
+title: 闷头持续更新至签约门槛，不要因早期数据惨淡而停更
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 闷头持续更新至签约门槛，不要因早期数据惨淡而停更 | 编辑案例：西幻新人200首订持续更新至签约，签约后日销稳定破千，坚持更新是平台推荐的前提
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 005_新人月稿费破万，26年写小说现状.md
+failure_pattern:
+  description: 闷头持续更新至签约门槛，不要因早期数据惨淡而停更 — 理由：编辑案例：西幻新人200首订持续更新至签约，签约后日销稳定破千，坚持更新是平台推荐的前提
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0006）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

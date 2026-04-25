@@ -1,0 +1,29 @@
+case_id: CASE-2026-0315
+title: 在生死危机处设置章末卡点，不得让主角在危机解除后才结章
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 在生死危机处设置章末卡点，不得让主角在危机解除后才结章 | 网文连载依赖读者追更，危机卡点是迫使读者继续阅读的核心机制；《西游记》第二章无卡点是吴承恩被编辑批评的唯一硬伤
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 389_untitled.md
+failure_pattern:
+  description: 在生死危机处设置章末卡点，不得让主角在危机解除后才结章 — 理由：网文连载依赖读者追更，危机卡点是迫使读者继续阅读的核心机制；《西游记》第二章无卡点是吴承恩被编辑批评的唯一硬伤
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0315）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

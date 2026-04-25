@@ -1,0 +1,28 @@
+case_id: CASE-2026-0055
+title: 写历史题材前先研究当前大众情绪，避免选择与主流情绪相悖的历史立场
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 写历史题材前先研究当前大众情绪，避免选择与主流情绪相悖的历史立场 | 大众情绪直接决定历史题材小说的成绩上限，如当前写清朝正面题材会触发读者反感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 【合集】编辑星河_全部视频内容.md
+failure_pattern:
+  description: 写历史题材前先研究当前大众情绪，避免选择与主流情绪相悖的历史立场 — 理由：大众情绪直接决定历史题材小说的成绩上限，如当前写清朝正面题材会触发读者反感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0055）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

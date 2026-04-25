@@ -1,0 +1,29 @@
+case_id: CASE-2026-0202
+title: 必须强制自己研究榜单前二三十本热门作品，从中提取可学习的市场规律，不以个人口味为借口回避
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 必须强制自己研究榜单前二三十本热门作品，从中提取可学习的市场规律，不以个人口味为借口回避 | 榜单代表市场口味；若连续二三十本都看不进去，说明与市场审美严重脱节，无法靠写作赚钱
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 187_起点编辑星河谈写小说之前注意三件事_写小说拿稿费，新人得有哪些认知和准备.md
+failure_pattern:
+  description: 必须强制自己研究榜单前二三十本热门作品，从中提取可学习的市场规律，不以个人口味为借口回避 — 理由：榜单代表市场口味；若连续二三十本都看不进去，说明与市场审美严重脱节，无法靠写作赚钱
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0202）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

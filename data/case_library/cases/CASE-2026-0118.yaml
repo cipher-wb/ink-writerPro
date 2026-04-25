@@ -1,0 +1,28 @@
+case_id: CASE-2026-0118
+title: 以读者体验为中心写作，避免纯粹自嗨和自我满足式叙事
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 以读者体验为中心写作，避免纯粹自嗨和自我满足式叙事 | 编辑对书质量的判断是客观的，作者的主观感受不代表读者买账；纯粹自嗨的内容会直接被编辑筛掉
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 087_起点编辑星河谈起点签约和番茄小说区别_第84集为什么起点签约模式不能学番茄.md
+failure_pattern:
+  description: 以读者体验为中心写作，避免纯粹自嗨和自我满足式叙事 — 理由：编辑对书质量的判断是客观的，作者的主观感受不代表读者买账；纯粹自嗨的内容会直接被编辑筛掉
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0118）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

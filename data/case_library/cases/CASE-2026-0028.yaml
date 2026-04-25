@@ -1,0 +1,28 @@
+case_id: CASE-2026-0028
+title: 避免「换地图」套路或同人式靠单一卖点撑全书，确保核心看点可持续延伸
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 避免「换地图」套路或同人式靠单一卖点撑全书，确保核心看点可持续延伸 | 同人和换地图套路本质上都是消耗单一亮点，写完即无法续更，完本均订远低于首订
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 031_起点编辑星河谈网文断更烂尾切书.md
+failure_pattern:
+  description: 避免「换地图」套路或同人式靠单一卖点撑全书，确保核心看点可持续延伸 — 理由：同人和换地图套路本质上都是消耗单一亮点，写完即无法续更，完本均订远低于首订
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0028）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

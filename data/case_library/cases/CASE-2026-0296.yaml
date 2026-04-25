@@ -1,0 +1,29 @@
+case_id: CASE-2026-0296
+title: 避免将作者现实困境（未签约、被拒稿）直接投射为小说世界观或主角背景
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 避免将作者现实困境（未签约、被拒稿）直接投射为小说世界观或主角背景 | 现实挫败感投射出的'意淫'框架会让编辑立刻识别出创作动机不纯，影响审稿判断
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 335_untitled.md
+failure_pattern:
+  description: 避免将作者现实困境（未签约、被拒稿）直接投射为小说世界观或主角背景 — 理由：现实挫败感投射出的'意淫'框架会让编辑立刻识别出创作动机不纯，影响审稿判断
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0296）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

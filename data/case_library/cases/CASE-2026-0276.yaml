@@ -1,0 +1,28 @@
+case_id: CASE-2026-0276
+title: 退婚流/打脸流的冲突起因必须有现实逻辑支撑，不得为凑矛盾而强行设置不合理的社会歧视场景
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 退婚流/打脸流的冲突起因必须有现实逻辑支撑，不得为凑矛盾而强行设置不合理的社会歧视场景 | 编辑说'大专生聚会'被排斥的情节太刻意，现实中聚会并不会如此明确地划分鄙视链；失真的冲突让节奏空转
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 309_起点编辑星河直播审稿系列_起点编辑星河直播审稿之大专生退婚流，好的985不比大专差.md
+failure_pattern:
+  description: 退婚流/打脸流的冲突起因必须有现实逻辑支撑，不得为凑矛盾而强行设置不合理的社会歧视场景 — 理由：编辑说'大专生聚会'被排斥的情节太刻意，现实中聚会并不会如此明确地划分鄙视链；失真的冲突让节奏空转
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0276）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

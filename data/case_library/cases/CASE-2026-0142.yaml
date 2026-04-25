@@ -1,0 +1,28 @@
+case_id: CASE-2026-0142
+title: 以日更节奏为基础承诺，稳定输出优先于单章质量的极致打磨
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 以日更节奏为基础承诺，稳定输出优先于单章质量的极致打磨 | 持续日更是网文行业最核心的基本功，断更对读者黏性的伤害远大于某章质量略低
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 127_第66集起点编辑星河谈网文现状_写小说得改变下思路了，最重要的两个点.md
+failure_pattern:
+  description: 以日更节奏为基础承诺，稳定输出优先于单章质量的极致打磨 — 理由：持续日更是网文行业最核心的基本功，断更对读者黏性的伤害远大于某章质量略低
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0142）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0376
+title: 每场景至少包含一段≥80字的感官描写段落（战斗与情感场景≥100字），用于建立沉浸锚点
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_sensory
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 每场景至少包含一段≥80字的感官描写段落（战斗与情感场景≥100字），用于建立沉浸锚点 | 感官描写段落是读者进入场景的'加载页'，过短会让场景悬浮，编辑批评'没有感官锚点的段落像PPT幻灯片'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: desire-description.md
+failure_pattern:
+  description: 每场景至少包含一段≥80字的感官描写段落（战斗与情感场景≥100字），用于建立沉浸锚点 — 理由：感官描写段落是读者进入场景的'加载页'，过短会让场景悬浮，编辑批评'没有感官锚点的段落像PPT幻灯片'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0376）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,34 @@
+case_id: CASE-2026-0396
+title: 禁用空洞套话：此情此景、不知为何、时间仿佛静止、心里五味杂陈、眼里闪过一丝（引用 prose-blacklist.yaml）
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 禁用空洞套话：此情此景、不知为何、时间仿佛静止、心里五味杂陈、眼里闪过一丝（引用 prose-blacklist.yaml） | US-003
+    黑名单套话组——全是 telling 不是 showing，AI 生成最喜欢的填充料，编辑一眼识破
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 禁用空洞套话：此情此景、不知为何、时间仿佛静止、心里五味杂陈、眼里闪过一丝（引用 prose-blacklist.yaml） — 理由：US-003
+    黑名单套话组——全是 telling 不是 showing，AI 生成最喜欢的填充料，编辑一眼识破
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0396）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

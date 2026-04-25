@@ -1,0 +1,29 @@
+case_id: CASE-2026-0270
+title: 禁止在文中批注式地说明'这里体现了主角的XX之情'，情感必须通过行动和细节自然传递
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 禁止在文中批注式地说明'这里体现了主角的XX之情'，情感必须通过行动和细节自然传递 | 编辑指出作者在旁边批注情感意图是作文思维而非小说思维，说明写法本身已经失败
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 297_起点编辑星河审稿之慢热开头_起点编辑星河直播审稿之慢热开头，大哥别怀念爹娘了，赶紧下山吧.md
+failure_pattern:
+  description: 禁止在文中批注式地说明'这里体现了主角的XX之情'，情感必须通过行动和细节自然传递 — 理由：编辑指出作者在旁边批注情感意图是作文思维而非小说思维，说明写法本身已经失败
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0270）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

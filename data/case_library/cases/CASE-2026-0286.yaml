@@ -1,0 +1,29 @@
+case_id: CASE-2026-0286
+title: 朴实无华的文笔配上强情绪剧情即可签约，不要为了堆砌辞藻而破坏情绪节奏
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 朴实无华的文笔配上强情绪剧情即可签约，不要为了堆砌辞藻而破坏情绪节奏 | 编辑明确表态「好剧情大于好文笔」，该作文笔平实但剧情节奏和情绪张力强，直接签约
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 325_起点编辑星河直播审稿，仙侠一章签约.md
+failure_pattern:
+  description: 朴实无华的文笔配上强情绪剧情即可签约，不要为了堆砌辞藻而破坏情绪节奏 — 理由：编辑明确表态「好剧情大于好文笔」，该作文笔平实但剧情节奏和情绪张力强，直接签约
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0286）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

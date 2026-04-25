@@ -1,0 +1,29 @@
+case_id: CASE-2026-0281
+title: 场景设定需内部自洽：0比7还在踢球、40度高温还有学妹送水，细节矛盾会累积成整体可信度崩塌
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 场景设定需内部自洽：0比7还在踢球、40度高温还有学妹送水，细节矛盾会累积成整体可信度崩塌 | 编辑用'醒醒吧'表达对基本逻辑缺失的失望，细节漏洞是新手最常见的扣分项
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 317_起点编辑星河审稿系列之国足？.md
+failure_pattern:
+  description: 场景设定需内部自洽：0比7还在踢球、40度高温还有学妹送水，细节矛盾会累积成整体可信度崩塌 — 理由：编辑用'醒醒吧'表达对基本逻辑缺失的失望，细节漏洞是新手最常见的扣分项
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0281）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

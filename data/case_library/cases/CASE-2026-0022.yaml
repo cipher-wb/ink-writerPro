@@ -1,0 +1,28 @@
+case_id: CASE-2026-0022
+title: 遇到卡壳的词句先用标注跳过，写完整章后再回头修改查资料，不要中途打断写作流
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- misc
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 遇到卡壳的词句先用标注跳过，写完整章后再回头修改查资料，不要中途打断写作流 | 中途停顿查资料会打断灵感和写作节奏，导致整体效率下降
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 027_起点编辑星河谈网文作者码字速度如何提升.md
+failure_pattern:
+  description: 遇到卡壳的词句先用标注跳过，写完整章后再回头修改查资料，不要中途打断写作流 — 理由：中途停顿查资料会打断灵感和写作节奏，导致整体效率下降
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0022）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0145
+title: 前三章按顺序铺设：第一章建立代入感，第二章拉满期待感，第三章再引入世界观设定
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 前三章按顺序铺设：第一章建立代入感，第二章拉满期待感，第三章再引入世界观设定 | 设定未立、信任未建时讲世界观读者会跑；剧情和期待感先立住，读者才愿意接受设定信息
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 129_起点编辑星河直播拆书_拆书奇幻新书榜第一，新人写西幻需要注意.md
+failure_pattern:
+  description: 前三章按顺序铺设：第一章建立代入感，第二章拉满期待感，第三章再引入世界观设定 — 理由：设定未立、信任未建时讲世界观读者会跑；剧情和期待感先立住，读者才愿意接受设定信息
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0145）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

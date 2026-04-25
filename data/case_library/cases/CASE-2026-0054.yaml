@@ -1,0 +1,28 @@
+case_id: CASE-2026-0054
+title: 新人确定一个擅长的类型方向后专精写下去，不要题材写得太杂
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新人确定一个擅长的类型方向后专精写下去，不要题材写得太杂 | 风格专精能让作者更快积累读者认知和写作深度，跨类型写作分散精力且难以形成辨识度
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 【合集】编辑星河_全部视频内容.md
+failure_pattern:
+  description: 新人确定一个擅长的类型方向后专精写下去，不要题材写得太杂 — 理由：风格专精能让作者更快积累读者认知和写作深度，跨类型写作分散精力且难以形成辨识度
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0054）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

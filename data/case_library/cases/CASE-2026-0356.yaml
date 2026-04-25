@@ -1,0 +1,29 @@
+case_id: CASE-2026-0356
+title: 主角的核心执念在中期应以'向现实压力妥协'的方式被打破，且妥协要与读者现实处境形成映射以引发共鸣
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角的核心执念在中期应以'向现实压力妥协'的方式被打破，且妥协要与读者现实处境形成映射以引发共鸣 | 编辑点评'这说明现在不止人类，癞蛤蟆的压力也很大'，妥协结局比主角永远赢更能引发读者情感共振和追读动力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 439_untitled.md
+failure_pattern:
+  description: 主角的核心执念在中期应以'向现实压力妥协'的方式被打破，且妥协要与读者现实处境形成映射以引发共鸣 — 理由：编辑点评'这说明现在不止人类，癞蛤蟆的压力也很大'，妥协结局比主角永远赢更能引发读者情感共振和追读动力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0356）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

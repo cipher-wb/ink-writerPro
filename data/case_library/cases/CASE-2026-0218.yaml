@@ -1,0 +1,28 @@
+case_id: CASE-2026-0218
+title: 新手优先选择接地气、有代入感的题材，确保编辑和普通读者看得懂故事
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新手优先选择接地气、有代入感的题材，确保编辑和普通读者看得懂故事 | 写小说首要目标是有人看、能签约，而非冲击文学奖项
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 209_最近ai投稿确实多，小说几句_ai写小说润色辅助没问题，但deepseek也是讲方法的.md
+failure_pattern:
+  description: 新手优先选择接地气、有代入感的题材，确保编辑和普通读者看得懂故事 — 理由：写小说首要目标是有人看、能签约，而非冲击文学奖项
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0218）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

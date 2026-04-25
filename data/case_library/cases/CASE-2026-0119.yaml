@@ -1,0 +1,28 @@
+case_id: CASE-2026-0119
+title: 避免语无伦次、逻辑混乱的叙事，保持故事流畅性和内在逻辑一致
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 避免语无伦次、逻辑混乱的叙事，保持故事流畅性和内在逻辑一致 | 语无伦次是编辑拒签的核心原因之一，付费平台读者容忍度极低，劣质内容会直接劝退读者
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 087_起点编辑星河谈起点签约和番茄小说区别_第84集为什么起点签约模式不能学番茄.md
+failure_pattern:
+  description: 避免语无伦次、逻辑混乱的叙事，保持故事流畅性和内在逻辑一致 — 理由：语无伦次是编辑拒签的核心原因之一，付费平台读者容忍度极低，劣质内容会直接劝退读者
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0119）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

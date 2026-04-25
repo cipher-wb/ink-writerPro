@@ -1,0 +1,28 @@
+case_id: CASE-2026-0247
+title: 优先选择玄幻、仙侠等大风类题材，避免把主力稿投在武侠、游戏等小风类
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 优先选择玄幻、仙侠等大风类题材，避免把主力稿投在武侠、游戏等小风类 | 大风类天花板更高，冲榜和涨均订的空间更大；小风类即便写到同等质量，均订上限也远低于大风类，投入产出比低
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 259_起点编辑星河点评起点十二天王_看看这次十二天王的一字小八卦吧.md
+failure_pattern:
+  description: 优先选择玄幻、仙侠等大风类题材，避免把主力稿投在武侠、游戏等小风类 — 理由：大风类天花板更高，冲榜和涨均订的空间更大；小风类即便写到同等质量，均订上限也远低于大风类，投入产出比低
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0247）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

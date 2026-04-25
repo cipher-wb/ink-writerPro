@@ -1,0 +1,29 @@
+case_id: CASE-2026-0345
+title: 系统或金手指须在第一章内通过剧情动作自然呈现，不得用说明文字独立介绍
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 系统或金手指须在第一章内通过剧情动作自然呈现，不得用说明文字独立介绍 | 第一版千字才提到核心设定属于无效铺垫；系统只有嵌入剧情才能留住读者
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 421_untitled.md
+failure_pattern:
+  description: 系统或金手指须在第一章内通过剧情动作自然呈现，不得用说明文字独立介绍 — 理由：第一版千字才提到核心设定属于无效铺垫；系统只有嵌入剧情才能留住读者
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0345）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0175
+title: 扫榜学开头只看「签约作者新书榜」前50和各分类「新书畅销榜」前30，排除大神/白金/万定老作者的书
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 扫榜学开头只看「签约作者新书榜」前50和各分类「新书畅销榜」前30，排除大神/白金/万定老作者的书 | 大神慢热文或传统文的开头节奏与当前新书市场不符，照学开头会越学越歪
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 161_起点编辑星河谈新人写小说怎么扫榜_新人写网文，扫榜学习三个技巧.md
+failure_pattern:
+  description: 扫榜学开头只看「签约作者新书榜」前50和各分类「新书畅销榜」前30，排除大神/白金/万定老作者的书 — 理由：大神慢热文或传统文的开头节奏与当前新书市场不符，照学开头会越学越歪
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0175）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

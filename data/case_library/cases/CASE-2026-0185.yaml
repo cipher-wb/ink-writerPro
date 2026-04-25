@@ -1,0 +1,29 @@
+case_id: CASE-2026-0185
+title: 若书风偏慢热长篇，前期成绩低迷时保持耐心，不因短期数据患得患失
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 若书风偏慢热长篇，前期成绩低迷时保持耐心，不因短期数据患得患失 | 《大乘期才有系统》首订仅800，慢热书前期打不过系统文属正常市场规律，非质量问题
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 169_起点编辑星河谈小说书名_为什么榜单上都是短书名，编辑还是建议你写脑洞长书名.md
+failure_pattern:
+  description: 若书风偏慢热长篇，前期成绩低迷时保持耐心，不因短期数据患得患失 — 理由：《大乘期才有系统》首订仅800，慢热书前期打不过系统文属正常市场规律，非质量问题
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0185）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

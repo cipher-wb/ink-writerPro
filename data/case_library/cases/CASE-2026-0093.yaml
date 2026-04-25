@@ -1,0 +1,29 @@
+case_id: CASE-2026-0093
+title: 上架前提前规划付费区的剧情节奏与卖点分布，确保付费章节与免费章节质量相当甚至更强
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 上架前提前规划付费区的剧情节奏与卖点分布，确保付费章节与免费章节质量相当甚至更强 | 读者付费后期待更高回报，若付费区剧情平缓则订阅数据下滑，形成作者心态崩溃的起点
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 069_起点编辑星河谈网文为什么那么多太监_第92集为什么很多小说不更新，更新差甚至是太监，原因在这了.md
+failure_pattern:
+  description: 上架前提前规划付费区的剧情节奏与卖点分布，确保付费章节与免费章节质量相当甚至更强 — 理由：读者付费后期待更高回报，若付费区剧情平缓则订阅数据下滑，形成作者心态崩溃的起点
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0093）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

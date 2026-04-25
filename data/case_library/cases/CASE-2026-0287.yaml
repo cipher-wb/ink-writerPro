@@ -1,0 +1,29 @@
+case_id: CASE-2026-0287
+title: 配角设计须展现真实人性的两面：有人盼你失败，有人真心盼你好
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 配角设计须展现真实人性的两面：有人盼你失败，有人真心盼你好 | 编辑特别点名配角李贵写得好，真实人性的复杂感让世界更立体，也让读者更有代入感
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 325_起点编辑星河直播审稿，仙侠一章签约.md
+failure_pattern:
+  description: 配角设计须展现真实人性的两面：有人盼你失败，有人真心盼你好 — 理由：编辑特别点名配角李贵写得好，真实人性的复杂感让世界更立体，也让读者更有代入感
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0287）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

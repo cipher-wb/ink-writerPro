@@ -1,0 +1,28 @@
+case_id: CASE-2026-0346
+title: 用身份/地位的双重逆转构建开篇钩子：主角落魄，旧情人却在羞辱性的新位置上重新出现
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 用身份/地位的双重逆转构建开篇钩子：主角落魄，旧情人却在羞辱性的新位置上重新出现 | 编辑被「千万身价破产→去叶子慧照顾白月光业绩」的反差瞬间勾住，双重错位（我落魄＋她在这种场所）制造的戏剧张力远强于单一变化
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 425_untitled.md
+failure_pattern:
+  description: 用身份/地位的双重逆转构建开篇钩子：主角落魄，旧情人却在羞辱性的新位置上重新出现 — 理由：编辑被「千万身价破产→去叶子慧照顾白月光业绩」的反差瞬间勾住，双重错位（我落魄＋她在这种场所）制造的戏剧张力远强于单一变化
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0346）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

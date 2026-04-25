@@ -1,0 +1,28 @@
+case_id: CASE-2026-0111
+title: 将现实中的极端情绪（憋屈、愤怒、不公平感）通过夸张的奇幻情节放大到极致，而非温和化处理
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 将现实中的极端情绪（憋屈、愤怒、不公平感）通过夸张的奇幻情节放大到极致，而非温和化处理 | 情绪拉扯强度直接决定读者粘性；温吞的情感呈现无法形成追读冲动
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 079_2025年，写什么题材稿费最高最火_第88集起点编辑星河题材推荐，写网文写小说赚稿费的好题材.md
+failure_pattern:
+  description: 将现实中的极端情绪（憋屈、愤怒、不公平感）通过夸张的奇幻情节放大到极致，而非温和化处理 — 理由：情绪拉扯强度直接决定读者粘性；温吞的情感呈现无法形成追读冲动
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0111）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0046
+title: 不要模仿大神、白金或万订老作者的开头写法，即使其架构和大纲值得学习
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 不要模仿大神、白金或万订老作者的开头写法，即使其架构和大纲值得学习 | 顶级作者的开头依赖积累的读者基本盘和品牌效应，新人照学会越学越偏，无法适应当前新书市场的冷启动逻辑
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 047_新人写小说赚稿费扫榜技巧.md
+failure_pattern:
+  description: 不要模仿大神、白金或万订老作者的开头写法，即使其架构和大纲值得学习 — 理由：顶级作者的开头依赖积累的读者基本盘和品牌效应，新人照学会越学越偏，无法适应当前新书市场的冷启动逻辑
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0046）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

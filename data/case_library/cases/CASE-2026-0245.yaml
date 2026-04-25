@@ -1,0 +1,29 @@
+case_id: CASE-2026-0245
+title: 穿越者身份必须在第一章前五百字内交代，不得拖到第二章
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 穿越者身份必须在第一章前五百字内交代，不得拖到第二章 | 拖延揭示穿越身份会让读者迷失，快速交代才是不拖泥带水的专业写法
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 249_起点编辑星河直播拆书。从《幽冥画皮卷》开头讲诡异修仙和灵异小说切入.md
+failure_pattern:
+  description: 穿越者身份必须在第一章前五百字内交代，不得拖到第二章 — 理由：拖延揭示穿越身份会让读者迷失，快速交代才是不拖泥带水的专业写法
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0245）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

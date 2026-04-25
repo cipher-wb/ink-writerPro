@@ -1,0 +1,28 @@
+case_id: CASE-2026-0360
+title: 新人入行前先研究市场榜单和编辑推荐题材，不要闷头码字
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 新人入行前先研究市场榜单和编辑推荐题材，不要闷头码字 | 盲目写作极易选错赛道，同等实力下题材选择的对错结果天差地别
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 【合集】编辑星河_抖音全部视频内容.md
+failure_pattern:
+  description: 新人入行前先研究市场榜单和编辑推荐题材，不要闷头码字 — 理由：盲目写作极易选错赛道，同等实力下题材选择的对错结果天差地别
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0360）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

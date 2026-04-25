@@ -1,0 +1,29 @@
+case_id: CASE-2026-0328
+title: 书名必须直白点明主角身份与阵营目标，让读者一眼看懂主角要干什么
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- hook
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 书名必须直白点明主角身份与阵营目标，让读者一眼看懂主角要干什么 | 书名、封面、简介是小说门面，直白书名能让读者秒判断是否是自己想看的类型，降低进入门槛
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 403_untitled.md
+failure_pattern:
+  description: 书名必须直白点明主角身份与阵营目标，让读者一眼看懂主角要干什么 — 理由：书名、封面、简介是小说门面，直白书名能让读者秒判断是否是自己想看的类型，降低进入门槛
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0328）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

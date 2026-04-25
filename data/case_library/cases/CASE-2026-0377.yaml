@@ -1,0 +1,28 @@
+case_id: CASE-2026-0377
+title: 章级句长变异系数（CV）应≥0.40；CV<0.35 视为句式平铺，连续超过3段句长接近视为节奏单调
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_rhythm
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 章级句长变异系数（CV）应≥0.40；CV<0.35 视为句式平铺，连续超过3段句长接近视为节奏单调 | 句长一致是AI味最显眼的统计特征，编辑直接指出'句长直方图扁平=机器写'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: pacing-control.md
+failure_pattern:
+  description: 章级句长变异系数（CV）应≥0.40；CV<0.35 视为句式平铺，连续超过3段句长接近视为节奏单调 — 理由：句长一致是AI味最显眼的统计特征，编辑直接指出'句长直方图扁平=机器写'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0377）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

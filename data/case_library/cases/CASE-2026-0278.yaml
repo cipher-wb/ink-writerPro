@@ -1,0 +1,28 @@
+case_id: CASE-2026-0278
+title: 打脸爽文要保持类型纯粹性，不要混入舔狗、贵妇人等龙王赘婿式元素，否则类型感崩塌
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打脸爽文要保持类型纯粹性，不要混入舔狗、贵妇人等龙王赘婿式元素，否则类型感崩塌 | 编辑看到'妈妈说你这个废物配不上我们家顾许'时直接调侃'短剧龙王赘婿来了'，类型混乱会让核心读者群流失
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 309_起点编辑星河直播审稿系列_起点编辑星河直播审稿之大专生退婚流，好的985不比大专差.md
+failure_pattern:
+  description: 打脸爽文要保持类型纯粹性，不要混入舔狗、贵妇人等龙王赘婿式元素，否则类型感崩塌 — 理由：编辑看到'妈妈说你这个废物配不上我们家顾许'时直接调侃'短剧龙王赘婿来了'，类型混乱会让核心读者群流失
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0278）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,28 @@
+case_id: CASE-2026-0001
+title: 用AI生成高潮情节的多个版本细纲，对比分析哪种收获感和反馈感最强，以此为蓝本起笔或参考
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 用AI生成高潮情节的多个版本细纲，对比分析哪种收获感和反馈感最强，以此为蓝本起笔或参考 | 编辑星河指出顶级作者的真实AI用法：不是让AI写正文，而是用AI快速穷举高潮方案，再由人判断哪个最有爆发力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 001_AI写小说是否可行，编辑星河观点分享.md
+failure_pattern:
+  description: 用AI生成高潮情节的多个版本细纲，对比分析哪种收获感和反馈感最强，以此为蓝本起笔或参考 — 理由：编辑星河指出顶级作者的真实AI用法：不是让AI写正文，而是用AI快速穷举高潮方案，再由人判断哪个最有爆发力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0001）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

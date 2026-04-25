@@ -1,0 +1,28 @@
+case_id: CASE-2026-0208
+title: 禁止创作涉黄、擦边、封建迷信内容，以及影射现实真实人物的角色设定，否则面临作品被下架处理
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止创作涉黄、擦边、封建迷信内容，以及影射现实真实人物的角色设定，否则面临作品被下架处理 | 净网行动对'导向不良'和'角色影射'类内容执法明确，《大爱仙宗》被封即因此，与作者人际关系无关
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 203_起点编辑星河，谈网文圈十大经典谣言_网文圈那些经典谣言（上）.md
+failure_pattern:
+  description: 禁止创作涉黄、擦边、封建迷信内容，以及影射现实真实人物的角色设定，否则面临作品被下架处理 — 理由：净网行动对'导向不良'和'角色影射'类内容执法明确，《大爱仙宗》被封即因此，与作者人际关系无关
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0208）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

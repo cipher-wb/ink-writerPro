@@ -1,0 +1,28 @@
+case_id: CASE-2026-0249
+title: 玄幻/仙侠类型新书字数不足时不要轻易切书，坚持更新至少到100万字再评估成绩
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 玄幻/仙侠类型新书字数不足时不要轻易切书，坚持更新至少到100万字再评估成绩 | 玄幻仙侠读者在字数少时不爱追读，大量书籍依靠日更积累字数后期才真正发力，过早切书会错失后期爆发机会
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 281_起点编辑星河讲一讲新人坚持的重要性_从首订两三百到精品，月稿费三四万，坚持就是王道.md
+failure_pattern:
+  description: 玄幻/仙侠类型新书字数不足时不要轻易切书，坚持更新至少到100万字再评估成绩 — 理由：玄幻仙侠读者在字数少时不爱追读，大量书籍依靠日更积累字数后期才真正发力，过早切书会错失后期爆发机会
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0249）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

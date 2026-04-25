@@ -1,0 +1,28 @@
+case_id: CASE-2026-0123
+title: 老套噱头文前期成绩差则果断切书，不要继续硬熬
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 老套噱头文前期成绩差则果断切书，不要继续硬熬 | 噱头文依赖前期爆发，前期崩了说明卖点已失效，继续堆字数难以逆转，首订往往就是巅峰
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 095_写小说完本必神是真的吗_第82集起点编辑星河谈写网文到底要不要坚持，如何判断自己要不要开新书.md
+failure_pattern:
+  description: 老套噱头文前期成绩差则果断切书，不要继续硬熬 — 理由：噱头文依赖前期爆发，前期崩了说明卖点已失效，继续堆字数难以逆转，首订往往就是巅峰
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0123）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

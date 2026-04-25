@@ -1,0 +1,28 @@
+case_id: CASE-2026-0179
+title: 开篇剧情展现量必须大于原创设定量，新人不要把世界观和设定当卖点
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 开篇剧情展现量必须大于原创设定量，新人不要把世界观和设定当卖点 | 读者看开篇是为了感受故事，而非学习设定；大量设定堆砌会破坏代入感，起点编辑会以此为由拒签
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 165_起点编辑星河谈新人为什么在起点签约不了_新人得注意起点风格的改变.md
+failure_pattern:
+  description: 开篇剧情展现量必须大于原创设定量，新人不要把世界观和设定当卖点 — 理由：读者看开篇是为了感受故事，而非学习设定；大量设定堆砌会破坏代入感，起点编辑会以此为由拒签
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0179）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

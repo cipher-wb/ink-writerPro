@@ -1,0 +1,36 @@
+case_id: CASE-2026-0000
+title: reference_corpus 软链接全断导致范文召回静默失效
+status: active
+severity: P0
+domain: infra_health
+layer:
+- infra_health
+tags:
+- reference_corpus
+- symlink
+- silent_degradation
+scope:
+  trigger: repo 搬迁或 benchmark/corpus 路径变更后未重建 reference_corpus
+source:
+  type: infra_check
+  raw_text: benchmark/reference_corpus/<book>/chapters/*.txt 全部是指向旧绝对路径的软链接；repo 搬到
+    /Users/cipher/AI/小说/ink/ 之后 target 全部失效，Retriever 在加载范文时静默返回空列表，下游 writer/polish
+    失去风格锚点。
+  ingested_at: '2026-04-23'
+  reviewer: self
+  ingested_from: benchmark/reference_corpus/
+failure_pattern:
+  description: reference_corpus 以软链接形态存在、target 指向仓库外部绝对路径；仓库位置变化后链接全断，Retriever 加载时不抛错仅静默返回空结果，导致下游组件失去可读范文但不可观测。
+  observable:
+  - broken symlink count under reference_corpus/*/chapters > 0
+  - corpus_root readable file count < min_files threshold
+bound_assets:
+  checkers:
+  - checker_id: preflight-reference-corpus-readable
+    version: v1
+    created_for_this_case: true
+resolution:
+  introduced_at: '2026-04-23'
+  validation_chapters: []
+  related_cases: []
+evidence_links: []

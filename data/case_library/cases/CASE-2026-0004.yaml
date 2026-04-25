@@ -1,0 +1,29 @@
+case_id: CASE-2026-0004
+title: 将AI定位为查资料和扩展思路的工具，核心叙事能力（开头切入、架构、人设塑造、炼句审美、市场判断）必须靠作者自身持续打磨
+status: pending
+severity: P3
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+- info_only
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 将AI定位为查资料和扩展思路的工具，核心叙事能力（开头切入、架构、人设塑造、炼句审美、市场判断）必须靠作者自身持续打磨 | 编辑强调故事和内容是作者的立身之本，AI锦上添花但不能替代讲故事的整体能力
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 001_AI写小说是否可行，编辑星河观点分享.md
+failure_pattern:
+  description: 将AI定位为查资料和扩展思路的工具，核心叙事能力（开头切入、架构、人设塑造、炼句审美、市场判断）必须靠作者自身持续打磨 — 理由：编辑强调故事和内容是作者的立身之本，AI锦上添花但不能替代讲故事的整体能力
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0004）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

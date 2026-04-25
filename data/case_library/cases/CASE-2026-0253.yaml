@@ -1,0 +1,28 @@
+case_id: CASE-2026-0253
+title: 物理/生理描写必须自洽：已经毁损到无法存在的器官，不得再承载该器官的功能（如脸部烂光的丧尸不能有面部表情）
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 物理/生理描写必须自洽：已经毁损到无法存在的器官，不得再承载该器官的功能（如脸部烂光的丧尸不能有面部表情） | 编辑以「脸都没有了但能看出贪婪和凶狠的表情」为例嘲讽，此类硬伤直接摧毁读者沉浸感并暴露作者不认真
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 283_起点编辑星河直播审稿之新系统_现在的小说.md
+failure_pattern:
+  description: 物理/生理描写必须自洽：已经毁损到无法存在的器官，不得再承载该器官的功能（如脸部烂光的丧尸不能有面部表情） — 理由：编辑以「脸都没有了但能看出贪婪和凶狠的表情」为例嘲讽，此类硬伤直接摧毁读者沉浸感并暴露作者不认真
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0253）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

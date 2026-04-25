@@ -1,0 +1,28 @@
+case_id: CASE-2026-0113
+title: 使用AI查资料、搜风景描写、生成灵感点子时须将AI输出作为参考素材，而非直接粘贴进正文
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 使用AI查资料、搜风景描写、生成灵感点子时须将AI输出作为参考素材，而非直接粘贴进正文 | AI辅助创作本身无问题，但直接粘贴AI生成内容会产生AI味且可能触发平台检测
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 081_起点编辑星河谈ai写作，抄袭判定，封闭式创作_AI写作有什么影响，为什么不能抄袭.md
+failure_pattern:
+  description: 使用AI查资料、搜风景描写、生成灵感点子时须将AI输出作为参考素材，而非直接粘贴进正文 — 理由：AI辅助创作本身无问题，但直接粘贴AI生成内容会产生AI味且可能触发平台检测
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0113）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

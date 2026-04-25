@@ -1,0 +1,28 @@
+case_id: CASE-2026-0242
+title: 灵异/诡异开头必须立即聚焦主角限制视角，禁止上帝视角抛设定，用主角的所见所想所感制造沉浸感
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 灵异/诡异开头必须立即聚焦主角限制视角，禁止上帝视角抛设定，用主角的所见所想所感制造沉浸感 | 限制视角让读者代入主角，产生带入感+沉浸感+期待感三感合一；上帝视角会把读者推出故事
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 249_起点编辑星河直播拆书。从《幽冥画皮卷》开头讲诡异修仙和灵异小说切入.md
+failure_pattern:
+  description: 灵异/诡异开头必须立即聚焦主角限制视角，禁止上帝视角抛设定，用主角的所见所想所感制造沉浸感 — 理由：限制视角让读者代入主角，产生带入感+沉浸感+期待感三感合一；上帝视角会把读者推出故事
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0242）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

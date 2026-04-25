@@ -1,0 +1,28 @@
+case_id: CASE-2026-0378
+title: 紧张/战斗场景句均长度≤15字且允许删除连词（如'他缩肩，下蹲，滚向雪地'三动作零连词）
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_rhythm
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 紧张/战斗场景句均长度≤15字且允许删除连词（如'他缩肩，下蹲，滚向雪地'三动作零连词） | 短句因稀缺而有力，连词删除能让心率跟着加速；编辑在打斗拆解中反复演示'删掉的'然后''的然后''就把战斗写活了'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: pacing-control.md
+failure_pattern:
+  description: 紧张/战斗场景句均长度≤15字且允许删除连词（如'他缩肩，下蹲，滚向雪地'三动作零连词） — 理由：短句因稀缺而有力，连词删除能让心率跟着加速；编辑在打斗拆解中反复演示'删掉的'然后''的然后''就把战斗写活了'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0378）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

@@ -1,0 +1,29 @@
+case_id: CASE-2026-0295
+title: 主角人设必须'立住'——有独立价值和底气，而非靠女性角色抬轿才能显得厉害
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- character
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角人设必须'立住'——有独立价值和底气，而非靠女性角色抬轿才能显得厉害 | 人设立不住是稿件被毙的核心原因之一，编辑一眼识别屌丝意淫框架后直接放弃
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 335_untitled.md
+failure_pattern:
+  description: 主角人设必须'立住'——有独立价值和底气，而非靠女性角色抬轿才能显得厉害 — 理由：人设立不住是稿件被毙的核心原因之一，编辑一眼识别屌丝意淫框架后直接放弃
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0295）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

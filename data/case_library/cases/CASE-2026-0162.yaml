@@ -1,0 +1,28 @@
+case_id: CASE-2026-0162
+title: 人物外貌描写优先使用对比或动态细节，而非静态形容词堆砌
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 人物外貌描写优先使用对比或动态细节，而非静态形容词堆砌 | 编辑称'比较壮'的具体描写'有点意思'，比程式化形容词更能让读者产生真实印象
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 143_起点编辑直播审稿偶遇新人强者_大哥害圈境强者，肥宅学生的幻想.md
+failure_pattern:
+  description: 人物外貌描写优先使用对比或动态细节，而非静态形容词堆砌 — 理由：编辑称'比较壮'的具体描写'有点意思'，比程式化形容词更能让读者产生真实印象
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0162）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

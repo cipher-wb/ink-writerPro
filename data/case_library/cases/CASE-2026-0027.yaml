@@ -1,0 +1,28 @@
+case_id: CASE-2026-0027
+title: 上架后平缓期主动安排新爆点或转折，防止追订断崖式下跌
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- pacing
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 上架后平缓期主动安排新爆点或转折，防止追订断崖式下跌 | 追订从万级跌至千级会严重打击作者心态，一旦失去动力极难恢复，读者骂声又加剧恶性循环
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 031_起点编辑星河谈网文断更烂尾切书.md
+failure_pattern:
+  description: 上架后平缓期主动安排新爆点或转折，防止追订断崖式下跌 — 理由：追订从万级跌至千级会严重打击作者心态，一旦失去动力极难恢复，读者骂声又加剧恶性循环
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0027）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

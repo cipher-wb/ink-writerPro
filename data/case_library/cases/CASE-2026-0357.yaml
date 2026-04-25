@@ -1,0 +1,28 @@
+case_id: CASE-2026-0357
+title: 不要频繁开新书后太监，签约后必须保证完结或长期稳定更新
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- taboo
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不要频繁开新书后太监，签约后必须保证完结或长期稳定更新 | 反复开书太监会损害读者信任和平台资源，占推荐位后太监是对编辑资源的严重浪费，会导致封号或列入黑名单
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 455_视频_73581224.md
+failure_pattern:
+  description: 不要频繁开新书后太监，签约后必须保证完结或长期稳定更新 — 理由：反复开书太监会损害读者信任和平台资源，占推荐位后太监是对编辑资源的严重浪费，会导致封号或列入黑名单
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0357）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

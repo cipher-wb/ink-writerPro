@@ -1,0 +1,28 @@
+case_id: CASE-2026-0321
+title: 选题前主动排查当前市场中头部作品离场后留下的空白赛道，优先填补已有读者基础但缺乏新供给的题材
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 选题前主动排查当前市场中头部作品离场后留下的空白赛道，优先填补已有读者基础但缺乏新供给的题材 | 起点存在明显赛道缺失现象，空缺赛道自带读者存量，竞争压力小且红利明显
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 391_起点编辑直播拆书，由《赤心巡天》引发的题材思考，《神秘复苏》《道诡异仙》《宿命之环》《不科学御兽》等.md
+failure_pattern:
+  description: 选题前主动排查当前市场中头部作品离场后留下的空白赛道，优先填补已有读者基础但缺乏新供给的题材 — 理由：起点存在明显赛道缺失现象，空缺赛道自带读者存量，竞争压力小且红利明显
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0321）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

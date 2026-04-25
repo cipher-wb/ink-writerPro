@@ -1,0 +1,33 @@
+case_id: CASE-2026-0391
+title: 禁止出现连续超过 3 句的纯环境/物件描写段，每 3 句内必须插入角色动作、对话或心理
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 禁止出现连续超过 3 句的纯环境/物件描写段，每 3 句内必须插入角色动作、对话或心理 | PRD US-006 硬原则：空境描写让爽点断气；战斗场景的
+    4 句环境 = 节奏死亡。即使是铺垫也要让人物嵌在环境里
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 禁止出现连续超过 3 句的纯环境/物件描写段，每 3 句内必须插入角色动作、对话或心理 — 理由：PRD US-006 硬原则：空境描写让爽点断气；战斗场景的
+    4 句环境 = 节奏死亡。即使是铺垫也要让人物嵌在环境里
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0391）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

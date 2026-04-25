@@ -1,0 +1,29 @@
+case_id: CASE-2026-0234
+title: 主角完成爽点后必须写配角的具体反应（感谢、震惊、折服等），不能让爽点无人响应
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 主角完成爽点后必须写配角的具体反应（感谢、震惊、折服等），不能让爽点无人响应 | 没有配角反馈的装逼等于白装，读者情绪需要出口，反馈环节是爽感的放大器
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 235_连麦《大奉打更人》作者卖报小郎君录播精简版上_起点编辑星河，连麦卖报小郎君，讲网文干货的录播精简版上.md
+failure_pattern:
+  description: 主角完成爽点后必须写配角的具体反应（感谢、震惊、折服等），不能让爽点无人响应 — 理由：没有配角反馈的装逼等于白装，读者情绪需要出口，反馈环节是爽感的放大器
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0234）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

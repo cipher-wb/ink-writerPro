@@ -1,0 +1,28 @@
+case_id: CASE-2026-0120
+title: 禁止写毫无逻辑的极端虐主、无端杀人等内容
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 禁止写毫无逻辑的极端虐主、无端杀人等内容 | 此类内容被起点编辑明确列为劣质书的典型特征，会出现在新书入库后直接影响平台用户体验，属于平台红线
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 087_起点编辑星河谈起点签约和番茄小说区别_第84集为什么起点签约模式不能学番茄.md
+failure_pattern:
+  description: 禁止写毫无逻辑的极端虐主、无端杀人等内容 — 理由：此类内容被起点编辑明确列为劣质书的典型特征，会出现在新书入库后直接影响平台用户体验，属于平台红线
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0120）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

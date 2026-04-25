@@ -1,0 +1,28 @@
+case_id: CASE-2026-0085
+title: 数据冷的书果断切，数据有起色的书坚持更新不轻易放弃
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- genre
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 数据冷的书果断切，数据有起色的书坚持更新不轻易放弃 | 时间成本是新人最稀缺资源，在错误方向上的坚持只会延误成长
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 059_写网文如何一年内月稿费破七万_第96集新人写网文，半年月入破万，一年月入七万，有哪些诀窍，编辑星河谈.md
+failure_pattern:
+  description: 数据冷的书果断切，数据有起色的书坚持更新不轻易放弃 — 理由：时间成本是新人最稀缺资源，在错误方向上的坚持只会延误成长
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0085）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

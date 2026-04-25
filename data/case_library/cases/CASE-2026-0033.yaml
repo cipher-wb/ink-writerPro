@@ -1,0 +1,29 @@
+case_id: CASE-2026-0033
+title: 发书前必须确认已有后续大纲或细纲，明确知道后续几万字乃至几十万字的大概内容走向
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 发书前必须确认已有后续大纲或细纲，明确知道后续几万字乃至几十万字的大概内容走向 | 头脑一热写完开头却不知后续如何写，即使过审也会陷入断更或质量崩塌
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 037_起点编辑星河谈写网文之前的准备工作.md
+failure_pattern:
+  description: 发书前必须确认已有后续大纲或细纲，明确知道后续几万字乃至几十万字的大概内容走向 — 理由：头脑一热写完开头却不知后续如何写，即使过审也会陷入断更或质量崩塌
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0033）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

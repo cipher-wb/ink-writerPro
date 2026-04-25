@@ -1,0 +1,28 @@
+case_id: CASE-2026-0383
+title: 单段（≤200字）最多引入1个新概念/设定；连续3段内不允许超过2个设定解释
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- prose_density
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 单段（≤200字）最多引入1个新概念/设定；连续3段内不允许超过2个设定解释 | 信息过载是'塞信息感'的直接成因，编辑反复指出'前三章塞设定=直接劝退'
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: scene-craft-index.md
+failure_pattern:
+  description: 单段（≤200字）最多引入1个新概念/设定；连续3段内不允许超过2个设定解释 — 理由：信息过载是'塞信息感'的直接成因，编辑反复指出'前三章塞设定=直接劝退'
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0383）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

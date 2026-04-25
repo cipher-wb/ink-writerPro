@@ -1,0 +1,33 @@
+case_id: CASE-2026-0399
+title: 连续两句以上修辞（比喻/拟人/排比）必须删到只剩一句；排比句限单段一次
+status: active
+severity: P1
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- simplicity
+scope:
+  genre:
+  - all
+  chapter:
+  - golden_three
+  - combat
+  - climax
+  - high_point
+source:
+  type: editor_review
+  raw_text: 连续两句以上修辞（比喻/拟人/排比）必须删到只剩一句；排比句限单段一次 | 修辞堆砌 = 炫技 = AI 味；benchmark 起点 D1
+    修辞密度 p75 ≈ 0.025，即每 40 句才允许一次修辞，连续两句立即触发 red
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: prose-directness/simplicity-rules.md
+failure_pattern:
+  description: 连续两句以上修辞（比喻/拟人/排比）必须删到只剩一句；排比句限单段一次 — 理由：修辞堆砌 = 炫技 = AI 味；benchmark
+    起点 D1 修辞密度 p75 ≈ 0.025，即每 40 句才允许一次修辞，连续两句立即触发 red
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0399）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

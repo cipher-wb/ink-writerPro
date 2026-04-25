@@ -1,0 +1,29 @@
+case_id: CASE-2026-0061
+title: 都市爽文在前几百字内必须触发情绪共鸣或逻辑认同，让读者对主角处境或观念产生代入感
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- opening
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+  - golden_three
+source:
+  type: editor_review
+  raw_text: 都市爽文在前几百字内必须触发情绪共鸣或逻辑认同，让读者对主角处境或观念产生代入感 | 只要读者点开第二页、第三页，都市爽文就已经成功一大半，首屏情绪共鸣是关键触发点
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 001_小说开头吸引人的具体实操分析.md
+failure_pattern:
+  description: 都市爽文在前几百字内必须触发情绪共鸣或逻辑认同，让读者对主角处境或观念产生代入感 — 理由：只要读者点开第二页、第三页，都市爽文就已经成功一大半，首屏情绪共鸣是关键触发点
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0061）'
+bound_assets: {}
+resolution: {}
+evidence_links: []

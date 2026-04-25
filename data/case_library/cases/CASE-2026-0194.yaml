@@ -1,0 +1,28 @@
+case_id: CASE-2026-0194
+title: 写作时保持专注、屏蔽外部干扰，必要时锁屏或关闭通知，进入心无旁骛的状态
+status: pending
+severity: P2
+domain: writing_quality
+layer:
+- downstream
+tags:
+- from_editor_wisdom
+- ops
+scope:
+  genre:
+  - all
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 写作时保持专注、屏蔽外部干扰，必要时锁屏或关闭通知，进入心无旁骛的状态 | 分心是影响码字效率和文思连贯性的最大障碍，专注状态下写出的内容在逻辑和情感上也更为流畅
+  ingested_at: '2026-04-25'
+  reviewer: 星河编辑
+  ingested_from: 175_起点编辑星河谈写小说码字速度_大神白金写小说时速如何，新人怎么提升速度.md
+failure_pattern:
+  description: 写作时保持专注、屏蔽外部干扰，必要时锁屏或关闭通知，进入心无旁骛的状态 — 理由：分心是影响码字效率和文思连贯性的最大障碍，专注状态下写出的内容在逻辑和情感上也更为流畅
+  observable:
+  - '待 M3 dry-run 后基于实际触发样本细化（rule_id: EW-0194）'
+bound_assets: {}
+resolution: {}
+evidence_links: []
