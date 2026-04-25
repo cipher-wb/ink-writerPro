@@ -1,0 +1,43 @@
+# M3 P1 下游闭环 — 集中阈值配置（2026-04-25 起强制）
+# 由 ink_writer/checker_pipeline/thresholds_loader.py 在 ink-write 启动时读一次。
+# 修改后需要重启 writer 才会生效（M3 期间不做热更新）。
+
+writer_self_check:
+  # 自检 rule_compliance 通过线（每条 rule 0-1 算术平均）
+  rule_compliance_threshold: 0.70
+
+reader_pull:
+  block_threshold: 60     # 真阻断线
+  warn_threshold: 75      # 警告线
+  bound_cases_tags:
+    - reader_pull
+    - hook_density
+
+sensory_immersion:
+  block_threshold: 65
+  warn_threshold: 78
+
+high_point:
+  block_threshold: 70
+  warn_threshold: 80
+
+conflict_skeleton:
+  # 章节级 checker，score = 0.5*has_conflict + 0.3*has_three_stage + 0.2*min(count/2, 1)
+  block_threshold: 0.60
+
+protagonist_agency:
+  # 章节级 checker，公式与 conflict_skeleton 同结构
+  block_threshold: 0.60
+
+rewrite_loop:
+  # 最多重写轮次（每轮一个 case，按 severity 排序）
+  max_rounds: 3
+  # 仍失败时的兜底落盘路径（相对仓库根）
+  needs_human_review_path: data/needs_human_review.jsonl
+
+dry_run:
+  # M3 上线后强制 dry-run 5 章观察期
+  enabled: true
+  observation_chapters: 5
+  # 观察满后是否自动切真阻断
+  switch_to_block_after: true
