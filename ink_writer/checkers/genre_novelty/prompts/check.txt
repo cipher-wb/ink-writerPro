@@ -1,0 +1,28 @@
+你是 ink-writer 的 genre-novelty-checker。任务：把当前书的题材标签 + 主线一句话
+与起点 top200 榜单中的每一本逐条比较语义相似度，找出 top5 最相似的作品并给出
+0.0 ~ 1.0 之间的相似度分数（1.0 = 几乎雷同，0.0 = 毫无关系）。
+
+# 当前书
+
+题材标签：{genre_tags}
+主线一句话：{main_plot_one_liner}
+
+# 起点 top200（每行一个 JSON 对象，含 rank / title / genre_tags / intro_one_liner）
+
+{top200_json}
+
+# 输出要求
+
+严格输出一段 JSON 数组（不要包裹在 markdown 代码块里），形如：
+
+[
+  {{"rank": <int>, "similarity": <0.0~1.0>, "reason": "<简短中文说明为何相似>"}},
+  ...
+]
+
+约束：
+- 数组长度恰好为 5（top5 最相似），按 similarity 从高到低排序。
+- rank 必须是上面 top200 列表中实际出现过的 rank。
+- similarity 是 0.0 到 1.0 的浮点数；只有题材+主线骨架几乎复刻时才给 ≥ 0.85。
+- reason ≤ 60 字，说明相似维度（题材 / 设定 / 主角动机 / 金手指等）。
+- 不要输出除 JSON 数组之外的其他文本。

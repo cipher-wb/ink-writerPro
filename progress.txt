@@ -8,6 +8,10 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
 - 测试 fixtures 走 tests/<area>/conftest.py，fixture 命名 `<area>_base_dir` + `sample_<area>_<scenario>`
 - 阶段性输出（ink-init / ink-plan）合并到同一 JSON 时按 stage 名去重再追加，overall_passed 用 all() 聚合
 - pytest.ini testpaths 是单行（极长但不能换行），新加测试目录追加到末尾
+- 新 checker 完全照 M3 protagonist_agency 模式：`ink_writer/checkers/<name>/{__init__,models,checker}.py + prompts/check.txt`，dataclass 含 score/blocked/cases_hit/notes + to_dict()，cases_hit 默认 []（由编排层注入），LLM/JSON 失败统一降级为 score=0.0/blocked=True/notes 含 "checker_failed"
+- LLM 响应统一用 _extract_json* helper：先 try fence ```json ... ```，再退化为 raw "{ ... }" / "[ ... ]" 子串解析；失败抛 ValueError 让 except 捕获重试
+- 跨 checker 复用 tests/checkers/conftest.py 的 FakeLLMClient（queue + calls + .messages.create stub），不要在 sub-area 新建 fixture
+- agent spec 落 ink-writer/agents/<name>-checker.md，frontmatter 含 name/description/tools=Read/model=inherit；包含来源 spec/PRD、Python 调用示例、字段表、阻断行为、与下游衔接段
 
 ---
 
@@ -27,4 +31,24 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - 合并 stage 时用 `[s for s in stages if s.get("stage") != evidence.stage]` 实现 upsert，避免重跑 ink-init 后产生重复条目
   - DEFAULT_BASE_DIR 复用自 writer.py，不要重复定义；其他模块需要默认 base_dir 时直接 import
   - require_*_evidence_chain 的返回类型不一致是历史包袱：chapter 版返回 Path，planning 版返回 dict（解析后的 JSON）；US-012 调用方需要 dict 来做后续 stage 合并判断
+---
+
+## 2026-04-25 - US-003
+- 实现 genre-novelty-checker（M4 ink-init 策划期题材新颖度检查 spec §3.1）
+- Files changed:
+  - ink_writer/checkers/genre_novelty/__init__.py（导出 GenreNoveltyReport / check_genre_novelty）
+  - ink_writer/checkers/genre_novelty/models.py（GenreNoveltyReport dataclass：score / blocked / top5_similar / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/genre_novelty/checker.py（check_genre_novelty + _build_prompt + _extract_json_array + _enrich_top5；score=1.0-max(top5 sim)，block_threshold=0.40；empty top200 跳过；LLM 失败重试 max_retries 后 blocked+notes='checker_failed: <err>'）
+  - ink_writer/checkers/genre_novelty/prompts/check.txt（{genre_tags} / {main_plot_one_liner} / {top200_json} 占位符；要求 JSON 数组输出）
+  - tests/checkers/genre_novelty/__init__.py（新增）
+  - tests/checkers/genre_novelty/test_checker.py（4 用例：test_high_similarity_blocks / test_low_similarity_passes / test_empty_top200_skipped / test_llm_failure_blocks）
+  - ink-writer/agents/genre-novelty-checker.md（agent spec：来源 spec/PRD + Python 调用 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/genre_novelty/ 4 passed；tests/checkers/ 整体 16 passed（M3 章节级 checker 向后兼容）；ruff lint 通过
+- **Learnings for future iterations:**
+  - genre_novelty 的 score 反向（与 M3 章节级 checker 同向）：低 score = 高相似 = 阻断；spec §3.1 是 1.0 - max(sim)，不要写成 mean(sim)
+  - top5 array 输出时显式按 similarity 降序排序后 [:5]：LLM 偶尔会返回多于/少于 5 条或排序错乱，用 `enriched.sort(key=lambda x: x["similarity"], reverse=True)` 兜底，确保 top5_similar[0] 即 max
+  - top5 dict 里 title 不依赖 LLM 返回（LLM 可能漏填）：用 by_rank = {item.get("rank"): item} 索引 + 后端注入 title，避免 LLM hallucination 题名
+  - prompts/check.txt 用 {{ }} 转义 .format() 占位符里的 JSON 例子（`{{"rank": ...}}`），否则 KeyError；只有 {genre_tags} / {main_plot_one_liner} / {top200_json} 是真正的 placeholder
+  - notes='checker_failed' 在 M3 是固定字串，M4 spec 要求 'checker_failed: <err>' 含原始异常信息（便于 evidence_chain 调试）；测试用 `report.notes.startswith("checker_failed:")` 而不是 `==`
+  - max_retries 默认 2（M4 上游层 spec），与 M3 章节级 checker 默认 3 不同——抄 protagonist_agency 时记得改默认值
 ---
