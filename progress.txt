@@ -52,3 +52,23 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - notes='checker_failed' 在 M3 是固定字串，M4 spec 要求 'checker_failed: <err>' 含原始异常信息（便于 evidence_chain 调试）；测试用 `report.notes.startswith("checker_failed:")` 而不是 `==`
   - max_retries 默认 2（M4 上游层 spec），与 M3 章节级 checker 默认 3 不同——抄 protagonist_agency 时记得改默认值
 ---
+
+## 2026-04-25 - US-004
+- 实现 golden-finger-spec-checker（M4 ink-init 策划期金手指规格检查 spec §3.2）
+- Files changed:
+  - ink_writer/checkers/golden_finger_spec/__init__.py（导出 GoldenFingerSpecReport / check_golden_finger_spec）
+  - ink_writer/checkers/golden_finger_spec/models.py（GoldenFingerSpecReport dataclass：score / blocked / dim_scores (4 dim 各 0-1) / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/golden_finger_spec/checker.py（check_golden_finger_spec + _build_prompt + _extract_json_object + _normalize_dim_scores；score=mean(4 dim)，block_threshold=0.65；description strip 后 < 20 字直接 blocked + notes='description_too_short' 不调 LLM；LLM 失败重试 max_retries 后 blocked + notes='checker_failed: <err>'）
+  - ink_writer/checkers/golden_finger_spec/prompts/check.txt（{description} 占位符；要求 JSON 对象输出 4 个 dim + notes）
+  - tests/checkers/golden_finger_spec/__init__.py（新增）
+  - tests/checkers/golden_finger_spec/test_checker.py（4 用例：test_high_score_passes / test_low_score_blocks / test_short_description_blocks / test_llm_failure_blocks）
+  - ink-writer/agents/golden-finger-spec-checker.md（agent spec：来源 spec/PRD + Python 调用 + 4 维度说明 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/golden_finger_spec/ 4 passed；tests/checkers/ 整体 20 passed（M3 + M4 genre_novelty 向后兼容）；ruff lint 通过
+- **Learnings for future iterations:**
+  - golden_finger_spec 输出是 JSON **对象** 而非数组（与 genre_novelty 不同）：用 `_extract_json_object` 抓 `\{.*\}`，与 genre_novelty 的 `_extract_json_array` 区分；后续 protagonist_motive 也是对象，naming_style 无 LLM
+  - 4 个维度键名用模块级常量 `_DIMENSIONS = ("clarity", "falsifiability", "boundary", "growth_curve")` 固化：normalize 时按这个 tuple 遍历，缺失 / 类型错的 dim 一律降级为 0.0；不要相信 LLM 返回的键集合
+  - `_MIN_DESCRIPTION_LEN = 20` 用 `description.strip()` 后判断长度（spec §3.2）：避免 LLM 在 `"主角有金手指。      "` 这种 padding 字串上浪费一次调用；测试 `mock_llm_client.calls == []` 校验未调用
+  - dim_scores 用 `dict[str, float]`（而非 list of dict），便于下游 evidence_chain 直接渲染 `{"clarity": 0.9, ...}`，不需要再按 dim 名查找
+  - notes 字段双重用途：normal path 是 LLM 给的中文简短说明（"边界模糊"），异常 path 是固定前缀（"description_too_short" / "checker_failed: <err>"）；下游过滤时用 `startswith("checker_failed:")` 而非 `==`
+  - 抄 genre_novelty 时记得改 `_DEFAULT_BLOCK_THRESHOLD = 0.65`、`_DEFAULT_MAX_TOKENS = 1024`（而非 2048，因输出是单 JSON 对象较短）
+---
