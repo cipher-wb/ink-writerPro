@@ -167,3 +167,23 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - PRD 用例数严格按 `输出 5 passed` 验收，不要在测试里加额外 LLM 失败测试（虽然代码有 fallback 路径）；US-014 e2e 会再覆盖
   - `bool(matched_raw) if isinstance(matched_raw, (bool, int)) else False` 防御 LLM 返回字符串 `"true"`/`"false"`：JSON 严格 boolean 不会有这种问题，但 prompt 改写后偶尔会漂；isinstance 判一手保底
 ---
+
+## 2026-04-25 - US-010
+- 实现 protagonist-agency-skeleton-checker（M4 ink-plan 策划期主角能动性骨架检查 spec §3.6）
+- Files changed:
+  - ink_writer/checkers/protagonist_agency_skeleton/__init__.py（导出 ProtagonistAgencySkeletonReport / check_protagonist_agency_skeleton）
+  - ink_writer/checkers/protagonist_agency_skeleton/models.py（ProtagonistAgencySkeletonReport：score / blocked / per_chapter / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/protagonist_agency_skeleton/checker.py（check_protagonist_agency_skeleton + _build_prompt + _extract_json_array + _normalize_per_chapter；score=mean(per_chapter agency_score)，block_threshold=0.55；空 skeleton 直接 score=0.0+blocked+notes='empty_skeleton' 不调 LLM；LLM 失败重试 max_retries=2 后 score=0.0+blocked+notes='checker_failed: <err>'）
+  - ink_writer/checkers/protagonist_agency_skeleton/prompts/check.txt（{summaries_text} 占位符；要求 JSON 数组 [{chapter_idx, agency_score, reason}]）
+  - tests/checkers/protagonist_agency_skeleton/__init__.py（新增）
+  - tests/checkers/protagonist_agency_skeleton/test_checker.py（4 用例：test_high_agency_passes / test_low_agency_blocks / test_empty_skeleton_blocks / test_llm_failure_blocks）
+  - ink-writer/agents/protagonist-agency-skeleton-checker.md（agent spec：来源 spec/PRD + Python 调用 + 评分标尺 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/protagonist_agency_skeleton/ 4 passed；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 194 passed 向后兼容；ruff 通过
+- **Learnings for future iterations:**
+  - protagonist_agency_skeleton 与 genre_novelty 在结构上同构（LLM JSON 数组 + per-item 评分 + mean 聚合），抄模板时只改：(a) `_DEFAULT_BLOCK_THRESHOLD = 0.55`、(b) prompt 主体（"主角能动性"代替"题材相似度"）、(c) per_item 字段名 `agency_score`/`chapter_idx`/`reason` 代替 `similarity`/`rank`/`reason`、(d) `_normalize_per_chapter` 替代 `_enrich_top5`（不需要按 max 排序，保持 LLM 顺序即可）
+  - 与 genre_novelty 的关键差别：empty input 的语义不同——genre_novelty 空 top200 是"上游数据缺失" → 放行（score=1.0/notes='empty_top200_skipped'）；本 checker 空 skeleton 是"卷大纲未填" → 保守阻断（score=0.0/blocked/notes='empty_skeleton'）。两种 fallback 反映了 spec §3.1 vs §3.6 不同的责任：top200 是数据资产，skeleton 是用户必填策划产出
+  - 与 M3 章节级 protagonist-agency 必须严格区分：M3 看章节正文（`chapter_text` 字段、`_SHORT_CHAPTER_CHARS=500` 短章节豁免、score 公式 `0.5*has_active + 0.3*has_plot_drive + 0.2*count_term`）；M4 卷骨架级只看 summary 一行、无短文本豁免、score 公式纯 mean。模块名 `protagonist_agency_skeleton` 后缀防撞，目录与 import 路径都不冲突
+  - per_chapter 全条目无效（LLM 返回 `[{}, {}, {}]` 之类）需要二次 fallback：`_normalize_per_chapter` 返回空列表后再次降级为 `notes='checker_failed: no valid per_chapter entries'`，否则 `mean([])` 会 ZeroDivisionError
+  - prompt 中的 `chapter_idx` 校验在 LLM 端（"必须与上方第 N 章的 N 一致"）+ Python 端（`int(entry.get("chapter_idx"))` 失败跳过），两道防线降低 LLM 漂移导致的 KeyError；reason 字段类型校验 `isinstance(reason_value, str)` 兜底，否则 LLM 偶尔返回 list 会污染 evidence_chain JSON 序列化
+  - 与 US-006 protagonist_motive 的对称提醒：那是 ink-init 阶段单 description 评估（dim_scores 对象），本 US-010 是 ink-plan 阶段多 chapter 评估（per_chapter 数组）；同一 "protagonist 系" 后续可能再加 "protagonist-arc-checker"，命名统一前缀方便 grep
+---

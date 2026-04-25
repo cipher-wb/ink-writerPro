@@ -216,8 +216,8 @@
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — 新增 ink_writer/checkers/protagonist_agency_skeleton/{__init__,models,checker}.py + prompts/check.txt；ProtagonistAgencySkeletonReport 含 score/blocked/per_chapter/cases_hit/notes + to_dict()；check_protagonist_agency_skeleton LLM 对每章 summary 打 agency_score 0-1 算术平均，block_threshold=0.55；空 skeleton 直接 score=0.0+blocked+notes='empty_skeleton' 不调 LLM；LLM 失败重试 max_retries=2 后 score=0.0+blocked+notes='checker_failed: <err>'；per_chapter 全条目无效时 notes='checker_failed: no valid per_chapter entries'；markdown ``` 自动剥离；agency_score clamp 到 [0,1]；tests/checkers/protagonist_agency_skeleton/ 4 用例全过（high_agency_passes / low_agency_blocks / empty_skeleton_blocks / llm_failure_blocks）；checkers/checker_pipeline/planning_review/evidence_chain/market_intelligence 194 passed 向后兼容；ink-writer/agents/protagonist-agency-skeleton-checker.md agent spec 落档；ruff 通过"
     },
     {
       "id": "US-011",
