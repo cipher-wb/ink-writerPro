@@ -1,0 +1,20 @@
+你是 case 库元规则归纳助手。给定 N 个 case 的 failure_pattern.description + tags，
+判断它们是否描述同一类问题（即可合并为元规则）。
+
+输入 cases（JSON 数组）：
+{cases_json}
+
+请严格按以下 JSON 结构回答（只回 JSON，不要前后多余说明）：
+{{
+  "similar": true,
+  "similarity": 0.85,
+  "merged_rule": "合并后的元规则文本（一句话，描述这一类失败/约束）",
+  "covered_cases": ["CASE-2026-0042", "..."],
+  "reason": "判断理由（一句话）"
+}}
+
+判定原则：
+- similar=true 仅在所有 case 共享同一根因 / 同一观察特征时
+- similarity ∈ [0.0, 1.0]，> 0.80 才视为可归纳
+- covered_cases 必须是输入 case_id 的子集
+- 不相似时返回 similar=false / similarity 低分 / covered_cases=[]
