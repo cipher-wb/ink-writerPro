@@ -41,3 +41,68 @@ dry_run:
   observation_chapters: 5
   # 观察满后是否自动切真阻断
   switch_to_block_after: true
+
+# ============================================================
+# M4 P0 上游策划层 — ink-init / ink-plan Step 99 阈值（2026-04-25 起强制）
+# 由 ink_writer/planning_review/{ink_init_review, ink_plan_review}.py 在 Step 99 启动时读一次。
+# ============================================================
+
+# ink-init 4 个 checker
+genre_novelty:
+  # LLM 题材新颖度 score = 1.0 - max(top5 相似度)
+  block_threshold: 0.40
+  warn_threshold: 0.55
+  case_ids:
+    - CASE-2026-M4-0001
+
+golden_finger_spec:
+  # LLM 4 维度（clarity / falsifiability / boundary / growth_curve）算术平均
+  block_threshold: 0.65
+  warn_threshold: 0.75
+  case_ids:
+    - CASE-2026-M4-0002
+
+naming_style:
+  # 纯规则（exact 0.0 / double_char 0.4 / single_char 0.7 / clean 1.0），多名取均值
+  block_threshold: 0.70
+  warn_threshold: 0.85
+  case_ids:
+    - CASE-2026-M4-0003
+
+protagonist_motive:
+  # LLM 3 维度（resonance / specific_goal / inner_conflict）算术平均
+  block_threshold: 0.65
+  warn_threshold: 0.75
+  case_ids:
+    - CASE-2026-M4-0004
+
+# ink-plan 3 个 checker
+golden_finger_timing:
+  # 硬阻断（金手指必须在前 3 章 summary 出现）：passed → 1.0 / failed → 0.0
+  block_threshold: 1.0
+  warn_threshold: 1.0
+  case_ids:
+    - CASE-2026-M4-0005
+
+protagonist_agency_skeleton:
+  # 卷骨架级 LLM 每章 agency_score 0-1 平均
+  block_threshold: 0.55
+  warn_threshold: 0.70
+  case_ids:
+    - CASE-2026-M4-0006
+
+chapter_hook_density:
+  # density = strong_count / total_count（strong threshold = 0.5）
+  block_threshold: 0.70
+  warn_threshold: 0.85
+  case_ids:
+    - CASE-2026-M4-0007
+
+# 策划期独立 dry-run 计数器（与 M3 章节级 dry_run 段独立）
+planning_dry_run:
+  enabled: true
+  observation_runs: 5
+  # 观察满后是否自动切真阻断
+  switch_to_block_after: true
+  # 计数器持久化路径（相对仓库根，独立于章节级 dry_run）
+  counter_path: data/.planning_dry_run_counter

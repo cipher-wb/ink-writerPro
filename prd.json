@@ -17,8 +17,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — config/checker-thresholds.yaml 追加 8 段（7 checker + planning_dry_run），pytest.ini testpaths 加 9 个目录，tests/checker_pipeline/test_thresholds_loader.py 加 test_load_thresholds_includes_m4_sections；pytest 5/5 passed，全 checker_pipeline 142 passed 0 failed"
     },
     {
       "id": "US-002",
