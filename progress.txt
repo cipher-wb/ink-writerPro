@@ -249,3 +249,26 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - M3 完成 = 30→50 分关键节点已铺好；下一会话开 M4 时同样的"先 cat M-ROADMAP"流程
 - M3 收尾完成；下一会话开 M4 上游策划层
 ---
+
+## ⚠️ Long-Term Roadmap Reminder (2026-04-25 12:50 PM 后；M3 完成后由人类更新)
+
+本 PRD（M3 - 30→50 分质量拐点）已**完成**（14/14 ✅，2026-04-25）。
+
+**进度**：
+- ✅ M1（17/17，tag `m1-foundation`）
+- 🟡 M2 partial（10/12，tag `m2-data-assets-partial`，corpus_chunks deferred）
+- ✅ M3（14/14，tag `m3-p1-loop`）
+- ⚪ **M4** P0 上游策划层（待启动；参考 `docs/superpowers/M4-PREPARATION-NOTES.md`）
+- ⚪ M5 Dashboard + 自进化 + 用户接口
+
+**新会话开始的标准动作**（给打开新对话的 AI / 人类）：
+1. **第一件事**：`cat docs/superpowers/M-SESSION-HANDOFF.md`（单文件 catch-up，5 分钟接上完整上下文）
+2. 用户说"开 M4" / "继续" / "接着干" → 进 brainstorming skill + 用 M4-PREPARATION-NOTES Part C 的 15 题逐题问
+3. 走标准 5 步流程：brainstorm spec → writing-plans → /prd → /ralph → bash scripts/ralph/ralph.sh
+4. **绝不能停在 M4**：M4 完成后必须主动推 M5（最终 milestone）
+
+**关键索引**：
+- `docs/superpowers/M-SESSION-HANDOFF.md` — 单文件 catch-up（新会话第一件事 cat）
+- `docs/superpowers/M-ROADMAP.md` — 5 周计划主索引
+- `docs/superpowers/M4-PREPARATION-NOTES.md` — M4 brainstorm 15 题预备
+- `docs/superpowers/M2-FOLLOWUP-NOTES.md` — M2 corpus_chunks deferred 调研报告
