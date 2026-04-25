@@ -191,3 +191,42 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - PRD AC 的 grep 数 ≥ N 类约束很轻松满足：在 Python import 块、调用块、PowerShell sibling 块、失败语义段落散布关键字 4-5 处即可破 10
 - Next: US-012 dry-run 5 章 smoke + 切换报告生成
 ---
+
+## [2026-04-25 13:50] - US-012
+- 实现 `ink_writer/evidence_chain/dry_run_report.py`：`aggregate_dry_run_metrics(*, book, base_dir)` + `generate_dry_run_report(*, book, base_dir=None)` + `_iter_evidence` helper
+- aggregate 字段：total_chapters / delivered / needs_human_review / rewrite_rounds_total / rewrite_rate / human_review_rate / case_hit_top10 / rule_compliance_avg
+- 报告写到 `<base_dir>/data/dry_run_report_<UTC_TS>.md`，含 `# M3 Dry-Run Report` + Outcomes 段 + Top 10 Case Hits 段
+- 0 章节兜底：报告含 `*0 chapters yet; run more chapters to populate this report.*`
+- 新增 `tests/evidence_chain/test_dry_run_report.py` 3 用例全绿（counts_outcomes 5 章 4 delivered 1 human_review / writes_md / handles_no_evidence）
+- 验证：tests/evidence_chain 7 passed；regression utf8_stdio + safe_symlink 27 passed；ruff 无错
+- **Learnings for future iterations:**
+  - reader 路径与 writer 路径默认 base 不一致：`evidence_chain.writer.write_evidence_chain` 默认 base=`Path("data")`（写到 `data/<book>/...`），而 `dry_run_report` 默认 base=`Path(".")`（读 `./data/<book>/...`）。两者通过 cwd 隐式对齐；测试一律传 `tmp_path` + `_iter_evidence` 在 `base_dir/"data"/book/"chapters"` 下扫
+  - `Counter.most_common(10)` 返回 list[tuple]，非 dict — 测试断言 `[("CASE-2026-0042", 1)]` 而非 `{"CASE-2026-0042": 1}`
+  - 报告时间戳精度到秒：`strftime("%Y%m%dT%H%M%S")`，避免毫秒带 `:` 在 Windows 文件名报错
+  - JSON 解析失败 / 文件 IO 错误用 `except (json.JSONDecodeError, OSError): continue` 跳过单文件而非整个聚合失败 — 部分章节坏不影响其他章节统计
+  - Counter 类型注解必须明确泛型 `Counter[str]`（Py 3.14 ruff 严）
+  - `polish.get("rewrite_rounds", 0) or 0` 双兜底防 None — evidence schema 演化时常见 polish_agent 字段缺失
+- Next: US-013 M3 e2e 集成测试（8 用例覆盖 spec §6.5）
+---
+
+## [2026-04-25 14:50] - US-013
+- 实现 `tests/integration/test_m3_e2e.py`：8 用例覆盖 spec §6.5 完整 M3 P1 链路
+  1. `test_e2e_chapter_passes_first_round_when_clear`：clean self_check + 空 checkers → outcome=delivered（rounds=1，polish 不调用）+ write_evidence_chain + require_evidence_chain pass
+  2. `test_e2e_chapter_polishes_then_passes`：r0 fail/r1 pass → 1 次 polish；断言 polish kwargs.case_id + related_chunks=None + failure_description 含 case_id
+  3. `test_e2e_chapter_3_rounds_fails_then_human_review`：3 轮全失败 → outcome=needs_human_review + history 4 版（r0..r3）+ save_rewrite_history 落 4 文件 + write_human_review_record 写 jsonl
+  4. `test_e2e_dry_run_records_blocked_but_does_not_polish`：apply_block_threshold(is_dry_run=True) → blocked=False/would_have_blocked=True；self_check passed → 无阻断 case → 不 polish；evidence.checker_results 留痕
+  5. `test_e2e_dry_run_counter_switches_after_5`：5 次 increment + cfg.observation_chapters=5 → is_dry_run 翻 False；switch_to_block_after=False 时即使 counter 超也保持 dry-run
+  6. `test_e2e_evidence_chain_strict_required`：require_evidence_chain 缺文件 → raise EvidenceChainMissingError；写盘后通过
+  7. `test_e2e_polish_prompt_carries_case_failure_pattern`：build_polish_prompt 直接断言 case_id + failure_description + observable bullets + "无相关范文" 占位
+  8. `test_e2e_5chapter_dry_run_report_generated`：手写 5 个 evidence_chain.json (4 delivered + 1 human_review) → generate_dry_run_report → md 含 "delivered: 4" + "needs_human_review: 1" + 命中 case_id
+- 验证：tests/integration/test_m3_e2e.py 8 passed；全量 pytest -q 总覆盖率 **82.75% ≥ 70**；ruff check 全绿
+- 已知 pre-existing 失败（**与 US-013 无关，stash 验证 master 同样失败**）：tests/prompts/test_prompt_templates.py::TestABPrompts::test_diff_all_runs / tests/release/test_v16_gates.py::test_verify_docs_exit_zero — 不在本 story scope，留给后续单独修复
+- **Learnings for future iterations:**
+  - **dry_run 不会被 orchestrator 主动拦 polish**：`run_rewrite_loop` 的 `is_dry_run` 仅写入 `evidence.dry_run` 字段，不改变循环行为；真正的 dry-run 阻断从 `apply_block_threshold` 来（让 checker.blocked=False，于是 collect_blocking_cases 不收）；e2e #4 必须让 self_check 也 passed=True，否则 cases_violated 还是会触发 polish
+  - **evidence_chain 与 dry_run_report 的 base_dir 语义不同**：write_evidence_chain 默认 `Path("data")` (base 即 data 目录)；generate_dry_run_report 默认 `Path(".")` (base 是项目根，"data/" 由模块拼接)；e2e #8 用 `evidence_base = tmp_path / "data"` + `report_base = tmp_path` 两参数对齐
+  - `polish.assert_called_once()` + `polish.call_args.kwargs["case_id"]` 是验 orchestrator 把单个 case_id 透传给 polish_fn 的最简手法
+  - `MagicMock(side_effect=lambda **_: next(rewrites))` 比 list-based side_effect 更灵活——可基于参数返回不同值；`**_` 抛弃所有 kwargs（不要写 `**kwargs` 否则 unused 触发 ruff）
+  - Pre-existing failures 检测法：`git stash` 后跑相同测试套件验证；stash 不是 destructive 操作（pop 可恢复），适合区分"我引入的"vs"前置存在的"
+  - tests/integration 目录已在 pytest.ini testpaths（不需追加）；testpaths 单行已超 700 字符建议 M5 拆分
+- Next: US-014 M3 验收 + tag m3-p1-loop + 更新 M-ROADMAP
+---

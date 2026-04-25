@@ -229,8 +229,8 @@
         "Typecheck passes"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：evidence_chain.dry_run_report (aggregate_dry_run_metrics + generate_dry_run_report) + 3 tests passing；扫 data/<book>/chapters/*.evidence.json 出 markdown 含 Outcomes / Top 10 Case Hits 段；0 章节走 \"0 chapters yet\" 分支"
     },
     {
       "id": "US-013",
@@ -243,8 +243,8 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：tests/integration/test_m3_e2e.py 8 用例全绿（passes_first_round / polishes_then_passes / 3_rounds_human_review / dry_run_no_polish / dry_run_counter_switches / evidence_chain_required / polish_prompt_carries_failure / 5chapter_dry_run_report）；全量回归 cov 82.75% ≥ 70；2 个失败 (test_prompt_templates::test_diff_all_runs / test_v16_gates::test_verify_docs_exit_zero) 为 US-013 前已存在，不在本 story scope"
     },
     {
       "id": "US-014",
