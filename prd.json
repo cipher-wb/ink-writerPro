@@ -80,8 +80,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：conflict_skeleton checker + models + prompt + agent spec + 6 tests passing"
     },
     {
       "id": "US-005",
@@ -100,8 +100,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：protagonist_agency checker + models + prompt + agent spec + 6 tests passing"
     },
     {
       "id": "US-006",

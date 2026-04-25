@@ -1,0 +1,36 @@
+你是 ink-writer 的 protagonist-agency-checker。任务：判断主角（{protagonist_name}）在本章中是否
+做出至少 1 个明确的主动决策，并且至少 1 次以行动推动了剧情发展（反对"主角当摄像头/旁观者"）。
+
+# 主角
+
+{protagonist_name}
+
+# 章节正文
+
+{chapter_text}
+
+# 输出要求
+
+严格输出一段 JSON（不得包裹在 markdown 代码块中），形如：
+
+{{
+  "has_active_decision": true|false,
+  "has_plot_drive": true|false,
+  "decision_count": <整数>,
+  "decisions": [
+    {{
+      "decision": "<主角主动决策的简短描述>",
+      "drives_plot": true|false,
+      "consequence": "<该决策推动剧情走向的简短描述，可空字符串>"
+    }},
+    ...
+  ],
+  "notes": "<简短判断说明，可空字符串>"
+}}
+
+约束：
+- has_active_decision 仅当主角在本章中至少做了一个有意识的、改变后续情节的选择时为 true；
+  纯被动反应、纯环境观察、被他人推着走不算主动决策。
+- has_plot_drive 仅当主角的至少一个行动直接推动了主线/支线剧情发展时为 true。
+- decision_count 反映主角主动决策的总数（不计旁观者反应）。
+- 不要输出除 JSON 之外的其他文本。

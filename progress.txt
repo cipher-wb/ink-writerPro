@@ -60,3 +60,38 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - ruff isort 默认会把 first-party (`ink_writer.*`) 排在 third-party (`tests.*`) 前面 — 不要手写 import 顺序，让 ruff --fix 处理
 - Next: US-004 conflict-skeleton-checker（章节级 LLM checker，结构同此 agent）
 ---
+
+## [2026-04-25 12:30] - US-004
+- 实现 `ink_writer/checkers/__init__.py`（包入口）+ `ink_writer/checkers/conflict_skeleton/{__init__,models,checker}.py`
+- `ConflictReport(has_explicit_conflict, conflict_count, has_three_stage_structure, conflict_summaries, score, block_threshold, blocked, cases_hit, notes)` + `to_dict()`
+- `ink_writer/checkers/conflict_skeleton/prompts/check.txt` 严格 JSON 输出含 has_explicit_conflict / conflict_count / has_three_stage_structure / conflicts list (friction_point/escalation/interim_resolution) / notes
+- `check_conflict_skeleton(*, chapter_text, book, chapter, llm_client, max_retries=3, block_threshold=0.60, model="glm-4.6")`：短章节 (< 500 字) 跳过；LLM 失败重试 → 仍失败 score=0/blocked=True/notes="checker_failed"；score = 0.5×has_conflict + 0.3×has_three_stage + 0.2×min(count/2, 1)
+- 新增 `ink-writer/agents/conflict-skeleton-checker.md` agent spec
+- 新增 `tests/checkers/__init__.py` + `conftest.py`（mock_llm_client fixture，复用 writer_self_check 的 FakeLLMClient 风格）+ `tests/checkers/conflict_skeleton/{__init__,test_checker}.py` 6 用例全绿
+- 验证：tests/checkers/conflict_skeleton 6 passed；tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py 20 passed；ruff 无错
+- **Learnings for future iterations:**
+  - score 边界：partial three-stage（has_conflict=True, three_stage=False, count=1）= 0.5+0+0.1 = 0.60，**不阻断**（blocked = score < threshold，等于阈值时通过）
+  - cases_hit 由 rewrite_loop 在阻断时按 tag 注入，checker 自己始终返 []（保持职责单一）
+  - prompt 模板 JSON 示例的 `{}` 必须双写 `{{}}`（writer_self_check 已踩过坑）
+  - 短章节豁免与 LLM 失败的 blocked 行为相反：豁免 blocked=False（缺数据不阻断），失败 blocked=True（保守降级让 rewrite_loop 处理）
+  - LLM 返回类型若非 dict（如 conflicts 给成 string）也要兜底：用 `isinstance(conflicts_raw, list)` 防御
+  - 后续 checker（US-005 protagonist_agency）可直接复用 `tests/checkers/conftest.py` 的 mock_llm_client（不再重写 FakeLLMClient）
+- Next: US-005 protagonist-agency-checker（结构同此，prompt 改判主角主动决策）
+---
+
+## [2026-04-25 12:50] - US-005
+- 实现 `ink_writer/checkers/protagonist_agency/{__init__,models,checker}.py` + `prompts/check.txt`，结构镜像 conflict_skeleton
+- `AgencyReport(has_active_decision, has_plot_drive, decision_count, decision_summaries, score, block_threshold, blocked, cases_hit, notes)` + `to_dict()`
+- `check_protagonist_agency(*, chapter_text, protagonist_name, book, chapter, llm_client, max_retries=3, block_threshold=0.60, model="glm-4.6")`
+- score = 0.5×has_active + 0.3×has_plot_drive + 0.2×min(count/2, 1)；短章节 (<500 字) 跳过；LLM 失败 → score=0/blocked=True/notes="checker_failed"
+- prompt 含 `{protagonist_name}` + `{chapter_text}` 占位符，要求 JSON 含 has_active_decision/has_plot_drive/decision_count/decisions list/notes
+- 新增 `ink-writer/agents/protagonist-agency-checker.md` agent spec（mirror conflict-skeleton-checker）
+- 新增 `tests/checkers/protagonist_agency/{__init__,test_checker}.py` 6 用例全绿（happy_path / no_active_decision / partial / threshold_boundary / llm_failure / short_chapter）
+- 验证：tests/checkers/protagonist_agency 6 passed；regression utf8_stdio + safe_symlink + conflict_skeleton 26 passed；ruff 无错
+- **Learnings for future iterations:**
+  - 章节级 checker 三件套（conflict_skeleton + protagonist_agency + 后续）公式同结构、阈值同 0.60、阻断行为同：可以抽公共 helper（_compute_score / _extract_json / _call_llm）但目前仅 2 个先不抽（rule of three）
+  - prompt 多占位符场景下 `.format()` 必须把所有 JSON schema 示例的 `{}` 都双写 `{{}}`；测试 happy_path 顺手断言 prompt 含主角名能捕获 format 失误
+  - test happy_path 加 `assert PROTAGONIST in mock_llm_client.calls[0]["messages"][0]["content"]` 一行就能验证 prompt 注入正确，强烈推荐后续 checker 沿用
+  - decision_summaries 用 `decision → consequence` 拼接（与 conflict_summaries 用 friction → escalation → interim 不同），按字段语义而非死板复制
+- Next: US-006 block_threshold_wrapper（升级现有 3 prompt-based checker 为 CheckerOutcome 包装）
+---
