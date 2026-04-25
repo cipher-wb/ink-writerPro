@@ -159,3 +159,20 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - read_counter 返 `max(value, 0)` 容错负数手改 — 文件可被人编辑，不要 trust int(raw) 直返
 - Next: US-010 needs_human_review.jsonl 兜底 + 4 版保留
 ---
+
+## [2026-04-25 13:30] - US-010
+- 实现 `ink_writer/rewrite_loop/human_review.py`：`save_rewrite_history(*, book, chapter, history, base_dir=None) -> list[Path]` + `write_human_review_record(*, book, chapter, blocking_cases, rewrite_attempts, rewrite_history_paths, evidence_chain_path, base_dir=None) -> Path`
+- 写盘路径：`<base_dir>/data/<book>/chapters/<chapter>.r{i}.txt`（每版独立文件，i 0..N-1，永不删稿）
+- jsonl 路径：`<base_dir>/data/<book>/needs_human_review.jsonl`（append 模式，含 marked_at UTC ISO）
+- `_serialize_case` 兼容 str / dict / 含 case_id+severity 的对象 / repr 兜底，保 json.dump 不抛 TypeError
+- 默认 `base_dir=Path(".")`（项目根，路径前缀 `data/` 来自 spec 字面）—— 注意与 evidence_chain (`Path("data")`) 的 base 语义不同
+- 新增 `tests/rewrite_loop/test_human_review.py` 3 用例全绿（4_versions / appends_jsonl / appends_not_overwrites）
+- 验证：tests/rewrite_loop 14 passed + audit utf8_stdio 8 + core safe_symlink 12 共 34 passed；ruff 无错
+- **Learnings for future iterations:**
+  - **base_dir 语义在 M3 模块间不统一**：evidence_chain/dry_run 默认 `Path("data")`（base 即 data 目录）；human_review 默认 `Path(".")`（base 是项目根，"data/" 由模块内拼接）。orchestrator 调用时若把 `base_dir=Path("data")` 直接传给 human_review 会写到 `data/data/<book>/...`——US-013 集成测试时记得对齐
+  - JSONL append 模式：`open(path, "a", encoding="utf-8")` + 单行 `json.dumps(record, ensure_ascii=False) + "\n"`；多次 write 自然累加，不需要先 read+rewrite
+  - `marked_at` 用 `datetime.now(UTC).isoformat().replace("+00:00", "Z")` 输出 RFC3339 Z 后缀，比 `+00:00` 更便于跨语言解析
+  - `_serialize_case` 多形态兼容：blocking_cases 在 orchestrator 是 dataclass case 对象，但写盘时统一抽取 case_id/severity 形成稳定 schema；测试可直接传 str/dict
+  - test_appends_not_overwrites 用 `**common` + `{**common, "chapter": "ch002"}` 模式简化重复 kwargs，2 行就能验证 append 语义
+- Next: US-011 ink-write SKILL.md 集成 M3 写章合规循环 + Windows PowerShell sibling
+---
