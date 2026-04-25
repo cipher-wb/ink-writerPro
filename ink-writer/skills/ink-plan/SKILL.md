@@ -898,3 +898,69 @@ If any hard fail triggers:
 Next steps:
 - 继续规划下一卷 → /ink-plan
 - 开始写作 → /ink-write
+
+---
+
+## Step 99：策划期审查（M4 P0 必跑）
+
+`/ink-plan` 输出本卷骨架（每章 summary）后，必须跑 3 个 ink-plan 阶段 checker，否则不得进入 `/ink-write`。该步骤由 `ink_writer.planning_review.ink_plan_review` 编排，覆盖：
+
+1. **golden-finger-timing** — 金手指必须在前 3 章 summary 出现（regex + LLM 双层）
+2. **protagonist-agency-skeleton** — 卷骨架级主角能动性（每章 agency_score 平均）
+3. **chapter-hook-density** — 卷骨架级钩子密度（hook_strength ≥ 0.5 占比）
+
+### 输入：outline JSON
+
+把本卷章纲汇总为 `data/<book>/outline.json`：
+
+```json
+{
+  "volume_skeleton": [
+    {"chapter_idx": 1, "summary": "顾望安觉醒万道归一，主动出手破阵..."},
+    {"chapter_idx": 2, "summary": "他融合两种功法首次试招..."},
+    {"chapter_idx": 3, "summary": "他追查到观之七境的入口..."}
+  ],
+  "golden_finger_keywords": ["万道归一", "融合"]
+}
+```
+
+### 跑审查（macOS / Linux）
+
+```bash
+# dry-run 模式
+python3 -m ink_writer.planning_review.ink_plan_review \
+  --book <book> --outline data/<book>/outline.json
+
+# 紧急绕过
+python3 -m ink_writer.planning_review.ink_plan_review \
+  --book <book> --outline data/<book>/outline.json --skip-planning-review
+
+# 5 次观察期满后聚合报告
+python3 -m ink_writer.planning_review.dry_run_report --base-dir data
+```
+
+### 跑审查（Windows PowerShell sibling）
+
+```powershell
+# dry-run 模式
+py -3 -m ink_writer.planning_review.ink_plan_review `
+  --book <book> --outline "data/<book>/outline.json"
+
+# 紧急绕过
+py -3 -m ink_writer.planning_review.ink_plan_review `
+  --book <book> --outline "data/<book>/outline.json" --skip-planning-review
+
+# 聚合报告
+py -3 -m ink_writer.planning_review.dry_run_report --base-dir data
+```
+
+### 输出
+
+- `data/<book>/planning_evidence_chain.json` — 同书已有 `ink-init` stage 时按 stage 名追加；`overall_passed = all(stages 未 blocked)`。
+- 退出码：`0` = 通过；`1` = 阻断（real mode 下任一 checker blocked）。
+
+### 模式说明
+
+- **dry-run（前 5 次）**：与 ink-init 共享独立计数器 `data/.planning_dry_run_counter`；observation_runs=5。
+- **real mode**：任一 checker `blocked=True` 即阻断；`cases_hit` 注入对应 `CASE-2026-M4-0005~0007`；`golden-finger-timing` 是硬阻断（金手指在前 3 章 summary 出现 → 1.0 通过；否则 0.0 阻断）。
+- **`--skip-planning-review`**：紧急绕过；写 `outcome=skipped` 的 stage。

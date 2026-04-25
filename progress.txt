@@ -15,6 +15,7 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
 - 跨 checker 复用 tests/checkers/conftest.py 的 FakeLLMClient（queue + calls + .messages.create stub），不要在 sub-area 新建 fixture
 - agent spec 落 ink-writer/agents/<name>-checker.md，frontmatter 含 name/description/tools=Read/model=inherit；包含来源 spec/PRD、Python 调用示例、字段表、阻断行为、与下游衔接段
 - 数据爬虫脚本：scripts/<area>/__init__.py（空）+ fetch_*.py（UA 含联系邮箱、_check_robots_txt、RATE_LIMIT_SECONDS=1.0、_load_progress/_save_progress_one 续爬、_fetch_*_page → list[(rank, id)]、_fetch_one_* max_retries 失败 return None、enable_windows_utf8_stdio()）；测试用 autouse fixture monkeypatch OUTPUT_PATH/PROGRESS_PATH 到 tmp_path 隔离仓库 data/
+- 编排层模式：ink_writer/planning_review/<stage>_review.py 复用 EvidenceChain（phase=planning + stage=...），dry-run 计数独立路径 data/.planning_dry_run_counter 走 dry_run.py helpers；effective_blocked = blocked_any AND not dry_run，dry-run 跑后 increment；skip 路径只写 outcome=skipped 不调 checker；blocked 时按 thresholds yaml case_ids 注入 cases_hit；CLI argparse + enable_windows_utf8_stdio() + 退出码 1/0；测试用 FakeLLMClient（tests/checkers/conftest.py）+ tmp_path 隔离 base_dir + 显式 dry_run_counter_path 控制 dry/real 模式
 
 ---
 
@@ -206,3 +207,31 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - 抄 protagonist_agency_skeleton 模板时改 5 处即可：(a) `_DEFAULT_BLOCK_THRESHOLD = 0.70`、(b) prompt 主体（"章末钩子强度"代替"主角能动性"）、(c) `hook_strength` 替代 `agency_score` 字段名、(d) 新增 `_STRONG_THRESHOLD=0.5` + `strong` 字段、(e) 聚合公式 `strong_count/total_count` 替代 `mean(...)`
   - PRD 验收 `输出 4 passed` 非 5 passed（与 US-009 的 5 用例对照）：双层 checker（regex+LLM）需要 5 用例（regex_hit/regex_miss_llm_hit/regex_miss_llm_miss/outline_too_short/empty_keywords），单层 LLM checker 4 用例（high/low/empty/llm_failure）
 ---
+
+## 2026-04-25 - US-012
+- 实现 planning_review 编排层 + ink-init/ink-plan SKILL.md Step 99（M4 P0 spec §5）
+- Files changed:
+  - ink_writer/planning_review/__init__.py（新增；导出 5 个主入口）
+  - ink_writer/planning_review/dry_run.py（新增；get_counter / increment_counter / is_dry_run_active；DEFAULT_COUNTER_PATH = Path('data/.planning_dry_run_counter')）
+  - ink_writer/planning_review/ink_init_review.py（新增；run_ink_init_review 串行 genre-novelty / golden-finger-spec / naming-style / protagonist-motive；_load_top200 读 jsonl 缺则 []；naming_blacklist_path 可注入；skip 路径写 skipped stage + 不调 checker；effective_blocked = blocked_any AND not dry_run；dry-run 跑后 increment_counter；CLI argparse + enable_windows_utf8_stdio + 退出码 1/0）
+  - ink_writer/planning_review/ink_plan_review.py（新增；3 checker 同构 golden-finger-timing / protagonist-agency-skeleton / chapter-hook-density；outline schema {volume_skeleton, golden_finger_keywords}；CLI 同上）
+  - ink_writer/planning_review/dry_run_report.py（新增；扫 <base_dir>/<book>/planning_evidence_chain.json 聚合 checker avg/blocked/cases + per-stage 行 → markdown；CLI --base-dir/--out）
+  - ink-writer/skills/ink-init/SKILL.md（追加 Step 99 章节：dry-run 模式 + Windows PowerShell sibling + skip flag + 聚合报告）
+  - ink-writer/skills/ink-plan/SKILL.md（同上，3 checker + ink_plan_review CLI）
+  - tests/planning_review/test_dry_run.py（新增；3 用例 counter_starts_at_zero / increment / dry_run_active_until_threshold）
+  - tests/planning_review/test_ink_init_review.py（新增；5 用例 skip_flag / dry_run_blocked_does_not_fail / real_mode_blocks_on_failure / all_pass_real_mode / evidence_chain_written；用 FakeLLMClient + naming_blacklist_path tmp 词典 + dry_run_counter_path 控制模式）
+  - tests/planning_review/test_ink_plan_review.py（新增；4 用例 skip_flag / evidence_merges_after_init / low_agency_blocks_in_real_mode / empty_outline_blocks）
+- 测试：tests/planning_review/ 16 passed（3 dry_run + 5 init + 4 plan + 4 writer）；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 210 passed 全向后兼容；ruff 通过
+- grep 校验：Step 99 (init/plan 各 1) / skip-planning-review (各 3) / PowerShell (各 2) 全过
+- **Learnings for future iterations:**
+  - naming-style 默认词典路径硬编码 'data/market_intelligence/llm_naming_blacklist.json'，monkeypatch.chdir(tmp_path) 后会查不到；run_ink_init_review 必须暴露 naming_blacklist_path 参数让测试注入 fake 词典——不要试图 monkeypatch checker 模块属性，因为默认 path 是函数体内 Path() 字面量
+  - dry-run 与 real mode 切换的关键信号：counter < observation_runs（默认 5）。测试时 `counter.write_text("5")` 直接进入 real mode；起始 0 + 不写文件即 dry mode；不要依赖 _DEFAULT_COUNTER_PATH 全局 state，每个测试都传 dry_run_counter_path 避免污染
+  - effective_blocked 公式 `blocked_any AND not dry_run`：dry-run 永不阻断（让用户观察阻断点），real mode 任一 checker blocked 就 1 退出；测试 4 路：dry+pass / dry+blocked / real+pass / real+blocked，覆盖 truth table
+  - cases_hit 注入只在 blocked 时发生：编排层从 thresholds yaml 读 case_ids 写入 report dict（覆盖 checker 默认空列表），让 evidence_chain 里能直接看到本次阻断关联到哪个 CASE-2026-M4-*；checker 本身不读 yaml 保持职责单一
+  - skip 路径走 record_checkers([]) + outcome="skipped" + human_overrides 追加一条 skip stage；evidence 仍要落盘（审计），不能简单跳过；返回 dict 含 skipped=True + skip_reason 让 CLI 上层一眼区分
+  - 编排层 record_checkers 的 outcome 列表用 dict (`{id, score, blocked, cases_hit, notes, details}`) 而非 dataclass：evidence_chain.record_checkers 期望 list[dict]，保持序列化简单；details 字段携带原始 to_dict() 便于后续审计完整 dim_scores / per_chapter
+  - SKILL.md 追加 Step 99 时 macOS/Linux 块 + Windows PowerShell sibling 块必须同时出现，CLAUDE.md Windows 兼容守则要求 grep -c PowerShell ≥ 1；用 backtick 续行的 PowerShell 写法 `command \`\n  --arg`
+  - dry-run 计数器是策划期独立的（与 M3 章节级 dry_run.observation_chapters 不混）：路径默认 data/.planning_dry_run_counter，与 ink-write 计数完全隔离；counter 文件单行整数 + UTF-8 + parent.mkdir(parents=True, exist_ok=True)
+  - generate_planning_dry_run_report 扫 base_dir/*/planning_evidence_chain.json 而非递归 glob：每书一个文件，sorted(base_dir.iterdir()) 让输出顺序稳定；空 base_dir 返回空 markdown 不抛异常
+---
+

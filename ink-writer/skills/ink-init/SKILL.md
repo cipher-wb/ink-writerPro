@@ -937,3 +937,69 @@ test -f "{project_root}/.ink/idea_bank.json"
    - 总纲缺字段 -> 只 patch 总纲；
    - idea_bank 不一致 -> 只重写该文件。
 3. 重新验证，全部通过后结束。
+
+---
+
+## Step 99：策划期审查（M4 P0 必跑）
+
+`/ink-init` 完成所有结构化产出（设定集 / 总纲 / 金手指 / 主角卡）后，必须跑 4 个上游 checker，否则不得进入 `/ink-plan`。该步骤由 `ink_writer.planning_review.ink_init_review` 编排，覆盖：
+
+1. **genre-novelty** — 题材新颖度（vs 起点 top200）
+2. **golden-finger-spec** — 金手指四维度规格（清晰 / 可证伪 / 边界 / 成长曲线）
+3. **naming-style** — 角色起名风格（纯规则 vs LLM 高频起名词典）
+4. **protagonist-motive** — 主角动机三维度（共情 / 具体目标 / 内心冲突）
+
+### 输入：setting JSON
+
+把 `/ink-init` 末尾的产出汇总为 `data/<book>/setting.json`：
+
+```json
+{
+  "genre_tags": ["仙侠", "正剧"],
+  "main_plot_one_liner": "战争遗孤追查万道归一真相，最终改写历史。",
+  "golden_finger_description": "主角觉醒万道归一之力：可融合任意两种已掌握的功法生成第三种新功法，代价是融合后 24 小时内无法再次融合，且只能保留一种结果。",
+  "character_names": [{"role": "protagonist", "name": "顾望安"}],
+  "protagonist_motive_description": "战争遗孤亲眼目睹养母在烽火中自尽，誓要找出观之七境背后的真相，却又恐惧自己变成同样的怪物。"
+}
+```
+
+### 跑审查（macOS / Linux）
+
+```bash
+# dry-run 模式（observation_runs 5 次，自动开启）
+python3 -m ink_writer.planning_review.ink_init_review \
+  --book <book> --setting data/<book>/setting.json
+
+# 紧急绕过（不推荐；编辑/PM 介入时使用）
+python3 -m ink_writer.planning_review.ink_init_review \
+  --book <book> --setting data/<book>/setting.json --skip-planning-review
+
+# 5 次观察期满后产聚合报告
+python3 -m ink_writer.planning_review.dry_run_report --base-dir data
+```
+
+### 跑审查（Windows PowerShell sibling）
+
+```powershell
+# dry-run 模式
+py -3 -m ink_writer.planning_review.ink_init_review `
+  --book <book> --setting "data/<book>/setting.json"
+
+# 紧急绕过
+py -3 -m ink_writer.planning_review.ink_init_review `
+  --book <book> --setting "data/<book>/setting.json" --skip-planning-review
+
+# 聚合报告
+py -3 -m ink_writer.planning_review.dry_run_report --base-dir data
+```
+
+### 输出
+
+- `data/<book>/planning_evidence_chain.json` — schema_version 1.0；含 `phase=planning`、`stages=[{stage: ink-init, ...}]`、`overall_passed`。
+- 退出码：`0` = 通过；`1` = 阻断（real mode 下任一 checker blocked）。
+
+### 模式说明
+
+- **dry-run（前 5 次）**：阈值未达标也不会终止流程，但 evidence 仍写入；用于观察阻断点。计数器 `data/.planning_dry_run_counter` 独立于 M3 章节级 `dry_run`。
+- **real mode（第 6 次起）**：任一 checker `blocked=True` 即阻断；`cases_hit` 注入对应 `CASE-2026-M4-0001~0004`。
+- **`--skip-planning-review`**：写一条 `outcome=skipped` 的 stage，标 `skip_reason='--skip-planning-review'`；仅紧急情况使用。

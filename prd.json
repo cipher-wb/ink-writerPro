@@ -272,8 +272,8 @@
         "Typecheck passes"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — 新增 ink_writer/planning_review/{__init__.py, dry_run.py, ink_init_review.py, ink_plan_review.py, dry_run_report.py}：dry_run 暴露 get_counter/increment_counter/is_dry_run_active（默认路径 data/.planning_dry_run_counter，支持 enabled/switch_to_block_after/observation_runs 三档）；run_ink_init_review 串行 4 checker（genre-novelty 走 _load_top200 jsonl + 缺则 [] / golden-finger-spec / naming-style（支持 naming_blacklist_path 参数注入便测）/ protagonist-motive），blocked_any → effective_blocked = blocked_any AND not dry_run，dry-run 跑后 increment_counter；阻断时按 thresholds yaml case_ids 注入到 cases_hit；skip=True 路径写 outcome=skipped + skip_reason='--skip-planning-review' + 不调任何 checker；run_ink_plan_review 同构 3 checker（golden-finger-timing / protagonist-agency-skeleton / chapter-hook-density），outline schema {volume_skeleton, golden_finger_keywords}；CLI 入口 argparse + enable_windows_utf8_stdio() + 退出码 1 if effective_blocked else 0；generate_planning_dry_run_report 扫所有书 planning_evidence_chain.json 输出 markdown（每 checker avg + case 触发频次 + per-stage 行）；ink-writer/skills/ink-init/SKILL.md + ink-plan/SKILL.md 末尾追加 Step 99 章节（含 macOS/Linux + Windows PowerShell sibling + dry-run/real 模式说明 + skip flag + 5 次后聚合报告命令）；新增 tests/planning_review/test_dry_run.py 3 用例 + test_ink_init_review.py 5 用例 + test_ink_plan_review.py 4 用例 = 12 passed；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 共 210 passed 全向后兼容；ruff 通过；grep 校验：Step 99 各 1 / skip-planning-review 各 3 / PowerShell 各 2"
     },
     {
       "id": "US-013",
