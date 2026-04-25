@@ -158,8 +158,8 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：rewrite_loop.orchestrator (RewriteLoopResult + collect_blocking_cases + run_rewrite_loop) + 5 tests passing；适配 EvidenceChain keyword-only API"
     },
     {
       "id": "US-009",

@@ -126,3 +126,21 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - 测试断言中文短语命中即可，不必死磕完整句子；fixture 用真实可读样本（"主角站在街口张望"）便于排错时一眼看出 prompt 形态
 - Next: US-008 rewrite_loop orchestrator（用本 step 的 build_polish_prompt 作 polish_fn 默认实现）
 ---
+
+## [2026-04-25 13:50] - US-008
+- 实现 `ink_writer/rewrite_loop/orchestrator.py`：`RewriteLoopResult` dataclass + `collect_blocking_cases` + `run_rewrite_loop`
+- `collect_blocking_cases(compliance, check_results, case_store)`：聚合 `compliance.cases_violated`（仅当未通过）∪ 每个 `blocked` checker 的 `cases_hit`，去重保序，按 `case.severity.value` P0→P3 排序；`case_store.load(cid)` 失败的 case 静默跳过（保护 polish 流程）
+- `run_rewrite_loop(*, book, chapter, chapter_text, cfg, case_store, self_check_fn, checkers_fn, polish_fn, is_dry_run, base_dir=None)`：主循环 `for round_idx in range(max_rounds + 1)`，每轮调 self_check_fn + checkers_fn + 记 evidence；如 blocking_cases=[] → outcome=delivered 退出；如 round_idx >= max_rounds → outcome=needs_human_review 退出；否则取 `blocking_cases[0]` 调 polish_fn，传 `case_id / case_failure_description / case_observable / related_chunks=None`
+- history 记录每轮 chapter_text（含初始 r0；3 轮重写后共 4 版，US-010 写盘消费）
+- evidence helper API：`record_self_check(*, round_idx, compliance_report)` / `record_checkers(checker_outcomes)` / `record_polish(*, round_idx, case_id, result)` 全部 keyword-only 调用
+- 新增 `tests/rewrite_loop/test_orchestrator.py` 5 用例全绿（dedupe+sort / passes_when_clear / rewrites_until_pass / 3_rounds_human_review / one_case_per_round）
+- 验证：tests/rewrite_loop 全 8 passed；M3 全模块 188 passed；ruff 修后 clean
+- **Learnings for future iterations:**
+  - `EvidenceChain` 实际 API 与 plan 草稿不一致：`record_self_check` / `record_polish` 是 keyword-only（`*, round_idx=, ...`），`record_checkers` 只收 `checker_outcomes`（不含 round_idx，因为只跑一次 pipeline）— 后续 US-013 e2e 写 mock 时 sat 同一坑
+  - dependency injection 三件套（self_check_fn / checkers_fn / polish_fn）让 orchestrator 单元测试无需真 LLM；MagicMock side_effect=list 是模拟"第 N 轮返回不同结果"的标准手法
+  - `getattr(target.failure_pattern, "description", "")` 链式 getattr 兼容真 case 对象与 MagicMock；`failure_pattern=None` 时不要直接 `target.failure_pattern.description`
+  - `for round_idx in range(max_rounds + 1)` 关键：max_rounds=3 → range(4)，覆盖 r0(初始)+r1+r2+r3，共 4 次 self_check 调用，与"3 轮重写"语义一致
+  - severity 排序用 `_SEVERITY_ORDER.index(sev) if sev in _SEVERITY_ORDER else 99`，未知 severity 沉底，避免 ValueError
+  - `polish_fn` 必须接收 `related_chunks=None`（M3 期 chunk_borrowing deferred；spec §3.5 风险 8）；US-007 build_polish_prompt 已在 None 时输出"无相关范文"占位
+- Next: US-009 dry-run 模式控制 + counter + auto-switch（持久化到 `<base_dir>/.dry_run_counter`）
+---
