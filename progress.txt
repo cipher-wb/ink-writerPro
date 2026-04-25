@@ -16,6 +16,8 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
 - M5 元规则提议 ID 分配复用模式（`meta_rule_emergence/emerger.py::_next_proposal_id`）：扫目录 → regex `MR-(\d{4,})` → max+1 → 默认 `MR-0001`；缺目录直接返回 `MR-0001`。后续 US-004/US-005 列表/审批 CLI 可直接复用。
 - LLM 客户端注入用 Protocol 类型 `class _LLMLike(Protocol)` + `messages.create(...)` 接口（见 `meta_rule_emergence/emerger.py`）；测试塞入 `_FakeLLM` 即可不依赖真 LLM；与 `scripts/corpus_chunking/llm_client.LLMClient` 同形。
 - LLM 输出 JSON 解析容错（`_parse_llm_json`）：先 strip ```json ... ``` 围栏 → `json.loads` → 失败再 regex `\{.*\}` 抓最大块；M5 后续 LLM 调用都建议复用此模式。
+- M5 子命令模块 (`meta_rule_cli` / 后续 dashboard/learn) 接入 `case_library/cli.py` 的标准模式：(1) 模块自带 `register_subparsers(parent_sub)` 注册嵌套子命令 + `dispatch(args)` 解 namespace；(2) cli.py 顶部 import + `_build_parser` 末尾调一次 `register_..._subparsers(sub)` + main() if 链多一行 dispatch 路由；(3) 自身仍保留独立 `_build_parser/main` 以便 `python -m ...` 直跑。这样新增子命令对 cli.py 的入侵 ≤ 4 行。
+- meta-rule 提议 yaml 持久化字段：`status: pending|approved|rejected` + 仅在 approve/reject 时分别加 `approved_at`/`rejected_at`（YYYY-MM-DD UTC）；`covered_cases` 是 case_id 列表，approve 时遍历 store.load → 写 `case.meta_rule_id` → store.save。幂等：第二次 approve 看到 status != pending 直接 rc=1 + stderr 报错；不会重写 cases。
 
 ## 2026-04-25 - US-001 case schema 扩展（recurrence_history / meta_rule_id / sovereign）
 - 实现：
@@ -96,4 +98,30 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **YAML status 字段必带 `pending`**：`MetaRuleProposal.to_dict()` 主动注入；CLI approve（US-004）只翻字段值，不动其他结构。
   - **prompt 模板放 `prompts/emerge.txt`**：`{cases_json}` 占位符用 `prompt_template.replace(...)`（不是 `.format()`，因为模板里有 `{}` JSON 示例会和 .format 冲突）。下游 US-009 ink-learn 自动 case prompt 同模式。
   - **Tag 粗筛去重要按 case_id 集合签名**：避免相同 5 个 case 因为共享多个 tag 被 LLM 重复判定；`seen_signatures` 用排序后 case_id tuple 即可，不用真聚类算法。
+---
+
+## 2026-04-25 - US-004 ink meta-rule {list, approve, reject} CLI
+- 实现：
+  - `ink_writer/case_library/meta_rule_cli.py`：暴露 `cmd_list / cmd_approve / cmd_reject` 纯函数 + `register_subparsers(parent_sub)` 嵌套子命令 + `dispatch(args)` 路由 + 独立 `_build_parser/main` 支持 `python -m ink_writer.case_library.meta_rule_cli`。
+  - `cmd_list` 输出 `MR-NNNN status=X sim=0.XX cases=N :: <merged_rule>` 行，`--status pending|approved|rejected` 过滤；缺 meta_rules 目录直接返回空。
+  - `cmd_approve <id>`：load yaml → status != pending → rc=1 stderr 警告；遍历 covered_cases → `store.load → case.meta_rule_id = id → store.save`；proposal 写 `status=approved + approved_at=<UTC YYYY-MM-DD>`；CASE-NotFound 收集进 failed list（≤10 条 stderr 输出）+ rc=1。
+  - `cmd_reject <id>`：同上守门 → 写 `status=rejected + rejected_at`。
+  - `ink_writer/case_library/cli.py`：顶部 `from ... import dispatch as meta_rule_dispatch, register_subparsers as register_meta_rule_subparsers`；`_build_parser` 末尾 `register_meta_rule_subparsers(sub)`；`main` if-chain 增 `if args.command == "meta-rule": return meta_rule_dispatch(args)`。
+  - `tests/case_library/test_meta_rule_cli.py`：5 用例（PRD 4 + 父 CLI 路由烟雾测试）。
+- Files changed:
+  - ink_writer/case_library/meta_rule_cli.py (new)
+  - ink_writer/case_library/cli.py
+  - tests/case_library/test_meta_rule_cli.py (new)
+- 验证：
+  - `pytest tests/case_library/test_meta_rule_cli.py -v --no-cov` → 5 passed
+  - `pytest tests/case_library/ tests/meta_rule_emergence/ tests/regression_tracker/ --no-cov` → 64 passed (M3/M4/M5 已有用例向后兼容)
+  - `python3 -m pytest --no-cov` → **3832 passed / 23 skipped / 0 failed / 3 warnings** (343s)
+  - `python3 -m ink_writer.case_library.meta_rule_cli --help` → exit 0 列出 list/approve/reject
+  - `ruff check ink_writer/case_library/meta_rule_cli.py ink_writer/case_library/cli.py` → All checks passed
+- Learnings for future iterations:
+  - **PRD 措辞 `case_store._save_case` 是 typo**：实际公共 API 是 `CaseStore.save(case)`（已在 store.py L57 暴露）；测试就直接用 store.save 即可。下游 US-009/US-010 (auto-case / promote) 给 store 写入也都用 `store.save`。
+  - **嵌套子命令注册的 4 行入侵契约**：见上文 Codebase Patterns 末条；US-005 (dashboard) / US-006 (weekly_report) / US-009/US-010 (ink-learn 子命令) 都按这个模式接入主 CLI。
+  - **proposal 幂等接口**：approve 第二次返回 1 + stderr `not pending` —— 让批量脚本 (后续编辑评分自动审批) 可以 try/再读 status 判别成功还是 already-done。reject 同样守门，避免误覆盖 approved。
+  - **YAML 顶级字段 status/approved_at/rejected_at**：用 `yaml.safe_dump(..., sort_keys=False)` 保持插入顺序；下游 dashboard 只 `data.get("status")` 不假设顺序，但人工 diff 看顺序很重要。
+  - **`approved_at = datetime.now(UTC).strftime("%Y-%m-%d")`**：UTC 日期字符串（Python 3.14 `datetime.UTC`），与 case_schema.json `ingested_at` 保持同形；不混 ISO 时间戳避免 yaml `2026-04-25T..` 干扰 grep。
 ---

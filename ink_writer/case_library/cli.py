@@ -43,6 +43,12 @@ from ink_writer.case_library.errors import (
 )
 from ink_writer.case_library.index import CaseIndex
 from ink_writer.case_library.ingest import ingest_case
+from ink_writer.case_library.meta_rule_cli import (
+    dispatch as meta_rule_dispatch,
+)
+from ink_writer.case_library.meta_rule_cli import (
+    register_subparsers as register_meta_rule_subparsers,
+)
 from ink_writer.case_library.rules_to_cases import convert_rules_to_cases
 from ink_writer.case_library.store import CaseStore
 
@@ -117,6 +123,8 @@ def _build_parser() -> argparse.ArgumentParser:
         required=True,
         help="Path to approvals YAML (schema: case_approval_batch_schema.json)",
     )
+
+    register_meta_rule_subparsers(sub)
 
     return parser
 
@@ -268,6 +276,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
         if args.command == "approve":
             return _cmd_approve(args.library_root, args.batch)
+        if args.command == "meta-rule":
+            return meta_rule_dispatch(args)
         print(f"unknown command: {args.command}", file=sys.stderr)
         return 2
     except CaseLibraryError as exc:

@@ -80,8 +80,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：meta_rule_cli 模块（cmd_list/approve/reject + register_subparsers + main）+ 接入 case_library/cli.py main parser；5 用例全绿（覆盖 list 过滤 / approve 写 meta_rule_id + approved_at / approve 幂等保护 / reject + rejected_at / 父 CLI 路由）；touched-area 64/64；全量 pytest 3832 passed / 23 skipped / 0 failed；ruff check 全绿。"
     },
     {
       "id": "US-005",
