@@ -147,8 +147,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：config/ab_channels.yaml（enabled=false 默认）+ EvidenceChain.channel: str|None=None + to_dict 输出 channel + planning_writer 自动透传（通过 to_dict）+ ink-write SKILL.md 加 'M5 A/B 通道（可选）' 段（含 PowerShell sibling）+ 4 用例全绿（test_channel_default_none / a / b / planning_evidence_writes_channel）；evidence_chain 8 用例全绿（向后兼容）；M3/M4 模块 88 个 touched-area 用例全绿；ruff check 全绿。"
     },
     {
       "id": "US-008",

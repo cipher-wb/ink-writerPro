@@ -42,6 +42,8 @@ def write_planning_evidence_chain(
     - 文件不存在：新建 ``{schema_version, phase, book, stages: [stage], overall_passed}``。
     - 文件已存在：剔除同 ``stage`` 名的旧条目（重跑覆盖），追加新 stage。
     - ``overall_passed = all(stage 未 blocked)``。
+    - M5 P3：``evidence.channel`` 由 ``EvidenceChain.to_dict()`` 直接透传到
+      ``stages[i]['channel']``（默认 None；A/B 通道实验启用时由调用方设值）。
 
     若 ``evidence.phase != 'planning'`` 直接 raise ``ValueError``，避免误把章节级
     evidence 写到策划期文件。

@@ -21,6 +21,7 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
 - dashboard 数据布局（M5 P3 起 aggregator 假定的 base_dir layout）：`<base_dir>/.dry_run_counter`（M3 章节）+ `<base_dir>/.planning_dry_run_counter`（M4 策划期）+ `<base_dir>/<book>/chapters/*.evidence.json`（chapter 级 outcome=delivered/needs_human_review/blocked）+ `<base_dir>/<book>/planning_evidence_chain.json`（含 stages list + overall_passed）+ `<base_dir>/case_library/meta_rules/MR-*.yaml`（status: pending|approved|rejected）+ `<base_dir>/editor_reviews/*.yaml`（编辑评分 trend）。M5 dashboard / 周报 / overview JSON 都按这一布局工作；测试用 `tmp_path / "data"` 现造同形布局即可零耦合验证。
 - chapter evidence pass 判定：`outcome == "delivered"` = 通过；`needs_human_review` 与 `blocked` 都不计 pass。M3 周报 / 切换推荐 都用此契约。
 - planning evidence pass 判定：每个 stage `outcome != "blocked"` = 通过（M4 与 §6.2 一致；spec 注 outcome=blocked → 切真阻断阻塞）。
+- EvidenceChain 字段透传 → planning stage 自动持有同字段：`planning_writer.write_planning_evidence_chain` 内 `new_stage = evidence.to_dict()`，所以 EvidenceChain 任意新增字段（如 M5 `channel`）只需改 dataclass + to_dict，planning stage 即随之携带；无需在 planning_writer 显式拷贝。下游 US-013 e2e 同此模式。
 
 ## 2026-04-25 - US-001 case schema 扩展（recurrence_history / meta_rule_id / sovereign）
 - 实现：
@@ -189,4 +190,31 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **行动项触发 contract**：spec 行动项 H2 必须**永远存在**（即使空也写"暂无紧急行动项"）；触发条件用阈值字符串硬匹配（"评估 M3 dry-run 切真" / "审批 N 条 pending 元规则"）—— US-013 e2e 测试会按字符串断言，不要改文案。
   - **`out_path.parent.mkdir(parents=True, exist_ok=True)`**：默认输出 `reports/weekly/<Y>-W<NN>.md` 时父目录可能不存在，必须先 mkdir；测试 fixture 用 `tmp_path / "reports" / "weekly" / "..."` 也要靠这一行才能写盘。
   - **报告 markdown 不读 case 内容、只读 overview JSON**：`generate_weekly_report` 整体 = 调一次 `get_m5_overview(base_dir, case_store)` + 字符串渲染。下游周报扩展（按 book 过滤、加趋势图）只动 `_render_markdown`，不要再回头重算指标。
+---
+
+## 2026-04-25 - US-007 A/B 通道 config + --channel flag + evidence_chain channel 字段
+- 实现：
+  - `config/ab_channels.yaml`：默认 enabled=false；channels.A.{description: 保守 baseline / overrides.meta_rule.enabled=false}；channels.B.{description: 启用 M5 元规则 / overrides.meta_rule.enabled=true}。
+  - `ink_writer/evidence_chain/models.py`：EvidenceChain 加 `channel: str | None = None`；to_dict 在 phase/stage 之后输出 channel 键（默认 None 向后兼容）。
+  - `ink_writer/evidence_chain/planning_writer.py`：docstring 加 M5 P3 channel 透传说明。**没有显式赋值代码**：因为 `new_stage = evidence.to_dict()` 自动把 channel 带进每个 stage dict，无需重复实现（学到：dataclass→dict 透传是天然路径，避免 copy-paste 字段名陷阱）。
+  - `ink-writer/skills/ink-write/SKILL.md`：在 Step 1.5 后插 `### M5 A/B 通道（可选）` 段，含 Python 示例（EvidenceChain(channel='A')）+ 字段语义（A=保守 / B=启用 meta_rule / null=默认）+ Windows PowerShell sibling 块 + 启用前提 (`config/ab_channels.yaml enabled: true`) 提示。
+  - `tests/evidence_chain/test_channel_field.py`：4 用例（test_channel_default_none / test_channel_a / test_channel_b / test_planning_evidence_writes_channel；最后一个写盘后读 stages[0]['channel']=='A'）。
+- Files changed:
+  - config/ab_channels.yaml (new)
+  - ink_writer/evidence_chain/models.py
+  - ink_writer/evidence_chain/planning_writer.py (docstring only)
+  - ink-writer/skills/ink-write/SKILL.md
+  - tests/evidence_chain/test_channel_field.py (new)
+- 验证：
+  - `pytest tests/evidence_chain/test_channel_field.py -v --no-cov` → 4 passed
+  - `pytest tests/evidence_chain/ tests/regression_tracker/ tests/dashboard/ tests/case_library/ tests/meta_rule_emergence/ --no-cov` → 88 passed (M3/M4 模块全向后兼容)
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` → **3791 passed / 23 skipped / 0 failed / 3 warnings** (345s)
+  - `ruff check ink_writer/evidence_chain/` → All checks passed
+  - `python3 -c "from ink_writer.evidence_chain import EvidenceChain; ev=EvidenceChain(book='B', chapter='c', channel='A'); assert ev.to_dict()['channel']=='A'; print('OK')"` → OK
+- Learnings for future iterations:
+  - **EvidenceChain 字段经 to_dict 自动流到 planning stage**：planning_writer 不需要为新字段写一行；`new_stage = evidence.to_dict()` 已经把 channel 一并写入。下游 US-013 e2e 测 stages[0]['channel'] 时直接 build EvidenceChain(channel='A') 喂 write_planning_evidence_chain 即可。
+  - **A/B 通道 enabled=false 是 M5 收官策略**：spec §7.4 要的是"评估通道存在"而非"立即切真"；持久化 channel 字段 + dashboard 不切实际行为分支即可。真要启用是 5 周 roadmap 之后真实质量验证阶段的事，本 PR 只把骨架搭好。
+  - **channel 字段位置在 stage 后**：to_dict 输出顺序固定为 `book, chapter, phase, stage, channel, produced_at, ...`，让人工 diff evidence_chain.json 时按"宽信号"递进读（先看是什么书章节，再看哪一阶段，再看 A/B 通道）。
+  - **SKILL.md 段落只插在 Step 1.5 之后、Step 2A 之前**：M3 写章合规循环 (Step 1.5) 是 channel 落地点；Step 2A 起草不需要知道 channel；这样段落定位最不影响阅读流。
+  - **PowerShell sibling 用 `python -c @"..."@` here-string**：单行命令含中文/引号会破坏 PS 转义；这是 SKILL.md 已有约定（参考 Step 1.5 PS sibling），新加的 A/B 通道示例就近复用即可。
 ---

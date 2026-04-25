@@ -1,0 +1,28 @@
+# M5 P3 A/B 通道护栏（spec §7.4 防过拟合）
+#
+# 默认 enabled=false：5 周 roadmap 收官后，channel 字段持久化到 evidence_chain
+# 但不影响任何运行时分支；真要启用需手工 toggle 或在 ink-write CLI 显式 --channel A|B。
+#
+# 通道 A：保守 baseline，跳过 meta_rule 强约束（only case-level 检查）
+# 通道 B：启用 meta_rule emergence 路径（M5 Layer 5 元规则参与 self_check）
+#
+# 字段约定：
+#   enabled: 总开关；false 时 ink-write 即使收到 --channel 也只把 channel 写进
+#            evidence_chain.json，不切实际行为分支。
+#   channels.<name>.description: 一句话语义说明
+#   channels.<name>.overrides: 行为覆盖键值；与 config/checker-thresholds.yaml /
+#            self_check.cfg 同形（消费方负责浅合并）。
+
+enabled: false
+
+channels:
+  A:
+    description: "保守 baseline — 跳过 meta_rule 检查，只用 case-level 约束"
+    overrides:
+      meta_rule:
+        enabled: false
+  B:
+    description: "M5 元规则启用 — meta_rule_emergence 输出参与 self_check"
+    overrides:
+      meta_rule:
+        enabled: true

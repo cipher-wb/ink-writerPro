@@ -975,6 +975,44 @@ if ($LASTEXITCODE -ne 0) { throw "Step 1.5 failed; do not proceed to Step 2C/3/4
 
 > 失败语义：`run_rewrite_loop` 在 3 轮重写仍失败时返回 `outcome="needs_human_review"` 并在 `data/<book>/needs_human_review.jsonl` append 一行；`evidence_chain.json` 仍会写盘以保留全链路审计；后续 step 只在 `outcome="delivered"` 时继续。
 
+### M5 A/B 通道（可选）
+
+M5 P3 防过拟合护栏（spec §7.4）：可选给本章 evidence_chain 打 `channel: "A"|"B"` 标签，方便周报 / 切换推荐按通道切片复盘。**默认不启用，向后兼容**——`channel` 字段缺省 `null`，对所有现有流程零影响。
+
+**何时启用**：5 周 roadmap 收官后真实质量验证阶段；当观察到指标波动疑似过拟合时，开 `config/ab_channels.yaml` 的 `enabled: true`，给一小段章节走 channel A（保守 baseline，跳 meta_rule），其余走 channel B（启用 meta_rule），用 dashboard `recommendation` 切片对比。
+
+**调用方式**（在 Step 1.5 构造 EvidenceChain 时传入）：
+
+```python
+# Step 1.5 内部把 cli flag --channel A 透传给 EvidenceChain
+from ink_writer.evidence_chain import EvidenceChain
+
+ev = EvidenceChain(
+    book=book,
+    chapter=chapter,
+    channel="A",  # 或 "B"；默认 None
+    # ... 其余字段照旧
+)
+```
+
+evidence_chain.json 字段说明：
+- `channel: "A"` — 保守 baseline，对应 `config/ab_channels.yaml` channels.A.overrides
+- `channel: "B"` — 启用 M5 元规则，对应 channels.B.overrides
+- `channel: null` — 默认（不参与 A/B 实验；M3/M4 已写章节回灌时全为 null）
+
+<!-- windows-ps1-sibling -->
+```powershell
+# Windows PowerShell sibling — A/B 通道 CLI 透传示例
+$env:PYTHONIOENCODING = "utf-8"
+python -c @"
+from ink_writer.evidence_chain import EvidenceChain
+ev = EvidenceChain(book='都市A', chapter='ch005', channel='A')
+print(ev.to_dict()['channel'])
+"@
+```
+
+> **注意**：`config/ab_channels.yaml` `enabled: false` 时即使传 `--channel A` 也仅持久化字段，不切实际行为分支；切真前请先评估 dashboard `recommendation`（M5 周报 §Layer 4 复发追踪）。
+
 ### Step 2A：正文起草
 
 执行前必须加载（静态优先，最大化 cache 命中）：
