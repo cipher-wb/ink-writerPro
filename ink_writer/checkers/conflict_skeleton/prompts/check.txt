@@ -1,0 +1,31 @@
+你是 ink-writer 的 conflict-skeleton-checker。任务：判断章节是否包含显式冲突（≥ 1 个）以及
+是否完成了三段结构（摩擦点 friction_point → 升级 escalation → 临时收尾 interim_resolution）。
+
+# 章节正文
+
+{chapter_text}
+
+# 输出要求
+
+严格输出一段 JSON（不得包裹在 markdown 代码块中），形如：
+
+{{
+  "has_explicit_conflict": true|false,
+  "conflict_count": <整数>,
+  "has_three_stage_structure": true|false,
+  "conflicts": [
+    {{
+      "friction_point": "<冲突起点的简短描述>",
+      "escalation": "<冲突升级过程的简短描述>",
+      "interim_resolution": "<本章临时收尾的简短描述>"
+    }},
+    ...
+  ],
+  "notes": "<简短判断说明，可空字符串>"
+}}
+
+约束：
+- has_explicit_conflict 仅在章节内确实存在角色之间或角色与外部环境的对抗/冲突时为 true。
+- has_three_stage_structure 仅在至少一个 conflict 含 friction_point + escalation + interim_resolution 三段时为 true。
+- conflict_count 反映本章不同冲突线的数量；纯环境描写或日常铺陈不计入。
+- 不要输出除 JSON 之外的其他文本。
