@@ -213,6 +213,9 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - `python3 -c "from ink_writer.evidence_chain import EvidenceChain; ev=EvidenceChain(book='B', chapter='c', channel='A'); assert ev.to_dict()['channel']=='A'; print('OK')"` → OK
 - Learnings for future iterations:
   - **EvidenceChain 字段经 to_dict 自动流到 planning stage**：planning_writer 不需要为新字段写一行；`new_stage = evidence.to_dict()` 已经把 channel 一并写入。下游 US-013 e2e 测 stages[0]['channel'] 时直接 build EvidenceChain(channel='A') 喂 write_planning_evidence_chain 即可。
+- **case_id 模式已扩**：`schemas/case_schema.json` regex 现为 `^CASE-([0-9]{4}|LEARN|PROMOTE)-(M[0-9]+-)?[0-9]{4}$`（US-009 扩）。ink-learn 自动 case 用 `CASE-LEARN-NNNN`（M5 P3）；US-010 promote 用 `CASE-PROMOTE-NNNN`（同模式直接复用，schema 已就绪）。
+- **`_next_learn_id` 与 `_next_proposal_id` 同模式**：扫目录 → 取 NNNN 最大 → +1 → 缺则 0001。US-010 promote 复用即可（只换前缀）。每周 throttle 通过扫现有 `CASE-LEARN-*.yaml` 的 `source.ingested_at >= 周一日期` 计数，不需要单独写 counter 文件。
+- **Auto-learned case schema 映射**：PRD 写的 `category=auto_learned`/`countermeasure.guideline` 不在 schema（additionalProperties:false）；改用 `tags=["m5_auto_learn", ...pattern_case_ids[:3]]` + `source.type=self_audit` + `source.ingested_from="ink_learn_auto"` + `failure_pattern.observable=list(pattern)` + `failure_pattern.description="重复触发组合 X+Y ..."` 覆盖语义；用 `case_store.save` 走 schema validator，确保盘上 yaml 始终合规。下游 US-010 promote 同样映射。
   - **A/B 通道 enabled=false 是 M5 收官策略**：spec §7.4 要的是"评估通道存在"而非"立即切真"；持久化 channel 字段 + dashboard 不切实际行为分支即可。真要启用是 5 周 roadmap 之后真实质量验证阶段的事，本 PR 只把骨架搭好。
   - **channel 字段位置在 stage 后**：to_dict 输出顺序固定为 `book, chapter, phase, stage, channel, produced_at, ...`，让人工 diff evidence_chain.json 时按"宽信号"递进读（先看是什么书章节，再看哪一阶段，再看 A/B 通道）。
   - **SKILL.md 段落只插在 Step 1.5 之后、Step 2A 之前**：M3 写章合规循环 (Step 1.5) 是 channel 落地点；Step 2A 起草不需要知道 channel；这样段落定位最不影响阅读流。
@@ -242,4 +245,37 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **`user_corpus/<genre>/_meta.yaml` 字段最小契约**：`genre`（string）+ `license`（string）+ `files`（list of dict，每项必有 `path` + `source`）+ `created_at`。spec §3 P3 没强制其它字段；测试只 assert 这四样就够用。下游 M2 真跑切片时再扩 `chunks_count` / `last_ingested_at` 到 _meta.yaml（目前只在 user_genres.yaml 顶级索引里）。
   - **`wc -m` 统计中文字符数**：macOS BSD wc 加 `-m` 按 multi-byte 字符数（每个汉字 = 1）；不要用 `wc -c`（按字节，1 个汉字 = 3 字节）会让 100-2000 字硬限误判 3 倍。
   - **预存 `dashboard.app` collection error**：tests/data_modules/test_dashboard_{app,server,watcher}.py 三文件 import `dashboard.app`，但 macOS HFS+ 大小写不敏感导致 `/Users/cipher/AI/小说/ink/...` 与 `/Users/cipher/AI/ink/...` 在 sys.path 解析时标准化失败 (`No module named 'dashboard.app'`)。US-007 / 本 PR 都用 `--ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` 绕过；不属本 PR 修复范围。下游 US-013 e2e 验收若把这三个文件含进 `pytest -q --no-cov` 总用例数门禁，必须先修预存 path normalization 问题（不归 M5 追加 PR）。
+---
+
+## 2026-04-25 - US-009 ink-learn --auto-case-from-failure
+- 实现：
+  - `config/ink_learn_throttle.yaml`：`auto_case_from_failure: {max_per_week: 5, min_pattern_occurrences: 2, pattern_window_days: 7}`。
+  - `ink_writer/learn/__init__.py`：暴露 `propose_cases_from_failures`。
+  - `ink_writer/learn/auto_case.py`：`_load_throttle` (yaml 缺则用 DEFAULT_THROTTLE) + `_hit_case_ids` (复用 regression_tracker 4 种载体 contract) + `_evidence_pattern` (要求 outcome==blocked + 至少 1 个 case_id，返回 sorted tuple) + `_scan_blocked_evidence` (扫 `<base>/<book>/chapters/*.evidence.json`，过滤 `produced_at < since`) + `_next_learn_id` (扫 `CASE-LEARN-*.yaml` 取最大 NNNN+1) + `_count_existing_learn_this_week` (按 ISO 周一锚点计数 `source.ingested_at >= 周一`) + `_make_learn_case` (映射到 schema 合规字段：tags 带 `m5_auto_learn`、source.type=self_audit、source.ingested_from=ink_learn_auto、failure_pattern.observable=list(pattern)) + 主入口 `propose_cases_from_failures`：throttle → scan → Counter → 过 min_occurrences → budget = max_per_week - 已用 → 排序 (-count, pattern) → 创建并 `case_store.save` (走 schema validator)。
+  - `schemas/case_schema.json`：case_id regex 扩到 `^CASE-([0-9]{4}|LEARN|PROMOTE)-(M[0-9]+-)?[0-9]{4}$`，让 CASE-LEARN/PROMOTE 通过校验；M3/M4 现有 410 个 CASE-2026-* 仍合规。
+  - `ink-writer/skills/ink-learn/SKILL.md`：末尾追加 `## M5 自动 case 提案（M5 P3）` 段（含 `### --auto-case-from-failure`）+ Python 调用示例 + Windows PowerShell sibling here-string + 读法（窗口/阈值/throttle/审批 fanout 4 句话）。
+  - `tests/learn/{__init__,test_auto_case}.py`：4 用例（pattern 重复 → 提议 + 字段校验 + 落盘 yaml round-trip / 单次出现跳过 / max_per_week=2 限流 + 二次调用全限 / outcome=delivered 跳过）。fixture `case_store` 用 tmp_path/case_library；fixture `now_dt` 锚定 2026-04-25 12:00 UTC。
+- Files changed:
+  - config/ink_learn_throttle.yaml (new)
+  - ink_writer/learn/__init__.py (new)
+  - ink_writer/learn/auto_case.py (new)
+  - schemas/case_schema.json
+  - ink-writer/skills/ink-learn/SKILL.md
+  - tests/learn/__init__.py (new)
+  - tests/learn/test_auto_case.py (new)
+- 验证：
+  - `pytest tests/learn/test_auto_case.py -v --no-cov` → 4 passed
+  - `pytest tests/case_library/ tests/regression_tracker/ tests/meta_rule_emergence/ tests/dashboard/ tests/evidence_chain/ tests/learn/ --no-cov` → 95 passed (M3/M4/M5 全模块向后兼容)
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` → **3798 passed / 23 skipped / 0 failed / 3 warnings** (302s)
+  - `python3 -c "from ink_writer.learn.auto_case import propose_cases_from_failures; print('import OK')"` → import OK
+  - `ruff check ink_writer/learn/` → All checks passed
+  - `grep -c 'M5 自动 case 提案' ink-writer/skills/ink-learn/SKILL.md` → 1
+  - `grep -c 'PowerShell' ink-writer/skills/ink-learn/SKILL.md` → 2
+- Learnings for future iterations:
+  - **PRD 字段名 vs schema 实际字段**：US-009 PRD 列了 `category`/`countermeasure.guideline`/`created_at` 等不在 schema 的字段。坚持走 `case_store.save`（含 schema validator）+ 把语义压到现有字段（tags / source.ingested_from / failure_pattern.observable）；不要改 `additionalProperties: false`。下游 US-010 promote 同套打法。
+  - **case_id regex 加 LEARN/PROMOTE**：仅一行 schema 改动，向后兼容（410 个 CASE-2026-* 仍 match）。改 regex 之前一定要本地跑过 `pytest tests/case_library/ --no-cov`，确保 410 yaml round-trip 没破。
+  - **Throttle counter 不另写文件**：复用文件系统作为状态——直接扫现有 `CASE-LEARN-*.yaml` 的 `source.ingested_at` 计数。优点：天然原子（fs 操作） + 不需要再设计 counter schema；缺点：若编辑手工删 yaml，counter 会回流（spec §3 P3 接受）。
+  - **`_evidence_pattern` 排序后 tuple 作 Counter key**：相同两个 case_id 顺序不同的 evidence 会合并为同一模式；这跟 regression_tracker 的 set 语义一致。下游 promote 模块按 pattern_type+text 也用 sort+tuple 作 key。
+  - **outcome=delivered 不参与 auto-learn**：spec §3 P3 只关心 blocked；passed/needs_human_review 章节不触发提议。这与 dashboard m3 pass-rate (delivered=过) 是相反的契约，别混淆。
+  - **测试不依赖真实 LLM/网络**：propose_cases_from_failures 是纯 fs + Counter，无 LLM 调用；US-010 promote 同样无 LLM（只是把 project_memory.json 的 patterns 升格）。M5 真要用 LLM 是 meta_rule_emergence (US-003) 那一条线。
 ---

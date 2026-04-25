@@ -185,8 +185,8 @@
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：config/ink_learn_throttle.yaml + ink_writer/learn/{__init__,auto_case}.py + propose_cases_from_failures + ink-learn SKILL.md M5 段（含 PowerShell sibling）+ 4 用例全绿；schema regex 扩到 ^CASE-([0-9]{4}|LEARN|PROMOTE)-(M[0-9]+-)?[0-9]{4}$ 以容纳 CASE-LEARN-NNNN；touched-area pytest 95/95；全量 pytest 3798 passed / 23 skipped / 0 failed (302s)；ruff check ink_writer/learn/ 全绿。"
     },
     {
       "id": "US-010",

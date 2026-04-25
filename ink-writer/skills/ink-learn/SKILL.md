@@ -162,3 +162,43 @@ Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.p
 - 趋势快照最多保留 10 条，超出时删除最早的
 - 风格指纹每次只保留最新值（覆盖更新）
 - 自动提取的模式标记 `auto_extracted: true`，与手动记录区分
+
+## M5 自动 case 提案（M5 P3）
+
+短期 project_memory 之外，M5 引入"自动从 blocked 章节抽出失败模式 → 提议 pending case"通道。每周限 5 条，由编辑/产品 `ink case approve` 升格为长期 case。
+
+### --auto-case-from-failure
+
+```bash
+python3 -c "from ink_writer.learn.auto_case import propose_cases_from_failures; \
+from ink_writer.case_library.store import CaseStore; from pathlib import Path; \
+proposed = propose_cases_from_failures( \
+    case_store=CaseStore(Path('data/case_library')), \
+    base_dir=Path('data'), \
+    cases_dir=Path('data/case_library/cases'), \
+    throttle_path=Path('config/ink_learn_throttle.yaml')); \
+print(f'proposed: {[c.case_id for c in proposed]}')"
+```
+
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价）：
+
+```powershell
+python3 -c @"
+from ink_writer.learn.auto_case import propose_cases_from_failures
+from ink_writer.case_library.store import CaseStore
+from pathlib import Path
+proposed = propose_cases_from_failures(
+    case_store=CaseStore(Path('data/case_library')),
+    base_dir=Path('data'),
+    cases_dir=Path('data/case_library/cases'),
+    throttle_path=Path('config/ink_learn_throttle.yaml'))
+print(f'proposed: {[c.case_id for c in proposed]}')
+"@
+```
+
+读法：
+- 扫最近 7 天 (`pattern_window_days`) blocked 章节 evidence_chain，统计 `cases_violated` 组合频次。
+- 频次 ≥ `min_pattern_occurrences` (默认 2) 的组合 → 写 `data/case_library/cases/CASE-LEARN-NNNN.yaml`（status=pending、severity=P2、tags 含 `m5_auto_learn`）。
+- 每周硬上限 `max_per_week` (默认 5)；阈值改 `config/ink_learn_throttle.yaml`。
+- 编辑 `ink case approve CASE-LEARN-NNNN` 后才进入长期 case 闭环。
