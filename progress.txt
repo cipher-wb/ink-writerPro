@@ -13,6 +13,7 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
 - LLM 响应统一用 _extract_json* helper：先 try fence ```json ... ```，再退化为 raw "{ ... }" / "[ ... ]" 子串解析；失败抛 ValueError 让 except 捕获重试
 - 跨 checker 复用 tests/checkers/conftest.py 的 FakeLLMClient（queue + calls + .messages.create stub），不要在 sub-area 新建 fixture
 - agent spec 落 ink-writer/agents/<name>-checker.md，frontmatter 含 name/description/tools=Read/model=inherit；包含来源 spec/PRD、Python 调用示例、字段表、阻断行为、与下游衔接段
+- 数据爬虫脚本：scripts/<area>/__init__.py（空）+ fetch_*.py（UA 含联系邮箱、_check_robots_txt、RATE_LIMIT_SECONDS=1.0、_load_progress/_save_progress_one 续爬、_fetch_*_page → list[(rank, id)]、_fetch_one_* max_retries 失败 return None、enable_windows_utf8_stdio()）；测试用 autouse fixture monkeypatch OUTPUT_PATH/PROGRESS_PATH 到 tmp_path 隔离仓库 data/
 
 ---
 
@@ -91,4 +92,42 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - 词典缺失采用保守阻断（score=0.0 + blocked=True + notes 含 'blacklist_missing'），与 LLM checker 的 'checker_failed' 同源思路：拒绝在没有真相源的情况下放行
   - per_name_scores 是 list of dict（不是 dict of list）：每条 `{role, name, score, hit_type}`，便于 evidence_chain 渲染表格；entry 缺 name / 非 dict 跳过不计入 mean
   - 名字取 `name[0]` 作首字、`name[-1]` 作末字，2 字 / 3 字 / 单字（首末同字）一致处理；不要按字符串完整切分
+---
+
+## 2026-04-25 - US-006
+- 实现 protagonist-motive-checker（M4 ink-init 策划期主角动机检查 spec §3.4）
+- Files changed:
+  - ink_writer/checkers/protagonist_motive/__init__.py（导出 ProtagonistMotiveReport / check_protagonist_motive）
+  - ink_writer/checkers/protagonist_motive/models.py（ProtagonistMotiveReport：score / blocked / dim_scores (3 dim) / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/protagonist_motive/checker.py（check_protagonist_motive + _build_prompt + _extract_json_object + _normalize_dim_scores；score=mean(3 dim)，block_threshold=0.65；description strip 后 < 20 字直接 blocked + notes='description_too_short' 不调 LLM；LLM 失败重试 max_retries 后 blocked + notes='checker_failed: <err>'）
+  - ink_writer/checkers/protagonist_motive/prompts/check.txt（{description} 占位符；要求 JSON 对象输出 3 个 dim + notes）
+  - tests/checkers/protagonist_motive/__init__.py（新增）
+  - tests/checkers/protagonist_motive/test_checker.py（4 用例：test_high_score_passes / test_low_score_blocks / test_short_description_blocks / test_llm_failure_blocks）
+  - ink-writer/agents/protagonist-motive-checker.md（agent spec：来源 spec/PRD + Python 调用 + 3 维度说明 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/protagonist_motive/ 4 passed；tests/checkers/ 整体 30 passed（M3 + M4 genre_novelty/golden_finger_spec/naming_style 全向后兼容）；ruff lint 通过
+- **Learnings for future iterations:**
+  - protagonist_motive 与 golden_finger_spec 形态完全同构（LLM JSON 对象 + dim_scores mean），唯一差别是 3 dim 而不是 4 dim 以及 _DIMENSIONS 常量；抄模板时只改 (a) `_DIMENSIONS` tuple、(b) prompt 中的维度描述、(c) GOOD_DESCRIPTION 测试样例
+  - 3 dim 的 score = sum(dim_scores.values()) / len(_DIMENSIONS)，写成 `len(_DIMENSIONS)` 而非硬编码 3 / 4，方便未来再加新 dim 时只动一处常量
+  - test_low_score_blocks 用 `pytest.approx(0.4666666, abs=1e-3)` 处理 3 dim 平均的浮点不整除（4 dim 时是整除 0.45 不需要 abs）
+  - prompt 占位符 .format() 转义：JSON 例子中的所有 `{` `}` 都要写成 `{{` `}}`，只有真实 placeholder（这里只有 `{description}`）保持单层；多了就 KeyError
+---
+
+## 2026-04-25 - US-007
+- 实现 起点 top200 爬虫（M4 genre-novelty-checker 数据后端 spec §4.1）
+- Files changed:
+  - scripts/market_intelligence/__init__.py（新增；空）
+  - scripts/market_intelligence/fetch_qidian_top200.py（新增；UA 含 educational/non-commercial 声明 + insectwb@gmail.com；_check_robots_txt 起始检查；RATE_LIMIT_SECONDS=1.0 全程节流；_load_progress/_save_progress_one 用 .qidian_top200_progress 续爬；_fetch_rank_page → [(rank, book_id), ...]；_fetch_one_book max_retries=3 返回 dict|None；CLI --target/--max-retries + enable_windows_utf8_stdio()）
+  - tests/market_intelligence/__init__.py（新增）
+  - tests/market_intelligence/test_fetch_qidian_top200.py（2 用例：test_fetch_one_book_parses_html / test_fetch_one_book_returns_none_after_retries；fixture monkeypatch OUTPUT_PATH/PROGRESS_PATH 到 tmp_path）
+  - data/market_intelligence/qidian_top200.jsonl（新增；空文件，标 [manual-fallback-needed]）
+  - data/market_intelligence/README.md（新增；schema 文档 + manual-fallback 说明）
+- 测试：tests/market_intelligence/ 2 passed；tests/checker_pipeline/ 144 passed 向后兼容；ruff lint 通过
+- 实跑：起点 /rank/yuepiao/page1/ 返回 HTTP 202 + JavaScript 反爬挑战（probe.js / buid 注入），纯 requests 抓不到榜单；按 PRD 失败路径 commit 空 jsonl + manual-fallback README，US-014 e2e 用 fixture
+- **Learnings for future iterations:**
+  - 起点已部署 JS 反爬挑战（GET 返回 status=202 + 209 字节空 body 仅含 probe.js），requests/curl 拿不到数据；后续要么换 Playwright/Selenium，要么换第三方 API/RSS（PRD 失败路径已设计好兜底）
+  - genre-novelty-checker 已有 `empty top200 → score=1.0 skipped` 分支，空 jsonl 不阻塞 ink-init 策划链路；US-014 e2e 必须用 fixture top200 而非真实文件
+  - 测试用 monkeypatch 重定向 OUTPUT_PATH/PROGRESS_PATH 到 tmp_path autouse fixture 是隔离仓库 data/ 的标准模式（避免 pytest 副作用污染 git status）；新增 scripts/<area>/ 写文件函数的测试都该照此办理
+  - `_fetch_one_book` 重试间隔走指数退避 `RATE_LIMIT_SECONDS * (attempt + 1)`，比固定 1s 更礼貌；reuses `time.sleep` 模块属性方便 monkeypatch
+  - `from datetime import UTC` 是 Python 3.11+ 现代写法（ruff `UP017` 规则）；`datetime.timezone.utc` 已被 `UP017` flag 为 deprecated alias
+  - PRD 验收 "实跑 ≥ 150 / 失败 commit 空 jsonl 标 manual-fallback" 的 OR 路径设计是亮点：让 M4 验收不被外部反爬阻塞；类似数据爬取任务都该照此设计验收
 ---

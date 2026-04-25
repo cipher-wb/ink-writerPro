@@ -149,8 +149,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — 新增 scripts/market_intelligence/{__init__.py, fetch_qidian_top200.py}（UA 含教育/非商业声明 + 联系邮箱、_check_robots_txt 起始检查 disallow + 退出码 1、RATE_LIMIT_SECONDS=1.0 节流、_load_progress / _save_progress_one 用 data/market_intelligence/.qidian_top200_progress 续爬、_fetch_rank_page 抓 1 页榜单、_fetch_one_book 解析 BeautifulSoup 提取 title/author/genre_tags/intro_one_liner/intro_full + max_retries 3 + 失败 return None、输出 jsonl 每行一条 + fetched_at + ensure_ascii=False、CLI argparse 支持 --target/--max-retries + enable_windows_utf8_stdio()）；新增 tests/market_intelligence/{__init__.py, test_fetch_qidian_top200.py} 2 用例（test_fetch_one_book_parses_html mock requests.get 假 HTML 校验所有字段；test_fetch_one_book_returns_none_after_retries mock side_effect RuntimeError 校验 None+重试次数）；fixture _isolate_data_paths monkeypatch 重定向 OUTPUT_PATH/PROGRESS_PATH 到 tmp_path 防止测试落盘到仓库 data/；实跑：起点 /rank/yuepiao/page1/ 返回 HTTP 202 + JS 反爬挑战（probe.js / buid 注入），纯 HTTP 抓不到榜单；按 PRD 失败路径 commit 空 data/market_intelligence/qidian_top200.jsonl + data/market_intelligence/README.md 标 [manual-fallback-needed]，US-014 e2e 用 fixture top200 跑（不阻塞 M4 验收）；ruff 通过；tests/market_intelligence/ 2 passed；checker_pipeline 144 passed 向后兼容"
     },
     {
       "id": "US-008",
