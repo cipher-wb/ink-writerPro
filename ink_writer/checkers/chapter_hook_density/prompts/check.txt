@@ -1,0 +1,26 @@
+你是 ink-writer 的 chapter-hook-density-checker。任务：对当前书"卷大纲骨架"
+（每章一行 summary）逐章评估"章末钩子强度"——本章 summary 是否在结尾留下足够强的
+悬念 / 反转 / 危机 / 信息差，让读者有强烈追读下一章的动机。给出 0.0 ~ 1.0 之间的
+hook_strength（1.0 = 强钩子，反转 / 高危机 / 重大谜底；0.5 = 中等悬念；
+0.0 = 无钩子或仅交代结果）。
+
+# 卷大纲（每行：第 N 章 — summary）
+
+{summaries_text}
+
+# 输出要求
+
+严格输出一段 JSON 数组（不要包裹在 markdown 代码块里），形如：
+
+[
+  {{"chapter_idx": <int>, "hook_strength": <0.0~1.0>, "reason": "<简短中文说明>"}},
+  ...
+]
+
+约束：
+- 数组长度等于上面卷大纲的章节数；chapter_idx 必须与上方 "第 N 章" 的 N 一致。
+- hook_strength 是 0.0 到 1.0 的浮点数；只有结尾出现强反转 / 高危机 / 关键谜底
+  才给 ≥ 0.5（视为 strong 钩子）。
+- 若 summary 仅交代过程或结果、无悬念 / 无新信息差，hook_strength < 0.5。
+- reason ≤ 60 字，说明钩子类型（反转 / 危机 / 谜底 / 信息差 / 无钩子 等）。
+- 不要输出除 JSON 数组之外的其他文本。

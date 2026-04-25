@@ -187,3 +187,22 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - prompt 中的 `chapter_idx` 校验在 LLM 端（"必须与上方第 N 章的 N 一致"）+ Python 端（`int(entry.get("chapter_idx"))` 失败跳过），两道防线降低 LLM 漂移导致的 KeyError；reason 字段类型校验 `isinstance(reason_value, str)` 兜底，否则 LLM 偶尔返回 list 会污染 evidence_chain JSON 序列化
   - 与 US-006 protagonist_motive 的对称提醒：那是 ink-init 阶段单 description 评估（dim_scores 对象），本 US-010 是 ink-plan 阶段多 chapter 评估（per_chapter 数组）；同一 "protagonist 系" 后续可能再加 "protagonist-arc-checker"，命名统一前缀方便 grep
 ---
+
+## 2026-04-25 - US-011
+- 实现 chapter-hook-density-checker（M4 ink-plan 策划期卷骨架钩子密度检查 spec §3.7）
+- Files changed:
+  - ink_writer/checkers/chapter_hook_density/__init__.py（导出 ChapterHookDensityReport / check_chapter_hook_density）
+  - ink_writer/checkers/chapter_hook_density/models.py（ChapterHookDensityReport：score / blocked / per_chapter / strong_count / total_count / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/chapter_hook_density/checker.py（check_chapter_hook_density + _build_prompt + _extract_json_array + _normalize_per_chapter；_STRONG_THRESHOLD=0.5 二值化 strong；score=strong_count/total_count，block_threshold=0.70；空 skeleton 直接 score=0.0+blocked+notes='empty_skeleton' 不调 LLM；LLM 失败重试 max_retries=2 后 score=0.0+blocked+notes='checker_failed: <err>'）
+  - ink_writer/checkers/chapter_hook_density/prompts/check.txt（{summaries_text} 占位符；要求 JSON 数组 [{chapter_idx, hook_strength, reason}]）
+  - tests/checkers/chapter_hook_density/__init__.py（新增）
+  - tests/checkers/chapter_hook_density/test_checker.py（4 用例：test_high_density_passes / test_low_density_blocks / test_empty_skeleton_blocks / test_llm_failure_blocks）
+  - ink-writer/agents/chapter-hook-density-checker.md（agent spec：来源 spec/PRD + Python 调用 + 评分标尺 + 字段表 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/chapter_hook_density/ 4 passed；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 198 passed 向后兼容；ruff 通过
+- **Learnings for future iterations:**
+  - chapter_hook_density 与 protagonist_agency_skeleton 在调用形态上同构（LLM JSON 数组 + per-item 评分），但**聚合方式不同**：本 checker 把每章按 `_STRONG_THRESHOLD=0.5` 二值化为 strong 后取占比，protagonist_agency_skeleton 则取算术平均；策划期"密度类"指标都该走二值化（避免少数高分章节稀释整体钩子稀疏问题），与"程度类"指标（mean）形成对照
+  - 报告同时暴露 `strong_count` + `total_count` 而不仅是 score：evidence_chain 调试 / dry-run 报告渲染时常需要看"4 章里 1 强"这种绝对数，单看 0.25 score 不直观；新增 dataclass 字段比起来后端拼装更省事
+  - per_chapter 每条新增 `strong: bool` 字段把二值化结果固化到结构里，避免下游再 reduce 一次；测试时用 `report.per_chapter[0]["strong"] is True` 校验比 `>= _STRONG_THRESHOLD` 更稳
+  - 抄 protagonist_agency_skeleton 模板时改 5 处即可：(a) `_DEFAULT_BLOCK_THRESHOLD = 0.70`、(b) prompt 主体（"章末钩子强度"代替"主角能动性"）、(c) `hook_strength` 替代 `agency_score` 字段名、(d) 新增 `_STRONG_THRESHOLD=0.5` + `strong` 字段、(e) 聚合公式 `strong_count/total_count` 替代 `mean(...)`
+  - PRD 验收 `输出 4 passed` 非 5 passed（与 US-009 的 5 用例对照）：双层 checker（regex+LLM）需要 5 用例（regex_hit/regex_miss_llm_hit/regex_miss_llm_miss/outline_too_short/empty_keywords），单层 LLM checker 4 用例（high/low/empty/llm_failure）
+---

@@ -239,8 +239,8 @@
         "Typecheck passes"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — 新增 ink_writer/checkers/chapter_hook_density/{__init__,models,checker}.py + prompts/check.txt；ChapterHookDensityReport 含 score/blocked/per_chapter/strong_count/total_count/cases_hit/notes + to_dict()；check_chapter_hook_density LLM 对每章 summary 打 hook_strength 0-1，按 _STRONG_THRESHOLD=0.5 二值化为 strong，score = strong_count/total_count，block_threshold=0.70；空 skeleton 直接 score=0.0+blocked+notes='empty_skeleton' 不调 LLM；LLM 失败重试 max_retries=2 后 score=0.0+blocked+notes='checker_failed: <err>'；per_chapter 全无效条目 → 'checker_failed: no valid per_chapter entries'；hook_strength clamp 到 [0,1]；markdown ``` 自动剥离；tests/checkers/chapter_hook_density/ 4 用例全过（high_density_passes / low_density_blocks / empty_skeleton_blocks / llm_failure_blocks）；checkers + checker_pipeline + planning_review + evidence_chain + market_intelligence 198 passed 向后兼容；ink-writer/agents/chapter-hook-density-checker.md agent spec 落档；ruff 通过"
     },
     {
       "id": "US-012",
