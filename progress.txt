@@ -163,3 +163,30 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **dry-run pass 判定 contract**：chapter outcome==delivered 才算过；planning stage outcome!=blocked 即算过。两者不同别混用。
   - **dashboard 模块导入对 sys.path 不敏感**：`from ink_writer.dashboard import ...` 通过 ink_writer namespace；不要走 ink-writer/dashboard (那个是 React 后端 server，dashboard.server 入口)。两者并存，命名相同但完全无关。
 ---
+
+## 2026-04-25 - US-006 ink dashboard report --week N 周报 CLI
+- 实现：
+  - `ink_writer/dashboard/weekly_report.py`：`_week_range(week_num, year)` 走 `datetime.date.fromisocalendar` (Mon=day1 / Sun=day7) → ISO 字符串 tuple；`generate_weekly_report(*, week_num, year=2026, book=None, base_dir=Path("data"), out_path=None) -> Path` 调 `get_m5_overview` 拼 markdown 写盘（默认 `reports/weekly/<Y>-W<NN>.md`，目录自动 mkdir）；`main(argv)` argparse 入口；`_render_markdown` 含 5 个 H2（## 4 大指标 / ## Layer 4 复发追踪 / ## Layer 5 元规则浮现 / ## Dry-run 状态 / ## 行动项）。
+  - 行动项规则：`pending 元规则 ≥ 1 → "审批 N 条 pending 元规则"`；`m3.recommendation == "switch" → "评估 M3 dry-run 切真"`（m4 同），无触发输出"暂无紧急行动项"。
+  - `ink_writer/dashboard/__init__.py` 加 `cli_main(argv)`：argparse subparsers 注册 `report` 子命令，路由到 `weekly_report.generate_weekly_report`（lazy import 规避 `python -m` 双载警告）；本身签名兼容 `ink dashboard report --week N [--year Y] [--book B] [--base-dir P] [--out PATH]`。
+  - `tests/dashboard/test_weekly_report.py`：3 用例（test_week_range_w17 = ("2026-04-20","2026-04-26") / test_generate_creates_report_file 验 5 段 H2 + 区间 / test_report_includes_action_items 验 counter=10 + delivered×4 → "评估 M3 dry-run 切真" + pending MR-0001 → "审批 1 条"）。
+  - Windows 兼容：`main()` 内 try/except 插 sys.path + `enable_windows_utf8_stdio()`（lint-clean 写法，import 在 main() 内）；所有 `open()` 带 `encoding="utf-8"`。
+- Files changed:
+  - ink_writer/dashboard/weekly_report.py (new)
+  - ink_writer/dashboard/__init__.py
+  - tests/dashboard/test_weekly_report.py (new)
+- 验证：
+  - `pytest tests/dashboard/test_weekly_report.py -v --no-cov` → 3 passed
+  - `pytest tests/dashboard/ tests/case_library/ tests/regression_tracker/ tests/meta_rule_emergence/ tests/evidence_chain/ --no-cov` → 84 passed
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` → **3787 passed / 23 skipped / 0 failed / 3 warnings** (332s)
+  - `python3 -m ink_writer.dashboard.weekly_report --week 17 --year 2026 --base-dir /tmp/empty --out /tmp/r.md` → exit 0 + 5 段 H2 markdown
+  - `python3 -c "from ink_writer.dashboard import cli_main; cli_main(['report','--week','17','--year','2026','--base-dir','/tmp/empty','--out','/tmp/r2.md'])"` → exit 0
+  - `ruff check ink_writer/dashboard/` → All checks passed
+- Learnings for future iterations:
+  - **ISO week 算法直接走 stdlib**：`datetime.date.fromisocalendar(year, week, day)`，day=1 周一 / day=7 周日。不用第三方 `isoweek` 库；W17/2026 = (2026-04-20, 2026-04-26) 是断言锚点。
+  - **`cli_main` lazy 子命令导入**：`__init__.py` 顶层不要 `from .weekly_report import generate_weekly_report`；改成在 `cli_main()` 分支内 `from ink_writer.dashboard.weekly_report import ...`。原因：`python -m ink_writer.dashboard.weekly_report` 时包初始化先 import 模块、随后 runpy 再执行，会触发 `RuntimeWarning: found in sys.modules after import of package`。下游 US-007/US-008 加新子命令复用此模式。
+  - **Windows 引导写在 `main()` 内、不写顶层**：`try: import os/sys → 插 ../../ink-writer/scripts → from runtime_compat import enable_windows_utf8_stdio` 全部塞进 `main()` 第一段 try。这样 ruff 不报 E402（顶层 import 不被打断），又保留了 Windows 用户 `python -m ink_writer.dashboard.weekly_report` 的 stdio bootstrap。`regression_tracker/__main__.py` 顶层 sys.path 写法是历史遗留（ruff 漏检），新模块走这个方式。
+  - **行动项触发 contract**：spec 行动项 H2 必须**永远存在**（即使空也写"暂无紧急行动项"）；触发条件用阈值字符串硬匹配（"评估 M3 dry-run 切真" / "审批 N 条 pending 元规则"）—— US-013 e2e 测试会按字符串断言，不要改文案。
+  - **`out_path.parent.mkdir(parents=True, exist_ok=True)`**：默认输出 `reports/weekly/<Y>-W<NN>.md` 时父目录可能不存在，必须先 mkdir；测试 fixture 用 `tmp_path / "reports" / "weekly" / "..."` 也要靠这一行才能写盘。
+  - **报告 markdown 不读 case 内容、只读 overview JSON**：`generate_weekly_report` 整体 = 调一次 `get_m5_overview(base_dir, case_store)` + 字符串渲染。下游周报扩展（按 book 过滤、加趋势图）只动 `_render_markdown`，不要再回头重算指标。
+---
