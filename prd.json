@@ -104,8 +104,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — 新增 ink_writer/checkers/naming_style/{__init__,models,checker}.py（纯规则无 LLM 无 prompts/）；NamingStyleReport 含 score/blocked/per_name_scores/cases_hit/notes；按优先级短路打分：exact (0.0/exact) > 双字模式 首字+末字均命中 (0.4/double_char) > 单字模式 首字或末字命中 (0.7/single_char) > clean (1.0/clean)；多名取 mean，block_threshold=0.70；空名单→1.0/no_names 不读词典；词典缺失/JSON 解析失败→0.0/blocked/notes='blacklist_missing: <path> (<ErrClass>)' 保守阻断；entry name 缺失/非 dict 跳过；blacklist_path 默认 data/market_intelligence/llm_naming_blacklist.json；tests/checkers/naming_style/ 6 用例全过；ink-writer/agents/naming-style-checker.md agent spec 落档；ruff 通过"
     },
     {
       "id": "US-006",

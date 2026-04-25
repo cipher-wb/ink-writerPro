@@ -9,6 +9,7 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
 - 阶段性输出（ink-init / ink-plan）合并到同一 JSON 时按 stage 名去重再追加，overall_passed 用 all() 聚合
 - pytest.ini testpaths 是单行（极长但不能换行），新加测试目录追加到末尾
 - 新 checker 完全照 M3 protagonist_agency 模式：`ink_writer/checkers/<name>/{__init__,models,checker}.py + prompts/check.txt`，dataclass 含 score/blocked/cases_hit/notes + to_dict()，cases_hit 默认 []（由编排层注入），LLM/JSON 失败统一降级为 score=0.0/blocked=True/notes 含 "checker_failed"
+- 纯规则 checker（无 LLM）跳过 prompts/ 目录与 mock_llm_client；保守阻断契约：依赖文件缺失 → score=0.0 + blocked=True + notes 含 'missing'，让 planning_review 拿到失败信号
 - LLM 响应统一用 _extract_json* helper：先 try fence ```json ... ```，再退化为 raw "{ ... }" / "[ ... ]" 子串解析；失败抛 ValueError 让 except 捕获重试
 - 跨 checker 复用 tests/checkers/conftest.py 的 FakeLLMClient（queue + calls + .messages.create stub），不要在 sub-area 新建 fixture
 - agent spec 落 ink-writer/agents/<name>-checker.md，frontmatter 含 name/description/tools=Read/model=inherit；包含来源 spec/PRD、Python 调用示例、字段表、阻断行为、与下游衔接段
@@ -71,4 +72,23 @@ Started: 2026年 4月25日 星期六 15时15分45秒 CST
   - dim_scores 用 `dict[str, float]`（而非 list of dict），便于下游 evidence_chain 直接渲染 `{"clarity": 0.9, ...}`，不需要再按 dim 名查找
   - notes 字段双重用途：normal path 是 LLM 给的中文简短说明（"边界模糊"），异常 path 是固定前缀（"description_too_short" / "checker_failed: <err>"）；下游过滤时用 `startswith("checker_failed:")` 而非 `==`
   - 抄 genre_novelty 时记得改 `_DEFAULT_BLOCK_THRESHOLD = 0.65`、`_DEFAULT_MAX_TOKENS = 1024`（而非 2048，因输出是单 JSON 对象较短）
+---
+
+## 2026-04-25 - US-005
+- 实现 naming-style-checker（M4 ink-init 策划期纯规则角色起名风格 spec §3.3）
+- Files changed:
+  - ink_writer/checkers/naming_style/__init__.py（导出 NamingStyleReport / check_naming_style）
+  - ink_writer/checkers/naming_style/models.py（NamingStyleReport：score / blocked / per_name_scores / cases_hit / notes + to_dict()）
+  - ink_writer/checkers/naming_style/checker.py（无 prompts/；按优先级短路打分 exact > double_char > single_char > clean；多名 mean；block_threshold=0.70；空名单→1.0/no_names；词典缺失→0.0/blocked/'blacklist_missing'）
+  - tests/checkers/naming_style/__init__.py（新增）
+  - tests/checkers/naming_style/test_checker.py（6 用例：test_exact_match_zero / test_double_char_pattern / test_single_char_pattern / test_clean_name_passes / test_multiple_names_average / test_blacklist_missing_blocks；用 tmp_path 写假词典 fixture，无 mock_llm_client）
+  - ink-writer/agents/naming-style-checker.md（agent spec：来源 spec/PRD + Python 调用 + 评分规则表 + 词典格式 + 阻断行为 + 与下游衔接）
+- 测试：tests/checkers/naming_style/ 6 passed；tests/checkers/ 整体 26 passed（M3 + M4 genre_novelty + golden_finger_spec 全向后兼容）；ruff lint 通过
+- **Learnings for future iterations:**
+  - 纯规则 checker 不要新建 prompts/ 目录、不要 import _extract_json_*，与 LLM checker 形态明显区分；测试 fixture 写假 JSON 文件即可
+  - "双字模式" 解读为 **首字 first_char 列表 AND 末字 second_char 列表均命中**，非"任意两个连续字"；"单字模式" 是 **首字或末字其一命中**；按 exact > double > single > clean 短路顺序判定，不要做布尔组合
+  - 词典默认路径硬编码 `Path('data/market_intelligence/llm_naming_blacklist.json')`：`blacklist_path=None` 走默认，`blacklist_path=tmp_path/...` 走自定义；测试时务必传自定义 path 避免依赖 US-008 词典文件
+  - 词典缺失采用保守阻断（score=0.0 + blocked=True + notes 含 'blacklist_missing'），与 LLM checker 的 'checker_failed' 同源思路：拒绝在没有真相源的情况下放行
+  - per_name_scores 是 list of dict（不是 dict of list）：每条 `{role, name, score, hit_type}`，便于 evidence_chain 渲染表格；entry 缺 name / 非 dict 跳过不计入 mean
+  - 名字取 `name[0]` 作首字、`name[-1]` 作末字，2 字 / 3 字 / 单字（首末同字）一致处理；不要按字符串完整切分
 ---
