@@ -194,8 +194,8 @@
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "2026-04-25 完成 — 新增 ink_writer/checkers/golden_finger_timing/{__init__,models,checker}.py + prompts/check.txt；GoldenFingerTimingReport 含 score/blocked/regex_match/llm_match/matched_chapter/cases_hit/notes + to_dict()；check_golden_finger_timing 流水线：(1) outline < 3 章 → blocked + notes='outline_too_short: <n> < 3' (2) 空 keywords → blocked + notes='empty_keywords' (3) regex 用 re.escape OR pattern 扫前 3 章 summary 命中即直通 score=1.0 不调 LLM，matched_chapter 取首个命中 entry 的 chapter_idx (4) regex miss 调 LLM (max_retries=2)，matched=True+chapter ∈ {1,2,3} → score=1.0/llm_match=True；matched=False → score=0.0/blocked/llm_match=False (5) LLM 失败重试后 → score=0.0+blocked+notes='checker_failed: <err>'；硬阻断 block_threshold=1.0；markdown ``` 自动剥离；tests/checkers/golden_finger_timing/ 5 用例全过（regex_hit_passes / regex_miss_llm_hit_passes / regex_miss_llm_miss_blocks / outline_too_short_blocks / empty_keywords_blocks）；checkers/checker_pipeline/planning_review/evidence_chain/market_intelligence 190 passed 向后兼容；ink-writer/agents/golden-finger-timing-checker.md agent spec 落档；ruff 通过"
     },
     {
       "id": "US-010",
