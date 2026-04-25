@@ -160,16 +160,46 @@ def test_approve_idempotent(
     assert rc1 == 0
     capsys.readouterr()
 
-    # Second approve must NOT re-approve — proposal is no longer pending.
+    # Snapshot proposal yaml mtime + bytes (review §二 P1#7：真幂等不应重写盘)
+    proposal_path = library_root / "meta_rules" / "MR-0007.yaml"
+    mtime_before = proposal_path.stat().st_mtime
+    bytes_before = proposal_path.read_bytes()
+
+    # Second approve on already-approved must be true idempotent: rc=0, no yaml mutation.
     rc2 = cmd_approve(library_root=library_root, proposal_id="MR-0007")
-    assert rc2 == 1
-    err = capsys.readouterr().err
-    assert "not pending" in err
+    assert rc2 == 0
+    captured = capsys.readouterr()
+    assert "already approved" in captured.out
+    assert captured.err == ""
+
+    # yaml file 未被改写
+    assert proposal_path.stat().st_mtime == mtime_before
+    assert proposal_path.read_bytes() == bytes_before
 
     # Cases still carry the meta_rule_id from the first approve.
     for cid in case_ids:
         case = store.load(cid)
         assert case.meta_rule_id == "MR-0007"
+
+
+def test_approve_rejected_proposal_returns_error(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """approve 一个 rejected proposal 应当 rc=1（review §二 P1#7：跨状态拒绝）。"""
+    library_root = tmp_path / "lib"
+    library_root.mkdir()
+    _write_proposal(
+        library_root,
+        proposal_id="MR-0099",
+        status="rejected",
+        covered_cases=["CASE-Z"],
+    )
+
+    rc = cmd_approve(library_root=library_root, proposal_id="MR-0099")
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "not pending" in err
+    assert "rejected" in err
 
 
 def test_reject(

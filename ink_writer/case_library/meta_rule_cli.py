@@ -91,17 +91,31 @@ def cmd_list(*, library_root: Path, status: str | None = None) -> int:
 
 
 def cmd_approve(*, library_root: Path, proposal_id: str) -> int:
-    """Stamp meta_rule_id on covered cases + flip proposal to approved."""
+    """Stamp meta_rule_id on covered cases + flip proposal to approved.
+
+    幂等语义（review §二 P1#7 修复）：
+      * status=pending → 正常 approve，rc=0。
+      * status=approved → 真幂等返回 rc=0（不重写 yaml、不再调 store.save），
+        批量脚本网络重试时不会刷日志噪声。
+      * status=rejected → rc=1（拒绝跨状态 approve）。
+    """
     try:
         path, data = _load_proposal(library_root, proposal_id)
     except FileNotFoundError as exc:
         print(str(exc), file=sys.stderr)
         return 2
 
-    if data.get("status") != "pending":
+    current_status = data.get("status")
+    if current_status == "approved":
+        # 真幂等：已 approved 直接返回成功，不重新写盘
+        print(
+            f"proposal {proposal_id} already approved; no-op (idempotent)",
+        )
+        return 0
+    if current_status != "pending":
         print(
             f"proposal {proposal_id} is not pending (status="
-            f"{data.get('status')}); refusing to approve",
+            f"{current_status}); refusing to approve",
             file=sys.stderr,
         )
         return 1
