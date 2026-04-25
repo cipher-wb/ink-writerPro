@@ -11,6 +11,8 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
 - `python3` 而非 `python`（macOS 默认 alias）
 - ruff 默认开 UP017：`from datetime import timezone; timezone.utc` 必须改为 `from datetime import UTC; UTC`（Py 3.11+ alias）
 - M3 期 evidence_chain 写盘：默认 base_dir 是 `Path("data")`；测试传 tmp_path 隔离
+- LLM client stub 标准模式：`FakeLLMClient(responders=[...])` + `.messages.create(**kwargs).content[0].text`；FIFO 队列，超出列表时复用最后一个；调用 kwargs 记到 `.calls` 便于断言 prompt 内容（参考 `tests/writer_self_check/conftest.py`）
+- prompt 模板中 JSON schema 示例的 `{` `}` 必须写成 `{{` `}}`，否则 `.format()` 会爆 KeyError
 
 ## [2026-04-25 11:35] - US-001
 - 实现 `config/checker-thresholds.yaml`（8 段：writer_self_check / reader_pull / sensory_immersion / high_point / conflict_skeleton / protagonist_agency / rewrite_loop / dry_run）
@@ -40,4 +42,21 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - `produced_at=""` 在 to_dict 时回退到 `_utc_now_iso()`（避免每次 dataclass 构造都拍时间戳，便于测试）
   - `EvidenceChainMissingError(RuntimeError)` 而非 FileNotFoundError，让 ink-write 能精确捕获该业务异常
 - Next: US-003 writer-self-check agent
+---
+
+## [2026-04-25 12:10] - US-003
+- 实现 `ink_writer/writer_self_check/__init__.py`（导出 `ComplianceReport` + `writer_self_check`）
+- 新增 `ink_writer/writer_self_check/models.py`：`ComplianceReport(rule_compliance, chunk_borrowing, cases_addressed, cases_violated, raw_scores, overall_passed, notes)` + `to_dict()`
+- 新增 `ink_writer/writer_self_check/prompts/self_check.txt`：含 `{chapter_text}/{injected_rules}/{applicable_cases}` 占位符；要求严格 JSON 输出 `rule_scores`/`case_evaluation`/`notes`
+- 新增 `ink_writer/writer_self_check/checker.py`：`writer_self_check(*, chapter_text, injected_rules, injected_chunks, applicable_cases, book, chapter, llm_client, max_retries=3, model="glm-4.6")`，含 `_extract_json` 容错（markdown fence + 前后文本）、`_coerce_score` clamp [0,1]、失败兜底 `_failed_report`
+- 新增 `ink-writer/agents/writer-self-check.md` agent spec（aligned with reader-pull-checker.md 风格）
+- 新增 `tests/writer_self_check/{__init__,conftest,test_checker}.py`：`FakeLLMClient` stub（兼容 `client.messages.create(...).content[0].text` + 多次 queue + 调用记录）+ 7 用例全绿
+- 验证：tests/writer_self_check 7 passed；tests/audit/test_cli_entries_utf8_stdio.py + tests/core/test_safe_symlink.py 20 passed；ruff 修后无错（isort I001 自动修）
+- **Learnings for future iterations:**
+  - LLM client stub 模式：`FakeLLMClient(responders=[...])` 内含 `_FakeMessages` dataclass 暴露 `.create(**kwargs)`，按 FIFO 返回；超出列表时复用最后一个；每次 create 记录 kwargs 到 `.calls` 便于断言 prompt 内容
+  - `noqa: ARG001` 用于 keyword-only 但当前未使用的参数（`book`/`chapter`/`injected_chunks`），保契约前向兼容
+  - prompt 模板中 `{` `}` 在 JSON schema 示例处需写成 `{{` `}}`，否则 `.format()` 会爆 KeyError
+  - 失败兜底必须把 `applicable_cases` 全部塞进 `cases_violated`，并在 `raw_scores` 用 `{"missing": [全 rule_ids]}` 标记，便于 evidence_chain 审计
+  - ruff isort 默认会把 first-party (`ink_writer.*`) 排在 third-party (`tests.*`) 前面 — 不要手写 import 顺序，让 ruff --fix 处理
+- Next: US-004 conflict-skeleton-checker（章节级 LLM checker，结构同此 agent）
 ---
