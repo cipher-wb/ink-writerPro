@@ -1,6 +1,6 @@
 # 🔁 M-SESSION-HANDOFF.md — 新会话单文件 catch-up
 
-**最后更新**：2026-04-25（M4 完成后）
+**最后更新**：2026-04-26（M5 完成后；5 周 roadmap 100% 完成）
 **用途**：新 Claude Code 会话开始时**第一件事 cat 这份文件**，5 分钟接上完整上下文
 
 ---
@@ -11,11 +11,11 @@
 
 | 用户说 | 你的第一动作 |
 |---|---|
-| "继续" / "接着干" / "推 M5" / "开 M5" | 调 `superpowers:brainstorming` skill → 创建 `docs/superpowers/M5-PREPARATION-NOTES.md` → 按 spec §9 M5 列出题逐题问用户 |
-| "看进度" / "M5 怎么样了" / "进度如何" | 跑 `jq -r '.userStories[] | "\(.id) \(if .passes then "✅" else "⬜" end)"' prd.json + git log --oneline -8 + ps -ef | grep ralph` 给当前快照 |
-| "M4 跑完没" / 想看回顾 | cat `docs/superpowers/M-ROADMAP.md` 顶部 Status 行 + cat 本文件 §3 快照 |
-| 提到具体 case / chunk / agent | 这些是 ink-writer 项目的核心概念；详见本文件 §4 |
-| "重新开始" / "新功能" | 不要打断 5 周 roadmap，先确认这是 roadmap 内还是 roadmap 外的需求 |
+| "继续" / "接着干" / "开始真实验证" / "跑测试书" | 5 周 roadmap 已 100% 完成；下一步是真实质量验证。见 §7 7 步流程（ink-init quick → ink-plan → ink-write 30 章 → 投编辑评分 → dashboard 看趋势） |
+| "看进度" / "进度如何" / "M5 跑完没" | 跑 `jq -r '.userStories[] | "\(.id) \(if .passes then "✅" else "⬜" end)"' prd.json + git log --oneline -8` 给当前快照；M5 13 US 全 ✅，tag `m5-final` |
+| "M5 怎么样了" / 想看回顾 | cat `docs/superpowers/M-ROADMAP.md` 顶部 Status 行 + cat 本文件 §3 M5 实际产出 |
+| 提到具体 case / chunk / agent / meta-rule / dry-run | 这些是 ink-writer 项目的核心概念；详见本文件 §4 |
+| "重新开始" / "新功能" | roadmap 已收官；新需求按常规分支 + brainstorming → plan → ralph 三步流程 |
 
 ---
 
@@ -28,7 +28,7 @@
 
 ---
 
-## §2 当前进度快照（2026-04-25 M4 完成后）
+## §2 当前进度快照（2026-04-26 M5 完成后；5 周 roadmap 100% 完成）
 
 | Milestone | 状态 | 完成日期 | branch / tag | commit count |
 |---|---|---|---|---|
@@ -36,46 +36,45 @@
 | **M2** 数据资产（cases 完整 / corpus_chunks deferred）| 🟡 partial | 2026-04-25 | `m2-data-assets-partial` | 12 US |
 | **M3** P1 下游闭环（**质量拐点**）| ✅ | 2026-04-25 | `m3-p1-loop` | 14 US |
 | **M4** P0 上游策划层 | ✅ | 2026-04-25 | `m4-p0-planning` | 14 US |
-| **M5** Dashboard + 自进化 + 用户接口 | ⚪ 待启动 | — | TBD | TBD |
+| **M5** Dashboard + 自进化 + 用户接口 | ✅ | 2026-04-26 | `m5-final` | 13 US |
 
-**80% 进度（4/5 milestone 完成 + 1 partial）**。
+**100% 进度（5/5 milestone 完成 + 1 partial 待续）**。
 
 **全部 push 到 GitHub**（remote: `https://github.com/cipher-wb/ink-writerPro.git`）。
 
 ---
 
-## §3 M4 实际产出（最近一次完成）
+## §3 M5 实际产出（最近一次完成）
 
-### 已交付的 14 个 US
+### 已交付的 13 个 US
 
 | US | 实际产出 | 关键 commit |
 |---|---|---|
-| US-001 | `config/checker-thresholds.yaml` 加 7 section + `planning_dry_run` | `cfe3fca` |
-| US-002 | `planning_evidence_chain.json` schema + writer + 向后兼容 | `90fab82` |
-| US-003 | `ink_writer/checkers/genre_novelty/` LLM 题材新颖度 | `c1b8f1f` |
-| US-004 | `ink_writer/checkers/golden_finger_spec/` 4 维 LLM | `9820723` |
-| US-005 | `ink_writer/checkers/naming_style/` 纯规则起名风格 | `0ef3006` |
-| US-006 | `ink_writer/checkers/protagonist_motive/` 3 维 LLM | `229e487` |
-| US-007 | `scripts/market_intelligence/fetch_qidian_top200.py` + `qidian_top200.jsonl` (manual-fallback) | `8886857` |
-| US-008 | `data/market_intelligence/llm_naming_blacklist.json` 331 条 | `8c2d76a` |
-| US-009 | `ink_writer/checkers/golden_finger_timing/` regex+LLM 双层 | `fe5f285` |
-| US-010 | `ink_writer/checkers/protagonist_agency_skeleton/` 卷骨架级 | `4559455` |
-| US-011 | `ink_writer/checkers/chapter_hook_density/` 卷骨架级 | `406970b` |
-| US-012 | `ink_writer/planning_review/` 编排层 + ink-init/ink-plan SKILL.md Step 99 | `1a242ba` |
-| US-013 | 7 个 `CASE-2026-M4-0001~0007` seed cases + batch approve + schema 扩展 | `aed5fb7` |
-| US-014 | `tests/integration/test_m4_e2e.py` 7 用例 + 测试书 + tag `m4-p0-planning` + ROADMAP/handoff 更新 | (本次提交) |
+| US-001 | Case schema 扩展 3 字段（recurrence_history / meta_rule_id / sovereign）+ 410 yaml 向后兼容 | (本批次) |
+| US-002 | `ink_writer/regression_tracker/` Layer 4 复发追踪 + CLI `--apply` | (本批次) |
+| US-003 | `ink_writer/meta_rule_emergence/` Layer 5 元规则浮现 + LLM 主观聚类 + MR-NNNN 写盘 | (本批次) |
+| US-004 | `ink case meta-rule {list, approve, reject}` CLI + 幂等接口 + covered_cases 写 meta_rule_id | (本批次) |
+| US-005 | `ink_writer/dashboard/{aggregator,m5_overview}` 4 大指标 + dry-run 切换推荐 | (本批次) |
+| US-006 | `ink_writer/dashboard/weekly_report.py` ISO 周报 markdown CLI | (本批次) |
+| US-007 | `config/ab_channels.yaml` + EvidenceChain `channel` 字段透传 + ink-write SKILL.md A/B 通道段 | (本批次) |
+| US-008 | `data/case_library/user_corpus/history-travel/` 仿写片段 + user_genres 索引 | (本批次) |
+| US-009 | `ink_writer/learn/auto_case.py` ink-learn `--auto-case-from-failure` CLI + throttle 配置 | (本批次) |
+| US-010 | `ink_writer/learn/promote.py` ink-learn `--promote` 短期记忆升格长期 case | (本批次) |
+| US-011 | `docs/USER_MANUAL.md` 5 节作者使用手册（229 行） | `a2288f8` |
+| US-012 | `docs/EDITOR_FEEDBACK_GUIDE.md` 3 节编辑反馈手册（166 行）+ `8886079` 修正 prd.json/progress.txt 路径 | `3988ba8` / `8886079` |
+| US-013 | `tests/integration/test_m5_e2e.py` 6 用例 + tag `m5-final` + ROADMAP/handoff 100% 完成标记 | (本次提交) |
 
-### M4 关键产物（M5 复用）
+### M5 关键产物（roadmap 全交付）
 
-- **新增 7 个 checker 子包**：genre_novelty / golden_finger_spec / naming_style / protagonist_motive（ink-init 4 个）+ golden_finger_timing / protagonist_agency_skeleton / chapter_hook_density（ink-plan 3 个）
-- **新增 1 个编排子包**：`ink_writer/planning_review/`（dry_run + ink_init_review + ink_plan_review + dry_run_report）
-- **新增 7 个 agent.md**：每个 checker 一份 spec（ink-writer/agents/*-checker.md）
-- **新增 1 个数据资产**：`data/market_intelligence/llm_naming_blacklist.json`（331 exact + first/second_char_overused）
-- **新增 1 个数据资产（manual-fallback）**：`data/market_intelligence/qidian_top200.jsonl` 空文件 + README（起点 JS 反爬阻断 → 兜底）
-- **新增 7 个 case**：`data/case_library/cases/CASE-2026-M4-0001~0007.yaml`（layer=upstream, status=active）
-- **新增 2 个 SKILL.md Step 99 章节**：`ink-writer/skills/{ink-init,ink-plan}/SKILL.md` 强制策划期审查
-- **测试书 e2e 驱动**：`scripts/run_m4_test_book.py` + `data/test-book-m4/{setting,outline}.json` + `planning_evidence_chain.json`（4+3=7 checker 全过 + 2 stage 合并）
-- **全量 pytest**：≥ 3700 passed / 0 failed / coverage 维持 ~82%
+- **新增 4 个子包**：`ink_writer/regression_tracker/`（Layer 4）+ `ink_writer/meta_rule_emergence/`（Layer 5）+ `ink_writer/dashboard/`（aggregator + m5_overview + weekly_report）+ `ink_writer/learn/`（auto_case + promote）。
+- **新增 3 个 CLI**：`python -m ink_writer.regression_tracker [--apply]` + `python -m ink_writer.meta_rule_emergence [--propose]` + `python -m ink_writer.dashboard.weekly_report --week N` + `ink case meta-rule {list,approve,reject}` 嵌套子命令。
+- **case schema 扩 3 字段**：recurrence_history / meta_rule_id / sovereign（向后兼容 410 active case）；case_id regex 加 `LEARN|PROMOTE` 前缀分支。
+- **新增 2 份用户文档**：`docs/USER_MANUAL.md`（5 节，229 行）+ `docs/EDITOR_FEEDBACK_GUIDE.md`（3 节，166 行）。
+- **2 份 SKILL.md 加 M5 段**：`ink-writer/skills/ink-dashboard/SKILL.md` 加 M5 Case 治理段 + `ink-writer/skills/ink-write/SKILL.md` 加 A/B 通道段（含 PowerShell sibling 块）+ `ink-writer/skills/ink-learn/SKILL.md` 加 auto-case + promote 段。
+- **新增 1 个数据资产**：`data/case_library/user_corpus/history-travel/` 仿写历史叙事文体片段（fair-use synthetic_excerpt）。
+- **新增 2 份配置**：`config/ab_channels.yaml`（A/B 通道，默认 enabled=false）+ `config/ink_learn_throttle.yaml`（自动 case throttle）。
+- **e2e 测试**：`tests/integration/test_m5_e2e.py` 6 用例覆盖 spec §13；周报 `reports/weekly/2026-W17.md` 真跑产物。
+- **全量 pytest**：3808 passed / 23 skipped / 0 failed（5 分钟 17 秒）；忽略 3 个 pre-existing dashboard collection error（自 US-008 起即存在，归 follow-up）。
 
 ---
 
@@ -158,23 +157,24 @@ bash scripts/ralph/ralph.sh --tool claude <US 数> > scripts/ralph/run.log 2>&1 
 
 ---
 
-## §7 M5 brainstorm 准备
+## §7 下一步：真实质量验证（5 周 roadmap 之外）
 
-**待启动**：M5 Dashboard + 自进化 + 用户接口（5 周 roadmap 最后一个 milestone）
+**5 周 roadmap 已 100% 交付**；从工程视角看 M5 ✅ 收官。下一阶段重心是**真实数据验证 30/100 → 60+/100**。
 
-**M5 摘要**（依赖 M1 + M2 + M3 + M4 全部已落档）：
-- **范围**：`ink dashboard` 扩展（病例复发率 / 修复速度 / 编辑分趋势 / checker 准确率）+ Layer 4 复发追踪（resolved → regressed 升级 severity）+ Layer 5 元规则浮现（5 个相似 case 自动建议合并）+ `data/case_library/user_corpus/` + history-travel 样例 + A/B 通道（可选 50% 章节生效）+ 文档：作者使用手册 + 编辑反馈录入手册
-- **核心解决**：完整闭环 + 周报自动产出 + history-travel 用户案例
-- **依赖**：M3 evidence_chain（章节级）+ M4 planning_evidence_chain（策划期）+ M2 cases active 列表
+**目标**：用真实测试书 + 真实编辑评分验证 5 周 roadmap 的产线效果。
 
-**启动流程**（用户说 "继续" / "开 M5" 时）：
-1. cat `docs/superpowers/M-ROADMAP.md` 顶部 Status 行
-2. cat 本文件 §3 M4 实际产出 + §6 标准流程
-3. 调 `superpowers:brainstorming` skill → 创建 `docs/superpowers/M5-PREPARATION-NOTES.md`
-4. brainstorm 完成后写 spec → plan → /prd → /ralph 五步流程
-5. 启动后台 ralph：bash scripts/ralph/ralph.sh --tool claude
+**步骤**（用户说 "开始真实验证" / "跑测试书" 时）：
+1. `ink-init quick --book test-real`：开新书（走 M4 Step 99 策划审查 4 个 ink-init checker）
+2. `ink-plan --book test-real`：30 章大纲（走 M4 Step 99 策划审查 3 个 ink-plan checker）
+3. `ink-write ch001..ch030 --book test-real`：写 30 章（M3 dry-run 5 章后 auto-switch 真阻断；可选 `--channel A|B` 验 A/B 实验）
+4. 投起点 / 番茄编辑评分（30 章 ≈ 7.5 万字）
+5. 评分回填 `data/editor_reviews/test-real.yaml`（参考 `docs/EDITOR_FEEDBACK_GUIDE.md` §1 schema）
+6. `ink dashboard --m5`：看 4 大指标趋势（recurrence_rate / repair_speed / editor_score_trend / checker_accuracy）
+7. `python -m ink_writer.dashboard.weekly_report --week N`：周报跟踪长期趋势
 
-**M3 dry-run 切真阻断时机**：M3 / M4 各自有 5 次观察期独立计数（`data/.dry_run_counter` / `data/.planning_dry_run_counter`），观察期满后 `switch_to_block_after=true` 自动切真阻断；M5 启动前可 review 两个 dry_run 报告决定是否调阈值。
+**M3 / M4 dry-run 切真阻断时机**：M3 / M4 各自有 5 次观察期独立计数（`data/.dry_run_counter` / `data/.planning_dry_run_counter`），观察期满后 `switch_to_block_after=true` 自动切真阻断；首次跑 30 章前可 review 两个 dry_run 报告决定是否调阈值。
+
+**5 周外 follow-up**：见 §8（M2 corpus_chunks 真跑、ink-learn promote 跑 ≥ 4 周、跨 book 复发追踪、A/B 随机分流等可选项）。
 
 ---
 

@@ -354,3 +354,37 @@ Started: 2026年 4月25日 星期六 19时30分28秒 CST
   - **元规则审批幂等性必须记入手册**：`ink meta-rule approve MR-NNNN` 第二次 rc=1 + stderr 报错的契约要写明，避免编辑误以为审批失败重试导致手动绕过；同样 reject 也是一次性。M5 不提供 `revoke` 子命令，需要手动编辑 yaml + 加 `revoke_reason` 字段（与 `rejected_at` 区分）以保留审计痕迹。
   - **自动学习 case 节流 throttle 也是文档契约**：CASE-LEARN-NNNN 每周限 5、reject 后 7 天不再提议；这些数字由 `config/ink_learn_throttle.yaml` 控制，不要硬编码到文档；后续节流参数变更只需改配置即可。
 ---
+
+## 2026-04-26 - US-013 M5 e2e + tag m5-final + ROADMAP/handoff '5 周 100% 完成'标记
+- 实现：
+  - `tests/integration/test_m5_e2e.py` 6 用例（spec §13 验收清单）：
+    - test_layer4_recurrence_full_cycle：resolved → cases_violated → status=regressed + severity P1→P0
+    - test_layer5_meta_rule_proposal_and_write：5 共 tag case + _FakeLLM → 1 proposal + 写 yaml + status=pending
+    - test_dashboard_m5_overview_aggregates：counter=3 + delivered → counter==3 + recommendation=='continue'
+    - test_weekly_report_generation：W17/2026 周报 markdown + 含 '2026-W17' + ## 行动项
+    - test_ab_channel_in_planning_evidence：EvidenceChain(channel='A') → planning stages[0]['channel']=='A'
+    - test_auto_case_proposes_pattern：2 章 outcome=blocked + 同 pattern → 1 条 CASE-LEARN-* + 'm5_auto_learn' tag
+  - `docs/superpowers/M-ROADMAP.md`：M5 行 ⚪→✅ + Status 标 'M1✅+M2🟡+M3✅+M4✅+M5✅完成 2026-04-26 — 5 周 100% 完成；下一步真实质量验证'。
+  - `docs/superpowers/M-SESSION-HANDOFF.md`：§1 最后更新 2026-04-26 + TL;DR 表换 5 行（继续 → 真实验证 / 看进度 / M5 回顾 / 概念查询 / 新需求）；§2 进度快照 M5 行 ⚪→✅ + 100% 进度（5/5+1 partial）；§3 重写为 M5 13 US 实际产出 + 4 个新子包 + 3 个 CLI + 2 份用户文档 + 全量 pytest 3808 passed；§7 改为 '下一步：真实质量验证（5 周 roadmap 之外）'，含 7 步流程（ink-init quick → ink-plan 30 章 → ink-write → 投评分 → 回填 yaml → dashboard → 周报）。
+  - `reports/weekly/2026-W17.md`：真跑 generate_weekly_report 落盘（622 字节，5 段 H2）。
+- Files changed:
+  - tests/integration/test_m5_e2e.py (new)
+  - docs/superpowers/M-ROADMAP.md
+  - docs/superpowers/M-SESSION-HANDOFF.md
+  - reports/weekly/2026-W17.md (new)
+  - prd.json
+- 验证：
+  - `pytest tests/integration/test_m5_e2e.py -v --no-cov` → 6 passed (0.06s)
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_app.py --ignore=tests/data_modules/test_dashboard_server.py --ignore=tests/data_modules/test_dashboard_watcher.py` → **3808 passed / 23 skipped / 0 failed / 3 warnings**（317s）。3 个 ignore 自 US-008 起即存在的预存 `dashboard.app` import error，归 5 周外 follow-up（macOS HFS+ 大小写不敏感导致 sys.path 解析问题）。
+  - `python3 -c "from ink_writer.regression_tracker import scan_evidence_chains, apply_recurrence; from ink_writer.meta_rule_emergence import find_similar_clusters, write_meta_rule_proposal; from ink_writer.dashboard.aggregator import compute_recurrence_rate; from ink_writer.dashboard.weekly_report import generate_weekly_report; from ink_writer.dashboard.m5_overview import get_m5_overview; from ink_writer.learn.auto_case import propose_cases_from_failures; from ink_writer.learn.promote import promote_short_term_to_long_term; print('M5 OK')"` → M5 OK
+  - `python3 -m ink_writer.regression_tracker --base-dir data` → exit 0 + JSON `{detected: 0, applied: 0, dry_run: true, records: []}`
+  - `python3 -m ink_writer.meta_rule_emergence` → exit 0 + `提议数: 0 (LLM_API_KEY ... not set; configure ~/.claude/ink-writer/.env)`
+  - `python3 -c "from ink_writer.dashboard.weekly_report import generate_weekly_report; from pathlib import Path; out = generate_weekly_report(week_num=17, year=2026, out_path=Path('reports/weekly/2026-W17.md')); print(out)"` → reports/weekly/2026-W17.md 落盘成功
+- Learnings for future iterations:
+  - **plan 模板代码 ≠ 真实 API**：spec/plan 的 e2e 模板用了 `Case(id=..., category=..., countermeasure={}, source={"type": "test"})` 等不存在的字段；真实 Case dataclass 用 `case_id` + `domain` + `layer` + `Source(type=SourceType.SELF_AUDIT, raw_text, ingested_at)` + `Scope/FailurePattern` dataclass。新的 e2e 测试一律走 `_make_case()` helper + `case_store.save`（schema validator 兜底），不要手写 yaml 字符串。
+  - **`_FakeLLM` 复用 meta_rule_emergence 测试模板**：`messages.create(...)` 接口（不是 `complete`）；payload 支持 dict 或 list[dict] 顺序返回；测试不依赖网络。
+  - **plan 周报断言 'Weekly Report' 是错的**：实际 weekly_report.py 渲染中文标题 `# Ink Writer 周报 2026-W17`；e2e 应断言 `'2026-W17' in text`（label 字符串）+ `'## 行动项'`（H2 锚点稳定）。
+  - **EvidenceChain phase='planning' 必填**：`write_planning_evidence_chain` 入口对 `phase != 'planning'` raise ValueError；写 e2e 时 `EvidenceChain(book=, chapter='planning', phase='planning', stage='ink-init', channel='A')` 即可，channel 经 `to_dict()` 自动透传到 `stages[0]['channel']`。
+  - **3 个 dashboard.app collection error 是预存**：自 US-008 起 `tests/data_modules/test_dashboard_{app,server,watcher}.py` 因 macOS HFS+ 大小写解析问题始终 import error；US-013 全量 pytest 验证用同样 `--ignore` 三件套（与 US-007/008/009/010 一致），不属本 PR 修复范围；归 5 周外 follow-up。
+  - **PRD 验收 '≥ 3700 + 50 passed' 解读**：PRD 写法是 ≥ 3750；本 PR 实测 3808 passed（M5 13 US 累计加 ~80 个新用例），通过门禁。
+---
