@@ -144,3 +144,18 @@ Started: 2026年 4月25日 星期六 11时30分01秒 CST
   - `polish_fn` 必须接收 `related_chunks=None`（M3 期 chunk_borrowing deferred；spec §3.5 风险 8）；US-007 build_polish_prompt 已在 None 时输出"无相关范文"占位
 - Next: US-009 dry-run 模式控制 + counter + auto-switch（持久化到 `<base_dir>/.dry_run_counter`）
 ---
+
+## [2026-04-25 14:10] - US-009
+- 实现 `ink_writer/rewrite_loop/dry_run.py`：`is_dry_run(cfg, *, base_dir=None)` + `increment_dry_run_counter(*, base_dir=None) -> int` + `read_dry_run_counter(*, base_dir=None) -> int`
+- counter 持久化到 `<base_dir>/.dry_run_counter`，默认 `base_dir=Path("data")`；缺文件/解析失败返 0；increment 自动 mkdir parents
+- `is_dry_run` 三段判定：cfg.dry_run.enabled=False → False；counter ≥ observation_chapters 且 switch_to_block_after=True → False（auto-switch）；其它 True
+- 新增 `tests/rewrite_loop/test_dry_run.py` 3 用例全绿（disabled / enabled_until_threshold（5 章后 auto-switch）/ no_auto_switch）
+- 验证：tests/rewrite_loop/test_dry_run.py 3 passed；regression utf8_stdio + safe_symlink 23 passed；ruff 无错（修了 SIM103 → 改成 `return not (switch_after and counter >= observation)`）
+- **Learnings for future iterations:**
+  - ruff SIM103 会要求把 `if cond: return False; return True` 折叠为 `return not cond` — 写新代码时直接用单行 return 省一道 fix
+  - dry_run 模块全部 `Path | str | None` 入参 + 单一辅助 `_resolve_counter_path`：以后 US-010/US-012 写盘类模块可直接照搬这套 base_dir 解析模式
+  - `cfg.get("dry_run") if isinstance(cfg, dict) else None` 防御：当 cfg 缺 dry_run 段或类型异常时退回 False（不走 KeyError），让 ink-write 在 yaml 残缺时也能安全降级到真阻断
+  - tests fixture 直接用 tmp_path 隔离 counter 持久化，不需要 monkeypatch 全局；每个用例自带干净沙箱
+  - read_counter 返 `max(value, 0)` 容错负数手改 — 文件可被人编辑，不要 trust int(raw) 直返
+- Next: US-010 needs_human_review.jsonl 兜底 + 4 版保留
+---
