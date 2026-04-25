@@ -171,7 +171,9 @@ class TestABPrompts:
         results = ab_prompts.diff_all_agents()
         # v13 US-016：foreshadow-tracker + plotline-tracker 合并删除（24→22）
         # v22 US-005：新增 directness-checker（22→23）
-        assert len(results) == 23
+        # M3 (2026-04-25)：新增 writer-self-check / conflict-skeleton-checker /
+        # protagonist-agency-checker (23→26)
+        assert len(results) == 26
         for r in results:
             assert "agent" in r
             assert "template_refs" in r

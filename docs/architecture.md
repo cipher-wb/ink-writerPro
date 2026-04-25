@@ -34,8 +34,9 @@
 │    resume / learn / dashboard / auto / audit / resolve /    │
 │    macro-review / migrate / 5(弃用桩)                      │
 ├─────────────────────────────────────────────────────────────┤
-│  Agents (23个, v22.0): Context / Writer / Polish / Data     │
-│    + 17 Checkers (v13.2 Logic + v13.7 文笔 + v22 直白)      │
+│  Agents (26个, M3): Context / Writer / Polish / Data        │
+│    + Writer-self-check (M3) + 19 Checkers (含 M3 新 2 个    │
+│    conflict-skeleton + protagonist-agency)                  │
 │    Consistency / Continuity / OOC / Golden-three /          │
 │    Logic / Outline-compliance / Anti-detection /            │
 │    Reader-pull / High-point / Pacing / Proofreading /       │
