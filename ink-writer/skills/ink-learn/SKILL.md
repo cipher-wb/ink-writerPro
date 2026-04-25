@@ -202,3 +202,43 @@ print(f'proposed: {[c.case_id for c in proposed]}')
 - 频次 ≥ `min_pattern_occurrences` (默认 2) 的组合 → 写 `data/case_library/cases/CASE-LEARN-NNNN.yaml`（status=pending、severity=P2、tags 含 `m5_auto_learn`）。
 - 每周硬上限 `max_per_week` (默认 5)；阈值改 `config/ink_learn_throttle.yaml`。
 - 编辑 `ink case approve CASE-LEARN-NNNN` 后才进入长期 case 闭环。
+
+### --promote
+
+短期 `project_memory.json`（ink-learn 模式 A/B/C 的 `patterns` 数组）→ 长期 case 桥。重复 ≥ 3 次的 success/failure 模式回灌为 `CASE-PROMOTE-NNNN.yaml`（pending）。
+
+```bash
+python3 -c "from ink_writer.learn.promote import promote_short_term_to_long_term; \
+from ink_writer.case_library.store import CaseStore; from pathlib import Path; \
+proposed = promote_short_term_to_long_term( \
+    project_memory_path=Path('.ink/<book>/project_memory.json'), \
+    case_store=CaseStore(Path('data/case_library')), \
+    cases_dir=Path('data/case_library/cases'), \
+    min_occurrences=3); \
+print(f'promoted: {[c.case_id for c in proposed]}')"
+```
+
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价）：
+
+```powershell
+python3 -c @"
+from ink_writer.learn.promote import promote_short_term_to_long_term
+from ink_writer.case_library.store import CaseStore
+from pathlib import Path
+proposed = promote_short_term_to_long_term(
+    project_memory_path=Path('.ink/<book>/project_memory.json'),
+    case_store=CaseStore(Path('data/case_library')),
+    cases_dir=Path('data/case_library/cases'),
+    min_occurrences=3)
+print(f'promoted: {[c.case_id for c in proposed]}')
+"@
+```
+
+读法：
+- 读 `.ink/<book>/project_memory.json` 的 `patterns: [{text, kind, count}, ...]`。
+- `count >= min_occurrences` (默认 3) 的模式 → 写 `data/case_library/cases/CASE-PROMOTE-NNNN.yaml`。
+- `kind=failure` → severity=P2；`kind=success`（或其它）→ severity=P3。
+- tags 含 `m5_promote` + `kind`；`source.ingested_from='ink_learn_promote'`。
+- 缺 project_memory.json 时返回空 list 不抛错。
+- 编辑 `ink case approve CASE-PROMOTE-NNNN` 后才进入长期 case 闭环。

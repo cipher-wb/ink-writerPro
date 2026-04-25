@@ -204,8 +204,8 @@
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-25：ink_writer/learn/promote.py + ink_writer/learn/__init__.py 暴露 promote_short_term_to_long_term；读 .ink/<book>/project_memory.json 的 patterns: [{text, kind, count}]；count >= min_occurrences (默认 3) 写 CASE-PROMOTE-NNNN.yaml（pending；failure→P2 / 其它→P3；tags=[m5_promote, kind]；source.ingested_from=ink_learn_promote）；缺 project_memory.json 返回空 list 不抛错；ink-learn SKILL.md 加 --promote 段（含 PowerShell sibling）；4 用例全绿（promotes_high_frequency / skips_below_min / handles_missing / success_kind_assigns_p3）；touched-area pytest 99/99；全量 pytest 3802 passed / 23 skipped / 0 failed（忽略预存 dashboard.app 模块路径冲突的 3 个 collection error，US-008 起即如此）；ruff check 全绿。"
     },
     {
       "id": "US-011",
