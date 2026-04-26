@@ -1,0 +1,24 @@
+[
+  {
+    "novel_idx": 0,
+    "line_start": 2,
+    "line_end": 3,
+    "title_guess": "玄幻无敌流",
+    "title_confidence": 0.7,
+    "genre_guess": ["玄幻", "无敌流"],
+    "score": 65,
+    "score_raw": "65分边缘签约",
+    "score_signal": "explicit_number",
+    "verdict": "borderline",
+    "overall_comment": "开篇信息过密但题材有市场",
+    "comments": [
+      {
+        "dimension": "opening",
+        "severity": "negative",
+        "content": "开篇 200 字内信息过密",
+        "raw_quote": "开篇 200 字内信息过密",
+        "raw_line_range": [2, 3]
+      }
+    ]
+  }
+]

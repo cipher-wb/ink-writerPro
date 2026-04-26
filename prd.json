@@ -108,8 +108,8 @@
         "ruff check scripts/live-review/run_batch.py tests/live_review/test_run_batch.py 无新增错误"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "fixtures 用 BV1AAA/BBB/CCC/DDD/EEE 5 BV (BV1CCC 故意缺 mock 触发失败)。test_b2 在 RED 阶段碰巧也是 returncode=2（subprocess 找不到脚本），GREEN 后改为 ExtractionError 路径返回 1；非 --skip-failed 命中失败时 break 不再处理后续 BV，failures 仍写 _failed.jsonl 后退出。--limit 接受 None / 负值（None 表示全跑，负值由 list 切片自动得空）。脚本失败也会写 _failed.jsonl，方便用户回看 traceback。"
     },
     {
       "id": "US-007",

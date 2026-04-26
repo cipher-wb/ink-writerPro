@@ -1,0 +1,24 @@
+[
+  {
+    "novel_idx": 0,
+    "line_start": 2,
+    "line_end": 3,
+    "title_guess": "末日生存",
+    "title_confidence": 0.75,
+    "genre_guess": ["末日", "生存", "无限流"],
+    "score": 70,
+    "score_raw": "70分签约",
+    "score_signal": "explicit_number",
+    "verdict": "pass",
+    "overall_comment": "设定扎实金手指克制",
+    "comments": [
+      {
+        "dimension": "golden_finger",
+        "severity": "positive",
+        "content": "金手指克制不破坏紧张感",
+        "raw_quote": "金手指克制",
+        "raw_line_range": [2, 3]
+      }
+    ]
+  }
+]
