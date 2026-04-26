@@ -132,8 +132,8 @@
         "ruff check scripts/live-review/jsonl_to_cases.py tests/live_review/test_jsonl_to_cases.py 无新增错误"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "DIMENSION_TO_LAYER 表完全对齐 plan §1501-1516 / 不引入 spec §428-434 字面 [planning, golden_three] 等扩展 layer (case_schema.layer enum 仅允许 upstream/downstream/reference_gap/infra_health)。dry-run 不调 allocate_live_review_id 避免污染 counter file，使用占位 ID 'CASE-LR-{year}-DRYRUN-NNNN'，但跳过 schema 校验（pattern 不匹配）。脚本 glob '*.jsonl' 并跳过下划线开头文件，自然兼容 sample_5_files.jsonl 与 BV*.jsonl 多种命名。"
     },
     {
       "id": "US-008",

@@ -21,6 +21,9 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - 批跑脚本 `--resume` + `--skip-failed` 组合：`--resume` 扫 `output_dir.glob("BV*.jsonl")` 取已完成 bvid set；循环内 `if bvid in done: continue`（log "skipped (resume)"）。`--skip-failed` 控制 `except` 分支 break 还是 continue —— `try/except Exception` 把 ExtractionError + mock 缺文件 + read_text 解码错都收编成一条 failure dict (`{bvid, error, traceback}`) 写进 `_failed.jsonl`。失败计数即使 break 退出也要写盘，方便用户审 traceback。退出码：失败且非 skip → 1；其余 → 0。
 - `_failed.jsonl` 用 append 模式：多次 batch run 失败累积；测试时 tmp_path 每次新建可避免污染。`_failed.jsonl` 不应被 schema 校验脚本（US-005）当成普通 jsonl —— 后续 US-008 / US-013 等扫描 jsonl 时建议用 glob `BV*.jsonl` 而非 `*.jsonl` 排除 `_failed.jsonl`。
 - 多份测试中"故意缺一个 mock 模拟失败"模式：fixture 目录放 N raw + (N-1) mock；缺失那个的 BV 在 mock_dir 取 path 时抛 FileNotFoundError，被 ExtractionError 捕获写进 _failed。需要"全 mock 齐"的兄弟测试用 fixture（fixture 名 `complete_mock_dir`）：拷贝 4 mock + 合成 1 minimal record 写入 tmp_path。这套 minimal record 用 `score=null / score_signal=unknown / verdict=unknown / comments=[]` 即可通过 schema 校验。
+- jsonl→yaml 转换器写盘前必须 `from ink_writer.case_library.schema import validate_case_dict` 调用以 fail-loud — 比手动校验各字段省事，且与 case_library.store.save() 一致路径。yaml.safe_dump 用 `sort_keys=False, allow_unicode=True, default_flow_style=False` 三件套保持 schema 字段顺序 + 中文不转义 + 块式输出（与 410 份现存 yaml 风格一致）。
+- live_review_meta.comments 必须 strip `raw_line_range`：jsonl 中间产物 schema 强制 raw_line_range 必填，但 case_schema 的 live_review_meta.comments 是 `additionalProperties: false` 且不含 raw_line_range — 转换时用 `{k: v for k, v in c.items() if k != "raw_line_range"}` 即可。其它字段（dimension/severity/content/raw_quote）保留即可。
+- 脚本支持 `--dry-run` 时避免污染 counter file：dry-run 路径下不要调 `allocate_live_review_id`（否则 `_id_alloc.allocate_case_id` 会原子写 `.id_alloc_case_lr_2026.cnt`），改用 placeholder ID `CASE-LR-{year}-DRYRUN-NNNN` 形式 — 注意此 placeholder pattern 不通过 case_schema 校验，所以 dry-run 也跳过 validate_case_dict（用户应理解 dry-run 仅做"jsonl 解析 + 字段编排"，schema 校验在 wet-run 才生效）。
 
 ---
 
@@ -251,4 +254,50 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **`Path.glob("BV*.jsonl")` 自然排除 `_failed.jsonl`**：`_failed.jsonl` 文件名 `_` 开头，不匹配 `BV*` 模式，所以 `--resume` 时的 `done = {p.stem for p in output.glob("BV*.jsonl")}` 自动忽略 `_failed.jsonl`。后续 US-007/008/013 等扫 jsonl 都应该用 `BV*.jsonl` 而非 `*.jsonl` 避免误把 `_failed.jsonl` 当作有效病例输入。
 - **`except Exception` 的窄化**：BLE001 警告原本希望 except 子类化。但 batch 跑批的全 fault-tolerance 设计本意就是吃掉所有异常（mock IO / read_text 编码 / json parse / schema 校验），所以加 `# noqa: BLE001` 是合理的（Plan 字面 `except Exception as e` 的写法认可此宽口径）。如果未来缩窄到 `(ExtractionError, FileNotFoundError, json.JSONDecodeError)`，注意 schema 校验失败现在被 ExtractionError 包装，但 OS 层错误（如 `PermissionError`）会逃出 — 工程取舍。
 - **complete_mock_dir 复合 fixture 模式**：有些场景需要 5 mock 全齐（a/c/d），有些需要故意缺 1 mock（b）。在 conftest/test 内部定义 `complete_mock_dir` fixture：拷贝 mock_batch 4 mock + tmp_path 合成 1 minimal record 即可。minimal record 用 `score=None / score_signal=unknown / verdict=unknown / comments=[]` 通过 schema 校验。后续类似"全集 vs 缺漏"的对比测试可复用此 fixture 模板。
+---
+
+## 2026-04-26 16:50 CST - US-007 jsonl → CASE-LR-yaml 转换器
+
+**实现内容：**
+- 新建 `scripts/live-review/jsonl_to_cases.py` — 把 live_review jsonl 每行转成符合 case_schema (1.1) 的 yaml：
+  - argparse：`--jsonl-dir` 必填 / `--cases-dir`（默认 `data/case_library/cases/live_review`）/ `--dry-run` / `--year`（默认 2026）。
+  - 推导函数：
+    - `derive_severity(score)`：None→P3 / <55→P0 / <60→P1 / <65→P2 / 其他→P3。
+    - `derive_layers(comments)`：DIMENSION_TO_LAYER 表（opening/hook/golden_finger/genre/taboo/character/ops/misc → [upstream]；pacing/highpoint → [upstream, downstream]；simplicity → [downstream]）；空 comments → [upstream]；返回 sorted。
+    - `derive_title(title_guess, verdict, score)`：score=None → "X (verdict)"；其他 → "X (verdict / N分)"。
+    - `derive_failure_pattern(overall, comments, verdict)`：有 negative → description=overall+" | "+前3个negative 内容；observable=full negative 列表 `f"{dim}维度: {content}"`；无 negative → description=overall；observable=`["整体被星河直播判定为 {verdict}"]`。
+    - `derive_live_review_meta(record)`：完整 9 字段 + score（可 null）；comments 自动 strip `raw_line_range`。
+  - case_id 用 `allocate_live_review_id(cases_dir, year=2026)`（dry-run 改用 `CASE-LR-{year}-DRYRUN-NNNN` 占位避免污染 counter）。
+  - 写盘前调 `validate_case_dict(case_dict)` fail-loud；任一失败 stderr 列 jsonl 文件名+行号+bvid+错误，退出码 1。
+  - jsonl 扫描：glob `*.jsonl` 跳过 `_*` 文件。
+- 新建 `tests/live_review/fixtures/sample_5_files.jsonl` — 5 行覆盖 P0/P1/P2/P3+null 全 5 类 severity；layer 推导 3 分支（downstream-only via simplicity / upstream-only via opening 与空 comments / 双 layer via pacing）；同 BV1AAA 共享 2 行（novel_idx 0/1）；BV1CCC 全 positive 触发 failure_pattern fallback；BV1DDD 空 comments+null score。
+- 新建 `tests/live_review/test_jsonl_to_cases.py` 9 用例 (subprocess 模式)：
+  1. 5 jsonl 行 → CASE-LR-2026-0001..0005 严格递增；
+  2. 全 5 yaml 用 `case_schema.json` 校验通过；
+  3. severity 集合 == {P0,P1,P2,P3} + P3 ≥ 2；
+  4. layer 推导覆盖 (downstream,) / (upstream,) / (downstream, upstream) 三分支；
+  5. 同 bvid (BV1AAA) 多本不冲突 + case_id 全唯一；
+  6. live_review_meta 9 字段完整 + comments 已 strip raw_line_range；
+  7. 失败兜底（无 negative comments）observable 含 "整体被星河直播判定为"；
+  8. severity-score 严格映射 (50→P0 / 58→P1 / 63→P2 / 75→P3 / null→P3)；
+  9. dry-run 不写 yaml。
+
+**Files changed:**
+- A scripts/live-review/jsonl_to_cases.py
+- A tests/live_review/fixtures/sample_5_files.jsonl
+- A tests/live_review/test_jsonl_to_cases.py
+
+**验证：**
+- TDD 顺序确认：写完 9 测试 → pytest 8/9 fail（脚本不存在；test_live_review_meta_fully_populated 因 cases_dir.glob 空遍历碰巧 pass）→ 实现脚本 → 9 PASS。
+- `python3 -m pytest tests/live_review/test_jsonl_to_cases.py --no-cov -q` → 9 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 441 passed（无回归；从 US-006 的 432 增 9）。
+- `ruff check scripts/live-review/jsonl_to_cases.py tests/live_review/test_jsonl_to_cases.py` → All checks passed。
+
+**Learnings for future iterations:**
+- **layer enum 必须查 case_schema.json 而非 spec 文档**：spec §428-434 字面写 `[planning, golden_three]` / `[planning, chapter]` 等，但 `case_schema.json` 的 layer enum 仅允许 `["upstream", "downstream", "reference_gap", "infra_health"]`。Plan §1501-1516 提供的 DIMENSION_TO_LAYER 表用 upstream/downstream 是正解。后续 US 看到 spec 与 plan 不一致时，**plan 优先**（plan 是 schema-aware）。
+- **`validate_case_dict` 是 case yaml 写盘的标准 gate**：从 `ink_writer.case_library.schema` 直接导入即可，错误信息已含 JSON pointer + 字段消息（CaseValidationError）。jsonl_to_cases.py 写盘前用此 gate fail-loud，错误会被脚本捕获后 stderr 列 line_no + bvid + 字段定位，退出码 1。后续 US-009/US-013 等会写 yaml/json 的脚本沿用此模式。
+- **jsonl→yaml 字段映射的 raw_line_range 陷阱**：jsonl extracted 的 comments 必填 `raw_line_range`（强制 LLM 给定位），但 case_schema.live_review_meta.comments 是 `additionalProperties: false` 且不含 `raw_line_range` — 必须 strip。这是字段命名/职责差异：jsonl 是抽取中间产物（追溯回 raw），case 是病例库稳定形态（不引用 raw 行号）。后续 US-009 / US-013 类似的"中间产物→稳定 schema"映射要警觉这种字段 schema 不对称。
+- **dry-run 与 counter file 隔离**：`allocate_live_review_id` 调用就会原子写 `cases_dir/.id_alloc_case_lr_2026.cnt`。dry-run 路径不能调它（否则把"模拟跑"变成"半写盘"）。占位 ID 用 `CASE-LR-{year}-DRYRUN-NNNN` — 注意此 pattern 不通过 case_schema 校验（schema 期望 `CASE-LR-NNNN` 或 `CASE-LR-2026-NNNN`），所以 dry-run 必须跳过 validate_case_dict。后续 schedule 类的 dry-run / preview 脚本沿用此"placeholder ID + 跳过强校验"模式。
+- **fixture 用 `*.jsonl` 而非 `BV*.jsonl` 命名**：US-007 fixture 名 `sample_5_files.jsonl`（PRD AC 字面）。脚本若严格 glob `BV*.jsonl` 则无法消费此 fixture。最终设计让 `_iter_jsonl_files` 跳过 `_*` 但接受任意 jsonl 名 — 既兼容 `BV*.jsonl` 生产输出，也兼容 `sample_*.jsonl` fixture。`_failed.jsonl` 的 `_` 前缀依旧自动排除。
+- **subprocess test fixture 用 tmp_path 自然不污染 repo**：测试用 tmp_path 作 cases_dir，所以脚本写出的 yaml 与 `.id_alloc_case_lr_2026.cnt` 都在 tmp 目录里。**手测时**用 `/tmp/` 跑端到端 + 之后清理；**永远不要**在 repo 内 cases_dir 测试，否则 counter file 会进版本控制。
 ---
