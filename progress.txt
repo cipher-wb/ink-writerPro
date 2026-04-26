@@ -8,6 +8,9 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - pytest.ini `testpaths` 是单行长串 — 新增目录追加在末尾即可，不要重排已有目录避免 diff 噪音；行后注释保持原样。
 - ruff isort 要求：`from __future__ import annotations` 后空一行，再 stdlib，再空一行，再三方包；conftest/test 文件别忽略 `--fix` 自动修复。
 - 测试用 `Draft202012Validator(load_schema(...))` fixture 模式：从 `tests/live_review/conftest.py` 取 `load_schema` fixture（按 schema 文件名加载），再实例化 validator；schema self-validity 用 `Draft202012Validator.check_schema(schema)`。
+- Python 3.14 `datetime.utcnow()` 已 deprecated；新代码统一 `from datetime import UTC, datetime` + `datetime.now(UTC)`。ruff UP017 会提示。
+- ID 分配复用 `case_library._id_alloc.allocate_case_id(cases_dir, prefix=...)`：传不同 prefix 自动隔离 counter file（`.id_alloc_<sanitized_prefix>.cnt`）+ glob 兜底防外部手工添加 yaml 让 counter 落后；并发安全（独占文件锁，4 worker spawn 0001..0004 无空洞已验证）。新 case 类型不需要再写 ID 分配器，写 `live_review.case_id.allocate_live_review_id` 这种薄封装即可。
+- live-review 配置 dataclass 模式：`LiveReviewConfig` 是 frozen dataclass + 嵌套 `BatchConfig`/`InjectConfig`；`enabled=false` 在 `load_config` 内强制 `inject_into.{init,review}` 全 false（`& 与` 操作）— 这是关闭整个模块的 master switch，下游 inject point 务必查 `cfg.inject_into.<stage>` 而不是直接看 yaml。
 
 ---
 
@@ -43,5 +46,36 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **live_review_meta.required 9 字段而非 10**：plan diff 中 `required` 列出 9 个字段（`source_bvid`/`source_line_range`/`score_raw`/`score_signal`/`verdict`/`title_guess`/`genre_guess`/`overall_comment`/`comments`），`score` 不在 required 中（因为 score 可为 null 时 LLM 可能会省略，但 score_raw 必填承载原始引语）。PRD AC 笔误说"9 字段"实际是指 required 9 个，properties 共 10 个。
 - **ruff 未在 CI 上跑某些子目录**：跑 `ruff check schemas/` 不会报错（json 文件 ruff 不管），但 tests/ 下会触发 I001（import 排序）。新写测试文件时养成 `from __future__ import annotations` 后空行 → stdlib 空行 → 三方包的习惯，省一次 --fix。
 - **pytest.ini testpaths 行尾注释**：原文件 testpaths 行结尾紧贴 `\n# 注：...` 注释，编辑时需用足够长的 old_string 锚定行末（我用 `tests/learn tests/_compat\n# 注：tests/editor_wisdom...`）才能精准追加 ` tests/live_review`。
+
+---
+
+## 2026-04-26 12:05 CST - US-002 ID 分配器封装 + 配置文件
+
+**实现内容：**
+- 新建 `ink_writer/live_review/__init__.py`（仅 docstring 引用 spec）。
+- 新建 `ink_writer/live_review/case_id.py:allocate_live_review_id(cases_dir, year=None) -> str`，薄封装 `case_library._id_alloc.allocate_case_id`，year=None 时取 `datetime.now(UTC).year`，返回 `CASE-LR-{year}-NNNN`。
+- 新建 `ink_writer/live_review/config.py`：3 个 frozen dataclass（`LiveReviewConfig` / `BatchConfig` / `InjectConfig`）+ `load_config(path)`；`enabled=false` 强制 `inject_into.{init,review}` 全 false（`& enabled` 而非赋值）。
+- 新建 `config/live-review.yaml`，与 spec §8 字段一致。
+- 新建 `tests/live_review/test_case_id.py`（5 用例：basic / sequential / 4-worker spawn 并发 / prefix 隔离 / year 隔离）。
+- 新建 `tests/live_review/test_config.py`（5 用例：默认 / 完整覆盖 / disabled 强制 / 部分回落 / 真实 yaml）。
+
+**Files changed:**
+- A ink_writer/live_review/__init__.py
+- A ink_writer/live_review/case_id.py
+- A ink_writer/live_review/config.py
+- A config/live-review.yaml
+- A tests/live_review/test_case_id.py
+- A tests/live_review/test_config.py
+
+**验证：**
+- `python3 -m pytest tests/live_review/test_case_id.py tests/live_review/test_config.py --no-cov -q` → 10 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ --no-cov` → 86 passed（无回归）。
+- `ruff check ink_writer/live_review/ tests/live_review/test_case_id.py tests/live_review/test_config.py` → All checks passed。
+
+**Learnings for future iterations:**
+- **`datetime.utcnow()` 在 Py 3.14 已 deprecated**：plan 中字面写的 `datetime.utcnow()` 触发 ruff UP017，需改为 `from datetime import UTC, datetime` + `datetime.now(UTC)`。后续 US 看到 plan 中的 `utcnow()` 时直接用 UTC 写法。
+- **`_id_alloc.allocate_case_id` 的 prefix 串号机制**：counter file 名是 `.id_alloc_<sanitized>.cnt`，sanitized 是 `prefix.strip('-').replace('-', '_')`。所以 `CASE-LR-2026-` → `case_lr_2026`、`CASE-2026-` → `case_2026`、`CASE-LEARN-` → `case_learn`，前缀彼此不串号已 spawn pool 4-worker 验证。
+- **`@dataclass(frozen=True)` 嵌套字段必须用 `field(default_factory=...)`**：直接 `batch: BatchConfig = BatchConfig()` 在 frozen 上跑不通（mutable default class instance），必须 `field(default_factory=BatchConfig)`。
+- **`enabled=false` master switch 的实现要点**：`InjectConfig(init=bool(...) and enabled, review=bool(...) and enabled)` — 这样即使 yaml 写 `inject_into.init: true`，只要顶层 `enabled: false`，inject 也强制为 false。下游消费 `cfg.inject_into.<stage>` 时无须再分别检查 enabled，单一字段就含义完整。
 
 ---

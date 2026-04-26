@@ -38,8 +38,8 @@
         "ruff check ink_writer/live_review/ tests/live_review/test_case_id.py tests/live_review/test_config.py 无新增错误"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "case_id.py 用 datetime.now(UTC) 替代 plan 中的 datetime.utcnow()（Py 3.14 起 utcnow() 触发 ruff UP017）。其他与 plan 字面一致。"
     },
     {
       "id": "US-003",

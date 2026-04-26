@@ -1,0 +1,28 @@
+# Live-Review 模块配置（174 份星河直播稿融入 ink-writer 创作链路）
+# Spec: docs/superpowers/specs/2026-04-26-live-review-integration-design.md
+enabled: true
+model: claude-sonnet-4-6
+extractor_version: "1.0.0"
+
+batch:
+  input_dir: "~/Desktop/星河审稿"
+  output_dir: "data/live-review/extracted"
+  resume_from_jsonl: true
+  skip_failed: true
+  log_progress: true
+
+# review 门禁
+hard_gate_threshold: 0.65
+golden_three_threshold: 0.75
+
+# init 注入
+init_genre_warning_threshold: 60
+init_top_k: 3
+
+# 聚合
+min_cases_per_genre: 3
+
+# 注入开关（独立可关）
+inject_into:
+  init: true
+  review: true
