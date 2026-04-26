@@ -11,6 +11,7 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - Python 3.14 `datetime.utcnow()` 已 deprecated；新代码统一 `from datetime import UTC, datetime` + `datetime.now(UTC)`。ruff UP017 会提示。
 - ID 分配复用 `case_library._id_alloc.allocate_case_id(cases_dir, prefix=...)`：传不同 prefix 自动隔离 counter file（`.id_alloc_<sanitized_prefix>.cnt`）+ glob 兜底防外部手工添加 yaml 让 counter 落后；并发安全（独占文件锁，4 worker spawn 0001..0004 无空洞已验证）。新 case 类型不需要再写 ID 分配器，写 `live_review.case_id.allocate_live_review_id` 这种薄封装即可。
 - live-review 配置 dataclass 模式：`LiveReviewConfig` 是 frozen dataclass + 嵌套 `BatchConfig`/`InjectConfig`；`enabled=false` 在 `load_config` 内强制 `inject_into.{init,review}` 全 false（`& 与` 操作）— 这是关闭整个模块的 master switch，下游 inject point 务必查 `cfg.inject_into.<stage>` 而不是直接看 yaml。
+- 资源路径必须锚定 `_REPO_ROOT = Path(__file__).resolve().parents[N]`：plan/示例里出现的 `Path("scripts/...")` / `Path("schemas/...")` 是相对 CWD 的脆弱写法，被 pytest fixture 调用时会随启动目录漂移。`ink_writer/live_review/*.py` 在 `parents[2]` 即 repo root；这条规矩适用所有 module-level 常量。
 
 ---
 
@@ -78,4 +79,47 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **`@dataclass(frozen=True)` 嵌套字段必须用 `field(default_factory=...)`**：直接 `batch: BatchConfig = BatchConfig()` 在 frozen 上跑不通（mutable default class instance），必须 `field(default_factory=BatchConfig)`。
 - **`enabled=false` master switch 的实现要点**：`InjectConfig(init=bool(...) and enabled, review=bool(...) and enabled)` — 这样即使 yaml 写 `inject_into.init: true`，只要顶层 `enabled: false`，inject 也强制为 false。下游消费 `cfg.inject_into.<stage>` 时无须再分别检查 enabled，单一字段就含义完整。
 
+---
+
+## 2026-04-26 14:00 CST - US-003 LLM 切分 prompt + extractor + mock 单测
+
+**实现内容：**
+- 新建 `scripts/live-review/prompts/extract_v1.txt` — 含任务定义、切分启发式、score_signal 判定规则、dimension/severity 严格 enum、5 个真实 few-shot 例子（基于 `~/Desktop/星河审稿/BV12yBoBAEEn_raw.txt` 真实片段：机甲穿越文 / 校园甜宠 / 无敌流玄幻 / 违禁触发 / 金手指迟到）+ 明确"不要 markdown 围栏"指令。
+- 新建 `ink_writer/live_review/extractor.py:extract_from_text(...) -> list[dict]`：
+  - 三层 LLM 优先级：`mock_response` > `llm_call` > 真实 anthropic SDK；
+  - `_build_record` 注入元数据 `schema_version='1.0' / bvid / source_path / source_line_total / extracted_at(now UTC) / model / extractor_version`；
+  - jsonschema Draft202012 校验每条 record，违反即 `raise ExtractionError(failed schema: [errors])`；
+  - JSON 解析失败 → `not valid JSON` / 顶层非 list → `Expected JSON array` / 元素非 dict → `is not an object`，全部 fail-loud；
+  - `_PROMPT_PATH` / `_SCHEMA_PATH` 锚定 `Path(__file__).resolve().parents[2]` 而非 plan 字面相对 CWD 写法。
+- 新建 `tests/live_review/fixtures/raw_BV12yBoBAEEn.txt`（383 行：head 200 + ellipsis + tail 200；原文 191 行所以 head/tail 完整重叠）。
+- 新建 `tests/live_review/fixtures/mock_extract_BV12yBoBAEEn.json`（3 本：律师文 explicit_number 68 / 校园甜宠 sign_phrase null/fail / 玄幻 fuzzy null/unknown，覆盖三类 score_signal 与多个 dimension/severity 组合）。
+- 新建 `tests/live_review/test_extractor_mock.py` 7 用例：
+  1. mock 返回 3 records；
+  2. 元数据完整（model / extractor_version / source_path / extracted_at 以 Z 结尾 / source_line_total 等于 raw.count('\n')+1）；
+  3. score_signal 三类多样性；
+  4. 非 JSON → ExtractionError(match='not valid JSON')；
+  5. 非 Array → ExtractionError(match='Expected JSON array')；
+  6. 缺字段 → ExtractionError(match='failed schema')；
+  7. score=999 → ExtractionError(match='failed schema')。
+
+**Files changed:**
+- A scripts/live-review/prompts/extract_v1.txt
+- A ink_writer/live_review/extractor.py
+- A tests/live_review/fixtures/raw_BV12yBoBAEEn.txt
+- A tests/live_review/fixtures/mock_extract_BV12yBoBAEEn.json
+- A tests/live_review/test_extractor_mock.py
+
+**验证：**
+- `python3 -m pytest tests/live_review/test_extractor_mock.py --no-cov -q` → 7 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 417 passed（无回归）。
+- `ruff check ink_writer/live_review/ tests/live_review/test_extractor_mock.py` → All checks passed（autofix 已合并 stdlib import 块）。
+- TDD 顺序确认：写完 test 跑 pytest → ModuleNotFoundError（RED 通过；正是缺 `ink_writer.live_review.extractor` 模块） → 实现 extractor → 7 PASS（GREEN）。
+
+**Learnings for future iterations:**
+- **Plan 字面 `Path("scripts/live-review/prompts/extract_v1.txt")` 是相对 CWD 的脆弱写法**：pytest 从 repo root 启动时碰巧能用，但任何外部脚本从其他 CWD import extractor 都会炸 FileNotFoundError。改用 `_REPO_ROOT = Path(__file__).resolve().parents[2]` 锚定，再 `_REPO_ROOT / "scripts" / "live-review" / "prompts" / "extract_v1.txt"`。后续 US-004/005/006 等需要 prompt/schema 路径时直接复用此模式。
+- **`from typing import Callable` 已 deprecated（Py 3.10+）**：ruff UP035 会自动 fix 成 `from collections.abc import Callable`。新代码直接写 `from collections.abc import Callable` 跳过 ruff 来回。
+- **mock_response 优先级最高 + llm_call 次之 + 真实 SDK 兜底 — 这套三层注入对所有 LLM-coupled 模块是通用模式**：测试用 mock_response 直接绕过 prompt 加载与 LLM 调用；llm_call 注入用于错误路径测试（非 JSON / 非 Array）；真实 SDK 仅在没有 mock_response / llm_call 时才加载 anthropic（lazy import 避免无 API 环境的 import error）。
+- **fixture raw 文件即使内容重复也无所谓**：mock_response 模式下 raw_text 仅用于计算 source_line_total（`raw.count('\n')+1`），实际语义不被 assert。但 fixtures 文件存在性 + 行数仍要保证 — `tests/live_review/fixtures/raw_BV12yBoBAEEn.txt` 必须随 mock_extract_BV12yBoBAEEn.json 一起 commit。
+- **prompt few-shot 必须基于真实数据 + 不留 placeholder**：plan §943-994 明示"5 个 few-shot 不可留 placeholder"。我 5 个例子分别覆盖：(1) explicit_number 多维度 (2) sign_phrase 题材问题 (3) fuzzy 开头节奏 (4) taboo+ops 违禁 fail (5) golden_finger 迟到。这 5 个样本来自 BV12yBoBAEEn 真实片段或同类逻辑组合，不是凭空虚构。
+- **schema validation 在 extractor 内必须 fail-loud — 不是上游 sanitization**：plan 强调"非 JSON / 非 Array / schema 违反"三种异常都不 silent fallback。`Draft202012Validator(schema).iter_errors(record)` 取前 3 条 message 拼到 ExtractionError，足够下游脚本（US-006 batch runner）写入 _failed.jsonl。
 ---

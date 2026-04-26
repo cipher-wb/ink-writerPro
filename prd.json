@@ -57,8 +57,8 @@
         "ruff check ink_writer/live_review/extractor.py tests/live_review/test_extractor_mock.py 无新增错误"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Plan 字面 `_PROMPT_PATH = Path('scripts/...')` 是相对 CWD 的脆弱写法；改为 `Path(__file__).resolve().parents[2] / 'scripts' / 'live-review' / 'prompts' / 'extract_v1.txt'` (同样 _SCHEMA_PATH 锚定 repo root) 让任何 CWD 启动都能找到。其它字面与 plan 一致。"
     },
     {
       "id": "US-004",
