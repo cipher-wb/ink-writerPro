@@ -131,8 +131,8 @@
         "ruff check ink_writer/evidence_chain/writer.py ink_writer/rewrite_loop/human_review.py 无新增错误"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-26：evidence_chain/writer.py + rewrite_loop/human_review.py 的 _atomic_write_text 重构 — `tmp_path = Path(tmp_name)` 移入外层 try 第一行；新增内嵌 try/except 包住 `Path(tmp_name) + os.fdopen(fd)`，except 路径手动 `os.close(fd)` + unlink tmp 文件，避免 mkstemp→fdopen 之间异常导致 fd 资源泄漏（fdopen 失败时 fd 未被 BufferedWriter 接管，外层 with 不会兜底）。同时把 4 处 `try/except OSError: pass` 改为 `contextlib.suppress(OSError)`：消除原 4 个 SIM105 baseline 而非新增，无新增噪音。新增 tests/evidence_chain/test_atomic_write.py:test_atomic_write_no_fd_leak_on_fdopen_failure[evidence_chain_writer / human_review] parameterized 测试：mock os.fdopen 抛 OSError → 50 轮压力 → assert (a) 进程 open-fd 计数（/proc/self/fd 或 /dev/fd）增量 ≤ 2 ；(b) 目录无 .tmp 残留。pytest tests/evidence_chain tests/rewrite_loop → 50 passed；ruff check 两文件 → All checks passed (4 → 0)。"
     }
   ]
 }

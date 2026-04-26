@@ -16,7 +16,7 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
 - 严重程度阶梯：`P3 → P2 → P1 → P0`，到 P0 不再升；累计次数靠 `len(recurrence_history)`。常量 `_SEVERITY_LADDER` 在 `ink_writer/case_library/store.py`。
 - evidence_chain 检查器命中 case_id 至少 4 种载体：`checkers[].cases_hit` / `checkers[].cases_violated` / `checkers[].details.cases_hit` / `checkers[].details.cases_violated`；既支持 `["CASE-..."]` 字符串，也支持 `[{"case_id": "CASE-..."}]` dict。
 - 多进程并发测试统一用 `mp.get_context("spawn")` 跨平台一致 — 见 `tests/case_library/test_id_alloc_concurrency.py` 与 `tests/rewrite_loop/test_dry_run_safety.py`。
-- 原子写盘统一模式：`tempfile.mkstemp(prefix=..., suffix='.tmp', dir=...)` → `os.fdopen(fd,'w')` write+flush+fsync → `os.replace(tmp, target)`；except 路径 `tmp.unlink()` 兜底。本批次 US-008 强化 fd 安全。
+- 原子写盘统一模式（US-008 终版）：`tempfile.mkstemp(prefix=..., suffix='.tmp', dir=...)` 拿 (fd, tmp_name) 后**必须**用内嵌 try/except 包住 `Path(tmp_name)` 和 `os.fdopen(fd)` 这两步：异常路径手动 `os.close(fd)` + unlink tmp（fdopen 失败时 fd 未被 BufferedWriter 接管，外层 `with` 不会兜底，旧实现会泄漏 fd）。然后 `with fh: write+flush+fsync` → `os.replace(tmp, target)`；外层 except 路径再 `tmp.unlink()` 兜底覆盖 replace 之前的所有失败窗口。OSError 抑制统一用 `contextlib.suppress(OSError)`，避免 SIM105 噪音。复用此模式的两个标准实现：`ink_writer/evidence_chain/writer.py:_atomic_write_text` + `ink_writer/rewrite_loop/human_review.py:_atomic_write_text`（两份完全一致）。
 - fail-loud 原则：上游 schema 漂移 / 锁失败 / 未知类型应显式抛错而非 silent pass — 参考 commit 47a6fe5 (Windows lock) 与本批次 US-006 (_serialize_case)。
 - `ink_writer/_compat/locking.py:locked_file` 是当前唯一的跨平台独占文件锁原语；US-003 计划在同文件加 `shared_locked_file`（read-only 共享锁）；US-004 复用 `locked_file`。
 - `ink_writer/rewrite_loop/dry_run.py:_observation_quality_passed` 的 chapters 路径约定：``base_dir / book / 'chapters'``（直接拼，不再走 ``base.name == 'data'`` 启发式）。是 dry-run 内部独立路径假设，与 ``ink_writer/evidence_chain/dry_run_report.py:aggregate_dry_run_metrics`` 期待 ``base_dir/data/<book>/chapters`` 的约定**不同**。两者公共 API 互不影响。
@@ -111,4 +111,17 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
   - "Iterable 接受所有可迭代" 在大型项目里几乎总是错的：dict / set / generator 都会进，意图与现实分叉；除非真的要支持任意可迭代，否则收紧到 `list` / `Sequence` / 显式类型；类似 `_hit_case_ids` 的"按 schema 收紧" 在其他读上游字段的代码里值得复盘 (`evidence_chain/aggregator.py`、`learn/promote.py` 的 evidence 解析路径都是潜在改造目标)。
   - 模块级私有函数 (`_hit_case_ids`) 直接被测试 import 是合理做法 (Python 的下划线只是约定不是私有性) —— 比把测试套用到 `propose_cases_from_failures` 全链路绕一大圈再断言派生结果更省时也更精准。tests/learn/test_auto_case.py 现有结构允许混合两种粒度：`test_hit_case_ids_*` 单元 + `test_proposes_*` / `test_skips_*` / `test_throttled_*` 集成。
   - generator 在 `isinstance(x, Iterable)` 下也是 True，但 `isinstance(x, list)` 下是 False。此处恰好是想要的语义：generator 不像 list 那样可重读、易引发其他下游 bug。如未来真的要支持 generator，应显式 `list(value)` materialize 后再处理。
+---
+
+## 2026-04-26 - US-008
+- `ink_writer/evidence_chain/writer.py:_atomic_write_text` + `ink_writer/rewrite_loop/human_review.py:_atomic_write_text` 重构：(1) `tmp_path = Path(tmp_name)` 移入外层 try 第一行 (2) 新增内嵌 try/except 包住 `Path(tmp_name) + os.fdopen(fd)`，except 路径 `os.close(fd)` + unlink tmp —— mkstemp 拿到 fd 后到 fdopen 接管之间若有异常（fdopen 本身 OSError、Path() future-proof 等），fd 会泄漏；旧版没有兜底，因为 fdopen 失败时 BufferedWriter 未生成、外层 `with` 不会触发 close fd（review §三 #11）。
+- 同步把 4 处 `try/except OSError: pass` 改为 `with contextlib.suppress(OSError): ...`：消除原 4 个 SIM105 baseline，新增的 4 处兜底也走同样语义；ruff 总数 4 → 0。
+- 新增 `tests/evidence_chain/test_atomic_write.py:test_atomic_write_no_fd_leak_on_fdopen_failure[evidence_chain_writer / human_review]` parameterized：mock 目标模块的 `os.fdopen` 抛 OSError → 50 轮重复触发 → assert (a) 进程 open-fd 计数（探测 `/proc/self/fd` 或 `/dev/fd`）增量 ≤ 2（fixture/capture 噪音冗余）；(b) 章节目录无 `.tmp` 残留。
+- Files changed: `ink_writer/evidence_chain/writer.py`, `ink_writer/rewrite_loop/human_review.py`, `tests/evidence_chain/test_atomic_write.py`, `scripts/ralph/prd.json`, `scripts/ralph/progress.txt`。
+- Quality: `pytest tests/evidence_chain tests/rewrite_loop --no-cov -q` → 50 passed；wider regression `pytest tests/_compat tests/case_library tests/evidence_chain tests/rewrite_loop tests/learn` → 127 passed；`ruff check ink_writer/evidence_chain/writer.py ink_writer/rewrite_loop/human_review.py` → All checks passed (4 → 0)。
+- **Learnings for future iterations:**
+  - `tempfile.mkstemp` 返回 `(fd, name)` 的语义陷阱：fd 是裸 OS fd，不被任何 Python 对象拥有；只有 `os.fdopen(fd)` 成功后才被 BufferedWriter 接管。fdopen 抛错时 `with os.fdopen(...) as fh:` 的 `__exit__` 永不触发——外层兜底不会 close fd。所以"先 mkstemp 后 fdopen"的代码必须把 fdopen 单独放在内嵌 try/except 里，except 路径手动 `os.close(fd)`。这个 fd-ownership 边界容易看走眼。
+  - 跨平台 fd 计数：Linux 走 `/proc/self/fd`，macOS 走 `/dev/fd`，两者都返目录列表项数。`pytest.skip` 兜底罕见平台。`psutil.Process().num_fds()` 更可移植但本项目无 psutil 依赖，按 `os.path.isdir` 探测两个标准位置最轻量。
+  - `with contextlib.suppress(OSError): ...` 是 ruff SIM105 规则建议的标准替换；语义与 `try: ... except OSError: pass` 完全等价但更声明式，且消 SIM105 lint 噪音。改造旧 `_atomic_write_text` 时可顺手把所有兜底点换上，不必单开 PR。
+  - parameterized 测试覆盖"两份内容完全一致的不同模块"的标准做法：`pytest.mark.parametrize` 传 `(module_path, invoke_fn, chapters_subpath)`，invoke 用 module-level helper 函数（保持简洁、可被 spawn 序列化如未来要并发跑）。`os.fdopen` mock 路径要带模块前缀（`{module_path}.os.fdopen`），不能 patch `os.fdopen` 全局以免误中其他测试基础设施。
 ---

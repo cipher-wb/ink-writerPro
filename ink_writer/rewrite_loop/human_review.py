@@ -18,6 +18,7 @@ US-010 (2026-04-25 起)：
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import tempfile
@@ -73,30 +74,42 @@ def _serialize_case(case: Any) -> Any:
 
 
 def _atomic_write_text(path: Path, content: str) -> None:
-    """temp file → fsync → os.replace 原子覆盖（review §二 P1#3）。
+    """temp file → fsync → os.replace 原子覆盖（review §二 P1#3 + §三 #11）。
 
     避免进程在写入中途崩溃留下半截 .rN.txt 让人工 review 误判 r0..r3 完整。
+
+    review §三 #11：``mkstemp`` 返回 (fd, name) 后到 ``os.fdopen(fd)`` 之前若有
+    异常（``Path(tmp_name)`` 当前不会抛但属 future-proof），fd 会泄漏。把
+    ``Path(tmp_name)`` 移入 try 块；并用一个内嵌 try/except 包住 fdopen 之前
+    的代码 —— 异常路径里手动 ``os.close(fd)`` + ``unlink(tmp)``，避免 fd 资源
+    泄漏（fdopen 失败时 fd 未被 BufferedWriter 接管，外层 ``with`` 不会兜底）。
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp_name = tempfile.mkstemp(
         prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent)
     )
-    tmp_path = Path(tmp_name)
+    tmp_path: Path | None = None
     try:
-        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+        try:
+            tmp_path = Path(tmp_name)
+            fh = os.fdopen(fd, "w", encoding="utf-8")
+        except Exception:
+            with contextlib.suppress(OSError):
+                os.close(fd)
+            if tmp_path is not None and tmp_path.exists():
+                with contextlib.suppress(OSError):
+                    tmp_path.unlink()
+            raise
+        with fh:
             fh.write(content)
             fh.flush()
-            try:
+            with contextlib.suppress(OSError):
                 os.fsync(fh.fileno())
-            except OSError:
-                pass
         os.replace(tmp_path, path)
     except Exception:
-        if tmp_path.exists():
-            try:
+        if tmp_path is not None and tmp_path.exists():
+            with contextlib.suppress(OSError):
                 tmp_path.unlink()
-            except OSError:
-                pass
         raise
 
 

@@ -1,15 +1,19 @@
-"""tests for write_evidence_chain / save_rewrite_history 原子性（review §二 P1#3）。
+"""tests for write_evidence_chain / save_rewrite_history 原子性（review §二 P1#3 + §三 #11）。
 
 手段：
 1. 正常写完后目录不留 ``.tmp`` 残骸。
 2. mock json.dumps 抛错模拟"序列化失败"，验证目标文件**保持旧内容**而非被截空。
 3. mock os.fsync 抛 OSError 模拟 fsync 失败 → 不能让原子写崩，目标文件仍正确。
+4. mock os.fdopen 抛 OSError 模拟"mkstemp 拿到 fd 但 fdopen 失败"窗口（review §三 #11）：
+   验证 fd 不泄漏 + tmp 文件不残留，覆盖 evidence_chain/writer.py 与 human_review.py。
 """
 
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
+from typing import Any, Callable
 from unittest.mock import patch
 
 import pytest
@@ -119,3 +123,78 @@ def test_save_rewrite_history_first_file_preserved_when_second_fails(
     files = sorted(p.name for p in chapters_dir.iterdir())
     assert files == ["ch5.r0.txt"]
     assert (chapters_dir / "ch5.r0.txt").read_text(encoding="utf-8") == "r0 初稿"
+
+
+def _open_fd_count() -> int:
+    """统计当前进程打开的 fd 数 — Linux 走 /proc/self/fd，macOS 走 /dev/fd。"""
+    for d in ("/proc/self/fd", "/dev/fd"):
+        if os.path.isdir(d):
+            try:
+                return len(os.listdir(d))
+            except OSError:
+                continue
+    pytest.skip("no /proc/self/fd or /dev/fd available on this platform")
+
+
+def _invoke_evidence_chain_writer(tmp_path: Path) -> None:
+    write_evidence_chain(
+        book="Z", chapter="ch9",
+        evidence=_build_min_evidence("Z", "ch9"), base_dir=tmp_path,
+    )
+
+
+def _invoke_human_review(tmp_path: Path) -> None:
+    save_rewrite_history(
+        book="Z", chapter="ch9", history=["draft text"], base_dir=tmp_path,
+    )
+
+
+@pytest.mark.parametrize(
+    ("module_path", "invoke", "chapters_subpath"),
+    [
+        (
+            "ink_writer.evidence_chain.writer",
+            _invoke_evidence_chain_writer,
+            ("Z", "chapters"),
+        ),
+        (
+            "ink_writer.rewrite_loop.human_review",
+            _invoke_human_review,
+            ("data", "Z", "chapters"),
+        ),
+    ],
+    ids=["evidence_chain_writer", "human_review"],
+)
+def test_atomic_write_no_fd_leak_on_fdopen_failure(
+    tmp_path: Path,
+    module_path: str,
+    invoke: Callable[[Path], Any],
+    chapters_subpath: tuple[str, ...],
+) -> None:
+    """review §三 #11 — mock os.fdopen 抛 OSError，验证：
+
+    (a) ``mkstemp`` 创建的 tmp 文件被 unlink 清理（不残留 ``.tmp``）。
+    (b) 50 轮重复触发 fdopen 失败后，进程的 open-fd 计数不增长 —— 旧实现
+        ``fdopen`` 抛错时 fd 未被任何对象接管，``with`` 语义不会兜底，新实现
+        在内嵌 except 路径手动 ``os.close(fd)``。
+    """
+    baseline_fds = _open_fd_count()
+
+    target = f"{module_path}.os.fdopen"
+    with patch(target, side_effect=OSError("simulated fdopen failure")):
+        for _ in range(50):
+            with pytest.raises(OSError, match="simulated fdopen failure"):
+                invoke(tmp_path)
+
+    after_fds = _open_fd_count()
+    # 允许 ±2 噪音（pytest fixture / capture 偶发 fd 抖动），但不能见 50+ 增长
+    assert after_fds - baseline_fds <= 2, (
+        f"fd leak detected: baseline={baseline_fds}, after 50 rounds={after_fds}"
+    )
+
+    chapters_dir = tmp_path
+    for part in chapters_subpath:
+        chapters_dir = chapters_dir / part
+    if chapters_dir.exists():
+        leftover_tmp = sorted(p.name for p in chapters_dir.iterdir() if ".tmp" in p.name)
+        assert leftover_tmp == [], f"残留 .tmp 文件: {leftover_tmp}"
