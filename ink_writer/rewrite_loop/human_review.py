@@ -154,7 +154,12 @@ def write_human_review_record(
         "evidence_chain_path": str(evidence_chain_path),
     }
 
+    # 单次 write（review §三 #3 修复）：旧实现 fh.write(json) + fh.write("\n")
+    # 两次调用，并发 append 时两个进程的 json 与 \n 可能交错产出
+    # ``<json1><json2>\n\n``，整行解析即炸。改为单 write —— POSIX O_APPEND
+    # 普通文件的单次 write(2) 是原子的（普通 needs_human_review 记录远小于
+    # 默认 8K BufferedWriter buffer，不会被拆 syscall）。
+    line = json.dumps(record, ensure_ascii=False) + "\n"
     with open(out_path, "a", encoding="utf-8") as fh:
-        fh.write(json.dumps(record, ensure_ascii=False))
-        fh.write("\n")
+        fh.write(line)
     return out_path

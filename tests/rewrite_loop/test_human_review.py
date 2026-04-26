@@ -71,6 +71,61 @@ def test_write_human_review_record_appends_jsonl(tmp_path: Path) -> None:
     assert "marked_at" in record and record["marked_at"].endswith("Z")
 
 
+def test_write_human_review_record_single_write_call(tmp_path: Path) -> None:
+    """review §三 #3 修复：jsonl record 必须经一次 fh.write 调用写出。
+
+    旧实现 fh.write(json) + fh.write("\n") 两次调用，并发 append 时两个进程
+    的 json 与 \\n 可能交错产出 ``<json1><json2>\\n\\n``，整行解析炸。新
+    实现合并为单 write —— 用 monkey-patch 拦截 fh.write 计数次数，未来
+    若有人改回双 write 立即失败。
+    """
+    from unittest.mock import patch
+
+    real_open = open
+    write_calls: list[str] = []
+
+    class _CountingFh:
+        def __init__(self, fh):
+            self._fh = fh
+
+        def write(self, s):
+            write_calls.append(s)
+            return self._fh.write(s)
+
+        def __enter__(self):
+            self._fh.__enter__()
+            return self
+
+        def __exit__(self, *a):
+            return self._fh.__exit__(*a)
+
+    def fake_open(path, *args, **kwargs):
+        # 只拦截 needs_human_review.jsonl 的 append 调用；其他文件（mkdir 等
+        # 不走 open）正常放行
+        if str(path).endswith("needs_human_review.jsonl"):
+            return _CountingFh(real_open(path, *args, **kwargs))
+        return real_open(path, *args, **kwargs)
+
+    with patch("ink_writer.rewrite_loop.human_review.open", side_effect=fake_open):
+        write_human_review_record(
+            book="demo",
+            chapter="ch001",
+            blocking_cases=["case-001"],
+            rewrite_attempts=1,
+            rewrite_history_paths=[],
+            evidence_chain_path=tmp_path / "ev.json",
+            base_dir=tmp_path,
+        )
+
+    # 关键断言：只调用了 1 次 fh.write，且整行末尾正好 1 个 \n
+    assert len(write_calls) == 1, (
+        f"expected single fh.write call (atomic JSONL line); got {len(write_calls)}: "
+        f"{[s[:40] for s in write_calls]}"
+    )
+    assert write_calls[0].endswith("\n")
+    assert not write_calls[0].endswith("\n\n")
+
+
 def test_write_human_review_appends_not_overwrites(tmp_path: Path) -> None:
     common = dict(
         book="demo",
