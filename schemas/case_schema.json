@@ -19,7 +19,7 @@
   "properties": {
     "case_id": {
       "type": "string",
-      "pattern": "^CASE-([0-9]{4}|LEARN|PROMOTE)-(M[0-9]+-)?[0-9]{4}$"
+      "pattern": "^CASE-([0-9]{4}|LEARN|PROMOTE|LR(-[0-9]{4})?)-(M[0-9]+-)?[0-9]{4}$"
     },
     "title": {"type": "string", "minLength": 1, "maxLength": 200},
     "status": {
@@ -32,7 +32,7 @@
     },
     "domain": {
       "type": "string",
-      "enum": ["writing_quality", "infra_health"]
+      "enum": ["writing_quality", "infra_health", "live_review"]
     },
     "layer": {
       "type": "array",
@@ -167,6 +167,64 @@
     },
     "sovereign": {
       "type": "boolean"
+    },
+    "live_review_meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_bvid",
+        "source_line_range",
+        "score_raw",
+        "score_signal",
+        "verdict",
+        "title_guess",
+        "genre_guess",
+        "overall_comment",
+        "comments"
+      ],
+      "properties": {
+        "source_bvid": {"type": "string", "pattern": "^BV[A-Za-z0-9]+$"},
+        "source_line_range": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "score": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+        "score_raw": {"type": "string"},
+        "score_signal": {
+          "type": "string",
+          "enum": ["explicit_number", "sign_phrase", "fuzzy", "unknown"]
+        },
+        "verdict": {
+          "type": "string",
+          "enum": ["pass", "fail", "borderline", "unknown"]
+        },
+        "title_guess": {"type": "string", "minLength": 1, "maxLength": 200},
+        "genre_guess": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1
+        },
+        "overall_comment": {"type": "string", "minLength": 1},
+        "comments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["dimension", "severity", "content"],
+            "properties": {
+              "dimension": {"type": "string"},
+              "severity": {
+                "type": "string",
+                "enum": ["negative", "positive", "neutral"]
+              },
+              "content": {"type": "string"},
+              "raw_quote": {"type": "string"}
+            }
+          }
+        }
+      }
     }
   }
 }

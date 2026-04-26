@@ -1,12 +1,47 @@
-# Ralph Progress Log — live-review module (2026-04-26)
-
-PRD: prd.json (scripts/ralph/prd.json is symlink → ../../prd.json)
-Branch: ralph/live-review-2026-04-26
-Spec: docs/superpowers/specs/2026-04-26-live-review-integration-design.md (commit 611ccd1)
-Plan: docs/superpowers/plans/2026-04-26-live-review-implementation.md (commit 17ed48c)
+# Ralph Progress Log
+Started: 2026年 4月26日 星期日 11时24分11秒 CST
+---
 
 ## Codebase Patterns
+- Schema 修改严格保持 `additionalProperties: false`：任何新顶层字段必须在 properties 显式声明，否则现存数据立即拒收。
+- case_id pattern 容纳多前缀的方式：在主 alternation 段加分支（如 `LR(-[0-9]{4})?`），保留 `(M[0-9]+-)?` 与末尾 `[0-9]{4}$` 不动；每加一个前缀都要回归 `tests/case_library/test_schema_backward_compat.py::test_all_existing_cases_still_validate` 全 410 份。
+- pytest.ini `testpaths` 是单行长串 — 新增目录追加在末尾即可，不要重排已有目录避免 diff 噪音；行后注释保持原样。
+- ruff isort 要求：`from __future__ import annotations` 后空一行，再 stdlib，再空一行，再三方包；conftest/test 文件别忽略 `--fix` 自动修复。
+- 测试用 `Draft202012Validator(load_schema(...))` fixture 模式：从 `tests/live_review/conftest.py` 取 `load_schema` fixture（按 schema 文件名加载），再实例化 validator；schema self-validity 用 `Draft202012Validator.check_schema(schema)`。
 
-（ralph 在跑 US 过程中发现的可复用约定填这里）
+---
+
+## 2026-04-26 11:30 CST - US-001 schema 定义 + 410 份病例向后兼容测试
+
+**实现内容：**
+- 新建 `schemas/live_review_extracted.schema.json` (Draft 2020-12) — jsonl 中间产物 schema，强制 18 字段，含 11-dimension enum / 4-signal enum / 4-verdict enum / score 0-100 含 null。
+- 新建 `schemas/live_review_genre_acceptance.schema.json` — 题材聚合产物 schema，case_ids 严格 `^CASE-LR-[0-9]{4}-[0-9]{4}$` pattern。
+- 修改 `schemas/case_schema.json`：(1) case_id pattern 加 `LR(-[0-9]{4})?` 分支 (2) domain enum 加 `live_review` (3) 追加 optional `live_review_meta` block 含 10 字段。
+- 修改 `pytest.ini`：testpaths 末尾追加 `tests/live_review`（不动其他目录）。
+- 新建 `tests/live_review/__init__.py`（空）+ `conftest.py`（fixtures: fixtures_dir / schemas_dir / load_schema）。
+- 新建 `tests/live_review/test_schema_validation.py`（9 用例：2 self-valid / 5 extracted 校验 / 2 genre_acceptance 校验，全过）。
+- 新建 `tests/case_library/test_schema_backward_compat.py`（3 用例：410 份现存 yaml / 新增 LR sample / 防过宽 domain，全过）。
+
+**Files changed:**
+- A schemas/live_review_extracted.schema.json
+- A schemas/live_review_genre_acceptance.schema.json
+- M schemas/case_schema.json
+- M pytest.ini
+- A tests/live_review/__init__.py
+- A tests/live_review/conftest.py
+- A tests/live_review/test_schema_validation.py
+- A tests/case_library/test_schema_backward_compat.py
+
+**验证：**
+- `python3 -m pytest tests/live_review/test_schema_validation.py tests/case_library/test_schema_backward_compat.py --no-cov -q` → 12 passed。
+- `python3 -m pytest tests/case_library tests/editor_wisdom tests/learn --no-cov -q` → 427 passed（无回归）。
+- `ruff check schemas/ tests/live_review/ tests/case_library/test_schema_backward_compat.py` → All checks passed。
+
+**Learnings for future iterations:**
+- **Plan 中 case_id pattern 字面写错**：`^CASE-([0-9]{4}|LEARN|PROMOTE|LR)-(M[0-9]+-)?[0-9]{4}$` 只能匹配 `CASE-LR-NNNN`，匹配不了 `CASE-LR-2026-NNNN`（Plan Discovered Constraints 自己也说要兼容两种形式但提供的 regex 错了）。我改用 `^CASE-([0-9]{4}|LEARN|PROMOTE|LR(-[0-9]{4})?)-(M[0-9]+-)?[0-9]{4}$`，与 spec §3.2 / US-002 prefix='CASE-LR-2026-' / genre_acceptance.case_ids pattern 全部一致。后续 US 看到 case_id 时无需再 patch pattern。
+- **case_schema.json 顶层 schema_version**：plan 提示不能加 `$schema_version` 字段（与 JSON Schema 自有字段冲突），但其实 case_schema.json 顶层 `additionalProperties` 没有显式 false（仅在 properties 内的对象限制），加自定义字段会被 jsonschema 当作元数据忽略。我没加任何顶层版本字段，逻辑版本号靠 commit message 描述（"schema_version 1.0→1.1"）。
+- **live_review_meta.required 9 字段而非 10**：plan diff 中 `required` 列出 9 个字段（`source_bvid`/`source_line_range`/`score_raw`/`score_signal`/`verdict`/`title_guess`/`genre_guess`/`overall_comment`/`comments`），`score` 不在 required 中（因为 score 可为 null 时 LLM 可能会省略，但 score_raw 必填承载原始引语）。PRD AC 笔误说"9 字段"实际是指 required 9 个，properties 共 10 个。
+- **ruff 未在 CI 上跑某些子目录**：跑 `ruff check schemas/` 不会报错（json 文件 ruff 不管），但 tests/ 下会触发 I001（import 排序）。新写测试文件时养成 `from __future__ import annotations` 后空行 → stdlib 空行 → 三方包的习惯，省一次 --fix。
+- **pytest.ini testpaths 行尾注释**：原文件 testpaths 行结尾紧贴 `\n# 注：...` 注释，编辑时需用足够长的 old_string 锚定行末（我用 `tests/learn tests/_compat\n# 注：tests/editor_wisdom...`）才能精准追加 ` tests/live_review`。
 
 ---

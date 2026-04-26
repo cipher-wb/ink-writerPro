@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ink-writer/live_review_extracted",
+  "title": "Live Review Extracted Novel",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bvid",
+    "source_path",
+    "source_line_total",
+    "extracted_at",
+    "model",
+    "extractor_version",
+    "novel_idx",
+    "line_start",
+    "line_end",
+    "title_guess",
+    "title_confidence",
+    "genre_guess",
+    "score_raw",
+    "score_signal",
+    "verdict",
+    "overall_comment",
+    "comments"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "bvid": {"type": "string", "pattern": "^BV[A-Za-z0-9]+$"},
+    "source_path": {"type": "string", "minLength": 1},
+    "source_line_total": {"type": "integer", "minimum": 1},
+    "extracted_at": {"type": "string", "format": "date-time"},
+    "model": {"type": "string"},
+    "extractor_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "novel_idx": {"type": "integer", "minimum": 0},
+    "line_start": {"type": "integer", "minimum": 1},
+    "line_end": {"type": "integer", "minimum": 1},
+    "title_guess": {"type": "string", "minLength": 1, "maxLength": 200},
+    "title_confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+    "genre_guess": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "score": {"type": ["integer", "null"], "minimum": 0, "maximum": 100},
+    "score_raw": {"type": "string"},
+    "score_signal": {
+      "type": "string",
+      "enum": ["explicit_number", "sign_phrase", "fuzzy", "unknown"]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "fail", "borderline", "unknown"]
+    },
+    "overall_comment": {"type": "string", "minLength": 1},
+    "comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dimension", "severity", "content", "raw_quote", "raw_line_range"],
+        "properties": {
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "opening",
+              "hook",
+              "character",
+              "pacing",
+              "highpoint",
+              "golden_finger",
+              "taboo",
+              "genre",
+              "ops",
+              "simplicity",
+              "misc"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["negative", "positive", "neutral"]
+          },
+          "content": {"type": "string", "minLength": 1},
+          "raw_quote": {"type": "string"},
+          "raw_line_range": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ink-writer/live_review_genre_acceptance",
+  "title": "Live Review Genre Acceptance Stats",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "updated_at",
+    "total_novels_analyzed",
+    "min_cases_per_genre",
+    "genres"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "total_novels_analyzed": {"type": "integer", "minimum": 0},
+    "min_cases_per_genre": {"type": "integer", "minimum": 1},
+    "genres": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_count",
+          "score_mean",
+          "verdict_pass_rate",
+          "common_complaints",
+          "case_ids"
+        ],
+        "properties": {
+          "case_count": {"type": "integer", "minimum": 1},
+          "score_mean": {"type": ["number", "null"]},
+          "score_median": {"type": ["number", "null"]},
+          "score_p25": {"type": ["number", "null"]},
+          "score_p75": {"type": ["number", "null"]},
+          "verdict_pass_rate": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+          "common_complaints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["dimension", "frequency", "examples"],
+              "properties": {
+                "dimension": {"type": "string"},
+                "frequency": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                "examples": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "case_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^CASE-LR-[0-9]{4}-[0-9]{4}$"
+            },
+            "minItems": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@
     {
       "id": "US-001",
       "title": "schema 定义 + 410 份病例向后兼容测试",
-      "description": "Plan Task 1 / Spec US-LR-001 — 新建 live_review 两个 schema + 扩 case_schema.json (case_id pattern 加 |LR / domain enum 加 live_review / 增加可选 live_review_meta block)，强制 410 份现存病例向后兼容。pytest.ini testpaths 末尾加 tests/live_review。",
+      "description": "Plan Task 1 / Spec US-LR-001 — 新建 live_review 两个 schema + 扩 case_schema.json (case_id pattern 加 |LR(-NNNN)? / domain enum 加 live_review / 增加可选 live_review_meta block)，强制 410 份现存病例向后兼容。pytest.ini testpaths 末尾加 tests/live_review。",
       "acceptanceCriteria": [
         "新建 schemas/live_review_extracted.schema.json (Draft 2020-12)，含 schema_version/bvid/source_path/source_line_total/extracted_at/model/extractor_version/novel_idx/line_start/line_end/title_guess/title_confidence/genre_guess/score/score_raw/score_signal/verdict/overall_comment/comments 全部字段；comments 项含 dimension (11 主题域 enum) /severity/content/raw_quote/raw_line_range；additionalProperties: false；详细字段类型见 plan Task 1 Step 1",
         "新建 schemas/live_review_genre_acceptance.schema.json，含 schema_version/updated_at/total_novels_analyzed/min_cases_per_genre/genres，genres 项含 case_count/score_mean/score_median/score_p25/score_p75/verdict_pass_rate/common_complaints/case_ids；case_ids pattern ^CASE-LR-[0-9]{4}-[0-9]{4}$；详细字段见 plan Task 1 Step 2",
@@ -20,8 +20,8 @@
         "ruff check schemas/ tests/live_review/ tests/case_library/test_schema_backward_compat.py 无新增错误"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "case_id pattern 实际写入 ^CASE-([0-9]{4}|LEARN|PROMOTE|LR(-[0-9]{4})?)-(M[0-9]+-)?[0-9]{4}$ — 比 PRD 字面文本多一个 (-[0-9]{4})? 子组以同时容纳 CASE-LR-NNNN 与 CASE-LR-2026-NNNN（plan §Discovered Constraints 已说明此意图、所有下游 AC 与 schema (genre_acceptance.case_ids pattern / US-002 prefix='CASE-LR-2026-') 均按 CASE-LR-2026-NNNN 形式工作）。"
     },
     {
       "id": "US-002",
