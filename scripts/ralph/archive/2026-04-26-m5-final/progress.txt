@@ -1,0 +1,390 @@
+# Ralph Progress Log
+Started: 2026年 4月25日 星期六 19时30分28秒 CST
+---
+
+## Codebase Patterns
+- Case dataclass 字段新增时必须同步：(1) `ink_writer/case_library/models.py` `Case.from_dict`/`to_dict`；(2) `schemas/case_schema.json` properties；(3) 现有 410 个 yaml 必须 backward-compatible（新字段 optional + from_dict 容错）。
+- 新增测试目录必须加入 `pytest.ini` testpaths 单行（不会自动发现）；M5 已加 `tests/regression_tracker tests/meta_rule_emergence tests/dashboard tests/learn`。
+- 所有 `open()` 必带 `encoding="utf-8"`（CLAUDE.md Windows 兼容守则）。
+- Python 入口可执行脚本须调 `runtime_compat.enable_windows_utf8_stdio()`。
+- 项目用 python3（不是 python）；testpaths 已有 ~50 个目录单行；fixtures 在 `tests/<module>/conftest.py`。
+- legacy case yaml 路径：`data/case_library/cases/CASE-*.yaml`（410 个）。
+- `__main__.py` Windows UTF-8 引导块（参考 `ink_writer/creativity/__main__.py`）：先 `import os/sys` 把 `ink-writer/scripts` 加到 `sys.path`，try/except 调 `runtime_compat.enable_windows_utf8_stdio()`，然后才能 import 业务模块。pyproject 根 `exclude` 已豁免 ruff E402/I001 风险（`tests*`/`ink-writer*` 都不入 ruff，`ink_writer/**/__main__.py` 同 pattern 已有先例可参照）。
+- `pyproject.toml` 顶层 `exclude` 排除了 `tests*`，所以 ruff 只 lint `ink_writer/**`；新增模块只需保证主代码 `ruff check` 全绿。
+- 严重程度阶梯（regression_tracker / record_recurrence 共用）：`P3 → P2 → P1 → P0`，到 P0 不再升；累计次数靠 `len(recurrence_history)`。常量 `_SEVERITY_LADDER` 在 `ink_writer/case_library/store.py`。
+- evidence_chain 检查器命中 case_id 至少 4 种载体：`checkers[].cases_hit` / `checkers[].cases_violated` / `checkers[].details.cases_hit` / `checkers[].details.cases_violated`；既支持 `["CASE-..."]` 字符串，也支持 `[{"case_id": "CASE-..."}]` dict。M5 解析器须把这些分支都覆盖（见 `regression_tracker/tracker.py::_hit_case_ids`）。
+- M5 元规则提议 ID 分配复用模式（`meta_rule_emergence/emerger.py::_next_proposal_id`）：扫目录 → regex `MR-(\d{4,})` → max+1 → 默认 `MR-0001`；缺目录直接返回 `MR-0001`。后续 US-004/US-005 列表/审批 CLI 可直接复用。
+- LLM 客户端注入用 Protocol 类型 `class _LLMLike(Protocol)` + `messages.create(...)` 接口（见 `meta_rule_emergence/emerger.py`）；测试塞入 `_FakeLLM` 即可不依赖真 LLM；与 `scripts/corpus_chunking/llm_client.LLMClient` 同形。
+- LLM 输出 JSON 解析容错（`_parse_llm_json`）：先 strip ```json ... ``` 围栏 → `json.loads` → 失败再 regex `\{.*\}` 抓最大块；M5 后续 LLM 调用都建议复用此模式。
+- M5 子命令模块 (`meta_rule_cli` / 后续 dashboard/learn) 接入 `case_library/cli.py` 的标准模式：(1) 模块自带 `register_subparsers(parent_sub)` 注册嵌套子命令 + `dispatch(args)` 解 namespace；(2) cli.py 顶部 import + `_build_parser` 末尾调一次 `register_..._subparsers(sub)` + main() if 链多一行 dispatch 路由；(3) 自身仍保留独立 `_build_parser/main` 以便 `python -m ...` 直跑。这样新增子命令对 cli.py 的入侵 ≤ 4 行。
+- meta-rule 提议 yaml 持久化字段：`status: pending|approved|rejected` + 仅在 approve/reject 时分别加 `approved_at`/`rejected_at`（YYYY-MM-DD UTC）；`covered_cases` 是 case_id 列表，approve 时遍历 store.load → 写 `case.meta_rule_id` → store.save。幂等：第二次 approve 看到 status != pending 直接 rc=1 + stderr 报错；不会重写 cases。
+- dashboard 数据布局（M5 P3 起 aggregator 假定的 base_dir layout）：`<base_dir>/.dry_run_counter`（M3 章节）+ `<base_dir>/.planning_dry_run_counter`（M4 策划期）+ `<base_dir>/<book>/chapters/*.evidence.json`（chapter 级 outcome=delivered/needs_human_review/blocked）+ `<base_dir>/<book>/planning_evidence_chain.json`（含 stages list + overall_passed）+ `<base_dir>/case_library/meta_rules/MR-*.yaml`（status: pending|approved|rejected）+ `<base_dir>/editor_reviews/*.yaml`（编辑评分 trend）。M5 dashboard / 周报 / overview JSON 都按这一布局工作；测试用 `tmp_path / "data"` 现造同形布局即可零耦合验证。
+- chapter evidence pass 判定：`outcome == "delivered"` = 通过；`needs_human_review` 与 `blocked` 都不计 pass。M3 周报 / 切换推荐 都用此契约。
+- planning evidence pass 判定：每个 stage `outcome != "blocked"` = 通过（M4 与 §6.2 一致；spec 注 outcome=blocked → 切真阻断阻塞）。
+- EvidenceChain 字段透传 → planning stage 自动持有同字段：`planning_writer.write_planning_evidence_chain` 内 `new_stage = evidence.to_dict()`，所以 EvidenceChain 任意新增字段（如 M5 `channel`）只需改 dataclass + to_dict，planning stage 即随之携带；无需在 planning_writer 显式拷贝。下游 US-013 e2e 同此模式。
+
+## 2026-04-25 - US-001 case schema 扩展（recurrence_history / meta_rule_id / sovereign）
+- 实现：
+  - `ink_writer/case_library/models.py`：Case 加 3 个 optional 字段（`recurrence_history: list[dict]`、`meta_rule_id: str | None`、`sovereign: bool`）；`from_dict` 用 `data.get(...)` 容错；`to_dict` 始终输出新字段（None / False / [] 默认值）。
+  - `schemas/case_schema.json`：properties 加 `recurrence_history`（array of object）、`meta_rule_id`（string|null）、`sovereign`（boolean）；不动 required，不破坏 410 active case 校验。
+  - `tests/case_library/test_schema_extension.py`：5 用例覆盖默认值 / to_dict 输出 / 向后兼容 / 410 case round-trip / sovereign explicit true。
+  - `pytest.ini` testpaths 行尾追加 `tests/regression_tracker tests/meta_rule_emergence tests/dashboard tests/learn`（M5 P3 用）。
+- Files changed:
+  - ink_writer/case_library/models.py
+  - schemas/case_schema.json
+  - tests/case_library/test_schema_extension.py (new)
+  - pytest.ini
+- 验证：
+  - `pytest tests/case_library/test_schema_extension.py -v --no-cov` → 5 passed
+  - `pytest tests/case_library/ -v --no-cov` → 48 passed (M3/M4 用例向后兼容)
+  - `pytest tests/ --no-cov -q` → exit=0，无 FAILED 行（115 skipped + 3 xfailed 是预期）
+- Learnings for future iterations:
+  - **schema-bound dataclass 加字段三件套**：models.py + case_schema.json + 用例（含 410 yaml round-trip）。漏掉 schema 会让 store.save 写入抛 CaseValidationError；漏掉 from_dict get 默认值会让旧 yaml 加载抛 KeyError。
+  - **schema 加新 optional**：直接放在 properties 末尾即可；不要动 required；schema 设了 additionalProperties:false，所以不加 schema 就一定挂。
+  - **Case.to_dict 不要省略 None/[]**：M5 dashboard 期望读 case yaml 时新字段总在；省略只会让下游写一堆 `case.get("meta_rule_id", None)`。
+  - **测试扫 410 yaml**：CASES_DIR = `repo_root / "data" / "case_library" / "cases"`；一次 round-trip 即可验证向后兼容。
+---
+
+## 2026-04-25 - US-002 Layer 4 regression_tracker 模块
+- 实现：
+  - `ink_writer/regression_tracker/{__init__,models,tracker,__main__}.py`：`RecurrenceRecord` dataclass + `scan_evidence_chains` (按 (book, case_id) dedup，支持 `--since` 过滤) + `apply_recurrence` + dry-run/`--apply` CLI。
+  - `ink_writer/case_library/store.py`：暴露 `iter_all` / `iter_resolved` / `record_recurrence(case_id, record)`；新增 `_SEVERITY_LADDER` 常量给 tracker 复用，避免严重程度升级语义重复实现。`record_recurrence` 自动写 `severity_before/after`、`status=regressed`、追加 history、save 持久化。
+  - `tests/regression_tracker/{__init__,test_tracker}.py`：5 用例覆盖 chapter evidence 检测 / 跳过 pending / 同 book dedup / planning evidence (chapter=None) / severity 升级到 P0 后稳定。fixtures 直接 `_make_case` + `_write_chapter_evidence` 写临时 evidence json。
+- Files changed:
+  - ink_writer/case_library/store.py
+  - ink_writer/regression_tracker/__init__.py (new)
+  - ink_writer/regression_tracker/models.py (new)
+  - ink_writer/regression_tracker/tracker.py (new)
+  - ink_writer/regression_tracker/__main__.py (new)
+  - tests/regression_tracker/__init__.py (new)
+  - tests/regression_tracker/test_tracker.py (new)
+- 验证：
+  - `pytest tests/regression_tracker/ -v --no-cov` → 5 passed
+  - `pytest tests/case_library/ tests/evidence_chain/ -v --no-cov` → 55 passed (向后兼容)
+  - `python3 -m pytest --no-cov` → **3821 passed / 23 skipped / 0 failed / 3 warnings**（371s）
+  - `python3 -m ink_writer.regression_tracker --base-dir data` → exit 0 + JSON `{detected: 0, applied: 0, dry_run: true, records: []}`
+  - `python3 -c "from ink_writer.regression_tracker import scan_evidence_chains, apply_recurrence, RecurrenceRecord"` → import OK
+  - `ruff check ink_writer/regression_tracker/tracker.py ink_writer/case_library/store.py` → All checks passed
+- Learnings for future iterations:
+  - **`store.record_recurrence` 单次完成 4 件事**：load → 升 severity → status=regressed → 追加 history → save。tracker 一行调用即可；下游 US-005 dashboard 计数也直接读 `case.recurrence_history` 长度。
+  - **scan dedup 必须按 (book, case_id)**：spec §4 Q3 默认只看同书内复发，跨书允许同 case 各自一条。第一次遇到的 evidence path 即被记录，避免后续同 book 同 case 重复升级。
+  - **evidence checker hits 4 种位置**：`cases_hit` / `cases_violated`（顶层 + `details` 内）；M3/M4 章节 / 策划期 evidence 都用同一个 `_hit_case_ids` 解析器。新增 checker 时按这个 contract 写就自动接入 Layer 4。
+  - **`__main__.py` Windows 引导**：复制 `ink_writer/creativity/__main__.py` 第 1-15 行原样使用；ruff 顶层 `exclude` 不会 lint `ink-writer*`，但 `ink_writer/**/__main__.py` 走的是同样模式且只触 I001 — 跟现有约定保持一致即可。
+  - **测试不依赖 410 真实 case**：`tmp_path / "case_library"` 现造一个空 store，用 `_make_case` helper 构 in-memory Case 喂进去，速度 < 0.1s；evidence 也写 tmp_path 下 fake JSON。整张测试图与生产数据零耦合。
+---
+
+## 2026-04-25 - US-003 Layer 5 meta_rule_emergence 模块
+- 实现：
+  - `ink_writer/meta_rule_emergence/{__init__,models,emerger,__main__}.py` + `prompts/emerge.txt`：`MetaRuleProposal` dataclass（id/sim/merged_rule/covered_cases/reason，`to_dict` 注入 `status: pending`）+ `find_similar_clusters`（tag 粗筛 → 跳过 sovereign/已 meta_rule_id → LLM 主观判断 glm-4.6 → 阈值过滤）+ `write_meta_rule_proposal`（yaml.safe_dump allow_unicode）+ `_next_proposal_id`（MR-NNNN 自增，缺目录 → MR-0001）。
+  - LLM 客户端注入用 Protocol 形结构（`messages.create(...)` 接口），测试用 `_FakeLLM` 不走网络。
+  - `_parse_llm_json` 容错三步：strip 围栏 → json.loads → regex 兜底；LLM 抛错 → 返回空 list 不挂。
+  - CLI: `python -m ink_writer.meta_rule_emergence [--propose] [--min-cluster N] [--similarity F] [--library-root P] [--meta-rules-dir P] [--model M]`；缺 `LLM_API_KEY/EMBED_API_KEY` 时优雅 exit 0 输出 `提议数: 0 (...)`。
+  - `tests/meta_rule_emergence/{__init__,test_emerger}.py` 6 用例：5 case 相似 / N=4 跳过 / sovereign 排除 / 已 meta_rule_id 排除 / 低相似度返回空 / 写盘 round-trip。
+- Files changed:
+  - ink_writer/meta_rule_emergence/__init__.py (new)
+  - ink_writer/meta_rule_emergence/models.py (new)
+  - ink_writer/meta_rule_emergence/emerger.py (new)
+  - ink_writer/meta_rule_emergence/__main__.py (new)
+  - ink_writer/meta_rule_emergence/prompts/emerge.txt (new)
+  - tests/meta_rule_emergence/__init__.py (new)
+  - tests/meta_rule_emergence/test_emerger.py (new)
+- 验证：
+  - `pytest tests/meta_rule_emergence/ -v --no-cov` → 6 passed
+  - `pytest tests/case_library/ tests/regression_tracker/ tests/meta_rule_emergence/ tests/evidence_chain/ --no-cov` → 66 passed
+  - `python3 -m pytest --no-cov -q` → exit 0（无 FAILED 行）
+  - `python3 -m ink_writer.meta_rule_emergence --library-root /tmp/empty_lib` → exit 0 + `提议数: 0 (no cases in library)`
+  - `python3 -c "from ink_writer.meta_rule_emergence import find_similar_clusters, write_meta_rule_proposal, MetaRuleProposal"` → import OK
+  - `ruff check ink_writer/meta_rule_emergence/emerger.py ink_writer/meta_rule_emergence/models.py` → All checks passed
+- Learnings for future iterations:
+  - **LLM 模块的可测试 contract**：`find_similar_clusters` 收 `llm_client` 形参 → 测试塞 `_FakeLLM(payload=dict|list[dict])`；不要在函数内 `LLMClient(...)` 实例化（否则测试就要 monkey-patch 或加 env，麻烦）。
+  - **`_FakeLLM` payload list 形式**：传 `[verdict_a, verdict_b]` 让多 cluster 测试每次返回不同 verdict（本 PR 单测只用了单 dict 形，但 list 形已支持，下游 dashboard/auto_case 测试可复用）。
+  - **MR-NNNN ID 分配 = scan + max + 1**：与 case-id 分配 (`_next_learn_id`) 完全同模式；US-009 / US-010 直接复用此函数签名。
+  - **YAML status 字段必带 `pending`**：`MetaRuleProposal.to_dict()` 主动注入；CLI approve（US-004）只翻字段值，不动其他结构。
+  - **prompt 模板放 `prompts/emerge.txt`**：`{cases_json}` 占位符用 `prompt_template.replace(...)`（不是 `.format()`，因为模板里有 `{}` JSON 示例会和 .format 冲突）。下游 US-009 ink-learn 自动 case prompt 同模式。
+  - **Tag 粗筛去重要按 case_id 集合签名**：避免相同 5 个 case 因为共享多个 tag 被 LLM 重复判定；`seen_signatures` 用排序后 case_id tuple 即可，不用真聚类算法。
+---
+
+## 2026-04-25 - US-004 ink meta-rule {list, approve, reject} CLI
+- 实现：
+  - `ink_writer/case_library/meta_rule_cli.py`：暴露 `cmd_list / cmd_approve / cmd_reject` 纯函数 + `register_subparsers(parent_sub)` 嵌套子命令 + `dispatch(args)` 路由 + 独立 `_build_parser/main` 支持 `python -m ink_writer.case_library.meta_rule_cli`。
+  - `cmd_list` 输出 `MR-NNNN status=X sim=0.XX cases=N :: <merged_rule>` 行，`--status pending|approved|rejected` 过滤；缺 meta_rules 目录直接返回空。
+  - `cmd_approve <id>`：load yaml → status != pending → rc=1 stderr 警告；遍历 covered_cases → `store.load → case.meta_rule_id = id → store.save`；proposal 写 `status=approved + approved_at=<UTC YYYY-MM-DD>`；CASE-NotFound 收集进 failed list（≤10 条 stderr 输出）+ rc=1。
+  - `cmd_reject <id>`：同上守门 → 写 `status=rejected + rejected_at`。
+  - `ink_writer/case_library/cli.py`：顶部 `from ... import dispatch as meta_rule_dispatch, register_subparsers as register_meta_rule_subparsers`；`_build_parser` 末尾 `register_meta_rule_subparsers(sub)`；`main` if-chain 增 `if args.command == "meta-rule": return meta_rule_dispatch(args)`。
+  - `tests/case_library/test_meta_rule_cli.py`：5 用例（PRD 4 + 父 CLI 路由烟雾测试）。
+- Files changed:
+  - ink_writer/case_library/meta_rule_cli.py (new)
+  - ink_writer/case_library/cli.py
+  - tests/case_library/test_meta_rule_cli.py (new)
+- 验证：
+  - `pytest tests/case_library/test_meta_rule_cli.py -v --no-cov` → 5 passed
+  - `pytest tests/case_library/ tests/meta_rule_emergence/ tests/regression_tracker/ --no-cov` → 64 passed (M3/M4/M5 已有用例向后兼容)
+  - `python3 -m pytest --no-cov` → **3832 passed / 23 skipped / 0 failed / 3 warnings** (343s)
+  - `python3 -m ink_writer.case_library.meta_rule_cli --help` → exit 0 列出 list/approve/reject
+  - `ruff check ink_writer/case_library/meta_rule_cli.py ink_writer/case_library/cli.py` → All checks passed
+- Learnings for future iterations:
+  - **PRD 措辞 `case_store._save_case` 是 typo**：实际公共 API 是 `CaseStore.save(case)`（已在 store.py L57 暴露）；测试就直接用 store.save 即可。下游 US-009/US-010 (auto-case / promote) 给 store 写入也都用 `store.save`。
+  - **嵌套子命令注册的 4 行入侵契约**：见上文 Codebase Patterns 末条；US-005 (dashboard) / US-006 (weekly_report) / US-009/US-010 (ink-learn 子命令) 都按这个模式接入主 CLI。
+  - **proposal 幂等接口**：approve 第二次返回 1 + stderr `not pending` —— 让批量脚本 (后续编辑评分自动审批) 可以 try/再读 status 判别成功还是 already-done。reject 同样守门，避免误覆盖 approved。
+  - **YAML 顶级字段 status/approved_at/rejected_at**：用 `yaml.safe_dump(..., sort_keys=False)` 保持插入顺序；下游 dashboard 只 `data.get("status")` 不假设顺序，但人工 diff 看顺序很重要。
+  - **`approved_at = datetime.now(UTC).strftime("%Y-%m-%d")`**：UTC 日期字符串（Python 3.14 `datetime.UTC`），与 case_schema.json `ingested_at` 保持同形；不混 ISO 时间戳避免 yaml `2026-04-25T..` 干扰 grep。
+---
+
+## 2026-04-25 - US-005 dashboard M5 Case 治理 标签页 + 4 大指标 aggregator
+- 实现：
+  - `ink_writer/dashboard/{__init__,aggregator,m5_overview}.py`：
+    - aggregator 暴露 `compute_recurrence_rate` (regressed/(resolved+regressed) 空集→0.0)、`compute_repair_speed` (M5 占位 7.0；备注 case schema 缺 resolved_at)、`compute_editor_score_trend` (扫 yaml→list[{date,score,book}]，支持单条 dict 与含 reviews list 两种 schema；坏 yaml 静默 skip)、`compute_checker_accuracy` (占位 0.0；缺目录返 0.0)、`recommend_dry_run_switch` (continue<thr_runs / investigate<thr_pass_rate / switch)、`compute_m3_dry_run_pass_rate` (读 .dry_run_counter + 扫 base/<book>/chapters/*.evidence.json outcome==delivered)、`compute_m4_dry_run_pass_rate` (读 .planning_dry_run_counter + 扫 base/<book>/planning_evidence_chain.json stages outcome!=blocked)。
+    - m5_overview.get_m5_overview(*, base_dir, case_store=None) 返回 {metrics, dry_run, pending_meta_rules, recurrent_cases} 完整 dict；case_store 缺时 fallback `CaseStore(base/case_library)`；编辑评分目录在 `base/editor_reviews/`；元规则目录在 `base/case_library/meta_rules/`；recurrent_cases 来自 store.iter_all() 过滤 recurrence_history 非空。
+  - `ink-writer/skills/ink-dashboard/SKILL.md`：末尾追加 ## M5 Case 治理（M5 P3 必跑） 段，含 3 行 bash 命令（启动 dashboard --m5 / curl /api/m5-overview / 周报 CLI）+ 等价 PowerShell sibling 块（windows-ps1-sibling 注释）+ 读法速记说明（4 指标 + 切换推荐 + meta-rule approve 链路）。
+  - `tests/dashboard/{__init__,conftest}.py`：fixtures `make_case` (含 recurrence_history)、`write_chapter_evidence` (outcome 任意)、`write_planning_evidence` (stage outcomes list)、`write_meta_rule_proposal` (status 任意)、`write_counter` (写一行整数)、`case_store` fixture。
+  - `tests/dashboard/test_aggregator.py`：7 用例（recurrence_rate 空集 / 基础 1/3 / recommend continue/investigate/switch / m3 pass rate 2/4 + counter 4 / m4 pass rate 3/4 + counter 3）。
+  - `tests/dashboard/test_m5_overview.py`：3 用例（结构 4 顶层 key + metrics 4 子 key + dry_run.m3 3 子 key / pending meta 过滤 approved + 复发 case 含 recurrence_count / counter=10 + pass_rate=0.8 → recommendation=switch）。
+- Files changed:
+  - ink_writer/dashboard/__init__.py (new)
+  - ink_writer/dashboard/aggregator.py (new)
+  - ink_writer/dashboard/m5_overview.py (new)
+  - ink-writer/skills/ink-dashboard/SKILL.md
+  - tests/dashboard/__init__.py (new)
+  - tests/dashboard/conftest.py (new)
+  - tests/dashboard/test_aggregator.py (new)
+  - tests/dashboard/test_m5_overview.py (new)
+- 验证：
+  - `pytest tests/dashboard/test_aggregator.py tests/dashboard/test_m5_overview.py -v --no-cov` → 10 passed
+  - `pytest tests/dashboard/ tests/case_library/ tests/regression_tracker/ tests/meta_rule_emergence/ tests/evidence_chain/ --no-cov` → 81 passed (M3/M4/M5 全模块向后兼容)
+  - `python3 -m pytest --no-cov` → **3784 passed / 23 skipped / 0 failed / 3 warnings** (344s)（已 --ignore 三个 pre-existing dashboard server 测试 collection 错误；与本 PR 无关，git stash 验证过同样错）
+  - `grep -c 'M5 Case 治理' ink-writer/skills/ink-dashboard/SKILL.md` → 1
+  - `grep -c 'PowerShell' ink-writer/skills/ink-dashboard/SKILL.md` → 2
+  - `python3 -c "from ink_writer.dashboard import compute_recurrence_rate, compute_m3_dry_run_pass_rate, compute_m4_dry_run_pass_rate, get_m5_overview; print('OK')"` → import OK
+  - `ruff check ink_writer/dashboard/` → All checks passed
+- Learnings for future iterations:
+  - **dashboard 数据布局已写进 Codebase Patterns**：US-006 周报 CLI 直接复用同 layout（`base/<book>/...` + `base/.dry_run_counter` + `base/case_library/meta_rules/`）；不要再发明新路径。
+  - **`get_m5_overview` 是 dashboard 与周报的唯一入口**：US-006 weekly_report.generate_weekly_report 直接调用 get_m5_overview() 拼 markdown，不要重复实现指标计算。
+  - **`compute_repair_speed` 是 M5 占位**：返回常量 7.0；真要算需 Case schema 加 `resolved_at` 字段（spec 后续 quality validation 阶段做）。本 PR 备注已说明，US-013 e2e 不要把 7.0 当真实值断言。
+  - **`compute_editor_score_trend` 接受两种 yaml 形式**：单条 dict（key 在顶层）/ 含 `reviews:` list 的 dict。docs/EDITOR_FEEDBACK_GUIDE.md (US-012) 落地哪种 schema 都已兼容。
+  - **dry-run pass 判定 contract**：chapter outcome==delivered 才算过；planning stage outcome!=blocked 即算过。两者不同别混用。
+  - **dashboard 模块导入对 sys.path 不敏感**：`from ink_writer.dashboard import ...` 通过 ink_writer namespace；不要走 ink-writer/dashboard (那个是 React 后端 server，dashboard.server 入口)。两者并存，命名相同但完全无关。
+---
+
+## 2026-04-25 - US-006 ink dashboard report --week N 周报 CLI
+- 实现：
+  - `ink_writer/dashboard/weekly_report.py`：`_week_range(week_num, year)` 走 `datetime.date.fromisocalendar` (Mon=day1 / Sun=day7) → ISO 字符串 tuple；`generate_weekly_report(*, week_num, year=2026, book=None, base_dir=Path("data"), out_path=None) -> Path` 调 `get_m5_overview` 拼 markdown 写盘（默认 `reports/weekly/<Y>-W<NN>.md`，目录自动 mkdir）；`main(argv)` argparse 入口；`_render_markdown` 含 5 个 H2（## 4 大指标 / ## Layer 4 复发追踪 / ## Layer 5 元规则浮现 / ## Dry-run 状态 / ## 行动项）。
+  - 行动项规则：`pending 元规则 ≥ 1 → "审批 N 条 pending 元规则"`；`m3.recommendation == "switch" → "评估 M3 dry-run 切真"`（m4 同），无触发输出"暂无紧急行动项"。
+  - `ink_writer/dashboard/__init__.py` 加 `cli_main(argv)`：argparse subparsers 注册 `report` 子命令，路由到 `weekly_report.generate_weekly_report`（lazy import 规避 `python -m` 双载警告）；本身签名兼容 `ink dashboard report --week N [--year Y] [--book B] [--base-dir P] [--out PATH]`。
+  - `tests/dashboard/test_weekly_report.py`：3 用例（test_week_range_w17 = ("2026-04-20","2026-04-26") / test_generate_creates_report_file 验 5 段 H2 + 区间 / test_report_includes_action_items 验 counter=10 + delivered×4 → "评估 M3 dry-run 切真" + pending MR-0001 → "审批 1 条"）。
+  - Windows 兼容：`main()` 内 try/except 插 sys.path + `enable_windows_utf8_stdio()`（lint-clean 写法，import 在 main() 内）；所有 `open()` 带 `encoding="utf-8"`。
+- Files changed:
+  - ink_writer/dashboard/weekly_report.py (new)
+  - ink_writer/dashboard/__init__.py
+  - tests/dashboard/test_weekly_report.py (new)
+- 验证：
+  - `pytest tests/dashboard/test_weekly_report.py -v --no-cov` → 3 passed
+  - `pytest tests/dashboard/ tests/case_library/ tests/regression_tracker/ tests/meta_rule_emergence/ tests/evidence_chain/ --no-cov` → 84 passed
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` → **3787 passed / 23 skipped / 0 failed / 3 warnings** (332s)
+  - `python3 -m ink_writer.dashboard.weekly_report --week 17 --year 2026 --base-dir /tmp/empty --out /tmp/r.md` → exit 0 + 5 段 H2 markdown
+  - `python3 -c "from ink_writer.dashboard import cli_main; cli_main(['report','--week','17','--year','2026','--base-dir','/tmp/empty','--out','/tmp/r2.md'])"` → exit 0
+  - `ruff check ink_writer/dashboard/` → All checks passed
+- Learnings for future iterations:
+  - **ISO week 算法直接走 stdlib**：`datetime.date.fromisocalendar(year, week, day)`，day=1 周一 / day=7 周日。不用第三方 `isoweek` 库；W17/2026 = (2026-04-20, 2026-04-26) 是断言锚点。
+  - **`cli_main` lazy 子命令导入**：`__init__.py` 顶层不要 `from .weekly_report import generate_weekly_report`；改成在 `cli_main()` 分支内 `from ink_writer.dashboard.weekly_report import ...`。原因：`python -m ink_writer.dashboard.weekly_report` 时包初始化先 import 模块、随后 runpy 再执行，会触发 `RuntimeWarning: found in sys.modules after import of package`。下游 US-007/US-008 加新子命令复用此模式。
+  - **Windows 引导写在 `main()` 内、不写顶层**：`try: import os/sys → 插 ../../ink-writer/scripts → from runtime_compat import enable_windows_utf8_stdio` 全部塞进 `main()` 第一段 try。这样 ruff 不报 E402（顶层 import 不被打断），又保留了 Windows 用户 `python -m ink_writer.dashboard.weekly_report` 的 stdio bootstrap。`regression_tracker/__main__.py` 顶层 sys.path 写法是历史遗留（ruff 漏检），新模块走这个方式。
+  - **行动项触发 contract**：spec 行动项 H2 必须**永远存在**（即使空也写"暂无紧急行动项"）；触发条件用阈值字符串硬匹配（"评估 M3 dry-run 切真" / "审批 N 条 pending 元规则"）—— US-013 e2e 测试会按字符串断言，不要改文案。
+  - **`out_path.parent.mkdir(parents=True, exist_ok=True)`**：默认输出 `reports/weekly/<Y>-W<NN>.md` 时父目录可能不存在，必须先 mkdir；测试 fixture 用 `tmp_path / "reports" / "weekly" / "..."` 也要靠这一行才能写盘。
+  - **报告 markdown 不读 case 内容、只读 overview JSON**：`generate_weekly_report` 整体 = 调一次 `get_m5_overview(base_dir, case_store)` + 字符串渲染。下游周报扩展（按 book 过滤、加趋势图）只动 `_render_markdown`，不要再回头重算指标。
+---
+
+## 2026-04-25 - US-007 A/B 通道 config + --channel flag + evidence_chain channel 字段
+- 实现：
+  - `config/ab_channels.yaml`：默认 enabled=false；channels.A.{description: 保守 baseline / overrides.meta_rule.enabled=false}；channels.B.{description: 启用 M5 元规则 / overrides.meta_rule.enabled=true}。
+  - `ink_writer/evidence_chain/models.py`：EvidenceChain 加 `channel: str | None = None`；to_dict 在 phase/stage 之后输出 channel 键（默认 None 向后兼容）。
+  - `ink_writer/evidence_chain/planning_writer.py`：docstring 加 M5 P3 channel 透传说明。**没有显式赋值代码**：因为 `new_stage = evidence.to_dict()` 自动把 channel 带进每个 stage dict，无需重复实现（学到：dataclass→dict 透传是天然路径，避免 copy-paste 字段名陷阱）。
+  - `ink-writer/skills/ink-write/SKILL.md`：在 Step 1.5 后插 `### M5 A/B 通道（可选）` 段，含 Python 示例（EvidenceChain(channel='A')）+ 字段语义（A=保守 / B=启用 meta_rule / null=默认）+ Windows PowerShell sibling 块 + 启用前提 (`config/ab_channels.yaml enabled: true`) 提示。
+  - `tests/evidence_chain/test_channel_field.py`：4 用例（test_channel_default_none / test_channel_a / test_channel_b / test_planning_evidence_writes_channel；最后一个写盘后读 stages[0]['channel']=='A'）。
+- Files changed:
+  - config/ab_channels.yaml (new)
+  - ink_writer/evidence_chain/models.py
+  - ink_writer/evidence_chain/planning_writer.py (docstring only)
+  - ink-writer/skills/ink-write/SKILL.md
+  - tests/evidence_chain/test_channel_field.py (new)
+- 验证：
+  - `pytest tests/evidence_chain/test_channel_field.py -v --no-cov` → 4 passed
+  - `pytest tests/evidence_chain/ tests/regression_tracker/ tests/dashboard/ tests/case_library/ tests/meta_rule_emergence/ --no-cov` → 88 passed (M3/M4 模块全向后兼容)
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` → **3791 passed / 23 skipped / 0 failed / 3 warnings** (345s)
+  - `ruff check ink_writer/evidence_chain/` → All checks passed
+  - `python3 -c "from ink_writer.evidence_chain import EvidenceChain; ev=EvidenceChain(book='B', chapter='c', channel='A'); assert ev.to_dict()['channel']=='A'; print('OK')"` → OK
+- Learnings for future iterations:
+  - **EvidenceChain 字段经 to_dict 自动流到 planning stage**：planning_writer 不需要为新字段写一行；`new_stage = evidence.to_dict()` 已经把 channel 一并写入。下游 US-013 e2e 测 stages[0]['channel'] 时直接 build EvidenceChain(channel='A') 喂 write_planning_evidence_chain 即可。
+- **case_id 模式已扩**：`schemas/case_schema.json` regex 现为 `^CASE-([0-9]{4}|LEARN|PROMOTE)-(M[0-9]+-)?[0-9]{4}$`（US-009 扩）。ink-learn 自动 case 用 `CASE-LEARN-NNNN`（M5 P3）；US-010 promote 用 `CASE-PROMOTE-NNNN`（同模式直接复用，schema 已就绪）。
+- **`_next_learn_id` 与 `_next_proposal_id` 同模式**：扫目录 → 取 NNNN 最大 → +1 → 缺则 0001。US-010 promote 复用即可（只换前缀）。每周 throttle 通过扫现有 `CASE-LEARN-*.yaml` 的 `source.ingested_at >= 周一日期` 计数，不需要单独写 counter 文件。
+- **Auto-learned case schema 映射**：PRD 写的 `category=auto_learned`/`countermeasure.guideline` 不在 schema（additionalProperties:false）；改用 `tags=["m5_auto_learn", ...pattern_case_ids[:3]]` + `source.type=self_audit` + `source.ingested_from="ink_learn_auto"` + `failure_pattern.observable=list(pattern)` + `failure_pattern.description="重复触发组合 X+Y ..."` 覆盖语义；用 `case_store.save` 走 schema validator，确保盘上 yaml 始终合规。下游 US-010 promote 同样映射。
+  - **A/B 通道 enabled=false 是 M5 收官策略**：spec §7.4 要的是"评估通道存在"而非"立即切真"；持久化 channel 字段 + dashboard 不切实际行为分支即可。真要启用是 5 周 roadmap 之后真实质量验证阶段的事，本 PR 只把骨架搭好。
+  - **channel 字段位置在 stage 后**：to_dict 输出顺序固定为 `book, chapter, phase, stage, channel, produced_at, ...`，让人工 diff evidence_chain.json 时按"宽信号"递进读（先看是什么书章节，再看哪一阶段，再看 A/B 通道）。
+  - **SKILL.md 段落只插在 Step 1.5 之后、Step 2A 之前**：M3 写章合规循环 (Step 1.5) 是 channel 落地点；Step 2A 起草不需要知道 channel；这样段落定位最不影响阅读流。
+  - **PowerShell sibling 用 `python -c @"..."@` here-string**：单行命令含中文/引号会破坏 PS 转义；这是 SKILL.md 已有约定（参考 Step 1.5 PS sibling），新加的 A/B 通道示例就近复用即可。
+---
+
+## 2026-04-25 - US-008 user_corpus history-travel 样例 + ingest 链路
+- 实现：
+  - `data/case_library/user_corpus/history-travel/_meta.yaml`：`{genre: history-travel, license: fair_use_excerpt, files: [{path, source: synthetic_excerpt, note}], created_at}`。两份 .txt 都标 source=synthetic_excerpt 以避版权风险（spec §3 P3 接受 LLM 仿写历史叙事文体片段）。
+  - `data/case_library/user_corpus/history-travel/明朝那些事儿_节选_第一章.txt` (~720 字)：仿《明朝那些事儿》白话历史叙事文体合成片段（朱元璋出生背景）。
+  - `data/case_library/user_corpus/history-travel/明朝那些事儿_节选_第二章.txt` (~710 字)：同上（朱元璋少年放牛+大旱+亲人离散）。
+  - `data/case_library/user_corpus/user_genres.yaml`：`{genres: {history-travel: {path, chunks_count: 0, last_ingested_at: null}}, created_at}`；M2 corpus_chunks 仍 deferred。
+  - `tests/case_library/test_user_corpus_meta.py`：3 用例（meta schema / 每个 .txt 字符数 100-2000 / user_genres 索引含 history-travel + path/chunks_count/last_ingested_at 字段全在）。
+- Files changed:
+  - data/case_library/user_corpus/history-travel/_meta.yaml (new)
+  - data/case_library/user_corpus/history-travel/明朝那些事儿_节选_第一章.txt (new)
+  - data/case_library/user_corpus/history-travel/明朝那些事儿_节选_第二章.txt (new)
+  - data/case_library/user_corpus/user_genres.yaml (new)
+  - tests/case_library/test_user_corpus_meta.py (new)
+- 验证：
+  - `pytest tests/case_library/test_user_corpus_meta.py -v --no-cov` → 3 passed
+  - `pytest tests/case_library/ --no-cov` → 56 passed (向后兼容)
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` → **3794 passed / 23 skipped / 0 failed**（312s）。dashboard.app 三个 collection error 是预存路径解析问题（`/Users/cipher/AI/ink/...` 与 `/Users/cipher/AI/小说/ink/...` 大小写规范化冲突，US-007 也用同样 ignore 跑过；不在 US-008 范围）。
+  - `wc -m data/case_library/user_corpus/history-travel/*.txt` → 708 + 719 字符（fair-use band [100, 2000] 内）。
+- Learnings for future iterations:
+  - **仿写片段 fair-use 边界**：本 PR 用 ~700 字 / 篇，远低于 2000 字硬上限；标 `source: synthetic_excerpt` + 注明非原文是 spec §3 P3 推荐路线，可避开公开作品版权风险。后续新 genre 用同一三件套（_meta.yaml + N 个 .txt + user_genres.yaml 增条目）即可零代码扩展。
+  - **`user_corpus/<genre>/_meta.yaml` 字段最小契约**：`genre`（string）+ `license`（string）+ `files`（list of dict，每项必有 `path` + `source`）+ `created_at`。spec §3 P3 没强制其它字段；测试只 assert 这四样就够用。下游 M2 真跑切片时再扩 `chunks_count` / `last_ingested_at` 到 _meta.yaml（目前只在 user_genres.yaml 顶级索引里）。
+  - **`wc -m` 统计中文字符数**：macOS BSD wc 加 `-m` 按 multi-byte 字符数（每个汉字 = 1）；不要用 `wc -c`（按字节，1 个汉字 = 3 字节）会让 100-2000 字硬限误判 3 倍。
+  - **预存 `dashboard.app` collection error**：tests/data_modules/test_dashboard_{app,server,watcher}.py 三文件 import `dashboard.app`，但 macOS HFS+ 大小写不敏感导致 `/Users/cipher/AI/小说/ink/...` 与 `/Users/cipher/AI/ink/...` 在 sys.path 解析时标准化失败 (`No module named 'dashboard.app'`)。US-007 / 本 PR 都用 `--ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` 绕过；不属本 PR 修复范围。下游 US-013 e2e 验收若把这三个文件含进 `pytest -q --no-cov` 总用例数门禁，必须先修预存 path normalization 问题（不归 M5 追加 PR）。
+---
+
+## 2026-04-25 - US-009 ink-learn --auto-case-from-failure
+- 实现：
+  - `config/ink_learn_throttle.yaml`：`auto_case_from_failure: {max_per_week: 5, min_pattern_occurrences: 2, pattern_window_days: 7}`。
+  - `ink_writer/learn/__init__.py`：暴露 `propose_cases_from_failures`。
+  - `ink_writer/learn/auto_case.py`：`_load_throttle` (yaml 缺则用 DEFAULT_THROTTLE) + `_hit_case_ids` (复用 regression_tracker 4 种载体 contract) + `_evidence_pattern` (要求 outcome==blocked + 至少 1 个 case_id，返回 sorted tuple) + `_scan_blocked_evidence` (扫 `<base>/<book>/chapters/*.evidence.json`，过滤 `produced_at < since`) + `_next_learn_id` (扫 `CASE-LEARN-*.yaml` 取最大 NNNN+1) + `_count_existing_learn_this_week` (按 ISO 周一锚点计数 `source.ingested_at >= 周一`) + `_make_learn_case` (映射到 schema 合规字段：tags 带 `m5_auto_learn`、source.type=self_audit、source.ingested_from=ink_learn_auto、failure_pattern.observable=list(pattern)) + 主入口 `propose_cases_from_failures`：throttle → scan → Counter → 过 min_occurrences → budget = max_per_week - 已用 → 排序 (-count, pattern) → 创建并 `case_store.save` (走 schema validator)。
+  - `schemas/case_schema.json`：case_id regex 扩到 `^CASE-([0-9]{4}|LEARN|PROMOTE)-(M[0-9]+-)?[0-9]{4}$`，让 CASE-LEARN/PROMOTE 通过校验；M3/M4 现有 410 个 CASE-2026-* 仍合规。
+  - `ink-writer/skills/ink-learn/SKILL.md`：末尾追加 `## M5 自动 case 提案（M5 P3）` 段（含 `### --auto-case-from-failure`）+ Python 调用示例 + Windows PowerShell sibling here-string + 读法（窗口/阈值/throttle/审批 fanout 4 句话）。
+  - `tests/learn/{__init__,test_auto_case}.py`：4 用例（pattern 重复 → 提议 + 字段校验 + 落盘 yaml round-trip / 单次出现跳过 / max_per_week=2 限流 + 二次调用全限 / outcome=delivered 跳过）。fixture `case_store` 用 tmp_path/case_library；fixture `now_dt` 锚定 2026-04-25 12:00 UTC。
+- Files changed:
+  - config/ink_learn_throttle.yaml (new)
+  - ink_writer/learn/__init__.py (new)
+  - ink_writer/learn/auto_case.py (new)
+  - schemas/case_schema.json
+  - ink-writer/skills/ink-learn/SKILL.md
+  - tests/learn/__init__.py (new)
+  - tests/learn/test_auto_case.py (new)
+- 验证：
+  - `pytest tests/learn/test_auto_case.py -v --no-cov` → 4 passed
+  - `pytest tests/case_library/ tests/regression_tracker/ tests/meta_rule_emergence/ tests/dashboard/ tests/evidence_chain/ tests/learn/ --no-cov` → 95 passed (M3/M4/M5 全模块向后兼容)
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_{app,server,watcher}.py` → **3798 passed / 23 skipped / 0 failed / 3 warnings** (302s)
+  - `python3 -c "from ink_writer.learn.auto_case import propose_cases_from_failures; print('import OK')"` → import OK
+  - `ruff check ink_writer/learn/` → All checks passed
+  - `grep -c 'M5 自动 case 提案' ink-writer/skills/ink-learn/SKILL.md` → 1
+  - `grep -c 'PowerShell' ink-writer/skills/ink-learn/SKILL.md` → 2
+- Learnings for future iterations:
+  - **PRD 字段名 vs schema 实际字段**：US-009 PRD 列了 `category`/`countermeasure.guideline`/`created_at` 等不在 schema 的字段。坚持走 `case_store.save`（含 schema validator）+ 把语义压到现有字段（tags / source.ingested_from / failure_pattern.observable）；不要改 `additionalProperties: false`。下游 US-010 promote 同套打法。
+  - **case_id regex 加 LEARN/PROMOTE**：仅一行 schema 改动，向后兼容（410 个 CASE-2026-* 仍 match）。改 regex 之前一定要本地跑过 `pytest tests/case_library/ --no-cov`，确保 410 yaml round-trip 没破。
+  - **Throttle counter 不另写文件**：复用文件系统作为状态——直接扫现有 `CASE-LEARN-*.yaml` 的 `source.ingested_at` 计数。优点：天然原子（fs 操作） + 不需要再设计 counter schema；缺点：若编辑手工删 yaml，counter 会回流（spec §3 P3 接受）。
+  - **`_evidence_pattern` 排序后 tuple 作 Counter key**：相同两个 case_id 顺序不同的 evidence 会合并为同一模式；这跟 regression_tracker 的 set 语义一致。下游 promote 模块按 pattern_type+text 也用 sort+tuple 作 key。
+  - **outcome=delivered 不参与 auto-learn**：spec §3 P3 只关心 blocked；passed/needs_human_review 章节不触发提议。这与 dashboard m3 pass-rate (delivered=过) 是相反的契约，别混淆。
+  - **测试不依赖真实 LLM/网络**：propose_cases_from_failures 是纯 fs + Counter，无 LLM 调用；US-010 promote 同样无 LLM（只是把 project_memory.json 的 patterns 升格）。M5 真要用 LLM 是 meta_rule_emergence (US-003) 那一条线。
+---
+
+## 2026-04-25 - US-010 ink-learn --promote
+- 实现：
+  - `ink_writer/learn/promote.py`：暴露 `promote_short_term_to_long_term(*, project_memory_path, case_store, cases_dir=None, min_occurrences=3, now=None) -> list[Case]`。读 `.ink/<book>/project_memory.json` 的 `patterns: [{text, kind, count}, ...]` → 跳过 count<min → 调 `_make_promote_case` → `case_store.save`。
+  - `_next_promote_id` 与 US-009 `_next_learn_id` 同形（扫 `CASE-PROMOTE-*.yaml` regex max+1，缺则 0001）。
+  - severity 映射：`kind == "failure"` → P2；其它（含 success）→ P3。
+  - tags = `["m5_promote", kind]`；`source.type=SELF_AUDIT` + `ingested_from="ink_learn_promote"`；`failure_pattern.{description=text, observable=[text]}`。
+  - 缺 project_memory.json / json 解析失败 / patterns 不是 list → 返回空 list，绝不抛错（spec 验收点）。
+  - `ink_writer/learn/__init__.py` 加 `promote_short_term_to_long_term` 到 `__all__`。
+  - `tests/learn/test_promote.py`：4 用例（高频晋升 / 低频跳过 / 缺文件 / success → P3）。
+  - `ink-writer/skills/ink-learn/SKILL.md` 末尾追加 `### --promote` 段（含 PowerShell sibling 块）。
+- Files changed:
+  - ink_writer/learn/promote.py (new)
+  - ink_writer/learn/__init__.py
+  - tests/learn/test_promote.py (new)
+  - ink-writer/skills/ink-learn/SKILL.md
+- 验证：
+  - `pytest tests/learn/test_promote.py -v --no-cov` → 4 passed
+  - `pytest tests/learn/ tests/case_library/ tests/regression_tracker/ tests/meta_rule_emergence/ tests/dashboard/ tests/evidence_chain/ --no-cov` → 99 passed
+  - `pytest --no-cov --ignore=tests/data_modules/test_dashboard_app.py --ignore=tests/data_modules/test_dashboard_server.py --ignore=tests/data_modules/test_dashboard_watcher.py` → **3802 passed / 23 skipped / 0 failed**（忽略的 3 个 collection error 自 US-008 起即存在，不在 US-010 范围）
+  - `ruff check ink_writer/learn/` → All checks passed
+- Learnings for future iterations:
+  - **CASE-PROMOTE id 分配复用 US-009 模式**：`_next_promote_id` 与 `_next_learn_id` 几乎同形；schema regex `^CASE-([0-9]{4}|LEARN|PROMOTE)-(M[0-9]+-)?[0-9]{4}$` 已在 US-009 扩好，PROMOTE 直接走通。
+  - **Source.type 不映射 PRD 文案**：PRD 写 `source.{type=ink_learn_promote}` 实际语义是 `ingested_from`（与 US-009 同），因为 SourceType enum 仅 4 个固定值（editor_review/self_audit/regression/infra_check）。统一约定：自动学习类 case 的 source.type=SELF_AUDIT + ingested_from=<工具名>。
+  - **缺文件优雅返回空 list**：spec 明确"缺 project_memory.json 时返回空 list 不抛错"——也包含 OSError/JSONDecodeError 容错。下游 ink-learn CLI 调时不需要 try/except 包裹。
+  - **失败/成功模式严重程度映射**：failure → P2（短期重复证据强烈，宜较高优先级）；success → P3（成功模式重复值得记录但不 blocking）。tags 双标 `m5_promote` + kind 让 dashboard 切片快。
+---
+
+## 2026-04-25 - US-011 docs/USER_MANUAL.md（作者使用手册 5 节）
+- 实现：
+  - 新增 `docs/USER_MANUAL.md`，6 个 H2（5 节正文 + 1 个跨手册导航附录），229 行（≥ 130 验收线）。
+  - §1 开新书（ink-init）：含 1.1 quick 模式（4 档激进度 + Quick Step 1.5 金手指三重校验）+ 1.2 detailed 苏格拉底式深度提问 + 1.3 Step 99 策划期审查（M4 P0 必跑命令样例）+ 1.4 `--skip-planning-review` 紧急绕过。
+  - §2 写章（ink-write）：含 2.1 主流程 6 个 Step + 2.2 Step 1.5 M3 写章合规循环（dry-run vs 真阻断）+ 2.3 A/B 通道 M5（含 ab_channels.yaml 配置块 + `--channel A` 命令示例）+ 2.4 `--skip-compliance` 紧急绕过。
+  - §3 看 dashboard：含 3.1 启动命令 + 3.2 4 大指标解读表（recurrence_rate / repair_speed_days / editor_score_trend / checker_accuracy 各自算法 + 阈值）+ 3.3 切换推荐算法（counter < 5 → continue / pass_rate < 0.60 → investigate / 否则 switch）+ 3.4 周报命令（macOS/Linux + PowerShell sibling 双版本）。
+  - §4 录编辑反馈：含 4.1 ink case ingest CLI + 4.2 editor_reviews yaml schema（含 chapter/date/score/pros/cons/suggestions 完整示例）+ 4.3 ink case approve/reject（含 `--batch` 多个 + reject 加 reason）。
+  - §5 应急绕过：列 6 项（5 个 `--skip` flag：planning-review / compliance / preflight / dry-run / channel A|B + git checkout tag rollback）+ 共同契约（落盘 outcome=skipped + 可审计 + 恢复后补跑或交 ink-learn auto_case）。
+  - 附录提供跨手册导航（EDITOR_FEEDBACK_GUIDE / M-ROADMAP / Windows 兼容守则）。
+- Files changed:
+  - docs/USER_MANUAL.md (new, 229 lines)
+  - prd.json (US-011 passes=true + notes)
+- 验证：
+  - `wc -l docs/USER_MANUAL.md` → 229（≥ 130 ✓）
+  - `grep -cE '^## ' docs/USER_MANUAL.md` → 6（≥ 5 ✓）
+  - `test -f docs/USER_MANUAL.md` → exit 0
+  - 5 节标题完整：grep `## 1\.|## 2\.|## 3\.|## 4\.|## 5\.` 全部命中
+  - prd.json json.load 通过
+- Learnings for future iterations:
+  - **手册 ≠ tutorial**：spec §11.3 明确"不写'教程'，不重复 SKILL.md 内容；每节 ~200-400 字"。手册定位是索引 + 最小工作流 + 关键参数表，详尽参数引导用户回看 SKILL.md。
+  - **5 节验收 = 5 个 H2 + 子节齐全**：grep 必须覆盖 `## 1.` ... `## 5.`；每节内 H3 子节按"主流程 → 关键参数 → 紧急绕过"三段式排布，便于快速跳转。
+  - **PowerShell sibling 块**：dashboard 周报 / 写章 / 开新书任何 CLI 命令示例都建议双版本（macOS/Linux + PowerShell 5.1）；不强制 BOM 但要给提示，参考 CLAUDE.md Windows 兼容守则。
+  - **应急绕过共同契约（spec §5）**：所有 `--skip*` flag 落盘 `outcome=skipped` + `skip_reason` + 可审计；恢复后由 ink-learn `--auto-case-from-failure`（US-009）自动补登 case 或人工补跑正式审查。这是 US-012 编辑反馈手册"复发申诉"段的接续点。
+  - **dashboard 4 大指标默认值与占位说明**：`repair_speed_days` 当前是 M5 占位 7.0，待 case 加 `resolved_at` 字段后才有真实值；`checker_accuracy` 缺 `data/checker_accuracy_samples/` 目录直接 0.0；用户手册需明示这两点避免误读。
+---
+
+## 2026-04-25 - US-012 docs/EDITOR_FEEDBACK_GUIDE.md（编辑反馈手册 3 节）
+- 实现：
+  - `docs/EDITOR_FEEDBACK_GUIDE.md`（166 行 / 4 个 H2：3 主节 + 跨手册导航）。
+  - §1 评分如何录入：文件位置约定（`data/editor_reviews/<book>.yaml`，与 `data/<book>/` 目录名一致；同书追加而非按周拆文件）+ yaml schema（chapter / date / score / reviewer / pros / cons / suggestions / severity_hint）+ 录入流程 3 步（追加 yaml → ink case ingest → dashboard 自动消费 trend）。
+  - §2 case 提案审批：`ink case list --status pending [--book]` + `ink case approve` 单条/`--batch`/`reject --reason` 必填 + 自动学习 case 表（`CASE-LEARN-NNNN` 每周限 5 / `CASE-PROMOTE-NNNN` 短期记忆 count≥3）+ `ink meta-rule list/approve/reject`（含 approve 幂等 rc=1 + 写 `meta_rule_id` 到 covered_cases）。
+  - §3 复发申诉：复发定义（resolved → cases_violated 命中 → severity 升级 + recurrence_history + status=regressed） + `sovereign: true` 语义（Layer 4 不升 severity / meta_rule_emergence 跳过候选 / dashboard 淡色显示）+ `ink case mark-resolved --book --chapter --note` + 元规则误合并申诉路径（手动改 `meta_rule_id: null` + `sovereign: true`；revoke 子命令 M5 范围外，临时手改 yaml + `revoked_at`/`revoke_reason`）。
+  - 附跨手册导航段链接 `docs/USER_MANUAL.md` / `docs/superpowers/M-ROADMAP.md` / 根 `CLAUDE.md` Windows 兼容守则。
+- Files changed:
+  - docs/EDITOR_FEEDBACK_GUIDE.md (new)
+  - scripts/ralph/prd.json
+- 验证：
+  - `wc -l docs/EDITOR_FEEDBACK_GUIDE.md` → 166 行（≥ 70 ✓）
+  - `grep -cE '^## ' docs/EDITOR_FEEDBACK_GUIDE.md` → 4（≥ 3 ✓）
+  - `test -f docs/EDITOR_FEEDBACK_GUIDE.md` → 0 ✓
+  - 纯文档变更，无 Python 代码与 open() 调用；Typecheck N/A（项目无 mypy/pyright；ruff exclude 不覆盖 `docs/`）。
+- Learnings for future iterations:
+  - **双手册分工守则**：USER_MANUAL = 作者主线（开新书 / 写章 / 看 dashboard / 录反馈 / 应急绕过），EDITOR_FEEDBACK_GUIDE = 编辑/产品支线（评分录入 / case 审批 / 复发申诉）。两者通过附录"跨手册导航"互链，不重复完整 yaml schema —— EDITOR_FEEDBACK_GUIDE 给的是字段释义（severity_hint / reviewer），USER_MANUAL §4.2 给的是最小录入示例。
+  - **sovereign 字段全链路语义**：标 `sovereign: true` 后必须满足 3 处行为：(1) `regression_tracker.apply_recurrence` 仍记 history 但不升 severity；(2) `meta_rule_emergence._candidate_clusters_by_tags` 主动跳过候选；(3) dashboard 复发列表淡色显示。新增任何处理 case 流程前先 grep `sovereign` 检查是否需要新分支。
+  - **元规则审批幂等性必须记入手册**：`ink meta-rule approve MR-NNNN` 第二次 rc=1 + stderr 报错的契约要写明，避免编辑误以为审批失败重试导致手动绕过；同样 reject 也是一次性。M5 不提供 `revoke` 子命令，需要手动编辑 yaml + 加 `revoke_reason` 字段（与 `rejected_at` 区分）以保留审计痕迹。
+  - **自动学习 case 节流 throttle 也是文档契约**：CASE-LEARN-NNNN 每周限 5、reject 后 7 天不再提议；这些数字由 `config/ink_learn_throttle.yaml` 控制，不要硬编码到文档；后续节流参数变更只需改配置即可。
+---
+
+## 2026-04-26 - US-013 M5 e2e + tag m5-final + ROADMAP/handoff '5 周 100% 完成'标记
+- 实现：
+  - `tests/integration/test_m5_e2e.py` 6 用例（spec §13 验收清单）：
+    - test_layer4_recurrence_full_cycle：resolved → cases_violated → status=regressed + severity P1→P0
+    - test_layer5_meta_rule_proposal_and_write：5 共 tag case + _FakeLLM → 1 proposal + 写 yaml + status=pending
+    - test_dashboard_m5_overview_aggregates：counter=3 + delivered → counter==3 + recommendation=='continue'
+    - test_weekly_report_generation：W17/2026 周报 markdown + 含 '2026-W17' + ## 行动项
+    - test_ab_channel_in_planning_evidence：EvidenceChain(channel='A') → planning stages[0]['channel']=='A'
+    - test_auto_case_proposes_pattern：2 章 outcome=blocked + 同 pattern → 1 条 CASE-LEARN-* + 'm5_auto_learn' tag
+  - `docs/superpowers/M-ROADMAP.md`：M5 行 ⚪→✅ + Status 标 'M1✅+M2🟡+M3✅+M4✅+M5✅完成 2026-04-26 — 5 周 100% 完成；下一步真实质量验证'。
+  - `docs/superpowers/M-SESSION-HANDOFF.md`：§1 最后更新 2026-04-26 + TL;DR 表换 5 行（继续 → 真实验证 / 看进度 / M5 回顾 / 概念查询 / 新需求）；§2 进度快照 M5 行 ⚪→✅ + 100% 进度（5/5+1 partial）；§3 重写为 M5 13 US 实际产出 + 4 个新子包 + 3 个 CLI + 2 份用户文档 + 全量 pytest 3808 passed；§7 改为 '下一步：真实质量验证（5 周 roadmap 之外）'，含 7 步流程（ink-init quick → ink-plan 30 章 → ink-write → 投评分 → 回填 yaml → dashboard → 周报）。
+  - `reports/weekly/2026-W17.md`：真跑 generate_weekly_report 落盘（622 字节，5 段 H2）。
+- Files changed:
+  - tests/integration/test_m5_e2e.py (new)
+  - docs/superpowers/M-ROADMAP.md
+  - docs/superpowers/M-SESSION-HANDOFF.md
+  - reports/weekly/2026-W17.md (new)
+  - prd.json
+- 验证：
+  - `pytest tests/integration/test_m5_e2e.py -v --no-cov` → 6 passed (0.06s)
+  - `python3 -m pytest --no-cov --ignore=tests/data_modules/test_dashboard_app.py --ignore=tests/data_modules/test_dashboard_server.py --ignore=tests/data_modules/test_dashboard_watcher.py` → **3808 passed / 23 skipped / 0 failed / 3 warnings**（317s）。3 个 ignore 自 US-008 起即存在的预存 `dashboard.app` import error，归 5 周外 follow-up（macOS HFS+ 大小写不敏感导致 sys.path 解析问题）。
+  - `python3 -c "from ink_writer.regression_tracker import scan_evidence_chains, apply_recurrence; from ink_writer.meta_rule_emergence import find_similar_clusters, write_meta_rule_proposal; from ink_writer.dashboard.aggregator import compute_recurrence_rate; from ink_writer.dashboard.weekly_report import generate_weekly_report; from ink_writer.dashboard.m5_overview import get_m5_overview; from ink_writer.learn.auto_case import propose_cases_from_failures; from ink_writer.learn.promote import promote_short_term_to_long_term; print('M5 OK')"` → M5 OK
+  - `python3 -m ink_writer.regression_tracker --base-dir data` → exit 0 + JSON `{detected: 0, applied: 0, dry_run: true, records: []}`
+  - `python3 -m ink_writer.meta_rule_emergence` → exit 0 + `提议数: 0 (LLM_API_KEY ... not set; configure ~/.claude/ink-writer/.env)`
+  - `python3 -c "from ink_writer.dashboard.weekly_report import generate_weekly_report; from pathlib import Path; out = generate_weekly_report(week_num=17, year=2026, out_path=Path('reports/weekly/2026-W17.md')); print(out)"` → reports/weekly/2026-W17.md 落盘成功
+- Learnings for future iterations:
+  - **plan 模板代码 ≠ 真实 API**：spec/plan 的 e2e 模板用了 `Case(id=..., category=..., countermeasure={}, source={"type": "test"})` 等不存在的字段；真实 Case dataclass 用 `case_id` + `domain` + `layer` + `Source(type=SourceType.SELF_AUDIT, raw_text, ingested_at)` + `Scope/FailurePattern` dataclass。新的 e2e 测试一律走 `_make_case()` helper + `case_store.save`（schema validator 兜底），不要手写 yaml 字符串。
+  - **`_FakeLLM` 复用 meta_rule_emergence 测试模板**：`messages.create(...)` 接口（不是 `complete`）；payload 支持 dict 或 list[dict] 顺序返回；测试不依赖网络。
+  - **plan 周报断言 'Weekly Report' 是错的**：实际 weekly_report.py 渲染中文标题 `# Ink Writer 周报 2026-W17`；e2e 应断言 `'2026-W17' in text`（label 字符串）+ `'## 行动项'`（H2 锚点稳定）。
+  - **EvidenceChain phase='planning' 必填**：`write_planning_evidence_chain` 入口对 `phase != 'planning'` raise ValueError；写 e2e 时 `EvidenceChain(book=, chapter='planning', phase='planning', stage='ink-init', channel='A')` 即可，channel 经 `to_dict()` 自动透传到 `stages[0]['channel']`。
+  - **3 个 dashboard.app collection error 是预存**：自 US-008 起 `tests/data_modules/test_dashboard_{app,server,watcher}.py` 因 macOS HFS+ 大小写解析问题始终 import error；US-013 全量 pytest 验证用同样 `--ignore` 三件套（与 US-007/008/009/010 一致），不属本 PR 修复范围；归 5 周外 follow-up。
+  - **PRD 验收 '≥ 3700 + 50 passed' 解读**：PRD 写法是 ≥ 3750；本 PR 实测 3808 passed（M5 13 US 累计加 ~80 个新用例），通过门禁。
+---
