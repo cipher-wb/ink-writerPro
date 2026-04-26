@@ -5,6 +5,7 @@
 - ``--limit N``      仅处理排序后前 N 份
 - ``--resume``       跳过 output_dir 已存在的 ``<bvid>.jsonl``
 - ``--skip-failed``  失败时不退出，写 ``_failed.jsonl`` 后继续
+- ``--workers N``    并发 worker 数（默认 1 = 单进程串行；> 1 用 multiprocessing.Pool）
 - ``--mock-llm-dir`` 测试用，每 BV 取 ``<dir>/<bvid>.json``；缺 mock 视为该 BV 失败
 
 退出码:
@@ -38,6 +39,7 @@ import re  # noqa: E402
 import sys  # noqa: E402
 import time  # noqa: E402
 import traceback  # noqa: E402
+from dataclasses import dataclass  # noqa: E402
 from pathlib import Path  # noqa: E402
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -66,6 +68,8 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="跳过 output_dir 已存在的 <bvid>.jsonl")
     p.add_argument("--skip-failed", dest="skip_failed", action="store_true",
                    help="失败时不退出，写 _failed.jsonl 后继续")
+    p.add_argument("--workers", type=int, default=1,
+                   help="并发 worker 数（默认 1 = 串行；> 1 用 multiprocessing.Pool）")
     p.add_argument("--model", default="claude-sonnet-4-6",
                    help="LLM 模型 (默认 claude-sonnet-4-6)")
     p.add_argument("--mock-llm-dir", dest="mock_llm_dir", default=None,
@@ -109,6 +113,61 @@ def _append_failed(failed_path: Path, failures: list[dict]) -> None:
             f.write(json.dumps(failure, ensure_ascii=False) + "\n")
 
 
+@dataclass
+class _BvJobResult:
+    """单 BV 处理结果，可 pickle 跨进程传递。"""
+    bvid: str
+    success: bool
+    elapsed_seconds: float
+    error: str = ""
+    traceback_str: str = ""
+
+
+def _process_one_bv(job: tuple) -> _BvJobResult:
+    """Module-level worker function for multiprocessing.Pool (must be picklable).
+
+    Args:
+        job: (raw_path_str, output_dir_str, model, mock_dir_str_or_none)
+    """
+    raw_path_str, output_dir_str, model, mock_dir_str = job
+    raw_path = Path(raw_path_str)
+    output_dir = Path(output_dir_str)
+    mock_dir = Path(mock_dir_str) if mock_dir_str else None
+
+    bvid = _infer_bvid(raw_path)
+    if not bvid:
+        return _BvJobResult(
+            bvid=raw_path.stem,
+            success=False,
+            elapsed_seconds=0.0,
+            error=f"cannot infer bvid from {raw_path.name!r}",
+        )
+
+    t0 = time.time()
+    try:
+        mock_response = _load_mock(mock_dir, bvid)
+        raw_text = raw_path.read_text(encoding="utf-8")
+        records = extract_from_text(
+            raw_text,
+            bvid=bvid,
+            source_path=str(raw_path),
+            model=model,
+            mock_response=mock_response,
+        )
+        _write_jsonl(output_dir / f"{bvid}.jsonl", records)
+        return _BvJobResult(
+            bvid=bvid, success=True, elapsed_seconds=time.time() - t0
+        )
+    except Exception as exc:  # noqa: BLE001
+        return _BvJobResult(
+            bvid=bvid,
+            success=False,
+            elapsed_seconds=time.time() - t0,
+            error=str(exc),
+            traceback_str=traceback.format_exc(),
+        )
+
+
 def _run(args: argparse.Namespace) -> int:
     input_dir = Path(args.input_dir)
     if not input_dir.is_dir():
@@ -127,53 +186,77 @@ def _run(args: argparse.Namespace) -> int:
     if args.resume:
         done_bvids = {p.stem for p in output_dir.glob("BV*.jsonl")}
 
-    mock_dir = Path(args.mock_llm_dir) if args.mock_llm_dir else None
-    failures: list[dict] = []
-    total = len(files)
-
-    for i, raw_path in enumerate(files, 1):
+    files_to_process = []
+    for raw_path in files:
         bvid = _infer_bvid(raw_path)
-        if not bvid:
-            print(
-                f"[{i}/{total}] cannot infer bvid from {raw_path.name!r}",
-                file=sys.stderr,
-            )
-            failures.append({
-                "bvid": raw_path.stem,
-                "error": f"cannot infer bvid from {raw_path.name!r}",
-                "traceback": "",
-            })
-            if not args.skip_failed:
-                break
+        if bvid and bvid in done_bvids:
+            print(f"[skip] {bvid} skipped (resume)")
             continue
+        files_to_process.append(raw_path)
 
-        if bvid in done_bvids:
-            print(f"[{i}/{total}] {bvid} skipped (resume)")
-            continue
+    if not files_to_process:
+        print("[run_batch] all done (resume); nothing to process")
+        return 0
 
-        t0 = time.time()
-        try:
-            mock_response = _load_mock(mock_dir, bvid)
-            raw_text = raw_path.read_text(encoding="utf-8")
-            records = extract_from_text(
-                raw_text,
-                bvid=bvid,
-                source_path=str(raw_path),
-                model=args.model,
-                mock_response=mock_response,
-            )
-            _write_jsonl(output_dir / f"{bvid}.jsonl", records)
-            elapsed = time.time() - t0
-            print(f"[{i}/{total}] {bvid} done in {elapsed:.1f}s")
-        except Exception as exc:  # noqa: BLE001
-            failures.append({
-                "bvid": bvid,
-                "error": str(exc),
-                "traceback": traceback.format_exc(),
-            })
-            print(f"[{i}/{total}] {bvid} FAILED: {exc}", file=sys.stderr)
-            if not args.skip_failed:
-                break
+    mock_dir_str = str(args.mock_llm_dir) if args.mock_llm_dir else None
+    jobs = [
+        (str(raw_path), str(output_dir), args.model, mock_dir_str)
+        for raw_path in files_to_process
+    ]
+    total = len(jobs)
+    failures: list[dict] = []
+
+    workers = max(1, int(args.workers))
+    if workers == 1:
+        # 串行路径（向后兼容；调试友好）
+        for i, job in enumerate(jobs, 1):
+            result = _process_one_bv(job)
+            if result.success:
+                print(f"[{i}/{total}] {result.bvid} done in {result.elapsed_seconds:.1f}s")
+            else:
+                failures.append({
+                    "bvid": result.bvid,
+                    "error": result.error,
+                    "traceback": result.traceback_str,
+                })
+                print(
+                    f"[{i}/{total}] {result.bvid} FAILED: {result.error}",
+                    file=sys.stderr,
+                )
+                if not args.skip_failed:
+                    break
+    else:
+        # 并发路径（multiprocessing.Pool + imap_unordered）
+        from multiprocessing import get_context
+
+        print(f"[run_batch] starting {workers} workers for {total} jobs")
+        ctx = get_context("spawn")  # 跨平台一致；避免 fork copy 不稳定问题
+        with ctx.Pool(processes=workers) as pool:
+            done = 0
+            try:
+                for result in pool.imap_unordered(_process_one_bv, jobs):
+                    done += 1
+                    if result.success:
+                        print(
+                            f"[{done}/{total}] {result.bvid} done in "
+                            f"{result.elapsed_seconds:.1f}s"
+                        )
+                    else:
+                        failures.append({
+                            "bvid": result.bvid,
+                            "error": result.error,
+                            "traceback": result.traceback_str,
+                        })
+                        print(
+                            f"[{done}/{total}] {result.bvid} FAILED: {result.error}",
+                            file=sys.stderr,
+                        )
+                        if not args.skip_failed:
+                            pool.terminate()
+                            break
+            finally:
+                pool.close()
+                pool.join()
 
     if failures:
         _append_failed(output_dir / "_failed.jsonl", failures)

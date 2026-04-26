@@ -169,3 +169,79 @@ def test_d_limit_2_processes_only_first_two(tmp_path, mock_batch_dir, complete_m
     assert proc.returncode == 0, f"stderr={proc.stderr}\nstdout={proc.stdout}"
     done = sorted(p.stem for p in out.glob("BV*.jsonl"))
     assert done == ["BV1AAA", "BV1BBB"]
+
+
+# === 并发 worker 测试（M-2 之后新增；改 run_batch.py 加 --workers 后） ===
+
+
+def test_e_workers_4_all_mocks_present_produces_5_jsonl(
+    tmp_path, mock_batch_dir, complete_mock_dir, schema_validator
+):
+    """4 worker 并发跑 5 mock fixture，全 5 jsonl 生成且 schema 校验通过。"""
+    out = tmp_path / "out"
+    proc = _run([
+        "--input-dir", str(mock_batch_dir),
+        "--output-dir", str(out),
+        "--mock-llm-dir", str(complete_mock_dir),
+        "--workers", "4",
+    ])
+    assert proc.returncode == 0, f"stderr={proc.stderr}\nstdout={proc.stdout}"
+    done = sorted(p.stem for p in out.glob("BV*.jsonl"))
+    assert done == ALL_BVIDS
+    # _failed.jsonl 不应存在
+    assert not (out / "_failed.jsonl").exists()
+    # 各 jsonl schema 全过
+    for bvid in ALL_BVIDS:
+        with open(out / f"{bvid}.jsonl", encoding="utf-8") as f:
+            for line in f:
+                schema_validator.validate(json.loads(line))
+
+
+def test_f_workers_4_with_one_missing_mock_skip_failed(tmp_path, mock_batch_dir):
+    """4 worker 并发：故意缺 1 mock 文件 + --skip-failed → 4 成功 + 1 失败入 _failed.jsonl + exit 0。"""
+    out = tmp_path / "out"
+    # 不传 complete_mock_dir，直接用 mock_batch_dir（缺 BV1CCC.json）
+    proc = _run([
+        "--input-dir", str(mock_batch_dir),
+        "--output-dir", str(out),
+        "--mock-llm-dir", str(mock_batch_dir),
+        "--skip-failed",
+        "--workers", "4",
+    ])
+    assert proc.returncode == 0, f"stderr={proc.stderr}\nstdout={proc.stdout}"
+    done = sorted(p.stem for p in out.glob("BV*.jsonl"))
+    # BV1CCC.jsonl 不应生成
+    assert "BV1CCC" not in done
+    assert len(done) == 4  # 其余 4 成功
+    # _failed.jsonl 应存在且含 BV1CCC
+    failed = out / "_failed.jsonl"
+    assert failed.exists()
+    failed_lines = [json.loads(line) for line in failed.read_text(encoding="utf-8").splitlines()]
+    failed_bvids = [f["bvid"] for f in failed_lines]
+    assert "BV1CCC" in failed_bvids
+
+
+def test_g_workers_2_resume_with_partial_existing(tmp_path, mock_batch_dir, complete_mock_dir):
+    """2 worker 并发 + --resume：已存在 BV1AAA.jsonl 时跳过它，仅处理另外 4 个。"""
+    out = tmp_path / "out"
+    out.mkdir()
+    # 预先放一个空 BV1AAA.jsonl 模拟已存在
+    (out / "BV1AAA.jsonl").write_text("", encoding="utf-8")
+
+    proc = _run([
+        "--input-dir", str(mock_batch_dir),
+        "--output-dir", str(out),
+        "--mock-llm-dir", str(complete_mock_dir),
+        "--resume",
+        "--workers", "2",
+    ])
+    assert proc.returncode == 0, f"stderr={proc.stderr}\nstdout={proc.stdout}"
+    # BV1AAA 应被 skip 不被覆盖
+    assert (out / "BV1AAA.jsonl").read_text(encoding="utf-8") == ""
+    # 其他 4 个应有内容
+    done = sorted(p.stem for p in out.glob("BV*.jsonl"))
+    assert done == ALL_BVIDS  # 5 文件存在
+    for bvid in ["BV1BBB", "BV1CCC", "BV1DDD", "BV1EEE"]:
+        assert (out / f"{bvid}.jsonl").stat().st_size > 0
+    assert "BV1AAA" in proc.stdout
+    assert "skip" in proc.stdout.lower()
