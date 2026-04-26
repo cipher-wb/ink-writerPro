@@ -71,6 +71,7 @@ benchmark/reference_corpus/
 benchmark/per_book_stats/
 benchmark/per_book_craft/
 scripts/ralph/progress.txt
+scripts/ralph/ralph.run.log
 
 # Ralph runtime state (root-level)
 /prd.json
