@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import json
 from collections import Counter
-from collections.abc import Iterable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -54,11 +53,19 @@ def _load_throttle(path: Path | None) -> dict[str, int]:
 
 
 def _hit_case_ids(checker: dict) -> list[str]:
+    """Extract ``CASE-...`` ids from a checker payload.
+
+    Upstream schemas (``writer_self_check.ComplianceReport.cases_violated`` 与
+    checker outcome ``cases_hit``) 显式声明为 ``list[str]`` 或 ``list[dict]``。
+    收紧到 ``isinstance(value, list)``：dict / set / generator 等异常 payload
+    被忽略（旧实现走 ``Iterable`` 时会 silently 迭代 dict keys 当作 case_id），
+    避免上游 schema 漂移悄悄污染学习管线（review §三 #10）。
+    """
     out: list[str] = []
     seen: set[str] = set()
     for key in ("cases_violated", "cases_hit"):
         for value in (checker.get(key), checker.get("details", {}).get(key)):
-            if isinstance(value, Iterable) and not isinstance(value, (str, bytes)):
+            if isinstance(value, list):
                 for item in value:
                     cid: str | None = None
                     if isinstance(item, str):

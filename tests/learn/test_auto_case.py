@@ -9,7 +9,7 @@ import pytest
 import yaml
 
 from ink_writer.case_library.store import CaseStore
-from ink_writer.learn.auto_case import propose_cases_from_failures
+from ink_writer.learn.auto_case import _hit_case_ids, propose_cases_from_failures
 
 
 def _write_chapter_evidence(
@@ -166,6 +166,30 @@ def test_throttled_at_max_per_week(
         now=now_dt,
     )
     assert again == []
+
+
+def test_hit_case_ids_rejects_dict_payload() -> None:
+    """US-007 (review §三 #10) — 上游 schema 漂移交付 dict 而非 list 时，旧版用
+    ``isinstance(value, Iterable)`` 会迭代 dict keys 当作 case_id silently 污染
+    学习管线；收紧到 ``isinstance(value, list)`` 后必须返 [] 而非 ['CASE-A']。"""
+    checker = {"cases_violated": {"CASE-A": "x"}}
+    assert _hit_case_ids(checker) == []
+
+    # 同样收紧 details.* 路径与 cases_hit 键。
+    nested = {"details": {"cases_hit": {"CASE-B": "y"}}}
+    assert _hit_case_ids(nested) == []
+
+    # 其他非 list 异常 payload（set / tuple / generator / str）也被一律拒绝。
+    assert _hit_case_ids({"cases_violated": {"CASE-C", "CASE-D"}}) == []
+    assert _hit_case_ids({"cases_violated": ("CASE-E", "CASE-F")}) == []
+    assert _hit_case_ids({"cases_violated": (x for x in ["CASE-G"])}) == []
+    assert _hit_case_ids({"cases_violated": "CASE-H"}) == []
+
+    # 正常 list 路径仍可工作（守护回归）。
+    assert _hit_case_ids({"cases_violated": ["CASE-X"]}) == ["CASE-X"]
+    assert _hit_case_ids(
+        {"cases_hit": [{"case_id": "CASE-Y"}, "CASE-Z"]}
+    ) == ["CASE-Y", "CASE-Z"]
 
 
 def test_skips_passed_chapters(

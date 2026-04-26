@@ -10,6 +10,7 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
 - 项目用 python3（不是 python）；testpaths 已有 ~50 个目录单行；fixtures 在 `tests/<module>/conftest.py`。
 - 跨平台文件锁原语：本批次 US-001 抽到 `ink_writer/_compat/locking.py`；以后任何需要文件锁的地方直接 import，不要再各模块复制 fcntl/msvcrt 代码。
 - legacy case yaml 路径：`data/case_library/cases/CASE-*.yaml`（410 个）。
+- evidence_chain checker payload 收紧约定（US-007）：`_hit_case_ids` 只接受 `isinstance(value, list)`；上游 schema (`writer_self_check.ComplianceReport.cases_violated` / checker outcome `cases_hit`) 严格 `list[str]` 或 `list[dict{case_id}]`。dict / set / tuple / generator / str 等 Iterable 一律拒（旧版 `isinstance(value, Iterable) and not isinstance(value, (str, bytes))` 会迭代 dict keys 当作 case_id 静默污染学习管线）。其他读上游 cases_* 字段的代码请同样收紧到 list 检查，不要图省事用 Iterable。
 - `__main__.py` Windows UTF-8 引导块（参考 `ink_writer/creativity/__main__.py`）：先 `import os/sys` 把 `ink-writer/scripts` 加到 `sys.path`，try/except 调 `runtime_compat.enable_windows_utf8_stdio()`，然后才能 import 业务模块。pyproject 根 `exclude` 已豁免 ruff E402/I001 风险。
 - `pyproject.toml` 顶层 `exclude` 排除了 `tests*`，所以 ruff 只 lint `ink_writer/**`；新增模块只需保证主代码 `ruff check` 全绿。
 - 严重程度阶梯：`P3 → P2 → P1 → P0`，到 P0 不再升；累计次数靠 `len(recurrence_history)`。常量 `_SEVERITY_LADDER` 在 `ink_writer/case_library/store.py`。
@@ -96,4 +97,18 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
   - `"a+"` 是"打开或创建"的标准做法，避免"先 mkdir/write_text 再上锁"这种锁外初始化的可读性陷阱；只要后续走 `seek(0) + truncate + write` 即可绕过 O_APPEND 总写 EOF 的语义。
   - spawn-context 多进程测试若需 monkey-patch 模块级函数，必须在 worker 函数内部 patch（不能 fixture 父进程 patch）：`from ink_writer.case_library import _id_alloc as mod; mod._scan_max = slow_scan_max`。worker 函数本身必须 module-level 才能被 spawn pickle。
   - 旧"锁外 write_text 救场靠锁内 glob 兜底"模式在 `ink_writer/rewrite_loop/dry_run.py:increment_dry_run_counter` 中仍存在（没在本批次 US 范围）；如未来 dry_run counter 也想清理，可复用 US-004 的 'a+' 模式（参考此处实现）。
+---
+
+## 2026-04-26 - US-007
+- `ink_writer/learn/auto_case.py:_hit_case_ids` 把宽松的 `isinstance(value, Iterable) and not isinstance(value, (str, bytes))` 收紧为 `isinstance(value, list)`。原因：上游 schema (`writer_self_check.ComplianceReport.cases_violated`、checker outcome `cases_hit`) 显式声明 `list[str]` / `list[dict{case_id}]`；旧实现接受任何 Iterable，dict 等异常 payload 会 silently 进分支并迭代 dict keys 当作 case_id 污染学习管线。收紧到 list 后 dict / set / tuple / generator / str 全部静默拒绝（review §三 #10 fail-safe）。
+- 删除 `from collections.abc import Iterable`（auto_case.py 仅此一处用）。
+- docstring 增补：解释收紧动机 + 上游 schema 约定 + 受拒类型清单。
+- 新增 `tests/learn/test_auto_case.py:test_hit_case_ids_rejects_dict_payload`：(a) `{'cases_violated': {'CASE-A':'x'}}` 返 [] 而不是 ['CASE-A']（旧实现会拿到 dict keys）；(b) `details.cases_hit` 路径 dict 同样返 []；(c) set/tuple/generator/str 异常 payload 全部拒绝；(d) 正常 list[str] 与 list[dict{case_id}] 路径回归仍正确（包括 dict 与 str 混合元素去重保序）。从模块直接 import `_hit_case_ids` 单测，避开 `propose_cases_from_failures` 全栈夹具。
+- 现有 4 个 `propose_cases_from_failures` 集成测试不修改即通过。
+- Files changed: `ink_writer/learn/auto_case.py`, `tests/learn/test_auto_case.py`。
+- Quality: `pytest tests/learn --no-cov -q` → 11 passed (旧 10 → 新 11)；`ruff check ink_writer/learn/` → All checks passed (基线 0 维持 0)。
+- **Learnings for future iterations:**
+  - "Iterable 接受所有可迭代" 在大型项目里几乎总是错的：dict / set / generator 都会进，意图与现实分叉；除非真的要支持任意可迭代，否则收紧到 `list` / `Sequence` / 显式类型；类似 `_hit_case_ids` 的"按 schema 收紧" 在其他读上游字段的代码里值得复盘 (`evidence_chain/aggregator.py`、`learn/promote.py` 的 evidence 解析路径都是潜在改造目标)。
+  - 模块级私有函数 (`_hit_case_ids`) 直接被测试 import 是合理做法 (Python 的下划线只是约定不是私有性) —— 比把测试套用到 `propose_cases_from_failures` 全链路绕一大圈再断言派生结果更省时也更精准。tests/learn/test_auto_case.py 现有结构允许混合两种粒度：`test_hit_case_ids_*` 单元 + `test_proposes_*` / `test_skips_*` / `test_throttled_*` 集成。
+  - generator 在 `isinstance(x, Iterable)` 下也是 True，但 `isinstance(x, list)` 下是 False。此处恰好是想要的语义：generator 不像 list 那样可重读、易引发其他下游 bug。如未来真的要支持 generator，应显式 `list(value)` materialize 后再处理。
 ---

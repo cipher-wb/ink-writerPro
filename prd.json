@@ -115,8 +115,8 @@
         "ruff check ink_writer/learn/auto_case.py 无新增错误"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-26：auto_case.py _hit_case_ids 把 isinstance(value, Iterable) and not isinstance(value, (str, bytes)) 收紧为 isinstance(value, list)；删除 from collections.abc import Iterable（本文件仅此一处用）。docstring 显式说明上游 schema 是 list[str]/list[dict]，dict/set/tuple/generator 等异常 payload 被静默拒绝以避免 silent 污染学习管线。新增 tests/learn/test_auto_case.py:test_hit_case_ids_rejects_dict_payload：(a) {'cases_violated': {'CASE-A':'x'}} 返 [] (旧行为返 ['CASE-A'] 取 dict keys)；(b) details.cases_hit dict 同样返 []；(c) set/tuple/generator/str 异常 payload 全部返 []；(d) 正常 list[str] / list[dict{case_id}] 路径回归仍 OK。pytest tests/learn → 11 passed (10 → 11)；ruff check ink_writer/learn 全过。"
     },
     {
       "id": "US-008",
