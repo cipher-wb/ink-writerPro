@@ -1,1 +1,272 @@
-../../prd.json
+{
+  "project": "ink-writer",
+  "branchName": "ralph/live-review-2026-04-26",
+  "description": "Live-Review 模块 — 把 174 份起点编辑星河 B 站直播稿（含逐稿点评 + 打分 + 改稿建议）融入 ink-writer 创作链路，产出 3 类产物（作品病例 / 题材接受度信号 / 新原子规则候选）→ 接入 init / write / review 三阶段。与现有 editor-wisdom 模块（288 份小红书/抖音建议）并列共存不替换。详细设计：docs/superpowers/specs/2026-04-26-live-review-integration-design.md (commit 611ccd1)；详细 14-task TDD plan：docs/superpowers/plans/2026-04-26-live-review-implementation.md (commit 17ed48c)。基于 master @ 43e5fe0；与 M2/M4/M5 数据线并行不交叉。复用现有资产：case_library schema (扩 1.0→1.1 加可选 live_review_meta block，410 份现存病例零影响) / _id_alloc.py (传 prefix=CASE-LR-2026- 自动隔离 counter file) / editor-wisdom rules.json (新规则候选经人工闸后回流) / bge-small-zh-v1.5 向量模型 / polish-agent 修复循环 / ink-init/ink-review SKILL.md hook 点。本 PRD 14 条 US 全部 ralph 机器可验（mock LLM、无真实 API 调用）；实跑全量 174 份由用户按 spec §12 §M-1..§M-9 手动触发。LLM 默认 claude-sonnet-4-6，可在 config/live-review.yaml 切 Haiku 4.5。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "schema 定义 + 410 份病例向后兼容测试",
+      "description": "Plan Task 1 / Spec US-LR-001 — 新建 live_review 两个 schema + 扩 case_schema.json (case_id pattern 加 |LR / domain enum 加 live_review / 增加可选 live_review_meta block)，强制 410 份现存病例向后兼容。pytest.ini testpaths 末尾加 tests/live_review。",
+      "acceptanceCriteria": [
+        "新建 schemas/live_review_extracted.schema.json (Draft 2020-12)，含 schema_version/bvid/source_path/source_line_total/extracted_at/model/extractor_version/novel_idx/line_start/line_end/title_guess/title_confidence/genre_guess/score/score_raw/score_signal/verdict/overall_comment/comments 全部字段；comments 项含 dimension (11 主题域 enum) /severity/content/raw_quote/raw_line_range；additionalProperties: false；详细字段类型见 plan Task 1 Step 1",
+        "新建 schemas/live_review_genre_acceptance.schema.json，含 schema_version/updated_at/total_novels_analyzed/min_cases_per_genre/genres，genres 项含 case_count/score_mean/score_median/score_p25/score_p75/verdict_pass_rate/common_complaints/case_ids；case_ids pattern ^CASE-LR-[0-9]{4}-[0-9]{4}$；详细字段见 plan Task 1 Step 2",
+        "修改 schemas/case_schema.json：(1) case_id.pattern 由 ^CASE-([0-9]{4}|LEARN|PROMOTE)-(M[0-9]+-)?[0-9]{4}$ 改为 ^CASE-([0-9]{4}|LEARN|PROMOTE|LR)-(M[0-9]+-)?[0-9]{4}$ (2) domain.enum 由 [writing_quality, infra_health] 改为 [writing_quality, infra_health, live_review] (3) properties 末尾追加可选 live_review_meta block (含 source_bvid/source_line_range/score/score_raw/score_signal/verdict/title_guess/genre_guess/overall_comment/comments 9 字段)；source.type / layer enum 不动",
+        "修改 pytest.ini testpaths 末尾追加单词 tests/live_review (不重排其他目录避免 diff 噪音)",
+        "新建 tests/live_review/__init__.py (空) + tests/live_review/conftest.py (含 fixtures_dir / schemas_dir / load_schema 共享 fixtures)",
+        "新建 tests/live_review/test_schema_validation.py 含 9 用例：(1) extracted schema self-valid (Draft202012Validator.check_schema) (2) genre_acceptance schema self-valid (3) extracted minimal valid (4) extracted score=null+verdict=unknown 合法 (5) extracted invalid dimension 拒绝 (6) extracted score 超 0-100 拒绝 (7) extracted unknown 顶层字段拒绝 (8) genre_acceptance minimal valid (9) genre_acceptance case_id 非 CASE-LR- 前缀拒绝",
+        "新建 tests/case_library/test_schema_backward_compat.py 含 3 用例：(1) test_all_existing_cases_still_validate 遍历 data/case_library/cases/**/*.yaml 全部用扩展后 schema 校验通过 (2) test_new_live_review_case_validates 给 sample CASE-LR-2026-0001 含 live_review_meta 校验通过 (3) test_invalid_domain_still_rejected 防过宽",
+        "python3 -m pytest tests/live_review/test_schema_validation.py tests/case_library/test_schema_backward_compat.py --no-cov -q 全过",
+        "python3 -m pytest tests/case_library/ --no-cov -q 全过 (现有测试无回归)",
+        "ruff check schemas/ tests/live_review/ tests/case_library/test_schema_backward_compat.py 无新增错误"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "ID 分配器封装 + 配置文件",
+      "description": "Plan Task 2 / Spec US-LR-002 — 不新建独立 _id_alloc，复用 case_library._id_alloc.allocate_case_id (现有 prefix 隔离 counter file 机制) 写薄封装；新建 LiveReviewConfig dataclass 加载 config/live-review.yaml；enabled=false 强制 inject_into.{init,review} 全 false。",
+      "acceptanceCriteria": [
+        "新建 ink_writer/live_review/__init__.py (含 docstring 引用 spec)",
+        "新建 ink_writer/live_review/case_id.py:allocate_live_review_id(cases_dir: Path, year: int | None = None) -> str；底层调 allocate_case_id(cases_dir, prefix=f'CASE-LR-{year}-')；year=None 时取 datetime.utcnow().year；返回形如 CASE-LR-2026-0001",
+        "新建 ink_writer/live_review/config.py:LiveReviewConfig (frozen dataclass) + BatchConfig + InjectConfig + load_config(path) 函数；缺字段全部回落默认值；enabled=false 强制 inject_into.{init,review} 全 false (& 操作而非赋值)；详细字段与默认值见 plan Task 2 Step 4",
+        "新建 config/live-review.yaml 含完整字段 (enabled/model/extractor_version/batch.{input_dir,output_dir,resume_from_jsonl,skip_failed,log_progress}/hard_gate_threshold/golden_three_threshold/init_genre_warning_threshold/init_top_k/min_cases_per_genre/inject_into.{init,review}) 与 spec §8 一字不差",
+        "新建 tests/live_review/test_case_id.py 含 5 用例：(1) basic format CASE-LR-2026-0001 (2) sequential 0001..0003 (3) 4 worker spawn pool 并发 0001..0004 无空洞 (4) 同进程交替分配 CASE-LR-2026- 与 CASE-2026- 不串号且各自 counter file 隔离 (5) 不同年份 prefix 各自隔离",
+        "新建 tests/live_review/test_config.py 含 5 用例：(1) 文件不存在走默认 (2) 完整 yaml 加载 + 部分字段覆盖 (3) enabled=false 强制 inject_into 全 false (4) 部分 yaml 缺字段回落默认不抛 KeyError (5) 实际 config/live-review.yaml 加载成功",
+        "python3 -m pytest tests/live_review/test_case_id.py tests/live_review/test_config.py --no-cov -q 全过",
+        "ruff check ink_writer/live_review/ tests/live_review/test_case_id.py tests/live_review/test_config.py 无新增错误"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "LLM 切分 prompt + extractor + mock 单测",
+      "description": "Plan Task 3 / Spec US-LR-003 — 写 LLM 切分 prompt (含 5 个 few-shot 例子，基于真实 BV12yBoBAEEn 等样本编写) + extractor 主函数支持 mock_response/llm_call 注入；fail-loud 三种异常 (非 JSON / 非 Array / schema 违反) 不 silent fallback。",
+      "acceptanceCriteria": [
+        "新建 scripts/live-review/prompts/extract_v1.txt 含：任务描述/输入输出格式说明/切分启发式/score_signal 判定规则/dimension 与 severity 严格 enum/5 个 few-shot 例子 (基于 ~/Desktop/星河审稿/BV12yBoBAEEn_raw.txt 等真实数据手编 — 不留 placeholder)/输出纯 JSON 不带 markdown 代码块的明确指示",
+        "新建 ink_writer/live_review/extractor.py:extract_from_text(raw_text, bvid, source_path, *, model='claude-sonnet-4-6', extractor_version='1.0.0', mock_response=None, llm_call=None) -> list[dict]：mock_response 不为 None 时直接用；否则若 llm_call 不为 None 用注入；否则真实调 anthropic SDK；解析 LLM 输出 JSON Array → 对每条用 _build_record 注入元数据 → jsonschema Draft202012Validator 校验；任一失败抛 ExtractionError",
+        "新建 ink_writer/live_review/extractor.py:ExtractionError 异常类",
+        "_build_record 函数注入：schema_version='1.0' / bvid / source_path / source_line_total=raw_text.count('\\n')+1 / extracted_at=ISO8601 UTC / model / extractor_version；保留 LLM 返回的 novel 字段",
+        "新建 tests/live_review/fixtures/raw_BV12yBoBAEEn.txt：截取 ~/Desktop/星河审稿/BV12yBoBAEEn_raw.txt 前 200 行 + 后 200 行做 fixture (中间用 '...（中略）...' 行分隔)",
+        "新建 tests/live_review/fixtures/mock_extract_BV12yBoBAEEn.json：手编 3 本小说预期输出，每本含完整 novel_idx/line_start/line_end/title_guess/title_confidence/genre_guess/score/score_raw/score_signal/verdict/overall_comment/comments；3 本 score_signal 必须分别覆盖 explicit_number / sign_phrase / fuzzy 三类",
+        "新建 tests/live_review/test_extractor_mock.py 含 7 用例：(1) mock 返回 3 records (2) records 含完整元数据 (model/extractor_version/source_path/extracted_at) (3) score_signal 三类多样性 (4) 非 JSON 输出 raise ExtractionError(match='not valid JSON') (5) 非 Array 输出 raise ExtractionError(match='Expected JSON array') (6) 缺字段 schema 违反 raise ExtractionError(match='failed schema') (7) score=999 超界 raise ExtractionError",
+        "python3 -m pytest tests/live_review/test_extractor_mock.py --no-cov -q 全过",
+        "ruff check ink_writer/live_review/extractor.py tests/live_review/test_extractor_mock.py 无新增错误"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "单文件冒烟脚本 extract_one.py",
+      "description": "Plan Task 4 / Spec US-LR-004 — 写单文件 + 多文件冒烟脚本，支持 --mock-llm 注入测试用 fixture，bvid 默认从文件名 BV*_raw.txt 正则提取。退出码：成功 0 / extractor 异常 1 / 文件不存在 2。",
+      "acceptanceCriteria": [
+        "新建 scripts/live-review/extract_one.py 含 argparse 参数：--bvid (可选，从 --input 文件名自动提取)、--input (必填或当传 --bvids 时省略)、--out (必填)、--model (默认 claude-sonnet-4-6)、--mock-llm <fixture_json_path> (测试用)；可选 --bvids id1,id2,... + --input-dir 多份模式 (US-005 复用)",
+        "实现：读 --input 的 raw.txt → 调 extractor.extract_from_text(raw, bvid, source_path, model=..., mock_response=load(--mock-llm) if --mock-llm else None) → 写 --out (jsonl 一行一 record)",
+        "bvid 从 input 文件名正则提取：re.match(r'^(BV[\\w]+)_raw\\.txt$', basename)；不匹配且未传 --bvid → exit 2",
+        "退出码：成功 0 / ExtractionError 1 / 输入文件不存在 2",
+        "新建 tests/live_review/test_extract_one_smoke.py 含 5 用例：(1) test_extract_one_with_mock_creates_jsonl 用 fixtures/mock_extract_BV12yBoBAEEn.json + fixtures/raw_BV12yBoBAEEn.txt 跑 → assert jsonl 文件存在 + 3 行 + 全部用 schemas/live_review_extracted.schema.json 校验通过 (2) test_extract_one_jsonl_lines_are_valid_records 每行 json.loads + schema 校验 (3) test_extract_one_score_signal_distribution 3 本覆盖 3 类 (4) test_extract_one_missing_input_exits_2 subprocess 跑 --input nonexistent → returncode == 2 (5) test_extract_one_bvid_extracted_from_filename 不传 --bvid 时从文件名自动提取",
+        "python3 -m pytest tests/live_review/test_extract_one_smoke.py --no-cov -q 全过",
+        "ruff check scripts/live-review/extract_one.py tests/live_review/test_extract_one_smoke.py 无新增错误"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "多份模式 + schema 一致性验证脚本",
+      "description": "Plan Task 5 / Spec US-LR-005 — 复用 US-004 extract_one.py 加多份模式 + 新建 validate_jsonl_batch.py 输出 markdown 报告 (含 score_signal 分布 / 各 BV 统计)。",
+      "acceptanceCriteria": [
+        "依赖 US-004 — 修改 scripts/live-review/extract_one.py 加 --bvids id1,id2,... 多份模式 (与 --input-dir + --output-dir 配合)",
+        "新建 scripts/live-review/validate_jsonl_batch.py：扫 --jsonl-dir 下所有 *.jsonl → 对每行用 schemas/live_review_extracted.schema.json 校验 + 统计 (novel_count, score_signal 分布, score 非空比例) → 输出 reports/live-review-validation-<YYYYmmdd-HHMMSS>.md (markdown 格式含 Per-file Statistics 表 + Score Signal Distribution + Validation Issues 段)；任一失败退出码 1，stderr 列 BVID + 行号 + 字段名",
+        "新建 tests/live_review/fixtures/mock_extract_5_files/ 含 5 份 mock_extract_*.json：BV-A (3 本，全 explicit_number) / BV-B (4 本，全 fuzzy) / BV-C (2 本，全 unknown) / BV-D (2 本，极少) / BV-E (15 本，极多)",
+        "新建 tests/live_review/test_extract_many.py 含 2+ 用例：(1) 5 份 mock 全跑通后 5 个 jsonl 文件存在 + 全部 schema 校验通过 + 总 novel 数 == 26 (2) 不同 BV 的 record 不串号",
+        "新建 tests/live_review/test_validate_jsonl_batch.py 含 3+ 用例：(a) 正常 5 份 → 退出码 0 + reports/live-review-validation-*.md 存在 + 含 'All files passed' (b) 故意 1 份某行 score=200 → 退出码 1 + stderr 含 BVID + 行号 + 'score' 字段 (c) 报告 markdown 渲染合法 (用 markdown 库 parse 不抛错)",
+        "python3 -m pytest tests/live_review/test_extract_many.py tests/live_review/test_validate_jsonl_batch.py --no-cov -q 全过",
+        "ruff check scripts/live-review/extract_one.py scripts/live-review/validate_jsonl_batch.py tests/live_review/test_extract_many.py tests/live_review/test_validate_jsonl_batch.py 无新增错误"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "全量批跑脚本 run_batch.py 断点续跑机制验证",
+      "description": "Plan Task 6 / Spec US-LR-006 — 写全量批跑脚本，仅由 ralph 验证机制 (mock 模式 4 场景)，实际 174 份跑批由用户按 §M-3 手动触发。退出码：全部成功 0；--skip-failed 模式部分失败仍 0；非 --skip-failed 有失败 1。",
+      "acceptanceCriteria": [
+        "新建 scripts/live-review/run_batch.py 含 argparse 参数：--input-dir (必填) / --output-dir (必填) / --limit N / --resume / --skip-failed / --mock-llm-dir <fixture_dir> (测试用，每 BV 对应 <fixture_dir>/<bvid>.json，不存在则视为该 BV 失败)",
+        "主流程：扫 input_dir 下 BV*_raw.txt → 列表 → --limit 截断 → --resume 时 skip 已存在 <bvid>.jsonl → 逐份调 extract_from_text → 写 jsonl；失败时进 failures 列表，--skip-failed 继续否则 raise；最终若有失败追加 _failed.jsonl 含 bvid/error/traceback；进度日志 [N/total] <bvid> done in Xs / FAILED",
+        "退出码：全成功 0 / 有失败但 --skip-failed → 0 / 有失败且非 --skip-failed → 1",
+        "新建 tests/live_review/fixtures/mock_batch/ 含 5 个 BV*_raw.txt + 4 个对应 mock_*.json (故意第 3 个无对应 mock 模拟失败)",
+        "新建 tests/live_review/test_run_batch.py 含 4 场景：(a) 5 文件全 mock 齐 + 无 --skip-failed → 5 jsonl 生成 + _failed.jsonl 不存在 + 退出码 0 (b) 1 文件无 mock + --skip-failed → 4 jsonl 生成 + _failed.jsonl 1 条 + 退出码 0；同场景非 --skip-failed → 退出码 1 (c) --resume 模式：先 --limit 3 跑 + 再不限跑 → 第二次仅处理新增 2 个 (d) --limit 2 → 仅前 2 个被处理",
+        "python3 -m pytest tests/live_review/test_run_batch.py --no-cov -q 全过",
+        "ruff check scripts/live-review/run_batch.py tests/live_review/test_run_batch.py 无新增错误"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "jsonl → CASE-LR-yaml 转换器",
+      "description": "Plan Task 7 / Spec US-LR-007 — 把 jsonl 中每本小说转成符合 schema 1.1 的 CASE-LR-yaml；severity 由 score 推导 (P0/P1/P2/P3)；layer 由 dimension 推导用现有 enum (upstream/downstream)。",
+      "acceptanceCriteria": [
+        "新建 scripts/live-review/jsonl_to_cases.py 含 argparse：--jsonl-dir / --cases-dir (默认 data/case_library/cases/live_review) / --dry-run",
+        "severity 推导函数 derive_severity(score)：score is None → P3 / score < 55 → P0 / score < 60 → P1 / score < 65 → P2 / 其他 → P3",
+        "layer 推导函数 derive_layers(comments)：dimension to layer 字典 (opening/hook/golden_finger/genre/taboo/character/ops/misc → [upstream]；pacing/highpoint → [upstream, downstream]；simplicity → [downstream])，对所有 comments 取并集去重；空 comments → [upstream]；返回 sorted list",
+        "title 推导：f'{title_guess} ({verdict} / {score}分)' 或 score=None 时 f'{title_guess} ({verdict})'",
+        "failure_pattern.description: overall_comment + ' | ' + ';'.join(c['content'] for c in comments if c['severity']=='negative')[:3 项]",
+        "failure_pattern.observable: 至少 1 项；从 negative comments 中取 [f'{c[dimension]}维度: {c[content]}' for c in negative_comments]；若无 negative comments 兜底 ['整体被星河直播判定为 {verdict}'] ",
+        "case ID 用 ink_writer.live_review.case_id.allocate_live_review_id(cases_dir, year=2026)",
+        "source.type 固定 'editor_review'；source.ingested_from 设为 jsonl 文件相对路径；source.raw_text 设为 score_raw + ' | ' + overall_comment 截断 1000 字符；source.ingested_at 取 jsonl record extracted_at 的日期部分 (YYYY-MM-DD)；source.reviewer 设为 jsonl record model 字段值",
+        "live_review_meta block 完整填充 (source_bvid/source_line_range/score/score_raw/score_signal/verdict/title_guess/genre_guess/overall_comment/comments)",
+        "新建 tests/live_review/fixtures/sample_5_files.jsonl：手编 5 行 jsonl 覆盖 P0/P1/P2/P3+null 全 5 类 severity + 全 layer 推导分支 (含 simplicity 单 downstream / pacing 双 layer / opening 单 upstream)",
+        "新建 tests/live_review/test_jsonl_to_cases.py 含 6+ 用例：(1) 5 jsonl 行 → 5 yaml + case_id 严格 CASE-LR-2026-0001..0005 (2) 全部 schema 1.1 校验通过 (3) severity 推导覆盖 5 类 (4) layer 推导覆盖完整规则表全部分支 (5) 同 bvid 多本不冲突 (6) live_review_meta 字段完整",
+        "python3 -m pytest tests/live_review/test_jsonl_to_cases.py --no-cov -q 全过",
+        "现有 tests/case_library/ 测试不修改即通过 (无回归)",
+        "ruff check scripts/live-review/jsonl_to_cases.py tests/live_review/test_jsonl_to_cases.py 无新增错误"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "题材聚合器 aggregate_genre.py",
+      "description": "Plan Task 8 / Spec US-LR-008 — 扫 case yaml 聚合到 genre_acceptance.json；笛卡尔积单标签；min_cases_per_genre 阈值过滤；统计 mean/median/p25/p75/pass_rate；common_complaints 取 dimension 频率 Top-5。",
+      "acceptanceCriteria": [
+        "新建 scripts/live-review/aggregate_genre.py 含 argparse：--cases-dir / --out (默认 data/live-review/genre_acceptance.json) / --min-cases (默认 3) / --top-complaints (默认 5)",
+        "聚合算法：扫 cases-dir/CASE-LR-*.yaml → 对每本的 live_review_meta.genre_guess 数组每个标签独立计入 (笛卡尔积，[都市,重生] 算 2 次贡献) → 按 genre 分组 → case_count < min_cases 的 genre 不计入输出",
+        "统计字段：score_mean (statistics.mean，全 None 时返 null) / score_median (None safe) / score_p25 / score_p75 (用 statistics.quantiles 或自实现) / verdict_pass_rate = count(verdict=='pass') / total",
+        "common_complaints：聚合所有 case live_review_meta.comments 中 severity=='negative' 的 dimension 频率 → 排序取 Top-N (默认 5)；frequency = count(dim) / total_negative_comments；examples 取该 dim 下 raw_quote (或 content) 前 3 条",
+        "case_ids 字段填本 genre 命中的全部 CASE-LR-* ID 数组",
+        "输出 schema_version='1.0' + updated_at=ISO8601 UTC + total_novels_analyzed (扫描的 case 总数 = 各 genre 不重复 case 总数 union)",
+        "新建 tests/live_review/fixtures/sample_30_cases/ 含 30 份 CASE-LR-*.yaml：覆盖 5+ genre 不同分布；含至少 1 个 case_count<3 的 genre (不应入聚合) + 1 个 score 全 null 的 genre + 1 个 verdict 全 fail 的 genre + pacing/simplicity/opening 等多 layer 分支",
+        "新建 tests/live_review/test_aggregate_genre.py 含 5+ 用例：(1) 30 fixture 跑 → 输出 schema 校验通过 (2) 各 genre mean/median/p25/p75/pass_rate 与手算误差 < 0.01 (3) case_count<3 的 genre 不出现 (4) score 全 null 的 genre score_mean/median/p25/p75 为 null (5) verdict 全 fail 的 genre pass_rate==0.0 (6) common_complaints 频率严格降序",
+        "python3 -m pytest tests/live_review/test_aggregate_genre.py --no-cov -q 全过",
+        "ruff check scripts/live-review/aggregate_genre.py tests/live_review/test_aggregate_genre.py 无新增错误"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "规则候选抽取器 (LLM + bge cosine 去重)",
+      "description": "Plan Task 9 / Spec US-LR-009 — 从 jsonl 抽通用规则候选 (LLM + 与 rules.json cosine > 0.85 自动去重)；新规则不自动写 rules.json，等 US-010 人工闸。",
+      "acceptanceCriteria": [
+        "新建 scripts/live-review/extract_rule_candidates.py 含 argparse：--jsonl-dir / --rules-json (默认 data/editor-wisdom/rules.json) / --out (默认 data/live-review/rule_candidates.json) / --mock-llm <fixture.json> (测试用) / --threshold (cosine 去重阈值，默认 0.85)",
+        "主流程：扫 jsonl-dir 全部 jsonl → 调 LLM (claude-sonnet-4-6 默认) 抽通用规则 (剥离作品语境) → 用 BAAI/bge-small-zh-v1.5 (sentence-transformers) 计算候选 vs 现有 rules.json 的 cosine 矩阵 → 候选每条标 dup_with: list[EW-XXXX] 或 None → 写出 candidates 文件",
+        "候选 schema：id (RC-NNNN, 候选 ID 不进 rules.json 不取 EW-) / category (与 editor-rules.schema.json 同 enum) / rule (≤120 字符) / why / severity / applies_to (限定 enum) / source_files (此 PRD 用空数组 [] 或 ['live_review:<bvid>'] 形式) / dup_with (list[str]|null) / approved (null|true|false，初始 null) / source_bvids (list[str]，本规则关联的 BV ID)",
+        "fail-loud：LLM 输出非 JSON / 不满足候选 schema / cosine 计算失败 → raise 不 silent fallback",
+        "新建 tests/live_review/fixtures/mock_rule_extract.json：mock LLM 返回 5 条候选规则文本，其中 2 条故意与现有 rules.json 中前 2 条 (EW-0001/EW-0002) 语义相近以触发 dup_with",
+        "新建 tests/live_review/fixtures/existing_rules_fixture.json：拷自 data/editor-wisdom/rules.json 前 3 条 (EW-0001/0002/0003)",
+        "新建 tests/live_review/test_extract_rule_candidates.py 含 5+ 用例：(1) mock 5 条 → 输出 5 条 (2) 至少 2 条 dup_with 字段非空 (3) source_bvids 字段正确填充 (从 jsonl 的 bvid 集合) (4) approved 字段全 null (5) bge 模型加载与 cosine 计算正确 (6) 用扩展 schema 校验通过 (允许 dup_with/approved/source_bvids 扩展字段)",
+        "python3 -m pytest tests/live_review/test_extract_rule_candidates.py --no-cov -q 全过",
+        "ruff check scripts/live-review/extract_rule_candidates.py tests/live_review/test_extract_rule_candidates.py 无新增错误"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "规则候选审核 CLI + 提交工具 (人工闸)",
+      "description": "Plan Task 10 / Spec US-LR-010 — 交互式审核 CLI 标记 approved=true/false + 提交工具仅写入 approved=true 的项到 rules.json，现有规则字节级保持不变。",
+      "acceptanceCriteria": [
+        "新建 scripts/live-review/review_rule_candidates.py 交互式 CLI：参数 --candidates (默认 data/live-review/rule_candidates.json)；逐条展示 [N/M] 候选含 category/severity/applies_to/why/dup_with/source_bvids → 输入 [y]es/[n]o/[s]kip/[q]uit → 写回 approved 字段 → 保存 candidates 文件",
+        "新建 scripts/live-review/promote_approved_rules.py：参数 --candidates / --rules (默认 data/editor-wisdom/rules.json) / --dry-run；仅写入 approved=true 的项；新 ID 取现有 rules.json 末尾 EW-NNNN + 1；新规则保留 category/rule/why/severity/applies_to/source_files (后两者保持兼容 editor-rules.schema.json 严格 schema) + 加 source: 'live_review' 字段；现有规则项字节级保持不变 (用 hash 比对)",
+        "promote 必须用现有 schemas/editor-rules.schema.json 严格校验输出文件 (去掉 dup_with/approved/source_bvids 等候选扩展字段)；校验失败抛错不破坏文件",
+        "新建 tests/live_review/fixtures/sample_rule_candidates.json：5 条候选 (3 标 approved=true / 2 标 approved=false；其中 2 dup_with 命中 EW-0001/EW-0002)",
+        "新建 tests/live_review/test_review_rule_candidates.py 含 2+ 用例：(1) test_review_writes_approved_back stdin pipe 'y\\nn\\ny\\ns\\ny\\n' → candidates 文件 approved 字段写回 [True, False, True, None, True] (2) test_review_quit_keeps_unmodified 输入 'q' 在第 2 条后 → candidates 文件第 1 条之后 approved 仍是初始值",
+        "新建 tests/live_review/test_promote_approved_rules.py 含 4+ 用例：(1) tmp_path 复制 fixture rules.json (含 EW-0001..EW-0080) → 跑 promote → 新文件含 EW-0001..EW-0083 (3 条 approved 写入) (2) 现有 EW-0001..EW-0080 字节级 hash 完全相同 (3) 新加项 source 字段 == 'live_review' (4) 整个输出文件用 schemas/editor-rules.schema.json 严格校验通过",
+        "python3 -m pytest tests/live_review/test_review_rule_candidates.py tests/live_review/test_promote_approved_rules.py --no-cov -q 全过",
+        "ruff check scripts/live-review/review_rule_candidates.py scripts/live-review/promote_approved_rules.py tests/live_review/test_review_rule_candidates.py tests/live_review/test_promote_approved_rules.py 无新增错误"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "题材语义检索 + ink-init Step 99.5 D+B 接入",
+      "description": "Plan Task 11 / Spec US-LR-011 — 用现有 BAAI/bge-small-zh-v1.5 + FAISS 构建 live_review 病例向量索引；ink-init 题材选材步骤后追加 Step 99.5 调 init_injection.check_genre 输出 D (反向检索) + B (阈值告警) 组合 UI。",
+      "acceptanceCriteria": [
+        "新建 ink_writer/live_review/_vector_index.py：build_index(cases_dir, out_dir) / load_index(out_dir) / search(index, query, top_k) 三函数；用 sentence-transformers BAAI/bge-small-zh-v1.5 + faiss-cpu IndexFlatIP；元数据 meta.jsonl 每行 {case_id, title_guess, genre_guess, overall_comment, embedding_text} (embedding_text = title_guess + ' ' + ' '.join(genre_guess) + ' ' + overall_comment)",
+        "新建 ink_writer/live_review/genre_retrieval.py:retrieve_similar_cases(query: str, top_k: int = 3) -> list[dict]：加载已构建索引 + 调 search → 返回 [{case_id, title_guess, score, verdict, overall_comment, source_bvid, cosine_sim}, ...]；索引不存在时 raise FileNotFoundError 并提示跑 build_vector_index.py",
+        "新建 ink_writer/live_review/init_injection.py:check_genre(user_genre_input: str, *, top_k: int = 3, config_path: Path | None = None) -> dict 返回 {warning_level: 'ok'|'warn'|'no_data', similar_cases: [...], genre_stats: {...}|None, suggested_actions: [...], render_text: str}",
+        "warning_level 决策：未匹配 genre 聚合 → 'no_data'；匹配且 score_mean < init_genre_warning_threshold (默认 60) → 'warn'；其他 → 'ok'",
+        "render_text：终端 ASCII 输出，含 '📚 星河直播相似案例 (174 份直播 × 10+ 本/份)' 列出 Top-K + '🎯 该题材统计: 均分 X / 签约率 Y / 主要差评' + '💡 写作建议' 段",
+        "新建 scripts/live-review/build_vector_index.py：argparse --cases-dir / --out-dir (默认 data/live-review/vector_index) → 调 _vector_index.build_index → 写 index.faiss + meta.jsonl",
+        "修改 ink-writer/skills/ink-init/SKILL.md：在用户题材确定步骤后追加 'Step 99.5: 星河直播题材审查 (live-review)' 段，含 Python 调用 init_injection.check_genre 的代码块 + warning_level 三分支 (ok 通行 / warn 用户 y/n 二次确认 / no_data 仅展示通行) + 'config/live-review.yaml:inject_into.init: false 全局关' 提示",
+        "新建 tests/live_review/test_genre_retrieval.py 含 2+ 用例：(1) test_build_and_retrieve 用 fixtures/sample_30_cases 构建索引 → query '都市重生律师' 返回 Top-3 含预设 case_id (2) test_cosine_sim_monotonic 检索结果按 cosine_sim 单调降",
+        "新建 tests/live_review/test_init_injection.py 含 5 用例：5 query 覆盖 (覆盖+ok / 覆盖+warn / 覆盖+ok 中分 / 未覆盖+no_data / 极端高分+ok) → warning_level 严格匹配 + render_text 含特定字符串",
+        "新建 tests/live_review/test_skill_step_99_5.py 含 2+ 用例：(1) 模拟 ink-init 调 check_genre fixture query → render_text 含 '星河直播相似案例' / '该题材统计' / '写作建议' (2) inject_into.init=false → check_genre 返回早退 dict (warning_level='ok' + render_text 空字符串或简短 disabled 提示)",
+        "python3 -m pytest tests/live_review/test_genre_retrieval.py tests/live_review/test_init_injection.py tests/live_review/test_skill_step_99_5.py --no-cov -q 全过",
+        "ruff check ink_writer/live_review/_vector_index.py ink_writer/live_review/genre_retrieval.py ink_writer/live_review/init_injection.py scripts/live-review/build_vector_index.py 无新增错误"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "live-review-checker agent + ink-review Step 3.6 (OR 并列)",
+      "description": "Plan Task 12 / Spec US-LR-012 — 新建第 34 个 checker agent spec + ink-review Step 3.6 与现有 editor-wisdom Step 3.5 OR 并列 (任一通过即放行)；阻断时复用现有 polish-agent 修复循环。",
+      "acceptanceCriteria": [
+        "新建 ink-writer/agents/live-review-checker.md：开头 {{PROMPT_TEMPLATE:checker-input-rules.md}} 引用；含 Purpose / Input (chapter_text/chapter_no/genre_tags) / Retrieval (从 data/case_library/cases/live_review/ cosine 召回 Top-5) / Scoring (综合 = (1 - violation_density) × verdict_pass_rate_of_top5) / Output ({score, dimensions, violations, cases_hit}) 与现有 33 个 checker spec 文件结构对齐",
+        "新建 ink_writer/live_review/checker.py:run_live_review_checker(chapter_text, chapter_no, genre_tags, *, mock_response=None, llm_call=None, config_path=None) -> dict：retrieve_top_k 从 live_review faiss 索引 → 调 LLM 评分 (mock_response 不为 None 时直接返回；llm_call 不为 None 时注入；否则 anthropic SDK)",
+        "checker 返回结构：{score: float (0-1), dimensions: dict[str, float], violations: list[{case_id, dimension, evidence_quote, severity}], cases_hit: list[str]}",
+        "修改 ink-writer/skills/ink-review/SKILL.md：在 Step 3.5 (editor-wisdom 硬门禁) 后追加 'Step 3.6: live-review 硬门禁 (与 Step 3.5 OR 并列)' 段；含 Python 调用 run_live_review_checker 代码块 + 阈值选择 (chapter_no <= 3 用 golden_three_threshold 0.75，否则 hard_gate_threshold 0.65) + 阻断分支 (score < threshold → evidence_chain.violations.extend + trigger_polish) + 'OR 并列' 注释 (两 checker 都不通过才阻断；任一通过即放行) + 'inject_into.review: false 全局关' 提示",
+        "新建 tests/live_review/fixtures/sample_chapter_violating.txt：手编 800 字章节，故意触发 fixture cases 中的多条违规 (开头铺设定 / 主角动机模糊 / 金手指出场太晚 / 节奏拖沓)",
+        "新建 tests/live_review/fixtures/mock_live_review_checker_response.json：mock 返回 {score: 0.45, dimensions: {opening: 0.4, pacing: 0.3, golden_finger: 0.5}, violations: [3 条], cases_hit: [3 个 fixture case_id]}",
+        "新建 tests/live_review/test_checker.py 含 3+ 用例：(1) test_checker_with_mock_returns_full_structure (2) test_score_below_hard_gate_indicates_block (0.45 < 0.65) (3) test_score_above_threshold_passes",
+        "新建 tests/live_review/test_review_step_3_6.py 含 4 用例：(a) mock checker + mock polish-agent 假定违反 → checker 调用 + violations 写入 evidence_chain + polish 循环触发 (b) inject_into.review=false → Step 3.6 短路 (0 调用) (c) chapter_no <= 3 用 golden_three_threshold 0.75 (d) chapter_no > 3 用 hard_gate_threshold 0.65",
+        "python3 -m pytest tests/live_review/test_checker.py tests/live_review/test_review_step_3_6.py --no-cov -q 全过",
+        "现有 tests/integration/ tests/checker_pipeline/ tests/checkers/ 不修改即通过 (无回归)",
+        "ruff check ink_writer/live_review/checker.py 无新增错误 (注：.md 文件不需 ruff)"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "端到端冒烟脚本 smoke_test.py",
+      "description": "Plan Task 13 / Spec US-LR-013 — 端到端冒烟覆盖 init Step 99.5 + review Step 3.6；默认 mock 模式 (无 API 费)，--with-api 真 LLM 由用户按 §M-9 手动跑。",
+      "acceptanceCriteria": [
+        "新建 scripts/live-review/smoke_test.py：参数 --with-api (默认 false)；主流程 (1) 检查 vector_index 不存在则用 fixtures/sample_30_cases 重建 (2) 跑 fixture init query '都市重生律师' → assert warning_level 在 {ok, warn, no_data} + render_text 非空 (3) 跑 fixture sample_chapter_violating.txt + mock_live_review_checker_response.json → assert score/violations/cases_hit 字段存在",
+        "输出 reports/live-review-smoke-report.md：含 Generated 时间 + 每 check item PASS/FAIL 表 + 每步耗时",
+        "无 ANTHROPIC_API_KEY 时 (默认无 --with-api) 全部走 mock，不应抛 import error 或 network error",
+        "新建 tests/live_review/test_smoke.py 含 1+ 用例：subprocess 跑 smoke_test.py (不带 --with-api) → 退出码 0 + reports/live-review-smoke-report.md 存在 + 内容含 'PASS' 关键字",
+        "python3 -m pytest tests/live_review/test_smoke.py --no-cov -q 全过",
+        "ruff check scripts/live-review/smoke_test.py tests/live_review/test_smoke.py 无新增错误"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "用户文档 docs/live-review-integration.md + CLAUDE.md 段 + 内部链接检查",
+      "description": "Plan Task 14 / Spec US-LR-014 — 写用户文档结构对齐 docs/editor-wisdom-integration.md + 在 CLAUDE.md '编辑智慧模块' 段后对称追加 live-review 段 + 简单 link 检查脚本 + pytest 验证。",
+      "acceptanceCriteria": [
+        "新建 docs/live-review-integration.md 含：(1) 模块定位 + 与 editor-wisdom 关系 (2) 架构 mermaid 图 (与 spec §2.1 数据流一致) (3) 数据流 (174 → jsonl → 3 类产物 → 3 阶段接入) (4) 主题域 (与 editor-wisdom 同 11 类) (5) 如何添加新数据 (6) 如何调阈值 (config/live-review.yaml 各字段) (7) § 用户手动操作清单 完整拷自 spec §12 §M-1..§M-9 含命令/费用/时长 (8) FAQ (含与 editor-wisdom-checker 关系 / 阈值含义 / 人工审核必要性) (9) Smoke test 段",
+        "新建 scripts/live-review/check_links.py：扫 markdown 内 [text](path) 格式相对链接 → 检查 path 在 md 同级目录或 repo root 是否可达；http(s)/mailto/anchor-only 跳过；失败时退出 1 + stderr 列每条不可达链接",
+        "修改 CLAUDE.md：在 '## 编辑智慧模块' 段后追加 '## Live-Review 模块（新增 v26.x）' 段，含模块定位 + 文档链接 + 'Top 3 注意事项' (1) 首次接入需跑 §M-1..§M-9 (2) case_id prefix 是 CASE-LR-2026- (3) 新规则永远走人工审核闸",
+        "新建 tests/live_review/test_docs.py 含 4 用例：(1) test_doc_exists assert docs/live-review-integration.md 存在 (2) test_mermaid_blocks_valid_syntax 用 re.findall 提 mermaid 块 ≥ 1 + 含 graph/flowchart 关键字 + [ 与 ] 数量平衡 (3) test_internal_links_resolvable import scripts/live-review/check_links.check_links → 跑 docs/live-review-integration.md → 无失败 (4) test_claude_md_mentions_live_review CLAUDE.md 含 'Live-Review' 字符串 + 含 docs/live-review-integration.md",
+        "python3 -m pytest tests/live_review/test_docs.py --no-cov -q 全过",
+        "python3 scripts/live-review/check_links.py docs/live-review-integration.md 退出码 0",
+        "ruff check scripts/live-review/check_links.py tests/live_review/test_docs.py 无新增错误"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
