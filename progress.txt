@@ -14,6 +14,10 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - 资源路径必须锚定 `_REPO_ROOT = Path(__file__).resolve().parents[N]`：plan/示例里出现的 `Path("scripts/...")` / `Path("schemas/...")` 是相对 CWD 的脆弱写法，被 pytest fixture 调用时会随启动目录漂移。`ink_writer/live_review/*.py` 在 `parents[2]` 即 repo root；这条规矩适用所有 module-level 常量。
 - `scripts/live-review/*.py` 子进程启动需自举 sys.path：脚本顶部加 `sys.path.insert(0, str(_REPO_ROOT))`（`_REPO_ROOT = Path(__file__).resolve().parents[2]`）才能 `from ink_writer.live_review.extractor import ...`，否则 `python3 scripts/live-review/foo.py` 直接启动会 ModuleNotFoundError。pytest 走 `pythonpath = .` 不需要这一步，但 subprocess test 必须靠脚本自举。
 - ruff E402 的合规写法：windows stdio block 必须先于其他 import（构成 module level import），随后的 stdlib 导入 + 跨 `_REPO_ROOT` 注入后的 first-party 导入都加 `# noqa: E402`，与 `scripts/analyze_prose_directness.py` / `scripts/e2e_smoke_harness.py` 沿用同款。`# noqa: E402` 必须直接附在每行 import 后，行级粒度。
+- BVID 字面值受 schema 约束 `^BV[A-Za-z0-9]+$`：PRD 字面占位（"BV-A"/"BV-B"等）含短横线不合法，fixture 必须用 `BV1AAA`/`BV1BBB`/`BV1CCC`/`BV1DDD`/`BV1EEE`（5 文件多份模式标准 ID 集，已固化在 mock_extract_5_files/raw_5_files）。
+- Markdown 报告 parse 校验用 `MarkdownIt('commonmark').enable('table')`：默认 preset 不带 table 扩展；`'gfm-like'` preset 默认 enable linkify 但 linkify-it-py 未在依赖里会 raise ModuleNotFoundError。后续生成 markdown 报告（US-013/US-014）的 parse 测试沿用此组合。
+- 脚本 stdout/stderr 分流：success path 写 stdout（如 `OK N files → path`），failure path 把详情 + report 写 stderr。测试断言可单边 `proc.stderr.contains` 而不被 success 干扰；CI/cron 也好用 grep 单独抓 OK 行。所有 `scripts/live-review/*.py` 沿用此约定。
+- 单文件 vs 多份模式 argparse 共存：用一个触发参数（如 `--bvids`）作为分支开关，两组参数都 `required=False`，main 内手工校验 "single requires X/Y" / "many requires A/B"。比 mutually-exclusive group 灵活，能容纳各组多个必填字段。
 
 ---
 
@@ -158,4 +162,46 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **`missing_input_exits_2` 用例对 PYTHONPATH 不健壮的 false-positive**：subprocess 找不到脚本时 python interpreter 返回 2。我在 RED 阶段碰巧 4 失败 1 通过，但通过的那个是 python 自身退码而非脚本逻辑。GREEN 阶段实现脚本后该测试才用 `[extract_one] input not found` stderr 信号验证脚本真的进入了正确分支 — 写测试时建议加 stderr 字符串断言（已加 `proc.stderr` 的 assert message 但未严格匹配）。后续类似"exit code 校验"用例可考虑 `assert "input not found" in proc.stderr` 形式更严格。
 - **`json.dumps(ensure_ascii=False)`**：jsonl 写入时必须 `ensure_ascii=False`，否则 `comments[].content` 的中文会被 `\uXXXX` 转义，文件大小膨胀 ×6 + 人工审查不可读。下游 US-005 / US-007 读 jsonl 时假设 raw utf-8，`ensure_ascii=True` 会破坏后续 round-trip。
 - **`Path.parent.mkdir(parents=True, exist_ok=True)` 是必须的**：测试 fixture 用 `tmp_path / "out.jsonl"`（parent 一定存在）所以不暴露问题，但实际跑 `--out reports/live-review/X.jsonl` 时 reports 子目录可能不存在 — 写出前先创建父目录是健壮性的最低门槛。
+---
+
+## 2026-04-26 15:30 CST - US-005 多份模式 + schema 一致性验证脚本
+
+**实现内容：**
+- 修改 `scripts/live-review/extract_one.py`：增加多份模式分支 `_run_many`，触发条件 `--bvids id1,id2,...` 与 `--input-dir` + `--output-dir`；可选 `--mock-llm-dir <fixture_dir>`，每 BV 取 `<bvid>.json`；缺 raw 或缺 mock → exit 2；任一 ExtractionError → exit 1；不破坏 US-004 单文件分支（`_run_single`）。
+- 新建 `scripts/live-review/validate_jsonl_batch.py`：扫 `--jsonl-dir/*.jsonl` → 用 `Draft202012Validator` 逐行校验 → 统计每文件 novel_count / score_signal / verdict / score_present_ratio → 写 markdown 报告（含 Per-file Statistics 表 / Score Signal Distribution / Validation Issues 三段，标题 `# Live-Review JSONL Batch Validation Report`）；任一行不合法 → exit 1 + stderr 列 `FAIL <name> line=N bvid=<X> field=<Y> msg=<...>`；可选 `--report-out` 覆盖默认 `reports/live-review-validation-<TS>.md`。
+- 新建 fixtures：
+  - `tests/live_review/fixtures/mock_extract_5_files/{BV1AAA,BV1BBB,BV1CCC,BV1DDD,BV1EEE}.json`，分别 3/4/2/2/15 本 = 26 本；BV1AAA 全 explicit_number / BV1BBB 全 fuzzy / BV1CCC 全 unknown / BV1DDD 全 sign_phrase / BV1EEE 混合（涵盖 4 类 signal、4 类 verdict、多 dimension）。
+  - `tests/live_review/fixtures/raw_5_files/{BV1AAA..BV1EEE}_raw.txt` 同名占位 raw 文本（mock 模式下仅用于 `source_line_total = raw.count('\n')+1`）。
+- 新建 `tests/live_review/test_extract_many.py` 2 用例：(1) 5 jsonl 全部生成 + 全 schema 校验通过 + 总 novel == 26；(2) 各 jsonl 内 bvid 字段不串号（严格 == 文件名 BV）。
+- 新建 `tests/live_review/test_validate_jsonl_batch.py` 3 用例：(a) 5 valid jsonl → exit 0 + 报告含 'All files passed' / 'Per-file Statistics' / 'Score Signal Distribution' / 'Validation Issues'；(b) 故意把 BV1AAA 第 2 行 score=200 → exit 1 + stderr 含 `BV1AAA` + `line=2` + `score`；(c) 报告用 `MarkdownIt('commonmark').enable('table')` 渲染 → 含 `<h1>` 与 `<table>`。
+
+**Files changed:**
+- M scripts/live-review/extract_one.py
+- A scripts/live-review/validate_jsonl_batch.py
+- A tests/live_review/fixtures/mock_extract_5_files/BV1AAA.json
+- A tests/live_review/fixtures/mock_extract_5_files/BV1BBB.json
+- A tests/live_review/fixtures/mock_extract_5_files/BV1CCC.json
+- A tests/live_review/fixtures/mock_extract_5_files/BV1DDD.json
+- A tests/live_review/fixtures/mock_extract_5_files/BV1EEE.json
+- A tests/live_review/fixtures/raw_5_files/BV1AAA_raw.txt
+- A tests/live_review/fixtures/raw_5_files/BV1BBB_raw.txt
+- A tests/live_review/fixtures/raw_5_files/BV1CCC_raw.txt
+- A tests/live_review/fixtures/raw_5_files/BV1DDD_raw.txt
+- A tests/live_review/fixtures/raw_5_files/BV1EEE_raw.txt
+- A tests/live_review/test_extract_many.py
+- A tests/live_review/test_validate_jsonl_batch.py
+
+**验证：**
+- `python3 -m pytest tests/live_review/test_extract_many.py tests/live_review/test_validate_jsonl_batch.py --no-cov -q` → 5 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 427 passed（无回归；从 US-004 的 422 增 5）。
+- `ruff check scripts/live-review/extract_one.py scripts/live-review/validate_jsonl_batch.py tests/live_review/test_extract_many.py tests/live_review/test_validate_jsonl_batch.py` → All checks passed。
+
+**Learnings for future iterations:**
+- **PRD 字面 "BV-A" 不能直接用作 bvid**：`schemas/live_review_extracted.schema.json` 的 `bvid` 模式 `^BV[A-Za-z0-9]+$` 不允许短横线。把 PRD 字面占位（BV-A/BV-B/...）替换为 `BV1AAA/BV1BBB/BV1CCC/BV1DDD/BV1EEE` 既符合 pattern 又保持 5-份语义。后续涉及合成 BV id 的 fixture（US-006/US-008/...）沿用此 5 个 ID。
+- **`MarkdownIt('gfm-like')` 默认开启 linkify 但 linkify-it-py 不在依赖里**：用 `'commonmark'` preset 再 `.enable('table')` 是最小可工作组合。pyproject.toml 没有显式依赖 markdown_it，但被 sentence-transformers 间接装上了；测试若想要严格独立可考虑改用 `re` 自检 markdown 结构（# / | / 表头 / blank lines）。但当前 markdown_it 已稳定可用。
+- **多份模式与单文件模式的 argparse 共存**：`--bvids` 是触发开关 — 一旦传入就走 `_run_many` 分支（忽略 `--input` / `--out`）。两组参数都 `required=False` 是 argparse 的明面写法，再在 main 里手工校验 "single requires --input/--out" / "many requires --input-dir/--output-dir"，比 mutually-exclusive group 灵活（后者难以同时让多组互斥）。后续 US-006 run_batch.py 不再走多份分支，但同样手工校验参数完整性。
+- **markdown 报告的 stderr 与 stdout 分流**：`validate_jsonl_batch.py` 把 `OK N files → path` 写 stdout（成功），把 `FAIL ...` 与 `report → path` 写 stderr（失败时）。两路分开后，CI/cron 调用方能用 `grep` / pipeline 单独抓 OK 行（如 `python validate.py | grep OK`）；测试也能直接 `assert proc.stderr.contains` 验证错误细节而不被 stdout 干扰。后续 US-006/US-013 同步沿用此分流。
+- **`_REPO_ROOT = Path(__file__).resolve().parents[2]` 在 `scripts/live-review/*.py` 是 spr 共享路径锚定**：脚本路径 `scripts/live-review/foo.py` → parents[2] 是 repo root；schema/prompt 等资源用 `_REPO_ROOT / "schemas" / "..."` 引用。这套与 `ink_writer/live_review/*.py`（也是 parents[2] = repo root）保持一致，后续脚本直接复用。
+- **fixture 26 = 3+4+2+2+15 是 PRD 硬约束**：US-008 题材聚合器测试 fixture（30 份 case）与本批 26 份并不直接复用，但若未来要做 jsonl→case 链路 e2e 测，需要保持 26 计数稳定，否则下游统计失真。修改 fixture 计数前先回归 `test_extract_many_creates_5_jsonl_with_total_26_records`。
+
 ---

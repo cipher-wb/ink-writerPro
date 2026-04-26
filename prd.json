@@ -91,8 +91,8 @@
         "ruff check scripts/live-review/extract_one.py scripts/live-review/validate_jsonl_batch.py tests/live_review/test_extract_many.py tests/live_review/test_validate_jsonl_batch.py 无新增错误"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "extract_one.py 多份模式分支：--bvids 触发 _run_many；任一 BV 缺 raw 或缺 mock → exit 2；任一 ExtractionError → exit 1。validate_jsonl_batch.py 用 markdown_it+table 做语法检查（默认 commonmark preset 不带 table 扩展，必须 .enable('table')，不要用 'gfm-like' 因为它默认 enable linkify 但环境无 linkify package）。fixtures 用 BV1AAA/BBB/CCC/DDD/EEE 替代 PRD 字面 'BV-A'，因为 schema bvid pattern 是 ^BV[A-Za-z0-9]+$（短横线不合法）。"
     },
     {
       "id": "US-006",

@@ -1,0 +1,90 @@
+[
+  {
+    "novel_idx": 0,
+    "line_start": 3,
+    "line_end": 60,
+    "title_guess": "校园甜宠",
+    "title_confidence": 0.65,
+    "genre_guess": ["校园", "甜宠"],
+    "score": null,
+    "score_raw": "还可以再写写吧",
+    "score_signal": "fuzzy",
+    "verdict": "unknown",
+    "overall_comment": "题材接受度低，整体差点意思",
+    "comments": [
+      {
+        "dimension": "genre",
+        "severity": "negative",
+        "content": "校园甜宠类签约率偏低",
+        "raw_quote": "我们这里很少签",
+        "raw_line_range": [20, 24]
+      }
+    ]
+  },
+  {
+    "novel_idx": 1,
+    "line_start": 65,
+    "line_end": 140,
+    "title_guess": "古言宫斗",
+    "title_confidence": 0.7,
+    "genre_guess": ["古言", "宫斗"],
+    "score": null,
+    "score_raw": "感觉还行可以打磨",
+    "score_signal": "fuzzy",
+    "verdict": "borderline",
+    "overall_comment": "宫斗节奏可以但人设单薄",
+    "comments": [
+      {
+        "dimension": "character",
+        "severity": "negative",
+        "content": "女主性格扁平",
+        "raw_quote": "人设单薄",
+        "raw_line_range": [80, 84]
+      }
+    ]
+  },
+  {
+    "novel_idx": 2,
+    "line_start": 145,
+    "line_end": 220,
+    "title_guess": "末世异能",
+    "title_confidence": 0.55,
+    "genre_guess": ["末世", "异能"],
+    "score": null,
+    "score_raw": "可以的水平有",
+    "score_signal": "fuzzy",
+    "verdict": "pass",
+    "overall_comment": "异能设定新颖但节奏控制需要练",
+    "comments": [
+      {
+        "dimension": "pacing",
+        "severity": "neutral",
+        "content": "节奏中规中矩",
+        "raw_quote": "节奏需要练",
+        "raw_line_range": [180, 185]
+      }
+    ]
+  },
+  {
+    "novel_idx": 3,
+    "line_start": 225,
+    "line_end": 300,
+    "title_guess": "种田经营",
+    "title_confidence": 0.6,
+    "genre_guess": ["种田", "经营"],
+    "score": null,
+    "score_raw": "差不多吧普通水平",
+    "score_signal": "fuzzy",
+    "verdict": "fail",
+    "overall_comment": "种田流缺爽点设计",
+    "comments": [
+      {
+        "dimension": "highpoint",
+        "severity": "negative",
+        "content": "前 5 章无明显爽点",
+        "raw_quote": "缺爽点",
+        "raw_line_range": [240, 245]
+      }
+    ]
+  }
+]

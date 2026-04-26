@@ -1,0 +1,46 @@
+[
+  {
+    "novel_idx": 0,
+    "line_start": 5,
+    "line_end": 100,
+    "title_guess": "山海经异闻",
+    "title_confidence": 0.5,
+    "genre_guess": ["神话", "志怪"],
+    "score": null,
+    "score_raw": "看看吧",
+    "score_signal": "unknown",
+    "verdict": "unknown",
+    "overall_comment": "信号不足，未能给出明确评分",
+    "comments": [
+      {
+        "dimension": "misc",
+        "severity": "neutral",
+        "content": "尚未读完，难以评判",
+        "raw_quote": "看看吧",
+        "raw_line_range": [50, 53]
+      }
+    ]
+  },
+  {
+    "novel_idx": 1,
+    "line_start": 105,
+    "line_end": 200,
+    "title_guess": "悬疑推理",
+    "title_confidence": 0.5,
+    "genre_guess": ["悬疑", "推理"],
+    "score": null,
+    "score_raw": "嗯，下一本",
+    "score_signal": "unknown",
+    "verdict": "unknown",
+    "overall_comment": "未给出明确判断",
+    "comments": [
+      {
+        "dimension": "misc",
+        "severity": "neutral",
+        "content": "时间不够",
+        "raw_quote": "下一本",
+        "raw_line_range": [180, 182]
+      }
+    ]
+  }
+]

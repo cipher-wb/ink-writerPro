@@ -1,0 +1,46 @@
+[
+  {
+    "novel_idx": 0,
+    "line_start": 10,
+    "line_end": 90,
+    "title_guess": "都市职场",
+    "title_confidence": 0.7,
+    "genre_guess": ["都市", "职场"],
+    "score": null,
+    "score_raw": "我可以签",
+    "score_signal": "sign_phrase",
+    "verdict": "pass",
+    "overall_comment": "拉扯紧凑，签约级别",
+    "comments": [
+      {
+        "dimension": "character",
+        "severity": "positive",
+        "content": "主角心理描写到位",
+        "raw_quote": "拉扯写得好",
+        "raw_line_range": [40, 45]
+      }
+    ]
+  },
+  {
+    "novel_idx": 1,
+    "line_start": 95,
+    "line_end": 180,
+    "title_guess": "灵异志怪",
+    "title_confidence": 0.55,
+    "genre_guess": ["灵异", "悬疑"],
+    "score": null,
+    "score_raw": "签约不了",
+    "score_signal": "sign_phrase",
+    "verdict": "fail",
+    "overall_comment": "灵异冷题材，签约率极低",
+    "comments": [
+      {
+        "dimension": "genre",
+        "severity": "negative",
+        "content": "灵异志怪在投稿池接受度极低",
+        "raw_quote": "这种题材几乎签不过",
+        "raw_line_range": [120, 125]
+      }
+    ]
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "novel_idx": 0,
+    "line_start": 5,
+    "line_end": 80,
+    "title_guess": "都市重生律师",
+    "title_confidence": 0.85,
+    "genre_guess": ["都市", "重生", "职业流"],
+    "score": 72,
+    "score_raw": "72分吧，可以签",
+    "score_signal": "explicit_number",
+    "verdict": "pass",
+    "overall_comment": "节奏稳，金手指出场及时",
+    "comments": [
+      {
+        "dimension": "pacing",
+        "severity": "positive",
+        "content": "黄金三章节奏到位",
+        "raw_quote": "节奏可以",
+        "raw_line_range": [10, 12]
+      }
+    ]
+  },
+  {
+    "novel_idx": 1,
+    "line_start": 82,
+    "line_end": 160,
+    "title_guess": "玄幻无敌流",
+    "title_confidence": 0.7,
+    "genre_guess": ["玄幻", "无敌流"],
+    "score": 65,
+    "score_raw": "65分",
+    "score_signal": "explicit_number",
+    "verdict": "borderline",
+    "overall_comment": "无敌爽点足但开篇太快",
+    "comments": [
+      {
+        "dimension": "opening",
+        "severity": "negative",
+        "content": "开篇 200 字内信息过密",
+        "raw_quote": "开头太冲了",
+        "raw_line_range": [85, 88]
+      }
+    ]
+  },
+  {
+    "novel_idx": 2,
+    "line_start": 165,
+    "line_end": 240,
+    "title_guess": "诸天万界",
+    "title_confidence": 0.6,
+    "genre_guess": ["诸天", "无限流"],
+    "score": 55,
+    "score_raw": "55分，差点意思",
+    "score_signal": "explicit_number",
+    "verdict": "fail",
+    "overall_comment": "金手指落地拖到第三章",
+    "comments": [
+      {
+        "dimension": "golden_finger",
+        "severity": "negative",
+        "content": "金手指出现过晚",
+        "raw_quote": "金手指出来太晚",
+        "raw_line_range": [200, 205]
+      }
+    ]
+  }
+]
