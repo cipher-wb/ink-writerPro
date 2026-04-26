@@ -1,0 +1,12 @@
+# Ralph Progress Log — live-review module (2026-04-26)
+
+PRD: prd.json (scripts/ralph/prd.json is symlink → ../../prd.json)
+Branch: ralph/live-review-2026-04-26
+Spec: docs/superpowers/specs/2026-04-26-live-review-integration-design.md (commit 611ccd1)
+Plan: docs/superpowers/plans/2026-04-26-live-review-implementation.md (commit 17ed48c)
+
+## Codebase Patterns
+
+（ralph 在跑 US 过程中发现的可复用约定填这里）
+
+---
