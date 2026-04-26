@@ -35,8 +35,8 @@
         "ruff check ink_writer/rewrite_loop/dry_run.py 无新增错误"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-26：dry_run.py 删除 base.name == 'data' 启发式；新增 _delivered_rate(chapters_root) helper 直读 base_dir/<book>/chapters 不再走 aggregate_dry_run_metrics 内置路径假设；aggregate_dry_run_metrics 公共 API 不动。新增 tests/rewrite_loop/test_dry_run_base_dir_robust.py 2 测试覆盖 base_dir 命名不是 'data' 时的两种阈值分支。pytest tests/rewrite_loop 27 passed；ruff baseline 1 SIM105 无新增。"
     },
     {
       "id": "US-003",

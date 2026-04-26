@@ -15,6 +15,7 @@ US-009 (2026-04-25 起)：
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import Any
@@ -79,26 +80,44 @@ def increment_dry_run_counter(*, base_dir: Path | str | None = None) -> int:
     return new_value
 
 
+def _delivered_rate(chapters_root: Path) -> float | None:
+    """扫 ``chapters_root/*.evidence.json`` 计 delivered/total；空目录返 None。
+
+    与 ``ink_writer/evidence_chain/dry_run_report.py:_iter_evidence`` 同读盘策略，
+    但接受显式 ``chapters_root``，绕开 ``aggregate_dry_run_metrics`` 内置的
+    ``base/data/<book>/chapters`` 路径假设，便于 ``is_dry_run`` 直接构造路径。
+    """
+    if not chapters_root.is_dir():
+        return None
+    delivered = 0
+    total = 0
+    for path in sorted(chapters_root.glob("*.evidence.json")):
+        try:
+            with open(path, encoding="utf-8") as fh:
+                data = json.load(fh)
+        except (json.JSONDecodeError, OSError):
+            continue
+        total += 1
+        if data.get("outcome") == "delivered":
+            delivered += 1
+    if total <= 0:
+        return None
+    return delivered / total
+
+
 def _observation_quality_passed(
     *,
     book: str,
     base_dir: Path,
     threshold: float,
 ) -> bool:
-    """读取 ``<base_dir>/data/<book>/chapters/*.evidence.json`` 聚合 delivered_rate，
+    """读取 ``<base_dir>/<book>/chapters/*.evidence.json`` 聚合 delivered_rate，
     与阈值对比；当无 evidence 可读时（total=0）保守返回 ``False``（即"还没观察够，别切"）。
     """
-    # 局部 import 防循环依赖（dry_run_report 不依赖 dry_run）
-    from ink_writer.evidence_chain.dry_run_report import (
-        aggregate_dry_run_metrics,
-    )
-
-    metrics = aggregate_dry_run_metrics(book=book, base_dir=base_dir)
-    total = int(metrics.get("total_chapters", 0) or 0)
-    if total <= 0:
+    chapters_root = base_dir / book / "chapters"
+    rate = _delivered_rate(chapters_root)
+    if rate is None:
         return False
-    delivered = int(metrics.get("delivered", 0) or 0)
-    rate = delivered / total
     return rate >= float(threshold)
 
 
@@ -147,11 +166,8 @@ def is_dry_run(
     ) else None
     if threshold is not None and book:
         base = Path(base_dir) if base_dir is not None else _DEFAULT_BASE_DIR
-        # base_dir 默认就是 "data/"；aggregate_dry_run_metrics 期望的 base 上层是
-        # 含 ``data/`` 的目录，因此回退一层
-        scan_base = base.parent if base.name == "data" else base
         if not _observation_quality_passed(
-            book=book, base_dir=scan_base, threshold=float(threshold)
+            book=book, base_dir=base, threshold=float(threshold)
         ):
             return True  # 质量未达标，保持 dry-run
 
