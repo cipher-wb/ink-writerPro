@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0020
+title: 职业流20号样本 (pass / 75分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JOB
+scope:
+  genre:
+  - 职业流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 75分 | 整体被星河直播判定为 pass，主要问题集中在hook维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 pass，主要问题集中在hook维度。 | 章末未留钩子，追读力不足
+  observable:
+  - 'hook维度: 章末未留钩子，追读力不足'
+live_review_meta:
+  source_bvid: BV1JOB
+  source_line_range:
+  - 1
+  - 100
+  score: 75
+  score_raw: 75分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 职业流20号样本
+  genre_guess:
+  - 职业流
+  overall_comment: 整体被星河直播判定为 pass，主要问题集中在hook维度。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 章末未留钩子，追读力不足
+    raw_quote: 章末缺乏钩子

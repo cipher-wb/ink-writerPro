@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0011
+title: 玄幻11号样本 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1XYI
+scope:
+  genre:
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分 | 整体被星河直播判定为 fail，主要问题集中在golden_finger维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 fail，主要问题集中在golden_finger维度。 | 金手指出场太晚，前 5 章读感平淡
+  observable:
+  - 'golden_finger维度: 金手指出场太晚，前 5 章读感平淡'
+live_review_meta:
+  source_bvid: BV1XYI
+  source_line_range:
+  - 1
+  - 100
+  score: 50
+  score_raw: 50分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玄幻11号样本
+  genre_guess:
+  - 玄幻
+  overall_comment: 整体被星河直播判定为 fail，主要问题集中在golden_finger维度。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指出场太晚，前 5 章读感平淡
+    raw_quote: 金手指迟迟不出场

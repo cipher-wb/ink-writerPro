@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0012
+title: 玄幻12号样本 (fail / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1XYJ
+scope:
+  genre:
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 整体被星河直播判定为 fail，主要问题集中在character维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 fail，主要问题集中在character维度。 | 主角动机模糊，难以共鸣
+  observable:
+  - 'character维度: 主角动机模糊，难以共鸣'
+live_review_meta:
+  source_bvid: BV1XYJ
+  source_line_range:
+  - 1
+  - 100
+  score: 55
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玄幻12号样本
+  genre_guess:
+  - 玄幻
+  overall_comment: 整体被星河直播判定为 fail，主要问题集中在character维度。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角动机模糊，难以共鸣
+    raw_quote: 主角动机模糊

@@ -1,0 +1,44 @@
+case_id: CASE-LR-2026-0027
+title: 仙侠27号样本 (pass / 75分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1XID
+scope:
+  genre:
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 75分 | 整体被星河直播判定为 pass，主要问题集中在highpoint维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 pass，主要问题集中在highpoint维度。 | 爽点密度不足，缺乏情绪释放
+  observable:
+  - 'highpoint维度: 爽点密度不足，缺乏情绪释放'
+live_review_meta:
+  source_bvid: BV1XID
+  source_line_range:
+  - 1
+  - 100
+  score: 75
+  score_raw: 75分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 仙侠27号样本
+  genre_guess:
+  - 仙侠
+  overall_comment: 整体被星河直播判定为 pass，主要问题集中在highpoint维度。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 爽点密度不足，缺乏情绪释放
+    raw_quote: 爽点稀薄

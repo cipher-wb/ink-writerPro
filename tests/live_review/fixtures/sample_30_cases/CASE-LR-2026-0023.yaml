@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0023
+title: 职业流23号样本 (fail / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JOE
+scope:
+  genre:
+  - 职业流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 整体被星河直播判定为 fail，主要问题集中在opening维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 fail，主要问题集中在opening维度。 | 开篇 800 字铺设定，主线被淹没
+  observable:
+  - 'opening维度: 开篇 800 字铺设定，主线被淹没'
+live_review_meta:
+  source_bvid: BV1JOE
+  source_line_range:
+  - 1
+  - 100
+  score: 55
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 职业流23号样本
+  genre_guess:
+  - 职业流
+  overall_comment: 整体被星河直播判定为 fail，主要问题集中在opening维度。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇 800 字铺设定，主线被淹没
+    raw_quote: 开头铺设定太多

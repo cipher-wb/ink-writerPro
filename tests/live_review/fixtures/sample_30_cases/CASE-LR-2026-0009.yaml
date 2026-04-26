@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0009
+title: 玄幻09号样本 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1XYH
+scope:
+  genre:
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分 | 整体被星河直播判定为 fail，主要问题集中在opening维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 fail，主要问题集中在opening维度。 | 开篇 800 字铺设定，主线被淹没
+  observable:
+  - 'opening维度: 开篇 800 字铺设定，主线被淹没'
+live_review_meta:
+  source_bvid: BV1XYH
+  source_line_range:
+  - 1
+  - 100
+  score: 40
+  score_raw: 40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玄幻09号样本
+  genre_guess:
+  - 玄幻
+  overall_comment: 整体被星河直播判定为 fail，主要问题集中在opening维度。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇 800 字铺设定，主线被淹没
+    raw_quote: 开头铺设定太多

@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0022
+title: 职业流22号样本 (fail / 60分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JOD
+scope:
+  genre:
+  - 职业流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 60分 | 整体被星河直播判定为 fail，主要问题集中在golden_finger维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 fail，主要问题集中在golden_finger维度。 | 金手指出场太晚，前 5 章读感平淡
+  observable:
+  - 'golden_finger维度: 金手指出场太晚，前 5 章读感平淡'
+live_review_meta:
+  source_bvid: BV1JOD
+  source_line_range:
+  - 1
+  - 100
+  score: 60
+  score_raw: 60分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 职业流22号样本
+  genre_guess:
+  - 职业流
+  overall_comment: 整体被星河直播判定为 fail，主要问题集中在golden_finger维度。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指出场太晚，前 5 章读感平淡
+    raw_quote: 金手指迟迟不出场

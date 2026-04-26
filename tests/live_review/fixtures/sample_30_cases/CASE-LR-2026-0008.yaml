@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0008
+title: 重生08号样本 (borderline / 62分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1AAE
+scope:
+  genre:
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 62分 | 整体被星河直播判定为 borderline，主要问题集中在simplicity维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 borderline，主要问题集中在simplicity维度。 | 文字过于复杂，应口语化
+  observable:
+  - 'simplicity维度: 文字过于复杂，应口语化'
+live_review_meta:
+  source_bvid: BV1AAE
+  source_line_range:
+  - 1
+  - 100
+  score: 62
+  score_raw: 62分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生08号样本
+  genre_guess:
+  - 重生
+  overall_comment: 整体被星河直播判定为 borderline，主要问题集中在simplicity维度。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文字过于复杂，应口语化
+    raw_quote: 文字过于书面化

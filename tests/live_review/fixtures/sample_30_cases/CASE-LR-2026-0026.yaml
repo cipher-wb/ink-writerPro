@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0026
+title: 仙侠26号样本 (pass / 70分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1XIC
+scope:
+  genre:
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 70分 | 整体被星河直播判定为 pass，主要问题集中在simplicity维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 pass，主要问题集中在simplicity维度。 | 文字过于复杂，应口语化
+  observable:
+  - 'simplicity维度: 文字过于复杂，应口语化'
+live_review_meta:
+  source_bvid: BV1XIC
+  source_line_range:
+  - 1
+  - 100
+  score: 70
+  score_raw: 70分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 仙侠26号样本
+  genre_guess:
+  - 仙侠
+  overall_comment: 整体被星河直播判定为 pass，主要问题集中在simplicity维度。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文字过于复杂，应口语化
+    raw_quote: 文字过于书面化

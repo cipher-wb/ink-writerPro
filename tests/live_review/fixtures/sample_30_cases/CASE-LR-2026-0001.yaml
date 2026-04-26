@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0001
+title: 都市01号样本 (pass / 60分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AAA
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 60分 | 整体被星河直播判定为 pass，主要问题集中在opening,hook维度。
+  ingested_at: '2026-04-26'
+  ingested_from: tests/live_review/fixtures/sample_30_cases
+  reviewer: claude-sonnet-4-6
+failure_pattern:
+  description: 整体被星河直播判定为 pass，主要问题集中在opening,hook维度。 | 开篇 800 字铺设定，主线被淹没;悬念稀薄，难以驱动下一章
+  observable:
+  - 'opening维度: 开篇 800 字铺设定，主线被淹没'
+  - 'hook维度: 悬念稀薄，难以驱动下一章'
+live_review_meta:
+  source_bvid: BV1AAA
+  source_line_range:
+  - 1
+  - 100
+  score: 60
+  score_raw: 60分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 都市01号样本
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 整体被星河直播判定为 pass，主要问题集中在opening,hook维度。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇 800 字铺设定，主线被淹没
+    raw_quote: 开头铺设定太多
+  - dimension: hook
+    severity: negative
+    content: 悬念稀薄，难以驱动下一章
+    raw_quote: 悬念太弱

@@ -152,8 +152,8 @@
         "ruff check scripts/live-review/aggregate_genre.py tests/live_review/test_aggregate_genre.py 无新增错误"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "实测 statistics.quantiles(method='exclusive') 对 7 元素 [50,55,60,65,70,75,80] 给 [55,65,75]、对 5 元素 [60,62,65,70,75] 给 [61,65,72.5]，与测试硬编码期望一致。30 份 fixture（覆盖 6 入选 genre + 1 排除 genre 末世 + 全 null score 校园 + 全 fail 玄幻 + 多 layer 推导）一次写入；都市 negatives 设计成 opening=5/pacing=4/golden_finger=3/hook=2/character=1 五档严格不同频率以满足 strict-descending AC。"
     },
     {
       "id": "US-009",

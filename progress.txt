@@ -24,6 +24,10 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - jsonl→yaml 转换器写盘前必须 `from ink_writer.case_library.schema import validate_case_dict` 调用以 fail-loud — 比手动校验各字段省事，且与 case_library.store.save() 一致路径。yaml.safe_dump 用 `sort_keys=False, allow_unicode=True, default_flow_style=False` 三件套保持 schema 字段顺序 + 中文不转义 + 块式输出（与 410 份现存 yaml 风格一致）。
 - live_review_meta.comments 必须 strip `raw_line_range`：jsonl 中间产物 schema 强制 raw_line_range 必填，但 case_schema 的 live_review_meta.comments 是 `additionalProperties: false` 且不含 raw_line_range — 转换时用 `{k: v for k, v in c.items() if k != "raw_line_range"}` 即可。其它字段（dimension/severity/content/raw_quote）保留即可。
 - 脚本支持 `--dry-run` 时避免污染 counter file：dry-run 路径下不要调 `allocate_live_review_id`（否则 `_id_alloc.allocate_case_id` 会原子写 `.id_alloc_case_lr_2026.cnt`），改用 placeholder ID `CASE-LR-{year}-DRYRUN-NNNN` 形式 — 注意此 placeholder pattern 不通过 case_schema 校验，所以 dry-run 也跳过 validate_case_dict（用户应理解 dry-run 仅做"jsonl 解析 + 字段编排"，schema 校验在 wet-run 才生效）。
+- `statistics.quantiles(method="exclusive")` 在小样本上的精确数值（实测）：n=4 quantiles 用 m_k=k*(N+1)/4 位置插值。N=7 [50,55,60,65,70,75,80] → [55,65,75]；N=5 [60,62,65,70,75] → [61,65,72.5]；N=5 [60,65,70,75,80] → [62.5,70,77.5]；N=5 [55,60,65,70,75] → [57.5,65,72.5]。需要 N≥2 否则抛 StatisticsError；N=1 用 `_safe_quantiles` 兜底返 (None, float(scores[0]), None)。聚合脚本对全 None score 的 genre 直接返 score_mean=None / score_median=None / score_p25=None / score_p75=None，这样既符合 schema "number|null" 也不混淆"统计量为 0"与"无数据"。
+- 题材聚合的笛卡尔贡献（多标签 genre）模式：`live_review_meta.genre_guess` 是 array，每个标签独立计入对应 genre bucket，所以 `[都市,重生]` 既算 1 次 都市 也算 1 次 重生；`total_novels_analyzed` 用 cases scanned 总数（=union 而非各 genre 累加 sum），避免被笛卡尔重复放大。后续 US-009 / US-013 涉及 genre 维度统计要遵循这同一约定。
+- 30 份测试 fixture 通过 Python 一次性 generator 生成（用过即弃 `/tmp/gen_*.py`），不留 generator 在 repo 内 — 30 份 yaml 静态 commit，构建 reproducibility 由 PR diff 与 schema 校验回归共同保证。下次扩 fixture 数量时复用此模式：临时脚本 → 写盘 → 验证 → 删脚本，避免 `_generate.py` 长期存在被误改。
+- common_complaints 严格降序需要 fixture 数据本身设计成"top-N 频率两两不同"：都市设计 opening=5/pacing=4/golden_finger=3/hook=2/character=1 五档严格不同。如果允许 ties，把测试的 `>=` 写法保留（非严格降序）即可；想测严格 `>` 必须从 fixture 端保证唯一频率。
 
 ---
 
@@ -300,4 +304,53 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **dry-run 与 counter file 隔离**：`allocate_live_review_id` 调用就会原子写 `cases_dir/.id_alloc_case_lr_2026.cnt`。dry-run 路径不能调它（否则把"模拟跑"变成"半写盘"）。占位 ID 用 `CASE-LR-{year}-DRYRUN-NNNN` — 注意此 pattern 不通过 case_schema 校验（schema 期望 `CASE-LR-NNNN` 或 `CASE-LR-2026-NNNN`），所以 dry-run 必须跳过 validate_case_dict。后续 schedule 类的 dry-run / preview 脚本沿用此"placeholder ID + 跳过强校验"模式。
 - **fixture 用 `*.jsonl` 而非 `BV*.jsonl` 命名**：US-007 fixture 名 `sample_5_files.jsonl`（PRD AC 字面）。脚本若严格 glob `BV*.jsonl` 则无法消费此 fixture。最终设计让 `_iter_jsonl_files` 跳过 `_*` 但接受任意 jsonl 名 — 既兼容 `BV*.jsonl` 生产输出，也兼容 `sample_*.jsonl` fixture。`_failed.jsonl` 的 `_` 前缀依旧自动排除。
 - **subprocess test fixture 用 tmp_path 自然不污染 repo**：测试用 tmp_path 作 cases_dir，所以脚本写出的 yaml 与 `.id_alloc_case_lr_2026.cnt` 都在 tmp 目录里。**手测时**用 `/tmp/` 跑端到端 + 之后清理；**永远不要**在 repo 内 cases_dir 测试，否则 counter file 会进版本控制。
+---
+
+## 2026-04-26 17:30 CST - US-008 题材聚合器 aggregate_genre.py
+
+**实现内容：**
+- 新建 `scripts/live-review/aggregate_genre.py`：CASE-LR-*.yaml → genre_acceptance.json 聚合脚本：
+  - 参数：`--cases-dir` 必填 / `--out`（默认 `data/live-review/genre_acceptance.json`）/ `--min-cases`（默认 3）/ `--top-complaints`（默认 5）。
+  - 笛卡尔贡献：`live_review_meta.genre_guess` 多标签每个独立计入对应 genre bucket（`[都市,重生]` 算 都市 1 + 重生 1）。
+  - 统计字段：`score_mean / score_median`（statistics.mean/median，None-safe）+ `score_p25/p75`（`statistics.quantiles(method="exclusive")`；N=1 时回落 None；全 None scores → 全 None 输出）+ `verdict_pass_rate = count(verdict=='pass') / total`。
+  - `common_complaints`：聚合所有 negative comments 的 dimension → `Counter.most_common(top_N)` → `frequency = count / total_negatives`，`examples` 取该 dim 下 raw_quote 前 3 条（缺 raw_quote 兜底 content）。
+  - `case_count < min_cases` 的 genre 直接过滤；`total_novels_analyzed` 取 cases scanned 总数（union，非各 genre 累加 sum）。
+- 新建 `tests/live_review/fixtures/sample_30_cases/` 含 30 份 CASE-LR-2026-0001..0030.yaml（用一次性 `/tmp/gen_lr_fixtures.py` 生成后删除生成器；30 份 yaml 静态 commit）：
+  - 都市 7 cases / 重生 5 cases（与都市 4 重叠）/ 玄幻 5 cases（全 fail verdict）/ 校园 5 cases（全 null score）/ 职业流 5 cases / 仙侠 5 cases / 末世 2 cases（< min=3 → 排除）。
+  - 都市 negatives 设计成 opening=5 / pacing=4 / golden_finger=3 / hook=2 / character=1 五档严格不同频率 → 满足 "common_complaints 频率严格降序" AC。
+- 新建 `tests/live_review/test_aggregate_genre.py` 13 用例（subprocess + 共享 `aggregate` fixture）：
+  1. test_output_validates_genre_acceptance_schema — Draft202012 校验通过；
+  2. test_top_level_metadata — schema_version/total/min_cases；
+  3. test_excluded_genres_below_min_cases — 末世 不在输出；
+  4. test_included_genres_match_expected — 6 入选 genre；
+  5. test_dushi_stats_match_handcomputed — mean=65 / median=65 / p25=55 / p75=75 / pass_rate=5/7；
+  6. test_chongsheng_stats_match_handcomputed — mean=66.4 / median=65 / p25=61 / p75=72.5 / pass_rate=0.8；
+  7. test_xuanhuan_all_fail_pass_rate_zero — 玄幻 pass_rate==0；
+  8. test_xiaoyuan_all_null_score_stats_are_null — 校园 mean/median/p25/p75 全 None；
+  9. test_common_complaints_frequency_descending — 都市 cc 频率非递增 + top-5 freq 唯一 + cc[0]=opening；
+  10. test_common_complaints_examples_present — 每条 cc 含 examples ≤3；
+  11. test_case_ids_well_formed — case_ids pattern + 非空；
+  12. test_top_complaints_flag_caps_list — `--top-complaints 2` 限上界；
+  13. test_min_cases_threshold_changes_output — `--min-cases 2` 包含末世。
+
+**Files changed:**
+- A scripts/live-review/aggregate_genre.py
+- A tests/live_review/fixtures/sample_30_cases/CASE-LR-2026-0001.yaml … 0030.yaml（30 份）
+- A tests/live_review/test_aggregate_genre.py
+
+**验证：**
+- TDD 顺序确认：写完 13 测试 → pytest 13 errors/fails（脚本不存在；subprocess `python3 SCRIPT.py` returncode=2）→ 实现 aggregate_genre.py → 13 PASS。
+- `python3 -m pytest tests/live_review/test_aggregate_genre.py --no-cov -q` → 13 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 454 passed（无回归；US-007 的 441 增 13）。
+- `ruff check scripts/live-review/aggregate_genre.py tests/live_review/test_aggregate_genre.py` → All checks passed。
+- 端到端 CLI 冒烟：`python3 scripts/live-review/aggregate_genre.py --cases-dir tests/live_review/fixtures/sample_30_cases --out /tmp/x.json` → `OK 6 genre(s) (30 cases) → /tmp/x.json`，输出 schema_version=1.0 / total_novels_analyzed=30 / 都市 score_mean=65 / 校园 score_mean=null / 玄幻 pass_rate=0.0 全部符合预期。
+
+**Learnings for future iterations:**
+- **`statistics.quantiles(method='exclusive')` 在小样本上的精确数值**：n=4 quantiles 用 m_k=k*(N+1)/4 位置插值。N=7 [50,55,60,65,70,75,80] → [55,65,75]；N=5 [60,62,65,70,75] → [61,65,72.5]；N=5 [60,65,70,75,80] → [62.5,70,77.5]。需要 N≥2 否则抛 StatisticsError；N=1 用 `_safe_quantiles` 兜底返 (None, float(scores[0]), None)。聚合脚本对全 None score 的 genre 直接返 score_mean=None / score_median=None / score_p25=None / score_p75=None — 这样既符合 schema "number|null" 也不混淆"统计量为 0"与"无数据"。
+- **题材聚合的笛卡尔贡献模式**：`live_review_meta.genre_guess` 是 array，每个标签独立计入对应 genre bucket，所以 `[都市,重生]` 既算 1 次 都市 也算 1 次 重生；`total_novels_analyzed` 用 cases scanned 总数（=union 而非各 genre 累加 sum），避免被笛卡尔重复放大。后续 US-009 / US-013 涉及 genre 维度统计要遵循同一约定。
+- **30 份测试 fixture 用一次性 generator 生成后删除**：写 `/tmp/gen_lr_fixtures.py` 一次性脚本生成 30 份 yaml → 校验 → 删脚本；30 份 yaml 作为静态 fixture 提交，构建 reproducibility 由 PR diff + schema 校验回归共同保证。这套模式比 conftest.py 动态创建 fixture 更稳（不依赖 generator 长期存在被误改），下次扩 fixture 数量复用此模式。
+- **common_complaints 严格降序需 fixture 设计配合**：测试用 `>=` 验证非严格降序就够；想测严格 `>` 必须从 fixture 端保证唯一频率。我设计都市 negatives 为 opening=5 / pacing=4 / golden_finger=3 / hook=2 / character=1 五档严格不同 → 满足 "频率严格降序" AC。如果 PRD AC 说"非严格"则 fixture 可以放任 ties。
+- **subprocess fixture 嵌套 pytest fixture（@pytest.fixture aggregate(out_path)）**：`aggregate` fixture 调用 `_run` + 解析 json，所有依赖它的测试都共享一次 subprocess 调用 — 13 用例只跑一次脚本，比每用例独立跑省时。但需注意 fixture scope 默认 function，要 module-level 共享得显式 `scope="module"` + tmp_path_factory 替代 tmp_path。
+- **`statistics.median` 的偶数样本返回中位数算术平均**：N=2 返 (a+b)/2；statistics.quantiles 在 N=2 用 m_k=k*3/4 也插值。聚合脚本不需要特殊处理偶数样本，直接调即可。但要警惕 N=1 时 quantiles 抛错 — `_safe_quantiles` 必须兜底。
+- **`yaml.safe_load` 对 None / 空文件返 None**：load_cases 必须 `if data is None: continue` 防御空 yaml；30 份 fixture 不会触发但生产环境若有人手工删空内容会暴露。所有 `yaml.safe_load` 后建议加这道防线。
 ---
