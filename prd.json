@@ -74,8 +74,8 @@
         "ruff check scripts/live-review/extract_one.py tests/live_review/test_extract_one_smoke.py 无新增错误"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "script 用 `sys.path.insert(0, repo_root)` 自举以便 subprocess 启动也能 import ink_writer.live_review.extractor；导入受 ruff E402 影响，沿用 scripts/analyze_prose_directness.py 的 `# noqa: E402` 写法（包含 windows stdio bootstrap 之后的全部 stdlib 导入）。`--bvids/--input-dir` 多份模式留给 US-005 加。"
     },
     {
       "id": "US-005",

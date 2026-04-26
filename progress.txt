@@ -12,6 +12,8 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - ID 分配复用 `case_library._id_alloc.allocate_case_id(cases_dir, prefix=...)`：传不同 prefix 自动隔离 counter file（`.id_alloc_<sanitized_prefix>.cnt`）+ glob 兜底防外部手工添加 yaml 让 counter 落后；并发安全（独占文件锁，4 worker spawn 0001..0004 无空洞已验证）。新 case 类型不需要再写 ID 分配器，写 `live_review.case_id.allocate_live_review_id` 这种薄封装即可。
 - live-review 配置 dataclass 模式：`LiveReviewConfig` 是 frozen dataclass + 嵌套 `BatchConfig`/`InjectConfig`；`enabled=false` 在 `load_config` 内强制 `inject_into.{init,review}` 全 false（`& 与` 操作）— 这是关闭整个模块的 master switch，下游 inject point 务必查 `cfg.inject_into.<stage>` 而不是直接看 yaml。
 - 资源路径必须锚定 `_REPO_ROOT = Path(__file__).resolve().parents[N]`：plan/示例里出现的 `Path("scripts/...")` / `Path("schemas/...")` 是相对 CWD 的脆弱写法，被 pytest fixture 调用时会随启动目录漂移。`ink_writer/live_review/*.py` 在 `parents[2]` 即 repo root；这条规矩适用所有 module-level 常量。
+- `scripts/live-review/*.py` 子进程启动需自举 sys.path：脚本顶部加 `sys.path.insert(0, str(_REPO_ROOT))`（`_REPO_ROOT = Path(__file__).resolve().parents[2]`）才能 `from ink_writer.live_review.extractor import ...`，否则 `python3 scripts/live-review/foo.py` 直接启动会 ModuleNotFoundError。pytest 走 `pythonpath = .` 不需要这一步，但 subprocess test 必须靠脚本自举。
+- ruff E402 的合规写法：windows stdio block 必须先于其他 import（构成 module level import），随后的 stdlib 导入 + 跨 `_REPO_ROOT` 注入后的 first-party 导入都加 `# noqa: E402`，与 `scripts/analyze_prose_directness.py` / `scripts/e2e_smoke_harness.py` 沿用同款。`# noqa: E402` 必须直接附在每行 import 后，行级粒度。
 
 ---
 
@@ -122,4 +124,38 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **fixture raw 文件即使内容重复也无所谓**：mock_response 模式下 raw_text 仅用于计算 source_line_total（`raw.count('\n')+1`），实际语义不被 assert。但 fixtures 文件存在性 + 行数仍要保证 — `tests/live_review/fixtures/raw_BV12yBoBAEEn.txt` 必须随 mock_extract_BV12yBoBAEEn.json 一起 commit。
 - **prompt few-shot 必须基于真实数据 + 不留 placeholder**：plan §943-994 明示"5 个 few-shot 不可留 placeholder"。我 5 个例子分别覆盖：(1) explicit_number 多维度 (2) sign_phrase 题材问题 (3) fuzzy 开头节奏 (4) taboo+ops 违禁 fail (5) golden_finger 迟到。这 5 个样本来自 BV12yBoBAEEn 真实片段或同类逻辑组合，不是凭空虚构。
 - **schema validation 在 extractor 内必须 fail-loud — 不是上游 sanitization**：plan 强调"非 JSON / 非 Array / schema 违反"三种异常都不 silent fallback。`Draft202012Validator(schema).iter_errors(record)` 取前 3 条 message 拼到 ExtractionError，足够下游脚本（US-006 batch runner）写入 _failed.jsonl。
+---
+
+## 2026-04-26 14:50 CST - US-004 单文件冒烟脚本 extract_one.py
+
+**实现内容：**
+- 新建 `scripts/live-review/extract_one.py` — argparse 单文件冒烟脚本：
+  - 参数：`--bvid`（可选，BV*_raw.txt 文件名自动提取）/ `--input`（必填）/ `--out`（必填）/ `--model`（默认 claude-sonnet-4-6）/ `--mock-llm`（测试用 fixture json）。
+  - 退出码：成功 0 / `ExtractionError` 1 / 输入文件不存在或无法推断 bvid 2。
+  - bvid 推断正则 `^(BV[\w]+)_raw\.txt$`，未匹配且无 `--bvid` 时 stderr 提示后 exit 2。
+  - sys.path 自举 `_REPO_ROOT` 以支持任何 CWD 启动；windows stdio bootstrap 沿用 editor-wisdom 模板。
+  - 读 raw → 调 `ink_writer.live_review.extractor.extract_from_text(...)` → 逐 record 写 jsonl 一行 `json.dumps(ensure_ascii=False)`。
+- 新建 `tests/live_review/test_extract_one_smoke.py` 5 用例（subprocess 模式）：
+  1. `with_mock_creates_jsonl` — mock 跑通后 jsonl 存在 + 3 行；
+  2. `jsonl_lines_are_valid_records` — 每行 schema 校验 0 errors；
+  3. `score_signal_distribution` — 3 records 严格覆盖 explicit_number / sign_phrase / fuzzy；
+  4. `missing_input_exits_2` — `--input` 文件不存在 → returncode 2 + 不创建 out 文件；
+  5. `bvid_extracted_from_filename` — 不传 `--bvid`，从 `BV12yBoBAEEn_raw.txt` 自动提取，jsonl 全部 record bvid 正确。
+
+**Files changed:**
+- A scripts/live-review/extract_one.py
+- A tests/live_review/test_extract_one_smoke.py
+
+**验证：**
+- `python3 -m pytest tests/live_review/test_extract_one_smoke.py --no-cov -q` → 5 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 422 passed（无回归）。
+- `ruff check scripts/live-review/extract_one.py tests/live_review/test_extract_one_smoke.py` → All checks passed。
+- TDD 顺序确认：写完 5 测试 → pytest 4/5 fail（脚本不存在；missing_input 用例因 python 找不到脚本本身碰巧返回 2 ≈ 半命中，但 GREEN 后语义正确） → 实现脚本 → 5 PASS。
+
+**Learnings for future iterations:**
+- **subprocess 启动 `scripts/live-review/*.py` 必须脚本自举 sys.path**：pytest fixture 调用 `python3 SCRIPT.py` 时不会继承 pytest.ini 的 `pythonpath = .`，纯 subprocess 启动 → 必须脚本顶部 `sys.path.insert(0, str(_REPO_ROOT))`。AC 没明说但是被 5 用例之一逼出来的硬性要求。后续 US-005 batch runner / US-006 等同样跑 subprocess 的脚本沿用此模板。
+- **ruff E402 合规需要 `# noqa: E402` 行级标注**：windows stdio bootstrap block（`import os as _os_win_stdio` / 后续 try-import runtime_compat）走在 `from __future__ import annotations` 后面，再之后的 stdlib import 全部触发 E402。沿用 `scripts/analyze_prose_directness.py:43-49` / `scripts/e2e_smoke_harness.py:45` 的 `# noqa: E402` 行级写法即可（编辑 wisdom 老脚本里没加 noqa 是因为 ruff 没在它们那批文件上跑通）。修改导入顺序无解，因为 windows stdio block 必须早于其他 import 拦截 stdout 编码。
+- **`missing_input_exits_2` 用例对 PYTHONPATH 不健壮的 false-positive**：subprocess 找不到脚本时 python interpreter 返回 2。我在 RED 阶段碰巧 4 失败 1 通过，但通过的那个是 python 自身退码而非脚本逻辑。GREEN 阶段实现脚本后该测试才用 `[extract_one] input not found` stderr 信号验证脚本真的进入了正确分支 — 写测试时建议加 stderr 字符串断言（已加 `proc.stderr` 的 assert message 但未严格匹配）。后续类似"exit code 校验"用例可考虑 `assert "input not found" in proc.stderr` 形式更严格。
+- **`json.dumps(ensure_ascii=False)`**：jsonl 写入时必须 `ensure_ascii=False`，否则 `comments[].content` 的中文会被 `\uXXXX` 转义，文件大小膨胀 ×6 + 人工审查不可读。下游 US-005 / US-007 读 jsonl 时假设 raw utf-8，`ensure_ascii=True` 会破坏后续 round-trip。
+- **`Path.parent.mkdir(parents=True, exist_ok=True)` 是必须的**：测试 fixture 用 `tmp_path / "out.jsonl"`（parent 一定存在）所以不暴露问题，但实际跑 `--out reports/live-review/X.jsonl` 时 reports 子目录可能不存在 — 写出前先创建父目录是健壮性的最低门槛。
 ---
