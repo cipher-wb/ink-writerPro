@@ -5,7 +5,11 @@ import json
 from pathlib import Path
 
 import pytest
-from ink_writer.live_review.extractor import ExtractionError, extract_from_text
+from ink_writer.live_review.extractor import (
+    ExtractionError,
+    _clamp_numeric_fields,
+    extract_from_text,
+)
 
 
 def _load_mock(fixtures_dir: Path) -> list[dict]:
@@ -94,7 +98,8 @@ def test_extract_schema_violation_raises():
         extract_from_text(raw, bvid="BV1x", source_path="/x", llm_call=bad_llm)
 
 
-def test_extract_score_out_of_range_raises():
+def test_extract_score_out_of_range_clamps_then_passes():
+    """score=999 现在被软 clamp 到 100（自 §M-2 后；旧行为是 fail-loud）。"""
     raw = "x"
 
     def bad_llm(prompt, text, model):
@@ -113,5 +118,72 @@ def test_extract_score_out_of_range_raises():
             "comments": [],
         }])
 
-    with pytest.raises(ExtractionError, match="failed schema"):
-        extract_from_text(raw, bvid="BV1x", source_path="/x", llm_call=bad_llm)
+    records = extract_from_text(raw, bvid="BV1x", source_path="/x", llm_call=bad_llm)
+    assert len(records) == 1
+    assert records[0]["score"] == 100  # clamped from 999
+
+
+# === clamp 软容错 单测（修 §M-2 BV1F6 schema fail 'title_confidence=45 > 1.0' 后新增）===
+
+
+def test_clamp_title_confidence_above_1():
+    novel = {"title_confidence": 45}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["title_confidence"] == 1.0
+
+
+def test_clamp_title_confidence_below_0():
+    novel = {"title_confidence": -0.5}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["title_confidence"] == 0.0
+
+
+def test_clamp_score_above_100():
+    novel = {"score": 150}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["score"] == 100
+
+
+def test_clamp_score_below_0():
+    novel = {"score": -10}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["score"] == 0
+
+
+def test_clamp_keeps_valid_values_unchanged():
+    novel = {"title_confidence": 0.85, "score": 68}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["title_confidence"] == 0.85
+    assert novel["score"] == 68
+
+
+def test_clamp_handles_none_score():
+    novel = {"score": None}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["score"] is None
+
+
+def test_extract_with_oversize_title_confidence_clamps_then_passes(fixtures_dir):
+    """LLM 误把 score 填进 title_confidence 时 clamp + 校验通过（不再 fail-loud）。"""
+    raw = "x"
+
+    def buggy_llm(prompt, text, model):
+        return json.dumps([{
+            "novel_idx": 0,
+            "line_start": 1,
+            "line_end": 10,
+            "title_guess": "x",
+            "title_confidence": 45,  # ← LLM 误填的分数
+            "genre_guess": ["x"],
+            "score": 45,
+            "score_raw": "45 分",
+            "score_signal": "explicit_number",
+            "verdict": "fail",
+            "overall_comment": "x",
+            "comments": [],
+        }])
+
+    records = extract_from_text(raw, bvid="BV1x", source_path="/x", llm_call=buggy_llm)
+    assert len(records) == 1
+    assert records[0]["title_confidence"] == 1.0  # clamped
+    assert records[0]["score"] == 45  # 未超界，原值保留

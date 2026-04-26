@@ -44,10 +44,14 @@ severity 严格枚举（3 个）：negative / positive / neutral
 - bvid / source_path / extracted_at / model / extractor_version /
   source_line_total 等字段由调用方注入，**不要**自己填
 - novel_idx 从 0 开始递增；line_start <= line_end
-- title_confidence：明确听到完整书名给 0.85-0.95；只猜到题材没听到书名给 0.3-0.5
 - raw_line_range 必须落在该 novel 的 [line_start, line_end] 区间内
 - comments 数组允许为空数组 []（罕见）；正常情况 1-6 条
 - 切勿凭空虚构内容；找不到的字段填 null（仅 score 允许 null，其他字符串字段用空概括短语兜底，如 score_raw='未明确说出分数'）
+
+⚠️ 数值字段易混淆（曾出错，请逐字段确认）：
+- ``score``：**0-100 整数**（如 68），表示满分 100 的评分。**没明确分数时填 null**，不要用 0/-1/45/百位数兜底。
+- ``title_confidence``：**0.0-1.0 浮点数**（如 0.85），表示标题猜测的置信度（0=完全猜不到、1=听到完整书名）。**严禁**把 score、行号、年份、其他任何整数填进 title_confidence！如果 score=68，title_confidence 应该独立判断（如 0.45），**不要**写成 68 或 0.68 或 45。
+- 明确听到完整书名给 title_confidence 0.85-0.95；只猜到题材没听到书名给 0.3-0.5；完全猜不到给 ≤0.2。
 
 === few-shot 示例 ===
 
