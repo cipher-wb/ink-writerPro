@@ -18,8 +18,8 @@
         "ruff check ink_writer/_compat/ ink_writer/case_library/_id_alloc.py ink_writer/rewrite_loop/dry_run.py 无新增错误"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-26：抽 ink_writer/_compat/locking.py:locked_file，两调用方 import 并删除本地实现；新增 tests/_compat/test_locking.py 覆盖 Unix mp 互斥 + Windows fail-loud；pytest.ini testpaths 加 tests/_compat。基线 ruff 4 errors → 改后 3（少 1 个 SIM105，无新增）。"
     },
     {
       "id": "US-002",
