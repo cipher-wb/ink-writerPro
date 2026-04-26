@@ -1,1 +1,138 @@
-../../prd.json
+{
+  "project": "ink-writer",
+  "branchName": "ralph/code-review-followup-2026-04-26",
+  "description": "代码审查后续修复 — 把首批 P1 fix (commit 074e587/47a6fe5/5acd69d) 跳过的 8 条 P2/nit 项全部修完。背景：reviewer 在 #4-#11 中提出但被作者评估为 '边际收益低' 的项目，用户决定全修以彻底清掉技术债。每条 US 自包含背景 + 文件路径 + 验收标准；ralph fresh instance 无需历史 review 报告也能执行。前置条件：ink_writer/case_library/_id_alloc.py + ink_writer/rewrite_loop/dry_run.py + ink_writer/rewrite_loop/human_review.py + ink_writer/evidence_chain/writer.py + ink_writer/learn/auto_case.py + ink_writer/learn/promote.py 当前 master 状态（commit 5acd69d）。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "抽公共 _locked_file 到 ink_writer/_compat/locking.py",
+      "description": "review §三 #8 — _id_alloc.py 与 rewrite_loop/dry_run.py 各持一份字面相同的 _locked_file (跨平台 fcntl/msvcrt 锁)，违反 CLAUDE.md 'Windows 兼容守则 — 优先复用 runtime_compat 原语而非重写'。任何后续修要被迫双改。本 US 抽公共，后续 US (#3/#4) 依赖此 helper。",
+      "acceptanceCriteria": [
+        "新建 ink_writer/_compat/__init__.py + ink_writer/_compat/locking.py，暴露 locked_file(path: Path, mode: str) context manager",
+        "实现保留当前 fail-loud 语义：Windows msvcrt.locking 失败抛 OSError（不 silent pass），Unix 用 fcntl.flock(LOCK_EX)，with 退出释放锁并 close fh",
+        "ink_writer/case_library/_id_alloc.py 删除自身 _locked_file 实现，改 from ink_writer._compat.locking import locked_file 并替换调用点",
+        "ink_writer/rewrite_loop/dry_run.py 同样替换；同时清理两文件 docstring 内 '与 X 行为一致' 的互引注释",
+        "新建 tests/_compat/__init__.py + tests/_compat/test_locking.py：(1) Unix 路径多进程互斥（mp.Pool 8 worker × 25 round 共享同一 counter file，最终精确 200，复用 test_dry_run_safety 的 spawn-context 模式）(2) mock sys.platform='win32' + mock msvcrt.locking 抛 OSError → 验证 locked_file 上抛而非 silent pass",
+        "现有 tests/case_library/test_id_alloc_concurrency.py + tests/rewrite_loop/test_dry_run_safety.py 不修改即通过",
+        "python3 -m pytest tests/_compat/ tests/case_library/test_id_alloc_concurrency.py tests/rewrite_loop/test_dry_run_safety.py --no-cov -q 全过",
+        "ruff check ink_writer/_compat/ ink_writer/case_library/_id_alloc.py ink_writer/rewrite_loop/dry_run.py 无新增错误"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "完成 2026-04-26：抽 ink_writer/_compat/locking.py:locked_file，两调用方 import 并删除本地实现；新增 tests/_compat/test_locking.py 覆盖 Unix mp 互斥 + Windows fail-loud；pytest.ini testpaths 加 tests/_compat。基线 ruff 4 errors → 改后 3（少 1 个 SIM105，无新增）。"
+    },
+    {
+      "id": "US-002",
+      "title": "dry_run.py is_dry_run 删除 base.name == 'data' 启发式",
+      "description": "review §三 #4 — _observation_quality_passed 用 `scan_base = base.parent if base.name == 'data' else base` 推路径，传入 base_dir 命名不是 'data' 时 silently 走错路径，aggregate 永远返 0 → 永远停在 dry-run。当前 0 prod caller 没炸；M3 接入 ink-write 时必踩。",
+      "acceptanceCriteria": [
+        "删除 ink_writer/rewrite_loop/dry_run.py is_dry_run 函数内 `scan_base = base.parent if base.name == 'data' else base` 启发式（行约 187）",
+        "改为 _observation_quality_passed 内部直接构造 chapters_root = Path(base_dir) / book / 'chapters'，绕过 aggregate_dry_run_metrics 的 base/data/<book> 路径假设",
+        "或新增 _delivered_rate(book, chapters_root) helper 复用 ink_writer/evidence_chain/dry_run_report.py:_iter_evidence 的逻辑但接受显式 chapters_root；任一方案均不修改 aggregate_dry_run_metrics 公共 API",
+        "tests/rewrite_loop/test_dry_run_safety.py 中 test_is_dry_run_quality_gate_blocks_switch_when_below_threshold / allows_switch_when_above_threshold / no_evidence_stays_dry 三个测试不修改即通过（当前 base_dir=tmp_path/data 命中启发式真分支，新实现也必须能算对）",
+        "新增 tests/rewrite_loop/test_dry_run_base_dir_robust.py：传 base_dir=tmp_path/test_data（命名不是 'data'）+ seed evidence 4/1，断言 is_dry_run 正确返回 False（旧实现这里返 True）",
+        "python3 -m pytest tests/rewrite_loop/ --no-cov -q 全过",
+        "ruff check ink_writer/rewrite_loop/dry_run.py 无新增错误"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "完成 2026-04-26：dry_run.py 删除 base.name == 'data' 启发式；新增 _delivered_rate(chapters_root) helper 直读 base_dir/<book>/chapters 不再走 aggregate_dry_run_metrics 内置路径假设；aggregate_dry_run_metrics 公共 API 不动。新增 tests/rewrite_loop/test_dry_run_base_dir_robust.py 2 测试覆盖 base_dir 命名不是 'data' 时的两种阈值分支。pytest tests/rewrite_loop 27 passed；ruff baseline 1 SIM105 无新增。"
+    },
+    {
+      "id": "US-003",
+      "title": "read_dry_run_counter 加共享锁防 truncate 瞬间读 0",
+      "description": "review §三 #5 — read_dry_run_counter 不加锁；另一进程在 increment 的 r+/seek/truncate/write 中途时，read 可能拿到空文件 → fallthrough 到 0，is_dry_run 误判 counter=0。当前 0 prod caller，M3 接入并发书写时会触发。",
+      "acceptanceCriteria": [
+        "依赖 US-001 — 在 ink_writer/_compat/locking.py 内新增 shared_locked_file context manager：Unix 用 fcntl.flock(LOCK_SH)，Windows msvcrt 无 shared lock 概念则降级为 LK_LOCK 独占 + 注释说明",
+        "ink_writer/rewrite_loop/dry_run.py read_dry_run_counter 改为 with shared_locked_file(...): 读，并在 raw 为空但 path.stat().st_size > 0 时触发 1 次重读（最多 1 次重试，避免无限循环）",
+        "原有 tests/rewrite_loop/test_dry_run.py + test_dry_run_safety.py 不修改即通过",
+        "新增 tests/rewrite_loop/test_dry_run_read_safety.py：用 multiprocessing 同时 8 worker increment + 1 worker 反复 read，断言 read 返回值序列单调非递减（除首次 0），至少持续 200 次 increment",
+        "python3 -m pytest tests/rewrite_loop/ --no-cov -q 全过",
+        "ruff check 无新增错误"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "完成 2026-04-26：ink_writer/_compat/locking.py 新增 shared_locked_file (Unix LOCK_SH 共享锁；Windows msvcrt 无共享语义降级 LK_LOCK 独占 + 注释说明)。read_dry_run_counter 改为用 shared_locked_file('r')，并在 raw='' 但 stat().st_size>0 时触发最多 1 次重读，避免命中 writer truncate→write 中途窗口返 0。新增 tests/rewrite_loop/test_dry_run_read_safety.py 4 测试：(1) 8 worker increment + 1 worker 反复 read 序列单调非递减；(2) monkeypatch shared_locked_file 模拟空读触发 retry 拿稳定 42；(3) 持续空读不无限循环（exact 2 calls）；(4) Windows 共享锁 fail-loud。pytest tests/rewrite_loop tests/_compat tests/case_library tests/evidence_chain → 112 passed；ruff baseline 2 (1 SIM105 + 1 SIM115) 无新增（新 open() 加 noqa: SIM115 配对 yield 所有权语义）。"
+    },
+    {
+      "id": "US-004",
+      "title": "_id_alloc.py counter 文件初始化挪进锁内",
+      "description": "review §三 #6 — counter 文件首次 not exists 时的 write_text(scan_max) 在锁外执行；当前靠 with-lock 内 'glob 兜底取 max' 救场，没炸。但代码读起来令人不安，并发初始化期间外部读会看到不完整状态。",
+      "acceptanceCriteria": [
+        "依赖 US-001 — 复用 locked_file helper",
+        "ink_writer/case_library/_id_alloc.py allocate_case_id 删除函数体顶部的 `if not counter_path.exists(): counter_path.write_text(...)`",
+        "把初始化挪进 with locked_file(counter_path, 'a+') as fh: 块内：fh.seek(0) 读取，若空则用 _scan_max 初始化",
+        "保留 'r+' 与 'a+' 选择中能正确支持 read+write 的模式（'a+' 在 Unix 下 read 位置是文件开头，写总是 append，需 fh.seek(0) + truncate 后再 write）",
+        "现有 tests/case_library/test_id_alloc_concurrency.py 4 个测试不修改即通过",
+        "新增测试 test_allocate_case_id_initial_state_atomic：在 mock 下让 _scan_max 故意 sleep 50ms，多个进程同时首次分配，断言 ID 序列仍然连续无空洞 (1..N)",
+        "python3 -m pytest tests/case_library/ --no-cov -q 全过",
+        "ruff check 无新增错误"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "完成 2026-04-26：_id_alloc.py allocate_case_id 删掉锁外 `if not counter_path.exists(): write_text(...)`，改为 `with locked_file(counter_path, 'a+') as fh:` —— 'a+' 在 Unix/Windows 下都 auto-create 空文件。fh.seek(0)+read 拿 raw；空则 _scan_max 取 glob max 初始化（与现存 yaml 兜底逻辑合并：永远 max(stored, scan_max)，与原行为等价）。fh.seek(0)+truncate+write 写回（'a+' Unix O_APPEND 写在 EOF，但 truncate 让 EOF=0 仍落 0）。新增 tests/case_library/test_id_alloc_concurrency.py:test_allocate_case_id_initial_state_atomic：4 spawn worker 同时首次分配，子进程内 monkey-patch _scan_max 慢 50ms（拉长锁内停留拍醒任何残留 race window），断言 ID 序列严格 1..4。pytest tests/case_library 64 passed；ruff check baseline 1 SIM105 无新增。"
+    },
+    {
+      "id": "US-005",
+      "title": "auto_case.py / promote.py 消除 cases_dir 参数 shadow",
+      "description": "review §三 #7 — propose_cases_from_failures 函数体内 `cases_dir = Path(cases_dir)` 覆盖关键字参数；promote_short_term_to_long_term 同样。pyright/mypy strict 模式可能 warn shadow-parameter；纯 cosmetic，但属审查清单。",
+      "acceptanceCriteria": [
+        "ink_writer/learn/auto_case.py propose_cases_from_failures 函数签名改为 cases_dir: Path | str（接受两种输入），函数体内引入 cases_dir_p = Path(cases_dir) 局部变量、删除 `cases_dir = Path(cases_dir)` 同名覆盖；所有原先用 cases_dir 的内部引用换为 cases_dir_p",
+        "ink_writer/learn/promote.py promote_short_term_to_long_term 同样模式（cases_dir 参数）也对齐处理",
+        "现有 tests/learn/ 全部测试不修改即通过（这是纯重构）",
+        "python3 -m pytest tests/learn/ --no-cov -q 全过",
+        "ruff check ink_writer/learn/ 无新增错误"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "完成 2026-04-26：auto_case.py propose_cases_from_failures 签名 cases_dir: Path → Path | str；函数体内 `cases_dir = Path(cases_dir)` shadow 改为 `cases_dir_p = Path(cases_dir)`，所有内部引用（_count_existing_learn_this_week / _next_learn_id 调用）切到 cases_dir_p。promote.py promote_short_term_to_long_term 同步：签名 cases_dir: Path | None → Path | str | None；shadow 改为 cases_dir_p。pytest tests/learn 10 passed；ruff check ink_writer/learn 全过。"
+    },
+    {
+      "id": "US-006",
+      "title": "human_review.py _serialize_case repr 兜底改为 raise TypeError",
+      "description": "review §三 #9 — _serialize_case 末路用 repr(case) 兜底未知类型，写进 jsonl 是 '<MyCase object at 0x...>' 对人工 review 零价值。改为 raise TypeError 让 schema 漂移立刻可见，符合 fail-loud 原则。",
+      "acceptanceCriteria": [
+        "ink_writer/rewrite_loop/human_review.py _serialize_case 函数末尾把 `return repr(case)` 改为 `raise TypeError(f'unsupported case type for human_review jsonl: {type(case).__name__}')`",
+        "现有 tests/rewrite_loop/test_human_review.py 4 个测试不修改即通过（当前测试都传 str/dict/Case dataclass，不触发兜底）",
+        "新增测试 test_write_human_review_record_raises_on_unknown_case_type：传一个 object()（无 case_id 属性、非 str/dict）作为 blocking_cases[0]，断言 raise TypeError，且 jsonl 文件未被创建（fail before write）",
+        "python3 -m pytest tests/rewrite_loop/ --no-cov -q 全过",
+        "ruff check ink_writer/rewrite_loop/human_review.py 无新增错误"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "完成 2026-04-26：human_review.py _serialize_case 末路 `return repr(case)` 改为 `raise TypeError(f'unsupported case type for human_review jsonl: {type(case).__name__}')`，fail-loud。docstring 同步更新（旧版兜底掩盖 schema 漂移的解释）。新增 tests/rewrite_loop/test_human_review.py:test_write_human_review_record_raises_on_unknown_case_type：传 _Bogus()（无 case_id 属性、非 str/dict）触发 TypeError；jsonl 文件未被创建（序列化在 open() 之前的列表推导式中完成，fail-before-write 天然成立）。pytest tests/rewrite_loop 32 passed；ruff check baseline 2 SIM105 无新增。"
+    },
+    {
+      "id": "US-007",
+      "title": "auto_case.py _hit_case_ids 收紧 Iterable→list 检查",
+      "description": "review §三 #10 — _hit_case_ids 用 isinstance(value, Iterable) and not isinstance(value, (str, bytes)) 接受任何可迭代，但上游 schema (writer_self_check.ComplianceReport.cases_violated 与 checker outcome.cases_hit) 显式声明为 list[str]。dict 等异常类型会 silently 进分支并迭代 keys。收紧为 isinstance(value, list)。",
+      "acceptanceCriteria": [
+        "ink_writer/learn/auto_case.py _hit_case_ids 把 isinstance(value, Iterable) 改为 isinstance(value, list)",
+        "删除 from collections.abc import Iterable 如果不再被本文件使用",
+        "现有 tests/learn/ 全部测试不修改即通过",
+        "新增测试 test_hit_case_ids_rejects_dict_payload：构造 checker = {'cases_violated': {'CASE-A': 'x'}}，断言 _hit_case_ids 返回 [] 而不是 ['CASE-A']（旧行为会拿到 dict keys）",
+        "python3 -m pytest tests/learn/ --no-cov -q 全过",
+        "ruff check ink_writer/learn/auto_case.py 无新增错误"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "完成 2026-04-26：auto_case.py _hit_case_ids 把 isinstance(value, Iterable) and not isinstance(value, (str, bytes)) 收紧为 isinstance(value, list)；删除 from collections.abc import Iterable（本文件仅此一处用）。docstring 显式说明上游 schema 是 list[str]/list[dict]，dict/set/tuple/generator 等异常 payload 被静默拒绝以避免 silent 污染学习管线。新增 tests/learn/test_auto_case.py:test_hit_case_ids_rejects_dict_payload：(a) {'cases_violated': {'CASE-A':'x'}} 返 [] (旧行为返 ['CASE-A'] 取 dict keys)；(b) details.cases_hit dict 同样返 []；(c) set/tuple/generator/str 异常 payload 全部返 []；(d) 正常 list[str] / list[dict{case_id}] 路径回归仍 OK。pytest tests/learn → 11 passed (10 → 11)；ruff check ink_writer/learn 全过。"
+    },
+    {
+      "id": "US-008",
+      "title": "evidence_chain/writer.py + human_review.py 加固 mkstemp 后 fd 状态",
+      "description": "review §三 #11 — _atomic_write_text 在 tempfile.mkstemp() 返回 (fd, name) 后到 os.fdopen(fd) 之前的极小窗口若有异常 (理论上 Path 构造不会抛但属 future-proof)，fd 会泄漏。把 Path(tmp_name) 移进 try 块，并在 fdopen 前的异常路径 os.close(fd) 兜底。",
+      "acceptanceCriteria": [
+        "ink_writer/evidence_chain/writer.py _atomic_write_text 重构：(1) `tmp_path = Path(tmp_name)` 移入 try 块第一行 (2) try 块开头加一个内嵌 try/except 包住 fdopen 之前的代码，except 路径 os.close(fd) + 删 tmp 文件",
+        "ink_writer/rewrite_loop/human_review.py _atomic_write_text 同模式同步处理（review 时未单独提，但是同样代码 — 一并修）",
+        "现有 tests/evidence_chain/test_atomic_write.py + tests/rewrite_loop/test_human_review.py 全部测试不修改即通过",
+        "新增测试 test_atomic_write_no_fd_leak_on_fdopen_failure（同时覆盖 evidence_chain/writer.py 与 human_review.py 两处）：mock os.fdopen 抛 OSError，断言 raise 后 (a) tmp 文件不残留 (b) 50 轮压力下 fd count 不增长（用 resource.getrlimit 或 psutil）",
+        "python3 -m pytest tests/evidence_chain/ tests/rewrite_loop/ --no-cov -q 全过",
+        "ruff check ink_writer/evidence_chain/writer.py ink_writer/rewrite_loop/human_review.py 无新增错误"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "完成 2026-04-26：evidence_chain/writer.py + rewrite_loop/human_review.py 的 _atomic_write_text 重构 — `tmp_path = Path(tmp_name)` 移入外层 try 第一行；新增内嵌 try/except 包住 `Path(tmp_name) + os.fdopen(fd)`，except 路径手动 `os.close(fd)` + unlink tmp 文件，避免 mkstemp→fdopen 之间异常导致 fd 资源泄漏（fdopen 失败时 fd 未被 BufferedWriter 接管，外层 with 不会兜底）。同时把 4 处 `try/except OSError: pass` 改为 `contextlib.suppress(OSError)`：消除原 4 个 SIM105 baseline 而非新增，无新增噪音。新增 tests/evidence_chain/test_atomic_write.py:test_atomic_write_no_fd_leak_on_fdopen_failure[evidence_chain_writer / human_review] parameterized 测试：mock os.fdopen 抛 OSError → 50 轮压力 → assert (a) 进程 open-fd 计数（/proc/self/fd 或 /dev/fd）增量 ≤ 2 ；(b) 目录无 .tmp 残留。pytest tests/evidence_chain tests/rewrite_loop → 50 passed；ruff check 两文件 → All checks passed (4 → 0)。"
+    }
+  ]
+}
