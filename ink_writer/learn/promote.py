@@ -85,7 +85,7 @@ def promote_short_term_to_long_term(
     *,
     project_memory_path: Path,
     case_store: CaseStore,
-    cases_dir: Path | None = None,
+    cases_dir: Path | str | None = None,
     min_occurrences: int = 3,
     now: datetime | None = None,
 ) -> list[Case]:
@@ -123,7 +123,7 @@ def promote_short_term_to_long_term(
     if not isinstance(patterns, list):
         return []
 
-    cases_dir = Path(cases_dir) if cases_dir is not None else Path("data/case_library/cases")
+    cases_dir_p = Path(cases_dir) if cases_dir is not None else Path("data/case_library/cases")
     now_dt = now or datetime.now(UTC)
 
     proposed: list[Case] = []
@@ -141,7 +141,7 @@ def promote_short_term_to_long_term(
             continue
 
         case = _make_promote_case(
-            case_id=_next_promote_id(cases_dir),
+            case_id=_next_promote_id(cases_dir_p),
             text=text,
             kind=kind,
             count=count,

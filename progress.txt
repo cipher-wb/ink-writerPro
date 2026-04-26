@@ -62,6 +62,17 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
   - Windows 测试模拟 `msvcrt.locking` 抛 OSError 的模式（mock + `mock.patch.object(sys, "platform", "win32")` + `mock.patch.dict(sys.modules, {"msvcrt": fake})`）已沉淀两次；US-001 与 US-003 都用同模式，未来锁相关 fail-loud 测试请直接复用。
 ---
 
+## 2026-04-26 - US-005
+- `ink_writer/learn/auto_case.py:propose_cases_from_failures` 签名 `cases_dir: Path` → `cases_dir: Path | str`；删除函数体内 `cases_dir = Path(cases_dir)` 同名 shadow，改用局部 `cases_dir_p = Path(cases_dir)`；`_count_existing_learn_this_week` 与 `_next_learn_id` 调用点切到 `cases_dir_p`。
+- `ink_writer/learn/promote.py:promote_short_term_to_long_term` 同步处理：签名 `cases_dir: Path | None` → `cases_dir: Path | str | None`；shadow `cases_dir = Path(cases_dir) if ... else Path("...")` 改为 `cases_dir_p`，`_next_promote_id` 调用切到 `cases_dir_p`。
+- 纯重构（不改语义、不改对外行为）；现有 10 个测试不修改即通过。
+- Files changed: `ink_writer/learn/auto_case.py`, `ink_writer/learn/promote.py`。
+- Quality: `pytest tests/learn --no-cov -q` → 10 passed；`ruff check ink_writer/learn/` → All checks passed (基线 0 错误维持 0)。
+- **Learnings for future iterations:**
+  - 项目对外参数支持 `Path | str` 是常见接受性约定（PathLike-friendly）；函数体内统一用 `<param>_p = Path(<param>)` 局部变量绑定是消除 shadow + pyright/mypy strict 友好的标准做法。如未来发现其他 `param = Path(param)` 同名覆盖，按此模式批量改。
+  - `ruff` 默认不 warn 同名 shadow（PLR1704 在禁用集），但 mypy/pyright strict + reviewer 人工审查会 flag；预先消除可减少未来重复噪音。
+---
+
 ## 2026-04-26 - US-004
 - `ink_writer/case_library/_id_alloc.py:allocate_case_id` 删除函数体顶部锁外的 `if not counter_path.exists(): counter_path.write_text(_scan_max(...))`；改为 `with locked_file(counter_path, "a+") as fh:` —— 'a+' 模式在 Unix/Windows 下都自动创建空文件，把"创建+读取+初始化+写回"全挪进锁内串行。
 - 锁内逻辑：`fh.seek(0)` 读 raw → 空则视为 stored=0 → `cur = max(stored, _scan_max(cases_dir, prefix))` 与 glob 取 max 兜底（行为与原版等价）→ `fh.seek(0) + truncate + write` 写回。'a+' 在 Unix 下 O_APPEND 写到 EOF，但 truncate 让 EOF=0 所以仍写在位置 0，正确。

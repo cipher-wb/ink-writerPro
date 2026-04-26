@@ -84,8 +84,8 @@
         "ruff check ink_writer/learn/ 无新增错误"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-26：auto_case.py propose_cases_from_failures 签名 cases_dir: Path → Path | str；函数体内 `cases_dir = Path(cases_dir)` shadow 改为 `cases_dir_p = Path(cases_dir)`，所有内部引用（_count_existing_learn_this_week / _next_learn_id 调用）切到 cases_dir_p。promote.py promote_short_term_to_long_term 同步：签名 cases_dir: Path | None → Path | str | None；shadow 改为 cases_dir_p。pytest tests/learn 10 passed；ruff check ink_writer/learn 全过。"
     },
     {
       "id": "US-006",

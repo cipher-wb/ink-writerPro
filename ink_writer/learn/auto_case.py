@@ -191,7 +191,7 @@ def propose_cases_from_failures(
     *,
     case_store: CaseStore,
     base_dir: Path,
-    cases_dir: Path,
+    cases_dir: Path | str,
     throttle_path: Path | None = None,
     now: datetime | None = None,
 ) -> list[Case]:
@@ -233,9 +233,9 @@ def propose_cases_from_failures(
     if not qualifying:
         return []
 
-    cases_dir = Path(cases_dir)
+    cases_dir_p = Path(cases_dir)
     max_per_week = int(throttle["max_per_week"])
-    used_this_week = _count_existing_learn_this_week(cases_dir, now_dt)
+    used_this_week = _count_existing_learn_this_week(cases_dir_p, now_dt)
     budget = max(0, max_per_week - used_this_week)
     if budget == 0:
         return []
@@ -248,7 +248,7 @@ def propose_cases_from_failures(
         if len(proposed) >= budget:
             break
         case = _make_learn_case(
-            case_id=_next_learn_id(cases_dir),
+            case_id=_next_learn_id(cases_dir_p),
             pattern=pattern,
             occurrences=count,
             sample_chapters=pattern_chapters[pattern],
