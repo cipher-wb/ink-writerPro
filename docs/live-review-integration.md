@@ -292,10 +292,19 @@ python3 scripts/live-review/promote_approved_rules.py \
   --rules data/editor-wisdom/rules.json
 
 # 7-C: 重建 editor-wisdom 向量索引（让新规则被 retriever 召回）
-python3 ink-writer/scripts/ink.py editor-wisdom rebuild --from-step 6
-# 注：--from-step 6 跳过需要 ANTHROPIC_API_KEY 的 03_classify / 05_extract_rules，
-#    只跑 06_build_index 把 promote 后的 rules.json 重建为向量索引（CPU bge < 5 分钟）。
+python3 scripts/editor-wisdom/06_build_index.py
+# 注：直接跑 06_build_index（CPU bge < 1 分钟）；ink.py editor-wisdom rebuild 入口
+#    会强制走 01..06 全 pipeline，其中 03_classify / 05_extract_rules 需要
+#    ANTHROPIC_API_KEY，绕过它们直接调 06_build_index 即可重建向量索引。
 ```
+
+**§M-7 后处理（可选 / 推荐）**：审核后 approved 候选间可能有语义近似的（"措辞略变意思相同"），跑 dedupe 工具自动按 cluster 选 keep：
+```bash
+# 7-D: dry-run 看建议合并报告（不写盘）
+python3 scripts/live-review/dedupe_approved_candidates.py \
+  --candidates data/live-review/rule_candidates.json
+# 看完 reports/live-review-dedupe-<timestamp>.md 满意后追加 --apply 真改 candidates.json，
+# 然后再跑 7-B / 7-C 完成 promote + rebuild。
 
 **预期产物**：`rules.json` 增加若干 `EW-XXXX` 条目（含 `source: live_review`）+ `data/editor-wisdom/vector_index/` 重建
 
