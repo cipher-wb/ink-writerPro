@@ -1,0 +1,37 @@
+[
+  {
+    "category": "taboo",
+    "rule": "用AI生成高潮情节的多个版本大纲，对比哪种反馈感最强，作为起笔的参考",
+    "why": "编辑星河指出顶级作者用AI穷举高潮方案，由人判断哪个最有爆发力",
+    "severity": "soft",
+    "applies_to": ["all_chapters"]
+  },
+  {
+    "category": "taboo",
+    "rule": "基于角色性格与习惯设定，让AI列举配角（尤其女配）在关键事件中的多种反应方式，挑选最合理吸引人的方案改写",
+    "why": "用AI穷举角色行为可能性快速发现超出作者惯性思维的人物弧光，最终选择由人审美判断",
+    "severity": "soft",
+    "applies_to": ["all_chapters"]
+  },
+  {
+    "category": "opening",
+    "rule": "开篇前 800 字必须呈现主角核心动机和首个钩子，避免铺设定",
+    "why": "直播稿多次指出开篇铺设定是签约失败的高频原因，黄金三章必须见钩子",
+    "severity": "hard",
+    "applies_to": ["golden_three"]
+  },
+  {
+    "category": "pacing",
+    "rule": "主线高潮节点之间间隔不超过三章，避免读者流失",
+    "why": "直播稿多次指出节奏拖沓是低分主因，高潮密度直接决定追读率",
+    "severity": "hard",
+    "applies_to": ["all_chapters"]
+  },
+  {
+    "category": "hook",
+    "rule": "每章结尾必须留下未解悬念，确保读者翻向下一章",
+    "why": "直播稿强调章末钩子是订阅率与完读率的核心保险",
+    "severity": "hard",
+    "applies_to": ["all_chapters"]
+  }
+]

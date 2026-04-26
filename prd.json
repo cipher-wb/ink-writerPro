@@ -171,8 +171,8 @@
         "ruff check scripts/live-review/extract_rule_candidates.py tests/live_review/test_extract_rule_candidates.py 无新增错误"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "脚本 source_files 注入 `live_review_bvid:<BV>` 列表（每个 jsonl bvid 一项），方便 US-010 promote 时直接复用此追溯标识。LLM 调用层只支持 `--mock-llm` 文件路径注入（PRD 仅要求 fixture 模式覆盖；真实 SDK 留 `_call_llm` stub 给手测使用，inline prompt）。bge cosine `>` threshold 比较（PRD 字面 `> 0.85`）。`source_bvids` 由脚本从 jsonl 集合统一注入（mock 仅含 5 字段 rule/why/category/severity/applies_to）。候选 schema 用 inline 字典（见 test 顶部 CANDIDATE_SCHEMA），未单独建 schemas/ 文件 — US-010 promote 时再剥除 dup_with/approved/source_bvids 后用严格 editor-rules.schema.json 校验。fail-loud 三类异常：非 JSON / 必填字段缺失 / category|severity|applies_to enum 违反。"
     },
     {
       "id": "US-010",

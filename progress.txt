@@ -28,6 +28,9 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - 题材聚合的笛卡尔贡献（多标签 genre）模式：`live_review_meta.genre_guess` 是 array，每个标签独立计入对应 genre bucket，所以 `[都市,重生]` 既算 1 次 都市 也算 1 次 重生；`total_novels_analyzed` 用 cases scanned 总数（=union 而非各 genre 累加 sum），避免被笛卡尔重复放大。后续 US-009 / US-013 涉及 genre 维度统计要遵循这同一约定。
 - 30 份测试 fixture 通过 Python 一次性 generator 生成（用过即弃 `/tmp/gen_*.py`），不留 generator 在 repo 内 — 30 份 yaml 静态 commit，构建 reproducibility 由 PR diff 与 schema 校验回归共同保证。下次扩 fixture 数量时复用此模式：临时脚本 → 写盘 → 验证 → 删脚本，避免 `_generate.py` 长期存在被误改。
 - common_complaints 严格降序需要 fixture 数据本身设计成"top-N 频率两两不同"：都市设计 opening=5/pacing=4/golden_finger=3/hook=2/character=1 五档严格不同。如果允许 ties，把测试的 `>=` 写法保留（非严格降序）即可；想测严格 `>` 必须从 fixture 端保证唯一频率。
+- bge-small-zh-v1.5 中文 cosine 体感：相同语义但措辞不同的中文规则文本，cosine 通常 0.75-0.85；想稳过 0.85 需保留核心字面词（"AI生成"/"高潮情节"/"多个版本"等关键 token）。fixture 凡涉及触发 dup_with 的相似度阈值，先用 `from sentence_transformers import SentenceTransformer` 30s 实测验证 — 不要凭直觉。模型加载 30s 是硬约束，pytest 必须 `@pytest.fixture(scope="module")` + `tmp_path_factory` 共享脚本调用结果给所有非异常用例。
+- LLM-coupled 脚本三段式 fail-loud 顺序：`parse JSON` → `validate fields enum/length` → `cosine/heavy compute`（bge 仅在前 2 关全过后才调）。错误路径测试体感 ~1s 即返回 exit 1，不浪费 30s 模型加载。test 用 `--mock-llm <path>` 注入"故意非 JSON / 故意缺字段"的 fixture 验证 fail-loud 路径。
+- mock fixture 字段分层：LLM 只能给"LLM-generated 字段"（如 rule/why/category/severity/applies_to），其余字段（id/source_files/dup_with/approved/source_bvids 等）由脚本统一注入或计算。fixture 越精简，测试断言"字段来自脚本注入路径"才能成立；如果 mock 已包含全字段，则脚本注入逻辑无法被验证。
 
 ---
 
@@ -353,4 +356,50 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **subprocess fixture 嵌套 pytest fixture（@pytest.fixture aggregate(out_path)）**：`aggregate` fixture 调用 `_run` + 解析 json，所有依赖它的测试都共享一次 subprocess 调用 — 13 用例只跑一次脚本，比每用例独立跑省时。但需注意 fixture scope 默认 function，要 module-level 共享得显式 `scope="module"` + tmp_path_factory 替代 tmp_path。
 - **`statistics.median` 的偶数样本返回中位数算术平均**：N=2 返 (a+b)/2；statistics.quantiles 在 N=2 用 m_k=k*3/4 也插值。聚合脚本不需要特殊处理偶数样本，直接调即可。但要警惕 N=1 时 quantiles 抛错 — `_safe_quantiles` 必须兜底。
 - **`yaml.safe_load` 对 None / 空文件返 None**：load_cases 必须 `if data is None: continue` 防御空 yaml；30 份 fixture 不会触发但生产环境若有人手工删空内容会暴露。所有 `yaml.safe_load` 后建议加这道防线。
+---
+
+## 2026-04-26 18:15 CST - US-009 规则候选抽取器（LLM + bge cosine 去重）
+
+**实现内容：**
+- 新建 `scripts/live-review/extract_rule_candidates.py`：
+  - argparse：`--jsonl-dir` 必填 / `--rules-json`（默认 data/editor-wisdom/rules.json）/ `--out`（默认 data/live-review/rule_candidates.json）/ `--mock-llm <fixture.json>` / `--threshold`（默认 0.85）/ `--model`（默认 claude-sonnet-4-6）。
+  - 主流程：扫 jsonl-dir 全部 jsonl 收集 bvids set → 读 rules.json → mock 模式直接读 fixture / 真实模式 inline prompt 调 anthropic SDK → 解析 LLM JSON 数组 → 校验每条 5 字段（rule≤120 / why / category enum10 / severity enum3 / applies_to enum3 子集）→ bge cosine 计算 dup_with（`> threshold`）→ 注入 `id RC-NNNN / source_files=[live_review_bvid:<BV>] / approved=null / source_bvids=sorted(jsonl_bvids)` → 写 JSON 数组。
+  - fail-loud：`CandidateExtractionError` 涵盖 LLM 非 JSON / 非 Array / 必填字段缺 / enum 违反 / cosine 失败；退出码 1（CandidateExtractionError）/ 2（jsonl-dir 不是目录）/ 0（成功）。
+  - 不写 prompt 独立文件，inline prompt 嵌入 `_call_llm`（mock 模式根本不读 prompt）。
+- 新建 `tests/live_review/fixtures/existing_rules_fixture.json`：拷自 `data/editor-wisdom/rules.json` 前 3 条（EW-0001/0002/0003，全 taboo 类）。
+- 新建 `tests/live_review/fixtures/mock_rule_extract.json`：5 条候选（仅含 LLM 输出 5 字段 rule/why/category/severity/applies_to，不含 id/source_bvids/dup_with/approved — 由脚本统一注入）；候选 1 与 EW-0001 cosine≈0.94（实测 bge）/ 候选 2 与 EW-0002 cosine≈0.89 → 触发 dup_with；候选 3-5 分别覆盖 opening/pacing/hook 类。
+- 新建 `tests/live_review/test_extract_rule_candidates.py` 10 用例（subprocess 模式，6 个共享 `module-scope candidates_file` fixture 节省 bge 加载时间）：
+  1. test_mock_returns_5_candidates；
+  2. test_at_least_2_candidates_have_dup_with；
+  3. test_dup_with_targets_existing_EW_ids（EW-0001 / EW-0002 至少命中 1）；
+  4. test_source_bvids_filled_from_jsonl（全等于 jsonl bvid 集合 {BV1AAA, BV1BBB, BV1CCC, BV1DDD}）；
+  5. test_approved_field_all_null；
+  6. test_ids_well_formed_and_unique（RC-NNNN 严格唯一+排序）；
+  7. test_validates_against_extended_schema（inline 扩展 schema 含 dup_with/approved/source_bvids，严格 additionalProperties: false）；
+  8. test_fail_loud_on_non_json_llm_output（非 JSON → exit 1 + stderr 'JSON' + 不写 out）；
+  9. test_fail_loud_on_missing_required_field（candidate 缺 category/why → exit 1 + stderr 'category|missing'）；
+  10. test_threshold_zero_marks_everything_as_dup（threshold=0 时全部候选 dup_with 至少 1 条 — 不依赖具体 EW，验证 cosine 计算路径走通）。
+
+**Files changed:**
+- A scripts/live-review/extract_rule_candidates.py
+- A tests/live_review/fixtures/existing_rules_fixture.json
+- A tests/live_review/fixtures/mock_rule_extract.json
+- A tests/live_review/test_extract_rule_candidates.py
+- M prd.json
+- M progress.txt
+
+**验证：**
+- TDD 顺序确认：写完 10 测试 → pytest 10 失败/错误（脚本不存在）→ 实现脚本 → 9/10 通过；mock 候选 1 cosine 实测 0.81（不到 0.85 阈值，未触发 dup_with）→ 改写 mock 候选 1 文本（保留语义但更接近 EW-0001 字面）实测 0.94 → 10/10 PASS。
+- `python3 -m pytest tests/live_review/test_extract_rule_candidates.py --no-cov -q` → 10 passed (~17s 含 bge 模型加载 1 次 + 3 次额外 subprocess 调用)。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 464 passed in 73.24s（无回归；US-008 的 454 增 10）。
+- `ruff check scripts/live-review/extract_rule_candidates.py tests/live_review/test_extract_rule_candidates.py` → All checks passed。
+
+**Learnings for future iterations:**
+- **bge-small-zh-v1.5 中文相似度的 0.85 阈值实测体感**：相同语义但措辞不同的中文规则文本，cosine 通常落在 0.75-0.85 区间；要稳过 0.85 需保留**核心字面词**（如"AI生成 / 高潮情节 / 多个版本"全部保留）。fixture 设计 dup_with 命中规则时要先实测 cosine（用 `python3 -c "from sentence_transformers import SentenceTransformer; ..."` 30s 跑一次）—— 不要凭直觉判断"语义近 → cosine 高"。后续 US-011 vector retrieval / US-012 checker 均会用同模型，相同实测要点适用。
+- **bge 模型加载耗时 ~30s，pytest fixture 必须 module-scope 共享**：pytest 默认 function scope，10 用例独立加载会 5min+；用 `@pytest.fixture(scope="module")` + `tmp_path_factory.mktemp(...)` 把脚本调用结果（candidates_file）共享给 6 个非异常用例 → 总耗时压到 17s。同模式适用所有依赖 sentence-transformers 的测试集。
+- **`> threshold` 与 `>= threshold` 边界差异**：plan §1597 字面 `np.where(sim[i] > 0.85)[0]` 用严格大于。我沿用此约定（`if float(sim[i, j]) > threshold`）。下游若想"边缘命中"（sim==0.85 也算 dup）需手工 `>=` 改写。`threshold=0` 时 cosine 几乎所有 pair 都 > 0（normalized + 中文文本一般正相关），所以 test 10 用 `threshold=0.0` 验证"全部命中"路径稳过。
+- **mock fixture 设计要分清"LLM 输出形态" vs "脚本写盘形态"**：候选最终含 10 字段（id/category/rule/why/severity/applies_to/source_files/dup_with/approved/source_bvids），但 mock LLM 只能给前 5 个 LLM-generated 字段（rule/why/category/severity/applies_to）。后 5 个 (id/source_files/dup_with/approved/source_bvids) 由脚本注入或计算。fixture 简洁化、脚本注入逻辑透明 — 测试 (3) source_bvids 来自 jsonl 才说得通（如果 mock 已含 source_bvids 则不能验证脚本注入路径）。
+- **fail-loud schema 校验放在 LLM 输出后立即跑（不要等 cosine 算完）**：bge 加载 30s — 如果先调 cosine 再校验 LLM 输出，fail-loud 路径会浪费 30s。脚本顺序 `_parse_llm_output` → `_validate_candidate_fields` → `_compute_dup_with`（bge 仅在前 2 关全过后才调）。test_fail_loud_on_missing_required_field 仅 ~1s 即可返回 exit 1 — 测试体感证明此顺序正确。
+- **inline 扩展 schema 替代独立 schema 文件的取舍**：候选阶段的 schema 仅在 US-009 测试与 US-010 promote 阶段被引用，建独立 `schemas/live_review_rule_candidates.schema.json` 反而引入未明文要求的资产。我把扩展 schema 写在 test 顶部 `CANDIDATE_SCHEMA` dict — US-010 若需要复用直接 import 测试模块或重新 inline。如果未来 US-013 / US-014 也要校验候选，再考虑提升为独立 schema 文件。
+- **`source_files` 字段在候选阶段就给 promote-ready 形态**：候选每条 `source_files = [f"live_review_bvid:{b}" for b in sorted(bvids)]` 直接给 US-010 promote 时的预期格式（plan §1649 字面 `source_files: ["live_review_bvid:BV12yBoBAEEn", ...]`）。promote 不需要再转换 source_files，只需剥除 dup_with/approved/source_bvids/id 改 EW-NNNN 即可。这是上游设计为下游消费让步的范例。
 ---
