@@ -88,6 +88,9 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="cosine 去重阈值 (默认 0.85)")
     p.add_argument("--model", default="claude-sonnet-4-6",
                    help="LLM 模型 (mock 模式忽略)")
+    p.add_argument("--batch-size", dest="batch_size", type=int, default=0,
+                   help="LLM 分批大小：每批 N 个 jsonl 文件单独调用一次（默认 0=全量单批）；"
+                        "用于上下文受限的 LLM (deepseek 128K / GLM 128K)，跨批合并去重。")
     return p
 
 
@@ -126,9 +129,23 @@ def _load_existing_rules(path: Path) -> list[dict]:
     return data
 
 
+def _strip_markdown_fence(raw: str) -> str:
+    """deepseek / glm 偶尔吐 ```json ... ``` 代码块；剥外层围栏只留 JSON 主体。"""
+    text = raw.strip()
+    if text.startswith("```"):
+        # ```json\n...\n```  或  ```\n...\n```
+        first_nl = text.find("\n")
+        if first_nl > 0:
+            text = text[first_nl + 1:]
+        if text.endswith("```"):
+            text = text[:-3]
+    return text.strip()
+
+
 def _parse_llm_output(raw: str) -> list[dict]:
+    text = _strip_markdown_fence(raw)
     try:
-        data = json.loads(raw)
+        data = json.loads(text)
     except json.JSONDecodeError as exc:
         raise CandidateExtractionError(
             f"LLM output is not valid JSON: {exc}"
@@ -143,6 +160,13 @@ def _parse_llm_output(raw: str) -> list[dict]:
                 f"LLM output item #{i} is not an object: {type(item).__name__}"
             )
     return data
+
+
+def _normalize_candidate(cand: dict) -> dict:
+    """字段类型软容错：LLM 偶尔吐 applies_to=str 而非 list[str]，统一拉成 list。"""
+    if isinstance(cand.get("applies_to"), str):
+        cand["applies_to"] = [cand["applies_to"]]
+    return cand
 
 
 def _validate_candidate_fields(cand: dict, idx: int) -> None:
@@ -246,15 +270,17 @@ def _call_llm(model_name: str, jsonl_records_blob: str) -> str:
     )
     msg = client.messages.create(
         model=effective_model,
-        max_tokens=4096,
+        max_tokens=8192,  # deepseek thinking 模式 reasoning + content 共享 max_tokens 配额
         messages=[{"role": "user", "content": prompt}],
     )
     return msg.content[0].text
 
 
-def _read_jsonl_blob(jsonl_dir: Path) -> str:
+def _read_jsonl_blob(jsonl_dir: Path, files: list[Path] | None = None) -> str:
+    """拼 jsonl 为 LLM blob。``files=None`` 走全量单批；否则只拼传入的文件。"""
     parts: list[str] = []
-    for path in _iter_jsonl_files(jsonl_dir):
+    iter_files = files if files is not None else _iter_jsonl_files(jsonl_dir)
+    for path in iter_files:
         parts.append(f"# {path.name}")
         parts.append(path.read_text(encoding="utf-8"))
     return "\n".join(parts)
@@ -289,6 +315,7 @@ def run(
     mock_llm: Path | None,
     threshold: float,
     model_name: str,
+    batch_size: int = 0,
 ) -> list[dict]:
     if not jsonl_dir.is_dir():
         raise CandidateExtractionError(f"jsonl-dir not a directory: {jsonl_dir}")
@@ -299,15 +326,48 @@ def run(
         )
     existing_rules = _load_existing_rules(rules_json)
 
+    parsed: list[dict] = []
     if mock_llm is not None:
         if not mock_llm.is_file():
             raise CandidateExtractionError(f"mock-llm fixture not found: {mock_llm}")
         llm_raw = mock_llm.read_text(encoding="utf-8")
+        parsed.extend(_parse_llm_output(llm_raw))
     else:
-        blob = _read_jsonl_blob(jsonl_dir)
-        llm_raw = _call_llm(model_name, blob)
+        files = _iter_jsonl_files(jsonl_dir)
+        if batch_size <= 0 or batch_size >= len(files):
+            blob = _read_jsonl_blob(jsonl_dir)
+            llm_raw = _call_llm(model_name, blob)
+            parsed.extend(_parse_llm_output(llm_raw))
+        else:
+            n_batches = (len(files) + batch_size - 1) // batch_size
+            for b in range(n_batches):
+                batch_files = files[b * batch_size : (b + 1) * batch_size]
+                blob = _read_jsonl_blob(jsonl_dir, batch_files)
+                print(
+                    f"[batch {b + 1}/{n_batches}] {len(batch_files)} files "
+                    f"→ LLM (~{len(blob)} chars)",
+                    file=sys.stderr,
+                )
+                try:
+                    llm_raw = _call_llm(model_name, blob)
+                    batch_parsed = _parse_llm_output(llm_raw)
+                except CandidateExtractionError as exc:
+                    print(
+                        f"[batch {b + 1}/{n_batches}] WARN: skipping batch ({exc})",
+                        file=sys.stderr,
+                    )
+                    continue
+                print(
+                    f"[batch {b + 1}/{n_batches}] OK +{len(batch_parsed)} candidates",
+                    file=sys.stderr,
+                )
+                parsed.extend(batch_parsed)
+            if not parsed:
+                raise CandidateExtractionError(
+                    f"all {n_batches} batches failed; no candidates extracted"
+                )
 
-    parsed = _parse_llm_output(llm_raw)
+    parsed = [_normalize_candidate(c) for c in parsed]
     for i, c in enumerate(parsed):
         _validate_candidate_fields(c, i)
 
@@ -341,6 +401,7 @@ def main(argv: list[str] | None = None) -> int:
             mock_llm=Path(args.mock_llm) if args.mock_llm else None,
             threshold=float(args.threshold),
             model_name=args.model,
+            batch_size=int(args.batch_size),
         )
     except CandidateExtractionError as exc:
         print(f"[extract_rule_candidates] FAIL: {exc}", file=sys.stderr)

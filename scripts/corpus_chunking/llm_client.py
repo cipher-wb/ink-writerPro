@@ -70,7 +70,8 @@ class _AnthropicLikeMessagesAPI:
                     temperature=temperature,
                 )
                 self._last_call_at = time.monotonic()
-                text = resp.choices[0].message.content or ""
+                msg_obj = resp.choices[0].message
+                text = msg_obj.content or getattr(msg_obj, "reasoning_content", None) or ""
                 return _AnthropicLikeResponse(content=[_AnthropicLikeMessage(text=text)])
             except Exception as err:  # noqa: BLE001 — handle 429 generically
                 last_err = err
