@@ -16,17 +16,32 @@ _SCHEMA_PATH = _REPO_ROOT / "schemas" / "live_review_extracted.schema.json"
 _logger = logging.getLogger(__name__)
 
 
-def _clamp_numeric_fields(novel: dict, novel_idx: int) -> None:
-    """LLM 软容错：把数值字段 clamp 到 schema 允许范围（in-place）。
+_DIMENSION_ENUM = frozenset({
+    "opening", "hook", "character", "pacing", "highpoint",
+    "golden_finger", "taboo", "genre", "ops", "simplicity", "misc",
+})
+_SEVERITY_ENUM = frozenset({"negative", "positive", "neutral"})
+_SCORE_SIGNAL_ENUM = frozenset({"explicit_number", "sign_phrase", "fuzzy", "unknown"})
+_VERDICT_ENUM = frozenset({"pass", "fail", "borderline", "unknown"})
 
-    只处理两个最易混淆的字段：
+
+def _clamp_numeric_fields(novel: dict, novel_idx: int) -> None:
+    """LLM 软容错：把数值字段 + enum 字段规整到 schema 允许范围（in-place）。
+
+    数值字段：
     - ``title_confidence`` 应在 [0.0, 1.0]；超界（如 LLM 误填分数 45）→ clamp + warn
     - ``score`` 应在 [0, 100]；超界 → clamp + warn
 
-    Schema 验证在本函数后进行；clamp 后仍超界（如类型错误 'abc'）会被 schema fail-loud。
+    Enum 字段（unknown 值 fallback 到合理默认 + warn）：
+    - ``score_signal`` not in enum → 'unknown'
+    - ``verdict`` not in enum → 'unknown'
+    - ``comments[].dimension`` not in enum → 'misc'
+    - ``comments[].severity`` not in enum → 'neutral'
+
+    Schema 验证在本函数后进行；类型错误（如 score='abc'）仍 fail-loud。
     """
     tc = novel.get("title_confidence")
-    if isinstance(tc, (int, float)) and (tc > 1.0 or tc < 0.0):
+    if isinstance(tc, (int, float)) and not isinstance(tc, bool) and (tc > 1.0 or tc < 0.0):
         clamped = max(0.0, min(1.0, float(tc)))
         _logger.warning(
             "novel #%d title_confidence=%r out of [0,1] range, clamped to %f",
@@ -43,6 +58,42 @@ def _clamp_numeric_fields(novel: dict, novel_idx: int) -> None:
                 novel_idx, s, clamped_s,
             )
             novel["score"] = clamped_s
+
+    sig = novel.get("score_signal")
+    if isinstance(sig, str) and sig not in _SCORE_SIGNAL_ENUM:
+        _logger.warning(
+            "novel #%d score_signal=%r not in enum, fallback to 'unknown'",
+            novel_idx, sig,
+        )
+        novel["score_signal"] = "unknown"
+
+    v = novel.get("verdict")
+    if isinstance(v, str) and v not in _VERDICT_ENUM:
+        _logger.warning(
+            "novel #%d verdict=%r not in enum, fallback to 'unknown'",
+            novel_idx, v,
+        )
+        novel["verdict"] = "unknown"
+
+    comments = novel.get("comments")
+    if isinstance(comments, list):
+        for j, c in enumerate(comments):
+            if not isinstance(c, dict):
+                continue
+            dim = c.get("dimension")
+            if isinstance(dim, str) and dim not in _DIMENSION_ENUM:
+                _logger.warning(
+                    "novel #%d comment #%d dimension=%r not in enum, fallback to 'misc'",
+                    novel_idx, j, dim,
+                )
+                c["dimension"] = "misc"
+            sev = c.get("severity")
+            if isinstance(sev, str) and sev not in _SEVERITY_ENUM:
+                _logger.warning(
+                    "novel #%d comment #%d severity=%r not in enum, fallback to 'neutral'",
+                    novel_idx, j, sev,
+                )
+                c["severity"] = "neutral"
 
 
 class ExtractionError(Exception):

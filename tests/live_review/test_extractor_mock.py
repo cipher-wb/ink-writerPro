@@ -187,3 +187,40 @@ def test_extract_with_oversize_title_confidence_clamps_then_passes(fixtures_dir)
     assert len(records) == 1
     assert records[0]["title_confidence"] == 1.0  # clamped
     assert records[0]["score"] == 45  # 未超界，原值保留
+
+
+def test_clamp_dimension_not_in_enum_fallback_misc():
+    novel = {"comments": [{"dimension": "title", "severity": "negative", "content": "x"}]}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["comments"][0]["dimension"] == "misc"
+
+
+def test_clamp_severity_not_in_enum_fallback_neutral():
+    novel = {"comments": [{"dimension": "opening", "severity": "negative_x", "content": "x"}]}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["comments"][0]["severity"] == "neutral"
+
+
+def test_clamp_score_signal_not_in_enum_fallback_unknown():
+    novel = {"score_signal": "weird_value"}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["score_signal"] == "unknown"
+
+
+def test_clamp_verdict_not_in_enum_fallback_unknown():
+    novel = {"verdict": "good"}
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["verdict"] == "unknown"
+
+
+def test_clamp_keeps_valid_enum_values_unchanged():
+    novel = {
+        "score_signal": "explicit_number",
+        "verdict": "pass",
+        "comments": [{"dimension": "opening", "severity": "positive", "content": "x"}],
+    }
+    _clamp_numeric_fields(novel, novel_idx=0)
+    assert novel["score_signal"] == "explicit_number"
+    assert novel["verdict"] == "pass"
+    assert novel["comments"][0]["dimension"] == "opening"
+    assert novel["comments"][0]["severity"] == "positive"

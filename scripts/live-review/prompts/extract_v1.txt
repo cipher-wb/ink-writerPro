@@ -53,6 +53,17 @@ severity 严格枚举（3 个）：negative / positive / neutral
 - ``title_confidence``：**0.0-1.0 浮点数**（如 0.85），表示标题猜测的置信度（0=完全猜不到、1=听到完整书名）。**严禁**把 score、行号、年份、其他任何整数填进 title_confidence！如果 score=68，title_confidence 应该独立判断（如 0.45），**不要**写成 68 或 0.68 或 45。
 - 明确听到完整书名给 title_confidence 0.85-0.95；只猜到题材没听到书名给 0.3-0.5；完全猜不到给 ≤0.2。
 
+⚠️ Enum 字段（曾出错，**严禁臆造未列出的值**）：
+- ``dimension``（comments[].dimension）：**仅以下 11 个**之一
+  → opening / hook / character / pacing / highpoint / golden_finger /
+     taboo / genre / ops / simplicity / misc
+  **绝对不要**填 "title" / "题材" / "节奏" / "金手指" 等中文或别名！
+  例如：评开头 → "opening"（不要 "开篇"）；评金手指 → "golden_finger"（不要 "金手指"）；
+  评题材 → "genre"（不要 "题材" / "题目" / "title"）；其他无法归类 → "misc"。
+- ``severity``：仅 negative / positive / neutral 三个英文值（不要 "负面" / "正向"）
+- ``score_signal``：仅 explicit_number / sign_phrase / fuzzy / unknown 四个英文值
+- ``verdict``：仅 pass / fail / borderline / unknown 四个英文值
+
 === few-shot 示例 ===
 
 示例 1（明确分数 + 多维度评价）：
