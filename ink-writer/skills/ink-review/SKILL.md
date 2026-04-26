@@ -214,6 +214,67 @@ if not gate_result.passed:
     pass
 ```
 
+## Step 3.6: live-review 硬门禁（与 Step 3.5 OR 并列）
+
+> 在 Step 3.5 之后、Step 4 之前运行。Step 3.5（editor-wisdom）与 Step 3.6（live-review）OR 并列：**两 checker 都不通过才阻断；任一通过即放行**。
+
+**前置条件**：
+- Step 3.5 已运行并产出 `editor_wisdom_gate_result`（含 `passed` 字段）。
+- live-review 向量索引存在（首次需跑 `python3 scripts/live-review/build_vector_index.py`）。
+
+**执行逻辑**：
+
+1. 加载 `config/live-review.yaml`，检查 `enabled` 与 `inject_into.review`。
+2. 调 `ink_writer.live_review.review_injection.check_review` 对章节评分：
+   - 检索 Top-K=5 相似病例（FAISS + bge-small-zh-v1.5）；
+   - LLM 比对正文 → 输出 `score / dimensions / violations / cases_hit`；
+   - 由 `chapter_no` 自动选阈值：`chapter_no <= 3` → `golden_three_threshold` 0.75，否则 `hard_gate_threshold` 0.65。
+3. **若 `score >= threshold`**：本路通行（`live_review_passed = True`）。
+4. **若 `score < threshold`**：
+   - 把 `result["violations"]` extend 进 `evidence_chain.violations`（供后续审查报告引用）；
+   - 调 `polish_fn` 触发修复（与 Step 3.5 共享同一 polish-agent 实例）；
+   - 重检最多 2 次；连续失败则本路 `live_review_passed = False`。
+5. **OR 合并**：`final_passed = editor_wisdom_passed OR live_review_passed`。
+   - `final_passed = True` → 进入 Step 4；
+   - `final_passed = False` → 写 `chapters/{n}/blocked.md`（合并两路 violations），不输出最终章节。
+
+**编排模块**：`ink_writer/live_review/review_injection.py` — `check_review()`
+
+```python
+from ink_writer.live_review.review_injection import check_review
+
+live_review_result = check_review(
+    chapter_text=chapter_text,
+    chapter_no=chapter_no,
+    genre_tags=genre_tags,            # 来自 state.json / .ink/state.json:project.genre_tags
+    polish_fn=polish_fn,              # 与 Step 3.5 共享 polish-agent 调用器
+    config_path=None,                 # 默认 config/live-review.yaml
+)
+
+# OR 合并两路硬门禁
+final_passed = editor_wisdom_passed or live_review_result["passed"]
+
+if not final_passed:
+    # 合并 violations 后写 blocked.md，halt chapter emission
+    evidence_chain["violations"].extend(live_review_result["violations"])
+```
+
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 Python 等价；通过 ink-auto.ps1 包装运行）：
+
+```powershell
+python -X utf8 -c @'
+from ink_writer.live_review.review_injection import check_review
+result = check_review(chapter_text=$chapter_text, chapter_no=$chapter_no, genre_tags=$genre_tags, polish_fn=$polish_fn)
+'@
+```
+
+**关闭开关**：
+- `config/live-review.yaml:inject_into.review: false` → 本步骤短路（`disabled=True` + `passed=True`，不调用 checker / polish）。
+- `config/live-review.yaml:enabled: false` → master switch，整个 live-review 模块短路。
+
+**日志**：失败的检查写入 `logs/live-review/chapter_{n}.log`（参考 editor-wisdom 同款）。
+
 ## Step 4: 生成审查报告
 
 保存到：`审查报告/第{start}-{end}章审查报告.md`

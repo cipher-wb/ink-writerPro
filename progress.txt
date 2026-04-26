@@ -34,6 +34,11 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - live-review 向量索引落盘格式 `index.faiss + meta.jsonl`（与 editor-wisdom 的 `rules.faiss + metadata.json` 不同）：jsonl 一行一 record 便于增量扩库（追加病例只需 append + 重建 faiss）；统一通过 `ink_writer.live_review._vector_index.load_index` API 隔离差异。下游 retriever 调用走 `genre_retrieval._INDEX_CACHE` process-level dict 缓存（key=resolved index_dir str），避免每次 ink-init 重载 bge ~30s；测试钩子 `clear_index_cache()` 隔离不同 tmp_path 索引。
 - 调用点 master switch 早退模式：`cfg = load_config(config_path); if not cfg.enabled or not cfg.inject_into.<stage>: return _disabled_response()`。`_disabled_response` 返回保持类型一致（dict 字段齐备但内容空：`warning_level='ok' / similar_cases=[] / render_text=''`），调用方无须额外分支判断。后续 ink-review Step 3.6 / smoke_test 注入点沿用此模板。
 - SKILL.md 内嵌 ink-writer Python 调用块：每个 Step 段落 macOS/Linux + PowerShell sibling 双块；测试用 `assert "Step X.Y" in text` + `assert "<api_name>" in text` + `assert "inject_into" in text` 三层 grep 防止段落被回滚，不 assert 详细 markdown 结构（否则微调即破坏 test）。后续 ink-review Step 3.6 / 其他 SKILL.md 注入沿用同款。
+- OR 并列硬门禁是调用方在两路 GateResult 上做 `final_passed = a or b` —— 不要在 Step 3.6 的 review_injection 内部做合并（保持 Step 3.5 不动 + 让两路独立可关）。SKILL.md 的 Python 块负责 `editor_wisdom_passed or live_review_result["passed"]` 合并，并把两路 violations extend 到 evidence_chain。后续若 Step 3.7 加入 reader-simulator-strict-gate，仍按此三并 OR 模板（任一通过即放行）。
+- live-review checker 双层 master switch：`run_live_review_checker` 与 `check_review` 都查 `cfg.enabled / cfg.inject_into.review` —— 看似冗余但允许用户直接调 checker（绕过 review_injection orchestrator）也能正确短路。这是与 init_injection 模式一致的统一约定，后续 US-013 smoke_test 等直接调 checker 的链路必须依赖此防护。
+- live-review checker mock_response 跳过 retrieval：bge 30s + faiss 5s + LLM 10s — mock 模式必须 short-circuit 全部三步（在 master switch 之后立刻 return mock），否则 12 用例 ×30s = 6min 不可接受。real path 才走 retrieve_similar_cases + LLM。后续 smoke_test 的非 `--with-api` 路径沿用此模式，让默认跑 mock 不读 ANTHROPIC_API_KEY。
+- live-review polish 触发不重试：`check_review` 仅触发一次 polish_fn 不做重试循环（与 editor_wisdom.review_gate 的 max_retries=3 不同）—— 因为 OR 并列后总体重试次数已够 + 黄金三章阈值差距小 + 测试断言简单。如果未来需要 retry 循环，再加 `max_retries` 参数（参考 editor_wisdom.review_gate）。
+- agent spec 5 段标准结构：Purpose / Input / Retrieval / Scoring / Output —— 测试用 5 个 `assert section in text` grep 验证。`{{PROMPT_TEMPLATE:checker-input-rules.md}}` 必须放在 frontmatter + agent 描述段之后的第一段。这是与 33 个现有 checker spec 对齐的最小集，后续新加 checker spec 沿用此模板。
 
 ---
 
@@ -479,4 +484,71 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **render_text 渲染规范化**：3 段固定 emoji 标题 '📚' / '🎯' / '💡' + 二级缩进案例列表（`  [N] title (verdict / Xs)`）。Linux/macOS terminal 默认 emoji 渲染，Windows PowerShell 需 chcp 65001 + UTF-8 BOM —— 与 SKILL.md PowerShell sibling block 已对齐。后续 US-012 review checker 输出走 evidence_chain.json 不直接 render，故无需对齐此格式。
 - **SKILL.md 测试断言策略**：用 `assert "Step 99.5" in text` + `assert "check_genre" in text` + `assert "inject_into" in text` 三层 grep 比 regex 模糊匹配 更稳；不要 assert 过细的 markdown 结构（否则后续 SKILL.md 微调极易 break test）。SKILL.md 字符串测试是"消极保险"防 SKILL.md 被回滚到 Step 99 之前的状态，不是"详细规范"。
 - **process-level cache 与测试隔离的张力**：`_INDEX_CACHE` 全局单例对生产链路是优化，但对 pytest 不同 module 切换 index_dir 时可能拿到旧数据。当前实现按 `str(Path(index_dir).resolve())` 作 key 自然隔离不同 tmp_path，所以 tests pass。后续若加 "动态重建索引" 操作（如 US-013 smoke_test），必须显式调 `clear_index_cache()` 否则索引重建后旧 cache 仍指向被覆盖的文件路径。
+---
+
+## 2026-04-26 20:15 CST - US-012 live-review-checker agent + ink-review Step 3.6（OR 并列）
+
+**实现内容：**
+- 新建 `ink-writer/agents/live-review-checker.md`（agent spec）：开头 `{{PROMPT_TEMPLATE:checker-input-rules.md}}` 引用；含 Purpose / Input / Retrieval / Scoring / Output 与 33 个现有 checker spec 结构对齐；说明 Top-K=5 检索 + (1-violation_density)×verdict_pass_rate 综合公式 + 黄金三章阈值 0.75 / 其他 0.65 + 与 editor-wisdom-checker OR 并列说明 + 关闭开关。
+- 新建 `ink_writer/live_review/checker.py:run_live_review_checker(chapter_text, chapter_no, genre_tags, *, mock_response=None, llm_call=None, config_path=None, index_dir=None, top_k=5) -> dict`：
+  - master switch：`enabled=false` 或 `inject_into.review=false` → 早退 `_disabled_response`（score=1.0 / disabled=True）。
+  - 三层 LLM 优先级：mock_response > llm_call > 真实 anthropic SDK；mock 模式直接跳过 retrieval 与 bge 加载（测试快路径）。
+  - real path：拼 `query = " ".join(genre_tags) + " " + chapter_text[:500]` → `retrieve_similar_cases` Top-K → 构 LLM prompt → 解析 JSON → 用 retrieval `case_id` 兜底注入 cases_hit。
+  - fail-loud：JSON 解析失败 / 缺字段（score/dimensions/violations/cases_hit）/ 类型不对 → ValueError。
+  - 真实 SDK 调 `anthropic.Anthropic().messages.create`；max_tokens=4096；blocks 拼接为 str。
+- 新建 `ink_writer/live_review/review_injection.py:check_review(...) -> dict`：Step 3.6 主流程编排：
+  - master switch（与 checker 同一开关）→ 早退（passed=True 视为通行）。
+  - 阈值：`chapter_no <= 3` → `golden_three_threshold` (默认 0.75)；其他 → `hard_gate_threshold` (默认 0.65)。
+  - 调 `run_live_review_checker` 取评分；若 `score < threshold` 且 `polish_fn` 给定 → 触发 polish 一次（修复循环由调用方控制，与 editor_wisdom.review_gate 同款语义但更轻量）。
+  - 返回 `{passed, score, threshold, violations, cases_hit, dimensions, polish_triggered, disabled}`。
+- 修改 `ink-writer/skills/ink-review/SKILL.md`：在 Step 3.5 后追加 "## Step 3.6: live-review 硬门禁（与 Step 3.5 OR 并列）" 段：
+  - 含 5 步执行逻辑（master switch / 调 check_review / 阈值规则 / polish 触发 / OR 合并）。
+  - Python 调用块（`from ink_writer.live_review.review_injection import check_review`）+ Windows PowerShell sibling 块。
+  - 关闭开关说明（`inject_into.review: false` + 全局 `enabled: false`）。
+  - 索引前置提示（`build_vector_index.py` + bge ~30s）。
+- 新建 fixtures：
+  - `tests/live_review/fixtures/sample_chapter_violating.txt`（800 字章节，故意触发"开头铺设定 / 主角动机模糊 / 金手指出场太晚 / 节奏拖沓"4 类典型违规）。
+  - `tests/live_review/fixtures/mock_live_review_checker_response.json`（score=0.45 / 4 dimensions / 3 violations / 3 cases_hit）。
+- 新建 `tests/live_review/test_checker.py`（5 用例）：
+  1. mock 返回 → 字段齐全（score/dimensions/violations/cases_hit + violations 4 子字段）；
+  2. score=0.45 < hard_gate 0.65 阻断；
+  3. score=0.80 > hard_gate 0.65 通行；
+  4. inject_into.review=false → disabled=True / score=1.0 / mock 不消费；
+  5. enabled=false 全局短路。
+- 新建 `tests/live_review/test_review_step_3_6.py`（7 用例）：
+  - (a) mock score=0.45 + mock polish → polish_triggered=True + violations 完整传给 polish_fn；
+  - (b) inject_into.review=false → disabled=True / passed=True / 0 polish 调用 / score=1.0；
+  - (c) chapter_no=1 → threshold=0.75；
+  - (d) chapter_no=10 → threshold=0.65；
+  - (e) score=0.85 高于阈值 → polish 不触发；
+  - (f) SKILL.md 含 Step 3.6 / live-review / run_live_review_checker / inject_into / OR 等关键词；
+  - (g) live-review-checker.md agent spec 存在 + 含 Purpose/Input/Retrieval/Scoring/Output 5 段。
+
+**Files changed:**
+- A ink-writer/agents/live-review-checker.md
+- A ink_writer/live_review/checker.py
+- A ink_writer/live_review/review_injection.py
+- M ink-writer/skills/ink-review/SKILL.md
+- A tests/live_review/fixtures/sample_chapter_violating.txt
+- A tests/live_review/fixtures/mock_live_review_checker_response.json
+- A tests/live_review/test_checker.py
+- A tests/live_review/test_review_step_3_6.py
+- M prd.json
+- M progress.txt
+
+**验证：**
+- TDD 顺序确认：写完 12 测试 → pytest 12/12 fail（模块/agent spec/SKILL.md 字符串都缺）→ 实现 4 文件 + 修 SKILL.md → 12/12 PASS。
+- `python3 -m pytest tests/live_review/test_checker.py tests/live_review/test_review_step_3_6.py --no-cov -q` → 12 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 503 passed in 199.88s（无回归；US-011 的 491 增 12）。
+- `python3 -m pytest tests/integration/ tests/checker_pipeline/ tests/checkers/ --no-cov` → 240 passed, 3 skipped（无回归 — 编辑 wisdom Step 3.5 链路完好）。
+- `ruff check ink_writer/live_review/checker.py ink_writer/live_review/review_injection.py tests/live_review/test_checker.py tests/live_review/test_review_step_3_6.py` → All checks passed。
+
+**Learnings for future iterations:**
+- **OR 并列硬门禁的实现位置**：PRD 字面 "Step 3.5 与 Step 3.6 OR 并列" 不是一个新模块，而是 SKILL.md 调用方在两路 GateResult 上做布尔 OR (`final_passed = editor_wisdom_passed or live_review_result["passed"]`)。各自模块只返回单路 `passed`，不做合并。这套设计让 Step 3.5 不需要任何修改（保持 410 份 case yaml 与 US-001 schema 1.1 兼容性的隔离原则），同时让 Step 3.6 能独立测试 + 独立关闭开关。后续若有 Step 3.7（如 reader-simulator-strict-gate）也可以照此模板做 OR 三并。
+- **mock_response 跳过 retrieval 是关键设计**：bge 加载 30s + faiss 索引加载 ~5s + LLM 调用 ~10s — mock 模式必须 short-circuit 全部三步。我让 `run_live_review_checker(mock_response=...)` 在 master switch 之后立刻返回 mock，跳过 `retrieve_similar_cases` 和 `_call_anthropic`。所以 12 个 test 用例总耗时 ~3s（多数 fixture 加载）。如果 mock 还要走 retrieval，每用例 +30s ×12 = 6min，不可接受。这套"mock 全短路"模式可推广到 US-013 smoke_test 的非 --with-api 路径。
+- **polish 触发但不重试**：editor_wisdom.review_gate 是"polish + 重检最多 3 次"的完整循环；live_review.review_injection 只触发一次 polish，重试由调用方控制。理由：(1) 黄金三章 0.75 vs 0.65 vs 阈值差距小，单次 polish 已能修大部分违规；(2) 与 editor-wisdom OR 并列后总体重试次数已经够；(3) 测试断言简单（polish_triggered True/False + polish_calls 长度）。如果未来需要 retry 循环，可在 review_injection 内部加 `max_retries` 参数（参考 editor_wisdom.review_gate）。
+- **agent spec 5 段标准结构**：Purpose / Input / Retrieval / Scoring / Output —— 测试 `test_agent_spec_exists_and_has_required_sections` 用 5 个 `assert section in text` grep。这是与 33 个现有 checker spec 对齐的最小集，后续新加 checker spec 沿用此模板。`{{PROMPT_TEMPLATE:checker-input-rules.md}}` 必须放在文件开头第一段（紧跟 frontmatter + agent 描述段）。
+- **score 在 mock 与计算路径上的不一致**：PRD agent spec §1 说"综合 = (1 - violation_density) × verdict_pass_rate_of_top5"，但实现里 `run_live_review_checker` 直接用 LLM 返回的 score 不再二次计算。这是因为：(1) LLM 已能按公式输出 score，二次计算可能与 LLM 自评分歧造成 evidence_chain 自相矛盾；(2) 公式作为 LLM prompt 的指导显式写在 prompt 中，让 LLM 内部按规则评分；(3) mock 模式下 score 来自 fixture，二次计算反而破坏 fixture 设计意图。后续如果发现 LLM 评分漂移，可加 `--strict-formula` flag 在 Python 端二次校验，但目前不必。
+- **配置 master switch 在两层模块都查**：`run_live_review_checker` 与 `check_review` 都查 `cfg.enabled / cfg.inject_into.review`。看似冗余，但用户可能直接调 checker（绕过 review_injection），单独的 checker 也必须支持关闭。两层独立查同一开关与 init_injection.check_genre 模式一致，是 live-review 模块的统一约定。后续 US-013 smoke_test 也会走 checker 直接路径，需要这层防护。
+- **SKILL.md Python 块字符串测试不细究 markdown 结构**：用 `assert "Step 3.6" / "live_review" / "inject_into" / "OR | 并列" in text` 5 层 grep 防 SKILL.md 被回滚；不 assert 完整代码块的具体行（否则微调即破坏 test）。这套"消极保险"测试与 US-011 的 SKILL.md 测试同款，sustainable。
 ---

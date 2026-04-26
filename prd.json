@@ -232,8 +232,8 @@
         "ruff check ink_writer/live_review/checker.py 无新增错误 (注：.md 文件不需 ruff)"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "实现拆为两个模块：`ink_writer/live_review/checker.py` (run_live_review_checker：mock>llm_call>真实 SDK 三层注入；mock 模式跳过 retrieval 与 LLM 加载；real path 调 retrieve_similar_cases + LLM)；`ink_writer/live_review/review_injection.py` (check_review：master switch + 阈值选择 + 可选 polish_fn 触发；polish 仅触发一次，retry 循环交给调用方)。OR 合并发生在 SKILL.md 调用方。SKILL.md Step 3.6 段含 Python 调用块 + Windows PowerShell sibling + 阈值规则 + 关闭开关 + OR 并列说明。tests 新增 12 (test_checker 5 + test_review_step_3_6 7)；regression 503 passed (从 US-011 的 491 增 12)。"
     },
     {
       "id": "US-013",

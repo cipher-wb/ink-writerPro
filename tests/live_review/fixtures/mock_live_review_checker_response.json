@@ -1,0 +1,34 @@
+{
+  "score": 0.45,
+  "dimensions": {
+    "opening": 0.4,
+    "pacing": 0.3,
+    "golden_finger": 0.5,
+    "character": 0.6
+  },
+  "violations": [
+    {
+      "case_id": "CASE-LR-2026-0001",
+      "dimension": "opening",
+      "evidence_quote": "公元前 4570 年，原始大陆的地脉之力在地壳深处涌动……",
+      "severity": "negative"
+    },
+    {
+      "case_id": "CASE-LR-2026-0005",
+      "dimension": "pacing",
+      "evidence_quote": "他想要站起来，但是身体却不听使唤。他又试着坐起来，可是又坐不起来……",
+      "severity": "negative"
+    },
+    {
+      "case_id": "CASE-LR-2026-0009",
+      "dimension": "golden_finger",
+      "evidence_quote": "正想着，一个老者的声音突然在他耳边响起：「小子，你的金手指激活了。」",
+      "severity": "negative"
+    }
+  ],
+  "cases_hit": [
+    "CASE-LR-2026-0001",
+    "CASE-LR-2026-0005",
+    "CASE-LR-2026-0009"
+  ]
+}
