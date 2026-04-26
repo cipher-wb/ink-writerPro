@@ -169,7 +169,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -501,7 +501,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -833,7 +833,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -1165,7 +1165,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -1497,7 +1497,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -1829,7 +1829,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -2161,7 +2161,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -2493,7 +2493,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -2825,7 +2825,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -3157,7 +3157,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -3489,7 +3489,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -3821,7 +3821,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -4153,7 +4153,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -4817,7 +4817,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -5149,7 +5149,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -5481,7 +5481,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -5813,7 +5813,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -6145,7 +6145,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -6305,7 +6305,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0218 (cosine>0.85)"
   },
   {
     "id": "RC-0020",
@@ -6477,7 +6478,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -6809,7 +6810,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -7141,7 +7142,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -7301,7 +7302,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0180 (cosine>0.85)"
   },
   {
     "id": "RC-0023",
@@ -7473,7 +7475,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -7805,7 +7807,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -8137,7 +8139,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -8297,7 +8299,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0047 (cosine>0.85)"
   },
   {
     "id": "RC-0026",
@@ -8469,7 +8472,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -9133,7 +9136,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -9465,7 +9468,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -9797,7 +9800,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -10129,7 +10132,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -10289,7 +10292,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0222 (cosine>0.85)"
   },
   {
     "id": "RC-0032",
@@ -10461,7 +10465,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -10793,7 +10797,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -11125,7 +11129,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -11457,7 +11461,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -11789,7 +11793,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -12121,7 +12125,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -12453,7 +12457,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -12613,7 +12617,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0085 (cosine>0.85)"
   },
   {
     "id": "RC-0039",
@@ -12785,7 +12790,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -13117,7 +13122,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -13277,7 +13282,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0180 (cosine>0.85)"
   },
   {
     "id": "RC-0041",
@@ -13449,7 +13455,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -13781,7 +13787,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -14113,7 +14119,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -14445,7 +14451,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -14777,7 +14783,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -15109,7 +15115,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -15441,7 +15447,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -15773,7 +15779,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -16105,7 +16111,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -16437,7 +16443,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -16597,7 +16603,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0200 (cosine>0.85)"
   },
   {
     "id": "RC-0051",
@@ -16769,7 +16776,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -17101,7 +17108,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -17433,7 +17440,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -17765,7 +17772,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -18097,7 +18104,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -18429,7 +18436,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -18761,7 +18768,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -19093,7 +19100,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -19425,7 +19432,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -19757,7 +19764,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -20089,7 +20096,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -20421,7 +20428,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -20581,7 +20588,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0200 (cosine>0.85)"
   },
   {
     "id": "RC-0063",
@@ -20753,7 +20761,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -21086,7 +21094,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -21418,7 +21426,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -21750,7 +21758,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -22082,7 +22090,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -22414,7 +22422,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -22746,7 +22754,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -23078,7 +23086,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -23410,7 +23418,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -23742,7 +23750,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -24074,7 +24082,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -24406,7 +24414,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -24738,7 +24746,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -25070,7 +25078,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -25402,7 +25410,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -25734,7 +25742,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -26066,7 +26074,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -26398,7 +26406,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -26730,7 +26738,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -26890,7 +26898,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0200 (cosine>0.85)"
   },
   {
     "id": "RC-0082",
@@ -27062,7 +27071,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -27394,7 +27403,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -27726,7 +27735,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -28058,7 +28067,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -28390,7 +28399,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -28722,7 +28731,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -29054,7 +29063,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -29386,7 +29395,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -29718,7 +29727,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -29878,7 +29887,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0011 (cosine>0.85)"
   },
   {
     "id": "RC-0091",
@@ -30050,7 +30060,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -30382,7 +30392,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -30714,7 +30724,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -31046,7 +31056,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -31206,7 +31216,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0231 (cosine>0.85)"
   },
   {
     "id": "RC-0095",
@@ -31378,7 +31389,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -31710,7 +31721,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -31870,7 +31881,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0224 (cosine>0.85)"
   },
   {
     "id": "RC-0097",
@@ -32042,7 +32054,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -32374,7 +32386,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -32706,7 +32718,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -32866,7 +32878,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0244 (cosine>0.85)"
   },
   {
     "id": "RC-0100",
@@ -33038,7 +33051,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -33370,7 +33383,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -33702,7 +33715,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -34034,7 +34047,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -34366,7 +34379,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -34698,7 +34711,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -35030,7 +35043,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -35362,7 +35375,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -35694,7 +35707,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -36026,7 +36039,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -36358,7 +36371,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -36690,7 +36703,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -37022,7 +37035,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -37354,7 +37367,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -37686,7 +37699,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -38018,7 +38031,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -38350,7 +38363,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -38682,7 +38695,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -39014,7 +39027,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -39346,7 +39359,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -39678,7 +39691,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -40010,7 +40023,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -40342,7 +40355,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -40674,7 +40687,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -41006,7 +41019,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -41338,7 +41351,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -41498,7 +41511,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0200 (cosine>0.85)"
   },
   {
     "id": "RC-0126",
@@ -41670,7 +41684,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -42002,7 +42016,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -42334,7 +42348,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -42666,7 +42680,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -42998,7 +43012,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -43330,7 +43344,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -43662,7 +43676,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -43822,7 +43836,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0280 (cosine>0.85)"
   },
   {
     "id": "RC-0133",
@@ -43994,7 +44009,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -44326,7 +44341,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -44658,7 +44673,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -44990,7 +45005,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -45150,7 +45165,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0069 (cosine>0.85)"
   },
   {
     "id": "RC-0137",
@@ -45322,7 +45338,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -45654,7 +45670,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -45987,7 +46003,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -46147,7 +46163,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0258 (cosine>0.85)"
   },
   {
     "id": "RC-0140",
@@ -46319,7 +46336,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -46652,7 +46669,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -46984,7 +47001,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -47316,7 +47333,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -47476,7 +47493,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0200 (cosine>0.85)"
   },
   {
     "id": "RC-0144",
@@ -47648,7 +47666,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -47980,7 +47998,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -48312,7 +48330,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -48472,7 +48490,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0180 (cosine>0.85)"
   },
   {
     "id": "RC-0147",
@@ -48644,7 +48663,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -48976,7 +48995,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -49308,7 +49327,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -49640,7 +49659,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -49800,7 +49819,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0244 (cosine>0.85)"
   },
   {
     "id": "RC-0151",
@@ -49972,7 +49992,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -50304,7 +50324,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -50464,7 +50484,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0011 (cosine>0.85)"
   },
   {
     "id": "RC-0153",
@@ -50636,7 +50657,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -50969,7 +50990,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -51301,7 +51322,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -51633,7 +51654,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -51965,7 +51986,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -52297,7 +52318,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -52629,7 +52650,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -52961,7 +52982,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -53293,7 +53314,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -53625,7 +53646,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -53957,7 +53978,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -54290,7 +54311,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -54622,7 +54643,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -54954,7 +54975,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -55286,7 +55307,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -55618,7 +55639,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -55950,7 +55971,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -56282,7 +56303,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -56614,7 +56635,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -56946,7 +56967,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -57278,7 +57299,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -57610,7 +57631,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -57942,7 +57963,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -58274,7 +58295,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -58606,7 +58627,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -58938,7 +58959,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -59270,7 +59291,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -59602,7 +59623,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -59934,7 +59955,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -60266,7 +60287,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -60598,7 +60619,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -60930,7 +60951,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -61090,7 +61111,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0244 (cosine>0.85)"
   },
   {
     "id": "RC-0185",
@@ -61262,7 +61284,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -61594,7 +61616,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -61926,7 +61948,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -62258,7 +62280,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -62590,7 +62612,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -62922,7 +62944,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -63254,7 +63276,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -63586,7 +63608,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -63918,7 +63940,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -64078,7 +64100,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0011 (cosine>0.85)"
   },
   {
     "id": "RC-0194",
@@ -64250,7 +64273,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -64410,7 +64433,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0275 (cosine>0.85)"
   },
   {
     "id": "RC-0195",
@@ -64582,7 +64606,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -64914,7 +64938,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -65246,7 +65270,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -65578,7 +65602,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -65738,7 +65762,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0180 (cosine>0.85)"
   },
   {
     "id": "RC-0199",
@@ -65910,7 +65935,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -66070,7 +66095,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0003 (cosine>0.85)"
   },
   {
     "id": "RC-0200",
@@ -66242,7 +66268,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -66574,7 +66600,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -66906,7 +66932,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -67238,7 +67264,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -67570,7 +67596,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -67902,7 +67928,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -68234,7 +68260,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -68566,7 +68592,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -68898,7 +68924,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -69230,7 +69256,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -69562,7 +69588,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -69894,7 +69920,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -70226,7 +70252,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -70558,7 +70584,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -70890,7 +70916,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -71222,7 +71248,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -71554,7 +71580,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -71886,7 +71912,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -72218,7 +72244,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -72550,7 +72576,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -72882,7 +72908,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -73214,7 +73240,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -73546,7 +73572,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -73878,7 +73904,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -74210,7 +74236,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -74542,7 +74568,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -74702,7 +74728,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0047 (cosine>0.85)"
   },
   {
     "id": "RC-0226",
@@ -74874,7 +74901,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -75206,7 +75233,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -75538,7 +75565,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -75870,7 +75897,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -76202,7 +76229,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -76534,7 +76561,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -76866,7 +76893,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -77026,7 +77053,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0028 (cosine>0.85)"
   },
   {
     "id": "RC-0233",
@@ -77198,7 +77226,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -77530,7 +77558,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -77862,7 +77890,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -78194,7 +78222,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -78526,7 +78554,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -78858,7 +78886,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -79190,7 +79218,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -79522,7 +79550,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -79854,7 +79882,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -80186,7 +80214,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -80518,7 +80546,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -80850,7 +80878,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -81182,7 +81210,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -81514,7 +81542,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -81846,7 +81874,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -82178,7 +82206,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -82510,7 +82538,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -82842,7 +82870,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -83174,7 +83202,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -83506,7 +83534,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -83838,7 +83866,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -84170,7 +84198,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -84502,7 +84530,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -84834,7 +84862,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -85166,7 +85194,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -85326,7 +85354,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0231 (cosine>0.85)"
   },
   {
     "id": "RC-0258",
@@ -85498,7 +85527,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -85830,7 +85859,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -85990,7 +86019,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0082 (cosine>0.85)"
   },
   {
     "id": "RC-0260",
@@ -86162,7 +86192,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -86494,7 +86524,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -86826,7 +86856,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -87158,7 +87188,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -87490,7 +87520,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -87822,7 +87852,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -88154,7 +88184,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -88487,7 +88517,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -88647,7 +88677,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0231 (cosine>0.85)"
   },
   {
     "id": "RC-0268",
@@ -88819,7 +88850,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -89152,7 +89183,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -89484,7 +89515,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -89816,7 +89847,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -90148,7 +90179,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -90308,7 +90339,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0235 (cosine>0.85)"
   },
   {
     "id": "RC-0273",
@@ -90480,7 +90512,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -90812,7 +90844,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -91145,7 +91177,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -91477,7 +91509,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -91637,7 +91669,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0300 (cosine>0.85)"
   },
   {
     "id": "RC-0277",
@@ -91809,7 +91842,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -92141,7 +92174,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -92301,7 +92334,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0200 (cosine>0.85)"
   },
   {
     "id": "RC-0279",
@@ -92473,7 +92507,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -92805,7 +92839,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -93137,7 +93171,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -93469,7 +93503,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -93801,7 +93835,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -94133,7 +94167,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -94465,7 +94499,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -94797,7 +94831,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -94957,7 +94991,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0011 (cosine>0.85)"
   },
   {
     "id": "RC-0287",
@@ -95130,7 +95165,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -95463,7 +95498,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -95623,7 +95658,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0218 (cosine>0.85)"
   },
   {
     "id": "RC-0289",
@@ -95795,7 +95831,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -96127,7 +96163,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -96459,7 +96495,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -96792,7 +96828,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -97124,7 +97160,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -97456,7 +97492,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -97788,7 +97824,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -97948,7 +97984,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0200 (cosine>0.85)"
   },
   {
     "id": "RC-0296",
@@ -98121,7 +98158,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -98453,7 +98490,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -98785,7 +98822,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -99117,7 +99154,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -99449,7 +99486,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -99781,7 +99818,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -100113,7 +100150,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -100445,7 +100482,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -100777,7 +100814,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -101109,7 +101146,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -101441,7 +101478,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -101773,7 +101810,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -102105,7 +102142,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -102437,7 +102474,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -102769,7 +102806,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -102929,7 +102966,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0120 (cosine>0.85)"
   },
   {
     "id": "RC-0311",
@@ -103433,7 +103471,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -103765,7 +103803,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -104097,7 +104135,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -104257,7 +104295,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0244 (cosine>0.85)"
   },
   {
     "id": "RC-0315",
@@ -104429,7 +104468,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -104761,7 +104800,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -104921,7 +104960,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0047 (cosine>0.85)"
   },
   {
     "id": "RC-0317",
@@ -105093,7 +105133,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -105425,7 +105465,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -105757,7 +105797,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -106089,7 +106129,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -106421,7 +106461,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -106753,7 +106793,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": false,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -106913,7 +106953,8 @@
       "BV1yvFEz3E8W",
       "BV1yzB8BQEoq",
       "BV1zufxBEEHv"
-    ]
+    ],
+    "dedupe_reason": "dup of RC-0200 (cosine>0.85)"
   },
   {
     "id": "RC-0323",
@@ -107085,7 +107126,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -107417,7 +107458,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -107749,7 +107790,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -108081,7 +108122,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
@@ -108413,7 +108454,7 @@
       "live_review_bvid:BV1zufxBEEHv"
     ],
     "dup_with": null,
-    "approved": null,
+    "approved": true,
     "source_bvids": [
       "BV11YFEzkEVu",
       "BV11YrABQEyZ",
