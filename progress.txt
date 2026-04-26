@@ -39,6 +39,9 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - live-review checker mock_response 跳过 retrieval：bge 30s + faiss 5s + LLM 10s — mock 模式必须 short-circuit 全部三步（在 master switch 之后立刻 return mock），否则 12 用例 ×30s = 6min 不可接受。real path 才走 retrieve_similar_cases + LLM。后续 smoke_test 的非 `--with-api` 路径沿用此模式，让默认跑 mock 不读 ANTHROPIC_API_KEY。
 - live-review polish 触发不重试：`check_review` 仅触发一次 polish_fn 不做重试循环（与 editor_wisdom.review_gate 的 max_retries=3 不同）—— 因为 OR 并列后总体重试次数已够 + 黄金三章阈值差距小 + 测试断言简单。如果未来需要 retry 循环，再加 `max_retries` 参数（参考 editor_wisdom.review_gate）。
 - agent spec 5 段标准结构：Purpose / Input / Retrieval / Scoring / Output —— 测试用 5 个 `assert section in text` grep 验证。`{{PROMPT_TEMPLATE:checker-input-rules.md}}` 必须放在 frontmatter + agent 描述段之后的第一段。这是与 33 个现有 checker spec 对齐的最小集，后续新加 checker spec 沿用此模板。
+- subprocess 测试共享重型 fixture：subprocess 进程吃不到 pytest fixture，但脚本接受 `--<resource>-dir <path>` 参数即可让 module-scope `tmp_path_factory` 预构建的资源（如 30 cases × bge ~30s 的 vector index）被多个 subprocess test 复用，相比每 test 重复构建节省 60%+ 时间。后续所有"e2e smoke + 重型资源"测试沿用此模板：fixture 预构建 + 脚本 `--<resource>-dir` 接住。
+- 报告 markdown 含通过/失败状态的双层约定：表格行 `| step_X | PASS | ... |` 提供机器可读结构，`All checks PASS` / `N checks FAILED` 摘要行提供人类可读结论 + AC 关键字稳定锚点（"含 'PASS' 关键字"）。后续 reports/*.md 类 AC 沿用此双层渲染（dataclass StepResult + render_summary 字符串）。
+- e2e smoke 用 `# noqa: BLE001` + 收集到 dataclass 的 fail-soft 模式：smoke 各 step 函数 `try/except Exception as e: return StepResult("FAIL", detail=f"{type(e).__name__}: {e}")` 把异常吞进报告 detail 字段，由 main 函数最终决定退出码。报告先写盘再退出，便于诊断。`# noqa: BLE001 — surface ... in report` 行级注释 + 注明意图即可绕过 ruff 默认 broad-except 警告。
 
 ---
 
@@ -551,4 +554,45 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **score 在 mock 与计算路径上的不一致**：PRD agent spec §1 说"综合 = (1 - violation_density) × verdict_pass_rate_of_top5"，但实现里 `run_live_review_checker` 直接用 LLM 返回的 score 不再二次计算。这是因为：(1) LLM 已能按公式输出 score，二次计算可能与 LLM 自评分歧造成 evidence_chain 自相矛盾；(2) 公式作为 LLM prompt 的指导显式写在 prompt 中，让 LLM 内部按规则评分；(3) mock 模式下 score 来自 fixture，二次计算反而破坏 fixture 设计意图。后续如果发现 LLM 评分漂移，可加 `--strict-formula` flag 在 Python 端二次校验，但目前不必。
 - **配置 master switch 在两层模块都查**：`run_live_review_checker` 与 `check_review` 都查 `cfg.enabled / cfg.inject_into.review`。看似冗余，但用户可能直接调 checker（绕过 review_injection），单独的 checker 也必须支持关闭。两层独立查同一开关与 init_injection.check_genre 模式一致，是 live-review 模块的统一约定。后续 US-013 smoke_test 也会走 checker 直接路径，需要这层防护。
 - **SKILL.md Python 块字符串测试不细究 markdown 结构**：用 `assert "Step 3.6" / "live_review" / "inject_into" / "OR | 并列" in text` 5 层 grep 防 SKILL.md 被回滚；不 assert 完整代码块的具体行（否则微调即破坏 test）。这套"消极保险"测试与 US-011 的 SKILL.md 测试同款，sustainable。
+---
+
+## 2026-04-26 17:00 CST - US-013 端到端冒烟脚本 smoke_test.py
+
+**实现内容：**
+- 新建 `scripts/live-review/smoke_test.py`：三步流水（`ensure_index` / `init_check_genre` / `review_checker`），用 `@dataclass StepResult(name, status, elapsed_s, detail)` 收集结果；写 markdown 报告含 H1 + Mode + Date + 步骤表 + Summary（"All checks PASS" 或 "N checks FAILED"）。
+  - argparse 参数：`--with-api`（默认 false，跳过 fixture mock 走真实 LLM；用户按 §M-9 手动触发）/ `--index-dir`（默认 `data/live-review/vector_index`） / `--report-out`（默认 `reports/live-review-smoke-report.md`） / `--cases-dir`（默认 `tests/live_review/fixtures/sample_30_cases`）。
+  - 步骤 1：若 index 已存在直接复用；否则用 `_vector_index.build_index` 从 cases-dir 重建。
+  - 步骤 2：调 `init_injection.check_genre("都市重生律师", top_k=3, index_dir=...)` → 校验 `warning_level ∈ {ok, warn, no_data}` + `render_text` 非空。
+  - 步骤 3：读 `sample_chapter_violating.txt` → 若 `--with-api` 走真实 LLM，否则 `mock_response = mock_live_review_checker_response.json` 注入 `run_live_review_checker(...)` → 校验 `score` 字段存在 + `violations` 是 list + `cases_hit` 是 list。
+  - 退出码：全 PASS → 0；任一 FAIL → 1（报告仍写入便于诊断）。
+- 新建 `tests/live_review/test_smoke.py` 4 用例：
+  1. `default_mock_mode_passes` —— subprocess 跑（不带 `--with-api`） → exit 0 + 报告含 "PASS"。
+  2. `report_enumerates_init_and_review_steps` —— 报告内含 `init_check_genre` / `review_checker` / `ensure_index` 三个 step name。
+  3. `no_api_key_does_not_import_anthropic` —— 显式 `env.pop("ANTHROPIC_API_KEY")` → 仍 exit 0 + 报告 mode='mock'。
+  4. `builds_index_when_missing` —— 给空 `--index-dir` + 提供 `--cases-dir` → 自动构建 `index.faiss` + `meta.jsonl`。
+- 4 用例共享 `prebuilt_index` module-scope fixture（`tmp_path_factory.mktemp` + `_vector_index.build_index`，30 cases ~30s 一次性构建）；subprocess 通过 `--index-dir` 接住该路径，避免每个 test 重复构建（`builds_index_when_missing` 用例除外，故意触发首次构建路径）。
+
+**Files changed:**
+- A scripts/live-review/smoke_test.py
+- A tests/live_review/test_smoke.py
+- M prd.json (US-013 passes: false → true + notes)
+- M progress.txt
+
+**验证：**
+- `python3 -m pytest tests/live_review/test_smoke.py --no-cov -q` → 4 passed。
+- `python3 -m pytest tests/live_review/ --no-cov` → 116 passed（从 US-012 的 112 增 4）。
+- `python3 -m pytest tests/case_library tests/editor_wisdom tests/learn --no-cov` → 391 passed（无回归）。
+- 总 regression 507 passed（从 US-012 的 503 增 4）。
+- `ruff check scripts/live-review/smoke_test.py tests/live_review/test_smoke.py` → All checks passed。
+- 手测 `python3 scripts/live-review/smoke_test.py --index-dir /tmp/smoke/index --report-out /tmp/smoke/report.md` → exit 0 + 真实报告生成（ensure_index 9.6s built 30 cases / init 8.8s warning_level=no_data / review 0.0s mock score=0.45）。
+- TDD 顺序确认：先写 4 测试 → pytest collect 通过但 subprocess 跑直接 fail（脚本不存在）→ 实现脚本 → 4 PASS（GREEN）。
+
+**Learnings for future iterations:**
+- **subprocess 测试与 module-scope fixture 共享 vector index 的模式**：subprocess 进程不能直接消费 pytest fixture，但脚本接受 `--index-dir <pre-built-path>` 参数即可让 fixture 中预构建的索引被复用。`tmp_path_factory.mktemp(scope="module")` 让 4 个 subprocess test 只付一次 30s 构建成本（约 35-45s 总），相比每 test 一次构建（4×30s=120s）节省 65%+。这是所有"subprocess 跑脚本但脚本依赖重型外部资源"的通用优化模式。后续 US-014 / 其他 e2e smoke 沿用此模板（fixture 预构建 + 脚本 `--<resource>-dir` 接住）。
+- **mock 模式 review checker 完全不读 ANTHROPIC_API_KEY**：`run_live_review_checker(..., mock_response=mock)` 在 `_validate_result_shape` 之后立刻 return，从不进入 retrieve_similar_cases 也不调 anthropic SDK。这意味着 smoke_test.py 默认模式（无 `--with-api`）即使在没有 API key 的 CI 上也能通过——这是 plan §M-9 "ralph 机器可验，无真实 API" 约束的关键支点。后续任何 e2e smoke 默认走 mock 路径必须严格遵守"mock_response 直返不进 retrieval"语义。
+- **report markdown 含 'PASS' 关键字的稳定写法**：用 dataclass `StepResult(status='PASS')` + 渲染表格 + `All checks PASS` 摘要行。即使任一 step FAIL，仍保留通过 step 的 `| step_X | PASS | ... |` 行 + 改尾行为 `N checks FAILED`。AC "内容含 'PASS' 关键字" 在 ramen-soup 场景仍可能命中（PASS substring in 'FAILED' 倒也不出现，但 `| PASS |` 表格单元格永远存在），所以更严格的"All checks PASS"摘要行作为权威信号。后续报告类 AC 写法沿用此双层（表格单元格 + 显式摘要句）。
+- **`--index-dir` 默认指向 `data/live-review/vector_index/` 会污染 repo**：用户首次跑 smoke_test 不带参数 → 触发首次构建到 `data/live-review/vector_index/`。这与 build_vector_index.py 的默认输出一致（脚本设计就是让 smoke_test 同时初始化用户的实用索引），但测试场景必须显式 `--index-dir <tmp_path>` 避免污染。这是 spec §M-1 "用户首次跑 smoke 即建初始索引"语义的实现，不是 bug。
+- **dataclass 字段不要漏写默认值**：`StepResult(detail: str = "")` 必须显式默认空串否则部分 step 不传 detail 会 TypeError。Plan 字面没强调但是 mypy/ruff 不查这种运行时遗漏，必须 `pytest -v` 跑过才暴露。后续 dataclass 定义先写默认值再写代码，避免"等 RED 再加默认值"的重复迭代。
+- **`# noqa: BLE001` 用法**：smoke_test 三个 step 函数都用 `except Exception as e: ... return StepResult("FAIL", ...)`——故意吞所有异常存到 detail 字段，给报告诊断用。ruff BLE001 默认禁止 broad except，加 `# noqa: BLE001 — surface ... in report` 行级注释 + 注明意图即可。后续所有"先写报告，最后由 main 决定退出码"的脚本沿用此 fail-soft 模式。
+- **`from datetime import UTC, datetime` 是 Py 3.11+ 的标准写法**：`datetime.now(tz=UTC)` 替代 `datetime.utcnow()`（后者在 3.14 deprecated）。smoke_test.py 报告时间戳沿用此写法与 editor-wisdom/smoke_test.py 一致。
 ---

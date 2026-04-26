@@ -248,8 +248,8 @@
         "ruff check scripts/live-review/smoke_test.py tests/live_review/test_smoke.py 无新增错误"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "smoke_test.py 三步骤 (ensure_index / init_check_genre / review_checker) 用 dataclass StepResult 统计耗时 + status，markdown 报告含 PASS/FAIL 表格 + 'All checks PASS' 摘要行（同时满足 AC '内容含 PASS 关键字'）。默认 mock 模式不读 ANTHROPIC_API_KEY（review 走 mock_response 短路 retrieval+LLM），仅 init 路径需要 vector_index（用 --index-dir 复用预构建索引避免每次 30s）。tests 4 用例 (default_mock_mode_passes / report_enumerates_init_review_steps / no_api_key_does_not_import_anthropic / builds_index_when_missing) 通过 module-scope tmp_path_factory 共享一次 build_index 调用，subprocess 各 test 用 --index-dir 复用，整套 ~3min（主要是首次构建 + bge 模型加载）。regression 507 passed (从 US-012 的 503 增 4)。"
     },
     {
       "id": "US-014",
