@@ -20,6 +20,9 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
 - `ink_writer/_compat/locking.py:locked_file` 是当前唯一的跨平台独占文件锁原语；US-003 计划在同文件加 `shared_locked_file`（read-only 共享锁）；US-004 复用 `locked_file`。
 - `ink_writer/rewrite_loop/dry_run.py:_observation_quality_passed` 的 chapters 路径约定：``base_dir / book / 'chapters'``（直接拼，不再走 ``base.name == 'data'`` 启发式）。是 dry-run 内部独立路径假设，与 ``ink_writer/evidence_chain/dry_run_report.py:aggregate_dry_run_metrics`` 期待 ``base_dir/data/<book>/chapters`` 的约定**不同**。两者公共 API 互不影响。
 - ``ink_writer/rewrite_loop/dry_run.py:_delivered_rate(chapters_root)`` helper：直接读 ``*.evidence.json`` 计 delivered/total 返 ``float | None``；空目录或读取全失败返 None。dry_run 内部 quality gate 专用，不导出。
+- ``ink_writer/_compat/locking.py:shared_locked_file`` (US-003)：Unix 用 ``fcntl.flock(LOCK_SH)`` 真共享锁，多 reader 并发；Windows ``msvcrt`` 无共享锁概念降级为 ``LK_LOCK`` 独占（reader 也走串行）。任何"读频率高、写频率低、不能容忍 writer 中途状态"的文件读路径优先用此 helper。
+- ``read_dry_run_counter`` retry 模式：用 ``shared_locked_file`` 拿到 raw='' 但 ``path.stat().st_size > 0`` 表示命中 writer ``truncate→write`` 极小窗口；重读一次（**最多 1 次**，避免无限循环）。这个 read-empty + size-positive 检测模式可被其他"writer atomic-replace 风格 + reader 共享锁"组合复用。
+- counter 文件 "open-or-create + lock-internal init" 标准做法（US-004）：``with locked_file(path, "a+") as fh:`` 后立刻 ``fh.seek(0)`` 读 → 空走初始化 → ``fh.seek(0) + truncate + write`` 写回。'a+' 在 Unix/Windows 都 auto-create；O_APPEND 写到 EOF，truncate=0 后 EOF=0 落 0 位置正确。**禁止**再用"锁外 ``if not exists: write_text(...)`` + 锁内救场" 这种旧模式。
 
 ---
 
@@ -45,4 +48,28 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
 - **Learnings for future iterations:**
   - `aggregate_dry_run_metrics(book, base_dir)` 其内部硬编码 `base_dir / "data" / book / "chapters"` —— 它是 M3 dry-run report 的扫盘函数，期望传入"项目根目录"。`is_dry_run` 的 base_dir 语义不同（指 counter 父目录），所以不能直接借用。两 API 有不同 base_dir 约定，调用前先看清楚。
   - 新建 `_delivered_rate(chapters_root)` 的语义边界：空目录与全 JSONDecodeError 都返 None；调用方据此回到"还没观察够"保守分支。重构 dry-run quality gate 时建议复用此 helper 而非直接 inline。
+---
+
+## 2026-04-26 - US-003
+- `ink_writer/_compat/locking.py` 新增 `shared_locked_file(path, mode='r')` context manager：Unix `fcntl.flock(LOCK_SH)` 真共享锁；Windows `msvcrt` 没有共享锁概念降级为 `LK_LOCK` 独占 + 注释说明 reviewer 推荐的折中。同样保留 fail-loud：锁失败上抛 OSError。
+- `ink_writer/rewrite_loop/dry_run.py:read_dry_run_counter` 改为用 `shared_locked_file('r')` 读，并加入 retry 路径：raw='' 但 `path.stat().st_size > 0` 时（命中 writer `r+/seek/truncate/write` 三连中途窗口）重读 1 次拿稳定值；最多 1 次重试避免无限循环。
+- 新增 `tests/rewrite_loop/test_dry_run_read_safety.py` 4 测试：(1) 8 worker spawn-context 并发 increment + 1 worker 反复 read 200 采样点，断言序列单调非递减且 final == 200；(2) monkeypatch 让 `shared_locked_file` 首次返空 fh、二次返真 fh —— 验证触发 exact 1 次重试拿到 42；(3) 持续空读不无限循环（exact 2 calls）；(4) Windows 共享锁 fail-loud（mock 抛 OSError 上抛）。
+- Files changed: `ink_writer/_compat/locking.py`, `ink_writer/rewrite_loop/dry_run.py`, `tests/rewrite_loop/test_dry_run_read_safety.py` (新)。
+- Quality: `pytest tests/_compat tests/case_library tests/rewrite_loop tests/evidence_chain --no-cov -q` → 112 passed；`ruff check ink_writer/_compat/ ink_writer/rewrite_loop/dry_run.py` → 2 (基线 1 SIM105 + 1 SIM115，新 open() 加 `# noqa: SIM115` 配对 yield-ownership 模式，无新增)。
+- **Learnings for future iterations:**
+  - `shared_locked_file` 与 `locked_file` 互斥：reader 与 writer 互斥，多 reader 间不互斥（Unix 真共享）。这是 reader 高频 / writer 低频场景的正确锁原语；写路径仍用 `locked_file`。
+  - "读到空 + 文件 size > 0" 是 atomic-replace 风格 writer 的特征 race window：truncate 已发生但 write 未到。共享锁 + 1 次 retry 是 fix；不要尝试用 sleep loop 或多次 retry，前者掩盖问题，后者 livelock。
+  - Windows 测试模拟 `msvcrt.locking` 抛 OSError 的模式（mock + `mock.patch.object(sys, "platform", "win32")` + `mock.patch.dict(sys.modules, {"msvcrt": fake})`）已沉淀两次；US-001 与 US-003 都用同模式，未来锁相关 fail-loud 测试请直接复用。
+---
+
+## 2026-04-26 - US-004
+- `ink_writer/case_library/_id_alloc.py:allocate_case_id` 删除函数体顶部锁外的 `if not counter_path.exists(): counter_path.write_text(_scan_max(...))`；改为 `with locked_file(counter_path, "a+") as fh:` —— 'a+' 模式在 Unix/Windows 下都自动创建空文件，把"创建+读取+初始化+写回"全挪进锁内串行。
+- 锁内逻辑：`fh.seek(0)` 读 raw → 空则视为 stored=0 → `cur = max(stored, _scan_max(cases_dir, prefix))` 与 glob 取 max 兜底（行为与原版等价）→ `fh.seek(0) + truncate + write` 写回。'a+' 在 Unix 下 O_APPEND 写到 EOF，但 truncate 让 EOF=0 所以仍写在位置 0，正确。
+- 新增 `tests/case_library/test_id_alloc_concurrency.py:test_allocate_case_id_initial_state_atomic`：4 spawn-context worker 在子进程内 monkey-patch `_scan_max` 慢 50ms（放大首次分配的 race window），同时首次分配 CASE-LEARN-，断言 ID 序列严格 1..4。新增模块级 `_alloc_one_with_slow_scan` worker 函数（spawn 必须 module-level）。
+- Files changed: `ink_writer/case_library/_id_alloc.py`, `tests/case_library/test_id_alloc_concurrency.py`。
+- Quality: `pytest tests/case_library tests/_compat tests/rewrite_loop --no-cov -q` → 97 passed；`ruff check ink_writer/case_library/_id_alloc.py` → 1 (基线 SIM105，无新增)。
+- **Learnings for future iterations:**
+  - `"a+"` 是"打开或创建"的标准做法，避免"先 mkdir/write_text 再上锁"这种锁外初始化的可读性陷阱；只要后续走 `seek(0) + truncate + write` 即可绕过 O_APPEND 总写 EOF 的语义。
+  - spawn-context 多进程测试若需 monkey-patch 模块级函数，必须在 worker 函数内部 patch（不能 fixture 父进程 patch）：`from ink_writer.case_library import _id_alloc as mod; mod._scan_max = slow_scan_max`。worker 函数本身必须 module-level 才能被 spawn pickle。
+  - 旧"锁外 write_text 救场靠锁内 glob 兜底"模式在 `ink_writer/rewrite_loop/dry_run.py:increment_dry_run_counter` 中仍存在（没在本批次 US 范围）；如未来 dry_run counter 也想清理，可复用 US-004 的 'a+' 模式（参考此处实现）。
 ---

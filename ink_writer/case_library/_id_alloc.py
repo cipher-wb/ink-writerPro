@@ -31,28 +31,29 @@ def allocate_case_id(cases_dir: Path, prefix: str) -> str:
         cases_dir: 写盘目标目录；不存在自动创建。
         prefix: 形如 ``"CASE-LEARN-"`` / ``"CASE-PROMOTE-"`` 的前缀（含尾部 -）。
 
-    流程：
-      1. 计数器文件 ``cases_dir/.id_alloc_<sanitized_prefix>.cnt``；首次创建时
-         初始化为现存 max。
-      2. 上独占锁，读 counter，再 glob 一次取 max 兜底，取 ``max(counter, glob_max) + 1``。
-      3. 把新值写回 counter，释放锁返回。
+    流程（US-004 — review §三 #6）：
+      1. 计数器文件 ``cases_dir/.id_alloc_<sanitized_prefix>.cnt``。
+      2. 以 ``"a+"`` 模式开 + 上独占锁；``"a+"`` 在不存在时自动创建空文件，
+         初始化与读取均在锁内串行——避免旧实现"先 write_text 再上锁"窗口期
+         里其他进程读到不完整状态（旧实现只靠 glob 兜底救场，可读性差）。
+      3. ``fh.seek(0)`` 读 raw；空则用 ``_scan_max`` 取 glob max 初始化。
+      4. 与 ``_scan_max`` 再取一次 max 防外部手工添加的 yaml 让 counter 落后。
+      5. ``fh.seek(0) + truncate + write`` 写回 counter。注：``"a+"`` 在 Unix 下
+         O_APPEND 写总是 seek 到 EOF 再写——但 truncate 让 EOF=0，所以写仍落在
+         位置 0；Windows 上 truncate 把指针置 EOF 同样落 0。
     """
     cases_dir.mkdir(parents=True, exist_ok=True)
     sanitized = prefix.strip("-").replace("-", "_") or "case"
     counter_path = cases_dir / f".id_alloc_{sanitized}.cnt"
 
-    if not counter_path.exists():
-        # 首次：以现存 yaml 的 max 初始化
-        counter_path.write_text(str(_scan_max(cases_dir, prefix)), encoding="utf-8")
-
-    with locked_file(counter_path, "r+") as fh:
+    with locked_file(counter_path, "a+") as fh:
+        fh.seek(0)
         raw = fh.read().strip()
         try:
-            cur = max(int(raw), 0) if raw else 0
+            stored = max(int(raw), 0) if raw else 0
         except ValueError:
-            cur = 0
-        # 再 glob 一次防外部手工添加 case 让 counter 落后
-        cur = max(cur, _scan_max(cases_dir, prefix))
+            stored = 0
+        cur = max(stored, _scan_max(cases_dir, prefix))
         new_num = cur + 1
         fh.seek(0)
         fh.truncate()

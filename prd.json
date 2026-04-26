@@ -69,8 +69,8 @@
         "ruff check 无新增错误"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-26：_id_alloc.py allocate_case_id 删掉锁外 `if not counter_path.exists(): write_text(...)`，改为 `with locked_file(counter_path, 'a+') as fh:` —— 'a+' 在 Unix/Windows 下都 auto-create 空文件。fh.seek(0)+read 拿 raw；空则 _scan_max 取 glob max 初始化（与现存 yaml 兜底逻辑合并：永远 max(stored, scan_max)，与原行为等价）。fh.seek(0)+truncate+write 写回（'a+' Unix O_APPEND 写在 EOF，但 truncate 让 EOF=0 仍落 0）。新增 tests/case_library/test_id_alloc_concurrency.py:test_allocate_case_id_initial_state_atomic：4 spawn worker 同时首次分配，子进程内 monkey-patch _scan_max 慢 50ms（拉长锁内停留拍醒任何残留 race window），断言 ID 序列严格 1..4。pytest tests/case_library 64 passed；ruff check baseline 1 SIM105 无新增。"
     },
     {
       "id": "US-005",
