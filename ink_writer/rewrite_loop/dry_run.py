@@ -35,20 +35,24 @@ def _locked_file(path: Path, mode: str):
     """跨平台文件锁：Unix fcntl.flock，Windows msvcrt.locking。
 
     路径父目录由调用方保证存在；以 ``mode`` 打开后立即取独占锁，with 退出时释放。
+
+    Fail-loud（review §三 #2 修复）：Windows 下 ``msvcrt.locking(LK_LOCK, 1)``
+    内部会重试 10 次/s（共 ~10s），仍拿不到才 ``raise OSError``。旧实现把
+    OSError 静默吞掉继续 yield，相当于"降级保留旧行为"——可旧行为正是
+    P0 race lost-update 本身。这里改为直接抛，让 increment_dry_run_counter
+    的调用方感知锁失败，不再悄悄丢更新。
     """
     fh = open(path, mode, encoding="utf-8")
     try:
         if sys.platform == "win32":
             import msvcrt
 
-            try:
-                msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
-            except OSError:
-                # 无法加锁则降级（保留旧行为，不阻塞调用方）
-                pass
+            # 锁失败直接抛 OSError；外层 finally 关闭 fh
+            msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
             try:
                 yield fh
             finally:
+                # unlock 失败可忽略：fh.close() 时 OS 自动释放
                 try:
                     fh.seek(0)
                     msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1)

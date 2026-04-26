@@ -17,19 +17,25 @@ from pathlib import Path
 
 @contextmanager
 def _locked_file(path: Path, mode: str):
-    """跨平台独占文件锁；与 rewrite_loop/dry_run.py 内的实现行为一致。"""
+    """跨平台独占文件锁；与 rewrite_loop/dry_run.py 内的实现行为一致。
+
+    Fail-loud（review §三 #2 修复）：Windows 下 ``msvcrt.locking(LK_LOCK, 1)``
+    内部会重试 10 次/s（共 ~10s），仍拿不到才 ``raise OSError``。旧实现把
+    OSError 静默吞掉继续 yield，等于无锁串行化、并发安全被悄悄解除——
+    P1#6 修的 race 又回来。这里改为直接向上抛，让外层 try/finally 关闭
+    fh，调用方明确感知锁失败。
+    """
     fh = open(path, mode, encoding="utf-8")
     try:
         if sys.platform == "win32":
             import msvcrt
 
-            try:
-                msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
-            except OSError:
-                pass
+            # 锁失败直接抛 OSError；外层 finally 会关闭 fh
+            msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
             try:
                 yield fh
             finally:
+                # unlock 失败可忽略：fh.close() 时 OS 自动释放
                 try:
                     fh.seek(0)
                     msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1)
