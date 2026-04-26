@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2137
+title: 鬼也要相亲 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 灵异
+  - 日常
+  - 轻喜剧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分啊 | 文笔尚可但题材怪异，无病呻吟，剧情毫无看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但题材怪异，无病呻吟，剧情毫无看点。 | 灵异日常错位，看不出卖点和题材定位;通篇阿姨邻居拉扯，无意义闲聊
+  observable:
+  - 'genre维度: 灵异日常错位，看不出卖点和题材定位'
+  - 'pacing维度: 通篇阿姨邻居拉扯，无意义闲聊'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 881
+  - 990
+  score: 20
+  score_raw: 20分啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼也要相亲
+  genre_guess:
+  - 灵异
+  - 日常
+  - 轻喜剧
+  overall_comment: 文笔尚可但题材怪异，无病呻吟，剧情毫无看点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 灵异日常错位，看不出卖点和题材定位
+    raw_quote: 这个题材很奇怪啊 完全看不出卖点和什么题材
+  - dimension: pacing
+    severity: negative
+    content: 通篇阿姨邻居拉扯，无意义闲聊
+    raw_quote: 这些奶奶阿姨的拉扯屁意思都没有 你懂吗 没有一个合适的主线内容

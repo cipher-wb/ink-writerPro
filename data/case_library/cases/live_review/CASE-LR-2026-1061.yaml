@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1061
+title: 都重生了，谁还吃软饭呀 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 软饭
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是45分满 | 书名有卖点但内容平淡，缺乏标签蹭热度，人物互动尴尬。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名有卖点但内容平淡，缺乏标签蹭热度，人物互动尴尬。 | 人物脸谱化，互动平淡如背书;缺少侧重点和蹭热点，卖点不明确
+  observable:
+  - 'character维度: 人物脸谱化，互动平淡如背书'
+  - 'hook维度: 缺少侧重点和蹭热点，卖点不明确'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 381
+  - 460
+  score: 45
+  score_raw: 还是45分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 都重生了，谁还吃软饭呀
+  genre_guess:
+  - 都市
+  - 重生
+  - 软饭
+  overall_comment: 书名有卖点但内容平淡，缺乏标签蹭热度，人物互动尴尬。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物脸谱化，互动平淡如背书
+    raw_quote: 这些互动都没意思 ... 就你好你好
+  - dimension: hook
+    severity: negative
+    content: 缺少侧重点和蹭热点，卖点不明确
+    raw_quote: 侧重点跟蹭是非常非常重要的

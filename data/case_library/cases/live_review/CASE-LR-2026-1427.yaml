@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1427
+title: 卖核弹的小女孩 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 都市
+  - 神豪
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材敏感涉及新闻联播，建议换节目，神豪文可写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材敏感涉及新闻联播，建议换节目，神豪文可写。 | 新闻联播作为系统太敏感
+  observable:
+  - 'taboo维度: 新闻联播作为系统太敏感'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 971
+  - 1010
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 卖核弹的小女孩
+  genre_guess:
+  - 都市
+  - 神豪
+  - 系统
+  overall_comment: 题材敏感涉及新闻联播，建议换节目，神豪文可写。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 新闻联播作为系统太敏感
+    raw_quote: 你拿新闻联播当系统的加点 这个不行啊

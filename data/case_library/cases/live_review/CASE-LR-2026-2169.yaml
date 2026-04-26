@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2169
+title: 摆腰涂肤（疑似书名） (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 奇幻
+  - 妖怪
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十八分的样子 | 第一章狐妖书生写得不错，但后续对话变小白，缺少强驱动力，节奏崩了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章狐妖书生写得不错，但后续对话变小白，缺少强驱动力，节奏崩了。 | 后续对话变小白，拉扯无味道;缺乏强驱动力，主线太弱
+  observable:
+  - 'character维度: 后续对话变小白，拉扯无味道'
+  - 'hook维度: 缺乏强驱动力，主线太弱'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 215
+  - 287
+  score: 48
+  score_raw: 四十八分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 摆腰涂肤（疑似书名）
+  genre_guess:
+  - 奇幻
+  - 妖怪
+  - 穿越
+  overall_comment: 第一章狐妖书生写得不错，但后续对话变小白，缺少强驱动力，节奏崩了。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 狐妖与书生开局有期待感，经典写法
+    raw_quote: 其实挺好看的 这个其实是没问题 你想古代也这么写嘛
+  - dimension: character
+    severity: negative
+    content: 后续对话变小白，拉扯无味道
+    raw_quote: 这后面没意思 这个本来第一章挺好的 … 对话太白了
+  - dimension: hook
+    severity: negative
+    content: 缺乏强驱动力，主线太弱
+    raw_quote: 驱动力你必须急冲冲的要去干嘛干嘛

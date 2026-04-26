@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0606
+title: 东晋风俗店 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 穿越
+  - 东京
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 雪白切入还行但主线太弱，末日丧尸无氛围，题材乱融。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白切入还行但主线太弱，末日丧尸无氛围，题材乱融。 | 主线涉黄且末日丧尸氛围不对，题材融合生硬
+  observable:
+  - 'genre维度: 主线涉黄且末日丧尸氛围不对，题材融合生硬'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 2651
+  - 2800
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 东晋风俗店
+  genre_guess:
+  - 都市
+  - 穿越
+  - 东京
+  - 系统
+  overall_comment: 雪白切入还行但主线太弱，末日丧尸无氛围，题材乱融。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 主线涉黄且末日丧尸氛围不对，题材融合生硬
+    raw_quote: 主线涉黄...丧尸也没氛围...感觉还是冒充东京
+  - dimension: hook
+    severity: neutral
+    content: 拍翘臀切入有一定吸引，但整体缺乏好主线
+    raw_quote: 切入那个拍翘臀那里是可以的但是主线太弱了

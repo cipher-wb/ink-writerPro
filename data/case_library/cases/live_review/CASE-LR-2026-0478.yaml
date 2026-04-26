@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0478
+title: 废土跑车大哥 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 科幻
+  - 废土
+  - 赛博朋克
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 看在跑车面子上给你就不打分了啊 不打分了不打分了 打分的话比例还可以 就是有个30多分的样子 | 像电影剧本，动作细节过多，缺乏主角心理活动和期待感。不是网文写法，无法签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 像电影剧本，动作细节过多，缺乏主角心理活动和期待感。不是网文写法，无法签约。 | 写法像影视剧本，侧重场景动作，忽略主角内心盘算;开篇剧场应加速，两三百字写完，主角名字出现太晚
+  observable:
+  - 'misc维度: 写法像影视剧本，侧重场景动作，忽略主角内心盘算'
+  - 'opening维度: 开篇剧场应加速，两三百字写完，主角名字出现太晚'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 568
+  - 633
+  score: null
+  score_raw: 看在跑车面子上给你就不打分了啊 不打分了不打分了 打分的话比例还可以 就是有个30多分的样子
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 废土跑车大哥
+  genre_guess:
+  - 科幻
+  - 废土
+  - 赛博朋克
+  overall_comment: 像电影剧本，动作细节过多，缺乏主角心理活动和期待感。不是网文写法，无法签约。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 写法像影视剧本，侧重场景动作，忽略主角内心盘算
+    raw_quote: 这太细节了 你写重点就重点就是主角的盘算对吧 主角有什么跟别人不一样的期待感...这就是电影剧本呀
+  - dimension: opening
+    severity: negative
+    content: 开篇剧场应加速，两三百字写完，主角名字出现太晚
+    raw_quote: 前面的剧场你要加速对吧 两三百个字就写完了 三四百个字...我叫林奇 现在才出来了 这才是阅读性啊

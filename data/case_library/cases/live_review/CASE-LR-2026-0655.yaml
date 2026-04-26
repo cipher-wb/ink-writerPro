@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0655
+title: 推演诸天万法 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 慢热
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是最多40吧 | 比例没问题，但人设崩坏，事件无聊，本质上还是慢热老毛病没改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例没问题，但人设崩坏，事件无聊，本质上还是慢热老毛病没改。 | 女性角色一上来就投怀送抱，极其毒烦;事件无聊，脱困戏份又俗又水
+  observable:
+  - 'character维度: 女性角色一上来就投怀送抱，极其毒烦'
+  - 'pacing维度: 事件无聊，脱困戏份又俗又水'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1221
+  - 1300
+  score: 40
+  score_raw: 还是最多40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 推演诸天万法
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 慢热
+  overall_comment: 比例没问题，但人设崩坏，事件无聊，本质上还是慢热老毛病没改。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女性角色一上来就投怀送抱，极其毒烦
+    raw_quote: 这人已经崩完了...大哥写书出来抒发情感了...就意淫
+  - dimension: pacing
+    severity: negative
+    content: 事件无聊，脱困戏份又俗又水
+    raw_quote: 事件挺无聊...这个事件也没人看
+  - dimension: misc
+    severity: positive
+    content: 比例节奏感不错
+    raw_quote: 唉就还是比例好点

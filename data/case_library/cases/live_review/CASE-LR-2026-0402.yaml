@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0402
+title: 守夜人奇遇灵异文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 灵异
+  - 奇遇
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多有个35分吧 | 设定太老，节奏慢，写法过时，代入感还行但卖点突兀
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定太老，节奏慢，写法过时，代入感还行但卖点突兀 | 节奏太慢，娓娓道来太多;卖点出来后又很突兀，不接地气;设定想法是10年前的风格，现在没人看
+  observable:
+  - 'pacing维度: 节奏太慢，娓娓道来太多'
+  - 'highpoint维度: 卖点出来后又很突兀，不接地气'
+  - 'genre维度: 设定想法是10年前的风格，现在没人看'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1
+  - 82
+  score: 35
+  score_raw: 差不多有个35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 守夜人奇遇灵异文
+  genre_guess:
+  - 灵异
+  - 奇遇
+  - 都市
+  overall_comment: 设定太老，节奏慢，写法过时，代入感还行但卖点突兀
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，娓娓道来太多
+    raw_quote: 一方面是太慢了，一方面是写法问题，写法这个娓娓道来，娓娓的太多了
+  - dimension: highpoint
+    severity: negative
+    content: 卖点出来后又很突兀，不接地气
+    raw_quote: 卖点出来之后又很突兀，又不接地气
+  - dimension: genre
+    severity: negative
+    content: 设定想法是10年前的风格，现在没人看
+    raw_quote: 你这个想法10年前了...现在没人看
+  - dimension: simplicity
+    severity: positive
+    content: 表达能力没问题
+    raw_quote: 这个这个是表达能力没问题

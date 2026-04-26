@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0593
+title: 重生2004之野心为股 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就还是37吧 38吧 | 文笔尚可但故事平淡如日记，缺乏极端事件吸引读者，维持37-38分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但故事平淡如日记，缺乏极端事件吸引读者，维持37-38分。 | 开篇平淡无事件，像日记式叙述;缺乏极端事件和猎奇钩子，无法吸引眼球
+  observable:
+  - 'opening维度: 开篇平淡无事件，像日记式叙述'
+  - 'hook维度: 缺乏极端事件和猎奇钩子，无法吸引眼球'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 651
+  - 850
+  score: 38
+  score_raw: 差不多就还是37吧 38吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2004之野心为股
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 文笔尚可但故事平淡如日记，缺乏极端事件吸引读者，维持37-38分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇平淡无事件，像日记式叙述
+    raw_quote: 剧情本质上全是废话...日记
+  - dimension: hook
+    severity: negative
+    content: 缺乏极端事件和猎奇钩子，无法吸引眼球
+    raw_quote: 没有事件根本就没事件...文似看山不喜平

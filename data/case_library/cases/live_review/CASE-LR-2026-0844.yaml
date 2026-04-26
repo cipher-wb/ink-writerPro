@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0844
+title: 魔王勇者穿越现代 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 轻小说
+  - 穿越
+  - 乐子
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就35分 | 设定卖点弱，颠文乐子写成尴尬，不适合此风格，建议走正常题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定卖点弱，颠文乐子写成尴尬，不适合此风格，建议走正常题材。 | 开头烂梗，乐子与尴尬一墙之隔，没有乐子;整个世界设定没吸引力，卖点太弱
+  observable:
+  - 'opening维度: 开头烂梗，乐子与尴尬一墙之隔，没有乐子'
+  - 'genre维度: 整个世界设定没吸引力，卖点太弱'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 471
+  - 520
+  score: 35
+  score_raw: 就35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔王勇者穿越现代
+  genre_guess:
+  - 轻小说
+  - 穿越
+  - 乐子
+  overall_comment: 设定卖点弱，颠文乐子写成尴尬，不适合此风格，建议走正常题材。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头烂梗，乐子与尴尬一墙之隔，没有乐子
+    raw_quote: 这些烂梗现在只能发蓝精灵，我觉得直发也很难
+  - dimension: genre
+    severity: negative
+    content: 整个世界设定没吸引力，卖点太弱
+    raw_quote: 对这个世界的塑造其实吸引力不够

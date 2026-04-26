@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-1506
+title: 年少有为暑假工 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fCk8BXEUi
+scope:
+  genre:
+  - 都市
+  - 犯罪
+  - 第一人称
+  - 黑道
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你66分 | 第一人称犯罪题材，描写人物有天赋，尤其女性角色刻画生动，节奏快，但因题材敏感和第一人称限制，起点无法签约，建议转投番茄，最终给66分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fCk8BXEUi.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称犯罪题材，描写人物有天赋，尤其女性角色刻画生动，节奏快，但因题材敏感和第一人称限制，起点无法签约，建议转投番茄，最终给66分。
+    | 犯罪题材违反平台审核规定，过不了审;第一人称在起点接受度小，无法签约
+  observable:
+  - 'taboo维度: 犯罪题材违反平台审核规定，过不了审'
+  - 'genre维度: 第一人称在起点接受度小，无法签约'
+live_review_meta:
+  source_bvid: BV1fCk8BXEUi
+  source_line_range:
+  - 1
+  - 184
+  score: 66
+  score_raw: 就给你66分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 年少有为暑假工
+  genre_guess:
+  - 都市
+  - 犯罪
+  - 第一人称
+  - 黑道
+  overall_comment: 第一人称犯罪题材，描写人物有天赋，尤其女性角色刻画生动，节奏快，但因题材敏感和第一人称限制，起点无法签约，建议转投番茄，最终给66分。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 开篇节奏很快，有看点
+    raw_quote: 节奏倒是挺快的对吧
+  - dimension: character
+    severity: positive
+    content: 描写女人很厉害，寥寥几句凸显好看
+    raw_quote: 这点比例很厉害…就是写女的几句话怎么凸显它好看
+  - dimension: taboo
+    severity: negative
+    content: 犯罪题材违反平台审核规定，过不了审
+    raw_quote: 大哥这过不了审…这玩意起点不让写了
+  - dimension: genre
+    severity: negative
+    content: 第一人称在起点接受度小，无法签约
+    raw_quote: 第一人称在起点接触度太小了

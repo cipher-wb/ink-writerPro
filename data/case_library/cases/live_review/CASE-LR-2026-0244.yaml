@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0244
+title: 副本世界崩塌 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 诸天
+  - 诡异
+  - 复仇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 比例好但开篇无代入，需要按主线重理事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例好但开篇无代入，需要按主线重理事件。 | 第一章没交代清楚月姐，没有代入
+  observable:
+  - 'opening维度: 第一章没交代清楚月姐，没有代入'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 1375
+  - 1420
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 副本世界崩塌
+  genre_guess:
+  - 诸天
+  - 诡异
+  - 复仇
+  overall_comment: 比例好但开篇无代入，需要按主线重理事件。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章没交代清楚月姐，没有代入
+    raw_quote: 你现在才讲了一点 ... 不会写书啊

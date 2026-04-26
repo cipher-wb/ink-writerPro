@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1274
+title: 穿成魔宗弟子系统争斗 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是最多就22分 | 系统斗智太无聊，人物故事弱无沉浸感，需要从基础故事人物练起。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统斗智太无聊，人物故事弱无沉浸感，需要从基础故事人物练起。 | 系统写得像说明书，跟AI斗智太无聊;人物写得弱，故事不真实无沉浸感
+  observable:
+  - 'golden_finger维度: 系统写得像说明书，跟AI斗智太无聊'
+  - 'character维度: 人物写得弱，故事不真实无沉浸感'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1311
+  - 1380
+  score: 22
+  score_raw: 还是最多就22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿成魔宗弟子系统争斗
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 穿越
+  overall_comment: 系统斗智太无聊，人物故事弱无沉浸感，需要从基础故事人物练起。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统写得像说明书，跟AI斗智太无聊
+    raw_quote: 系统又非常无聊...跟系统斗着斗着干嘛，与人斗其乐无穷啊
+  - dimension: character
+    severity: negative
+    content: 人物写得弱，故事不真实无沉浸感
+    raw_quote: 人物写的很弱，然后故事性不真实，就是没有那种真实的沉浸感

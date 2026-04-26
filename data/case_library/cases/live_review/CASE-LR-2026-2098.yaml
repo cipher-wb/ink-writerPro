@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2098
+title: 人在大宋开局拒绝神宗听政 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vpFwzLEEN
+scope:
+  genre:
+  - 历史
+  - 宋朝
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 上次58分 | 节奏比例尚可，但蹭热度不足，简介需更清晰介绍皇帝关系提升开头吸引力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vpFwzLEEN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏比例尚可，但蹭热度不足，简介需更清晰介绍皇帝关系提升开头吸引力。 | 开头蹭热度的点不够突出，对读者吸引力弱
+  observable:
+  - 'opening维度: 开头蹭热度的点不够突出，对读者吸引力弱'
+live_review_meta:
+  source_bvid: BV1vpFwzLEEN
+  source_line_range:
+  - 1
+  - 56
+  score: 58
+  score_raw: 上次58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 人在大宋开局拒绝神宗听政
+  genre_guess:
+  - 历史
+  - 宋朝
+  - 穿越
+  overall_comment: 节奏比例尚可，但蹭热度不足，简介需更清晰介绍皇帝关系提升开头吸引力。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头蹭热度的点不够突出，对读者吸引力弱
+    raw_quote: 就是蹭的少
+  - dimension: simplicity
+    severity: positive
+    content: 改进后的简介对读者更友好，能快速理清背景
+    raw_quote: 对这个简介就好一点
+  - dimension: pacing
+    severity: positive
+    content: 整体比例没问题，节奏把控尚可
+    raw_quote: 比例这方面是没问题

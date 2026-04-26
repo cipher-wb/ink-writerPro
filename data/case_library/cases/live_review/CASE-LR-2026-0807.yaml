@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-0807
+title: 斩杀线/重生为鼠 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 鼠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就30分吧 | 情绪真实但剧情极弱，水份大，写老鼠太多
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪真实但剧情极弱，水份大，写老鼠太多 | 大半章水在老鼠打架，没看点
+  observable:
+  - 'pacing维度: 大半章水在老鼠打架，没看点'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 2380
+  - 2500
+  score: 30
+  score_raw: 就30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斩杀线/重生为鼠
+  genre_guess:
+  - 都市
+  - 重生
+  - 鼠
+  overall_comment: 情绪真实但剧情极弱，水份大，写老鼠太多
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 大半章水在老鼠打架，没看点
+    raw_quote: 水疯掉了 剧情很弱

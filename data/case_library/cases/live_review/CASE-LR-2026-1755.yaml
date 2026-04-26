@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1755
+title: 穿越成隋唐第一门将 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 历史
+  - 仙侠
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个老东立不住 | 历史与仙侠杂糅，逻辑不通，难以分类。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史与仙侠杂糅，逻辑不通，难以分类。 | 历史与仙侠分类冲突，两边都不讨好。;核心逻辑站不住脚，代入感差。
+  observable:
+  - 'genre维度: 历史与仙侠分类冲突，两边都不讨好。'
+  - 'hook维度: 核心逻辑站不住脚，代入感差。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 2150
+  - 2235
+  score: null
+  score_raw: 这个老东立不住
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 穿越成隋唐第一门将
+  genre_guess:
+  - 历史
+  - 仙侠
+  - 穿越
+  overall_comment: 历史与仙侠杂糅，逻辑不通，难以分类。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 历史与仙侠分类冲突，两边都不讨好。
+    raw_quote: 你发历史封类 你得罪大唐写不了...你发仙侠封类 走稀有路线 你这开头也是一个扯蛋的
+  - dimension: hook
+    severity: negative
+    content: 核心逻辑站不住脚，代入感差。
+    raw_quote: 这个逻辑根本在起点 也没法子写

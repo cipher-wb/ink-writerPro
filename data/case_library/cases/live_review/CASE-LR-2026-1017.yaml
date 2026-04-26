@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1017
+title: 全班穿越 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 玄幻
+  - 群穿
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 群像写法高难度，像多书融合，主角代入感弱，但为梦想赞一个。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 群像写法高难度，像多书融合，主角代入感弱，但为梦想赞一个。 | 主角掉入感弱，群像分散焦点
+  observable:
+  - 'character维度: 主角掉入感弱，群像分散焦点'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 681
+  - 850
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 全班穿越
+  genre_guess:
+  - 玄幻
+  - 群穿
+  overall_comment: 群像写法高难度，像多书融合，主角代入感弱，但为梦想赞一个。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角掉入感弱，群像分散焦点
+    raw_quote: 前几章主角掉入感也一般 现在穷一下了
+  - dimension: genre
+    severity: neutral
+    content: 创意有撞车嫌疑，类似哈利波特分院
+    raw_quote: 就霍格沃斯来了 然后宁根 四个学校

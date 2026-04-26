@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1029
+title: 重生1994 (pass / 60分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 都市
+  - 娱乐
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59到60左右吧 | 人物描写和拉扯能力强，小剧场不错，需换书名和增加娱乐元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人物描写和拉扯能力强，小剧场不错，需换书名和增加娱乐元素。 | 文娱元素太少，应强化娱乐圈比重
+  observable:
+  - 'genre维度: 文娱元素太少，应强化娱乐圈比重'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1941
+  - 2030
+  score: 60
+  score_raw: 59到60左右吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 重生1994
+  genre_guess:
+  - 都市
+  - 娱乐
+  - 重生
+  overall_comment: 人物描写和拉扯能力强，小剧场不错，需换书名和增加娱乐元素。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人物塑造生动，拉扯感自然
+    raw_quote: 拉扯能力挺强的 这个描述能力挺好的 我感觉她有天赋
+  - dimension: genre
+    severity: negative
+    content: 文娱元素太少，应强化娱乐圈比重
+    raw_quote: 没什么文娱乐的东西 这个要重生1994对吧 说明要换

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0429
+title: 修什么鬼仙鬼缠 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 灵异
+  - 仙侠
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 场景描写有水平，比例没问题，但就是不写主角目的和代入感，纯恶心人
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 场景描写有水平，比例没问题，但就是不写主角目的和代入感，纯恶心人 | 不写主角代入感、目的、创意，读者早跑完了
+  observable:
+  - 'character维度: 不写主角代入感、目的、创意，读者早跑完了'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 2139
+  - 2238
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 修什么鬼仙鬼缠
+  genre_guess:
+  - 灵异
+  - 仙侠
+  - 民俗
+  overall_comment: 场景描写有水平，比例没问题，但就是不写主角目的和代入感，纯恶心人
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 比例没问题，场景描写有水平
+    raw_quote: 这些场景写的挺好的...赵四爷抢小娘子，这种写民俗非常好，有味道
+  - dimension: character
+    severity: negative
+    content: 不写主角代入感、目的、创意，读者早跑完了
+    raw_quote: 它唯一的问题是主角...大哥好好的比例，你为什么要这么恶心人啊，就不写主题要干嘛...纯恶心人

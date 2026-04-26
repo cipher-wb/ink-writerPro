@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1055
+title: 废土庇护所求生文 (fail / 6分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 废土
+  - 末世
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多六分 | 背景完全架空成外星球，主角外国人，缺乏代入，设定堆砌无故事
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 背景完全架空成外星球，主角外国人，缺乏代入，设定堆砌无故事 | 需要中国人背景和都市化，不能写成外星球;穿越雷同重复，设定冗杂，开局没有事件和金手指
+  observable:
+  - 'ops维度: 需要中国人背景和都市化，不能写成外星球'
+  - 'simplicity维度: 穿越雷同重复，设定冗杂，开局没有事件和金手指'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 3201
+  - 3350
+  score: 6
+  score_raw: 差不多六分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 废土庇护所求生文
+  genre_guess:
+  - 废土
+  - 末世
+  - 种田
+  overall_comment: 背景完全架空成外星球，主角外国人，缺乏代入，设定堆砌无故事
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 需要中国人背景和都市化，不能写成外星球
+    raw_quote: 尽量还是要都市化 就废土归废土 你还是要都市为主 不要完全架空成写成外星球了
+  - dimension: simplicity
+    severity: negative
+    content: 穿越雷同重复，设定冗杂，开局没有事件和金手指
+    raw_quote: 一个穿越你要这么废话 那你就恕我告老还乡了

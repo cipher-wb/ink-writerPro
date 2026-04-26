@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1804
+title: 诡异降临：榜一大姐的直播间 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 诡异
+  - 直播
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多50陪同安了 | 首章都市水平不俗，但诡异转折生硬，金手指突兀，整体调性偏番茄，在起点签约较难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 首章都市水平不俗，但诡异转折生硬，金手指突兀，整体调性偏番茄，在起点签约较难。 | 金手指出场毫无铺垫，非常突兀;系统设计削弱故事真实感;后期风格过于靠近番茄，不适合起点
+  observable:
+  - 'golden_finger维度: 金手指出场毫无铺垫，非常突兀'
+  - 'golden_finger维度: 系统设计削弱故事真实感'
+  - 'genre维度: 后期风格过于靠近番茄，不适合起点'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 84
+  - 176
+  score: 50
+  score_raw: 差不多50陪同安了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异降临：榜一大姐的直播间
+  genre_guess:
+  - 诡异
+  - 直播
+  - 都市
+  overall_comment: 首章都市水平不俗，但诡异转折生硬，金手指突兀，整体调性偏番茄，在起点签约较难。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章都市切入写得挺好
+    raw_quote: 第一张都市水平挺高的啊
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指出场毫无铺垫，非常突兀
+    raw_quote: 这个金手指太秃了 光都出去也挺好的 这一段好突兀啊
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设计削弱故事真实感
+    raw_quote: 系统感觉很出戏……这个系统感觉很一般般
+  - dimension: genre
+    severity: negative
+    content: 后期风格过于靠近番茄，不适合起点
+    raw_quote: 我觉得这种就太难精灵了 光写都市那个天赋很高……就就就回去吧

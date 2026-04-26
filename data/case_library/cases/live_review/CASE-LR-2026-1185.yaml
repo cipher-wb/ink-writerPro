@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1185
+title: 天命人拒绝女妖精 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 女频
+  - 仙侠
+  - 九世
+  - 转世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多38分吧 | 典型女频风格，吟诗装逼，思维跳脱，不适合起点，建议发晋江或蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 典型女频风格，吟诗装逼，思维跳脱，不适合起点，建议发晋江或蓝精灵。 | 女频气息浓厚，与起点男频市场不兼容;主角思维跳脱，像小说中期的感觉，主线不明
+  observable:
+  - 'genre维度: 女频气息浓厚，与起点男频市场不兼容'
+  - 'character维度: 主角思维跳脱，像小说中期的感觉，主线不明'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 2750
+  - 2900
+  score: 38
+  score_raw: 差不多38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天命人拒绝女妖精
+  genre_guess:
+  - 女频
+  - 仙侠
+  - 九世
+  - 转世
+  overall_comment: 典型女频风格，吟诗装逼，思维跳脱，不适合起点，建议发晋江或蓝精灵。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 女频气息浓厚，与起点男频市场不兼容
+    raw_quote: 真女频气吧 女频了也很喜欢吟诗了
+  - dimension: character
+    severity: negative
+    content: 主角思维跳脱，像小说中期的感觉，主线不明
+    raw_quote: 他已经是小说中期的感觉了 然后各种小心思

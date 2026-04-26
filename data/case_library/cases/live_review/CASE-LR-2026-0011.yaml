@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0011
+title: 重生辛弃疾 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11viPBrEPq
+scope:
+  genre:
+  - 历史
+  - 同人
+  - 宋朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50多分有 | 题材市场存疑，但文笔节奏流畅，有几百均订潜力，建议只发。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11viPBrEPq.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材市场存疑，但文笔节奏流畅，有几百均订潜力，建议只发。 | 辛弃疾题材跟风多，市场不一定接受
+  observable:
+  - 'genre维度: 辛弃疾题材跟风多，市场不一定接受'
+live_review_meta:
+  source_bvid: BV11viPBrEPq
+  source_line_range:
+  - 231
+  - 413
+  score: 55
+  score_raw: 50多分有
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生辛弃疾
+  genre_guess:
+  - 历史
+  - 同人
+  - 宋朝
+  overall_comment: 题材市场存疑，但文笔节奏流畅，有几百均订潜力，建议只发。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 辛弃疾题材跟风多，市场不一定接受
+    raw_quote: 辛弃疾不一定愿意
+  - dimension: pacing
+    severity: positive
+    content: 节奏和文笔处理得当
+    raw_quote: 我觉得节奏啊 文笔啊 这方面还可以
+  - dimension: simplicity
+    severity: positive
+    content: 语言流畅，阅读无障碍
+    raw_quote: 能看懂 没什么阅读障碍

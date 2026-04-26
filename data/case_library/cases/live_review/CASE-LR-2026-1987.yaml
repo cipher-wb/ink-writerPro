@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1987
+title: 道归仙/李火旺 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 同人
+  - 道轨
+  - 美利坚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分吧 | 实力够但执着于小众道轨元素，换成大众都市金手指会更好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 实力够但执着于小众道轨元素，换成大众都市金手指会更好。 | 加入道轨仙手游元素，受众太窄;金手指与都市主流期待不符
+  observable:
+  - 'genre维度: 加入道轨仙手游元素，受众太窄'
+  - 'golden_finger维度: 金手指与都市主流期待不符'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1321
+  - 1400
+  score: 58
+  score_raw: 58分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 道归仙/李火旺
+  genre_guess:
+  - 同人
+  - 道轨
+  - 美利坚
+  overall_comment: 实力够但执着于小众道轨元素，换成大众都市金手指会更好。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 加入道轨仙手游元素，受众太窄
+    raw_quote: 道归仙真的没那么火，你相信我
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指与都市主流期待不符
+    raw_quote: 你宁可选成其他的金手指，选成加点啊情报这些东西

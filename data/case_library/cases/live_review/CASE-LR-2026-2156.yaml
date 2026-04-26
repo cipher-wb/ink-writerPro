@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2156
+title: 西游：宋小胜 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 同人
+  - 西游
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 写不了就写不了 | 西游同人但方寸山和原著翻译式写法太烂俗没味道，建议改走轻松乐子向或者发番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 西游同人但方寸山和原著翻译式写法太烂俗没味道，建议改走轻松乐子向或者发番茄。 | 原著翻译式对白没味道，方寸山切入已被写烂;开头啰嗦没代入感，缺乏仙侠味道
+  observable:
+  - 'genre维度: 原著翻译式对白没味道，方寸山切入已被写烂'
+  - 'opening维度: 开头啰嗦没代入感，缺乏仙侠味道'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 1443
+  - 1562
+  score: null
+  score_raw: 写不了就写不了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 西游：宋小胜
+  genre_guess:
+  - 同人
+  - 西游
+  - 仙侠
+  overall_comment: 西游同人但方寸山和原著翻译式写法太烂俗没味道，建议改走轻松乐子向或者发番茄。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 原著翻译式对白没味道，方寸山切入已被写烂
+    raw_quote: 方寸山被写烂了...对白的就没味道了...翻译的味道的翻译出来也没啥味道
+  - dimension: opening
+    severity: negative
+    content: 开头啰嗦没代入感，缺乏仙侠味道
+    raw_quote: 没啥代入感...写的太小白了...走原著剧情了
+  - dimension: misc
+    severity: neutral
+    content: 书名蹭热度方向是对的，建议改成轻松反套路乐子向
+    raw_quote: 书名很厉害...走老东向写轻松一点，然后把这个书名改成这个对吧

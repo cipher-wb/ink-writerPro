@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1910
+title: 重生问道长生/矿工打造神器 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 玄幻
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30多分马八股文嘛 | 设定有少许意思，但事件无聊，写成八股文，建议推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定有少许意思，但事件无聊，写成八股文，建议推翻。 | 金手指与剧情割裂，设定介绍生硬。;事件老套无聊，像矿工逃生之类的情节已经写烂了。
+  observable:
+  - 'golden_finger维度: 金手指与剧情割裂，设定介绍生硬。'
+  - 'opening维度: 事件老套无聊，像矿工逃生之类的情节已经写烂了。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 112
+  - 145
+  score: 30
+  score_raw: 30多分马八股文嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生问道长生/矿工打造神器
+  genre_guess:
+  - 玄幻
+  - 重生
+  overall_comment: 设定有少许意思，但事件无聊，写成八股文，建议推翻。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指与剧情割裂，设定介绍生硬。
+    raw_quote: 割裂了金手指跟剧情割裂
+  - dimension: opening
+    severity: negative
+    content: 事件老套无聊，像矿工逃生之类的情节已经写烂了。
+    raw_quote: 矿工里面逃生真的写烂了
+  - dimension: taboo
+    severity: positive
+    content: 故意将反派命名为秦桧，没有问题。
+    raw_quote: 秦桧就是坏的嘛，岳飞就是好的

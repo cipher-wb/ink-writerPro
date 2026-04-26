@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1986
+title: 龙族失去魔鬼的路 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 龙族
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 龙族同人无突出脑洞，文笔小白，慢热无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 龙族同人无突出脑洞，文笔小白，慢热无聊。 | 没有强卖点或金手指设计;节奏慢，对话白开水
+  observable:
+  - 'golden_finger维度: 没有强卖点或金手指设计'
+  - 'pacing维度: 节奏慢，对话白开水'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1261
+  - 1320
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 龙族失去魔鬼的路
+  genre_guess:
+  - 龙族
+  - 同人
+  overall_comment: 龙族同人无突出脑洞，文笔小白，慢热无聊。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 没有强卖点或金手指设计
+    raw_quote: 路明非想要变强，没什么强卖点吧
+  - dimension: pacing
+    severity: negative
+    content: 节奏慢，对话白开水
+    raw_quote: 好慢好无聊

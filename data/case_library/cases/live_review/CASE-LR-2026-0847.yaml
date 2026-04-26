@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0847
+title: 热望 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 都市
+  - 商K
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有50发50分 | 思路好但比例跟不上，雪白溢出，需收一收并加强主角心理活动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路好但比例跟不上，雪白溢出，需收一收并加强主角心理活动。 | 雪白描写太多，从下方往上看腿脚重复
+  observable:
+  - 'character维度: 雪白描写太多，从下方往上看腿脚重复'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 681
+  - 730
+  score: 50
+  score_raw: 有50发50分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 热望
+  genre_guess:
+  - 都市
+  - 商K
+  - 雪白
+  overall_comment: 思路好但比例跟不上，雪白溢出，需收一收并加强主角心理活动。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入没问题，短剧现场感好
+    raw_quote: 切入我觉得是没问题，只是说大概的比例现在跟不上思路是蛮好的
+  - dimension: character
+    severity: negative
+    content: 雪白描写太多，从下方往上看腿脚重复
+    raw_quote: 这雪白有点溢出了……怎么又看到大腿了

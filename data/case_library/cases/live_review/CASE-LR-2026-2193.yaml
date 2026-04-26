@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-2193
+title: 临时贷款修仙 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1y1zbBQEce
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 贷款
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就22块左右 | 贷款修仙题材烂大街，人设虚、文笔白、心理活动少，毫无市场竞争力，建议直接删除。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1y1zbBQEce.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 贷款修仙题材烂大街，人设虚、文笔白、心理活动少，毫无市场竞争力，建议直接删除。 | 贷款修仙题材陈旧，无人问津，属于垃圾题材;人设虚浮，心理活动缺失，人物描写单薄;通篇小白文，遣词造句过于直白无味
+  observable:
+  - 'genre维度: 贷款修仙题材陈旧，无人问津，属于垃圾题材'
+  - 'character维度: 人设虚浮，心理活动缺失，人物描写单薄'
+  - 'simplicity维度: 通篇小白文，遣词造句过于直白无味'
+live_review_meta:
+  source_bvid: BV1y1zbBQEce
+  source_line_range:
+  - 122
+  - 240
+  score: 22
+  score_raw: 差不多就22块左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 临时贷款修仙
+  genre_guess:
+  - 都市
+  - 修仙
+  - 贷款
+  - 乐子文
+  overall_comment: 贷款修仙题材烂大街，人设虚、文笔白、心理活动少，毫无市场竞争力，建议直接删除。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 贷款修仙题材陈旧，无人问津，属于垃圾题材
+    raw_quote: 垃圾题材
+  - dimension: character
+    severity: negative
+    content: 人设虚浮，心理活动缺失，人物描写单薄
+    raw_quote: 人设也虚
+  - dimension: simplicity
+    severity: negative
+    content: 通篇小白文，遣词造句过于直白无味
+    raw_quote: 描述还是小白啦

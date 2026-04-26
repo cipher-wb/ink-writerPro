@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1134
+title: 宠爱战士海王系统 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 西幻
+  - 系统
+  - 勇者
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '有天赋有天赋
+
+    但主线过不了审 | 讲故事能力有，但系统逼主角攻略妹子不可过审，建议换种田领主主线。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 讲故事能力有，但系统逼主角攻略妹子不可过审，建议换种田领主主线。 | 系统存在感过强且主线违规
+  observable:
+  - 'golden_finger维度: 系统存在感过强且主线违规'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 2494
+  - 2592
+  score: null
+  score_raw: '有天赋有天赋
+
+    但主线过不了审'
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 宠爱战士海王系统
+  genre_guess:
+  - 西幻
+  - 系统
+  - 勇者
+  overall_comment: 讲故事能力有，但系统逼主角攻略妹子不可过审，建议换种田领主主线。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统存在感过强且主线违规
+    raw_quote: 主线不能是攻略妹子以及加好感度
+  - dimension: opening
+    severity: positive
+    content: 代入感与快节奏处理出色
+    raw_quote: '比例挺好的
+
+      代入感也OK'
+  - dimension: genre
+    severity: neutral
+    content: 天赋好，建议换安全题材如领主种田
+    raw_quote: '你找个什么
+
+      像之前我今晚看的那个领主大哥'

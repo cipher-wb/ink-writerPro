@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1993
+title: 转生异界气运皇朝 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 玄幻
+  - 宫廷
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开篇设定和金手指交代太生硬，写法倒退20年。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇设定和金手指交代太生硬，写法倒退20年。 | 一上来就铺设定，毫无情节;元素杂糅不伦不类，不像当代网文
+  observable:
+  - 'opening维度: 一上来就铺设定，毫无情节'
+  - 'genre维度: 元素杂糅不伦不类，不像当代网文'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1701
+  - 1750
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 转生异界气运皇朝
+  genre_guess:
+  - 玄幻
+  - 宫廷
+  - 穿越
+  overall_comment: 开篇设定和金手指交代太生硬，写法倒退20年。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 一上来就铺设定，毫无情节
+    raw_quote: 啥都没有时间地点然后立刻就金手指立刻就这设定谁看啊
+  - dimension: genre
+    severity: negative
+    content: 元素杂糅不伦不类，不像当代网文
+    raw_quote: 这个比前面那个好一点但还是像西幻气流

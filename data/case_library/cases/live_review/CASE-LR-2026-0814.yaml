@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0814
+title: 剑仙传承在现代艺能社会 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 都市异能
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分 | 题材选错，都市异能过审极难且事件不接地气
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材选错，都市异能过审极难且事件不接地气 | 都市异能审核严，写不爽，很难起来;一上来就是异能打斗，没有都市感;事件无聊，没有市场研究
+  observable:
+  - 'genre维度: 都市异能审核严，写不爽，很难起来'
+  - 'opening维度: 一上来就是异能打斗，没有都市感'
+  - 'simplicity维度: 事件无聊，没有市场研究'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 685
+  - 830
+  score: 22
+  score_raw: 22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 剑仙传承在现代艺能社会
+  genre_guess:
+  - 都市异能
+  - 修仙
+  overall_comment: 题材选错，都市异能过审极难且事件不接地气
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市异能审核严，写不爽，很难起来
+    raw_quote: 都市能现在该写都写烂了 而且审核尺度题你也写不爽
+  - dimension: opening
+    severity: negative
+    content: 一上来就是异能打斗，没有都市感
+    raw_quote: 你一上来进入那个异能打架 那些不接地气了
+  - dimension: simplicity
+    severity: negative
+    content: 事件无聊，没有市场研究
+    raw_quote: 事件无聊 题材错误 没研究市场

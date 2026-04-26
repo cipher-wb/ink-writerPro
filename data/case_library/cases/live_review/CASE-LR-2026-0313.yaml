@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0313
+title: 华夏名剑召唤师 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 古代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38左右 | 文字表达流畅，但剧情俗套且没有亮点，属于无功无过的网文，难以吸引读者。编辑欣赏作者的熬夜精神。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文字表达流畅，但剧情俗套且没有亮点，属于无功无过的网文，难以吸引读者。编辑欣赏作者的熬夜精神。 | 剧情俗套，缺乏亮点和反转，文字看山不喜平。;写的内容太俗，没有看点，流程化严重。
+  observable:
+  - 'opening维度: 剧情俗套，缺乏亮点和反转，文字看山不喜平。'
+  - 'simplicity维度: 写的内容太俗，没有看点，流程化严重。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 178
+  - 266
+  score: 38
+  score_raw: 38左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 华夏名剑召唤师
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 古代
+  overall_comment: 文字表达流畅，但剧情俗套且没有亮点，属于无功无过的网文，难以吸引读者。编辑欣赏作者的熬夜精神。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 文笔和表达都很流畅。
+    raw_quote: 兴奋流畅是流畅的啊...那个夜晚上确实流畅
+  - dimension: opening
+    severity: negative
+    content: 剧情俗套，缺乏亮点和反转，文字看山不喜平。
+    raw_quote: 但是真的很俗啊...读者不爱看这个...没亮点...四平八稳的少年英雄
+  - dimension: simplicity
+    severity: negative
+    content: 写的内容太俗，没有看点，流程化严重。
+    raw_quote: 这个网文太俗套了...直发就是石沉大海
+  - dimension: misc
+    severity: positive
+    content: 作者通宵写作的拼搏精神值得肯定，未来有潜力。
+    raw_quote: 大哥不一样，大哥通宵写书呀...这种精神这种斗志...迟早起飞

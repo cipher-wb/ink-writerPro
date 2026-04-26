@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2000
+title: 世家生存者 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 如果40分吧就只能40分 | 文笔不错，但题材偏门，三国背景下却写考试学习，缺乏争霸等看点，思路与市场脱节。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，但题材偏门，三国背景下却写考试学习，缺乏争霸等看点，思路与市场脱节。 | 三国文缺乏熟悉元素和看点，不应以学习考试为主线。;开篇平淡，缺乏危机和爽点，主线不明。
+  observable:
+  - 'genre维度: 三国文缺乏熟悉元素和看点，不应以学习考试为主线。'
+  - 'highpoint维度: 开篇平淡，缺乏危机和爽点，主线不明。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 332
+  - 407
+  score: 40
+  score_raw: 如果40分吧就只能40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 世家生存者
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  overall_comment: 文笔不错，但题材偏门，三国背景下却写考试学习，缺乏争霸等看点，思路与市场脱节。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 三国文缺乏熟悉元素和看点，不应以学习考试为主线。
+    raw_quote: 没人看三国考试的呀这个 ... 你跑到三国你考试学习
+  - dimension: highpoint
+    severity: negative
+    content: 开篇平淡，缺乏危机和爽点，主线不明。
+    raw_quote: 就没什么好的危机没什么好的看见兄弟

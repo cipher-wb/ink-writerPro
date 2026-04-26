@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0713
+title: 姑娘情慢（情报系统） (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 仙侠
+  - 情报流
+  - 拉扯/雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分没问题 | 人设切入有进步，拉扯有感觉；但主线太弱，雪白过多，缺乏修炼主线驱动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设切入有进步，拉扯有感觉；但主线太弱，雪白过多，缺乏修炼主线驱动。 | 主线过于单薄，雪白卖点过多易腻
+  observable:
+  - 'highpoint维度: 主线过于单薄，雪白卖点过多易腻'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 881
+  - 960
+  score: 50
+  score_raw: 50分没问题
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 姑娘情慢（情报系统）
+  genre_guess:
+  - 仙侠
+  - 情报流
+  - 拉扯/雪白
+  overall_comment: 人设切入有进步，拉扯有感觉；但主线太弱，雪白过多，缺乏修炼主线驱动。
+  comments:
+  - dimension: character
+    severity: neutral
+    content: 拉扯水平在线，主角关系有变化感
+    raw_quote: 互相拉扯...这不有感觉了吗
+  - dimension: highpoint
+    severity: negative
+    content: 主线过于单薄，雪白卖点过多易腻
+    raw_quote: 主线我觉得还是有点弱...雪白太多兄弟...每张都雪白

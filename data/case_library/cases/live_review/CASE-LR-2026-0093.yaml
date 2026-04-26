@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0093
+title: 10年老书生穿越魔法时代机甲文 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 都市
+  - 人工智能
+  - 机甲
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 才十几万，看不上 | 简介卖点人工智能霸主出戏，成绩十几万看不上，整体不吸引人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介卖点人工智能霸主出戏，成绩十几万看不上，整体不吸引人。 | 简介人工智能霸主出戏，读者不在乎AI元素;整体看不上，才十几万字成绩太差
+  observable:
+  - 'genre维度: 简介人工智能霸主出戏，读者不在乎AI元素'
+  - 'ops维度: 整体看不上，才十几万字成绩太差'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1
+  - 77
+  score: null
+  score_raw: 才十几万，看不上
+  score_signal: unknown
+  verdict: fail
+  title_guess: 10年老书生穿越魔法时代机甲文
+  genre_guess:
+  - 都市
+  - 人工智能
+  - 机甲
+  overall_comment: 简介卖点人工智能霸主出戏，成绩十几万看不上，整体不吸引人。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 简介人工智能霸主出戏，读者不在乎AI元素
+    raw_quote: 简介其实一点都不吸引人，那个因为人工智能这些东西，读者也不在乎
+  - dimension: pacing
+    severity: neutral
+    content: 拉扯水平很高，值得肯定
+    raw_quote: 拉扯大概的拉扯水平很高
+  - dimension: ops
+    severity: negative
+    content: 整体看不上，才十几万字成绩太差
+    raw_quote: 啧才十几万血，这有啥意思，切了吧好吧

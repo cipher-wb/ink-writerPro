@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1177
+title: 龙虎山天师府 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 都市
+  - 道士
+  - 斩妖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十七八分 | 道士下山的人设有乐子潜质，但写成了灵异恐怖，风格跑偏，需要学金庸杨过。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 道士下山的人设有乐子潜质，但写成了灵异恐怖，风格跑偏，需要学金庸杨过。 | 人设本该是风流杨过型，结果写成了阴沉灵异;开篇氛围不对，浪费了一个好玩的梗;题材老套，道士下山已铺天盖地，需要新意
+  observable:
+  - 'character维度: 人设本该是风流杨过型，结果写成了阴沉灵异'
+  - 'opening维度: 开篇氛围不对，浪费了一个好玩的梗'
+  - 'genre维度: 题材老套，道士下山已铺天盖地，需要新意'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 1390
+  - 1580
+  score: 38
+  score_raw: 三十七八分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 龙虎山天师府
+  genre_guess:
+  - 都市
+  - 道士
+  - 斩妖
+  overall_comment: 道士下山的人设有乐子潜质，但写成了灵异恐怖，风格跑偏，需要学金庸杨过。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设本该是风流杨过型，结果写成了阴沉灵异
+    raw_quote: 这个雪白呀 就举个例子 比如说你是杨过 ... 你怎么写成灵异 吓人路线
+  - dimension: opening
+    severity: negative
+    content: 开篇氛围不对，浪费了一个好玩的梗
+    raw_quote: 这应该是个乐子 前面的分个是乐子 你怎么写的一本正经呢
+  - dimension: genre
+    severity: negative
+    content: 题材老套，道士下山已铺天盖地，需要新意
+    raw_quote: 就比较以前的 都是一轮了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1254
+title: 梦境刑场 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就15分吧 | 表达流畅但剧情无聊，主线不清楚，读者没有期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达流畅但剧情无聊，主线不清楚，读者没有期待感。 | 主线治病太无聊，读者没有期待感;主角人设太弱，像个磨叽的小学生
+  observable:
+  - 'hook维度: 主线治病太无聊，读者没有期待感'
+  - 'character维度: 主角人设太弱，像个磨叽的小学生'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1640
+  - 1703
+  score: 15
+  score_raw: 差不多也就15分吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 梦境刑场
+  genre_guess:
+  - 都市
+  - 异能
+  - 悬疑
+  overall_comment: 表达流畅但剧情无聊，主线不清楚，读者没有期待感。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 主线治病太无聊，读者没有期待感
+    raw_quote: 这个主线就是治病，治病到底有啥爽的
+  - dimension: character
+    severity: negative
+    content: 主角人设太弱，像个磨叽的小学生
+    raw_quote: 大哥你小学生吗，天天生病是吧

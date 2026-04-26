@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0485
+title: 修仙飞升是骗局 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  - 反套路
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你40分吧 虽然很老套 | 比例和情绪烘托很到位，但这脑洞太老套。简介剧透是大忌，第二章割裂无卡点，但作者会写书。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例和情绪烘托很到位，但这脑洞太老套。简介剧透是大忌，第二章割裂无卡点，但作者会写书。 | 飞升是骗局的劳动太老套，简介剧透没意思;第二章割裂，没有卡点，每张像单元剧
+  observable:
+  - 'genre维度: 飞升是骗局的劳动太老套，简介剧透没意思'
+  - 'pacing维度: 第二章割裂，没有卡点，每张像单元剧'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1082
+  - 1149
+  score: 40
+  score_raw: 给你40分吧 虽然很老套
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙飞升是骗局
+  genre_guess:
+  - 玄幻
+  - 修仙
+  - 反套路
+  overall_comment: 比例和情绪烘托很到位，但这脑洞太老套。简介剧透是大忌，第二章割裂无卡点，但作者会写书。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章情绪烘托到位，比例很棒
+    raw_quote: 我觉得大哥是有天赋的 但是题材太垃圾了...比例是特别棒的对吧 比例氛围情绪特别棒
+  - dimension: genre
+    severity: negative
+    content: 飞升是骗局的劳动太老套，简介剧透没意思
+    raw_quote: 简介已经剧透了...这个脑洞 读者可能就会呃呃呃对吧 就会这个表情吧
+  - dimension: pacing
+    severity: negative
+    content: 第二章割裂，没有卡点，每张像单元剧
+    raw_quote: 但你的代入感太差了 然后卡点几乎没有 每张都是重新写 读者要一口气看3张才能懂你写啥

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0924
+title: 荒村野庙书生女鬼 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 仙侠
+  - 悬疑
+  - 志怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多50分吧 | 文笔很有仙侠味道，但女鬼反转俗套且猜得到，建议引入第三者丰富人物关系。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔很有仙侠味道，但女鬼反转俗套且猜得到，建议引入第三者丰富人物关系。 | 反转轻易被猜到，毫无惊喜;女鬼是蟾蜍精，恶心且降代入;节奏慢，水剧情
+  observable:
+  - 'highpoint维度: 反转轻易被猜到，毫无惊喜'
+  - 'character维度: 女鬼是蟾蜍精，恶心且降代入'
+  - 'pacing维度: 节奏慢，水剧情'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 995
+  - 1060
+  score: 50
+  score_raw: 差不多50分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 荒村野庙书生女鬼
+  genre_guess:
+  - 仙侠
+  - 悬疑
+  - 志怪
+  overall_comment: 文笔很有仙侠味道，但女鬼反转俗套且猜得到，建议引入第三者丰富人物关系。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 反转轻易被猜到，毫无惊喜
+    raw_quote: 你能不能不要让我猜到 所以我就知道你故意在那演戏
+  - dimension: character
+    severity: negative
+    content: 女鬼是蟾蜍精，恶心且降代入
+    raw_quote: 能不能不要给我变成女人 行不行 能不能给我不要 你们为什么老是这么恶趣味呢 … 癞蛤蟆这种很恶心的
+  - dimension: pacing
+    severity: negative
+    content: 节奏慢，水剧情
+    raw_quote: 兄弟遣词造句没啥问题 节奏就是慢 杀了个鬼嘛 我知道你你要杀

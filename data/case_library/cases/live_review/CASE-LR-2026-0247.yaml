@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0247
+title: 全民修仙：我的词条能复制 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 修仙
+  - 高武
+  - 词条流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话 给他个30分吧 | 文笔尚可但设定老套，轻松搞笑基调与高武冲突，缺乏危机感，整体平平无奇。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但设定老套，轻松搞笑基调与高武冲突，缺乏危机感，整体平平无奇。 | 高武题材不应主打轻松搞笑，基调矛盾。;开头宿舍生活平淡，冷美人等角色老套，没有亮眼事件。;设定插入过多且突兀，找不到剧情主线。
+  observable:
+  - 'genre维度: 高武题材不应主打轻松搞笑，基调矛盾。'
+  - 'opening维度: 开头宿舍生活平淡，冷美人等角色老套，没有亮眼事件。'
+  - 'simplicity维度: 设定插入过多且突兀，找不到剧情主线。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 388
+  - 525
+  score: 30
+  score_raw: 打分的话 给他个30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全民修仙：我的词条能复制
+  genre_guess:
+  - 修仙
+  - 高武
+  - 词条流
+  overall_comment: 文笔尚可但设定老套，轻松搞笑基调与高武冲突，缺乏危机感，整体平平无奇。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 高武题材不应主打轻松搞笑，基调矛盾。
+    raw_quote: 高武世界就不要轻松搞笑了 ... 主线一定是升级变强
+  - dimension: opening
+    severity: negative
+    content: 开头宿舍生活平淡，冷美人等角色老套，没有亮眼事件。
+    raw_quote: 宿舍这帮吊人没人看的 ... 冷美人没用啊
+  - dimension: simplicity
+    severity: negative
+    content: 设定插入过多且突兀，找不到剧情主线。
+    raw_quote: 设定太多了 找不到剧情

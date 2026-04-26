@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0390
+title: 半床气闷压心和 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 西幻
+  - 海克斯
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 签约了 | 海克斯题材可行，人设立体节奏尚可，但第二章海克斯卖点必须提前曝光。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 海克斯题材可行，人设立体节奏尚可，但第二章海克斯卖点必须提前曝光。 | 海克斯核心能力在第二章迟迟不出，容易造成读者流失。
+  observable:
+  - 'golden_finger维度: 海克斯核心能力在第二章迟迟不出，容易造成读者流失。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 560
+  - 610
+  score: null
+  score_raw: 签约了
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 半床气闷压心和
+  genre_guess:
+  - 西幻
+  - 海克斯
+  overall_comment: 海克斯题材可行，人设立体节奏尚可，但第二章海克斯卖点必须提前曝光。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人设清晰通过配角和对话立了起来，读者代入快。
+    raw_quote: 立足两个人设了嘛，他刚才会写。
+  - dimension: golden_finger
+    severity: negative
+    content: 海克斯核心能力在第二章迟迟不出，容易造成读者流失。
+    raw_quote: 第二张节奏有恰到好处，但你不出来你的海克斯卖点。

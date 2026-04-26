@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1085
+title: 北风轻小说自杀审核 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 轻小说
+  - 无限流
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给他34分 | 写得正经但推进过于缓慢，需要人物互动和情绪看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写得正经但推进过于缓慢，需要人物互动和情绪看点。 | 节奏太慢，干巴巴描述场景;缺少鲜活的人物互动
+  observable:
+  - 'pacing维度: 节奏太慢，干巴巴描述场景'
+  - 'character维度: 缺少鲜活的人物互动'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 1541
+  - 1596
+  score: 34
+  score_raw: 给他34分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 北风轻小说自杀审核
+  genre_guess:
+  - 轻小说
+  - 无限流
+  - 系统
+  overall_comment: 写得正经但推进过于缓慢，需要人物互动和情绪看点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，干巴巴描述场景
+    raw_quote: 慢疯掉了...你都在干巴巴的描述场景
+  - dimension: character
+    severity: negative
+    content: 缺少鲜活的人物互动
+    raw_quote: 需要人和人互动起来需要情绪

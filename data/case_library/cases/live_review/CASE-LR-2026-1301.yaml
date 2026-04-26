@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1301
+title: 1978年穿越年代文 (pass / 60分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 年代
+  - 穿越
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 六十分这个大哥 | 年代感真实，文笔不错，但事件冲突弱，缺乏期待感和爆点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 年代感真实，文笔不错，但事件冲突弱，缺乏期待感和爆点。 | 事件太弱，缺乏危机驱动力和主线期待;缺少像女知青这样的钩子留人
+  observable:
+  - 'pacing维度: 事件太弱，缺乏危机驱动力和主线期待'
+  - 'simplicity维度: 缺少像女知青这样的钩子留人'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 25
+  - 180
+  score: 60
+  score_raw: 六十分这个大哥
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 1978年穿越年代文
+  genre_guess:
+  - 年代
+  - 穿越
+  - 日常
+  overall_comment: 年代感真实，文笔不错，但事件冲突弱，缺乏期待感和爆点。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 年代感拉得真实，沉浸感足
+    raw_quote: 拉个年代感 拉个真实感 OK的
+  - dimension: pacing
+    severity: negative
+    content: 事件太弱，缺乏危机驱动力和主线期待
+    raw_quote: 事件真的太弱了呀 就是你的危机感啊 主线驱动力啊
+  - dimension: simplicity
+    severity: negative
+    content: 缺少像女知青这样的钩子留人
+    raw_quote: 就少一个女知青这样的东西吊 导致整个事件就看点非常弱

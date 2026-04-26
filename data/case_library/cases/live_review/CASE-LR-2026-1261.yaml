@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1261
+title: 雷法观想世界 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 玄幻
+  - 观想
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分最多吧 | 世界观拉垮无受众，主角无爽点无魅力，设定介绍太慢且无聊，浪费好的比例表达。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观拉垮无受众，主角无爽点无魅力，设定介绍太慢且无聊，浪费好的比例表达。 | 世界观太垃圾，无受众分类;主角人设无期待感，无魅力;开篇设定介绍过于拖沓，节奏慢
+  observable:
+  - 'genre维度: 世界观太垃圾，无受众分类'
+  - 'character维度: 主角人设无期待感，无魅力'
+  - 'pacing维度: 开篇设定介绍过于拖沓，节奏慢'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 296
+  - 370
+  score: 20
+  score_raw: 20分最多吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 雷法观想世界
+  genre_guess:
+  - 玄幻
+  - 观想
+  - 穿越
+  overall_comment: 世界观拉垮无受众，主角无爽点无魅力，设定介绍太慢且无聊，浪费好的比例表达。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观太垃圾，无受众分类
+    raw_quote: 这个世界观太垃圾了...发什么分类都没推荐效果
+  - dimension: character
+    severity: negative
+    content: 主角人设无期待感，无魅力
+    raw_quote: 你的主角没有一点魅力啊，主角人设没有一点期待力
+  - dimension: pacing
+    severity: negative
+    content: 开篇设定介绍过于拖沓，节奏慢
+    raw_quote: 老是纠结世界观慢慢的介绍，你问我答没意思啊

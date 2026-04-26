@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1486
+title: 东京律师金锦浩 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 都市
+  - 东京文
+  - 律师
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分吧 还是题材加分吧 | 题材加分，但第一张拉扯失败，系统太下头，主角太老实，缺少看头
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材加分，但第一张拉扯失败，系统太下头，主角太老实，缺少看头 | 系统设计太垃圾，出戏;主角太正经老实，写不出东京文的拉扯
+  observable:
+  - 'golden_finger维度: 系统设计太垃圾，出戏'
+  - 'character维度: 主角太正经老实，写不出东京文的拉扯'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 193
+  - 252
+  score: 40
+  score_raw: 40分吧 还是题材加分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京律师金锦浩
+  genre_guess:
+  - 都市
+  - 东京文
+  - 律师
+  - 系统
+  overall_comment: 题材加分，但第一张拉扯失败，系统太下头，主角太老实，缺少看头
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设计太垃圾，出戏
+    raw_quote: 系统一般般吧这个系统 这系统有点垃圾了
+  - dimension: character
+    severity: negative
+    content: 主角太正经老实，写不出东京文的拉扯
+    raw_quote: 大哥太老实了 老实人写东京文我真的 好难啊

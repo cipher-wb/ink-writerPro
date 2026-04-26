@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1830
+title: 东京魔女格斗 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 轻小说
+  - 格斗
+  - 魔女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 估计只能25分最多了 | 轻小说极度吃文笔，对话无聊不流畅，人设毫无吸引，换题材吧
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 轻小说极度吃文笔，对话无聊不流畅，人设毫无吸引，换题材吧 | 人物毫无意思，互动无聊没一点意思;纯轻小说功底不够，去学滚开
+  observable:
+  - 'character维度: 人物毫无意思，互动无聊没一点意思'
+  - 'genre维度: 纯轻小说功底不够，去学滚开'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 851
+  - 950
+  score: 25
+  score_raw: 估计只能25分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京魔女格斗
+  genre_guess:
+  - 轻小说
+  - 格斗
+  - 魔女
+  overall_comment: 轻小说极度吃文笔，对话无聊不流畅，人设毫无吸引，换题材吧
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物毫无意思，互动无聊没一点意思
+    raw_quote: 这个好无聊啊...真不如去讨论猪脚饭好吃还是鸭腿饭好吃
+  - dimension: genre
+    severity: negative
+    content: 纯轻小说功底不够，去学滚开
+    raw_quote: 大哥你别写轻小说了吧...赶紧换题材的轻小说写不了的

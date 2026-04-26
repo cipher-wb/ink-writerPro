@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0824
+title: 世家大族的家族斗争 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 玄幻
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分最多 | 没有穿越代入感，太着急写内部争斗，像宅斗宫斗
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 没有穿越代入感，太着急写内部争斗，像宅斗宫斗 | 没有代入感，上来就写家族内部算计;家族宅斗像女频宫斗，没人爱看
+  observable:
+  - 'opening维度: 没有代入感，上来就写家族内部算计'
+  - 'genre维度: 家族宅斗像女频宫斗，没人爱看'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 2175
+  - 2320
+  score: 20
+  score_raw: 20分最多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 世家大族的家族斗争
+  genre_guess:
+  - 玄幻
+  - 家族
+  overall_comment: 没有穿越代入感，太着急写内部争斗，像宅斗宫斗
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 没有代入感，上来就写家族内部算计
+    raw_quote: 没代入感 真没那感
+  - dimension: genre
+    severity: negative
+    content: 家族宅斗像女频宫斗，没人爱看
+    raw_quote: 这种互相算计 宅斗宫斗挺无聊的

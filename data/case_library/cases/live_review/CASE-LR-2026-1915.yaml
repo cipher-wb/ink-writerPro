@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1915
+title: 三国沙尘兴复汉室 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 历史
+  - 三国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分吧 | 内容切入和文笔都不错，但主角“非我族类”的身份导致题材天花板受限，建议直发试水。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容切入和文笔都不错，但主角“非我族类”的身份导致题材天花板受限，建议直发试水。 | 主角为一介蛮夷光复汉室，名不正言不顺，有政治风险。
+  observable:
+  - 'taboo维度: 主角为一介蛮夷光复汉室，名不正言不顺，有政治风险。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 297
+  - 330
+  score: 59
+  score_raw: 59分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 三国沙尘兴复汉室
+  genre_guess:
+  - 历史
+  - 三国
+  overall_comment: 内容切入和文笔都不错，但主角“非我族类”的身份导致题材天花板受限，建议直发试水。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 主角为一介蛮夷光复汉室，名不正言不顺，有政治风险。
+    raw_quote: 一介蛮夷兴复汉室...就相当于相当于找了个外国人，然后把自己的汉朝给统治了...中国人讲究一个名正言顺
+  - dimension: opening
+    severity: positive
+    content: 比例、代入感、事件冲突都还不错。
+    raw_quote: 比例挺好的，就是代入感也OK，其实事件冲突也挺好的

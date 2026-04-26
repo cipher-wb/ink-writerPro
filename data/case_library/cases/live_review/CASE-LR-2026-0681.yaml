@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0681
+title: 游戏穿越仙侠 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HCzwBuEV6
+scope:
+  genre:
+  - 游戏
+  - 穿越
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 落花纷飞飘散梦晚35分嘛 | 比例扎实，但游戏穿越题材受众少上限低，事件不吸引人，建议写正常玄幻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HCzwBuEV6.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实，但游戏穿越题材受众少上限低，事件不吸引人，建议写正常玄幻。 | 游戏题材自带难度，受众少，上限低;融入游戏类设定，事件不吸引人
+  observable:
+  - 'genre维度: 游戏题材自带难度，受众少，上限低'
+  - 'opening维度: 融入游戏类设定，事件不吸引人'
+live_review_meta:
+  source_bvid: BV1HCzwBuEV6
+  source_line_range:
+  - 1405
+  - 1490
+  score: 35
+  score_raw: 落花纷飞飘散梦晚35分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 游戏穿越仙侠
+  genre_guess:
+  - 游戏
+  - 穿越
+  - 仙侠
+  overall_comment: 比例扎实，但游戏穿越题材受众少上限低，事件不吸引人，建议写正常玄幻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 游戏题材自带难度，受众少，上限低
+    raw_quote: 写游戏等于是给你增加了个...受众会很少
+  - dimension: opening
+    severity: negative
+    content: 融入游戏类设定，事件不吸引人
+    raw_quote: 这里面融了很多设定...读者真不爱看这些东西

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0128
+title: 东京恋爱追杀游戏 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 都市
+  - 日娱
+  - 恋爱系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 脑洞尚可但细节把控不到位，情绪与拉扯薄弱，45分需沉淀练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞尚可但细节把控不到位，情绪与拉扯薄弱，45分需沉淀练笔。 | 主角对死亡回归的情绪反应太平淡，像玩游戏;追杀游戏缺乏紧张期待，节奏温吞
+  observable:
+  - 'character维度: 主角对死亡回归的情绪反应太平淡，像玩游戏'
+  - 'pacing维度: 追杀游戏缺乏紧张期待，节奏温吞'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 1210
+  - 1280
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京恋爱追杀游戏
+  genre_guess:
+  - 都市
+  - 日娱
+  - 恋爱系统
+  overall_comment: 脑洞尚可但细节把控不到位，情绪与拉扯薄弱，45分需沉淀练笔。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角对死亡回归的情绪反应太平淡，像玩游戏
+    raw_quote: 你重生回来没什么好情绪 大哥
+  - dimension: pacing
+    severity: negative
+    content: 追杀游戏缺乏紧张期待，节奏温吞
+    raw_quote: 杀的真没什么紧张的

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1983
+title: 时间收债人/房东陈怡 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 收债
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开头与房东拉扯有进步，但一转到打鬼就退了回去，题材仍不行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头与房东拉扯有进步，但一转到打鬼就退了回去，题材仍不行。 | 执着于杀鬼金手指，题材难被市场接受
+  observable:
+  - 'genre维度: 执着于杀鬼金手指，题材难被市场接受'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1021
+  - 1100
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 时间收债人/房东陈怡
+  genre_guess:
+  - 都市
+  - 灵异
+  - 收债
+  overall_comment: 开头与房东拉扯有进步，但一转到打鬼就退了回去，题材仍不行。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 执着于杀鬼金手指，题材难被市场接受
+    raw_quote: 你总又要惹到鬼上面去
+  - dimension: opening
+    severity: positive
+    content: 前几百字房东拉扯有代入感
+    raw_quote: 切入点还行，跟房东的拉扯是小姑娘了吗，可以的

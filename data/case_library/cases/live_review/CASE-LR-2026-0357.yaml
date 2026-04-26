@@ -1,0 +1,65 @@
+case_id: CASE-LR-2026-0357
+title: 我的酒馆招到了辣妹 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 东京
+  - 都市
+  - 酒馆
+  - 辣妹
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得22分最多吧 加两分了 | 缺乏真实感，主角太老实不会拉扯，金手指抢戏，建议放弃仙侠改写都市，加强雪白和人设互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缺乏真实感，主角太老实不会拉扯，金手指抢戏，建议放弃仙侠改写都市，加强雪白和人设互动。 | 主角太老实，不像常去洗脚的人，拉扯差;开头干巴，毫无真实感和雪白;仙侠驾驭不住，应转都市
+  observable:
+  - 'character维度: 主角太老实，不像常去洗脚的人，拉扯差'
+  - 'opening维度: 开头干巴，毫无真实感和雪白'
+  - 'genre维度: 仙侠驾驭不住，应转都市'
+  - 'simplicity维度: 为金手指写书，倒置主次'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 248
+  - 325
+  score: 24
+  score_raw: 我觉得22分最多吧 加两分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的酒馆招到了辣妹
+  genre_guess:
+  - 东京
+  - 都市
+  - 酒馆
+  - 辣妹
+  overall_comment: 缺乏真实感，主角太老实不会拉扯，金手指抢戏，建议放弃仙侠改写都市，加强雪白和人设互动。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角太老实，不像常去洗脚的人，拉扯差
+    raw_quote: 太老实了 ... 你这个人太老实了 ... 不会跟妹子拉扯对吧
+  - dimension: opening
+    severity: negative
+    content: 开头干巴，毫无真实感和雪白
+    raw_quote: 太干了 那个太干了 ... 没有一点真实感呀
+  - dimension: genre
+    severity: negative
+    content: 仙侠驾驭不住，应转都市
+    raw_quote: 写都市去吧 别别写学校修仙论文写的挺尴尬的
+  - dimension: simplicity
+    severity: negative
+    content: 为金手指写书，倒置主次
+    raw_quote: 大哥你是为了这个金手指写的 有写书的 不是为了讲故事

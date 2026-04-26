@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1107
+title: 小虎队加密投稿·白洁复仇 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 玄幻
+  - 探案
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吧 | 文笔尚可，但分类不清、苦大仇深套路老旧，缺乏现代网文亮点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可，但分类不清、苦大仇深套路老旧，缺乏现代网文亮点 | 玄幻历史武侠探案不沾边，分类尴尬
+  observable:
+  - 'genre维度: 玄幻历史武侠探案不沾边，分类尴尬'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1800
+  - 1855
+  score: 30
+  score_raw: 30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 小虎队加密投稿·白洁复仇
+  genre_guess:
+  - 玄幻
+  - 探案
+  overall_comment: 文笔尚可，但分类不清、苦大仇深套路老旧，缺乏现代网文亮点
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 玄幻历史武侠探案不沾边，分类尴尬
+    raw_quote: 玄幻不玄幻 历史不历史的 就就报仇是什么探案嘛
+  - dimension: character
+    severity: neutral
+    content: 小姨白洁形象比较深刻，但主线支撑不足
+    raw_quote: 小姨白洁印象深刻 内容确实虚啊

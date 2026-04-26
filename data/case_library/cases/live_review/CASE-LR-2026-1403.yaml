@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1403
+title: 我自人间浪漫 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就50分左右吧 | 八股套路，人设和剧情均无亮点，虽流畅但很难杀出重围。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股套路，人设和剧情均无亮点，虽流畅但很难杀出重围。 | 开学、班主任、同桌等情节极其俗套;缺乏任何惊喜，无功无过式平庸
+  observable:
+  - 'opening维度: 开学、班主任、同桌等情节极其俗套'
+  - 'simplicity维度: 缺乏任何惊喜，无功无过式平庸'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 1701
+  - 1850
+  score: 50
+  score_raw: 差不多就50分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我自人间浪漫
+  genre_guess:
+  - 都市
+  - 重生
+  - 校园
+  overall_comment: 八股套路，人设和剧情均无亮点，虽流畅但很难杀出重围。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开学、班主任、同桌等情节极其俗套
+    raw_quote: 这太俗了兄弟 太俗了呀
+  - dimension: simplicity
+    severity: negative
+    content: 缺乏任何惊喜，无功无过式平庸
+    raw_quote: 没有一个让人惊喜的地方

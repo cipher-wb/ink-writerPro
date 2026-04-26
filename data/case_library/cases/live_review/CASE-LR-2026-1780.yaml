@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1780
+title: 冰与火之歌非传统奇幻 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 奇幻
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33吧 | 场景描写及格，但缺乏代入感，整体无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 场景描写及格，但缺乏代入感，整体无聊。 | 缺乏代入感，读者无法带入主角。
+  observable:
+  - 'hook维度: 缺乏代入感，读者无法带入主角。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 137
+  - 214
+  score: 33
+  score_raw: 33吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 冰与火之歌非传统奇幻
+  genre_guess:
+  - 奇幻
+  - 西幻
+  overall_comment: 场景描写及格，但缺乏代入感，整体无聊。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 缺乏代入感，读者无法带入主角。
+    raw_quote: 你是谁...没代入感兄弟...反正就是这样的场景
+  - dimension: simplicity
+    severity: neutral
+    content: 有一定写法，场景刻画及格。
+    raw_quote: 美剧写法就是没代入感...会写法切入雪白没问题

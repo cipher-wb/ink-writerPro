@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0673
+title: 没钱修仙变种 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HCzwBuEV6
+scope:
+  genre:
+  - 修仙
+  - 借贷
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 文笔不错，但题材是没人看的没钱修仙变种，市场已死，除非写得贼牛。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HCzwBuEV6.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，但题材是没人看的没钱修仙变种，市场已死，除非写得贼牛。 | 类似没钱修仙题材读者已流失，市场饱和
+  observable:
+  - 'genre维度: 类似没钱修仙题材读者已流失，市场饱和'
+live_review_meta:
+  source_bvid: BV1HCzwBuEV6
+  source_line_range:
+  - 725
+  - 810
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 没钱修仙变种
+  genre_guess:
+  - 修仙
+  - 借贷
+  - 轻小说
+  overall_comment: 文笔不错，但题材是没人看的没钱修仙变种，市场已死，除非写得贼牛。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 类似没钱修仙题材读者已流失，市场饱和
+    raw_quote: 没钱修仙...这一类读者已经吃完了，不吃了
+  - dimension: opening
+    severity: positive
+    content: 白浅色道具还可以，表达有天赋
+    raw_quote: 我觉得对白浅色道具还可以...水平确实挺高的

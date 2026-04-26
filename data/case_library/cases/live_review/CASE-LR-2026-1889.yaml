@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1889
+title: 末日幸福人生系统 (fail / 37分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 37分的样子 | 流畅但事件偏毒，丧尸吃人后抱腿玩笑破坏观感。只能发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 流畅但事件偏毒，丧尸吃人后抱腿玩笑破坏观感。只能发蓝精灵。 | 丧尸刚吃完人就抱着开玩笑，毒点明显;996烂梗开篇，太小白
+  observable:
+  - 'taboo维度: 丧尸刚吃完人就抱着开玩笑，毒点明显'
+  - 'opening维度: 996烂梗开篇，太小白'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1241
+  - 1320
+  score: 37
+  score_raw: 37分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日幸福人生系统
+  genre_guess:
+  - 科幻
+  - 末日
+  - 系统
+  overall_comment: 流畅但事件偏毒，丧尸吃人后抱腿玩笑破坏观感。只能发蓝精灵。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 丧尸刚吃完人就抱着开玩笑，毒点明显
+    raw_quote: 他是丧尸呀 他吃了人啊... 刚吃了下去你就把他抱着腿抱上... 还是毒哈
+  - dimension: opening
+    severity: negative
+    content: 996烂梗开篇，太小白
+    raw_quote: 就是以前的烂梗了... 这种思路其实不对的

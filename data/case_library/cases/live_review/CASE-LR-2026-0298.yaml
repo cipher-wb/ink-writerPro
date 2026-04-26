@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0298
+title: 梦中的撒菲拉 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38了吧 | 写法过时，都市化仙侠，人设烂梗，救不了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法过时，都市化仙侠，人设烂梗，救不了。 | 仙侠行文过于都市化，缺乏仙侠味;缺乏仙侠人物塑造能力
+  observable:
+  - 'genre维度: 仙侠行文过于都市化，缺乏仙侠味'
+  - 'character维度: 缺乏仙侠人物塑造能力'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 571
+  - 630
+  score: 38
+  score_raw: 38了吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 梦中的撒菲拉
+  genre_guess:
+  - 仙侠
+  - 穿越
+  overall_comment: 写法过时，都市化仙侠，人设烂梗，救不了。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 仙侠行文过于都市化，缺乏仙侠味
+    raw_quote: 这写法也太太都市化了
+  - dimension: character
+    severity: negative
+    content: 缺乏仙侠人物塑造能力
+    raw_quote: 你人设不会不会写
+  - dimension: misc
+    severity: neutral
+    content: 不适合写仙侠，建议更换题材
+    raw_quote: 就不要鼓捣这个题材了

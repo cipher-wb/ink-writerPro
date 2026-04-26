@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0371
+title: 俗世鬼将 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 民俗
+  - 诡异
+  - 志怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分 | 氛围和人设立得住，但主线反转普通，缺乏爆点，50分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围和人设立得住，但主线反转普通，缺乏爆点，50分。 | 师父是坏蛋这一核心梗过于常见，无新反转
+  observable:
+  - 'highpoint维度: 师父是坏蛋这一核心梗过于常见，无新反转'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 871
+  - 950
+  score: 50
+  score_raw: 50分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 俗世鬼将
+  genre_guess:
+  - 民俗
+  - 诡异
+  - 志怪
+  overall_comment: 氛围和人设立得住，但主线反转普通，缺乏爆点，50分。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 师父是坏蛋这一核心梗过于常见，无新反转
+    raw_quote: 这个主线剧情 我觉得你放现在的起点挺卷的 其实很就很难起来
+  - dimension: pacing
+    severity: neutral
+    content: 工笔细描氛围，但进度缓慢
+    raw_quote: 这种还是需要很强的比例 我觉得至少得精品上的比例其实才有味道

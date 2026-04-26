@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1442
+title: 狄仁杰之关门弟子 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 历史
+  - 同人
+  - 探案
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分吧 | 同人文应多蹭原角色增加期待，专业探案写得太细，读者会跳
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 同人文应多蹭原角色增加期待，专业探案写得太细，读者会跳 | 写成原创没蹭同人元素，读者不买账;探案过程过于专业细碎，网文应简化
+  observable:
+  - 'genre维度: 写成原创没蹭同人元素，读者不买账'
+  - 'simplicity维度: 探案过程过于专业细碎，网文应简化'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1001
+  - 1090
+  score: 55
+  score_raw: 55分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 狄仁杰之关门弟子
+  genre_guess:
+  - 历史
+  - 同人
+  - 探案
+  overall_comment: 同人文应多蹭原角色增加期待，专业探案写得太细，读者会跳
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写成原创没蹭同人元素，读者不买账
+    raw_quote: 你是个同人文 你不能当成原创写
+  - dimension: simplicity
+    severity: negative
+    content: 探案过程过于专业细碎，网文应简化
+    raw_quote: 太专业了呀 不爱看啊 真不爱看

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0780
+title: 梦中的萨菲拉 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出新分数 | 证据写法看点弱，蹭名人不够，比例扎实代入感可，有进步但没给分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 证据写法看点弱，蹭名人不够，比例扎实代入感可，有进步但没给分。 | 开局太正经，没有名场面;蹭的名人知名度不高，不如郭威柴荣
+  observable:
+  - 'opening维度: 开局太正经，没有名场面'
+  - 'genre维度: 蹭的名人知名度不高，不如郭威柴荣'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 651
+  - 700
+  score: null
+  score_raw: 未明确说出新分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 梦中的萨菲拉
+  genre_guess:
+  - 历史
+  - 五代十国
+  overall_comment: 证据写法看点弱，蹭名人不够，比例扎实代入感可，有进步但没给分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局太正经，没有名场面
+    raw_quote: 我觉得这种乱世写法应该跟证据不一样 我觉得你这个是大明的写法 应该蹭那些名人嘛
+  - dimension: genre
+    severity: negative
+    content: 蹭的名人知名度不高，不如郭威柴荣
+    raw_quote: 你去蹭蹭那个郭威柴荣 不要去蹭那个前面的皇帝 前几个后唐的知名度不高的

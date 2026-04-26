@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1714
+title: 重生高中 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 加油 你试试三十分吧 | 表达没大问题但情节极其无聊，大量喝酒叙旧毫无情绪和钩子。重生后缺乏重点和目标，对话不像高中生，读起来乏味。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达没大问题但情节极其无聊，大量喝酒叙旧毫无情绪和钩子。重生后缺乏重点和目标，对话不像高中生，读起来乏味。 | 开篇缺乏吸引人的钩子，一直在喝酒谈天毫无波澜;人物对话不符合高中生身份，显得降智
+  observable:
+  - 'hook维度: 开篇缺乏吸引人的钩子，一直在喝酒谈天毫无波澜'
+  - 'character维度: 人物对话不符合高中生身份，显得降智'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 507
+  - 580
+  score: 30
+  score_raw: 加油 你试试三十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生高中
+  genre_guess:
+  - 重生
+  - 都市
+  - 日常
+  overall_comment: 表达没大问题但情节极其无聊，大量喝酒叙旧毫无情绪和钩子。重生后缺乏重点和目标，对话不像高中生，读起来乏味。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开篇缺乏吸引人的钩子，一直在喝酒谈天毫无波澜
+    raw_quote: 文似看山不洗平，你不能老觉得周东也是天下第一美女嘛就一直写哈哈大笑
+  - dimension: character
+    severity: negative
+    content: 人物对话不符合高中生身份，显得降智
+    raw_quote: 哎呀这对话不像高中啊，这个对话简直像小学生
+  - dimension: simplicity
+    severity: positive
+    content: 文笔和写法本身不错，就是内容欠缺
+    raw_quote: 兄弟很难，但是得继续放下去，松满了就

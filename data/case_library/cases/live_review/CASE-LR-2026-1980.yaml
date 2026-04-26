@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1980
+title: 厉鬼说书人 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 灵异
+  - 恐怖
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分 | 氛围和节奏都不错，实力在线，但纯灵异上限低，必须融合都市元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围和节奏都不错，实力在线，但纯灵异上限低，必须融合都市元素。 | 纯灵异题材在起点极难独立出成绩;缺少融合其他卖点的金手指
+  observable:
+  - 'genre维度: 纯灵异题材在起点极难独立出成绩'
+  - 'golden_finger维度: 缺少融合其他卖点的金手指'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 741
+  - 840
+  score: 59
+  score_raw: 59分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 厉鬼说书人
+  genre_guess:
+  - 灵异
+  - 恐怖
+  - 悬疑
+  overall_comment: 氛围和节奏都不错，实力在线，但纯灵异上限低，必须融合都市元素。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯灵异题材在起点极难独立出成绩
+    raw_quote: 光讲厉鬼没人看呀，上限就很低
+  - dimension: golden_finger
+    severity: negative
+    content: 缺少融合其他卖点的金手指
+    raw_quote: 加北美加东晋或者加都市聊天群把灵异加进来

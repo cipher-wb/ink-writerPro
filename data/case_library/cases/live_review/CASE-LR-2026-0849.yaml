@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0849
+title: 大照诡实录 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 悬疑
+  - 玄幻
+  - 探案
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我不评价你内容故事本身 | 开头傲慢，元素乱融，读者代入感极差，需学习切入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头傲慢，元素乱融，读者代入感极差，需学习切入。 | 开头直接抛出大量设定事件，读者厌烦;融合武侠、历史、玄幻太杂，缺少熟悉背景
+  observable:
+  - 'opening维度: 开头直接抛出大量设定事件，读者厌烦'
+  - 'genre维度: 融合武侠、历史、玄幻太杂，缺少熟悉背景'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 801
+  - 870
+  score: null
+  score_raw: 我不评价你内容故事本身
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 大照诡实录
+  genre_guess:
+  - 悬疑
+  - 玄幻
+  - 探案
+  overall_comment: 开头傲慢，元素乱融，读者代入感极差，需学习切入。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头直接抛出大量设定事件，读者厌烦
+    raw_quote: 一上来这些事件读的根本不看的……这些东西其实不应该放在开头
+  - dimension: genre
+    severity: negative
+    content: 融合武侠、历史、玄幻太杂，缺少熟悉背景
+    raw_quote: 因为你是融合很多元素的，很多很多你又没有一个熟悉的一个背景世界观

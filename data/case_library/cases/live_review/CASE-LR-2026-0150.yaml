@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0150
+title: 与我渡北川 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 都市
+  - 年代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 垃圾题材就完事了 | 题材彻底否定，无人关心。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材彻底否定，无人关心。 | 灵异乐园题材，副本独角戏，没人看
+  observable:
+  - 'genre维度: 灵异乐园题材，副本独角戏，没人看'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 302
+  - 303
+  score: null
+  score_raw: 垃圾题材就完事了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 与我渡北川
+  genre_guess:
+  - 都市
+  - 年代
+  overall_comment: 题材彻底否定，无人关心。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 灵异乐园题材，副本独角戏，没人看
+    raw_quote: 垃圾题材就完事了 没有人看垃圾题材就完事了

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0157
+title: 嘿嘿哈 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 玄幻
+  - 意识流
+  - 第一人称
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这给你15分吧好吧 | 第一人称意识流，连基本身份都没交代，读者完全懵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称意识流，连基本身份都没交代，读者完全懵。 | 第一章结束都不知道我是谁，纯粹瞎写
+  observable:
+  - 'opening维度: 第一章结束都不知道我是谁，纯粹瞎写'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 367
+  - 372
+  score: 15
+  score_raw: 这给你15分吧好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 嘿嘿哈
+  genre_guess:
+  - 玄幻
+  - 意识流
+  - 第一人称
+  overall_comment: 第一人称意识流，连基本身份都没交代，读者完全懵。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章结束都不知道我是谁，纯粹瞎写
+    raw_quote: 第一章就写了个大哥穿越过来了 第一人称 然后你然后第一章完了之后 大哥不知道我是谁就结束了

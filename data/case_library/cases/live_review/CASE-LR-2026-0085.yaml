@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0085
+title: 费柴张伟修仙记 (fail / 6分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 小白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 六六太六了太六了 | 极度小白，性压抑严重，人设窝囊，毫无人物魅力，建议出门左转换题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 极度小白，性压抑严重，人设窝囊，毫无人物魅力，建议出门左转换题材。 | 男主窝囊，毫无人格魅力，被欺辱也无反抗;书名和人名极度小白，对网文一无所知
+  observable:
+  - 'character维度: 男主窝囊，毫无人格魅力，被欺辱也无反抗'
+  - 'simplicity维度: 书名和人名极度小白，对网文一无所知'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1421
+  - 1475
+  score: 6
+  score_raw: 六六太六了太六了
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 费柴张伟修仙记
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 小白
+  overall_comment: 极度小白，性压抑严重，人设窝囊，毫无人物魅力，建议出门左转换题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 男主窝囊，毫无人格魅力，被欺辱也无反抗
+    raw_quote: 主角也太窝囊了吧...被鸡女这样左右...你害怕的颤抖吗
+  - dimension: simplicity
+    severity: negative
+    content: 书名和人名极度小白，对网文一无所知
+    raw_quote: 费柴张伟...这个书名没入行啊那个完全没入行...太小白了这东西

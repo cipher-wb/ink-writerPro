@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0463
+title: 确诊癌症那天 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 历史
+  - 大秦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分 | 文笔扎实思路有深度，但大秦政治写法市场担忧，可能写不长，需要更好的脑洞。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实思路有深度，但大秦政治写法市场担忧，可能写不长，需要更好的脑洞。 | 隐藏式洗白和深度政治容易崩，过往同类作品光速崩完
+  observable:
+  - 'ops维度: 隐藏式洗白和深度政治容易崩，过往同类作品光速崩完'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 921
+  - 960
+  score: 59
+  score_raw: 59分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 确诊癌症那天
+  genre_guess:
+  - 历史
+  - 大秦
+  overall_comment: 文笔扎实思路有深度，但大秦政治写法市场担忧，可能写不长，需要更好的脑洞。
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 大秦拯救末代皇帝是知乎热度题材，但起点读者更吃脑洞
+    raw_quote: 大情我觉得更吃金手指 以及好的脑洞 不是吃沉浸感
+  - dimension: ops
+    severity: negative
+    content: 隐藏式洗白和深度政治容易崩，过往同类作品光速崩完
+    raw_quote: 他这么说 第一个三国是万定的 后来就崩完了 ... 你就给大情续命 这个核心还是不爽

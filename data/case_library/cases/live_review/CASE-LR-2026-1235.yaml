@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1235
+title: 我在末日收集鬼 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 末世
+  - 异能
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还有30分 | 场景描写和人物塑造太干巴，剧情缺乏情绪和看点，像游记一样平淡。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 场景描写和人物塑造太干巴，剧情缺乏情绪和看点，像游记一样平淡。 | 人物像NPC，缺乏心理活动和情绪;剧情平淡无奇，缺乏看点，像背景介绍;开篇一直在铺世界观，没有迅速进入主线剧情
+  observable:
+  - 'character维度: 人物像NPC，缺乏心理活动和情绪'
+  - 'pacing维度: 剧情平淡无奇，缺乏看点，像背景介绍'
+  - 'opening维度: 开篇一直在铺世界观，没有迅速进入主线剧情'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 361
+  - 421
+  score: 30
+  score_raw: 还有30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在末日收集鬼
+  genre_guess:
+  - 末世
+  - 异能
+  - 求生
+  overall_comment: 场景描写和人物塑造太干巴，剧情缺乏情绪和看点，像游记一样平淡。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物像NPC，缺乏心理活动和情绪
+    raw_quote: 写人物太干巴了，兄弟写人物特别干巴，黄毛看上红毛
+  - dimension: pacing
+    severity: negative
+    content: 剧情平淡无奇，缺乏看点，像背景介绍
+    raw_quote: 这917个字读书全跑完了
+  - dimension: opening
+    severity: negative
+    content: 开篇一直在铺世界观，没有迅速进入主线剧情
+    raw_quote: 到现在为止没有一点看点，这些东西就这些人都平平淡淡的，跟NPC似的

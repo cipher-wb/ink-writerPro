@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0219
+title: 三好学生（叮当猫） (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 校园
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十五分 | 行文像高中生日记，自嗨产物，完全不了解网文市场，建议多读书学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 行文像高中生日记，自嗨产物，完全不了解网文市场，建议多读书学习。 | 作品缺乏市场意识，属于典型的学生习作;整体思路和写法需要推翻重建，从拆书学习开始
+  observable:
+  - 'genre维度: 作品缺乏市场意识，属于典型的学生习作'
+  - 'misc维度: 整体思路和写法需要推翻重建，从拆书学习开始'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1334
+  - 1379
+  score: 15
+  score_raw: 十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三好学生（叮当猫）
+  genre_guess:
+  - 校园
+  - 搞笑
+  overall_comment: 行文像高中生日记，自嗨产物，完全不了解网文市场，建议多读书学习。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 作品缺乏市场意识，属于典型的学生习作
+    raw_quote: 就感觉像是学生写的那种 学校的那种 ... 自己写的这一类 漫游的也没啥意思
+  - dimension: misc
+    severity: negative
+    content: 整体思路和写法需要推翻重建，从拆书学习开始
+    raw_quote: 这个推翻就写的太自嗨了 ... 多看看书

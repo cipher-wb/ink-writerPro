@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-1803
+title: 重生：白月光周冬雨 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 职场
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个大概59分 | 切入不错且有代入感，但主线偏弱、模板化，差一分签约，略有可惜。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入不错且有代入感，但主线偏弱、模板化，差一分签约，略有可惜。 | 主线普通，缺乏侧重点;剧情模板化;白月光女主的描写直白粗鲁
+  observable:
+  - 'pacing维度: 主线普通，缺乏侧重点'
+  - 'simplicity维度: 剧情模板化'
+  - 'character维度: 白月光女主的描写直白粗鲁'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 1
+  - 83
+  score: 59
+  score_raw: 这个大概59分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生：白月光周冬雨
+  genre_guess:
+  - 都市
+  - 重生
+  - 职场
+  overall_comment: 切入不错且有代入感，但主线偏弱、模板化，差一分签约，略有可惜。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 职业解释和配角出场切入清楚
+    raw_quote: 切入确实没啥问题对吧 就是职业解释 然后配角都出来了 功成名就的
+  - dimension: pacing
+    severity: negative
+    content: 主线普通，缺乏侧重点
+    raw_quote: 主线还是普通啊 就是没什么太大的新意
+  - dimension: simplicity
+    severity: negative
+    content: 剧情模板化
+    raw_quote: 太日计划了 就就是模板化吗
+  - dimension: character
+    severity: negative
+    content: 白月光女主的描写直白粗鲁
+    raw_quote: 你这个太直白了……就是把白月光写的跟什么一样 我想跟你睡觉 流氓啊

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-2148
+title: 穿越后被大娘救了 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 穿越
+  - 民俗
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这几段有水平 | 开头太水，但中间大娘身亡反转引出邪祟的段落写得好，人设太搞笑破坏氛围，金手指设定奇怪。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头太水，但中间大娘身亡反转引出邪祟的段落写得好，人设太搞笑破坏氛围，金手指设定奇怪。 | 前86个字全是水分，穿越过程写得太长;主角人设爱吐槽耍贫，在诡异氛围中严重破坏紧张感;讲故事获共鸣的金手指设定奇怪，容易出戏
+  observable:
+  - 'opening维度: 前86个字全是水分，穿越过程写得太长'
+  - 'character维度: 主角人设爱吐槽耍贫，在诡异氛围中严重破坏紧张感'
+  - 'golden_finger维度: 讲故事获共鸣的金手指设定奇怪，容易出戏'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 427
+  - 530
+  score: null
+  score_raw: 这几段有水平
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越后被大娘救了
+  genre_guess:
+  - 穿越
+  - 民俗
+  - 诡异
+  overall_comment: 开头太水，但中间大娘身亡反转引出邪祟的段落写得好，人设太搞笑破坏氛围，金手指设定奇怪。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前86个字全是水分，穿越过程写得太长
+    raw_quote: 你看一个穿越写了这么久...这干嘛，前面是水分掉的
+  - dimension: highpoint
+    severity: positive
+    content: 大娘身亡的反转和引出邪祟的段落写得很有水平
+    raw_quote: 你闺女呢她死了...这一段结特别好，就是极端小剧场，然后加引出来邪祟
+  - dimension: character
+    severity: negative
+    content: 主角人设爱吐槽耍贫，在诡异氛围中严重破坏紧张感
+    raw_quote: 大概就在那疯狂吐槽...兄弟你的美瞳哪买的...你你不说话，没人把你当哑巴啊
+  - dimension: golden_finger
+    severity: negative
+    content: 讲故事获共鸣的金手指设定奇怪，容易出戏
+    raw_quote: 讲述蕴含争议的故事引动听者心声...不如香火啊因果啊

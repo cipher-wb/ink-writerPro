@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0081
+title: 今天阴谋 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 玄幻
+  - 古早
+  - 废柴
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分 | 文笔基本功有，但对网文市场的理解完全脱节，题材老套得无可救药。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔基本功有，但对网文市场的理解完全脱节，题材老套得无可救药。 | 题材和设定是2016年的风格，对当前市场一无所知
+  observable:
+  - 'genre维度: 题材和设定是2016年的风格，对当前市场一无所知'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1216
+  - 1245
+  score: 22
+  score_raw: 22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 今天阴谋
+  genre_guess:
+  - 玄幻
+  - 古早
+  - 废柴
+  overall_comment: 文笔基本功有，但对网文市场的理解完全脱节，题材老套得无可救药。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材和设定是2016年的风格，对当前市场一无所知
+    raw_quote: 你们这是活在什么年代啊...2026年不可能还写这种书吧

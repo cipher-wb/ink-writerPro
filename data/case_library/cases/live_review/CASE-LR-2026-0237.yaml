@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0237
+title: 仙子请自重 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 反派
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分 | 拉扯有天赋，但主线内容太虚，驾驭不住，现在写太浪费。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 拉扯有天赋，但主线内容太虚，驾驭不住，现在写太浪费。 | 圣境围攻等内容太虚大;比例跟不上构思
+  observable:
+  - 'misc维度: 圣境围攻等内容太虚大'
+  - 'simplicity维度: 比例跟不上构思'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 845
+  - 930
+  score: 48
+  score_raw: 48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙子请自重
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 反派
+  overall_comment: 拉扯有天赋，但主线内容太虚，驾驭不住，现在写太浪费。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章拉扯代入感可
+    raw_quote: 第一章其实还可以
+  - dimension: misc
+    severity: negative
+    content: 圣境围攻等内容太虚大
+    raw_quote: 这些东西太虚了 太大了
+  - dimension: simplicity
+    severity: negative
+    content: 比例跟不上构思
+    raw_quote: 比例现在不够的驾驭不住

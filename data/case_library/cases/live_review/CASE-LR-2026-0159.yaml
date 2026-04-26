@@ -1,0 +1,70 @@
+case_id: CASE-LR-2026-0159
+title: 宋代乞丐王 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13sDQBREFe
+scope:
+  genre:
+  - 历史
+  - 架空历史
+  - 系统
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真实实力其实是对吧，其实是30分有的，但是在直播间我觉得只能给你九分 | 故事接地气但题材太小众，金手指设计失败，主线缺乏爽感，整体评分很低。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sDQBREFe.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事接地气但题材太小众，金手指设计失败，主线缺乏爽感，整体评分很低。 | 开篇未快速切入历史核心事件，长时间停留吃包子细节，缺乏冲突与看点。;天眼系统被用于导航要饭，金手指大材小用，方向错误。;主角对施舍者言辞刻薄，不利于角色讨喜度。
+  observable:
+  - 'opening维度: 开篇未快速切入历史核心事件，长时间停留吃包子细节，缺乏冲突与看点。'
+  - 'golden_finger维度: 天眼系统被用于导航要饭，金手指大材小用，方向错误。'
+  - 'character维度: 主角对施舍者言辞刻薄，不利于角色讨喜度。'
+  - 'genre维度: 题材偏汉圈，受众极窄，在起点签约前景差。'
+  - 'pacing维度: 主线推进缓慢，两天仍在要饭，缺乏上升趋势。'
+live_review_meta:
+  source_bvid: BV13sDQBREFe
+  source_line_range:
+  - 14
+  - 264
+  score: 30
+  score_raw: 真实实力其实是对吧，其实是30分有的，但是在直播间我觉得只能给你九分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宋代乞丐王
+  genre_guess:
+  - 历史
+  - 架空历史
+  - 系统
+  - 搞笑
+  overall_comment: 故事接地气但题材太小众，金手指设计失败，主线缺乏爽感，整体评分很低。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇未快速切入历史核心事件，长时间停留吃包子细节，缺乏冲突与看点。
+    raw_quote: 这是宋朝呀 老在这里吃包子 吃完又给又拿两个包子 这这么多包子干嘛呀
+  - dimension: golden_finger
+    severity: negative
+    content: 天眼系统被用于导航要饭，金手指大材小用，方向错误。
+    raw_quote: 就是你这么牛逼的系统 然后再告诉你第二天去哪里要饭合适 你就不能直接给我点点其他的能力吗
+  - dimension: character
+    severity: negative
+    content: 主角对施舍者言辞刻薄，不利于角色讨喜度。
+    raw_quote: 你都饿成这样了 你还把人家叫矮胖子 我觉得你对吧
+  - dimension: genre
+    severity: negative
+    content: 题材偏汉圈，受众极窄，在起点签约前景差。
+    raw_quote: 这个有点汉圈 我觉得有点害圈
+  - dimension: pacing
+    severity: negative
+    content: 主线推进缓慢，两天仍在要饭，缺乏上升趋势。
+    raw_quote: 第一天就是吃吃包子 第二天呢 吃烧饼去了 吃炊饼了

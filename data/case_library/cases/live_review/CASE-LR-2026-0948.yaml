@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0948
+title: 木秋时节(柴刀少年) (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 玄幻
+  - 农村
+  - 求雨
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打风的话中规中矩吧 | 八股写法，事件弱，官府逼粮不足以支撑主线，卖点不足
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股写法，事件弱，官府逼粮不足以支撑主线，卖点不足 | 事件太弱，缺妖邪威胁或家人危机;姐姐线可发展但当前太平缓
+  observable:
+  - 'opening维度: 事件太弱，缺妖邪威胁或家人危机'
+  - 'pacing维度: 姐姐线可发展但当前太平缓'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 2024
+  - 2192
+  score: null
+  score_raw: 打风的话中规中矩吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 木秋时节(柴刀少年)
+  genre_guess:
+  - 玄幻
+  - 农村
+  - 求雨
+  overall_comment: 八股写法，事件弱，官府逼粮不足以支撑主线，卖点不足
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 事件太弱，缺妖邪威胁或家人危机
+    raw_quote: 没事件兄弟事件太弱了
+  - dimension: pacing
+    severity: negative
+    content: 姐姐线可发展但当前太平缓
+    raw_quote: 你姐姐对你很好但你姐姐不对劲...有妖盯上

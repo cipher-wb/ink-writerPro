@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0596
+title: 民国姨太熟练度 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 民国
+  - 系统
+  - 诸天
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分吧 | 模板八股但节奏快，人设元素立得住，但剧情缺乏新意，文笔未达精品层次。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 模板八股但节奏快，人设元素立得住，但剧情缺乏新意，文笔未达精品层次。 | 题材和套路过于八股，没有新意
+  observable:
+  - 'genre维度: 题材和套路过于八股，没有新意'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 1151
+  - 1300
+  score: 40
+  score_raw: 40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国姨太熟练度
+  genre_guess:
+  - 民国
+  - 系统
+  - 诸天
+  overall_comment: 模板八股但节奏快，人设元素立得住，但剧情缺乏新意，文笔未达精品层次。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材和套路过于八股，没有新意
+    raw_quote: 读者不看的...剧情看八股的...没有任何新意
+  - dimension: simplicity
+    severity: positive
+    content: 人设元素立得住，节奏较快
+    raw_quote: 这个稿子确实用了心思...看着不无聊

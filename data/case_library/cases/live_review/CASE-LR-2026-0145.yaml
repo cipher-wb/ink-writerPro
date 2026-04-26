@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0145
+title: DDDA历史文 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 历史
+  - 权谋
+  - 大宋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 顶送了个是吧 59分 那还有点实力的 | 历史底蕴扎实但切入太小众，大宋背景缺乏关注，节奏忽快忽慢。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史底蕴扎实但切入太小众，大宋背景缺乏关注，节奏忽快忽慢。 | 大宋朝代太冷门，读者不关注
+  observable:
+  - 'genre维度: 大宋朝代太冷门，读者不关注'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 261
+  - 264
+  score: 59
+  score_raw: 顶送了个是吧 59分 那还有点实力的
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: DDDA历史文
+  genre_guess:
+  - 历史
+  - 权谋
+  - 大宋
+  overall_comment: 历史底蕴扎实但切入太小众，大宋背景缺乏关注，节奏忽快忽慢。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 大宋朝代太冷门，读者不关注
+    raw_quote: 你这个因为你的这个历史这一段大家不熟悉 也不关注 大宋不一样是吧 宋仁宗 宋英宗 这个时候他就是不火

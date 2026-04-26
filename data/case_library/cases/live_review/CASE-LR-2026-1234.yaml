@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1234
+title: 理智的分子 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 现实
+  - 军旅
+  - 回忆录
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在就是翰林了，就不打分 | 文笔扎实，但更像是散文或回忆录，不是网文写法，建议走实体出版或军旅路线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，但更像是散文或回忆录，不是网文写法，建议走实体出版或军旅路线。 | 说教味太重，直接灌输道理，缺乏故事性;开篇像散文，缺乏故事载体和代入感
+  observable:
+  - 'simplicity维度: 说教味太重，直接灌输道理，缺乏故事性'
+  - 'opening维度: 开篇像散文，缺乏故事载体和代入感'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 303
+  - 350
+  score: null
+  score_raw: 现在就是翰林了，就不打分
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 理智的分子
+  genre_guess:
+  - 现实
+  - 军旅
+  - 回忆录
+  overall_comment: 文笔扎实，但更像是散文或回忆录，不是网文写法，建议走实体出版或军旅路线。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 说教味太重，直接灌输道理，缺乏故事性
+    raw_quote: 这个东西说教嘛，就是你可以用故事体现出你的什么
+  - dimension: opening
+    severity: negative
+    content: 开篇像散文，缺乏故事载体和代入感
+    raw_quote: 这已经是散文了，这周三下午04:50分撕裂了出去的
+  - dimension: genre
+    severity: neutral
+    content: 建议放弃网文思路，改走蓝小龙式军旅实体文学路线
+    raw_quote: 你可以讲一讲那些见闻，讲一讲一些碰到的东西，部队上锻炼出来什么

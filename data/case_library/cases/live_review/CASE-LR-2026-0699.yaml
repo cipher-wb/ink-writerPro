@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0699
+title: 正谣博物馆 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 规则怪谈
+  - 灵异
+  - 副本流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材大胆，但副本流写得不够接地气，节奏较慢；文笔有西幻风格，建议发挥都市内容优势。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材大胆，但副本流写得不够接地气，节奏较慢；文笔有西幻风格，建议发挥都市内容优势。 | 节奏偏慢，疑似强行副本流
+  observable:
+  - 'pacing维度: 节奏偏慢，疑似强行副本流'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 41
+  - 120
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 正谣博物馆
+  genre_guess:
+  - 规则怪谈
+  - 灵异
+  - 副本流
+  overall_comment: 题材大胆，但副本流写得不够接地气，节奏较慢；文笔有西幻风格，建议发挥都市内容优势。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏偏慢，疑似强行副本流
+    raw_quote: 副本流你写的不接地气，然后节奏也很慢
+  - dimension: genre
+    severity: neutral
+    content: 都市题材更适合作者文笔，灵异/副本不接地气
+    raw_quote: 你这个题材没有意义，这个题材还不接地气
+  - dimension: character
+    severity: positive
+    content: 作者文笔不错，写都市内容会更好
+    raw_quote: 你的文笔其实有点像西幻写法...你大胆点写都市已经无敌了

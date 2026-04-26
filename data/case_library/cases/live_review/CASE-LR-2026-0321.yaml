@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0321
+title: 病娇女骑士掌控魔王 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 奇幻
+  - 轻小说
+  - 日式奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分吧 | 设定过多且出戏，病娇女骑士人设尚可，但剧情简单无趣，设定堆砌严重，读者没耐心看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定过多且出戏，病娇女骑士人设尚可，但剧情简单无趣，设定堆砌严重，读者没耐心看。 | 设定占比过多，且中西方元素强行结合如合欢宗笔录，很出戏。;剧情被繁琐的设定拖累，故事本身简单无趣。
+  observable:
+  - 'golden_finger维度: 设定占比过多，且中西方元素强行结合如合欢宗笔录，很出戏。'
+  - 'opening维度: 剧情被繁琐的设定拖累，故事本身简单无趣。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 1193
+  - 1312
+  score: 42
+  score_raw: 42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 病娇女骑士掌控魔王
+  genre_guess:
+  - 奇幻
+  - 轻小说
+  - 日式奇幻
+  overall_comment: 设定过多且出戏，病娇女骑士人设尚可，但剧情简单无趣，设定堆砌严重，读者没耐心看。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 设定占比过多，且中西方元素强行结合如合欢宗笔录，很出戏。
+    raw_quote: 这个设定我觉得出戏了...四个元素是有点复杂了...中西结合，又是六老师
+  - dimension: opening
+    severity: negative
+    content: 剧情被繁琐的设定拖累，故事本身简单无趣。
+    raw_quote: 就大概很想写设定...每一段都写，就撑不住...剧情确实简单很无趣
+  - dimension: character
+    severity: neutral
+    content: 病娇女骑士人设有点意思。
+    raw_quote: 就是这个病娇女...设定稍微有点意思

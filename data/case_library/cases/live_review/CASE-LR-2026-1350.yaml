@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1350
+title: 仙侠宗门收徒 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 仙侠
+  - 宗门
+  - 系统
+  - 收徒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 风格定位不清晰，半番茄半起点，节奏奇怪，建议选定一种风格深耕。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风格定位不清晰，半番茄半起点，节奏奇怪，建议选定一种风格深耕。 | 风格混杂，既不纯起点也不纯飞卢，别扭;拉情绪和系统爽点冲突，表情哭笑无常，像杜克一样纠结
+  observable:
+  - 'misc维度: 风格混杂，既不纯起点也不纯飞卢，别扭'
+  - 'misc维度: 拉情绪和系统爽点冲突，表情哭笑无常，像杜克一样纠结'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 358
+  - 404
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 仙侠宗门收徒
+  genre_guess:
+  - 仙侠
+  - 宗门
+  - 系统
+  - 收徒
+  overall_comment: 风格定位不清晰，半番茄半起点，节奏奇怪，建议选定一种风格深耕。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 风格混杂，既不纯起点也不纯飞卢，别扭
+    raw_quote: 一半番茄一半起点一点都不融合...很奇怪
+  - dimension: misc
+    severity: negative
+    content: 拉情绪和系统爽点冲突，表情哭笑无常，像杜克一样纠结
+    raw_quote: 一会又要拉情绪又要爽，太别扭了
+  - dimension: genre
+    severity: neutral
+    content: 题材老套，但表达力尚可，系统文仍有市场基础
+    raw_quote: 题材也是老题材了比例还可以

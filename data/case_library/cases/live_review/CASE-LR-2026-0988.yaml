@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0988
+title: 截胡赵大花蕊夫人 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 白43好吧，本来能给你46的，但毒蘑菇说了，过完年了就不加分了，都扣三分了 | 文笔好但切入点侧重点有问题，过于香艳，缺乏争霸主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔好但切入点侧重点有问题，过于香艳，缺乏争霸主线。 | 开局直奔香艳内容，缺乏代入感;主角不像现代人，缺乏穿越感;题材偏离争霸主线，侧重香艳
+  observable:
+  - 'opening维度: 开局直奔香艳内容，缺乏代入感'
+  - 'character维度: 主角不像现代人，缺乏穿越感'
+  - 'genre维度: 题材偏离争霸主线，侧重香艳'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 329
+  - 455
+  score: 43
+  score_raw: 白43好吧，本来能给你46的，但毒蘑菇说了，过完年了就不加分了，都扣三分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 截胡赵大花蕊夫人
+  genre_guess:
+  - 历史
+  - 五代十国
+  overall_comment: 文笔好但切入点侧重点有问题，过于香艳，缺乏争霸主线。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局直奔香艳内容，缺乏代入感
+    raw_quote: 一上来就集邮啊……爽完了呀……你开头第一段就抢了，那无敌了
+  - dimension: character
+    severity: negative
+    content: 主角不像现代人，缺乏穿越感
+    raw_quote: 他根本就不像现代人，他完全就是一个就是你在演电视剧
+  - dimension: genre
+    severity: negative
+    content: 题材偏离争霸主线，侧重香艳
+    raw_quote: 你主线肯定是争霸啊，争霸当皇上收燕云16州美女只是附带啊怪我

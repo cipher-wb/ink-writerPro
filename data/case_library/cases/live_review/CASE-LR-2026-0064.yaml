@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0064
+title: 被困金库的穿越者 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 科幻
+  - 穿越
+  - 未来
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 细节内容比例节奏还好 | 小剧场和节奏尚可，但题材不接地气且有过多设定，不适合新人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小剧场和节奏尚可，但题材不接地气且有过多设定，不适合新人。 | 题材不接地气，设定繁多，不适合新人
+  observable:
+  - 'genre维度: 题材不接地气，设定繁多，不适合新人'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 256
+  - 330
+  score: 40
+  score_raw: 细节内容比例节奏还好
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 被困金库的穿越者
+  genre_guess:
+  - 科幻
+  - 穿越
+  - 未来
+  overall_comment: 小剧场和节奏尚可，但题材不接地气且有过多设定，不适合新人。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 小剧场内容还行，节奏挺快
+    raw_quote: 小剧场内容还行...节奏也挺快的
+  - dimension: genre
+    severity: negative
+    content: 题材不接地气，设定繁多，不适合新人
+    raw_quote: 题材根本就不是新人能使用，而且很多设定类的东西，实际上不接地气

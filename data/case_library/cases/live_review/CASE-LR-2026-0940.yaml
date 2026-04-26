@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0940
+title: 第五神格(第五人格同仁) (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 电竞
+  - 同仁
+  - 第五人格
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多 30分左右吧 | 同仁写法太小众，未玩过游戏不可读，网文市场无出路
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 同仁写法太小众，未玩过游戏不可读，网文市场无出路 | 题材过窄，仅限第五人格玩家;整体事件接受不了，看不懂
+  observable:
+  - 'genre维度: 题材过窄，仅限第五人格玩家'
+  - 'misc维度: 整体事件接受不了，看不懂'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 826
+  - 1077
+  score: 30
+  score_raw: 差不多 30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 第五神格(第五人格同仁)
+  genre_guess:
+  - 电竞
+  - 同仁
+  - 第五人格
+  overall_comment: 同仁写法太小众，未玩过游戏不可读，网文市场无出路
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材过窄，仅限第五人格玩家
+    raw_quote: 大哥这个太小众了吧 你写给王者荣要的小众
+  - dimension: misc
+    severity: negative
+    content: 整体事件接受不了，看不懂
+    raw_quote: 就是事件大家接受不了 因为我们没玩过嘛

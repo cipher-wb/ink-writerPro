@@ -1,0 +1,66 @@
+case_id: CASE-LR-2026-0892
+title: 穿越成平行时空蔡徐坤参加练习生 (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1NBwWzaEyG
+scope:
+  genre:
+  - 娱乐
+  - 穿越
+  - 练习生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 对68分满题材非常好 | 穿越平行时空蔡徐坤练习生题材新颖有热度，但开篇过度描写帅气导致信息量不足，切入点不错但金手指较弱，需加强冲突和爽点节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NBwWzaEyG.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越平行时空蔡徐坤练习生题材新颖有热度，但开篇过度描写帅气导致信息量不足，切入点不错但金手指较弱，需加强冲突和爽点节奏。 | 开篇写自己帅太多，导致信息量少、看点不足;缺乏爽点吊着，需有空镜打脸来推动节奏;金手指设定偏弱
+  observable:
+  - 'opening维度: 开篇写自己帅太多，导致信息量少、看点不足'
+  - 'pacing维度: 缺乏爽点吊着，需有空镜打脸来推动节奏'
+  - 'golden_finger维度: 金手指设定偏弱'
+live_review_meta:
+  source_bvid: BV1NBwWzaEyG
+  source_line_range:
+  - 1
+  - 164
+  score: 68
+  score_raw: 对68分满题材非常好
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 穿越成平行时空蔡徐坤参加练习生
+  genre_guess:
+  - 娱乐
+  - 穿越
+  - 练习生
+  overall_comment: 穿越平行时空蔡徐坤练习生题材新颖有热度，但开篇过度描写帅气导致信息量不足，切入点不错但金手指较弱，需加强冲突和爽点节奏。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 题材非常好，有热度
+    raw_quote: 满题材非常好
+  - dimension: hook
+    severity: positive
+    content: 切入思路OK
+    raw_quote: 切入也OK思路
+  - dimension: opening
+    severity: negative
+    content: 开篇写自己帅太多，导致信息量少、看点不足
+    raw_quote: 因为你第一章写自己帅有点多...就导致稿子看点有点少了
+  - dimension: pacing
+    severity: negative
+    content: 缺乏爽点吊着，需有空镜打脸来推动节奏
+    raw_quote: 得有空镜才能打脸...这样的话你就有一个爽点吊着
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设定偏弱
+    raw_quote: 金手指还是有点弱

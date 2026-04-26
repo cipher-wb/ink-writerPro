@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0465
+title: 隋用心花魁妻子 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 历史
+  - 种田
+  - 美人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是能给你给到55分左右 | 套路老套属于前两年的逃工旺思路，成绩顶多100订赚不到钱，建议推翻换切入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路老套属于前两年的逃工旺思路，成绩顶多100订赚不到钱，建议推翻换切入。 | 逃工旺、娘子魏耀式的老套路，现在已过时;姐妹花报恩的感情戏尴尬刻意，不够自然流畅
+  observable:
+  - 'genre维度: 逃工旺、娘子魏耀式的老套路，现在已过时'
+  - 'character维度: 姐妹花报恩的感情戏尴尬刻意，不够自然流畅'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 1001
+  - 1040
+  score: 55
+  score_raw: 还是能给你给到55分左右
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 隋用心花魁妻子
+  genre_guess:
+  - 历史
+  - 种田
+  - 美人
+  overall_comment: 套路老套属于前两年的逃工旺思路，成绩顶多100订赚不到钱，建议推翻换切入。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 逃工旺、娘子魏耀式的老套路，现在已过时
+    raw_quote: 这个思路跟题材是陶宫旺 陶宫旺是不是 这个有点像娘子魏耀那种写法
+  - dimension: character
+    severity: negative
+    content: 姐妹花报恩的感情戏尴尬刻意，不够自然流畅
+    raw_quote: 这种感觉很小 我觉得他们对你好 报恩是对的 但是写的还是挺白的这种 不够自然

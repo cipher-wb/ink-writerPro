@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0548
+title: 重生创一代 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 商业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 看点差不多就30 | 白丝女秘书切入好，但重生后流水账，没侧重点，水多没内容。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 白丝女秘书切入好，但重生后流水账，没侧重点，水多没内容。 | 重生后到处装逼，水太多，没有核心看点
+  observable:
+  - 'pacing维度: 重生后到处装逼，水太多，没有核心看点'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 2451
+  - 2560
+  score: 30
+  score_raw: 看点差不多就30
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生创一代
+  genre_guess:
+  - 都市
+  - 重生
+  - 商业
+  overall_comment: 白丝女秘书切入好，但重生后流水账，没侧重点，水多没内容。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 白丝女秘书切入有反差，人设立住了
+    raw_quote: 这个就有意思 闭环了就解释了你的不合理的地方
+  - dimension: pacing
+    severity: negative
+    content: 重生后到处装逼，水太多，没有核心看点
+    raw_quote: 全是水 水文太多了呀 … 没侧重点 没看点 没内容填了

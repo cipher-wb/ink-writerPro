@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2170
+title: 民国旗袍哨腹 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 民国
+  - 穿越
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38的样子 | 穿越者代入感太差，主角像普通长工，没有现代人盘算，事件也不真实。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越者代入感太差，主角像普通长工，没有现代人盘算，事件也不真实。 | 主角没穿越者思维，像窝囊长工，无代入感;干巴巴的讲述，无氛围感
+  observable:
+  - 'character维度: 主角没穿越者思维，像窝囊长工，无代入感'
+  - 'ops维度: 干巴巴的讲述，无氛围感'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 285
+  - 325
+  score: 38
+  score_raw: 38的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国旗袍哨腹
+  genre_guess:
+  - 民国
+  - 穿越
+  - 玄幻
+  overall_comment: 穿越者代入感太差，主角像普通长工，没有现代人盘算，事件也不真实。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角没穿越者思维，像窝囊长工，无代入感
+    raw_quote: 我就不能把我带入啊 … 你这不窝囊了吧 怎么带入
+  - dimension: ops
+    severity: negative
+    content: 干巴巴的讲述，无氛围感
+    raw_quote: 大手感太差了 事件 雪白也没写好 展开也不咋样

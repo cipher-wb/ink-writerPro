@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1578
+title: 血月祭祀民俗逃杀 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 民俗
+  - 玄幻
+  - 祭祀
+  - 恐怖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 民俗学院能写但方向错，剧情老套，缺乏看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 民俗学院能写但方向错，剧情老套，缺乏看点。 | 情节老套，转折无惊喜，反派献祭套路;节奏拖沓，方向错误，缺乏核心卖点
+  observable:
+  - 'highpoint维度: 情节老套，转折无惊喜，反派献祭套路'
+  - 'pacing维度: 节奏拖沓，方向错误，缺乏核心卖点'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 2301
+  - 2400
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 血月祭祀民俗逃杀
+  genre_guess:
+  - 民俗
+  - 玄幻
+  - 祭祀
+  - 恐怖
+  overall_comment: 民俗学院能写但方向错，剧情老套，缺乏看点。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 情节老套，转折无惊喜，反派献祭套路
+    raw_quote: 说了半天，都4000字了，就献祭，你开头300个字都写完了
+  - dimension: pacing
+    severity: negative
+    content: 节奏拖沓，方向错误，缺乏核心卖点
+    raw_quote: 方向有没有错，题材民俗学院能写方向错了，我觉得，食堂放一张都不怪

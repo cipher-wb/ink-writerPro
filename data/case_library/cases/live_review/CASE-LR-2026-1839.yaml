@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1839
+title: 末日死灵法师觉醒 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 末世
+  - 召唤
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 加点给个30吧好吧 | 蓝精灵写法，在起点不行，需要情绪和妹妹拉仇恨
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蓝精灵写法，在起点不行，需要情绪和妹妹拉仇恨 | 缺少妹妹或女角拉仇恨;装逼太早，情绪不够绝望
+  observable:
+  - 'character维度: 缺少妹妹或女角拉仇恨'
+  - 'hook维度: 装逼太早，情绪不够绝望'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1651
+  - 1730
+  score: 30
+  score_raw: 加点给个30吧好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日死灵法师觉醒
+  genre_guess:
+  - 末世
+  - 召唤
+  - 异能
+  overall_comment: 蓝精灵写法，在起点不行，需要情绪和妹妹拉仇恨
+  comments:
+  - dimension: character
+    severity: negative
+    content: 缺少妹妹或女角拉仇恨
+    raw_quote: 少一个妹妹你需要一个妹妹...不要用什么小胖子配角什么的就拉仇恨嘛
+  - dimension: hook
+    severity: negative
+    content: 装逼太早，情绪不够绝望
+    raw_quote: 装逼的这个点得后置...绝望的感觉要出来

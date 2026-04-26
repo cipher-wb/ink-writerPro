@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0022
+title: 创世游戏电竞异界 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 电竞
+  - 异界
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多只能给你20分 | 题材完全扯淡，没人看，切入全要删，20分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材完全扯淡，没人看，切入全要删，20分。 | 题材完全扯淡，读者不感兴趣;切入啰嗦，设定复杂
+  observable:
+  - 'genre维度: 题材完全扯淡，读者不感兴趣'
+  - 'opening维度: 切入啰嗦，设定复杂'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 223
+  - 260
+  score: 20
+  score_raw: 最多只能给你20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 创世游戏电竞异界
+  genre_guess:
+  - 电竞
+  - 异界
+  - 科幻
+  overall_comment: 题材完全扯淡，没人看，切入全要删，20分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材完全扯淡，读者不感兴趣
+    raw_quote: 这个题材就就扯淡了 题材完全就扯淡了
+  - dimension: opening
+    severity: negative
+    content: 切入啰嗦，设定复杂
+    raw_quote: 前面内容全是要删掉的

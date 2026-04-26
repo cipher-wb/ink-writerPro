@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1834
+title: 双面人格薅系统羊毛 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就18分啊兄弟 | 第一章纯设定无人物，起点跑偏严重
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章纯设定无人物，起点跑偏严重 | 开局绕绕弯各种无关设定;设定过多致养猪，需要故事非设定
+  observable:
+  - 'opening维度: 开局绕绕弯各种无关设定'
+  - 'simplicity维度: 设定过多致养猪，需要故事非设定'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1221
+  - 1300
+  score: 18
+  score_raw: 就18分啊兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 双面人格薅系统羊毛
+  genre_guess:
+  - 修仙
+  - 穿越
+  - 系统
+  overall_comment: 第一章纯设定无人物，起点跑偏严重
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局绕绕弯各种无关设定
+    raw_quote: 老喜欢搞这种设定类的东西让读者看着头疼
+  - dimension: simplicity
+    severity: negative
+    content: 设定过多致养猪，需要故事非设定
+    raw_quote: 设定养猪了...千万不要加设定了

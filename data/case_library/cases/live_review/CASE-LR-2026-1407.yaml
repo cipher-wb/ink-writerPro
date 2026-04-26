@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1407
+title: 我家电视通万界 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 系统流
+  - 影视同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你三十二 | 天赋在写小人物互动，但当下选材老旧，魔幻手机没市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 天赋在写小人物互动，但当下选材老旧，魔幻手机没市场。 | 魔幻手机作为同人根本没人看;开头小反派拉扯没必要，可以一笔带过
+  observable:
+  - 'genre维度: 魔幻手机作为同人根本没人看'
+  - 'opening维度: 开头小反派拉扯没必要，可以一笔带过'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 2151
+  - 2250
+  score: 32
+  score_raw: 给你三十二
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我家电视通万界
+  genre_guess:
+  - 都市
+  - 系统流
+  - 影视同人
+  overall_comment: 天赋在写小人物互动，但当下选材老旧，魔幻手机没市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 魔幻手机作为同人根本没人看
+    raw_quote: 魔幻手机受众不是很大
+  - dimension: opening
+    severity: negative
+    content: 开头小反派拉扯没必要，可以一笔带过
+    raw_quote: 没必要写那么小白呀

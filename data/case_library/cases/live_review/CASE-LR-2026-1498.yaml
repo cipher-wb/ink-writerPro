@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1498
+title: 暗燃销鸿的天懒牛娘女巫 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 奇幻
+  - 女巫
+  - 领主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是五十多分钟 现在 | 思路冷喜，但拉扯细节太差，需打磨，目前难以签约
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路冷喜，但拉扯细节太差，需打磨，目前难以签约 | 女巫角色写得像壮汉，缺少雪白和拉扯感;反转和拉扯细节不足
+  observable:
+  - 'character维度: 女巫角色写得像壮汉，缺少雪白和拉扯感'
+  - 'opening维度: 反转和拉扯细节不足'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 776
+  - 820
+  score: null
+  score_raw: 还是五十多分钟 现在
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 暗燃销鸿的天懒牛娘女巫
+  genre_guess:
+  - 奇幻
+  - 女巫
+  - 领主
+  overall_comment: 思路冷喜，但拉扯细节太差，需打磨，目前难以签约
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女巫角色写得像壮汉，缺少雪白和拉扯感
+    raw_quote: 这些女巫就跟男人一样壮汉一样 就不能把雪白很流畅的加到剧情里面
+  - dimension: opening
+    severity: negative
+    content: 反转和拉扯细节不足
+    raw_quote: 第一章的拉扯其实细节写得太差了

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2038
+title: 死期将至 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 西方奇幻
+  - 悬疑
+  - 意识流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 小剧场反转有天赋，但人设差，没有强主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小剧场反转有天赋，但人设差，没有强主线。 | 主角人设差，缺少魅力
+  observable:
+  - 'character维度: 主角人设差，缺少魅力'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 1441
+  - 1560
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 死期将至
+  genre_guess:
+  - 西方奇幻
+  - 悬疑
+  - 意识流
+  overall_comment: 小剧场反转有天赋，但人设差，没有强主线。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设差，缺少魅力
+    raw_quote: 你人设不行 你这个主角人设不行
+  - dimension: hook
+    severity: positive
+    content: 小剧场反转有天赋
+    raw_quote: 反转其实一直反转挺好的…就有点像越狱的感觉

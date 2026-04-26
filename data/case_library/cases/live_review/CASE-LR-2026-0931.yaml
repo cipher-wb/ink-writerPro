@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0931
+title: 东京文娱：星野未来 (pass / 65分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 轻小说
+  - 文娱
+  - 东京
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 65分就签了 | 配角塑造极强，签约水平没问题，但要加强主角主观能动性和时代绑定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 配角塑造极强，签约水平没问题，但要加强主角主观能动性和时代绑定。 | 主角主观能动性太弱，差点变成大女主;需要蹭时代背景，加上经典事件绑定
+  observable:
+  - 'character维度: 主角主观能动性太弱，差点变成大女主'
+  - 'genre维度: 需要蹭时代背景，加上经典事件绑定'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1455
+  - 1530
+  score: 65
+  score_raw: 65分就签了
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 东京文娱：星野未来
+  genre_guess:
+  - 轻小说
+  - 文娱
+  - 东京
+  overall_comment: 配角塑造极强，签约水平没问题，但要加强主角主观能动性和时代绑定。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 配角写得特别好，人设抢戏
+    raw_quote: 写配角每次都挺强的 … 签约水平应该是有的
+  - dimension: character
+    severity: negative
+    content: 主角主观能动性太弱，差点变成大女主
+    raw_quote: 有个最大问题就是你主角的主观能动性太弱了对吧 配角现在写的特别好 配角特别抢戏
+  - dimension: genre
+    severity: negative
+    content: 需要蹭时代背景，加上经典事件绑定
+    raw_quote: 你要讲啊 这个他给柯南唱过主题曲什么 你要讲啊 他多牛逼 他弄了啥 你提前投资 这个要说大哥

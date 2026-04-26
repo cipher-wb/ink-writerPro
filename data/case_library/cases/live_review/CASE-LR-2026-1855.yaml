@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1855
+title: 异世界御兽打工文 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 异世界
+  - 御兽
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分 | 非常萌新的稿子，从文笔到人物塑造到剧情都很差，题材选择也不行，需要大量学习和练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 非常萌新的稿子，从文笔到人物塑造到剧情都很差，题材选择也不行，需要大量学习和练笔。 | 人物塑造非常小白，反派一上来直接骂主角废物，毫无设计;设定堆砌无人在意，人物互动和期待感才是核心
+  observable:
+  - 'character维度: 人物塑造非常小白，反派一上来直接骂主角废物，毫无设计'
+  - 'opening维度: 设定堆砌无人在意，人物互动和期待感才是核心'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 481
+  - 531
+  score: 16
+  score_raw: 16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 异世界御兽打工文
+  genre_guess:
+  - 异世界
+  - 御兽
+  - 穿越
+  overall_comment: 非常萌新的稿子，从文笔到人物塑造到剧情都很差，题材选择也不行，需要大量学习和练笔。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物塑造非常小白，反派一上来直接骂主角废物，毫无设计
+    raw_quote: 你废物这个词语出来 他就已经崩完了 就非常小白了
+  - dimension: opening
+    severity: negative
+    content: 设定堆砌无人在意，人物互动和期待感才是核心
+    raw_quote: 没人关心设定 兄弟知道吧 我知道你想这个思路 无所谓了

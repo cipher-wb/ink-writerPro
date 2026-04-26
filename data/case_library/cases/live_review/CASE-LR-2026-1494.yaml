@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1494
+title: 暮年修仙捡储物袋 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 修仙
+  - 暮年
+  - 古典仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个45吧 | 暮年修仙思路老套，没写出情绪，这类题材已无市场
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 暮年修仙思路老套，没写出情绪，这类题材已无市场 | 缺乏情绪爆点和沧桑感，读者无法共情;暮年修仙没有市场，两年前就已泛滥
+  observable:
+  - 'highpoint维度: 缺乏情绪爆点和沧桑感，读者无法共情'
+  - 'genre维度: 暮年修仙没有市场，两年前就已泛滥'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 577
+  - 630
+  score: 45
+  score_raw: 这个45吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 暮年修仙捡储物袋
+  genre_guess:
+  - 修仙
+  - 暮年
+  - 古典仙侠
+  overall_comment: 暮年修仙思路老套，没写出情绪，这类题材已无市场
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏情绪爆点和沧桑感，读者无法共情
+    raw_quote: 暮年秋仙最重要的就是情绪 没情绪
+  - dimension: genre
+    severity: negative
+    content: 暮年修仙没有市场，两年前就已泛滥
+    raw_quote: 死路一条 就这么简单 暮年秋仙 两年前都这么写的

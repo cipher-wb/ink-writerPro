@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1456
+title: 我家大黄是妖兽 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eEfxBGEfa
+scope:
+  genre:
+  - 都市
+  - 宠物
+  - 妖兽
+  - 老爷爷金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 遣词造句和代入感OK，但金手指老爷爷变成狗，剧情中二违和，脑洞不新。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eEfxBGEfa.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句和代入感OK，但金手指老爷爷变成狗，剧情中二违和，脑洞不新。 | 老爷爷金手指变成狗，剧情中二，凡人与狗一本正经讨论修仙太违和;凡人和妖兽的对话过于严肃，出戏
+  observable:
+  - 'golden_finger维度: 老爷爷金手指变成狗，剧情中二，凡人与狗一本正经讨论修仙太违和'
+  - 'character维度: 凡人和妖兽的对话过于严肃，出戏'
+live_review_meta:
+  source_bvid: BV1eEfxBGEfa
+  source_line_range:
+  - 511
+  - 702
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 我家大黄是妖兽
+  genre_guess:
+  - 都市
+  - 宠物
+  - 妖兽
+  - 老爷爷金手指
+  overall_comment: 遣词造句和代入感OK，但金手指老爷爷变成狗，剧情中二违和，脑洞不新。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 老爷爷金手指变成狗，剧情中二，凡人与狗一本正经讨论修仙太违和
+    raw_quote: 这不就药老变成狗了吗……一个凡人一个狗狗说这种话好中二啊
+  - dimension: character
+    severity: negative
+    content: 凡人和妖兽的对话过于严肃，出戏
+    raw_quote: 一个打工的凡人 然后一个大黄狗在这里说……读者就会觉得非常违和
+  - dimension: simplicity
+    severity: positive
+    content: 遣词造句还可以，代入感OK
+    raw_quote: 兄弟遣词造句还可以对吧 代入感也OK的

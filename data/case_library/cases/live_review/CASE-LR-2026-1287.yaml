@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1287
+title: 贫民窟诡异复仇 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 都市
+  - 悬疑
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30来分吧 | 开头小剧场有一定氛围，但日常内容过多，金手指与剧情割裂，复仇主线缺乏代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头小剧场有一定氛围，但日常内容过多，金手指与剧情割裂，复仇主线缺乏代入感。 | 应聘成功后日常描写过于详细，情节注水;金手指与都市剧情完全不搭，无法形成联动;主角代入感弱，读者不想跟随复仇路线
+  observable:
+  - 'pacing维度: 应聘成功后日常描写过于详细，情节注水'
+  - 'golden_finger维度: 金手指与都市剧情完全不搭，无法形成联动'
+  - 'character维度: 主角代入感弱，读者不想跟随复仇路线'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 325
+  - 520
+  score: 30
+  score_raw: 30来分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 贫民窟诡异复仇
+  genre_guess:
+  - 都市
+  - 悬疑
+  - 灵异
+  overall_comment: 开头小剧场有一定氛围，但日常内容过多，金手指与剧情割裂，复仇主线缺乏代入感。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 应聘成功后日常描写过于详细，情节注水
+    raw_quote: 怎么后面感觉好日常呀
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指与都市剧情完全不搭，无法形成联动
+    raw_quote: 你的剧情跟你的金手指不搭呀
+  - dimension: character
+    severity: negative
+    content: 主角代入感弱，读者不想跟随复仇路线
+    raw_quote: 我们不想跟着你去报仇

@@ -1,0 +1,72 @@
+case_id: CASE-LR-2026-1116
+title: 宠爱战神爆杀牛头人 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 都市
+  - 龙族
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '给你18封了
+
+    还是比较萌新 | 设定疯掉，切入平平，整体萌新水准，缺乏有效事件与节奏。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定疯掉，切入平平，整体萌新水准，缺乏有效事件与节奏。 | 打架切入无聊，没有快速进入核心事件;大量设定堆砌导致节奏拖沓，读者易睡着;女角被牛后无价值，主角行为缺乏驱动力
+  observable:
+  - 'opening维度: 打架切入无聊，没有快速进入核心事件'
+  - 'pacing维度: 大量设定堆砌导致节奏拖沓，读者易睡着'
+  - 'character维度: 女角被牛后无价值，主角行为缺乏驱动力'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 270
+  - 392
+  score: 18
+  score_raw: '给你18封了
+
+    还是比较萌新'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宠爱战神爆杀牛头人
+  genre_guess:
+  - 都市
+  - 龙族
+  - 同人
+  overall_comment: 设定疯掉，切入平平，整体萌新水准，缺乏有效事件与节奏。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 打架切入无聊，没有快速进入核心事件
+    raw_quote: 切入是黄毛混混在那骂
+  - dimension: pacing
+    severity: negative
+    content: 大量设定堆砌导致节奏拖沓，读者易睡着
+    raw_quote: '然后讲设定
+
+      讲设定
+
+      然后讲设定继续讲'
+  - dimension: character
+    severity: negative
+    content: 女角被牛后无价值，主角行为缺乏驱动力
+    raw_quote: '当个女角色已经被牛
+
+      就当不了女主角'
+  - dimension: simplicity
+    severity: neutral
+    content: 文笔与套路均需重新打磨，建议练笔
+    raw_quote: 文笔也得去练

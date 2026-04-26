@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1997
+title: 黄翔/穿梭无量虚实 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 诸天
+  - 穿越
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吧 | 元素过多主线不清，掺杂恋足描写，受众不明。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素过多主线不清，掺杂恋足描写，受众不明。 | 诸天、天魔、贴膜等元素杂糅，混乱;名字劝退且开篇打架无效
+  observable:
+  - 'genre维度: 诸天、天魔、贴膜等元素杂糅，混乱'
+  - 'opening维度: 名字劝退且开篇打架无效'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1901
+  - 1950
+  score: 30
+  score_raw: 30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 黄翔/穿梭无量虚实
+  genre_guess:
+  - 诸天
+  - 穿越
+  - 玄幻
+  overall_comment: 元素过多主线不清，掺杂恋足描写，受众不明。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 诸天、天魔、贴膜等元素杂糅，混乱
+    raw_quote: 诸天亮的元素好多呀，不知道什么受众读者
+  - dimension: opening
+    severity: negative
+    content: 名字劝退且开篇打架无效
+    raw_quote: 主角名叫黄颜色的翔卧槽

@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1097
+title: 大明1449从坚果开始 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 历史
+  - 大明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就50分嘛 | 比例干练，专业性强，但切入战争侧重点小众，需直发测试数据
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例干练，专业性强，但切入战争侧重点小众，需直发测试数据
+  observable:
+  - 整体被星河直播判定为 fail
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1000
+  - 1070
+  score: 50
+  score_raw: 就50分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明1449从坚果开始
+  genre_guess:
+  - 历史
+  - 大明
+  overall_comment: 比例干练，专业性强，但切入战争侧重点小众，需直发测试数据
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 切入战争而非政治谋略，属小众方向
+    raw_quote: 大明一般是去写政治的 他跟着想要帮他爸嘛 帮他爸就是三国那种写法 帮他爸就是打仗

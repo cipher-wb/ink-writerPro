@@ -1,0 +1,72 @@
+case_id: CASE-LR-2026-1776
+title: 委托人与北条夫人 (pass / 65分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEpd
+scope:
+  genre:
+  - 都市
+  - 商战
+  - 攻略
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 所以说给大哥给个65分 | 人设和情报衔接写得好，写作底子不错，但奖励设定踩线、主线尚未展开，综合给65分予以签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEpd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设和情报衔接写得好，写作底子不错，但奖励设定踩线、主线尚未展开，综合给65分予以签约。 | 两章内容拖得太长，节奏需要大幅加速;奖励设定涉及双飞，严重踩审核红线，必须修改;整体主线没有出现，后续剧情存疑
+  observable:
+  - 'pacing维度: 两章内容拖得太长，节奏需要大幅加速'
+  - 'taboo维度: 奖励设定涉及双飞，严重踩审核红线，必须修改'
+  - 'highpoint维度: 整体主线没有出现，后续剧情存疑'
+live_review_meta:
+  source_bvid: BV1p2w5zNEpd
+  source_line_range:
+  - 102
+  - 222
+  score: 65
+  score_raw: 所以说给大哥给个65分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 委托人与北条夫人
+  genre_guess:
+  - 都市
+  - 商战
+  - 攻略
+  - 悬疑
+  overall_comment: 人设和情报衔接写得好，写作底子不错，但奖励设定踩线、主线尚未展开，综合给65分予以签约。
+  comments:
+  - dimension: misc
+    severity: positive
+    content: 写作天赋和水平较高，值得肯定
+    raw_quote: 大哥这水平还挺高的…这个天赋还不错
+  - dimension: pacing
+    severity: negative
+    content: 两章内容拖得太长，节奏需要大幅加速
+    raw_quote: 主要是因为你这两张了…我觉得节奏要加速
+  - dimension: taboo
+    severity: negative
+    content: 奖励设定涉及双飞，严重踩审核红线，必须修改
+    raw_quote: 两人一起…这个可能有点涉黄…审核可能会管你
+  - dimension: opening
+    severity: positive
+    content: 开篇内容写得不错，具备签约基础
+    raw_quote: 但开头内容写的不错了
+  - dimension: character
+    severity: positive
+    content: 人设和情报衔接处理得很出色
+    raw_quote: 几个情报的衔接以及人设写的挺好的
+  - dimension: highpoint
+    severity: negative
+    content: 整体主线没有出现，后续剧情存疑
+    raw_quote: 主线你没出来…后续其他主线我也没看出来

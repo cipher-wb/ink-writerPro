@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1425
+title: 穿越修仙学徒（师傅被吃） (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 妖魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 看43分心会痛 | 切入有点意思，展开无聊，情绪反馈差，43分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入有点意思，展开无聊，情绪反馈差，43分。 | 展开无聊，情绪不到位
+  observable:
+  - 'pacing维度: 展开无聊，情绪不到位'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 871
+  - 920
+  score: 43
+  score_raw: 看43分心会痛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越修仙学徒（师傅被吃）
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 妖魔
+  overall_comment: 切入有点意思，展开无聊，情绪反馈差，43分。
+  comments:
+  - dimension: opening
+    severity: neutral
+    content: 切入有点意思，看门师傅桥段有乐子
+    raw_quote: 切入其实有点意思 切出来给师傅看门
+  - dimension: pacing
+    severity: negative
+    content: 展开无聊，情绪不到位
+    raw_quote: 展开其实无聊的 情绪没写到位

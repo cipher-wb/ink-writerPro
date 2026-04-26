@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0407
+title: 俄乌战争枪神 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 军事
+  - 战争
+  - 现代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十三三十三份 | 题材过不了审，水平不够，切入啰嗦，比例差点，架空也没用
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材过不了审，水平不够，切入啰嗦，比例差点，架空也没用 | 俄乌战争题材过不了审，审核会查，架空也不行;水平不够，切入啰嗦，展开稍微好点但比例差得多
+  observable:
+  - 'taboo维度: 俄乌战争题材过不了审，审核会查，架空也不行'
+  - 'opening维度: 水平不够，切入啰嗦，展开稍微好点但比例差得多'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 395
+  - 466
+  score: 33
+  score_raw: 三十三三十三份
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 俄乌战争枪神
+  genre_guess:
+  - 军事
+  - 战争
+  - 现代
+  overall_comment: 题材过不了审，水平不够，切入啰嗦，比例差点，架空也没用
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 俄乌战争题材过不了审，审核会查，架空也不行
+    raw_quote: 这个题材过不了审...相信我不让写这些东西...你还是在写俄乌战争，什么叫架空一下就能起来，这肯定不行啊
+  - dimension: opening
+    severity: negative
+    content: 水平不够，切入啰嗦，展开稍微好点但比例差得多
+    raw_quote: 你的水平不够切入啰嗦，然后展开稍微好点，但是比例这方面还是差的有点多

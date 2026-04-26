@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0263
+title: 赵文豪的猫和老鼠同人 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 同人
+  - 猫和老鼠
+  - 侦探
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 你这20分左右不会高于20 | 同人背景陌生、第一人称自嗨，完全无法代入，抢救机会渺茫。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 同人背景陌生、第一人称自嗨，完全无法代入，抢救机会渺茫。 | 猫和老鼠的同人背景无人关心，读者看不懂。;第一人称＋陌生设定，毫无代入感。
+  observable:
+  - 'genre维度: 猫和老鼠的同人背景无人关心，读者看不懂。'
+  - 'ops维度: 第一人称＋陌生设定，毫无代入感。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1895
+  - 1940
+  score: 20
+  score_raw: 你这20分左右不会高于20
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 赵文豪的猫和老鼠同人
+  genre_guess:
+  - 同人
+  - 猫和老鼠
+  - 侦探
+  overall_comment: 同人背景陌生、第一人称自嗨，完全无法代入，抢救机会渺茫。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 猫和老鼠的同人背景无人关心，读者看不懂。
+    raw_quote: 这谁能看懂 ... 这些个看个够吧 哪有这种同人
+  - dimension: ops
+    severity: negative
+    content: 第一人称＋陌生设定，毫无代入感。
+    raw_quote: 第一人称加同人自嗨写法怎么代入

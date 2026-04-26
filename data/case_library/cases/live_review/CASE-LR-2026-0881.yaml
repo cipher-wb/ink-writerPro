@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0881
+title: 万鬼全书 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 灵异
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得可以加点分 | 设定用心，类似神秘复苏风格，但过审难度大，情绪和氛围不够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定用心，类似神秘复苏风格，但过审难度大，情绪和氛围不够。 | 校园灵异容易触线，神秘复苏前车之鉴;缺乏情绪和好的人物塑造
+  observable:
+  - 'taboo维度: 校园灵异容易触线，神秘复苏前车之鉴'
+  - 'character维度: 缺乏情绪和好的人物塑造'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 831
+  - 860
+  score: null
+  score_raw: 我觉得可以加点分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 万鬼全书
+  genre_guess:
+  - 灵异
+  - 都市
+  overall_comment: 设定用心，类似神秘复苏风格，但过审难度大，情绪和氛围不够。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 校园灵异容易触线，神秘复苏前车之鉴
+    raw_quote: 校园里面灵异写不了的 神秘复苏也被封了好多次对吧 … 不能有鬼啊
+  - dimension: character
+    severity: negative
+    content: 缺乏情绪和好的人物塑造
+    raw_quote: 大哥没有情绪是吧 没有危机 没有好的人物 就干巴的这样写

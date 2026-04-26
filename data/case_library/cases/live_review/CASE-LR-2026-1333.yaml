@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1333
+title: 重生不追白月光 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 人设极端，逻辑硬伤明显，文笔还行但情节立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设极端，逻辑硬伤明显，文笔还行但情节立不住。 | 男女主角均像密分，人设不符合逻辑;保送北大放弃考北大等事件太极端
+  observable:
+  - 'character维度: 男女主角均像密分，人设不符合逻辑'
+  - 'opening维度: 保送北大放弃考北大等事件太极端'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 143
+  - 220
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生不追白月光
+  genre_guess:
+  - 都市
+  - 重生
+  - 校园
+  overall_comment: 人设极端，逻辑硬伤明显，文笔还行但情节立不住。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 男女主角均像密分，人设不符合逻辑
+    raw_quote: 男女都是密分，智商都不高
+  - dimension: opening
+    severity: negative
+    content: 保送北大放弃考北大等事件太极端
+    raw_quote: 太极端了 不符合逻辑
+  - dimension: pacing
+    severity: neutral
+    content: 文笔尚可，但情节推进需要更合理
+    raw_quote: 文笔还行，就是事件太极端了

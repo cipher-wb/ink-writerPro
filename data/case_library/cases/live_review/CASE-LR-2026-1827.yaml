@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1827
+title: 郑和下西洋日常 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 历史
+  - 明朝
+  - 科技
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40来分吧...大概40分吧...40分左右吧 | 题材能写比例够，但架构核心有问题，奏章写法太文绉过时
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材能写比例够，但架构核心有问题，奏章写法太文绉过时 | AI时代不能文绉绉写长篇奏折;转朱棣视角导致代入感断层;开篇故事性弱，像细纲写法
+  observable:
+  - 'pacing维度: AI时代不能文绉绉写长篇奏折'
+  - 'opening维度: 转朱棣视角导致代入感断层'
+  - 'hook维度: 开篇故事性弱，像细纲写法'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 521
+  - 620
+  score: 40
+  score_raw: 40来分吧...大概40分吧...40分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 郑和下西洋日常
+  genre_guess:
+  - 历史
+  - 明朝
+  - 科技
+  overall_comment: 题材能写比例够，但架构核心有问题，奏章写法太文绉过时
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: AI时代不能文绉绉写长篇奏折
+    raw_quote: 一个奏章写这么多干嘛...你这么长AI其实豆包就是一秒生成...所以说不能这么文绉绉的写
+  - dimension: opening
+    severity: negative
+    content: 转朱棣视角导致代入感断层
+    raw_quote: 你这一上来立刻就转到朱棣了...读者可能会有点断代入感
+  - dimension: hook
+    severity: negative
+    content: 开篇故事性弱，像细纲写法
+    raw_quote: 故事性比较弱吧比较笼统的一个细纲写法

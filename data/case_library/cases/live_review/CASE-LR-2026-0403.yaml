@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0403
+title: 民俗惊悚鲁南青泥洼 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 民俗
+  - 惊悚
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吧 | 分类不明，代入感无意义，第一人称很干，纯故弄玄虚
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 分类不明，代入感无意义，第一人称很干，纯故弄玄虚 | 第一人称没代入感，故弄玄虚，分类都不知道;描述能力可以，但代入感没有意义
+  observable:
+  - 'opening维度: 第一人称没代入感，故弄玄虚，分类都不知道'
+  - 'pacing维度: 描述能力可以，但代入感没有意义'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 83
+  - 154
+  score: 30
+  score_raw: 30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民俗惊悚鲁南青泥洼
+  genre_guess:
+  - 民俗
+  - 惊悚
+  - 灵异
+  overall_comment: 分类不明，代入感无意义，第一人称很干，纯故弄玄虚
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一人称没代入感，故弄玄虚，分类都不知道
+    raw_quote: 我第一人称没代入感...纯扯勾八蛋...现在问题是故弄玄虚啊，我连你的分类都不知道
+  - dimension: pacing
+    severity: negative
+    content: 描述能力可以，但代入感没有意义
+    raw_quote: 描述能力可以，但是代入感没有了...这个东西我都不知道这是啥了

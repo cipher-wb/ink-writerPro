@@ -1,0 +1,46 @@
+case_id: CASE-LR-2026-1642
+title: 西游幕后流 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 仙侠
+  - 西游
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分9了 | 有进步但签约尚早，节奏和主线偏弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有进步但签约尚早，节奏和主线偏弱。 | 节奏偏慢，主线驱动力不足。
+  observable:
+  - 'pacing维度: 节奏偏慢，主线驱动力不足。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 741
+  - 790
+  score: 38
+  score_raw: 38分9了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 西游幕后流
+  genre_guess:
+  - 仙侠
+  - 西游
+  overall_comment: 有进步但签约尚早，节奏和主线偏弱。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏偏慢，主线驱动力不足。
+    raw_quote: 整体主线还是有点太弱了

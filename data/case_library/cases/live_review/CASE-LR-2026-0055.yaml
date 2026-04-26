@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0055
+title: 成神从接盘穿越之开始 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就22分吧 | 剧情无聊，日常过多，无看点，22分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情无聊，日常过多，无看点，22分。 | 没有事件冲突，纯日常;没有看点
+  observable:
+  - 'pacing维度: 没有事件冲突，纯日常'
+  - 'hook维度: 没有看点'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 1081
+  - 1130
+  score: 22
+  score_raw: 差不多就22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 成神从接盘穿越之开始
+  genre_guess:
+  - 玄幻
+  overall_comment: 剧情无聊，日常过多，无看点，22分。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 没有事件冲突，纯日常
+    raw_quote: 冲突在哪里 毛痛在哪里
+  - dimension: hook
+    severity: negative
+    content: 没有看点
+    raw_quote: 没有任何看点

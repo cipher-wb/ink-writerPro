@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0347
+title: 重生从修车开始 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 创业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分吧 还是有天分的 | 重生切入点尚可但执行过急，世界观立不住，且有涉政风险。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生切入点尚可但执行过急，世界观立不住，且有涉政风险。 | 多次触及非典等敏感内容，严重审核隐患
+  observable:
+  - 'taboo维度: 多次触及非典等敏感内容，严重审核隐患'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 2930
+  - 3059
+  score: 40
+  score_raw: 40分吧 还是有天分的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生从修车开始
+  genre_guess:
+  - 都市
+  - 重生
+  - 创业
+  overall_comment: 重生切入点尚可但执行过急，世界观立不住，且有涉政风险。
+  comments:
+  - dimension: opening
+    severity: neutral
+    content: 穿越遇事件避险思路正确，但太过仓促
+    raw_quote: 穿过来碰见事件也是一个思路 但是思考是对的
+  - dimension: taboo
+    severity: negative
+    content: 多次触及非典等敏感内容，严重审核隐患
+    raw_quote: 他妈的摄证啊…你不要提这种东西

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0729
+title: 偷盗传人 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 武侠
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十九分吧 | 金手指性别随意切换设计过于怪异，主角智商显得低下，事件无聊且缺乏爽感，整体代入感差。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指性别随意切换设计过于怪异，主角智商显得低下，事件无聊且缺乏爽感，整体代入感差。 | 可随意变性别的金手指设计怪异，读者难以带入;主角人设智商不高，缺乏人物魅力;突破等爽点描写不足，缺乏读者爽感
+  observable:
+  - 'golden_finger维度: 可随意变性别的金手指设计怪异，读者难以带入'
+  - 'character维度: 主角人设智商不高，缺乏人物魅力'
+  - 'highpoint维度: 突破等爽点描写不足，缺乏读者爽感'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 701
+  - 780
+  score: 19
+  score_raw: 十九分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 偷盗传人
+  genre_guess:
+  - 武侠
+  - 穿越
+  - 系统
+  overall_comment: 金手指性别随意切换设计过于怪异，主角智商显得低下，事件无聊且缺乏爽感，整体代入感差。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 可随意变性别的金手指设计怪异，读者难以带入
+    raw_quote: 这个太奇怪了这就是奇怪 这玩意...怎么代入啊关键的怎么代入
+  - dimension: character
+    severity: negative
+    content: 主角人设智商不高，缺乏人物魅力
+    raw_quote: 人设我已经到入不了...感觉智商不高
+  - dimension: highpoint
+    severity: negative
+    content: 突破等爽点描写不足，缺乏读者爽感
+    raw_quote: 不爽呀怎么突破爽

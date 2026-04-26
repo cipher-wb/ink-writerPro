@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1389
+title: 重返电竞之我是战队经理 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 电竞
+  - 鲁阿鲁
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 完全不会写网文，电竞文必须写具体战队、选手和赛季，不能虚写，整体思路错误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不会写网文，电竞文必须写具体战队、选手和赛季，不能虚写，整体思路错误。 | 电竞文虚化概念，没有明确游戏和战队，根本不是合格的鲁阿鲁文;用第一人称完全无法写网文;写法是十年前的虚化电竞，现在必须像同人一样明确
+  observable:
+  - 'genre维度: 电竞文虚化概念，没有明确游戏和战队，根本不是合格的鲁阿鲁文'
+  - 'ops维度: 用第一人称完全无法写网文'
+  - 'simplicity维度: 写法是十年前的虚化电竞，现在必须像同人一样明确'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 909
+  - 985
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 重返电竞之我是战队经理
+  genre_guess:
+  - 电竞
+  - 鲁阿鲁
+  - 重生
+  overall_comment: 完全不会写网文，电竞文必须写具体战队、选手和赛季，不能虚写，整体思路错误。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 电竞文虚化概念，没有明确游戏和战队，根本不是合格的鲁阿鲁文
+    raw_quote: 哪有电竞文这么写的...电竞是具象化的 它一定是 战队具体的战队
+  - dimension: ops
+    severity: negative
+    content: 用第一人称完全无法写网文
+    raw_quote: 不要第一人称 永远不要第一人称 第一人称咋写咋签呀
+  - dimension: simplicity
+    severity: negative
+    content: 写法是十年前的虚化电竞，现在必须像同人一样明确
+    raw_quote: 大哥这种写法是十年前的写法...现在有时候都是同人

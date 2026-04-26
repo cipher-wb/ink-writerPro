@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1295
+title: 穿越正德：开局新娘剥皮 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 历史
+  - 明朝
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话其实有个三四十了 | 文笔扎实，但历史背景未有效蹭热名人，主线发展模糊，现代感过强。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，但历史背景未有效蹭热名人，主线发展模糊，现代感过强。 | 明朝历史文却没有利用知名历史人物，写成架空历史
+  observable:
+  - 'genre维度: 明朝历史文却没有利用知名历史人物，写成架空历史'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 1860
+  - 2050
+  score: null
+  score_raw: 打分的话其实有个三四十了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越正德：开局新娘剥皮
+  genre_guess:
+  - 历史
+  - 明朝
+  - 悬疑
+  overall_comment: 文笔扎实，但历史背景未有效蹭热名人，主线发展模糊，现代感过强。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 明朝历史文却没有利用知名历史人物，写成架空历史
+    raw_quote: 你既然写了大名 你为什么没有身份啊 … 你为什么要当成架空历史原创剧情
+  - dimension: opening
+    severity: neutral
+    content: 新娘剥皮案切入有一定吸引力，但后续身份代入不足
+    raw_quote: 这个案子倒看着有意思

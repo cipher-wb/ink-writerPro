@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1025
+title: 上公主 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 历史
+  - 大唐
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十五分的样子 | 书名好，文笔还行，但节奏干巴，心理活动少，直发看捞不捞。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名好，文笔还行，但节奏干巴，心理活动少，直发看捞不捞。 | 第一张平淡啰嗦，事件无聊;主角盘算与心理活动不足
+  observable:
+  - 'pacing维度: 第一张平淡啰嗦，事件无聊'
+  - 'character维度: 主角盘算与心理活动不足'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1571
+  - 1670
+  score: 55
+  score_raw: 五十五分的样子
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 上公主
+  genre_guess:
+  - 历史
+  - 大唐
+  overall_comment: 书名好，文笔还行，但节奏干巴，心理活动少，直发看捞不捞。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 第一张平淡啰嗦，事件无聊
+    raw_quote: 第一张我就觉得第一张 包括你的这个控劲 包括你的事件都挺无聊的
+  - dimension: character
+    severity: negative
+    content: 主角盘算与心理活动不足
+    raw_quote: 你的盘算 你的主线 你的心理活动太少

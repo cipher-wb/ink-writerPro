@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1158
+title: 林无双加倍金手指 (fail / 17分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我就给大哥十七分吧 | 金手指‘事物加倍’设定立不住，情节是恶搞和学生日记水平，事件选择无聊，缺乏主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指‘事物加倍’设定立不住，情节是恶搞和学生日记水平，事件选择无聊，缺乏主线。 | 加倍金手指设定夸张且逻辑难自洽;事件选择没意思，爽点薄弱
+  observable:
+  - 'golden_finger维度: 加倍金手指设定夸张且逻辑难自洽'
+  - 'highpoint维度: 事件选择没意思，爽点薄弱'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 742
+  - 883
+  score: 17
+  score_raw: 我就给大哥十七分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 林无双加倍金手指
+  genre_guess:
+  - 都市
+  - 异能
+  - 恶搞
+  overall_comment: 金手指‘事物加倍’设定立不住，情节是恶搞和学生日记水平，事件选择无聊，缺乏主线。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 加倍金手指设定夸张且逻辑难自洽
+    raw_quote: 我觉得立不住了 我跟你觉得这个金手指 包括你这个事件都立不住了 人设也是小白的
+  - dimension: highpoint
+    severity: negative
+    content: 事件选择没意思，爽点薄弱
+    raw_quote: 事件选择的没意思 这个金手指比较大……爽点就是水火转呀 就大概是鲁志生呀 就良差好汉呀 给你夸两句 就这样了

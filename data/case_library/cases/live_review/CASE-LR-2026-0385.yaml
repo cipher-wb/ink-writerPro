@@ -1,0 +1,46 @@
+case_id: CASE-LR-2026-0385
+title: 山野聪夫 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 玄幻
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 词条重生构思尚可，但句子偏长像清小说，需要紧凑化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 词条重生构思尚可，但句子偏长像清小说，需要紧凑化。 | 句子太长，不符合网文短平快的阅读节奏。
+  observable:
+  - 'pacing维度: 句子太长，不符合网文短平快的阅读节奏。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 325
+  - 340
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 山野聪夫
+  genre_guess:
+  - 玄幻
+  - 重生
+  overall_comment: 词条重生构思尚可，但句子偏长像清小说，需要紧凑化。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 句子太长，不符合网文短平快的阅读节奏。
+    raw_quote: 太长了太长了短一点，四个字六个字这种多一点就行。

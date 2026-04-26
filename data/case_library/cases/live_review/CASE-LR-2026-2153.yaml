@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2153
+title: 规则怪谈：晋灵山 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 灵异
+  - 规则怪谈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 前面是18分，后面有个25分，最后就20分 | 节奏太慢，大段独角戏描写像荒野求生，不如贝爷德爷；建议参考《鬼社》加快节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏太慢，大段独角戏描写像荒野求生，不如贝爷德爷；建议参考《鬼社》加快节奏。 | 节奏极慢，长时间单人独角戏，没有人物互动;缺乏其他人物互动，一直在独白;开篇过程描写过多，应该直接进入规则怪谈副本
+  observable:
+  - 'pacing维度: 节奏极慢，长时间单人独角戏，没有人物互动'
+  - 'character维度: 缺乏其他人物互动，一直在独白'
+  - 'opening维度: 开篇过程描写过多，应该直接进入规则怪谈副本'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 1025
+  - 1143
+  score: 20
+  score_raw: 前面是18分，后面有个25分，最后就20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 规则怪谈：晋灵山
+  genre_guess:
+  - 灵异
+  - 规则怪谈
+  overall_comment: 节奏太慢，大段独角戏描写像荒野求生，不如贝爷德爷；建议参考《鬼社》加快节奏。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏极慢，长时间单人独角戏，没有人物互动
+    raw_quote: 不要写太多独角形...你是贝爷还是德爷，你要荒野求生吗...鲁滨逊都没你这么能甩啊
+  - dimension: character
+    severity: negative
+    content: 缺乏其他人物互动，一直在独白
+    raw_quote: 又不是蜜蜂，你为什么老是一个人呀...其他人同伴们呢
+  - dimension: opening
+    severity: negative
+    content: 开篇过程描写过多，应该直接进入规则怪谈副本
+    raw_quote: 过程不重要，不用太多了...就就就开始不就行了嘛

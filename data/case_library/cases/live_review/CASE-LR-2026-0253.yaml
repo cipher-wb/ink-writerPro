@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0253
+title: 潘子串的异世界投稿 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 异世界
+  - 西幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 题材不行 就得25分 | 题材老旧，独角戏太多，事件太慢，虽接地气但人设小白，只能给基础分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老旧，独角戏太多，事件太慢，虽接地气但人设小白，只能给基础分。 | 开头独角戏太多，事件推进慢，无病呻吟。;爷爷洗衣服等情节过于小白，人设幼稚。
+  observable:
+  - 'opening维度: 开头独角戏太多，事件推进慢，无病呻吟。'
+  - 'character维度: 爷爷洗衣服等情节过于小白，人设幼稚。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1006
+  - 1070
+  score: 25
+  score_raw: 题材不行 就得25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 潘子串的异世界投稿
+  genre_guess:
+  - 异世界
+  - 西幻
+  - 穿越
+  overall_comment: 题材老旧，独角戏太多，事件太慢，虽接地气但人设小白，只能给基础分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头独角戏太多，事件推进慢，无病呻吟。
+    raw_quote: 独角戏太多了 事件太慢了 兄弟好吧
+  - dimension: character
+    severity: negative
+    content: 爷爷洗衣服等情节过于小白，人设幼稚。
+    raw_quote: 大哥你15岁了 还要你爷爷给你洗衣服吗

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1518
+title: 穿越成师父圈养的极品徒弟 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十分最多把 | 模仿起点风格不伦不类，干巴巴讲设定，建议用剧情小切口切入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 模仿起点风格不伦不类，干巴巴讲设定，建议用剧情小切口切入。 | 上帝视角描写世界，没有剧情切入;第一章没有剧情，只是描述世界和设定
+  observable:
+  - 'opening维度: 上帝视角描写世界，没有剧情切入'
+  - 'pacing维度: 第一章没有剧情，只是描述世界和设定'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1081
+  - 1180
+  score: 40
+  score_raw: 四十分最多把
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越成师父圈养的极品徒弟
+  genre_guess:
+  - 仙侠
+  - 穿越
+  overall_comment: 模仿起点风格不伦不类，干巴巴讲设定，建议用剧情小切口切入。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 上帝视角描写世界，没有剧情切入
+    raw_quote: 就干巴巴的讲 事件一点都不好看 … 你要写剧情切入
+  - dimension: pacing
+    severity: negative
+    content: 第一章没有剧情，只是描述世界和设定
+    raw_quote: 一章里面一个剧情都不加 一个势力都不加

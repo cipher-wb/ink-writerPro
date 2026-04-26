@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1636
+title: 高武召唤流 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 都市
+  - 高武
+  - 召唤
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 发番茄也很难呀 | 套路模板化，人物单薄，缺乏情绪铺垫。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路模板化，人物单薄，缺乏情绪铺垫。 | 人物单薄，缺乏故事和立体感。;开篇只讲设定，缺乏故事和情绪。
+  observable:
+  - 'character维度: 人物单薄，缺乏故事和立体感。'
+  - 'opening维度: 开篇只讲设定，缺乏故事和情绪。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 421
+  - 480
+  score: null
+  score_raw: 发番茄也很难呀
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 高武召唤流
+  genre_guess:
+  - 都市
+  - 高武
+  - 召唤
+  overall_comment: 套路模板化，人物单薄，缺乏情绪铺垫。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物单薄，缺乏故事和立体感。
+    raw_quote: 人物是需要包装的，包装了才立体
+  - dimension: opening
+    severity: negative
+    content: 开篇只讲设定，缺乏故事和情绪。
+    raw_quote: 一上来就讲设定，老是讲，烦死了

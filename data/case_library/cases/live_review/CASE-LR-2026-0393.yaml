@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0393
+title: 易不容 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 武侠
+  - 志怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开头过水，危机像日常，缺乏网文节奏，需提前引出妖怪等仙侠元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头过水，危机像日常，缺乏网文节奏，需提前引出妖怪等仙侠元素。 | 前面大量干巴巴的商队描述，平淡如水，没有波折。;东瀛妖怪等爽点藏得太深，应尽早端出来留住读者。
+  observable:
+  - 'pacing维度: 前面大量干巴巴的商队描述，平淡如水，没有波折。'
+  - 'highpoint维度: 东瀛妖怪等爽点藏得太深，应尽早端出来留住读者。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 725
+  - 780
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 易不容
+  genre_guess:
+  - 武侠
+  - 志怪
+  overall_comment: 开头过水，危机像日常，缺乏网文节奏，需提前引出妖怪等仙侠元素。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 前面大量干巴巴的商队描述，平淡如水，没有波折。
+    raw_quote: 前面有点太水了，太平淡了，慢点太偏加工历史。
+  - dimension: highpoint
+    severity: negative
+    content: 东瀛妖怪等爽点藏得太深，应尽早端出来留住读者。
+    raw_quote: 早点出来这玩意不就行了吗，东营的妖怪，雪女早点出来。

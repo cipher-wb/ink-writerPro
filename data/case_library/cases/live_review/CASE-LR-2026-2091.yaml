@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2091
+title: 民国风，堂吉诃德式 (fail / 53分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 民国
+  - 武侠
+  - 克系
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个今晚最高分了，53分吧 | 被万订作者平淡写法带偏的新人稿，缺少强冲突和情绪爆发，虽文笔合格但注定流量惨淡。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 被万订作者平淡写法带偏的新人稿，缺少强冲突和情绪爆发，虽文笔合格但注定流量惨淡。 | 剧情太平淡日常，讲万订作家的故事却不够抓人;民国文现在跟风太多且已过时，缺乏新鲜碰撞
+  observable:
+  - 'opening维度: 剧情太平淡日常，讲万订作家的故事却不够抓人'
+  - 'genre维度: 民国文现在跟风太多且已过时，缺乏新鲜碰撞'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1340
+  - 1415
+  score: 53
+  score_raw: 这个今晚最高分了，53分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国风，堂吉诃德式
+  genre_guess:
+  - 民国
+  - 武侠
+  - 克系
+  - 架空
+  overall_comment: 被万订作者平淡写法带偏的新人稿，缺少强冲突和情绪爆发，虽文笔合格但注定流量惨淡。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 剧情太平淡日常，讲万订作家的故事却不够抓人
+    raw_quote: 就是情绪啊，冲突，这些都是铺垫型的，人家100个人看能留住50个，你100个看就只能留30个了呀……所以得开头300个人看
+  - dimension: genre
+    severity: negative
+    content: 民国文现在跟风太多且已过时，缺乏新鲜碰撞
+    raw_quote: 民国风现在好几本之后……就你现在已经吃不到热乎的，就除非有自己其他的碰撞嘛

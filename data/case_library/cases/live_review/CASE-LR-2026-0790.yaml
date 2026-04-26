@@ -1,0 +1,66 @@
+case_id: CASE-LR-2026-0790
+title: 五代十国之赵匡胤 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KqwWzAEbM
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 66分吧 | 第一章代入感、驱动力、文笔扎实，进步明显，但风格偏正统历史文，怕后面把控不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KqwWzAEbM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章代入感、驱动力、文笔扎实，进步明显，但风格偏正统历史文，怕后面把控不住。 | 文笔过于扎实，显得沉闷。;写法过于正经，像正统历史文，缺乏网文感。;担心后续剧情把控不住，节奏可能失控。
+  observable:
+  - 'simplicity维度: 文笔过于扎实，显得沉闷。'
+  - 'genre维度: 写法过于正经，像正统历史文，缺乏网文感。'
+  - 'pacing维度: 担心后续剧情把控不住，节奏可能失控。'
+live_review_meta:
+  source_bvid: BV1KqwWzAEbM
+  source_line_range:
+  - 1
+  - 159
+  score: 66
+  score_raw: 66分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 五代十国之赵匡胤
+  genre_guess:
+  - 历史
+  - 五代十国
+  - 穿越
+  overall_comment: 第一章代入感、驱动力、文笔扎实，进步明显，但风格偏正统历史文，怕后面把控不住。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文笔过于扎实，显得沉闷。
+    raw_quote: 但是有点太扎实了
+  - dimension: genre
+    severity: negative
+    content: 写法过于正经，像正统历史文，缺乏网文感。
+    raw_quote: 确实有点像那个正常正统的历史文写法
+  - dimension: opening
+    severity: positive
+    content: 第一章代入感强，危机和驱动力到位，文笔扎实。
+    raw_quote: 就是代入感啊，危机啊，各种驱动力啊，要干的啥什么都都有，包括文笔也很扎实
+  - dimension: character
+    severity: neutral
+    content: 使用李煜等历史名人，蹭热度增加认知。
+    raw_quote: 全是名人啊，李煜这些都是名人，主要是蹭疯掉了
+  - dimension: pacing
+    severity: negative
+    content: 担心后续剧情把控不住，节奏可能失控。
+    raw_quote: 但怕你后面把控不住啊

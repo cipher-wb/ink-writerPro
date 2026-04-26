@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1465
+title: 无耻修仙诛仙模仿 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十八分 | 世界观设定为主，没有剧情人物，太老套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观设定为主，没有剧情人物，太老套。 | 设定系统为卖点，没有实质剧情;像诛仙，写法太老
+  observable:
+  - 'golden_finger维度: 设定系统为卖点，没有实质剧情'
+  - 'genre维度: 像诛仙，写法太老'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 451
+  - 540
+  score: 28
+  score_raw: 二十八分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 无耻修仙诛仙模仿
+  genre_guess:
+  - 仙侠
+  - 系统
+  overall_comment: 世界观设定为主，没有剧情人物，太老套。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 设定系统为卖点，没有实质剧情
+    raw_quote: 整个卖点 就全是这个系统加设定
+  - dimension: genre
+    severity: negative
+    content: 像诛仙，写法太老
+    raw_quote: 这不就是诸仙嘛

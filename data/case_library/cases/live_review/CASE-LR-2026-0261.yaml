@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0261
+title: 重回考场的穿越 (fail / 17分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 穿越
+  - 原始社会
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 17分 | 穿越过程啰嗦水漫金山，世界观探索毫无看点，建议直接推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越过程啰嗦水漫金山，世界观探索毫无看点，建议直接推翻。 | 穿越醒来过程冗长，到处絮叨，废笔太多。;无事件无人物，纯探索，读者全跑。
+  observable:
+  - 'opening维度: 穿越醒来过程冗长，到处絮叨，废笔太多。'
+  - 'pacing维度: 无事件无人物，纯探索，读者全跑。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1725
+  - 1800
+  score: 17
+  score_raw: 17分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重回考场的穿越
+  genre_guess:
+  - 穿越
+  - 原始社会
+  - 求生
+  overall_comment: 穿越过程啰嗦水漫金山，世界观探索毫无看点，建议直接推翻。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越醒来过程冗长，到处絮叨，废笔太多。
+    raw_quote: 好慢呀 好水啊 ... 就一个破穿越 大概能啰嗦成这样了
+  - dimension: pacing
+    severity: negative
+    content: 无事件无人物，纯探索，读者全跑。
+    raw_quote: 到现在就是穿越 然后探索 我不知道干嘛

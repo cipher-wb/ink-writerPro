@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1971
+title: 熊猫坐下 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 灵气复苏
+  - 异兽
+  - 竹子修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多值得有18分兄弟 | 世界观难代入，只有老汉一个配角，劳动写不长，建议走仙侠未道或异兽流。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观难代入，只有老汉一个配角，劳动写不长，建议走仙侠未道或异兽流。 | 竹子变熊猫的设定奇怪，代入感差;除老汉外无人类配角，互动单薄
+  observable:
+  - 'misc维度: 竹子变熊猫的设定奇怪，代入感差'
+  - 'character维度: 除老汉外无人类配角，互动单薄'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 1121
+  - 1170
+  score: 18
+  score_raw: 差不多值得有18分兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 熊猫坐下
+  genre_guess:
+  - 灵气复苏
+  - 异兽
+  - 竹子修炼
+  overall_comment: 世界观难代入，只有老汉一个配角，劳动写不长，建议走仙侠未道或异兽流。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 竹子变熊猫的设定奇怪，代入感差
+    raw_quote: 他一个人带入个竹子就算了熊猫现在变成大怪物了
+  - dimension: character
+    severity: negative
+    content: 除老汉外无人类配角，互动单薄
+    raw_quote: 你除了老汉就没人了

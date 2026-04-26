@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2040
+title: 无名毫无天赋根骨之家 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 杂役
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30来分吧 | 缺少事件，第一章割裂，太跳脱，需要改小事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缺少事件，第一章割裂，太跳脱，需要改小事件。 | 前半章无事件，独角戏系统;事件进展太快，割裂感强
+  observable:
+  - 'opening维度: 前半章无事件，独角戏系统'
+  - 'pacing维度: 事件进展太快，割裂感强'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 1681
+  - 1800
+  score: 30
+  score_raw: 30来分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 无名毫无天赋根骨之家
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 杂役
+  overall_comment: 缺少事件，第一章割裂，太跳脱，需要改小事件。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前半章无事件，独角戏系统
+    raw_quote: 没事件啊兄弟 小说是讲事件了
+  - dimension: pacing
+    severity: negative
+    content: 事件进展太快，割裂感强
+    raw_quote: 太割裂了 前半章是独角戏系统 后半章疯狂快速进入战场事件

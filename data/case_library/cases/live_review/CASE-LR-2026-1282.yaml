@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1282
+title: 仙界抖M越辱越强 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 逆袭
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分也有也有 | 越辱越强的系统本身就是大毒点，代入感差，剧情小白，拉扯白，脑洞一般。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 越辱越强的系统本身就是大毒点，代入感差，剧情小白，拉扯白，脑洞一般。 | 越被欺负越能加点是永远的毒点;书名麦当劳太出戏过不了审
+  observable:
+  - 'golden_finger维度: 越被欺负越能加点是永远的毒点'
+  - 'genre维度: 书名麦当劳太出戏过不了审'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 2001
+  - 2080
+  score: 25
+  score_raw: 25分也有也有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙界抖M越辱越强
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 逆袭
+  overall_comment: 越辱越强的系统本身就是大毒点，代入感差，剧情小白，拉扯白，脑洞一般。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 越被欺负越能加点是永远的毒点
+    raw_quote: 你越被人家欺负你越加点这是个毒点...因为我们代入不了
+  - dimension: genre
+    severity: negative
+    content: 书名麦当劳太出戏过不了审
+    raw_quote: 麦当劳这个词语太出戏了...肯定过不了审

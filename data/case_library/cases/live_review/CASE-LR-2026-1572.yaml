@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1572
+title: 肖申克无限流回档 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 无限流
+  - 游戏
+  - 悬疑
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40多分吧 | 氛围感不够，思路不对，有天赋但退步。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围感不够，思路不对，有天赋但退步。 | 开场就知道结局和角色底细，破坏好奇感与期待;角色互动生硬，拉扯太白
+  observable:
+  - 'hook维度: 开场就知道结局和角色底细，破坏好奇感与期待'
+  - 'character维度: 角色互动生硬，拉扯太白'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 1601
+  - 1750
+  score: 45
+  score_raw: 40多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 肖申克无限流回档
+  genre_guess:
+  - 无限流
+  - 游戏
+  - 悬疑
+  - 求生
+  overall_comment: 氛围感不够，思路不对，有天赋但退步。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开场就知道结局和角色底细，破坏好奇感与期待
+    raw_quote: 一上来就知道结局对吧，一上来就知道她是天阳，他面对天龙就没啥意思了
+  - dimension: character
+    severity: negative
+    content: 角色互动生硬，拉扯太白
+    raw_quote: 这些人设拉扯我感觉也挺白的，其实真真挺白的

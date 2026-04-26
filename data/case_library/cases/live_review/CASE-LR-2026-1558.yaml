@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1558
+title: 大摩沙吃人 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 异兽
+  - 进化
+  - 吃人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就九分 | 主角鲨鱼吃人，毒点致命。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角鲨鱼吃人，毒点致命。 | 开篇就吃人，无法代入且必被举报;开局吃人无铺垫，直接劝退
+  observable:
+  - 'taboo维度: 开篇就吃人，无法代入且必被举报'
+  - 'opening维度: 开局吃人无铺垫，直接劝退'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1751
+  - 1858
+  score: null
+  score_raw: 差不多就九分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 大摩沙吃人
+  genre_guess:
+  - 异兽
+  - 进化
+  - 吃人
+  overall_comment: 主角鲨鱼吃人，毒点致命。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 开篇就吃人，无法代入且必被举报
+    raw_quote: 大哥说完了开头就在吃人 你为什么要吃人
+  - dimension: opening
+    severity: negative
+    content: 开局吃人无铺垫，直接劝退
+    raw_quote: 不能吃人 跟你说了不能吃人

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1255
+title: 我穿越成了大魔鲨 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 进化
+  - 变异
+  - 海洋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就九分 | 吃人有巨大毒点且可能违规，虽然危机感写得尚可但无法代入，建议修改进化路线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 吃人有巨大毒点且可能违规，虽然危机感写得尚可但无法代入，建议修改进化路线。 | 主角吃人是重大毒点和严重违规点;完全无法代入一条想吃人的鲨鱼
+  observable:
+  - 'taboo维度: 主角吃人是重大毒点和严重违规点'
+  - 'character维度: 完全无法代入一条想吃人的鲨鱼'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1710
+  - 1781
+  score: 9
+  score_raw: 差不多就九分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我穿越成了大魔鲨
+  genre_guess:
+  - 进化
+  - 变异
+  - 海洋
+  overall_comment: 吃人有巨大毒点且可能违规，虽然危机感写得尚可但无法代入，建议修改进化路线。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 主角吃人是重大毒点和严重违规点
+    raw_quote: 有人举报你必死，就主角吃人你怎么办怎么办
+  - dimension: character
+    severity: negative
+    content: 完全无法代入一条想吃人的鲨鱼
+    raw_quote: 但是问题是问题是我怎么代入啊
+  - dimension: misc
+    severity: positive
+    content: 危机氛围和场景描写尚可
+    raw_quote: 其实危机氛围都可以

@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0173
+title: 穿成武大郎：我能看见好感度与心声 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 都市
+  - 穿越
+  - 系统流
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多45分吧 | 行文流畅但金手指过大（好感度+心声），事件解决方式无脑，起点不适合，可能更适合蓝精灵短剧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 行文流畅但金手指过大（好感度+心声），事件解决方式无脑，起点不适合，可能更适合蓝精灵短剧。 | 能查看好感度同时听见心声，挂太大，失去悬念。;翻身直接杀死潘金莲的处理显得无脑，缺乏智力博弈。;杀人获得加点的设计与起点大环境不符。
+  observable:
+  - 'golden_finger维度: 能查看好感度同时听见心声，挂太大，失去悬念。'
+  - 'character维度: 翻身直接杀死潘金莲的处理显得无脑，缺乏智力博弈。'
+  - 'ops维度: 杀人获得加点的设计与起点大环境不符。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 350
+  - 520
+  score: 45
+  score_raw: 差不多45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿成武大郎：我能看见好感度与心声
+  genre_guess:
+  - 都市
+  - 穿越
+  - 系统流
+  - 金手指
+  overall_comment: 行文流畅但金手指过大（好感度+心声），事件解决方式无脑，起点不适合，可能更适合蓝精灵短剧。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 能查看好感度同时听见心声，挂太大，失去悬念。
+    raw_quote: 这个挂太大了这个挂真压不住
+  - dimension: character
+    severity: negative
+    content: 翻身直接杀死潘金莲的处理显得无脑，缺乏智力博弈。
+    raw_quote: 捅进他的咽喉不能杀呀大哥这这就崩了呀
+  - dimension: ops
+    severity: negative
+    content: 杀人获得加点的设计与起点大环境不符。
+    raw_quote: 起点的话杀人真不好

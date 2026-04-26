@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0458
+title: 穿成孟霍 (fail / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 蓝精灵
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 52分 真有 | 蓝精灵小白写法流畅，人设挺好但金手指系统恶搞，题材更适合蓝精灵而非起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蓝精灵小白写法流畅，人设挺好但金手指系统恶搞，题材更适合蓝精灵而非起点。 | 错位系统太恶搞，换成好感度或情绪值系统更自然
+  observable:
+  - 'golden_finger维度: 错位系统太恶搞，换成好感度或情绪值系统更自然'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 661
+  - 720
+  score: 52
+  score_raw: 52分 真有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿成孟霍
+  genre_guess:
+  - 历史
+  - 三国
+  - 蓝精灵
+  overall_comment: 蓝精灵小白写法流畅，人设挺好但金手指系统恶搞，题材更适合蓝精灵而非起点。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 错位系统太恶搞，换成好感度或情绪值系统更自然
+    raw_quote: 你把这个系统换了吧 兄弟 我觉得没必要这种 错位系统 这种是恶搞系统
+  - dimension: character
+    severity: positive
+    content: 孟获和诸葛亮人设写得蛮好，专业感有
+    raw_quote: 大概写人的 还可以 梦或跟诸葛亮写的都蛮好的 而且这些专业性也有
+  - dimension: genre
+    severity: neutral
+    content: 写法更贴近蓝精灵，起点需要更合理逻辑，但仍可打磨尝试
+    raw_quote: 觉得题材更适合蓝精灵 52分 真有 相信我的打分含金量

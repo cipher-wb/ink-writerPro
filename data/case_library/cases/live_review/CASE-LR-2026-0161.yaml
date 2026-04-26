@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0161
+title: 合欢宗外门弟子结缘系统 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 合欢宗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四五十分有的 四十五分确实 | 节奏快、文笔好，但主线性弱，老梗多，适合发蓝精灵尝试。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快、文笔好，但主线性弱，老梗多，适合发蓝精灵尝试。 | 主线性太弱，没有危机感;切入逻辑性不够，老梗多
+  observable:
+  - 'genre维度: 主线性太弱，没有危机感'
+  - 'opening维度: 切入逻辑性不够，老梗多'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 271
+  - 461
+  score: 45
+  score_raw: 四五十分有的 四十五分确实
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 合欢宗外门弟子结缘系统
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 合欢宗
+  overall_comment: 节奏快、文笔好，但主线性弱，老梗多，适合发蓝精灵尝试。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 主线性太弱，没有危机感
+    raw_quote: 你的主線比較弱...沒什麼危機沒什麼緊迫感
+  - dimension: opening
+    severity: negative
+    content: 切入逻辑性不够，老梗多
+    raw_quote: 起點這樣的切入 我覺得還是不夠 有說服力
+  - dimension: pacing
+    severity: positive
+    content: 节奏快文笔好
+    raw_quote: 不過節奏快文筆好
+  - dimension: misc
+    severity: positive
+    content: 可以发蓝精灵试试
+    raw_quote: 就攔截你試試吧

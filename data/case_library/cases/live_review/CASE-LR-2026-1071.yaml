@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1071
+title: 大宋霸刀传 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 传统武侠
+  - 历史
+  - 金庸同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50吧 | 文笔扎实有金庸韵味，但写法过于古老，缺乏市场吸引力，建议改为同人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实有金庸韵味，但写法过于古老，缺乏市场吸引力，建议改为同人。 | 传统武侠写法过时，编辑不愿捞
+  observable:
+  - 'genre维度: 传统武侠写法过时，编辑不愿捞'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 461
+  - 542
+  score: 50
+  score_raw: 50吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大宋霸刀传
+  genre_guess:
+  - 传统武侠
+  - 历史
+  - 金庸同人
+  overall_comment: 文笔扎实有金庸韵味，但写法过于古老，缺乏市场吸引力，建议改为同人。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 传统武侠写法过时，编辑不愿捞
+    raw_quote: 现在不一定有人捞，太捞了
+  - dimension: misc
+    severity: neutral
+    content: 学院派风格适合老书虫，但缺乏新意
+    raw_quote: 基本功扎实归扎实，但是你这个写法太古老了

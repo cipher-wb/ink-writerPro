@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0953
+title: 潘夫人(药馆偷窥) (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 仙侠
+  - 雪白
+  - 医馆
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 一个五十八九分的样 | 潘夫人剧情有看头，但主角算计拖沓，需打磨主线
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 潘夫人剧情有看头，但主角算计拖沓，需打磨主线 | 主角总扯虎皮，影响人设
+  observable:
+  - 'pacing维度: 主角总扯虎皮，影响人设'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 2700
+  - 2780
+  score: 58
+  score_raw: 一个五十八九分的样
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 潘夫人(药馆偷窥)
+  genre_guess:
+  - 仙侠
+  - 雪白
+  - 医馆
+  overall_comment: 潘夫人剧情有看头，但主角算计拖沓，需打磨主线
+  comments:
+  - dimension: character
+    severity: positive
+    content: 潘夫人设定有琢磨空间，互动有趣
+    raw_quote: 潘夫人没问题 但展看写的不够清楚
+  - dimension: pacing
+    severity: negative
+    content: 主角总扯虎皮，影响人设
+    raw_quote: 老是莫名其妙的扯这些 然后不如写他的主线

@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1653
+title: 无限流大明 (borderline)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 无限流
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还行嘛还行嘛 | 比例扎实，但无限流主线难出成绩，更适合番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实，但无限流主线难出成绩，更适合番茄。 | 无限流无法构建长期主线。
+  observable:
+  - 'misc维度: 无限流无法构建长期主线。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 1371
+  - 1420
+  score: null
+  score_raw: 还行嘛还行嘛
+  score_signal: fuzzy
+  verdict: borderline
+  title_guess: 无限流大明
+  genre_guess:
+  - 无限流
+  - 历史
+  overall_comment: 比例扎实，但无限流主线难出成绩，更适合番茄。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 无限流无法构建长期主线。
+    raw_quote: 主线不行，无限流没办法无解

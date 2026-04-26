@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1385
+title: 正道第一玄门（粉丝感谢记） (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 仙侠
+  - 邪修
+  - 反差
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 34分了 | 比例很好但吐槽烂梗太多，事件太弱、主线朦胧，完全没入行，建议用危机开局模板重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例很好但吐槽烂梗太多，事件太弱、主线朦胧，完全没入行，建议用危机开局模板重写。 | 开篇没事件，自言自语闷头写，需要直接进入危机;人物互动几乎没有，故事性差;烂梗太多，吐槽没必要也不搞笑
+  observable:
+  - 'opening维度: 开篇没事件，自言自语闷头写，需要直接进入危机'
+  - 'character维度: 人物互动几乎没有，故事性差'
+  - 'simplicity维度: 烂梗太多，吐槽没必要也不搞笑'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 621
+  - 710
+  score: 34
+  score_raw: 34分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 正道第一玄门（粉丝感谢记）
+  genre_guess:
+  - 仙侠
+  - 邪修
+  - 反差
+  overall_comment: 比例很好但吐槽烂梗太多，事件太弱、主线朦胧，完全没入行，建议用危机开局模板重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇没事件，自言自语闷头写，需要直接进入危机
+    raw_quote: 写小剧场去吧...写故事 写人物的互动 没人看啊
+  - dimension: character
+    severity: negative
+    content: 人物互动几乎没有，故事性差
+    raw_quote: 事件太弱了 主线太朦胧了
+  - dimension: simplicity
+    severity: negative
+    content: 烂梗太多，吐槽没必要也不搞笑
+    raw_quote: 烂梗太多了...吐槽没必要

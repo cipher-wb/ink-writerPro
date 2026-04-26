@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0114
+title: 将军莫虑/全职业百页书 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 仙侠
+  - cos
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分左右吧 | 代入感思考了对但读者不关心，事件无聊不爽，老盯着几个男的一直写，建议写女人去。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感思考了对但读者不关心，事件无聊不爽，老盯着几个男的一直写，建议写女人去。 | 前面写太多啰嗦，事件无聊无趣;cos词语出戏不接地气
+  observable:
+  - 'pacing维度: 前面写太多啰嗦，事件无聊无趣'
+  - 'genre维度: cos词语出戏不接地气'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1881
+  - 2000
+  score: 40
+  score_raw: 40分左右吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 将军莫虑/全职业百页书
+  genre_guess:
+  - 仙侠
+  - cos
+  - 系统
+  overall_comment: 代入感思考了对但读者不关心，事件无聊不爽，老盯着几个男的一直写，建议写女人去。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 前面写太多啰嗦，事件无聊无趣
+    raw_quote: 前面估计要跑很多人，这里的这个卖点也没啥意思...这个事件很无聊
+  - dimension: genre
+    severity: negative
+    content: cos词语出戏不接地气
+    raw_quote: 在这里面出来这种cos类的词语出戏，我觉读者跑完了全跑

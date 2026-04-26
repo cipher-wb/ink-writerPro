@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0417
+title: 雪白稿造物养料 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 奇幻
+  - 脑洞
+  - 乐子
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 想法有趣，想象力丰富，但写得太直白，需留白规避审核
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 想法有趣，想象力丰富，但写得太直白，需留白规避审核 | 细节太多太直白，直播有妹妹和未成年，要照顾影响
+  observable:
+  - 'taboo维度: 细节太多太直白，直播有妹妹和未成年，要照顾影响'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1149
+  - 1230
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 雪白稿造物养料
+  genre_guess:
+  - 奇幻
+  - 脑洞
+  - 乐子
+  overall_comment: 想法有趣，想象力丰富，但写得太直白，需留白规避审核
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 细节太多太直白，直播有妹妹和未成年，要照顾影响
+    raw_quote: 不要写细节，点到为止留白...这样规避审核，又恰到好处
+  - dimension: simplicity
+    severity: positive
+    content: 天赋没问题，想象力丰富
+    raw_quote: 写的挺好的...有天赋的，天赋没问题

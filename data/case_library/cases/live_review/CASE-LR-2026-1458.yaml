@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1458
+title: 京师末日废土 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eEfxBGEfa
+scope:
+  genre:
+  - 科幻
+  - 末日废土
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 分镜式电影剧本，缺乏网文代入感，题材很难写，需要推翻思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eEfxBGEfa.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 分镜式电影剧本，缺乏网文代入感，题材很难写，需要推翻思路。 | 开篇纯设定、无代入感，分镜式写法不适合网文;末日废土大背景预设太多，卖点不接地气
+  observable:
+  - 'opening维度: 开篇纯设定、无代入感，分镜式写法不适合网文'
+  - 'genre维度: 末日废土大背景预设太多，卖点不接地气'
+live_review_meta:
+  source_bvid: BV1eEfxBGEfa
+  source_line_range:
+  - 901
+  - 1124
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 京师末日废土
+  genre_guess:
+  - 科幻
+  - 末日废土
+  overall_comment: 分镜式电影剧本，缺乏网文代入感，题材很难写，需要推翻思路。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇纯设定、无代入感，分镜式写法不适合网文
+    raw_quote: 你写成科幻了……网文不是科幻……思路是分镜师
+  - dimension: genre
+    severity: negative
+    content: 末日废土大背景预设太多，卖点不接地气
+    raw_quote: 这种大背景大哥读者怎么代入啊……你的卖点也是你自己设定了一个世界观

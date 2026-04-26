@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0352
+title: 第一台机娘 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 轻小说
+  - 机娘
+  - 改装
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55方案给你 | 机娘互动堪称天才，但主线驱动力太弱，全靠福利撑着。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 机娘互动堪称天才，但主线驱动力太弱，全靠福利撑着。 | 主线单薄，仅有搞钱一个驱动力
+  observable:
+  - 'hook维度: 主线单薄，仅有搞钱一个驱动力'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 3540
+  - 3659
+  score: 55
+  score_raw: 55方案给你
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 第一台机娘
+  genre_guess:
+  - 轻小说
+  - 机娘
+  - 改装
+  overall_comment: 机娘互动堪称天才，但主线驱动力太弱，全靠福利撑着。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 机娘人设和拉扯互动绝佳，纯属签约级实力
+    raw_quote: 机娘是真的很强…闭着眼睛签约 签约境界的水平
+  - dimension: hook
+    severity: negative
+    content: 主线单薄，仅有搞钱一个驱动力
+    raw_quote: 可惜前面太垃圾了 这个题材也主线单薄 没什么好的主线驱动力

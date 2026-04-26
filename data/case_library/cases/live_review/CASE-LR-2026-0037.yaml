@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0037
+title: 张霖穿越灭门复仇 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是30分左右吧 | 武侠写法流畅，但剧情老套，代入感差，事件驱动力老套。需换题材和剧情。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 武侠写法流畅，但剧情老套，代入感差，事件驱动力老套。需换题材和剧情。 | 剧情老套无聊;代入感很差;事件驱动力老套
+  observable:
+  - 'opening维度: 剧情老套无聊'
+  - 'character维度: 代入感很差'
+  - 'pacing维度: 事件驱动力老套'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 136
+  - 190
+  score: 30
+  score_raw: 也是30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 张霖穿越灭门复仇
+  genre_guess:
+  - 武侠
+  overall_comment: 武侠写法流畅，但剧情老套，代入感差，事件驱动力老套。需换题材和剧情。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 剧情老套无聊
+    raw_quote: 换汤不换药呀
+  - dimension: character
+    severity: negative
+    content: 代入感很差
+    raw_quote: 但代入感很差
+  - dimension: pacing
+    severity: negative
+    content: 事件驱动力老套
+    raw_quote: 你的事件驱动力也很老套

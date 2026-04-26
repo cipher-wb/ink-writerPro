@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1861
+title: 重生宠爱捡精致女孩都市文 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 重生
+  - 恋爱
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44分 | 毒蘑菇现在只写平淡的宠爱文，没有主线、爆点和看点，像琼瑶剧，但遣词造句还可以。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 毒蘑菇现在只写平淡的宠爱文，没有主线、爆点和看点，像琼瑶剧，但遣词造句还可以。 | 全文平淡无主线，缺乏爆点和看点，放短剧都会被轰出去
+  observable:
+  - 'highpoint维度: 全文平淡无主线，缺乏爆点和看点，放短剧都会被轰出去'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 834
+  - 895
+  score: 44
+  score_raw: 44分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生宠爱捡精致女孩都市文
+  genre_guess:
+  - 重生
+  - 恋爱
+  - 都市
+  overall_comment: 毒蘑菇现在只写平淡的宠爱文，没有主线、爆点和看点，像琼瑶剧，但遣词造句还可以。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 全文平淡无主线，缺乏爆点和看点，放短剧都会被轰出去
+    raw_quote: 没有看点 没有爆点 没有主线 就平平淡淡的呀
+  - dimension: simplicity
+    severity: positive
+    content: 遣词造句写得很好，比例还行
+    raw_quote: 我觉得遣词造句是写的很好 但是没主线

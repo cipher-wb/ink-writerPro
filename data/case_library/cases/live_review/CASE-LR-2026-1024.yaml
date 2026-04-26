@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1024
+title: 预售开局融合 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 预售
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分有 | 番茄向五年前写法，卖点不突出，只能去番茄或Q阅。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 番茄向五年前写法，卖点不突出，只能去番茄或Q阅。 | 预售系统没有独特卖点，召唤物无聊;设定和人物分开写，最小白写法
+  observable:
+  - 'golden_finger维度: 预售系统没有独特卖点，召唤物无聊'
+  - 'simplicity维度: 设定和人物分开写，最小白写法'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1481
+  - 1570
+  score: 25
+  score_raw: 25分有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 预售开局融合
+  genre_guess:
+  - 预售
+  - 都市
+  overall_comment: 番茄向五年前写法，卖点不突出，只能去番茄或Q阅。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 预售系统没有独特卖点，召唤物无聊
+    raw_quote: 别人召唤神龙 你召唤个毛毛虫这样子
+  - dimension: simplicity
+    severity: negative
+    content: 设定和人物分开写，最小白写法
+    raw_quote: 你现在是分开写 这是最小白的写法

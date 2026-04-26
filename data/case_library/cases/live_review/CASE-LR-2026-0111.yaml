@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0111
+title: 苏联/武侠药铺 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 武侠
+  - 朝堂
+  - 传统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给他个22分 | 思路非常老套，原创武侠没人看。必须加穿越救女侠引出金手指和事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路非常老套，原创武侠没人看。必须加穿越救女侠引出金手指和事件。 | 原创武侠没人看，写法太古老;必须穿越，必须穿越，不穿越不行
+  observable:
+  - 'genre维度: 原创武侠没人看，写法太古老'
+  - 'opening维度: 必须穿越，必须穿越，不穿越不行'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1581
+  - 1680
+  score: 22
+  score_raw: 给他个22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 苏联/武侠药铺
+  genre_guess:
+  - 武侠
+  - 朝堂
+  - 传统
+  overall_comment: 思路非常老套，原创武侠没人看。必须加穿越救女侠引出金手指和事件。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 原创武侠没人看，写法太古老
+    raw_quote: 原创武侠真没人看啊，而且你还加了一些就是那个什么政治嘛...这种时候只能回08年了
+  - dimension: opening
+    severity: negative
+    content: 必须穿越，必须穿越，不穿越不行
+    raw_quote: 一定要穿越，一定要穿越，一定要穿越，记住不穿越绝对不行

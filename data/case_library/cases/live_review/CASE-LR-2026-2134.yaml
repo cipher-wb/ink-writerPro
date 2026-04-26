@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2134
+title: 我在东京女监当狱警 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 都市
+  - 职场
+  - 东京流
+  - 监狱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个稿子大概能给个40左右 | 选题和封面不错，但正文偏题成雪白拉扯，缺少职场事件和主线驱动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 选题和封面不错，但正文偏题成雪白拉扯，缺少职场事件和主线驱动。 | 开头误会拉扯刻意，没有好的事件脑洞
+  observable:
+  - 'opening维度: 开头误会拉扯刻意，没有好的事件脑洞'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 581
+  - 680
+  score: 40
+  score_raw: 这个稿子大概能给个40左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在东京女监当狱警
+  genre_guess:
+  - 都市
+  - 职场
+  - 东京流
+  - 监狱
+  overall_comment: 选题和封面不错，但正文偏题成雪白拉扯，缺少职场事件和主线驱动。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 东京女监狱警题材能过审，有潜力
+    raw_quote: 这能过审真牛逼 这个题材挺好的
+  - dimension: opening
+    severity: negative
+    content: 开头误会拉扯刻意，没有好的事件脑洞
+    raw_quote: 我觉得你前面那个误会有点太刻意了 真的太刻意了 就暴露出你的开头没有好的脑洞呀

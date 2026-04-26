@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2163
+title: 重生救妹妹：黑砖窑绑架案 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 苦情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有天赋，但代入感太差 | 写强情绪有天赋，但苦大仇深的重生主线代入感差，建议临摹大众重生文如灯红酒绿回归白月光的套路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写强情绪有天赋，但苦大仇深的重生主线代入感差，建议临摹大众重生文如灯红酒绿回归白月光的套路。 | 黑砖窑救人主线太苦大仇深，大众无法代入
+  observable:
+  - 'genre维度: 黑砖窑救人主线太苦大仇深，大众无法代入'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 2415
+  - 2574
+  score: null
+  score_raw: 有天赋，但代入感太差
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 重生救妹妹：黑砖窑绑架案
+  genre_guess:
+  - 都市
+  - 重生
+  - 苦情
+  overall_comment: 写强情绪有天赋，但苦大仇深的重生主线代入感差，建议临摹大众重生文如灯红酒绿回归白月光的套路。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 写情绪和煽情有天赋，能打动人
+    raw_quote: 写情绪确实有天赋...这种感慨都有...你能把这个情绪写的很好
+  - dimension: genre
+    severity: negative
+    content: 黑砖窑救人主线太苦大仇深，大众无法代入
+    raw_quote: 救人这个主线没意思呀，读者不好代入...我又不是黑砖窑的...起点重生文都是写那种灯红酒绿...只想回到白月光

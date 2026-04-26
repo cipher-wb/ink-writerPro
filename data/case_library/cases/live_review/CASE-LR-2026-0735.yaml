@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0735
+title: 太子命我保定了 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 历史
+  - 明朝
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就三十三分 | 文笔比例还行，但切入全靠高手，故事零散像公路文，缺乏集中剧情和眼前的事件推进。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例还行，但切入全靠高手，故事零散像公路文，缺乏集中剧情和眼前的事件推进。 | 开头用道士算命故弄玄虚，应直接穿越切入;故事零散如公路文，缺乏集中的事件推进
+  observable:
+  - 'opening维度: 开头用道士算命故弄玄虚，应直接穿越切入'
+  - 'pacing维度: 故事零散如公路文，缺乏集中的事件推进'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1251
+  - 1330
+  score: 33
+  score_raw: 差不多就三十三分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 太子命我保定了
+  genre_guess:
+  - 历史
+  - 明朝
+  - 穿越
+  overall_comment: 文笔比例还行，但切入全靠高手，故事零散像公路文，缺乏集中剧情和眼前的事件推进。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头用道士算命故弄玄虚，应直接穿越切入
+    raw_quote: 把老道士删掉吧 不要了搞这种故弄玄虚的
+  - dimension: pacing
+    severity: negative
+    content: 故事零散如公路文，缺乏集中的事件推进
+    raw_quote: 没什么集中的故事 就零零散散的 仿佛就公路文
+  - dimension: simplicity
+    severity: neutral
+    content: 文笔比例还行，但内容虚且缺乏主线展开
+    raw_quote: 比例还行...而且内容也虚...就是没有好多主线展开

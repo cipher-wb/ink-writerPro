@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1034
+title: 互联网成了寄愿保安 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 架空历史
+  - 不明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 21分之内 | 自嗨式写法，满屏烂梗加上非主流视角，完全脱离市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 自嗨式写法，满屏烂梗加上非主流视角，完全脱离市场。 | 题材古怪，不像网文套路;干巴巴讲故事，冲突事件全无
+  observable:
+  - 'genre维度: 题材古怪，不像网文套路'
+  - 'misc维度: 干巴巴讲故事，冲突事件全无'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 2371
+  - 2450
+  score: 21
+  score_raw: 21分之内
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 互联网成了寄愿保安
+  genre_guess:
+  - 架空历史
+  - 不明
+  overall_comment: 自嗨式写法，满屏烂梗加上非主流视角，完全脱离市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材古怪，不像网文套路
+    raw_quote: 这玩意读者都不知道怎么分类
+  - dimension: misc
+    severity: negative
+    content: 干巴巴讲故事，冲突事件全无
+    raw_quote: 这个冲突事件什么都没有 就干巴巴这么讲一直吐槽

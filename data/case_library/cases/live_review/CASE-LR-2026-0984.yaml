@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0984
+title: 远古二傻子针灸救人 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 仙侠
+  - 古典
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你40分兄弟 | 文笔很好，比例和悬念都扎实。但人设代入不了，傻子/树先生主角不流行，故弄玄虚。改成现代穿越人设就好了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔很好，比例和悬念都扎实。但人设代入不了，傻子/树先生主角不流行，故弄玄虚。改成现代穿越人设就好了。 | 傻子主角不流行，很难代入，故弄玄虚。
+  observable:
+  - 'character维度: 傻子主角不流行，很难代入，故弄玄虚。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 3841
+  - 4000
+  score: 40
+  score_raw: 给你40分兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 远古二傻子针灸救人
+  genre_guess:
+  - 仙侠
+  - 古典
+  overall_comment: 文笔很好，比例和悬念都扎实。但人设代入不了，傻子/树先生主角不流行，故弄玄虚。改成现代穿越人设就好了。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 傻子主角不流行，很难代入，故弄玄虚。
+    raw_quote: 现在不流行这种傻子主角了...傻子主角肯定不流行了...这怎么立得住...人设真的很难代入
+  - dimension: opening
+    severity: positive
+    content: 小剧场悬念不错，文笔娓娓道来不觉得出戏。
+    raw_quote: 小剧场挺好的...有点悬念...比例还挺好的...娓娓道来不觉得出戏

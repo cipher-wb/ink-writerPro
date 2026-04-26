@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1621
+title: 民国武宗斩妖 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 民国
+  - 武宗
+  - 灵异
+  - 斩妖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多45分 | 氛围文笔尚可，但节奏太慢，故事剧情单薄，缺乏惊喜反转。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围文笔尚可，但节奏太慢，故事剧情单薄，缺乏惊喜反转。 | 节奏已经慢崩了，毫无剧情推进，观察侦探杀妖反复太单调;缺乏高潮和惊喜反转，平淡如水
+  observable:
+  - 'pacing维度: 节奏已经慢崩了，毫无剧情推进，观察侦探杀妖反复太单调'
+  - 'highpoint维度: 缺乏高潮和惊喜反转，平淡如水'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 1220
+  - 1299
+  score: 45
+  score_raw: 差不多45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国武宗斩妖
+  genre_guess:
+  - 民国
+  - 武宗
+  - 灵异
+  - 斩妖
+  overall_comment: 氛围文笔尚可，但节奏太慢，故事剧情单薄，缺乏惊喜反转。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏已经慢崩了，毫无剧情推进，观察侦探杀妖反复太单调
+    raw_quote: 已经慢疯掉了 … 内容太八谷了 … 沒人看兄弟
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏高潮和惊喜反转，平淡如水
+    raw_quote: 反转没什么惊喜的 … 太简单了

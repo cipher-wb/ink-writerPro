@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1186
+title: 盛夏某日 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 按时三分啊 | 高考查分切入后穿越仙侠游戏，但前面日常无效，进入事件后依然拖沓。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 高考查分切入后穿越仙侠游戏，但前面日常无效，进入事件后依然拖沓。 | 前期日常交代与主线毫无关系，纯粹浪费时间;穿越后仍在探险研究，节奏水滥
+  observable:
+  - 'opening维度: 前期日常交代与主线毫无关系，纯粹浪费时间'
+  - 'pacing维度: 穿越后仍在探险研究，节奏水滥'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 2910
+  - 3060
+  score: 33
+  score_raw: 按时三分啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 盛夏某日
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 游戏
+  overall_comment: 高考查分切入后穿越仙侠游戏，但前面日常无效，进入事件后依然拖沓。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前期日常交代与主线毫无关系，纯粹浪费时间
+    raw_quote: 我以为你在写日记 你知道吧 又 这不是又重复了吗
+  - dimension: pacing
+    severity: negative
+    content: 穿越后仍在探险研究，节奏水滥
+    raw_quote: 穿过去 事件也是水滥的 等于一整张在探险研究

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2004
+title: 剑客传奇 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 武侠
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你30分 | 文笔好但思路陈旧，军队边境的写法缺乏接地气的看点，像过时的老武侠。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔好但思路陈旧，军队边境的写法缺乏接地气的看点，像过时的老武侠。 | 写法过于老套文青，读者无代入感。;缺乏吸引人的冲突事件，全是写景和设定。
+  observable:
+  - 'genre维度: 写法过于老套文青，读者无代入感。'
+  - 'opening维度: 缺乏吸引人的冲突事件，全是写景和设定。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 554
+  - 599
+  score: 30
+  score_raw: 就给你30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 剑客传奇
+  genre_guess:
+  - 武侠
+  - 奇幻
+  overall_comment: 文笔好但思路陈旧，军队边境的写法缺乏接地气的看点，像过时的老武侠。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写法过于老套文青，读者无代入感。
+    raw_quote: 这个太文青了 他特别文青 ... 难带入啊 这大哥 不接地气
+  - dimension: opening
+    severity: negative
+    content: 缺乏吸引人的冲突事件，全是写景和设定。
+    raw_quote: 你一上来 来一个 冲突事件内容啊

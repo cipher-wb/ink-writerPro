@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1883
+title: 重生92年忽悠迁祖坟 (fail / 26分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 创业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 26分 | 老乡文笔扎实接地气，但事件太老套，知开头知结局，毫无期待感，适合5年前的起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老乡文笔扎实接地气，但事件太老套，知开头知结局，毫无期待感，适合5年前的起点。 | 知开头知结局，毫无期待感;农村重生创业题材已过时
+  observable:
+  - 'highpoint维度: 知开头知结局，毫无期待感'
+  - 'genre维度: 农村重生创业题材已过时'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 701
+  - 790
+  score: 26
+  score_raw: 26分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生92年忽悠迁祖坟
+  genre_guess:
+  - 都市
+  - 重生
+  - 创业
+  overall_comment: 老乡文笔扎实接地气，但事件太老套，知开头知结局，毫无期待感，适合5年前的起点。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 知开头知结局，毫无期待感
+    raw_quote: 知开同行知结局是非常弱的 期待感就永远不要让别人知道呀
+  - dimension: genre
+    severity: negative
+    content: 农村重生创业题材已过时
+    raw_quote: 这个东西适合5年前的起点... 我觉得还是难
+  - dimension: opening
+    severity: positive
+    content: 文笔扎实，接地气
+    raw_quote: 比例很扎实也没问题... 比例还可以吧 有点接地烟火气

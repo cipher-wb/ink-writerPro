@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1339
+title: 阴阳化道器修仙系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 仙侠
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是四十多分 | 剧情老套，系统流无新意，人物对话尴尬。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情老套，系统流无新意，人物对话尴尬。 | 系统设定俗套，缺乏特色;主角像舔狗，配角工具化;开头情节推进缓慢，缺乏爆点
+  observable:
+  - 'golden_finger维度: 系统设定俗套，缺乏特色'
+  - 'character维度: 主角像舔狗，配角工具化'
+  - 'pacing维度: 开头情节推进缓慢，缺乏爆点'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 600
+  - 660
+  score: null
+  score_raw: 还是四十多分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 阴阳化道器修仙系统
+  genre_guess:
+  - 仙侠
+  - 系统流
+  overall_comment: 剧情老套，系统流无新意，人物对话尴尬。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定俗套，缺乏特色
+    raw_quote: 又是陈东亚全是土豆亚，全干了
+  - dimension: character
+    severity: negative
+    content: 主角像舔狗，配角工具化
+    raw_quote: 大哥是舔狗，舔狗穿越了
+  - dimension: pacing
+    severity: negative
+    content: 开头情节推进缓慢，缺乏爆点
+    raw_quote: 哎好无聊啊，这个世界也无聊啊

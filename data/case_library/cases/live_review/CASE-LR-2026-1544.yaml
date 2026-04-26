@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1544
+title: 诗仙市场之李白王龙 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 历史
+  - 系统
+  - 耽美
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多九分 | 文笔不错但搞基暧昧，女频向严重，无法签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错但搞基暧昧，女频向严重，无法签约。 | 写成耽美，不符合起点男频定位;开篇兄弟情拉扯过于暧昧
+  observable:
+  - 'genre维度: 写成耽美，不符合起点男频定位'
+  - 'hook维度: 开篇兄弟情拉扯过于暧昧'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 134
+  - 262
+  score: null
+  score_raw: 差不多九分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 诗仙市场之李白王龙
+  genre_guess:
+  - 历史
+  - 系统
+  - 耽美
+  overall_comment: 文笔不错但搞基暧昧，女频向严重，无法签约。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写成耽美，不符合起点男频定位
+    raw_quote: 再看到你们写这种搞急的 我就眨动自己的眼睛
+  - dimension: hook
+    severity: negative
+    content: 开篇兄弟情拉扯过于暧昧
+    raw_quote: 不是还是赌大哥 这不是兄弟心这是 搞极的感觉

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0541
+title: 蝉鸣于风起时 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 游戏
+  - 穿越
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 落花有撑死就40吧 | 切入民俗小故事有进步，但之后全是上帝视角，读者睡着才出主角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入民俗小故事有进步，但之后全是上帝视角，读者睡着才出主角。 | 上帝视角让读者出戏，主角出场太慢
+  observable:
+  - 'pacing维度: 上帝视角让读者出戏，主角出场太慢'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 1701
+  - 1820
+  score: 40
+  score_raw: 落花有撑死就40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蝉鸣于风起时
+  genre_guess:
+  - 游戏
+  - 穿越
+  - 民俗
+  overall_comment: 切入民俗小故事有进步，但之后全是上帝视角，读者睡着才出主角。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头民俗故事切入不错
+    raw_quote: 这个开头有点像以前的民俗小故事 … 其实还好
+  - dimension: pacing
+    severity: negative
+    content: 上帝视角让读者出戏，主角出场太慢
+    raw_quote: 一直上帝视角 … 读者全睡着了 你出来主角了

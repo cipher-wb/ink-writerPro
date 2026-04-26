@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1212
+title: 我被第四天灾玩家追杀 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 第四天灾
+  - 修仙
+  - 玩家
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分吧 | 不会讲故事，设定堆积无代入感，建议推翻重学基础叙事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不会讲故事，设定堆积无代入感，建议推翻重学基础叙事。 | 开头几百字全是技能介绍和设定，毫无剧情;信息密集但全无有效推进
+  observable:
+  - 'opening维度: 开头几百字全是技能介绍和设定，毫无剧情'
+  - 'pacing维度: 信息密集但全无有效推进'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 554
+  - 595
+  score: 22
+  score_raw: 22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我被第四天灾玩家追杀
+  genre_guess:
+  - 第四天灾
+  - 修仙
+  - 玩家
+  overall_comment: 不会讲故事，设定堆积无代入感，建议推翻重学基础叙事。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头几百字全是技能介绍和设定，毫无剧情
+    raw_quote: 你这前几百个字出来就干嘛…看你的书要对吧就问一下玩家降临和解怎么办
+  - dimension: pacing
+    severity: negative
+    content: 信息密集但全无有效推进
+    raw_quote: 就是设定里面偷偷加点剧情

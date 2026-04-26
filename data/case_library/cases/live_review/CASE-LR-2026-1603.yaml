@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1603
+title: 神明建房子 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 西幻
+  - 系统
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就20分 | 对白幼稚，剧情儿戏，毫无期待感，只适合低龄向。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对白幼稚，剧情儿戏，毫无期待感，只适合低龄向。 | 人物对话与行为极低幼，无深度;系统卖萌、兄弟笑场等桥段劝退成年人
+  observable:
+  - 'character维度: 人物对话与行为极低幼，无深度'
+  - 'opening维度: 系统卖萌、兄弟笑场等桥段劝退成年人'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 741
+  - 770
+  score: 20
+  score_raw: 就20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 神明建房子
+  genre_guess:
+  - 西幻
+  - 系统
+  - 轻松
+  overall_comment: 对白幼稚，剧情儿戏，毫无期待感，只适合低龄向。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物对话与行为极低幼，无深度
+    raw_quote: 这T小吧 … 光头强跟熊大熊二都比你对白有深度 … 全方位的全方位的小孩
+  - dimension: opening
+    severity: negative
+    content: 系统卖萌、兄弟笑场等桥段劝退成年人
+    raw_quote: 宿主你的可能这太小白了 … 人家哭 你笑是吧 … 能救也别笑呀

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1216
+title: 重生矿工国术宗师 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 国术
+  - 近代
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多38分满 | 切入接地气，但道士师父太年轻弱化主角存在感，后续向国术发展更合适。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入接地气，但道士师父太年轻弱化主角存在感，后续向国术发展更合适。 | 30岁道士当师父会抢主角风头
+  observable:
+  - 'character维度: 30岁道士当师父会抢主角风头'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 713
+  - 754
+  score: 38
+  score_raw: 差不多38分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生矿工国术宗师
+  genre_guess:
+  - 国术
+  - 近代
+  - 穿越
+  overall_comment: 切入接地气，但道士师父太年轻弱化主角存在感，后续向国术发展更合适。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 30岁道士当师父会抢主角风头
+    raw_quote: 30岁的道士你在这装逼那就弱化了主角的感觉
+  - dimension: opening
+    severity: positive
+    content: 矿场开篇有真实历史质感
+    raw_quote: 第一章代入感其实可以吧

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1799
+title: 资本魔法少女赎罪 (borderline / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 轻小说
+  - 魔法少女
+  - 变身
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十八 | 比例可以，有一丝癫狂轻小说味，但主线赎罪和系统设定要整。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例可以，有一丝癫狂轻小说味，但主线赎罪和系统设定要整。 | 赎全人类罪孽、资本家的设定有问题，系统本身扣分。
+  observable:
+  - 'golden_finger维度: 赎全人类罪孽、资本家的设定有问题，系统本身扣分。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 1186
+  - 1229
+  score: 48
+  score_raw: 四十八
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 资本魔法少女赎罪
+  genre_guess:
+  - 轻小说
+  - 魔法少女
+  - 变身
+  overall_comment: 比例可以，有一丝癫狂轻小说味，但主线赎罪和系统设定要整。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 赎全人类罪孽、资本家的设定有问题，系统本身扣分。
+    raw_quote: 全人类的罪猎七十八亿人...这个设定有点整不好
+  - dimension: character
+    severity: positive
+    content: 具体拉扯互动处（不能黑化点）有轻小说味道。
+    raw_quote: 这一点有那个味道...黑化可以强一万倍...必须得抱着她去这个地化

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1421
+title: 宋代乞丐王 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 历史
+  - 架空
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 其实是30分有的 | 故事接地气但太害圈，系统要饭无爽点，思路得改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事接地气但太害圈，系统要饭无爽点，思路得改。 | 系统用来要饭，无爽感;缺乏明确升级主线
+  observable:
+  - 'golden_finger维度: 系统用来要饭，无爽感'
+  - 'hook维度: 缺乏明确升级主线'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 661
+  - 720
+  score: 30
+  score_raw: 其实是30分有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宋代乞丐王
+  genre_guess:
+  - 历史
+  - 架空
+  - 脑洞
+  overall_comment: 故事接地气但太害圈，系统要饭无爽点，思路得改。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统用来要饭，无爽感
+    raw_quote: 用你的系统辅助你去要饭 这个我认为绝对是个害圈
+  - dimension: hook
+    severity: negative
+    content: 缺乏明确升级主线
+    raw_quote: 有了系统 还是每天要饭就去去哪 哪个区域更适合这里人流量高

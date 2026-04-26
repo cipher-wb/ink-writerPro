@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0340
+title: 悬疑破案：方舒芬的卡片 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 悬疑
+  - 侦探
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你五十分吧 | 剧本级开头极具天赋，但起点无受众，建议转短篇或知乎严选。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧本级开头极具天赋，但起点无受众，建议转短篇或知乎严选。 | 悬疑破案在起点极冷门，几乎没有读者
+  observable:
+  - 'genre维度: 悬疑破案在起点极冷门，几乎没有读者'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 1930
+  - 2075
+  score: 50
+  score_raw: 就给你五十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 悬疑破案：方舒芬的卡片
+  genre_guess:
+  - 悬疑
+  - 侦探
+  - 灵异
+  overall_comment: 剧本级开头极具天赋，但起点无受众，建议转短篇或知乎严选。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章推理破案专业，电影感强，水平较高
+    raw_quote: 第一章水平是蛮高的
+  - dimension: genre
+    severity: negative
+    content: 悬疑破案在起点极冷门，几乎没有读者
+    raw_quote: 网红这一块很凉…没错路 没什么用户

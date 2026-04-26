@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0607
+title: 马鞭骚乡村 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个确实只能20分 最多了 | 小学生日记式叙述，人设小白，毫无看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小学生日记式叙述，人设小白，毫无看点。 | 人物和剧情极度小白，像小学生作文
+  observable:
+  - 'character维度: 人物和剧情极度小白，像小学生作文'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 2801
+  - 2950
+  score: 20
+  score_raw: 这个确实只能20分 最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 马鞭骚乡村
+  genre_guess:
+  - 都市
+  - 日常
+  overall_comment: 小学生日记式叙述，人设小白，毫无看点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物和剧情极度小白，像小学生作文
+    raw_quote: 你这人设太小白了...到底看点在哪里呢

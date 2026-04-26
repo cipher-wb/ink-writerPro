@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1096
+title: 魔法学院·光之子风格 (fail / 17分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 魔法
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大哥就17分了 | 对白和人设过于低幼，属于十几年前的写法，需全面学习现代网文
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对白和人设过于低幼，属于十几年前的写法，需全面学习现代网文 | 人设小白，说话像个八岁孩子，立不住;题材上年纪，定位不清，现代读者难接受
+  observable:
+  - 'character维度: 人设小白，说话像个八岁孩子，立不住'
+  - 'genre维度: 题材上年纪，定位不清，现代读者难接受'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 920
+  - 980
+  score: 17
+  score_raw: 只能给大哥就17分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔法学院·光之子风格
+  genre_guess:
+  - 魔法
+  - 校园
+  overall_comment: 对白和人设过于低幼，属于十几年前的写法，需全面学习现代网文
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设小白，说话像个八岁孩子，立不住
+    raw_quote: 你这说话就感觉8岁 我的名字叫余震远 喜欢的异性是魔法 目前18岁就立不住呀
+  - dimension: genre
+    severity: negative
+    content: 题材上年纪，定位不清，现代读者难接受
+    raw_quote: 这题材太垃圾了 你就玻璃心我就明说了 这垃圾题材就就是有 上了年纪了已经

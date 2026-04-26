@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2215
+title: 平行世界怪诞 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 灵异
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我愿意给你40分 兄弟 | 有天赋但故弄玄虚，写得太癫狂读者看不懂，建议写简单点并多介绍背景。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋但故弄玄虚，写得太癫狂读者看不懂，建议写简单点并多介绍背景。 | 开头看不懂，诗歌一样的写法太飘;写得过于文青和癫狂，信息不清
+  observable:
+  - 'opening维度: 开头看不懂，诗歌一样的写法太飘'
+  - 'misc维度: 写得过于文青和癫狂，信息不清'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 869
+  - 915
+  score: 40
+  score_raw: 我愿意给你40分 兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 平行世界怪诞
+  genre_guess:
+  - 灵异
+  - 异能
+  overall_comment: 有天赋但故弄玄虚，写得太癫狂读者看不懂，建议写简单点并多介绍背景。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头看不懂，诗歌一样的写法太飘
+    raw_quote: 这不是鲁迅 这是散文啊...看不懂
+  - dimension: misc
+    severity: negative
+    content: 写得过于文青和癫狂，信息不清
+    raw_quote: 有点故弄玄虚了...我就愿意给你40分 兄弟赌一波好吧
+  - dimension: character
+    severity: neutral
+    content: 有天赋，但缺乏清晰的主线和阅读爽点
+    raw_quote: 其实也是有天赋的 你们确实也是有潜力无限的...就写点简单一点的先

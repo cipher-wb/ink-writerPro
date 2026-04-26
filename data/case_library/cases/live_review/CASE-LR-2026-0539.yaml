@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0539
+title: 家父战死纨绔也摊牌了 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 玄幻
+  - 权谋
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给他给个32分 | 玄幻味道太弱，主线卖点老套没意思，类似权力游戏但没写出亮点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 玄幻味道太弱，主线卖点老套没意思，类似权力游戏但没写出亮点。 | 玄幻分类却写成权力斗争，智能推不吃;父亲死亡复仇的主线没有卖点
+  observable:
+  - 'genre维度: 玄幻分类却写成权力斗争，智能推不吃'
+  - 'hook维度: 父亲死亡复仇的主线没有卖点'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 1471
+  - 1590
+  score: 32
+  score_raw: 给他给个32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 家父战死纨绔也摊牌了
+  genre_guess:
+  - 玄幻
+  - 权谋
+  - 爽文
+  overall_comment: 玄幻味道太弱，主线卖点老套没意思，类似权力游戏但没写出亮点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 玄幻分类却写成权力斗争，智能推不吃
+    raw_quote: 你是玄幻分类 你这玩意写成了一个 … 权力的游戏啊 就这样的感觉
+  - dimension: hook
+    severity: negative
+    content: 父亲死亡复仇的主线没有卖点
+    raw_quote: 你的你以为的所有的书的卖点 这句话一点意思都没有

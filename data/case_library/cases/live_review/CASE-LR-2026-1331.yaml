@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1331
+title: 穿越汉武之卫青崛起 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 历史穿越
+  - 汉朝
+  - 匈奴
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你38 还能给40了吧 | 思路有进步，但开头松散、心理活动多、视角乱变，配角没立住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路有进步，但开头松散、心理活动多、视角乱变，配角没立住。 | 开篇心理活动和画外音太多，缺乏直接切入;设定堆积过多，节奏拖沓
+  observable:
+  - 'opening维度: 开篇心理活动和画外音太多，缺乏直接切入'
+  - 'pacing维度: 设定堆积过多，节奏拖沓'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 31
+  - 52
+  score: 38
+  score_raw: 给你38 还能给40了吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越汉武之卫青崛起
+  genre_guess:
+  - 历史穿越
+  - 汉朝
+  - 匈奴
+  overall_comment: 思路有进步，但开头松散、心理活动多、视角乱变，配角没立住。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 拉扯描写水平较高
+    raw_quote: 拉扯大概的拉扯水平很高
+  - dimension: opening
+    severity: negative
+    content: 开篇心理活动和画外音太多，缺乏直接切入
+    raw_quote: 开头心理活动跟大陆感我觉得挺一般的
+  - dimension: pacing
+    severity: negative
+    content: 设定堆积过多，节奏拖沓
+    raw_quote: 他后面那些设定我怕还是写的太复杂

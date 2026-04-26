@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1013
+title: 情感修复系统 (fail / 46分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 第四六十分是吧 | 系统聊天文，事件缺失，对话水字数，建议写剧情而非依赖系统互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统聊天文，事件缺失，对话水字数，建议写剧情而非依赖系统互动。 | 系统占据主导，削弱人物主动性;节奏被系统对话拖慢，无实质推进
+  observable:
+  - 'golden_finger维度: 系统占据主导，削弱人物主动性'
+  - 'pacing维度: 节奏被系统对话拖慢，无实质推进'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 171
+  - 320
+  score: 46
+  score_raw: 第四六十分是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 情感修复系统
+  genre_guess:
+  - 都市
+  - 系统
+  overall_comment: 系统聊天文，事件缺失，对话水字数，建议写剧情而非依赖系统互动。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统占据主导，削弱人物主动性
+    raw_quote: 就跟系统聊风道 不写什么 你上次什么聊天都行啊
+  - dimension: pacing
+    severity: negative
+    content: 节奏被系统对话拖慢，无实质推进
+    raw_quote: 真别在这跟系统聊天了呀 聊啥呀

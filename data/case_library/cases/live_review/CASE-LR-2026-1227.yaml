@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1227
+title: 规则怪谈霸王 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YhDGB7ETi
+scope:
+  genre:
+  - 规则怪谈
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 设定怪异，主角全身蓝色腌入味道，偏害圈风格，编辑可能不会签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YhDGB7ETi.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定怪异，主角全身蓝色腌入味道，偏害圈风格，编辑可能不会签。 | 主角全身蓝色设定过于刻意，读起来出戏;稿件风格偏害圈，不适合起点主流
+  observable:
+  - 'character维度: 主角全身蓝色设定过于刻意，读起来出戏'
+  - 'genre维度: 稿件风格偏害圈，不适合起点主流'
+live_review_meta:
+  source_bvid: BV1YhDGB7ETi
+  source_line_range:
+  - 1
+  - 34
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 规则怪谈霸王
+  genre_guess:
+  - 规则怪谈
+  - 诡异
+  overall_comment: 设定怪异，主角全身蓝色腌入味道，偏害圈风格，编辑可能不会签。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角全身蓝色设定过于刻意，读起来出戏
+    raw_quote: 整个人都是蓝色的 就蓝精灵已经腌入味道了
+  - dimension: genre
+    severity: negative
+    content: 稿件风格偏害圈，不适合起点主流
+    raw_quote: 你这不能害圈来的吗

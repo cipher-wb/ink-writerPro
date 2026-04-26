@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1726
+title: 画匠到人间圣主 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 玄幻
+  - 雪白
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好 恭喜大哥在全地球华语圈人气最高的神搞直播间拿下了五十分的傲人战绩 | 反派写得有张力，真实感足，但题材推进太慢，金手指出场太晚，传玄味道重。建议加快节奏、提早亮出金手指。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 反派写得有张力，真实感足，但题材推进太慢，金手指出场太晚，传玄味道重。建议加快节奏、提早亮出金手指。 | 金手指太拖沓，画江能力没写出味道，出来太慢;整体节奏缓慢，建议加快与现代网文接轨
+  observable:
+  - 'golden_finger维度: 金手指太拖沓，画江能力没写出味道，出来太慢'
+  - 'pacing维度: 整体节奏缓慢，建议加快与现代网文接轨'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1576
+  - 1621
+  score: 50
+  score_raw: 好 恭喜大哥在全地球华语圈人气最高的神搞直播间拿下了五十分的傲人战绩
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 画匠到人间圣主
+  genre_guess:
+  - 玄幻
+  - 雪白
+  - 金手指
+  overall_comment: 反派写得有张力，真实感足，但题材推进太慢，金手指出场太晚，传玄味道重。建议加快节奏、提早亮出金手指。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 反派马铭写得嚣张真实，市井感很好
+    raw_quote: 这马铭写的其实挺好的，这个真实感我觉得挺好的
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指太拖沓，画江能力没写出味道，出来太慢
+    raw_quote: 金手指太拖拉和传拳似的
+  - dimension: pacing
+    severity: negative
+    content: 整体节奏缓慢，建议加快与现代网文接轨
+    raw_quote: 还是看看现在的网文节奏，就节奏就加油

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1816
+title: 穿越检察官：年代高雨 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 年代
+  - 检察
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不是难问题……还是不行 第一张还是不行 兄弟59 | 二三章反转不错，但第一章解释不足、心理活动偏少，没让读者完全进入故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 二三章反转不错，但第一章解释不足、心理活动偏少，没让读者完全进入故事。 | 第一章解释和心理活动偏少，读者不易理解;主角视角偏旁观，缺乏主动引导
+  observable:
+  - 'opening维度: 第一章解释和心理活动偏少，读者不易理解'
+  - 'character维度: 主角视角偏旁观，缺乏主动引导'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 916
+  - 985
+  score: 59
+  score_raw: 不是难问题……还是不行 第一张还是不行 兄弟59
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越检察官：年代高雨
+  genre_guess:
+  - 年代
+  - 检察
+  - 重生
+  overall_comment: 二三章反转不错，但第一章解释不足、心理活动偏少，没让读者完全进入故事。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章解释和心理活动偏少，读者不易理解
+    raw_quote: 第一章解释能力还是不够的……心理活动特别少 他要穿插穿插很多进去
+  - dimension: character
+    severity: negative
+    content: 主角视角偏旁观，缺乏主动引导
+    raw_quote: 你笑个勾八 你天天在那笑不语 还是还是不行
+  - dimension: highpoint
+    severity: positive
+    content: 后续章节反转和算计线有看点
+    raw_quote: 后面二三张反转连第二三张挺好的

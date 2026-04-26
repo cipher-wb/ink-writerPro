@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1545
+title: 哑巴与悦养 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 古言
+  - 虐恋
+  - 苦主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 正常打的话 44分有的给你 | 情绪扎实但主角窝囊，代入极难，题材过偏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪扎实但主角窝囊，代入极难，题材过偏。 | 主角偷窥爱人在他人身下，行为猥琐窝囊;开篇即苦主视角，未能建立代入感
+  observable:
+  - 'character维度: 主角偷窥爱人在他人身下，行为猥琐窝囊'
+  - 'opening维度: 开篇即苦主视角，未能建立代入感'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 263
+  - 405
+  score: 44
+  score_raw: 正常打的话 44分有的给你
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 哑巴与悦养
+  genre_guess:
+  - 古言
+  - 虐恋
+  - 苦主
+  overall_comment: 情绪扎实但主角窝囊，代入极难，题材过偏。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角偷窥爱人在他人身下，行为猥琐窝囊
+    raw_quote: 偷偷躲在角落里自卫 我的天哪 这怎么代入啊
+  - dimension: opening
+    severity: negative
+    content: 开篇即苦主视角，未能建立代入感
+    raw_quote: 苦主在这里搬石头想要偷看 自己心爱的哑巴被人家怎么干

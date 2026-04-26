@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0035
+title: 黑白无常地府升职 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 灵异
+  - 地府
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 题材太无聊了 | 10年前套路，无任何起来可能，建议推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 10年前套路，无任何起来可能，建议推翻。 | 地府小鬼差题材已过时
+  observable:
+  - 'genre维度: 地府小鬼差题材已过时'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 655
+  - 675
+  score: null
+  score_raw: 题材太无聊了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 黑白无常地府升职
+  genre_guess:
+  - 灵异
+  - 地府
+  overall_comment: 10年前套路，无任何起来可能，建议推翻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 地府小鬼差题材已过时
+    raw_quote: 老洞10年了 早就过时了

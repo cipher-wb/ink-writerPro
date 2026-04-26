@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0277
+title: 凡人修仙传同人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 凡人流
+  - 同人
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没给分，上限低别写了 | 节奏快但没味道，凡人同人上限低不建议碰
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快但没味道，凡人同人上限低不建议碰 | 凡人同人当前市场上限很低，缺乏精品
+  observable:
+  - 'genre维度: 凡人同人当前市场上限很低，缺乏精品'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1119
+  - 1190
+  score: null
+  score_raw: 没给分，上限低别写了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 凡人修仙传同人
+  genre_guess:
+  - 凡人流
+  - 同人
+  - 修仙
+  overall_comment: 节奏快但没味道，凡人同人上限低不建议碰
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 凡人同人当前市场上限很低，缺乏精品
+    raw_quote: 凡人现在上限也很低...别写凡人了吧

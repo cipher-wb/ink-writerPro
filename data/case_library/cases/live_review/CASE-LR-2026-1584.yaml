@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1584
+title: 重生1985从小山村开始 (borderline / 56分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得56吧 | 文笔扎实但套路老旧，缺乏金手指和新卖点，第二章捉奸戏算亮眼，整体平庸。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但套路老旧，缺乏金手指和新卖点，第二章捉奸戏算亮眼，整体平庸。 | 开局长舌妇唠叨、家庭遗憾，节奏拖沓无钩子;缺乏金手指或独特卖点，与现代读者期待脱节
+  observable:
+  - 'opening维度: 开局长舌妇唠叨、家庭遗憾，节奏拖沓无钩子'
+  - 'golden_finger维度: 缺乏金手指或独特卖点，与现代读者期待脱节'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 26
+  - 70
+  score: 56
+  score_raw: 我觉得56吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生1985从小山村开始
+  genre_guess:
+  - 都市
+  - 重生
+  - 种田
+  overall_comment: 文笔扎实但套路老旧，缺乏金手指和新卖点，第二章捉奸戏算亮眼，整体平庸。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局长舌妇唠叨、家庭遗憾，节奏拖沓无钩子
+    raw_quote: 长舌妇… 吐槽骂昂子不成声 … 重生回来 然后因为前世什么遗憾点 … 这种年代我都都是别人唠叨 … 但时代变了 兄弟你这个又没有金手指
+      又没有其他的卖点
+  - dimension: golden_finger
+    severity: negative
+    content: 缺乏金手指或独特卖点，与现代读者期待脱节
+    raw_quote: 又没有金手指 又没有其他的卖点 … 卖点太少了
+  - dimension: character
+    severity: positive
+    content: 人物塑造尚可，基本功扎实
+    raw_quote: 其实塑造挺好的 我觉得基本功那个扎实 以前应该签约过

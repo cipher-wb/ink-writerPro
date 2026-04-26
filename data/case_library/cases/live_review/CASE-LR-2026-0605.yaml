@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0605
+title: 仙子门成凶手 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 仙侠
+  - 修真
+  - 破案
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分大佬 | 设定不合理，节奏虽快但逻辑立不住，毒点多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定不合理，节奏虽快但逻辑立不住，毒点多。 | 设定逻辑不合理，练气期让元婴仙子卸甲荒唐
+  observable:
+  - 'ops维度: 设定逻辑不合理，练气期让元婴仙子卸甲荒唐'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 2501
+  - 2650
+  score: 22
+  score_raw: 22分大佬
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙子门成凶手
+  genre_guess:
+  - 仙侠
+  - 修真
+  - 破案
+  overall_comment: 设定不合理，节奏虽快但逻辑立不住，毒点多。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 设定逻辑不合理，练气期让元婴仙子卸甲荒唐
+    raw_quote: 老鼠把老虎给那个了...设定不合理

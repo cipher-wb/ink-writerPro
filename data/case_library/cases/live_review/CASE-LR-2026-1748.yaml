@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-1748
+title: 先书以武正道 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 文青
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多最多也就28,上不去30 | 文青气息太重，重生剧情老套无聊，缺乏爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文青气息太重，重生剧情老套无聊，缺乏爽点。 | 节奏缓慢，剧情无聊，缺乏驱动力。
+  observable:
+  - 'pacing维度: 节奏缓慢，剧情无聊，缺乏驱动力。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1445
+  - 1520
+  score: 28
+  score_raw: 最多最多也就28,上不去30
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 先书以武正道
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 文青
+  overall_comment: 文青气息太重，重生剧情老套无聊，缺乏爽点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏缓慢，剧情无聊，缺乏驱动力。
+    raw_quote: 事件也没啥意思...没什么好可惜 这玩意立不住

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1171
+title: 胡中先足 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 家族修仙
+  - 葫芦
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四成二分嘛 | 典型的家族修仙八股文，金手指老套，时代已变，缺乏亮点，难以出成绩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 典型的家族修仙八股文，金手指老套，时代已变，缺乏亮点，难以出成绩。 | 家族修仙题材已严重过气，缺乏新意;金手指为酒葫芦，类似于小绿瓶，毫无新意;节奏沉闷，传统写法毫无拉扯，读者很难看下去
+  observable:
+  - 'genre维度: 家族修仙题材已严重过气，缺乏新意'
+  - 'golden_finger维度: 金手指为酒葫芦，类似于小绿瓶，毫无新意'
+  - 'pacing维度: 节奏沉闷，传统写法毫无拉扯，读者很难看下去'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 220
+  - 420
+  score: 42
+  score_raw: 四成二分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 胡中先足
+  genre_guess:
+  - 家族修仙
+  - 葫芦
+  - 种田
+  overall_comment: 典型的家族修仙八股文，金手指老套，时代已变，缺乏亮点，难以出成绩。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 家族修仙题材已严重过气，缺乏新意
+    raw_quote: 时代在变化呀 这种题材很老套的
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指为酒葫芦，类似于小绿瓶，毫无新意
+    raw_quote: 纯粹的这样一个家庭修仙 农村对吧 谁一堆农民 你作为一个金手指 你是什么酒啊 镜子啊这种很无聊的
+  - dimension: pacing
+    severity: negative
+    content: 节奏沉闷，传统写法毫无拉扯，读者很难看下去
+    raw_quote: 没有什么意义兄弟 没有意义就是八古心法

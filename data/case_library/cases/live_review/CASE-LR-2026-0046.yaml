@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0046
+title: 赵狂义李玉 (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 68 | 进步神速，文笔扎实，历史细节好，代入感强，有签约水平。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 进步神速，文笔扎实，历史细节好，代入感强，有签约水平。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 621
+  - 680
+  score: 68
+  score_raw: '68'
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 赵狂义李玉
+  genre_guess:
+  - 历史
+  - 五代十国
+  overall_comment: 进步神速，文笔扎实，历史细节好，代入感强，有签约水平。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 文笔扎实，人物有代入感
+    raw_quote: 文笔也很扎实
+  - dimension: opening
+    severity: positive
+    content: 第一张水平挺好的
+    raw_quote: 这第一张水平我觉得还挺好的

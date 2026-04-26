@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1585
+title: 废土搜查官 (fail / 13分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 废土
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就十二三的样子了 | 内容严重违规，审不过去；脑洞俗套，设定又臭又长。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容严重违规，审不过去；脑洞俗套，设定又臭又长。 | 开篇大量擦边描写，无法过审;平台合规性完全不过关;设定冗长，切入拖沓
+  observable:
+  - 'taboo维度: 开篇大量擦边描写，无法过审'
+  - 'ops维度: 平台合规性完全不过关'
+  - 'simplicity维度: 设定冗长，切入拖沓'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 71
+  - 95
+  score: 13
+  score_raw: 就十二三的样子了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 废土搜查官
+  genre_guess:
+  - 科幻
+  - 末日
+  - 废土
+  overall_comment: 内容严重违规，审不过去；脑洞俗套，设定又臭又长。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 开篇大量擦边描写，无法过审
+    raw_quote: 这这这个人家过不了审 那个审核绝对过不了审核 这人家告你了 给你发律师函了 … 这回我都不敢念 … 没有一句能过审的
+  - dimension: ops
+    severity: negative
+    content: 平台合规性完全不过关
+    raw_quote: 平台规定啊兄弟 这种过不了审的
+  - dimension: simplicity
+    severity: negative
+    content: 设定冗长，切入拖沓
+    raw_quote: 这又是一大串设定 … 这简介都是看阵容吧 … 一般这种都是永夜庇护所来着嘛 … 没一句能过审

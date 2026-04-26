@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1160
+title: 一人一龙建立人妖和平 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 玄幻
+  - 西幻
+  - 龙族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分有点黑幕了其实 | 文笔浮夸、场景描述过多，导致毫无代入感。打斗情节枯燥，整篇非常老套且不接地气。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔浮夸、场景描述过多，导致毫无代入感。打斗情节枯燥，整篇非常老套且不接地气。 | 华丽辞藻堆砌如AI写作，读者会反感;缺乏人物互动和代入感，打斗没人看
+  observable:
+  - 'ops维度: 华丽辞藻堆砌如AI写作，读者会反感'
+  - 'character维度: 缺乏人物互动和代入感，打斗没人看'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1063
+  - 1174
+  score: 18
+  score_raw: 18分有点黑幕了其实
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 一人一龙建立人妖和平
+  genre_guess:
+  - 玄幻
+  - 西幻
+  - 龙族
+  overall_comment: 文笔浮夸、场景描述过多，导致毫无代入感。打斗情节枯燥，整篇非常老套且不接地气。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 华丽辞藻堆砌如AI写作，读者会反感
+    raw_quote: 读者看书不爱看 浮夸的文笔以及华丽的词藻 为什么 因为是AI时代 AI时代你这种词语出来 读者很烦啊
+  - dimension: character
+    severity: negative
+    content: 缺乏人物互动和代入感，打斗没人看
+    raw_quote: 我觉得改不了兄弟 因为没有大入感一点大入感没有 场景描述太多了 妖族人族的这些战斗太不接地气了

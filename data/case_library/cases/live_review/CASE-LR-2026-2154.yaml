@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2154
+title: 精灵公主的修炼 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 奇幻
+  - 精灵
+  - 修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58.1吧...大哥进步了 | 精灵公主人设仍然不会写，女性角色神态描写匮乏；虽然努力但短时间不可能速成，需要积累和摘抄学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 精灵公主人设仍然不会写，女性角色神态描写匮乏；虽然努力但短时间不可能速成，需要积累和摘抄学习。 | 女性角色塑造失败，神态动作描写像白骨精而不是精灵少女;不会写女人，词语积累少，需要摘抄大佬作品
+  observable:
+  - 'character维度: 女性角色塑造失败，神态动作描写像白骨精而不是精灵少女'
+  - 'character维度: 不会写女人，词语积累少，需要摘抄大佬作品'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 1144
+  - 1287
+  score: 58
+  score_raw: 58.1吧...大哥进步了
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 精灵公主的修炼
+  genre_guess:
+  - 奇幻
+  - 精灵
+  - 修炼
+  overall_comment: 精灵公主人设仍然不会写，女性角色神态描写匮乏；虽然努力但短时间不可能速成，需要积累和摘抄学习。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女性角色塑造失败，神态动作描写像白骨精而不是精灵少女
+    raw_quote: 沾满泥污的赤脚...这哪里有屈辱了...这是一个老农民啊...给我一股白骨精的感觉
+  - dimension: character
+    severity: negative
+    content: 不会写女人，词语积累少，需要摘抄大佬作品
+    raw_quote: 你要去看...去抄抄人家那些虚幻里面写女都的那些词语词句来心理活动

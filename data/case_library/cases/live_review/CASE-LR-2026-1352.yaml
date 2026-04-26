@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1352
+title: 西幻领主种田 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 西幻
+  - 领主
+  - 穿越
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔和表达力OK，但事件太弱，西幻题材新人过多难出头。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和表达力OK，但事件太弱，西幻题材新人过多难出头。 | 西幻题材泛滥，竞争者多，必须出众才有机会;事件太弱，缺乏记忆点，需要立配角来衬托主角;开头心理活动多，不够直接进入剧情互动
+  observable:
+  - 'genre维度: 西幻题材泛滥，竞争者多，必须出众才有机会'
+  - 'highpoint维度: 事件太弱，缺乏记忆点，需要立配角来衬托主角'
+  - 'opening维度: 开头心理活动多，不够直接进入剧情互动'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 456
+  - 519
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 西幻领主种田
+  genre_guess:
+  - 西幻
+  - 领主
+  - 穿越
+  - 种田
+  overall_comment: 文笔和表达力OK，但事件太弱，西幻题材新人过多难出头。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西幻题材泛滥，竞争者多，必须出众才有机会
+    raw_quote: 西幻的新人太多了...一万个人写可能就一个人能到精品
+  - dimension: highpoint
+    severity: negative
+    content: 事件太弱，缺乏记忆点，需要立配角来衬托主角
+    raw_quote: 这些事件很弱的这个互动...需要用配角来体现主角的拉扯
+  - dimension: opening
+    severity: negative
+    content: 开头心理活动多，不够直接进入剧情互动
+    raw_quote: 不要写那些心理活动...没必要开头去拉些自己的心理活动

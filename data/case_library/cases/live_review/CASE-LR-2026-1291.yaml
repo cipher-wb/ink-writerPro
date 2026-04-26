@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1291
+title: 旧日重生之开局这么说 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 奇幻
+  - 游戏异界
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分告诉你 | 开篇战斗场景枯燥，主角代入感低，综合元素繁杂导致核心看点模糊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇战斗场景枯燥，主角代入感低，综合元素繁杂导致核心看点模糊。 | 开篇冗长的战斗和神明描述让读者无法代入;游戏元素和重生回档未有效融合，复杂而无趣
+  observable:
+  - 'opening维度: 开篇冗长的战斗和神明描述让读者无法代入'
+  - 'simplicity维度: 游戏元素和重生回档未有效融合，复杂而无趣'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 1080
+  - 1260
+  score: 25
+  score_raw: 25分告诉你
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 旧日重生之开局这么说
+  genre_guess:
+  - 奇幻
+  - 游戏异界
+  - 重生
+  overall_comment: 开篇战斗场景枯燥，主角代入感低，综合元素繁杂导致核心看点模糊。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇冗长的战斗和神明描述让读者无法代入
+    raw_quote: 哎呀这嗯…谁关心这些破神明啊 我只关心眼前的事
+  - dimension: simplicity
+    severity: negative
+    content: 游戏元素和重生回档未有效融合，复杂而无趣
+    raw_quote: 这玩意是复杂 好玩跟复杂是非常两个极端 … 我觉得写不了

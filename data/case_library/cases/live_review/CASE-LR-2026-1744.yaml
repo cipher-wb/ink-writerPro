@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1744
+title: 李雷勇穿越武侠世界 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 武侠
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得也就30分上不去 28分吧 | 传统武侠已没市场，剧情无聊，建议加入侠女等新元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统武侠已没市场，剧情无聊，建议加入侠女等新元素。 | 传统武侠写法没人看，题材老旧。
+  observable:
+  - 'genre维度: 传统武侠写法没人看，题材老旧。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1100
+  - 1185
+  score: 28
+  score_raw: 我觉得也就30分上不去 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 李雷勇穿越武侠世界
+  genre_guess:
+  - 武侠
+  - 穿越
+  - 系统
+  overall_comment: 传统武侠已没市场，剧情无聊，建议加入侠女等新元素。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 传统武侠写法没人看，题材老旧。
+    raw_quote: 写个锤子武侠 赶紧推翻吧

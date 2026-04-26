@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1729
+title: 诡异都市·怕鬼侦探 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没啥意义 兄弟这稿子 没啥意义 | 开篇俗套反转可预测，灵异题材但缺乏融合元素，纯鬼怪打怪无附加卖点起不来。需要融合东京驱魔、怪谈聊天群等元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇俗套反转可预测，灵异题材但缺乏融合元素，纯鬼怪打怪无附加卖点起不来。需要融合东京驱魔、怪谈聊天群等元素。 | 纯灵异杀鬼在起点无市场，必须融合其他元素如东京、聊天群等;开头的鬼怪反转读者都能猜到，缺乏新意
+  observable:
+  - 'genre维度: 纯灵异杀鬼在起点无市场，必须融合其他元素如东京、聊天群等'
+  - 'opening维度: 开头的鬼怪反转读者都能猜到，缺乏新意'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1701
+  - 1780
+  score: null
+  score_raw: 没啥意义 兄弟这稿子 没啥意义
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 诡异都市·怕鬼侦探
+  genre_guess:
+  - 灵异
+  - 都市
+  - 系统
+  overall_comment: 开篇俗套反转可预测，灵异题材但缺乏融合元素，纯鬼怪打怪无附加卖点起不来。需要融合东京驱魔、怪谈聊天群等元素。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯灵异杀鬼在起点无市场，必须融合其他元素如东京、聊天群等
+    raw_quote: 灵异在起点很难呢，要融其他的元素进来
+  - dimension: opening
+    severity: negative
+    content: 开头的鬼怪反转读者都能猜到，缺乏新意
+    raw_quote: 现在读者基本上这种反转就立了，已经已经预指太高了

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0968
+title: 跟韩立并肩作战特摄动漫 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 同人
+  - 特摄
+  - 动漫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 感觉立不住...也就能发蓝精灵 | 逻辑立不住，世界观矛盾。节奏快会蹭热度是优点，但特摄文抄类现实剧情很弱。换个题材可能更好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 逻辑立不住，世界观矛盾。节奏快会蹭热度是优点，但特摄文抄类现实剧情很弱。换个题材可能更好。 | 世界观矛盾，没有版权价值，逻辑立不住。;开头没意思，现实困境无聊，驱动力缺乏。
+  observable:
+  - 'ops维度: 世界观矛盾，没有版权价值，逻辑立不住。'
+  - 'opening维度: 开头没意思，现实困境无聊，驱动力缺乏。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 1131
+  - 1340
+  score: 40
+  score_raw: 感觉立不住...也就能发蓝精灵
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 跟韩立并肩作战特摄动漫
+  genre_guess:
+  - 同人
+  - 特摄
+  - 动漫
+  overall_comment: 逻辑立不住，世界观矛盾。节奏快会蹭热度是优点，但特摄文抄类现实剧情很弱。换个题材可能更好。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 世界观矛盾，没有版权价值，逻辑立不住。
+    raw_quote: 没有版权啊...如果这个世界这些书都没有的话...那你等于在这个书就没有RP价值
+  - dimension: opening
+    severity: negative
+    content: 开头没意思，现实困境无聊，驱动力缺乏。
+    raw_quote: 这种其实也很无聊...还是得换个题材...换个写法试试
+  - dimension: character
+    severity: neutral
+    content: 脑子好会蹭热度，节奏很快，但现实剧情弱。
+    raw_quote: 你会蹭...节奏也贼快...现实里面最重要...把驱动力写出来

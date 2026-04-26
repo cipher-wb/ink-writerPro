@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1214
+title: 开局忽悠哥布林建立神国 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 玄幻
+  - 种田
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就22左右时间 | 玩梗过多代入感差，适合发蓝精灵，起点市场接受度一般。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 玩梗过多代入感差，适合发蓝精灵，起点市场接受度一般。 | 信仰值系统驱动力弱;主角马保国式人设飘忽，难沉浸
+  observable:
+  - 'golden_finger维度: 信仰值系统驱动力弱'
+  - 'character维度: 主角马保国式人设飘忽，难沉浸'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 652
+  - 682
+  score: 22
+  score_raw: 就22左右时间
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 开局忽悠哥布林建立神国
+  genre_guess:
+  - 玄幻
+  - 种田
+  - 搞笑
+  overall_comment: 玩梗过多代入感差，适合发蓝精灵，起点市场接受度一般。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 信仰值系统驱动力弱
+    raw_quote: 这信仰值加1+1…驱动力一般般
+  - dimension: character
+    severity: negative
+    content: 主角马保国式人设飘忽，难沉浸
+    raw_quote: 就是马保国呀写个乐子吧

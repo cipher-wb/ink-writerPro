@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0997
+title: 穿越修仙审判庭 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个稿子最多最多就19分好吧，上不了20 | 纯萌新，不会讲故事，平淡如水，第一章毫无看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯萌新，不会讲故事，平淡如水，第一章毫无看点。 | 开局日常无聊，毫无事件;金手指老套，像15年前的写法;第一章毫无看点，第二章才有剧情
+  observable:
+  - 'opening维度: 开局日常无聊，毫无事件'
+  - 'hook维度: 金手指老套，像15年前的写法'
+  - 'pacing维度: 第一章毫无看点，第二章才有剧情'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 1316
+  - 1419
+  score: 19
+  score_raw: 这个稿子最多最多就19分好吧，上不了20
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越修仙审判庭
+  genre_guess:
+  - 仙侠
+  - 穿越
+  overall_comment: 纯萌新，不会讲故事，平淡如水，第一章毫无看点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局日常无聊，毫无事件
+    raw_quote: 就聊这些日常啊……文似看山不喜平，就周冬雨来了
+  - dimension: hook
+    severity: negative
+    content: 金手指老套，像15年前的写法
+    raw_quote: 好老套啊，15年前的写法
+  - dimension: pacing
+    severity: negative
+    content: 第一章毫无看点，第二章才有剧情
+    raw_quote: 我一说大哥第一张好无聊，大家说第二张有剧情，那你为什么第一张留着干嘛

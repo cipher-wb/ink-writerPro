@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1099
+title: 东京律师 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 都市
+  - 职业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 过不了审 | 题材敏感，涉政问题无法过审，但律师职业方向可换场景尝试
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材敏感，涉政问题无法过审，但律师职业方向可换场景尝试 | 虚构美日政治历史不能过审
+  observable:
+  - 'taboo维度: 虚构美日政治历史不能过审'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1200
+  - 1260
+  score: null
+  score_raw: 过不了审
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 东京律师
+  genre_guess:
+  - 都市
+  - 职业
+  overall_comment: 题材敏感，涉政问题无法过审，但律师职业方向可换场景尝试
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 虚构美日政治历史不能过审
+    raw_quote: 起点不让写这种涉政的东西 我记得我之前有个作者写的肯尼迪
+  - dimension: simplicity
+    severity: neutral
+    content: 可换泡沫经济年代背景，律政结合奇葩案件
+    raw_quote: 年代感对吧 零几年然后律师 就日本经济下滑泡沫的时候

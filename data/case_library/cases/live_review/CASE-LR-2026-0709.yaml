@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0709
+title: 忍者悔战（火影同人） (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 火影
+  - 同人
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十五分的样子 | 文笔比例可以，但写法三少化/小学生化，剧情单一，装逼震惊太多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例可以，但写法三少化/小学生化，剧情单一，装逼震惊太多。 | 写法极其套路化，类似斗罗大陆震惊流;剧情卖点单调，全靠装逼打脸推进
+  observable:
+  - 'simplicity维度: 写法极其套路化，类似斗罗大陆震惊流'
+  - 'character维度: 剧情卖点单调，全靠装逼打脸推进'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 631
+  - 690
+  score: 35
+  score_raw: 三十五分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 忍者悔战（火影同人）
+  genre_guess:
+  - 火影
+  - 同人
+  - 系统流
+  overall_comment: 文笔比例可以，但写法三少化/小学生化，剧情单一，装逼震惊太多。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 写法极其套路化，类似斗罗大陆震惊流
+    raw_quote: 这挺小白的...斗罗大陆...全场寂静...就那种感觉
+  - dimension: character
+    severity: negative
+    content: 剧情卖点单调，全靠装逼打脸推进
+    raw_quote: 还是太单一了...打赢了就像零四...然后装逼

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0602
+title: 外卖员捉鬼 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是50多分吧 50分 | 开头小剧场有亮点，但整体氛围不统一，恐怖不足，缺乏纯粹的灵异感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头小剧场有亮点，但整体氛围不统一，恐怖不足，缺乏纯粹的灵异感。 | 氛围不统一，又想吓人又想雪白又想异能
+  observable:
+  - 'genre维度: 氛围不统一，又想吓人又想雪白又想异能'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 2051
+  - 2200
+  score: 50
+  score_raw: 还是50多分吧 50分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 外卖员捉鬼
+  genre_guess:
+  - 都市
+  - 灵异
+  - 悬疑
+  overall_comment: 开头小剧场有亮点，但整体氛围不统一，恐怖不足，缺乏纯粹的灵异感。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开门外卖捉奸小剧场挺有意思
+    raw_quote: 开头有点意思...拍短剧也可以的
+  - dimension: genre
+    severity: negative
+    content: 氛围不统一，又想吓人又想雪白又想异能
+    raw_quote: 最大问题是不恐怖...整个氛围不对

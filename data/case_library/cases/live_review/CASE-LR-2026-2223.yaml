@@ -1,0 +1,68 @@
+case_id: CASE-LR-2026-2223
+title: 全民游戏降临保安李律师 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 都市
+  - 末日
+  - 游戏降临
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22吧 | 设定老套，金手指无聊，事件缺乏吸引力，保安角色没写出彩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定老套，金手指无聊，事件缺乏吸引力，保安角色没写出彩。 | 金手指绕口且出戏，操控人心能力无意义;角色关系设计失败，律师角色无吸引力;整体太老套，缺乏修改价值
+  observable:
+  - 'golden_finger维度: 金手指绕口且出戏，操控人心能力无意义'
+  - 'character维度: 角色关系设计失败，律师角色无吸引力'
+  - 'simplicity维度: 整体太老套，缺乏修改价值'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 114
+  - 222
+  score: 22
+  score_raw: 22吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全民游戏降临保安李律师
+  genre_guess:
+  - 都市
+  - 末日
+  - 游戏降临
+  overall_comment: 设定老套，金手指无聊，事件缺乏吸引力，保安角色没写出彩。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指绕口且出戏，操控人心能力无意义
+    raw_quote: '你这个什么什么屁的这个这个金手指
+
+      起得也太出息了'
+  - dimension: character
+    severity: negative
+    content: 角色关系设计失败，律师角色无吸引力
+    raw_quote: '没人看那个
+
+      印证这个设定
+
+      等于你的审问关系都失败了完全
+
+      写小丹呀'
+  - dimension: simplicity
+    severity: negative
+    content: 整体太老套，缺乏修改价值
+    raw_quote: '事件也很无聊还是
+
+      懒兄弟没有改的价值'

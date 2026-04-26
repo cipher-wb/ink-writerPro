@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0811
+title: 斗罗之灭神凡枪 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 斗罗大陆同人
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 文笔太白，毫无脑洞和人设，纯粹日常流水账，完全没有同人应有的看点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔太白，毫无脑洞和人设，纯粹日常流水账，完全没有同人应有的看点 | 文笔太白，对话和描写像小学生作文;开篇全是平淡日常，没有冲突和看点;没有金手指或亮眼脑洞，完全蹭不上原著
+  observable:
+  - 'simplicity维度: 文笔太白，对话和描写像小学生作文'
+  - 'opening维度: 开篇全是平淡日常，没有冲突和看点'
+  - 'golden_finger维度: 没有金手指或亮眼脑洞，完全蹭不上原著'
+  - 'ops维度: 写法像流水账，对白干瘪，缺乏画面和情绪'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 132
+  - 345
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗罗之灭神凡枪
+  genre_guess:
+  - 斗罗大陆同人
+  - 玄幻
+  overall_comment: 文笔太白，毫无脑洞和人设，纯粹日常流水账，完全没有同人应有的看点
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文笔太白，对话和描写像小学生作文
+    raw_quote: 这好白啊 大哥现在斗罗同人真的很卷呐 真的要有很强的脑洞啊
+  - dimension: opening
+    severity: negative
+    content: 开篇全是平淡日常，没有冲突和看点
+    raw_quote: 只有日常 这没人看待这个
+  - dimension: golden_finger
+    severity: negative
+    content: 没有金手指或亮眼脑洞，完全蹭不上原著
+    raw_quote: 没有奇遇 没有没有背景 然后就微末日常 这全是毒点
+  - dimension: ops
+    severity: negative
+    content: 写法像流水账，对白干瘪，缺乏画面和情绪
+    raw_quote: 太白了啊 这个对话他说到他说到这个很尴尬的

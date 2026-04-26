@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1069
+title: 非正常怪物收容笔记 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 开篇切入流畅有紧张感，但转向打怪兽后节奏拖沓，更适合蓝精灵风格，起点头脑风暴但展开不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇切入流畅有紧张感，但转向打怪兽后节奏拖沓，更适合蓝精灵风格，起点头脑风暴但展开不足。 | 第一章后转向打怪兽拖沓，读者容易流失;题材难度高，更适合老作者或蓝精灵
+  observable:
+  - 'pacing维度: 第一章后转向打怪兽拖沓，读者容易流失'
+  - 'genre维度: 题材难度高，更适合老作者或蓝精灵'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 291
+  - 389
+  score: 55
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 非正常怪物收容笔记
+  genre_guess:
+  - 都市
+  - 灵异
+  - 异能
+  overall_comment: 开篇切入流畅有紧张感，但转向打怪兽后节奏拖沓，更适合蓝精灵风格，起点头脑风暴但展开不足。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 都市外卖切入接地气，冲突建立快
+    raw_quote: 这个切入还是接地气的都市切法
+  - dimension: pacing
+    severity: negative
+    content: 第一章后转向打怪兽拖沓，读者容易流失
+    raw_quote: 你转向怪兽引出金手指这一段我觉得就太拖沓了
+  - dimension: genre
+    severity: negative
+    content: 题材难度高，更适合老作者或蓝精灵
+    raw_quote: 你这个我觉得更适合蓝精灵了

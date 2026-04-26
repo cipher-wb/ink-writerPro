@@ -1,0 +1,65 @@
+case_id: CASE-LR-2026-1138
+title: 大明海荒路求生 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 历史
+  - 大明
+  - 航海
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '听劝吧
+
+    那个不听劝就白来了 | 比例扎实但切入完全偏题，大明需快速绑定身份而非荒岛求生。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实但切入完全偏题，大明需快速绑定身份而非荒岛求生。 | 迟迟不进入大明相关，变成纯求生;历史频道读者要身份，不是鲁滨逊
+  observable:
+  - 'opening维度: 迟迟不进入大明相关，变成纯求生'
+  - 'genre维度: 历史频道读者要身份，不是鲁滨逊'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 2921
+  - 3043
+  score: null
+  score_raw: '听劝吧
+
+    那个不听劝就白来了'
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 大明海荒路求生
+  genre_guess:
+  - 历史
+  - 大明
+  - 航海
+  overall_comment: 比例扎实但切入完全偏题，大明需快速绑定身份而非荒岛求生。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 迟迟不进入大明相关，变成纯求生
+    raw_quote: '这跟大米一点关系都没有
+
+      变成求生了'
+  - dimension: genre
+    severity: negative
+    content: 历史频道读者要身份，不是鲁滨逊
+    raw_quote: 本章要发历史的历史读者找的是身份
+  - dimension: simplicity
+    severity: positive
+    content: 文笔与代入感基础不错，改方向可签
+    raw_quote: '比例挺好的
+
+      代入感也够'

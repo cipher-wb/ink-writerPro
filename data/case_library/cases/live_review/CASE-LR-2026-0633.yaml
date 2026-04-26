@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0633
+title: 无限副本 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 无限流
+  - 惊悚
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 过年我就给你30分加两分过年32分 | 氛围尚可但配角拉垮，题材敏感，卖点单薄，变成打怪兽
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围尚可但配角拉垮，题材敏感，卖点单薄，变成打怪兽 | 第一个配角蓝天蓝描写单薄，没有存在感;高中校园死人题材敏感，审核可能有问题;卖点单薄，后期变成纯打怪兽
+  observable:
+  - 'character维度: 第一个配角蓝天蓝描写单薄，没有存在感'
+  - 'taboo维度: 高中校园死人题材敏感，审核可能有问题'
+  - 'golden_finger维度: 卖点单薄，后期变成纯打怪兽'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 291
+  - 370
+  score: 32
+  score_raw: 过年我就给你30分加两分过年32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 无限副本
+  genre_guess:
+  - 无限流
+  - 惊悚
+  - 校园
+  overall_comment: 氛围尚可但配角拉垮，题材敏感，卖点单薄，变成打怪兽
+  comments:
+  - dimension: character
+    severity: negative
+    content: 第一个配角蓝天蓝描写单薄，没有存在感
+    raw_quote: 第一个配角很关键，你这个配角没写好，没感觉
+  - dimension: taboo
+    severity: negative
+    content: 高中校园死人题材敏感，审核可能有问题
+    raw_quote: 高中死人校园求生审核会出手
+  - dimension: golden_finger
+    severity: negative
+    content: 卖点单薄，后期变成纯打怪兽
+    raw_quote: 变成杀怪兽了，就奥特曼打怪兽了不够了

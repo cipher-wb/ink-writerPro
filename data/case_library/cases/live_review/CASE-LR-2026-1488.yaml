@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1488
+title: 矿工逃生 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 玄幻
+  - 监狱
+  - 反杀
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 很难上十分 | 事件老套没意思，缺少代入感和情绪，建议多看书研究网红写法
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件老套没意思，缺少代入感和情绪，建议多看书研究网红写法 | 事件本身没意思，缺乏心理活动;写得文艺，缺少网红节奏
+  observable:
+  - 'opening维度: 事件本身没意思，缺乏心理活动'
+  - 'simplicity维度: 写得文艺，缺少网红节奏'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 311
+  - 346
+  score: null
+  score_raw: 很难上十分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 矿工逃生
+  genre_guess:
+  - 玄幻
+  - 监狱
+  - 反杀
+  overall_comment: 事件老套没意思，缺少代入感和情绪，建议多看书研究网红写法
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 事件本身没意思，缺乏心理活动
+    raw_quote: 事件真的没意思啊 事件本身的没意思
+  - dimension: simplicity
+    severity: negative
+    content: 写得文艺，缺少网红节奏
+    raw_quote: 太文艺了呀 对网红了解了解吧

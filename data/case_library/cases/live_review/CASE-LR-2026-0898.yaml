@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0898
+title: 杨勇仙途 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 废材流
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 紧闭48分吧 | 套路老但流畅，写成番茄爽文，上限有限，需要调整打脸写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路老但流畅，写成番茄爽文，上限有限，需要调整打脸写法。 | 老套修仙，写成番茄打脸爽文，上限低;人设绝但剧情小白，打脸方式老套
+  observable:
+  - 'genre维度: 老套修仙，写成番茄打脸爽文，上限低'
+  - 'character维度: 人设绝但剧情小白，打脸方式老套'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 856
+  - 1042
+  score: 48
+  score_raw: 紧闭48分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 杨勇仙途
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 废材流
+  - 金手指
+  overall_comment: 套路老但流畅，写成番茄爽文，上限有限，需要调整打脸写法。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 老套修仙，写成番茄打脸爽文，上限低
+    raw_quote: 这个题材被大哥写成番茄爽文了，我是挺奇怪的
+  - dimension: character
+    severity: negative
+    content: 人设绝但剧情小白，打脸方式老套
+    raw_quote: 人设比较绝，现在人设设定抢戏了...跟着小白打脸这种

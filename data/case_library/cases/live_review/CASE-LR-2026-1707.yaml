@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1707
+title: 龙族同人打黑拳 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 同人
+  - 龙族
+  - 都市
+  - 格斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就22分牌 | 主线单薄仅缺钱打黑拳，缺乏情绪铺垫和代入感，想到哪写到哪。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线单薄仅缺钱打黑拳，缺乏情绪铺垫和代入感，想到哪写到哪。 | 开局独角戏，缺乏事件和人物冲突，切入突兀。;心理活动太少，干巴巴打拳缺乏情绪动机。
+  observable:
+  - 'opening维度: 开局独角戏，缺乏事件和人物冲突，切入突兀。'
+  - 'character维度: 心理活动太少，干巴巴打拳缺乏情绪动机。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1565
+  - 1622
+  score: 22
+  score_raw: 就22分牌
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 龙族同人打黑拳
+  genre_guess:
+  - 同人
+  - 龙族
+  - 都市
+  - 格斗
+  overall_comment: 主线单薄仅缺钱打黑拳，缺乏情绪铺垫和代入感，想到哪写到哪。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局独角戏，缺乏事件和人物冲突，切入突兀。
+    raw_quote: 一个人写独白戏到底要干嘛，谁看你们一个人这独独角戏啊
+  - dimension: character
+    severity: negative
+    content: 心理活动太少，干巴巴打拳缺乏情绪动机。
+    raw_quote: 大哥的心理活动太少了...就这一个卖点就是就是要赚钱

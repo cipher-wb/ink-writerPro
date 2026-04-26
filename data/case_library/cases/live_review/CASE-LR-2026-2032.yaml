@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2032
+title: 海贼归土 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 海贼王
+  - 同人
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 写法奇怪，上帝视角，主角废物人设，不虚心听建议。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法奇怪，上帝视角，主角废物人设，不虚心听建议。 | 开头啰嗦，上帝视角，代入感极差;主角人设废物，新人难接受
+  observable:
+  - 'opening维度: 开头啰嗦，上帝视角，代入感极差'
+  - 'character维度: 主角人设废物，新人难接受'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 721
+  - 840
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 海贼归土
+  genre_guess:
+  - 海贼王
+  - 同人
+  - 穿越
+  overall_comment: 写法奇怪，上帝视角，主角废物人设，不虚心听建议。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头啰嗦，上帝视角，代入感极差
+    raw_quote: 开头太啰嗦了 在上帝视角在大陆感贼差是人拉垮
+  - dimension: character
+    severity: negative
+    content: 主角人设废物，新人难接受
+    raw_quote: 你都是废物怎么代入吗

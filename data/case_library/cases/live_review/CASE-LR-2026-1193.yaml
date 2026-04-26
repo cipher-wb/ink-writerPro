@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1193
+title: 末日天灾预报系统 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 末日
+  - 系统
+  - 天灾
+  - 海克斯
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35 | 题材极佳，但切入无聊，真实感不足，写得赶了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材极佳，但切入无聊，真实感不足，写得赶了。 | 切入无聊，丧尸事件缺乏冲击力;节奏太快，真实感不足
+  observable:
+  - 'opening维度: 切入无聊，丧尸事件缺乏冲击力'
+  - 'pacing维度: 节奏太快，真实感不足'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 651
+  - 750
+  score: 35
+  score_raw: '35'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日天灾预报系统
+  genre_guess:
+  - 末日
+  - 系统
+  - 天灾
+  - 海克斯
+  overall_comment: 题材极佳，但切入无聊，真实感不足，写得赶了。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 末日加系统是好题材，有热度
+    raw_quote: 题材真的特别好
+  - dimension: opening
+    severity: negative
+    content: 切入无聊，丧尸事件缺乏冲击力
+    raw_quote: 切入无聊... 事件太无聊了
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快，真实感不足
+    raw_quote: 节奏也太快了 真实感不够其实

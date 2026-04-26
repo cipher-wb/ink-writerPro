@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0842
+title: 车迟国虎力大仙 (fail / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 西游
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 52分吧 | 文笔进步但事件没写出西游味道，原创过多，建议严格走原著剧情。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔进步但事件没写出西游味道，原创过多，建议严格走原著剧情。 | 事件处理偏向原创修仙，不像西游;主角着急，事件没写出有趣反转
+  observable:
+  - 'opening维度: 事件处理偏向原创修仙，不像西游'
+  - 'pacing维度: 主角着急，事件没写出有趣反转'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 346
+  - 430
+  score: 52
+  score_raw: 52分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 车迟国虎力大仙
+  genre_guess:
+  - 西游
+  - 穿越
+  overall_comment: 文笔进步但事件没写出西游味道，原创过多，建议严格走原著剧情。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 八戒悟空人设好一点，进步了
+    raw_quote: 唐僧加了个悟空，稍微人设好一点，这一点是进步了的
+  - dimension: opening
+    severity: negative
+    content: 事件处理偏向原创修仙，不像西游
+    raw_quote: 我觉得第一个剧情还是要走原著的，你这个玩意感觉太原创了
+  - dimension: pacing
+    severity: negative
+    content: 主角着急，事件没写出有趣反转
+    raw_quote: 大哥着急嘛急了……现在就是看着别着急别着急

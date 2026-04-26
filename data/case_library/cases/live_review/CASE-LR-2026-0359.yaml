@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0359
+title: 罗斯特 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 历史
+  - 大航海
+  - 明朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话只能给到20分 | 开头有代入感方面的进步，但后续严重偏题，文青和博士病泛滥，AI痕迹明显，缺乏期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头有代入感方面的进步，但后续严重偏题，文青和博士病泛滥，AI痕迹明显，缺乏期待感。 | 偏题文青，AI感重，无效叙述;主角身份不明，缺乏代入
+  observable:
+  - 'genre维度: 偏题文青，AI感重，无效叙述'
+  - 'character维度: 主角身份不明，缺乏代入'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 373
+  - 421
+  score: 20
+  score_raw: 打分的话只能给到20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 罗斯特
+  genre_guess:
+  - 历史
+  - 大航海
+  - 明朝
+  overall_comment: 开头有代入感方面的进步，但后续严重偏题，文青和博士病泛滥，AI痕迹明显，缺乏期待感。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头进步，有代入感
+    raw_quote: 我觉得开头还好 百开头其实进步了是吧 代入感
+  - dimension: genre
+    severity: negative
+    content: 偏题文青，AI感重，无效叙述
+    raw_quote: 就回来就就忽然忽然就那个了... 这没必要加这干嘛呀 ... 这没必要
+  - dimension: character
+    severity: negative
+    content: 主角身份不明，缺乏代入
+    raw_quote: 你写着干嘛 大哥你又不是一个 你不是航海吗

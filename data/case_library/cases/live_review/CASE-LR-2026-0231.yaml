@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0231
+title: 禅香关江守斩狐妖 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 仙侠
+  - 斩妖
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30多分肯定有 | 开头乱，人设干巴，什么都沾但没意思，需要重改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头乱，人设干巴，什么都沾但没意思，需要重改。 | 前情复杂无用，可从雪白直接开始;主角心理少，不像活人;宫斗与斩妖混杂，风格混乱
+  observable:
+  - 'opening维度: 前情复杂无用，可从雪白直接开始'
+  - 'character维度: 主角心理少，不像活人'
+  - 'genre维度: 宫斗与斩妖混杂，风格混乱'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 375
+  - 440
+  score: null
+  score_raw: 30多分肯定有
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 禅香关江守斩狐妖
+  genre_guess:
+  - 仙侠
+  - 斩妖
+  - 架空
+  overall_comment: 开头乱，人设干巴，什么都沾但没意思，需要重改。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前情复杂无用，可从雪白直接开始
+    raw_quote: 前面那个复杂呀 你直接在那除妖嘛
+  - dimension: character
+    severity: negative
+    content: 主角心理少，不像活人
+    raw_quote: 苏明感觉干巴巴的不像个人啊
+  - dimension: genre
+    severity: negative
+    content: 宫斗与斩妖混杂，风格混乱
+    raw_quote: 不伦不类

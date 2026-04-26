@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1764
+title: 壮大凉山（水浒拦路人） (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 水浒同人
+  - 历史
+  - 反套路
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十五 | 文笔扎实有原著味道，但历史老人开场无聊，爽点不明，主线立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实有原著味道，但历史老人开场无聊，爽点不明，主线立不住。 | 民族写法开局太拖，劝退读者;阻止鲁达救人作为爽点很奇怪，缺乏回报
+  observable:
+  - 'opening维度: 民族写法开局太拖，劝退读者'
+  - 'highpoint维度: 阻止鲁达救人作为爽点很奇怪，缺乏回报'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 840
+  - 960
+  score: 35
+  score_raw: 三十五
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 壮大凉山（水浒拦路人）
+  genre_guess:
+  - 水浒同人
+  - 历史
+  - 反套路
+  overall_comment: 文笔扎实有原著味道，但历史老人开场无聊，爽点不明，主线立不住。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 民族写法开局太拖，劝退读者
+    raw_quote: 大哥这个写法是民族写法……老头觉得就是系统，给你任务来了，我觉得这莫名其妙，真的很出戏
+  - dimension: highpoint
+    severity: negative
+    content: 阻止鲁达救人作为爽点很奇怪，缺乏回报
+    raw_quote: 不让人家上两个山的爽点在哪里……你又没有什么加点
+  - dimension: simplicity
+    severity: positive
+    content: 文笔扎实，有水浒味道
+    raw_quote: 他的写辞造就还行，有随后味道

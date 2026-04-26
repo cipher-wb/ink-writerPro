@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-2101
+title: 凡人修仙传风格土著修仙文 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  - 土著
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥40分吧 | 情绪节奏不错，有天赋，但主线内容太老套，放现在没人看，只能发番茄或七猫试试。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪节奏不错，有天赋，但主线内容太老套，放现在没人看，只能发番茄或七猫试试。 | 凡人切入很老套，看到这句话就不想看了;主线卖点太老，读者知道师傅是坏蛋就没期待了;五年十年前流行，现在没人看传统凡人流
+  observable:
+  - 'opening维度: 凡人切入很老套，看到这句话就不想看了'
+  - 'highpoint维度: 主线卖点太老，读者知道师傅是坏蛋就没期待了'
+  - 'genre维度: 五年十年前流行，现在没人看传统凡人流'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 1
+  - 35
+  score: 40
+  score_raw: 给大哥40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 凡人修仙传风格土著修仙文
+  genre_guess:
+  - 玄幻
+  - 修仙
+  - 土著
+  overall_comment: 情绪节奏不错，有天赋，但主线内容太老套，放现在没人看，只能发番茄或七猫试试。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 凡人切入很老套，看到这句话就不想看了
+    raw_quote: 烦人切入很老套了
+  - dimension: character
+    severity: positive
+    content: 情绪写得挺好的，能调动大众情绪
+    raw_quote: 情绪真的挺好的
+  - dimension: highpoint
+    severity: negative
+    content: 主线卖点太老，读者知道师傅是坏蛋就没期待了
+    raw_quote: 上来就是明牌了，所有人都知道师傅是坏蛋
+  - dimension: genre
+    severity: negative
+    content: 五年十年前流行，现在没人看传统凡人流
+    raw_quote: 太老了呀，放5年前10年前可能还真有人签

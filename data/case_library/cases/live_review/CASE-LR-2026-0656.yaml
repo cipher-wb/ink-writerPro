@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0656
+title: 林慧灵异校园 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 灵异
+  - 校园
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 所以要去给你38分 | 19岁有天赋，论坛切入氛围好，但后续崩成烧脑电影画面，需保持主角强代入视角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 19岁有天赋，论坛切入氛围好，但后续崩成烧脑电影画面，需保持主角强代入视角。 | 后续剧情崩坏，变成烧脑电影画面;题材乱炖，不知道到底要走哪种灵异路子
+  observable:
+  - 'pacing维度: 后续剧情崩坏，变成烧脑电影画面'
+  - 'genre维度: 题材乱炖，不知道到底要走哪种灵异路子'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1301
+  - 1380
+  score: 38
+  score_raw: 所以要去给你38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 林慧灵异校园
+  genre_guess:
+  - 灵异
+  - 校园
+  - 悬疑
+  overall_comment: 19岁有天赋，论坛切入氛围好，但后续崩成烧脑电影画面，需保持主角强代入视角。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 论坛帖子切入的灵异氛围感非常棒
+    raw_quote: 切入好一点...开头那一段还可以
+  - dimension: pacing
+    severity: negative
+    content: 后续剧情崩坏，变成烧脑电影画面
+    raw_quote: 后面已经崩完了...现在变成电影画面了
+  - dimension: genre
+    severity: negative
+    content: 题材乱炖，不知道到底要走哪种灵异路子
+    raw_quote: 题材太垃圾了...我不知道他到底要写成哪一种

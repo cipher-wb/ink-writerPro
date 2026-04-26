@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0786
+title: 末日救世主 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 末日
+  - 旅社
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开头自嗨没看点，设定太多无人物互动，完全没机会。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头自嗨没看点，设定太多无人物互动，完全没机会。 | 开头是独角戏加设定，大忌;没人物互动，全是描写;系统复杂，读者跑
+  observable:
+  - 'opening维度: 开头是独角戏加设定，大忌'
+  - 'character维度: 没人物互动，全是描写'
+  - 'simplicity维度: 系统复杂，读者跑'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 951
+  - 1000
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 末日救世主
+  genre_guess:
+  - 末日
+  - 旅社
+  - 系统
+  overall_comment: 开头自嗨没看点，设定太多无人物互动，完全没机会。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头是独角戏加设定，大忌
+    raw_quote: 你这是设定啊 你独角戏加设定 这种是新人开头大忌啊 大忌大哥
+  - dimension: character
+    severity: negative
+    content: 没人物互动，全是描写
+    raw_quote: 没人物 没互动 没写法 就是这个世界怎么样
+  - dimension: simplicity
+    severity: negative
+    content: 系统复杂，读者跑
+    raw_quote: 这个也复杂呀 你不会以为这不复杂吧

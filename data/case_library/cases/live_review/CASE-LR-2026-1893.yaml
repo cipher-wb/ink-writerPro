@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1893
+title: 玄剑先祖家族修仙 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 仙侠
+  - 家族
+  - 龙族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例挺好，可惜了... 上限很低 | 比例好但事件无聊，第一章最差。蹭路鸣泽龙族两边不讨好，25年家族修仙难出成绩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例好但事件无聊，第一章最差。蹭路鸣泽龙族两边不讨好，25年家族修仙难出成绩。 | 第一章最差，梦境伏笔读者会跑;事件无聊，家族冲突缺乏看点;蹭龙族两边不讨好，应找脑洞融合
+  observable:
+  - 'opening维度: 第一章最差，梦境伏笔读者会跑'
+  - 'pacing维度: 事件无聊，家族冲突缺乏看点'
+  - 'genre维度: 蹭龙族两边不讨好，应找脑洞融合'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1581
+  - 1680
+  score: null
+  score_raw: 比例挺好，可惜了... 上限很低
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 玄剑先祖家族修仙
+  genre_guess:
+  - 仙侠
+  - 家族
+  - 龙族
+  overall_comment: 比例好但事件无聊，第一章最差。蹭路鸣泽龙族两边不讨好，25年家族修仙难出成绩。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章最差，梦境伏笔读者会跑
+    raw_quote: 第一张最差的... 不要写梦境 不要写这种什么所谓的伏笔
+  - dimension: pacing
+    severity: negative
+    content: 事件无聊，家族冲突缺乏看点
+    raw_quote: 好无聊啊 这世界唉这些事情好无聊
+  - dimension: genre
+    severity: negative
+    content: 蹭龙族两边不讨好，应找脑洞融合
+    raw_quote: 没必要蹭这种蹭 其实两边不讨好... 25年你给我举个例子 有哪一本家族修仙

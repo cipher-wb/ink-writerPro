@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1964
+title: 重生2010开局和白月光做同学 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是38分兄弟 | 八股重生写法，反派俗套，女主俗套，没金手指没卖点，建议增加看点或系统。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股重生写法，反派俗套，女主俗套，没金手指没卖点，建议增加看点或系统。 | 开头课堂睡觉老套，校园霸凌违规;仅重生人设，缺少金手指和卖点;反派庄强霸凌形象俗套
+  observable:
+  - 'opening维度: 开头课堂睡觉老套，校园霸凌违规'
+  - 'golden_finger维度: 仅重生人设，缺少金手指和卖点'
+  - 'character维度: 反派庄强霸凌形象俗套'
+  - 'simplicity维度: 整体剧情俗套，毫无新意'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 361
+  - 460
+  score: 38
+  score_raw: 也是38分兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2010开局和白月光做同学
+  genre_guess:
+  - 都市
+  - 重生
+  - 校园
+  overall_comment: 八股重生写法，反派俗套，女主俗套，没金手指没卖点，建议增加看点或系统。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头课堂睡觉老套，校园霸凌违规
+    raw_quote: 又是睡觉…校研霸凌不能写
+  - dimension: golden_finger
+    severity: negative
+    content: 仅重生人设，缺少金手指和卖点
+    raw_quote: 你都没有金手指…没卖点
+  - dimension: character
+    severity: negative
+    content: 反派庄强霸凌形象俗套
+    raw_quote: 反派就是个霸凌你的一个轰轰
+  - dimension: simplicity
+    severity: negative
+    content: 整体剧情俗套，毫无新意
+    raw_quote: 八股重生写法…太俗了

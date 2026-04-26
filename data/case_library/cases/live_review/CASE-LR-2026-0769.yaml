@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0769
+title: 日月同错同人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 同人
+  - 玄幻
+  - 日月同错
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得水平是可以的，可以去直发看看 | 会讲故事，表达流畅有代入感，值得直发测试同人市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 会讲故事，表达流畅有代入感，值得直发测试同人市场。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1971
+  - 2030
+  score: null
+  score_raw: 我觉得水平是可以的，可以去直发看看
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 日月同错同人
+  genre_guess:
+  - 同人
+  - 玄幻
+  - 日月同错
+  overall_comment: 会讲故事，表达流畅有代入感，值得直发测试同人市场。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 表达流畅清晰，开篇像故事一样能看懂
+    raw_quote: 表达还是清楚的……没设定写的还是能看懂
+  - dimension: character
+    severity: positive
+    content: 人物立得好，讲故事会讲
+    raw_quote: 这个人物也是立的好的……我觉得你水平还是有一些的

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0588
+title: 美利坚斩杀线 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 本来有40了 现在没有了30多分 | 节奏快、代入感好，但题材过时且缺少情绪铺垫，爽文也要有合格的反派。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快、代入感好，但题材过时且缺少情绪铺垫，爽文也要有合格的反派。 | 美利坚斩杀线题材热度已过，拾人牙慧;爽点过于轻松，没有危机和反派铺垫，变成流水账
+  observable:
+  - 'genre维度: 美利坚斩杀线题材热度已过，拾人牙慧'
+  - 'pacing维度: 爽点过于轻松，没有危机和反派铺垫，变成流水账'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 794
+  - 878
+  score: 35
+  score_raw: 本来有40了 现在没有了30多分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚斩杀线
+  genre_guess:
+  - 都市
+  - 系统
+  - 爽文
+  overall_comment: 节奏快、代入感好，但题材过时且缺少情绪铺垫，爽文也要有合格的反派。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 美利坚斩杀线题材热度已过，拾人牙慧
+    raw_quote: 拾人牙慧全无创建 兄弟 现在斩杀线真没什么热度了
+  - dimension: pacing
+    severity: negative
+    content: 爽点过于轻松，没有危机和反派铺垫，变成流水账
+    raw_quote: 没情绪啊 ... 你这太轻松了 轻松是个大堵点

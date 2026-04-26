@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1136
+title: 特色修仙/英雄在修仙界成长 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 修仙
+  - 特摄
+  - 少年
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分吧 | 正能量少年漫风格，但反派小白，目标群体偏低龄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 正能量少年漫风格，但反派小白，目标群体偏低龄。 | 反派智商低，拉仇恨方式老套
+  observable:
+  - 'character维度: 反派智商低，拉仇恨方式老套'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 2710
+  - 2805
+  score: 22
+  score_raw: 22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 特色修仙/英雄在修仙界成长
+  genre_guess:
+  - 修仙
+  - 特摄
+  - 少年
+  overall_comment: 正能量少年漫风格，但反派小白，目标群体偏低龄。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 反派智商低，拉仇恨方式老套
+    raw_quote: 这些反派太小白了
+  - dimension: simplicity
+    severity: positive
+    content: 流畅度高，正能量加分
+    raw_quote: '正能量加分吧
+
+      加三分嘛'
+  - dimension: genre
+    severity: neutral
+    content: 建议发蓝精灵针对未成年市场
+    raw_quote: '你要么发蓝精灵是什么
+
+      那边学生可能多一点'

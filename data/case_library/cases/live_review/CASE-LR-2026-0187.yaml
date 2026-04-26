@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0187
+title: 明末旱灾：崇祯三年 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 历史
+  - 大明
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分 | 讲故事能力不错，但偏题到历史说教，不宜写见证文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 讲故事能力不错，但偏题到历史说教，不宜写见证文。 | 明明是历史文却偏成玄幻修炼，且说教意味太重。;反复渲染吃人肉等沉重情节，劝退读者。
+  observable:
+  - 'genre维度: 明明是历史文却偏成玄幻修炼，且说教意味太重。'
+  - 'taboo维度: 反复渲染吃人肉等沉重情节，劝退读者。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 2690
+  - 2820
+  score: 30
+  score_raw: 30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 明末旱灾：崇祯三年
+  genre_guess:
+  - 历史
+  - 大明
+  - 求生
+  overall_comment: 讲故事能力不错，但偏题到历史说教，不宜写见证文。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 明明是历史文却偏成玄幻修炼，且说教意味太重。
+    raw_quote: 这跟历史没关系这是一个历史见证大铭文
+  - dimension: taboo
+    severity: negative
+    content: 反复渲染吃人肉等沉重情节，劝退读者。
+    raw_quote: 吃了娘的肉你好好活活下去没用啊

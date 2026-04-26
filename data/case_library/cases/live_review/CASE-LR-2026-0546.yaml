@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0546
+title: 归墟编织者 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 无限流
+  - 诸天
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 设定自嗨，事件无聊，规则没人关心，读者根本不在乎。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定自嗨，事件无聊，规则没人关心，读者根本不在乎。 | 梦境穿越和大量规则设定劝退;主线卖点没有意思，就是做任务
+  observable:
+  - 'simplicity维度: 梦境穿越和大量规则设定劝退'
+  - 'hook维度: 主线卖点没有意思，就是做任务'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 2221
+  - 2330
+  score: 28
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 归墟编织者
+  genre_guess:
+  - 无限流
+  - 诸天
+  - 系统
+  overall_comment: 设定自嗨，事件无聊，规则没人关心，读者根本不在乎。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 梦境穿越和大量规则设定劝退
+    raw_quote: 一大堆设定出来了 … 读者根本记不住 这个事件很无聊
+  - dimension: hook
+    severity: negative
+    content: 主线卖点没有意思，就是做任务
+    raw_quote: 原因就是这个主线卖点一点意思都没有

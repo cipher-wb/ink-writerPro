@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1230
+title: 拔萝卜 (fail / 1分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YhDGB7ETi
+scope:
+  genre:
+  - 恶搞
+  - 儿歌改编
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多差不多一分吧 | 恶搞儿歌改编，无任何小说价值，打一分仅因作者不易。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YhDGB7ETi.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 恶搞儿歌改编，无任何小说价值，打一分仅因作者不易。 | 内容毫无价值，仅为儿歌改编的恶搞;内容过于简单，无小说结构
+  observable:
+  - 'misc维度: 内容毫无价值，仅为儿歌改编的恶搞'
+  - 'simplicity维度: 内容过于简单，无小说结构'
+live_review_meta:
+  source_bvid: BV1YhDGB7ETi
+  source_line_range:
+  - 162
+  - 215
+  score: 1
+  score_raw: 差不多差不多一分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 拔萝卜
+  genre_guess:
+  - 恶搞
+  - 儿歌改编
+  overall_comment: 恶搞儿歌改编，无任何小说价值，打一分仅因作者不易。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 内容毫无价值，仅为儿歌改编的恶搞
+    raw_quote: 这没啥值点了
+  - dimension: simplicity
+    severity: negative
+    content: 内容过于简单，无小说结构
+    raw_quote: 拔萝卜拔萝卜 嘿呦嘿呦 拔萝卜唉

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0411
+title: 卡牌架构师 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 都市
+  - 卡牌
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分左右吧 | 在番茄有成绩，但起点写法太详细，事件太弱，读者没耐心看细节
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 在番茄有成绩，但起点写法太详细，事件太弱，读者没耐心看细节 | 事件进展太慢，太详细，读者没耐心看那些细节;起点不是高贵的女神，该拉就拉，该用事件就用事件
+  observable:
+  - 'pacing维度: 事件进展太慢，太详细，读者没耐心看那些细节'
+  - 'simplicity维度: 起点不是高贵的女神，该拉就拉，该用事件就用事件'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 683
+  - 760
+  score: 35
+  score_raw: 35分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 卡牌架构师
+  genre_guess:
+  - 都市
+  - 卡牌
+  - 系统
+  overall_comment: 在番茄有成绩，但起点写法太详细，事件太弱，读者没耐心看细节
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 事件进展太慢，太详细，读者没耐心看那些细节
+    raw_quote: 这个显示道具太详细了，事件进展好慢啊，太详细了...整体而言事件太弱了，读者没有耐心看这些细节
+  - dimension: simplicity
+    severity: negative
+    content: 起点不是高贵的女神，该拉就拉，该用事件就用事件
+    raw_quote: 起点她不是高贵的女神，你在番茄怎么写，怎么爽，你也爽一点...

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0803
+title: 半生/藏海花类实体探险 (borderline / 46分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 探险
+  - 灵异
+  - 实体
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十八封嘛 四十六封嘛 | 文笔有，但题材吓人，像实体书，需要换角色关系
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有，但题材吓人，像实体书，需要换角色关系 | 题材过于写实吓人，易触线
+  observable:
+  - 'genre维度: 题材过于写实吓人，易触线'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 1820
+  - 1950
+  score: 46
+  score_raw: 四十八封嘛 四十六封嘛
+  score_signal: fuzzy
+  verdict: borderline
+  title_guess: 半生/藏海花类实体探险
+  genre_guess:
+  - 探险
+  - 灵异
+  - 实体
+  overall_comment: 文笔有，但题材吓人，像实体书，需要换角色关系
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材过于写实吓人，易触线
+    raw_quote: 这过不了审 这过不了审
+  - dimension: character
+    severity: positive
+    content: 氛围感不错，像鬼吹灯
+    raw_quote: 还是氛围感还是不错的

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0724
+title: 民国民俗驱鬼 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 民俗
+  - 悬疑
+  - 民国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多36分 | 元素堆砌过多，开篇女鬼事件无聊，金手指复杂，节奏过快且零散，氛围感和沉浸感不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素堆砌过多，开篇女鬼事件无聊，金手指复杂，节奏过快且零散，氛围感和沉浸感不足。 | 开篇女鬼事件无聊，氛围营造不足;金手指复杂，出现方式突兀，缺乏自然过渡;节奏过快，脱离空间太快，故事展开零散
+  observable:
+  - 'opening维度: 开篇女鬼事件无聊，氛围营造不足'
+  - 'golden_finger维度: 金手指复杂，出现方式突兀，缺乏自然过渡'
+  - 'pacing维度: 节奏过快，脱离空间太快，故事展开零散'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 216
+  - 310
+  score: 36
+  score_raw: 差不多36分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国民俗驱鬼
+  genre_guess:
+  - 民俗
+  - 悬疑
+  - 民国
+  overall_comment: 元素堆砌过多，开篇女鬼事件无聊，金手指复杂，节奏过快且零散，氛围感和沉浸感不足。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇女鬼事件无聊，氛围营造不足
+    raw_quote: 第一个时间无聊 写得不够集中 零散
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指复杂，出现方式突兀，缺乏自然过渡
+    raw_quote: 金手指复杂 时间不够集中比较零散
+  - dimension: pacing
+    severity: negative
+    content: 节奏过快，脱离空间太快，故事展开零散
+    raw_quote: 太快啦太快啦切入不行 金手指复杂 时间不够集中比较零散
+  - dimension: simplicity
+    severity: neutral
+    content: 元素太多，多个门派设定容易分散读者注意力
+    raw_quote: 大概这是不是有点多了 这种门派嘛 你抓住一个就行了

@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0907
+title: 白家涌泉或灵脉守卫战 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 仙侠
+  - 复仇
+  - 女频
+  - 苦大仇深
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就23分吧 | 苦大仇深番茄女频老套，情绪足但事件差，换成大女主可能有点希望。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 苦大仇深番茄女频老套，情绪足但事件差，换成大女主可能有点希望。 | 复仇废修为套路太老，10年前的风格;开头读者跑完，驱动力直接废修为
+  observable:
+  - 'genre维度: 复仇废修为套路太老，10年前的风格'
+  - 'opening维度: 开头读者跑完，驱动力直接废修为'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 2839
+  - 2984
+  score: 23
+  score_raw: 就23分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 白家涌泉或灵脉守卫战
+  genre_guess:
+  - 仙侠
+  - 复仇
+  - 女频
+  - 苦大仇深
+  overall_comment: 苦大仇深番茄女频老套，情绪足但事件差，换成大女主可能有点希望。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 复仇废修为套路太老，10年前的风格
+    raw_quote: 真太老了，这个你换成大女主，有人看...过程不重要
+  - dimension: opening
+    severity: negative
+    content: 开头读者跑完，驱动力直接废修为
+    raw_quote: 开头读者跑完了，就这个驱动力就废掉修为了呀

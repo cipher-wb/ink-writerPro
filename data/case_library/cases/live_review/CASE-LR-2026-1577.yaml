@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1577
+title: 校园怪物灵异求生 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 灵异
+  - 校园
+  - 异能
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40能有 | 写法流畅但题材不行，校园灵异难签起点，建议蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法流畅但题材不行，校园灵异难签起点，建议蓝精灵。 | 校园灵异触犯审核红线，起点极难过签;题材老套无新意，建议推翻或发蓝精灵
+  observable:
+  - 'genre维度: 校园灵异触犯审核红线，起点极难过签'
+  - 'ops维度: 题材老套无新意，建议推翻或发蓝精灵'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 2201
+  - 2300
+  score: 40
+  score_raw: 40能有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 校园怪物灵异求生
+  genre_guess:
+  - 灵异
+  - 校园
+  - 异能
+  - 求生
+  overall_comment: 写法流畅但题材不行，校园灵异难签起点，建议蓝精灵。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 比例和人设开头还好，叙事有流畅感
+    raw_quote: 比例跟人设开头也还好，我觉得实力是没啥问题的
+  - dimension: genre
+    severity: negative
+    content: 校园灵异触犯审核红线，起点极难过签
+    raw_quote: 学校里面不能有鬼，不能有鬼杀人，这是审核的一个尺度
+  - dimension: ops
+    severity: negative
+    content: 题材老套无新意，建议推翻或发蓝精灵
+    raw_quote: 这种题材没人看的，就是具体的，你具体就是剧情题材太垃圾了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2119
+title: 北境架空历史文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 历史
+  - 架空
+  - 争霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 比例不错有文字天赋，但思路太老套，场景疯狂切换像编剧，不会写网文主角代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例不错有文字天赋，但思路太老套，场景疯狂切换像编剧，不会写网文主角代入感。 | 太文气，场景疯狂切换，没有主角代入感;老是侧面写，说书人说事，本质不会写网文
+  observable:
+  - 'opening维度: 太文气，场景疯狂切换，没有主角代入感'
+  - 'character维度: 老是侧面写，说书人说事，本质不会写网文'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 791
+  - 825
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 北境架空历史文
+  genre_guess:
+  - 历史
+  - 架空
+  - 争霸
+  overall_comment: 比例不错有文字天赋，但思路太老套，场景疯狂切换像编剧，不会写网文主角代入感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 太文气，场景疯狂切换，没有主角代入感
+    raw_quote: 能不能不要这么写书啦，什么年代了
+  - dimension: character
+    severity: negative
+    content: 老是侧面写，说书人说事，本质不会写网文
+    raw_quote: 就是本质上就是不会写网文

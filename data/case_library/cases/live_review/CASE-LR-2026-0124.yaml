@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0124
+title: 青丘狐族小狐狸报恩 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 仙侠
+  - 女频
+  - 情缘
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多只能给20啊 | 典型女频仙侠，文笔太白，剧情老套，20分劝退。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 典型女频仙侠，文笔太白，剧情老套，20分劝退。 | 女频仙侠在该编辑手下罕有签约，不符合受众;主角小狐狸塑造幼稚，情节像三生三世梗
+  observable:
+  - 'genre维度: 女频仙侠在该编辑手下罕有签约，不符合受众'
+  - 'character维度: 主角小狐狸塑造幼稚，情节像三生三世梗'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 780
+  - 840
+  score: 20
+  score_raw: 差不多只能给20啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 青丘狐族小狐狸报恩
+  genre_guess:
+  - 仙侠
+  - 女频
+  - 情缘
+  overall_comment: 典型女频仙侠，文笔太白，剧情老套，20分劝退。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 女频仙侠在该编辑手下罕有签约，不符合受众
+    raw_quote: 这不是一个网文 写法挺白的
+  - dimension: character
+    severity: negative
+    content: 主角小狐狸塑造幼稚，情节像三生三世梗
+    raw_quote: 三生三世十里桃花了呀

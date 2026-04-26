@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0269
+title: 修仙危险需要护航 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 武侠
+  - 修仙
+  - 世家
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧，只能 | 主角反转太晚，开头写4000字不是主角，欺骗读者
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角反转太晚，开头写4000字不是主角，欺骗读者 | 主角反转太晚，戏份太低;开头套路老套，上门复仇没看头
+  observable:
+  - 'character维度: 主角反转太晚，戏份太低'
+  - 'hook维度: 开头套路老套，上门复仇没看头'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 421
+  - 510
+  score: 35
+  score_raw: 35分吧，只能
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙危险需要护航
+  genre_guess:
+  - 武侠
+  - 修仙
+  - 世家
+  overall_comment: 主角反转太晚，开头写4000字不是主角，欺骗读者
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角反转太晚，戏份太低
+    raw_quote: 这反转太晚了，一张纸太多了
+  - dimension: hook
+    severity: negative
+    content: 开头套路老套，上门复仇没看头
+    raw_quote: 这个主线这个上门复仇...读者不爱看这个卖点

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1221
+title: 我有一棵摇钱树 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那还是30分吧 | 故事流畅但只有一个系统金手指卖点，太平淡，缺乏冲突和人物互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事流畅但只有一个系统金手指卖点，太平淡，缺乏冲突和人物互动。 | 系统纯粹给钱，缺乏期待感和变化;缺少租房、美女房东等额外卖点制造紧迫
+  observable:
+  - 'golden_finger维度: 系统纯粹给钱，缺乏期待感和变化'
+  - 'hook维度: 缺少租房、美女房东等额外卖点制造紧迫'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 920
+  - 962
+  score: 30
+  score_raw: 那还是30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我有一棵摇钱树
+  genre_guess:
+  - 都市
+  - 系统
+  - 日常
+  overall_comment: 故事流畅但只有一个系统金手指卖点，太平淡，缺乏冲突和人物互动。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统纯粹给钱，缺乏期待感和变化
+    raw_quote: 系统本身也没啥期待感了…每天给你1000万你又没其他东西
+  - dimension: hook
+    severity: negative
+    content: 缺少租房、美女房东等额外卖点制造紧迫
+    raw_quote: 你就一个卖点…弄个什么美女房东太太对吧没钱了呀

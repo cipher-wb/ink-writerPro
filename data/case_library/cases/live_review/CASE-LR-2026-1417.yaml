@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1417
+title: 修仙穿越（极影） (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥20分吧 | 太小白，反派拉仇恨低智，主角中二，表达流畅但思路得改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太小白，反派拉仇恨低智，主角中二，表达流畅但思路得改。 | 开篇拉仇恨太低智;主角中二，反派无脑
+  observable:
+  - 'opening维度: 开篇拉仇恨太低智'
+  - 'character维度: 主角中二，反派无脑'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 441
+  - 490
+  score: 20
+  score_raw: 给大哥20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙穿越（极影）
+  genre_guess:
+  - 修仙
+  - 穿越
+  - 系统
+  overall_comment: 太小白，反派拉仇恨低智，主角中二，表达流畅但思路得改。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇拉仇恨太低智
+    raw_quote: 太小白了 那个睁开眼睛就在这里亲 太小白了
+  - dimension: character
+    severity: negative
+    content: 主角中二，反派无脑
+    raw_quote: 主角也比较中二呀

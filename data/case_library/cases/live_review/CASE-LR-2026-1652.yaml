@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1652
+title: 民国吸血鬼 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 民国
+  - 灵异
+  - 吸血鬼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 文笔的话就28封嘛 | 题材杂糅，故事冲突弱，对话过多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材杂糅，故事冲突弱，对话过多。 | 民国练武加吸血鬼，题材杂糅奇怪。
+  observable:
+  - 'genre维度: 民国练武加吸血鬼，题材杂糅奇怪。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 1311
+  - 1370
+  score: 28
+  score_raw: 文笔的话就28封嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国吸血鬼
+  genre_guess:
+  - 民国
+  - 灵异
+  - 吸血鬼
+  overall_comment: 题材杂糅，故事冲突弱，对话过多。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 民国练武加吸血鬼，题材杂糅奇怪。
+    raw_quote: 中西结合中美合拍啊

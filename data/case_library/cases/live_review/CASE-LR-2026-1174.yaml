@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1174
+title: 猫狗鼠蚁 (fail / 37分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 都市
+  - 超凡
+  - 刑侦
+  - 密室
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 37分吧 | 超凡刑侦难写，视角乱转，故事松散，文笔尚可但内容虚，缺乏市场吸引力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 超凡刑侦难写，视角乱转，故事松散，文笔尚可但内容虚，缺乏市场吸引力。 | 超凡刑侦类极难出成绩，番茄看多了才选这种题材;频繁切换场景和视角，导致故事线断裂;人物关系混乱，主角存在感弱
+  observable:
+  - 'genre维度: 超凡刑侦类极难出成绩，番茄看多了才选这种题材'
+  - 'pacing维度: 频繁切换场景和视角，导致故事线断裂'
+  - 'character维度: 人物关系混乱，主角存在感弱'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 840
+  - 1020
+  score: 37
+  score_raw: 37分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 猫狗鼠蚁
+  genre_guess:
+  - 都市
+  - 超凡
+  - 刑侦
+  - 密室
+  overall_comment: 超凡刑侦难写，视角乱转，故事松散，文笔尚可但内容虚，缺乏市场吸引力。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 超凡刑侦类极难出成绩，番茄看多了才选这种题材
+    raw_quote: 义能超凡 真不好写 你们番茄看多了
+  - dimension: pacing
+    severity: negative
+    content: 频繁切换场景和视角，导致故事线断裂
+    raw_quote: 怎么老是这种换场景 现在又换场景了
+  - dimension: character
+    severity: negative
+    content: 人物关系混乱，主角存在感弱
+    raw_quote: 他是鬼吗 惊喜 终于发现了 意思是 反正 怎么又变了

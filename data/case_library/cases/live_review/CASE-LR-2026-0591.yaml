@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0591
+title: 袁州府县令 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 历史
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分最多 | 文笔扎实但采用电影分镜式叙事，缺乏网文代入感和明确卖点，整体不及格。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但采用电影分镜式叙事，缺乏网文代入感和明确卖点，整体不及格。 | 分镜式写法导致节奏拖沓，代入感差;卖点不明确，没有吸引人的钩子
+  observable:
+  - 'pacing维度: 分镜式写法导致节奏拖沓，代入感差'
+  - 'hook维度: 卖点不明确，没有吸引人的钩子'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 322
+  - 470
+  score: 32
+  score_raw: 32分最多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 袁州府县令
+  genre_guess:
+  - 历史
+  - 架空
+  overall_comment: 文笔扎实但采用电影分镜式叙事，缺乏网文代入感和明确卖点，整体不及格。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 分镜式写法导致节奏拖沓，代入感差
+    raw_quote: 这是分镜式的写法...代入感挺差的...因为就是一个场景
+  - dimension: hook
+    severity: negative
+    content: 卖点不明确，没有吸引人的钩子
+    raw_quote: 卖点其实也不知道卖点是啥
+  - dimension: simplicity
+    severity: positive
+    content: 文笔比例扎实
+    raw_quote: 我觉得大哥比例扎实

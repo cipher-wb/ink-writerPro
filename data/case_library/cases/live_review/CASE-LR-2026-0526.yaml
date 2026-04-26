@@ -1,0 +1,74 @@
+case_id: CASE-LR-2026-0526
+title: 现代社畜朱刚穿越成猪八戒 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DViaB8EA4
+scope:
+  genre:
+  - 西游
+  - 穿越
+  - 系统
+  - 职场
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 把金属指给我改掉就能签，可以给你签了名 | 题材加分，文笔扎实，但系统设定老套需要修改，改后可签约，主播愿意赌一把。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DViaB8EA4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材加分，文笔扎实，但系统设定老套需要修改，改后可签约，主播愿意赌一把。 | 系统设定老套，钉钉打卡和躺平元素已过时;开篇系统说明需要简化，直接切入;过多引用原著，可能引发抄袭争议
+  observable:
+  - 'golden_finger维度: 系统设定老套，钉钉打卡和躺平元素已过时'
+  - 'simplicity维度: 开篇系统说明需要简化，直接切入'
+  - 'misc维度: 过多引用原著，可能引发抄袭争议'
+live_review_meta:
+  source_bvid: BV1DViaB8EA4
+  source_line_range:
+  - 5
+  - 172
+  score: null
+  score_raw: 把金属指给我改掉就能签，可以给你签了名
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 现代社畜朱刚穿越成猪八戒
+  genre_guess:
+  - 西游
+  - 穿越
+  - 系统
+  - 职场
+  - 轻松
+  overall_comment: 题材加分，文笔扎实，但系统设定老套需要修改，改后可签约，主播愿意赌一把。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇场景切入感和代入感强
+    raw_quote: 这开头的代入感非常强
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定老套，钉钉打卡和躺平元素已过时
+    raw_quote: 躺平也是非常老套的卖点了
+  - dimension: genre
+    severity: positive
+    content: 西游猪八戒题材新颖，代入好，加分
+    raw_quote: 这个题材大加分对吧 猪八戒本来就很好带入 很有个性
+  - dimension: simplicity
+    severity: negative
+    content: 开篇系统说明需要简化，直接切入
+    raw_quote: 前面那段钉钉钉什么算了吧 这一段直接介绍词改一改就行
+  - dimension: misc
+    severity: negative
+    content: 过多引用原著，可能引发抄袭争议
+    raw_quote: 这个你抄多了 龙空要骂我了
+  - dimension: misc
+    severity: positive
+    content: 文笔扎实，思路和节奏没问题
+    raw_quote: 思路没问题 速度没问题 文笔也很扎实

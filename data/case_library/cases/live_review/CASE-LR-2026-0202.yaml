@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0202
+title: 少年拯救世界科幻 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 科幻
+  - 虚拟现实
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你20分吧 | 题材老旧，少年救世设定无人关心，文笔尚可但内容空洞。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老旧，少年救世设定无人关心，文笔尚可但内容空洞。 | 故事设定缺乏吸引力，读者对拯救世界套路无感;题材过时，缺乏新鲜元素
+  observable:
+  - 'hook维度: 故事设定缺乏吸引力，读者对拯救世界套路无感'
+  - 'genre维度: 题材过时，缺乏新鲜元素'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 512
+  - 554
+  score: 20
+  score_raw: 给你20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 少年拯救世界科幻
+  genre_guess:
+  - 科幻
+  - 虚拟现实
+  overall_comment: 题材老旧，少年救世设定无人关心，文笔尚可但内容空洞。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 故事设定缺乏吸引力，读者对拯救世界套路无感
+    raw_quote: 少年如何 又是少年如何拯救世界 不在乎 没人在意这个东西
+  - dimension: genre
+    severity: negative
+    content: 题材过时，缺乏新鲜元素
+    raw_quote: 少年拯救世界是什么年代了 二零二六年了

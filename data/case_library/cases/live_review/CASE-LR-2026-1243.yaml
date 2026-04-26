@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1243
+title: 庶子修仙 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 仙侠
+  - 宅斗
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 磕个头和我一般高，有时他很努力，有时他也贪玩，他的年纪跟我一般大35分嘛 | 文笔没问题，但用女频宅斗事件开局，不符合男频读者口味，建议更换开篇事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔没问题，但用女频宅斗事件开局，不符合男频读者口味，建议更换开篇事件。 | 开篇事件是女频的嫡母杀庶子套路，读者不爱看;架空历史类的思路很难和玄幻结合
+  observable:
+  - 'opening维度: 开篇事件是女频的嫡母杀庶子套路，读者不爱看'
+  - 'genre维度: 架空历史类的思路很难和玄幻结合'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 924
+  - 970
+  score: 35
+  score_raw: 磕个头和我一般高，有时他很努力，有时他也贪玩，他的年纪跟我一般大35分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 庶子修仙
+  genre_guess:
+  - 仙侠
+  - 宅斗
+  - 穿越
+  overall_comment: 文笔没问题，但用女频宅斗事件开局，不符合男频读者口味，建议更换开篇事件。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇事件是女频的嫡母杀庶子套路，读者不爱看
+    raw_quote: 事件这个事件是偏女平的事件，读者不爱看
+  - dimension: genre
+    severity: negative
+    content: 架空历史类的思路很难和玄幻结合
+    raw_quote: 不要用架空历史去架空历史类的思路很难跟玄幻搭一起

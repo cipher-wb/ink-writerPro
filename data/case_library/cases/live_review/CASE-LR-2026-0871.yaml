@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0871
+title: 末日雪花球 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 末日
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔和细节有实体文学质感，但网文期待感弱、节奏慢，主线不明。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和细节有实体文学质感，但网文期待感弱、节奏慢，主线不明。 | 事件推进非常慢，期待感不足;缺乏明确的网文主线和卖点
+  observable:
+  - 'pacing维度: 事件推进非常慢，期待感不足'
+  - 'hook维度: 缺乏明确的网文主线和卖点'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 421
+  - 460
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 末日雪花球
+  genre_guess:
+  - 末日
+  - 异能
+  overall_comment: 文笔和细节有实体文学质感，但网文期待感弱、节奏慢，主线不明。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 事件推进非常慢，期待感不足
+    raw_quote: 事件讲的贼慢慢点不清晰 期待感比较弱 网文就是情绪代入感情 期待感这三个东西我觉得他没有情绪 他也没有期待感
+  - dimension: hook
+    severity: negative
+    content: 缺乏明确的网文主线和卖点
+    raw_quote: 那除了求生 还得有人物关系 改变人性 拉扯这些期待呀

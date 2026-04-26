@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1696
+title: 穿越红楼成为曾孙 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 历史
+  - 红楼
+  - 同人
+  - 宅斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能签 | 签约水平明显，与王熙凤拉扯有真实感，比例和人设均在水准之上，进步极大。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 签约水平明显，与王熙凤拉扯有真实感，比例和人设均在水准之上，进步极大。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 897
+  - 955
+  score: null
+  score_raw: 能签
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 穿越红楼成为曾孙
+  genre_guess:
+  - 历史
+  - 红楼
+  - 同人
+  - 宅斗
+  overall_comment: 签约水平明显，与王熙凤拉扯有真实感，比例和人设均在水准之上，进步极大。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 王熙凤的拉扯写得很好，有名著人设加持，真实感强。
+    raw_quote: 拉扯这几下没问题的...真实感很强呀对吧
+  - dimension: highpoint
+    severity: positive
+    content: 第一章故事性强，有签约潜力。
+    raw_quote: 这第一章没问题，随便签那个

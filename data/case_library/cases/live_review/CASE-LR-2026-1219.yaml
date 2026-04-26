@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1219
+title: 周雨柔与鼠王 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 仙侠
+  - 鼠王
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不好说 | 仙侠写鼠王加雪白容易变成西幻哥布林圣女，沉浸感失衡，再打磨。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 仙侠写鼠王加雪白容易变成西幻哥布林圣女，沉浸感失衡，再打磨。 | 仙侠背景却写出西幻洞穴囚禁圣女的感觉
+  observable:
+  - 'genre维度: 仙侠背景却写出西幻洞穴囚禁圣女的感觉'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 831
+  - 870
+  score: null
+  score_raw: 不好说
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 周雨柔与鼠王
+  genre_guess:
+  - 仙侠
+  - 鼠王
+  - 搞笑
+  overall_comment: 仙侠写鼠王加雪白容易变成西幻哥布林圣女，沉浸感失衡，再打磨。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 仙侠背景却写出西幻洞穴囚禁圣女的感觉
+    raw_quote: 现在就显得像西幻了…哥布林加圣女嘛

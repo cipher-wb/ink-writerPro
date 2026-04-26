@@ -1,0 +1,46 @@
+case_id: CASE-LR-2026-0887
+title: 鬼哭斩鬼长生 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 玄幻
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 撑死40多兄弟 能35了 | 前面切入有真实感，但事件吸引力弱，缺乏危机情绪，节奏歪了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 前面切入有真实感，但事件吸引力弱，缺乏危机情绪，节奏歪了。 | 场景没意思，期待感弱，节奏歪了
+  observable:
+  - 'pacing维度: 场景没意思，期待感弱，节奏歪了'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 1061
+  - 1100
+  score: 40
+  score_raw: 撑死40多兄弟 能35了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼哭斩鬼长生
+  genre_guess:
+  - 玄幻
+  - 灵异
+  overall_comment: 前面切入有真实感，但事件吸引力弱，缺乏危机情绪，节奏歪了。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 场景没意思，期待感弱，节奏歪了
+    raw_quote: 场景没意思 事件吸引力太弱了 … 节奏歪了 其实你擅长的也是主角代入感和改善 事件塑造能力也很不及格的

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0765
+title: 风月学说妖反转 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 仙侠
+  - 雪白
+  - 谍战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 笔力肯定没问题……但是退步还是要退步 | 雪白过多导致主线代入感极差，像谍战武侠，退步严重。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白过多导致主线代入感极差，像谍战武侠，退步严重。 | 读者带入感差，主角心理活动几乎为零，全员狂写女人;雪白写过度了，剧情悬念被冲淡
+  observable:
+  - 'character维度: 读者带入感差，主角心理活动几乎为零，全员狂写女人'
+  - 'pacing维度: 雪白写过度了，剧情悬念被冲淡'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1681
+  - 1760
+  score: null
+  score_raw: 笔力肯定没问题……但是退步还是要退步
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 风月学说妖反转
+  genre_guess:
+  - 仙侠
+  - 雪白
+  - 谍战
+  overall_comment: 雪白过多导致主线代入感极差，像谍战武侠，退步严重。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 读者带入感差，主角心理活动几乎为零，全员狂写女人
+    raw_quote: 她已经魔怔了……就狂写女人知道吧……也不写主角的心理活动
+  - dimension: pacing
+    severity: negative
+    content: 雪白写过度了，剧情悬念被冲淡
+    raw_quote: 你的雪白有点过度了啊……应该多写方形的线索的

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1856
+title: 洪秀全AI忽悠全球历史文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 历史
+  - 晚清
+  - 太平天国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 金手指用AI是大忌，读者会认为书是AI写的就不付费；且放着太平天国造反正面爽点不写，去聊神学和科学，完全跑偏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指用AI是大忌，读者会认为书是AI写的就不付费；且放着太平天国造反正面爽点不写，去聊神学和科学，完全跑偏。 | 光明正大用AI作为金手指，读者会默认书是AI写的，不付费;洪秀全最大的爽点是反清太平天国，作者却去写传教和聊科学
+  observable:
+  - 'golden_finger维度: 光明正大用AI作为金手指，读者会默认书是AI写的，不付费'
+  - 'highpoint维度: 洪秀全最大的爽点是反清太平天国，作者却去写传教和聊科学'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 532
+  - 600
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 洪秀全AI忽悠全球历史文
+  genre_guess:
+  - 历史
+  - 晚清
+  - 太平天国
+  overall_comment: 金手指用AI是大忌，读者会认为书是AI写的就不付费；且放着太平天国造反正面爽点不写，去聊神学和科学，完全跑偏。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 光明正大用AI作为金手指，读者会默认书是AI写的，不付费
+    raw_quote: 用AI这个太读者会觉得你的书是AI写的懂吗 他就不付费了
+  - dimension: highpoint
+    severity: negative
+    content: 洪秀全最大的爽点是反清太平天国，作者却去写传教和聊科学
+    raw_quote: 浑沌圈最大的爽点不是太平天国吗 你不写啊 就就聊疯掉了呀

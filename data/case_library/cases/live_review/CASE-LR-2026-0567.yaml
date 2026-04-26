@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0567
+title: 美好新生活系统 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就28分 | 重生末日前世太惨，系统智障，展开奇怪，28分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生末日前世太惨，系统智障，展开奇怪，28分 | 开局末世背景过于苦大仇深，与都市重生不搭;系统名字和设定太儿戏
+  observable:
+  - 'opening维度: 开局末世背景过于苦大仇深，与都市重生不搭'
+  - 'golden_finger维度: 系统名字和设定太儿戏'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 2610
+  - 2692
+  score: 28
+  score_raw: 就28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美好新生活系统
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  overall_comment: 重生末日前世太惨，系统智障，展开奇怪，28分
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局末世背景过于苦大仇深，与都市重生不搭
+    raw_quote: 你这个前世是末日战争啊...崩掉了呀
+  - dimension: golden_finger
+    severity: negative
+    content: 系统名字和设定太儿戏
+    raw_quote: 美好新生活系统...太白了

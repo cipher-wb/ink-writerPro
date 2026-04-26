@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1922
+title: 蜀山轻松向修仙 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 仙侠
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分 | 笔力尚可但对网文理解停留在十年前，喜欢写如厕之类的低级趣味堵点，建议好好做市场调研。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 笔力尚可但对网文理解停留在十年前，喜欢写如厕之类的低级趣味堵点，建议好好做市场调研。 | 频繁写如厕、屁股等低级趣味，是十年前的老套写法，没人看。;小说理解停留在过去，建议调研市场，学习热门书的风格。
+  observable:
+  - 'taboo维度: 频繁写如厕、屁股等低级趣味，是十年前的老套写法，没人看。'
+  - 'genre维度: 小说理解停留在过去，建议调研市场，学习热门书的风格。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 572
+  - 610
+  score: 23
+  score_raw: 23分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蜀山轻松向修仙
+  genre_guess:
+  - 仙侠
+  - 轻松
+  overall_comment: 笔力尚可但对网文理解停留在十年前，喜欢写如厕之类的低级趣味堵点，建议好好做市场调研。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 频繁写如厕、屁股等低级趣味，是十年前的老套写法，没人看。
+    raw_quote: 去你老是写他频频如厕，撅着电屁股撅在那就跑了呀...一直都写撅着屁股在那聊天
+  - dimension: genre
+    severity: negative
+    content: 小说理解停留在过去，建议调研市场，学习热门书的风格。
+    raw_quote: 你就把起点最近100万字以下的书你做个归类嘛...你就学一下他的风格就很容易入行啊

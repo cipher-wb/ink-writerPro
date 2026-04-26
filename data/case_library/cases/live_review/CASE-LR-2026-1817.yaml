@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1817
+title: 暗影酒馆：吸血鬼与法师 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 西幻
+  - 吸血鬼
+  - 都市奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20分 | 用古老酒馆切入，毫无心理活动，完全不让读者看懂，傲慢到像外星人写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 用古老酒馆切入，毫无心理活动，完全不让读者看懂，傲慢到像外星人写法。 | 酒馆环境描写与现代网文脱节;零心理活动，主角完全不拉代入感;剧情空洞，全程温吞水
+  observable:
+  - 'opening维度: 酒馆环境描写与现代网文脱节'
+  - 'character维度: 零心理活动，主角完全不拉代入感'
+  - 'pacing维度: 剧情空洞，全程温吞水'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 986
+  - 1050
+  score: 20
+  score_raw: 差不多就20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 暗影酒馆：吸血鬼与法师
+  genre_guess:
+  - 西幻
+  - 吸血鬼
+  - 都市奇幻
+  overall_comment: 用古老酒馆切入，毫无心理活动，完全不让读者看懂，傲慢到像外星人写法。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 酒馆环境描写与现代网文脱节
+    raw_quote: 酒馆里面进来什么客人 然后各种描述他长什么样 穿什么衣服 这种写法太古老了
+  - dimension: character
+    severity: negative
+    content: 零心理活动，主角完全不拉代入感
+    raw_quote: 能不能来点就清理活动 跟我们地球人有什么关系啊……你看不起我们是吧
+  - dimension: pacing
+    severity: negative
+    content: 剧情空洞，全程温吞水
+    raw_quote: 就无聊死了……宁可写什么培根炒鸡蛋也不写主角的心理活动

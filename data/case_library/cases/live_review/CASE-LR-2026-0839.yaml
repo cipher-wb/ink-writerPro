@@ -1,0 +1,41 @@
+case_id: CASE-LR-2026-0839
+title: 养成系实习生 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 都市
+  - 养成
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 直播间推荐大鹅的书，追读稳定，没有具体点评。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 直播间推荐大鹅的书，追读稳定，没有具体点评。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 211
+  - 220
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 养成系实习生
+  genre_guess:
+  - 都市
+  - 养成
+  overall_comment: 直播间推荐大鹅的书，追读稳定，没有具体点评。
+  comments: []

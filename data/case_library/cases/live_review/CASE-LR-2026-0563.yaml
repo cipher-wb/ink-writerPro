@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0563
+title: 末日收集新科幻 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 科幻
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分吧 | 科幻写成说明书，毫无代入感，18分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 科幻写成说明书，毫无代入感，18分 | 直接堆设定没有故事，像大纲;缺少代入感，没有从细节切入
+  observable:
+  - 'simplicity维度: 直接堆设定没有故事，像大纲'
+  - 'opening维度: 缺少代入感，没有从细节切入'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 1790
+  - 1896
+  score: 18
+  score_raw: 18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日收集新科幻
+  genre_guess:
+  - 科幻
+  - 末日
+  overall_comment: 科幻写成说明书，毫无代入感，18分
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 直接堆设定没有故事，像大纲
+    raw_quote: 老是上帝视角... 能不能用主角开始
+  - dimension: opening
+    severity: negative
+    content: 缺少代入感，没有从细节切入
+    raw_quote: 拉拉代入感呀

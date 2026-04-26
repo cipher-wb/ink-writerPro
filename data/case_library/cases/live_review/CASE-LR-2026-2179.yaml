@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-2179
+title: 闲女人（写女人高手） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 都市
+  - 风尘
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 写女人天赋极高，但故事题材没人看，建议发挥特长写女角色相关的题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写女人天赋极高，但故事题材没人看，建议发挥特长写女角色相关的题材。 | 外星人管理条例这类题材没人看，浪费天赋
+  observable:
+  - 'genre维度: 外星人管理条例这类题材没人看，浪费天赋'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 900
+  - 945
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 闲女人（写女人高手）
+  genre_guess:
+  - 都市
+  - 风尘
+  overall_comment: 写女人天赋极高，但故事题材没人看，建议发挥特长写女角色相关的题材。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 写女人非常厉害，比例有风尘味，天赋很高
+    raw_quote: 大哥写女人很厉害啊 … 写女人的天赋没用听
+  - dimension: genre
+    severity: negative
+    content: 外星人管理条例这类题材没人看，浪费天赋
+    raw_quote: 写什么外星人管理条例 这没人看的 … 不要浪费你的天赋了

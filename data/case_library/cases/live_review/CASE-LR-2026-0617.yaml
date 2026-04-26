@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0617
+title: 梦境画皮 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材卖设定，没有人物故事，纯自嗨，改不了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材卖设定，没有人物故事，纯自嗨，改不了。 | 只有设定当卖点，没有人物故事和钩子
+  observable:
+  - 'hook维度: 只有设定当卖点，没有人物故事和钩子'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 4301
+  - 4450
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 梦境画皮
+  genre_guess:
+  - 都市
+  - 异能
+  - 民俗
+  overall_comment: 题材卖设定，没有人物故事，纯自嗨，改不了。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 只有设定当卖点，没有人物故事和钩子
+    raw_quote: 还是设定当成卖点...这不会讲人物故事

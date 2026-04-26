@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0079
+title: 债主到人间 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 民国
+  - 玄幻
+  - 典当
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分 | 八股文写法，剧情俗套平淡无奇，少女和主线事件都立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股文写法，剧情俗套平淡无奇，少女和主线事件都立不住。 | 核心剧情借债还钱毫无看点，平淡如水;配角少女写得像小学生，人物立不住
+  observable:
+  - 'highpoint维度: 核心剧情借债还钱毫无看点，平淡如水'
+  - 'character维度: 配角少女写得像小学生，人物立不住'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1121
+  - 1165
+  score: 38
+  score_raw: 38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 债主到人间
+  genre_guess:
+  - 民国
+  - 玄幻
+  - 典当
+  overall_comment: 八股文写法，剧情俗套平淡无奇，少女和主线事件都立不住。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 核心剧情借债还钱毫无看点，平淡如水
+    raw_quote: 唐月借债这件事一点意思都没有...这个是特别特别无聊
+  - dimension: character
+    severity: negative
+    content: 配角少女写得像小学生，人物立不住
+    raw_quote: 唐月也写了个小学生词...立不住这个少女

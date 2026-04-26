@@ -1,0 +1,46 @@
+case_id: CASE-LR-2026-1110
+title: 鹿晗穿越修仙成了星e (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 同人
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分的样子吧 | 卖点单薄，危机感不强，但神秘少女切入有进步
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 卖点单薄，危机感不强，但神秘少女切入有进步 | 宗门被收的危机太小，像城管赶摊，缺乏致命威胁
+  observable:
+  - 'highpoint维度: 宗门被收的危机太小，像城管赶摊，缺乏致命威胁'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 2000
+  - 2055
+  score: 45
+  score_raw: 45分的样子吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鹿晗穿越修仙成了星e
+  genre_guess:
+  - 同人
+  - 修仙
+  overall_comment: 卖点单薄，危机感不强，但神秘少女切入有进步
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 宗门被收的危机太小，像城管赶摊，缺乏致命威胁
+    raw_quote: 就一直不觉得 仙门要收 不能成为宗门 这这没啥事 这又不是说什么人家打过来的

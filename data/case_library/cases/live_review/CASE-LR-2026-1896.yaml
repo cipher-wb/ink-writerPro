@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1896
+title: 停尸间3000块拼尸复活 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分钟... 25分 | 脑洞炸裂但不好洗白，切入事件没写好。题材不适合起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞炸裂但不好洗白，切入事件没写好。题材不适合起点。 | 3000小弟控制复活脑洞太大难驾驭;题材不适合起点，建议发蓝精灵
+  observable:
+  - 'highpoint维度: 3000小弟控制复活脑洞太大难驾驭'
+  - 'genre维度: 题材不适合起点，建议发蓝精灵'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1851
+  - 1930
+  score: 25
+  score_raw: 25分钟... 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 停尸间3000块拼尸复活
+  genre_guess:
+  - 都市
+  - 异能
+  - 灵异
+  overall_comment: 脑洞炸裂但不好洗白，切入事件没写好。题材不适合起点。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 3000小弟控制复活脑洞太大难驾驭
+    raw_quote: 这个脑洞有点炸裂... 不好洗
+  - dimension: genre
+    severity: negative
+    content: 题材不适合起点，建议发蓝精灵
+    raw_quote: 题材也不是很适合... 要么就蓝精灵吧

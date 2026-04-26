@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1508
+title: 退红对方是萧衍 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 反套路
+  - 同人
+  - 乐子
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 别这样写书了吧 | 乐子文过时，蹭斗破版权有封书风险，起点无市场，方向错误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 乐子文过时，蹭斗破版权有封书风险，起点无市场，方向错误。 | 反套路乐子文已过时，读者不再买账;涉嫌侵权斗破苍穹，发番茄会被封书
+  observable:
+  - 'genre维度: 反套路乐子文已过时，读者不再买账'
+  - 'taboo维度: 涉嫌侵权斗破苍穹，发番茄会被封书'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 81
+  - 160
+  score: null
+  score_raw: 别这样写书了吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 退红对方是萧衍
+  genre_guess:
+  - 反套路
+  - 同人
+  - 乐子
+  overall_comment: 乐子文过时，蹭斗破版权有封书风险，起点无市场，方向错误。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 反套路乐子文已过时，读者不再买账
+    raw_quote: 反套路现在也是老套路了 这句话特别牛逼
+  - dimension: taboo
+    severity: negative
+    content: 涉嫌侵权斗破苍穹，发番茄会被封书
+    raw_quote: 你这玩意其实还是蹭了 蹭了豆婆的 就你这个稿子 如果发番茄 番茄是有权利封你的书的

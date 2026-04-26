@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2005
+title: 少年玄幻 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 玄幻
+  - 苍生拯救
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就18分吧 | 题材和剧情极度老套，充斥着无聊的家族家常和少年拯救世界的套路，完全无法吸引读者。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材和剧情极度老套，充斥着无聊的家族家常和少年拯救世界的套路，完全无法吸引读者。 | 开头平淡如白水，全是家长里短的废话。
+  observable:
+  - 'opening维度: 开头平淡如白水，全是家长里短的废话。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 601
+  - 636
+  score: 18
+  score_raw: 就18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 少年玄幻
+  genre_guess:
+  - 玄幻
+  - 苍生拯救
+  overall_comment: 题材和剧情极度老套，充斥着无聊的家族家常和少年拯救世界的套路，完全无法吸引读者。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头平淡如白水，全是家长里短的废话。
+    raw_quote: 我就觉得 少年 然后苍生 拯救 ... 太老套太老套了

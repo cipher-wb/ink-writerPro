@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0190
+title: 仙界合伙人：橘猫天使投资 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 仙侠
+  - 经商
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没人看 | 仙界经商老套路，卖点不明确，节奏温吞，没有签约可能。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 仙界经商老套路，卖点不明确，节奏温吞，没有签约可能。 | 仙界赚钱开公司套路过时，没有新意。;开头就卖关子，主线缺失，读者抓不住看点。
+  observable:
+  - 'genre维度: 仙界赚钱开公司套路过时，没有新意。'
+  - 'pacing维度: 开头就卖关子，主线缺失，读者抓不住看点。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 3140
+  - 3250
+  score: null
+  score_raw: 没人看
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 仙界合伙人：橘猫天使投资
+  genre_guess:
+  - 仙侠
+  - 经商
+  - 搞笑
+  overall_comment: 仙界经商老套路，卖点不明确，节奏温吞，没有签约可能。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 仙界赚钱开公司套路过时，没有新意。
+    raw_quote: 又开始了仙界赚钱做RP合伙人没人看兄弟没人看
+  - dimension: pacing
+    severity: negative
+    content: 开头就卖关子，主线缺失，读者抓不住看点。
+    raw_quote: 到现在为止卖点不明确

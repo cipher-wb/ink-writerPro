@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1237
+title: 修仙模拟器 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 从16分进化到28分了 | 文笔好但是思路老套，凡人测灵根开局缺乏新意，带有文青病，建议学习当前精品写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔好但是思路老套，凡人测灵根开局缺乏新意，带有文青病，建议学习当前精品写法。 | 测灵根剧情非常老套，核心思路需要改变;文笔有些文青病，不够接地气
+  observable:
+  - 'opening维度: 测灵根剧情非常老套，核心思路需要改变'
+  - 'simplicity维度: 文笔有些文青病，不够接地气'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 490
+  - 555
+  score: 28
+  score_raw: 从16分进化到28分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙模拟器
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 凡人流
+  overall_comment: 文笔好但是思路老套，凡人测灵根开局缺乏新意，带有文青病，建议学习当前精品写法。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 测灵根剧情非常老套，核心思路需要改变
+    raw_quote: 但是你的主线确实是一个老套的测灵根，加入修仙的感觉，明白吗，这个很老套
+  - dimension: simplicity
+    severity: negative
+    content: 文笔有些文青病，不够接地气
+    raw_quote: 我感觉还是闻清味道，就是不够接地气的
+  - dimension: misc
+    severity: positive
+    content: 文笔扎实，有一定天赋
+    raw_quote: 比例挺好的，你也有天赋兄弟

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2210
+title: 采访元神 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 修仙
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分吧 | 作者有天赋，文笔节奏好，但主线无聊且有审核风险，建议更换题材或元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者有天赋，文笔节奏好，但主线无聊且有审核风险，建议更换题材或元素。 | 主事件无聊，缺乏吸引力;采补等设定存在审核风险
+  observable:
+  - 'opening维度: 主事件无聊，缺乏吸引力'
+  - 'taboo维度: 采补等设定存在审核风险'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 613
+  - 666
+  score: 42
+  score_raw: 42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 采访元神
+  genre_guess:
+  - 修仙
+  - 奇幻
+  overall_comment: 作者有天赋，文笔节奏好，但主线无聊且有审核风险，建议更换题材或元素。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主事件无聊，缺乏吸引力
+    raw_quote: 但是事件无聊啊...这个事件本身 这个事件要你要财不理 这个事件审核会管
+  - dimension: taboo
+    severity: negative
+    content: 采补等设定存在审核风险
+    raw_quote: 你这个逃生没意思呀 妖女要采捕你...审核会管哎 审核不让踩
+  - dimension: pacing
+    severity: positive
+    content: 讲故事能力可以，节奏干练
+    raw_quote: 其实也有天赋了 讲故事能力可以的 节奏干练文笔

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0147
+title: 燃起来 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 修仙
+  - 土著
+  - 分身
+  - 奇遇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你22分 | 土著分身流代入不了，战力崩坏，反转无意义。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 土著分身流代入不了，战力崩坏，反转无意义。 | 开局遇到合体大佬导致战力崩坏;土著身份读者带入不了，纯好奇不会付费
+  observable:
+  - 'highpoint维度: 开局遇到合体大佬导致战力崩坏'
+  - 'hook维度: 土著身份读者带入不了，纯好奇不会付费'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 282
+  - 294
+  score: 22
+  score_raw: 就给你22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 燃起来
+  genre_guess:
+  - 修仙
+  - 土著
+  - 分身
+  - 奇遇
+  overall_comment: 土著分身流代入不了，战力崩坏，反转无意义。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 开局遇到合体大佬导致战力崩坏
+    raw_quote: 兄弟开局战力崩了呀 因为你这些人你接触不到他才有逼格
+  - dimension: hook
+    severity: negative
+    content: 土著身份读者带入不了，纯好奇不会付费
+    raw_quote: 因为你是个土著土著 你现在就是讲讲设定 这个就是题材比较垃圾了 就因为读者不关心你

@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0315
+title: 都市异能道士 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 很无聊的都市异能 | 都市异能题材在起点没有市场，事件无聊且充斥烂梗，气功等设定有风险。编辑建议先找对题材方向。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市异能题材在起点没有市场，事件无聊且充斥烂梗，气功等设定有风险。编辑建议先找对题材方向。 | 都市异能题材在起点几乎没有市场，非常难进。;气功题材存在风险，需换个描述或避开。;开局事件无聊，过度的细节描写劝退读者。
+  observable:
+  - 'genre维度: 都市异能题材在起点几乎没有市场，非常难进。'
+  - 'taboo维度: 气功题材存在风险，需换个描述或避开。'
+  - 'opening维度: 开局事件无聊，过度的细节描写劝退读者。'
+  - 'simplicity维度: 毒点和烂梗太多，如络腮胡、印堂发黑等。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 368
+  - 466
+  score: null
+  score_raw: 很无聊的都市异能
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 都市异能道士
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 都市异能题材在起点没有市场，事件无聊且充斥烂梗，气功等设定有风险。编辑建议先找对题材方向。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市异能题材在起点几乎没有市场，非常难进。
+    raw_quote: 这怎么又是都市异能啊...你们写的这个题材本来就难进你的起点
+  - dimension: taboo
+    severity: negative
+    content: 气功题材存在风险，需换个描述或避开。
+    raw_quote: 气功这个词语确实有点危险...以前有个年代很多人搞这种东西，这个不能说
+  - dimension: opening
+    severity: negative
+    content: 开局事件无聊，过度的细节描写劝退读者。
+    raw_quote: 很无聊的一个事件...这些AI1秒生成啊...没必要写这么详细的
+  - dimension: simplicity
+    severity: negative
+    content: 毒点和烂梗太多，如络腮胡、印堂发黑等。
+    raw_quote: 50块钱烂梗呀...这络腮胡这些烂梗不要讲...你们老是把毒点加进去

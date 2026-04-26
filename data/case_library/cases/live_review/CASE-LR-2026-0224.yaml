@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0224
+title: 五代十国李重庆穿成叛将之子 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15JwWzyELA
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 五代十国
+  - 争霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分 | 切入啰嗦，文笔偏文艺不够白话，但主线有内忧外患与智商解决问题，存在期待感与看点。评分接近签约线，被扣三分后处于边缘状态。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15JwWzyELA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入啰嗦，文笔偏文艺不够白话，但主线有内忧外患与智商解决问题，存在期待感与看点。评分接近签约线，被扣三分后处于边缘状态。 | 切入过于啰嗦，文笔太文艺不够白话，影响阅读流畅性;文笔过文青，描述冗余不够简洁直接
+  observable:
+  - 'opening维度: 切入过于啰嗦，文笔太文艺不够白话，影响阅读流畅性'
+  - 'simplicity维度: 文笔过文青，描述冗余不够简洁直接'
+live_review_meta:
+  source_bvid: BV15JwWzyELA
+  source_line_range:
+  - 139
+  - 218
+  score: 59
+  score_raw: 59分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 五代十国李重庆穿成叛将之子
+  genre_guess:
+  - 历史
+  - 穿越
+  - 五代十国
+  - 争霸
+  overall_comment: 切入啰嗦，文笔偏文艺不够白话，但主线有内忧外患与智商解决问题，存在期待感与看点。评分接近签约线，被扣三分后处于边缘状态。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入过于啰嗦，文笔太文艺不够白话，影响阅读流畅性
+    raw_quote: 太啰嗦了太啰嗦了...说人话啊对吧
+  - dimension: simplicity
+    severity: negative
+    content: 文笔过文青，描述冗余不够简洁直接
+    raw_quote: 咬紧牙关力量加上刀柄 颈间留着刺痛...太文青了
+  - dimension: highpoint
+    severity: positive
+    content: 主线有内忧外患，有智商解决问题的看点和期待感
+    raw_quote: 有内忧外患 有智商解决问题 然后有蹭 然后有看点 有期待感都还好
+  - dimension: character
+    severity: neutral
+    content: 需补充夫人外貌描写，丰富人物形象
+    raw_quote: 她是将门虎女司的女子 要写啊 要写她长啥样

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1790
+title: 修仙界出生魔门诚心 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 修仙
+  - 魔门
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十分的上限的样子 | 模仿痕迹重（踩捕），剧情直白，缺乏文笔和人物塑造。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 模仿痕迹重（踩捕），剧情直白，缺乏文笔和人物塑造。 | 模仿痕迹过重，特别是原封不动“师娘”梗容易引起争议和举报。;文笔薄弱，只靠直接剧情推进，缺乏情感和立人能力。
+  observable:
+  - 'ops维度: 模仿痕迹过重，特别是原封不动“师娘”梗容易引起争议和举报。'
+  - 'character维度: 文笔薄弱，只靠直接剧情推进，缺乏情感和立人能力。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 737
+  - 778
+  score: 30
+  score_raw: 三十分的上限的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙界出生魔门诚心
+  genre_guess:
+  - 修仙
+  - 魔门
+  - 系统
+  overall_comment: 模仿痕迹重（踩捕），剧情直白，缺乏文笔和人物塑造。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 模仿痕迹过重，特别是原封不动“师娘”梗容易引起争议和举报。
+    raw_quote: 裁不这太像了兄弟没意思...说明这狗翠童每次都要一年什么...不然人家觉得还是太像了
+  - dimension: character
+    severity: negative
+    content: 文笔薄弱，只靠直接剧情推进，缺乏情感和立人能力。
+    raw_quote: 比例不够...写人物的能力以及感同身受的情感...心中震撼这就是修仙者吗

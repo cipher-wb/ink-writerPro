@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0876
+title: 陆小北都市修真 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 都市
+  - 修真
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 你也18分吧 | 对白小白，情节奇葩，踢屁股等描写毫无意义，基本功不行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对白小白，情节奇葩，踢屁股等描写毫无意义，基本功不行。 | 行为幼稚，踢屁股情节不知所谓;对白很小白，情节老套
+  observable:
+  - 'character维度: 行为幼稚，踢屁股情节不知所谓'
+  - 'opening维度: 对白很小白，情节老套'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 621
+  - 660
+  score: 18
+  score_raw: 你也18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 陆小北都市修真
+  genre_guess:
+  - 都市
+  - 修真
+  overall_comment: 对白小白，情节奇葩，踢屁股等描写毫无意义，基本功不行。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 行为幼稚，踢屁股情节不知所谓
+    raw_quote: 你老踢人家屁股干嘛呀 这大哥你又不是成都人 你一上来盯着人家屁股踢啥 一直踢 … 老在乎你兄弟的屁股干嘛
+  - dimension: opening
+    severity: negative
+    content: 对白很小白，情节老套
+    raw_quote: 好小白呀 小白兔白又白 … 好老套呀 简洁点啊

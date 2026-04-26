@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0217
+title: 系统逼我当反派 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 仙侠
+  - 反派
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 24分 | 系统威胁抹杀毒点明显，开局格局过大，不符合起点接地气的要求。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统威胁抹杀毒点明显，开局格局过大，不符合起点接地气的要求。 | 系统以抹杀威胁主角，属于大毒点;开局涉及十年大战和金丹修士，场景偏大缺乏代入感
+  observable:
+  - 'golden_finger维度: 系统以抹杀威胁主角，属于大毒点'
+  - 'opening维度: 开局涉及十年大战和金丹修士，场景偏大缺乏代入感'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1270
+  - 1300
+  score: 24
+  score_raw: 24分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 系统逼我当反派
+  genre_guess:
+  - 仙侠
+  - 反派
+  - 系统
+  overall_comment: 系统威胁抹杀毒点明显，开局格局过大，不符合起点接地气的要求。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统以抹杀威胁主角，属于大毒点
+    raw_quote: 系统任务不行抹杀 你就写剧情 把系统去掉写剧情就行
+  - dimension: opening
+    severity: negative
+    content: 开局涉及十年大战和金丹修士，场景偏大缺乏代入感
+    raw_quote: 起点开头 很机会写大的 十年大战的 ... 开頭用點其他的

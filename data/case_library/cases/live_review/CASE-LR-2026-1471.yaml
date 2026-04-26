@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1471
+title: 风水中介 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 都市
+  - 风水
+  - 中介
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就只能18封了 | 完全不会写书，没有心理活动，前因后果不明。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不会写书，没有心理活动，前因后果不明。 | 没写主角心理活动，没代入感
+  observable:
+  - 'opening维度: 没写主角心理活动，没代入感'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 991
+  - 1080
+  score: 18
+  score_raw: 就只能18封了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 风水中介
+  genre_guess:
+  - 都市
+  - 风水
+  - 中介
+  overall_comment: 完全不会写书，没有心理活动，前因后果不明。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 没写主角心理活动，没代入感
+    raw_quote: 要写心理活动 你韩国是主角了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2113
+title: 末日边缘风格都市文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 末日
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 思路没问题，想学末日边缘但基本功不够，人物立不住，没机会签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路没问题，想学末日边缘但基本功不够，人物立不住，没机会签约。 | 代入感不够，比例不够写不出人物真实感;日常事件无聊，撑不住后续剧情
+  observable:
+  - 'character维度: 代入感不够，比例不够写不出人物真实感'
+  - 'hook维度: 日常事件无聊，撑不住后续剧情'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 521
+  - 565
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 末日边缘风格都市文
+  genre_guess:
+  - 都市
+  - 末日
+  - 穿越
+  overall_comment: 思路没问题，想学末日边缘但基本功不够，人物立不住，没机会签约。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 代入感不够，比例不够写不出人物真实感
+    raw_quote: 我觉得是比例问题
+  - dimension: hook
+    severity: negative
+    content: 日常事件无聊，撑不住后续剧情
+    raw_quote: 这点事件无聊啊

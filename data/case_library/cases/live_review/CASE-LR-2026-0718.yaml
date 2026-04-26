@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0718
+title: 末日重生舔狗/河北老师 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 末日
+  - 重生
+  - 雪白/拉扯
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在只能三十五左右了 | 全章雪白，女性角色行为逻辑很毒；节奏快但卖点单一且导向错误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全章雪白，女性角色行为逻辑很毒；节奏快但卖点单一且导向错误。 | 女主太过恶毒且主角行为舔狗，角色崩坏;全部卖点是雪白，缺乏真正主线和爽点
+  observable:
+  - 'character维度: 女主太过恶毒且主角行为舔狗，角色崩坏'
+  - 'highpoint维度: 全部卖点是雪白，缺乏真正主线和爽点'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 1231
+  - 1300
+  score: 35
+  score_raw: 现在只能三十五左右了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日重生舔狗/河北老师
+  genre_guess:
+  - 末日
+  - 重生
+  - 雪白/拉扯
+  overall_comment: 全章雪白，女性角色行为逻辑很毒；节奏快但卖点单一且导向错误。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主太过恶毒且主角行为舔狗，角色崩坏
+    raw_quote: 这个女的真没意义...这种女的...浪费一秒
+  - dimension: highpoint
+    severity: negative
+    content: 全部卖点是雪白，缺乏真正主线和爽点
+    raw_quote: 就每一章都雪白...你觉得有意义吗

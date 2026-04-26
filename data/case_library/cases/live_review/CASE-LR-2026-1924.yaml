@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1924
+title: 离婚系统/孟子义文娱 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 都市
+  - 文娱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分吧 | 第一章切入非常强，但后续写女角色和拉扯的笔力太差，限制了成绩，建议针对性练习人设。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章切入非常强，但后续写女角色和拉扯的笔力太差，限制了成绩，建议针对性练习人设。 | 写女角色和拉扯的能力不够，文字干巴巴，人设不真实。
+  observable:
+  - 'character维度: 写女角色和拉扯的能力不够，文字干巴巴，人设不真实。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 662
+  - 700
+  score: 58
+  score_raw: 58分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 离婚系统/孟子义文娱
+  genre_guess:
+  - 都市
+  - 文娱
+  overall_comment: 第一章切入非常强，但后续写女角色和拉扯的笔力太差，限制了成绩，建议针对性练习人设。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章切入快，问题不大，非常强。
+    raw_quote: 切入倒还好挺快的节奏，第一章问题不大。第一张确实牛逼的吧
+  - dimension: character
+    severity: negative
+    content: 写女角色和拉扯的能力不够，文字干巴巴，人设不真实。
+    raw_quote: 人设能力真不够啊...这些女的都这女的感觉都好假的...我好昂蟹

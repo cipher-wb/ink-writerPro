@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1280
+title: 华语顶流被绿重生 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 都市
+  - 娱乐
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分的样子 | 反派处理太弱智小白，缺乏智商博弈，节奏慢，写法类似过时的蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 反派处理太弱智小白，缺乏智商博弈，节奏慢，写法类似过时的蓝精灵。 | 反派当面嘲讽太弱智，主角像废物;文娱装逼方式需要更高级的侧面描写
+  observable:
+  - 'character维度: 反派当面嘲讽太弱智，主角像废物'
+  - 'hook维度: 文娱装逼方式需要更高级的侧面描写'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1831
+  - 1920
+  score: 32
+  score_raw: 32分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 华语顶流被绿重生
+  genre_guess:
+  - 都市
+  - 娱乐
+  - 重生
+  overall_comment: 反派处理太弱智小白，缺乏智商博弈，节奏慢，写法类似过时的蓝精灵。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 反派当面嘲讽太弱智，主角像废物
+    raw_quote: 你这种这当着你面带着嘲讽骂的这种太弱智了...这人设太小白了
+  - dimension: hook
+    severity: negative
+    content: 文娱装逼方式需要更高级的侧面描写
+    raw_quote: 现在的文娱装逼都比较高级...非常原始的写法

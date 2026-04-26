@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0462
+title: 地府老爷爷 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 玄幻
+  - 地府
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你就20分 | 纯导游式讲设定，无冲突无卖点，慢而不热，必须推翻重找思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯导游式讲设定，无冲突无卖点，慢而不热，必须推翻重找思路。 | 开头就是老爷爷介绍设定，变成一战到底问答，毫无剧情;没有钩子，没有冲突和情绪，读者根本不会看下去
+  observable:
+  - 'opening维度: 开头就是老爷爷介绍设定，变成一战到底问答，毫无剧情'
+  - 'hook维度: 没有钩子，没有冲突和情绪，读者根本不会看下去'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 871
+  - 920
+  score: 20
+  score_raw: 给你就20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 地府老爷爷
+  genre_guess:
+  - 玄幻
+  - 地府
+  overall_comment: 纯导游式讲设定，无冲突无卖点，慢而不热，必须推翻重找思路。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头就是老爷爷介绍设定，变成一战到底问答，毫无剧情
+    raw_quote: 就导游呀 导游我现在是个导游 带大家去游览 ... 就一直问 就问设定 打设定
+  - dimension: hook
+    severity: negative
+    content: 没有钩子，没有冲突和情绪，读者根本不会看下去
+    raw_quote: 没有任何的冲突 也没有任何的看见 也没有任何的情绪

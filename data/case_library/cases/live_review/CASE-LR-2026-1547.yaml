@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1547
+title: 家门不兴 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 古言
+  - 宅斗
+  - 乱伦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十八分都上不了榜了 | 女频乱伦，血缘关系混乱，严重劝退男频读者。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 女频乱伦，血缘关系混乱，严重劝退男频读者。 | 内容为女频家庭伦理乱伦;人物关系复杂难懂
+  observable:
+  - 'genre维度: 内容为女频家庭伦理乱伦'
+  - 'simplicity维度: 人物关系复杂难懂'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 529
+  - 658
+  score: 18
+  score_raw: 十八分都上不了榜了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 家门不兴
+  genre_guess:
+  - 古言
+  - 宅斗
+  - 乱伦
+  overall_comment: 女频乱伦，血缘关系混乱，严重劝退男频读者。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 内容为女频家庭伦理乱伦
+    raw_quote: 我不能接受你跟你母亲的堂妹在一起
+  - dimension: simplicity
+    severity: negative
+    content: 人物关系复杂难懂
+    raw_quote: 一家人都没血缘关系是吧 姨也不是亲生的 她也不是亲孙子

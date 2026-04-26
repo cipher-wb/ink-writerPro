@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1785
+title: 炼药炼丹玄幻陈青彤 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 玄幻
+  - 炼药
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多28分 | 武侠风平淡叙事，开局信息量过多显得着急，比例尚可。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 武侠风平淡叙事，开局信息量过多显得着急，比例尚可。 | 人设太文青平淡，像西门吹雪，缺乏情感和代入感。;第一章信息量太多，着急引出帮派，应从更小事件切入。
+  observable:
+  - 'character维度: 人设太文青平淡，像西门吹雪，缺乏情感和代入感。'
+  - 'pacing维度: 第一章信息量太多，着急引出帮派，应从更小事件切入。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 427
+  - 500
+  score: 28
+  score_raw: 差不多28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 炼药炼丹玄幻陈青彤
+  genre_guess:
+  - 玄幻
+  - 炼药
+  overall_comment: 武侠风平淡叙事，开局信息量过多显得着急，比例尚可。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设太文青平淡，像西门吹雪，缺乏情感和代入感。
+    raw_quote: 装逼不是人设...这种人设是最无聊的人设...一定要有情感
+  - dimension: pacing
+    severity: negative
+    content: 第一章信息量太多，着急引出帮派，应从更小事件切入。
+    raw_quote: 不应该这么急着出来...第一章应该是个更小的东西...着急了

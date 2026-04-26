@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0835
+title: 天河打工不上班 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 末日
+  - 电力危机
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分有吧 | 番茄风末日电力题材，驱动力和故事事件老套，缺乏起点吸引力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 番茄风末日电力题材，驱动力和故事事件老套，缺乏起点吸引力。 | 驱动力番茄味太重，报复兄弟前女友;金手指出戏，背景设定有待商榷
+  observable:
+  - 'character维度: 驱动力番茄味太重，报复兄弟前女友'
+  - 'golden_finger维度: 金手指出戏，背景设定有待商榷'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 81
+  - 110
+  score: 50
+  score_raw: 50分有吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天河打工不上班
+  genre_guess:
+  - 末日
+  - 电力危机
+  overall_comment: 番茄风末日电力题材，驱动力和故事事件老套，缺乏起点吸引力。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 驱动力番茄味太重，报复兄弟前女友
+    raw_quote: 主驱动力还是太番茄了
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指出戏，背景设定有待商榷
+    raw_quote: 金手指我觉得有待商榷啊
+  - dimension: genre
+    severity: neutral
+    content: 末日电力危机题材小众，基础设定读者可能跑
+    raw_quote: 末日电力危机我还是觉得有待商榷

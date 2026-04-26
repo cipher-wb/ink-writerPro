@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1196
+title: 重生2014之商K风云 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十五分吧 | 布局可以，但笔力不足写不出味道，KTV事件没写好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 布局可以，但笔力不足写不出味道，KTV事件没写好。 | 笔力不够，场景和人物描写缺乏感染力;人设欠缺，需要更有魅力的角色
+  observable:
+  - 'misc维度: 笔力不够，场景和人物描写缺乏感染力'
+  - 'character维度: 人设欠缺，需要更有魅力的角色'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 901
+  - 950
+  score: 45
+  score_raw: 四十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2014之商K风云
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  overall_comment: 布局可以，但笔力不足写不出味道，KTV事件没写好。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 笔力不够，场景和人物描写缺乏感染力
+    raw_quote: 比例不够兄弟 写不出来一个好的场景
+  - dimension: genre
+    severity: positive
+    content: 重生商K题材有可读性
+    raw_quote: 题材肯定能写
+  - dimension: character
+    severity: negative
+    content: 人设欠缺，需要更有魅力的角色
+    raw_quote: 人设我觉得弄点好人设吧

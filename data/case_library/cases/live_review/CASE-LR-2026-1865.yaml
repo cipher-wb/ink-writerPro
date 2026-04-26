@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1865
+title: 日入千万被校园霸凌装逼文 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 装逼打脸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 九分 | 逻辑极度小白，在国内大学当街杀人没人管，情绪足胆子大，但不符合逻辑，更像短剧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 逻辑极度小白，在国内大学当街杀人没人管，情绪足胆子大，但不符合逻辑，更像短剧。 | 校霸当街杀人、扇耳光这种剧情逻辑崩坏，难以代入
+  observable:
+  - 'character维度: 校霸当街杀人、扇耳光这种剧情逻辑崩坏，难以代入'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1068
+  - 1135
+  score: 9
+  score_raw: 九分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 日入千万被校园霸凌装逼文
+  genre_guess:
+  - 都市
+  - 系统
+  - 装逼打脸
+  overall_comment: 逻辑极度小白，在国内大学当街杀人没人管，情绪足胆子大，但不符合逻辑，更像短剧。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 校霸当街杀人、扇耳光这种剧情逻辑崩坏，难以代入
+    raw_quote: 主角可以被打 可以被杀 但绝对不能被反派疯狂扇耳光
+  - dimension: simplicity
+    severity: positive
+    content: 情绪写得很足，很流畅，胆子大，算一种极致天赋
+    raw_quote: 情绪很足啊 很流畅 胆子很大 我觉得这是你的优点

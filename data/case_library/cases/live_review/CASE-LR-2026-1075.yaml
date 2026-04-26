@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1075
+title: 重修修仙·商业重生 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 修仙
+  - 重生
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 撑30分不会太高 | 设定老套，驱动力仍停留在灭门复仇，人物情绪淡薄，需要学习现代网文叙事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定老套，驱动力仍停留在灭门复仇，人物情绪淡薄，需要学习现代网文叙事。 | 设定当卖点，仍停留在萌新阶段;人物情绪反应平淡，缺乏代入感
+  observable:
+  - 'simplicity维度: 设定当卖点，仍停留在萌新阶段'
+  - 'character维度: 人物情绪反应平淡，缺乏代入感'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 796
+  - 880
+  score: 30
+  score_raw: 撑30分不会太高
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重修修仙·商业重生
+  genre_guess:
+  - 修仙
+  - 重生
+  - 凡人流
+  overall_comment: 设定老套，驱动力仍停留在灭门复仇，人物情绪淡薄，需要学习现代网文叙事。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定当卖点，仍停留在萌新阶段
+    raw_quote: 你到现在还在把设定当卖点
+  - dimension: character
+    severity: negative
+    content: 人物情绪反应平淡，缺乏代入感
+    raw_quote: 好不容易能修炼了也没什么情绪也不高兴

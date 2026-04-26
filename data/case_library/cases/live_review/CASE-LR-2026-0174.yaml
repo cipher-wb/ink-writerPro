@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0174
+title: 英灵殿同事：系统流反套路 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 西幻
+  - 系统流
+  - 反套路
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分过了 | 设定像没钱修仙的西幻版，但元素过于陌生，阅读门槛高，事件无聊，建议换成中国背景。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定像没钱修仙的西幻版，但元素过于陌生，阅读门槛高，事件无聊，建议换成中国背景。 | 西方人名地名过多，读者难以代入。;设定天书般难以理解，读者不会买单。;事件无聊，杀圣甲虫、找女妖缺乏吸引力。
+  observable:
+  - 'genre维度: 西方人名地名过多，读者难以代入。'
+  - 'ops维度: 设定天书般难以理解，读者不会买单。'
+  - 'simplicity维度: 事件无聊，杀圣甲虫、找女妖缺乏吸引力。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 540
+  - 710
+  score: 33
+  score_raw: 33分过了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 英灵殿同事：系统流反套路
+  genre_guess:
+  - 西幻
+  - 系统流
+  - 反套路
+  overall_comment: 设定像没钱修仙的西幻版，但元素过于陌生，阅读门槛高，事件无聊，建议换成中国背景。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西方人名地名过多，读者难以代入。
+    raw_quote: 你非要写个西方大陆呢你不能写中国吗
+  - dimension: ops
+    severity: negative
+    content: 设定天书般难以理解，读者不会买单。
+    raw_quote: 不解释就得天书呀
+  - dimension: simplicity
+    severity: negative
+    content: 事件无聊，杀圣甲虫、找女妖缺乏吸引力。
+    raw_quote: 杀圣甲虫找女妖有啥意思没意思呀

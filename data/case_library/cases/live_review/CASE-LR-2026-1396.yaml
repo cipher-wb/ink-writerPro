@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1396
+title: 真爱歪冰冰 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 死灵术士
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分嘛 17分就输了 | 题材本身可写，但主角穿越混乱，世界观杂糅，像个都市游戏，毫无看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材本身可写，但主角穿越混乱，世界观杂糅，像个都市游戏，毫无看点。 | 世界观杂糅，不像西幻也不像都市;开头冗长无聊，穿越过程拖沓
+  observable:
+  - 'genre维度: 世界观杂糅，不像西幻也不像都市'
+  - 'opening维度: 开头冗长无聊，穿越过程拖沓'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 651
+  - 800
+  score: 16
+  score_raw: 16分嘛 17分就输了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 真爱歪冰冰
+  genre_guess:
+  - 都市
+  - 异能
+  - 死灵术士
+  overall_comment: 题材本身可写，但主角穿越混乱，世界观杂糅，像个都市游戏，毫无看点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观杂糅，不像西幻也不像都市
+    raw_quote: 这个世界观根本就不是一个什么好的题材
+  - dimension: opening
+    severity: negative
+    content: 开头冗长无聊，穿越过程拖沓
+    raw_quote: 一个破穿越 我完全不会写网红呀

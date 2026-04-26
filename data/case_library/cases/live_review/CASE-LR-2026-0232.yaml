@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0232
+title: 拯救世界与我何干 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 轻小说
+  - 吸血
+  - 学院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 老套，慢悠悠展开，雪白切入糟糕，事件无趣。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套，慢悠悠展开，雪白切入糟糕，事件无趣。 | 换汤不换药，雪白加设定还是无聊;展开太慢，一直讲设定
+  observable:
+  - 'opening维度: 换汤不换药，雪白加设定还是无聊'
+  - 'pacing维度: 展开太慢，一直讲设定'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 445
+  - 510
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 拯救世界与我何干
+  genre_guess:
+  - 轻小说
+  - 吸血
+  - 学院
+  overall_comment: 老套，慢悠悠展开，雪白切入糟糕，事件无趣。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 换汤不换药，雪白加设定还是无聊
+    raw_quote: 开头加了个雪白 加上去之后觉得...其实没改
+  - dimension: pacing
+    severity: negative
+    content: 展开太慢，一直讲设定
+    raw_quote: 就一本正经讲真实世界 慢慢的讲

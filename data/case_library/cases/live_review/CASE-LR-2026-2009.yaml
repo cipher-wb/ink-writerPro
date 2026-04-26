@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2009
+title: 蛇妖斩妖除魔 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 修仙
+  - 妖魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那九分吧 | 内容极度恶心，吃人、蛤蟆精等描写是严重毒点，严重伤害读者观感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容极度恶心，吃人、蛤蟆精等描写是严重毒点，严重伤害读者观感。 | 吃人情节和恶心、丑陋的描写是严重的毒点和劝退点。
+  observable:
+  - 'taboo维度: 吃人情节和恶心、丑陋的描写是严重的毒点和劝退点。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 766
+  - 810
+  score: 9
+  score_raw: 那九分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蛇妖斩妖除魔
+  genre_guess:
+  - 修仙
+  - 妖魔
+  overall_comment: 内容极度恶心，吃人、蛤蟆精等描写是严重毒点，严重伤害读者观感。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 吃人情节和恶心、丑陋的描写是严重的毒点和劝退点。
+    raw_quote: 这么恶心的蛤蟆精在那吃 ... 吃完人你又吃他 我到底爽点在哪里

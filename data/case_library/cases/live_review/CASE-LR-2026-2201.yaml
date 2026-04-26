@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2201
+title: 诡秘同人 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 西方幻想
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大概这个表达能力已经有30多分了 | 蹭诡秘但切入不佳，开篇拖沓，缺乏心理代入感，金手指没吸引力，人设需加强。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蹭诡秘但切入不佳，开篇拖沓，缺乏心理代入感，金手指没吸引力，人设需加强。 | 开篇节奏太慢，过于拖沓，没有新意;主角人设干巴，缺乏情绪反应，代入感差;金手指不吸引人
+  observable:
+  - 'opening维度: 开篇节奏太慢，过于拖沓，没有新意'
+  - 'character维度: 主角人设干巴，缺乏情绪反应，代入感差'
+  - 'golden_finger维度: 金手指不吸引人'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 97
+  - 162
+  score: 35
+  score_raw: 大概这个表达能力已经有30多分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡秘同人
+  genre_guess:
+  - 西方幻想
+  - 同人
+  overall_comment: 蹭诡秘但切入不佳，开篇拖沓，缺乏心理代入感，金手指没吸引力，人设需加强。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇节奏太慢，过于拖沓，没有新意
+    raw_quote: 好慢啊...没有心理活动啊 没有盘算 也没有穿越啊
+  - dimension: character
+    severity: negative
+    content: 主角人设干巴，缺乏情绪反应，代入感差
+    raw_quote: 情绪呢 那个一点情绪都没有...主角写的太干巴了
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指不吸引人
+    raw_quote: 包括你这个书明的金手指 我觉得也不咋样吧

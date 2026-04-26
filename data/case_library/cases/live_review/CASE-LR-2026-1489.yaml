@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1489
+title: 猎缘拆散系统 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个估计也就25分嘛 | 题材奇怪，写得不够流畅，主线不明确，思路东一榔头西一棒槌
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材奇怪，写得不够流畅，主线不明确，思路东一榔头西一棒槌 | 事件写得不够流畅，思路跳跃;主线目标不明确，读者缺少看点
+  observable:
+  - 'pacing维度: 事件写得不够流畅，思路跳跃'
+  - 'opening维度: 主线目标不明确，读者缺少看点'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 347
+  - 390
+  score: 25
+  score_raw: 这个估计也就25分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 猎缘拆散系统
+  genre_guess:
+  - 都市
+  - 系统
+  - 恶搞
+  overall_comment: 题材奇怪，写得不够流畅，主线不明确，思路东一榔头西一棒槌
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 事件写得不够流畅，思路跳跃
+    raw_quote: 感觉这些设定内容还有大哥的这个思路就东一男头西一棒腿的
+  - dimension: opening
+    severity: negative
+    content: 主线目标不明确，读者缺少看点
+    raw_quote: 主线目标不明确 感觉还是主线目标不明确

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0276
+title: 暮年修仙长生 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 修仙
+  - 暮年
+  - 长生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说分数 | 情绪不够，切入杂糅太多，需沉淀
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪不够，切入杂糅太多，需沉淀 | 情绪铺垫不足，哭泣来得太突兀
+  observable:
+  - 'character维度: 情绪铺垫不足，哭泣来得太突兀'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1031
+  - 1118
+  score: null
+  score_raw: 未明确说分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 暮年修仙长生
+  genre_guess:
+  - 修仙
+  - 暮年
+  - 长生
+  overall_comment: 情绪不够，切入杂糅太多，需沉淀
+  comments:
+  - dimension: character
+    severity: negative
+    content: 情绪铺垫不足，哭泣来得太突兀
+    raw_quote: 情绪不是这么提前的，情绪是要铺垫的

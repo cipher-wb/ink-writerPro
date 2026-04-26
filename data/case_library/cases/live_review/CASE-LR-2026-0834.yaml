@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0834
+title: 离婚系统重生文 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是59分嘛 | 套路熟题材好，但内容干巴巴，真实感不够，签了怕仆街。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路熟题材好，但内容干巴巴，真实感不够，签了怕仆街。 | 心理活动、盘算、强驱动力主线太少，人物干瘪;节奏太快，为了签约写得干巴巴
+  observable:
+  - 'character维度: 心理活动、盘算、强驱动力主线太少，人物干瘪'
+  - 'pacing维度: 节奏太快，为了签约写得干巴巴'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 46
+  - 80
+  score: 59
+  score_raw: 还是59分嘛
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 离婚系统重生文
+  genre_guess:
+  - 重生
+  - 系统
+  overall_comment: 套路熟题材好，但内容干巴巴，真实感不够，签了怕仆街。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 心理活动、盘算、强驱动力主线太少，人物干瘪
+    raw_quote: 你的心理活动你的盘算你的强驱动力主线还是太少了
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快，为了签约写得干巴巴
+    raw_quote: 节奏为了签约写的太快了，有点干巴巴的写真题

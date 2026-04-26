@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0792
+title: 我的右眼是恶母胶 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 穿越
+  - 系统
+  - 傲娇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也三十左右 | 傲娇人设过时，像随身老爷爷，剧情无推进，不可爱
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 傲娇人设过时，像随身老爷爷，剧情无推进，不可爱 | 傲娇人设用力过猛，不可爱，写成弱智角色;开篇没有剧情，只有聊天，切入差;思路太古老、过时，不如写系统
+  observable:
+  - 'character维度: 傲娇人设用力过猛，不可爱，写成弱智角色'
+  - 'opening维度: 开篇没有剧情，只有聊天，切入差'
+  - 'simplicity维度: 思路太古老、过时，不如写系统'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 241
+  - 340
+  score: 30
+  score_raw: 也三十左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的右眼是恶母胶
+  genre_guess:
+  - 穿越
+  - 系统
+  - 傲娇
+  overall_comment: 傲娇人设过时，像随身老爷爷，剧情无推进，不可爱
+  comments:
+  - dimension: character
+    severity: negative
+    content: 傲娇人设用力过猛，不可爱，写成弱智角色
+    raw_quote: 一不小心就写成那种 就是讨人厌的那种弱智的角色
+  - dimension: opening
+    severity: negative
+    content: 开篇没有剧情，只有聊天，切入差
+    raw_quote: 到现在为止没有剧情 就是要老在跟你聊天
+  - dimension: simplicity
+    severity: negative
+    content: 思路太古老、过时，不如写系统
+    raw_quote: 这个脑洞太古老了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0117
+title: 修仙的名义/公务员穿越修仙 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 职场
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分吧 | 太拖沓太水，不写穿越直接行贿受贿，缺少小剧场和极端事件，全是烂梗。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太拖沓太水，不写穿越直接行贿受贿，缺少小剧场和极端事件，全是烂梗。 | 太拖沓不写穿越，读者点几下就走了;人设小白嘿嘿傻笑显得主角像弱智
+  observable:
+  - 'opening维度: 太拖沓不写穿越，读者点几下就走了'
+  - 'character维度: 人设小白嘿嘿傻笑显得主角像弱智'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 2201
+  - 2300
+  score: 33
+  score_raw: 33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙的名义/公务员穿越修仙
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 职场
+  overall_comment: 太拖沓太水，不写穿越直接行贿受贿，缺少小剧场和极端事件，全是烂梗。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 太拖沓不写穿越，读者点几下就走了
+    raw_quote: 你现在写你前世是干啥的，你前世什么什么办公室的...你不要让我找行不行，你找的话就说明你错了
+  - dimension: character
+    severity: negative
+    content: 人设小白嘿嘿傻笑显得主角像弱智
+    raw_quote: 黑色就显得主角像弱智了，这个一定要注意

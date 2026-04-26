@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0389
+title: 江阳德穿越 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 奇幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 冒险者穿越流俗套至极，没有事件也没有脑洞，普普通通。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 冒险者穿越流俗套至极，没有事件也没有脑洞，普普通通。 | 简介和开头缺乏任何卖点，一眼看到底。
+  observable:
+  - 'hook维度: 简介和开头缺乏任何卖点，一眼看到底。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 525
+  - 555
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 江阳德穿越
+  genre_guess:
+  - 奇幻
+  - 穿越
+  overall_comment: 冒险者穿越流俗套至极，没有事件也没有脑洞，普普通通。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 简介和开头缺乏任何卖点，一眼看到底。
+    raw_quote: 这好俗啊这个东西，一点卖点都没有。

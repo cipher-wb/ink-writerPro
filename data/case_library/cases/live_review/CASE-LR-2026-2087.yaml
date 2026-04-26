@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-2087
+title: 杂鱼主编的直播审稿系统 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 直播文
+  - 系统
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这九分啊 | 纯属直播间乐子自嗨，不必当真签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯属直播间乐子自嗨，不必当真签约。 | 乐子文用于娱乐可，签约无望
+  observable:
+  - 'genre维度: 乐子文用于娱乐可，签约无望'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1092
+  - 1120
+  score: 9
+  score_raw: 这九分啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 杂鱼主编的直播审稿系统
+  genre_guess:
+  - 直播文
+  - 系统
+  - 恶搞
+  overall_comment: 纯属直播间乐子自嗨，不必当真签约。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 乐子文用于娱乐可，签约无望
+    raw_quote: 这没办法呀，这题材问题对吧，题材问题主要是诽谤主播嘛

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0829
+title: 厨艺穿越修宗门 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 宗门修仙
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分有的 | 题材可写但守山门没观众，爽点需要人物互动
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材可写但守山门没观众，爽点需要人物互动 | 一个人修宗门没有观众，爽不起来;当前只有金手指，缺乏事件和剧情
+  observable:
+  - 'opening维度: 一个人修宗门没有观众，爽不起来'
+  - 'highpoint维度: 当前只有金手指，缺乏事件和剧情'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 2885
+  - 3020
+  score: 50
+  score_raw: 50分有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 厨艺穿越修宗门
+  genre_guess:
+  - 宗门修仙
+  - 种田
+  overall_comment: 题材可写但守山门没观众，爽点需要人物互动
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 一个人修宗门没有观众，爽不起来
+    raw_quote: 一个人是没意思的 爽点是在于就是有人啊
+  - dimension: highpoint
+    severity: negative
+    content: 当前只有金手指，缺乏事件和剧情
+    raw_quote: 导致没有剧情懂吗 没剧情啊

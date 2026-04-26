@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1735
+title: 黑暗流小说 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 黑暗流
+  - 都市
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大哥只能九分了 | 风格混乱，开篇涉险违规内容，涉嫌无差别杀人，严重毒点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风格混乱，开篇涉险违规内容，涉嫌无差别杀人，严重毒点。 | 主角无底线杀戮凡人，触发平台违禁内容。;一章内融合多种风格，跳脱严重。
+  observable:
+  - 'taboo维度: 主角无底线杀戮凡人，触发平台违禁内容。'
+  - 'genre维度: 一章内融合多种风格，跳脱严重。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 292
+  - 380
+  score: 9
+  score_raw: 大哥只能九分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 黑暗流小说
+  genre_guess:
+  - 黑暗流
+  - 都市
+  - 仙侠
+  overall_comment: 风格混乱，开篇涉险违规内容，涉嫌无差别杀人，严重毒点。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 主角无底线杀戮凡人，触发平台违禁内容。
+    raw_quote: 不能杀凡人 杀凡人是个 大毒点
+  - dimension: genre
+    severity: negative
+    content: 一章内融合多种风格，跳脱严重。
+    raw_quote: 一章里面看到了三个风类...不是已经是八个风类了大哥

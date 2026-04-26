@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1232
+title: 三清关密室 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 都市
+  - 道士
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 妹妹就加三分嘛，就18分嘛 | 文笔过于小白，内容太日常平淡，缺乏网文应有的冲突和设计，只适合推翻重来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔过于小白，内容太日常平淡，缺乏网文应有的冲突和设计，只适合推翻重来。 | 对话和情节过于小白，像学生作文;开篇缺乏网文的设计感和代入感
+  observable:
+  - 'simplicity维度: 对话和情节过于小白，像学生作文'
+  - 'opening维度: 开篇缺乏网文的设计感和代入感'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 154
+  - 221
+  score: 18
+  score_raw: 妹妹就加三分嘛，就18分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三清关密室
+  genre_guess:
+  - 都市
+  - 道士
+  - 日常
+  overall_comment: 文笔过于小白，内容太日常平淡，缺乏网文应有的冲突和设计，只适合推翻重来。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 对话和情节过于小白，像学生作文
+    raw_quote: 这个稿子也没人看啊，兄弟这还是太太日常写的太淡了，而且对话也得练一练，对话有点小白
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏网文的设计感和代入感
+    raw_quote: 你这个思路不是网文，就是没有设计，比如说代入感啊，墓地啊，这些都得有一些
+  - dimension: misc
+    severity: neutral
+    content: 能坚持写十几章值得鼓励，但需推翻重来
+    raw_quote: 妹妹我觉得还好，敢下笔，能用心写十几张，你就已经赢了很多人了对吧

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0314
+title: 赛博修仙高武世界 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 高武
+  - 玄幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 内容太虚了 | 节奏快但代入感极差，事件无聊，人设空洞，场景氛围描写不到位，建议换题材或直接放弃。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快但代入感极差，事件无聊，人设空洞，场景氛围描写不到位，建议换题材或直接放弃。 | 人设虚假，剧情尴尬，没有情绪调度。;切入无聊，元素繁多无法代入，事件不吓人且缺乏氛围。;场景描述像游戏，氛围感差，情节小白。
+  observable:
+  - 'character维度: 人设虚假，剧情尴尬，没有情绪调度。'
+  - 'opening维度: 切入无聊，元素繁多无法代入，事件不吓人且缺乏氛围。'
+  - 'simplicity维度: 场景描述像游戏，氛围感差，情节小白。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 275
+  - 351
+  score: null
+  score_raw: 内容太虚了
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 赛博修仙高武世界
+  genre_guess:
+  - 高武
+  - 玄幻
+  - 系统
+  overall_comment: 节奏快但代入感极差，事件无聊，人设空洞，场景氛围描写不到位，建议换题材或直接放弃。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 唯一优点是节奏快，描述干练。
+    raw_quote: 兄弟就是代入感太差了...你只有一个优点就是节奏特别快对吧
+  - dimension: character
+    severity: negative
+    content: 人设虚假，剧情尴尬，没有情绪调度。
+    raw_quote: 人设也虚，整个这些剧情很尴尬啊...根本就没有情绪不到位的
+  - dimension: opening
+    severity: negative
+    content: 切入无聊，元素繁多无法代入，事件不吓人且缺乏氛围。
+    raw_quote: 代代入感太差了，这个事件太着急了，这些元素我们根本就代入不进去
+  - dimension: simplicity
+    severity: negative
+    content: 场景描述像游戏，氛围感差，情节小白。
+    raw_quote: 你看你写的这么恐怖的事件都没氛围...就感觉跟玩游戏一样的

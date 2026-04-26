@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1913
+title: 英雄联盟祖安监狱 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 同人
+  - 英雄联盟
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这题材真别了真别了 | 英雄联盟题材热度低，市场天花板极低，且主角代入感差，不值当签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 英雄联盟题材热度低，市场天花板极低，且主角代入感差，不值当签约。 | 英雄联盟题材现在热度极低，没有市场。;文章像动画分镜，不像是网文写法，缺乏主角心理活动和代入感。
+  observable:
+  - 'genre维度: 英雄联盟题材现在热度极低，没有市场。'
+  - 'opening维度: 文章像动画分镜，不像是网文写法，缺乏主角心理活动和代入感。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 217
+  - 255
+  score: null
+  score_raw: 这题材真别了真别了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 英雄联盟祖安监狱
+  genre_guess:
+  - 同人
+  - 英雄联盟
+  overall_comment: 英雄联盟题材热度低，市场天花板极低，且主角代入感差，不值当签约。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 英雄联盟题材现在热度极低，没有市场。
+    raw_quote: 祖安...很难写，那个没热度啊是吧，英雄联盟的这个异世界真的没热度
+  - dimension: opening
+    severity: negative
+    content: 文章像动画分镜，不像是网文写法，缺乏主角心理活动和代入感。
+    raw_quote: 感觉像是双城镇的动画呀，不像是网文写法的

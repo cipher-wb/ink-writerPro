@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2202
+title: AI修仙助手 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 仙侠
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能20分了 | 纯自嗨的烂梗大集合，设定太多没人看，完全偏题，必须彻底推翻重来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯自嗨的烂梗大集合，设定太多没人看，完全偏题，必须彻底推翻重来。 | 开篇设定太多，信息过载，读者看不下去;人设毫无代入感，张三烂梗没人会代入;全是过时的吐槽烂梗，毫无新意
+  observable:
+  - 'opening维度: 开篇设定太多，信息过载，读者看不下去'
+  - 'character维度: 人设毫无代入感，张三烂梗没人会代入'
+  - 'simplicity维度: 全是过时的吐槽烂梗，毫无新意'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 163
+  - 213
+  score: 20
+  score_raw: 只能20分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: AI修仙助手
+  genre_guess:
+  - 仙侠
+  - 玄幻
+  overall_comment: 纯自嗨的烂梗大集合，设定太多没人看，完全偏题，必须彻底推翻重来。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇设定太多，信息过载，读者看不下去
+    raw_quote: 大哥这设定太多了 这没人看啊
+  - dimension: character
+    severity: negative
+    content: 人设毫无代入感，张三烂梗没人会代入
+    raw_quote: 谁会带入张三啊 是个正常都不可能代入张三
+  - dimension: simplicity
+    severity: negative
+    content: 全是过时的吐槽烂梗，毫无新意
+    raw_quote: 全是烂梗 大哥都多少年了 还在法外狂徒张三

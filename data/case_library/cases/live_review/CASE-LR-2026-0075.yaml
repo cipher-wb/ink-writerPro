@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0075
+title: 三年F班的破产教师 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 都市
+  - 东京
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这分最多了兄弟 | 选材好但东京味道没写出来，缺乏拉扯感和代入感，节奏太慢，实力驾驭不了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 选材好但东京味道没写出来，缺乏拉扯感和代入感，节奏太慢，实力驾驭不了。 | 没写出东京的味道，人物标签不对;节奏太慢，事件薄弱
+  observable:
+  - 'genre维度: 没写出东京的味道，人物标签不对'
+  - 'pacing维度: 节奏太慢，事件薄弱'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 896
+  - 950
+  score: 30
+  score_raw: 这分最多了兄弟
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 三年F班的破产教师
+  genre_guess:
+  - 都市
+  - 东京
+  - 校园
+  overall_comment: 选材好但东京味道没写出来，缺乏拉扯感和代入感，节奏太慢，实力驾驭不了。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 没写出东京的味道，人物标签不对
+    raw_quote: 没东京味道呀...没有房东味道呀...这个比例真不够
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，事件薄弱
+    raw_quote: 写的又很慢 节奏上打我自己...事件也弱 人也好慢好慢

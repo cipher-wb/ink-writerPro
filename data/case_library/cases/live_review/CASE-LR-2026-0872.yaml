@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0872
+title: 东京麻辣教师 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 都市
+  - 校园
+  - 教师
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例不够 大哥你不要不要强行强行尬起 | 题材对实力要求极高，比例完全不够，描写奇怪且大量无意义雪白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材对实力要求极高，比例完全不够，描写奇怪且大量无意义雪白。 | 校长、房东等人物描写低俗且不合理;比例太差，强行写必扑街
+  observable:
+  - 'character维度: 校长、房东等人物描写低俗且不合理'
+  - 'ops维度: 比例太差，强行写必扑街'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 461
+  - 500
+  score: null
+  score_raw: 比例不够 大哥你不要不要强行强行尬起
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 东京麻辣教师
+  genre_guess:
+  - 都市
+  - 校园
+  - 教师
+  overall_comment: 题材对实力要求极高，比例完全不够，描写奇怪且大量无意义雪白。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 校长、房东等人物描写低俗且不合理
+    raw_quote: 这哪有校长是这样的啊 你的东京我的东京好像不一样 … 怎么可能看到这种东西 这是学校啊
+  - dimension: ops
+    severity: negative
+    content: 比例太差，强行写必扑街
+    raw_quote: 比例不够 大哥你不要不要强行强行尬起 东京不是这样写的吗 不是大哥 你这个是不是这么写的 真不是这么写的 比例不够

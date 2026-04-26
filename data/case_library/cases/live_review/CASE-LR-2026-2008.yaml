@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2008
+title: 潘金莲与西门庆 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40我觉得 | 有反转设计，但开局人物关系混乱，恶搞过头，建议不要直接套用历史真实人物。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有反转设计，但开局人物关系混乱，恶搞过头，建议不要直接套用历史真实人物。 | 直接使用潘金莲、西门庆等人设导致混乱，增加理解成本。
+  observable:
+  - 'character维度: 直接使用潘金莲、西门庆等人设导致混乱，增加理解成本。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 715
+  - 764
+  score: 40
+  score_raw: 差不多40我觉得
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 潘金莲与西门庆
+  genre_guess:
+  - 历史
+  - 穿越
+  - 武侠
+  overall_comment: 有反转设计，但开局人物关系混乱，恶搞过头，建议不要直接套用历史真实人物。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 直接使用潘金莲、西门庆等人设导致混乱，增加理解成本。
+    raw_quote: 你写个正常的不要加这些什么 ... 这些人加进去乱七八遭的
+  - dimension: highpoint
+    severity: positive
+    content: 反转剧情有一定亮点。
+    raw_quote: 虽然乱但是它是有反转的

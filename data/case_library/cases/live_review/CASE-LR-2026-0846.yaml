@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0846
+title: 西游卖套人 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 西游
+  - 乐子
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就能九分吧 | 过于颠狂，西游乱编，起点无法发，仅适合蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 过于颠狂，西游乱编，起点无法发，仅适合蓝精灵。 | 改编过度，神仙也要带套等恶搞;只能发番茄蓝精灵，起点没法签
+  observable:
+  - 'taboo维度: 改编过度，神仙也要带套等恶搞'
+  - 'genre维度: 只能发番茄蓝精灵，起点没法签'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 596
+  - 680
+  score: 9
+  score_raw: 就能九分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 西游卖套人
+  genre_guess:
+  - 西游
+  - 乐子
+  - 搞笑
+  overall_comment: 过于颠狂，西游乱编，起点无法发，仅适合蓝精灵。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 改编过度，神仙也要带套等恶搞
+    raw_quote: 细说不是胡说，改编不是乱编
+  - dimension: genre
+    severity: negative
+    content: 只能发番茄蓝精灵，起点没法签
+    raw_quote: 起点没法拉，鞋垫没法子

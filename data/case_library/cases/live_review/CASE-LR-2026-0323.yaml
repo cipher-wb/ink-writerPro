@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0323
+title: 重回1999送牛奶 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38封顶了 | 比例和代入感尚可，但缺乏重生的期待感和主线目标，过程显得无聊，没有重生该有的遗憾和钩子。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例和代入感尚可，但缺乏重生的期待感和主线目标，过程显得无聊，没有重生该有的遗憾和钩子。 | 过于注重过程描写，缺少重生文最关键的核心驱动力——遗憾和目标。;主角没有体现出重生者的感觉和优势。;最关键的“重生”核心元素没写清楚，让读者感到困惑。
+  observable:
+  - 'opening维度: 过于注重过程描写，缺少重生文最关键的核心驱动力——遗憾和目标。'
+  - 'character维度: 主角没有体现出重生者的感觉和优势。'
+  - 'simplicity维度: 最关键的“重生”核心元素没写清楚，让读者感到困惑。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 1446
+  - 1532
+  score: 38
+  score_raw: 38封顶了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重回1999送牛奶
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 比例和代入感尚可，但缺乏重生的期待感和主线目标，过程显得无聊，没有重生该有的遗憾和钩子。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 过于注重过程描写，缺少重生文最关键的核心驱动力——遗憾和目标。
+    raw_quote: 全都在写过程...少一个重生的遗憾...缺失少个这样的东西吊着
+  - dimension: character
+    severity: negative
+    content: 主角没有体现出重生者的感觉和优势。
+    raw_quote: 没有重生啊，重生的感觉我觉得还是没有，还是很奇怪
+  - dimension: simplicity
+    severity: negative
+    content: 最关键的“重生”核心元素没写清楚，让读者感到困惑。
+    raw_quote: 就是重生啊，还是重申个元素没写好的雪白吗

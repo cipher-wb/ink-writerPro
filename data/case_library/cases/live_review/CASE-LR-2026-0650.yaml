@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0650
+title: 民俗灵异纸人 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 灵异
+  - 民俗
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这就是冒充白金的...所以说还是浪费时间 | 有天赋但用了大神白金才敢用的写法，新手驾驭不住，很快会崩，注定零追读，不签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋但用了大神白金才敢用的写法，新手驾驭不住，很快会崩，注定零追读，不签。 | 第一章氛围拉满，但后续绝无可能保持，必然崩盘;新人要出来能力而不是故弄玄虚讲氛围，看不到期待感
+  observable:
+  - 'opening维度: 第一章氛围拉满，但后续绝无可能保持，必然崩盘'
+  - 'simplicity维度: 新人要出来能力而不是故弄玄虚讲氛围，看不到期待感'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 821
+  - 900
+  score: null
+  score_raw: 这就是冒充白金的...所以说还是浪费时间
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 民俗灵异纸人
+  genre_guess:
+  - 灵异
+  - 民俗
+  - 悬疑
+  overall_comment: 有天赋但用了大神白金才敢用的写法，新手驾驭不住，很快会崩，注定零追读，不签。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章氛围拉满，但后续绝无可能保持，必然崩盘
+    raw_quote: 第一章OK没问题，但你怎么才能保证你全程这样的感觉...不可能的
+  - dimension: simplicity
+    severity: negative
+    content: 新人要出来能力而不是故弄玄虚讲氛围，看不到期待感
+    raw_quote: 新人其实应该要出来能力...他就是要讲一个这样的氛围场景，不对的

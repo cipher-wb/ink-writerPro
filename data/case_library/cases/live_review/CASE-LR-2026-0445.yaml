@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0445
+title: 分勇行武侠文 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 武侠
+  - 王朝
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多28分 | 文笔扎实但武侠过时、缺乏穿越代入感，固执不悟难签约
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但武侠过时、缺乏穿越代入感，固执不悟难签约 | 武侠被仙侠玄幻淘汰，应转仙侠并加穿越;开头故弄玄虚，缺乏主角事件代入感
+  observable:
+  - 'genre维度: 武侠被仙侠玄幻淘汰，应转仙侠并加穿越'
+  - 'opening维度: 开头故弄玄虚，缺乏主角事件代入感'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 950
+  - 1012
+  score: 28
+  score_raw: 差不多28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 分勇行武侠文
+  genre_guess:
+  - 武侠
+  - 王朝
+  - 诡异
+  overall_comment: 文笔扎实但武侠过时、缺乏穿越代入感，固执不悟难签约
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 武侠被仙侠玄幻淘汰，应转仙侠并加穿越
+    raw_quote: 武侠是被仙侠玄幻淘汰的呀...你加个穿越会死吗
+  - dimension: opening
+    severity: negative
+    content: 开头故弄玄虚，缺乏主角事件代入感
+    raw_quote: 不要老是故弄玄虚啊...只有你作者在老海中是有这个世界的一些框架
+  - dimension: misc
+    severity: positive
+    content: 文笔扎实，潜在功底好
+    raw_quote: 文笔确实挺扎实的...潜在道具也可以

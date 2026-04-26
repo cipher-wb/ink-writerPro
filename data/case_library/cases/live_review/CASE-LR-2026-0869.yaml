@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0869
+title: 末日钢琴女老师 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 末日
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48封吧好吧 | 互动真实感有，但侧偏言情，金手指突兀，整体类似无线列车缺乏新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 互动真实感有，但侧偏言情，金手指突兀，整体类似无线列车缺乏新意。 | 写成言情，侧重点偏离末日;金手指来得很突然，没架空
+  observable:
+  - 'genre维度: 写成言情，侧重点偏离末日'
+  - 'golden_finger维度: 金手指来得很突然，没架空'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 341
+  - 380
+  score: 48
+  score_raw: 48封吧好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日钢琴女老师
+  genre_guess:
+  - 末日
+  - 重生
+  overall_comment: 互动真实感有，但侧偏言情，金手指突兀，整体类似无线列车缺乏新意。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人物互动真实感还行，有拉扯
+    raw_quote: 拉扯的互动的真实感还行对吧 但是最终还是欲望下来了
+  - dimension: genre
+    severity: negative
+    content: 写成言情，侧重点偏离末日
+    raw_quote: 这侧重点偏离了 这干嘛 言情了呀 这个跟钢琴老师在一起 这个世界没意思呀
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指来得很突然，没架空
+    raw_quote: 莫名其妙的金手指出来 然后没架空金手指

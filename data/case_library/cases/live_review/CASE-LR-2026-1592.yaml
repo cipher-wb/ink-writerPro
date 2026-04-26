@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1592
+title: 加勒比海盗王 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 同人
+  - 海盗
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分节奏太快了 | 切入点选得太靠前，像复述原著，缺少独立主线，爽点乏力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点选得太靠前，像复述原著，缺少独立主线，爽点乏力。 | 穿越时间线太早，没有足够故事支撑
+  observable:
+  - 'opening维度: 穿越时间线太早，没有足够故事支撑'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 341
+  - 370
+  score: 40
+  score_raw: 40分节奏太快了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 加勒比海盗王
+  genre_guess:
+  - 同人
+  - 海盗
+  - 西幻
+  overall_comment: 切入点选得太靠前，像复述原著，缺少独立主线，爽点乏力。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越时间线太早，没有足够故事支撑
+    raw_quote: 太早了 没意思 … 你应该重生到第二部 … 去参与那个主线 … 这就是拦路的写法了 直接把人家原著复述一遍
+  - dimension: simplicity
+    severity: positive
+    content: 文笔流畅，有画面感
+    raw_quote: 比例还好 干巴巴的 … 但是写的挺干巴巴的 其实 … 比例还好一点

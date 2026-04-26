@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1996
+title: 万历30年科举 (fail / 6分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 历史
+  - 科举
+  - 大明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 他是六分吧 | 套路小白像番茄风，在起点没蹭到历史名人，缺乏竞争力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路小白像番茄风，在起点没蹭到历史名人，缺乏竞争力。 | 更像架空历史，没与真实历史名人互动;配角一直嘲讽太跳梁小丑
+  observable:
+  - 'genre维度: 更像架空历史，没与真实历史名人互动'
+  - 'character维度: 配角一直嘲讽太跳梁小丑'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1851
+  - 1900
+  score: 6
+  score_raw: 他是六分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 万历30年科举
+  genre_guess:
+  - 历史
+  - 科举
+  - 大明
+  overall_comment: 套路小白像番茄风，在起点没蹭到历史名人，缺乏竞争力。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 更像架空历史，没与真实历史名人互动
+    raw_quote: 你这个有点像原创写法了，就蹭不上什么东西
+  - dimension: character
+    severity: negative
+    content: 配角一直嘲讽太跳梁小丑
+    raw_quote: 一直嘲讽的话就是小白事件小白人设

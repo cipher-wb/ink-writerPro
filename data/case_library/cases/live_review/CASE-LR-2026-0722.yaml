@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0722
+title: 宗门覆灭后我养了一堆老祖 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 文笔比例扎实，但剧情假大空虚，师姐送灵力情节无趣，整体思路偏蓝精灵风格，缺乏吸引点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例扎实，但剧情假大空虚，师姐送灵力情节无趣，整体思路偏蓝精灵风格，缺乏吸引点。 | 开篇师姐上门送灵力情节平淡无奇，缺乏看点;题材思路偏蓝精灵风格，在起点不易受欢迎
+  observable:
+  - 'opening维度: 开篇师姐上门送灵力情节平淡无奇，缺乏看点'
+  - 'genre维度: 题材思路偏蓝精灵风格，在起点不易受欢迎'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1
+  - 122
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宗门覆灭后我养了一堆老祖
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 系统
+  overall_comment: 文笔比例扎实，但剧情假大空虚，师姐送灵力情节无趣，整体思路偏蓝精灵风格，缺乏吸引点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇师姐上门送灵力情节平淡无奇，缺乏看点
+    raw_quote: 前面的师姐上门 这个真一点意思都没有
+  - dimension: genre
+    severity: negative
+    content: 题材思路偏蓝精灵风格，在起点不易受欢迎
+    raw_quote: 确实还是蓝精灵的...太蓝精灵了
+  - dimension: misc
+    severity: neutral
+    content: 文笔比例尚可，但剧情架构整体偏弱
+    raw_quote: 比例倒是很扎实 就思路整个 太蓝精灵了

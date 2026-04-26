@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1020
+title: 新河镇 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25-26分吧 | 开头毫无看点，传统老爷爷节奏太慢，读者点进来就跑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头毫无看点，传统老爷爷节奏太慢，读者点进来就跑。 | 开头毫无抓点，应该直接穿越醒来;太传统慢热，没有事件只修炼吃面
+  observable:
+  - 'opening维度: 开头毫无抓点，应该直接穿越醒来'
+  - 'pacing维度: 太传统慢热，没有事件只修炼吃面'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1051
+  - 1140
+  score: 25
+  score_raw: 25-26分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 新河镇
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 开头毫无看点，传统老爷爷节奏太慢，读者点进来就跑。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头毫无抓点，应该直接穿越醒来
+    raw_quote: 就穿越了 别在这逼逼了 这些写证文
+  - dimension: pacing
+    severity: negative
+    content: 太传统慢热，没有事件只修炼吃面
+    raw_quote: 大哥开头字字猪鸡 每一个字都是猪 你用来写吃面吗

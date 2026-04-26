@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1164
+title: 大宋提醒官（宋词地府修仙） (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 仙侠
+  - 地府
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十五封码我觉得内容还是 | 玩梗有些味道，但人物能力太差，宋词和李妙真都很虚，不会写人，导致剧情无聊。题材本身世界观也极难架构。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 玩梗有些味道，但人物能力太差，宋词和李妙真都很虚，不会写人，导致剧情无聊。题材本身世界观也极难架构。 | 主角人设很差，心理描写只有‘满头雾水’和‘恍然大悟’，缺乏活人感;地府修仙题材世界观架构极难，以目前的写法支撑不住
+  observable:
+  - 'character维度: 主角人设很差，心理描写只有‘满头雾水’和‘恍然大悟’，缺乏活人感'
+  - 'simplicity维度: 地府修仙题材世界观架构极难，以目前的写法支撑不住'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1492
+  - 1597
+  score: 35
+  score_raw: 三十五封码我觉得内容还是
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大宋提醒官（宋词地府修仙）
+  genre_guess:
+  - 仙侠
+  - 地府
+  - 轻小说
+  overall_comment: 玩梗有些味道，但人物能力太差，宋词和李妙真都很虚，不会写人，导致剧情无聊。题材本身世界观也极难架构。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设很差，心理描写只有‘满头雾水’和‘恍然大悟’，缺乏活人感
+    raw_quote: 你自己想 就这两个形容词 就一个情感的变化 他要跟你雪白 然后他满头雾水 他恍然大悟 这是一个火人感吗 不是一个火人感
+  - dimension: simplicity
+    severity: negative
+    content: 地府修仙题材世界观架构极难，以目前的写法支撑不住
+    raw_quote: 题材能不能写 另说我认为题材是写不了的 因为这是一个非常难的一个世界观 架构 人物是最大的问题

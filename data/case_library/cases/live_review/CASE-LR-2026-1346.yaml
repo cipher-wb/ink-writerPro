@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1346
+title: 摩门末世穿越 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 摩门
+  - 末世
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话有个二十五分左右吧 | 题材过时，无点击，思路不伦不类，事件太弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材过时，无点击，思路不伦不类，事件太弱。 | 摩门题材已无人问津，读者不点击;开局危机情节老套，不如直接写女修等热门元素
+  observable:
+  - 'genre维度: 摩门题材已无人问津，读者不点击'
+  - 'hook维度: 开局危机情节老套，不如直接写女修等热门元素'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 5
+  - 76
+  score: 25
+  score_raw: 打分的话有个二十五分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 摩门末世穿越
+  genre_guess:
+  - 摩门
+  - 末世
+  - 穿越
+  overall_comment: 题材过时，无点击，思路不伦不类，事件太弱。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 摩门题材已无人问津，读者不点击
+    raw_quote: 你就知道這個題材有多垃圾了
+  - dimension: hook
+    severity: negative
+    content: 开局危机情节老套，不如直接写女修等热门元素
+    raw_quote: 早點寫女修嘛...不要寫前面那個什麼危機了沒人看
+  - dimension: simplicity
+    severity: neutral
+    content: 造句水平还行，但题材和写法过时是硬伤
+    raw_quote: 比例還好吧...就題材太老了

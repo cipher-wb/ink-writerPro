@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1479
+title: 影分之歌科幻 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 科幻
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多就是18分 | 完全自嗨，看不懂，没代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全自嗨，看不懂，没代入感。 | 不想让地球人看懂
+  observable:
+  - 'simplicity维度: 不想让地球人看懂'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1711
+  - 1800
+  score: 18
+  score_raw: 最多就是18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 影分之歌科幻
+  genre_guess:
+  - 科幻
+  - 末日
+  overall_comment: 完全自嗨，看不懂，没代入感。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 不想让地球人看懂
+    raw_quote: 根本就不想让我们地球人看懂

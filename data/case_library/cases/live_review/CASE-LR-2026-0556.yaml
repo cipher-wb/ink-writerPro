@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0556
+title: 斗罗：武魂觉醒 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 斗罗同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分吧 | 老杰克测武魂的套路太老，小白且没市场，只能给33分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老杰克测武魂的套路太老，小白且没市场，只能给33分 | 斗罗同人老套路，脑洞过时;写法小白，表达尚流畅但缺乏新意
+  observable:
+  - 'genre维度: 斗罗同人老套路，脑洞过时'
+  - 'simplicity维度: 写法小白，表达尚流畅但缺乏新意'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 53
+  - 188
+  score: 33
+  score_raw: 33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗罗：武魂觉醒
+  genre_guess:
+  - 斗罗同人
+  overall_comment: 老杰克测武魂的套路太老，小白且没市场，只能给33分
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 斗罗同人老套路，脑洞过时
+    raw_quote: 这个老杰克凑五红这个东西脑洞10年前的
+  - dimension: simplicity
+    severity: negative
+    content: 写法小白，表达尚流畅但缺乏新意
+    raw_quote: 写法也比较小白...就唯一的优点就是表达还是比较流畅的

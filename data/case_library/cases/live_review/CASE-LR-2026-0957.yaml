@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0957
+title: 流离断望骨(家族冤屈) (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 新媒体
+  - 兵王
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分左右吧 | 老套新媒体战神文，主线无看点，过时
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套新媒体战神文，主线无看点，过时 | 题材过时，16年后就不流行
+  observable:
+  - 'genre维度: 题材过时，16年后就不流行'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 3150
+  - 3220
+  score: 30
+  score_raw: 30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 流离断望骨(家族冤屈)
+  genre_guess:
+  - 新媒体
+  - 兵王
+  - 家族
+  overall_comment: 老套新媒体战神文，主线无看点，过时
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材过时，16年后就不流行
+    raw_quote: 16年前会流行过来 后来公众号也很流行... 三少的提案就没了

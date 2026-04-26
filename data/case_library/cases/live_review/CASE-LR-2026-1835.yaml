@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1835
+title: 陪女儿悟出阴阳大道 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多最多30分不会太高了 | 题材老套完全没有任何修改可能性
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套完全没有任何修改可能性 | 题材老套自带垃圾属性没市场
+  observable:
+  - 'genre维度: 题材老套自带垃圾属性没市场'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1301
+  - 1370
+  score: 30
+  score_raw: 最多最多30分不会太高了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 陪女儿悟出阴阳大道
+  genre_guess:
+  - 都市
+  - 重生
+  - 玄幻
+  overall_comment: 题材老套完全没有任何修改可能性
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材老套自带垃圾属性没市场
+    raw_quote: 这个题材绝对没有任何搭救的可能性

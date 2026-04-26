@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0781
+title: 清理格分 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 废土
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 氛围感还行，但缺少金手指和美女，节奏慢，卖点不清晰，可以写但需要调整。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围感还行，但缺少金手指和美女，节奏慢，卖点不清晰，可以写但需要调整。 | 金手指很重要但没写;缺美女和互动;开头全是场景描写，没看点
+  observable:
+  - 'golden_finger维度: 金手指很重要但没写'
+  - 'character维度: 缺美女和互动'
+  - 'opening维度: 开头全是场景描写，没看点'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 701
+  - 750
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 清理格分
+  genre_guess:
+  - 科幻
+  - 末日
+  - 废土
+  overall_comment: 氛围感还行，但缺少金手指和美女，节奏慢，卖点不清晰，可以写但需要调整。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指很重要但没写
+    raw_quote: 你的金手指啊 你有独特的什么看点啊 金手指很重要的 末日文金手指特别重要
+  - dimension: character
+    severity: negative
+    content: 缺美女和互动
+    raw_quote: 缺美女好吧 缺个美女 美女在哪里
+  - dimension: opening
+    severity: negative
+    content: 开头全是场景描写，没看点
+    raw_quote: 开头没必要写这种氛围 读者全跑了

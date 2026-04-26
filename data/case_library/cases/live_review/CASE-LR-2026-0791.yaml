@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-0791
+title: 灵系复苏百年 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 灵系复苏
+  - 都市
+  - 仙侠
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30吧 | 剧情太弱，人设没立住，题材老旧，表达流畅稍好
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情太弱，人设没立住，题材老旧，表达流畅稍好 | 女主没有感觉，像NPC;修炼篇幅过多，剧情弱;题材淘汰，灵系复苏不新
+  observable:
+  - 'character维度: 女主没有感觉，像NPC'
+  - 'pacing维度: 修炼篇幅过多，剧情弱'
+  - 'genre维度: 题材淘汰，灵系复苏不新'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 25
+  - 189
+  score: 30
+  score_raw: 30吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵系复苏百年
+  genre_guess:
+  - 灵系复苏
+  - 都市
+  - 仙侠
+  - 穿越
+  overall_comment: 剧情太弱，人设没立住，题材老旧，表达流畅稍好
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主没有感觉，像NPC
+    raw_quote: 女的没什么感觉 和 就NPC呀
+  - dimension: pacing
+    severity: negative
+    content: 修炼篇幅过多，剧情弱
+    raw_quote: 剧情太弱了 修炼 科并 篇幅太多了
+  - dimension: genre
+    severity: negative
+    content: 题材淘汰，灵系复苏不新
+    raw_quote: 地球这题材也淘汰了

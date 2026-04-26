@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1139
+title: 浪淘尽千古英雄 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分好吧 | 写法过于古老，开篇世界观老套，大量烂梗，人设与标点都不合格，建议全部推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法过于古老，开篇世界观老套，大量烂梗，人设与标点都不合格，建议全部推翻重写。 | 开篇把穿越世界观当卖点太老套;人设极差，标点符号都不对;遣词造句需要完全推翻，对网文理解太差
+  observable:
+  - 'opening维度: 开篇把穿越世界观当卖点太老套'
+  - 'character维度: 人设极差，标点符号都不对'
+  - 'simplicity维度: 遣词造句需要完全推翻，对网文理解太差'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 39
+  - 165
+  score: 16
+  score_raw: 16分好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 浪淘尽千古英雄
+  genre_guess:
+  - 修仙
+  - 穿越
+  overall_comment: 写法过于古老，开篇世界观老套，大量烂梗，人设与标点都不合格，建议全部推翻重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇把穿越世界观当卖点太老套
+    raw_quote: 把穿越世界观当卖点 太老套了
+  - dimension: character
+    severity: negative
+    content: 人设极差，标点符号都不对
+    raw_quote: 人设太差了 你看标点符号都没不对的 句号都不打吗
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句需要完全推翻，对网文理解太差
+    raw_quote: 你对网文的理解太差了 我现在要的是你整个推翻啊

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1316
+title: 北美邪教秘事 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 北美
+  - 驱魔
+  - 邪教
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20,1分满 | 文笔可以但自创世界观，分类不清，没人愿意看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔可以但自创世界观，分类不清，没人愿意看。 | 题材不明，世界观自创没人关心;开头故弄玄虚，医生谈话已劝退
+  observable:
+  - 'genre维度: 题材不明，世界观自创没人关心'
+  - 'opening维度: 开头故弄玄虚，医生谈话已劝退'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1351
+  - 1400
+  score: 21
+  score_raw: 20,1分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 北美邪教秘事
+  genre_guess:
+  - 北美
+  - 驱魔
+  - 邪教
+  overall_comment: 文笔可以但自创世界观，分类不清，没人愿意看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材不明，世界观自创没人关心
+    raw_quote: 當你學會不自創世界觀了 即使你就入行了
+  - dimension: opening
+    severity: negative
+    content: 开头故弄玄虚，医生谈话已劝退
+    raw_quote: 第一章很奇怪 寫了一張諸天文字

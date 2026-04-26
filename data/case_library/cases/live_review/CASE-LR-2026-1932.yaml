@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1932
+title: 剑仙残魂觉醒/赘婿养成 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 仙侠
+  - 养成
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这15分吧 | 想模仿热门书写娘子人设，但笔力差，事件无聊，卖点出得慢，典型的番茄套路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 想模仿热门书写娘子人设，但笔力差，事件无聊，卖点出得慢，典型的番茄套路。 | 模仿娘子人设，但笔力太差，事件无聊，女主人设太慢。
+  observable:
+  - 'character维度: 模仿娘子人设，但笔力太差，事件无聊，女主人设太慢。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 1030
+  - 1060
+  score: 15
+  score_raw: 这15分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 剑仙残魂觉醒/赘婿养成
+  genre_guess:
+  - 仙侠
+  - 养成
+  overall_comment: 想模仿热门书写娘子人设，但笔力差，事件无聊，卖点出得慢，典型的番茄套路。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 模仿娘子人设，但笔力太差，事件无聊，女主人设太慢。
+    raw_quote: 其实就是想模仿这个万众作者作者写的女主人设...但大哥的比例不够...事件讲的整个卖点出的慢一点

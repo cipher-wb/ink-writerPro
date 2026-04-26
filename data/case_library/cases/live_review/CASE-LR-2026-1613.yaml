@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1613
+title: 克苏鲁邪神秘猎人 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 克苏鲁
+  - 邪神
+  - 西方
+  - 猎人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 题材垃圾，写法慢热，毫无看点，事件人设无聊，新人勿碰。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材垃圾，写法慢热，毫无看点，事件人设无聊，新人勿碰。 | 克苏鲁邪神题材极难写，白金写都死，新人必死;慢热过度，铺垫世界设定太多，毫无剧情冲突
+  observable:
+  - 'genre维度: 克苏鲁邪神题材极难写，白金写都死，新人必死'
+  - 'pacing维度: 慢热过度，铺垫世界设定太多，毫无剧情冲突'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 640
+  - 709
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 克苏鲁邪神秘猎人
+  genre_guess:
+  - 克苏鲁
+  - 邪神
+  - 西方
+  - 猎人
+  overall_comment: 题材垃圾，写法慢热，毫无看点，事件人设无聊，新人勿碰。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 克苏鲁邪神题材极难写，白金写都死，新人必死
+    raw_quote: 克苏鲁邪神这些东西 … 白金给你写了照样铺 … 新人寫這種題材就是特別難
+  - dimension: pacing
+    severity: negative
+    content: 慢热过度，铺垫世界设定太多，毫无剧情冲突
+    raw_quote: 题材写的太慢了 … 人物的事件冲突根本就看不出来

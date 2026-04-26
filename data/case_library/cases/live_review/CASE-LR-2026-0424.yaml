@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0424
+title: 捡废品炼器锤爆百万丧尸 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 末日
+  - 系统
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 番茄爽文节奏，但太俗套，可改写成报恩拉仇恨
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 番茄爽文节奏，但太俗套，可改写成报恩拉仇恨 | 简介卖点太老套，读者反感，打脸装逼可写但别当简介;嘲讽太刻意，纯靠强大情绪，需拉个对你好的人衬托
+  observable:
+  - 'opening维度: 简介卖点太老套，读者反感，打脸装逼可写但别当简介'
+  - 'character维度: 嘲讽太刻意，纯靠强大情绪，需拉个对你好的人衬托'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1781
+  - 1846
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 捡废品炼器锤爆百万丧尸
+  genre_guess:
+  - 末日
+  - 系统
+  - 爽文
+  overall_comment: 番茄爽文节奏，但太俗套，可改写成报恩拉仇恨
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 简介卖点太老套，读者反感，打脸装逼可写但别当简介
+    raw_quote: 你可以写这样的情节，打脸装逼是经久不衰的，但是你不能把它当成简介里面的卖点，读者只会觉得反感
+  - dimension: character
+    severity: negative
+    content: 嘲讽太刻意，纯靠强大情绪，需拉个对你好的人衬托
+    raw_quote: 这种嘲讽太刻意了...你拉一个对你好的人，你把欺负你变成欺负对你好的人，他就不小白了

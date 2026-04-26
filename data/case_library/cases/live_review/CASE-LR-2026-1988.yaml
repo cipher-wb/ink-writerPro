@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1988
+title: 天崩开局异世园区当牛马有挂 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 异世界
+  - 吐槽
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 | 开头场景太复杂，满是阅读障碍，本质垃圾题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头场景太复杂，满是阅读障碍，本质垃圾题材。 | 开头不接地气，场景累赘;像开车全是路障，阅读不流畅
+  observable:
+  - 'opening维度: 开头不接地气，场景累赘'
+  - 'pacing维度: 像开车全是路障，阅读不流畅'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1401
+  - 1470
+  score: 20
+  score_raw: 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天崩开局异世园区当牛马有挂
+  genre_guess:
+  - 异世界
+  - 吐槽
+  - 搞笑
+  overall_comment: 开头场景太复杂，满是阅读障碍，本质垃圾题材。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头不接地气，场景累赘
+    raw_quote: 小说为什么要搞这么复杂，这些场景读者根本就不爱看
+  - dimension: pacing
+    severity: negative
+    content: 像开车全是路障，阅读不流畅
+    raw_quote: 全是路障，走两步就要停

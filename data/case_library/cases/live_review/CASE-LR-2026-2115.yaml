@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-2115
+title: 软饭返现系统文 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 软饭
+  - 生活
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 番茄风的短剧剧本，主线太弱，人设虚无，起点读者不看了，太着急用小梗。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 番茄风的短剧剧本，主线太弱，人设虚无，起点读者不看了，太着急用小梗。 | 光少女拉扯没意思，必须得有强主线;这太番茄了，像软饭相亲系统那种;人设内容都挺虚的
+  observable:
+  - 'hook维度: 光少女拉扯没意思，必须得有强主线'
+  - 'genre维度: 这太番茄了，像软饭相亲系统那种'
+  - 'character维度: 人设内容都挺虚的'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 601
+  - 655
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 软饭返现系统文
+  genre_guess:
+  - 都市
+  - 系统
+  - 软饭
+  - 生活
+  overall_comment: 番茄风的短剧剧本，主线太弱，人设虚无，起点读者不看了，太着急用小梗。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 光少女拉扯没意思，必须得有强主线
+    raw_quote: 光拉扯现在真没人看
+  - dimension: genre
+    severity: negative
+    content: 这太番茄了，像软饭相亲系统那种
+    raw_quote: 感觉就是一个番茄的乐子
+  - dimension: character
+    severity: negative
+    content: 人设内容都挺虚的
+    raw_quote: 人设内容都挺虚的

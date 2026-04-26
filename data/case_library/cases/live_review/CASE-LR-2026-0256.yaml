@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0256
+title: 某种世界武道长生 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 武侠
+  - 灵异
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是45分左右吧 | 开篇灵异氛围不错，但后续转武道修仙导致偏题，驾驭不住红月式开篇。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇灵异氛围不错，但后续转武道修仙导致偏题，驾驭不住红月式开篇。 | 初始灵异事件有期待，但未形成反转就跳到武道，期待落空。;书名用“某种世界”陌生词劝退读者。
+  observable:
+  - 'hook维度: 初始灵异事件有期待，但未形成反转就跳到武道，期待落空。'
+  - 'genre维度: 书名用“某种世界”陌生词劝退读者。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1240
+  - 1330
+  score: 45
+  score_raw: 也是45分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 某种世界武道长生
+  genre_guess:
+  - 武侠
+  - 灵异
+  - 穿越
+  overall_comment: 开篇灵异氛围不错，但后续转武道修仙导致偏题，驾驭不住红月式开篇。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 初始灵异事件有期待，但未形成反转就跳到武道，期待落空。
+    raw_quote: 父母在吃肉 ... 大家都期待着那种反转 ... 结果武道觉醒 干嘛呀
+  - dimension: genre
+    severity: negative
+    content: 书名用“某种世界”陌生词劝退读者。
+    raw_quote: 某种世界读者不关心啊 什么叫某种世界

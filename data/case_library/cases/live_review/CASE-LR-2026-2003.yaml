@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2003
+title: 天庭金鱼妖 (pass / 91分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 仙侠
+  - 洪荒
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 九十多分 | 老洞乐子文，节奏快，玩梗能力强，但系统有点出戏，建议简化，持续玩梗。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老洞乐子文，节奏快，玩梗能力强，但系统有点出戏，建议简化，持续玩梗。 | 系统设定复杂且出戏，建议简化。
+  observable:
+  - 'golden_finger维度: 系统设定复杂且出戏，建议简化。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 506
+  - 552
+  score: 91
+  score_raw: 九十多分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 天庭金鱼妖
+  genre_guess:
+  - 仙侠
+  - 洪荒
+  - 搞笑
+  overall_comment: 老洞乐子文，节奏快，玩梗能力强，但系统有点出戏，建议简化，持续玩梗。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 剧情玩梗很有趣，有乐子。
+    raw_quote: 反正是老动乐子嘛 ... 你这个玩梗一直发现光了
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定复杂且出戏，建议简化。
+    raw_quote: 这个系统太太出戏了 太复杂了 我觉得系统简化嘛

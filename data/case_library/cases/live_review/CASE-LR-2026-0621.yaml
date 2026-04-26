@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0621
+title: 无敌篮球 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 年代文
+  - 学霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥40吧 其实还可以 | 缺乏明确金手指，期待感模糊；开篇打游戏场景俗气，但个别配角的情绪刻画有亮点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缺乏明确金手指，期待感模糊；开篇打游戏场景俗气，但个别配角的情绪刻画有亮点。 | 开篇用打游戏切入显得屌丝且俗套。;主角重生了却没有任何明确能力，卖点不清。
+  observable:
+  - 'opening维度: 开篇用打游戏切入显得屌丝且俗套。'
+  - 'golden_finger维度: 主角重生了却没有任何明确能力，卖点不清。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 276
+  - 365
+  score: 40
+  score_raw: 给大哥40吧 其实还可以
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 无敌篮球
+  genre_guess:
+  - 都市
+  - 重生
+  - 年代文
+  - 学霸
+  overall_comment: 缺乏明确金手指，期待感模糊；开篇打游戏场景俗气，但个别配角的情绪刻画有亮点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇用打游戏切入显得屌丝且俗套。
+    raw_quote: 开头不要写什么打游戏 ... 读者会觉得很俗 很屌丝
+  - dimension: golden_finger
+    severity: negative
+    content: 主角重生了却没有任何明确能力，卖点不清。
+    raw_quote: 你你有什么能力吗 ... 你的卖点 ... 期待感就是这个东西啊
+  - dimension: character
+    severity: positive
+    content: 配角“wonderful”老师的人设和情绪写得不错。
+    raw_quote: wonderful挺好的对吧
+  - dimension: ops
+    severity: neutral
+    content: 如果侧重学霸文赛道会更有机会。
+    raw_quote: 如果是侧重于学霸挺好的 ... 这种算是独特的好赛道了

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0631
+title: 小人物也想翻身把歌唱 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 重生
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧加点分 | 文笔还行但剧情扯淡，切入老套，姐姐描写过于刻意，缺少前世遗憾与今世对应
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔还行但剧情扯淡，切入老套，姐姐描写过于刻意，缺少前世遗憾与今世对应 | 姐姐角色描写过于亲密且无意义，亲人不应如此刻画;切入方式老套，重生后直接塞袜子情节出戏;缺乏网文套路，需要学习成功经验
+  observable:
+  - 'character维度: 姐姐角色描写过于亲密且无意义，亲人不应如此刻画'
+  - 'opening维度: 切入方式老套，重生后直接塞袜子情节出戏'
+  - 'misc维度: 缺乏网文套路，需要学习成功经验'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 171
+  - 230
+  score: 35
+  score_raw: 35分吧加点分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 小人物也想翻身把歌唱
+  genre_guess:
+  - 重生
+  - 都市
+  overall_comment: 文笔还行但剧情扯淡，切入老套，姐姐描写过于刻意，缺少前世遗憾与今世对应
+  comments:
+  - dimension: character
+    severity: negative
+    content: 姐姐角色描写过于亲密且无意义，亲人不应如此刻画
+    raw_quote: 你姐你就这么写干嘛，亲人不是这么写了
+  - dimension: opening
+    severity: negative
+    content: 切入方式老套，重生后直接塞袜子情节出戏
+    raw_quote: 你姐把袜子塞你嘴里说你别动，这干嘛呀
+  - dimension: misc
+    severity: negative
+    content: 缺乏网文套路，需要学习成功经验
+    raw_quote: 得学学套路，你要驱纵你不能傲慢，要学学人家成功的套路

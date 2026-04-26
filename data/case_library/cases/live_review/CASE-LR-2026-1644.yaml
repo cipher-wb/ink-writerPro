@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1644
+title: 假太监修炼 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 历史
+  - 权谋
+  - 修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有33分嘛 | 比例尚可但卖点太弱，缺乏多线剧情。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例尚可但卖点太弱，缺乏多线剧情。 | 缺乏吸引人的暗线和多线叙事。
+  observable:
+  - 'hook维度: 缺乏吸引人的暗线和多线叙事。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 851
+  - 920
+  score: 33
+  score_raw: 有33分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 假太监修炼
+  genre_guess:
+  - 历史
+  - 权谋
+  - 修炼
+  overall_comment: 比例尚可但卖点太弱，缺乏多线剧情。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 缺乏吸引人的暗线和多线叙事。
+    raw_quote: 你这慢点是啥呀...就是一条慢点，写过八

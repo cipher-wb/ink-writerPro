@@ -1,0 +1,66 @@
+case_id: CASE-LR-2026-2235
+title: 传统武侠群像 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 武侠
+  - 传统
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比较古老吧20分好吧 | 传统武侠套路，金庸既视感强，啰嗦老套，缺乏代入感，需推翻重学。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统武侠套路，金庸既视感强，啰嗦老套，缺乏代入感，需推翻重学。 | 开局像大纲，缺乏心理活动和代入感;剧情老套，有明显的金庸武侠影子;啰嗦且老套，无法修改，建议推翻
+  observable:
+  - 'opening维度: 开局像大纲，缺乏心理活动和代入感'
+  - 'simplicity维度: 剧情老套，有明显的金庸武侠影子'
+  - 'misc维度: 啰嗦且老套，无法修改，建议推翻'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 1666
+  - 1799
+  score: 20
+  score_raw: 比较古老吧20分好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 传统武侠群像
+  genre_guess:
+  - 武侠
+  - 传统
+  - 穿越
+  overall_comment: 传统武侠套路，金庸既视感强，啰嗦老套，缺乏代入感，需推翻重学。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局像大纲，缺乏心理活动和代入感
+    raw_quote: '怎么这么跟大缸似的
+
+      你这玩意不是细缸吗'
+  - dimension: simplicity
+    severity: negative
+    content: 剧情老套，有明显的金庸武侠影子
+    raw_quote: '不许伤他
+
+      这不就是郭靖嘛
+
+      又来了呀社交英雄传呀'
+  - dimension: misc
+    severity: negative
+    content: 啰嗦且老套，无法修改，建议推翻
+    raw_quote: '大哥很用心写了很久改不了完全改不了
+
+      没办法改啊怎么改啊'

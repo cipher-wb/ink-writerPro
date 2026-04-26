@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1406
+title: 重生之离彼 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你五十五分 | 好题材，但首章设定堆积过重弱化故事性，改好第一章有望签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 好题材，但首章设定堆积过重弱化故事性，改好第一章有望签约。 | 第一章为讲设定严重牺牲故事性;人物心理活动苍白，互动生硬
+  observable:
+  - 'opening维度: 第一章为讲设定严重牺牲故事性'
+  - 'character维度: 人物心理活动苍白，互动生硬'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 2051
+  - 2150
+  score: 55
+  score_raw: 给你五十五分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生之离彼
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 好题材，但首章设定堆积过重弱化故事性，改好第一章有望签约。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章为讲设定严重牺牲故事性
+    raw_quote: 第一章几乎全是为了这点设定
+  - dimension: character
+    severity: negative
+    content: 人物心理活动苍白，互动生硬
+    raw_quote: 故事性太弱了 太弱了

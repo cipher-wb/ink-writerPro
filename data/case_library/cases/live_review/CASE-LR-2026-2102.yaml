@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-2102
+title: 电工重生04年代文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 年代文
+  - 职业文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也有个35分左右吧 | 电气专业知识有侧重点可以写，但人设太平淡，遗憾不够，期待感弱，读者提不起兴趣。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 电气专业知识有侧重点可以写，但人设太平淡，遗憾不够，期待感弱，读者提不起兴趣。 | 主角人设和妻子都没立好，太干巴巴了;没有遗憾和期待感，读者没感觉;专业电工知识一上来有点吓人，挑受众
+  observable:
+  - 'character维度: 主角人设和妻子都没立好，太干巴巴了'
+  - 'hook维度: 没有遗憾和期待感，读者没感觉'
+  - 'simplicity维度: 专业电工知识一上来有点吓人，挑受众'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 36
+  - 92
+  score: 35
+  score_raw: 也有个35分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 电工重生04年代文
+  genre_guess:
+  - 都市
+  - 重生
+  - 年代文
+  - 职业文
+  overall_comment: 电气专业知识有侧重点可以写，但人设太平淡，遗憾不够，期待感弱，读者提不起兴趣。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设和妻子都没立好，太干巴巴了
+    raw_quote: 你的主角人设，你的身边的这个妻子都没立好
+  - dimension: hook
+    severity: negative
+    content: 没有遗憾和期待感，读者没感觉
+    raw_quote: 遗憾太弱了，期待感不够
+  - dimension: simplicity
+    severity: negative
+    content: 专业电工知识一上来有点吓人，挑受众
+    raw_quote: 这个有点挑人了，这个有点挑受众了

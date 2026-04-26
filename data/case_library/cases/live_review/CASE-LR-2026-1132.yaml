@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1132
+title: 中专生反手养活全国 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 都市
+  - 国运
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥25分吧 | 题材过不了审，人设需换为高中生，增加反差打脸情节。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材过不了审，人设需换为高中生，增加反差打脸情节。 | 涉及不良导向与未成年导向，审核必杀;中专生身份代入感差，建议换为高中校花学霸;缺乏眼前的反派与打脸爽点
+  observable:
+  - 'taboo维度: 涉及不良导向与未成年导向，审核必杀'
+  - 'character维度: 中专生身份代入感差，建议换为高中校花学霸'
+  - 'opening维度: 缺乏眼前的反派与打脸爽点'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 2268
+  - 2382
+  score: 25
+  score_raw: 给大哥25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 中专生反手养活全国
+  genre_guess:
+  - 都市
+  - 国运
+  - 系统
+  overall_comment: 题材过不了审，人设需换为高中生，增加反差打脸情节。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 涉及不良导向与未成年导向，审核必杀
+    raw_quote: '这个就宣传不良导向了
+
+      你知道吧'
+  - dimension: character
+    severity: negative
+    content: 中专生身份代入感差，建议换为高中校花学霸
+    raw_quote: 女主也请你写成高中的校花学霸行不行
+  - dimension: opening
+    severity: negative
+    content: 缺乏眼前的反派与打脸爽点
+    raw_quote: '要有前面的小剧场
+
+      要有前面的反差
+
+      反转坏蛋'

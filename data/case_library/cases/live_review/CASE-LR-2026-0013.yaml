@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0013
+title: 穿越巫师世界 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11viPBrEPq
+scope:
+  genre:
+  - 巫师
+  - 奇幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也有个四五成分的样子 | 切入还行，但之后展开拖沓，卖点单薄，缺乏吸引力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11viPBrEPq.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入还行，但之后展开拖沓，卖点单薄，缺乏吸引力。 | 过程描写过多，展开拖沓;主线展开不吸引人，卖点单薄
+  observable:
+  - 'pacing维度: 过程描写过多，展开拖沓'
+  - 'highpoint维度: 主线展开不吸引人，卖点单薄'
+live_review_meta:
+  source_bvid: BV11viPBrEPq
+  source_line_range:
+  - 630
+  - 782
+  score: 45
+  score_raw: 也有个四五成分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越巫师世界
+  genre_guess:
+  - 巫师
+  - 奇幻
+  - 穿越
+  overall_comment: 切入还行，但之后展开拖沓，卖点单薄，缺乏吸引力。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局切入方式正确，代入感建立不错
+    raw_quote: 切入还可以吧
+  - dimension: pacing
+    severity: negative
+    content: 过程描写过多，展开拖沓
+    raw_quote: 过程写太多了
+  - dimension: highpoint
+    severity: negative
+    content: 主线展开不吸引人，卖点单薄
+    raw_quote: 卖点挺单薄的

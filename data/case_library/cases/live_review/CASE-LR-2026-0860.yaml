@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0860
+title: 东京律师 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 都市
+  - 律师
+  - 日娱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分有的 | 电车痴汉切入思路对了，金手指一般，衔接不够流畅，但可入行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 电车痴汉切入思路对了，金手指一般，衔接不够流畅，但可入行。 | 金手指一般，应该等合适时机再出
+  observable:
+  - 'golden_finger维度: 金手指一般，应该等合适时机再出'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1481
+  - 1540
+  score: 50
+  score_raw: 50分有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京律师
+  genre_guess:
+  - 都市
+  - 律师
+  - 日娱
+  overall_comment: 电车痴汉切入思路对了，金手指一般，衔接不够流畅，但可入行。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 比黑道切入好，节奏快，情绪足
+    raw_quote: 这个比黑道切入好，节奏挺快的，他就悟道了呀
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指一般，应该等合适时机再出
+    raw_quote: 金手指我觉得一般般金属确实比较垃圾

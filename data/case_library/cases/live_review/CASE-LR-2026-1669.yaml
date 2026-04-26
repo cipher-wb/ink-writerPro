@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1669
+title: 玉佩穿越公子哥求生 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 穿越
+  - 玄幻
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 15分吧 | 穿越前铺垫太长，描述复杂却无剧情，人设无聊缺乏驱动力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越前铺垫太长，描述复杂却无剧情，人设无聊缺乏驱动力。 | 描写过于复杂堆砌，读者看不懂世界和题材;开篇穿越探索过长而不是继承记忆直接进入剧情
+  observable:
+  - 'simplicity维度: 描写过于复杂堆砌，读者看不懂世界和题材'
+  - 'opening维度: 开篇穿越探索过长而不是继承记忆直接进入剧情'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 111
+  - 170
+  score: 15
+  score_raw: 15分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玉佩穿越公子哥求生
+  genre_guess:
+  - 穿越
+  - 玄幻
+  - 诡异
+  overall_comment: 穿越前铺垫太长，描述复杂却无剧情，人设无聊缺乏驱动力。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 描写过于复杂堆砌，读者看不懂世界和题材
+    raw_quote: 为什么要写这么复杂 能不能简单点
+  - dimension: opening
+    severity: negative
+    content: 开篇穿越探索过长而不是继承记忆直接进入剧情
+    raw_quote: 你直接继承记忆 不要去探索 你读者不看探索

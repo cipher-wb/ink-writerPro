@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0062
+title: 机械蓝机 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 赛博朋克
+  - 未来科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分 是吧 | 开局炸裂但题材太奇怪，背景世界观夸张，建议转写东京都市文发挥人物刻画优势。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局炸裂但题材太奇怪，背景世界观夸张，建议转写东京都市文发挥人物刻画优势。 | 赛博未来世界观太夸张，立不住
+  observable:
+  - 'genre维度: 赛博未来世界观太夸张，立不住'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 91
+  - 175
+  score: 30
+  score_raw: 30分 是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 机械蓝机
+  genre_guess:
+  - 赛博朋克
+  - 未来科幻
+  overall_comment: 开局炸裂但题材太奇怪，背景世界观夸张，建议转写东京都市文发挥人物刻画优势。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局炸裂，带入感强
+    raw_quote: 这开头倒是挺炸裂的
+  - dimension: character
+    severity: positive
+    content: 小剧场和人物描写有天赋，能让人会心一笑
+    raw_quote: 小内容写得挺好的
+  - dimension: genre
+    severity: negative
+    content: 赛博未来世界观太夸张，立不住
+    raw_quote: 就是题材太奇怪了 背景世界观太夸张了

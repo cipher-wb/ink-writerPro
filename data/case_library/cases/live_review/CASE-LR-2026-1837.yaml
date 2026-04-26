@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1837
+title: 重返08之网吧老板 (unknown / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 创业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 掉到48了啊 | 之前59分，这次掉48分，行为逻辑漏洞多，代入感差
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 之前59分，这次掉48分，行为逻辑漏洞多，代入感差 | 重生后没有成熟心态，人设立不住;逻辑漏洞百出不够流畅
+  observable:
+  - 'character维度: 重生后没有成熟心态，人设立不住'
+  - 'pacing维度: 逻辑漏洞百出不够流畅'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1461
+  - 1550
+  score: 48
+  score_raw: 掉到48了啊
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 重返08之网吧老板
+  genre_guess:
+  - 都市
+  - 重生
+  - 创业
+  overall_comment: 之前59分，这次掉48分，行为逻辑漏洞多，代入感差
+  comments:
+  - dimension: character
+    severity: negative
+    content: 重生后没有成熟心态，人设立不住
+    raw_quote: 昂没有重生的感觉...前世你已经30多岁了...但是你对她暂时没有什么协议
+  - dimension: pacing
+    severity: negative
+    content: 逻辑漏洞百出不够流畅
+    raw_quote: 这个不符合逻辑啊...起点的话逻辑漏洞百出呀

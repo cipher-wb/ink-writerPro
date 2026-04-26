@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1975
+title: 崇山晁盖从梁山开始 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 水浒
+  - 同人
+  - 穿越
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分吧 | 文笔扎实有说书人味道，但开篇平淡无金手指，题材上限低。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实有说书人味道，但开篇平淡无金手指，题材上限低。 | 切入一本正经缺乏爆点;没有金手指或亮点设计;水浒题材市场冰凉，上限锁死在精品
+  observable:
+  - 'opening维度: 切入一本正经缺乏爆点'
+  - 'golden_finger维度: 没有金手指或亮点设计'
+  - 'genre维度: 水浒题材市场冰凉，上限锁死在精品'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 231
+  - 340
+  score: 59
+  score_raw: 59分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 崇山晁盖从梁山开始
+  genre_guess:
+  - 水浒
+  - 同人
+  - 穿越
+  - 历史
+  overall_comment: 文笔扎实有说书人味道，但开篇平淡无金手指，题材上限低。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入一本正经缺乏爆点
+    raw_quote: 无功无过那种切入
+  - dimension: golden_finger
+    severity: negative
+    content: 没有金手指或亮点设计
+    raw_quote: 他也没什么金手指之类的
+  - dimension: genre
+    severity: negative
+    content: 水浒题材市场冰凉，上限锁死在精品
+    raw_quote: 水浒很多时候上线就精品就锁死了

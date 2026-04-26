@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1440
+title: 崇祯六世轮回修仙 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 历史
+  - 修仙
+  - 轮回
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多35分38分的样子 | 轮回脑洞有趣但写成一本正经失去乐子，主角不像崇祯，涉及抗战不可写
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 轮回脑洞有趣但写成一本正经失去乐子，主角不像崇祯，涉及抗战不可写 | 主角经历太多不是崇祯，失去人物魅力;出现抗战内容必须删掉
+  observable:
+  - 'character维度: 主角经历太多不是崇祯，失去人物魅力'
+  - 'taboo维度: 出现抗战内容必须删掉'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 731
+  - 840
+  score: null
+  score_raw: 差不多35分38分的样子
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 崇祯六世轮回修仙
+  genre_guess:
+  - 历史
+  - 修仙
+  - 轮回
+  overall_comment: 轮回脑洞有趣但写成一本正经失去乐子，主角不像崇祯，涉及抗战不可写
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角经历太多不是崇祯，失去人物魅力
+    raw_quote: 就是这个人他不是崇祯
+  - dimension: taboo
+    severity: negative
+    content: 出现抗战内容必须删掉
+    raw_quote: 你参加过抗战 这个不提删掉啊

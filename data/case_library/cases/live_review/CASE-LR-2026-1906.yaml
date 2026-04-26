@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1906
+title: 继承好兄弟遗产，我成了自己的死亡受益人 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sSrFB5Eot
+scope:
+  genre:
+  - 悬疑
+  - 轮回
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就20分吧 真的20分 | 文笔比例差，故弄玄虚，主线不清，情绪塑造不够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sSrFB5Eot.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例差，故弄玄虚，主线不清，情绪塑造不够。 | 开头干巴巴，比例差;比例不够，内容烧脑故弄玄虚;情绪没波动，人设塑造不够
+  observable:
+  - 'opening维度: 开头干巴巴，比例差'
+  - 'simplicity维度: 比例不够，内容烧脑故弄玄虚'
+  - 'character维度: 情绪没波动，人设塑造不够'
+  - 'pacing维度: 事件太虚，不能流畅表达'
+live_review_meta:
+  source_bvid: BV1sSrFB5Eot
+  source_line_range:
+  - 429
+  - 580
+  score: 20
+  score_raw: 也就20分吧 真的20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 继承好兄弟遗产，我成了自己的死亡受益人
+  genre_guess:
+  - 悬疑
+  - 轮回
+  - 科幻
+  overall_comment: 文笔比例差，故弄玄虚，主线不清，情绪塑造不够。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头干巴巴，比例差
+    raw_quote: 好干巴巴的去的 … 比例好差呀
+  - dimension: simplicity
+    severity: negative
+    content: 比例不够，内容烧脑故弄玄虚
+    raw_quote: 比例不够呀 你就很容易写成故弄玄虚啊
+  - dimension: character
+    severity: negative
+    content: 情绪没波动，人设塑造不够
+    raw_quote: 情绪没波动 … 人设塑造不够
+  - dimension: pacing
+    severity: negative
+    content: 事件太虚，不能流畅表达
+    raw_quote: 事件太虚了 … 然后一个事件不能流畅的表达

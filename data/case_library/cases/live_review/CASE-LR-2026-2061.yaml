@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2061
+title: 秘境成灾的世界看见血条 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 游戏化
+  - 秘境
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 | 题材老旧，缺乏人物冲突和剧情，变成网游数据文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老旧，缺乏人物冲突和剧情，变成网游数据文。 | 题材老旧，武侠+网游没市场;没有人物冲突和事件
+  observable:
+  - 'genre维度: 题材老旧，武侠+网游没市场'
+  - 'character维度: 没有人物冲突和事件'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 3001
+  - 3200
+  score: 20
+  score_raw: 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 秘境成灾的世界看见血条
+  genre_guess:
+  - 都市
+  - 游戏化
+  - 秘境
+  overall_comment: 题材老旧，缺乏人物冲突和剧情，变成网游数据文。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材老旧，武侠+网游没市场
+    raw_quote: 武侠跟网游两个人加起来 温度没有一度你知道吧
+  - dimension: character
+    severity: negative
+    content: 没有人物冲突和事件
+    raw_quote: 没事件啊 你本身没事件

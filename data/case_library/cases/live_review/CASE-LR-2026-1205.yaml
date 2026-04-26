@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1205
+title: 陈景深仙考核淘汰多子多福 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 多子多福
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话比较老啊 | 多子多福题材三年前流行，剧情套路老旧，缺乏新意，遣词造句无大问题但没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 多子多福题材三年前流行，剧情套路老旧，缺乏新意，遣词造句无大问题但没人看。 | 题材非常陈旧，三年前就已经流行过
+  observable:
+  - 'genre维度: 题材非常陈旧，三年前就已经流行过'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 240
+  - 285
+  score: null
+  score_raw: 打分的话比较老啊
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 陈景深仙考核淘汰多子多福
+  genre_guess:
+  - 修仙
+  - 系统
+  - 多子多福
+  overall_comment: 多子多福题材三年前流行，剧情套路老旧，缺乏新意，遣词造句无大问题但没人看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材非常陈旧，三年前就已经流行过
+    raw_quote: 这题材太老了…都2026年了还在写

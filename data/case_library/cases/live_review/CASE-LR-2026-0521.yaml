@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0521
+title: 重生在夏天 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 文娱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这次也定量十八吧 | 全方位退步，雪白抢戏反遭反感，需闭关抄书三个月重练基本功。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全方位退步，雪白抢戏反遭反感，需闭关抄书三个月重练基本功。 | 雪白描写过分关注下三路，场景不合逻辑;节奏完全崩盘，穿越前铺垫过长且无聊;建议找精品重生文超书三个月，重新打磨基本功
+  observable:
+  - 'character维度: 雪白描写过分关注下三路，场景不合逻辑'
+  - 'pacing维度: 节奏完全崩盘，穿越前铺垫过长且无聊'
+  - 'misc维度: 建议找精品重生文超书三个月，重新打磨基本功'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 731
+  - 775
+  score: 18
+  score_raw: 这次也定量十八吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生在夏天
+  genre_guess:
+  - 都市
+  - 重生
+  - 文娱
+  overall_comment: 全方位退步，雪白抢戏反遭反感，需闭关抄书三个月重练基本功。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 雪白描写过分关注下三路，场景不合逻辑
+    raw_quote: 你老看看人家脚，看人家的裤腿...你又不是在KTV看到他了
+  - dimension: pacing
+    severity: negative
+    content: 节奏完全崩盘，穿越前铺垫过长且无聊
+    raw_quote: 东拉一车西拉一车的，我没写好这东西
+  - dimension: misc
+    severity: negative
+    content: 建议找精品重生文超书三个月，重新打磨基本功
+    raw_quote: 你找AM十本起点今年的精品重生文...超六十万字吧你就啥都懂了

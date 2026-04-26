@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1821
+title: 重生：宅宅逆袭录 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 下一把就给你30分左右吧 | 文笔还行，但重生写成流水账日记，没有侧重点和遗憾主线，缺乏看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔还行，但重生写成流水账日记，没有侧重点和遗憾主线，缺乏看点。 | 重生文写成日记式流水账，无重点;没有用重生套路展现遗憾或强情绪
+  observable:
+  - 'pacing维度: 重生文写成日记式流水账，无重点'
+  - 'opening维度: 没有用重生套路展现遗憾或强情绪'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 1251
+  - 1310
+  score: 30
+  score_raw: 下一把就给你30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生：宅宅逆袭录
+  genre_guess:
+  - 都市
+  - 重生
+  - 日常
+  overall_comment: 文笔还行，但重生写成流水账日记，没有侧重点和遗憾主线，缺乏看点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 重生文写成日记式流水账，无重点
+    raw_quote: 你们写重生就写成日记了 都这是你们最大的问题
+  - dimension: opening
+    severity: negative
+    content: 没有用重生套路展现遗憾或强情绪
+    raw_quote: 重生就是弥补遗憾的呀 就是有侧重点

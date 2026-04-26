@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1259
+title: 领主从混血哥布林开始 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 奇幻
+  - 领主
+  - 哥布林
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就20来分的样子吧 | 题材元素人设被改动失去原味，开头缺乏事件和看点，过于平铺直叙，整体无功无过。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材元素人设被改动失去原味，开头缺乏事件和看点，过于平铺直叙，整体无功无过。 | 开头太小白，缺乏剧情和看点;名字俗气，心理活动差，没有情绪
+  observable:
+  - 'opening维度: 开头太小白，缺乏剧情和看点'
+  - 'character维度: 名字俗气，心理活动差，没有情绪'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 147
+  - 215
+  score: 20
+  score_raw: 就20来分的样子吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 领主从混血哥布林开始
+  genre_guess:
+  - 奇幻
+  - 领主
+  - 哥布林
+  overall_comment: 题材元素人设被改动失去原味，开头缺乏事件和看点，过于平铺直叙，整体无功无过。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头太小白，缺乏剧情和看点
+    raw_quote: 你这切入也太小白了吧
+  - dimension: character
+    severity: negative
+    content: 名字俗气，心理活动差，没有情绪
+    raw_quote: 沉默这个词语也很AI，就是不要用...心理活动很差，其实紧张吗，不紧张呀
+  - dimension: simplicity
+    severity: neutral
+    content: 过于平铺直叙，缺乏卖点，建议用雪白切入
+    raw_quote: 现在新人咋可能这样平铺直叙...冲突看点卖点直接先倒叙

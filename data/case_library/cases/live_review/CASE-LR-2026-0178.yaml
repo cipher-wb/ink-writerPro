@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0178
+title: 师姐救我：两界梦境 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 仙侠
+  - 两界穿梭
+  - 梦境
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分 21分 | 遣词造句太白，金手指和对话都像小学生作文，人设逻辑崩塌，完全驾驭不了两界文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句太白，金手指和对话都像小学生作文，人设逻辑崩塌，完全驾驭不了两界文。 | 文笔极为小白，滥用成语和尴尬对话。;主角和女助理人设全崩，行为不符合正常逻辑。;金手指过于直白，攻略任务毫无新意。
+  observable:
+  - 'simplicity维度: 文笔极为小白，滥用成语和尴尬对话。'
+  - 'character维度: 主角和女助理人设全崩，行为不符合正常逻辑。'
+  - 'golden_finger维度: 金手指过于直白，攻略任务毫无新意。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 1250
+  - 1390
+  score: 21
+  score_raw: 20分 21分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 师姐救我：两界梦境
+  genre_guess:
+  - 仙侠
+  - 两界穿梭
+  - 梦境
+  overall_comment: 遣词造句太白，金手指和对话都像小学生作文，人设逻辑崩塌，完全驾驭不了两界文。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文笔极为小白，滥用成语和尴尬对话。
+    raw_quote: 很小白啊很小白啊
+  - dimension: character
+    severity: negative
+    content: 主角和女助理人设全崩，行为不符合正常逻辑。
+    raw_quote: 这两个人全崩了呀
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指过于直白，攻略任务毫无新意。
+    raw_quote: 金手指也太白了

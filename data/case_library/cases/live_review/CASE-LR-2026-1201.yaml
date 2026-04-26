@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1201
+title: 永春大弟子代师收徒 (fail / 46分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 国术
+  - 穿越
+  - 年代文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这时六分吧其实也会写…46分吧 | 事件切入年代感错位，1950年黑帮争霸像民国戏，建议前置到民国时期，金手指尚可但卖点需再打磨。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件切入年代感错位，1950年黑帮争霸像民国戏，建议前置到民国时期，金手指尚可但卖点需再打磨。 | 将民国背景的事件硬套在1950年香港显得不伦不类
+  observable:
+  - 'genre维度: 将民国背景的事件硬套在1950年香港显得不伦不类'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 28
+  - 89
+  score: 46
+  score_raw: 这时六分吧其实也会写…46分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 永春大弟子代师收徒
+  genre_guess:
+  - 国术
+  - 穿越
+  - 年代文
+  overall_comment: 事件切入年代感错位，1950年黑帮争霸像民国戏，建议前置到民国时期，金手指尚可但卖点需再打磨。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 将民国背景的事件硬套在1950年香港显得不伦不类
+    raw_quote: 这个事件你放到民国时期其实都蛮好…这个剧情本来是对吧192几年三几年的时候的
+  - dimension: golden_finger
+    severity: neutral
+    content: 收徒系统有看点，但需要与年代结合好
+    raw_quote: 他有个收徒系统绑定的事件

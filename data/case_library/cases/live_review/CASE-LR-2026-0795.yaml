@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0795
+title: 我设计的民宿游戏成真了 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 民俗
+  - 游戏
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就 25分 | 劳动思路可以，但写法需要练笔，写女人和氛围差
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 劳动思路可以，但写法需要练笔，写女人和氛围差 | 写女人的能力太差，形容单一;氛围不够吓人，爽点不足
+  observable:
+  - 'character维度: 写女人的能力太差，形容单一'
+  - 'highpoint维度: 氛围不够吓人，爽点不足'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 710
+  - 880
+  score: 25
+  score_raw: 差不多就 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我设计的民宿游戏成真了
+  genre_guess:
+  - 民俗
+  - 游戏
+  - 穿越
+  overall_comment: 劳动思路可以，但写法需要练笔，写女人和氛围差
+  comments:
+  - dimension: character
+    severity: negative
+    content: 写女人的能力太差，形容单一
+    raw_quote: 写女人的能力太差了
+  - dimension: highpoint
+    severity: negative
+    content: 氛围不够吓人，爽点不足
+    raw_quote: 这不像是一个女人，氛围感不够

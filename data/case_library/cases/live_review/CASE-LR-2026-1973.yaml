@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1973
+title: 冒充天才俱乐部/时间循环精神病院 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 科幻
+  - 时间循环
+  - 精神病院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你30分以后还是流畅的还是流畅的 | 驾驭不住这种烧脑科幻题材，设定复杂但人设和代入感全无，实力与野心不匹配。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 驾驭不住这种烧脑科幻题材，设定复杂但人设和代入感全无，实力与野心不匹配。 | 开局精神病院问答不吸引人，切入平淡;人设立不住，没有记忆点;保险柜情节毫无期待感，节奏拖沓
+  observable:
+  - 'opening维度: 开局精神病院问答不吸引人，切入平淡'
+  - 'character维度: 人设立不住，没有记忆点'
+  - 'pacing维度: 保险柜情节毫无期待感，节奏拖沓'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 45
+  - 130
+  score: 30
+  score_raw: 就给你30分以后还是流畅的还是流畅的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 冒充天才俱乐部/时间循环精神病院
+  genre_guess:
+  - 科幻
+  - 时间循环
+  - 精神病院
+  overall_comment: 驾驭不住这种烧脑科幻题材，设定复杂但人设和代入感全无，实力与野心不匹配。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局精神病院问答不吸引人，切入平淡
+    raw_quote: 精神病院精神病院问答是吧
+  - dimension: character
+    severity: negative
+    content: 人设立不住，没有记忆点
+    raw_quote: 人设没有立住一个
+  - dimension: pacing
+    severity: negative
+    content: 保险柜情节毫无期待感，节奏拖沓
+    raw_quote: 期待感保险柜的一点意义都没有

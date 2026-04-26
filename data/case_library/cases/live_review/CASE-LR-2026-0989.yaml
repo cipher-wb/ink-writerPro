@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0989
+title: 李重庆穿成叛将之子 (pass / 62分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 本来可以65的吧，有毒蘑菇在就只能62了 | 思路和主线没问题，切入稍啰嗦，描写不具体，但可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路和主线没问题，切入稍啰嗦，描写不具体，但可签约。 | 切入啰嗦，文青
+  observable:
+  - 'opening维度: 切入啰嗦，文青'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 456
+  - 565
+  score: 62
+  score_raw: 本来可以65的吧，有毒蘑菇在就只能62了
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 李重庆穿成叛将之子
+  genre_guess:
+  - 历史
+  - 五代十国
+  overall_comment: 思路和主线没问题，切入稍啰嗦，描写不具体，但可签约。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入啰嗦，文青
+    raw_quote: 太啰嗦了太啰嗦了……这干嘛这么文文清大哥，这太文青了
+  - dimension: character
+    severity: neutral
+    content: 人物描写不具体，缺乏细节
+    raw_quote: 描写不具体……写写他的相貌呀……反正就是要要细节写一写吧
+  - dimension: golden_finger
+    severity: positive
+    content: 展开写得好，整体可签约
+    raw_quote: 签约差不多了，也可以可以签这个四对吧，展开的说问题不大

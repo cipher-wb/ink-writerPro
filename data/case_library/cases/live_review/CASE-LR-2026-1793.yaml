@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1793
+title: 鬼物清洗末日笔记 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 末世
+  - 诡异
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 撑死就30多分左右 | 设定说明书式的开头，剧情弱，建议推翻重写求生庇护所。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定说明书式的开头，剧情弱，建议推翻重写求生庇护所。 | 开篇全是设定和说明书，剧情非常弱，没有紧迫感。;日记金手指老套，建议增加求生庇护所感。
+  observable:
+  - 'opening维度: 开篇全是设定和说明书，剧情非常弱，没有紧迫感。'
+  - 'golden_finger维度: 日记金手指老套，建议增加求生庇护所感。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 889
+  - 935
+  score: 30
+  score_raw: 撑死就30多分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼物清洗末日笔记
+  genre_guess:
+  - 末世
+  - 诡异
+  - 求生
+  overall_comment: 设定说明书式的开头，剧情弱，建议推翻重写求生庇护所。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇全是设定和说明书，剧情非常弱，没有紧迫感。
+    raw_quote: 重复就是设定就说明书你要去写个说明书...剧情太弱了
+  - dimension: golden_finger
+    severity: negative
+    content: 日记金手指老套，建议增加求生庇护所感。
+    raw_quote: 日记也是人家写烂的东西然后嘲讽...这没啥意思

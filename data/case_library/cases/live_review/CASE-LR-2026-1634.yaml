@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1634
+title: 08年金融重生 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 商战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你58分吧 | 文笔流畅，但题材和部分内容有风险。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔流畅，但题材和部分内容有风险。 | 选题论证不足，部分内容涉嫌违规。;文中部分描写容易触发审核。
+  observable:
+  - 'genre维度: 选题论证不足，部分内容涉嫌违规。'
+  - 'ops维度: 文中部分描写容易触发审核。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 321
+  - 370
+  score: 58
+  score_raw: 给你58分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 08年金融重生
+  genre_guess:
+  - 都市
+  - 重生
+  - 商战
+  overall_comment: 文笔流畅，但题材和部分内容有风险。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 选题论证不足，部分内容涉嫌违规。
+    raw_quote: 他剪接过不了审了
+  - dimension: ops
+    severity: negative
+    content: 文中部分描写容易触发审核。
+    raw_quote: 每次扫黄打非他都在

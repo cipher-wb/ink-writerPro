@@ -1,0 +1,66 @@
+case_id: CASE-LR-2026-0721
+title: 金斗云开始修行 (pass / 63分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HhX2BAEvT
+scope:
+  genre:
+  - 西游
+  - 玄幻
+  - 古代神话
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就63分吧 | 西游题材脑洞思路可以尝试，开头问题不大，但缺少好主线可能写不长，给机会签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HhX2BAEvT.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 西游题材脑洞思路可以尝试，开头问题不大，但缺少好主线可能写不长，给机会签约。 | 西游题材比较难写，编辑认为题材难度大;缺少像西游兰若那样的好主线，可能导致写不长;总是差一点，临门一脚未突破
+  observable:
+  - 'genre维度: 西游题材比较难写，编辑认为题材难度大'
+  - 'highpoint维度: 缺少像西游兰若那样的好主线，可能导致写不长'
+  - 'misc维度: 总是差一点，临门一脚未突破'
+live_review_meta:
+  source_bvid: BV1HhX2BAEvT
+  source_line_range:
+  - 56
+  - 134
+  score: 63
+  score_raw: 差不多就63分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 金斗云开始修行
+  genre_guess:
+  - 西游
+  - 玄幻
+  - 古代神话
+  overall_comment: 西游题材脑洞思路可以尝试，开头问题不大，但缺少好主线可能写不长，给机会签约。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西游题材比较难写，编辑认为题材难度大
+    raw_quote: 对写金总这个我还是我还是觉得题材比较难
+  - dimension: simplicity
+    severity: positive
+    content: 小说风格接地气，没有过于文青，容易理解
+    raw_quote: 写的就是接地气的嘛
+  - dimension: highpoint
+    severity: negative
+    content: 缺少像西游兰若那样的好主线，可能导致写不长
+    raw_quote: 就是没有西游兰若那样的好主线
+  - dimension: opening
+    severity: positive
+    content: 开头问题不大，吸引读者
+    raw_quote: 但是开头是问题不大的
+  - dimension: misc
+    severity: negative
+    content: 总是差一点，临门一脚未突破
+    raw_quote: 其实都是临门一脚嗯

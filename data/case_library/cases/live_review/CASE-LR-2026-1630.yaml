@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1630
+title: 玄幻金手指流 (pass / 67分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 玄幻
+  - 金手指流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 65到70之间吧 | 金手指出场太晚，黄金三章节奏不达标。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指出场太晚，黄金三章节奏不达标。 | 金手指拖到第六章才出，错过黄金三章窗口。;开篇设定堆积过多。
+  observable:
+  - 'golden_finger维度: 金手指拖到第六章才出，错过黄金三章窗口。'
+  - 'opening维度: 开篇设定堆积过多。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 176
+  - 220
+  score: 67
+  score_raw: 65到70之间吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 玄幻金手指流
+  genre_guess:
+  - 玄幻
+  - 金手指流
+  overall_comment: 金手指出场太晚，黄金三章节奏不达标。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指拖到第六章才出，错过黄金三章窗口。
+    raw_quote: 你这个金手指拖到第六章才出
+  - dimension: opening
+    severity: negative
+    content: 开篇设定堆积过多。
+    raw_quote: 这个开头铺设定铺得有点多

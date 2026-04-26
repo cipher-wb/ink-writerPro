@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1414
+title: 中华小子同人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 同人
+  - 中华小子
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材太小众，同人没蹭到热度，有代入感但无期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太小众，同人没蹭到热度，有代入感但无期待感。 | 中华小子受众太小，蹭不到流量;只有代入感，缺乏期待感
+  observable:
+  - 'genre维度: 中华小子受众太小，蹭不到流量'
+  - 'hook维度: 只有代入感，缺乏期待感'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 281
+  - 320
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 中华小子同人
+  genre_guess:
+  - 同人
+  - 中华小子
+  - 穿越
+  overall_comment: 题材太小众，同人没蹭到热度，有代入感但无期待感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 中华小子受众太小，蹭不到流量
+    raw_quote: 中华小子这受众多吗 大哥这题材你还不如找成龙历险记
+  - dimension: hook
+    severity: negative
+    content: 只有代入感，缺乏期待感
+    raw_quote: 只有代入感 没有期待感呀

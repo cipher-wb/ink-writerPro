@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2012
+title: 嫂嫂别回头 (borderline / 51分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 仙侠
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 51吧 | 人物关系是核心，嫂嫂写得好，但乱世背景逻辑不成立，人设前后冲突，百合倾向是毒点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人物关系是核心，嫂嫂写得好，但乱世背景逻辑不成立，人设前后冲突，百合倾向是毒点。 | 在乱世背景下，美女嫂嫂还能安然无恙，逻辑不成立。
+  observable:
+  - 'character维度: 在乱世背景下，美女嫂嫂还能安然无恙，逻辑不成立。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 905
+  - 950
+  score: 51
+  score_raw: 51吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 嫂嫂别回头
+  genre_guess:
+  - 仙侠
+  - 家族
+  overall_comment: 人物关系是核心，嫂嫂写得好，但乱世背景逻辑不成立，人设前后冲突，百合倾向是毒点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 在乱世背景下，美女嫂嫂还能安然无恙，逻辑不成立。
+    raw_quote: 你这么美在这待着 乱世是什么概念 ... 就这一点就可以杀死了

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0464
+title: 九局一派 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 仙侠
+  - 异术
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分左右 | 世界观小众阅读成本高，纯卖设定无钩子，建议套用蜀山等大众题材降成本。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观小众阅读成本高，纯卖设定无钩子，建议套用蜀山等大众题材降成本。 | 九局一派太过陌生，换成蜀山剑侠立刻自带流量;开篇全是卖设定，读者看得很累会直接跑
+  observable:
+  - 'genre维度: 九局一派太过陌生，换成蜀山剑侠立刻自带流量'
+  - 'opening维度: 开篇全是卖设定，读者看得很累会直接跑'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 961
+  - 1000
+  score: 40
+  score_raw: 40分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 九局一派
+  genre_guess:
+  - 仙侠
+  - 异术
+  overall_comment: 世界观小众阅读成本高，纯卖设定无钩子，建议套用蜀山等大众题材降成本。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 九局一派太过陌生，换成蜀山剑侠立刻自带流量
+    raw_quote: 你把这个换成蜀山 对吧 蜀山剑侠那种 他不就立刻有感觉了吗
+  - dimension: opening
+    severity: negative
+    content: 开篇全是卖设定，读者看得很累会直接跑
+    raw_quote: 基本上全是卖设定了 真卖设定了兄弟 这一段读着直接跑

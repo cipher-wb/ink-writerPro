@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0782
+title: 睡不醒 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 年代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就20分 | 太水，写爸妈没人看，绿帽毒点，重生文没有侧重点，20分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太水，写爸妈没人看，绿帽毒点，重生文没有侧重点，20分。 | 女主前世是小三，毒点;写爹娘煽情没意思，读者代入不了;一句话写了一章，太水
+  observable:
+  - 'character维度: 女主前世是小三，毒点'
+  - 'opening维度: 写爹娘煽情没意思，读者代入不了'
+  - 'pacing维度: 一句话写了一章，太水'
+  - 'simplicity维度: 重生文没有侧重点'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 751
+  - 800
+  score: 20
+  score_raw: 差不多也就20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 睡不醒
+  genre_guess:
+  - 重生
+  - 都市
+  - 年代
+  overall_comment: 太水，写爸妈没人看，绿帽毒点，重生文没有侧重点，20分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主前世是小三，毒点
+    raw_quote: 你上一世是别人的小三 就说明这个女的已经崩了 然后你这一世要让一个当别人小三的人成为女主 这是毒点啊
+  - dimension: opening
+    severity: negative
+    content: 写爹娘煽情没意思，读者代入不了
+    raw_quote: 不要聊爸妈也不要写 要去写其他事件 爹娘的煽情没意思
+  - dimension: pacing
+    severity: negative
+    content: 一句话写了一章，太水
+    raw_quote: 你这一句话写了一章呀 太水了
+  - dimension: simplicity
+    severity: negative
+    content: 重生文没有侧重点
+    raw_quote: 没有侧重点 这个你们的重生文都没有侧重点

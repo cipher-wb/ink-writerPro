@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1103
+title: 梦境棋子异能 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个16分最多了 | 完全不懂网文写作，情节琐碎，详略失当，驱动力微弱
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不懂网文写作，情节琐碎，详略失当，驱动力微弱 | 大量日常流水账，无信息量;梦境棋子的钩子无聊，读者毫无兴趣
+  observable:
+  - 'simplicity维度: 大量日常流水账，无信息量'
+  - 'hook维度: 梦境棋子的钩子无聊，读者毫无兴趣'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1510
+  - 1575
+  score: 16
+  score_raw: 这个16分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 梦境棋子异能
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 完全不懂网文写作，情节琐碎，详略失当，驱动力微弱
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 大量日常流水账，无信息量
+    raw_quote: 洗脸刷牙做饭 这也要写 一下 打招呼王叔你早 巡逻呢王叔我早了 写这干嘛呀
+  - dimension: hook
+    severity: negative
+    content: 梦境棋子的钩子无聊，读者毫无兴趣
+    raw_quote: 没人在意啊 你梦里面这个棋子你碰到了 那然后呢

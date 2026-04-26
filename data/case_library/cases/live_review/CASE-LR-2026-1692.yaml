@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1692
+title: 重生救女神雪白 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 雪白
+  - 商战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 43分 | 套路成熟，节奏和讲故事能力有进步，但题材和人设已脱敏，事件极端。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路成熟，节奏和讲故事能力有进步，但题材和人设已脱敏，事件极端。 | 保研、猥亵等套路已脱敏，缺乏新意，适合番茄。
+  observable:
+  - 'genre维度: 保研、猥亵等套路已脱敏，缺乏新意，适合番茄。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 667
+  - 720
+  score: 43
+  score_raw: 43分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生救女神雪白
+  genre_guess:
+  - 都市
+  - 重生
+  - 雪白
+  - 商战
+  overall_comment: 套路成熟，节奏和讲故事能力有进步，但题材和人设已脱敏，事件极端。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入套路成熟，懂得使用极端事件制造反差。
+    raw_quote: 套路是很熟...大哥会讲故事，也知道网红的情绪
+  - dimension: genre
+    severity: negative
+    content: 保研、猥亵等套路已脱敏，缺乏新意，适合番茄。
+    raw_quote: 但这个事件现在读者也脱敏了呀，没啥看的

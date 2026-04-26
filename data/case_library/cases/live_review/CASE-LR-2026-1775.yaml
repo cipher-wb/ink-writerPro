@@ -1,0 +1,68 @@
+case_id: CASE-LR-2026-1775
+title: 穿越东京侦探社 (borderline)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEpd
+scope:
+  genre:
+  - 穿越
+  - 侦探
+  - 都市
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 上次是58分，本次未给出新分数 | 文笔和切入点尚可，但需要彻底修改涉黄描写并压缩冗长情节，否则无法过审。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEpd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和切入点尚可，但需要彻底修改涉黄描写并压缩冗长情节，否则无法过审。 | 自言自语成分过多，影响阅读体验;涉及对女性私处直接描写，铁定触发审核屏蔽;必须把所有违规描写删干净，否则编辑也无力回天
+  observable:
+  - 'simplicity维度: 自言自语成分过多，影响阅读体验'
+  - 'taboo维度: 涉及对女性私处直接描写，铁定触发审核屏蔽'
+  - 'ops维度: 必须把所有违规描写删干净，否则编辑也无力回天'
+live_review_meta:
+  source_bvid: BV1p2w5zNEpd
+  source_line_range:
+  - 8
+  - 101
+  score: null
+  score_raw: 上次是58分，本次未给出新分数
+  score_signal: fuzzy
+  verdict: borderline
+  title_guess: 穿越东京侦探社
+  genre_guess:
+  - 穿越
+  - 侦探
+  - 都市
+  - 悬疑
+  overall_comment: 文笔和切入点尚可，但需要彻底修改涉黄描写并压缩冗长情节，否则无法过审。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 反转设计有天赋，主线驱动力较强
+    raw_quote: 东京文天赋反转不错…细节主线驱动力加雪白
+  - dimension: simplicity
+    severity: negative
+    content: 自言自语成分过多，影响阅读体验
+    raw_quote: 自言自语太多啊
+  - dimension: taboo
+    severity: negative
+    content: 涉及对女性私处直接描写，铁定触发审核屏蔽
+    raw_quote: 芳草不能看啊…这这芳草不能这审核
+  - dimension: opening
+    severity: positive
+    content: 故事切入方式没有问题，开门见山
+    raw_quote: 切入是问题不大的
+  - dimension: ops
+    severity: negative
+    content: 必须把所有违规描写删干净，否则编辑也无力回天
+    raw_quote: 芳草能改改掉吧…直接说你描写差写关你怎么办

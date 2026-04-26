@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1954
+title: 爱心满满却被稱嗜血屠夫 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 都市
+  - 雪白
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分 | 穿越前雪白场景惊艳，文笔好。但转场极其突兀，心理活动偏弱，后续变成了无聊的决斗分镜。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越前雪白场景惊艳，文笔好。但转场极其突兀，心理活动偏弱，后续变成了无聊的决斗分镜。 | 转场过度突兀，心理活动弱，变成分镜叙事
+  observable:
+  - 'pacing维度: 转场过度突兀，心理活动弱，变成分镜叙事'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 1082
+  - 1153
+  score: 30
+  score_raw: 30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 爱心满满却被稱嗜血屠夫
+  genre_guess:
+  - 都市
+  - 雪白
+  - 穿越
+  overall_comment: 穿越前雪白场景惊艳，文笔好。但转场极其突兀，心理活动偏弱，后续变成了无聊的决斗分镜。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 穿越前的雪白与画面感写得很好
+    raw_quote: 比例没问题...包括穿越前那一段，直播间都喜欢
+  - dimension: pacing
+    severity: negative
+    content: 转场过度突兀，心理活动弱，变成分镜叙事
+    raw_quote: 转场好突兀...你的视角完全是分镜式写法，就不是写主角了，跟前面非常非常隔离

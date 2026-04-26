@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1740
+title: 同学你背后怎么长腿了 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 玄幻
+  - 校园
+  - 妖怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多给大哥 给个30分左右吧 | 氛围描写尚可，但主线模糊，剧情过于日常化，节奏慢。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围描写尚可，但主线模糊，剧情过于日常化，节奏慢。 | 开篇散文化，节奏缓慢，未能及时展开主线。;日常校园情节过多，主线迟迟不推进。
+  observable:
+  - 'opening维度: 开篇散文化，节奏缓慢，未能及时展开主线。'
+  - 'pacing维度: 日常校园情节过多，主线迟迟不推进。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 740
+  - 808
+  score: 30
+  score_raw: 差不多给大哥 给个30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 同学你背后怎么长腿了
+  genre_guess:
+  - 玄幻
+  - 校园
+  - 妖怪
+  overall_comment: 氛围描写尚可，但主线模糊，剧情过于日常化，节奏慢。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇散文化，节奏缓慢，未能及时展开主线。
+    raw_quote: 这开头太散文化了 其实应该一千字写完之后 就你反转
+  - dimension: pacing
+    severity: negative
+    content: 日常校园情节过多，主线迟迟不推进。
+    raw_quote: 你主线要干的点以及 我觉得有点模糊

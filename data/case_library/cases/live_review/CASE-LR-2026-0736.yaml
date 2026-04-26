@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0736
+title: 花花公子万法书 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 万法书
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这次有个三十多 | 开篇俗套小白，金手指过不了审，人设和情节处理不当，虽有进步但整体仍弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇俗套小白，金手指过不了审，人设和情节处理不当，虽有进步但整体仍弱。 | 开篇穿越反应过于小白，缺乏代入感;金手指涉及敏感内容，可能过不了审;人设到金手指两个点都崩了，主角缺乏魅力
+  observable:
+  - 'opening维度: 开篇穿越反应过于小白，缺乏代入感'
+  - 'golden_finger维度: 金手指涉及敏感内容，可能过不了审'
+  - 'character维度: 人设到金手指两个点都崩了，主角缺乏魅力'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1331
+  - 1490
+  score: 34
+  score_raw: 这次有个三十多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 花花公子万法书
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 万法书
+  overall_comment: 开篇俗套小白，金手指过不了审，人设和情节处理不当，虽有进步但整体仍弱。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇穿越反应过于小白，缺乏代入感
+    raw_quote: 太小白了...就这没智商
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指涉及敏感内容，可能过不了审
+    raw_quote: 金手指我觉得不一定能过审...审核看到这种肯定管的
+  - dimension: character
+    severity: negative
+    content: 人设到金手指两个点都崩了，主角缺乏魅力
+    raw_quote: 人设太奇怪了这个...感觉智商不高

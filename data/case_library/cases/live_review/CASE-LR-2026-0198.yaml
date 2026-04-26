@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0198
+title: 科幻末日废土 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 生化
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 24分 | 题材开局糟糕，缺乏心理活动和画面感，像电影分镜但读感差。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材开局糟糕，缺乏心理活动和画面感，像电影分镜但读感差。 | 开篇缺乏心理活动，无法建立读者代入感;描写过于视觉化，缺乏文字应有的想象引导
+  observable:
+  - 'opening维度: 开篇缺乏心理活动，无法建立读者代入感'
+  - 'simplicity维度: 描写过于视觉化，缺乏文字应有的想象引导'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 305
+  - 352
+  score: 24
+  score_raw: 24分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 科幻末日废土
+  genre_guess:
+  - 科幻
+  - 末日
+  - 生化
+  overall_comment: 题材开局糟糕，缺乏心理活动和画面感，像电影分镜但读感差。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏心理活动，无法建立读者代入感
+    raw_quote: 心理活动不要写 没心理活动吗 你这个离城一句 心理活动都没有
+  - dimension: simplicity
+    severity: negative
+    content: 描写过于视觉化，缺乏文字应有的想象引导
+    raw_quote: 这不是电影 这是小说 ... 一点画面感都没完

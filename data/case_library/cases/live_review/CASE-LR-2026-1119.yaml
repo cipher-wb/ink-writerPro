@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1119
+title: 月光下的旅途 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 西幻
+  - 传统文学
+  - 诗歌
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就不打分了 | 纯实体书文学笔法，无网文元素，读者基本盘为零，难以指点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯实体书文学笔法，无网文元素，读者基本盘为零，难以指点。 | 缺少主角视角与心理活动，缺乏代入感;写法完全不符合网文市场，水土不服;双女主无男主不符合起点主流受众
+  observable:
+  - 'opening维度: 缺少主角视角与心理活动，缺乏代入感'
+  - 'genre维度: 写法完全不符合网文市场，水土不服'
+  - 'character维度: 双女主无男主不符合起点主流受众'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 634
+  - 719
+  score: null
+  score_raw: 就不打分了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 月光下的旅途
+  genre_guess:
+  - 西幻
+  - 传统文学
+  - 诗歌
+  overall_comment: 纯实体书文学笔法，无网文元素，读者基本盘为零，难以指点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 缺少主角视角与心理活动，缺乏代入感
+    raw_quote: '谁是主角
+
+      我都找不到呀'
+  - dimension: genre
+    severity: negative
+    content: 写法完全不符合网文市场，水土不服
+    raw_quote: 你先要搞清楚什么叫网文
+  - dimension: character
+    severity: negative
+    content: 双女主无男主不符合起点主流受众
+    raw_quote: 哪个起点是双女主文呢

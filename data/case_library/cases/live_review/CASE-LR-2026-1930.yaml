@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1930
+title: 调教少妇/祸心大法 (fail / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 仙侠
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分，你下次你让我觉得能签我再签吧 | 作者天赋高，但内容涉险，描写了催眠、迷奸等导致风控风险极大，编辑不敢签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者天赋高，但内容涉险，描写了催眠、迷奸等导致风控风险极大，编辑不敢签。 | 内容涉及迷奸、催眠等，描写细致，有极高封书风险。
+  observable:
+  - 'taboo维度: 内容涉及迷奸、催眠等，描写细致，有极高封书风险。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 932
+  - 975
+  score: 59
+  score_raw: 59分，你下次你让我觉得能签我再签吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 调教少妇/祸心大法
+  genre_guess:
+  - 仙侠
+  - 后宫
+  overall_comment: 作者天赋高，但内容涉险，描写了催眠、迷奸等导致风控风险极大，编辑不敢签。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 内容涉及迷奸、催眠等，描写细致，有极高封书风险。
+    raw_quote: 我真的我不敢签里...你你这个人就看你那句话我都吓人...你必被分
+  - dimension: character
+    severity: positive
+    content: 作者水平很高，很有天赋。
+    raw_quote: 水平倒是挺高的...挺有天赋的这个大哥

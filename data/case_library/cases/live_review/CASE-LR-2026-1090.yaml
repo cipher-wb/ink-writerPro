@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1090
+title: 我女友是个克苏鲁 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 克苏鲁
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好吧 32分 | 遣词造句流畅，但校园灵异血腥敏感，过审风险极大
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句流畅，但校园灵异血腥敏感，过审风险极大 | 校园灵异血腥内容违反审核规则;过审无望，平台规定限制
+  observable:
+  - 'taboo维度: 校园灵异血腥内容违反审核规则'
+  - 'ops维度: 过审无望，平台规定限制'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 400
+  - 475
+  score: 32
+  score_raw: 好吧 32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我女友是个克苏鲁
+  genre_guess:
+  - 克苏鲁
+  - 校园
+  overall_comment: 遣词造句流畅，但校园灵异血腥敏感，过审风险极大
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 校园灵异血腥内容违反审核规则
+    raw_quote: 校园里面这种灵异对吧 这种东西写不了 怪物怪奇物语放起点会被封掉的
+  - dimension: ops
+    severity: negative
+    content: 过审无望，平台规定限制
+    raw_quote: 过不了审就是过不了审对吧

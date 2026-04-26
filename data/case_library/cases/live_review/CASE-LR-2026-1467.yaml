@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1467
+title: 回门海魔修夺舍 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 仙侠
+  - 魔修
+  - 夺舍
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十三分嘛 | 毒点明显，有点意思但不拉，题材剧情选的不好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 毒点明显，有点意思但不拉，题材剧情选的不好。 | 夺舍正派弟子是毒点
+  observable:
+  - 'taboo维度: 夺舍正派弟子是毒点'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 631
+  - 720
+  score: 33
+  score_raw: 三十三分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 回门海魔修夺舍
+  genre_guess:
+  - 仙侠
+  - 魔修
+  - 夺舍
+  overall_comment: 毒点明显，有点意思但不拉，题材剧情选的不好。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 夺舍正派弟子是毒点
+    raw_quote: 你把人家躲舍了 这是毒点
+  - dimension: pacing
+    severity: neutral
+    content: 后面展开有点意思
+    raw_quote: 拉一坨拉一坨大的

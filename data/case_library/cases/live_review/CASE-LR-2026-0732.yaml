@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0732
+title: 勇者战败被魔王囚禁 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 西幻
+  - 魔王勇者
+  - 变身
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分嘛 | 人设达到签约水平且智商在线，但文笔和细节仍需打磨，主角主线较老套，签后容易因缺乏成绩放弃。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设达到签约水平且智商在线，但文笔和细节仍需打磨，主角主线较老套，签后容易因缺乏成绩放弃。 | 主线勇者打魔王套路老套，难以写出新意;文笔文风过于仓促如草稿，需沉淀练习
+  observable:
+  - 'genre维度: 主线勇者打魔王套路老套，难以写出新意'
+  - 'simplicity维度: 文笔文风过于仓促如草稿，需沉淀练习'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 991
+  - 1120
+  score: 58
+  score_raw: 58分嘛
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 勇者战败被魔王囚禁
+  genre_guess:
+  - 西幻
+  - 魔王勇者
+  - 变身
+  overall_comment: 人设达到签约水平且智商在线，但文笔和细节仍需打磨，主角主线较老套，签后容易因缺乏成绩放弃。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人设立体有深度，达到签约水平
+    raw_quote: 人设现在绝对是牵手水平
+  - dimension: genre
+    severity: negative
+    content: 主线勇者打魔王套路老套，难以写出新意
+    raw_quote: 勇者这种事件 读者现在在起点 不是一个什么好活
+  - dimension: simplicity
+    severity: negative
+    content: 文笔文风过于仓促如草稿，需沉淀练习
+    raw_quote: 文笔文分不够了 太仓促了 就像那种草稿型

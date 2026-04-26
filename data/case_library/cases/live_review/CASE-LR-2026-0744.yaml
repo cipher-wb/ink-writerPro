@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0744
+title: 东京病娇前女友 (borderline / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 都市
+  - 东京
+  - 恋爱养成
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十多吧 | 文笔能力可以，但游戏攻略类题材平淡且属审核高危区，建议用职业主线代替系统来走剧情加擦边。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔能力可以，但游戏攻略类题材平淡且属审核高危区，建议用职业主线代替系统来走剧情加擦边。 | 恋爱养成游戏类题材是审核高危区;情节太平淡，不写擦边读者不爱看，写了审核又卡
+  observable:
+  - 'genre维度: 恋爱养成游戏类题材是审核高危区'
+  - 'pacing维度: 情节太平淡，不写擦边读者不爱看，写了审核又卡'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 2131
+  - 2190
+  score: 42
+  score_raw: 四十多吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东京病娇前女友
+  genre_guess:
+  - 都市
+  - 东京
+  - 恋爱养成
+  overall_comment: 文笔能力可以，但游戏攻略类题材平淡且属审核高危区，建议用职业主线代替系统来走剧情加擦边。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 恋爱养成游戏类题材是审核高危区
+    raw_quote: 这种游戏审核的高危区...审核的重点关注这种东西
+  - dimension: pacing
+    severity: negative
+    content: 情节太平淡，不写擦边读者不爱看，写了审核又卡
+    raw_quote: 太平淡了...你不写雪白其实很平淡...碰了那审核就出来了
+  - dimension: simplicity
+    severity: positive
+    content: 文笔和讲故事能力还行，有40多分的基础
+    raw_quote: 文笔能力可以...觉得讲故事呢还行

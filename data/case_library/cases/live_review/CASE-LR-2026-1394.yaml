@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1394
+title: 全员癌症的肿瘤世界 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 黑暗文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个没有30分 | 世界观立不住，主线模糊，角色代入感差，属于必死题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观立不住，主线模糊，角色代入感差，属于必死题材。 | 设定没有任何逻辑，世界观立不住;主角心理活动差，读者找不到代入点
+  observable:
+  - 'genre维度: 设定没有任何逻辑，世界观立不住'
+  - 'character维度: 主角心理活动差，读者找不到代入点'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 351
+  - 500
+  score: null
+  score_raw: 这个没有30分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 全员癌症的肿瘤世界
+  genre_guess:
+  - 都市
+  - 异能
+  - 黑暗文
+  overall_comment: 世界观立不住，主线模糊，角色代入感差，属于必死题材。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 设定没有任何逻辑，世界观立不住
+    raw_quote: 题材立不住了兄弟 我现在可以确认了 这个题材必死
+  - dimension: character
+    severity: negative
+    content: 主角心理活动差，读者找不到代入点
+    raw_quote: 主角的心理活动贼差

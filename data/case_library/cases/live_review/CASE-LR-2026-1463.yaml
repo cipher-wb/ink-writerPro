@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1463
+title: 1988年落榜重生 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 年代
+  - 重生
+  - 创业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 情绪拉太多了，缺少事业线，人物可以但单薄，年代感不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪拉太多了，缺少事业线，人物可以但单薄，年代感不足。 | 情绪拉得过满导致卖点单薄
+  observable:
+  - 'highpoint维度: 情绪拉得过满导致卖点单薄'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 271
+  - 360
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 1988年落榜重生
+  genre_guess:
+  - 年代
+  - 重生
+  - 创业
+  overall_comment: 情绪拉太多了，缺少事业线，人物可以但单薄，年代感不足。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 情绪拉得过满导致卖点单薄
+    raw_quote: 这个情绪你拉独者 你只能拉一阵 不能拉一辈子
+  - dimension: character
+    severity: positive
+    content: 人物没问题，像陈江河
+    raw_quote: 这个人是没问题的 人就是陈江河跟洛义主

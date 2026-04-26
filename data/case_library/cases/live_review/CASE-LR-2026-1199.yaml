@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1199
+title: 赛博都市穿越之旅 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 赛博
+  - 未来
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材在起点冷门，内容草稿，没有看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材在起点冷门，内容草稿，没有看点。 | 赛博类在起点非常冷门，缺乏读者;心理活动描写直白草稿，需要删改
+  observable:
+  - 'genre维度: 赛博类在起点非常冷门，缺乏读者'
+  - 'simplicity维度: 心理活动描写直白草稿，需要删改'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 1001
+  - 1050
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 赛博都市穿越之旅
+  genre_guess:
+  - 赛博
+  - 未来
+  - 穿越
+  overall_comment: 题材在起点冷门，内容草稿，没有看点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 赛博类在起点非常冷门，缺乏读者
+    raw_quote: 赛博真的是个垃圾东西
+  - dimension: simplicity
+    severity: negative
+    content: 心理活动描写直白草稿，需要删改
+    raw_quote: 这个描述是心理活动的 要删减的 ... 很草稿

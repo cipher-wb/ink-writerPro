@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1369
+title: 克苏鲁求生童话 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 灵异
+  - 克苏鲁
+  - 求生
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 反正就40分打底，说不定也能到50多 | 比例和氛围好，像绝境黑夜，但混杂多种题材，导向不明。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例和氛围好，像绝境黑夜，但混杂多种题材，导向不明。 | 模仿拱开、肘子，不成自体系，但文笔氛围棒
+  observable:
+  - 'misc维度: 模仿拱开、肘子，不成自体系，但文笔氛围棒'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1621
+  - 1680
+  score: null
+  score_raw: 反正就40分打底，说不定也能到50多
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 克苏鲁求生童话
+  genre_guess:
+  - 灵异
+  - 克苏鲁
+  - 求生
+  - 科幻
+  overall_comment: 比例和氛围好，像绝境黑夜，但混杂多种题材，导向不明。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 模仿拱开、肘子，不成自体系，但文笔氛围棒
+    raw_quote: 上次冒充肘子这次冒充拱开...比例没什么大问题
+  - dimension: misc
+    severity: neutral
+    content: 诡异童话求生，混杂灵异、废土、克苏鲁，题材不清
+    raw_quote: 到底走啥走灵异吗...我感觉他什么都想要

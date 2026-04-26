@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2062
+title: 重生2016学姐我喜欢你 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 算了 给你四十吧 | 情感主线明确但笔力不够，人设和反应平淡，建议加事业线卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情感主线明确但笔力不够，人设和反应平淡，建议加事业线卖点。 | 人物反应和情感描写不够深刻;缺乏额外的期待和卖点
+  observable:
+  - 'character维度: 人物反应和情感描写不够深刻'
+  - 'hook维度: 缺乏额外的期待和卖点'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 3201
+  - 3400
+  score: 40
+  score_raw: 算了 给你四十吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2016学姐我喜欢你
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 情感主线明确但笔力不够，人设和反应平淡，建议加事业线卖点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物反应和情感描写不够深刻
+    raw_quote: 比例不够 兄弟 ... 我觉得还是不够
+  - dimension: hook
+    severity: negative
+    content: 缺乏额外的期待和卖点
+    raw_quote: 如果你的比例不够写出来人设 你就只能加东西

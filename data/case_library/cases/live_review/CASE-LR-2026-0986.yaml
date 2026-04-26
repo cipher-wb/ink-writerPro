@@ -1,0 +1,73 @@
+case_id: CASE-LR-2026-0986
+title: 只收女厉鬼的民宿 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就比例流畅嘛，代入感其实还好，但是情绪波动太差了，就就就就40分左右吧 | 切入点问题多，主角情绪平淡，鬼怪设定像丧尸缺乏灵异感，整体缺乏看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点问题多，主角情绪平淡，鬼怪设定像丧尸缺乏灵异感，整体缺乏看点。 | 开篇缺少前因和环境铺垫，事件突兀;节奏过快，代入感差;主角情绪平淡，缺乏波动
+  observable:
+  - 'opening维度: 开篇缺少前因和环境铺垫，事件突兀'
+  - 'pacing维度: 节奏过快，代入感差'
+  - 'character维度: 主角情绪平淡，缺乏波动'
+  - 'highpoint维度: 第一章没有女厉鬼出场，与书名不符'
+  - 'genre维度: 鬼怪设定像丧尸，缺乏灵异氛围'
+  - 'misc维度: 整体毛病多，找不到优点'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 115
+  - 247
+  score: 40
+  score_raw: 就比例流畅嘛，代入感其实还好，但是情绪波动太差了，就就就就40分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 只收女厉鬼的民宿
+  genre_guess:
+  - 灵异
+  - 都市
+  - 重生
+  overall_comment: 切入点问题多，主角情绪平淡，鬼怪设定像丧尸缺乏灵异感，整体缺乏看点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇缺少前因和环境铺垫，事件突兀
+    raw_quote: 没有前因，但又说他找不到毛病，这就是毛病啊……没有前因
+  - dimension: pacing
+    severity: negative
+    content: 节奏过快，代入感差
+    raw_quote: 其实有时候节奏快的真不好，我觉得你至少要读得讲清楚
+  - dimension: character
+    severity: negative
+    content: 主角情绪平淡，缺乏波动
+    raw_quote: 大哥没情绪，你了告诉没情绪，你主角很淡，因为你蠢对吧
+  - dimension: highpoint
+    severity: negative
+    content: 第一章没有女厉鬼出场，与书名不符
+    raw_quote: 叽里咕噜半天也没见女厉鬼啊，这种说明你开头第一章一章半了，没有女厉鬼
+  - dimension: genre
+    severity: negative
+    content: 鬼怪设定像丧尸，缺乏灵异氛围
+    raw_quote: 你你这些已经不是鬼了，这些就是一个丧尸，你还不如写成丧尸
+  - dimension: misc
+    severity: negative
+    content: 整体毛病多，找不到优点
+    raw_quote: 恕我眼拙，我找不到长这种毛病了，这毛病得十几个了

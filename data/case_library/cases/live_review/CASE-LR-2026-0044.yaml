@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0044
+title: 东京鬼怪除灵 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 东京
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59 | 真实感强，有看点，但金手指需改，氛围不够吓人，主线不明，59分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 真实感强，有看点，但金手指需改，氛围不够吓人，主线不明，59分。 | 攻略进度类似雪白，需改;后续主线不明
+  observable:
+  - 'golden_finger维度: 攻略进度类似雪白，需改'
+  - 'pacing维度: 后续主线不明'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 511
+  - 570
+  score: 59
+  score_raw: '59'
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东京鬼怪除灵
+  genre_guess:
+  - 都市
+  - 灵异
+  - 东京
+  overall_comment: 真实感强，有看点，但金手指需改，氛围不够吓人，主线不明，59分。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入有代入感，真实
+    raw_quote: 今天他写的很真实
+  - dimension: golden_finger
+    severity: negative
+    content: 攻略进度类似雪白，需改
+    raw_quote: 攻略进度很容易被审核认为是雪白
+  - dimension: pacing
+    severity: negative
+    content: 后续主线不明
+    raw_quote: 我还不知道她的后续的主线在哪

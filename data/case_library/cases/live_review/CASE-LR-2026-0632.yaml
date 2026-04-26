@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0632
+title: 一介大能的抗癌日记 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是23分加两分吧 | 设定过时，逻辑小白，完全没代入感，大哥很努力但思路不对
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定过时，逻辑小白，完全没代入感，大哥很努力但思路不对 | 事件逻辑差，整体过于小白;主角人设像小学生，缺乏成年代入感;题材思路还停留在十年前
+  observable:
+  - 'simplicity维度: 事件逻辑差，整体过于小白'
+  - 'character维度: 主角人设像小学生，缺乏成年代入感'
+  - 'genre维度: 题材思路还停留在十年前'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 231
+  - 290
+  score: 23
+  score_raw: 还是23分加两分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 一介大能的抗癌日记
+  genre_guess:
+  - 修仙
+  - 系统
+  - 都市
+  overall_comment: 设定过时，逻辑小白，完全没代入感，大哥很努力但思路不对
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 事件逻辑差，整体过于小白
+    raw_quote: 事件逻辑什么的太差了
+  - dimension: character
+    severity: negative
+    content: 主角人设像小学生，缺乏成年代入感
+    raw_quote: 太小白了，就跟小学生一样
+  - dimension: genre
+    severity: negative
+    content: 题材思路还停留在十年前
+    raw_quote: 过时的思路，10年前的思路

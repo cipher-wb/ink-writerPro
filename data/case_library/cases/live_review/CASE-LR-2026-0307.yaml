@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0307
+title: 大唐年人 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 仙侠
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分了 | 切入极差，武侠化严重，但展开稍好，整体在退化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入极差，武侠化严重，但展开稍好，整体在退化。 | 开篇切入生硬，武侠榜单式开头失败;仙侠写成传统武侠，脱离市场
+  observable:
+  - 'opening维度: 开篇切入生硬，武侠榜单式开头失败'
+  - 'genre维度: 仙侠写成传统武侠，脱离市场'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 1111
+  - 1170
+  score: 40
+  score_raw: 40分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大唐年人
+  genre_guess:
+  - 仙侠
+  - 武侠
+  overall_comment: 切入极差，武侠化严重，但展开稍好，整体在退化。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇切入生硬，武侠榜单式开头失败
+    raw_quote: 切入真的写的太垃圾了
+  - dimension: genre
+    severity: negative
+    content: 仙侠写成传统武侠，脱离市场
+    raw_quote: 这太武侠风格了
+  - dimension: misc
+    severity: neutral
+    content: 心态急躁，需冷静思考
+    raw_quote: 你下楼吧 去楼边吹吹风

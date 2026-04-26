@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2105
+title: 许愿系统穿越文 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 玄幻
+  - 仙侠
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吧 | 写人物能力太差，都是上帝视角干巴巴的，不适合玄幻仙侠，建议换个简单题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写人物能力太差，都是上帝视角干巴巴的，不适合玄幻仙侠，建议换个简单题材。 | 人物写得干巴巴没感觉，不像真实的人;当前水平写不了玄幻仙侠，建议写都市简单分类
+  observable:
+  - 'character维度: 人物写得干巴巴没感觉，不像真实的人'
+  - 'genre维度: 当前水平写不了玄幻仙侠，建议写都市简单分类'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 186
+  - 230
+  score: 30
+  score_raw: 30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 许愿系统穿越文
+  genre_guess:
+  - 玄幻
+  - 仙侠
+  - 系统
+  overall_comment: 写人物能力太差，都是上帝视角干巴巴的，不适合玄幻仙侠，建议换个简单题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物写得干巴巴没感觉，不像真实的人
+    raw_quote: 我写人物能力好差呀，感觉都很干上帝视角是吧
+  - dimension: genre
+    severity: negative
+    content: 当前水平写不了玄幻仙侠，建议写都市简单分类
+    raw_quote: 你现在的比例以及这些人设安排能力写不了玄幻仙侠里的书

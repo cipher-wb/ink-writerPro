@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1279
+title: 穿越醒来有美女 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50吧 | 雪白切入和留白处理不错，第一张剧情衔接有天赋，但金手指太慢，青梅竹马多人设重复。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白切入和留白处理不错，第一张剧情衔接有天赋，但金手指太慢，青梅竹马多人设重复。 | 女性角色人设重复，青梅竹马和爱的人太多;金手指没看到，出现太慢
+  observable:
+  - 'character维度: 女性角色人设重复，青梅竹马和爱的人太多'
+  - 'golden_finger维度: 金手指没看到，出现太慢'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1731
+  - 1830
+  score: 50
+  score_raw: 50吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越醒来有美女
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 雪白
+  overall_comment: 雪白切入和留白处理不错，第一张剧情衔接有天赋，但金手指太慢，青梅竹马多人设重复。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头雪白加留白处理得好，反转变成前期危机不俗
+    raw_quote: 已经把第一章的雪白变成一个前期的小目标危机了，我觉得这个挺好的...变得不俗的好写法
+  - dimension: character
+    severity: negative
+    content: 女性角色人设重复，青梅竹马和爱的人太多
+    raw_quote: 同样的女性人设出来太多读者就不看了呀...又是爱你的真无聊
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指没看到，出现太慢
+    raw_quote: 金手指我没看到啊，金手指没看到，太慢了

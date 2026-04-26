@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0903
+title: 末日废土流浪地球 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 科幻
+  - 末日废土
+  - 流浪地球
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 来30 | 电影画面感强但缺少小说目的性和主角视角，像行尸走肉衍生剧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 电影画面感强但缺少小说目的性和主角视角，像行尸走肉衍生剧。 | 太电影画面，缺乏网文的目标主线和金手指
+  observable:
+  - 'ops维度: 太电影画面，缺乏网文的目标主线和金手指'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 1985
+  - 2178
+  score: 30
+  score_raw: 来30
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日废土流浪地球
+  genre_guess:
+  - 科幻
+  - 末日废土
+  - 流浪地球
+  overall_comment: 电影画面感强但缺少小说目的性和主角视角，像行尸走肉衍生剧。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 太电影画面，缺乏网文的目标主线和金手指
+    raw_quote: 太电影画面...不像是个正常的网红切入，你就是要目标主线对吧
+  - dimension: opening
+    severity: positive
+    content: 切入蹭流浪地球名场面挺好的
+    raw_quote: 这个切入还可以流浪地球啊...挺好的，这个切入没啥问题

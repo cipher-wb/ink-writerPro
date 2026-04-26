@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2140
+title: 英雄联盟王者修仙 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 修仙
+  - 游戏
+  - 英雄联盟
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分是要改结算吗 | 脑洞奇葩，试图把英雄联盟战术套入修仙，代入感极弱，乐子文都算不上。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞奇葩，试图把英雄联盟战术套入修仙，代入感极弱，乐子文都算不上。 | 英雄联盟修仙脑洞太扯，没人看;把打怪写成黑铁对局，人物行为混乱
+  observable:
+  - 'genre维度: 英雄联盟修仙脑洞太扯，没人看'
+  - 'character维度: 把打怪写成黑铁对局，人物行为混乱'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 1211
+  - 1320
+  score: 38
+  score_raw: 38分是要改结算吗
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 英雄联盟王者修仙
+  genre_guess:
+  - 修仙
+  - 游戏
+  - 英雄联盟
+  - 搞笑
+  overall_comment: 脑洞奇葩，试图把英雄联盟战术套入修仙，代入感极弱，乐子文都算不上。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 英雄联盟修仙脑洞太扯，没人看
+    raw_quote: 真别真别真别 我用我野王呀 你来越网打听就知道呀 这真别了 这这这乐子 这这这种点子真不行 扯淡了
+  - dimension: character
+    severity: negative
+    content: 把打怪写成黑铁对局，人物行为混乱
+    raw_quote: 这哪是打怪 这分明是黑铁局是吧 大神那种四线全部抢兵 他们啊他们没有哦 你看我猜对了吧

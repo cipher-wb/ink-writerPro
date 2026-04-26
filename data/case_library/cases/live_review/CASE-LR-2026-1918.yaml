@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1918
+title: 通关巨头/打工人修仙 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42嘛 | 正文写法是起点风，但简介太像番茄风，且作者笔力不足以支撑慢节奏，需要靠极端事件吸引眼球。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 正文写法是起点风，但简介太像番茄风，且作者笔力不足以支撑慢节奏，需要靠极端事件吸引眼球。 | 笔力不够却慢悠悠地写，节奏慢导致无聊。
+  observable:
+  - 'pacing维度: 笔力不够却慢悠悠地写，节奏慢导致无聊。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 407
+  - 450
+  score: 42
+  score_raw: 42嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 通关巨头/打工人修仙
+  genre_guess:
+  - 玄幻
+  - 系统
+  overall_comment: 正文写法是起点风，但简介太像番茄风，且作者笔力不足以支撑慢节奏，需要靠极端事件吸引眼球。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 笔力不够却慢悠悠地写，节奏慢导致无聊。
+    raw_quote: 比例不够就不要慢节奏，比例不够就要快节奏
+  - dimension: simplicity
+    severity: positive
+    content: 建议书名简介赶紧换，正文相对好一些，有明确主线。
+    raw_quote: 我觉得书名简介赶紧换了...正文还好吃点

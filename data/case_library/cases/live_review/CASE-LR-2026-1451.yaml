@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1451
+title: 金门木将 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 民国
+  - 灵异
+  - 百业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 说不定42分吧 | 文笔扎实但乱世开头无聊，应改成驱鬼捉妖，增加人际关系秘密
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但乱世开头无聊，应改成驱鬼捉妖，增加人际关系秘密 | 乱世开头元素太多，显得冗长;缺少人际关系秘密和悬念
+  observable:
+  - 'opening维度: 乱世开头元素太多，显得冗长'
+  - 'hook维度: 缺少人际关系秘密和悬念'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1741
+  - 1820
+  score: 42
+  score_raw: 说不定42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 金门木将
+  genre_guess:
+  - 民国
+  - 灵异
+  - 百业
+  overall_comment: 文笔扎实但乱世开头无聊，应改成驱鬼捉妖，增加人际关系秘密
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 乱世开头元素太多，显得冗长
+    raw_quote: 我觉得这个东西太多了 兄弟这个东西太多了
+  - dimension: hook
+    severity: negative
+    content: 缺少人际关系秘密和悬念
+    raw_quote: 你要用这里面的人不对劲 人有秘密来拉卖点

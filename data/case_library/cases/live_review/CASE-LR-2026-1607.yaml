@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1607
+title: 旧日厌诗观侦探野心作 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 侦探
+  - 破案
+  - 西方
+  - 野心
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多给大哥也是四十五分 | 比例扎实，野心极大，但开篇太震惊太慢，像侦探破案，容易劝退新读者，新人极难熬出头。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实，野心极大，但开篇太震惊太慢，像侦探破案，容易劝退新读者，新人极难熬出头。 | 开篇展开太慢，信息量密度过高，读者容易放弃;类侦探破案写法非新人能驾驭，市场接受度低;写法冒充老作者，但开篇不够接地气，缺乏简单明确的看点
+  observable:
+  - 'pacing维度: 开篇展开太慢，信息量密度过高，读者容易放弃'
+  - 'genre维度: 类侦探破案写法非新人能驾驭，市场接受度低'
+  - 'simplicity维度: 写法冒充老作者，但开篇不够接地气，缺乏简单明确的看点'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 140
+  - 239
+  score: 45
+  score_raw: 差不多给大哥也是四十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 旧日厌诗观侦探野心作
+  genre_guess:
+  - 侦探
+  - 破案
+  - 西方
+  - 野心
+  overall_comment: 比例扎实，野心极大，但开篇太震惊太慢，像侦探破案，容易劝退新读者，新人极难熬出头。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开篇展开太慢，信息量密度过高，读者容易放弃
+    raw_quote: 太震驚了 … 還是野心太大 … 很容易啃不進去直接走
+  - dimension: genre
+    severity: negative
+    content: 类侦探破案写法非新人能驾驭，市场接受度低
+    raw_quote: 你这卖点像侦探破案了
+  - dimension: simplicity
+    severity: negative
+    content: 写法冒充老作者，但开篇不够接地气，缺乏简单明确的看点
+    raw_quote: 開頭兩章幾乎就決定行人生死 … 太慢太拖沓 … 不接地氣

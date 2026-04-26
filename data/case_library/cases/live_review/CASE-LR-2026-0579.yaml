@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0579
+title: 灵异归一者 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 灵异
+  - 探险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 灵异氛围差，故事平淡不吓人，25分建议别写灵异
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 灵异氛围差，故事平淡不吓人，25分建议别写灵异 | 缺乏灵异应有的代入感和恐怖氛围;事件本身不吸引人，无惊悚感
+  observable:
+  - 'genre维度: 缺乏灵异应有的代入感和恐怖氛围'
+  - 'hook维度: 事件本身不吸引人，无惊悚感'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 3752
+  - 3821
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵异归一者
+  genre_guess:
+  - 灵异
+  - 探险
+  overall_comment: 灵异氛围差，故事平淡不吓人，25分建议别写灵异
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 缺乏灵异应有的代入感和恐怖氛围
+    raw_quote: 真的没氛围也不紧张...就是打怪兽打鬼
+  - dimension: hook
+    severity: negative
+    content: 事件本身不吸引人，无惊悚感
+    raw_quote: 事件本身也不吸引人...没感觉

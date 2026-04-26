@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0122
+title: 我以凡人之躯奴役女神 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 都市
+  - 系统流
+  - 女神
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个没人看啊 | 题材陈旧，写法枯燥，主角人设低智，编辑建议放弃重练。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材陈旧，写法枯燥，主角人设低智，编辑建议放弃重练。 | 奴役女神的题材早已过时，毫无看点;主角人设拉胯，完全无法代入
+  observable:
+  - 'genre维度: 奴役女神的题材早已过时，毫无看点'
+  - 'character维度: 主角人设拉胯，完全无法代入'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 560
+  - 620
+  score: null
+  score_raw: 这个没人看啊
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 我以凡人之躯奴役女神
+  genre_guess:
+  - 都市
+  - 系统流
+  - 女神
+  overall_comment: 题材陈旧，写法枯燥，主角人设低智，编辑建议放弃重练。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 奴役女神的题材早已过时，毫无看点
+    raw_quote: 奴役一众女神有啥写的
+  - dimension: character
+    severity: negative
+    content: 主角人设拉胯，完全无法代入
+    raw_quote: 你主角的人设也拉胯呀

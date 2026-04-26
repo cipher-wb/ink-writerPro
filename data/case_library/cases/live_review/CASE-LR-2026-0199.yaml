@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0199
+title: 聊斋红楼融合 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 历史
+  - 古典
+  - 聊斋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分是有的 | 文笔扎实，功底好，但题材冷门不确定市场，建议更换封面并直发试水。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，功底好，但题材冷门不确定市场，建议更换封面并直发试水。
+  observable:
+  - 整体被星河直播判定为 borderline
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 354
+  - 422
+  score: 50
+  score_raw: 50分是有的
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 聊斋红楼融合
+  genre_guess:
+  - 历史
+  - 古典
+  - 聊斋
+  overall_comment: 文笔扎实，功底好，但题材冷门不确定市场，建议更换封面并直发试水。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 开局拉扯和氛围营造较好，有可看性
+    raw_quote: 这开头不挺好的吗 有一种红楼芳华全新天下的味道
+  - dimension: genre
+    severity: neutral
+    content: 聊斋+红楼题材新颖但受众未知，需市场检验
+    raw_quote: 这个题材我也不确定 到底市场爱不爱
+  - dimension: simplicity
+    severity: positive
+    content: 文笔精炼，古文底子扎实
+    raw_quote: 确实古文有点扎实 天赋不错的

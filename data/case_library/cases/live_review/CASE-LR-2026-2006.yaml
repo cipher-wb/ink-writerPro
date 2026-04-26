@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2006
+title: 赛博朋克高中 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 科幻
+  - 赛博朋克
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不知道咋打分，题材就死了 | 题材完全自嗨，外国人名和世界观无法代入，慢热且无聊，毫无商业价值。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材完全自嗨，外国人名和世界观无法代入，慢热且无聊，毫无商业价值。 | 题材没有编辑敢签，也没有读者敢看，陷入规则怪谈的自嗨世界。;外国人名和背景导致无法代入。
+  observable:
+  - 'genre维度: 题材没有编辑敢签，也没有读者敢看，陷入规则怪谈的自嗨世界。'
+  - 'character维度: 外国人名和背景导致无法代入。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 638
+  - 673
+  score: null
+  score_raw: 不知道咋打分，题材就死了
+  score_signal: unknown
+  verdict: fail
+  title_guess: 赛博朋克高中
+  genre_guess:
+  - 科幻
+  - 赛博朋克
+  overall_comment: 题材完全自嗨，外国人名和世界观无法代入，慢热且无聊，毫无商业价值。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材没有编辑敢签，也没有读者敢看，陷入规则怪谈的自嗨世界。
+    raw_quote: 这个题材没一个编辑敢给你签 也没有读者敢看
+  - dimension: character
+    severity: negative
+    content: 外国人名和背景导致无法代入。
+    raw_quote: 外国的校花谁在乎 ... 戴维斯 我还杰克斯白角

@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0874
+title: 石矶娘娘自救哪吒 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 封神同人
+  - 洪荒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分比例问题其实就是比例问题 | 切入点、代入感、金手指都恰到好处，距离签约只差比例和仙侠味道的打磨。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点、代入感、金手指都恰到好处，距离签约只差比例和仙侠味道的打磨。 | 比例不够老练，仙侠味道弱
+  observable:
+  - 'ops维度: 比例不够老练，仙侠味道弱'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 531
+  - 580
+  score: 59
+  score_raw: 59分比例问题其实就是比例问题
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 石矶娘娘自救哪吒
+  genre_guess:
+  - 封神同人
+  - 洪荒
+  overall_comment: 切入点、代入感、金手指都恰到好处，距离签约只差比例和仙侠味道的打磨。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 金手指、切入点、代入感都很好
+    raw_quote: 金手指啊 代入感啊 切入点啊都恰到好处的
+  - dimension: ops
+    severity: negative
+    content: 比例不够老练，仙侠味道弱
+    raw_quote: 比例差一点 比例没有仙侠味道 仙侠味道有点弱 不够老练 这个比例没办法 … 59分比例问题其实就是比例问题

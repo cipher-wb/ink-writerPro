@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0866
+title: 重生指令 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 科幻
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就就30吧 | 纯科幻开局没市场，应为都市开局慢慢带出元素，节奏快但无沉浸感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯科幻开局没市场，应为都市开局慢慢带出元素，节奏快但无沉浸感。 | 纯科幻一上来在起点几乎没新人市场;科幻元素太多，不接地气，期待感弱
+  observable:
+  - 'genre维度: 纯科幻一上来在起点几乎没新人市场'
+  - 'simplicity维度: 科幻元素太多，不接地气，期待感弱'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 241
+  - 270
+  score: 30
+  score_raw: 就就30吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生指令
+  genre_guess:
+  - 科幻
+  - 爽文
+  overall_comment: 纯科幻开局没市场，应为都市开局慢慢带出元素，节奏快但无沉浸感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯科幻一上来在起点几乎没新人市场
+    raw_quote: 纯科幻的一上来一年也没几本 而且全都是万定老作者在换马甲 你一个做生意的 你去少林寺卖酒吗
+  - dimension: simplicity
+    severity: negative
+    content: 科幻元素太多，不接地气，期待感弱
+    raw_quote: 科幻元素多 然后这些事件太快了 不接地气 这东西多都看不了对吧

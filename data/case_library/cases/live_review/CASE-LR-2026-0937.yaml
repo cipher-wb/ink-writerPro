@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0937
+title: 我有一座零食框 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 修仙
+  - 都市
+  - 首富
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 规流畅25分到头 | 文笔切入还行但偏题成都市赚钱内容，缺乏紧张感与情绪冲突
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔切入还行但偏题成都市赚钱内容，缺乏紧张感与情绪冲突 | 修仙当首富题材垃圾，类似超市流;偏题写矿工细节，节奏拖沓且无危机;整体太平淡，缺少灭门复仇类强情绪
+  observable:
+  - 'genre维度: 修仙当首富题材垃圾，类似超市流'
+  - 'pacing维度: 偏题写矿工细节，节奏拖沓且无危机'
+  - 'misc维度: 整体太平淡，缺少灭门复仇类强情绪'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 145
+  - 287
+  score: 25
+  score_raw: 规流畅25分到头
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我有一座零食框
+  genre_guess:
+  - 修仙
+  - 都市
+  - 首富
+  overall_comment: 文笔切入还行但偏题成都市赚钱内容，缺乏紧张感与情绪冲突
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 修仙当首富题材垃圾，类似超市流
+    raw_quote: 修仙界当首富 垃圾题材 非常垃圾
+  - dimension: pacing
+    severity: negative
+    content: 偏题写矿工细节，节奏拖沓且无危机
+    raw_quote: 偏题了 这个应该是冲突 冲突应该是人与人的关系的冲突 而不是矿工上这些细节
+  - dimension: misc
+    severity: negative
+    content: 整体太平淡，缺少灭门复仇类强情绪
+    raw_quote: 没什么紧张感没什么紧凑感 没什么太强的情绪

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0827
+title: 穿越武侠学院 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 武侠
+  - 玄幻
+  - 学院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40出头 | 写成斗罗学院流，完全没有武侠味道，建议蹭同人或融合网游
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写成斗罗学院流，完全没有武侠味道，建议蹭同人或融合网游 | 这不是武侠，是玄幻学院流;传统穿越写法，没给武侠应有的看点
+  observable:
+  - 'genre维度: 这不是武侠，是玄幻学院流'
+  - 'opening维度: 传统穿越写法，没给武侠应有的看点'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 2585
+  - 2720
+  score: null
+  score_raw: 40出头
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越武侠学院
+  genre_guess:
+  - 武侠
+  - 玄幻
+  - 学院
+  overall_comment: 写成斗罗学院流，完全没有武侠味道，建议蹭同人或融合网游
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 这不是武侠，是玄幻学院流
+    raw_quote: 这冒充武侠哪里有武侠了呢
+  - dimension: opening
+    severity: negative
+    content: 传统穿越写法，没给武侠应有的看点
+    raw_quote: 传选写法 兄弟武侠都能被你们写成传学写法

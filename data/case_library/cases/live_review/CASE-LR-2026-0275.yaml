@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0275
+title: 重生1997首富 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 重生
+  - 年代
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就四十四十五吧 | 第一张氛围感没问题，但金手指机械降神会崩掉前面铺垫的情绪
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一张氛围感没问题，但金手指机械降神会崩掉前面铺垫的情绪 | 金手指时间兑换钱破坏铺垫的氛围感
+  observable:
+  - 'golden_finger维度: 金手指时间兑换钱破坏铺垫的氛围感'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 944
+  - 1030
+  score: 45
+  score_raw: 就四十四十五吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生1997首富
+  genre_guess:
+  - 重生
+  - 年代
+  - 都市
+  overall_comment: 第一张氛围感没问题，但金手指机械降神会崩掉前面铺垫的情绪
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指时间兑换钱破坏铺垫的氛围感
+    raw_quote: 你这金手指一出来崩完了呀
+  - dimension: opening
+    severity: positive
+    content: 第一张味道挺好，徐徐道来
+    raw_quote: 第一张的味道其实还挺好的，徐徐道来

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-2059
+title: 呼吸睡暴中 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 诡异
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多 25分吧 | 遣词造句还行，但缺人物互动，能力无期待感，平淡没情绪。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句还行，但缺人物互动，能力无期待感，平淡没情绪。 | 缺乏人物互动，独角戏无聊;能力无期待感，没体现好处;平淡没情绪
+  observable:
+  - 'character维度: 缺乏人物互动，独角戏无聊'
+  - 'hook维度: 能力无期待感，没体现好处'
+  - 'pacing维度: 平淡没情绪'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 2601
+  - 2800
+  score: 25
+  score_raw: 差不多 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 呼吸睡暴中
+  genre_guess:
+  - 都市
+  - 诡异
+  - 末日
+  overall_comment: 遣词造句还行，但缺人物互动，能力无期待感，平淡没情绪。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 缺乏人物互动，独角戏无聊
+    raw_quote: 你要有个同伴呀 ... 你一个人走走 看看停停解释
+  - dimension: hook
+    severity: negative
+    content: 能力无期待感，没体现好处
+    raw_quote: 你的那个关闭畏惧的能力 也没体现出来有啥好处
+  - dimension: pacing
+    severity: negative
+    content: 平淡没情绪
+    raw_quote: 就很平淡 没情绪

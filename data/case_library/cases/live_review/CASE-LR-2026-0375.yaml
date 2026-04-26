@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0375
+title: 蓝娘偷拍日记 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 都市
+  - 变态
+  - 颠文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我只能九分了 | 极度下头无下限，充满毒点，9分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 极度下头无下限，充满毒点，9分。 | 主角蓝娘行为猥琐变态，难以代入;涉及偷拍、性骚扰等低俗内容，风险高
+  observable:
+  - 'character维度: 主角蓝娘行为猥琐变态，难以代入'
+  - 'taboo维度: 涉及偷拍、性骚扰等低俗内容，风险高'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 1191
+  - 1270
+  score: 9
+  score_raw: 我只能九分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蓝娘偷拍日记
+  genre_guess:
+  - 都市
+  - 变态
+  - 颠文
+  overall_comment: 极度下头无下限，充满毒点，9分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角蓝娘行为猥琐变态，难以代入
+    raw_quote: 你这个蓝娘也太恶心了吧 这怎么代入啊
+  - dimension: taboo
+    severity: negative
+    content: 涉及偷拍、性骚扰等低俗内容，风险高
+    raw_quote: 这这太下头了

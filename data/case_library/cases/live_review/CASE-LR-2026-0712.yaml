@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0712
+title: 末日死灵法师 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 末日
+  - 亡灵法师
+  - 黑暗系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数，有套路熟评价 | 题材冷血，套路虽熟但事件太弱，黑帮冲突缺乏爽点；建议重新设计事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材冷血，套路虽熟但事件太弱，黑帮冲突缺乏爽点；建议重新设计事件。 | 危机救场情节无聊，靠烂梗撑不起高潮;初始事件太弱，缺少惊艳感和危机压迫
+  observable:
+  - 'highpoint维度: 危机救场情节无聊，靠烂梗撑不起高潮'
+  - 'hook维度: 初始事件太弱，缺少惊艳感和危机压迫'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 811
+  - 880
+  score: null
+  score_raw: 未明确说出分数，有套路熟评价
+  score_signal: sign_phrase
+  verdict: unknown
+  title_guess: 末日死灵法师
+  genre_guess:
+  - 末日
+  - 亡灵法师
+  - 黑暗系统
+  overall_comment: 题材冷血，套路虽熟但事件太弱，黑帮冲突缺乏爽点；建议重新设计事件。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 危机救场情节无聊，靠烂梗撑不起高潮
+    raw_quote: 直接把老大召唤了...就烂梗呀...没啥意思呀
+  - dimension: hook
+    severity: negative
+    content: 初始事件太弱，缺少惊艳感和危机压迫
+    raw_quote: 我觉得这种事件太无聊了...把老大召唤了...没啥意思呀

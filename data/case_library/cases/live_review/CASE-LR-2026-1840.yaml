@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1840
+title: 失业重生成网 (unknown / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分也有吧 | 题材能写，但职场切入仇恨不足，存款金额太高无爽点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材能写，但职场切入仇恨不足，存款金额太高无爽点 | 获得系统毫不激动，情绪没跟上;铺垫不够，人物线没立
+  observable:
+  - 'hook维度: 获得系统毫不激动，情绪没跟上'
+  - 'character维度: 铺垫不够，人物线没立'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1731
+  - 1820
+  score: 40
+  score_raw: 40分也有吧
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 失业重生成网
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  overall_comment: 题材能写，但职场切入仇恨不足，存款金额太高无爽点
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 获得系统毫不激动，情绪没跟上
+    raw_quote: 出来个系统你竟然这么淡定吗...这不可能
+  - dimension: character
+    severity: negative
+    content: 铺垫不够，人物线没立
+    raw_quote: 你要有个故事...要有爱心...要有铺垫铺垫

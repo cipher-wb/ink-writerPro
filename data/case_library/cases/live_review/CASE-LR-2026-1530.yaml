@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1530
+title: 沉默玩卢瓦鲁时 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 游戏
+  - 灵异
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多还是有个28分吧 | 金手指有创意，但开局游戏部分拖沓，建议用冠军人设直接切入诡异事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指有创意，但开局游戏部分拖沓，建议用冠军人设直接切入诡异事件。 | 开头熬夜打游戏部分白写，应删掉直接切入穿越后
+  observable:
+  - 'opening维度: 开头熬夜打游戏部分白写，应删掉直接切入穿越后'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 2301
+  - 2400
+  score: 28
+  score_raw: 差不多还是有个28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 沉默玩卢瓦鲁时
+  genre_guess:
+  - 游戏
+  - 灵异
+  - 诡异
+  overall_comment: 金手指有创意，但开局游戏部分拖沓，建议用冠军人设直接切入诡异事件。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头熬夜打游戏部分白写，应删掉直接切入穿越后
+    raw_quote: 其实第一章删掉 然后进入这样一个场景 … 世界冠军 麻辣香锅什么
+  - dimension: golden_finger
+    severity: positive
+    content: 惩戒金手指有创意
+    raw_quote: 金手指不错 基本上加5分吧

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0270
+title: 全息灵异重力消失 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 科幻
+  - 灵异
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你40分 | 设定为主，人物互动少，像电影剧本不像网文
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定为主，人物互动少，像电影剧本不像网文 | 独角戏太多，人物关系互动不足;科幻设定不适合网文新人，受众太小
+  observable:
+  - 'character维度: 独角戏太多，人物关系互动不足'
+  - 'genre维度: 科幻设定不适合网文新人，受众太小'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 511
+  - 607
+  score: 40
+  score_raw: 给你40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全息灵异重力消失
+  genre_guess:
+  - 科幻
+  - 灵异
+  - 末日
+  overall_comment: 设定为主，人物互动少，像电影剧本不像网文
+  comments:
+  - dimension: character
+    severity: negative
+    content: 独角戏太多，人物关系互动不足
+    raw_quote: 没有互动，那个没有人物关系的互动
+  - dimension: genre
+    severity: negative
+    content: 科幻设定不适合网文新人，受众太小
+    raw_quote: 这些都是太科幻了呀，太科幻了

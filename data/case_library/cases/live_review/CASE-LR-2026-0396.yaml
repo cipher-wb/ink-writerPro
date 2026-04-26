@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-0396
+title: 莫蒙蒙 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 未知
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 退步到了20多分的层次了 | 题材切入点不吸引人，人物苍白，整体表现严重退步。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材切入点不吸引人，人物苍白，整体表现严重退步。 | 切入方式像早期番茄文，缺乏新意。;人物设计苍白，写作停留在表面。
+  observable:
+  - 'opening维度: 切入方式像早期番茄文，缺乏新意。'
+  - 'character维度: 人物设计苍白，写作停留在表面。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 885
+  - 930
+  score: 25
+  score_raw: 退步到了20多分的层次了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 莫蒙蒙
+  genre_guess:
+  - 未知
+  overall_comment: 题材切入点不吸引人，人物苍白，整体表现严重退步。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入方式像早期番茄文，缺乏新意。
+    raw_quote: 切入也挺不咋样的，这个番茄了以上了已经。
+  - dimension: character
+    severity: negative
+    content: 人物设计苍白，写作停留在表面。
+    raw_quote: 写人物写的还是比较白的。

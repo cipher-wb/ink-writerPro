@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2114
+title: 北美驱魔降妖文 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 驱魔
+  - 北美
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分去掉 | 师傅死了没情绪，主线慢，东京味儿太浓，思路太中二老套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 师傅死了没情绪，主线慢，东京味儿太浓，思路太中二老套。 | 师傅死了没感觉，情绪没拉起来;主线太慢，8000多字才这么点东西
+  observable:
+  - 'character维度: 师傅死了没感觉，情绪没拉起来'
+  - 'pacing维度: 主线太慢，8000多字才这么点东西'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 566
+  - 600
+  score: 40
+  score_raw: 40分去掉
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 北美驱魔降妖文
+  genre_guess:
+  - 灵异
+  - 都市
+  - 驱魔
+  - 北美
+  overall_comment: 师傅死了没情绪，主线慢，东京味儿太浓，思路太中二老套。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 师傅死了没感觉，情绪没拉起来
+    raw_quote: 感觉你也没什么伤心的对吧，感觉你也无所谓
+  - dimension: pacing
+    severity: negative
+    content: 主线太慢，8000多字才这么点东西
+    raw_quote: 不够不够，兄弟不够不够

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2029
+title: 星星投稿（西方奇幻家族） (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 西方奇幻
+  - 家族
+  - 领主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不过四十了 | 太传统的西方奇幻，像冰与火之歌，节奏还行但写法老旧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太传统的西方奇幻，像冰与火之歌，节奏还行但写法老旧。 | 写法过于传统老旧;开头家族危机太大，难以建立代入感
+  observable:
+  - 'genre维度: 写法过于传统老旧'
+  - 'opening维度: 开头家族危机太大，难以建立代入感'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 361
+  - 480
+  score: 40
+  score_raw: 不过四十了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 星星投稿（西方奇幻家族）
+  genre_guess:
+  - 西方奇幻
+  - 家族
+  - 领主
+  overall_comment: 太传统的西方奇幻，像冰与火之歌，节奏还行但写法老旧。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写法过于传统老旧
+    raw_quote: 太老了，就是十年前的写法
+  - dimension: opening
+    severity: negative
+    content: 开头家族危机太大，难以建立代入感
+    raw_quote: 开头好事件 不要家族的这个危机 可以作为一个中期目标 不要作为一个前期的卖点

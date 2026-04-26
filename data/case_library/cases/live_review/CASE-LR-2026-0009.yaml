@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0009
+title: 日清校园日常 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11YrABQEyZ
+scope:
+  genre:
+  - 日清
+  - 校园
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给不到50个同学我觉得最多 40个我不知道 | 可以写日清，题材本身有市场，但开篇严重拖戏、女生出场太晚，缺乏亮点事件，水分太重，需要加速并强化主角与女主的互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YrABQEyZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 可以写日清，题材本身有市场，但开篇严重拖戏、女生出场太晚，缺乏亮点事件，水分太重，需要加速并强化主角与女主的互动。 | 铺垫过多，关键女主出场太慢，读者没耐心等;开头一千字没有任何卖点，桥段平淡如水
+  observable:
+  - 'pacing维度: 铺垫过多，关键女主出场太慢，读者没耐心等'
+  - 'opening维度: 开头一千字没有任何卖点，桥段平淡如水'
+live_review_meta:
+  source_bvid: BV11YrABQEyZ
+  source_line_range:
+  - 1068
+  - 1221
+  score: 40
+  score_raw: 给不到50个同学我觉得最多 40个我不知道
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 日清校园日常
+  genre_guess:
+  - 日清
+  - 校园
+  - 恋爱
+  overall_comment: 可以写日清，题材本身有市场，但开篇严重拖戏、女生出场太晚，缺乏亮点事件，水分太重，需要加速并强化主角与女主的互动。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 铺垫过多，关键女主出场太慢，读者没耐心等
+    raw_quote: 这个没意思 没意思在哪里呢就是你这个女的 女人出来的太慢了
+  - dimension: opening
+    severity: negative
+    content: 开头一千字没有任何卖点，桥段平淡如水
+    raw_quote: 一点一点都没有 一千个字没有一句是卖点

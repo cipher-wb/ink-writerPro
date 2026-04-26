@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0770
+title: 沈进穿越鬼怪横行 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 穿越
+  - 鬼怪
+  - 古代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 思路比例还好还好 30左右 | 开头套路化，剧情有AI感，金手指设定夸张，整体无趣，签约态度模糊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头套路化，剧情有AI感，金手指设定夸张，整体无趣，签约态度模糊。 | 开头描写过细像AI文风，读者会觉得是AI写的;老头、寡妇等情节老套无聊，缺乏吸引点;大品天仙诀金手指太夸张
+  observable:
+  - 'opening维度: 开头描写过细像AI文风，读者会觉得是AI写的'
+  - 'hook维度: 老头、寡妇等情节老套无聊，缺乏吸引点'
+  - 'golden_finger维度: 大品天仙诀金手指太夸张'
+  - 'simplicity维度: 内容太拖沓，设定没必要'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 9
+  - 150
+  score: null
+  score_raw: 思路比例还好还好 30左右
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 沈进穿越鬼怪横行
+  genre_guess:
+  - 穿越
+  - 鬼怪
+  - 古代
+  overall_comment: 开头套路化，剧情有AI感，金手指设定夸张，整体无趣，签约态度模糊。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头描写过细像AI文风，读者会觉得是AI写的
+    raw_quote: 你这一段读者会说你用AI的 所以说你没用 你就不要写这么详细
+  - dimension: hook
+    severity: negative
+    content: 老头、寡妇等情节老套无聊，缺乏吸引点
+    raw_quote: 大哥这前面的人设崩 这个记忆也崩 没啥意思 事件看点也弱
+  - dimension: golden_finger
+    severity: negative
+    content: 大品天仙诀金手指太夸张
+    raw_quote: 大哥这开头一个孤魂野鬼 一上来就大品天仙诀吗
+  - dimension: simplicity
+    severity: negative
+    content: 内容太拖沓，设定没必要
+    raw_quote: 写的太拖沓了 老头没必要呀 你直接进主线呀

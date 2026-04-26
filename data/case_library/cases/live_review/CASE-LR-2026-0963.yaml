@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0963
+title: 全人类被AI淘汰(采矿修仙) (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 游戏
+  - 修仙
+  - 网游
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分嘛 | 网游外壳下传统仙侠被欺压剧情，无聊无看点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 网游外壳下传统仙侠被欺压剧情，无聊无看点 | 监工打骂开局老套，读者直接跑
+  observable:
+  - 'opening维度: 监工打骂开局老套，读者直接跑'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 3800
+  - 3880
+  score: 33
+  score_raw: 33分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全人类被AI淘汰(采矿修仙)
+  genre_guess:
+  - 游戏
+  - 修仙
+  - 网游
+  overall_comment: 网游外壳下传统仙侠被欺压剧情，无聊无看点
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 监工打骂开局老套，读者直接跑
+    raw_quote: 监工骂你其实就是仙侠网游 你的主线内容监工 骂你没意思

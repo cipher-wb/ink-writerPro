@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1446
+title: 诸神之墓副本 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 副本
+  - 轻小说
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 副本与都市剧情割裂，主角窝囊没智商，题材偏门
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 副本与都市剧情割裂，主角窝囊没智商，题材偏门 | 副本流与前面都市剧情毫无关联;主角窝囊只会哭，无法代入
+  observable:
+  - 'genre维度: 副本流与前面都市剧情毫无关联'
+  - 'character维度: 主角窝囊只会哭，无法代入'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1311
+  - 1410
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 诸神之墓副本
+  genre_guess:
+  - 副本
+  - 轻小说
+  - 奇幻
+  overall_comment: 副本与都市剧情割裂，主角窝囊没智商，题材偏门
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 副本流与前面都市剧情毫无关联
+    raw_quote: 这前因跟后果无关系呀
+  - dimension: character
+    severity: negative
+    content: 主角窝囊只会哭，无法代入
+    raw_quote: 这种只能显得大哥窝囊 没智商

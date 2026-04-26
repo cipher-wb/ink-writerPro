@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0783
+title: 狗在妖魔修仙界 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 仙侠
+  - 妖魔
+  - 苟道
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分吧 其实我们分倒也行 | 节奏还行，文笔可，但代入感过多太焦虑，信息量少，题材过时，40分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏还行，文笔可，但代入感过多太焦虑，信息量少，题材过时，40分。 | 代入感太疯，全是独角戏思考;六耳猕猴题材过时;信息量太少，主线剧情不行
+  observable:
+  - 'character维度: 代入感太疯，全是独角戏思考'
+  - 'genre维度: 六耳猕猴题材过时'
+  - 'simplicity维度: 信息量太少，主线剧情不行'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 801
+  - 850
+  score: 40
+  score_raw: 40分吧 其实我们分倒也行
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 狗在妖魔修仙界
+  genre_guess:
+  - 仙侠
+  - 妖魔
+  - 苟道
+  overall_comment: 节奏还行，文笔可，但代入感过多太焦虑，信息量少，题材过时，40分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 代入感太疯，全是独角戏思考
+    raw_quote: 这个代入感太强行了 就觉全是想法 全是独角戏 大哥已经开始演哑剧了
+  - dimension: genre
+    severity: negative
+    content: 六耳猕猴题材过时
+    raw_quote: 六耳猕猴这个写烂了 过时了好吧
+  - dimension: simplicity
+    severity: negative
+    content: 信息量太少，主线剧情不行
+    raw_quote: 信息量太少了 主线剧情不错了 兄弟是吧 确确实代入感 慢慢收一收吧

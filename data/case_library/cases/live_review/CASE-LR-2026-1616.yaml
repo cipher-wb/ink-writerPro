@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1616
+title: 末日死灵重生 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 末日
+  - 死灵
+  - 重生
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能45分 | 死灵末世设定无意思，女主塑造乏力，金手指无聊，新人末日文死路一条。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 死灵末世设定无意思，女主塑造乏力，金手指无聊，新人末日文死路一条。 | 末日文新人写就是死路一条，竞争激烈无亮点;女主塑造流于表面，干巴巴无记忆点
+  observable:
+  - 'genre维度: 末日文新人写就是死路一条，竞争激烈无亮点'
+  - 'character维度: 女主塑造流于表面，干巴巴无记忆点'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 860
+  - 929
+  score: 45
+  score_raw: 只能45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日死灵重生
+  genre_guess:
+  - 末日
+  - 死灵
+  - 重生
+  - 异能
+  overall_comment: 死灵末世设定无意思，女主塑造乏力，金手指无聊，新人末日文死路一条。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 末日文新人写就是死路一条，竞争激烈无亮点
+    raw_quote: 你这样写陌生文就死路一条
+  - dimension: character
+    severity: negative
+    content: 女主塑造流于表面，干巴巴无记忆点
+    raw_quote: 这个女的你写得也一般 … 非常失败的描写 … 人设没立住

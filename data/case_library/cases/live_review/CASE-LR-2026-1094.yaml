@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1094
+title: 高武开局·通轨迹 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 高武
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分嘛第一次嘛 | 开局凌乱，代入感差，设定繁杂，缺少真实感
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局凌乱，代入感差，设定繁杂，缺少真实感 | 开篇人物过多，视角混乱，无法聚焦;设定复杂难懂，建议参考吞噬星空简单化
+  observable:
+  - 'opening维度: 开篇人物过多，视角混乱，无法聚焦'
+  - 'simplicity维度: 设定复杂难懂，建议参考吞噬星空简单化'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 740
+  - 810
+  score: 16
+  score_raw: 16分嘛第一次嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高武开局·通轨迹
+  genre_guess:
+  - 高武
+  - 都市
+  overall_comment: 开局凌乱，代入感差，设定繁杂，缺少真实感
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇人物过多，视角混乱，无法聚焦
+    raw_quote: 不要在确定谁是主角之前不要写 打斗又不是穷相
+  - dimension: simplicity
+    severity: negative
+    content: 设定复杂难懂，建议参考吞噬星空简单化
+    raw_quote: 你这玩意我怎么懂呀 阴阳龙转 阴阳之列 幽冥剑路

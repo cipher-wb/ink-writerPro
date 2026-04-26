@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1392
+title: 活在舞蹈以力振到形成他指甲（欧望穿越极限突破） (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 高武
+  - 系统
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分吧 | 八股写法但表达清楚，现实剧情太俗套，家贫姐嫁毒鬼等狗血没看点，切入武馆太慢。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股写法但表达清楚，现实剧情太俗套，家贫姐嫁毒鬼等狗血没看点，切入武馆太慢。 | 切入剧情无聊，家贫姐嫁这类家常太俗套;展开太快，立刻进武馆，换场景不如直接在武馆
+  observable:
+  - 'opening维度: 切入剧情无聊，家贫姐嫁这类家常太俗套'
+  - 'pacing维度: 展开太快，立刻进武馆，换场景不如直接在武馆'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 1131
+  - 1190
+  score: 25
+  score_raw: 差不多就25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 活在舞蹈以力振到形成他指甲（欧望穿越极限突破）
+  genre_guess:
+  - 高武
+  - 系统
+  - 爽文
+  overall_comment: 八股写法但表达清楚，现实剧情太俗套，家贫姐嫁毒鬼等狗血没看点，切入武馆太慢。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入剧情无聊，家贫姐嫁这类家常太俗套
+    raw_quote: 切入的剧情无聊 加长加短的 什么姐夫好赌 这种东西没意思
+  - dimension: pacing
+    severity: negative
+    content: 展开太快，立刻进武馆，换场景不如直接在武馆
+    raw_quote: 展开太快了 立刻就武馆了...你铺垫香葱就换场景了
+  - dimension: character
+    severity: neutral
+    content: 有配角和讲故事能量，但人设一般
+    raw_quote: 讲故事能量可以 讲的还是挺好的 有配角什么的

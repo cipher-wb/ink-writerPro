@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1753
+title: 绝阵少年 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得只能给大概 给个18分最多了 | 开局无效描写太多，文风故弄玄虚，读者没耐心看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局无效描写太多，文风故弄玄虚，读者没耐心看。 | 前两章无效情节过多，穿越过程拖沓。;辞藻堆砌，内容空洞，像AI写作。
+  observable:
+  - 'opening维度: 前两章无效情节过多，穿越过程拖沓。'
+  - 'misc维度: 辞藻堆砌，内容空洞，像AI写作。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1960
+  - 2050
+  score: 18
+  score_raw: 我觉得只能给大概 给个18分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 绝阵少年
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 开局无效描写太多，文风故弄玄虚，读者没耐心看。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前两章无效情节过多，穿越过程拖沓。
+    raw_quote: 两张了 都八千字了 还在这穿越还没穿呢
+  - dimension: misc
+    severity: negative
+    content: 辞藻堆砌，内容空洞，像AI写作。
+    raw_quote: 你写这东西谁看 大家忙了一天了

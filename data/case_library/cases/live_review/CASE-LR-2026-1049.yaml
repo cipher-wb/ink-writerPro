@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1049
+title: 魔法少女同人文 (fail / 37分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 同人
+  - 魔法少女
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十七八分吧 | 剧情太平淡，没有情绪和危机感，主角人设像普信男很毒，数据已崩
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情太平淡，没有情绪和危机感，主角人设像普信男很毒，数据已崩 | 全篇没有情绪高潮和紧迫感，平淡如水;主角行为像威胁人的普信男，毫无魅力
+  observable:
+  - 'highpoint维度: 全篇没有情绪高潮和紧迫感，平淡如水'
+  - 'character维度: 主角行为像威胁人的普信男，毫无魅力'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 2301
+  - 2450
+  score: 37
+  score_raw: 三十七八分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔法少女同人文
+  genre_guess:
+  - 同人
+  - 魔法少女
+  - 日常
+  overall_comment: 剧情太平淡，没有情绪和危机感，主角人设像普信男很毒，数据已崩
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 全篇没有情绪高潮和紧迫感，平淡如水
+    raw_quote: 没情绪 这个人太平淡了
+  - dimension: character
+    severity: negative
+    content: 主角行为像威胁人的普信男，毫无魅力
+    raw_quote: 主角是很讨厌 有点就故意恶心人 就这种主角没有人物弧光

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0857
+title: 非人图鉴 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 西幻
+  - 冒险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就二十五六分的样子吧 | 传统西幻写法太慢，人物互动无聊，建议推翻找新题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统西幻写法太慢，人物互动无聊，建议推翻找新题材。 | 开头收拾东西东市买骏马，没人看;人物写法旁白式描述，无代入
+  observable:
+  - 'opening维度: 开头收拾东西东市买骏马，没人看'
+  - 'character维度: 人物写法旁白式描述，无代入'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1331
+  - 1380
+  score: 25
+  score_raw: 也就二十五六分的样子吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 非人图鉴
+  genre_guess:
+  - 西幻
+  - 冒险
+  overall_comment: 传统西幻写法太慢，人物互动无聊，建议推翻找新题材。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头收拾东西东市买骏马，没人看
+    raw_quote: 东市买骏马，西市买长鞭，这没人看呀
+  - dimension: character
+    severity: negative
+    content: 人物写法旁白式描述，无代入
+    raw_quote: 这说怎么怎么怎么是第三人称写法，这是旁白描述

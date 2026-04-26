@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1376
+title: 战锤40K同人 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 同人
+  - 科幻
+  - 战锤
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分都到不了 | 完全不懂网文三要素（我是谁我在哪要干嘛），场景空洞。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不懂网文三要素（我是谁我在哪要干嘛），场景空洞。 | 开局大场景设定堆砌，读者根本看不懂，全跑;未交代主角是谁在干嘛，极其缺乏代入伍的可能
+  observable:
+  - 'simplicity维度: 开局大场景设定堆砌，读者根本看不懂，全跑'
+  - 'misc维度: 未交代主角是谁在干嘛，极其缺乏代入伍的可能'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 2081
+  - 2148
+  score: 20
+  score_raw: 20分都到不了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 战锤40K同人
+  genre_guess:
+  - 同人
+  - 科幻
+  - 战锤
+  overall_comment: 完全不懂网文三要素（我是谁我在哪要干嘛），场景空洞。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 开局大场景设定堆砌，读者根本看不懂，全跑
+    raw_quote: 这一上来不得跑完全跑了没人看
+  - dimension: misc
+    severity: negative
+    content: 未交代主角是谁在干嘛，极其缺乏代入伍的可能
+    raw_quote: 谁是主角怎么代伍你先告诉我...我不知道主角是谁

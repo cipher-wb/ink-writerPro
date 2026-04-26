@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2041
+title: 我逼李白成剑仙 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 历史架空
+  - 兄弟情
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 九分呀 | 搞基过度，虽然有天赋，但男频直播间极度劝退。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 搞基过度，虽然有天赋，但男频直播间极度劝退。 | 搞基暧昧情节，在男频直播间是毒点;兄弟情写得像恋爱，误导读者
+  observable:
+  - 'taboo维度: 搞基暧昧情节，在男频直播间是毒点'
+  - 'character维度: 兄弟情写得像恋爱，误导读者'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 1801
+  - 1920
+  score: 9
+  score_raw: 九分呀
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我逼李白成剑仙
+  genre_guess:
+  - 历史架空
+  - 兄弟情
+  - 搞笑
+  overall_comment: 搞基过度，虽然有天赋，但男频直播间极度劝退。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 搞基暧昧情节，在男频直播间是毒点
+    raw_quote: 这要是蓝屏直播间 这就是害圈的
+  - dimension: character
+    severity: negative
+    content: 兄弟情写得像恋爱，误导读者
+    raw_quote: 这太搞极了 写的这么暧昧

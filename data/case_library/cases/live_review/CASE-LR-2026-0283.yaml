@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0283
+title: 边缘星球科幻 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 科幻
+  - 边缘星球
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确分数 | 设定看不懂，受众太小，科幻很难写
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定看不懂，受众太小，科幻很难写 | 原创世界观太难让读者接受
+  observable:
+  - 'genre维度: 原创世界观太难让读者接受'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1596
+  - 1675
+  score: null
+  score_raw: 未明确分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 边缘星球科幻
+  genre_guess:
+  - 科幻
+  - 边缘星球
+  - 末日
+  overall_comment: 设定看不懂，受众太小，科幻很难写
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 原创世界观太难让读者接受
+    raw_quote: 全是设定，你不解释就这样开始事件没人看呀

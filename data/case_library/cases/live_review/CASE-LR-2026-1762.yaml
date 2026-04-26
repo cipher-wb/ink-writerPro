@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1762
+title: 修仙剑肉割 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 修仙
+  - 游戏异界
+  - 肉割
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你20分 | 金手指过于复杂，杀猪剧情无聊无爽点，写成乐子却乐不起来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指过于复杂，杀猪剧情无聊无爽点，写成乐子却乐不起来。 | 肉割系统太复杂，读者看不懂也不会看设定;杀猪情节毫无爽点，事件单一;缺少人物互动，只有动物打斗
+  observable:
+  - 'golden_finger维度: 肉割系统太复杂，读者看不懂也不会看设定'
+  - 'highpoint维度: 杀猪情节毫无爽点，事件单一'
+  - 'character维度: 缺少人物互动，只有动物打斗'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 610
+  - 680
+  score: 20
+  score_raw: 给你20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙剑肉割
+  genre_guess:
+  - 修仙
+  - 游戏异界
+  - 肉割
+  overall_comment: 金手指过于复杂，杀猪剧情无聊无爽点，写成乐子却乐不起来。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 肉割系统太复杂，读者看不懂也不会看设定
+    raw_quote: 系统真的太复杂了，肉割系统真的贼复杂，你把这个系统给我简化一下吧
+  - dimension: highpoint
+    severity: negative
+    content: 杀猪情节毫无爽点，事件单一
+    raw_quote: 到底爽点在哪里……就杀猪呀，就杀，然后猪被你杀了
+  - dimension: character
+    severity: negative
+    content: 缺少人物互动，只有动物打斗
+    raw_quote: 就没人物呀……写疯掉了猪狼牛

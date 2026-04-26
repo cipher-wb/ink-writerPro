@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1725
+title: 人中黄（末日后囤粪） (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 末日
+  - 乐子
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 呃 就给你五十九分吧 | 创意重口味但流畅度极高，节奏和反转设计到位。但由于题材太重口，起点无法签，只适合发蓝精灵。万事俱备，只差环境。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 创意重口味但流畅度极高，节奏和反转设计到位。但由于题材太重口，起点无法签，只适合发蓝精灵。万事俱备，只差环境。 | 题材过重口，起点无法签约，读者代入不了
+  observable:
+  - 'taboo维度: 题材过重口，起点无法签约，读者代入不了'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1529
+  - 1575
+  score: 59
+  score_raw: 呃 就给你五十九分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 人中黄（末日后囤粪）
+  genre_guess:
+  - 末日
+  - 乐子
+  - 恶搞
+  overall_comment: 创意重口味但流畅度极高，节奏和反转设计到位。但由于题材太重口，起点无法签，只适合发蓝精灵。万事俱备，只差环境。
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 行文流畅，节奏极佳，反转精彩，文笔功力强
+    raw_quote: 流畅是真的流畅对吧节奏第二张也刚好装逼来的下达好处很强啊兄弟
+  - dimension: taboo
+    severity: negative
+    content: 题材过重口，起点无法签约，读者代入不了
+    raw_quote: 就是题材问题吧，其实水平很高的，好吧可惜了

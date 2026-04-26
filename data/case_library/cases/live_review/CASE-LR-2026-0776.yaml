@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0776
+title: 我叫陈晓 (fail / 4分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 都市
+  - 斩杀线
+  - 克苏鲁
+  - 精神病
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 拿四分吧 | 稿子难看到极，代入感差，没有卖点，像大乱炖，自嗨。4分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 稿子难看到极，代入感差，没有卖点，像大乱炖，自嗨。4分。 | 整体非常难看;找不到卖点;代入感太差
+  observable:
+  - 'misc维度: 整体非常难看'
+  - 'hook维度: 找不到卖点'
+  - 'character维度: 代入感太差'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 451
+  - 500
+  score: 4
+  score_raw: 拿四分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我叫陈晓
+  genre_guess:
+  - 都市
+  - 斩杀线
+  - 克苏鲁
+  - 精神病
+  overall_comment: 稿子难看到极，代入感差，没有卖点，像大乱炖，自嗨。4分。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 整体非常难看
+    raw_quote: 这稿子就是很难看 很无聊 代入感也很差 是就是大乱动
+  - dimension: hook
+    severity: negative
+    content: 找不到卖点
+    raw_quote: 我第一张一直在找卖点 也没感觉 所以说等于说自嗨了一个东西
+  - dimension: character
+    severity: negative
+    content: 代入感太差
+    raw_quote: 代入感太差了 慢点我现在就只能找到一个压力啊 压力大

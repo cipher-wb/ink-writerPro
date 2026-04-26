@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0098
+title: 小妖西行记/穷巷文 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 西游衍生
+  - 仙侠
+  - 妖怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 | 写法非网文像动画剧本，无系统无穿越无代入感，文笔有仙侠味但中二装逼。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法非网文像动画剧本，无系统无穿越无代入感，文笔有仙侠味但中二装逼。 | 无系统无穿越，根本就不是网文写法;开头读着会跑，场景像CG动画不够接地气;主角是猪八戒/猪小野，既非现代人也无金手指，缺乏代入感
+  observable:
+  - 'genre维度: 无系统无穿越，根本就不是网文写法'
+  - 'opening维度: 开头读着会跑，场景像CG动画不够接地气'
+  - 'character维度: 主角是猪八戒/猪小野，既非现代人也无金手指，缺乏代入感'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 431
+  - 530
+  score: 20
+  score_raw: 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 小妖西行记/穷巷文
+  genre_guess:
+  - 西游衍生
+  - 仙侠
+  - 妖怪
+  overall_comment: 写法非网文像动画剧本，无系统无穿越无代入感，文笔有仙侠味但中二装逼。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 无系统无穿越，根本就不是网文写法
+    raw_quote: 你这个东西，你作为一个浪漫杀小怪那种电影剧本就算了，作为网文，他绝对不是网文
+  - dimension: opening
+    severity: negative
+    content: 开头读着会跑，场景像CG动画不够接地气
+    raw_quote: 所以我看到大哥的开头，我就觉得是电影画面了，这场景嘛都是就是那种什么游戏的，那种cg动画
+  - dimension: character
+    severity: negative
+    content: 主角是猪八戒/猪小野，既非现代人也无金手指，缺乏代入感
+    raw_quote: 他不是现代人，他也没有金手指，反正就是猪八戒历险记

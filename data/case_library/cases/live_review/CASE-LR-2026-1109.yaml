@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1109
+title: 回到家的高哥发现无脸人 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好吧就10六分吧 | 事件稚嫩，主角智商下线，逻辑混乱，缺乏基本网文常识
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件稚嫩，主角智商下线，逻辑混乱，缺乏基本网文常识 | 主角反应像低龄儿童，不符合正常人逻辑
+  observable:
+  - 'character维度: 主角反应像低龄儿童，不符合正常人逻辑'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1935
+  - 1985
+  score: 16
+  score_raw: 好吧就10六分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 回到家的高哥发现无脸人
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 事件稚嫩，主角智商下线，逻辑混乱，缺乏基本网文常识
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角反应像低龄儿童，不符合正常人逻辑
+    raw_quote: 大哥智商感觉有点低啊 你智商有点太低了吧

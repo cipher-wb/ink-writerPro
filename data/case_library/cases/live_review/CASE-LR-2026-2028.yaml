@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2028
+title: 重生者被玩家整破房了 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 游戏
+  - 重生
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打翻的话有个三四十的样子 35分吧 | 设定复杂抢戏，需要简化，剧情外在化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定复杂抢戏，需要简化，剧情外在化。 | 设定太复杂，抢戏，不够直接
+  observable:
+  - 'simplicity维度: 设定太复杂，抢戏，不够直接'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 241
+  - 360
+  score: 35
+  score_raw: 打翻的话有个三四十的样子 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生者被玩家整破房了
+  genre_guess:
+  - 游戏
+  - 重生
+  - 都市
+  overall_comment: 设定复杂抢戏，需要简化，剧情外在化。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定太复杂，抢戏，不够直接
+    raw_quote: 设定太垃圾了 就导致抢戏了
+  - dimension: character
+    severity: neutral
+    content: 表达没问题，但剧情思路不对
+    raw_quote: 会写数题材也可以 但是思路还是不对

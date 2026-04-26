@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0305
+title: 李世民穿越 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 李世民穿越题材立不住，人设不符合史实，切入拖沓，无前景。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 李世民穿越题材立不住，人设不符合史实，切入拖沓，无前景。 | 开场大量描写李世民驾崩，应直接穿越;李世民擅军事非政治，人设错位;历史穿越方向错误，难以吸引读者
+  observable:
+  - 'opening维度: 开场大量描写李世民驾崩，应直接穿越'
+  - 'character维度: 李世民擅军事非政治，人设错位'
+  - 'genre维度: 历史穿越方向错误，难以吸引读者'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 991
+  - 1050
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 李世民穿越
+  genre_guess:
+  - 历史
+  - 穿越
+  - 架空
+  overall_comment: 李世民穿越题材立不住，人设不符合史实，切入拖沓，无前景。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开场大量描写李世民驾崩，应直接穿越
+    raw_quote: 能不能直接穿 一句话穿过来
+  - dimension: character
+    severity: negative
+    content: 李世民擅军事非政治，人设错位
+    raw_quote: 李世民不一定懂这个
+  - dimension: genre
+    severity: negative
+    content: 历史穿越方向错误，难以吸引读者
+    raw_quote: 题材这他立不住的

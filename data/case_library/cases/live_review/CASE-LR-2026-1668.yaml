@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1668
+title: 水浒之赵构重生王龙 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 历史
+  - 水浒
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十多分有 | 文笔有基础但题材上限极低，水浒难出成绩，节奏急人物多，建议转正常历史文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有基础但题材上限极低，水浒难出成绩，节奏急人物多，建议转正常历史文。 | 水浒题材热度低、上限低，不适合签约;故事推进过急，人物出现太密集
+  observable:
+  - 'genre维度: 水浒题材热度低、上限低，不适合签约'
+  - 'pacing维度: 故事推进过急，人物出现太密集'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 51
+  - 110
+  score: 45
+  score_raw: 四十多分有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 水浒之赵构重生王龙
+  genre_guess:
+  - 历史
+  - 水浒
+  - 穿越
+  overall_comment: 文笔有基础但题材上限极低，水浒难出成绩，节奏急人物多，建议转正常历史文。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 水浒题材热度低、上限低，不适合签约
+    raw_quote: 水湖现在一方面是上限太低了 很少有人写 上限特别低水湖
+  - dimension: pacing
+    severity: negative
+    content: 故事推进过急，人物出现太密集
+    raw_quote: 太着急 蹭的人物太多

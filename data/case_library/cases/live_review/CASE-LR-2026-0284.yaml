@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0284
+title: 穿越成首富尸体 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 西幻
+  - 超凡
+  - 反杀
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你换一下，不能一直给你35，给你36 | 原创西方世界观+超凡设定，受众极小
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 原创西方世界观+超凡设定，受众极小 | 全原创西幻背景让读者立不住;剧情不足的情况下抛设定
+  observable:
+  - 'genre维度: 全原创西幻背景让读者立不住'
+  - 'simplicity维度: 剧情不足的情况下抛设定'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1676
+  - 1755
+  score: 36
+  score_raw: 给你换一下，不能一直给你35，给你36
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越成首富尸体
+  genre_guess:
+  - 西幻
+  - 超凡
+  - 反杀
+  overall_comment: 原创西方世界观+超凡设定，受众极小
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 全原创西幻背景让读者立不住
+    raw_quote: 因为你原创了世界观这种全原创的...受众很小
+  - dimension: simplicity
+    severity: negative
+    content: 剧情不足的情况下抛设定
+    raw_quote: 在剧情不足的情况下抛设定，这就是最大的问题

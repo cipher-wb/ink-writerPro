@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0586
+title: 四合院之老祖宗是反派 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 同人
+  - 年代文
+  - 四合院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多35分 总比还是可以的 | 短剧向脑洞可写，但展开拖沓，人物细节不足，应更快切入秦淮茹等原著角色蹭情怀。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 短剧向脑洞可写，但展开拖沓，人物细节不足，应更快切入秦淮茹等原著角色蹭情怀。 | 开头节奏偏慢，拖沓不紧凑;老太太描写太生硬，缺乏真实神态细节
+  observable:
+  - 'pacing维度: 开头节奏偏慢，拖沓不紧凑'
+  - 'character维度: 老太太描写太生硬，缺乏真实神态细节'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 634
+  - 701
+  score: 35
+  score_raw: 差不多35分 总比还是可以的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 四合院之老祖宗是反派
+  genre_guess:
+  - 同人
+  - 年代文
+  - 四合院
+  overall_comment: 短剧向脑洞可写，但展开拖沓，人物细节不足，应更快切入秦淮茹等原著角色蹭情怀。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开头节奏偏慢，拖沓不紧凑
+    raw_quote: 展开拖沓
+  - dimension: character
+    severity: negative
+    content: 老太太描写太生硬，缺乏真实神态细节
+    raw_quote: 老太太写的有点假 不像是老太太

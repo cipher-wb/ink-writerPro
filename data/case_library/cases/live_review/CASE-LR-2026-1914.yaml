@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1914
+title: 电梯谜团/灵异规则 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 悬疑
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没人看了 | 故事设定虽有趣但开头直接翻设定，缺乏人物和都市事件的代入感，建议从熟悉的都市场景切入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事设定虽有趣但开头直接翻设定，缺乏人物和都市事件的代入感，建议从熟悉的都市场景切入。 | 一上来就翻各种设定，读者不关心电梯问题，只关心人物和事件。;写法复杂化了，应该像同类型书一样从简单的都市剧情切入。
+  observable:
+  - 'opening维度: 一上来就翻各种设定，读者不关心电梯问题，只关心人物和事件。'
+  - 'simplicity维度: 写法复杂化了，应该像同类型书一样从简单的都市剧情切入。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 257
+  - 295
+  score: null
+  score_raw: 没人看了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 电梯谜团/灵异规则
+  genre_guess:
+  - 悬疑
+  - 科幻
+  overall_comment: 故事设定虽有趣但开头直接翻设定，缺乏人物和都市事件的代入感，建议从熟悉的都市场景切入。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 一上来就翻各种设定，读者不关心电梯问题，只关心人物和事件。
+    raw_quote: 别翻设定了，那个大哥再翻别翻了，再翻读就跑完了
+  - dimension: simplicity
+    severity: negative
+    content: 写法复杂化了，应该像同类型书一样从简单的都市剧情切入。
+    raw_quote: 你看人家写的多多简单，就是都市剧情...正常的人物对话正常的这些互动摩擦

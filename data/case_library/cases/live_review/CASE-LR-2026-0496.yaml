@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0496
+title: 治愈游戏被玩成Gala game (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 轻小说
+  - 游戏
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十分吧 | 文笔可以但剧情无聊，日常没冲突没情绪，像干巴巴的GAL剧本。需要设计有意思的小剧场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔可以但剧情无聊，日常没冲突没情绪，像干巴巴的GAL剧本。需要设计有意思的小剧场。 | 日常拉扯无聊，没情感没情绪;缺乏好的脑洞或反差，题材融合不够
+  observable:
+  - 'character维度: 日常拉扯无聊，没情感没情绪'
+  - 'hook维度: 缺乏好的脑洞或反差，题材融合不够'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1857
+  - 1910
+  score: 30
+  score_raw: 三十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 治愈游戏被玩成Gala game
+  genre_guess:
+  - 轻小说
+  - 游戏
+  - 日常
+  overall_comment: 文笔可以但剧情无聊，日常没冲突没情绪，像干巴巴的GAL剧本。需要设计有意思的小剧场。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 日常拉扯无聊，没情感没情绪
+    raw_quote: 这日常没感觉啊...好无聊啊 好无聊啊你这都 你这去弄游戏不是包扑街吗 没冲突没内容没元素
+  - dimension: hook
+    severity: negative
+    content: 缺乏好的脑洞或反差，题材融合不够
+    raw_quote: 本质上没什么好的反差 题材融合 人设也写得不咋样 真不咋地 这这找不到优点

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1609
+title: 系统惩罚种田文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 种田
+  - 系统
+  - 古风
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多分吧 … 三十五这个是 | 系统惩罚开局毒点大，写法轻薄，读者难以沉浸，基本无签可能。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统惩罚开局毒点大，写法轻薄，读者难以沉浸，基本无签可能。 | 系统惩罚开局太毒，起点读者反感罚罚罚桥段;写法太轻薄流畅，但故事本身不吸引人，像看乐子
+  observable:
+  - 'golden_finger维度: 系统惩罚开局太毒，起点读者反感罚罚罚桥段'
+  - 'simplicity维度: 写法太轻薄流畅，但故事本身不吸引人，像看乐子'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 340
+  - 409
+  score: 35
+  score_raw: 三十多分吧 … 三十五这个是
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 系统惩罚种田文
+  genre_guess:
+  - 种田
+  - 系统
+  - 古风
+  - 穿越
+  overall_comment: 系统惩罚开局毒点大，写法轻薄，读者难以沉浸，基本无签可能。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统惩罚开局太毒，起点读者反感罚罚罚桥段
+    raw_quote: 系统这个很毒 … 罚罚罚 … 還是大毒點
+  - dimension: simplicity
+    severity: negative
+    content: 写法太轻薄流畅，但故事本身不吸引人，像看乐子
+    raw_quote: 寫法太輕薄了 … 讀者不能沉浸 … 他只会觉得看个乐子

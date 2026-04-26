@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-0544
+title: 月圆离 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 都市
+  - 日常
+  - 治愈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大哥来直播间了 … 40分吧给他 … 大概也到不了40 给他38吧 | 太日常太正能量，雪白都没有，没金手指没事件，纯安慰没看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太日常太正能量，雪白都没有，没金手指没事件，纯安慰没看点。 | 全程安慰日常，没有戏剧冲突
+  observable:
+  - 'pacing维度: 全程安慰日常，没有戏剧冲突'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 2011
+  - 2100
+  score: 38
+  score_raw: 大哥来直播间了 … 40分吧给他 … 大概也到不了40 给他38吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 月圆离
+  genre_guess:
+  - 都市
+  - 日常
+  - 治愈
+  overall_comment: 太日常太正能量，雪白都没有，没金手指没事件，纯安慰没看点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 全程安慰日常，没有戏剧冲突
+    raw_quote: 这太日常了 这是 读者不爱看呀 … 没金手指 没雪白 没好的事件

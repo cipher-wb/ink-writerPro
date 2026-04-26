@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1183
+title: 游戏王：最后的决斗者 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 游戏王
+  - 卡牌
+  - 决斗
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好歹五十多分 | 开头代入感提升明显，专业性可，但受限于题材小众，需专家进一步判断。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头代入感提升明显，专业性可，但受限于题材小众，需专家进一步判断。 | 游戏王受众极窄，三本万定已是极限
+  observable:
+  - 'genre维度: 游戏王受众极窄，三本万定已是极限'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 2430
+  - 2580
+  score: null
+  score_raw: 好歹五十多分
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 游戏王：最后的决斗者
+  genre_guess:
+  - 游戏王
+  - 卡牌
+  - 决斗
+  - 系统
+  overall_comment: 开头代入感提升明显，专业性可，但受限于题材小众，需专家进一步判断。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 相比之前，解释清晰，普通读者能看懂
+    raw_quote: 没看懂的也能看懂的嘛 像蜜蜂这种智商不高的他也能懂的呀
+  - dimension: genre
+    severity: negative
+    content: 游戏王受众极窄，三本万定已是极限
+    raw_quote: 他说开头有水平 受众太低了
+  - dimension: misc
+    severity: neutral
+    content: 内容需大量插图支撑，文字版效果打折
+    raw_quote: 我感觉写游戏王得疯疯狂插图 他那本书里面全是图

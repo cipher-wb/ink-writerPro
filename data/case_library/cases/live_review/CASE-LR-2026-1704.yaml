@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1704
+title: 贷款金球中超扶贫 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 体育
+  - 足球
+  - 系统
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 出不了成绩 | 书名和题材极好，但写法太正经，应走反差和整活路线，如滕哈赫瞧不起黄皮猴子。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名和题材极好，但写法太正经，应走反差和整活路线，如滕哈赫瞧不起黄皮猴子。 | 开篇太正经，浪费了贷款金球去中超的好题材。
+  observable:
+  - 'opening维度: 开篇太正经，浪费了贷款金球去中超的好题材。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1382
+  - 1443
+  score: null
+  score_raw: 出不了成绩
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 贷款金球中超扶贫
+  genre_guess:
+  - 体育
+  - 足球
+  - 系统
+  - 爽文
+  overall_comment: 书名和题材极好，但写法太正经，应走反差和整活路线，如滕哈赫瞧不起黄皮猴子。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇太正经，浪费了贷款金球去中超的好题材。
+    raw_quote: 你这本正经的写的真没人看，这么写上限很低了
+  - dimension: golden_finger
+    severity: positive
+    content: 贷款金球系统创意好，应配合反差和打脸剧情。
+    raw_quote: 你转会去中超也很厉害，这个是好题材

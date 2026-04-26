@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1791
+title: 大明嘉靖气象官 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 历史
+  - 大明
+  - 朝堂
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 文字太作（缺点），故事不接地气，缺乏爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文字太作（缺点），故事不接地气，缺乏爽点。 | 文笔过于文青、专业性描述过多，导致读者群体受限、无聊。;缺乏读者期待的个人爽点（家、官、打脸等），只忧国民难以共鸣。
+  observable:
+  - 'simplicity维度: 文笔过于文青、专业性描述过多，导致读者群体受限、无聊。'
+  - 'highpoint维度: 缺乏读者期待的个人爽点（家、官、打脸等），只忧国民难以共鸣。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 779
+  - 842
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明嘉靖气象官
+  genre_guess:
+  - 历史
+  - 大明
+  - 朝堂
+  overall_comment: 文字太作（缺点），故事不接地气，缺乏爽点。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文笔过于文青、专业性描述过多，导致读者群体受限、无聊。
+    raw_quote: 这是无聊...太啰嗦了...不是优点...是缺点
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏读者期待的个人爽点（家、官、打脸等），只忧国民难以共鸣。
+    raw_quote: 我们只想看主角要是赌赢了...谁关心满朝百姓...这比打脸高级多了这种爽点

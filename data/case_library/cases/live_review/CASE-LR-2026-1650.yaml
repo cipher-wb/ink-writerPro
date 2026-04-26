@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-1650
+title: 女巫奶牛场拉扯 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 西幻
+  - 种田
+  - 拉扯
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 前两章签约没问题，后续主线太弱恐光速垫底。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 前两章签约没问题，后续主线太弱恐光速垫底。 | 主线太弱，拉完扯后无后续升级。
+  observable:
+  - 'pacing维度: 主线太弱，拉完扯后无后续升级。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 1201
+  - 1260
+  score: 55
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 女巫奶牛场拉扯
+  genre_guess:
+  - 西幻
+  - 种田
+  - 拉扯
+  overall_comment: 前两章签约没问题，后续主线太弱恐光速垫底。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 主线太弱，拉完扯后无后续升级。
+    raw_quote: 我觉得主线还是太弱了...就算签了也是光速垫底

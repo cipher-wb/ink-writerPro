@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1004
+title: 沙海迷国藏宝图 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 历史
+  - 悬疑
+  - 盗墓
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 全推翻吧 | 阴谋藏宝图题材没人看，开局打劫无聊，建议全推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 阴谋藏宝图题材没人看，开局打劫无聊，建议全推翻。 | 阴谋藏宝图题材没人看，分类冷门;开局直接打劫冲突，无聊缺乏铺垫
+  observable:
+  - 'genre维度: 阴谋藏宝图题材没人看，分类冷门'
+  - 'opening维度: 开局直接打劫冲突，无聊缺乏铺垫'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 2044
+  - 2166
+  score: null
+  score_raw: 全推翻吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 沙海迷国藏宝图
+  genre_guess:
+  - 历史
+  - 悬疑
+  - 盗墓
+  overall_comment: 阴谋藏宝图题材没人看，开局打劫无聊，建议全推翻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 阴谋藏宝图题材没人看，分类冷门
+    raw_quote: 没人看你这些什么阴谋啊……如果都喜欢看什么阴谋诡计，那悬疑就是第一分类也不用说了
+  - dimension: opening
+    severity: negative
+    content: 开局直接打劫冲突，无聊缺乏铺垫
+    raw_quote: 怎么这么无聊呢……就写了一句你要去干嘛，然后就开始直接就冲突是吧

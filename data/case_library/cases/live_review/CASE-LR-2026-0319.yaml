@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0319
+title: 架空历史末年皇帝 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 历史
+  - 架空
+  - 权谋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔和讲故事能力扎实，但架空历史题材极度冷门无人看，且开头惊悚的梦境是毒点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和讲故事能力扎实，但架空历史题材极度冷门无人看，且开头惊悚的梦境是毒点。 | 架空历史题材毫无市场，起点读者不爱看。;开篇的梦境/预知未来剧情属于毒点，会让读者感到被戏弄。;虚构的女侍卫称呼太出戏，不符合历史严谨性。
+  observable:
+  - 'genre维度: 架空历史题材毫无市场，起点读者不爱看。'
+  - 'opening维度: 开篇的梦境/预知未来剧情属于毒点，会让读者感到被戏弄。'
+  - 'character维度: 虚构的女侍卫称呼太出戏，不符合历史严谨性。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 930
+  - 1072
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 架空历史末年皇帝
+  genre_guess:
+  - 历史
+  - 架空
+  - 权谋
+  overall_comment: 文笔和讲故事能力扎实，但架空历史题材极度冷门无人看，且开头惊悚的梦境是毒点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空历史题材毫无市场，起点读者不爱看。
+    raw_quote: 架空历史真没人看...那么多历史书读者都看不完，凭什么看你这个书
+  - dimension: opening
+    severity: negative
+    content: 开篇的梦境/预知未来剧情属于毒点，会让读者感到被戏弄。
+    raw_quote: 梦境开头是绝对是毒点...叽里咕噜写了半天你告诉我我在做梦
+  - dimension: character
+    severity: negative
+    content: 虚构的女侍卫称呼太出戏，不符合历史严谨性。
+    raw_quote: 除了武则天，没有人要要武女收尾吧

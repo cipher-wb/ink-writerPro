@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0335
+title: 江城穿越真气：魔法与神明的世界 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 蒸汽朋克
+  - 西幻
+  - 女仆
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十五分吧 | 女仆互动亮眼但主线游离，缺乏西方奇幻沉浸感，整体融合度不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 女仆互动亮眼但主线游离，缺乏西方奇幻沉浸感，整体融合度不足。 | 缺乏真正的西幻/蒸汽朋克沉浸感;主线与配角结合生硬，剧情驱动弱
+  observable:
+  - 'genre维度: 缺乏真正的西幻/蒸汽朋克沉浸感'
+  - 'pacing维度: 主线与配角结合生硬，剧情驱动弱'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 786
+  - 908
+  score: 45
+  score_raw: 四十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 江城穿越真气：魔法与神明的世界
+  genre_guess:
+  - 蒸汽朋克
+  - 西幻
+  - 女仆
+  overall_comment: 女仆互动亮眼但主线游离，缺乏西方奇幻沉浸感，整体融合度不足。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 女仆角色互动写得很有味道，是最大亮点
+    raw_quote: 这个女仆的互动写的挺好的
+  - dimension: genre
+    severity: negative
+    content: 缺乏真正的西幻/蒸汽朋克沉浸感
+    raw_quote: 我的问题就是感觉没什么西方味道呀
+  - dimension: pacing
+    severity: negative
+    content: 主线与配角结合生硬，剧情驱动弱
+    raw_quote: 还是主线结合配角不行…主角人设也一般

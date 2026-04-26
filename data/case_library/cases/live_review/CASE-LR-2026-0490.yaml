@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0490
+title: 大明首辅宣城 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 历史
+  - 明朝
+  - 县令
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 专业性是有 40分 但是没啥用...35横线 | 崇祯年间县令开局太烂，没成长空间。越改越差，急着一上来就装逼说教。建议推翻练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 崇祯年间县令开局太烂，没成长空间。越改越差，急着一上来就装逼说教。建议推翻练笔。 | 县令开局远离权力中心，很难写出头，题材太差;开头就急着装逼说教，不符合历史文代入感
+  observable:
+  - 'genre维度: 县令开局远离权力中心，很难写出头，题材太差'
+  - 'character维度: 开头就急着装逼说教，不符合历史文代入感'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1440
+  - 1492
+  score: 35
+  score_raw: 专业性是有 40分 但是没啥用...35横线
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明首辅宣城
+  genre_guess:
+  - 历史
+  - 明朝
+  - 县令
+  overall_comment: 崇祯年间县令开局太烂，没成长空间。越改越差，急着一上来就装逼说教。建议推翻练笔。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 县令开局远离权力中心，很难写出头，题材太差
+    raw_quote: 崇祯是个好题材 但是你是个县令啊 你远离朝堂中心啊...本来就是个垃圾题材知道吧 上限很低的
+  - dimension: character
+    severity: negative
+    content: 开头就急着装逼说教，不符合历史文代入感
+    raw_quote: 就不能急着这样装逼 所有的起点的历史书 没有一上来就去那个的...就急呀那个急呀

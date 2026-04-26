@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1083
+title: 规则可改图书馆怪谈 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 规则怪谈
+  - 灵异
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 单人副本无配角，爽感缺失，但文笔尚可，适合蓝精灵节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 单人副本无配角，爽感缺失，但文笔尚可，适合蓝精灵节奏。 | 缺少配角让故事变得孤独无助
+  observable:
+  - 'character维度: 缺少配角让故事变得孤独无助'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 1431
+  - 1490
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 规则可改图书馆怪谈
+  genre_guess:
+  - 规则怪谈
+  - 灵异
+  - 系统
+  overall_comment: 单人副本无配角，爽感缺失，但文笔尚可，适合蓝精灵节奏。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 缺少配角让故事变得孤独无助
+    raw_quote: 一个人一个人一个人太无聊了
+  - dimension: opening
+    severity: neutral
+    content: 比例还可但需要观众来烘托
+    raw_quote: 你这开头...需要你的观众

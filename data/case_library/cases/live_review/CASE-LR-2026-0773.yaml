@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0773
+title: 周末是个扑街的游戏 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 民俗
+  - 灵异
+  - 穿越
+  - 密室
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分出头吧 | 文笔不错，题材有热度，但金手指过多，剧情不集中，卖点单薄，需要加强人物互动。40分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，题材有热度，但金手指过多，剧情不集中，卖点单薄，需要加强人物互动。40分。 | 金手指太多，像玩游戏;缺少人物互动，全是独角戏;开头冗长设定，独角戏加设定是新人开头大忌
+  observable:
+  - 'golden_finger维度: 金手指太多，像玩游戏'
+  - 'character维度: 缺少人物互动，全是独角戏'
+  - 'opening维度: 开头冗长设定，独角戏加设定是新人开头大忌'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 281
+  - 350
+  score: 40
+  score_raw: 40分出头吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 周末是个扑街的游戏
+  genre_guess:
+  - 民俗
+  - 灵异
+  - 穿越
+  - 密室
+  overall_comment: 文笔不错，题材有热度，但金手指过多，剧情不集中，卖点单薄，需要加强人物互动。40分。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指太多，像玩游戏
+    raw_quote: 金手指有点多了 金手指确实有点多了 现在像玩游戏了
+  - dimension: character
+    severity: negative
+    content: 缺少人物互动，全是独角戏
+    raw_quote: 你一个人求生啊 等于说大概还在密室逃脱呀 一个人密室炒作是真无聊
+  - dimension: opening
+    severity: negative
+    content: 开头冗长设定，独角戏加设定是新人开头大忌
+    raw_quote: 这就是你卖设定呀不行 大哥这是设定啊 你独角戏加设定 这种是新人开头大忌啊
+  - dimension: genre
+    severity: positive
+    content: 民俗游戏题材有热度
+    raw_quote: 这个书名其实还是有有热点有热度的 要有看点

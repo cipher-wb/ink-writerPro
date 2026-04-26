@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0926
+title: 裴总和女秘书 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 都市
+  - 职场
+  - 游戏制作
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多32分 | 思路可以，但都市商业文笔太差，前因后果缺失，流于皮毛。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路可以，但都市商业文笔太差，前因后果缺失，流于皮毛。 | 开头直接转雪白，与游戏制作主线关系生硬;都市创业背景未铺垫，驱动力不足
+  observable:
+  - 'opening维度: 开头直接转雪白，与游戏制作主线关系生硬'
+  - 'pacing维度: 都市创业背景未铺垫，驱动力不足'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1145
+  - 1200
+  score: 32
+  score_raw: 差不多32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 裴总和女秘书
+  genre_guess:
+  - 都市
+  - 职场
+  - 游戏制作
+  overall_comment: 思路可以，但都市商业文笔太差，前因后果缺失，流于皮毛。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头直接转雪白，与游戏制作主线关系生硬
+    raw_quote: 怎么就变成雪白红了 不是做游戏吗 你这怎么大哥在你喜欢我在下面啊
+  - dimension: pacing
+    severity: negative
+    content: 都市创业背景未铺垫，驱动力不足
+    raw_quote: 我觉得你的都市序没写好 就是起点的商业 … 这些东西他写的很合理 这个大哥的都市的文笔水平确实太差了

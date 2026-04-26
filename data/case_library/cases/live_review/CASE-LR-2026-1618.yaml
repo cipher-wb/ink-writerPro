@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1618
+title: 重生2010无遗憾 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 平淡
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就32分左右吧 | 无遗憾无情绪的重生文，缺乏驱动力，平淡如水，读者无法共情。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无遗憾无情绪的重生文，缺乏驱动力，平淡如水，读者无法共情。 | 没有遗憾导致无情绪驱动，重生动机立不住;开篇日常乏味，无矛盾无事件，读者提不起兴趣
+  observable:
+  - 'hook维度: 没有遗憾导致无情绪驱动，重生动机立不住'
+  - 'opening维度: 开篇日常乏味，无矛盾无事件，读者提不起兴趣'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 1010
+  - 1079
+  score: 32
+  score_raw: 也就32分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2010无遗憾
+  genre_guess:
+  - 都市
+  - 重生
+  - 平淡
+  overall_comment: 无遗憾无情绪的重生文，缺乏驱动力，平淡如水，读者无法共情。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 没有遗憾导致无情绪驱动，重生动机立不住
+    raw_quote: 没遗憾 … 沒遺憾就沒情緒 … 重生文就是看情緒的
+  - dimension: opening
+    severity: negative
+    content: 开篇日常乏味，无矛盾无事件，读者提不起兴趣
+    raw_quote: 好無聊啊兄弟 … 沒意思了兄弟 … 沒有要幹的事

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1564
+title: 地球唯一钉子户穿越 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 都市
+  - 科幻
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十三四米 | 题材不符合市场，建议转都市。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材不符合市场，建议转都市。 | 题材冷门，标签混乱，受众不明
+  observable:
+  - 'genre维度: 题材冷门，标签混乱，受众不明'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 551
+  - 700
+  score: 34
+  score_raw: 三十三四米
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 地球唯一钉子户穿越
+  genre_guess:
+  - 都市
+  - 科幻
+  - 穿越
+  - 系统
+  overall_comment: 题材不符合市场，建议转都市。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材冷门，标签混乱，受众不明
+    raw_quote: 这个题材不载，那个你有这个实力，我觉得你早点推翻去写其他书
+  - dimension: ops
+    severity: positive
+    content: 都市画面感可以，建议转向都市题材
+    raw_quote: 你的文风写都市去吧，写都市还可以，都市的画面感什么的还是OK的

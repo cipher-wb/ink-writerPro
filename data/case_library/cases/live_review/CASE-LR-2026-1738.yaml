@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1738
+title: 五岁复仇记 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 玄幻
+  - 复仇
+  - 传统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 所以我给你给到16分 | 传统老套的苦大仇深复仇开局，设定陈旧，缺乏新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统老套的苦大仇深复仇开局，设定陈旧，缺乏新意。 | 题材和写法都是十五年前的风格，非常传统。
+  observable:
+  - 'genre维度: 题材和写法都是十五年前的风格，非常传统。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 540
+  - 610
+  score: 16
+  score_raw: 所以我给你给到16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 五岁复仇记
+  genre_guess:
+  - 玄幻
+  - 复仇
+  - 传统
+  overall_comment: 传统老套的苦大仇深复仇开局，设定陈旧，缺乏新意。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材和写法都是十五年前的风格，非常传统。
+    raw_quote: 虽然你的谴辞造句人设安排 都是十五年前的风格

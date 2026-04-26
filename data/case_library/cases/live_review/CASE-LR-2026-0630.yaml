@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0630
+title: 我以灵福祝长生 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 仙侠
+  - 灵符
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 过年加两分本来36的 | 开头雪白割裂，缺乏一镜到底，设定和卖点着急，虽然雪白有些功底但代入感差
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头雪白割裂，缺乏一镜到底，设定和卖点着急，虽然雪白有些功底但代入感差 | 雪白场景切换太频繁，缺乏一镜到底的连贯性;设定和卖点交代太急，节奏过快
+  observable:
+  - 'opening维度: 雪白场景切换太频繁，缺乏一镜到底的连贯性'
+  - 'pacing维度: 设定和卖点交代太急，节奏过快'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 81
+  - 170
+  score: 38
+  score_raw: 过年加两分本来36的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我以灵福祝长生
+  genre_guess:
+  - 仙侠
+  - 灵符
+  - 雪白
+  overall_comment: 开头雪白割裂，缺乏一镜到底，设定和卖点着急，虽然雪白有些功底但代入感差
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 雪白场景切换太频繁，缺乏一镜到底的连贯性
+    raw_quote: 他老换场景，我要的是一镜到底的雪白
+  - dimension: pacing
+    severity: negative
+    content: 设定和卖点交代太急，节奏过快
+    raw_quote: 设定和卖点着急了不着急不着急
+  - dimension: simplicity
+    severity: positive
+    content: 文笔有一定功底，红笔修饰还行
+    raw_quote: 红笔还是有，但设定和卖点着急了

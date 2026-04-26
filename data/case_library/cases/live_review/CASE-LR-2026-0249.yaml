@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0249
+title: 共源动乱 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 悬疑
+  - 都市
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是22分左右 | 文笔扎实但悬疑推理开局太慢，缺乏全民修仙元素，读者无耐心。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但悬疑推理开局太慢，缺乏全民修仙元素，读者无耐心。 | 名义上全民修仙实际写成探案悬疑，挂羊头卖狗肉。;故弄玄虚过多，应当用主角线性叙事给出清晰信息量。
+  observable:
+  - 'genre维度: 名义上全民修仙实际写成探案悬疑，挂羊头卖狗肉。'
+  - 'simplicity维度: 故弄玄虚过多，应当用主角线性叙事给出清晰信息量。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 658
+  - 740
+  score: 22
+  score_raw: 也是22分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 共源动乱
+  genre_guess:
+  - 悬疑
+  - 都市
+  - 灵异
+  overall_comment: 文笔扎实但悬疑推理开局太慢，缺乏全民修仙元素，读者无耐心。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 名义上全民修仙实际写成探案悬疑，挂羊头卖狗肉。
+    raw_quote: 90%的都是你在探案的细节 这些人物拉扯没人看
+  - dimension: simplicity
+    severity: negative
+    content: 故弄玄虚过多，应当用主角线性叙事给出清晰信息量。
+    raw_quote: 不要这么故弄玄虚了 读者真没耐心了

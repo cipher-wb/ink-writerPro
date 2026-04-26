@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0441
+title: 权力游戏同人 (fail / 5分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 西幻
+  - 权力游戏
+  - 领主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多按时五分吧 | 撞创意且写法过慢，实质与权力游戏不谋而合但毫无市场吸引力
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 撞创意且写法过慢，实质与权力游戏不谋而合但毫无市场吸引力 | 与权力游戏雷同，无新颖性，难签约;叙述过慢，老写法已被市场淘汰
+  observable:
+  - 'genre维度: 与权力游戏雷同，无新颖性，难签约'
+  - 'pacing维度: 叙述过慢，老写法已被市场淘汰'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 695
+  - 758
+  score: 5
+  score_raw: 差不多按时五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 权力游戏同人
+  genre_guess:
+  - 西幻
+  - 权力游戏
+  - 领主
+  overall_comment: 撞创意且写法过慢，实质与权力游戏不谋而合但毫无市场吸引力
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 与权力游戏雷同，无新颖性，难签约
+    raw_quote: 我觉得是冰与火之歌有点抄袭大哥了...撞创意了
+  - dimension: pacing
+    severity: negative
+    content: 叙述过慢，老写法已被市场淘汰
+    raw_quote: 这是老写法...慢悠悠的小孩子睁开眼睛

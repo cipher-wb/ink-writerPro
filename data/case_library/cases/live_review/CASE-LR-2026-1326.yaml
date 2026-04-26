@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1326
+title: 开关人 捞尸人 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 灵异
+  - 悬疑
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分报图了 | 老套灵异模板，缺少新元素，上限很低。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套灵异模板，缺少新元素，上限很低。 | 太老套，没有新东西;只会装逼，不会立人物
+  observable:
+  - 'genre维度: 太老套，没有新东西'
+  - 'hook维度: 只会装逼，不会立人物'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1931
+  - 1990
+  score: 35
+  score_raw: 35分报图了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 开关人 捞尸人
+  genre_guess:
+  - 灵异
+  - 悬疑
+  - 民俗
+  overall_comment: 老套灵异模板，缺少新元素，上限很低。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 太老套，没有新东西
+    raw_quote: 还是太老套了 没新东西啊
+  - dimension: hook
+    severity: negative
+    content: 只会装逼，不会立人物
+    raw_quote: 要装逼啊 人物会不会立呀

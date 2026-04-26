@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0291
+title: 攻略渣女系统 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 都市
+  - 攻略系统
+  - 渣女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未给分 | 违背公序良俗，审核过不了，容易被举报
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 违背公序良俗，审核过不了，容易被举报 | 故意玩弄女人得钱违背公序良俗，审核过不了
+  observable:
+  - 'taboo维度: 故意玩弄女人得钱违背公序良俗，审核过不了'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 2241
+  - 2315
+  score: null
+  score_raw: 未给分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 攻略渣女系统
+  genre_guess:
+  - 都市
+  - 攻略系统
+  - 渣女
+  overall_comment: 违背公序良俗，审核过不了，容易被举报
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 故意玩弄女人得钱违背公序良俗，审核过不了
+    raw_quote: 这种违背公序良序吧，感觉引领不良风向
+  - dimension: pacing
+    severity: positive
+    content: 节奏挺好，比例也行
+    raw_quote: 节奏挺好的

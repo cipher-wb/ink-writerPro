@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1554
+title: 哥布林吃嘴子 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 奇幻
+  - 搞笑
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分 | 猎奇小白，金手指全靠亲嘴，逻辑漏洞大。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 猎奇小白，金手指全靠亲嘴，逻辑漏洞大。 | 金手指设定为亲嘴获得能力，荒诞无力;写法小白，缺乏设计
+  observable:
+  - 'golden_finger维度: 金手指设定为亲嘴获得能力，荒诞无力'
+  - 'simplicity维度: 写法小白，缺乏设计'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1289
+  - 1390
+  score: 16
+  score_raw: 16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 哥布林吃嘴子
+  genre_guess:
+  - 奇幻
+  - 搞笑
+  - 后宫
+  overall_comment: 猎奇小白，金手指全靠亲嘴，逻辑漏洞大。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设定为亲嘴获得能力，荒诞无力
+    raw_quote: 金手指肯定立不住 都不用想
+  - dimension: simplicity
+    severity: negative
+    content: 写法小白，缺乏设计
+    raw_quote: 好小白的 他倒是没写

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1283
+title: 史上最强店主同人 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 同人
+  - 诸天
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是22 | 同人蹭热度失败，原IP受众小，反复修改仍无起色，建议直接推翻重写笑傲江湖从头开始。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 同人蹭热度失败，原IP受众小，反复修改仍无起色，建议直接推翻重写笑傲江湖从头开始。 | 同人热度不够，蹭不上，毫无受众;建议从笑傲江湖开始单独写，不要快穿
+  observable:
+  - 'genre维度: 同人热度不够，蹭不上，毫无受众'
+  - 'ops维度: 建议从笑傲江湖开始单独写，不要快穿'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 2081
+  - 2180
+  score: 22
+  score_raw: 还是22
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 史上最强店主同人
+  genre_guess:
+  - 同人
+  - 诸天
+  - 穿越
+  overall_comment: 同人蹭热度失败，原IP受众小，反复修改仍无起色，建议直接推翻重写笑傲江湖从头开始。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 同人热度不够，蹭不上，毫无受众
+    raw_quote: 标人热度太低了...你这同人都没热度我蹭啥
+  - dimension: ops
+    severity: negative
+    content: 建议从笑傲江湖开始单独写，不要快穿
+    raw_quote: 不要一个世界一个世界这么快的穿了...从笑傲江湖开始直接写

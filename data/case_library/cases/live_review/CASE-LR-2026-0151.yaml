@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0151
+title: 灵异乐园 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 灵异
+  - 无限流
+  - 副本
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没办法 不想给高分 完全就是这种题材 完全就是没那个实力去写 | 副本独角戏无聊，处处是AI味道，写法像十年前的。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 副本独角戏无聊，处处是AI味道，写法像十年前的。 | 副本从头到尾一个人，没有同伴和配角;遣词造句AI味道太浓，吓人变恶心
+  observable:
+  - 'character维度: 副本从头到尾一个人，没有同伴和配角'
+  - 'ops维度: 遣词造句AI味道太浓，吓人变恶心'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 304
+  - 318
+  score: 20
+  score_raw: 没办法 不想给高分 完全就是这种题材 完全就是没那个实力去写
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 灵异乐园
+  genre_guess:
+  - 灵异
+  - 无限流
+  - 副本
+  overall_comment: 副本独角戏无聊，处处是AI味道，写法像十年前的。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 副本从头到尾一个人，没有同伴和配角
+    raw_quote: 为什么就没有人呀 你们的副本里为什么没有人 独角戏是最无聊的
+  - dimension: ops
+    severity: negative
+    content: 遣词造句AI味道太浓，吓人变恶心
+    raw_quote: 遣词造句太出戏了 我觉得浅词造句AI味道太重了 尽量删一删吧

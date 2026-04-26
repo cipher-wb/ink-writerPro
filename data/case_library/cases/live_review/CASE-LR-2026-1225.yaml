@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1225
+title: 废物修仙囤货 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 修仙
+  - 废土
+  - 囤货
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也有30分 | 事件太弱、无代入感，要早一点互动冲突，不要独角戏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件太弱、无代入感，要早一点互动冲突，不要独角戏。 | 开头没有穿越过渡，直接讲设定，读者易流失;主角毫无盘算情绪，像NPC
+  observable:
+  - 'opening维度: 开头没有穿越过渡，直接讲设定，读者易流失'
+  - 'character维度: 主角毫无盘算情绪，像NPC'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 1082
+  - 1121
+  score: 30
+  score_raw: 也有30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 废物修仙囤货
+  genre_guess:
+  - 修仙
+  - 废土
+  - 囤货
+  overall_comment: 事件太弱、无代入感，要早一点互动冲突，不要独角戏。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头没有穿越过渡，直接讲设定，读者易流失
+    raw_quote: 你也筑基了也不写…可能读者跑了呀
+  - dimension: character
+    severity: negative
+    content: 主角毫无盘算情绪，像NPC
+    raw_quote: 盘算都没有盘算

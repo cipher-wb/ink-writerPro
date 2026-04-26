@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0325
+title: 重回2014工地 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例也很好，加油吧 | 重生味道有，文笔和比例不错，但工地创业的剧情平淡无看点，像日记，缺乏极端事件或人设来拉动情绪。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生味道有，文笔和比例不错，但工地创业的剧情平淡无看点，像日记，缺乏极端事件或人设来拉动情绪。 | 第一章太疼痛，重生后与家人互动的日常太像日记，极度缺乏看点。;缺乏重生文应有的核心矛盾或强装逼事件，事业线没有吸引力。
+  observable:
+  - 'opening维度: 第一章太疼痛，重生后与家人互动的日常太像日记，极度缺乏看点。'
+  - 'simplicity维度: 缺乏重生文应有的核心矛盾或强装逼事件，事业线没有吸引力。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 1678
+  - 1799
+  score: null
+  score_raw: 比例也很好，加油吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 重回2014工地
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 重生味道有，文笔和比例不错，但工地创业的剧情平淡无看点，像日记，缺乏极端事件或人设来拉动情绪。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章太疼痛，重生后与家人互动的日常太像日记，极度缺乏看点。
+    raw_quote: 重生文最害怕写成日记...没意思啊，太空洞了这东西
+  - dimension: simplicity
+    severity: negative
+    content: 缺乏重生文应有的核心矛盾或强装逼事件，事业线没有吸引力。
+    raw_quote: 没有什么好遗憾...没侧重点，没质量...你写不了极端人设，所以说只能写几段事件
+  - dimension: misc
+    severity: positive
+    content: 文笔比例很好，有写作基础。
+    raw_quote: 味道是有的啊...比例也很好

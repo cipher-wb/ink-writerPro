@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1586
+title: 全民神职时代 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 种田
+  - 玄幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 | 设定说明书模式，剧情全无，爽点缺失，读者根本看不下去。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定说明书模式，剧情全无，爽点缺失，读者根本看不下去。 | 开头用大量说明介绍世界观，无事件;剧情推进极慢，缺乏冲突
+  observable:
+  - 'opening维度: 开头用大量说明介绍世界观，无事件'
+  - 'pacing维度: 剧情推进极慢，缺乏冲突'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 96
+  - 125
+  score: 20
+  score_raw: 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全民神职时代
+  genre_guess:
+  - 种田
+  - 玄幻
+  - 系统
+  overall_comment: 设定说明书模式，剧情全无，爽点缺失，读者根本看不下去。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头用大量说明介绍世界观，无事件
+    raw_quote: 这都是在介绍这个说明书 … 你现在去超市 你也不看说明书呀 … 没人看说明书 … 这还在介绍 这已经没时间了 这是介绍疯掉了
+  - dimension: pacing
+    severity: negative
+    content: 剧情推进极慢，缺乏冲突
+    raw_quote: 剧情太无聊了 本质上就等于那个博写这种书就要卖设定

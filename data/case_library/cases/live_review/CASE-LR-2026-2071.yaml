@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2071
+title: 重生1996商战野太阳 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 商战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个能给你40左右吧 40分嘛 | 文笔不错但商战描写不接地气，节奏太急，需加强重生代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错但商战描写不接地气，节奏太急，需加强重生代入感。 | 缺乏重生真实感和生活细节;野太阳等概念读者无感，纯商战没爽点
+  observable:
+  - 'character维度: 缺乏重生真实感和生活细节'
+  - 'genre维度: 野太阳等概念读者无感，纯商战没爽点'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 5001
+  - 5200
+  score: 40
+  score_raw: 这个能给你40左右吧 40分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生1996商战野太阳
+  genre_guess:
+  - 都市
+  - 重生
+  - 商战
+  overall_comment: 文笔不错但商战描写不接地气，节奏太急，需加强重生代入感。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 缺乏重生真实感和生活细节
+    raw_quote: 太急了 你不能直接上战 ... 你要真实
+  - dimension: genre
+    severity: negative
+    content: 野太阳等概念读者无感，纯商战没爽点
+    raw_quote: 你老是野太阳野太阳的 我不在乎 ... 没人在乎

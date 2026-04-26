@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1469
+title: 暴力美食家1978 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 年代
+  - 重生
+  - 美食
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就40 | 年代感还行，流畅紧凑，但没重生味道，像土著。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 年代感还行，流畅紧凑，但没重生味道，像土著。 | 没有重生现代人的视角感觉
+  observable:
+  - 'character维度: 没有重生现代人的视角感觉'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 811
+  - 900
+  score: 40
+  score_raw: 就40
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 暴力美食家1978
+  genre_guess:
+  - 年代
+  - 重生
+  - 美食
+  overall_comment: 年代感还行，流畅紧凑，但没重生味道，像土著。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 没有重生现代人的视角感觉
+    raw_quote: 没有重生现代人的 视角感觉

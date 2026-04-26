@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1901
+title: 全职法师双系共生 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 同人
+  - 全职法师
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 无脑洞无事件，双系共生卖点太普通。上限极低，不如写斗罗。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无脑洞无事件，双系共生卖点太普通。上限极低，不如写斗罗。 | 无脑洞，卖点太普通，直发都难捞;全职法师同人热度低，不如写斗罗
+  observable:
+  - 'highpoint维度: 无脑洞，卖点太普通，直发都难捞'
+  - 'genre维度: 全职法师同人热度低，不如写斗罗'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 2291
+  - 2380
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全职法师双系共生
+  genre_guess:
+  - 同人
+  - 全职法师
+  overall_comment: 无脑洞无事件，双系共生卖点太普通。上限极低，不如写斗罗。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 无脑洞，卖点太普通，直发都难捞
+    raw_quote: 没脑洞... 这样写太普通了... 没其他劳动啊
+  - dimension: genre
+    severity: negative
+    content: 全职法师同人热度低，不如写斗罗
+    raw_quote: 真不如写斗罗去了 上限低一有必要浪费时间

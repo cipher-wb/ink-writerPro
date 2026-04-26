@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0822
+title: 女帝的男宠 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 女频
+  - 穿书
+  - 女尊
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 内容猎奇炸裂但女频味儿太重，起点过审难
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容猎奇炸裂但女频味儿太重，起点过审难 | 典型女频写法，男频市场不行;有舔脚等大量擦边内容
+  observable:
+  - 'genre维度: 典型女频写法，男频市场不行'
+  - 'taboo维度: 有舔脚等大量擦边内容'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 1885
+  - 2020
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 女帝的男宠
+  genre_guess:
+  - 女频
+  - 穿书
+  - 女尊
+  overall_comment: 内容猎奇炸裂但女频味儿太重，起点过审难
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 典型女频写法，男频市场不行
+    raw_quote: 那个女频写法 起点审核肯定过不了
+  - dimension: taboo
+    severity: negative
+    content: 有舔脚等大量擦边内容
+    raw_quote: 他亲过自己的脚是吧 现在又来亲我的嘴

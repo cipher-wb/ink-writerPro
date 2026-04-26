@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0338
+title: 摆世书之我在新大直播间写书 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 百合
+  - 触手
+  - 恶趣味
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多给你20分 | 毫无市场的恶趣味自嗨，即使比例尚可也毫无签约可能。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 毫无市场的恶趣味自嗨，即使比例尚可也毫无签约可能。 | 触手母女等元素过于违禁，毫无市场;题材完全不属于网文主流，纯属个人恶趣味
+  observable:
+  - 'taboo维度: 触手母女等元素过于违禁，毫无市场'
+  - 'genre维度: 题材完全不属于网文主流，纯属个人恶趣味'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 1406
+  - 1577
+  score: 20
+  score_raw: 最多给你20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 摆世书之我在新大直播间写书
+  genre_guess:
+  - 百合
+  - 触手
+  - 恶趣味
+  overall_comment: 毫无市场的恶趣味自嗨，即使比例尚可也毫无签约可能。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 触手母女等元素过于违禁，毫无市场
+    raw_quote: 惊人的精彩并无人在意…触手母女你自己留着就行
+  - dimension: genre
+    severity: negative
+    content: 题材完全不属于网文主流，纯属个人恶趣味
+    raw_quote: 这什么东西啊…谁他妈在乎你这种同性繁殖

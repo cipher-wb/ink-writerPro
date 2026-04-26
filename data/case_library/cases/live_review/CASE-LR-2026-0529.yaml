@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0529
+title: 我兄弟不是人（暂定，开篇台词） (pass / 60分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1EbAKzBEWV
+scope:
+  genre:
+  - 仙侠
+  - 玄幻
+  - 封神
+  - 妖怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多六分 | 开头切入有签约水平，主线明确，但节奏过快，一章一个故事，需放缓二三章，总体可签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1EbAKzBEWV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头切入有签约水平，主线明确，但节奏过快，一章一个故事，需放缓二三章，总体可签。 | 节奏太快，一章一个故事，建议二三章放缓;出场人物过多，玄幻仙侠需慢讲故事
+  observable:
+  - 'pacing维度: 节奏太快，一章一个故事，建议二三章放缓'
+  - 'simplicity维度: 出场人物过多，玄幻仙侠需慢讲故事'
+live_review_meta:
+  source_bvid: BV1EbAKzBEWV
+  source_line_range:
+  - 22
+  - 201
+  score: 60
+  score_raw: 差不多六分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 我兄弟不是人（暂定，开篇台词）
+  genre_guess:
+  - 仙侠
+  - 玄幻
+  - 封神
+  - 妖怪
+  overall_comment: 开头切入有签约水平，主线明确，但节奏过快，一章一个故事，需放缓二三章，总体可签。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇切入设计巧妙，一语双关，签约水平
+    raw_quote: 我这个切入跟女力股是一个档次的…一语双关…这个切入我觉得是签约水平
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快，一章一个故事，建议二三章放缓
+    raw_quote: 展开感觉还是节奏太快…一张一个故事…为了过谦那个节奏有点太快了…二三张就可以放缓了
+  - dimension: golden_finger
+    severity: positive
+    content: 随机天赋选择符合海克斯潮流，设定没问题
+    raw_quote: 随机嘛就是随机性 海克斯嘛 现在海克斯流行都喜欢随机
+  - dimension: simplicity
+    severity: negative
+    content: 出场人物过多，玄幻仙侠需慢讲故事
+    raw_quote: 人太多了 故事还是要慢点讲的 因为是玄幻仙侠嘛

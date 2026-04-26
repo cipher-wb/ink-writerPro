@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0250
+title: 梦魇的眼 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 异能
+  - 精神病
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是22分左右 | 表达和文笔扎实，但精神病院、噩梦秘境等设定老旧，没有好事件，读者接受不了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达和文笔扎实，但精神病院、噩梦秘境等设定老旧，没有好事件，读者接受不了。 | 噩梦加精神病院开局踩遍新人坑，设定劝退。;开会聊设定没剧情，读者会跑。
+  observable:
+  - 'golden_finger维度: 噩梦加精神病院开局踩遍新人坑，设定劝退。'
+  - 'opening维度: 开会聊设定没剧情，读者会跑。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 746
+  - 840
+  score: 22
+  score_raw: 也是22分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 梦魇的眼
+  genre_guess:
+  - 异能
+  - 精神病
+  - 都市
+  overall_comment: 表达和文笔扎实，但精神病院、噩梦秘境等设定老旧，没有好事件，读者接受不了。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 噩梦加精神病院开局踩遍新人坑，设定劝退。
+    raw_quote: 精神病院 黑色观众说他白炽灯 ... 我真想把你给杀了 我真的是新人的坑 你全踩上了
+  - dimension: opening
+    severity: negative
+    content: 开会聊设定没剧情，读者会跑。
+    raw_quote: 坐下来开会 开会聊的内容是设定 那就跑了呀

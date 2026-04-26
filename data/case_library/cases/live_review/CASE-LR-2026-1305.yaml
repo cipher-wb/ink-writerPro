@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1305
+title: 我的东京恋爱物语有问题 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 东京
+  - 恋爱
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分 | 重恋爱没意思，缺乏职业元素，建议东京加职业路线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重恋爱没意思，缺乏职业元素，建议东京加职业路线。 | 只写恋爱太无聊，需要职业驱动;系统设计老套，好感度成功率没新意
+  observable:
+  - 'genre维度: 只写恋爱太无聊，需要职业驱动'
+  - 'hook维度: 系统设计老套，好感度成功率没新意'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 421
+  - 550
+  score: 48
+  score_raw: 48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的东京恋爱物语有问题
+  genre_guess:
+  - 东京
+  - 恋爱
+  - 校园
+  overall_comment: 重恋爱没意思，缺乏职业元素，建议东京加职业路线。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 只写恋爱太无聊，需要职业驱动
+    raw_quote: 我感覺重戀愛是沒意思 重戀愛特別無聊
+  - dimension: hook
+    severity: negative
+    content: 系统设计老套，好感度成功率没新意
+    raw_quote: 真不流行這種 就是類似於好感度啊 成功率啊這些東西啊

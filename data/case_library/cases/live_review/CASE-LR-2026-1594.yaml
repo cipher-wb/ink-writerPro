@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1594
+title: 大明海上藩王 (pass / 65分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 历史
+  - 明朝
+  - 航海
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 65没问题 | 历史功底扎实，与朱棣的政治拉扯写得正经，可签约但上限有限，建议增加脑洞事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史功底扎实，与朱棣的政治拉扯写得正经，可签约但上限有限，建议增加脑洞事件。 | 行文过于正经，缺乏轻娱乐和金手指
+  observable:
+  - 'simplicity维度: 行文过于正经，缺乏轻娱乐和金手指'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 406
+  - 470
+  score: 65
+  score_raw: 65没问题
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 大明海上藩王
+  genre_guess:
+  - 历史
+  - 明朝
+  - 航海
+  overall_comment: 历史功底扎实，与朱棣的政治拉扯写得正经，可签约但上限有限，建议增加脑洞事件。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 明朝航海题材在历史频道有一定受众
+    raw_quote: 大明肯定比隋朝上线高多了 … 打东营去嘛 打北美去没问题
+  - dimension: opening
+    severity: positive
+    content: 开局朱棣与主角的拉扯有戏剧张力
+    raw_quote: 你给JUDY说 我要去 … 这个思路挺好的 就比较正经
+  - dimension: simplicity
+    severity: negative
+    content: 行文过于正经，缺乏轻娱乐和金手指
+    raw_quote: 太正经了 大哥 大明joy橙色等临时太正经了 … 完全看内功嘛 … 就完全没有其他的设计啊

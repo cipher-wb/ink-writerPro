@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1050
+title: 西游土地公文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 西游
+  - 土地公
+  - 香火成神
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就逗我了 蓝精灵 | 核心是蓝精灵加天庭考核，完全违背劝告，需要正常写仙侠升级
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 核心是蓝精灵加天庭考核，完全违背劝告，需要正常写仙侠升级 | 加入了考核系统和日常任务，走向蓝精灵，没人看;加了系统立马变垃圾，还不如正经写求生成神
+  observable:
+  - 'golden_finger维度: 加入了考核系统和日常任务，走向蓝精灵，没人看'
+  - 'simplicity维度: 加了系统立马变垃圾，还不如正经写求生成神'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 2451
+  - 2600
+  score: null
+  score_raw: 就逗我了 蓝精灵
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 西游土地公文
+  genre_guess:
+  - 西游
+  - 土地公
+  - 香火成神
+  overall_comment: 核心是蓝精灵加天庭考核，完全违背劝告，需要正常写仙侠升级
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 加入了考核系统和日常任务，走向蓝精灵，没人看
+    raw_quote: 不要玩梗 不要KPI 不要天庭考核
+  - dimension: simplicity
+    severity: negative
+    content: 加了系统立马变垃圾，还不如正经写求生成神
+    raw_quote: 这种西游KPI 你你你你赶赶紧安干嘛干嘛去吧 就蓝精灵啊

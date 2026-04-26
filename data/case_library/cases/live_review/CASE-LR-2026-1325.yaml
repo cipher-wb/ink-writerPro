@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1325
+title: 玄武力3776年 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 科幻
+  - 日常
+  - 自嗨
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十五分吧 | 完全自嗨，像社友聊天记录，毫无小说卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全自嗨，像社友聊天记录，毫无小说卖点。 | 全文是无意义对白和日记;不知道是什么题材，无卖点
+  observable:
+  - 'simplicity维度: 全文是无意义对白和日记'
+  - 'genre维度: 不知道是什么题材，无卖点'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1881
+  - 1930
+  score: 15
+  score_raw: 十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玄武力3776年
+  genre_guess:
+  - 科幻
+  - 日常
+  - 自嗨
+  overall_comment: 完全自嗨，像社友聊天记录，毫无小说卖点。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 全文是无意义对白和日记
+    raw_quote: 日记打肉对白也是小白一点
+  - dimension: genre
+    severity: negative
+    content: 不知道是什么题材，无卖点
+    raw_quote: 就也没有卖点也不是什么题材

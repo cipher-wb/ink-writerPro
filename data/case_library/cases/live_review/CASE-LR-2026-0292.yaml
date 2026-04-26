@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-0292
+title: 我的重生日常 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 轻小说
+  - 重生
+  - 日常
+  - 系统
+  - 高考
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 故事流畅但严重偏题，金手指读档存档被忽略，转而写日常，缺乏卖点聚焦。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事流畅但严重偏题，金手指读档存档被忽略，转而写日常，缺乏卖点聚焦。 | 开篇信息赘述，系统出场拖沓;金手指读档系统表述不明确，未突出其重要性;主角从迷茫到惊喜的情绪转折没写清楚
+  observable:
+  - 'opening维度: 开篇信息赘述，系统出场拖沓'
+  - 'golden_finger维度: 金手指读档系统表述不明确，未突出其重要性'
+  - 'character维度: 主角从迷茫到惊喜的情绪转折没写清楚'
+  - 'pacing维度: 重点应在金手指，却花大量笔墨写日常人物，偏离主线'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 200
+  - 270
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 我的重生日常
+  genre_guess:
+  - 轻小说
+  - 重生
+  - 日常
+  - 系统
+  - 高考
+  overall_comment: 故事流畅但严重偏题，金手指读档存档被忽略，转而写日常，缺乏卖点聚焦。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇信息赘述，系统出场拖沓
+    raw_quote: 不要一直重复了啊 赘述了
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指读档系统表述不明确，未突出其重要性
+    raw_quote: 你既然系统要出来，你就不要什么哎呀 我怎么没有啊
+  - dimension: character
+    severity: negative
+    content: 主角从迷茫到惊喜的情绪转折没写清楚
+    raw_quote: 情绪变化就是一个迷茫到惊喜这种过程，我觉得就没没表达清楚吧
+  - dimension: pacing
+    severity: negative
+    content: 重点应在金手指，却花大量笔墨写日常人物，偏离主线
+    raw_quote: 偏题诈骗不写读档存档写日常去了

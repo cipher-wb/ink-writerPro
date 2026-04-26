@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1721
+title: 蓝星机械形命入侵 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 科幻
+  - 异能
+  - 外星
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真规范拉垮 | 机器人女友设定缺乏情感张力，再逼真也不是真人，市场不吃，角色身份没吸引力。文笔可以但整体拖沓啰嗦。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 机器人女友设定缺乏情感张力，再逼真也不是真人，市场不吃，角色身份没吸引力。文笔可以但整体拖沓啰嗦。 | 机器人少女设定缺乏真实身份和感情拉扯，没有市场吸引力;开篇拖沓啰嗦，全是设定解释和独角戏
+  observable:
+  - 'character维度: 机器人少女设定缺乏真实身份和感情拉扯，没有市场吸引力'
+  - 'pacing维度: 开篇拖沓啰嗦，全是设定解释和独角戏'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1157
+  - 1255
+  score: null
+  score_raw: 真规范拉垮
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 蓝星机械形命入侵
+  genre_guess:
+  - 科幻
+  - 异能
+  - 外星
+  overall_comment: 机器人女友设定缺乏情感张力，再逼真也不是真人，市场不吃，角色身份没吸引力。文笔可以但整体拖沓啰嗦。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 机器人少女设定缺乏真实身份和感情拉扯，没有市场吸引力
+    raw_quote: 机器人再逼真，他也不逼，这句话你自己去误道吧
+  - dimension: pacing
+    severity: negative
+    content: 开篇拖沓啰嗦，全是设定解释和独角戏
+    raw_quote: 太拖塔太啰嗦，整个都是设定详细

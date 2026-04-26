@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0760
+title: 谍战民国 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 谍战
+  - 民国
+  - 原创
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分吧 | 原创谍战缺乏身份代入，卖点出现太迟，第一章需直接亮身份。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 原创谍战缺乏身份代入，卖点出现太迟，第一章需直接亮身份。 | 身份卖点出现太晚，第一章全是原创客观描述;谍战需要明确身份铺垫，不能当成原创剧慢慢展开
+  observable:
+  - 'opening维度: 身份卖点出现太晚，第一章全是原创客观描述'
+  - 'genre维度: 谍战需要明确身份铺垫，不能当成原创剧慢慢展开'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1281
+  - 1350
+  score: 48
+  score_raw: 48分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 谍战民国
+  genre_guess:
+  - 谍战
+  - 民国
+  - 原创
+  overall_comment: 原创谍战缺乏身份代入，卖点出现太迟，第一章需直接亮身份。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 身份卖点出现太晚，第一章全是原创客观描述
+    raw_quote: 这个卖点现在出来太迟了……你第一章读者跑完了
+  - dimension: genre
+    severity: negative
+    content: 谍战需要明确身份铺垫，不能当成原创剧慢慢展开
+    raw_quote: 谍战其实都是半同人……给什么身份就行

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0701
+title: 湛蓝星诸神战场 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 玄幻
+  - 高武
+  - 开局杀狼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话我觉得也就是这个四十分到不了 | 世界观设定过于古老，开篇杀狼套路化严重，整体写法仍停留在十年前。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观设定过于古老，开篇杀狼套路化严重，整体写法仍停留在十年前。 | 开场杀狼套路化，缺乏新鲜感;设定堆积如教科书，节奏拖沓
+  observable:
+  - 'opening维度: 开场杀狼套路化，缺乏新鲜感'
+  - 'pacing维度: 设定堆积如教科书，节奏拖沓'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 186
+  - 235
+  score: 30
+  score_raw: 打分的话我觉得也就是这个四十分到不了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 湛蓝星诸神战场
+  genre_guess:
+  - 玄幻
+  - 高武
+  - 开局杀狼
+  overall_comment: 世界观设定过于古老，开篇杀狼套路化严重，整体写法仍停留在十年前。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开场杀狼套路化，缺乏新鲜感
+    raw_quote: 第一张杀狼出金手指...经典杀狼
+  - dimension: pacing
+    severity: negative
+    content: 设定堆积如教科书，节奏拖沓
+    raw_quote: 第二张设定讲一遍...根本不会讲网红，因为你设定太多了

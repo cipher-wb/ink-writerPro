@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0594
+title: 龙武历玄天传 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 玄幻
+  - 传统玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十二十多分吧 | 传玄废柴杀狼剧情老套，完全没跟上市场，脑洞不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传玄废柴杀狼剧情老套，完全没跟上市场，脑洞不足。 | 题材老旧，写凡人废柴杀狼毫无新意;开头设定堆积，没有吸引人的剧情
+  observable:
+  - 'genre维度: 题材老旧，写凡人废柴杀狼毫无新意'
+  - 'opening维度: 开头设定堆积，没有吸引人的剧情'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 851
+  - 1000
+  score: 20
+  score_raw: 二十二十多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 龙武历玄天传
+  genre_guess:
+  - 玄幻
+  - 传统玄幻
+  overall_comment: 传玄废柴杀狼剧情老套，完全没跟上市场，脑洞不足。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材老旧，写凡人废柴杀狼毫无新意
+    raw_quote: 凡人废柴杀狼谁看啊...传玄思路大哥
+  - dimension: opening
+    severity: negative
+    content: 开头设定堆积，没有吸引人的剧情
+    raw_quote: 开头写几段剧情啊...没人看啊

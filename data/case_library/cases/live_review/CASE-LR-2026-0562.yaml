@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0562
+title: 暑假工 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 都市
+  - 黑道
+  - 第一人称
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你66分 | 第一人称黑道文有天赋，但题材无法过审，66分但不签
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称黑道文有天赋，但题材无法过审，66分但不签 | 题材涉黑无法过审，起点不能签
+  observable:
+  - 'genre维度: 题材涉黑无法过审，起点不能签'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 1584
+  - 1774
+  score: 66
+  score_raw: 就给你66分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 暑假工
+  genre_guess:
+  - 都市
+  - 黑道
+  - 第一人称
+  overall_comment: 第一人称黑道文有天赋，但题材无法过审，66分但不签
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材涉黑无法过审，起点不能签
+    raw_quote: 这能过审吗...起点不让写了
+  - dimension: character
+    severity: positive
+    content: 描写人物有感觉，文笔有贴吧文味道
+    raw_quote: 这这个比例很有那种贴吧文的味道

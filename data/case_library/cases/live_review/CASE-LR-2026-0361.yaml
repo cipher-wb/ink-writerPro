@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0361
+title: 流浪诸荒 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 仙侠
+  - 老套
+  - 药老
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥就18风马好吧 | 文笔虽好但毫无网文代入感，老套设定未加穿越，金手指药老过时，完全偏离读者需求。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔虽好但毫无网文代入感，老套设定未加穿越，金手指药老过时，完全偏离读者需求。 | 没有穿越，缺乏现代视角代入感;金手指仍是老套的药老;上帝视角，人设不接地气
+  observable:
+  - 'opening维度: 没有穿越，缺乏现代视角代入感'
+  - 'golden_finger维度: 金手指仍是老套的药老'
+  - 'character维度: 上帝视角，人设不接地气'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 532
+  - 572
+  score: 18
+  score_raw: 给大哥就18风马好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 流浪诸荒
+  genre_guess:
+  - 仙侠
+  - 老套
+  - 药老
+  overall_comment: 文笔虽好但毫无网文代入感，老套设定未加穿越，金手指药老过时，完全偏离读者需求。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 没有穿越，缺乏现代视角代入感
+    raw_quote: 这个穿越加一个穿越不会死啊 真不会死 那你试一下
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指仍是老套的药老
+    raw_quote: 能不能改个名字 不要叫药老了 没有比药老更出名的金手指了
+  - dimension: character
+    severity: negative
+    content: 上帝视角，人设不接地气
+    raw_quote: 就这样干巴巴的讲 有啥人看呀

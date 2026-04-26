@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0808
+title: 卷王系统/白干绝不累卷 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真唱不了20 | 核心卖点过时，全是烂梗，系统驱动无剧情
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 核心卖点过时，全是烂梗，系统驱动无剧情 | 系统强制卷，毒点突出
+  observable:
+  - 'golden_finger维度: 系统强制卷，毒点突出'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 2520
+  - 2680
+  score: 20
+  score_raw: 真唱不了20
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 卷王系统/白干绝不累卷
+  genre_guess:
+  - 修仙
+  - 系统
+  - 搞笑
+  overall_comment: 核心卖点过时，全是烂梗，系统驱动无剧情
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统强制卷，毒点突出
+    raw_quote: 系统驱动力 系统牵连了鼻子走

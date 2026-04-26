@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0950
+title: 卖核弹的小女孩(足疗店) (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 都市
+  - 足疗
+  - 系统经营
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多份的水平 | 写得过于正经，缺少擦边互动，情绪平淡
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写得过于正经，缺少擦边互动，情绪平淡 | 足疗题材需要雪白与技师互动，当前太正经
+  observable:
+  - 'genre维度: 足疗题材需要雪白与技师互动，当前太正经'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 2330
+  - 2450
+  score: 30
+  score_raw: 三十多份的水平
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 卖核弹的小女孩(足疗店)
+  genre_guess:
+  - 都市
+  - 足疗
+  - 系统经营
+  overall_comment: 写得过于正经，缺少擦边互动，情绪平淡
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 足疗题材需要雪白与技师互动，当前太正经
+    raw_quote: 这种书你得在擦边的边缘写 你写得太正紧写不了

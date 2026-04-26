@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1022
+title: 座门收徒 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 修仙
+  - 收徒流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23左右吧 | 只有框架没有有趣人物，收徒流必须立起鲜活的弟子。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 只有框架没有有趣人物，收徒流必须立起鲜活的弟子。 | 人物干瘪无趣，全是老实人;重设定轻人物，没事件
+  observable:
+  - 'character维度: 人物干瘪无趣，全是老实人'
+  - 'simplicity维度: 重设定轻人物，没事件'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1241
+  - 1340
+  score: 23
+  score_raw: 23左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 座门收徒
+  genre_guess:
+  - 修仙
+  - 收徒流
+  overall_comment: 只有框架没有有趣人物，收徒流必须立起鲜活的弟子。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物干瘪无趣，全是老实人
+    raw_quote: 大哥这种稿子 就只有行没有神
+  - dimension: simplicity
+    severity: negative
+    content: 重设定轻人物，没事件
+    raw_quote: 特重点在设定上 特重点在人物上

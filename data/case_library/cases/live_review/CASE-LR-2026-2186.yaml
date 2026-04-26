@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2186
+title: 非法穿越者（诸天万界） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 诸天
+  - 同人
+  - 乐子
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材冷但能写，可惜改成原创不伦不类，人设笨，比例驾驭不住，不如直接写同人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材冷但能写，可惜改成原创不伦不类，人设笨，比例驾驭不住，不如直接写同人。 | 蹭了同人热度却硬套原创，不伦不类;人设太笨，智商低
+  observable:
+  - 'genre维度: 蹭了同人热度却硬套原创，不伦不类'
+  - 'character维度: 人设太笨，智商低'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1255
+  - 1288
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 非法穿越者（诸天万界）
+  genre_guess:
+  - 诸天
+  - 同人
+  - 乐子
+  overall_comment: 题材冷但能写，可惜改成原创不伦不类，人设笨，比例驾驭不住，不如直接写同人。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 蹭了同人热度却硬套原创，不伦不类
+    raw_quote: 这又不龙不类又不是叶凡 … 就直接写同仁都没啥事
+  - dimension: character
+    severity: negative
+    content: 人设太笨，智商低
+    raw_quote: 感觉智商好低啊 … 一个天地再就说

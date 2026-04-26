@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1523
+title: 教授我醒醒 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 科幻
+  - 无限流
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十到不了 十八最够了 | 科幻神怪多种题材杂糅，主线不清，雪白描写冗长无意义。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 科幻神怪多种题材杂糅，主线不清，雪白描写冗长无意义。 | 科幻、玄幻、末日混搭，分类混乱;对女性角色外貌描写过度冗长无聊
+  observable:
+  - 'genre维度: 科幻、玄幻、末日混搭，分类混乱'
+  - 'character维度: 对女性角色外貌描写过度冗长无聊'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1581
+  - 1700
+  score: 18
+  score_raw: 二十到不了 十八最够了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 教授我醒醒
+  genre_guess:
+  - 科幻
+  - 无限流
+  - 末日
+  overall_comment: 科幻神怪多种题材杂糅，主线不清，雪白描写冗长无意义。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻、玄幻、末日混搭，分类混乱
+    raw_quote: 活体样本这东西 不是玄幻里面的 … 以上就三个题材
+  - dimension: character
+    severity: negative
+    content: 对女性角色外貌描写过度冗长无聊
+    raw_quote: 一个睫毛都要跨半天 … 真想把你给杀了

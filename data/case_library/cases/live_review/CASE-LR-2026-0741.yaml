@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0741
+title: 妈有人欺负我 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 系统
+  - 穿越
+  - 上交国家
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有18的话就给你19吧 | 题材本质是上交国家变体，设定换成妈更显尴尬，开篇啰嗦无事件，属于自嗨设定堆砌。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材本质是上交国家变体，设定换成妈更显尴尬，开篇啰嗦无事件，属于自嗨设定堆砌。 | 设定本质是上交国家变体，换成妈更尴尬;开篇啰嗦，第一章就在卖设定毫无事件推进
+  observable:
+  - 'golden_finger维度: 设定本质是上交国家变体，换成妈更尴尬'
+  - 'opening维度: 开篇啰嗦，第一章就在卖设定毫无事件推进'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1851
+  - 1930
+  score: 19
+  score_raw: 有18的话就给你19吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 妈有人欺负我
+  genre_guess:
+  - 系统
+  - 穿越
+  - 上交国家
+  overall_comment: 题材本质是上交国家变体，设定换成妈更显尴尬，开篇啰嗦无事件，属于自嗨设定堆砌。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 设定本质是上交国家变体，换成妈更尴尬
+    raw_quote: 人家是上交国家 你的上交亲妈是吧...真的很尴尬
+  - dimension: opening
+    severity: negative
+    content: 开篇啰嗦，第一章就在卖设定毫无事件推进
+    raw_quote: 还在卖设计吗 都什么时代了还在卖设计 没人看这个设计
+  - dimension: simplicity
+    severity: neutral
+    content: 内容啰嗦结束，题材选择到剧情安排均有问题
+    raw_quote: 就是啰嗦啊 结束啊 包括题材 选择剧情安排 都是问题

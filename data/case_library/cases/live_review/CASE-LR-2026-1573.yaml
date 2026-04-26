@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1573
+title: 重生神父律师周成毅 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 律师
+  - 普法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 前面普法切入好，后面水文变无聊，文青病重，市场不对。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 前面普法切入好，后面水文变无聊，文青病重，市场不对。 | 重生后信息量重复，大量水文和周杰伦歌词填充;片段过于文青煽情，新人不宜模仿大神
+  observable:
+  - 'pacing维度: 重生后信息量重复，大量水文和周杰伦歌词填充'
+  - 'simplicity维度: 片段过于文青煽情，新人不宜模仿大神'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 1751
+  - 1900
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生神父律师周成毅
+  genre_guess:
+  - 都市
+  - 重生
+  - 律师
+  - 普法
+  overall_comment: 前面普法切入好，后面水文变无聊，文青病重，市场不对。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 普法节目切入有吸引力，冲突明确
+    raw_quote: 就是切入普法那段好
+  - dimension: pacing
+    severity: negative
+    content: 重生后信息量重复，大量水文和周杰伦歌词填充
+    raw_quote: 这水分掉了呀，一张没写完，两首歌已经拿过来水文了
+  - dimension: simplicity
+    severity: negative
+    content: 片段过于文青煽情，新人不宜模仿大神
+    raw_quote: 有点太文青了，纯生文是最容易让新手混淆自己跟大神的差距

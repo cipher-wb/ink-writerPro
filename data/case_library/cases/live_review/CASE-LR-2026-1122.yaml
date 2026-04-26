@@ -1,0 +1,65 @@
+case_id: CASE-LR-2026-1122
+title: 北美邪修密教教主 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 都市
+  - 北美
+  - 驱魔
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这50分吧太拖了 | 忏悔小剧场拉扯太多，节奏拖沓致读者审美疲劳，但切入可取。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 忏悔小剧场拉扯太多，节奏拖沓致读者审美疲劳，但切入可取。 | 忏悔场景信息量过大，节奏拖沓，易导致睡着;北美题材过度竞争，自身实力尚需沉淀
+  observable:
+  - 'pacing维度: 忏悔场景信息量过大，节奏拖沓，易导致睡着'
+  - 'simplicity维度: 北美题材过度竞争，自身实力尚需沉淀'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 964
+  - 1075
+  score: 50
+  score_raw: 这50分吧太拖了
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 北美邪修密教教主
+  genre_guess:
+  - 都市
+  - 北美
+  - 驱魔
+  - 系统
+  overall_comment: 忏悔小剧场拉扯太多，节奏拖沓致读者审美疲劳，但切入可取。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 忏悔场景信息量过大，节奏拖沓，易导致睡着
+    raw_quote: '这一章的信息量是人家好多倍了
+
+      一直写这个呢
+
+      三句话稳了'
+  - dimension: opening
+    severity: neutral
+    content: 切入设定OK，但展开不够利落
+    raw_quote: 切入没啥大问题
+  - dimension: simplicity
+    severity: negative
+    content: 北美题材过度竞争，自身实力尚需沉淀
+    raw_quote: '大哥我觉得现在北美很卷很卷
+
+      你现在的实力根本不够'

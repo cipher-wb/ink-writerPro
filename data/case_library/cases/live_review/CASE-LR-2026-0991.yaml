@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0991
+title: 穿越抗战追杀燕双鹰 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 军事
+  - 抗战
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 水平的话写倒也能写 | 系统和汉奸身份容易违规，节奏紧凑但需调整方向。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统和汉奸身份容易违规，节奏紧凑但需调整方向。 | 穿汉奸加系统历史虚无主义，容易敏感违规;系统太蓝精灵，费卢风
+  observable:
+  - 'taboo维度: 穿汉奸加系统历史虚无主义，容易敏感违规'
+  - 'golden_finger维度: 系统太蓝精灵，费卢风'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 670
+  - 776
+  score: null
+  score_raw: 水平的话写倒也能写
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越抗战追杀燕双鹰
+  genre_guess:
+  - 军事
+  - 抗战
+  - 穿越
+  overall_comment: 系统和汉奸身份容易违规，节奏紧凑但需调整方向。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 穿汉奸加系统历史虚无主义，容易敏感违规
+    raw_quote: 这个有点历史虚无主义的……这种很容易很容易过线，很敏感
+  - dimension: golden_finger
+    severity: negative
+    content: 系统太蓝精灵，费卢风
+    raw_quote: 这个系统有点蓝精灵了……有点太大了，有点太爽了
+  - dimension: genre
+    severity: neutral
+    content: 建议走谍战或诸天文路线
+    raw_quote: 要么就是把这个系统你改的正常一点吧……要么定一个影视剧……要么诸天影宗……

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1383
+title: 凡人投认文/想加入因为鬼 (fail / 5分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 科幻
+  - 废土
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 抱成五分 | 切入还行但展开一意孤行，故事断裂，后面变成设定堆砌，卖点混乱，只学雪白切入其他全不会。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入还行但展开一意孤行，故事断裂，后面变成设定堆砌，卖点混乱，只学雪白切入其他全不会。 | 故事突然中断，越写越垃圾，卖点乱转;只会雪白切入，后面剧情根本不会写
+  observable:
+  - 'pacing维度: 故事突然中断，越写越垃圾，卖点乱转'
+  - 'simplicity维度: 只会雪白切入，后面剧情根本不会写'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 476
+  - 535
+  score: 5
+  score_raw: 抱成五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 凡人投认文/想加入因为鬼
+  genre_guess:
+  - 科幻
+  - 废土
+  - 雪白
+  overall_comment: 切入还行但展开一意孤行，故事断裂，后面变成设定堆砌，卖点混乱，只学雪白切入其他全不会。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局雪白切入有看点，拉扯尚可
+    raw_quote: 切入可以 雪白切入好呀...大嫂拉扯
+  - dimension: pacing
+    severity: negative
+    content: 故事突然中断，越写越垃圾，卖点乱转
+    raw_quote: 后面越写越垃圾了...卖点疯狂的乱转
+  - dimension: simplicity
+    severity: negative
+    content: 只会雪白切入，后面剧情根本不会写
+    raw_quote: 她就雪白写的好呀 其他的不会学...就后面也不会写

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0289
+title: 边关战神架空历史 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 架空历史
+  - 边关战神
+  - 复仇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未给分 | 架空历史新人没市场，无代入感，上帝视角推进
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 架空历史新人没市场，无代入感，上帝视角推进 | 没有代入感，不写中国人视角;架空历史新人碰不了，复仇主线老套
+  observable:
+  - 'character维度: 没有代入感，不写中国人视角'
+  - 'genre维度: 架空历史新人碰不了，复仇主线老套'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 2086
+  - 2160
+  score: null
+  score_raw: 未给分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 边关战神架空历史
+  genre_guess:
+  - 架空历史
+  - 边关战神
+  - 复仇
+  overall_comment: 架空历史新人没市场，无代入感，上帝视角推进
+  comments:
+  - dimension: character
+    severity: negative
+    content: 没有代入感，不写中国人视角
+    raw_quote: 没有一句代入感...你什么人啊，不写
+  - dimension: genre
+    severity: negative
+    content: 架空历史新人碰不了，复仇主线老套
+    raw_quote: 架空历史没人看，新人来说

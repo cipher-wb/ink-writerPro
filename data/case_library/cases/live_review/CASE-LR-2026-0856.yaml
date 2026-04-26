@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0856
+title: 全知神 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 悬疑
+  - 佛教
+  - 精神病
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44分 | 氛围感好但读者看不懂，精神病题材难处理，建议以后写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围感好但读者看不懂，精神病题材难处理，建议以后写。 | 精神病题材，非白金无耐心环境;开头看不懂，故弄玄虚
+  observable:
+  - 'genre维度: 精神病题材，非白金无耐心环境'
+  - 'opening维度: 开头看不懂，故弄玄虚'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1271
+  - 1330
+  score: 44
+  score_raw: 44分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全知神
+  genre_guess:
+  - 悬疑
+  - 佛教
+  - 精神病
+  overall_comment: 氛围感好但读者看不懂，精神病题材难处理，建议以后写。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 精神病题材，非白金无耐心环境
+    raw_quote: 这种题材说白了不是白金大神没那个环境去消受
+  - dimension: opening
+    severity: negative
+    content: 开头看不懂，故弄玄虚
+    raw_quote: 从头到尾就神神叨叨，读者看不懂就会走

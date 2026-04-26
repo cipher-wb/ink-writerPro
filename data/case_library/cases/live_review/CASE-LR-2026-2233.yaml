@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-2233
+title: 开局截胡徐福 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 历史
+  - 大秦
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分其实都有点那个 | 文笔太白，不分段长句多，对白小白，剧情水，建议抄书练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔太白，不分段长句多，对白小白，剧情水，建议抄书练笔。 | 文笔太白，对话和叙述缺乏历史感;不分段，句子过长，疑似语音码字;剧情太水，穿越前啰嗦太多
+  observable:
+  - 'simplicity维度: 文笔太白，对话和叙述缺乏历史感'
+  - 'misc维度: 不分段，句子过长，疑似语音码字'
+  - 'pacing维度: 剧情太水，穿越前啰嗦太多'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 1422
+  - 1541
+  score: 16
+  score_raw: 16分其实都有点那个
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 开局截胡徐福
+  genre_guess:
+  - 历史
+  - 大秦
+  - 穿越
+  overall_comment: 文笔太白，不分段长句多，对白小白，剧情水，建议抄书练笔。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文笔太白，对话和叙述缺乏历史感
+    raw_quote: '这对话太小白了 这不是历史的文笔
+
+      不够大哥 这文笔写不了历史'
+  - dimension: misc
+    severity: negative
+    content: 不分段，句子过长，疑似语音码字
+    raw_quote: '这句话有点离谱 这句话60个字
+
+      谁能一口气读啊
+
+      分段啊'
+  - dimension: pacing
+    severity: negative
+    content: 剧情太水，穿越前啰嗦太多
+    raw_quote: 就水啊...穿越一笔带过 你爸爸那些可以不用写

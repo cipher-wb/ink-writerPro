@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1757
+title: 穿越之垃圾星 (fail / 8分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 科幻
+  - 玄幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 8分 | 设定堆砌严重，剧情乏味，缺乏学习模仿。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定堆砌严重，剧情乏味，缺乏学习模仿。 | 前两章全是设定介绍，毫无剧情推进。
+  observable:
+  - 'simplicity维度: 前两章全是设定介绍，毫无剧情推进。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 2340
+  - 2430
+  score: 8
+  score_raw: 8分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越之垃圾星
+  genre_guess:
+  - 科幻
+  - 玄幻
+  - 系统
+  overall_comment: 设定堆砌严重，剧情乏味，缺乏学习模仿。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 前两章全是设定介绍，毫无剧情推进。
+    raw_quote: 两张全是设定的 设定设定设定设定

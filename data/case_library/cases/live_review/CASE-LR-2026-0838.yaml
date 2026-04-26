@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0838
+title: 赖爷的钱 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 修仙
+  - 雪白
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就是一个30左右吧 | 封面像潘金莲，内容却写足浴催债，偏题严重，第一章需聚焦雪白事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 封面像潘金莲，内容却写足浴催债，偏题严重，第一章需聚焦雪白事件。 | 第一章偏题，写催债破案而非雪白;封面引雪白读者，正文不符期待;金手指债务系统太出戏
+  observable:
+  - 'opening维度: 第一章偏题，写催债破案而非雪白'
+  - 'genre维度: 封面引雪白读者，正文不符期待'
+  - 'golden_finger维度: 金手指债务系统太出戏'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 159
+  - 210
+  score: 30
+  score_raw: 也就是一个30左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 赖爷的钱
+  genre_guess:
+  - 修仙
+  - 雪白
+  - 都市
+  overall_comment: 封面像潘金莲，内容却写足浴催债，偏题严重，第一章需聚焦雪白事件。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章偏题，写催债破案而非雪白
+    raw_quote: 就重点写这个偏题了呀
+  - dimension: genre
+    severity: negative
+    content: 封面引雪白读者，正文不符期待
+    raw_quote: 书名封面你的封面把你害了
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指债务系统太出戏
+    raw_quote: 金手指太出戏了

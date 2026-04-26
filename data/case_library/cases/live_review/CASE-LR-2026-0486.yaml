@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0486
+title: 地府打假人 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 都市
+  - 地府
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 哇 32分 | 地府小判官题材太老，逻辑立不住。放在起点没人看，只能发番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 地府小判官题材太老，逻辑立不住。放在起点没人看，只能发番茄。 | 题材老套，16年的地府小判官变种，起点不吃这套;拉仇恨方式像小红书，逻辑立不住
+  observable:
+  - 'genre维度: 题材老套，16年的地府小判官变种，起点不吃这套'
+  - 'misc维度: 拉仇恨方式像小红书，逻辑立不住'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1156
+  - 1192
+  score: 32
+  score_raw: 哇 32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 地府打假人
+  genre_guess:
+  - 都市
+  - 地府
+  - 脑洞
+  overall_comment: 地府小判官题材太老，逻辑立不住。放在起点没人看，只能发番茄。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材老套，16年的地府小判官变种，起点不吃这套
+    raw_quote: 我16年刚入职 我就签过一本书叫地府小判官对吧...这太老了这个 太老了
+  - dimension: misc
+    severity: negative
+    content: 拉仇恨方式像小红书，逻辑立不住
+    raw_quote: 你们这群男人就是看不惯女生过得好 恶意诽谤...这个拉仇恨真的有点太小红书了

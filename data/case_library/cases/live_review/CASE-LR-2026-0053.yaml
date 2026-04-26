@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0053
+title: 火星做自己的复制人 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 未来设定缺乏代入感，需要都市开局，基本功扎实但方向错。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 未来设定缺乏代入感，需要都市开局，基本功扎实但方向错。 | 世界观太陌生，无代入感;应该都市开局
+  observable:
+  - 'simplicity维度: 世界观太陌生，无代入感'
+  - 'opening维度: 应该都市开局'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 981
+  - 1030
+  score: 28
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 火星做自己的复制人
+  genre_guess:
+  - 科幻
+  overall_comment: 未来设定缺乏代入感，需要都市开局，基本功扎实但方向错。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 世界观太陌生，无代入感
+    raw_quote: 这个东西对我们来说太陌生了
+  - dimension: opening
+    severity: negative
+    content: 应该都市开局
+    raw_quote: 都市开局吧 兄弟

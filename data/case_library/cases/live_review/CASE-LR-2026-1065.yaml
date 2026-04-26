@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1065
+title: 我在天庭写材料 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 仙侠
+  - 职场
+  - 公务员
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得挺到了28分 | 影射风险高，过不了审，剧情薄弱，缺乏具体事件支撑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 影射风险高，过不了审，剧情薄弱，缺乏具体事件支撑。 | 题材过审难，易被屏蔽;事件偏弱，缺乏小剧场和卖点
+  observable:
+  - 'taboo维度: 题材过审难，易被屏蔽'
+  - 'highpoint维度: 事件偏弱，缺乏小剧场和卖点'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 611
+  - 680
+  score: 28
+  score_raw: 我觉得挺到了28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在天庭写材料
+  genre_guess:
+  - 仙侠
+  - 职场
+  - 公务员
+  overall_comment: 影射风险高，过不了审，剧情薄弱，缺乏具体事件支撑。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 题材过审难，易被屏蔽
+    raw_quote: 这第一章都过不了审 起点的官职哪怕重生
+  - dimension: highpoint
+    severity: negative
+    content: 事件偏弱，缺乏小剧场和卖点
+    raw_quote: 事件比较弱 你不能光把这种就是玩梗的乐子当成卖点

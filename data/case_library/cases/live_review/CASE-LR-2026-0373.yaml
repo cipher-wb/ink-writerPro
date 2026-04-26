@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0373
+title: 速通黄油成仙 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 游戏
+  - 修仙
+  - 人设文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 你的水平根本不够这种书 | 只学雪白学偏了，比例不够驾驭此类题材，建议写简单东西。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 只学雪白学偏了，比例不够驾驭此类题材，建议写简单东西。 | 盲目模仿优秀作品雪白部分，忽视核心人物与故事;主角心理活动生硬，缺少盘算穿插
+  observable:
+  - 'simplicity维度: 盲目模仿优秀作品雪白部分，忽视核心人物与故事'
+  - 'character维度: 主角心理活动生硬，缺少盘算穿插'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 1031
+  - 1110
+  score: null
+  score_raw: 你的水平根本不够这种书
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 速通黄油成仙
+  genre_guess:
+  - 游戏
+  - 修仙
+  - 人设文
+  overall_comment: 只学雪白学偏了，比例不够驾驭此类题材，建议写简单东西。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 盲目模仿优秀作品雪白部分，忽视核心人物与故事
+    raw_quote: 你现在满脑子都是雪白 其实我觉得你学人家应该是学人设
+  - dimension: character
+    severity: negative
+    content: 主角心理活动生硬，缺少盘算穿插
+    raw_quote: 主角的盘算什么的很少的 其实主角的盘算要流畅的穿插在剧情里面

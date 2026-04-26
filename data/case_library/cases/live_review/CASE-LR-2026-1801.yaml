@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1801
+title: 赛博高武贷款系统 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 高武
+  - 赛博
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分左右吧 | 北大天赋作者，文笔流畅灵活，但剧情俗套、金手指无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 北大天赋作者，文笔流畅灵活，但剧情俗套、金手指无聊。 | 借贷/高利贷系统金手指没意思，缺乏新意。;过于着急，铺垫不够，人物出来太多，建议参考《吞噬星空》打好基本功。
+  observable:
+  - 'golden_finger维度: 借贷/高利贷系统金手指没意思，缺乏新意。'
+  - 'pacing维度: 过于着急，铺垫不够，人物出来太多，建议参考《吞噬星空》打好基本功。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 1292
+  - 1341
+  score: 40
+  score_raw: 40分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 赛博高武贷款系统
+  genre_guess:
+  - 高武
+  - 赛博
+  - 校园
+  overall_comment: 北大天赋作者，文笔流畅灵活，但剧情俗套、金手指无聊。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 借贷/高利贷系统金手指没意思，缺乏新意。
+    raw_quote: 借贷这个不好...用外挂了这种真不好...至少也有个好卖点...不过这种算了吧
+  - dimension: pacing
+    severity: negative
+    content: 过于着急，铺垫不够，人物出来太多，建议参考《吞噬星空》打好基本功。
+    raw_quote: 有点着急了...人物有多出来的...得有强危机

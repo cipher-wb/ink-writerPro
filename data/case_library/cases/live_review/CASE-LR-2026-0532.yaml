@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0532
+title: 我的当铺通三界 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 悬疑
+  - 灵异
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你28分 | 第一人称劝退，年代感缺失，核心卖点不接地气，氛围起不来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称劝退，年代感缺失，核心卖点不接地气，氛围起不来。 | 第一人称不适合起点的悬疑，建议用第三人称;没有年代味道，功德扣减像游戏出戏
+  observable:
+  - 'simplicity维度: 第一人称不适合起点的悬疑，建议用第三人称'
+  - 'genre维度: 没有年代味道，功德扣减像游戏出戏'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 431
+  - 610
+  score: 28
+  score_raw: 给你28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的当铺通三界
+  genre_guess:
+  - 悬疑
+  - 灵异
+  - 都市
+  overall_comment: 第一人称劝退，年代感缺失，核心卖点不接地气，氛围起不来。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 第一人称不适合起点的悬疑，建议用第三人称
+    raw_quote: 第一人称不要写了 尽量第三人称对吧
+  - dimension: genre
+    severity: negative
+    content: 没有年代味道，功德扣减像游戏出戏
+    raw_quote: 你没有表达清楚你的代入感以及年代感的生活 … 这玩意不接地气

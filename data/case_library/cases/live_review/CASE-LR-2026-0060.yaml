@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0060
+title: 红羽十七次轮回 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 末日
+  - 都市异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十八分 | 题材太冷，都市异能无市场，28分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太冷，都市异能无市场，28分。 | 题材太冷门;只能发蓝界
+  observable:
+  - 'genre维度: 题材太冷门'
+  - 'misc维度: 只能发蓝界'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 1331
+  - 1380
+  score: 28
+  score_raw: 二十八分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 红羽十七次轮回
+  genre_guess:
+  - 末日
+  - 都市异能
+  overall_comment: 题材太冷，都市异能无市场，28分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材太冷门
+    raw_quote: 起点的都市一棱就少到什么程度
+  - dimension: misc
+    severity: negative
+    content: 只能发蓝界
+    raw_quote: 真要写也只能难尽

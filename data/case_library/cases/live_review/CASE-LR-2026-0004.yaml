@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0004
+title: 苏语穿越修仙 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11YrABQEyZ
+scope:
+  genre:
+  - 穿越
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十分吧也是 | 故事表达尚且清楚，但事件不接地气、缺乏代入感，节奏推进过快，像中期夺宝而不是开局，需要从低身份慢慢铺垫。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YrABQEyZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事表达尚且清楚，但事件不接地气、缺乏代入感，节奏推进过快，像中期夺宝而不是开局，需要从低身份慢慢铺垫。 | 开篇像书中期幻境夺宝，缺少低身份代入和主角目标建立;节奏拉得太快，没有耐心铺垫人物和期待感
+  observable:
+  - 'opening维度: 开篇像书中期幻境夺宝，缺少低身份代入和主角目标建立'
+  - 'pacing维度: 节奏拉得太快，没有耐心铺垫人物和期待感'
+live_review_meta:
+  source_bvid: BV11YrABQEyZ
+  source_line_range:
+  - 450
+  - 568
+  score: 20
+  score_raw: 二十分吧也是
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 苏语穿越修仙
+  genre_guess:
+  - 穿越
+  - 修仙
+  overall_comment: 故事表达尚且清楚，但事件不接地气、缺乏代入感，节奏推进过快，像中期夺宝而不是开局，需要从低身份慢慢铺垫。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇像书中期幻境夺宝，缺少低身份代入和主角目标建立
+    raw_quote: 这种幻境没啥意思 就是有点像中期不像 开头
+  - dimension: pacing
+    severity: negative
+    content: 节奏拉得太快，没有耐心铺垫人物和期待感
+    raw_quote: 拉快了 二十分吧也是 就表达故事还好 但太快了

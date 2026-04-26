@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0433
+title: 战机荣耀九冠王重生 (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 电竞
+  - 重生
+  - 机甲
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 68吧是吧 | 内容表达流畅但切入过时，缺乏新颖老梗或极端设定，难适应现在市场
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容表达流畅但切入过时，缺乏新颖老梗或极端设定，难适应现在市场 | 战机类题材过时，仍是老套学动威力写法，缺乏新颖老梗;开头穿搭过多，人设裸露度不足，无法快速吸引读者
+  observable:
+  - 'genre维度: 战机类题材过时，仍是老套学动威力写法，缺乏新颖老梗'
+  - 'opening维度: 开头穿搭过多，人设裸露度不足，无法快速吸引读者'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 1
+  - 130
+  score: 68
+  score_raw: 68吧是吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 战机荣耀九冠王重生
+  genre_guess:
+  - 电竞
+  - 重生
+  - 机甲
+  overall_comment: 内容表达流畅但切入过时，缺乏新颖老梗或极端设定，难适应现在市场
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 战机类题材过时，仍是老套学动威力写法，缺乏新颖老梗
+    raw_quote: 战机现在也很难...还是老套的这种学动威力的说法...没有什么好的老洞
+  - dimension: opening
+    severity: negative
+    content: 开头穿搭过多，人设裸露度不足，无法快速吸引读者
+    raw_quote: 穿的太多了...穿这么多衣服干嘛
+  - dimension: pacing
+    severity: positive
+    content: 简介后有带入感，叙述流畅
+    raw_quote: 倒是也很好比例倒是可以的把你带入感也有稍微介绍一两句立刻就开始

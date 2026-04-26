@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1178
+title: 长安出了个妖力 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 架空历史
+  - 朝堂
+  - 无修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 文笔扎实但纯粹架空朝堂没有修炼元素，缺乏爽点和市场，卖报的都不写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但纯粹架空朝堂没有修炼元素，缺乏爽点和市场，卖报的都不写。 | 架空朝堂无玄幻修仙，网文难以生存;缺少核心卖点，比武会友和送情报都不吸引人;开篇做梦切入老套，世界观展开无趣
+  observable:
+  - 'genre维度: 架空朝堂无玄幻修仙，网文难以生存'
+  - 'hook维度: 缺少核心卖点，比武会友和送情报都不吸引人'
+  - 'opening维度: 开篇做梦切入老套，世界观展开无趣'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 1590
+  - 1750
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 长安出了个妖力
+  genre_guess:
+  - 架空历史
+  - 朝堂
+  - 无修炼
+  overall_comment: 文笔扎实但纯粹架空朝堂没有修炼元素，缺乏爽点和市场，卖报的都不写。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空朝堂无玄幻修仙，网文难以生存
+    raw_quote: 没人看呀 比例好但真没人看呀 这种加空朝堂没人看
+  - dimension: hook
+    severity: negative
+    content: 缺少核心卖点，比武会友和送情报都不吸引人
+    raw_quote: 没什么好卖点多么过
+  - dimension: opening
+    severity: negative
+    content: 开篇做梦切入老套，世界观展开无趣
+    raw_quote: 你这个做梦 切入也非常的老套

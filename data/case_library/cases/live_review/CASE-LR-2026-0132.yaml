@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0132
+title: 我在末日勾脸成神 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 末日
+  - 都市
+  - 梦境
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 亏个锤子30分磕一个锤子 | 梦境设定硬塞进都市文把对的全赶跑，读者一头雾水，修改建议全删梦境直接写都市。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 梦境设定硬塞进都市文把对的全赶跑，读者一头雾水，修改建议全删梦境直接写都市。 | 开篇梦境把读者往都市外拽，丧失代入感;新人乱加复杂设定等于自毁，建议全部删掉;梦境拖节奏且毫无必要
+  observable:
+  - 'opening维度: 开篇梦境把读者往都市外拽，丧失代入感'
+  - 'simplicity维度: 新人乱加复杂设定等于自毁，建议全部删掉'
+  - 'pacing维度: 梦境拖节奏且毫无必要'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 96
+  - 151
+  score: null
+  score_raw: 亏个锤子30分磕一个锤子
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 我在末日勾脸成神
+  genre_guess:
+  - 末日
+  - 都市
+  - 梦境
+  overall_comment: 梦境设定硬塞进都市文把对的全赶跑，读者一头雾水，修改建议全删梦境直接写都市。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇梦境把读者往都市外拽，丧失代入感
+    raw_quote: 你为什么要加这个东西 为什么要加梦境
+  - dimension: simplicity
+    severity: negative
+    content: 新人乱加复杂设定等于自毁，建议全部删掉
+    raw_quote: 新人加梦境等于等死 大哥这句话给你刻出来
+  - dimension: pacing
+    severity: negative
+    content: 梦境拖节奏且毫无必要
+    raw_quote: 这一段全删了 直接写都市就完事了 你看山寨是不是流畅多了

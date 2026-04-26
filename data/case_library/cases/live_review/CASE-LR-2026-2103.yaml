@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2103
+title: 放贷成神财富造物主 (fail / 27分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 奇幻
+  - 西幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 27分吧 | 世界观看不懂，人物关系太复杂，老套的设定介绍写法，缺乏期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观看不懂，人物关系太复杂，老套的设定介绍写法，缺乏期待感。 | 老套的世界观介绍开头，读者接受不了;太复杂看不懂，不接地气
+  observable:
+  - 'opening维度: 老套的世界观介绍开头，读者接受不了'
+  - 'simplicity维度: 太复杂看不懂，不接地气'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 93
+  - 145
+  score: 27
+  score_raw: 27分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 放贷成神财富造物主
+  genre_guess:
+  - 奇幻
+  - 西幻
+  - 系统
+  overall_comment: 世界观看不懂，人物关系太复杂，老套的设定介绍写法，缺乏期待感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 老套的世界观介绍开头，读者接受不了
+    raw_quote: 好老套的写法呀
+  - dimension: simplicity
+    severity: negative
+    content: 太复杂看不懂，不接地气
+    raw_quote: 你这叽里咕噜了半天，一句期待感都没有

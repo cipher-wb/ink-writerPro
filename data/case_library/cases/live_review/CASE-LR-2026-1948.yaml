@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1948
+title: 创业重生做游戏 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥45分吧 | 题材非常好，切入和前呼后应有亮点，是及格的稿子。但穿越后主线展开完全失去重点，且总喜欢写臭脚等恶心细节。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材非常好，切入和前呼后应有亮点，是及格的稿子。但穿越后主线展开完全失去重点，且总喜欢写臭脚等恶心细节。 | 穿越后写无关紧要的日常，主线完全跑偏
+  observable:
+  - 'pacing维度: 穿越后写无关紧要的日常，主线完全跑偏'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 672
+  - 750
+  score: 45
+  score_raw: 给大哥45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 创业重生做游戏
+  genre_guess:
+  - 都市
+  - 重生
+  - 游戏
+  overall_comment: 题材非常好，切入和前呼后应有亮点，是及格的稿子。但穿越后主线展开完全失去重点，且总喜欢写臭脚等恶心细节。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 前面的时代感、攒劲节目与前世呼应写得很好
+    raw_quote: 潜货后应了这里是挺好的...这个还挺好的潜意后果就有点意思
+  - dimension: pacing
+    severity: negative
+    content: 穿越后写无关紧要的日常，主线完全跑偏
+    raw_quote: 你的洗脚穿越前呼后应攒劲的节目我很喜欢，但是穿越后写这个美洋洋个肺洋洋这一点意思都没有

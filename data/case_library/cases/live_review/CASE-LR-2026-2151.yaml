@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2151
+title: 修仙世界穿越：易小安 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 穿越
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分左右的真的改不了 | 不懂网文，过程描写太多而忽略代入感和期待感，情节无聊且自嗨。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不懂网文，过程描写太多而忽略代入感和期待感，情节无聊且自嗨。 | 穿越前铺垫太长，还用刷短剧穿越这种过时梗;写了太多不重要的过程，缺乏心理活动和期待感;小说从头到尾都是无聊的事件和设定，毫无看点
+  observable:
+  - 'opening维度: 穿越前铺垫太长，还用刷短剧穿越这种过时梗'
+  - 'pacing维度: 写了太多不重要的过程，缺乏心理活动和期待感'
+  - 'simplicity维度: 小说从头到尾都是无聊的事件和设定，毫无看点'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 774
+  - 912
+  score: null
+  score_raw: 20分左右的真的改不了
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 修仙世界穿越：易小安
+  genre_guess:
+  - 穿越
+  - 修仙
+  overall_comment: 不懂网文，过程描写太多而忽略代入感和期待感，情节无聊且自嗨。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越前铺垫太长，还用刷短剧穿越这种过时梗
+    raw_quote: 以前穿越都是看小说，现在穿越都是看短剧了...大哥网红真要完了吧
+  - dimension: pacing
+    severity: negative
+    content: 写了太多不重要的过程，缺乏心理活动和期待感
+    raw_quote: 这些过程都不重要...前因后果跟代入感是最重要的...你们为什么老写过程啊
+  - dimension: simplicity
+    severity: negative
+    content: 小说从头到尾都是无聊的事件和设定，毫无看点
+    raw_quote: 这射箭无聊系统无聊...写了个非常无聊的事件...自嗨的东西

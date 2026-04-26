@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0435
+title: 梦境定制少年文 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 都市
+  - 梦境
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大哥给十五幅啊 | 题材拉垮、对白小白、人设虚浮，完全自嗨式写作，毫无市场适应力
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材拉垮、对白小白、人设虚浮，完全自嗨式写作，毫无市场适应力 | 新人加梦境设定就是扑街，题材过时没人看;角色对白过于小白，感染力差;写法复杂自嗨，缺乏简单清晰的传播力
+  observable:
+  - 'genre维度: 新人加梦境设定就是扑街，题材过时没人看'
+  - 'character维度: 角色对白过于小白，感染力差'
+  - 'simplicity维度: 写法复杂自嗨，缺乏简单清晰的传播力'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 254
+  - 318
+  score: 15
+  score_raw: 只能给大哥给十五幅啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 梦境定制少年文
+  genre_guess:
+  - 都市
+  - 梦境
+  - 校园
+  overall_comment: 题材拉垮、对白小白、人设虚浮，完全自嗨式写作，毫无市场适应力
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 新人加梦境设定就是扑街，题材过时没人看
+    raw_quote: 新人加梦境就等于铺盖
+  - dimension: character
+    severity: negative
+    content: 角色对白过于小白，感染力差
+    raw_quote: 对白太小白了...观众也睡着了主播也睡着了
+  - dimension: simplicity
+    severity: negative
+    content: 写法复杂自嗨，缺乏简单清晰的传播力
+    raw_quote: 题材太拉垮了...写法太复杂了

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0103
+title: 水源庄/方良古册推演 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 仙侠
+  - 玄幻
+  - 武道
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50多分有，58吧满 | 缝合痕迹重，驱动力不够强，和金手指推演过多缺乏新意，但起点风格对味。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缝合痕迹重，驱动力不够强，和金手指推演过多缺乏新意，但起点风格对味。 | 金手指写法与水猴子太像，推演过多强驱动力不够
+  observable:
+  - 'golden_finger维度: 金手指写法与水猴子太像，推演过多强驱动力不够'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 861
+  - 940
+  score: 58
+  score_raw: 50多分有，58吧满
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 水源庄/方良古册推演
+  genre_guess:
+  - 仙侠
+  - 玄幻
+  - 武道
+  overall_comment: 缝合痕迹重，驱动力不够强，和金手指推演过多缺乏新意，但起点风格对味。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 稍微有点新意，反转了一下
+    raw_quote: 反转了一下吧，稍微有点新意吧
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指写法与水猴子太像，推演过多强驱动力不够
+    raw_quote: 你这个金手指跟水猴子也太像了，而且你的困境不如人家

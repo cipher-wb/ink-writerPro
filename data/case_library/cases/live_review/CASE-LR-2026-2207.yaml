@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2207
+title: 玄女宝剑 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 西游
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分吧 | 有乐子的快节奏爽文，但情节过于恶趣味，缺乏仙侠味道，适合发蓝精灵试试。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有乐子的快节奏爽文，但情节过于恶趣味，缺乏仙侠味道，适合发蓝精灵试试。 | 没有仙侠味道，太小白;切入情节过于血腥恶趣味，可能暴露XP
+  observable:
+  - 'genre维度: 没有仙侠味道，太小白'
+  - 'opening维度: 切入情节过于血腥恶趣味，可能暴露XP'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 454
+  - 502
+  score: 50
+  score_raw: 50分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玄女宝剑
+  genre_guess:
+  - 西游
+  - 仙侠
+  overall_comment: 有乐子的快节奏爽文，但情节过于恶趣味，缺乏仙侠味道，适合发蓝精灵试试。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 没有仙侠味道，太小白
+    raw_quote: 这个比例没有仙侠味道...太小白了
+  - dimension: opening
+    severity: negative
+    content: 切入情节过于血腥恶趣味，可能暴露XP
+    raw_quote: 这个活剥人皮 这个有点吓人了...把人家反叛变成把人家男的变成女的...这个有点暴露大哥的XP了
+  - dimension: pacing
+    severity: positive
+    content: 节奏快，有乐子
+    raw_quote: 节奏挺快的 挺有乐子的

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0015
+title: 800斤的师姐 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11viPBrEPq
+scope:
+  genre:
+  - 仙侠
+  - 恶搞
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分肯定有 | 恶搞乐子文，番茄风浓厚，不适合起点，但作者有点天赋。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11viPBrEPq.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 恶搞乐子文，番茄风浓厚，不适合起点，但作者有点天赋。 | 恶搞乐子文在起点接受度低
+  observable:
+  - 'genre维度: 恶搞乐子文在起点接受度低'
+live_review_meta:
+  source_bvid: BV11viPBrEPq
+  source_line_range:
+  - 1171
+  - 1351
+  score: 40
+  score_raw: 40分肯定有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 800斤的师姐
+  genre_guess:
+  - 仙侠
+  - 恶搞
+  - 乐子文
+  overall_comment: 恶搞乐子文，番茄风浓厚，不适合起点，但作者有点天赋。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 恶搞乐子文在起点接受度低
+    raw_quote: 太恶搞了 其他读者真不爱看这种
+  - dimension: simplicity
+    severity: positive
+    content: 文笔和氛围营造有可取之处
+    raw_quote: 比例啊 氛围啊什么的 发番茄也是有量的

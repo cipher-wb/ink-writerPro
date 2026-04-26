@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0051
+title: 修仙发现姑姑是鬼 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 修仙
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30 暗分吧 | 反转弱，设定老套，无亮点，30分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 反转弱，设定老套，无亮点，30分。 | 反转太弱;剧情无聊
+  observable:
+  - 'highpoint维度: 反转太弱'
+  - 'opening维度: 剧情无聊'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 881
+  - 930
+  score: 30
+  score_raw: 30 暗分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙发现姑姑是鬼
+  genre_guess:
+  - 修仙
+  - 民俗
+  overall_comment: 反转弱，设定老套，无亮点，30分。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 反转太弱
+    raw_quote: 好弱的反转
+  - dimension: opening
+    severity: negative
+    content: 剧情无聊
+    raw_quote: 没意思啊

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1908
+title: 牛郎织女玄幻投稿 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 玄幻
+  - 传统老派
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多有个20分出头吧对吧 | 老派玄幻复仇题材，缺乏市场吸引力，建议推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老派玄幻复仇题材，缺乏市场吸引力，建议推翻重写。 | 题材非常传统老派，苦大仇深报仇套路，市场上没人看。;设定太古早，类似05、06年的风格。
+  observable:
+  - 'genre维度: 题材非常传统老派，苦大仇深报仇套路，市场上没人看。'
+  - 'opening维度: 设定太古早，类似05、06年的风格。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 10
+  - 60
+  score: 20
+  score_raw: 差不多有个20分出头吧对吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 牛郎织女玄幻投稿
+  genre_guess:
+  - 玄幻
+  - 传统老派
+  overall_comment: 老派玄幻复仇题材，缺乏市场吸引力，建议推翻重写。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材非常传统老派，苦大仇深报仇套路，市场上没人看。
+    raw_quote: 就非常传统的一个老派玄幻对吧...苦大仇深报仇来，没人看了
+  - dimension: opening
+    severity: negative
+    content: 设定太古早，类似05、06年的风格。
+    raw_quote: 以前那个兽血沸腾，那个年代的05年零六年的时候

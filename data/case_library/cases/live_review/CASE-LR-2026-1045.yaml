@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1045
+title: 宝可梦训练家文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 宝可梦
+  - 同人
+  - 捕获
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35层吧 | 题材凉，切入慢，卖点出来太晚，狼的剧情完全没必要
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材凉，切入慢，卖点出来太晚，狼的剧情完全没必要 | 开头狼的遭遇拖太久，应该直接切入捕获少女卖点;宝可梦题材整体潜上限有限，新书难起
+  observable:
+  - 'opening维度: 开头狼的遭遇拖太久，应该直接切入捕获少女卖点'
+  - 'genre维度: 宝可梦题材整体潜上限有限，新书难起'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 1601
+  - 1800
+  score: 35
+  score_raw: 35层吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宝可梦训练家文
+  genre_guess:
+  - 宝可梦
+  - 同人
+  - 捕获
+  overall_comment: 题材凉，切入慢，卖点出来太晚，狼的剧情完全没必要
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头狼的遭遇拖太久，应该直接切入捕获少女卖点
+    raw_quote: 这里狼就可以跳过了 其实哎豺狼上去骑士 狼又不是什么魔物 老写他干嘛
+  - dimension: genre
+    severity: negative
+    content: 宝可梦题材整体潜上限有限，新书难起
+    raw_quote: 宝可梦现在真不行 兄弟我们后台天天能看到 真没什么起来的书

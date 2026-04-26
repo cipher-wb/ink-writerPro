@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1391
+title: 精灵领主开始成为造物主 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 奇幻
+  - 炼金术士
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分吧 | 题材可以，但切入太差，不会讲故事，信件里塞设定犯大忌，建议抄书练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材可以，但切入太差，不会讲故事，信件里塞设定犯大忌，建议抄书练笔。 | 开局写土木老哥前世冗长无意义，应直接切入穿越;信件里加大量设定，读者不看，设定应融入剧情;有个16岁女儿设定严重阻碍代入感
+  observable:
+  - 'opening维度: 开局写土木老哥前世冗长无意义，应直接切入穿越'
+  - 'simplicity维度: 信件里加大量设定，读者不看，设定应融入剧情'
+  - 'character维度: 有个16岁女儿设定严重阻碍代入感'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 1061
+  - 1130
+  score: 25
+  score_raw: 差不多就25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 精灵领主开始成为造物主
+  genre_guess:
+  - 奇幻
+  - 炼金术士
+  - 穿越
+  overall_comment: 题材可以，但切入太差，不会讲故事，信件里塞设定犯大忌，建议抄书练笔。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局写土木老哥前世冗长无意义，应直接切入穿越
+    raw_quote: 别写土木啊 没人关心你土木老哥的事情...你就穿越了就行了
+  - dimension: simplicity
+    severity: negative
+    content: 信件里加大量设定，读者不看，设定应融入剧情
+    raw_quote: 不要在信件里面加设定了...设定没人看
+  - dimension: character
+    severity: negative
+    content: 有个16岁女儿设定严重阻碍代入感
+    raw_quote: 不能有个16岁的女昂呀 这不扯大吗

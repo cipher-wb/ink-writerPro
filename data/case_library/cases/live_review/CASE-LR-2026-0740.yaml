@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0740
+title: 天归请神 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 灵异
+  - 神话
+  - 复苏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多给你18分吧 | 开篇故弄玄虚，主角代入感几乎为零，完全是自嗨写法，需要彻底推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇故弄玄虚，主角代入感几乎为零，完全是自嗨写法，需要彻底推翻重写。 | 主角代入感几乎为零，读者无法投入;开篇故弄玄虚如说书人，读者第一时间会跑;背景世界观太复杂，缺乏简单流畅的故事
+  observable:
+  - 'character维度: 主角代入感几乎为零，读者无法投入'
+  - 'opening维度: 开篇故弄玄虚如说书人，读者第一时间会跑'
+  - 'genre维度: 背景世界观太复杂，缺乏简单流畅的故事'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1771
+  - 1850
+  score: 18
+  score_raw: 最多给你18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天归请神
+  genre_guess:
+  - 灵异
+  - 神话
+  - 复苏
+  overall_comment: 开篇故弄玄虚，主角代入感几乎为零，完全是自嗨写法，需要彻底推翻重写。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角代入感几乎为零，读者无法投入
+    raw_quote: 主角代入感几乎为零啊 这玩意完全是自嗨的大哥
+  - dimension: opening
+    severity: negative
+    content: 开篇故弄玄虚如说书人，读者第一时间会跑
+    raw_quote: 这种说话太故弄玄学了...放开头的读者会跑的 第一时间跑
+  - dimension: genre
+    severity: negative
+    content: 背景世界观太复杂，缺乏简单流畅的故事
+    raw_quote: 这玩意完全是自嗨的大哥 这玩意你得推翻了 改不了改不了

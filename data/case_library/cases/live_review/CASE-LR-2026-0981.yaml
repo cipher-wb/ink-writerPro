@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0981
+title: 末世异能与大手 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 末世
+  - 异能
+  - 废土
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就是个个人不定 | 第一章设定太多太差，后面探索真实感还可以。对话小白，节奏慢，得推翻重做。像19年蓝精灵刚开站时的文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章设定太多太差，后面探索真实感还可以。对话小白，节奏慢，得推翻重做。像19年蓝精灵刚开站时的文。 | 开头全是设定，没有剧情支撑，读者读不进去。;对话太白，口语化严重得删掉。
+  observable:
+  - 'opening维度: 开头全是设定，没有剧情支撑，读者读不进去。'
+  - 'character维度: 对话太白，口语化严重得删掉。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 3351
+  - 3510
+  score: null
+  score_raw: 差不多也就是个个人不定
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 末世异能与大手
+  genre_guess:
+  - 末世
+  - 异能
+  - 废土
+  overall_comment: 第一章设定太多太差，后面探索真实感还可以。对话小白，节奏慢，得推翻重做。像19年蓝精灵刚开站时的文。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头全是设定，没有剧情支撑，读者读不进去。
+    raw_quote: 第一张设定确实多...第一章比较差...前面的一点人物...不足以让人支撑把这些事情看进去
+  - dimension: character
+    severity: negative
+    content: 对话太白，口语化严重得删掉。
+    raw_quote: 对话都很小白了...这都是口语化...要删掉的...口语化太多了

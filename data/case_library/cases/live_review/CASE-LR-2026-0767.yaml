@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0767
+title: 重生全华班夺冠结婚 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 重生
+  - 电竞
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 作为老乡只能给两成八分好吧 | 对网文认知为零，重生日常无聊，要么写纯电竞要么去系统。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对网文认知为零，重生日常无聊，要么写纯电竞要么去系统。 | 不知道是写重生日常还是重生电竞，两条路没选定;慢热无事件，全文无卖点，节奏太拉胯
+  observable:
+  - 'genre维度: 不知道是写重生日常还是重生电竞，两条路没选定'
+  - 'opening维度: 慢热无事件，全文无卖点，节奏太拉胯'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1831
+  - 1900
+  score: 28
+  score_raw: 作为老乡只能给两成八分好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生全华班夺冠结婚
+  genre_guess:
+  - 重生
+  - 电竞
+  - 系统
+  overall_comment: 对网文认知为零，重生日常无聊，要么写纯电竞要么去系统。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 不知道是写重生日常还是重生电竞，两条路没选定
+    raw_quote: 你写电竞文……就老老实实电竞……要么就是重生，不要扯游戏
+  - dimension: opening
+    severity: negative
+    content: 慢热无事件，全文无卖点，节奏太拉胯
+    raw_quote: 就重生了……就这点东西……真没事件

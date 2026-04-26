@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1242
+title: 蛮荒系统穿越 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 穿越
+  - 系统
+  - 蛮荒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就48 | 文笔跟上，思路正确，但杀狼救美的桥段太儿戏，系统和事件结合生硬。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔跟上，思路正确，但杀狼救美的桥段太儿戏，系统和事件结合生硬。 | 杀狼救未婚妻的事件写得太儿戏，缺乏真实感;事件太儿戏，人设出戏
+  observable:
+  - 'opening维度: 杀狼救未婚妻的事件写得太儿戏，缺乏真实感'
+  - 'character维度: 事件太儿戏，人设出戏'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 862
+  - 920
+  score: 48
+  score_raw: 差不多就48
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蛮荒系统穿越
+  genre_guess:
+  - 穿越
+  - 系统
+  - 蛮荒
+  overall_comment: 文笔跟上，思路正确，但杀狼救美的桥段太儿戏，系统和事件结合生硬。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 杀狼救未婚妻的事件写得太儿戏，缺乏真实感
+    raw_quote: 这个杀狼救未婚妻是扯淡的
+  - dimension: character
+    severity: negative
+    content: 事件太儿戏，人设出戏
+    raw_quote: 真的事件详细了，这个系统驱动力也挺详细的，就
+  - dimension: misc
+    severity: positive
+    content: 文笔可以，思路大致理解
+    raw_quote: 比例蛮好的，套路思路大概理解，文笔也跟得上

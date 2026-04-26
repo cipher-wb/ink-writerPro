@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1575
+title: 机械异世界新人类 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 科幻
+  - 异世界
+  - 末世
+  - 机械
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 卖设定，不接地气，不懂商业化创作。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 卖设定，不接地气，不懂商业化创作。 | 科幻混杂异世界，完全不接地气，与读者脱节;过度执着于设定，忽视商业化写作本质
+  observable:
+  - 'genre维度: 科幻混杂异世界，完全不接地气，与读者脱节'
+  - 'ops维度: 过度执着于设定，忽视商业化写作本质'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 2001
+  - 2100
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 机械异世界新人类
+  genre_guess:
+  - 科幻
+  - 异世界
+  - 末世
+  - 机械
+  overall_comment: 卖设定，不接地气，不懂商业化创作。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻混杂异世界，完全不接地气，与读者脱节
+    raw_quote: 就是异世界加科幻，给我的感觉就是根本就不接地气
+  - dimension: ops
+    severity: negative
+    content: 过度执着于设定，忽视商业化写作本质
+    raw_quote: 网文是商业化创作，是要让读者喜欢看的，这句话不懂一辈子录不了

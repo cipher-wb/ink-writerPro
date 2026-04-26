@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0906
+title: 谢神末世魔方 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 科幻
+  - 末世
+  - 机械
+  - 家族修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 魔方机械设定绕来绕去，脱裤子放屁，本质家族修仙，但题材拉胯。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 魔方机械设定绕来绕去，脱裤子放屁，本质家族修仙，但题材拉胯。 | 魔方绑定少年就是家族修仙，多此一举;强行加入科幻机械类，冒充超神机械师，思路不对
+  observable:
+  - 'golden_finger维度: 魔方绑定少年就是家族修仙，多此一举'
+  - 'genre维度: 强行加入科幻机械类，冒充超神机械师，思路不对'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 2670
+  - 2780
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 谢神末世魔方
+  genre_guess:
+  - 科幻
+  - 末世
+  - 机械
+  - 家族修仙
+  overall_comment: 魔方机械设定绕来绕去，脱裤子放屁，本质家族修仙，但题材拉胯。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 魔方绑定少年就是家族修仙，多此一举
+    raw_quote: 魔方机械...然后绑定少年不就是家族修仙吗？就脱裤子放屁
+  - dimension: genre
+    severity: negative
+    content: 强行加入科幻机械类，冒充超神机械师，思路不对
+    raw_quote: 非要加这种科幻类的什么机械类的东西，冒充超神机械师呀

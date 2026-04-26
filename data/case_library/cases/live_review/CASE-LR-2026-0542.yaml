@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0542
+title: 从废宅青梅开始改造 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 都市
+  - 恋爱
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给他38分吧 | 日常恋爱流，高昂不能谈恋爱，审核风险大，人设干瘪剧情无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 日常恋爱流，高昂不能谈恋爱，审核风险大，人设干瘪剧情无聊。 | 高昂谈恋爱是毒点，审核重点关注;人设干瘪，和NPC一样没有极端性格
+  observable:
+  - 'simplicity维度: 高昂谈恋爱是毒点，审核重点关注'
+  - 'character维度: 人设干瘪，和NPC一样没有极端性格'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 1821
+  - 1930
+  score: 38
+  score_raw: 给他38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从废宅青梅开始改造
+  genre_guess:
+  - 都市
+  - 恋爱
+  - 日常
+  overall_comment: 日常恋爱流，高昂不能谈恋爱，审核风险大，人设干瘪剧情无聊。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 高昂谈恋爱是毒点，审核重点关注
+    raw_quote: 高昂是不能谈恋爱的 懂吗 … 审核会有重点关注
+  - dimension: character
+    severity: negative
+    content: 人设干瘪，和NPC一样没有极端性格
+    raw_quote: 剧情无聊 人设干瘪 其实也和NPC好比 没有极端比比

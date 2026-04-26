@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0595
+title: 维多利亚科学教父 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 历史
+  - 科技
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也上不了30 我觉得28分吧 | 理工科题材切入身份不明确，场景式开头太慢，缺乏好身份和亮点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 理工科题材切入身份不明确，场景式开头太慢，缺乏好身份和亮点。 | 开头场景描述太多，未快速明确身份和目标;主角身份太普通，缺少能蹭热度的牛动弟子之类身份
+  observable:
+  - 'opening维度: 开头场景描述太多，未快速明确身份和目标'
+  - 'character维度: 主角身份太普通，缺少能蹭热度的牛动弟子之类身份'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 1001
+  - 1150
+  score: 28
+  score_raw: 也上不了30 我觉得28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 维多利亚科学教父
+  genre_guess:
+  - 历史
+  - 科技
+  - 西幻
+  overall_comment: 理工科题材切入身份不明确，场景式开头太慢，缺乏好身份和亮点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头场景描述太多，未快速明确身份和目标
+    raw_quote: 他不要写场景...别写场景...又偏题了
+  - dimension: character
+    severity: negative
+    content: 主角身份太普通，缺少能蹭热度的牛动弟子之类身份
+    raw_quote: 你这个身份没意思...出来混身份都是自己给的

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1329
+title: 母猪产后护理 崇祯年间 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 历史
+  - 明末
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分 | 低身份种田太烂梗，不适合起点，更适合番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 低身份种田太烂梗，不适合起点，更适合番茄。 | 小县令种田起点没市场
+  observable:
+  - 'genre维度: 小县令种田起点没市场'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 2101
+  - 2160
+  score: 38
+  score_raw: 38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 母猪产后护理 崇祯年间
+  genre_guess:
+  - 历史
+  - 明末
+  - 种田
+  overall_comment: 低身份种田太烂梗，不适合起点，更适合番茄。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 小县令种田起点没市场
+    raw_quote: 这种小县令 小官这种不适合起点
+  - dimension: opening
+    severity: neutral
+    content: 接地气，真实感还不错
+    raw_quote: 接地气的大陆感觉还可以 还是有天赋的

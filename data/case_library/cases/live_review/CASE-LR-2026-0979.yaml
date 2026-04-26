@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0979
+title: 末日男变女情侣酒店 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 末日
+  - 变身
+  - 言情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就25分吧...不上30 | 节奏快但偏题，重点是谈恋爱。变身文毒，女女没市场也许发菠萝包。末日感觉太少。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快但偏题，重点是谈恋爱。变身文毒，女女没市场也许发菠萝包。末日感觉太少。 | 在起点太毒，更像菠萝包或番茄女频。;男变女加老师互动像是耽美，擦边危险。
+  observable:
+  - 'genre维度: 在起点太毒，更像菠萝包或番茄女频。'
+  - 'taboo维度: 男变女加老师互动像是耽美，擦边危险。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 2991
+  - 3160
+  score: 25
+  score_raw: 就25分吧...不上30
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日男变女情侣酒店
+  genre_guess:
+  - 末日
+  - 变身
+  - 言情
+  overall_comment: 节奏快但偏题，重点是谈恋爱。变身文毒，女女没市场也许发菠萝包。末日感觉太少。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 在起点太毒，更像菠萝包或番茄女频。
+    raw_quote: 在蓝屏比较毒...发蓝精灵说不定有市场...菠萝包其实可以
+  - dimension: taboo
+    severity: negative
+    content: 男变女加老师互动像是耽美，擦边危险。
+    raw_quote: 这耽美啊...这这不行...这这这不行...这不行...这这你跟你老师...

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0793
+title: 人在魔法少女 但是变身歧视 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 魔法少女
+  - 修仙
+  - 穿越
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十四分满 | 融合过多元素，设定复杂，但有看点，节奏需加速
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 融合过多元素，设定复杂，但有看点，节奏需加速 | 设定复杂，元素过多，读者可能看不懂;节奏需加速，设定需简化
+  observable:
+  - 'ops维度: 设定复杂，元素过多，读者可能看不懂'
+  - 'pacing维度: 节奏需加速，设定需简化'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 370
+  - 460
+  score: 44
+  score_raw: 四十四分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 人在魔法少女 但是变身歧视
+  genre_guess:
+  - 魔法少女
+  - 修仙
+  - 穿越
+  - 同人
+  overall_comment: 融合过多元素，设定复杂，但有看点，节奏需加速
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 设定复杂，元素过多，读者可能看不懂
+    raw_quote: 我觉得写得复杂
+  - dimension: pacing
+    severity: negative
+    content: 节奏需加速，设定需简化
+    raw_quote: 节奏 加速 设定 简化

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1343
+title: 金融狗重生创业 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 都市
+  - 商战
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 商战平淡，缺乏金手指，建议学习重生创业套路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 商战平淡，缺乏金手指，建议学习重生创业套路。 | 开场干巴巴，没有悬念和钩子;缺少核心金手指，读者难以代入;商业细节过于儿戏，真实感不足
+  observable:
+  - 'hook维度: 开场干巴巴，没有悬念和钩子'
+  - 'golden_finger维度: 缺少核心金手指，读者难以代入'
+  - 'simplicity维度: 商业细节过于儿戏，真实感不足'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 1010
+  - 1050
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 金融狗重生创业
+  genre_guess:
+  - 都市
+  - 商战
+  - 重生
+  overall_comment: 商战平淡，缺乏金手指，建议学习重生创业套路。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开场干巴巴，没有悬念和钩子
+    raw_quote: 没意思呀，光在这庆贺有啥意思
+  - dimension: golden_finger
+    severity: negative
+    content: 缺少核心金手指，读者难以代入
+    raw_quote: 你连重生都没有，设完局就开始报仇了有啥意思
+  - dimension: simplicity
+    severity: negative
+    content: 商业细节过于儿戏，真实感不足
+    raw_quote: 一百万两百万这种不行，你就deepsec去搜商业

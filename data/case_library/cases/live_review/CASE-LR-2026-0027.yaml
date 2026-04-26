@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0027
+title: 修仙从拒绝师姐开始 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 仙侠
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 太套路了 | 雪白拉扯套路化，缺乏新意，像仙子八股文，可发番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白拉扯套路化，缺乏新意，像仙子八股文，可发番茄。 | 师姐拉扯套路，无意外转折
+  observable:
+  - 'character维度: 师姐拉扯套路，无意外转折'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 415
+  - 440
+  score: null
+  score_raw: 太套路了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 修仙从拒绝师姐开始
+  genre_guess:
+  - 仙侠
+  - 雪白
+  overall_comment: 雪白拉扯套路化，缺乏新意，像仙子八股文，可发番茄。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 师姐拉扯套路，无意外转折
+    raw_quote: 这种卖点就是说单薄 ... 就是我觉得就是一个挺好的一个场景 像你这种场景其实很虚

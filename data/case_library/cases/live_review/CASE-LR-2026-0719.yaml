@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0719
+title: 兽人/异世界哥布林少女 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 西幻
+  - 兽人
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多四十左右 | 文笔不错，但人物智商偏低，西幻设定过于普通；第三章有偏离。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，但人物智商偏低，西幻设定过于普通；第三章有偏离。 | 人物对话和互动逻辑显弱智
+  observable:
+  - 'character维度: 人物对话和互动逻辑显弱智'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 1301
+  - 1375
+  score: 40
+  score_raw: 差不多四十左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 兽人/异世界哥布林少女
+  genre_guess:
+  - 西幻
+  - 兽人
+  - 穿越
+  overall_comment: 文笔不错，但人物智商偏低，西幻设定过于普通；第三章有偏离。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物对话和互动逻辑显弱智
+    raw_quote: 这个对话太雪白了...智商也不高...这什么智商
+  - dimension: hook
+    severity: positive
+    content: 少女单章开场与期待感思路可行
+    raw_quote: 有个期待感...反一下...这个干货

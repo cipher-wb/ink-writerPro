@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0559
+title: 重生未来猎人 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我是只能25分最多啊 | 双重生题材过时，夹杂异能设定无聊，25分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 双重生题材过时，夹杂异能设定无聊，25分 | 双重生+异能设定读者不爱看;设定太多摊子铺得大没有重点
+  observable:
+  - 'genre维度: 双重生+异能设定读者不爱看'
+  - 'simplicity维度: 设定太多摊子铺得大没有重点'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 827
+  - 995
+  score: 25
+  score_raw: 我是只能25分最多啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生未来猎人
+  genre_guess:
+  - 都市
+  - 重生
+  - 异能
+  overall_comment: 双重生题材过时，夹杂异能设定无聊，25分
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 双重生+异能设定读者不爱看
+    raw_quote: 你这个都市艺人路线...别人也不爱看呀
+  - dimension: simplicity
+    severity: negative
+    content: 设定太多摊子铺得大没有重点
+    raw_quote: 别讲设定了呀

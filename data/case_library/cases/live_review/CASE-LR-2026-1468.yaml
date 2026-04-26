@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1468
+title: 疯狂的直窗东京律师 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 都市
+  - 律师
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分吧 | 切入好，雪白为辅可以，后面元素多了，建议走职场律师。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入好，雪白为辅可以，后面元素多了，建议走职场律师。 | 后面加黑道警察元素杂了
+  observable:
+  - 'genre维度: 后面加黑道警察元素杂了'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 721
+  - 810
+  score: 55
+  score_raw: 55分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 疯狂的直窗东京律师
+  genre_guess:
+  - 都市
+  - 律师
+  - 雪白
+  overall_comment: 切入好，雪白为辅可以，后面元素多了，建议走职场律师。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 切入挺好的
+    raw_quote: 这个开头切肉其实问题不大
+  - dimension: genre
+    severity: negative
+    content: 后面加黑道警察元素杂了
+    raw_quote: 你想加的东西太多了 就是黑道啊 保护啊 警察这都扯上了

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0976
+title: 重生小学生画画 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分嘛 | 练得还可以，苏老师人设不错。但卖点奇怪，小学生和美女老师补课感觉不对，重生的意思也没体现。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 练得还可以，苏老师人设不错。但卖点奇怪，小学生和美女老师补课感觉不对，重生的意思也没体现。 | 卖点奇怪，像日轻写法不像重生文。;画画这个点很难写出爽点，节奏出得很慢。
+  observable:
+  - 'highpoint维度: 卖点奇怪，像日轻写法不像重生文。'
+  - 'genre维度: 画画这个点很难写出爽点，节奏出得很慢。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 2501
+  - 2690
+  score: 38
+  score_raw: 38分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生小学生画画
+  genre_guess:
+  - 都市
+  - 重生
+  - 轻小说
+  overall_comment: 练得还可以，苏老师人设不错。但卖点奇怪，小学生和美女老师补课感觉不对，重生的意思也没体现。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 卖点奇怪，像日轻写法不像重生文。
+    raw_quote: 这个卖点有点奇怪...真有点奇怪...有点像日清写法...不像重生文
+  - dimension: genre
+    severity: negative
+    content: 画画这个点很难写出爽点，节奏出得很慢。
+    raw_quote: 画画这个点很难写...真很难写...画画也许你还要加雪白...可更扯淡了哈

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0766
+title: 暗影学姐猫娘轻小说 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 轻小说
+  - 猫娘
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32 | 前两章日常太无聊，卖点第三章才出来节奏太慢，妹妹人设崩坏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 前两章日常太无聊，卖点第三章才出来节奏太慢，妹妹人设崩坏。 | 前三章才进入主线，前两章纯日常删掉都行;妹妹发现哥哥买斐济杯是毒点
+  observable:
+  - 'opening维度: 前三章才进入主线，前两章纯日常删掉都行'
+  - 'character维度: 妹妹发现哥哥买斐济杯是毒点'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1761
+  - 1830
+  score: 32
+  score_raw: '32'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 暗影学姐猫娘轻小说
+  genre_guess:
+  - 轻小说
+  - 猫娘
+  - 日常
+  overall_comment: 前两章日常太无聊，卖点第三章才出来节奏太慢，妹妹人设崩坏。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前三章才进入主线，前两章纯日常删掉都行
+    raw_quote: 开头日常没问题，但日常不是无聊啊……节奏太慢了
+  - dimension: character
+    severity: negative
+    content: 妹妹发现哥哥买斐济杯是毒点
+    raw_quote: 你偷偷买了个斐济杯了……真毒的……你不能妹妹发现哥哥

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0855
+title: 道友天劫上保险 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 修真
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 设定类系统文，上帝视角严重，金手指出戏且事件无聊，仙侠味太少。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定类系统文，上帝视角严重，金手指出戏且事件无聊，仙侠味太少。 | 开头描写啰嗦无代入感，上帝视角;金手指系统商城任务破坏仙侠味;新人写纯仙侠流量少，不信新人
+  observable:
+  - 'opening维度: 开头描写啰嗦无代入感，上帝视角'
+  - 'golden_finger维度: 金手指系统商城任务破坏仙侠味'
+  - 'genre维度: 新人写纯仙侠流量少，不信新人'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1211
+  - 1270
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 道友天劫上保险
+  genre_guess:
+  - 修真
+  - 系统
+  overall_comment: 设定类系统文，上帝视角严重，金手指出戏且事件无聊，仙侠味太少。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头描写啰嗦无代入感，上帝视角
+    raw_quote: 这写法也太干巴巴了，完全是上帝视角
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指系统商城任务破坏仙侠味
+    raw_quote: 你用金手指这样太破坏味道了
+  - dimension: genre
+    severity: negative
+    content: 新人写纯仙侠流量少，不信新人
+    raw_quote: 仙侠分类读者根本就不相信新人写的仙侠

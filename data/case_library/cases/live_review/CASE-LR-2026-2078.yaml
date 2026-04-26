@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2078
+title: 清风症传统武侠 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 武侠
+  - 传统
+  - 金庸风
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能18分吧，没办法忘不了陈良心 | 严重套用金庸框架，缺少网络化爽点和期待的铺垫，纯武林背景故事很难有市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 严重套用金庸框架，缺少网络化爽点和期待的铺垫，纯武林背景故事很难有市场。 | 闭门造车型的传统武侠，缺乏网络爽点和期待感;装逼情节缺少合适的对象与铺垫
+  observable:
+  - 'genre维度: 闭门造车型的传统武侠，缺乏网络爽点和期待感'
+  - 'highpoint维度: 装逼情节缺少合适的对象与铺垫'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 470
+  - 530
+  score: 18
+  score_raw: 只能18分吧，没办法忘不了陈良心
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 清风症传统武侠
+  genre_guess:
+  - 武侠
+  - 传统
+  - 金庸风
+  overall_comment: 严重套用金庸框架，缺少网络化爽点和期待的铺垫，纯武林背景故事很难有市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 闭门造车型的传统武侠，缺乏网络爽点和期待感
+    raw_quote: 大哥在这冒充古龙大哥……这稿子作为武侠来说，我觉得是严重不及格，要双电没双电，要气干嘛，要要事件贼去要人物，虚头巴脑的
+  - dimension: highpoint
+    severity: negative
+    content: 装逼情节缺少合适的对象与铺垫
+    raw_quote: 你在这讲故事就特别吹杨过，那就很爽……你这样装逼没意思啊……装逼要养对象，然后事件要有铺垫

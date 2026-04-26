@@ -1,0 +1,65 @@
+case_id: CASE-LR-2026-1133
+title: 手机里的成人游戏重生 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例的话勉勉强强有个25分的样子吧 | 前世流水账过多，重生后主线不明，缺少行业侧重点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 前世流水账过多，重生后主线不明，缺少行业侧重点。 | 重生前冗长流水账，浪费时间;无明确重生目标与行业方向
+  observable:
+  - 'opening维度: 重生前冗长流水账，浪费时间'
+  - 'pacing维度: 无明确重生目标与行业方向'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 2383
+  - 2493
+  score: 25
+  score_raw: 比例的话勉勉强强有个25分的样子吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 手机里的成人游戏重生
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 前世流水账过多，重生后主线不明，缺少行业侧重点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 重生前冗长流水账，浪费时间
+    raw_quote: '太流水账了
+
+      就是各种场景流水账'
+  - dimension: pacing
+    severity: negative
+    content: 无明确重生目标与行业方向
+    raw_quote: '你要重生成做什么呢
+
+      修手机吗
+
+      还是要创业'
+  - dimension: character
+    severity: neutral
+    content: 部分情绪与真实感处理得当
+    raw_quote: '情绪值是有的
+
+      真实感是可以的'

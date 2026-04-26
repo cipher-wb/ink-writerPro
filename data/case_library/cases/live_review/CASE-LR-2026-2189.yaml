@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2189
+title: 暮年修仙/范进中举 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 修仙
+  - 暮年
+  - 情绪流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 情绪足，有进步，但开头设定有点毒，耽误妹妹的设定显得自私。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪足，有进步，但开头设定有点毒，耽误妹妹的设定显得自私。 | 痴迷修仙耽误妹妹一辈子，人设有点毒
+  observable:
+  - 'character维度: 痴迷修仙耽误妹妹一辈子，人设有点毒'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1410
+  - 1480
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 暮年修仙/范进中举
+  genre_guess:
+  - 修仙
+  - 暮年
+  - 情绪流
+  overall_comment: 情绪足，有进步，但开头设定有点毒，耽误妹妹的设定显得自私。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 痴迷修仙耽误妹妹一辈子，人设有点毒
+    raw_quote: 你耽误了人家妹妹 人家妹妹挺好的对吧 … 这个有点毒啊这个
+  - dimension: hook
+    severity: positive
+    content: 情绪拉得足，虽然极端但有效
+    raw_quote: 情绪还是足的 对吧 你别管毒不毒 我觉得妹妹这个情绪还是足的

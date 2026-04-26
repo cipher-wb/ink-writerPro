@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0320
+title: 怪物寄生者 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 恐怖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 风格像日韩剧或漫画，文笔尚可，但网文感很弱，缺乏明确主线。起点过审困难，建议发往蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风格像日韩剧或漫画，文笔尚可，但网文感很弱，缺乏明确主线。起点过审困难，建议发往蓝精灵。 | 写法太像日漫或韩剧，缺乏网文的基本范式，需要加强网文感。;描写详细且血腥，过不了平台审核。;第一章太小白，缺少主角是谁、要干什么等基本代入信息。
+  observable:
+  - 'genre维度: 写法太像日漫或韩剧，缺乏网文的基本范式，需要加强网文感。'
+  - 'taboo维度: 描写详细且血腥，过不了平台审核。'
+  - 'opening维度: 第一章太小白，缺少主角是谁、要干什么等基本代入信息。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 1084
+  - 1187
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 怪物寄生者
+  genre_guess:
+  - 都市
+  - 异能
+  - 恐怖
+  overall_comment: 风格像日韩剧或漫画，文笔尚可，但网文感很弱，缺乏明确主线。起点过审困难，建议发往蓝精灵。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写法太像日漫或韩剧，缺乏网文的基本范式，需要加强网文感。
+    raw_quote: 这个太剧本了...很网文感很弱...没有什么网文的感觉
+  - dimension: taboo
+    severity: negative
+    content: 描写详细且血腥，过不了平台审核。
+    raw_quote: 节点过不了审...他写的太详细了些血腥寄生兽那种...这种就是过不了审
+  - dimension: opening
+    severity: negative
+    content: 第一章太小白，缺少主角是谁、要干什么等基本代入信息。
+    raw_quote: 你第一章就写的太小白了...简介也要改

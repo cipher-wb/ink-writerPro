@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1006
+title: 小人物系统一炮三响 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 都市
+  - 生活
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 太平淡了，没极端剧情 | 真实感强但太平淡，缺乏情绪和极端剧情，网文不吃。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 真实感强但太平淡，缺乏情绪和极端剧情，网文不吃。 | 日常琐碎，缺乏爆点
+  observable:
+  - 'pacing维度: 日常琐碎，缺乏爆点'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 2287
+  - 2374
+  score: null
+  score_raw: 太平淡了，没极端剧情
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 小人物系统一炮三响
+  genre_guess:
+  - 都市
+  - 生活
+  - 系统流
+  overall_comment: 真实感强但太平淡，缺乏情绪和极端剧情，网文不吃。
+  comments:
+  - dimension: hook
+    severity: neutral
+    content: 真实感强，但平淡缺乏强情绪
+    raw_quote: 写得好，但是太频繁了……太普通了，其实没什么强情绪
+  - dimension: pacing
+    severity: negative
+    content: 日常琐碎，缺乏爆点
+    raw_quote: 太平淡了……翻番茄也不行，翻番茄也不行，太平淡了，没极端剧情

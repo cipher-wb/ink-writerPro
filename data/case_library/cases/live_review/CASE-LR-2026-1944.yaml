@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1944
+title: 记忆迷宫 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 科幻
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35 | 文笔通顺但内容太无聊，上来就充满烧脑元素，缺乏让读者代入人性与故事的事件，不建议新人写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔通顺但内容太无聊，上来就充满烧脑元素，缺乏让读者代入人性与故事的事件，不建议新人写。 | 科幻悬疑题材不友好，读者不爱看烧脑;独自旁白讲，没有世界没有剧情
+  observable:
+  - 'genre维度: 科幻悬疑题材不友好，读者不爱看烧脑'
+  - 'opening维度: 独自旁白讲，没有世界没有剧情'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 437
+  - 488
+  score: 35
+  score_raw: '35'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 记忆迷宫
+  genre_guess:
+  - 科幻
+  - 悬疑
+  overall_comment: 文笔通顺但内容太无聊，上来就充满烧脑元素，缺乏让读者代入人性与故事的事件，不建议新人写。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻悬疑题材不友好，读者不爱看烧脑
+    raw_quote: 科幻悬疑...读者不爱看，你不要觉得读者很喜欢...没人喜欢上来喜欢烧老的
+  - dimension: opening
+    severity: negative
+    content: 独自旁白讲，没有世界没有剧情
+    raw_quote: 一个人读脚戏讲这种好难写兄弟...读者真不堪

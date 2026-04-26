@@ -1,0 +1,70 @@
+case_id: CASE-LR-2026-0890
+title: 千古第一龙虎榜 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MbzoBMECW
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 明朝
+  - 朝堂
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 历史穿越文，文笔扎实，懂得解释历史背景，开局切入新颖，蹭张居正严嵩等强主线，但简介过长需精简。总体可签约推荐。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MbzoBMECW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史穿越文，文笔扎实，懂得解释历史背景，开局切入新颖，蹭张居正严嵩等强主线，但简介过长需精简。总体可签约推荐。 | 投稿简介字数超标，建议控制在300字以内
+  observable:
+  - 'ops维度: 投稿简介字数超标，建议控制在300字以内'
+live_review_meta:
+  source_bvid: BV1MbzoBMECW
+  source_line_range:
+  - 16
+  - 139
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: pass
+  title_guess: 千古第一龙虎榜
+  genre_guess:
+  - 历史
+  - 穿越
+  - 明朝
+  - 朝堂
+  overall_comment: 历史穿越文，文笔扎实，懂得解释历史背景，开局切入新颖，蹭张居正严嵩等强主线，但简介过长需精简。总体可签约推荐。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局从进士榜题名切入，不写朝堂皇上，较为新颖
+    raw_quote: 第一诏书他从晋是晋榜题名 开局这个切入就挺好的 比较新
+  - dimension: ops
+    severity: negative
+    content: 投稿简介字数超标，建议控制在300字以内
+    raw_quote: 简介一般不要超过300个字
+  - dimension: pacing
+    severity: positive
+    content: 作者善于解释历史背景，让读者轻松跟上剧情
+    raw_quote: 历史就是一直跟你解释 不会写历史书的那些憨憨就一直是不给你解释
+  - dimension: hook
+    severity: positive
+    content: 开篇用严嵩作为强主线，危机感强
+    raw_quote: 严嵩嘛一上来作为一个强主线 强危机马上就要成
+  - dimension: genre
+    severity: positive
+    content: 蹭张居正、严嵩等历史名人，题材受众广
+    raw_quote: 这切入正文比包括这蹭张居正 严嵩狂蹭啊
+  - dimension: misc
+    severity: positive
+    content: 整体文风文笔无问题
+    raw_quote: 确实文风文笔没啥问题 挑不出啥问题

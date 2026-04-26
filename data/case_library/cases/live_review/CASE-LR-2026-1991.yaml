@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1991
+title: 橘子汽水/重生日记 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 重生
+  - 校园
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 日记式写法啰嗦没重点，读者看见爸妈就烦，需要做减法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 日记式写法啰嗦没重点，读者看见爸妈就烦，需要做减法。 | 开头像日记，没有主线卖点;家长里短太多，拖慢节奏且读者反感
+  observable:
+  - 'opening维度: 开头像日记，没有主线卖点'
+  - 'pacing维度: 家长里短太多，拖慢节奏且读者反感'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1591
+  - 1650
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 橘子汽水/重生日记
+  genre_guess:
+  - 重生
+  - 校园
+  - 日常
+  overall_comment: 日记式写法啰嗦没重点，读者看见爸妈就烦，需要做减法。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头像日记，没有主线卖点
+    raw_quote: 小说是要凸显重点，他有个主线他有个卖点为什么就不懂呀
+  - dimension: pacing
+    severity: negative
+    content: 家长里短太多，拖慢节奏且读者反感
+    raw_quote: 读者看到爸妈就头疼就跑路了呀

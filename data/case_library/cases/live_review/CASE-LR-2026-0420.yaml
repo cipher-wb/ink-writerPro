@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0420
+title: 拯救青梅 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44分吧 | 有天赋有优点，恋爱味道对，但金手指和展开没看点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋有优点，恋爱味道对，但金手指和展开没看点 | 系统奖励1万块钱太贱了，用金钱衡量爱情没意思;救了青梅后没展开，事件太单薄，没重点
+  observable:
+  - 'golden_finger维度: 系统奖励1万块钱太贱了，用金钱衡量爱情没意思'
+  - 'highpoint维度: 救了青梅后没展开，事件太单薄，没重点'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1421
+  - 1506
+  score: 44
+  score_raw: 44分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 拯救青梅
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 有天赋有优点，恋爱味道对，但金手指和展开没看点
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统奖励1万块钱太贱了，用金钱衡量爱情没意思
+    raw_quote: 把我的青梅竹马救了，才给1万块钱...这个东西你用金钱来衡量，其实就没意思了，其实变成完任务了
+  - dimension: highpoint
+    severity: negative
+    content: 救了青梅后没展开，事件太单薄，没重点
+    raw_quote: 任务完成1万块钱任务太垃圾了...没测重点呀...展开事件也没有...确实应该有看点但没写
+  - dimension: character
+    severity: positive
+    content: 恋爱味道写得对，青春小清新塑造正确
+    raw_quote: 他可能写爱恋爱，这恋爱还味道写的挺好的对吧，有那种清青春的感觉

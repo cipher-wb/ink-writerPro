@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1958
+title: 天海穿越永劫无间 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 同人
+  - 雪白
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30 35分有的 | 雪白天赋很高，写得很暧昧，但内容太过火且主线虚，全是脚和洗脚这类夹带私货，无法作为签约主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白天赋很高，写得很暧昧，但内容太过火且主线虚，全是脚和洗脚这类夹带私货，无法作为签约主线。 | 雪白太多太抢戏，主线内容太虚;主角太过沉迷于玉足等细节，显得偏门
+  observable:
+  - 'opening维度: 雪白太多太抢戏，主线内容太虚'
+  - 'character维度: 主角太过沉迷于玉足等细节，显得偏门'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 1385
+  - 1469
+  score: 35
+  score_raw: 30 35分有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天海穿越永劫无间
+  genre_guess:
+  - 同人
+  - 雪白
+  - 游戏
+  overall_comment: 雪白天赋很高，写得很暧昧，但内容太过火且主线虚，全是脚和洗脚这类夹带私货，无法作为签约主线。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 雪白太多太抢戏，主线内容太虚
+    raw_quote: 我觉得雪白太多了，主线其实挺弱的
+  - dimension: character
+    severity: negative
+    content: 主角太过沉迷于玉足等细节，显得偏门
+    raw_quote: 连塞到嘴里面的布都是你的国脚部啊...真感觉大哥有问题啊

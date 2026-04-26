@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2212
+title: 她体内的我 (fail / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 悬疑
+  - 女性
+  - 短篇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你就59分吧 | 短篇复仇流，脑洞不错，节奏快情绪足，但不适合起点长篇连载，建议投短篇平台。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 短篇复仇流，脑洞不错，节奏快情绪足，但不适合起点长篇连载，建议投短篇平台。 | 不适合起点女性频道，篇幅撑不起长篇
+  observable:
+  - 'genre维度: 不适合起点女性频道，篇幅撑不起长篇'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 722
+  - 772
+  score: 59
+  score_raw: 给你就59分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 她体内的我
+  genre_guess:
+  - 悬疑
+  - 女性
+  - 短篇
+  overall_comment: 短篇复仇流，脑洞不错，节奏快情绪足，但不适合起点长篇连载，建议投短篇平台。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 脑洞新鲜，代入感强，节奏快
+    raw_quote: 这个劳动这个脑洞我觉得挺好的呀...代入感特别强啊...真有天赋的
+  - dimension: genre
+    severity: negative
+    content: 不适合起点女性频道，篇幅撑不起长篇
+    raw_quote: 确实签不了吧...写不长...就一个短片嘛
+  - dimension: character
+    severity: positive
+    content: 有智商的反派让冲突升级
+    raw_quote: 然后他把那个反派一直有智商吗 反派有智商就说明你这个搞得好看

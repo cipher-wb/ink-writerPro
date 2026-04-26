@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1559
+title: 元首归来希特勒复活 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 军事
+  - 二战
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他个九分 | 题材严重踩线，希特勒形象无法通过。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材严重踩线，希特勒形象无法通过。 | 元首希特勒复活，政治敏感;涉及敏感政治人物，平台无法接受
+  observable:
+  - 'genre维度: 元首希特勒复活，政治敏感'
+  - 'ops维度: 涉及敏感政治人物，平台无法接受'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1859
+  - 1972
+  score: null
+  score_raw: 只能给他个九分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 元首归来希特勒复活
+  genre_guess:
+  - 军事
+  - 二战
+  - 穿越
+  overall_comment: 题材严重踩线，希特勒形象无法通过。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 元首希特勒复活，政治敏感
+    raw_quote: 这他妈不是希特勒复活是啥 真的是
+  - dimension: ops
+    severity: negative
+    content: 涉及敏感政治人物，平台无法接受
+    raw_quote: 起点妙太小了 养不下大哥我觉得

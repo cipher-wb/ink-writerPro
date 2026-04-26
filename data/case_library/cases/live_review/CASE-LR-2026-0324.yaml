@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0324
+title: 天龙养子花木兰 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 仙侠
+  - 历史
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 43放上面吧 | 人物拉扯和对话有天赋，前两章人设立得住，但节奏过于拖沓，期待感弱，且事件不能结束。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人物拉扯和对话有天赋，前两章人设立得住，但节奏过于拖沓，期待感弱，且事件不能结束。 | 节奏太慢，一章该写完的事件拖成了流水账。;没有金手指或修炼体系，缺乏让读者期待的内容。;偷看洗澡等桥段描写过于细节。
+  observable:
+  - 'pacing维度: 节奏太慢，一章该写完的事件拖成了流水账。'
+  - 'golden_finger维度: 没有金手指或修炼体系，缺乏让读者期待的内容。'
+  - 'taboo维度: 偷看洗澡等桥段描写过于细节。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 1540
+  - 1672
+  score: 43
+  score_raw: 43放上面吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天龙养子花木兰
+  genre_guess:
+  - 仙侠
+  - 历史
+  - 系统
+  overall_comment: 人物拉扯和对话有天赋，前两章人设立得住，但节奏过于拖沓，期待感弱，且事件不能结束。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 对白和拉扯有天赋，人设立得住。网文感很强。
+    raw_quote: 拉扯对白确实也很有天赋...孩子王的对人设其实已经立住了
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，一章该写完的事件拖成了流水账。
+    raw_quote: 就其实就是比例很好，就是节奏太慢了...但是一张写完了太多了
+  - dimension: golden_finger
+    severity: negative
+    content: 没有金手指或修炼体系，缺乏让读者期待的内容。
+    raw_quote: 你的期待感很弱...有什么金手指，有金属者才有期待感呀
+  - dimension: taboo
+    severity: negative
+    content: 偷看洗澡等桥段描写过于细节。
+    raw_quote: 你看我我看人家洗澡...这不能显这白虎的不能写不能写

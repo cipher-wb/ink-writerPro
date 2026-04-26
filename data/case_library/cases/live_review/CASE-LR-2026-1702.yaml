@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1702
+title: 三国张绣穿越重生 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  - 争霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分钟左右吧 | 第一章切入太毒，武将穿越却当全能文官写，缺乏敬畏心。第二个思路抱贾诩大腿可加分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章切入太毒，武将穿越却当全能文官写，缺乏敬畏心。第二个思路抱贾诩大腿可加分。 | 第一章主角行为太毒，缺乏历史敬畏和逻辑。;武将穿越应有自知之明，应扬长避短或抱军师大。
+  observable:
+  - 'opening维度: 第一章主角行为太毒，缺乏历史敬畏和逻辑。'
+  - 'character维度: 武将穿越应有自知之明，应扬长避短或抱军师大。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1251
+  - 1330
+  score: 40
+  score_raw: 40分钟左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国张绣穿越重生
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  - 争霸
+  overall_comment: 第一章切入太毒，武将穿越却当全能文官写，缺乏敬畏心。第二个思路抱贾诩大腿可加分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章主角行为太毒，缺乏历史敬畏和逻辑。
+    raw_quote: 你一上来装逼...你说免就免了，饿死了的对吧
+  - dimension: character
+    severity: negative
+    content: 武将穿越应有自知之明，应扬长避短或抱军师大。
+    raw_quote: 你是武将呀，你不要把自己当成文将当成全能啊

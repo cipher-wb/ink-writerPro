@@ -1,0 +1,65 @@
+case_id: CASE-LR-2026-0891
+title: 穿越平行世界拍迪迦奥特曼 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MwfRB2ERL
+scope:
+  genre:
+  - 穿越
+  - 平行世界
+  - 系统
+  - 动漫
+  - 特摄
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 签的话差不多能签啊 | 题材新颖，奥特曼特摄结合系统奖励流，开局切入尚可，但中间打怪加点过程拖沓需删减，多写奖励结算和装逼互动更容易留住读者，整体可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MwfRB2ERL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材新颖，奥特曼特摄结合系统奖励流，开局切入尚可，但中间打怪加点过程拖沓需删减，多写奖励结算和装逼互动更容易留住读者，整体可签约。 |
+    中间打怪加点过程冗长，导致读者厌烦，需要大幅删减
+  observable:
+  - 'pacing维度: 中间打怪加点过程冗长，导致读者厌烦，需要大幅删减'
+live_review_meta:
+  source_bvid: BV1MwfRB2ERL
+  source_line_range:
+  - 1
+  - 122
+  score: null
+  score_raw: 签的话差不多能签啊
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 穿越平行世界拍迪迦奥特曼
+  genre_guess:
+  - 穿越
+  - 平行世界
+  - 系统
+  - 动漫
+  - 特摄
+  overall_comment: 题材新颖，奥特曼特摄结合系统奖励流，开局切入尚可，但中间打怪加点过程拖沓需删减，多写奖励结算和装逼互动更容易留住读者，整体可签约。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 题材优秀，容易上新书榜，起量快
+    raw_quote: 这题材绝对是80分钟的题材
+  - dimension: hook
+    severity: positive
+    content: 开篇切入处理尚可
+    raw_quote: 切入也还行
+  - dimension: pacing
+    severity: negative
+    content: 中间打怪加点过程冗长，导致读者厌烦，需要大幅删减
+    raw_quote: 你不要一直比如类似于打怪加点了 怪加点其实写太多了 东西就比较厌烦了
+  - dimension: golden_finger
+    severity: positive
+    content: 系统奖励与装逼互动是核心爽点，应重点描写
+    raw_quote: 过程永远不重要永远是奖励 ... 就奖励结算以及怎么装逼嘛

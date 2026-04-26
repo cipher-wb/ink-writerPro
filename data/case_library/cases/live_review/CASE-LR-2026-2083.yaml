@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2083
+title: 重生做游戏，黑神话 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 重生
+  - 游戏
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例还好，就30 | 重生做游戏却通篇描写分手渣女，题材完全偏离，劝删掉感情线专注游戏创业。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生做游戏却通篇描写分手渣女，题材完全偏离，劝删掉感情线专注游戏创业。 | 文不对题，从头到尾都在写女人，game在哪里;题材过度同质化，分手渣女桥段烂大街
+  observable:
+  - 'genre维度: 文不对题，从头到尾都在写女人，game在哪里'
+  - 'simplicity维度: 题材过度同质化，分手渣女桥段烂大街'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 840
+  - 910
+  score: 30
+  score_raw: 比例还好，就30
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生做游戏，黑神话
+  genre_guess:
+  - 重生
+  - 游戏
+  - 都市
+  overall_comment: 重生做游戏却通篇描写分手渣女，题材完全偏离，劝删掉感情线专注游戏创业。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 文不对题，从头到尾都在写女人，game在哪里
+    raw_quote: 做游戏到现在跟游戏没关系啊……女人女人写疯掉了呀……I want to play a game, Please say game, No
+      woman
+  - dimension: simplicity
+    severity: negative
+    content: 题材过度同质化，分手渣女桥段烂大街
+    raw_quote: 我闭着眼睛这么一抓，一抓十本重生文里面九本重生都是女人是坏蛋

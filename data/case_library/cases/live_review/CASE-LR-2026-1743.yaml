@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1743
+title: 我的外婆不是人 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 灵异
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 老马这三十八分吧 | 作品涉嫌抄袭模仿《十日终焉》，缺乏原创性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作品涉嫌抄袭模仿《十日终焉》，缺乏原创性。 | 人物名字、设定高度模仿《十日终焉》，缺乏独立思考。;传统灵异写法，读者市场狭窄。
+  observable:
+  - 'misc维度: 人物名字、设定高度模仿《十日终焉》，缺乏独立思考。'
+  - 'genre维度: 传统灵异写法，读者市场狭窄。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 999
+  - 1095
+  score: 38
+  score_raw: 老马这三十八分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的外婆不是人
+  genre_guess:
+  - 灵异
+  - 悬疑
+  overall_comment: 作品涉嫌抄袭模仿《十日终焉》，缺乏原创性。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 人物名字、设定高度模仿《十日终焉》，缺乏独立思考。
+    raw_quote: 你能不能学学人家封闭了 你连人民都要抄
+  - dimension: genre
+    severity: negative
+    content: 传统灵异写法，读者市场狭窄。
+    raw_quote: 你写成传统灵异了...没有任何看的必要了已经

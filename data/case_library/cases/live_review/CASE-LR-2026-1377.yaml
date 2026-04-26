@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1377
+title: 杀手重生复仇文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 都市
+  - 杀手
+  - 重生
+  - 复仇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分嘛 | 节奏快、情绪足、文笔OK，但题材老旧，思路停留16年前新媒体风格，已被市场淘汰。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快、情绪足、文笔OK，但题材老旧，思路停留16年前新媒体风格，已被市场淘汰。 | 题材是过时的杀手重生复仇，十年前流行，现在没人看
+  observable:
+  - 'genre维度: 题材是过时的杀手重生复仇，十年前流行，现在没人看'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 55
+  - 119
+  score: 35
+  score_raw: 35分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 杀手重生复仇文
+  genre_guess:
+  - 都市
+  - 杀手
+  - 重生
+  - 复仇
+  overall_comment: 节奏快、情绪足、文笔OK，但题材老旧，思路停留16年前新媒体风格，已被市场淘汰。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材是过时的杀手重生复仇，十年前流行，现在没人看
+    raw_quote: 这15年前的说啊...现在已经被市场淘汰了
+  - dimension: pacing
+    severity: positive
+    content: 节奏推进快，情绪表达足
+    raw_quote: 节奏挺快的情绪足
+  - dimension: character
+    severity: neutral
+    content: 缺少女性角色互动，复仇主线过于单一
+    raw_quote: 再写个女的嘛，你拉个女的

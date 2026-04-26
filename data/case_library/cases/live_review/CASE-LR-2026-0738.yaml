@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0738
+title: 架空文娱重生 (unknown / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 都市
+  - 文娱
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 放上三元纸吧 | 文笔可以但架空文娱思路错了，现在读者不接受架空世界观，需结合年代背景加入真实明星。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔可以但架空文娱思路错了，现在读者不接受架空世界观，需结合年代背景加入真实明星。 | 架空文娱现在是死路，读者不认可;电影票房设定等细节过于悬浮不真实
+  observable:
+  - 'genre维度: 架空文娱现在是死路，读者不认可'
+  - 'opening维度: 电影票房设定等细节过于悬浮不真实'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1591
+  - 1680
+  score: 34
+  score_raw: 放上三元纸吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 架空文娱重生
+  genre_guess:
+  - 都市
+  - 文娱
+  - 重生
+  overall_comment: 文笔可以但架空文娱思路错了，现在读者不接受架空世界观，需结合年代背景加入真实明星。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空文娱现在是死路，读者不认可
+    raw_quote: 架空文娱现在谁写谁死呀...真没几个人敢写架空文娱的
+  - dimension: opening
+    severity: negative
+    content: 电影票房设定等细节过于悬浮不真实
+    raw_quote: 现在这种电影名不是扯淡吗...九千多万华裔票房
+  - dimension: simplicity
+    severity: positive
+    content: 文笔可以，遣词造句能力不错
+    raw_quote: 潜词都可以的 文笔可以的

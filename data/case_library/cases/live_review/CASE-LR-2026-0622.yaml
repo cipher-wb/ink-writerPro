@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0622
+title: 王牌怪兽 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 系统
+  - 东京流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多48分切入蛮好 ... 48分吧 | 哥布林杀怪切入流畅，文笔在线，但啰嗦拖沓、节奏慢，同伴角色选择失误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 哥布林杀怪切入流畅，文笔在线，但啰嗦拖沓、节奏慢，同伴角色选择失误。 | 写小女孩“肚肚”毫无吸引力，应换成御姐或圣女。;行文啰嗦，节奏拖沓，读者会失去耐心。
+  observable:
+  - 'character维度: 写小女孩“肚肚”毫无吸引力，应换成御姐或圣女。'
+  - 'pacing维度: 行文啰嗦，节奏拖沓，读者会失去耐心。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 366
+  - 455
+  score: 48
+  score_raw: 差不多48分切入蛮好 ... 48分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 王牌怪兽
+  genre_guess:
+  - 都市
+  - 异能
+  - 系统
+  - 东京流
+  overall_comment: 哥布林杀怪切入流畅，文笔在线，但啰嗦拖沓、节奏慢，同伴角色选择失误。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 利用哥布林泛滥任务作为切入，认知成本低。
+    raw_quote: 切入蛮好
+  - dimension: character
+    severity: negative
+    content: 写小女孩“肚肚”毫无吸引力，应换成御姐或圣女。
+    raw_quote: 渡度干嘛 度度跟个小屁孩似的 ... 换个那种 就是女的的反差人设呀
+  - dimension: pacing
+    severity: negative
+    content: 行文啰嗦，节奏拖沓，读者会失去耐心。
+    raw_quote: 写的太慢了 是个大问题 嗯啰嗦

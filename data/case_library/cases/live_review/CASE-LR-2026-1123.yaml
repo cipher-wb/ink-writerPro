@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1123
+title: 被魅魔当成救世主 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 奇幻
+  - 魅魔
+  - 黄油
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分满58到不了 | 黄油感严重，多女抢男主场面过激，涉黄风险高。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 黄油感严重，多女抢男主场面过激，涉黄风险高。 | 三女抢男主场景太突兀，缺乏铺垫;内容多处接近擦边，审核风险极高;整体像黄油攻略，而非正常网文主线
+  observable:
+  - 'opening维度: 三女抢男主场景太突兀，缺乏铺垫'
+  - 'taboo维度: 内容多处接近擦边，审核风险极高'
+  - 'genre维度: 整体像黄油攻略，而非正常网文主线'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 1076
+  - 1198
+  score: 48
+  score_raw: 48分满58到不了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 被魅魔当成救世主
+  genre_guess:
+  - 奇幻
+  - 魅魔
+  - 黄油
+  overall_comment: 黄油感严重，多女抢男主场面过激，涉黄风险高。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 三女抢男主场景太突兀，缺乏铺垫
+    raw_quote: '三个人抢你吧
+
+      这也太突兀了吧'
+  - dimension: taboo
+    severity: negative
+    content: 内容多处接近擦边，审核风险极高
+    raw_quote: '这塞进去审核出来了
+
+      你不要搞我啊'
+  - dimension: genre
+    severity: negative
+    content: 整体像黄油攻略，而非正常网文主线
+    raw_quote: '感觉就是黄油啊
+
+      就是我被美女包围了呀'

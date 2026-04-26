@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0743
+title: 长夜先图开局抢亲 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 玄幻
+  - 仙侠
+  - 先攻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 之前三十四五分 你看准不准 | 穿越代入感问题依旧没改，事件无聊，埋伏抢亲情节不接地气，虽有主线但整体提升不大。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越代入感问题依旧没改，事件无聊，埋伏抢亲情节不接地气，虽有主线但整体提升不大。 | 死都不写穿越代入感，视角切换混乱;事件无聊，埋伏抢亲情节悬浮缺乏现实感
+  observable:
+  - 'opening维度: 死都不写穿越代入感，视角切换混乱'
+  - 'pacing维度: 事件无聊，埋伏抢亲情节悬浮缺乏现实感'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 2041
+  - 2130
+  score: 34
+  score_raw: 之前三十四五分 你看准不准
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 长夜先图开局抢亲
+  genre_guess:
+  - 玄幻
+  - 仙侠
+  - 先攻
+  overall_comment: 穿越代入感问题依旧没改，事件无聊，埋伏抢亲情节不接地气，虽有主线但整体提升不大。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 死都不写穿越代入感，视角切换混乱
+    raw_quote: 就是不写穿越 不写大陆感 死都不写...视角什么都不对
+  - dimension: pacing
+    severity: negative
+    content: 事件无聊，埋伏抢亲情节悬浮缺乏现实感
+    raw_quote: 不接地气 事件无聊 伏击这个仙子 那又怎么样呢
+  - dimension: simplicity
+    severity: neutral
+    content: 比例和人设这块OK，但整体问题依旧
+    raw_quote: 比例跟人设这一块ok 其他的不咋样 我觉得你就三十来分吧

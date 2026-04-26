@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0142
+title: 我在末日废土君临天下 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 末日
+  - 废土
+  - 真菌
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吧 | 写法像漫画脚本，欠缺心理活动，设定占比过高，忽略人物互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法像漫画脚本，欠缺心理活动，设定占比过高，忽略人物互动。 | 开头心理活动少，像影视分镜，缺乏代入感;全程独角戏，无人物关系，末日应写人物互动
+  observable:
+  - 'opening维度: 开头心理活动少，像影视分镜，缺乏代入感'
+  - 'character维度: 全程独角戏，无人物关系，末日应写人物互动'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 214
+  - 222
+  score: 30
+  score_raw: 30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在末日废土君临天下
+  genre_guess:
+  - 末日
+  - 废土
+  - 真菌
+  overall_comment: 写法像漫画脚本，欠缺心理活动，设定占比过高，忽略人物互动。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头心理活动少，像影视分镜，缺乏代入感
+    raw_quote: 我觉得你前面这些东西都不是第一视角啊 感觉都像是那种分镜式慢剧的那种写法
+  - dimension: character
+    severity: negative
+    content: 全程独角戏，无人物关系，末日应写人物互动
+    raw_quote: 还是独角仙 还是没有人物关系 还是很无聊

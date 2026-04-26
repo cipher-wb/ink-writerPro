@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0543
+title: 被迫成为我的唯一 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 都市
+  - 恋爱
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个38分左右吧 | 纯恋爱日常没有职业或脑洞加持，像琼瑶但没事件，读者不爱看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯恋爱日常没有职业或脑洞加持，像琼瑶但没事件，读者不爱看。 | 恋爱日常在起点没受众，必须加职业或设定
+  observable:
+  - 'genre维度: 恋爱日常在起点没受众，必须加职业或设定'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 1931
+  - 2010
+  score: 38
+  score_raw: 这个38分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 被迫成为我的唯一
+  genre_guess:
+  - 都市
+  - 恋爱
+  - 轻小说
+  overall_comment: 纯恋爱日常没有职业或脑洞加持，像琼瑶但没事件，读者不爱看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 恋爱日常在起点没受众，必须加职业或设定
+    raw_quote: 我喜欢日系恋爱轻小说基本根本没有受众 … 千万不能日常啊

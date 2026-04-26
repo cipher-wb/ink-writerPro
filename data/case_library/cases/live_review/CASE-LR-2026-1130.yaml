@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-1130
+title: 青史名宫/清末穿越 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 历史
+  - 清末
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你加五分吧 | 比例功底扎实但写法过正，需学习网文技巧，绑定身份蹭历史热点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例功底扎实但写法过正，需学习网文技巧，绑定身份蹭历史热点。 | 祖宅回忆展开太慢，需快速切入身份
+  observable:
+  - 'opening维度: 祖宅回忆展开太慢，需快速切入身份'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 1997
+  - 2154
+  score: null
+  score_raw: 给你加五分吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 青史名宫/清末穿越
+  genre_guess:
+  - 历史
+  - 清末
+  - 穿越
+  overall_comment: 比例功底扎实但写法过正，需学习网文技巧，绑定身份蹭历史热点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 祖宅回忆展开太慢，需快速切入身份
+    raw_quote: '你可以把这前面的字删掉
+
+      写后面'
+  - dimension: simplicity
+    severity: positive
+    content: 医学专业细节扎实，历史文笔有优势
+    raw_quote: '我觉得你比例特别强
+
+      你看这些中医医学类的东西很专业的'
+  - dimension: genre
+    severity: neutral
+    content: 建议绑定历史知名人物身份做切入点
+    raw_quote: '你直接穿越过去
+
+      你是谁
+
+      然后这种身份开始走政治路线'

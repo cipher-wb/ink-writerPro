@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1866
+title: 王莽重生带AI系统历史文 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 王莽
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30几分 | 表达能力没问题，但题材和王莽重生加AI系统这两个点都需要改，太剑走偏锋不符合逻辑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达能力没问题，但题材和王莽重生加AI系统这两个点都需要改，太剑走偏锋不符合逻辑。 | 历史文带AI回去很尴尬，读者不会看;王莽重生的题材太小众，且金手指扣大分
+  observable:
+  - 'golden_finger维度: 历史文带AI回去很尴尬，读者不会看'
+  - 'genre维度: 王莽重生的题材太小众，且金手指扣大分'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1136
+  - 1193
+  score: 34
+  score_raw: 30几分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 王莽重生带AI系统历史文
+  genre_guess:
+  - 历史
+  - 穿越
+  - 王莽
+  overall_comment: 表达能力没问题，但题材和王莽重生加AI系统这两个点都需要改，太剑走偏锋不符合逻辑。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 历史文带AI回去很尴尬，读者不会看
+    raw_quote: 历史文 你带个AI回去 读者根本就不看
+  - dimension: genre
+    severity: negative
+    content: 王莽重生的题材太小众，且金手指扣大分
+    raw_quote: 题材还是扣大分 题材真的扣大分

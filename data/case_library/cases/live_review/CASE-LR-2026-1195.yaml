@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1195
+title: 系统让我当玩酷 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 玩酷
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分 | 文笔不错，但驱动力浪费，主线需要调整。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，但驱动力浪费，主线需要调整。 | 恶搞系统驱动无聊，建议删除或淡化;主角对丫鬟态度过于卑微，不符合纨绔身份
+  observable:
+  - 'golden_finger维度: 恶搞系统驱动无聊，建议删除或淡化'
+  - 'character维度: 主角对丫鬟态度过于卑微，不符合纨绔身份'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 851
+  - 900
+  score: 32
+  score_raw: 32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 系统让我当玩酷
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 玩酷
+  - 历史
+  overall_comment: 文笔不错，但驱动力浪费，主线需要调整。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 恶搞系统驱动无聊，建议删除或淡化
+    raw_quote: 就是恶搞系统 没意思的
+  - dimension: misc
+    severity: positive
+    content: 文笔扎实，有天赋
+    raw_quote: 文笔不错的 真不错
+  - dimension: character
+    severity: negative
+    content: 主角对丫鬟态度过于卑微，不符合纨绔身份
+    raw_quote: 你不能把卢碧当恋爱谈呀... 胆子太小了

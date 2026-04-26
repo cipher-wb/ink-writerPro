@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-2146
+title: 死亡循环：我在高中当刑警 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 悬疑
+  - 校园
+  - 无限流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 高中校园写死亡循环违规风险高，系统太抢戏，建议改成科幻或末日背景。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 高中校园写死亡循环违规风险高，系统太抢戏，建议改成科幻或末日背景。 | 高中校园写诡异死亡循环容易触碰审核红线;系统存在感过强、对话太多，喧宾夺主;刑警身份和高中校园背景搭配诡异循环不合适
+  observable:
+  - 'taboo维度: 高中校园写诡异死亡循环容易触碰审核红线'
+  - 'golden_finger维度: 系统存在感过强、对话太多，喧宾夺主'
+  - 'genre维度: 刑警身份和高中校园背景搭配诡异循环不合适'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 195
+  - 310
+  score: 28
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 死亡循环：我在高中当刑警
+  genre_guess:
+  - 悬疑
+  - 校园
+  - 无限流
+  overall_comment: 高中校园写死亡循环违规风险高，系统太抢戏，建议改成科幻或末日背景。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 高中校园写诡异死亡循环容易触碰审核红线
+    raw_quote: 你胆子是真大...这是高中无限循环的死亡吗，神秘复苏警告了我给你死亡了
+  - dimension: golden_finger
+    severity: negative
+    content: 系统存在感过强、对话太多，喧宾夺主
+    raw_quote: 跟系统不要类型...有点毒啊...真想你们的系统全杀了
+  - dimension: genre
+    severity: negative
+    content: 刑警身份和高中校园背景搭配诡异循环不合适
+    raw_quote: 高中校园很难让你去写这种死亡循环...另外一个是你的系统真的很抢戏
+  - dimension: pacing
+    severity: neutral
+    content: 遣词造句和氛围营造有一定基本功
+    raw_quote: 遣词造句氛围其实还行

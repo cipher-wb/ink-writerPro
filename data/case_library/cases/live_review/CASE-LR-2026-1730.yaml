@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1730
+title: 东京侦探·三上情报 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 都市
+  - 侦探
+  - 东京
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就五十八分吧 | 题材极佳，反白含设计有天赋，文笔扎实细节好。但任务动机过弱，节奏拖沓，缺少雪白和误会填充。系统太抢戏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材极佳，反白含设计有天赋，文笔扎实细节好。但任务动机过弱，节奏拖沓，缺少雪白和误会填充。系统太抢戏。 | 节奏拖沓，设定解释过多，读者易流失;主角接受任务的动机太弱（只为钱），需要增强
+  observable:
+  - 'pacing维度: 节奏拖沓，设定解释过多，读者易流失'
+  - 'hook维度: 主角接受任务的动机太弱（只为钱），需要增强'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1781
+  - 1861
+  score: 58
+  score_raw: 就五十八分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东京侦探·三上情报
+  genre_guess:
+  - 都市
+  - 侦探
+  - 东京
+  overall_comment: 题材极佳，反白含设计有天赋，文笔扎实细节好。但任务动机过弱，节奏拖沓，缺少雪白和误会填充。系统太抢戏。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 侦探职业切入好，韩琴反转有设计感，天赋不错
+    raw_quote: 这个其实挺好的像这一段就是能体现出你侦探的价值你知道这些细节
+  - dimension: pacing
+    severity: negative
+    content: 节奏拖沓，设定解释过多，读者易流失
+    raw_quote: 有点啰嗦了兄弟真啰嗦了这之间这都跑了
+  - dimension: hook
+    severity: negative
+    content: 主角接受任务的动机太弱（只为钱），需要增强
+    raw_quote: 重慶是为了钱这种有点太弱了真太弱了

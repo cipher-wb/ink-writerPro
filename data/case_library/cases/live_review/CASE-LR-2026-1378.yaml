@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1378
+title: 穿越天保四年 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30左右吧 | 书名起得不好，正文加入机器人设定太违和，无法代入，历史文需要正常写，读者不接受机器人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名起得不好，正文加入机器人设定太违和，无法代入，历史文需要正常写，读者不接受机器人。 | 历史文中加入机器人太出戏，读者完全无法代入;书名起得不好，没有吸引力;开篇选择正常人，缺乏代入感和看点
+  observable:
+  - 'genre维度: 历史文中加入机器人太出戏，读者完全无法代入'
+  - 'simplicity维度: 书名起得不好，没有吸引力'
+  - 'character维度: 开篇选择正常人，缺乏代入感和看点'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 145
+  - 232
+  score: 30
+  score_raw: 30左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越天保四年
+  genre_guess:
+  - 历史
+  - 穿越
+  - 科幻
+  overall_comment: 书名起得不好，正文加入机器人设定太违和，无法代入，历史文需要正常写，读者不接受机器人。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 历史文中加入机器人太出戏，读者完全无法代入
+    raw_quote: 机器人别大，就正常穿，不要有机器人，历史中有机器人也特别出气
+  - dimension: simplicity
+    severity: negative
+    content: 书名起得不好，没有吸引力
+    raw_quote: 穿越大,那这个书名还是下扎的 你现在书名都不会写
+  - dimension: character
+    severity: negative
+    content: 开篇选择正常人，缺乏代入感和看点
+    raw_quote: 你开头先写人家正常人 哎哟我的天哪

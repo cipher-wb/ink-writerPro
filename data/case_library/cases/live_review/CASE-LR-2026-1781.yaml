@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1781
+title: 穿越美利坚地下拳馆 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 美利坚
+  - 穿越
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分吧 | 1700万字老作者，有基础，但什么都想写导致味道不够，鼓励分58。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 1700万字老作者，有基础，但什么都想写导致味道不够，鼓励分58。 | 金手指设定被描述得不好，建议突出一个点。;什么都沾，但没有一个核心极致发挥。
+  observable:
+  - 'golden_finger维度: 金手指设定被描述得不好，建议突出一个点。'
+  - 'simplicity维度: 什么都沾，但没有一个核心极致发挥。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 195
+  - 288
+  score: 58
+  score_raw: 58分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越美利坚地下拳馆
+  genre_guess:
+  - 美利坚
+  - 穿越
+  - 都市
+  overall_comment: 1700万字老作者，有基础，但什么都想写导致味道不够，鼓励分58。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设定被描述得不好，建议突出一个点。
+    raw_quote: 这个寄生法师...被你描述的不咋样...你胆子大一点
+  - dimension: simplicity
+    severity: negative
+    content: 什么都沾，但没有一个核心极致发挥。
+    raw_quote: 你们写书就是什么都沾一点什么都没感觉...要学会取舍

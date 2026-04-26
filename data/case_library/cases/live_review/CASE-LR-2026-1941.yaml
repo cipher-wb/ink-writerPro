@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1941
+title: 魅魔有格调 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 玄幻
+  - 雪白
+  - 魅魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也是40分的兄弟 | 雪白能力强，但其他事件写得一般，切入啰嗦且写法起点化，导致蓝经历题材没写出优势。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白能力强，但其他事件写得一般，切入啰嗦且写法起点化，导致蓝经历题材没写出优势。 | 切入太啰嗦，开头应该直接雪白切入;危机不够，写得太正经;蓝经历题材用了起点慢热写法，吃力不讨好
+  observable:
+  - 'opening维度: 切入太啰嗦，开头应该直接雪白切入'
+  - 'highpoint维度: 危机不够，写得太正经'
+  - 'genre维度: 蓝经历题材用了起点慢热写法，吃力不讨好'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 306
+  - 352
+  score: 40
+  score_raw: 差不多也是40分的兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魅魔有格调
+  genre_guess:
+  - 玄幻
+  - 雪白
+  - 魅魔
+  overall_comment: 雪白能力强，但其他事件写得一般，切入啰嗦且写法起点化，导致蓝经历题材没写出优势。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入太啰嗦，开头应该直接雪白切入
+    raw_quote: 我觉得这个直接放开头就行了，不用管多的懂不懂，你倒绪吧
+  - dimension: highpoint
+    severity: negative
+    content: 危机不够，写得太正经
+    raw_quote: 但是危机也不够我觉得...后续写得太震惊，就你的切入跟后续都写得不咋样
+  - dimension: genre
+    severity: negative
+    content: 蓝经历题材用了起点慢热写法，吃力不讨好
+    raw_quote: 明明蓝经历题材...非要扯的跟起点的写法一样，不变兄弟

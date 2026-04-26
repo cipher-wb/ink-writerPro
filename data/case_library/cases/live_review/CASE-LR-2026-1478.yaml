@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1478
+title: 民俗鬼新娘求生 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 民俗
+  - 鬼怪
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 狗屎是大哥四十 | 开头切入和系统垃圾，但后面故事讲得好，有天赋。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头切入和系统垃圾，但后面故事讲得好，有天赋。 | 切入太垃圾，系统太垃圾
+  observable:
+  - 'opening维度: 切入太垃圾，系统太垃圾'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1621
+  - 1710
+  score: 40
+  score_raw: 狗屎是大哥四十
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民俗鬼新娘求生
+  genre_guess:
+  - 民俗
+  - 鬼怪
+  - 求生
+  overall_comment: 开头切入和系统垃圾，但后面故事讲得好，有天赋。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入太垃圾，系统太垃圾
+    raw_quote: 切入太垃圾了 切入跟系统太垃圾了
+  - dimension: pacing
+    severity: positive
+    content: 后面故事节奏情绪到位
+    raw_quote: 后面这些故事 节奏 情绪 都很到位

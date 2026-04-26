@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0386
+title: 未知模具词条文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 增加了情绪描写后合理性提高，但模具和词条的表现仍显笨拙，比例不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 增加了情绪描写后合理性提高，但模具和词条的表现仍显笨拙，比例不足。 | 模具/词条的核心看点没有打磨出来，节奏偏慢。
+  observable:
+  - 'highpoint维度: 模具/词条的核心看点没有打磨出来，节奏偏慢。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 345
+  - 395
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 未知模具词条文
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 增加了情绪描写后合理性提高，但模具和词条的表现仍显笨拙，比例不足。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 新加的情绪片段让角色合理度上升。
+    raw_quote: 现在觉得合理一点，这一段加了一点情绪。
+  - dimension: highpoint
+    severity: negative
+    content: 模具/词条的核心看点没有打磨出来，节奏偏慢。
+    raw_quote: 这个模具没感觉出来呀，我觉得比例问题吧。

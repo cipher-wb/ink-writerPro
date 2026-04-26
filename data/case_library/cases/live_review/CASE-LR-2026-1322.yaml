@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1322
+title: 武则天的蓝虫 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 历史
+  - 宫闱
+  - 女帝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有三十份吧 | 题材怪且敏感，武则天男宠过不了审，比例还好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材怪且敏感，武则天男宠过不了审，比例还好。 | 题材触犯审核，过不了审;武则天六十五岁，卖点奇怪
+  observable:
+  - 'taboo维度: 题材触犯审核，过不了审'
+  - 'genre维度: 武则天六十五岁，卖点奇怪'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1691
+  - 1750
+  score: 30
+  score_raw: 有三十份吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 武则天的蓝虫
+  genre_guess:
+  - 历史
+  - 宫闱
+  - 女帝
+  overall_comment: 题材怪且敏感，武则天男宠过不了审，比例还好。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 题材触犯审核，过不了审
+    raw_quote: 这万一都过不了神我跟你说
+  - dimension: genre
+    severity: negative
+    content: 武则天六十五岁，卖点奇怪
+    raw_quote: 武则天当上皇帝的时候应该是六十多 你很老了

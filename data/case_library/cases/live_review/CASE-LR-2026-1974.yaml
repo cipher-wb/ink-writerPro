@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1974
+title: 重生千禧年从一纸广告开始 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 都市
+  - 年代
+  - 重生
+  - 广告
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分吧 | 套路熟练但事件干巴，广告事业线无期待感，嫂子拉扯是毒点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路熟练但事件干巴，广告事业线无期待感，嫂子拉扯是毒点。 | 简介无卖点，事业线读者不感兴趣;嫂子拉扯太过，道德观感差;事件缺乏情绪起伏，波澜不惊
+  observable:
+  - 'opening维度: 简介无卖点，事业线读者不感兴趣'
+  - 'character维度: 嫂子拉扯太过，道德观感差'
+  - 'highpoint维度: 事件缺乏情绪起伏，波澜不惊'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 131
+  - 230
+  score: 40
+  score_raw: 40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生千禧年从一纸广告开始
+  genre_guess:
+  - 都市
+  - 年代
+  - 重生
+  - 广告
+  overall_comment: 套路熟练但事件干巴，广告事业线无期待感，嫂子拉扯是毒点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 简介无卖点，事业线读者不感兴趣
+    raw_quote: 看简介没啥期待感
+  - dimension: character
+    severity: negative
+    content: 嫂子拉扯太过，道德观感差
+    raw_quote: 你跟嫂子一直拉扯这个很毒啊
+  - dimension: highpoint
+    severity: negative
+    content: 事件缺乏情绪起伏，波澜不惊
+    raw_quote: 也没什么矛盾也没什么冲突就这样就答应了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1204
+title: 熊林记 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 女频
+  - 三国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我就不打分了 | 文笔有古色古香的味道，但节奏过慢，二十天转场无事件，缺乏看点与冲突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有古色古香的味道，但节奏过慢，二十天转场无事件，缺乏看点与冲突。 | 时间跨度快但实际剧情推进极慢，日常对话过多
+  observable:
+  - 'pacing维度: 时间跨度快但实际剧情推进极慢，日常对话过多'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 180
+  - 239
+  score: null
+  score_raw: 我就不打分了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 熊林记
+  genre_guess:
+  - 女频
+  - 三国
+  - 穿越
+  overall_comment: 文笔有古色古香的味道，但节奏过慢，二十天转场无事件，缺乏看点与冲突。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 时间跨度快但实际剧情推进极慢，日常对话过多
+    raw_quote: 20天这就过去了嘛…蓝屏20天能多经历多少事啊
+  - dimension: character
+    severity: neutral
+    content: 主角和周公子人物行为驱动力奇怪，相处模式不合理
+    raw_quote: 你这个女主就凭啥在这聊上天了，就你说啥她就干啥，你给她灌迷魂汤了嘛

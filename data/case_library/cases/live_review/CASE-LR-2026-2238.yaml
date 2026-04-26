@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-2238
+title: 藏地武侠追凶 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 武侠
+  - 悬疑
+  - 藏地
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 接近五十分了 | 实体书级别的文笔和讲故事能力，但不是网文写法，缺乏爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 实体书级别的文笔和讲故事能力，但不是网文写法，缺乏爽点。 | 实体书思路，非网文写法，缺乏爽点和期待感
+  observable:
+  - 'simplicity维度: 实体书思路，非网文写法，缺乏爽点和期待感'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 2042
+  - 2144
+  score: 50
+  score_raw: 接近五十分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 藏地武侠追凶
+  genre_guess:
+  - 武侠
+  - 悬疑
+  - 藏地
+  overall_comment: 实体书级别的文笔和讲故事能力，但不是网文写法，缺乏爽点。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人设塑造和风情描写极强，有幸运年叶青梅的感觉
+    raw_quote: '这些风情力都不像了...就有点实体的
+
+      追凶那种写法...大哥比例还是扎实了'
+  - dimension: simplicity
+    severity: negative
+    content: 实体书思路，非网文写法，缺乏爽点和期待感
+    raw_quote: 不像是网纹写法...可惜不是网纹写法...就是比较平平淡淡的讲故事
+  - dimension: misc
+    severity: neutral
+    content: 建议转发现实或换题材写藏地民俗玄幻
+    raw_quote: '要么发现实封内是可以的...要么就把这稿子改成其他的思路
+
+      就换题材吧 写个什么藏地的民俗 玄幻'

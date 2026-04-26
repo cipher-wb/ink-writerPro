@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1037
+title: 大明土木堡历史文 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 大明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40多分也不错了 | 文笔比例尚可但剧情设计平庸，缺乏独特脑洞和爽点，事件处理也没有新意
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例尚可但剧情设计平庸，缺乏独特脑洞和爽点，事件处理也没有新意 | 开头救不救皇帝的处理有毒点，应该直接写来不及;没有独特的卖点、人设或金手指切入，读者会觉得无聊
+  observable:
+  - 'hook维度: 开头救不救皇帝的处理有毒点，应该直接写来不及'
+  - 'highpoint维度: 没有独特的卖点、人设或金手指切入，读者会觉得无聊'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 301
+  - 450
+  score: 43
+  score_raw: 40多分也不错了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明土木堡历史文
+  genre_guess:
+  - 历史
+  - 穿越
+  - 大明
+  overall_comment: 文笔比例尚可但剧情设计平庸，缺乏独特脑洞和爽点，事件处理也没有新意
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开头救不救皇帝的处理有毒点，应该直接写来不及
+    raw_quote: 我觉得这样反而有点毒了啊 你没考虑过这个问题吗
+  - dimension: highpoint
+    severity: negative
+    content: 没有独特的卖点、人设或金手指切入，读者会觉得无聊
+    raw_quote: 真的没什么好心意 这种可能就容易烂大街

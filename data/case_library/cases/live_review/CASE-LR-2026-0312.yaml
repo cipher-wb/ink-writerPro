@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0312
+title: 10年老书生穿越魔法时代机甲文 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就18分嘛 | 思路老旧，中西方元素乱炖，写法古早，节奏慢，设定复杂，编辑建议直接放弃。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路老旧，中西方元素乱炖，写法古早，节奏慢，设定复杂，编辑建议直接放弃。 | 中西方元素胡乱拼接，玄幻修仙里出现军官、UFC等词，出戏严重。;节奏较慢，设定过于复杂，缺乏故事性。;开篇缺乏故事性，依然是古早的写法，没有现在的网文节奏。
+  observable:
+  - 'genre维度: 中西方元素胡乱拼接，玄幻修仙里出现军官、UFC等词，出戏严重。'
+  - 'pacing维度: 节奏较慢，设定过于复杂，缺乏故事性。'
+  - 'opening维度: 开篇缺乏故事性，依然是古早的写法，没有现在的网文节奏。'
+  - 'simplicity维度: 思路问题，建议全部推翻，当前稿子改下去没有意义。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 19
+  - 161
+  score: 18
+  score_raw: 就18分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 10年老书生穿越魔法时代机甲文
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 系统
+  overall_comment: 思路老旧，中西方元素乱炖，写法古早，节奏慢，设定复杂，编辑建议直接放弃。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 中西方元素胡乱拼接，玄幻修仙里出现军官、UFC等词，出戏严重。
+    raw_quote: 大钱说话有点说话有点不像玄幻那个对吧...这系统太出戏了...就是中美合拍的西游记...现在就是网游写法...乱融
+  - dimension: pacing
+    severity: negative
+    content: 节奏较慢，设定过于复杂，缺乏故事性。
+    raw_quote: 节奏较慢...没必要搞这么复杂
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏故事性，依然是古早的写法，没有现在的网文节奏。
+    raw_quote: 大哥写书就是先把故事开头先写好...你这个开篇太老了
+  - dimension: simplicity
+    severity: negative
+    content: 思路问题，建议全部推翻，当前稿子改下去没有意义。
+    raw_quote: 这稿子全部推翻...改是没有意义的...思路问题

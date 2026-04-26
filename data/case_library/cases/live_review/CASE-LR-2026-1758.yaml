@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1758
+title: 穿越意识界选职业 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 网游
+  - 穿越
+  - 西方奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30吧 | 网游式开头设定过多，缺乏冲突和看点，文笔尚可但内容太虚，读者很难看进去。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 网游式开头设定过多，缺乏冲突和看点，文笔尚可但内容太虚，读者很难看进去。 | 开篇大量设定对话，没有事件冲突;信息量少，内容拖沓，到第三章才进事件;网游选职业开局太小众，不吸引读者
+  observable:
+  - 'opening维度: 开篇大量设定对话，没有事件冲突'
+  - 'pacing维度: 信息量少，内容拖沓，到第三章才进事件'
+  - 'genre维度: 网游选职业开局太小众，不吸引读者'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 48
+  - 119
+  score: 30
+  score_raw: 30吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越意识界选职业
+  genre_guess:
+  - 网游
+  - 穿越
+  - 西方奇幻
+  overall_comment: 网游式开头设定过多，缺乏冲突和看点，文笔尚可但内容太虚，读者很难看进去。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇大量设定对话，没有事件冲突
+    raw_quote: 第一章设定对话第二章自言自语，就是没冲突没卖点
+  - dimension: pacing
+    severity: negative
+    content: 信息量少，内容拖沓，到第三章才进事件
+    raw_quote: 信息量很少，内容很虚……前两章几乎就是一句话可以带过的
+  - dimension: genre
+    severity: negative
+    content: 网游选职业开局太小众，不吸引读者
+    raw_quote: 这这么小白吗……真当网游写法师骑士，小队拥兵团吗

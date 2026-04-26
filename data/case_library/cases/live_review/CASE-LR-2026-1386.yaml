@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1386
+title: bug能力我杀伤鬼世界 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 游戏
+  - 鬼异
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 氛围拖沓，多余描述太多，情节是短剧段子合集，写法和思路都不对，文笔尚可但驾驭不了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围拖沓，多余描述太多，情节是短剧段子合集，写法和思路都不对，文笔尚可但驾驭不了。 | 氛围描述拖沓，读者根本接受不了那么多场景细节;情节是短剧分割的烂梗，叫爸爸等太俗;一个人玩副本最无聊，毫无人物互动
+  observable:
+  - 'pacing维度: 氛围描述拖沓，读者根本接受不了那么多场景细节'
+  - 'simplicity维度: 情节是短剧分割的烂梗，叫爸爸等太俗'
+  - 'character维度: 一个人玩副本最无聊，毫无人物互动'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 711
+  - 775
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: bug能力我杀伤鬼世界
+  genre_guess:
+  - 游戏
+  - 鬼异
+  - 爽文
+  overall_comment: 氛围拖沓，多余描述太多，情节是短剧段子合集，写法和思路都不对，文笔尚可但驾驭不了。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 氛围描述拖沓，读者根本接受不了那么多场景细节
+    raw_quote: 氛围太拖塔了 你把那些氛围呀 多余的描述删掉
+  - dimension: simplicity
+    severity: negative
+    content: 情节是短剧分割的烂梗，叫爸爸等太俗
+    raw_quote: 它就是一副短剧分割的一個 樂子...真的太俗了 写短剧去吧
+  - dimension: character
+    severity: negative
+    content: 一个人玩副本最无聊，毫无人物互动
+    raw_quote: 我觉得这个世界上没有比一个人玩游戏最无聊的事情...因为你没有人

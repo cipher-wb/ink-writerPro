@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1963
+title: 天庭第一大反贼 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 仙侠
+  - 天庭
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也了38分 | 乐子文人设有趣但主线不够，剧情无聊太原创，建议蹭西游或神话。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 乐子文人设有趣但主线不够，剧情无聊太原创，建议蹭西游或神话。 | 小国公/小天君人设太乐子，缺乏正经主线;剧情无聊，全是日常乐子无推进;原创天庭不蹭任何IP，缺乏流量入口
+  observable:
+  - 'character维度: 小国公/小天君人设太乐子，缺乏正经主线'
+  - 'pacing维度: 剧情无聊，全是日常乐子无推进'
+  - 'genre维度: 原创天庭不蹭任何IP，缺乏流量入口'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 261
+  - 360
+  score: 38
+  score_raw: 也了38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天庭第一大反贼
+  genre_guess:
+  - 仙侠
+  - 天庭
+  - 乐子文
+  overall_comment: 乐子文人设有趣但主线不够，剧情无聊太原创，建议蹭西游或神话。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 小国公/小天君人设太乐子，缺乏正经主线
+    raw_quote: 就是一个人设玩乐子…没什么好主线
+  - dimension: pacing
+    severity: negative
+    content: 剧情无聊，全是日常乐子无推进
+    raw_quote: 真的太无聊了这种剧情
+  - dimension: genre
+    severity: negative
+    content: 原创天庭不蹭任何IP，缺乏流量入口
+    raw_quote: 太原创了蹭呀那个蹭蹭蹭

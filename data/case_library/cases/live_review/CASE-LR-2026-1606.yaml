@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1606
+title: 德鲁伊穿越轻松吐槽文 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 德鲁伊
+  - 穿越
+  - 轻松
+  - 吐槽
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分差不多吧 | 轻松向过度，梗不够支撑全文，主线薄弱，设定堆积，读者沉浸感差。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 轻松向过度，梗不够支撑全文，主线薄弱，设定堆积，读者沉浸感差。 | 轻松向过度导致节奏轻浮，缺乏沉浸感;开场玩梗太多，冲淡主线，劝退读者
+  observable:
+  - 'pacing维度: 轻松向过度导致节奏轻浮，缺乏沉浸感'
+  - 'opening维度: 开场玩梗太多，冲淡主线，劝退读者'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 50
+  - 139
+  score: 33
+  score_raw: 33分差不多吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 德鲁伊穿越轻松吐槽文
+  genre_guess:
+  - 德鲁伊
+  - 穿越
+  - 轻松
+  - 吐槽
+  overall_comment: 轻松向过度，梗不够支撑全文，主线薄弱，设定堆积，读者沉浸感差。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 轻松向过度导致节奏轻浮，缺乏沉浸感
+    raw_quote: 太轻松 … 就沒有沉浸感了这种说话
+  - dimension: opening
+    severity: negative
+    content: 开场玩梗太多，冲淡主线，劝退读者
+    raw_quote: 輕鬆相有點過了 … 梗太多
+  - dimension: golden_finger
+    severity: neutral
+    content: 德鲁伊体系有一定受众，但未发挥优势
+    raw_quote: 德鲁伊就是有一定的受眾

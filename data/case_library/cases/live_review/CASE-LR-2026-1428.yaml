@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1428
+title: 穿越大梁偷情（紫詹叔控） (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40来分的水平吧 | 八股写法，金手指老套，事件无聊，40分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股写法，金手指老套，事件无聊，40分。 | 金手指老套，像5年前的设定;开头捉奸桥段没意思
+  observable:
+  - 'golden_finger维度: 金手指老套，像5年前的设定'
+  - 'opening维度: 开头捉奸桥段没意思'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 1011
+  - 1060
+  score: 40
+  score_raw: 40来分的水平吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越大梁偷情（紫詹叔控）
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 系统
+  overall_comment: 八股写法，金手指老套，事件无聊，40分。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指老套，像5年前的设定
+    raw_quote: 这金手指太扯淡了 太传选了 这个东西城墙什么九龙拉棺这些干啥
+  - dimension: opening
+    severity: negative
+    content: 开头捉奸桥段没意思
+    raw_quote: 捉奸这个没啥意思

@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-0528
+title: 穿越成见习骑士 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1E4BSBaEKR
+scope:
+  genre:
+  - 穿越
+  - 骑士
+  - 玄幻
+  - 词条
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 66分吧 | 剧情有创意，尺度较大需修改过审，整体质量不错，节奏流畅，金手指OK，达到签约水平但需要调整部分内容。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1E4BSBaEKR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情有创意，尺度较大需修改过审，整体质量不错，节奏流畅，金手指OK，达到签约水平但需要调整部分内容。 | 切入事件可能太极端，不一定过审;内容尺度较大，可能被举报下架
+  observable:
+  - 'opening维度: 切入事件可能太极端，不一定过审'
+  - 'taboo维度: 内容尺度较大，可能被举报下架'
+live_review_meta:
+  source_bvid: BV1E4BSBaEKR
+  source_line_range:
+  - 21
+  - 247
+  score: 66
+  score_raw: 66分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 穿越成见习骑士
+  genre_guess:
+  - 穿越
+  - 骑士
+  - 玄幻
+  - 词条
+  overall_comment: 剧情有创意，尺度较大需修改过审，整体质量不错，节奏流畅，金手指OK，达到签约水平但需要调整部分内容。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入事件可能太极端，不一定过审
+    raw_quote: 就是切入这个事件可能太极端了 不一定过审
+  - dimension: taboo
+    severity: negative
+    content: 内容尺度较大，可能被举报下架
+    raw_quote: 这就算过审 人家举报你也没了呀
+  - dimension: pacing
+    severity: positive
+    content: 节奏蛮好的，故事流畅
+    raw_quote: 节奏这些蛮好的 有流畅的故事
+  - dimension: golden_finger
+    severity: positive
+    content: 金手指设定OK
+    raw_quote: 金手指也OK
+  - dimension: ops
+    severity: neutral
+    content: 建议修改尺度但不要删减过度，保留味道
+    raw_quote: 删的太多可能就没味道了

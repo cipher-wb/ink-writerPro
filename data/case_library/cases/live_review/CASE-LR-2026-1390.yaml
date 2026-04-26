@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1390
+title: 宝子老乡给你泡水 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 穿越
+  - 玄幻
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分吧 | 主角自言自语像神经病，无法代入，人设太小白，对话和心理全崩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角自言自语像神经病，无法代入，人设太小白，对话和心理全崩。 | 主角自言自语像神经病，没有读者能带入;穿越烂梗太多，没有智商没有事件;三章了还是痴呆傻子觉醒来来回回，毫无推进
+  observable:
+  - 'character维度: 主角自言自语像神经病，没有读者能带入'
+  - 'opening维度: 穿越烂梗太多，没有智商没有事件'
+  - 'pacing维度: 三章了还是痴呆傻子觉醒来来回回，毫无推进'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 986
+  - 1060
+  score: 25
+  score_raw: 差不多就25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宝子老乡给你泡水
+  genre_guess:
+  - 穿越
+  - 玄幻
+  - 搞笑
+  overall_comment: 主角自言自语像神经病，无法代入，人设太小白，对话和心理全崩。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角自言自语像神经病，没有读者能带入
+    raw_quote: 大哥这种主角我跟你说 根本就带入不了 因为没有读者是神经病的
+  - dimension: opening
+    severity: negative
+    content: 穿越烂梗太多，没有智商没有事件
+    raw_quote: 就现在穿越就这么烂梗...没智商呀
+  - dimension: pacing
+    severity: negative
+    content: 三章了还是痴呆傻子觉醒来来回回，毫无推进
+    raw_quote: 三章了 就是痴呆傻子觉醒了 就穿越过来了 然后跟父母在那来

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0560
+title: 永夜庇护所 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 末日
+  - 进化
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 36分吧 | 氛围有但缺人物，展开太慢，36分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围有但缺人物，展开太慢，36分 | 缺少人物互动，建议加入女角色;前两章节奏慢，事件吸引力不足
+  observable:
+  - 'character维度: 缺少人物互动，建议加入女角色'
+  - 'pacing维度: 前两章节奏慢，事件吸引力不足'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 1116
+  - 1248
+  score: 36
+  score_raw: 36分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 永夜庇护所
+  genre_guess:
+  - 末日
+  - 进化
+  overall_comment: 氛围有但缺人物，展开太慢，36分
+  comments:
+  - dimension: character
+    severity: negative
+    content: 缺少人物互动，建议加入女角色
+    raw_quote: 没人物呀...新人真的要写人物的
+  - dimension: pacing
+    severity: negative
+    content: 前两章节奏慢，事件吸引力不足
+    raw_quote: 前两张太慢了 也没什么剧情吸引力

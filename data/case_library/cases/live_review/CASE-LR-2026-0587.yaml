@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0587
+title: 我在末世当文豪 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 末世
+  - 文豪
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就是30来分 | 妹妹文笔细腻有代入感，但末世文豪的脑洞非常违和，设定立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 妹妹文笔细腻有代入感，但末世文豪的脑洞非常违和，设定立不住。 | 末世背景下使用名著技能的金手指极不协调;金手指设定想当然，读起来很出戏
+  observable:
+  - 'genre维度: 末世背景下使用名著技能的金手指极不协调'
+  - 'golden_finger维度: 金手指设定想当然，读起来很出戏'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 702
+  - 793
+  score: 30
+  score_raw: 差不多就是30来分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在末世当文豪
+  genre_guess:
+  - 末世
+  - 文豪
+  - 系统
+  overall_comment: 妹妹文笔细腻有代入感，但末世文豪的脑洞非常违和，设定立不住。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 末世背景下使用名著技能的金手指极不协调
+    raw_quote: 金手指只是古今中外的名著技能吧 ... 这个特别违和
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设定想当然，读起来很出戏
+    raw_quote: 这个脑洞可能有点昂系 ... 真不行

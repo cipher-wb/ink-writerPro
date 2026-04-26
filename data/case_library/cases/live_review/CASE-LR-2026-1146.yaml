@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1146
+title: 卡牌求生游戏 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 无限流
+  - 卡牌
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就30分 | 通篇堆满各种复杂设定，剧情驱动力为零，完全是套皮卖设定，无法达到网文基本要求。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 通篇堆满各种复杂设定，剧情驱动力为零，完全是套皮卖设定，无法达到网文基本要求。 | 全部都是设定，没有一点剧情;开篇完全没事件，就是角色独白和系统说明;故事性太弱，连基本的故事原理都不懂
+  observable:
+  - 'simplicity维度: 全部都是设定，没有一点剧情'
+  - 'pacing维度: 开篇完全没事件，就是角色独白和系统说明'
+  - 'misc维度: 故事性太弱，连基本的故事原理都不懂'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 1021
+  - 1140
+  score: 30
+  score_raw: 就30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 卡牌求生游戏
+  genre_guess:
+  - 无限流
+  - 卡牌
+  - 求生
+  overall_comment: 通篇堆满各种复杂设定，剧情驱动力为零，完全是套皮卖设定，无法达到网文基本要求。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 全部都是设定，没有一点剧情
+    raw_quote: 全是设定 没人看呀 这没剧情啊
+  - dimension: pacing
+    severity: negative
+    content: 开篇完全没事件，就是角色独白和系统说明
+    raw_quote: 就一个人在这聊疯掉了 就就就反正就一个人就蜜蜂呀
+  - dimension: misc
+    severity: negative
+    content: 故事性太弱，连基本的故事原理都不懂
+    raw_quote: 我觉得没法改 兄弟真没法改 就故事性真的真的太弱了

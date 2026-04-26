@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0502
+title: 孤岛众神准备废 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 玄幻
+  - 搞笑
+  - 乐子
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30万上架...20分 | 开局像都市搞笑文发到了玄幻分类，全是烂梗。根本不会写书，建议推翻写正常玄幻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局像都市搞笑文发到了玄幻分类，全是烂梗。根本不会写书，建议推翻写正常玄幻。 | 玄幻分类写纯乐子烂梗，定位严重不符;第一张就是群像写法，根本不会讲故事
+  observable:
+  - 'genre维度: 玄幻分类写纯乐子烂梗，定位严重不符'
+  - 'character维度: 第一张就是群像写法，根本不会讲故事'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 2230
+  - 2283
+  score: 20
+  score_raw: 30万上架...20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 孤岛众神准备废
+  genre_guess:
+  - 玄幻
+  - 搞笑
+  - 乐子
+  overall_comment: 开局像都市搞笑文发到了玄幻分类，全是烂梗。根本不会写书，建议推翻写正常玄幻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 玄幻分类写纯乐子烂梗，定位严重不符
+    raw_quote: 这个编辑 编辑一眼就觉得你不会写书...发在玄幻分类的嘛 玄幻分类加这种说明怎么可能嘛
+  - dimension: character
+    severity: negative
+    content: 第一张就是群像写法，根本不会讲故事
+    raw_quote: 你连最基本的主角的大陆感 主角的视角讲故事你都做不准 不要写这么多人啊第一张

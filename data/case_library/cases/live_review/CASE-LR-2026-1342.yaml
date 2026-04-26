@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1342
+title: 兰宋喧化七年穿越 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 历史架空
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多20分吧 | 不是网文，全是自嗨设定，需要推翻重学。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不是网文，全是自嗨设定，需要推翻重学。 | 纯粹的架空历史，不符合网文市场;开篇全是无意义的朝堂描写;设定复杂，读者毫无代入感
+  observable:
+  - 'genre维度: 纯粹的架空历史，不符合网文市场'
+  - 'opening维度: 开篇全是无意义的朝堂描写'
+  - 'simplicity维度: 设定复杂，读者毫无代入感'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 950
+  - 1000
+  score: 20
+  score_raw: 差不多20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 兰宋喧化七年穿越
+  genre_guess:
+  - 历史架空
+  - 穿越
+  overall_comment: 不是网文，全是自嗨设定，需要推翻重学。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯粹的架空历史，不符合网文市场
+    raw_quote: 这玩意只有自嗨这一条路
+  - dimension: opening
+    severity: negative
+    content: 开篇全是无意义的朝堂描写
+    raw_quote: 你把这玩意全部推翻不要解释任何东西
+  - dimension: simplicity
+    severity: negative
+    content: 设定复杂，读者毫无代入感
+    raw_quote: 你现在对网文的理解就会为零

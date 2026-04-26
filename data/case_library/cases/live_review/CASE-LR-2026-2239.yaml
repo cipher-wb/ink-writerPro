@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-2239
+title: 大秦搞发明 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 历史
+  - 大秦
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个肯定五十以上的 | 文笔扎实，节奏好，有签约水平，但蒸汽机等设定离谱，身份逻辑需修改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，节奏好，有签约水平，但蒸汽机等设定离谱，身份逻辑需修改。 | 发明蒸汽机、火锅等过于超前，逻辑崩坏;平民身份直达天听，缺乏合理身份铺垫
+  observable:
+  - 'golden_finger维度: 发明蒸汽机、火锅等过于超前，逻辑崩坏'
+  - 'character维度: 平民身份直达天听，缺乏合理身份铺垫'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 2145
+  - 2232
+  score: 50
+  score_raw: 这个肯定五十以上的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大秦搞发明
+  genre_guess:
+  - 历史
+  - 大秦
+  - 种田
+  overall_comment: 文笔扎实，节奏好，有签约水平，但蒸汽机等设定离谱，身份逻辑需修改。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 文笔、节奏、心理活动都挺好，有轻敌的感觉
+    raw_quote: 比例也扎实...节奏都挺好的 有点情敌的感觉
+  - dimension: golden_finger
+    severity: negative
+    content: 发明蒸汽机、火锅等过于超前，逻辑崩坏
+    raw_quote: 你把那个蒸汽机火锅这些去掉...距离千元不远啊 兄弟
+  - dimension: character
+    severity: negative
+    content: 平民身份直达天听，缺乏合理身份铺垫
+    raw_quote: 你一个屁民你跟秦始皇蹭这么快 这肯定不符合逻辑

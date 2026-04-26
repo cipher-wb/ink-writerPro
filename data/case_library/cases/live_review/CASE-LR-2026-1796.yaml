@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1796
+title: 修仙界千问AI辅助 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 修仙
+  - 雪白
+  - AI系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 他说34分 | 雪白文笔尚可，但金手指AI是降低智商毒点，女主缺乏可获得感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白文笔尚可，但金手指AI是降低智商毒点，女主缺乏可获得感。 | AI问答金手指是毒点，使主角智商散失，建议换情报系统。;女主完美圣女设定太高，缺乏可获得感。
+  observable:
+  - 'golden_finger维度: AI问答金手指是毒点，使主角智商散失，建议换情报系统。'
+  - 'character维度: 女主完美圣女设定太高，缺乏可获得感。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 1005
+  - 1078
+  score: 34
+  score_raw: 他说34分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙界千问AI辅助
+  genre_guess:
+  - 修仙
+  - 雪白
+  - AI系统
+  overall_comment: 雪白文笔尚可，但金手指AI是降低智商毒点，女主缺乏可获得感。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: AI问答金手指是毒点，使主角智商散失，建议换情报系统。
+    raw_quote: 这金手指我觉得是毒点...真的...主角没智商代入不了...弄一下情报系统嘛
+  - dimension: character
+    severity: negative
+    content: 女主完美圣女设定太高，缺乏可获得感。
+    raw_quote: 这个女的我觉得太假了...他没有可获得感...万一给你刷个跑车呢

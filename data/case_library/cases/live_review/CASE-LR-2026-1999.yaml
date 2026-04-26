@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1999
+title: 刚满成年高中生谈格应聘成为诸神业务员 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 怪谈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分左右吧 | 遣词造句能力不错，但设定过于复杂，杂糅了太多元素，导致主卖点不清晰，建议简化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句能力不错，但设定过于复杂，杂糅了太多元素，导致主卖点不清晰，建议简化。 | 设定复杂，元素过多，主卖点被淹没。
+  observable:
+  - 'simplicity维度: 设定复杂，元素过多，主卖点被淹没。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 232
+  - 330
+  score: 55
+  score_raw: 45分左右吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 刚满成年高中生谈格应聘成为诸神业务员
+  genre_guess:
+  - 都市
+  - 异能
+  - 怪谈
+  overall_comment: 遣词造句能力不错，但设定过于复杂，杂糅了太多元素，导致主卖点不清晰，建议简化。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定复杂，元素过多，主卖点被淹没。
+    raw_quote: 兄弟这个设定太复杂了 就杂糅元素太多了
+  - dimension: genre
+    severity: neutral
+    content: 异能类写法未发挥出优点，建议只保留单一元素。
+    raw_quote: 你这种异能类的写法不明奇妙的 ... 真别了真别了 看着都吓人

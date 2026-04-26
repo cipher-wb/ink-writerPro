@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1811
+title: 恶龙小姐与精灵公主 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 西幻
+  - 轻小说
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就58分 | 题材和金手指不错，但文笔太小白，女角色描写失败，离签约差一点火候。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材和金手指不错，但文笔太小白，女角色描写失败，离签约差一点火候。 | 精灵公主毫无魅力，反应扁平如NPC;文笔太小白，缺乏描写力
+  observable:
+  - 'character维度: 精灵公主毫无魅力，反应扁平如NPC'
+  - 'simplicity维度: 文笔太小白，缺乏描写力'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 586
+  - 650
+  score: 58
+  score_raw: 就58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 恶龙小姐与精灵公主
+  genre_guess:
+  - 西幻
+  - 轻小说
+  - 系统
+  overall_comment: 题材和金手指不错，但文笔太小白，女角色描写失败，离签约差一点火候。
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 对手越老越强的金手指和斩杀线设定有想法
+    raw_quote: 这个思路挺好的 就为为了这个金手指
+  - dimension: character
+    severity: negative
+    content: 精灵公主毫无魅力，反应扁平如NPC
+    raw_quote: 就瞪大了眼睛 这不扯淡嘛对吧 又又眨了眨眼睛 只会这样写
+  - dimension: simplicity
+    severity: negative
+    content: 文笔太小白，缺乏描写力
+    raw_quote: 比例不够 太小白了 这个公主写的……根本就是吧

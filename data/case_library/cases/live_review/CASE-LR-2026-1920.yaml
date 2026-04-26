@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1920
+title: 苟在王朝末年武道大成 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是38分吧 | 典型八股文，事件老套，笔力也一般，难以出头，这种书AI都能生成。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 典型八股文，事件老套，笔力也一般，难以出头，这种书AI都能生成。 | 事件和套路是标准八股文，毫无新意，AI都可以轻易生成。;文笔不够干练，低视力的写法。
+  observable:
+  - 'simplicity维度: 事件和套路是标准八股文，毫无新意，AI都可以轻易生成。'
+  - 'pacing维度: 文笔不够干练，低视力的写法。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 492
+  - 528
+  score: 38
+  score_raw: 还是38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 苟在王朝末年武道大成
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 典型八股文，事件老套，笔力也一般，难以出头，这种书AI都能生成。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 事件和套路是标准八股文，毫无新意，AI都可以轻易生成。
+    raw_quote: 就是八股文呀...这种AI真的可以生成，我让AI生成AI肯定会生成的
+  - dimension: pacing
+    severity: negative
+    content: 文笔不够干练，低视力的写法。
+    raw_quote: 不够干练...这文笔也不咋样

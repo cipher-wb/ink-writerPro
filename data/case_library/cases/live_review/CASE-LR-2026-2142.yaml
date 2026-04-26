@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2142
+title: 凌休一觉睡醒穿成水浒第一渣男 (pass / 60分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 水浒同人
+  - 神魔
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好吧 我给你60分 | 第一章事件紧凑，父目前犯拉扯精彩，进步巨大，但水浒题材目前偏凉，建议直发试试。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章事件紧凑，父目前犯拉扯精彩，进步巨大，但水浒题材目前偏凉，建议直发试试。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 1431
+  - 1600
+  score: 60
+  score_raw: 好吧 我给你60分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 凌休一觉睡醒穿成水浒第一渣男
+  genre_guess:
+  - 水浒同人
+  - 神魔
+  - 穿越
+  overall_comment: 第一章事件紧凑，父目前犯拉扯精彩，进步巨大，但水浒题材目前偏凉，建议直发试试。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头场景、困境、人设和金手指安排得当，第一章事件完成度高
+    raw_quote: 开头就当前的困境 然后世界大概介绍介绍 然后人设你着急要干的事都有 然后金手指恰到时恰到好处出现了是吧
+  - dimension: hook
+    severity: positive
+    content: 父目前犯设计有看点和期待感
+    raw_quote: 这我就知道要父目前犯这个可以啊 也没问题对吧
+  - dimension: genre
+    severity: neutral
+    content: 水浒同人当前市场偏凉，需看后续数据
+    raw_quote: 但是水浒题材最近挺凉的 你要不直发看看吧 这个是真可以直发

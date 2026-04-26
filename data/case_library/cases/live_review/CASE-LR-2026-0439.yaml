@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0439
+title: 故弄玄虚穿越文 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给大哥十八分吧 | 内容太虚，故弄玄虚无代入感，读者开局即弃
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容太虚，故弄玄虚无代入感，读者开局即弃 | 上帝视角故弄玄虚，未先写好主角穿越代入感;无用虚写过多，缺乏积地气简单切入
+  observable:
+  - 'opening维度: 上帝视角故弄玄虚，未先写好主角穿越代入感'
+  - 'simplicity维度: 无用虚写过多，缺乏积地气简单切入'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 563
+  - 615
+  score: 18
+  score_raw: 就给大哥十八分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 故弄玄虚穿越文
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 内容太虚，故弄玄虚无代入感，读者开局即弃
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 上帝视角故弄玄虚，未先写好主角穿越代入感
+    raw_quote: 你一上来读者跑完了...就是在拽文
+  - dimension: simplicity
+    severity: negative
+    content: 无用虚写过多，缺乏积地气简单切入
+    raw_quote: 不要在这基地故弄玄虚...积极地气一点

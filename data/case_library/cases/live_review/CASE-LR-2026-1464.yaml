@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1464
+title: 教主请给我一个任务 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个38分大圆满 | 写女人不够，雪白梗太老套，建议加升级主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写女人不够，雪白梗太老套，建议加升级主线。 | 写女人反应不够，雪白相互的;烂梗过多，如下面给我吃
+  observable:
+  - 'character维度: 写女人反应不够，雪白相互的'
+  - 'simplicity维度: 烂梗过多，如下面给我吃'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 361
+  - 450
+  score: 38
+  score_raw: 这个38分大圆满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 教主请给我一个任务
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 雪白
+  overall_comment: 写女人不够，雪白梗太老套，建议加升级主线。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 写女人反应不够，雪白相互的
+    raw_quote: 你没写出主角的反应
+  - dimension: simplicity
+    severity: negative
+    content: 烂梗过多，如下面给我吃
+    raw_quote: 任务下面我的天 这这烂根

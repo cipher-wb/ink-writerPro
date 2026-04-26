@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1552
+title: 警察卧底文 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 都市
+  - 警察
+  - 卧底
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就九分 | 警察形象敏感，细节描写违规，直接劝退。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 警察形象敏感，细节描写违规，直接劝退。 | 警察与大嫂暧昧细节严重违规;国内警察题材限制多，不宜展开
+  observable:
+  - 'ops维度: 警察与大嫂暧昧细节严重违规'
+  - 'genre维度: 国内警察题材限制多，不宜展开'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1061
+  - 1175
+  score: null
+  score_raw: 差不多就九分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 警察卧底文
+  genre_guess:
+  - 都市
+  - 警察
+  - 卧底
+  overall_comment: 警察形象敏感，细节描写违规，直接劝退。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 警察与大嫂暧昧细节严重违规
+    raw_quote: 大嫂舌头给你喂 喂这些都不能写
+  - dimension: genre
+    severity: negative
+    content: 国内警察题材限制多，不宜展开
+    raw_quote: 国内警察 帽子叔叔 你别乱搞

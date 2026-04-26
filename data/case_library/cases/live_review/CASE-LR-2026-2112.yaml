@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2112
+title: 崇祯年间穿越文（雪白切入） (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 明朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分吧 | 水平很高，比例有红楼芳华的水平，但切入触线太多，胆子太大，建议别写大明改写红楼修仙。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 水平很高，比例有红楼芳华的水平，但切入触线太多，胆子太大，建议别写大明改写红楼修仙。 | 切入细节太多太露骨，不能看;大明读者不爱看雪白，不如写红楼仙子修仙
+  observable:
+  - 'taboo维度: 切入细节太多太露骨，不能看'
+  - 'genre维度: 大明读者不爱看雪白，不如写红楼仙子修仙'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 461
+  - 520
+  score: 48
+  score_raw: 48分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 崇祯年间穿越文（雪白切入）
+  genre_guess:
+  - 历史
+  - 穿越
+  - 明朝
+  overall_comment: 水平很高，比例有红楼芳华的水平，但切入触线太多，胆子太大，建议别写大明改写红楼修仙。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 切入细节太多太露骨，不能看
+    raw_quote: 这不能写，这太多了，别写这么详细
+  - dimension: character
+    severity: positive
+    content: 水平很高，比例确实有红楼芳华水平
+    raw_quote: 比例倒挺好的，确实是红龙芳华那种水平
+  - dimension: genre
+    severity: negative
+    content: 大明读者不爱看雪白，不如写红楼仙子修仙
+    raw_quote: 有这水平为什么要去大明啊

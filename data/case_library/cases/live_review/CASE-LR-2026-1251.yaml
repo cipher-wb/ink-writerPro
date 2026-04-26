@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1251
+title: 马扎尔人崛起 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 历史
+  - 外国
+  - 小众
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 很用心的给你30分吧 | 写的很用心，但题材太小众且开篇像天书，不懂用通俗的方式切入，导致读者流失。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写的很用心，但题材太小众且开篇像天书，不懂用通俗的方式切入，导致读者流失。 | 外国小众历史题材，读者群体太窄，且开篇不友好;开篇缺乏代入感，没有解释，读者看不懂
+  observable:
+  - 'genre维度: 外国小众历史题材，读者群体太窄，且开篇不友好'
+  - 'opening维度: 开篇缺乏代入感，没有解释，读者看不懂'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1451
+  - 1505
+  score: 30
+  score_raw: 很用心的给你30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 马扎尔人崛起
+  genre_guess:
+  - 历史
+  - 外国
+  - 小众
+  overall_comment: 写的很用心，但题材太小众且开篇像天书，不懂用通俗的方式切入，导致读者流失。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 外国小众历史题材，读者群体太窄，且开篇不友好
+    raw_quote: 你们写小众历史，为什么非要让自己变成小众呢
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏代入感，没有解释，读者看不懂
+    raw_quote: 我是谁，我在哪，我要干什么，快给我出来

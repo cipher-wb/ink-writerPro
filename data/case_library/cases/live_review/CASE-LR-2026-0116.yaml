@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0116
+title: 道士下山/师徒反差 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 仙侠
+  - 反套路
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 34分吧 | 道士下山这种师徒装逼打秋风的写法已经被淘汰了，太小白，现在没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 道士下山这种师徒装逼打秋风的写法已经被淘汰了，太小白，现在没人看。 | 道士下山的套路已经被淘汰了，前几年还行;主角像小学生，玩烂梗太大白
+  observable:
+  - 'genre维度: 道士下山的套路已经被淘汰了，前几年还行'
+  - 'character维度: 主角像小学生，玩烂梗太大白'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 2121
+  - 2200
+  score: 34
+  score_raw: 34分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 道士下山/师徒反差
+  genre_guess:
+  - 仙侠
+  - 反套路
+  - 搞笑
+  overall_comment: 道士下山这种师徒装逼打秋风的写法已经被淘汰了，太小白，现在没人看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 道士下山的套路已经被淘汰了，前几年还行
+    raw_quote: 看主播是不是说了，道士下山没人看了...这个得以前写这个得前几年，现在的话没人看了
+  - dimension: character
+    severity: negative
+    content: 主角像小学生，玩烂梗太大白
+    raw_quote: 主角跟小学生似的，蹦蹦跳跳哇，爸爸厉害...太强了，就这种感觉

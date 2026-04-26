@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1093
+title: 天师赛博朋克 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 赛博
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 赛博世界观代入难，数据证明此类题材读者接受度低
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 赛博世界观代入难，数据证明此类题材读者接受度低 | 赛博朋克题材新人难以驾驭，缺乏代入感;阅读障碍高，读者容易流失
+  observable:
+  - 'genre维度: 赛博朋克题材新人难以驾驭，缺乏代入感'
+  - 'simplicity维度: 阅读障碍高，读者容易流失'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 660
+  - 720
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天师赛博朋克
+  genre_guess:
+  - 赛博
+  - 都市
+  overall_comment: 赛博世界观代入难，数据证明此类题材读者接受度低
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 赛博朋克题材新人难以驾驭，缺乏代入感
+    raw_quote: 把赛博当成主卖点写的 新人没见过一本能当能进品以上的
+  - dimension: simplicity
+    severity: negative
+    content: 阅读障碍高，读者容易流失
+    raw_quote: 这些东西读者都是不懂 不懂我就要跑

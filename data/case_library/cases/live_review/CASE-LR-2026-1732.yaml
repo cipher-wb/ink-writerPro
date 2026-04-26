@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1732
+title: 山海灵兰 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 科幻
+  - 东方奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得只能给大哥一个20分啊 | 科幻写法但无对应分类，题材和写法过于老旧，建议推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 科幻写法但无对应分类，题材和写法过于老旧，建议推翻重写。 | 题材定位不清晰，东方奇幻实为科幻，无法归入现有分类。;写法老旧，类似20年前的科幻玄幻风格，代入感差。
+  observable:
+  - 'genre维度: 题材定位不清晰，东方奇幻实为科幻，无法归入现有分类。'
+  - 'misc维度: 写法老旧，类似20年前的科幻玄幻风格，代入感差。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1
+  - 93
+  score: 20
+  score_raw: 我觉得只能给大哥一个20分啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 山海灵兰
+  genre_guess:
+  - 科幻
+  - 东方奇幻
+  overall_comment: 科幻写法但无对应分类，题材和写法过于老旧，建议推翻重写。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材定位不清晰，东方奇幻实为科幻，无法归入现有分类。
+    raw_quote: 这跟玄幻一点关系都没有...就没有一个风类给你送下来啊
+  - dimension: misc
+    severity: negative
+    content: 写法老旧，类似20年前的科幻玄幻风格，代入感差。
+    raw_quote: 就是一个古老的20年前的一个科幻 玄幻的写法

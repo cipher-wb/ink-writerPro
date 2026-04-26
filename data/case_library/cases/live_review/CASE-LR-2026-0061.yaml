@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0061
+title: 诸天万剑 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 奇幻
+  - 设定流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分码 | 开篇全是看不懂的设定，缺乏代入感，是五年前的题材思路，现在读者已经不看了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇全是看不懂的设定，缺乏代入感，是五年前的题材思路，现在读者已经不看了。 | 全文堆砌设定，没有地球人能看懂的内容，缺乏代入感;卖设定的题材已经过时，2026年没人看了
+  observable:
+  - 'simplicity维度: 全文堆砌设定，没有地球人能看懂的内容，缺乏代入感'
+  - 'genre维度: 卖设定的题材已经过时，2026年没人看了'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1
+  - 90
+  score: 23
+  score_raw: 23分码
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诸天万剑
+  genre_guess:
+  - 奇幻
+  - 设定流
+  overall_comment: 开篇全是看不懂的设定，缺乏代入感，是五年前的题材思路，现在读者已经不看了。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 全文堆砌设定，没有地球人能看懂的内容，缺乏代入感
+    raw_quote: 时间地点人物全是虚构...没有一句我能看懂的
+  - dimension: genre
+    severity: negative
+    content: 卖设定的题材已经过时，2026年没人看了
+    raw_quote: 网络2026年了，卖设定的新人基本就死路一条了

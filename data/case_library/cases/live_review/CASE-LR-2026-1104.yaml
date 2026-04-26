@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1104
+title: 魔法世界步道修仙 (fail / 10分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 西幻
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 嗯 10积分嘛 | 世界观混乱，元素大杂烩，剧情薄弱，逻辑不通
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观混乱，元素大杂烩，剧情薄弱，逻辑不通 | 设定极其繁琐，世界观不伦不类
+  observable:
+  - 'simplicity维度: 设定极其繁琐，世界观不伦不类'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1595
+  - 1635
+  score: 10
+  score_raw: 嗯 10积分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔法世界步道修仙
+  genre_guess:
+  - 西幻
+  - 修仙
+  overall_comment: 世界观混乱，元素大杂烩，剧情薄弱，逻辑不通
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定极其繁琐，世界观不伦不类
+    raw_quote: 巨龙元素 那为什么修仙 那为什么丹炉 这种看不懂啊大哥

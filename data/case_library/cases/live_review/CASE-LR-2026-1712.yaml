@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1712
+title: 灵异日记鬼故事 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 灵异
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我给你30分吧 | 作者笔力尚可，但开篇切入思路错误，采用日记体和故弄玄虚的写法严重劝退读者。建议直接进入事件，学习神秘复苏/鬼社那种都市开局方式。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者笔力尚可，但开篇切入思路错误，采用日记体和故弄玄虚的写法严重劝退读者。建议直接进入事件，学习神秘复苏/鬼社那种都市开局方式。 |
+    日记体开篇被判定为纯设定堆砌，读者无法代入;开篇缺乏言之有物的钩子，一直在故弄玄虚
+  observable:
+  - 'opening维度: 日记体开篇被判定为纯设定堆砌，读者无法代入'
+  - 'hook维度: 开篇缺乏言之有物的钩子，一直在故弄玄虚'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 175
+  - 303
+  score: 30
+  score_raw: 我给你30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵异日记鬼故事
+  genre_guess:
+  - 灵异
+  - 悬疑
+  overall_comment: 作者笔力尚可，但开篇切入思路错误，采用日记体和故弄玄虚的写法严重劝退读者。建议直接进入事件，学习神秘复苏/鬼社那种都市开局方式。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 日记体开篇被判定为纯设定堆砌，读者无法代入
+    raw_quote: 我觉得这个日记不好，这个日记其实是设定
+  - dimension: hook
+    severity: negative
+    content: 开篇缺乏言之有物的钩子，一直在故弄玄虚
+    raw_quote: 你不要故弄玄学，为什么你要刻这三个字
+  - dimension: misc
+    severity: positive
+    content: 情节比例和练笔水平得到肯定
+    raw_quote: 大哥我觉得比例是扎实的，你写灵异可以写

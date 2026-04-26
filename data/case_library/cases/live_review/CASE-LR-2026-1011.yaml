@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1011
+title: 落叶烧来凶蜥 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 仙凡
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 简介完全看不懂，沉浸在自己世界，误入歧途只顾研究技巧，故事一塌糊涂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介完全看不懂，沉浸在自己世界，误入歧途只顾研究技巧，故事一塌糊涂。 | 整体误入歧途，只钻研技巧忽略故事内核;开头完全让人看不懂，缺乏代入感
+  observable:
+  - 'misc维度: 整体误入歧途，只钻研技巧忽略故事内核'
+  - 'opening维度: 开头完全让人看不懂，缺乏代入感'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1
+  - 130
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 落叶烧来凶蜥
+  genre_guess:
+  - 仙凡
+  - 玄幻
+  overall_comment: 简介完全看不懂，沉浸在自己世界，误入歧途只顾研究技巧，故事一塌糊涂。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 整体误入歧途，只钻研技巧忽略故事内核
+    raw_quote: 误入歧途了 就是研究技巧倒也研究故事本身
+  - dimension: opening
+    severity: negative
+    content: 开头完全让人看不懂，缺乏代入感
+    raw_quote: 落叶烧来凶蜥 仙凡之地仙凡 简介给我的信息就是大概完全不懂

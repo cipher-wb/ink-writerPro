@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1081
+title: 恐惧失真规则怪谈 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 灵异
+  - 规则怪谈
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多14分再加两分16分 | 开头网吧打游戏与灵异主题割裂，描写AI化，完全不懂爽文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头网吧打游戏与灵异主题割裂，描写AI化，完全不懂爽文。 | 灵异文开头写网吧打游戏，题材错位;比喻描写像AI散文，不干练
+  observable:
+  - 'opening维度: 灵异文开头写网吧打游戏，题材错位'
+  - 'simplicity维度: 比喻描写像AI散文，不干练'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 1286
+  - 1370
+  score: 16
+  score_raw: 最多14分再加两分16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 恐惧失真规则怪谈
+  genre_guess:
+  - 灵异
+  - 规则怪谈
+  - 系统
+  overall_comment: 开头网吧打游戏与灵异主题割裂，描写AI化，完全不懂爽文。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 灵异文开头写网吧打游戏，题材错位
+    raw_quote: 你一个灵异小说你大篇幅的比例在这写网吧里面打游戏
+  - dimension: simplicity
+    severity: negative
+    content: 比喻描写像AI散文，不干练
+    raw_quote: 什么街道里面的霓虹灯像是不安的脉搏这是哪里来的描述

@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2198
+title: 凌修一觉睡醒穿成DJ渣男 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yicPzME9X
+scope:
+  genre:
+  - 都市
+  - 娱乐
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 一眼扑街 | 设定一眼扑街，直发无意义，浪费作者时间，直接拒签
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yicPzME9X.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定一眼扑街，直发无意义，浪费作者时间，直接拒签 | 设定一眼扑街，毫无签约价值
+  observable:
+  - 'misc维度: 设定一眼扑街，毫无签约价值'
+live_review_meta:
+  source_bvid: BV1yicPzME9X
+  source_line_range:
+  - 25
+  - 59
+  score: null
+  score_raw: 一眼扑街
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 凌修一觉睡醒穿成DJ渣男
+  genre_guess:
+  - 都市
+  - 娱乐
+  overall_comment: 设定一眼扑街，直发无意义，浪费作者时间，直接拒签
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 设定一眼扑街，毫无签约价值
+    raw_quote: 一眼扑街

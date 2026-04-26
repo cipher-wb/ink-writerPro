@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1767
+title: 东南亚魔兽系统 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 都市
+  - 东南亚
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分 | 写法通俗节奏可以，但魔兽系统锁死受众上限，建议改成修仙并加入雪白元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法通俗节奏可以，但魔兽系统锁死受众上限，建议改成修仙并加入雪白元素。 | 魔兽系统受众极窄，上限被锁死;缺少雪白角色，东南亚场景下读者期待此类元素
+  observable:
+  - 'genre维度: 魔兽系统受众极窄，上限被锁死'
+  - 'simplicity维度: 缺少雪白角色，东南亚场景下读者期待此类元素'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 1180
+  - 1270
+  score: 58
+  score_raw: 58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东南亚魔兽系统
+  genre_guess:
+  - 都市
+  - 东南亚
+  - 系统
+  overall_comment: 写法通俗节奏可以，但魔兽系统锁死受众上限，建议改成修仙并加入雪白元素。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 魔兽系统受众极窄，上限被锁死
+    raw_quote: 魔兽系统挺出戏……受众上限……不会超过十分之一的
+  - dimension: simplicity
+    severity: negative
+    content: 缺少雪白角色，东南亚场景下读者期待此类元素
+    raw_quote: 少一个雪白兄弟……这里少一个雪白就是干妈的

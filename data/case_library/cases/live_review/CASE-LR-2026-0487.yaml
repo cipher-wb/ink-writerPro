@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0487
+title: 青楼归功 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 历史
+  - 青楼
+  - 底层
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是59分吧 | 切入和市井气息好，但主线卖点单薄，后面剧情偏白。离签约很近但签了容易扑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入和市井气息好，但主线卖点单薄，后面剧情偏白。离签约很近但签了容易扑。 | 全书与修炼没衔接，主线未呈现好
+  observable:
+  - 'golden_finger维度: 全书与修炼没衔接，主线未呈现好'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1196
+  - 1262
+  score: 59
+  score_raw: 还是59分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 青楼归功
+  genre_guess:
+  - 历史
+  - 青楼
+  - 底层
+  overall_comment: 切入和市井气息好，但主线卖点单薄，后面剧情偏白。离签约很近但签了容易扑。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 床底偷听切入没问题，市井烟火气是优点
+    raw_quote: 优点是起点比较流行这种低身份对吧 低身份的这种事件就是市井之气 就烟火气 他有
+  - dimension: golden_finger
+    severity: negative
+    content: 全书与修炼没衔接，主线未呈现好
+    raw_quote: 但缺点是你的书还是没有衔接 对吧你的树根修炼在哪里 还是没用

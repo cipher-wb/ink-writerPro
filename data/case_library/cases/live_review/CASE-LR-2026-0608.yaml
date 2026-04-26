@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0608
+title: 机械造物末日 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 机械
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分大管打怪兽 太无聊了 | 原创世界观难代入，开场打斗无心理活动，纯自嗨。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 原创世界观难代入，开场打斗无心理活动，纯自嗨。 | 一上来就紧张打斗，没有心理活动建立代入;原创世界观难懂，设定不接地气
+  observable:
+  - 'opening维度: 一上来就紧张打斗，没有心理活动建立代入'
+  - 'genre维度: 原创世界观难懂，设定不接地气'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 2951
+  - 3100
+  score: 22
+  score_raw: 22分大管打怪兽 太无聊了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 机械造物末日
+  genre_guess:
+  - 科幻
+  - 末日
+  - 机械
+  overall_comment: 原创世界观难代入，开场打斗无心理活动，纯自嗨。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 一上来就紧张打斗，没有心理活动建立代入
+    raw_quote: 不要一上来给读者上这种电影或者电视...先写心理活动
+  - dimension: genre
+    severity: negative
+    content: 原创世界观难懂，设定不接地气
+    raw_quote: 原创世界观是特别特别难写的...前世今生读者都没有代入感

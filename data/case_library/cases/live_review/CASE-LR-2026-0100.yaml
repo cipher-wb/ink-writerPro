@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0100
+title: 奥特曼/迪迦奥特曼同人 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 同人
+  - 奥特曼
+  - 文娱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多能签 | 题材非常好，简介能上新书榜，节奏快切入好，但中间打怪加点过程太长需要删减。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材非常好，简介能上新书榜，节奏快切入好，但中间打怪加点过程太长需要删减。 | 中间打怪加点写太多，过程不重要要回归主线
+  observable:
+  - 'pacing维度: 中间打怪加点写太多，过程不重要要回归主线'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 601
+  - 700
+  score: null
+  score_raw: 差不多能签
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 奥特曼/迪迦奥特曼同人
+  genre_guess:
+  - 同人
+  - 奥特曼
+  - 文娱
+  overall_comment: 题材非常好，简介能上新书榜，节奏快切入好，但中间打怪加点过程太长需要删减。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 题材是80分的题材，随便上新书榜
+    raw_quote: 这题材绝对是80分钟的题材，就作为新人来说
+  - dimension: pacing
+    severity: negative
+    content: 中间打怪加点写太多，过程不重要要回归主线
+    raw_quote: 但有点多啊，我觉得第二张有点有点多...你不要一直比如类似于打怪加点了

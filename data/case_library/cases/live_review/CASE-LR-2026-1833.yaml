@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1833
+title: 斗破斗罗融合重生 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 同人
+  - 玄幻
+  - 斗罗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20分吧...20分吧20分 | 人设老套无同伴，独角戏无女角，表达还行但起不来
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设老套无同伴，独角戏无女角，表达还行但起不来 | 全无女角拉仇恨，独角戏太小白;开局老套，没期待感
+  observable:
+  - 'character维度: 全无女角拉仇恨，独角戏太小白'
+  - 'hook维度: 开局老套，没期待感'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1131
+  - 1220
+  score: 20
+  score_raw: 差不多就20分吧...20分吧20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗破斗罗融合重生
+  genre_guess:
+  - 同人
+  - 玄幻
+  - 斗罗
+  overall_comment: 人设老套无同伴，独角戏无女角，表达还行但起不来
+  comments:
+  - dimension: character
+    severity: negative
+    content: 全无女角拉仇恨，独角戏太小白
+    raw_quote: 你一个女角色都没有...你连个同伴都没有
+  - dimension: hook
+    severity: negative
+    content: 开局老套，没期待感
+    raw_quote: 你这个开局也老套的有点夸张了

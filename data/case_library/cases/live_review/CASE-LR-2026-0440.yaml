@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0440
+title: 魔物娘开发日志 (fail / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 西幻
+  - 魔物娘
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十二分 | 雪白描写有天赋，但金手指弱、主线不明，审核风险高
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白描写有天赋，但金手指弱、主线不明，审核风险高 | 金手指一般，主线弱，缺少明确老动思路;雪白描写过界，极易被审核屏蔽
+  observable:
+  - 'golden_finger维度: 金手指一般，主线弱，缺少明确老动思路'
+  - 'taboo维度: 雪白描写过界，极易被审核屏蔽'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 616
+  - 694
+  score: 52
+  score_raw: 五十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔物娘开发日志
+  genre_guess:
+  - 西幻
+  - 魔物娘
+  - 种田
+  overall_comment: 雪白描写有天赋，但金手指弱、主线不明，审核风险高
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人物描写极佳，少女立得立体可爱
+    raw_quote: 一个傲娇的有那种自重心的少女就立准...雪白还行四十分打底了这雪白
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指一般，主线弱，缺少明确老动思路
+    raw_quote: 主线还是弱了...你金手指我感觉一般般
+  - dimension: taboo
+    severity: negative
+    content: 雪白描写过界，极易被审核屏蔽
+    raw_quote: 审核就在旁边看着了大哥...这段审核会管你第二章肯定是屏蔽了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1416
+title: 检测灵根雪白（仙人跳） (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 仙侠
+  - 轻小说
+  - 整活
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这种肯定是不行的 | 强行开车，无意义，仙侠味缺失，肯定不签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 强行开车，无意义，仙侠味缺失，肯定不签。 | 用嘴搞下笔的毛，明显涉黄;内容无法过审
+  observable:
+  - 'taboo维度: 用嘴搞下笔的毛，明显涉黄'
+  - 'ops维度: 内容无法过审'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 381
+  - 440
+  score: null
+  score_raw: 这种肯定是不行的
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 检测灵根雪白（仙人跳）
+  genre_guess:
+  - 仙侠
+  - 轻小说
+  - 整活
+  overall_comment: 强行开车，无意义，仙侠味缺失，肯定不签。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 用嘴搞下笔的毛，明显涉黄
+    raw_quote: 这用嘴给他弄下笔的毛是吧 不是 这不是重涉黄吗
+  - dimension: ops
+    severity: negative
+    content: 内容无法过审
+    raw_quote: 这种审核会管 而且你强行开是真没意思

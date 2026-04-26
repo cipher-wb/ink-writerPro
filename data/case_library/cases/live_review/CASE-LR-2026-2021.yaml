@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2021
+title: 燃血的世界 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 科幻
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不算网文就不打风了 | 文笔扎实，但本质不是网文，更偏向知乎严选或实体科幻，元素杂柔，没有网文应有的套路和分类。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，但本质不是网文，更偏向知乎严选或实体科幻，元素杂柔，没有网文应有的套路和分类。 | 世界观杂糅了科幻、奇幻、都市等多种元素，根本不知道属于什么分类。
+  observable:
+  - 'genre维度: 世界观杂糅了科幻、奇幻、都市等多种元素，根本不知道属于什么分类。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1241
+  - 1281
+  score: null
+  score_raw: 不算网文就不打风了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 燃血的世界
+  genre_guess:
+  - 科幻
+  - 末日
+  overall_comment: 文笔扎实，但本质不是网文，更偏向知乎严选或实体科幻，元素杂柔，没有网文应有的套路和分类。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观杂糅了科幻、奇幻、都市等多种元素，根本不知道属于什么分类。
+    raw_quote: 它分什么封类 ... 这不是网络 这就不是网络

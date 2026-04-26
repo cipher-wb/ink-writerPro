@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1144
+title: 无限副本：我与惊悚总成实 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 无限流
+  - 惊悚
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多28分 | 无限流最重代入感，主角毫无特色和魅力，像凭空出现的游戏NPC，需要彻底重立人设。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无限流最重代入感，主角毫无特色和魅力，像凭空出现的游戏NPC，需要彻底重立人设。 | 主角没有能力、没有来历、没有期待感;毫无预兆被卷入副本，缺乏前情提要;没有悬念钩子，直接进副本叙事太干
+  observable:
+  - 'character维度: 主角没有能力、没有来历、没有期待感'
+  - 'opening维度: 毫无预兆被卷入副本，缺乏前情提要'
+  - 'hook维度: 没有悬念钩子，直接进副本叙事太干'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 761
+  - 880
+  score: 28
+  score_raw: 差不多28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 无限副本：我与惊悚总成实
+  genre_guess:
+  - 无限流
+  - 惊悚
+  - 灵异
+  overall_comment: 无限流最重代入感，主角毫无特色和魅力，像凭空出现的游戏NPC，需要彻底重立人设。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角没有能力、没有来历、没有期待感
+    raw_quote: 我不知道你这个人的魅力 你这个人不真实
+  - dimension: opening
+    severity: negative
+    content: 毫无预兆被卷入副本，缺乏前情提要
+    raw_quote: 毫无预兆 普通人就啥都没有 大概就有副本了
+  - dimension: hook
+    severity: negative
+    content: 没有悬念钩子，直接进副本叙事太干
+    raw_quote: 很干的 个人东西太干巴巴了

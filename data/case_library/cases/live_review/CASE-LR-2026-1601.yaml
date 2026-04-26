@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1601
+title: 走路修仙系统 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分 | 跑步修仙脑洞有趣但整体太儿戏，缺乏付费价值，建议发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 跑步修仙脑洞有趣但整体太儿戏，缺乏付费价值，建议发蓝精灵。 | 前面切入无聊，缺少女角色互动
+  observable:
+  - 'opening维度: 前面切入无聊，缺少女角色互动'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 671
+  - 700
+  score: 20
+  score_raw: 20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 走路修仙系统
+  genre_guess:
+  - 修仙
+  - 系统
+  - 轻松
+  overall_comment: 跑步修仙脑洞有趣但整体太儿戏，缺乏付费价值，建议发蓝精灵。
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 步步升级的脑洞有乐子潜力
+    raw_quote: 走路就能修仙 … 有点意思 … 但有点奇怪 不过也有点意思
+  - dimension: opening
+    severity: negative
+    content: 前面切入无聊，缺少女角色互动
+    raw_quote: 前面那一段切入那一段特别无聊 … 加个师姐师妹 … 加个女人

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0214
+title: 苟出长生世家 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 仙侠
+  - 家族
+  - 长生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 估计四十分左右 | 传统仙侠家族流，文笔沉稳但事件平淡，缺乏看点，需要娘子等元素增加张力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统仙侠家族流，文笔沉稳但事件平淡，缺乏看点，需要娘子等元素增加张力。 | 剧情平淡，爹辈事件无聊且干扰主线
+  observable:
+  - 'pacing维度: 剧情平淡，爹辈事件无聊且干扰主线'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1079
+  - 1130
+  score: null
+  score_raw: 估计四十分左右
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 苟出长生世家
+  genre_guess:
+  - 仙侠
+  - 家族
+  - 长生
+  overall_comment: 传统仙侠家族流，文笔沉稳但事件平淡，缺乏看点，需要娘子等元素增加张力。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 剧情平淡，爹辈事件无聊且干扰主线
+    raw_quote: 你爹这个事件 ... 不沉稳 ... 很搞笑 没意思
+  - dimension: hook
+    severity: neutral
+    content: 风格沉稳，有凡人流底子，但需要更出彩的冲突
+    raw_quote: 传统是可以的沉稳 ... 只要你写出仙侠味道就行

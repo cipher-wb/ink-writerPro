@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-2152
+title: 弃仙从商：被遗弃的瞎眼少年 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 穿越
+  - 修仙
+  - 经商
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给他加两分15分吧 | 全是毒点，对网文的理解停留在十几年前；但坚持写50万字毅力可嘉。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全是毒点，对网文的理解停留在十几年前；但坚持写50万字毅力可嘉。 | 开篇遗弃、瞎眼等毒点劝退读者;靠扑街小说学现代知识这种设定极度不合理;内容冗长无意义，写了几十章还在吃生肉、哭诉
+  observable:
+  - 'opening维度: 开篇遗弃、瞎眼等毒点劝退读者'
+  - 'golden_finger维度: 靠扑街小说学现代知识这种设定极度不合理'
+  - 'simplicity维度: 内容冗长无意义，写了几十章还在吃生肉、哭诉'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 913
+  - 1024
+  score: 15
+  score_raw: 给他加两分15分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 弃仙从商：被遗弃的瞎眼少年
+  genre_guess:
+  - 穿越
+  - 修仙
+  - 经商
+  overall_comment: 全是毒点，对网文的理解停留在十几年前；但坚持写50万字毅力可嘉。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇遗弃、瞎眼等毒点劝退读者
+    raw_quote: 眼睛天生不好，父母就把你遗弃了...这个也毒
+  - dimension: golden_finger
+    severity: negative
+    content: 靠扑街小说学现代知识这种设定极度不合理
+    raw_quote: 他获得了一本扑街的作家的部分穿越小说，学到了包罗万象的现代知识和雄韬伟略...每一句都读点
+  - dimension: simplicity
+    severity: negative
+    content: 内容冗长无意义，写了几十章还在吃生肉、哭诉
+    raw_quote: 大哥两张了，还在吃...别吃了再吃我要点外卖了

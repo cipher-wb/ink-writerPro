@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1888
+title: 穿史弥远南宋权相 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 历史
+  - 南宋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44分吧 | 题材上限极低，南宋热度低，穿史弥远胆子太大。开篇装逼铺垫不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材上限极低，南宋热度低，穿史弥远胆子太大。开篇装逼铺垫不足。 | 南宋小众，穿史弥远上限极低;装逼铺垫不足，逻辑不充分;主角心理活动缺失，代入感弱
+  observable:
+  - 'genre维度: 南宋小众，穿史弥远上限极低'
+  - 'highpoint维度: 装逼铺垫不足，逻辑不充分'
+  - 'character维度: 主角心理活动缺失，代入感弱'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1141
+  - 1240
+  score: 44
+  score_raw: 44分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿史弥远南宋权相
+  genre_guess:
+  - 历史
+  - 南宋
+  overall_comment: 题材上限极低，南宋热度低，穿史弥远胆子太大。开篇装逼铺垫不足。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 南宋小众，穿史弥远上限极低
+    raw_quote: 南宋真的热度很低的... 史明远是一代权相 你直接穿它其实胆子也太大了
+  - dimension: highpoint
+    severity: negative
+    content: 装逼铺垫不足，逻辑不充分
+    raw_quote: 我其实很忌讳这种急着上来装逼的啊... 你要这些东西给读者弄的合理说服读者
+  - dimension: character
+    severity: negative
+    content: 主角心理活动缺失，代入感弱
+    raw_quote: 心理活动没有啊... 这个东西没没有不真实感觉还是上帝视角

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0288
+title: 一拳超人兑换系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 番茄风
+  - 系统
+  - 上交国家
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未给分 | 完全番茄风，起点发不了，剧情在后设定在前
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全番茄风，起点发不了，剧情在后设定在前 | 先设定后剧情，写法不适合起点
+  observable:
+  - 'opening维度: 先设定后剧情，写法不适合起点'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 2011
+  - 2085
+  score: null
+  score_raw: 未给分
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 一拳超人兑换系统
+  genre_guess:
+  - 番茄风
+  - 系统
+  - 上交国家
+  overall_comment: 完全番茄风，起点发不了，剧情在后设定在前
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 先设定后剧情，写法不适合起点
+    raw_quote: 起点应该是先剧情，把设定放后面

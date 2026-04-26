@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1952
+title: 缘份绑定系统 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我给你三十分 | 系统太过阴间（背带小男孩），情节偏毒，但文字表达欢乐，能带动情绪，有乐子写法潜质。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统太过阴间（背带小男孩），情节偏毒，但文字表达欢乐，能带动情绪，有乐子写法潜质。 | 背带小男孩作为系统非常阴间和毒点
+  observable:
+  - 'golden_finger维度: 背带小男孩作为系统非常阴间和毒点'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 942
+  - 1011
+  score: 30
+  score_raw: 我给你三十分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 缘份绑定系统
+  genre_guess:
+  - 都市
+  - 系统
+  - 恋爱
+  overall_comment: 系统太过阴间（背带小男孩），情节偏毒，但文字表达欢乐，能带动情绪，有乐子写法潜质。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 背带小男孩作为系统非常阴间和毒点
+    raw_quote: 这个是毒点大哥...这要整陰間的東西...別出來這種東西了哥
+  - dimension: misc
+    severity: positive
+    content: 文字带有欢乐感，至少能带来情绪波动
+    raw_quote: 比较欢乐也是好事情，至少你的文字带给我们的情绪波动

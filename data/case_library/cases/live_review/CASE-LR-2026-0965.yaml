@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0965
+title: 卡牌词条合成超凡者 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 西幻
+  - 诸天
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没法改...没法改 | 世界观搭建太垃圾，切入贼无聊，设定出戏。遣词造句还好，但是偏题，费力不讨好的题材，不建议写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观搭建太垃圾，切入贼无聊，设定出戏。遣词造句还好，但是偏题，费力不讨好的题材，不建议写。 | 场景搭建冗长，无效描写过多，重点的雪白写得没意思。;元素混乱不伦不类，修仙、猎魔人、都市元素混杂。;构思逻辑太烂，精品作者写也是死路一条。
+  observable:
+  - 'opening维度: 场景搭建冗长，无效描写过多，重点的雪白写得没意思。'
+  - 'genre维度: 元素混乱不伦不类，修仙、猎魔人、都市元素混杂。'
+  - 'misc维度: 构思逻辑太烂，精品作者写也是死路一条。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 611
+  - 750
+  score: 40
+  score_raw: 没法改...没法改
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 卡牌词条合成超凡者
+  genre_guess:
+  - 西幻
+  - 诸天
+  - 轻小说
+  overall_comment: 世界观搭建太垃圾，切入贼无聊，设定出戏。遣词造句还好，但是偏题，费力不讨好的题材，不建议写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 场景搭建冗长，无效描写过多，重点的雪白写得没意思。
+    raw_quote: 不要写这么墨迹...重点不就是一个雪白吗...你这个雪白写的又贼没意思
+  - dimension: genre
+    severity: negative
+    content: 元素混乱不伦不类，修仙、猎魔人、都市元素混杂。
+    raw_quote: 不伦不类...一个修仙的...加入了猎魔人的元素...加入了都市的元素
+  - dimension: misc
+    severity: negative
+    content: 构思逻辑太烂，精品作者写也是死路一条。
+    raw_quote: 这个稿子没法改...你这个思路...得万定级别才会让他去写这种书...你的世界观搭建太垃圾了

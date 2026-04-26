@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0262
+title: AA966的三国系统流 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 三国
+  - 系统
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你30分吧 | 小白爽文逻辑崩毁，商城换物过于玄幻，历史味太淡，只适合蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小白爽文逻辑崩毁，商城换物过于玄幻，历史味太淡，只适合蓝精灵。 | 系统商城太玄幻，凭空换物破坏历史逻辑。;女主贞操观崩塌，一夜情逻辑立不住。
+  observable:
+  - 'golden_finger维度: 系统商城太玄幻，凭空换物破坏历史逻辑。'
+  - 'character维度: 女主贞操观崩塌，一夜情逻辑立不住。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1805
+  - 1890
+  score: 30
+  score_raw: 给你30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: AA966的三国系统流
+  genre_guess:
+  - 三国
+  - 系统
+  - 历史
+  overall_comment: 小白爽文逻辑崩毁，商城换物过于玄幻，历史味太淡，只适合蓝精灵。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统商城太玄幻，凭空换物破坏历史逻辑。
+    raw_quote: 就商城里面随便出来一个东西嘛 ... 直接换詹姆斯就完事了
+  - dimension: character
+    severity: negative
+    content: 女主贞操观崩塌，一夜情逻辑立不住。
+    raw_quote: 你看到人家被强奸 这身裸体 人家好好的 ... 这不解自杀都不对的

@@ -1,0 +1,69 @@
+case_id: CASE-LR-2026-0618
+title: 人间失格：我在暗界求生 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 灵异
+  - 暗界
+  - 异能
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吧 过年加两分 32了 | 代入感差，缺乏真正的鬼故事内核，自嗨式展开且缺少智斗反转，题材难度高。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感差，缺乏真正的鬼故事内核，自嗨式展开且缺少智斗反转，题材难度高。 | 开篇通过论坛链接引入设定极为生硬突兀。;主角心理活动少、代入感薄弱，反应不合理。;高潮沦为直接打怪兽，毫无智斗与反转设计。
+  observable:
+  - 'opening维度: 开篇通过论坛链接引入设定极为生硬突兀。'
+  - 'character维度: 主角心理活动少、代入感薄弱，反应不合理。'
+  - 'highpoint维度: 高潮沦为直接打怪兽，毫无智斗与反转设计。'
+  - 'genre维度: 灵异题材极吃剧情，作者缺乏好的鬼故事。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 1
+  - 95
+  score: 32
+  score_raw: 30分吧 过年加两分 32了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 人间失格：我在暗界求生
+  genre_guess:
+  - 灵异
+  - 暗界
+  - 异能
+  - 穿越
+  overall_comment: 代入感差，缺乏真正的鬼故事内核，自嗨式展开且缺少智斗反转，题材难度高。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇通过论坛链接引入设定极为生硬突兀。
+    raw_quote: 直接一个不要点击连接 然后大哥点了 ... 这个有点突兀啊
+  - dimension: character
+    severity: negative
+    content: 主角心理活动少、代入感薄弱，反应不合理。
+    raw_quote: 配合他代入感很少
+  - dimension: highpoint
+    severity: negative
+    content: 高潮沦为直接打怪兽，毫无智斗与反转设计。
+    raw_quote: 应该是写智斗啊 打怪兽是没意思的
+  - dimension: genre
+    severity: negative
+    content: 灵异题材极吃剧情，作者缺乏好的鬼故事。
+    raw_quote: 这个题他就垃圾题材 ... 本质上你没有好的鬼故事
+  - dimension: simplicity
+    severity: positive
+    content: 文笔还算流畅。
+    raw_quote: 比例还行，最多也就我觉得比例流畅，就30分出头了

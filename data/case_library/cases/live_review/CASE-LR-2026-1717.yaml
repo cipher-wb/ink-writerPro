@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1717
+title: 斗罗黑暗圣龙 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 同仁
+  - 斗罗大陆
+  - 黑暗圣龙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是四十 四分吧 | 有进步，节奏快情绪足，但过于白开水、沉浸感不足。斗罗同仁在起点市场小，Q阅可能有机会，但内容太壮太冲。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有进步，节奏快情绪足，但过于白开水、沉浸感不足。斗罗同仁在起点市场小，Q阅可能有机会，但内容太壮太冲。 | 节奏太快导致沉浸感不足，人物进展匆忙
+  observable:
+  - 'pacing维度: 节奏太快导致沉浸感不足，人物进展匆忙'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 735
+  - 814
+  score: 44
+  score_raw: 还是四十 四分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗罗黑暗圣龙
+  genre_guess:
+  - 同仁
+  - 斗罗大陆
+  - 黑暗圣龙
+  overall_comment: 有进步，节奏快情绪足，但过于白开水、沉浸感不足。斗罗同仁在起点市场小，Q阅可能有机会，但内容太壮太冲。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快导致沉浸感不足，人物进展匆忙
+    raw_quote: 太快了，节奏太着急了有点，就是出来的人物啊这些进展啊太快了
+  - dimension: simplicity
+    severity: positive
+    content: 节奏快情绪足，文笔扎实
+    raw_quote: 节奏快，情绪足文笔也很扎实，确实有进步
+  - dimension: genre
+    severity: neutral
+    content: 斗罗同仁在起点市场不确定，但Q阅有特定受众
+    raw_quote: 起点斗罗觉得还挺凉的，现在斗罗在Q月确实比起点赚钱

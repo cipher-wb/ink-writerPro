@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0995
+title: 魔王大人岌岌可危 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 西幻
+  - 魔族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给到22分左右 | 西幻写法不接地气，缺乏代入感和期待感，剧情老套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 西幻写法不接地气，缺乏代入感和期待感，剧情老套。 | 缺乏代入感，不接地气;内容干巴巴，全是设定;主角智商低，剧情老套
+  observable:
+  - 'opening维度: 缺乏代入感，不接地气'
+  - 'pacing维度: 内容干巴巴，全是设定'
+  - 'character维度: 主角智商低，剧情老套'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 1116
+  - 1208
+  score: 22
+  score_raw: 只能给到22分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔王大人岌岌可危
+  genre_guess:
+  - 西幻
+  - 魔族
+  overall_comment: 西幻写法不接地气，缺乏代入感和期待感，剧情老套。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 缺乏代入感，不接地气
+    raw_quote: 没代入感啊……这不像是个中国人，我们需要有中国人的思路呀
+  - dimension: pacing
+    severity: negative
+    content: 内容干巴巴，全是设定
+    raw_quote: 内容几乎就是干巴巴的干巴巴的……就干干干干干干干干干干干干干干干干奇迹
+  - dimension: character
+    severity: negative
+    content: 主角智商低，剧情老套
+    raw_quote: 理查德智商不高呀，理查德智商有点太低了

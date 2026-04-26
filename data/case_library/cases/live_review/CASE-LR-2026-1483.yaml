@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1483
+title: 大学生穿越之干娘 (pass / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 穿越
+  - 架空历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分吧 | 第一次写书能达到38分，比例尚可，但设定和金手指着急，事件较弱
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一次写书能达到38分，比例尚可，但设定和金手指着急，事件较弱 | 世界观和金手指出场太急，事件集较弱;开头世界观不接地气，建议从小事件切入
+  observable:
+  - 'pacing维度: 世界观和金手指出场太急，事件集较弱'
+  - 'opening维度: 开头世界观不接地气，建议从小事件切入'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 39
+  - 85
+  score: 38
+  score_raw: 38分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 大学生穿越之干娘
+  genre_guess:
+  - 穿越
+  - 架空历史
+  overall_comment: 第一次写书能达到38分，比例尚可，但设定和金手指着急，事件较弱
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 世界观和金手指出场太急，事件集较弱
+    raw_quote: 这些设定金手指也着急了 事件集的比较弱
+  - dimension: opening
+    severity: negative
+    content: 开头世界观不接地气，建议从小事件切入
+    raw_quote: 开头还是弄点小身份小剧情

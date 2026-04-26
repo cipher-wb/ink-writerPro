@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0818
+title: 穿越差点被炼成人丹 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 玄幻
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 人物设定弱，故事平淡没有看点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人物设定弱，故事平淡没有看点 | 女主智商弱，人设单薄像NPC;开头被困三个月无事发生，缺乏紧张感
+  observable:
+  - 'character维度: 女主智商弱，人设单薄像NPC'
+  - 'opening维度: 开头被困三个月无事发生，缺乏紧张感'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 1285
+  - 1420
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越差点被炼成人丹
+  genre_guess:
+  - 玄幻
+  - 民俗
+  overall_comment: 人物设定弱，故事平淡没有看点
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主智商弱，人设单薄像NPC
+    raw_quote: 我觉得写女的人设好弱啊 这个妹妹感觉又没智商
+  - dimension: opening
+    severity: negative
+    content: 开头被困三个月无事发生，缺乏紧张感
+    raw_quote: 大哥我试探了三个人就在这待着 没世界那个赵括纸上谈兵

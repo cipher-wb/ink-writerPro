@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0973
+title: 1944纽约历险记 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 历史
+  - 都市
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多还是42分 | 文笔过关但思路打不开。1944年毫无年代感，前两章毫无卖点，太淡。需要学肯尼迪脑洞大开。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔过关但思路打不开。1944年毫无年代感，前两章毫无卖点，太淡。需要学肯尼迪脑洞大开。 | 前两章毫无卖点，找不到任何看点或主线。;1944年没有时代特征，换成1994年也成立。
+  observable:
+  - 'highpoint维度: 前两章毫无卖点，找不到任何看点或主线。'
+  - 'genre维度: 1944年没有时代特征，换成1994年也成立。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 1991
+  - 2140
+  score: 42
+  score_raw: 差不多还是42分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 1944纽约历险记
+  genre_guess:
+  - 历史
+  - 都市
+  - 穿越
+  overall_comment: 文笔过关但思路打不开。1944年毫无年代感，前两章毫无卖点，太淡。需要学肯尼迪脑洞大开。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 前两章毫无卖点，找不到任何看点或主线。
+    raw_quote: 两张多了没看见...找不到看点...没什么好的事件主线...包括你的金手指卖点啊啥的
+  - dimension: genre
+    severity: negative
+    content: 1944年没有时代特征，换成1994年也成立。
+    raw_quote: 你如果说你懂个异能...要去丢原子弹...我都能体验感觉跟1944年没关系啊...没感觉到1944年有什么特点啊

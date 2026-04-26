@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1306
+title: 魔物娘的开发设计 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 魔物娘
+  - 魅魔
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分 | 文笔情节太小白，像童话，完全立不住魔物娘人设。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔情节太小白，像童话，完全立不住魔物娘人设。 | 人物毫无魅魔特质，只是贴上标签;整体像童话，没有冲突和看点
+  observable:
+  - 'character维度: 人物毫无魅魔特质，只是贴上标签'
+  - 'simplicity维度: 整体像童话，没有冲突和看点'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 551
+  - 650
+  score: 23
+  score_raw: 23分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔物娘的开发设计
+  genre_guess:
+  - 魔物娘
+  - 魅魔
+  - 西幻
+  overall_comment: 文笔情节太小白，像童话，完全立不住魔物娘人设。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物毫无魅魔特质，只是贴上标签
+    raw_quote: 你這魅啥魅了 不是你說魅魔就魅魔了呀 要體現出來呀
+  - dimension: simplicity
+    severity: negative
+    content: 整体像童话，没有冲突和看点
+    raw_quote: 這個童話

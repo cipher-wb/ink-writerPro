@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0235
+title: 人在合欢宗 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 仙侠
+  - 合欢
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分 | 合欢宗题材过审难，拉扯有看点但整体偏小白，适合番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 合欢宗题材过审难，拉扯有看点但整体偏小白，适合番茄。 | 合欢宗起不了过审易违规;比例需精炼
+  observable:
+  - 'genre维度: 合欢宗起不了过审易违规'
+  - 'simplicity维度: 比例需精炼'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 685
+  - 750
+  score: 32
+  score_raw: 32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 人在合欢宗
+  genre_guess:
+  - 仙侠
+  - 合欢
+  - 系统
+  overall_comment: 合欢宗题材过审难，拉扯有看点但整体偏小白，适合番茄。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 合欢宗起不了过审易违规
+    raw_quote: 合欢宗明确不让写
+  - dimension: misc
+    severity: positive
+    content: 跟少女互动拉扯有点意思
+    raw_quote: 写人设写互动的嘛
+  - dimension: simplicity
+    severity: negative
+    content: 比例需精炼
+    raw_quote: 比例得练练 得精简精简

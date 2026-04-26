@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0108
+title: 德国留学生/重生都市 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分吧 | 没有讲故事水平，完全是面板设定，都市文写得像说明书，建议写足球。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 没有讲故事水平，完全是面板设定，都市文写得像说明书，建议写足球。 | 根本没有都市的感觉，就是个面板为主的脑洞;三章下来基本没故事，人物一个没立住
+  observable:
+  - 'genre维度: 根本没有都市的感觉，就是个面板为主的脑洞'
+  - 'character维度: 三章下来基本没故事，人物一个没立住'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1281
+  - 1380
+  score: 33
+  score_raw: 33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 德国留学生/重生都市
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  overall_comment: 没有讲故事水平，完全是面板设定，都市文写得像说明书，建议写足球。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 根本没有都市的感觉，就是个面板为主的脑洞
+    raw_quote: 这完全没有都市的遗憾什么的感觉，就完全是个面板为主的一个脑洞对吧
+  - dimension: character
+    severity: negative
+    content: 三章下来基本没故事，人物一个没立住
+    raw_quote: 三章下来基本没什么故事，都是设定什么为卖点，剧情人物一个都没立住对吧

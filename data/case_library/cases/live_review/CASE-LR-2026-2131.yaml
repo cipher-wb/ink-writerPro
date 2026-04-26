@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2131
+title: 命如草芥 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 古风
+  - 穿越
+  - 玄幻
+  - 妖异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的书好吧 就比例还好吧 比例味道还好 但代入感确实无聊 差不多就30分的样子 | 文笔古香古色有韵味，但代入感极差，上帝视角严重，穿越主角无现代人心理。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔古香古色有韵味，但代入感极差，上帝视角严重，穿越主角无现代人心理。 | 主角完全没有现代人穿越应有的心理活动，像土著;开头刻画妖狐身份过于复杂，弄巧成拙
+  observable:
+  - 'character维度: 主角完全没有现代人穿越应有的心理活动，像土著'
+  - 'opening维度: 开头刻画妖狐身份过于复杂，弄巧成拙'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 241
+  - 350
+  score: 30
+  score_raw: 打分的书好吧 就比例还好吧 比例味道还好 但代入感确实无聊 差不多就30分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 命如草芥
+  genre_guess:
+  - 古风
+  - 穿越
+  - 玄幻
+  - 妖异
+  overall_comment: 文笔古香古色有韵味，但代入感极差，上帝视角严重，穿越主角无现代人心理。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角完全没有现代人穿越应有的心理活动，像土著
+    raw_quote: 他没有一句现代人的思考 没有一句现代网思考对吧 你想他是一个21世纪的人 他从小到大都是玩手机 然后这种长大的结果 他的思路就完全是古代人
+  - dimension: opening
+    severity: negative
+    content: 开头刻画妖狐身份过于复杂，弄巧成拙
+    raw_quote: 非要把那个身份弄那么搞 那个什么第二层 第三层 你是现代人啊

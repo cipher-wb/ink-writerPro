@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0197
+title: 双女主宠爱我 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 21吧 | 重生文笔不错但事件无聊，缺乏冲突和卖点，像日记叙事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生文笔不错但事件无聊，缺乏冲突和卖点，像日记叙事。 | 开头缺乏矛盾事件，故事平淡无趣;人物关系老套，缺乏张力，怀念死去前任的设定令人反感
+  observable:
+  - 'hook维度: 开头缺乏矛盾事件，故事平淡无趣'
+  - 'character维度: 人物关系老套，缺乏张力，怀念死去前任的设定令人反感'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 258
+  - 303
+  score: 21
+  score_raw: 21吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 双女主宠爱我
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 重生文笔不错但事件无聊，缺乏冲突和卖点，像日记叙事。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开头缺乏矛盾事件，故事平淡无趣
+    raw_quote: 事件很无聊啊 一个谈恋爱有啥 ... 没冲突 没事件 没毛动 没遗憾没看点
+  - dimension: character
+    severity: negative
+    content: 人物关系老套，缺乏张力，怀念死去前任的设定令人反感
+    raw_quote: 你这个开头也很毒啊 王妻这种也很毒的

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2147
+title: 火影：旺气改命从神无毗桥开始 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 同人
+  - 火影忍者
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得这个水平40分应该也有，如同人一般都加个五分 | 穿越设定太晚出现，金手指介绍过多，缺乏眼前的小事件和危机，代入感不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越设定太晚出现，金手指介绍过多，缺乏眼前的小事件和危机，代入感不足。 | 穿越身份交代太晚，不如一上来就穿越;金手指铺垫过多，占用了推进剧情的时间;节奏较慢，缺乏中期目标之外的小事件和小危机衔接
+  observable:
+  - 'opening维度: 穿越身份交代太晚，不如一上来就穿越'
+  - 'golden_finger维度: 金手指铺垫过多，占用了推进剧情的时间'
+  - 'pacing维度: 节奏较慢，缺乏中期目标之外的小事件和小危机衔接'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 311
+  - 426
+  score: 40
+  score_raw: 我觉得这个水平40分应该也有，如同人一般都加个五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 火影：旺气改命从神无毗桥开始
+  genre_guess:
+  - 同人
+  - 火影忍者
+  overall_comment: 穿越设定太晚出现，金手指介绍过多，缺乏眼前的小事件和危机，代入感不足。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越身份交代太晚，不如一上来就穿越
+    raw_quote: 穿越还是太晚了...你还不如一上来就穿越了
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指铺垫过多，占用了推进剧情的时间
+    raw_quote: 金手指要设定半天...这两张就全都是为金手指服务的
+  - dimension: pacing
+    severity: negative
+    content: 节奏较慢，缺乏中期目标之外的小事件和小危机衔接
+    raw_quote: 大哥自己也没什么事件...只有只有一个中期目标，没有眼前的小事件小小危机衔接

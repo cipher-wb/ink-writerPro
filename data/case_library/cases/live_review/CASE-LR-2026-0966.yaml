@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0966
+title: 女兵王除恶系统 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 都市
+  - 兵王
+  - 刑侦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就30分左右吧 | 系统抢戏，不是网文写法。但节奏挺快，比例挺好，更像电视剧剧本。去掉系统适合改编短剧或发女频/实体频道。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统抢戏，不是网文写法。但节奏挺快，比例挺好，更像电视剧剧本。去掉系统适合改编短剧或发女频/实体频道。 | 系统出戏，更像是电视剧剧本而非网文。
+  observable:
+  - 'genre维度: 系统出戏，更像是电视剧剧本而非网文。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 751
+  - 910
+  score: 30
+  score_raw: 就30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 女兵王除恶系统
+  genre_guess:
+  - 都市
+  - 兵王
+  - 刑侦
+  overall_comment: 系统抢戏，不是网文写法。但节奏挺快，比例挺好，更像电视剧剧本。去掉系统适合改编短剧或发女频/实体频道。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏挺快，比例挺好，开头对白紧凑。
+    raw_quote: 我节奏倒挺快的...这个比例挺好的...节奏挺快的
+  - dimension: genre
+    severity: negative
+    content: 系统出戏，更像是电视剧剧本而非网文。
+    raw_quote: 我觉得系统有点出戏了...没系统的话可以写短短句的
+  - dimension: ops
+    severity: neutral
+    content: 建议去系统化后发短篇实体频道或知乎探案。
+    raw_quote: 可以把金手指删掉吧...把这个事件写的真实一点...你可以发语文的短篇实体频道

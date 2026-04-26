@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1614
+title: 穿成老虎救美 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 穿越
+  - 老虎
+  - 古代
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 设定有趣但女主人设崩塌，剧情老套，读者难代入老虎。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定有趣但女主人设崩塌，剧情老套，读者难代入老虎。 | 女主人设太傻白，智商低，魅力全无;老虎主角代入感差，过往同类书成绩也不好
+  observable:
+  - 'character维度: 女主人设太傻白，智商低，魅力全无'
+  - 'golden_finger维度: 老虎主角代入感差，过往同类书成绩也不好'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 710
+  - 789
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿成老虎救美
+  genre_guess:
+  - 穿越
+  - 老虎
+  - 古代
+  - 修仙
+  overall_comment: 设定有趣但女主人设崩塌，剧情老套，读者难代入老虎。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主人设太傻白，智商低，魅力全无
+    raw_quote: 你们的女的为什么智商都这么低呀 … 感觉说话也白白的 就没魅力呀
+  - dimension: golden_finger
+    severity: negative
+    content: 老虎主角代入感差，过往同类书成绩也不好
+    raw_quote: 起点我签过 … 也写不了 … 读者就是不好代入老虎

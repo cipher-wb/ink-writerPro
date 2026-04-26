@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0715
+title: 寅言幼稚（异世界剑宗都市） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 都市
+  - 开局捡宝
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数，评价偏低 | 设定过多且不接地气，需要情绪和身份认同；金手指类同药老梗显俗套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定过多且不接地气，需要情绪和身份认同；金手指类同药老梗显俗套。 | 开局战斗+设定过多，缺乏情绪牵引;金手指设定与老套路雷同，读者会觉无聊
+  observable:
+  - 'opening维度: 开局战斗+设定过多，缺乏情绪牵引'
+  - 'golden_finger维度: 金手指设定与老套路雷同，读者会觉无聊'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 1041
+  - 1100
+  score: null
+  score_raw: 未明确说出分数，评价偏低
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 寅言幼稚（异世界剑宗都市）
+  genre_guess:
+  - 都市
+  - 开局捡宝
+  - 系统流
+  overall_comment: 设定过多且不接地气，需要情绪和身份认同；金手指类同药老梗显俗套。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局战斗+设定过多，缺乏情绪牵引
+    raw_quote: 一上来写战斗，没人看...直接出结果吧...设定太多了
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设定与老套路雷同，读者会觉无聊
+    raw_quote: 很多人会觉得太像...读者...会觉得很无聊

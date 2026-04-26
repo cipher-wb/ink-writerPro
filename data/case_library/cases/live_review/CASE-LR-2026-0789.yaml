@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-0789
+title: 未听清标题（雪白擦边文，可能以“大夏京城”开头） (pass / 70分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KWFqzaErs
+scope:
+  genre:
+  - 玄幻
+  - 雪白
+  - 宫斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 第一张水平绝对有70分以上的 | 文笔和人设拉扯水平在线，雪白部分吸引人，但内容过度擦边，极有可能无法通过审核。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KWFqzaErs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和人设拉扯水平在线，雪白部分吸引人，但内容过度擦边，极有可能无法通过审核。 | 内容擦边描写密集，有触线风险;即便能签，也大概率无法过审，需要修改但可能破坏味道
+  observable:
+  - 'taboo维度: 内容擦边描写密集，有触线风险'
+  - 'ops维度: 即便能签，也大概率无法过审，需要修改但可能破坏味道'
+live_review_meta:
+  source_bvid: BV1KWFqzaErs
+  source_line_range:
+  - 72
+  - 231
+  score: 70
+  score_raw: 第一张水平绝对有70分以上的
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 未听清标题（雪白擦边文，可能以“大夏京城”开头）
+  genre_guess:
+  - 玄幻
+  - 雪白
+  - 宫斗
+  overall_comment: 文笔和人设拉扯水平在线，雪白部分吸引人，但内容过度擦边，极有可能无法通过审核。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 主线人设塑造较强
+    raw_quote: 主线人设都挺挺强的
+  - dimension: opening
+    severity: positive
+    content: 第一章整体水平高，超过70分
+    raw_quote: 第一张水平绝对有70分以上的
+  - dimension: taboo
+    severity: negative
+    content: 内容擦边描写密集，有触线风险
+    raw_quote: 这两句审核肯定出来了...太夸张了
+  - dimension: ops
+    severity: negative
+    content: 即便能签，也大概率无法过审，需要修改但可能破坏味道
+    raw_quote: 签是能签了...审核能过审就能签是吧...如果改完没味道我就不签了

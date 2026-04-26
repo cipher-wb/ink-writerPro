@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1903
+title: 超神机械师第四天灾 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 游戏
+  - 第四天灾
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 天赋有实力有，但真别写 | 实力有但老写法缺脑洞，第四天灾新人极难驾驭。做减法直指重点方有可为。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 实力有但老写法缺脑洞，第四天灾新人极难驾驭。做减法直指重点方有可为。 | 第四天灾不适合新人写;应做减法直指重点，不敌短剧节奏
+  observable:
+  - 'genre维度: 第四天灾不适合新人写'
+  - 'simplicity维度: 应做减法直指重点，不敌短剧节奏'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 2471
+  - 2550
+  score: null
+  score_raw: 天赋有实力有，但真别写
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 超神机械师第四天灾
+  genre_guess:
+  - 游戏
+  - 第四天灾
+  overall_comment: 实力有但老写法缺脑洞，第四天灾新人极难驾驭。做减法直指重点方有可为。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 第四天灾不适合新人写
+    raw_quote: 第四天灾我觉得现在也不适合新人写的... 新人就算了吧
+  - dimension: simplicity
+    severity: negative
+    content: 应做减法直指重点，不敌短剧节奏
+    raw_quote: 现在是要做减法的东西... 尽量凸显重点

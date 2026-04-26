@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1191
+title: 预寿传选 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 玄幻
+  - 预寿
+  - 传选
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就不打风了 | 本质是传选换皮斗罗，人物设定还行，但节奏过时，没多大看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 本质是传选换皮斗罗，人物设定还行，但节奏过时，没多大看点。 | 设定堆砌过多，缺乏事件推进;整体框架像斗罗大陆，缺乏新意
+  observable:
+  - 'simplicity维度: 设定堆砌过多，缺乏事件推进'
+  - 'misc维度: 整体框架像斗罗大陆，缺乏新意'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 351
+  - 500
+  score: null
+  score_raw: 就不打风了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 预寿传选
+  genre_guess:
+  - 玄幻
+  - 预寿
+  - 传选
+  overall_comment: 本质是传选换皮斗罗，人物设定还行，但节奏过时，没多大看点。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定堆砌过多，缺乏事件推进
+    raw_quote: 这全是设定啊兄弟
+  - dimension: character
+    severity: positive
+    content: 人物塑造有一定功力，能立住如少女、老头等形象
+    raw_quote: 写人物还是就是能立得住的 比如说可爱的少女 神秘的老头这些还可以
+  - dimension: misc
+    severity: negative
+    content: 整体框架像斗罗大陆，缺乏新意
+    raw_quote: 就是唐家三少兄弟

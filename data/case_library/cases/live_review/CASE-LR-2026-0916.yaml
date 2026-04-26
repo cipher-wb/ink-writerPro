@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0916
+title: 穿越中世纪：骑枪与行尸 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 西幻
+  - 中世纪
+  - 克苏鲁
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多三十三十五分吧 | 节奏缓慢，开场卖世界观但读者没耐心，缺乏人物事件吸引。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏缓慢，开场卖世界观但读者没耐心，缺乏人物事件吸引。 | 太慢，缺乏前因后果;开头全在推销世界观，缺少人物事件
+  observable:
+  - 'pacing维度: 太慢，缺乏前因后果'
+  - 'opening维度: 开头全在推销世界观，缺少人物事件'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 415
+  - 480
+  score: 35
+  score_raw: 差不多三十三十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越中世纪：骑枪与行尸
+  genre_guess:
+  - 西幻
+  - 中世纪
+  - 克苏鲁
+  overall_comment: 节奏缓慢，开场卖世界观但读者没耐心，缺乏人物事件吸引。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 太慢，缺乏前因后果
+    raw_quote: 我觉得好慢 应该是试剑兄弟 这个太慢了
+  - dimension: opening
+    severity: negative
+    content: 开头全在推销世界观，缺少人物事件
+    raw_quote: 真没人在乎的 哎偏题贼慢 你老是这个世界 这个世界没人在乎的

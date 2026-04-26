@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0800
+title: K线修仙 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 修仙
+  - 炒股
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23吧 | 剧情老套，金手指太毒，传统修仙废材开局
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情老套，金手指太毒，传统修仙废材开局 | K线图系统太毒，索套;开头炒粉太监套路，过时
+  observable:
+  - 'golden_finger维度: K线图系统太毒，索套'
+  - 'opening维度: 开头炒粉太监套路，过时'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 1420
+  - 1550
+  score: 23
+  score_raw: 23吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: K线修仙
+  genre_guess:
+  - 修仙
+  - 炒股
+  - 系统
+  overall_comment: 剧情老套，金手指太毒，传统修仙废材开局
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: K线图系统太毒，索套
+    raw_quote: 金手战不知道弄个简单的什么加碱之类的都比这好
+  - dimension: opening
+    severity: negative
+    content: 开头炒粉太监套路，过时
+    raw_quote: 还在那炒粉 没意思这个炒粉就没意思

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0750
+title: 校园恋爱：明辨是非 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 校园
+  - 恋爱
+  - 梦境
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这题材太脑洞太差了……其实你就写个高中恋爱文都可以的 | 遣词造句太小白，梦境设定是毒点，建议换题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句太小白，梦境设定是毒点，建议换题材。 | 梦境揭示为毒点，读者会有被欺骗感;遣词造句过于小白，像小学生作文
+  observable:
+  - 'taboo维度: 梦境揭示为毒点，读者会有被欺骗感'
+  - 'simplicity维度: 遣词造句过于小白，像小学生作文'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 501
+  - 560
+  score: null
+  score_raw: 这题材太脑洞太差了……其实你就写个高中恋爱文都可以的
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 校园恋爱：明辨是非
+  genre_guess:
+  - 校园
+  - 恋爱
+  - 梦境
+  overall_comment: 遣词造句太小白，梦境设定是毒点，建议换题材。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 梦境揭示为毒点，读者会有被欺骗感
+    raw_quote: 这个脑洞里面梦境就是你如果给读者讲了半天……那读者就会直接跑
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句过于小白，像小学生作文
+    raw_quote: 这种太小白了，这些东西一定要注意啊
+  - dimension: character
+    severity: neutral
+    content: 代入感还可以
+    raw_quote: 你有个优点，就是代入感还可以

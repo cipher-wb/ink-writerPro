@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0648
+title: 系统收徒弟子都是大反派 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 收徒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 太白了太白了太白了 | 套路的系统收徒文，主角完全被系统牵着鼻子走，人设弱智，事件低龄化，虽然文笔节奏还行，但题材无望。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路的系统收徒文，主角完全被系统牵着鼻子走，人设弱智，事件低龄化，虽然文笔节奏还行，但题材无望。 | 主角被系统牵着走，驱动力为零，行为弱智;金手指内容平庸，全是抽奖商城十连抽
+  observable:
+  - 'character维度: 主角被系统牵着走，驱动力为零，行为弱智'
+  - 'golden_finger维度: 金手指内容平庸，全是抽奖商城十连抽'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 661
+  - 740
+  score: null
+  score_raw: 太白了太白了太白了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 系统收徒弟子都是大反派
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 收徒
+  overall_comment: 套路的系统收徒文，主角完全被系统牵着鼻子走，人设弱智，事件低龄化，虽然文笔节奏还行，但题材无望。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角被系统牵着走，驱动力为零，行为弱智
+    raw_quote: 主角本身就自身没有驱动力的...系统让你干嘛就干嘛...写成弱智了呀
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指内容平庸，全是抽奖商城十连抽
+    raw_quote: 老是喜欢商城大礼包在那抽抽抽的
+  - dimension: pacing
+    severity: positive
+    content: 节奏OK，文笔勉强可看，不是全无优点
+    raw_quote: 文笔还好...节奏OK...也有优点

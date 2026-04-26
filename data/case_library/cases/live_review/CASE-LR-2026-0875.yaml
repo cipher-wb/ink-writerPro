@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0875
+title: 联盟第一好人 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 豪门
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大哥给18分满 | 新人乱拉世界观设定，fresh到极点，错综复杂完全没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 新人乱拉世界观设定，fresh到极点，错综复杂完全没人看。 | 都市异能加豪门世家，设定混乱没人看;太多世界观势力，新读者根本进不去
+  observable:
+  - 'genre维度: 都市异能加豪门世家，设定混乱没人看'
+  - 'simplicity维度: 太多世界观势力，新读者根本进不去'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 581
+  - 620
+  score: 18
+  score_raw: 只能给大哥给18分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 联盟第一好人
+  genre_guess:
+  - 都市
+  - 异能
+  - 豪门
+  overall_comment: 新人乱拉世界观设定，fresh到极点，错综复杂完全没人看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市异能加豪门世家，设定混乱没人看
+    raw_quote: 都市一人家族企业雷霆长 枪高我他我真想把你杀了 没人看呀 … 没人看这种书对吧 兵王那个时代都没人看
+  - dimension: simplicity
+    severity: negative
+    content: 太多世界观势力，新读者根本进不去
+    raw_quote: 你现在要做的就把这题他全部给我推翻 不要给我拉这种背景世界观设定不要给我拉了 别拉了 没人看

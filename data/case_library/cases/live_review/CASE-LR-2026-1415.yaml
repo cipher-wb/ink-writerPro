@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1415
+title: 大仓末年妖魔横行（林墨） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 妖魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 剧情太俗，姐姐生病缺乏爆点，建议加大冲突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情太俗，姐姐生病缺乏爆点，建议加大冲突。 | 开篇设定俗套，妖魔乱世太多类似;救姐姐驱动力俗套，缺乏新意
+  observable:
+  - 'opening维度: 开篇设定俗套，妖魔乱世太多类似'
+  - 'character维度: 救姐姐驱动力俗套，缺乏新意'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 321
+  - 380
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 大仓末年妖魔横行（林墨）
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 妖魔
+  overall_comment: 剧情太俗，姐姐生病缺乏爆点，建议加大冲突。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇设定俗套，妖魔乱世太多类似
+    raw_quote: 又是民不聊生 又是大钱 什么大仓 又是有什么金手指 唉 就妖魔就就就就行吧
+  - dimension: character
+    severity: negative
+    content: 救姐姐驱动力俗套，缺乏新意
+    raw_quote: 就是没钱嘛 就是要救姐姐

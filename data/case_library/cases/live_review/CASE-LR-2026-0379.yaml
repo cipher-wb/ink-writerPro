@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-0379
+title: 精神病悦 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 改后节奏加快，氛围比例还行，但题材本身依然是垃圾，大哥不听劝。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 改后节奏加快，氛围比例还行，但题材本身依然是垃圾，大哥不听劝。 | 灵异题材在起点极难出头，本质是垃圾题材。
+  observable:
+  - 'genre维度: 灵异题材在起点极难出头，本质是垃圾题材。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 70
+  - 110
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 精神病悦
+  genre_guess:
+  - 灵异
+  overall_comment: 改后节奏加快，氛围比例还行，但题材本身依然是垃圾，大哥不听劝。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 改稿后节奏有明显加快。
+    raw_quote: 他节奏加快了嘛，就是，但其实也是垃圾题材。
+  - dimension: genre
+    severity: negative
+    content: 灵异题材在起点极难出头，本质是垃圾题材。
+    raw_quote: 垃圾题材，大哥不听劝。

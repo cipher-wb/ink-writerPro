@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0580
+title: 妖魔外挂 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20块比老吗 | 金手指复杂无聊，事件老套，约20分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指复杂无聊，事件老套，约20分 | 金手指介绍冗长且无聊;事件无趣，杀妖无看点
+  observable:
+  - 'golden_finger维度: 金手指介绍冗长且无聊'
+  - 'highpoint维度: 事件无趣，杀妖无看点'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 3822
+  - 3926
+  score: null
+  score_raw: 差不多就20块比老吗
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 妖魔外挂
+  genre_guess:
+  - 玄幻
+  - 系统
+  overall_comment: 金手指复杂无聊，事件老套，约20分
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指介绍冗长且无聊
+    raw_quote: 本来金手指就是个垃圾 金手指疯狂介绍
+  - dimension: highpoint
+    severity: negative
+    content: 事件无趣，杀妖无看点
+    raw_quote: 杀妖魔出手...一点意思都没有

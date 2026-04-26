@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2060
+title: 毫无准备 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多二十二万分 | 表达清楚但题材虚，分类无法归属，建议写正常都市重生。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达清楚但题材虚，分类无法归属，建议写正常都市重生。 | 题材奇怪，没有一个分类能容纳;设定混乱，像是重生又像是诡异
+  observable:
+  - 'genre维度: 题材奇怪，没有一个分类能容纳'
+  - 'simplicity维度: 设定混乱，像是重生又像是诡异'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 2801
+  - 3000
+  score: 22
+  score_raw: 差不多二十二万分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 毫无准备
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 表达清楚但题材虚，分类无法归属，建议写正常都市重生。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材奇怪，没有一个分类能容纳
+    raw_quote: 没有一个分类能把你这个数留下来
+  - dimension: simplicity
+    severity: negative
+    content: 设定混乱，像是重生又像是诡异
+    raw_quote: 看都写得跟鬼一似的 ... 你写个正常的重生我觉得可以写

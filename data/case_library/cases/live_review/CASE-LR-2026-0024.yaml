@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0024
+title: 逃离无尽夏末日 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 末日
+  - 科幻
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没人看啊 | 节奏快但内容虚，设定类没看点，世界观没立住，建议转废土末日。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快但内容虚，设定类没看点，世界观没立住，建议转废土末日。 | 节奏太快显得无聊;设定复杂，新人难掌控
+  observable:
+  - 'pacing维度: 节奏太快显得无聊'
+  - 'simplicity维度: 设定复杂，新人难掌控'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 305
+  - 335
+  score: null
+  score_raw: 没人看啊
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 逃离无尽夏末日
+  genre_guess:
+  - 末日
+  - 科幻
+  - 异能
+  overall_comment: 节奏快但内容虚，设定类没看点，世界观没立住，建议转废土末日。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快显得无聊
+    raw_quote: 节奏倒是挺快的啊 但但是内容好虚啊 没看点啊
+  - dimension: simplicity
+    severity: negative
+    content: 设定复杂，新人难掌控
+    raw_quote: 你像像是什么科幻副本啊 都经神明那种游戏都出来了 就是就是想太多

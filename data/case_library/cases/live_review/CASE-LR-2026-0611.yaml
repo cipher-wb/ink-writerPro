@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0611
+title: 大佬求带飞N开花 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 玄幻
+  - 大杂烩
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 书名小白，世界观N开花，内容混乱，完全没入行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名小白，世界观N开花，内容混乱，完全没入行。 | 融梗过多，中西古今乱炖，毫无市场;对白极度小白，叙述繁杂
+  observable:
+  - 'genre维度: 融梗过多，中西古今乱炖，毫无市场'
+  - 'simplicity维度: 对白极度小白，叙述繁杂'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 3401
+  - 3550
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 大佬求带飞N开花
+  genre_guess:
+  - 玄幻
+  - 大杂烩
+  overall_comment: 书名小白，世界观N开花，内容混乱，完全没入行。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 融梗过多，中西古今乱炖，毫无市场
+    raw_quote: 这不是两开花 这他妈是N开花呀
+  - dimension: simplicity
+    severity: negative
+    content: 对白极度小白，叙述繁杂
+    raw_quote: 太白了...跟那种How are you I'm fine 没什么区别

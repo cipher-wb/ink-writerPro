@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1635
+title: 西幻魔王史莱姆 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 西幻
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这种四五十封的样子吧 | 套路老套，卖点单薄，读者已审美疲劳。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路老套，卖点单薄，读者已审美疲劳。 | 题材老旧，缺乏新卖点，读者已审美疲劳。;缺乏吸引读者的核心看点。
+  observable:
+  - 'golden_finger维度: 题材老旧，缺乏新卖点，读者已审美疲劳。'
+  - 'hook维度: 缺乏吸引读者的核心看点。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 371
+  - 420
+  score: 50
+  score_raw: 这种四五十封的样子吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 西幻魔王史莱姆
+  genre_guess:
+  - 西幻
+  - 轻松
+  overall_comment: 套路老套，卖点单薄，读者已审美疲劳。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 题材老旧，缺乏新卖点，读者已审美疲劳。
+    raw_quote: 这种史莱姆跟这种女精灵拉扯的，真去敏了
+  - dimension: hook
+    severity: negative
+    content: 缺乏吸引读者的核心看点。
+    raw_quote: 你得有其他的卖点

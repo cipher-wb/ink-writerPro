@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1512
+title: 全球领主 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 游戏
+  - 玄幻
+  - 领主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 最多20分啦 兄弟 | 设定为主，事件极弱，开局规则堆砌，读者直接跑光，需推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定为主，事件极弱，开局规则堆砌，读者直接跑光，需推翻。 | 设定太多没冲突，读者会睡着;一上来就是规则选择，不写人物和世界
+  observable:
+  - 'pacing维度: 设定太多没冲突，读者会睡着'
+  - 'opening维度: 一上来就是规则选择，不写人物和世界'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 481
+  - 580
+  score: 20
+  score_raw: 20分吧 最多20分啦 兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全球领主
+  genre_guess:
+  - 游戏
+  - 玄幻
+  - 领主
+  overall_comment: 设定为主，事件极弱，开局规则堆砌，读者直接跑光，需推翻。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 设定太多没冲突，读者会睡着
+    raw_quote: 设定太多了 没冲突 没看点 没卖点 没爆点 再看睡着啦
+  - dimension: opening
+    severity: negative
+    content: 一上来就是规则选择，不写人物和世界
+    raw_quote: 一上来就是吉里咕嚕的选择 … 你要写人物 写世界啊

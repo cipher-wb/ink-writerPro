@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0788
+title: 娘娘别玩了（又名娘娘那时候的蘑菇头） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KWFqzaErs
+scope:
+  genre:
+  - 历史
+  - 现偶
+  - 宫斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确给出分数，曾提旧稿40多分 | 题材新颖但开头不太合适，建议放在简介，先多看多积累。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KWFqzaErs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材新颖但开头不太合适，建议放在简介，先多看多积累。 | 题材可以但不宜作为开头，应用作简介
+  observable:
+  - 'opening维度: 题材可以但不宜作为开头，应用作简介'
+live_review_meta:
+  source_bvid: BV1KWFqzaErs
+  source_line_range:
+  - 40
+  - 71
+  score: null
+  score_raw: 未明确给出分数，曾提旧稿40多分
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 娘娘别玩了（又名娘娘那时候的蘑菇头）
+  genre_guess:
+  - 历史
+  - 现偶
+  - 宫斗
+  overall_comment: 题材新颖但开头不太合适，建议放在简介，先多看多积累。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 题材可以但不宜作为开头，应用作简介
+    raw_quote: 哎这个题材可以啊...但是不是个当开头对吧
+  - dimension: misc
+    severity: neutral
+    content: 建议先多看作品，别急着写
+    raw_quote: 先看看书吧，别别急着写

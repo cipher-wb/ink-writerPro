@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2141
+title: 穿越成柴荣 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你35出门山河再出发 | 选题可行但文笔和心理描写严重不足，缺乏现代人穿越的真实感，需要狂补代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 选题可行但文笔和心理描写严重不足，缺乏现代人穿越的真实感，需要狂补代入感。 | 穿越者心理活动太少，人物思考尴尬;文笔不够历史味道，遣词造句生硬
+  observable:
+  - 'character维度: 穿越者心理活动太少，人物思考尴尬'
+  - 'opening维度: 文笔不够历史味道，遣词造句生硬'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 1321
+  - 1430
+  score: 35
+  score_raw: 给你35出门山河再出发
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越成柴荣
+  genre_guess:
+  - 历史
+  - 五代十国
+  - 穿越
+  overall_comment: 选题可行但文笔和心理描写严重不足，缺乏现代人穿越的真实感，需要狂补代入感。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 穿越者心理活动太少，人物思考尴尬
+    raw_quote: 你不会写人物 你看你的人物说话 你的思考多尴尬 就更不说你这个人穿成柴荣之后 你对吧 你作为一个现代人 你你到底要怎么样
+  - dimension: opening
+    severity: negative
+    content: 文笔不够历史味道，遣词造句生硬
+    raw_quote: 你现在比例根本不够 大哥你不会写人物

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2171
+title: 宋佳志我在凡间送外卖 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 都市
+  - 西游
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你35分吧 | 写得可爱用心，但题材在起点立不住，代入感差，更适合番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写得可爱用心，但题材在起点立不住，代入感差，更适合番茄。 | 乐子类悟空送外卖在起点难立住，更适合番茄;难以代入孙悟空，主角换成现代人穿越会好很多
+  observable:
+  - 'genre维度: 乐子类悟空送外卖在起点难立住，更适合番茄'
+  - 'character维度: 难以代入孙悟空，主角换成现代人穿越会好很多'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 348
+  - 393
+  score: 35
+  score_raw: 给你35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宋佳志我在凡间送外卖
+  genre_guess:
+  - 都市
+  - 西游
+  - 乐子文
+  overall_comment: 写得可爱用心，但题材在起点立不住，代入感差，更适合番茄。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 乐子类悟空送外卖在起点难立住，更适合番茄
+    raw_quote: 但我是起点编辑就没办法 … 这要求在起点没人看
+  - dimension: character
+    severity: negative
+    content: 难以代入孙悟空，主角换成现代人穿越会好很多
+    raw_quote: 你怎么带入松孔呢 带入不了呀

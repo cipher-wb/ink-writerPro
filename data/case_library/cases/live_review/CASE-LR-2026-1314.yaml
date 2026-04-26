@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1314
+title: 崇圣考公 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 崇圣
+  - 考公
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 崇圣文写成穿越，无记忆节点，无爽点，完全不懂崇圣文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 崇圣文写成穿越，无记忆节点，无爽点，完全不懂崇圣文。 | 开头不知道自己在哪，没有崇圣感;没有崇圣文的弥补遗憾爽点
+  observable:
+  - 'opening维度: 开头不知道自己在哪，没有崇圣感'
+  - 'hook维度: 没有崇圣文的弥补遗憾爽点'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1251
+  - 1300
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 崇圣考公
+  genre_guess:
+  - 崇圣
+  - 考公
+  - 都市
+  overall_comment: 崇圣文写成穿越，无记忆节点，无爽点，完全不懂崇圣文。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头不知道自己在哪，没有崇圣感
+    raw_quote: 崇圣我你在这里不知道记忆 不知道这是哪 就变成傻子一样
+  - dimension: hook
+    severity: negative
+    content: 没有崇圣文的弥补遗憾爽点
+    raw_quote: 崇圣的爽点永远是知道他的后续剧情

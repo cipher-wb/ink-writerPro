@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0862
+title: 日清灵异轻小说 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 轻小说
+  - 都市异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 完全就是垃圾题材 不知道干嘛的 | 题材毫无卖点，代入感差，像都市异能又像轻小说，读者根本看不懂要讲什么。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材毫无卖点，代入感差，像都市异能又像轻小说，读者根本看不懂要讲什么。 | 开篇场景让人一头雾水，没有代入感;题材定位混乱，既非轻小说也非标准异能，编辑也不知如何建议
+  observable:
+  - 'opening维度: 开篇场景让人一头雾水，没有代入感'
+  - 'genre维度: 题材定位混乱，既非轻小说也非标准异能，编辑也不知如何建议'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 71
+  - 110
+  score: null
+  score_raw: 完全就是垃圾题材 不知道干嘛的
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 日清灵异轻小说
+  genre_guess:
+  - 轻小说
+  - 都市异能
+  overall_comment: 题材毫无卖点，代入感差，像都市异能又像轻小说，读者根本看不懂要讲什么。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇场景让人一头雾水，没有代入感
+    raw_quote: 看上去在很用心的讲述一个场景冲突 看不懂没代入感 就完全就是个都市异能
+  - dimension: genre
+    severity: negative
+    content: 题材定位混乱，既非轻小说也非标准异能，编辑也不知如何建议
+    raw_quote: 完全就是垃圾题材 不知道干嘛的 你发给任何编辑 任何编辑……都是模板区

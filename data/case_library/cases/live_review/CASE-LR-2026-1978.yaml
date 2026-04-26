@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1978
+title: 我的姐姐是天后 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 都市
+  - 娱乐圈
+  - 恋爱
+  - 姐弟
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 姐弟暧昧过不了审，题材老套且无主线，纯粹是生活流水账。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 姐弟暧昧过不了审，题材老套且无主线，纯粹是生活流水账。 | 姐弟拉扯严重违规，审核必死;题材过时且雷同卖报风格，无创新;没有强主线，全是日常拉扯
+  observable:
+  - 'taboo维度: 姐弟拉扯严重违规，审核必死'
+  - 'genre维度: 题材过时且雷同卖报风格，无创新'
+  - 'highpoint维度: 没有强主线，全是日常拉扯'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 511
+  - 650
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 我的姐姐是天后
+  genre_guess:
+  - 都市
+  - 娱乐圈
+  - 恋爱
+  - 姐弟
+  overall_comment: 姐弟暧昧过不了审，题材老套且无主线，纯粹是生活流水账。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 姐弟拉扯严重违规，审核必死
+    raw_quote: 你发出来审核都过不了谁签审核一举报必死
+  - dimension: genre
+    severity: negative
+    content: 题材过时且雷同卖报风格，无创新
+    raw_quote: 你在写这种老掉牙的东西，跟卖报十年前一样
+  - dimension: highpoint
+    severity: negative
+    content: 没有强主线，全是日常拉扯
+    raw_quote: 这他妈就不是主线，这就是日常

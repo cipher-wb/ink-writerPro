@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2185
+title: 守护妹妹（十部果腹） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 修仙
+  - 妹控
+  - 奶爸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 卖点太老，妹控奶爸流已被淘汰，核心驱动力没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 卖点太老，妹控奶爸流已被淘汰，核心驱动力没人看。 | 妹控奶爸题材太古老，没人看;核心驱动力早就被人厌烦了
+  observable:
+  - 'genre维度: 妹控奶爸题材太古老，没人看'
+  - 'hook维度: 核心驱动力早就被人厌烦了'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1215
+  - 1250
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 守护妹妹（十部果腹）
+  genre_guess:
+  - 修仙
+  - 妹控
+  - 奶爸
+  overall_comment: 卖点太老，妹控奶爸流已被淘汰，核心驱动力没人看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 妹控奶爸题材太古老，没人看
+    raw_quote: 这种奶爸妹控力的书现在好难呀 真的好难呀 … 这种卖点真的太难了 太古老了
+  - dimension: hook
+    severity: negative
+    content: 核心驱动力早就被人厌烦了
+    raw_quote: 你这个曲东西没人看呀 我努力我要把我的妹妹 我对妹妹好 这谁看呀

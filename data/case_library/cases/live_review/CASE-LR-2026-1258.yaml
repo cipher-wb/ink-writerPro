@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1258
+title: 奥数反叛者 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 西幻
+  - 巫师
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就20分 | 设定看不懂，古筝人式写法太老套，缺乏代入感，建议直接学《巫师世界》的开篇节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定看不懂，古筝人式写法太老套，缺乏代入感，建议直接学《巫师世界》的开篇节奏。 | 画外音和古筝人式写法是大毒点;设定太多，开篇看不懂，读者直接流失
+  observable:
+  - 'opening维度: 画外音和古筝人式写法是大毒点'
+  - 'ops维度: 设定太多，开篇看不懂，读者直接流失'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1918
+  - 1996
+  score: 20
+  score_raw: 差不多也就20分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 奥数反叛者
+  genre_guess:
+  - 西幻
+  - 巫师
+  - 穿越
+  overall_comment: 设定看不懂，古筝人式写法太老套，缺乏代入感，建议直接学《巫师世界》的开篇节奏。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 画外音和古筝人式写法是大毒点
+    raw_quote: 还在画外音写出这种是大毒点，大哥到现在了没有出息啊
+  - dimension: ops
+    severity: negative
+    content: 设定太多，开篇看不懂，读者直接流失
+    raw_quote: 看不懂，兄弟，奥数联邦之下里昂哎呀
+  - dimension: genre
+    severity: neutral
+    content: 建议学习《巫师世界》的开头节奏和期待感塑造
+    raw_quote: 人家的书很好的，现在万订书的一半，...，就是有优点的优点，优点很多，你要去好好学了

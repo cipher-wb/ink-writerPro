@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2218
+title: 泥巴先祖 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 仙侠
+  - 家族流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有天赋慢慢来吧 | 第一人称仙侠没人看，但作者讲故事能力很强，真实感好，若能转第三人称并提速有望突破。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称仙侠没人看，但作者讲故事能力很强，真实感好，若能转第三人称并提速有望突破。 | 第一人称写仙侠玄幻是大忌，没人看;节奏太慢，一章都在描绘心态，人物迟迟不出场
+  observable:
+  - 'genre维度: 第一人称写仙侠玄幻是大忌，没人看'
+  - 'pacing维度: 节奏太慢，一章都在描绘心态，人物迟迟不出场'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 1006
+  - 1055
+  score: null
+  score_raw: 有天赋慢慢来吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 泥巴先祖
+  genre_guess:
+  - 仙侠
+  - 家族流
+  overall_comment: 第一人称仙侠没人看，但作者讲故事能力很强，真实感好，若能转第三人称并提速有望突破。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 第一人称写仙侠玄幻是大忌，没人看
+    raw_quote: 第一人称肯定扯淡了 哪有仙侠玄幻第一人称...第一人称真没人看
+  - dimension: character
+    severity: positive
+    content: 讲故事能力强，真实感好，代入感不错
+    raw_quote: 真实感这种讲故事的能力很强...这个能看出大哥的天赋来
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，一章都在描绘心态，人物迟迟不出场
+    raw_quote: 节奏挺慢的...不写人就不写人...读者跑完了

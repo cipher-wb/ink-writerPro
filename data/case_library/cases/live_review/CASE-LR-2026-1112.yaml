@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1112
+title: 被包养那些年 (pass / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 都市
+  - 现实
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分吧给杰克上元了 水平很高的 | 文笔扎实，烟火气浓，真实感强，可惜尺度原因在起点无法过审，建议转投黑岩或蓝精灵
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，烟火气浓，真实感强，可惜尺度原因在起点无法过审，建议转投黑岩或蓝精灵 | 涉及包养、情色描写，起点的审核无法通过
+  observable:
+  - 'taboo维度: 涉及包养、情色描写，起点的审核无法通过'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 2135
+  - 2195
+  score: 50
+  score_raw: 50分吧给杰克上元了 水平很高的
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 被包养那些年
+  genre_guess:
+  - 都市
+  - 现实
+  overall_comment: 文笔扎实，烟火气浓，真实感强，可惜尺度原因在起点无法过审，建议转投黑岩或蓝精灵
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 涉及包养、情色描写，起点的审核无法通过
+    raw_quote: 就过不了审 起点过不了审对吧 女人怎么过审
+  - dimension: character
+    severity: positive
+    content: 主角屈辱与坚韧刻画到位，富婆形象生动
+    raw_quote: 很厉害我怎么办呢 这个去黑岩吧 这起点过不了审呀

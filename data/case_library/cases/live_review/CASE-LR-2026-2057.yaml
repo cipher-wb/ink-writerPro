@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2057
+title: 穷书生与小姐 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 古代
+  - 言情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个35分吧 | 故事俗套但可看，缺网文性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事俗套但可看，缺网文性。 | 故事老套，缺乏新意
+  observable:
+  - 'genre维度: 故事老套，缺乏新意'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 2201
+  - 2400
+  score: 35
+  score_raw: 这个35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穷书生与小姐
+  genre_guess:
+  - 古代
+  - 言情
+  overall_comment: 故事俗套但可看，缺网文性。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 故事老套，缺乏新意
+    raw_quote: 俗归俗 ... 几千年大家都喜欢 到你这里觉得人家不喜欢了

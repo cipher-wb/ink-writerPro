@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1203
+title: 重启预售时代 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 御兽
+  - 宠兽
+  - 预售
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就20分出头的样子 | 题材老套、卖点弱，人设单薄，全程讲设定毫无冲突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套、卖点弱，人设单薄，全程讲设定毫无冲突。 | 预售作为主卖点太老，缺乏新意;开篇大量设定堆砌，没有剧情钩子
+  observable:
+  - 'genre维度: 预售作为主卖点太老，缺乏新意'
+  - 'hook维度: 开篇大量设定堆砌，没有剧情钩子'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 145
+  - 179
+  score: 20
+  score_raw: 就20分出头的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重启预售时代
+  genre_guess:
+  - 御兽
+  - 宠兽
+  - 预售
+  overall_comment: 题材老套、卖点弱，人设单薄，全程讲设定毫无冲突。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 预售作为主卖点太老，缺乏新意
+    raw_quote: 光预售作为主题材真的很难啦…卖点太老了呀
+  - dimension: hook
+    severity: negative
+    content: 开篇大量设定堆砌，没有剧情钩子
+    raw_quote: 现在开篇拉设定…都是设定对吧

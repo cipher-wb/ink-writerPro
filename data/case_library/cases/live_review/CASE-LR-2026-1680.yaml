@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1680
+title: 社畜死后被逼投胎做猪 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 都市
+  - 地府
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你25分 | 文案情绪有，比例过关，但地府小品设定过时且无网感，更适合自媒体。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文案情绪有，比例过关，但地府小品设定过时且无网感，更适合自媒体。 | 地府判官、变猪等梗太老，难以吸引网文读者
+  observable:
+  - 'genre维度: 地府判官、变猪等梗太老，难以吸引网文读者'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 781
+  - 830
+  score: 25
+  score_raw: 给你25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 社畜死后被逼投胎做猪
+  genre_guess:
+  - 都市
+  - 地府
+  - 灵异
+  overall_comment: 文案情绪有，比例过关，但地府小品设定过时且无网感，更适合自媒体。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 地府判官、变猪等梗太老，难以吸引网文读者
+    raw_quote: 地府小板案这种谁看 这种东西早就过时了
+  - dimension: simplicity
+    severity: neutral
+    content: 行文有情绪，文案功底适合短视频脚本
+    raw_quote: 你的比例写书没有 就是写文案是没问题的 做自媒体吧

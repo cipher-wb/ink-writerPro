@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0694
+title: 致命扼腕（大夏边疆杀伐果断） (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 仙侠
+  - 杀伐果断
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个车最多九分了 | 一章连杀四人，主角钓鱼执法，反派弱智，文笔虽好但剧情劝退一切读者。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 一章连杀四人，主角钓鱼执法，反派弱智，文笔虽好但剧情劝退一切读者。 | 主角懒散不救人反而剁人，形象极度反感;一章连续杀人，读者等不到反转就跑光;开局对求救者痛下杀手，极度劝退
+  observable:
+  - 'character维度: 主角懒散不救人反而剁人，形象极度反感'
+  - 'pacing维度: 一章连续杀人，读者等不到反转就跑光'
+  - 'taboo维度: 开局对求救者痛下杀手，极度劝退'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 1796
+  - 1880
+  score: 9
+  score_raw: 这个车最多九分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 致命扼腕（大夏边疆杀伐果断）
+  genre_guess:
+  - 仙侠
+  - 杀伐果断
+  overall_comment: 一章连杀四人，主角钓鱼执法，反派弱智，文笔虽好但剧情劝退一切读者。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角懒散不救人反而剁人，形象极度反感
+    raw_quote: 你把人家人家就是两句话 我把你收 唉不想说话了
+  - dimension: pacing
+    severity: negative
+    content: 一章连续杀人，读者等不到反转就跑光
+    raw_quote: 等不到反转已经走完了
+  - dimension: taboo
+    severity: negative
+    content: 开局对求救者痛下杀手，极度劝退
+    raw_quote: 一张杀四个

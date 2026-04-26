@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0026
+title: 久久同穿没一个是人 (fail / 47分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 同人
+  - 无限流
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 47分肯定有 | 有乐子和代入感，但题材太杂，签约估计悬，47分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有乐子和代入感，但题材太杂，签约估计悬，47分。 | 融太多世界观为毒点
+  observable:
+  - 'genre维度: 融太多世界观为毒点'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 380
+  - 410
+  score: 47
+  score_raw: 47分肯定有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 久久同穿没一个是人
+  genre_guess:
+  - 同人
+  - 无限流
+  - 搞笑
+  overall_comment: 有乐子和代入感，但题材太杂，签约估计悬，47分。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 主角是鸟吐槽有乐子
+    raw_quote: 主角是个鸟 他这个吐槽乐子还可以
+  - dimension: genre
+    severity: negative
+    content: 融太多世界观为毒点
+    raw_quote: 你简介太吓人了 正文你可以从萧炎什么什么开始嘛

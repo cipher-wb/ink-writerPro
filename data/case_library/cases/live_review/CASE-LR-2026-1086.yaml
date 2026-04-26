@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-1086
+title: 百叶书 (pass / 91分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1VBd4BqEGb
+scope:
+  genre:
+  - 同人
+  - 都市
+  - 情色
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你91分吧 | 切入无敌身份设定好，写作水平很高，但全书涉黄违规无法签约，建议转写事业线或影视剧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1VBd4BqEGb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入无敌身份设定好，写作水平很高，但全书涉黄违规无法签约，建议转写事业线或影视剧。 | 对话和情色描写显得粗糙，文风过于接地气;全篇情色内容涉黄违法，无法通过平台审核;因违规内容无法向其他编辑推荐，签约无望
+  observable:
+  - 'simplicity维度: 对话和情色描写显得粗糙，文风过于接地气'
+  - 'taboo维度: 全篇情色内容涉黄违法，无法通过平台审核'
+  - 'ops维度: 因违规内容无法向其他编辑推荐，签约无望'
+live_review_meta:
+  source_bvid: BV1VBd4BqEGb
+  source_line_range:
+  - 1
+  - 186
+  score: 91
+  score_raw: 给你91分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 百叶书
+  genre_guess:
+  - 同人
+  - 都市
+  - 情色
+  overall_comment: 切入无敌身份设定好，写作水平很高，但全书涉黄违规无法签约，建议转写事业线或影视剧。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入相当精彩，单独评价可达七八十分
+    raw_quote: 光这个切入绝对七八十分的水平
+  - dimension: simplicity
+    severity: negative
+    content: 对话和情色描写显得粗糙，文风过于接地气
+    raw_quote: 啊你这个对话是不是有点太糙了…雪白写的很糙
+  - dimension: taboo
+    severity: negative
+    content: 全篇情色内容涉黄违法，无法通过平台审核
+    raw_quote: 这已经是全黄数了…违法的这个东西
+  - dimension: ops
+    severity: negative
+    content: 因违规内容无法向其他编辑推荐，签约无望
+    raw_quote: 但确实没法子签

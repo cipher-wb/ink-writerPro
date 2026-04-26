@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0660
+title: 暴风雪副本流 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 悬疑
+  - 副本
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 恭喜大哥没有最低分...坏消息大哥倒数第二分 | 开篇混乱，NPC全员无智商，毫无代入感，建议抄《十日终焉》一百遍。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇混乱，NPC全员无智商，毫无代入感，建议抄《十日终焉》一百遍。 | 开头诡异又混乱，完全不知道在干嘛;主角和NPC全员无智商无心理活动，像工具人;建议深度学习《十日终焉》的强代入感写法
+  observable:
+  - 'opening维度: 开头诡异又混乱，完全不知道在干嘛'
+  - 'character维度: 主角和NPC全员无智商无心理活动，像工具人'
+  - 'simplicity维度: 建议深度学习《十日终焉》的强代入感写法'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1621
+  - 1700
+  score: 21
+  score_raw: 恭喜大哥没有最低分...坏消息大哥倒数第二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 暴风雪副本流
+  genre_guess:
+  - 悬疑
+  - 副本
+  - 都市
+  overall_comment: 开篇混乱，NPC全员无智商，毫无代入感，建议抄《十日终焉》一百遍。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头诡异又混乱，完全不知道在干嘛
+    raw_quote: 这开头不知道有人干嘛的...你能不能给我简化一下
+  - dimension: character
+    severity: negative
+    content: 主角和NPC全员无智商无心理活动，像工具人
+    raw_quote: 主角也没有心理活动...随口应了一声...到现在没有智商
+  - dimension: simplicity
+    severity: negative
+    content: 建议深度学习《十日终焉》的强代入感写法
+    raw_quote: 把十字中间看到给我抄三遍...要开放式创作呀

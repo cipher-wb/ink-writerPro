@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1851
+title: 海族再利用指南（奴隶少女对抗海怪） (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 奇幻
+  - 种田
+  - 海洋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分 | 开头杀美人鱼有膈应感，虽然后面展开还行，但金手指设计毒且上限低，大概率会被捞签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头杀美人鱼有膈应感，虽然后面展开还行，但金手指设计毒且上限低，大概率会被捞签约。 | 第一章杀美人鱼会让很多人觉得膈应，影响阅读体验;金手指设计为杀人就能加点，逻辑很毒，不管怎么解释都膈应
+  observable:
+  - 'opening维度: 第一章杀美人鱼会让很多人觉得膈应，影响阅读体验'
+  - 'golden_finger维度: 金手指设计为杀人就能加点，逻辑很毒，不管怎么解释都膈应'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 277
+  - 336
+  score: 59
+  score_raw: 59分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 海族再利用指南（奴隶少女对抗海怪）
+  genre_guess:
+  - 奇幻
+  - 种田
+  - 海洋
+  overall_comment: 开头杀美人鱼有膈应感，虽然后面展开还行，但金手指设计毒且上限低，大概率会被捞签约。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章杀美人鱼会让很多人觉得膈应，影响阅读体验
+    raw_quote: 我说实话 我感觉杀美人鱼还是有点对我来说 我觉得还是有点出戏
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设计为杀人就能加点，逻辑很毒，不管怎么解释都膈应
+    raw_quote: 只要你杀人 你就能加点 我觉得就很毒 不管你怎么解释 我觉得很毒
+  - dimension: character
+    severity: neutral
+    content: 后面的展开和角色辅助还行，但开头劝退力强
+    raw_quote: 三张还好吧 其实张三张签约水平还好 轻小说嘛 不要写的太笨了

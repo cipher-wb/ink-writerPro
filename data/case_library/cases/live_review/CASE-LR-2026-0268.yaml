@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0268
+title: 封神篡榜人 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 封神
+  - 系统
+  - 西游
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 你你又58分，你怎么老是这么58分啊 | 太像拦路人，节奏太慢，但水平还行
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太像拦路人，节奏太慢，但水平还行 | 开头节奏太慢，需加速;过于模仿他人作品，缺乏原创性
+  observable:
+  - 'pacing维度: 开头节奏太慢，需加速'
+  - 'misc维度: 过于模仿他人作品，缺乏原创性'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 327
+  - 420
+  score: 59
+  score_raw: 你你又58分，你怎么老是这么58分啊
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 封神篡榜人
+  genre_guess:
+  - 封神
+  - 系统
+  - 西游
+  overall_comment: 太像拦路人，节奏太慢，但水平还行
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开头节奏太慢，需加速
+    raw_quote: 有第一张其实可以加速
+  - dimension: misc
+    severity: negative
+    content: 过于模仿他人作品，缺乏原创性
+    raw_quote: 这个太像了这个很像这个太像了

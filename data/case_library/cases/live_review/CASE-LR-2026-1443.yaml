@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1443
+title: 斩首日验尸官 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 历史
+  - 架空
+  - 探案
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分还是没啥大变化 | 卖点太电视剧化，古代探案缺乏网文期待感，详细没用
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 卖点太电视剧化，古代探案缺乏网文期待感，详细没用 | 网文期待感弱，像电视剧;写得太详细，读者直接跳过
+  observable:
+  - 'highpoint维度: 网文期待感弱，像电视剧'
+  - 'simplicity维度: 写得太详细，读者直接跳过'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1091
+  - 1150
+  score: 42
+  score_raw: 42分还是没啥大变化
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斩首日验尸官
+  genre_guess:
+  - 历史
+  - 架空
+  - 探案
+  overall_comment: 卖点太电视剧化，古代探案缺乏网文期待感，详细没用
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 网文期待感弱，像电视剧
+    raw_quote: 网文性的网文的期待感很弱
+  - dimension: simplicity
+    severity: negative
+    content: 写得太详细，读者直接跳过
+    raw_quote: 写的贼详细详细没用啊

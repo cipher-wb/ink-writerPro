@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1108
+title: 土木哥の魔法基建 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 西幻
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就不打分了 | 照搬古老写法，设定脱离现实，未学习当下网文，无法评价
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 照搬古老写法，设定脱离现实，未学习当下网文，无法评价 | 魔法等级体系老旧，与都市背景割裂
+  observable:
+  - 'genre维度: 魔法等级体系老旧，与都市背景割裂'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1870
+  - 1920
+  score: null
+  score_raw: 就不打分了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 土木哥の魔法基建
+  genre_guess:
+  - 西幻
+  - 都市
+  overall_comment: 照搬古老写法，设定脱离现实，未学习当下网文，无法评价
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 魔法等级体系老旧，与都市背景割裂
+    raw_quote: 都什么年代了 还在那都市里面写魔法

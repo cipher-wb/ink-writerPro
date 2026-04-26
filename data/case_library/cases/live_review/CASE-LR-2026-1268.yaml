@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1268
+title: 李寻欢武侠同人 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 武侠
+  - 古代言情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能给你35分钟 | 文笔有武侠味道，拉扯尚可，但主角毫无主线，故事平淡无反转，像女频言情。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有武侠味道，拉扯尚可，但主角毫无主线，故事平淡无反转，像女频言情。 | 主角没有主线，像无业游民
+  observable:
+  - 'character维度: 主角没有主线，像无业游民'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 781
+  - 860
+  score: 35
+  score_raw: 能给你35分钟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 李寻欢武侠同人
+  genre_guess:
+  - 武侠
+  - 古代言情
+  overall_comment: 文笔有武侠味道，拉扯尚可，但主角毫无主线，故事平淡无反转，像女频言情。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角没有主线，像无业游民
+    raw_quote: 你的主角是没有主线的，主角是没有事干的...冒充蒙多呀
+  - dimension: pacing
+    severity: neutral
+    content: 文笔和拉扯尚有可取之处
+    raw_quote: 文笔倒也还好，有点古代的武侠味道吧

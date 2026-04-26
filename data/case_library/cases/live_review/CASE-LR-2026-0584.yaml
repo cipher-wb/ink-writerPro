@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0584
+title: 父子闯江湖 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 都市
+  - 生活
+  - 第一人称
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有天赋的大哥给你40分好吧 | 讲故事有天赋，情绪和代入感都不错，但网文阅读量不足，第一人称不适合起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 讲故事有天赋，情绪和代入感都不错，但网文阅读量不足，第一人称不适合起点。 | 第一人称在起点较难签约，需改为第三人称
+  observable:
+  - 'ops维度: 第一人称在起点较难签约，需改为第三人称'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 447
+  - 561
+  score: 40
+  score_raw: 有天赋的大哥给你40分好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 父子闯江湖
+  genre_guess:
+  - 都市
+  - 生活
+  - 第一人称
+  overall_comment: 讲故事有天赋，情绪和代入感都不错，但网文阅读量不足，第一人称不适合起点。
+  comments:
+  - dimension: misc
+    severity: positive
+    content: 人设和叙事有天赋，能写出接地气的情绪
+    raw_quote: 讲故事能力 人设能力很强 忍受能力 情绪价值这些都开
+  - dimension: ops
+    severity: negative
+    content: 第一人称在起点较难签约，需改为第三人称
+    raw_quote: 尽量第一人称啊 尽量第三人称正常写

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1236
+title: 全宇宙第一 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 赛博
+  - 科幻
+  - 义体
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多25分吧 | 设定太多影响阅读，代入感差，故事不接地气，建议推翻或写同人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定太多影响阅读，代入感差，故事不接地气，建议推翻或写同人。 | 设定过于繁复，严重影响阅读体验和代入感;事件和人物元素不接地气，看不懂
+  observable:
+  - 'ops维度: 设定过于繁复，严重影响阅读体验和代入感'
+  - 'simplicity维度: 事件和人物元素不接地气，看不懂'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 425
+  - 482
+  score: 25
+  score_raw: 差不多25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全宇宙第一
+  genre_guess:
+  - 赛博
+  - 科幻
+  - 义体
+  overall_comment: 设定太多影响阅读，代入感差，故事不接地气，建议推翻或写同人。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 设定过于繁复，严重影响阅读体验和代入感
+    raw_quote: 设定影响阅读，真的影响阅读，没人看这个东西
+  - dimension: simplicity
+    severity: negative
+    content: 事件和人物元素不接地气，看不懂
+    raw_quote: 我觉得就是事件和人物元素不接地气，或者一上来看着很费劲

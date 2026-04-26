@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2080
+title: 灵根至上，意大利炮 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 玄幻
+  - 爽文
+  - 灵根
+  - 热血
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就只能给大哥就20分吧 | 典型小白爽文，废柴逆天、当众打脸、痴情少女等元素全套老派，读着能猜到后续所有爽点，毫无新鲜感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 典型小白爽文，废柴逆天、当众打脸、痴情少女等元素全套老派，读着能猜到后续所有爽点，毫无新鲜感。 | 一上来就拉仇恨、废物、打脸套路过于雷同;倔强少年、傻白甜妹妹等人物模式化
+  observable:
+  - 'opening维度: 一上来就拉仇恨、废物、打脸套路过于雷同'
+  - 'character维度: 倔强少年、傻白甜妹妹等人物模式化'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 605
+  - 670
+  score: 20
+  score_raw: 就只能给大哥就20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵根至上，意大利炮
+  genre_guess:
+  - 玄幻
+  - 爽文
+  - 灵根
+  - 热血
+  overall_comment: 典型小白爽文，废柴逆天、当众打脸、痴情少女等元素全套老派，读着能猜到后续所有爽点，毫无新鲜感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 一上来就拉仇恨、废物、打脸套路过于雷同
+    raw_quote: 这太小白了呀……现在读者不爱看了这种东西，读者都知道这种套路了，韭菜老套
+  - dimension: character
+    severity: negative
+    content: 倔强少年、傻白甜妹妹等人物模式化
+    raw_quote: 这不就是郭靖吗，郭靖距离现在已经60年了……杨林雪现在呢……就是一眼知道呀

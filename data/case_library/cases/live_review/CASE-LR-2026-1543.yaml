@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1543
+title: 第一次投稿整活文 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 恶搞
+  - 直播同人
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能九分 | 纯恶搞侮辱主播，内容混乱，不可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯恶搞侮辱主播，内容混乱，不可签约。 | 将蜜蜂写成女性侮辱主播;涉及侮辱直播相关人物，违规风险
+  observable:
+  - 'taboo维度: 将蜜蜂写成女性侮辱主播'
+  - 'ops维度: 涉及侮辱直播相关人物，违规风险'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1
+  - 133
+  score: null
+  score_raw: 只能九分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 第一次投稿整活文
+  genre_guess:
+  - 恶搞
+  - 直播同人
+  - 科幻
+  overall_comment: 纯恶搞侮辱主播，内容混乱，不可签约。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 将蜜蜂写成女性侮辱主播
+    raw_quote: 你把蜜蜂变成一个女的 给我图画通报真侮辱主播
+  - dimension: ops
+    severity: negative
+    content: 涉及侮辱直播相关人物，违规风险
+    raw_quote: 只能九分 签了就是汉里

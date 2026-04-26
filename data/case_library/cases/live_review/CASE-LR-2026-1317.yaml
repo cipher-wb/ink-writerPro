@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1317
+title: 我的百道之一 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 仙侠
+  - 职业
+  - 百道
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分继续 | 比例不够，代入感差，剧情无力，第一章完全失败。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例不够，代入感差，剧情无力，第一章完全失败。 | 开头没有期待感，金手指出来太晚;金手指必须前两章出来
+  observable:
+  - 'opening维度: 开头没有期待感，金手指出来太晚'
+  - 'golden_finger维度: 金手指必须前两章出来'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1401
+  - 1450
+  score: 22
+  score_raw: 22分继续
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的百道之一
+  genre_guess:
+  - 仙侠
+  - 职业
+  - 百道
+  overall_comment: 比例不够，代入感差，剧情无力，第一章完全失败。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头没有期待感，金手指出来太晚
+    raw_quote: 第一章完全是失败了 比例不够场景塑造不够
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指必须前两章出来
+    raw_quote: 你一定要前两章出来 不行

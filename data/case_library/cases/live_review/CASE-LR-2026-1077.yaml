@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1077
+title: 公子请斩妖 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 仙侠
+  - 雪白
+  - 香火
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 毕竟45分吧 | 雪白拉扯够味但剧情缺少惊喜反转，整体流畅但不够打榜。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白拉扯够味但剧情缺少惊喜反转，整体流畅但不够打榜。 | 剧情推进无反转，老妇人是妖早被猜到
+  observable:
+  - 'highpoint维度: 剧情推进无反转，老妇人是妖早被猜到'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 961
+  - 1040
+  score: 45
+  score_raw: 毕竟45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 公子请斩妖
+  genre_guess:
+  - 仙侠
+  - 雪白
+  - 香火
+  overall_comment: 雪白拉扯够味但剧情缺少惊喜反转，整体流畅但不够打榜。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 剧情推进无反转，老妇人是妖早被猜到
+    raw_quote: 就这个剧情没有惊喜
+  - dimension: golden_finger
+    severity: neutral
+    content: 香火系统设定普通，缺乏新意
+    raw_quote: 香火值加十点加上...没什么惊喜

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0971
+title: 恶搞西游不做人 (fail / 46分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 西幻
+  - 恶搞
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多46分吧 | 进步很大，脑洞有意思。但逻辑性立不住，发起点容易跑，更适合发蓝精灵。进阶思路需重新设计收徒线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 进步很大，脑洞有意思。但逻辑性立不住，发起点容易跑，更适合发蓝精灵。进阶思路需重新设计收徒线。 | 引诱离姑还俗等内容太出戏，涉擦边球。;系统跟阎王聊天拖沓，节奏慢。
+  observable:
+  - 'taboo维度: 引诱离姑还俗等内容太出戏，涉擦边球。'
+  - 'pacing维度: 系统跟阎王聊天拖沓，节奏慢。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 1661
+  - 1820
+  score: 46
+  score_raw: 差不多46分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 恶搞西游不做人
+  genre_guess:
+  - 西幻
+  - 恶搞
+  - 穿越
+  overall_comment: 进步很大，脑洞有意思。但逻辑性立不住，发起点容易跑，更适合发蓝精灵。进阶思路需重新设计收徒线。
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 脑洞有意思，不想成为骷髅头的自救设定有看点。
+    raw_quote: 他还是有点意思的...脑洞是有点意思的...他不想成为沙客商里面的一个骷髅头...他想自救一下
+  - dimension: taboo
+    severity: negative
+    content: 引诱离姑还俗等内容太出戏，涉擦边球。
+    raw_quote: 但是你跟尼姑这些还是很出息...虽然是这不是你干的...这就是出息...因为你整个是恶搞西游嘛
+  - dimension: pacing
+    severity: negative
+    content: 系统跟阎王聊天拖沓，节奏慢。
+    raw_quote: 节奏很慢...前世和轮回...他这个系统跟阎王确实比较拖沓

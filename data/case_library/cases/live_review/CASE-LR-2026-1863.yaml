@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1863
+title: 三清观女厉鬼仙侠文 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 仙侠
+  - 道士
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分 | 文笔和设定很扎实，比例好，但太炫技，独角戏和设定读白过多，缺乏剧情和人物互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和设定很扎实，比例好，但太炫技，独角戏和设定读白过多，缺乏剧情和人物互动。 | 独角戏太多，设定读白堆积，读者阈值会拉满随时跑
+  observable:
+  - 'opening维度: 独角戏太多，设定读白堆积，读者阈值会拉满随时跑'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 953
+  - 1016
+  score: 40
+  score_raw: 40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三清观女厉鬼仙侠文
+  genre_guess:
+  - 仙侠
+  - 道士
+  - 雪白
+  overall_comment: 文笔和设定很扎实，比例好，但太炫技，独角戏和设定读白过多，缺乏剧情和人物互动。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 独角戏太多，设定读白堆积，读者阈值会拉满随时跑
+    raw_quote: 我觉得独角戏太多了 兄弟真真太多了 真探走了 这个毒者肯定要走了
+  - dimension: simplicity
+    severity: positive
+    content: 文笔扎实，比例很好，有仙侠味道，天赋高
+    raw_quote: 比例很扎实啊 大哥大哥应该写过书吧 感觉比例还挺扎实的

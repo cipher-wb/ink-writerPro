@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0254
+title: 陈真觉醒顶经理 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 科幻
+  - 超能力
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥50分好吧 今晚最高分 | 第一章人设和事件有看点，写人物能力强，但后续偏题，金手指衔接需打磨，有精品潜力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章人设和事件有看点，写人物能力强，但后续偏题，金手指衔接需打磨，有精品潜力。 | 后续剧情偏离第一章人设，转到超凡乱斗，衔接突兀。
+  observable:
+  - 'highpoint维度: 后续剧情偏离第一章人设，转到超凡乱斗，衔接突兀。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1075
+  - 1160
+  score: 50
+  score_raw: 给大哥50分好吧 今晚最高分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 陈真觉醒顶经理
+  genre_guess:
+  - 科幻
+  - 超能力
+  - 轻小说
+  overall_comment: 第一章人设和事件有看点，写人物能力强，但后续偏题，金手指衔接需打磨，有精品潜力。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 一家人人设立体，充满张力，写人物是天赋。
+    raw_quote: 她的母亲 她的爸爸人设全立住了 这个很厉害
+  - dimension: opening
+    severity: positive
+    content: 地下室微积分开门事件设计极端有趣，比单纯讲设定强。
+    raw_quote: 这个事件我觉得好有看点 比那些讲设定好多了
+  - dimension: highpoint
+    severity: negative
+    content: 后续剧情偏离第一章人设，转到超凡乱斗，衔接突兀。
+    raw_quote: 怎么感觉有点偏题啊 ... 我觉得这样照没有意义啊

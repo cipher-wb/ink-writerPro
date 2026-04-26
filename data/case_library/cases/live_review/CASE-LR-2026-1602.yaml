@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1602
+title: 人在大宋开局拒绝听政 (pass / 65分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 历史
+  - 宋朝
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是65 | 历史细节扎实，蹭名人开局有效，但需多解释冷门知识，慢热型可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史细节扎实，蹭名人开局有效，但需多解释冷门知识，慢热型可签约。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 701
+  - 740
+  score: 65
+  score_raw: 也是65
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 人在大宋开局拒绝听政
+  genre_guess:
+  - 历史
+  - 宋朝
+  - 穿越
+  overall_comment: 历史细节扎实，蹭名人开局有效，但需多解释冷门知识，慢热型可签约。
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 宋朝题材小众但粉丝忠实，能熬出成绩
+    raw_quote: 历史书挺能涨的 尤其是这种小众一点的历史追读 追读很铁的
+  - dimension: opening
+    severity: positive
+    content: 开头就搬出欧阳修、范仲淹之子，快速建立时代感
+    raw_quote: 开头送了两个名人嘛 … 快速确认 … 这介绍可以

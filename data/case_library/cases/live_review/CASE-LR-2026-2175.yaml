@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2175
+title: 现代奇幻（考研大哥） (fail / 14分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 现代奇幻
+  - 魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 估计只能14分了 | 完全不了解网文，不会流畅讲故事，代入感差，剧情天马行空不接地气。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不了解网文，不会流畅讲故事，代入感差，剧情天马行空不接地气。 | 开局代入感极差，上帝视角连主角都不出;不会流畅地讲一个基本故事
+  observable:
+  - 'opening维度: 开局代入感极差，上帝视角连主角都不出'
+  - 'misc维度: 不会流畅地讲一个基本故事'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 605
+  - 638
+  score: 14
+  score_raw: 估计只能14分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 现代奇幻（考研大哥）
+  genre_guess:
+  - 现代奇幻
+  - 魔法
+  overall_comment: 完全不了解网文，不会流畅讲故事，代入感差，剧情天马行空不接地气。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局代入感极差，上帝视角连主角都不出
+    raw_quote: 开头的代入感就不写 … 完全是上帝视角 连个主角都不出道
+  - dimension: misc
+    severity: negative
+    content: 不会流畅地讲一个基本故事
+    raw_quote: 根本就不懂流畅的讲个故事 流畅的讲呀

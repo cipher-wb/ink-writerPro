@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0837
+title: 修仙加点仙子 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 修仙
+  - 加点
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 简介有点意思，但融合太多，书名封面需调整，建议专攻雪白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介有点意思，但融合太多，书名封面需调整，建议专攻雪白。 | 既要加点主流又要雪白，融太多
+  observable:
+  - 'genre维度: 既要加点主流又要雪白，融太多'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 126
+  - 158
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 修仙加点仙子
+  genre_guess:
+  - 修仙
+  - 加点
+  - 雪白
+  overall_comment: 简介有点意思，但融合太多，书名封面需调整，建议专攻雪白。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 既要加点主流又要雪白，融太多
+    raw_quote: 你就是既要又要又要加点的主流要雪白的主流

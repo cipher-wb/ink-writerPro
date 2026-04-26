@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0345
+title: 同志人大间内 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 校园
+  - 恋爱
+  - 百合
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十来分最多了吧 | 开局表白烂梗已跑光读者，必须用金手指切入校园日常。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局表白烂梗已跑光读者，必须用金手指切入校园日常。 | 开局表白对话老套无聊，绝对吸引不了读者;缺乏金手指支撑，无法在校园文市场立足
+  observable:
+  - 'opening维度: 开局表白对话老套无聊，绝对吸引不了读者'
+  - 'golden_finger维度: 缺乏金手指支撑，无法在校园文市场立足'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 2600
+  - 2739
+  score: 30
+  score_raw: 三十来分最多了吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 同志人大间内
+  genre_guess:
+  - 校园
+  - 恋爱
+  - 百合
+  overall_comment: 开局表白烂梗已跑光读者，必须用金手指切入校园日常。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局表白对话老套无聊，绝对吸引不了读者
+    raw_quote: 你这样开头已经死了…就是好无聊啊
+  - dimension: golden_finger
+    severity: negative
+    content: 缺乏金手指支撑，无法在校园文市场立足
+    raw_quote: 没有强金手指 就是浪费你的人生

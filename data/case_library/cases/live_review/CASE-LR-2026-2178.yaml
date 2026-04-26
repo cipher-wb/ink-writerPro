@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2178
+title: 猫娘教主（公会冒险） (pass / 64分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 奇幻
+  - 冒险
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 64是吧 | 改过后衔接立住了，切入点好，能签，但需多加主线线索提高追读。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 改过后衔接立住了，切入点好，能签，但需多加主线线索提高追读。 | 主线有点弱，缺乏危机和多条线索，容易崩
+  observable:
+  - 'hook维度: 主线有点弱，缺乏危机和多条线索，容易崩'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 810
+  - 878
+  score: 64
+  score_raw: 64是吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 猫娘教主（公会冒险）
+  genre_guess:
+  - 奇幻
+  - 冒险
+  - 轻小说
+  overall_comment: 改过后衔接立住了，切入点好，能签，但需多加主线线索提高追读。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 这次改完衔接上了，切入快，气球也立住了
+    raw_quote: 现在这个气球我觉得立住了 这个气球没啥问题了 … 之前她是两件事毫不相关 现在立住了
+  - dimension: hook
+    severity: negative
+    content: 主线有点弱，缺乏危机和多条线索，容易崩
+    raw_quote: 主线怎么感觉还那样 没什么危机 … 真不要写没主线 没主线很容易崩的
+  - dimension: character
+    severity: positive
+    content: 人物立住了，卖点没问题
+    raw_quote: 你人是已经立住了 … 敢签是能签

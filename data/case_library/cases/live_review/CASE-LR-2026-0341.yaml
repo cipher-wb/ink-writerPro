@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0341
+title: 超英管理局：红包档案 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 漫威DC同人
+  - 都市
+  - 超能力
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你42分 | 切入有趣但逻辑崩坏，让凡人干掉超人太违和，整体难以成立。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入有趣但逻辑崩坏，让凡人干掉超人太违和，整体难以成立。 | 逻辑矛盾大，让普通人处理超级英雄不合理
+  observable:
+  - 'simplicity维度: 逻辑矛盾大，让普通人处理超级英雄不合理'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 2076
+  - 2260
+  score: 42
+  score_raw: 给你42分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 超英管理局：红包档案
+  genre_guess:
+  - 漫威DC同人
+  - 都市
+  - 超能力
+  overall_comment: 切入有趣但逻辑崩坏，让凡人干掉超人太违和，整体难以成立。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 殃及池鱼后凡人管理英雄的设定有创意
+    raw_quote: 超音他们之间打架 总是会殃及驰余 这就是殃及驰余之后 大哥去管理他们
+  - dimension: simplicity
+    severity: negative
+    content: 逻辑矛盾大，让普通人处理超级英雄不合理
+    raw_quote: 让你去干掉一个超音这句话很出戏啊

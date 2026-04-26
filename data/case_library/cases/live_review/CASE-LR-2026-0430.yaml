@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0430
+title: 魔鬼先生平静生活 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 奇幻
+  - 魔鬼
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材太垃圾，节奏太慢，不接地气，人设立不住，包扑
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太垃圾，节奏太慢，不接地气，人设立不住，包扑 | 题材太垃圾，读者没感觉，慢悠悠的都跑了;前面事件人设都立不住，关键的我是谁我在哪没讲清楚
+  observable:
+  - 'genre维度: 题材太垃圾，读者没感觉，慢悠悠的都跑了'
+  - 'opening维度: 前面事件人设都立不住，关键的我是谁我在哪没讲清楚'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 2239
+  - 2316
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: fail
+  title_guess: 魔鬼先生平静生活
+  genre_guess:
+  - 奇幻
+  - 魔鬼
+  - 西幻
+  overall_comment: 题材太垃圾，节奏太慢，不接地气，人设立不住，包扑
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材太垃圾，读者没感觉，慢悠悠的都跑了
+    raw_quote: 我觉得是这个题材太垃圾了，慢悠悠的在这些都是跑完了...这东西不接地气
+  - dimension: opening
+    severity: negative
+    content: 前面事件人设都立不住，关键的我是谁我在哪没讲清楚
+    raw_quote: 前面的事件都立不住，人设都立不住...我是谁，我在哪，一定要讲清楚

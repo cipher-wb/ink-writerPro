@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1484
+title: 猎龙乱世仙人 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 仙侠
+  - 猎龙
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能就20个码 | 写法太细纲化，缺乏代入感，题材四不像，像老旧武侠
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法太细纲化，缺乏代入感，题材四不像，像老旧武侠 | 写法像细纲，缺少细节和灵魂;主角心理活动少，代入感差
+  observable:
+  - 'simplicity维度: 写法像细纲，缺少细节和灵魂'
+  - 'character维度: 主角心理活动少，代入感差'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 86
+  - 145
+  score: 20
+  score_raw: 只能就20个码
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 猎龙乱世仙人
+  genre_guess:
+  - 仙侠
+  - 猎龙
+  - 武侠
+  overall_comment: 写法太细纲化，缺乏代入感，题材四不像，像老旧武侠
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 写法像细纲，缺少细节和灵魂
+    raw_quote: 这个太戏缸了 这写法有奇怪 没感觉 这个太戏缸了
+  - dimension: character
+    severity: negative
+    content: 主角心理活动少，代入感差
+    raw_quote: 主角也没什么好多心理活动 反正就是这样干巴巴的这样讲

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1100
+title: 师姐河里之物 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 仙侠
+  - 轻喜剧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 36分吧其实还是事件开头不吸引人 | 比例干练，但事件平淡无趣，师姐悬念出现太晚
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例干练，但事件平淡无趣，师姐悬念出现太晚 | 开头枯燥，缺乏有效冲突与期待感;第二章第三章才有点看点，但故弄玄虚
+  observable:
+  - 'opening维度: 开头枯燥，缺乏有效冲突与期待感'
+  - 'pacing维度: 第二章第三章才有点看点，但故弄玄虚'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1280
+  - 1350
+  score: 36
+  score_raw: 36分吧其实还是事件开头不吸引人
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 师姐河里之物
+  genre_guess:
+  - 仙侠
+  - 轻喜剧
+  overall_comment: 比例干练，但事件平淡无趣，师姐悬念出现太晚
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头枯燥，缺乏有效冲突与期待感
+    raw_quote: 就不好看 这些世界没什么有趣的小剧场 没什么有趣的故事
+  - dimension: pacing
+    severity: negative
+    content: 第二章第三章才有点看点，但故弄玄虚
+    raw_quote: 就就第二章第三章有点看点 但是又写得故弄玄虚的

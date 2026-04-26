@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2217
+title: 密室逃脱诡异录 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 灵异
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 24分钟 | 故事讲得没问题，但玩法太老套且有严重的过审问题，浅词造句还不错，更适合写其他题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事讲得没问题，但玩法太老套且有严重的过审问题，浅词造句还不错，更适合写其他题材。 | 学生跳楼、校园鬼怪等情节严重违反审核规则;玩法套路老，缺乏新意
+  observable:
+  - 'taboo维度: 学生跳楼、校园鬼怪等情节严重违反审核规则'
+  - 'opening维度: 玩法套路老，缺乏新意'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 965
+  - 1005
+  score: 24
+  score_raw: 24分钟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 密室逃脱诡异录
+  genre_guess:
+  - 灵异
+  - 都市
+  overall_comment: 故事讲得没问题，但玩法太老套且有严重的过审问题，浅词造句还不错，更适合写其他题材。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 学生跳楼、校园鬼怪等情节严重违反审核规则
+    raw_quote: 校园里面不能有这种事情的...说什么教学楼宿舍办公楼是一个英牢...这审核肯定过不了
+  - dimension: opening
+    severity: negative
+    content: 玩法套路老，缺乏新意
+    raw_quote: 没意思啊...这玩意十几年前就写烂了啊
+  - dimension: simplicity
+    severity: positive
+    content: 遣词造句还可以
+    raw_quote: 浅层道具写捕食去吧...也还好

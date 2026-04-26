@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2049
+title: 红武红川闯王 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 历史
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能给大哥给到40多 | 题材有代入问题但文笔和节奏尚可，需要加强谋划和继承记忆。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材有代入问题但文笔和节奏尚可，需要加强谋划和继承记忆。 | 穿越成李自成难以代入;没继承记忆导致不真实;缺乏谋划和高潮
+  observable:
+  - 'genre维度: 穿越成李自成难以代入'
+  - 'character维度: 没继承记忆导致不真实'
+  - 'highpoint维度: 缺乏谋划和高潮'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 601
+  - 800
+  score: 40
+  score_raw: 能给大哥给到40多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 红武红川闯王
+  genre_guess:
+  - 历史
+  - 穿越
+  overall_comment: 题材有代入问题但文笔和节奏尚可，需要加强谋划和继承记忆。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 穿越成李自成难以代入
+    raw_quote: 你朱元璋穿越李自成 这太难接受了
+  - dimension: character
+    severity: negative
+    content: 没继承记忆导致不真实
+    raw_quote: 你不继承机 其实也不行
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏谋划和高潮
+    raw_quote: 我觉得你少一个谋划

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0317
+title: 民国捉妖师 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 民国
+  - 悬疑
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45吧 | 文笔氛围不错，但剧情过于拖沓且傲慢，主角代入感弱，水分多，关键的剧情不写，读者很容易弃书。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔氛围不错，但剧情过于拖沓且傲慢，主角代入感弱，水分多，关键的剧情不写，读者很容易弃书。 | 太拖沓，无关紧要的描写太多，如对丫鬟的着墨过多。;前期事件推进缓慢，重要的反转和看点一笔带过，让读者失去耐心。;主角人设过于傲慢，接地气太少，读者容易丧失代入感。
+  observable:
+  - 'pacing维度: 太拖沓，无关紧要的描写太多，如对丫鬟的着墨过多。'
+  - 'opening维度: 前期事件推进缓慢，重要的反转和看点一笔带过，让读者失去耐心。'
+  - 'character维度: 主角人设过于傲慢，接地气太少，读者容易丧失代入感。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 681
+  - 796
+  score: 45
+  score_raw: 45吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国捉妖师
+  genre_guess:
+  - 民国
+  - 悬疑
+  - 奇幻
+  overall_comment: 文笔氛围不错，但剧情过于拖沓且傲慢，主角代入感弱，水分多，关键的剧情不写，读者很容易弃书。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 太拖沓，无关紧要的描写太多，如对丫鬟的着墨过多。
+    raw_quote: 结果还是水分掉了...你喜欢鸡吗...还在水...为什么写这么详细
+  - dimension: opening
+    severity: negative
+    content: 前期事件推进缓慢，重要的反转和看点一笔带过，让读者失去耐心。
+    raw_quote: 你这个事件解决一点意思都没有啊...然后下一章去解释啊
+  - dimension: character
+    severity: negative
+    content: 主角人设过于傲慢，接地气太少，读者容易丧失代入感。
+    raw_quote: 主角太人设太傲慢了...接接地气太少了
+  - dimension: misc
+    severity: positive
+    content: 文笔和氛围感不错。
+    raw_quote: 我觉得文笔氛围不错

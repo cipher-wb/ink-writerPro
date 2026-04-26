@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0774
+title: 六神花露水 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 魔门
+  - 修仙
+  - 人才
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分 魔门 | 魔门题材没人看，剧情不极端，全是欺负人的老套路，会讲故事但题材太毒，40分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 魔门题材没人看，剧情不极端，全是欺负人的老套路，会讲故事但题材太毒，40分。 | 魔门题材读者看了直接跑;开头两个剧情都在凸显魔门残忍，重复表达信息量;主角等于没写，人物没立住
+  observable:
+  - 'genre维度: 魔门题材读者看了直接跑'
+  - 'opening维度: 开头两个剧情都在凸显魔门残忍，重复表达信息量'
+  - 'character维度: 主角等于没写，人物没立住'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 351
+  - 400
+  score: 40
+  score_raw: 40分 魔门
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 六神花露水
+  genre_guess:
+  - 魔门
+  - 修仙
+  - 人才
+  overall_comment: 魔门题材没人看，剧情不极端，全是欺负人的老套路，会讲故事但题材太毒，40分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 魔门题材读者看了直接跑
+    raw_quote: 看到魔门读者直接PDST直接不看 看到那种就是没人看
+  - dimension: opening
+    severity: negative
+    content: 开头两个剧情都在凸显魔门残忍，重复表达信息量
+    raw_quote: 你这第一章 两个剧情都是为了凸显魔门残忍残酷 那没意思 重复表达信息量
+  - dimension: character
+    severity: negative
+    content: 主角等于没写，人物没立住
+    raw_quote: 你主角也等于没血 你看那雪白也等于没洗 提了一嘴

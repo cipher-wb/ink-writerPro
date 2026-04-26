@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1907
+title: 方林在跳楼和挨揍中选择了穿越来到一个神宫 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sSrFB5Eot
+scope:
+  genre:
+  - 穿越
+  - 系统
+  - 神宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开头专业生动，但梦的部分没意思，李小璐角色出戏，整体莫名其妙。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sSrFB5Eot.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头专业生动，但梦的部分没意思，李小璐角色出戏，整体莫名其妙。 | 李小璐角色名称出戏，影响观感;稿子整体写得莫名其妙
+  observable:
+  - 'misc维度: 李小璐角色名称出戏，影响观感'
+  - 'misc维度: 稿子整体写得莫名其妙'
+live_review_meta:
+  source_bvid: BV1sSrFB5Eot
+  source_line_range:
+  - 636
+  - 735
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 方林在跳楼和挨揍中选择了穿越来到一个神宫
+  genre_guess:
+  - 穿越
+  - 系统
+  - 神宫
+  overall_comment: 开头专业生动，但梦的部分没意思，李小璐角色出戏，整体莫名其妙。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头写得很专业，让人身临其境
+    raw_quote: 开头还是写的可以的是吧 很专业 就是精中有善口技者的感觉
+  - dimension: misc
+    severity: negative
+    content: 李小璐角色名称出戏，影响观感
+    raw_quote: 你怎么能叫李小璐啊 这个人不能叫李小璐啊 … 这太出戏了
+  - dimension: misc
+    severity: negative
+    content: 稿子整体写得莫名其妙
+    raw_quote: 这个稿子写的就莫名其妙的

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-1233
+title: 历届飞升先帝掠夺资源 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 仙侠
+  - 宗门
+  - 复仇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥就19分吧 | 设定混乱，人物众多，开篇缺乏代入感，但文笔尚有仙侠味道，建议推翻重来写穿越。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定混乱，人物众多，开篇缺乏代入感，但文笔尚有仙侠味道，建议推翻重来写穿越。 | 开篇缺乏代入感，打斗场景太多，读者无法共情;出场人物过多，像报菜名，主角不突出;金手指设计老套，八个药老战苍穹太俗气
+  observable:
+  - 'opening维度: 开篇缺乏代入感，打斗场景太多，读者无法共情'
+  - 'character维度: 出场人物过多，像报菜名，主角不突出'
+  - 'golden_finger维度: 金手指设计老套，八个药老战苍穹太俗气'
+  - 'genre维度: 题材老旧，传统的复仇传功思路，需要彻底推翻'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 224
+  - 296
+  score: 19
+  score_raw: 给大哥就19分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 历届飞升先帝掠夺资源
+  genre_guess:
+  - 仙侠
+  - 宗门
+  - 复仇
+  overall_comment: 设定混乱，人物众多，开篇缺乏代入感，但文笔尚有仙侠味道，建议推翻重来写穿越。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏代入感，打斗场景太多，读者无法共情
+    raw_quote: 这不要写这种场景去写代入感行不行，我现在就代入感
+  - dimension: character
+    severity: negative
+    content: 出场人物过多，像报菜名，主角不突出
+    raw_quote: 你这里练出来的人物事件好多啊
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设计老套，八个药老战苍穹太俗气
+    raw_quote: 八个药老战苍穹啊，就先帝你注意一下，先帝是有逼格的，就江南七怪，江南也只有七怪呀
+  - dimension: genre
+    severity: negative
+    content: 题材老旧，传统的复仇传功思路，需要彻底推翻
+    raw_quote: 比例还是有仙侠味的，但题材真得推翻了，没法子卡

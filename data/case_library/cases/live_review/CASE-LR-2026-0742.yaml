@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0742
+title: 土地公的自我修养 (borderline / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 仙侠
+  - 西游
+  - 土地公
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得这次40分起步了 | 适合蓝精灵风格，故事讲得流畅可爱，虽小白但进步很大，讲故事能力是重要指标。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 适合蓝精灵风格，故事讲得流畅可爱，虽小白但进步很大，讲故事能力是重要指标。
+  observable:
+  - 整体被星河直播判定为 borderline
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1931
+  - 2040
+  score: 40
+  score_raw: 我觉得这次40分起步了
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 土地公的自我修养
+  genre_guess:
+  - 仙侠
+  - 西游
+  - 土地公
+  overall_comment: 适合蓝精灵风格，故事讲得流畅可爱，虽小白但进步很大，讲故事能力是重要指标。
+  comments:
+  - dimension: character
+    severity: neutral
+    content: 人设单薄，但整体故事讲得流畅可爱
+    raw_quote: 被欺负有情绪...小白但是故事讲得很流畅
+  - dimension: genre
+    severity: positive
+    content: 风格很适合蓝精灵，有机会起来
+    raw_quote: 这个就很适合兰吉林...真有机会起来了
+  - dimension: simplicity
+    severity: positive
+    content: 讲故事能力进步明显，是重要的写作天赋
+    raw_quote: 我觉得进步能力很强 他故事讲得挺好的 慢慢的 娓娓道来

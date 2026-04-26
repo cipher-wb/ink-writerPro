@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2064
+title: 凌晨四点高五 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 高武
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 蓝精灵四分 34分 | 世界观老套，但攻略功法的恶搞设定有看点，建议发蓝精灵更癫狂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观老套，但攻略功法的恶搞设定有看点，建议发蓝精灵更癫狂。 | 世界观背景老套
+  observable:
+  - 'genre维度: 世界观背景老套'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 3601
+  - 3800
+  score: 34
+  score_raw: 蓝精灵四分 34分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 凌晨四点高五
+  genre_guess:
+  - 都市
+  - 高武
+  - 恶搞
+  overall_comment: 世界观老套，但攻略功法的恶搞设定有看点，建议发蓝精灵更癫狂。
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 金手指攻略功法有恶搞趣味
+    raw_quote: 这里我觉得有意思 ... 说不定有人看
+  - dimension: genre
+    severity: negative
+    content: 世界观背景老套
+    raw_quote: 世界还是太无聊了 没什么好的人设和剧情 背景大家都写烂了

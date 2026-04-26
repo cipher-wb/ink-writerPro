@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1381
+title: 初夜世界或类似超凡悬疑 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 科幻
+  - 悬疑
+  - 超凡
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你三人八分吧 | 有进步，知道写代入感和空镜，但题材无聊，吐槽太多，写法像分镜电影不适合网文，设定卖点已被淘汰。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有进步，知道写代入感和空镜，但题材无聊，吐槽太多，写法像分镜电影不适合网文，设定卖点已被淘汰。 | 超凡观察类题材故弄玄虚，吸引不了读者;分镜式叙事太断切，读不进去;吐槽骂太多，只会让主角显得智商低
+  observable:
+  - 'genre维度: 超凡观察类题材故弄玄虚，吸引不了读者'
+  - 'ops维度: 分镜式叙事太断切，读不进去'
+  - 'simplicity维度: 吐槽骂太多，只会让主角显得智商低'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 366
+  - 424
+  score: 38
+  score_raw: 给你三人八分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 初夜世界或类似超凡悬疑
+  genre_guess:
+  - 科幻
+  - 悬疑
+  - 超凡
+  overall_comment: 有进步，知道写代入感和空镜，但题材无聊，吐槽太多，写法像分镜电影不适合网文，设定卖点已被淘汰。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 超凡观察类题材故弄玄虚，吸引不了读者
+    raw_quote: 你們現在寫出來叫故弄玄虛 它不叫挖坑 不叫看點
+  - dimension: ops
+    severity: negative
+    content: 分镜式叙事太断切，读不进去
+    raw_quote: 你们的分镜式叙事 就非常的断切其实
+  - dimension: simplicity
+    severity: negative
+    content: 吐槽骂太多，只会让主角显得智商低
+    raw_quote: 骂太多只能生命主角 智商低

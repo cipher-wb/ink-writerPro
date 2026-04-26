@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1192
+title: 民俗灵异：从游戏机开始 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 灵异
+  - 民俗
+  - 无限流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 喊个三十五分 | 民俗内容尚可，但现实身份和烂梗一团糟，灵异与乐子不搭。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 民俗内容尚可，但现实身份和烂梗一团糟，灵异与乐子不搭。 | 现实身份与民俗剧情严重割裂;滥用烂梗，破坏阅读体验
+  observable:
+  - 'character维度: 现实身份与民俗剧情严重割裂'
+  - 'misc维度: 滥用烂梗，破坏阅读体验'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 501
+  - 650
+  score: 35
+  score_raw: 喊个三十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民俗灵异：从游戏机开始
+  genre_guess:
+  - 灵异
+  - 民俗
+  - 无限流
+  overall_comment: 民俗内容尚可，但现实身份和烂梗一团糟，灵异与乐子不搭。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 现实身份与民俗剧情严重割裂
+    raw_quote: 主要是你的现实身份跟你的民俗剧情不搭呀
+  - dimension: misc
+    severity: negative
+    content: 滥用烂梗，破坏阅读体验
+    raw_quote: 不要老玩烂梗
+  - dimension: misc
+    severity: positive
+    content: 灵异内容本身有一定可看性
+    raw_quote: 你的灵异内容我觉得还可以的

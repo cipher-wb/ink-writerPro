@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0365
+title: 绿色天空下神明出现 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 科幻
+  - 日常
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个20分也是20分 | 内容如魔法少女日常，科幻感全无，毫无看点，20分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容如魔法少女日常，科幻感全无，毫无看点，20分。 | 标题标榜科幻实际日常，题材欺诈;开篇平淡无聊，无法留住读者
+  observable:
+  - 'genre维度: 标题标榜科幻实际日常，题材欺诈'
+  - 'opening维度: 开篇平淡无聊，无法留住读者'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 346
+  - 420
+  score: 20
+  score_raw: 这个20分也是20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 绿色天空下神明出现
+  genre_guess:
+  - 科幻
+  - 日常
+  - 重生
+  overall_comment: 内容如魔法少女日常，科幻感全无，毫无看点，20分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 标题标榜科幻实际日常，题材欺诈
+    raw_quote: 和科幻搭不上边呀
+  - dimension: opening
+    severity: negative
+    content: 开篇平淡无聊，无法留住读者
+    raw_quote: 这没看点啊

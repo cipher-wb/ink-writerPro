@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2165
+title: 元婴真君重生当县长 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 民国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分吗 | 世界观混乱，仙侠县长马匪乱炖，各种烂梗乱入，读者完全无法代入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观混乱，仙侠县长马匪乱炖，各种烂梗乱入，读者完全无法代入。 | 世界观混乱不堪，县长加宗门加元婴加马匪各路元素乱炖;前世记忆和现代梗乱入，读者无法共情
+  observable:
+  - 'genre维度: 世界观混乱不堪，县长加宗门加元婴加马匪各路元素乱炖'
+  - 'character维度: 前世记忆和现代梗乱入，读者无法共情'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 2704
+  - 2825
+  score: 18
+  score_raw: 18分吗
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 元婴真君重生当县长
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 民国
+  overall_comment: 世界观混乱，仙侠县长马匪乱炖，各种烂梗乱入，读者完全无法代入。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观混乱不堪，县长加宗门加元婴加马匪各路元素乱炖
+    raw_quote: 县长加马匪，那就是民国，但是又是宗门...这个设定有点奇怪了...这些世界观我不好接受了
+  - dimension: character
+    severity: negative
+    content: 前世记忆和现代梗乱入，读者无法共情
+    raw_quote: 老是莫名需要加一加大哥...这玩意你当个乐子你发蓝精灵试试吧...读者都接受不了的

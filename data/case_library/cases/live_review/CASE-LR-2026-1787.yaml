@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1787
+title: 重生欧洲为牛顿请命 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 历史
+  - 欧洲
+  - 学术
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 分掉了 | 开头英伦学术争端可以写，但世界观崩坏触及红线，建议重塑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头英伦学术争端可以写，但世界观崩坏触及红线，建议重塑。 | 魔改世界观得罪所有粉丝群体，试图融合中西是毒点。
+  observable:
+  - 'genre维度: 魔改世界观得罪所有粉丝群体，试图融合中西是毒点。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 526
+  - 577
+  score: null
+  score_raw: 分掉了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 重生欧洲为牛顿请命
+  genre_guess:
+  - 历史
+  - 欧洲
+  - 学术
+  overall_comment: 开头英伦学术争端可以写，但世界观崩坏触及红线，建议重塑。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 魔改世界观得罪所有粉丝群体，试图融合中西是毒点。
+    raw_quote: 你这个是骗人啊...为什么要大明末年...完全得罪...不要世界观
+  - dimension: opening
+    severity: positive
+    content: 开头的学术辩论、文艺复兴感有看点。
+    raw_quote: 就是文艺复兴那种感觉...还可以的

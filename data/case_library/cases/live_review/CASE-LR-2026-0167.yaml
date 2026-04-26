@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0167
+title: 命令王冠 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 诸天
+  - 系统
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分 有的 真有 | 脑洞不错，梗多，但太白太骚，涉及侮辱主播，起点不敢签，建议蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞不错，梗多，但太白太骚，涉及侮辱主播，起点不敢签，建议蓝精灵。 | 写密封变性侮辱主播，触碰读点
+  observable:
+  - 'taboo维度: 写密封变性侮辱主播，触碰读点'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 1526
+  - 1699
+  score: 50
+  score_raw: 50分 有的 真有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 命令王冠
+  genre_guess:
+  - 诸天
+  - 系统
+  - 穿越
+  overall_comment: 脑洞不错，梗多，但太白太骚，涉及侮辱主播，起点不敢签，建议蓝精灵。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 写密封变性侮辱主播，触碰读点
+    raw_quote: 把密封變成一個女的 給我圖畫通報,真侮辱主播
+  - dimension: misc
+    severity: positive
+    content: 脑洞很棒，有创意
+    raw_quote: 它老洞挺牛逼的其實

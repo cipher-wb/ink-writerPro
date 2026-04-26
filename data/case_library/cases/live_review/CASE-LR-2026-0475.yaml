@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0475
+title: 酒馆 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 轻小说
+  - 都市
+  - 经营
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分嘛 这冒充二次元嘛这不是 | 背景世界观混乱，写成都市异能说明书，毫无事件和人物冲突，完全不会写轻小说，建议养猪。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 背景世界观混乱，写成都市异能说明书，毫无事件和人物冲突，完全不会写轻小说，建议养猪。 | 世界观混乱，华夏背景写轻小说/西幻酒馆，不伦不类;开头干巴巴介绍，没有事件和人物，像说明书没人看
+  observable:
+  - 'genre维度: 世界观混乱，华夏背景写轻小说/西幻酒馆，不伦不类'
+  - 'opening维度: 开头干巴巴介绍，没有事件和人物，像说明书没人看'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 342
+  - 428
+  score: 20
+  score_raw: 20分嘛 这冒充二次元嘛这不是
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 酒馆
+  genre_guess:
+  - 轻小说
+  - 都市
+  - 经营
+  overall_comment: 背景世界观混乱，写成都市异能说明书，毫无事件和人物冲突，完全不会写轻小说，建议养猪。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观混乱，华夏背景写轻小说/西幻酒馆，不伦不类
+    raw_quote: 怎么是中国呢 那你为什么叫罗文...这没人看啊 这个对吧 现在青青小说这种最怕这种 什么平行世界 灵气复苏的这种对吧
+  - dimension: opening
+    severity: negative
+    content: 开头干巴巴介绍，没有事件和人物，像说明书没人看
+    raw_quote: 好无聊啊 目前为止没有事件...你不能这样干巴巴的介绍就写事件呢 这就是说明书没人看呀

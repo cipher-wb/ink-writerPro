@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2187
+title: 师父死了（三生三世） (borderline / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 仙侠
+  - 女频
+  - 三生三世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你40分吧 | 比例挺好，氛围场景描述强，但不接地气，缺乏代入感，更像女频写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例挺好，氛围场景描述强，但不接地气，缺乏代入感，更像女频写法。 | 开头场景太大不接地气，缺乏代入感;像女频写法，男频看来太虚
+  observable:
+  - 'opening维度: 开头场景太大不接地气，缺乏代入感'
+  - 'genre维度: 像女频写法，男频看来太虚'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1288
+  - 1322
+  score: 40
+  score_raw: 就给你40分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 师父死了（三生三世）
+  genre_guess:
+  - 仙侠
+  - 女频
+  - 三生三世
+  overall_comment: 比例挺好，氛围场景描述强，但不接地气，缺乏代入感，更像女频写法。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头场景太大不接地气，缺乏代入感
+    raw_quote: 不接地气 场景没有大入感 就是一个大场景大冲突
+  - dimension: genre
+    severity: negative
+    content: 像女频写法，男频看来太虚
+    raw_quote: 女评就喜欢这样高大上空虚 … 男评的话就只有30分

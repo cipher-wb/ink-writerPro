@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1967
+title: 末日刚来谁是好人 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 末日
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话给大哥20多分 | 主线驱动力是妹妹医药费，世界观难以接受，剧情无聊，虽然比例好但故事不流畅。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线驱动力是妹妹医药费，世界观难以接受，剧情无聊，虽然比例好但故事不流畅。 | 驱动力为妹妹医药费，老套且无力;异能觉醒过程漫长，剧情无聊;开头打台球等事件无关主线，代入感差
+  observable:
+  - 'hook维度: 驱动力为妹妹医药费，老套且无力'
+  - 'pacing维度: 异能觉醒过程漫长，剧情无聊'
+  - 'opening维度: 开头打台球等事件无关主线，代入感差'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 641
+  - 820
+  score: 25
+  score_raw: 打分的话给大哥20多分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日刚来谁是好人
+  genre_guess:
+  - 末日
+  - 异能
+  overall_comment: 主线驱动力是妹妹医药费，世界观难以接受，剧情无聊，虽然比例好但故事不流畅。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 驱动力为妹妹医药费，老套且无力
+    raw_quote: 妹妹嘛就是主线就是一个妹妹…有啥意义呢
+  - dimension: pacing
+    severity: negative
+    content: 异能觉醒过程漫长，剧情无聊
+    raw_quote: 你这等这么久觉醒个一轮终于觉醒了吗
+  - dimension: opening
+    severity: negative
+    content: 开头打台球等事件无关主线，代入感差
+    raw_quote: 你在干嘛问题是…刚好扶球吗

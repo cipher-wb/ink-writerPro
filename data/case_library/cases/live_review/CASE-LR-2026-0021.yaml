@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0021
+title: 18岁少年武侠玄幻 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 武侠
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20分了 加两分 | 文笔有武侠味但内容太白，对白尴尬，人设塑造差，22分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有武侠味但内容太白，对白尴尬，人设塑造差，22分。 | 人设小白，对白尴尬;剧情老套，结拜突兀
+  observable:
+  - 'character维度: 人设小白，对白尴尬'
+  - 'opening维度: 剧情老套，结拜突兀'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 178
+  - 220
+  score: 22
+  score_raw: 差不多就20分了 加两分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 18岁少年武侠玄幻
+  genre_guess:
+  - 武侠
+  - 玄幻
+  overall_comment: 文笔有武侠味但内容太白，对白尴尬，人设塑造差，22分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设小白，对白尴尬
+    raw_quote: 人设太小娃了 小娃娃你怎么会认识王胖子 这个烦人太白了
+  - dimension: opening
+    severity: negative
+    content: 剧情老套，结拜突兀
+    raw_quote: 聊两句话就就结拜了 就大概是刘备是吧

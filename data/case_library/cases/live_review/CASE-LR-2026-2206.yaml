@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2206
+title: 拯救单身女神 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没意思 | 纯靠系统任务驱动的无聊套路，男女主人设都崩，这个题材没市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯靠系统任务驱动的无聊套路，男女主人设都崩，这个题材没市场。 | 开局全是系统和任务驱动力，无聊;女主人设是毒点，没有吸引力;国内难写，题材没市场
+  observable:
+  - 'opening维度: 开局全是系统和任务驱动力，无聊'
+  - 'character维度: 女主人设是毒点，没有吸引力'
+  - 'genre维度: 国内难写，题材没市场'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 402
+  - 453
+  score: null
+  score_raw: 没意思
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 拯救单身女神
+  genre_guess:
+  - 都市
+  - 系统
+  overall_comment: 纯靠系统任务驱动的无聊套路，男女主人设都崩，这个题材没市场。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局全是系统和任务驱动力，无聊
+    raw_quote: 很无聊的...就全靠系统事件也无聊
+  - dimension: character
+    severity: negative
+    content: 女主人设是毒点，没有吸引力
+    raw_quote: 一上来我要跟你睡...种女的没有一点魅力...人设已经崩完了
+  - dimension: genre
+    severity: negative
+    content: 国内难写，题材没市场
+    raw_quote: 心理医生在国内很难写...这种国内很难写...有市场没有市场

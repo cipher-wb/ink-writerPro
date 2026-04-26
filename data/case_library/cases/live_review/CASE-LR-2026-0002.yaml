@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0002
+title: 西门庆穿红楼同人 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11YrABQEyZ
+scope:
+  genre:
+  - 历史
+  - 同人
+  - 红楼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 跟风西门庆路线太像已有热门作品，缺乏新鲜感，这类同人短期内读者会审美疲劳；虽然比例/笔力不错，但题材和切入角度注定难起来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YrABQEyZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 跟风西门庆路线太像已有热门作品，缺乏新鲜感，这类同人短期内读者会审美疲劳；虽然比例/笔力不错，但题材和切入角度注定难起来。 | 与现有热书的西门庆穿越红楼高度雷同，缺少差异化切入
+  observable:
+  - 'genre维度: 与现有热书的西门庆穿越红楼高度雷同，缺少差异化切入'
+live_review_meta:
+  source_bvid: BV11YrABQEyZ
+  source_line_range:
+  - 51
+  - 195
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 西门庆穿红楼同人
+  genre_guess:
+  - 历史
+  - 同人
+  - 红楼
+  overall_comment: 跟风西门庆路线太像已有热门作品，缺乏新鲜感，这类同人短期内读者会审美疲劳；虽然比例/笔力不错，但题材和切入角度注定难起来。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 与现有热书的西门庆穿越红楼高度雷同，缺少差异化切入
+    raw_quote: 太像了呀 不会找题 他在干什么 不会找题
+  - dimension: simplicity
+    severity: positive
+    content: 笔力比例好，写其他题材随便起飞
+    raw_quote: 大哥的比例挺强的 写其他的随便起飞

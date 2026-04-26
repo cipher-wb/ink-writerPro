@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0266
+title: 美利坚第一驱魔师 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 美利坚
+  - 驱魔
+  - 反转
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那就只能21分吧 | 反转太弱，卖点少，呈现效果不行
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 反转太弱，卖点少，呈现效果不行 | 反转太弱，一眼看穿坏蛋身份;例会开局没意思，事件不吸引人
+  observable:
+  - 'highpoint维度: 反转太弱，一眼看穿坏蛋身份'
+  - 'hook维度: 例会开局没意思，事件不吸引人'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 155
+  - 254
+  score: 21
+  score_raw: 那就只能21分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚第一驱魔师
+  genre_guess:
+  - 美利坚
+  - 驱魔
+  - 反转
+  overall_comment: 反转太弱，卖点少，呈现效果不行
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 反转太弱，一眼看穿坏蛋身份
+    raw_quote: 这个反转太弱了
+  - dimension: hook
+    severity: negative
+    content: 例会开局没意思，事件不吸引人
+    raw_quote: 这个例会例会开局真没意思

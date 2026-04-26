@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0996
+title: 地下城魔王顾问 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 西幻
+  - 种田
+  - 地下城
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这只能到18分了，这个这个真高不了 | 雪白为零，妹妹人设为零，展现笨拙，读者极易流失。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白为零，妹妹人设为零，展现笨拙，读者极易流失。 | 开头无效描写太多，劝退读者;雪白和人物关系展现为零;设定展现笨拙，读者跑路
+  observable:
+  - 'opening维度: 开头无效描写太多，劝退读者'
+  - 'character维度: 雪白和人物关系展现为零'
+  - 'simplicity维度: 设定展现笨拙，读者跑路'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 1209
+  - 1315
+  score: 18
+  score_raw: 这只能到18分了，这个这个真高不了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 地下城魔王顾问
+  genre_guess:
+  - 西幻
+  - 种田
+  - 地下城
+  overall_comment: 雪白为零，妹妹人设为零，展现笨拙，读者极易流失。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头无效描写太多，劝退读者
+    raw_quote: 叽里咕噜一大串，贼无聊的……前面至少劝退一半的人
+  - dimension: character
+    severity: negative
+    content: 雪白和人物关系展现为零
+    raw_quote: 雪白为零，妹妹的人设为零……根本就不会展现，根本就不会穿插
+  - dimension: simplicity
+    severity: negative
+    content: 设定展现笨拙，读者跑路
+    raw_quote: 每次展现出来就是那些笨拙的设定，读者看到就随时跑路的

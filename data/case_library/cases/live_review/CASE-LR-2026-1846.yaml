@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1846
+title: 后唐五代国变 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  - 政治
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多58分 | 文笔顶级切入可以，内投有机会，节奏偏慢+太正经
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔顶级切入可以，内投有机会，节奏偏慢+太正经 | 太正经上限低，爽点不足;第一张平淡无太多暗示
+  observable:
+  - 'pacing维度: 太正经上限低，爽点不足'
+  - 'opening维度: 第一张平淡无太多暗示'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 2251
+  - 2350
+  score: 58
+  score_raw: 差不多58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 后唐五代国变
+  genre_guess:
+  - 历史
+  - 五代十国
+  - 政治
+  overall_comment: 文笔顶级切入可以，内投有机会，节奏偏慢+太正经
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 太正经上限低，爽点不足
+    raw_quote: 有点太正经这个写法上限太低了
+  - dimension: opening
+    severity: negative
+    content: 第一张平淡无太多暗示
+    raw_quote: 我第一章看完就是可能写的有点太平淡了

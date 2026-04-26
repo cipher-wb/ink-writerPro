@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0636
+title: 回到明朝做网演 (fail / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 历史
+  - 无限流
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 52分 | 无限循环设定有想法，主线剧情不够爽，系统写复杂了，但代入感和节奏有进步
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无限循环设定有想法，主线剧情不够爽，系统写复杂了，但代入感和节奏有进步 | 主线剧情平淡，逃跑没有看点，不够爽;系统写得过于复杂，结算奖励不清晰
+  observable:
+  - 'highpoint维度: 主线剧情平淡，逃跑没有看点，不够爽'
+  - 'golden_finger维度: 系统写得过于复杂，结算奖励不清晰'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 511
+  - 580
+  score: 52
+  score_raw: 52分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 回到明朝做网演
+  genre_guess:
+  - 历史
+  - 无限流
+  - 系统
+  overall_comment: 无限循环设定有想法，主线剧情不够爽，系统写复杂了，但代入感和节奏有进步
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 主线剧情平淡，逃跑没有看点，不够爽
+    raw_quote: 主线不好看，没什么好东西
+  - dimension: golden_finger
+    severity: negative
+    content: 系统写得过于复杂，结算奖励不清晰
+    raw_quote: 系统写得复杂了一点
+  - dimension: pacing
+    severity: positive
+    content: 这次代入感和节奏有明显进步
+    raw_quote: 代入感有了，这次有进步

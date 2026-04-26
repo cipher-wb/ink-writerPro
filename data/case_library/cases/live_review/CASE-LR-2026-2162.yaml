@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-2162
+title: 地下城：生命女神与小爱同学 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 西幻
+  - 游戏异界
+  - 地下城
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 忘了给他打分 | 设定为卖点的典型刺猬猫/菠萝包写法，开头全是设定和AI对话没有故事，必须改思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定为卖点的典型刺猬猫/菠萝包写法，开头全是设定和AI对话没有故事，必须改思路。 | 开篇全是主神任务和系统设定，没有故事和事件;生命女神给任务+小爱同学辅助这种设定太老套;铺垫一整章才开始狼追人这种低级事件
+  observable:
+  - 'opening维度: 开篇全是主神任务和系统设定，没有故事和事件'
+  - 'golden_finger维度: 生命女神给任务+小爱同学辅助这种设定太老套'
+  - 'pacing维度: 铺垫一整章才开始狼追人这种低级事件'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 2284
+  - 2414
+  score: null
+  score_raw: 忘了给他打分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 地下城：生命女神与小爱同学
+  genre_guess:
+  - 西幻
+  - 游戏异界
+  - 地下城
+  overall_comment: 设定为卖点的典型刺猬猫/菠萝包写法，开头全是设定和AI对话没有故事，必须改思路。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇全是主神任务和系统设定，没有故事和事件
+    raw_quote: 这种写法太古老了...现在是设定为卖点的基本全死完了...一定是故事以及有趣的人物反差为卖点
+  - dimension: golden_finger
+    severity: negative
+    content: 生命女神给任务+小爱同学辅助这种设定太老套
+    raw_quote: 女神说你去这里给你一个什么金手指怎么怎么样...没必要了...这都是毒点
+  - dimension: pacing
+    severity: negative
+    content: 铺垫一整章才开始狼追人这种低级事件
+    raw_quote: 我的天哪...你铺垫了这么久，事件竟然是追狼吗...读者会看这吗

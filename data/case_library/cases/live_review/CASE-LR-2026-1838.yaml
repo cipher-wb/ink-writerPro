@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1838
+title: 多子多福截胡师姐 (unknown / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40分还是有点意思的 | 脑洞能写，但主角人设需改动不能舔狗废柴
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞能写，但主角人设需改动不能舔狗废柴 | 废柴舔狗人设需要修正;直接看脸就答应太生硬
+  observable:
+  - 'character维度: 废柴舔狗人设需要修正'
+  - 'hook维度: 直接看脸就答应太生硬'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1551
+  - 1650
+  score: 40
+  score_raw: 差不多40分还是有点意思的
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 多子多福截胡师姐
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 系统
+  overall_comment: 脑洞能写，但主角人设需改动不能舔狗废柴
+  comments:
+  - dimension: character
+    severity: negative
+    content: 废柴舔狗人设需要修正
+    raw_quote: 主角不能这么废柴...这个就变成舔狗了
+  - dimension: hook
+    severity: negative
+    content: 直接看脸就答应太生硬
+    raw_quote: 我觉得这样答应算毒点

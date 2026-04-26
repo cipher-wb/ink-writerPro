@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1927
+title: 扑街作者重生诅咒系统 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分嘛 | 切入真实，有代入感，但怨念值系统太幼稚，典型的番茄风，在起点已判死刑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入真实，有代入感，但怨念值系统太幼稚，典型的番茄风，在起点已判死刑。 | 怨念值/诅咒系统的卖点太昂气，编辑看了会嘲笑，在起点已死。
+  observable:
+  - 'golden_finger维度: 怨念值/诅咒系统的卖点太昂气，编辑看了会嘲笑，在起点已死。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 792
+  - 835
+  score: 28
+  score_raw: 28分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 扑街作者重生诅咒系统
+  genre_guess:
+  - 都市
+  - 系统
+  overall_comment: 切入真实，有代入感，但怨念值系统太幼稚，典型的番茄风，在起点已判死刑。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入真实，有代入感，屌丝写手的情绪也OK。
+    raw_quote: 代入感倒是还好吧，真实很真实...切入还是很真实的
+  - dimension: golden_finger
+    severity: negative
+    content: 怨念值/诅咒系统的卖点太昂气，编辑看了会嘲笑，在起点已死。
+    raw_quote: 怨念值系统其实在起点已经死刑了...这种太昂气了

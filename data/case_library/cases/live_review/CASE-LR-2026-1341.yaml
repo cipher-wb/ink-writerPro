@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1341
+title: 宇宙基本法则转校生 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 科幻
+  - 校园
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大哥十六分 | 世界观混乱，阅读障碍严重，自嗨设定劝退读者。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观混乱，阅读障碍严重，自嗨设定劝退读者。 | 过多的架空设定毫无逻辑;设定介绍多而无用，主线不明;开门见设定，缺乏核心事件
+  observable:
+  - 'genre维度: 过多的架空设定毫无逻辑'
+  - 'simplicity维度: 设定介绍多而无用，主线不明'
+  - 'opening维度: 开门见设定，缺乏核心事件'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 885
+  - 930
+  score: 16
+  score_raw: 只能给大哥十六分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宇宙基本法则转校生
+  genre_guess:
+  - 科幻
+  - 校园
+  - 架空
+  overall_comment: 世界观混乱，阅读障碍严重，自嗨设定劝退读者。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 过多的架空设定毫无逻辑
+    raw_quote: 银种人紫种人，大哥这也不是地球啊
+  - dimension: simplicity
+    severity: negative
+    content: 设定介绍多而无用，主线不明
+    raw_quote: 大哥这都是设定，我们不关心啊
+  - dimension: opening
+    severity: negative
+    content: 开门见设定，缺乏核心事件
+    raw_quote: 没有阅读障碍，你会不会写书

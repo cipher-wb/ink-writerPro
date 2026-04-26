@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0737
+title: 崇祯元年 (borderline / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 历史
+  - 明朝
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个是45 | 有进步，故事讲清楚了，历史思路正确但事件太无聊缺乏突出卖点，需更流畅连贯的剧情设计。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有进步，故事讲清楚了，历史思路正确但事件太无聊缺乏突出卖点，需更流畅连贯的剧情设计。 | 开篇事件太无聊，缺乏亮点和看点;缺乏流畅连贯的剧情，像哨送风格的模仿
+  observable:
+  - 'opening维度: 开篇事件太无聊，缺乏亮点和看点'
+  - 'pacing维度: 缺乏流畅连贯的剧情，像哨送风格的模仿'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1491
+  - 1590
+  score: 45
+  score_raw: 这个是45
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 崇祯元年
+  genre_guess:
+  - 历史
+  - 明朝
+  - 穿越
+  overall_comment: 有进步，故事讲清楚了，历史思路正确但事件太无聊缺乏突出卖点，需更流畅连贯的剧情设计。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇事件太无聊，缺乏亮点和看点
+    raw_quote: 这些事件很无聊 这些事件还是...太无聊了
+  - dimension: pacing
+    severity: negative
+    content: 缺乏流畅连贯的剧情，像哨送风格的模仿
+    raw_quote: 重置版本的哨送 有一些哨送的味道吧
+  - dimension: simplicity
+    severity: neutral
+    content: 比例需要加强，要精简多分段
+    raw_quote: 比例要加强 要精简 然后要多分段

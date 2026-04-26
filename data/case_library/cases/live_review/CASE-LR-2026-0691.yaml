@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0691
+title: 路德穿越异界龙娘 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 异界
+  - 后宫
+  - 暧昧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 嗯差不多33分吧 | 切入会写，但后面主线崩坏，展开无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入会写，但后面主线崩坏，展开无聊。 | 第一章后段崩了，后续主线内容虚浮;父亲监视的感觉虽然有趣，但展开乏力
+  observable:
+  - 'pacing维度: 第一章后段崩了，后续主线内容虚浮'
+  - 'golden_finger维度: 父亲监视的感觉虽然有趣，但展开乏力'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 800
+  - 888
+  score: 33
+  score_raw: 嗯差不多33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 路德穿越异界龙娘
+  genre_guess:
+  - 异界
+  - 后宫
+  - 暧昧
+  overall_comment: 切入会写，但后面主线崩坏，展开无聊。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入部分有进步，能写出暧昧感
+    raw_quote: 切入会写了 兄弟切入会写了
+  - dimension: pacing
+    severity: negative
+    content: 第一章后段崩了，后续主线内容虚浮
+    raw_quote: 后面崩了呀
+  - dimension: golden_finger
+    severity: negative
+    content: 父亲监视的感觉虽然有趣，但展开乏力
+    raw_quote: 后面我觉得其实无聊了

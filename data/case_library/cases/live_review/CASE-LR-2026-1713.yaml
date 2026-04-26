@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1713
+title: 李青玄的末世三体 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多25分吧 | 元素杂糅、世界观混乱，开篇堆砌设定导致节奏弱化，但文笔节奏较快。剧情的唯一情绪点（女朋友跟人跑）写得太俗。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素杂糅、世界观混乱，开篇堆砌设定导致节奏弱化，但文笔节奏较快。剧情的唯一情绪点（女朋友跟人跑）写得太俗。 | 都市、修仙、科幻三世界杂糅，分类不清晰，读者无法代入;开篇大量设定轰炸，黄金三章剧情被设定严重压弱
+  observable:
+  - 'genre维度: 都市、修仙、科幻三世界杂糅，分类不清晰，读者无法代入'
+  - 'opening维度: 开篇大量设定轰炸，黄金三章剧情被设定严重压弱'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 311
+  - 479
+  score: 25
+  score_raw: 差不多25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 李青玄的末世三体
+  genre_guess:
+  - 都市
+  - 修仙
+  - 科幻
+  overall_comment: 元素杂糅、世界观混乱，开篇堆砌设定导致节奏弱化，但文笔节奏较快。剧情的唯一情绪点（女朋友跟人跑）写得太俗。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市、修仙、科幻三世界杂糅，分类不清晰，读者无法代入
+    raw_quote: 你不能写修仙，也不能写科幻，你要发什么分类嘛
+  - dimension: opening
+    severity: negative
+    content: 开篇大量设定轰炸，黄金三章剧情被设定严重压弱
+    raw_quote: 到目前为止都是设定尾脉点，唯一的情绪剧情就是你老婆女朋友那个其实很俗
+  - dimension: pacing
+    severity: positive
+    content: 文笔节奏尚可，比例扎实
+    raw_quote: 节奏这么快，不过大哥节奏快比例也还挺好的

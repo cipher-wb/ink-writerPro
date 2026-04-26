@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0443
+title: 龙族+韩语文 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 都市
+  - 韩娱
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分 | 人设描写能力出色，但题材杂糅，切入陈旧，主线弱
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设描写能力出色，但题材杂糅，切入陈旧，主线弱 | 书名与题材杂糅龙族+韩语难签约，应纯粹写韩语
+  observable:
+  - 'genre维度: 书名与题材杂糅龙族+韩语难签约，应纯粹写韩语'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 823
+  - 899
+  score: 40
+  score_raw: 40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 龙族+韩语文
+  genre_guess:
+  - 都市
+  - 韩娱
+  - 系统
+  overall_comment: 人设描写能力出色，但题材杂糅，切入陈旧，主线弱
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人设表现力强，人物描写细腻有味道
+    raw_quote: 人设表现挺厉害的...女人描写还可以
+  - dimension: genre
+    severity: negative
+    content: 书名与题材杂糅龙族+韩语难签约，应纯粹写韩语
+    raw_quote: 没必要龙族家韩语...就正常写韩语嘛

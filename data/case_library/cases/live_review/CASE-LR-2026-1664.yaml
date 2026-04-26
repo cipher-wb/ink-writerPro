@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1664
+title: 清小说探险 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 西幻
+  - 清小说
+  - 探险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十分左右吧 | 文青自嗨，像童话冒险，完全没有网文节奏和期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文青自嗨，像童话冒险，完全没有网文节奏和期待感。 | 开篇不知所云，没有明确目标和危机;整稿节奏平淡，像自娱自乐
+  observable:
+  - 'opening维度: 开篇不知所云，没有明确目标和危机'
+  - 'pacing维度: 整稿节奏平淡，像自娱自乐'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 835
+  - 920
+  score: 20
+  score_raw: 二十分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 清小说探险
+  genre_guess:
+  - 西幻
+  - 清小说
+  - 探险
+  overall_comment: 文青自嗨，像童话冒险，完全没有网文节奏和期待感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇不知所云，没有明确目标和危机
+    raw_quote: 反正就是感觉像那种小时候看的那种童话冒险记一样几个小朋友去冒险去了 稷里咕噜的
+  - dimension: pacing
+    severity: negative
+    content: 整稿节奏平淡，像自娱自乐
+    raw_quote: 这不是一个网络写法……你目的性这些看不出来

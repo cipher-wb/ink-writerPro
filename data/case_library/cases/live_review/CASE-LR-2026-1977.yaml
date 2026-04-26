@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1977
+title: 重生1983开局水脉精通 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 重生
+  - 年代
+  - 真爱
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 真爱文套路可以，但关键人物松玉兰人设没立起来，魅力不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 真爱文套路可以，但关键人物松玉兰人设没立起来，魅力不足。 | 重生后妻子人设扁平，缺乏完美白月光感;前期描写不够，相貌、细节缺失
+  observable:
+  - 'character维度: 重生后妻子人设扁平，缺乏完美白月光感'
+  - 'opening维度: 前期描写不够，相貌、细节缺失'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 431
+  - 510
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生1983开局水脉精通
+  genre_guess:
+  - 重生
+  - 年代
+  - 真爱
+  - 种田
+  overall_comment: 真爱文套路可以，但关键人物松玉兰人设没立起来，魅力不足。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 重生后妻子人设扁平，缺乏完美白月光感
+    raw_quote: 松玉兰的人设不咋样，写得干巴了
+  - dimension: opening
+    severity: negative
+    content: 前期描写不够，相貌、细节缺失
+    raw_quote: 这点描写真不够，你见到他第一眼就应该写

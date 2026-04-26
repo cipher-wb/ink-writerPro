@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1072
+title: 海妖新生 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 变身
+  - 触手
+  - 百合
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多30分有吧 | 脑洞奇怪，变身海妖生娃设定劝退，虽然有点乐子但更适合菠萝包。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞奇怪，变身海妖生娃设定劝退，虽然有点乐子但更适合菠萝包。 | 男性变海妖生娃设定容易引发不适;角色关系混乱，逻辑不通
+  observable:
+  - 'taboo维度: 男性变海妖生娃设定容易引发不适'
+  - 'character维度: 角色关系混乱，逻辑不通'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 543
+  - 620
+  score: null
+  score_raw: 差不多30分有吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 海妖新生
+  genre_guess:
+  - 变身
+  - 触手
+  - 百合
+  overall_comment: 脑洞奇怪，变身海妖生娃设定劝退，虽然有点乐子但更适合菠萝包。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 男性变海妖生娃设定容易引发不适
+    raw_quote: 太变态了吗，你看兔姐都觉得你变态
+  - dimension: character
+    severity: negative
+    content: 角色关系混乱，逻辑不通
+    raw_quote: 你不是我妈我也不是林允儿那你们两个抱在怀里干嘛嘛

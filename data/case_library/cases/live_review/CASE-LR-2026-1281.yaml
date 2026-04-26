@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1281
+title: 三兄弟去骑士府 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 仙侠
+  - 家族
+  - 传统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 期待23份吧 | 传统乡下人进城套路，缺乏脑洞和金手指，三兄弟群像主角不突出，卖点不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统乡下人进城套路，缺乏脑洞和金手指，三兄弟群像主角不突出，卖点不足。 | 三兄弟写法群像不突出重点主角;传统写法毫无惊喜，像乡下人进城
+  observable:
+  - 'character维度: 三兄弟写法群像不突出重点主角'
+  - 'highpoint维度: 传统写法毫无惊喜，像乡下人进城'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1921
+  - 2000
+  score: 23
+  score_raw: 期待23份吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三兄弟去骑士府
+  genre_guess:
+  - 仙侠
+  - 家族
+  - 传统
+  overall_comment: 传统乡下人进城套路，缺乏脑洞和金手指，三兄弟群像主角不突出，卖点不足。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 三兄弟写法群像不突出重点主角
+    raw_quote: 三个人一起上...没有侧重点就是三个人一起上
+  - dimension: highpoint
+    severity: negative
+    content: 传统写法毫无惊喜，像乡下人进城
+    raw_quote: 就是农村小伙来到大城市...这个这个有啥意思呢

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0332
+title: 重生01历袭人生 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 都市重生
+  - 情感
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你40奥芬玛 | 人物情感真挚，但开篇无主线卖点，属于无病呻吟的日常自传，不适合网文市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人物情感真挚，但开篇无主线卖点，属于无病呻吟的日常自传，不适合网文市场。 | 开篇缺乏核心卖点和冲突，节奏过慢;缺少明确的金手指和系统，导致代入感差;6岁主角难以代入，切入点过于个人化
+  observable:
+  - 'opening维度: 开篇缺乏核心卖点和冲突，节奏过慢'
+  - 'golden_finger维度: 缺少明确的金手指和系统，导致代入感差'
+  - 'simplicity维度: 6岁主角难以代入，切入点过于个人化'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 120
+  - 305
+  score: 40
+  score_raw: 就给你40奥芬玛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生01历袭人生
+  genre_guess:
+  - 都市重生
+  - 情感
+  - 日常
+  overall_comment: 人物情感真挚，但开篇无主线卖点，属于无病呻吟的日常自传，不适合网文市场。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人物塑造和情感描写扎实，能引起共鸣
+    raw_quote: 情感很足 兄弟 真的情感很足
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏核心卖点和冲突，节奏过慢
+    raw_quote: 这不是什么卖点…就是日常 很普通的日常
+  - dimension: golden_finger
+    severity: negative
+    content: 缺少明确的金手指和系统，导致代入感差
+    raw_quote: 你要有目的性啊…你的金手指是什么
+  - dimension: simplicity
+    severity: negative
+    content: 6岁主角难以代入，切入点过于个人化
+    raw_quote: 而且6岁小孩不好代入

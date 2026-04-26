@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1899
+title: 模拟修仙继承悟性 (pass / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 仙侠
+  - 模拟
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分满... 模拟... 40分 | 模拟修仙需情绪张力，开头悟道应放中期。仙子人设没立住，情绪太淡。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 模拟修仙需情绪张力，开头悟道应放中期。仙子人设没立住，情绪太淡。 | 仙子人设没立住，情绪太淡;悟道应放中后期，开头不要感悟;一年时间一笔带过，缺乏沧桑感
+  observable:
+  - 'character维度: 仙子人设没立住，情绪太淡'
+  - 'opening维度: 悟道应放中后期，开头不要感悟'
+  - 'pacing维度: 一年时间一笔带过，缺乏沧桑感'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 2121
+  - 2200
+  score: 40
+  score_raw: 40分满... 模拟... 40分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 模拟修仙继承悟性
+  genre_guess:
+  - 仙侠
+  - 模拟
+  - 系统
+  overall_comment: 模拟修仙需情绪张力，开头悟道应放中期。仙子人设没立住，情绪太淡。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 仙子人设没立住，情绪太淡
+    raw_quote: 没情绪啊 没有感觉到你必须得修仙那种情绪... 就淡淡的呀
+  - dimension: opening
+    severity: negative
+    content: 悟道应放中后期，开头不要感悟
+    raw_quote: 悟道不要放在开头... 他从中期动... 开头就是写快点
+  - dimension: pacing
+    severity: negative
+    content: 一年时间一笔带过，缺乏沧桑感
+    raw_quote: 动不动就一年时间... 睁开眼就一年结束了

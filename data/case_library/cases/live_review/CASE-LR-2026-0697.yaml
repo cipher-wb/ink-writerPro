@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0697
+title: 我在修仙界整顿宗门内卷 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 仙侠
+  - 宗门
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分吧 | 比例尚可但境界设定过高，独角戏无配角，脑洞立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例尚可但境界设定过高，独角戏无配角，脑洞立不住。 | 开后全是独角戏，没有配角互动;缺少师姐师弟等宗门人物，缺乏真实感;企业面板太高雅，建议改为种田建筑面板
+  observable:
+  - 'pacing维度: 开后全是独角戏，没有配角互动'
+  - 'character维度: 缺少师姐师弟等宗门人物，缺乏真实感'
+  - 'golden_finger维度: 企业面板太高雅，建议改为种田建筑面板'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 2151
+  - 2415
+  score: 32
+  score_raw: 32分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在修仙界整顿宗门内卷
+  genre_guess:
+  - 仙侠
+  - 宗门
+  - 种田
+  overall_comment: 比例尚可但境界设定过高，独角戏无配角，脑洞立不住。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开后全是独角戏，没有配角互动
+    raw_quote: 开头BB完之后就全是独角戏了
+  - dimension: character
+    severity: negative
+    content: 缺少师姐师弟等宗门人物，缺乏真实感
+    raw_quote: 真实的宗门肯定是有师姐啊 师弟啊 师兄啊
+  - dimension: golden_finger
+    severity: negative
+    content: 企业面板太高雅，建议改为种田建筑面板
+    raw_quote: 你把这个面板我告诉你怎么改 改成一个种田

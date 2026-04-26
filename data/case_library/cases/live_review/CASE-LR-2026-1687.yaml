@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1687
+title: 变身魔女都市文 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 都市
+  - 变身
+  - 魔女
+  - 刺猬猫风格
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就40多分 | 节奏尚可但事件无聊，缺乏好看的主线和心理活动，变身文在起点市场极小。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏尚可但事件无聊，缺乏好看的主线和心理活动，变身文在起点市场极小。 | 拉屎等低俗梗无必要，影响观感。;变身文在起点受众极小，成功概率低。
+  observable:
+  - 'ops维度: 拉屎等低俗梗无必要，影响观感。'
+  - 'genre维度: 变身文在起点受众极小，成功概率低。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 376
+  - 444
+  score: 40
+  score_raw: 也就40多分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 变身魔女都市文
+  genre_guess:
+  - 都市
+  - 变身
+  - 魔女
+  - 刺猬猫风格
+  overall_comment: 节奏尚可但事件无聊，缺乏好看的主线和心理活动，变身文在起点市场极小。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 拉屎等低俗梗无必要，影响观感。
+    raw_quote: 屁股马桶拉屎这东西感觉没必要的
+  - dimension: genre
+    severity: negative
+    content: 变身文在起点受众极小，成功概率低。
+    raw_quote: 变身文在起点真不咋样

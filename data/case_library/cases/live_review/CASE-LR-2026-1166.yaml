@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1166
+title: 外界文明蓝星（星空科幻） (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 科幻
+  - 玄幻
+  - 无敌流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多23 24分的样子 | 开头就让各路大佬在宇宙中打生打死，读者阈值被拉得太高，后期必崩。本质上是脱离大众的自嗨文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头就让各路大佬在宇宙中打生打死，读者阈值被拉得太高，后期必崩。本质上是脱离大众的自嗨文。 | 开头境界太高，一堆大佬出来打架，几万字就会崩盘;严重的自嗨式幻想，忽视读者想看眼前事件的需求
+  observable:
+  - 'opening维度: 开头境界太高，一堆大佬出来打架，几万字就会崩盘'
+  - 'simplicity维度: 严重的自嗨式幻想，忽视读者想看眼前事件的需求'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1678
+  - 1765
+  score: 24
+  score_raw: 差不多23 24分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 外界文明蓝星（星空科幻）
+  genre_guess:
+  - 科幻
+  - 玄幻
+  - 无敌流
+  overall_comment: 开头就让各路大佬在宇宙中打生打死，读者阈值被拉得太高，后期必崩。本质上是脱离大众的自嗨文。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头境界太高，一堆大佬出来打架，几万字就会崩盘
+    raw_quote: 很多万地书为什么崩了 因为他们把那些 不该出来的人都前面出来了 就一个道理 这种书几万次就崩完了 因为读者的预指 开头拉的太高了
+  - dimension: simplicity
+    severity: negative
+    content: 严重的自嗨式幻想，忽视读者想看眼前事件的需求
+    raw_quote: 说难听点叫自嗨 说好听点叫喜欢 喜欢的幻想 我尊重大哥 但是没办法 幻想没问题 但写小说还是得接地气

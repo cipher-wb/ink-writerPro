@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0970
+title: 末日雪白曹魏发小 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 末日
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就九分吧 | 纯恶搞过不了审，雪白那段太真实看不了。根本不知道是异能还是干嘛，没法改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯恶搞过不了审，雪白那段太真实看不了。根本不知道是异能还是干嘛，没法改。 | 开篇出现大量软色情描写，过不了审。;没看懂是异能还是什么，恶搞流太离谱。;纯恶搞过不了审，改不了，不能正常签约。
+  observable:
+  - 'taboo维度: 开篇出现大量软色情描写，过不了审。'
+  - 'genre维度: 没看懂是异能还是什么，恶搞流太离谱。'
+  - 'ops维度: 纯恶搞过不了审，改不了，不能正常签约。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 1481
+  - 1660
+  score: 9
+  score_raw: 差不多就九分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日雪白曹魏发小
+  genre_guess:
+  - 末日
+  - 都市
+  - 异能
+  overall_comment: 纯恶搞过不了审，雪白那段太真实看不了。根本不知道是异能还是干嘛，没法改。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 开篇出现大量软色情描写，过不了审。
+    raw_quote: 这个前面这个看不了啊...这个你摸你摸卫星河的玉兔...这个肯定看不了对吧
+  - dimension: genre
+    severity: negative
+    content: 没看懂是异能还是什么，恶搞流太离谱。
+    raw_quote: 而且我也没看懂你是到底是异能的...还是干嘛的是吧...到底是不是异能的变异了
+  - dimension: ops
+    severity: negative
+    content: 纯恶搞过不了审，改不了，不能正常签约。
+    raw_quote: 这个不是说正常签约...这个是纯恶搞这种过不了审...改不了...兄弟改...不是这玩意玩意整得了

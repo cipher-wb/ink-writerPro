@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0274
+title: 锦衣卫守陵人 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 历史
+  - 锦衣卫
+  - 民俗灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就差不多38封吧 | 元素杂糅太多，主线零散，驾驭难度高
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素杂糅太多，主线零散，驾驭难度高 | 开局设定过多，读者快速流失;东一榔头西一棒槌，想加元素太多
+  observable:
+  - 'pacing维度: 开局设定过多，读者快速流失'
+  - 'simplicity维度: 东一榔头西一棒槌，想加元素太多'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 856
+  - 943
+  score: 38
+  score_raw: 就差不多38封吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 锦衣卫守陵人
+  genre_guess:
+  - 历史
+  - 锦衣卫
+  - 民俗灵异
+  overall_comment: 元素杂糅太多，主线零散，驾驭难度高
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开局设定过多，读者快速流失
+    raw_quote: 这跑完了呀，这跑完了搁这跑完了对吧
+  - dimension: simplicity
+    severity: negative
+    content: 东一榔头西一棒槌，想加元素太多
+    raw_quote: 东一榔头西一棒槌的，其实根本就不集中零散

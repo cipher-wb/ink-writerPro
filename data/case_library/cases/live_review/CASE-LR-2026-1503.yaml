@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1503
+title: 地缘天宗冥界求签 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 仙侠
+  - 冥界
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就是个按十分不到的样子 | 开头人设没立柱，偏题严重，没有追读，无修改价值
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头人设没立柱，偏题严重，没有追读，无修改价值 | 开头都市部分太长，仙侠用户会跑;人设崩坏，无代入感
+  observable:
+  - 'opening维度: 开头都市部分太长，仙侠用户会跑'
+  - 'character维度: 人设崩坏，无代入感'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 1006
+  - 1050
+  score: null
+  score_raw: 差不多也就是个按十分不到的样子
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 地缘天宗冥界求签
+  genre_guess:
+  - 仙侠
+  - 冥界
+  - 穿越
+  overall_comment: 开头人设没立柱，偏题严重，没有追读，无修改价值
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头都市部分太长，仙侠用户会跑
+    raw_quote: 仙侠分类千万不要写都市因为仙侠用户点进来看到你都市一直写他会跑的
+  - dimension: character
+    severity: negative
+    content: 人设崩坏，无代入感
+    raw_quote: 人设没立柱 开头偏题 没人看开头

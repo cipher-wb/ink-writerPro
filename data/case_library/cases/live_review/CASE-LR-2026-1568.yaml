@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1568
+title: 来时路新人都市悲剧 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 都市
+  - 现实
+  - 悲剧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30咳 | 题材垃圾，不懂市场，语文功底还行但无用。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材垃圾，不懂市场，语文功底还行但无用。 | 选题完全脱离市场，自嗨式写作;缺乏对网文行业的基本了解，方向错误
+  observable:
+  - 'genre维度: 选题完全脱离市场，自嗨式写作'
+  - 'ops维度: 缺乏对网文行业的基本了解，方向错误'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 1101
+  - 1250
+  score: 30
+  score_raw: 30咳
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 来时路新人都市悲剧
+  genre_guess:
+  - 都市
+  - 现实
+  - 悲剧
+  overall_comment: 题材垃圾，不懂市场，语文功底还行但无用。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 选题完全脱离市场，自嗨式写作
+    raw_quote: 这写的一点意义都没有，你全删掉就行了，这都是自嗨
+  - dimension: ops
+    severity: negative
+    content: 缺乏对网文行业的基本了解，方向错误
+    raw_quote: 你写了1万多字了，你连最基本的题材你都不会找吗
+  - dimension: simplicity
+    severity: positive
+    content: 语文功底扎实，文笔尚可
+    raw_quote: 比例没啥问题，那个确实小时候语文功底应该可以

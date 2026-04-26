@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2084
+title: 乱世梨园，我以戏曲镇江山 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 神雕同人
+  - 戏曲
+  - 金庸武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 幸福就33分吧 | 金庸同人蹭得不够明显，写得像原创且偏女频文艺味，需要更贴合男频爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金庸同人蹭得不够明显，写得像原创且偏女频文艺味，需要更贴合男频爽点。 | 背离同人标签，写得像女频文艺原创，缺乏武侠爽感;切入太慢，迟迟不亮神雕元素
+  observable:
+  - 'genre维度: 背离同人标签，写得像女频文艺原创，缺乏武侠爽感'
+  - 'opening维度: 切入太慢，迟迟不亮神雕元素'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 915
+  - 980
+  score: 33
+  score_raw: 幸福就33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 乱世梨园，我以戏曲镇江山
+  genre_guess:
+  - 神雕同人
+  - 戏曲
+  - 金庸武侠
+  overall_comment: 金庸同人蹭得不够明显，写得像原创且偏女频文艺味，需要更贴合男频爽点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 背离同人标签，写得像女频文艺原创，缺乏武侠爽感
+    raw_quote: 写的跟原创似的……有点女频的味道，就有点文艺有点情感……毕竟是武侠，感觉咋和女频一样
+  - dimension: opening
+    severity: negative
+    content: 切入太慢，迟迟不亮神雕元素
+    raw_quote: 蹭上了呀……蹭就蹭的太慢了

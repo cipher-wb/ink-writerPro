@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0353
+title: 少年零分两世惊红 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 玄幻
+  - 重生
+  - 废柴逆袭
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分慢给你 | 斗之力三段式老套玄幻，毫无新意，浪费一个月学习成果。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 斗之力三段式老套玄幻，毫无新意，浪费一个月学习成果。 | 开篇废柴设定极端过时，像十年前的模板;情节全部可预测，缺乏任何惊喜
+  observable:
+  - 'opening维度: 开篇废柴设定极端过时，像十年前的模板'
+  - 'simplicity维度: 情节全部可预测，缺乏任何惊喜'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 3660
+  - 3800
+  score: 25
+  score_raw: 25分慢给你
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 少年零分两世惊红
+  genre_guess:
+  - 玄幻
+  - 重生
+  - 废柴逆袭
+  overall_comment: 斗之力三段式老套玄幻，毫无新意，浪费一个月学习成果。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇废柴设定极端过时，像十年前的模板
+    raw_quote: 斗之力三段…永乐的天才 确实让我想起了从前
+  - dimension: simplicity
+    severity: negative
+    content: 情节全部可预测，缺乏任何惊喜
+    raw_quote: 冬了一个月 你就冬了个这个嘛…这不就放旁边

@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-2195
+title: 山中客 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1y1zbBQEce
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 学院
+  - 等级
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这玩意20吧 | 设定极度老套，开篇疯狂堆设定，人物互动尴尬小白，完全不具备商业化可能，必须全部推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1y1zbBQEce.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定极度老套，开篇疯狂堆设定，人物互动尴尬小白，完全不具备商业化可能，必须全部推翻重写。 | 第一章全是设定堆砌，没有剧情推进;用“叫妈妈”梗拉关系，情节设计极其尴尬小白;整体像19年的过时写法，毫无新意
+  observable:
+  - 'opening维度: 第一章全是设定堆砌，没有剧情推进'
+  - 'character维度: 用“叫妈妈”梗拉关系，情节设计极其尴尬小白'
+  - 'simplicity维度: 整体像19年的过时写法，毫无新意'
+live_review_meta:
+  source_bvid: BV1y1zbBQEce
+  source_line_range:
+  - 420
+  - 530
+  score: 20
+  score_raw: 这玩意20吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 山中客
+  genre_guess:
+  - 都市
+  - 异能
+  - 学院
+  - 等级
+  overall_comment: 设定极度老套，开篇疯狂堆设定，人物互动尴尬小白，完全不具备商业化可能，必须全部推翻重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章全是设定堆砌，没有剧情推进
+    raw_quote: 上上下下还疯狂讲设定
+  - dimension: character
+    severity: negative
+    content: 用“叫妈妈”梗拉关系，情节设计极其尴尬小白
+    raw_quote: 快说谢谢妈妈，真乖……尴尬不尴尬嘛
+  - dimension: simplicity
+    severity: negative
+    content: 整体像19年的过时写法，毫无新意
+    raw_quote: 这是番茄19年刚开战的时候很流行的写法

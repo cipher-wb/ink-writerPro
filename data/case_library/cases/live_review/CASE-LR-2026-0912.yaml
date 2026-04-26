@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0912
+title: 奇怪技能杀穿副本 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 副本流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给你给到20分 | 技能谜语人不写清楚，整体质量一般，部分描写过不了审导致硬伤。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 技能谜语人不写清楚，整体质量一般，部分描写过不了审导致硬伤。 | 不写清楚奇怪技能具体是什么，变成谜语人;出现疑似过不了审的黄油描写
+  observable:
+  - 'golden_finger维度: 不写清楚奇怪技能具体是什么，变成谜语人'
+  - 'taboo维度: 出现疑似过不了审的黄油描写'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 180
+  - 210
+  score: 20
+  score_raw: 只能给你给到20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 奇怪技能杀穿副本
+  genre_guess:
+  - 都市
+  - 灵异
+  - 副本流
+  overall_comment: 技能谜语人不写清楚，整体质量一般，部分描写过不了审导致硬伤。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 不写清楚奇怪技能具体是什么，变成谜语人
+    raw_quote: 你这个奇怪技能到底是什么技能 你不写 这就是个谜语人
+  - dimension: taboo
+    severity: negative
+    content: 出现疑似过不了审的黄油描写
+    raw_quote: 大哥这一段话 这段话审核可能会出来的额 不断的抚摸收集玩家的提议
+  - dimension: pacing
+    severity: positive
+    content: 节奏控制还不错
+    raw_quote: 节奏倒还好吧

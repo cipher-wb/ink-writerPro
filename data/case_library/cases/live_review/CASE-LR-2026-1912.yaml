@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1912
+title: 穿书自嗨文 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 穿书
+  - 自嗨
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分吧 | 文风像散文，缺乏网文代入感，内容自嗨，没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文风像散文，缺乏网文代入感，内容自嗨，没人看。 | 开头像散文，没有代入感，读者会立刻跑光。;题材自嗨，写法混乱，不知如何分类。
+  observable:
+  - 'opening维度: 开头像散文，没有代入感，读者会立刻跑光。'
+  - 'misc维度: 题材自嗨，写法混乱，不知如何分类。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 177
+  - 215
+  score: 16
+  score_raw: 16分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿书自嗨文
+  genre_guess:
+  - 穿书
+  - 自嗨
+  overall_comment: 文风像散文，缺乏网文代入感，内容自嗨，没人看。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头像散文，没有代入感，读者会立刻跑光。
+    raw_quote: 这怎么跟散文似的...读者全跑了...不是网文
+  - dimension: misc
+    severity: negative
+    content: 题材自嗨，写法混乱，不知如何分类。
+    raw_quote: 就不知道干嘛就是自己自己题材在那玩梗...完全就是自嗨呀

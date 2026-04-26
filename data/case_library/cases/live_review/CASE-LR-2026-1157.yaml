@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1157
+title: 骑着火龙穿过地球 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 科幻
+  - 都市
+  - 小白文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得这个思路题材真的16分 | 故事极度低幼，类似小虎还乡/快乐星球，通篇都是小学生和小姑娘，没有成年人配角，不符合起点商业网站调性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事极度低幼，类似小虎还乡/快乐星球，通篇都是小学生和小姑娘，没有成年人配角，不符合起点商业网站调性。 | 配角全是小学生和小姑娘，人物过于低幼;情节过于小白，像日记和动画片，不适合起点;反派台词像动画片，缺乏真实感
+  observable:
+  - 'character维度: 配角全是小学生和小姑娘，人物过于低幼'
+  - 'simplicity维度: 情节过于小白，像日记和动画片，不适合起点'
+  - 'misc维度: 反派台词像动画片，缺乏真实感'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 615
+  - 740
+  score: 16
+  score_raw: 我觉得这个思路题材真的16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 骑着火龙穿过地球
+  genre_guess:
+  - 科幻
+  - 都市
+  - 小白文
+  overall_comment: 故事极度低幼，类似小虎还乡/快乐星球，通篇都是小学生和小姑娘，没有成年人配角，不符合起点商业网站调性。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 配角全是小学生和小姑娘，人物过于低幼
+    raw_quote: 你里面的配角 不是小学生就是小姑娘 就连一个成年人都没有 那你不是快乐小神仙吗
+  - dimension: simplicity
+    severity: negative
+    content: 情节过于小白，像日记和动画片，不适合起点
+    raw_quote: 但太小白了 起点是商业网站 我们调性不符 可惜了可惜了
+  - dimension: misc
+    severity: negative
+    content: 反派台词像动画片，缺乏真实感
+    raw_quote: 我跟你说 我长这么大 见过这么说的 只有灰太郎 对吧 就小乖乖 你不要反抗了 乖乖让我吃了吧 我还会回来的 只有动画片里面会这么说呀

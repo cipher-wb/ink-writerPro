@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0030
+title: 超脱破碎时代 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 奇幻
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 15分吧 | 看不懂设定，完全自嗨，15分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 看不懂设定，完全自嗨，15分。 | 通篇设定，无代入感
+  observable:
+  - 'simplicity维度: 通篇设定，无代入感'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 500
+  - 520
+  score: 15
+  score_raw: 15分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 超脱破碎时代
+  genre_guess:
+  - 奇幻
+  - 西幻
+  overall_comment: 看不懂设定，完全自嗨，15分。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 通篇设定，无代入感
+    raw_quote: 就一点意一点意义都没东西

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0329
+title: 大乘期无敌躺平 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 仙侠
+  - 无敌流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 很平淡 | 典型的无敌文但缺乏驱动力，节奏平淡如流水账，完全没有危机感，无敌文的爽点没立起来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 典型的无敌文但缺乏驱动力，节奏平淡如流水账，完全没有危机感，无敌文的爽点没立起来。 | 开局毫无事件和冲突，节奏极度的平淡，读者几秒就跑。;剧情拖沓，强行装逼，危机感甚至不如新手村怪物。;无敌流主角缺乏人格魅力和强驱动力，行事全靠无敌二字。
+  observable:
+  - 'opening维度: 开局毫无事件和冲突，节奏极度的平淡，读者几秒就跑。'
+  - 'pacing维度: 剧情拖沓，强行装逼，危机感甚至不如新手村怪物。'
+  - 'character维度: 无敌流主角缺乏人格魅力和强驱动力，行事全靠无敌二字。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 2155
+  - 2260
+  score: null
+  score_raw: 很平淡
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 大乘期无敌躺平
+  genre_guess:
+  - 仙侠
+  - 无敌流
+  overall_comment: 典型的无敌文但缺乏驱动力，节奏平淡如流水账，完全没有危机感，无敌文的爽点没立起来。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局毫无事件和冲突，节奏极度的平淡，读者几秒就跑。
+    raw_quote: 今日无事好...真平淡啊...作者描写太多，读者全跑光
+  - dimension: pacing
+    severity: negative
+    content: 剧情拖沓，强行装逼，危机感甚至不如新手村怪物。
+    raw_quote: 没啥事...没危机感...不要写这种无敌文了，你们的无敌文写的让我浑身就是尴尬的头皮发麻
+  - dimension: character
+    severity: negative
+    content: 无敌流主角缺乏人格魅力和强驱动力，行事全靠无敌二字。
+    raw_quote: 莫名其妙的太尴尬了...比例倒是还好吧，但是不是慢，是没驱动力

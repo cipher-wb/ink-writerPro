@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-2157
+title: 骑砍二同人：当厨子用弹道mod爆头 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 同人
+  - 游戏异界
+  - 骑砍
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给大哥28分吧 | 骑砍二同人受众极窄，写原创领主文加系统反而可能有几百追。题材太小众，几乎无指点价值。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 骑砍二同人受众极窄，写原创领主文加系统反而可能有几百追。题材太小众，几乎无指点价值。 | 骑砍同人受众太小众，不要写同人，应用其元素写原创领主文;人设出戏，喜欢乱玩梗
+  observable:
+  - 'genre维度: 骑砍同人受众太小众，不要写同人，应用其元素写原创领主文'
+  - 'character维度: 人设出戏，喜欢乱玩梗'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 1563
+  - 1694
+  score: 28
+  score_raw: 就给大哥28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 骑砍二同人：当厨子用弹道mod爆头
+  genre_guess:
+  - 同人
+  - 游戏异界
+  - 骑砍
+  overall_comment: 骑砍二同人受众极窄，写原创领主文加系统反而可能有几百追。题材太小众，几乎无指点价值。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 骑砍同人受众太小众，不要写同人，应用其元素写原创领主文
+    raw_quote: 不要写骑砍on的同人...同仁反而会限制你的发挥，其实你吸不到他的流量
+  - dimension: character
+    severity: negative
+    content: 人设出戏，喜欢乱玩梗
+    raw_quote: 哎呦这人设又出戏了...马塞昂往嘴里塞了药草...你知道的，他不
+  - dimension: simplicity
+    severity: neutral
+    content: 比例还好，但信息茧房让作者误以为IP受众大
+    raw_quote: 比例倒还好...但是完全就是这太小众了...大哥控住信息减防了

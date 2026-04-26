@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1599
+title: 封神杨戬天眼 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 仙侠
+  - 封神
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分吧 | 比例节奏在线，但封神题材近期冷门，阴谋论套路太俗。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例节奏在线，但封神题材近期冷门，阴谋论套路太俗。 | 封神流热度极低，近期三江不见封神书;开局即黑佛教阴谋论，缺乏新意
+  observable:
+  - 'genre维度: 封神流热度极低，近期三江不见封神书'
+  - 'opening维度: 开局即黑佛教阴谋论，缺乏新意'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 606
+  - 640
+  score: 42
+  score_raw: 42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 封神杨戬天眼
+  genre_guess:
+  - 仙侠
+  - 封神
+  - 穿越
+  overall_comment: 比例节奏在线，但封神题材近期冷门，阴谋论套路太俗。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 封神流热度极低，近期三江不见封神书
+    raw_quote: 最近封神热度好低啊 … 三江也找不到了 … 不咋样
+  - dimension: opening
+    severity: negative
+    content: 开局即黑佛教阴谋论，缺乏新意
+    raw_quote: 就是这点阴谋论 … 说白了不就是苦大仇深吗 … 那有什么意思嘛

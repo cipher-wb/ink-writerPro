@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0695
+title: 民国妖魔斩杀熟练度 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 民国
+  - 国术
+  - 永冲
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分嘛 | 八股写法但重点偏题，忽略媳妇拉仇恨，抓鸡杀狗无趣。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股写法但重点偏题，忽略媳妇拉仇恨，抓鸡杀狗无趣。 | 真正的卖点是俏媳妇，但作者去写兄弟伏击野狗;没有写出媳妇形象拉期待;民国永冲题材过时，当前斩断线
+  observable:
+  - 'highpoint维度: 真正的卖点是俏媳妇，但作者去写兄弟伏击野狗'
+  - 'character维度: 没有写出媳妇形象拉期待'
+  - 'genre维度: 民国永冲题材过时，当前斩断线'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 1910
+  - 2015
+  score: 45
+  score_raw: 45分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国妖魔斩杀熟练度
+  genre_guess:
+  - 民国
+  - 国术
+  - 永冲
+  overall_comment: 八股写法但重点偏题，忽略媳妇拉仇恨，抓鸡杀狗无趣。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 真正的卖点是俏媳妇，但作者去写兄弟伏击野狗
+    raw_quote: 谁他妈关心抓鸡摸狗
+  - dimension: character
+    severity: negative
+    content: 没有写出媳妇形象拉期待
+    raw_quote: 写点形象呀
+  - dimension: genre
+    severity: negative
+    content: 民国永冲题材过时，当前斩断线
+    raw_quote: 民国永冲有点过时了

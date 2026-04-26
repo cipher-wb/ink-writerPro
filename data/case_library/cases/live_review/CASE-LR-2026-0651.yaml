@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0651
+title: 穿越成孙悟空觉醒系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 西游
+  - 系统
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 但没什么建议的必要，防御就是方向错 | 穿孙悟空的题材十年来没人起来过，豆包的建议没市场，再写也是零追读，除非改编成黑神话那种癫狂背景才有一线生机。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿孙悟空的题材十年来没人起来过，豆包的建议没市场，再写也是零追读，除非改编成黑神话那种癫狂背景才有一线生机。 | 穿孙悟空题材过时，十几年没人成功过;倒反天罡系统老土，没事件没看点
+  observable:
+  - 'genre维度: 穿孙悟空题材过时，十几年没人成功过'
+  - 'golden_finger维度: 倒反天罡系统老土，没事件没看点'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 901
+  - 980
+  score: null
+  score_raw: 但没什么建议的必要，防御就是方向错
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越成孙悟空觉醒系统
+  genre_guess:
+  - 西游
+  - 系统
+  - 同人
+  overall_comment: 穿孙悟空的题材十年来没人起来过，豆包的建议没市场，再写也是零追读，除非改编成黑神话那种癫狂背景才有一线生机。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 穿孙悟空题材过时，十几年没人成功过
+    raw_quote: 现在的穿孙悟空...没有起来过呀
+  - dimension: golden_finger
+    severity: negative
+    content: 倒反天罡系统老土，没事件没看点
+    raw_quote: 倒反天罡系统...这名字这么虚嘛...没有事件
+  - dimension: misc
+    severity: neutral
+    content: 唯一可能性是用黑神话极端癫狂背景包装
+    raw_quote: 就是黑神话那种...整个天庭什么的全是极端的...读者可能还会看

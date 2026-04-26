@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0084
+title: 手冲一直都在 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 圣女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分 | 剧情平淡如水，没有情绪波动，遣词造句太白太现代化，人物行为逻辑缺失。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情平淡如水，没有情绪波动，遣词造句太白太现代化，人物行为逻辑缺失。 | 剧情平淡，无情绪波动;对话和描写太过现代化、太白，缺乏古风;人物行为逻辑混乱，女主不生气也无所谓
+  observable:
+  - 'pacing维度: 剧情平淡，无情绪波动'
+  - 'ops维度: 对话和描写太过现代化、太白，缺乏古风'
+  - 'character维度: 人物行为逻辑混乱，女主不生气也无所谓'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1356
+  - 1420
+  score: 20
+  score_raw: 20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 手冲一直都在
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 圣女
+  overall_comment: 剧情平淡如水，没有情绪波动，遣词造句太白太现代化，人物行为逻辑缺失。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 剧情平淡，无情绪波动
+    raw_quote: 这么平淡感觉...没情绪了可震惊...淡淡的
+  - dimension: ops
+    severity: negative
+    content: 对话和描写太过现代化、太白，缺乏古风
+    raw_quote: 简词套句也很现代化对吧...这是修仙界的话吗
+  - dimension: character
+    severity: negative
+    content: 人物行为逻辑混乱，女主不生气也无所谓
+    raw_quote: 少女也不生气关键少女也无所谓

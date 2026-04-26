@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0841
+title: 时空镖局 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 科幻
+  - 时间轮回
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不是20分了哟 | 科幻设定有天才俱乐部影子，比例进步快但题材高难，建议转末日加设定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 科幻设定有天才俱乐部影子，比例进步快但题材高难，建议转末日加设定。 | 科幻题材驾驭不住，与天才俱乐部相似易举报
+  observable:
+  - 'genre维度: 科幻题材驾驭不住，与天才俱乐部相似易举报'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 281
+  - 345
+  score: null
+  score_raw: 不是20分了哟
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 时空镖局
+  genre_guess:
+  - 科幻
+  - 时间轮回
+  overall_comment: 科幻设定有天才俱乐部影子，比例进步快但题材高难，建议转末日加设定。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻题材驾驭不住，与天才俱乐部相似易举报
+    raw_quote: 天才俱乐部来了……这个题材很难写，而且也有点像
+  - dimension: pacing
+    severity: positive
+    content: 节奏快，遣词造句干练
+    raw_quote: 节奏倒是快，思路没啥问题

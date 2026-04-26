@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1364
+title: 穿成鸭子修仙 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十五分吧 | 剧情薄弱，日常描写无意义，缺少冲突，雪白元素也立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情薄弱，日常描写无意义，缺少冲突，雪白元素也立不住。 | 内容像日记，日常搭车、回家等情节毫无看点;穿越后无波澜，冲突极其淡薄，像自言自语的练习
+  observable:
+  - 'misc维度: 内容像日记，日常搭车、回家等情节毫无看点'
+  - 'misc维度: 穿越后无波澜，冲突极其淡薄，像自言自语的练习'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1301
+  - 1360
+  score: 25
+  score_raw: 二十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿成鸭子修仙
+  genre_guess:
+  - 都市
+  - 修仙
+  - 穿越
+  - 系统
+  overall_comment: 剧情薄弱，日常描写无意义，缺少冲突，雪白元素也立不住。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 内容像日记，日常搭车、回家等情节毫无看点
+    raw_quote: 写这啥意思...记录了吗这日记
+  - dimension: misc
+    severity: negative
+    content: 穿越后无波澜，冲突极其淡薄，像自言自语的练习
+    raw_quote: 毫无波澜面无表情真能算算个天才

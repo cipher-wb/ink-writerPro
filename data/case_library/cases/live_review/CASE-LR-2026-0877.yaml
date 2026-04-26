@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0877
+title: 私家侦探西幻 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 西幻
+  - 侦探
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给你22分吧 | 比例还行但铺垫过长，妹妹出场太晚，前面全是无效水文，不懂网文节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例还行但铺垫过长，妹妹出场太晚，前面全是无效水文，不懂网文节奏。 | 开头单人生存研究太久，没有立即建立人物关系;第三章才引入关键人物，读者早已跑光
+  observable:
+  - 'opening维度: 开头单人生存研究太久，没有立即建立人物关系'
+  - 'pacing维度: 第三章才引入关键人物，读者早已跑光'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 661
+  - 710
+  score: 22
+  score_raw: 只能给你22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 私家侦探西幻
+  genre_guess:
+  - 西幻
+  - 侦探
+  - 悬疑
+  overall_comment: 比例还行但铺垫过长，妹妹出场太晚，前面全是无效水文，不懂网文节奏。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头单人生存研究太久，没有立即建立人物关系
+    raw_quote: 不要写一个人求生研究了 还在求生研究 都研究了5000字了 还妹妹呢 后面有在后面 你在后面为什么要铺垫
+  - dimension: pacing
+    severity: negative
+    content: 第三章才引入关键人物，读者早已跑光
+    raw_quote: 第三章出来 妹妹了呀 … 前面是没人看的 你的危机 其无头骑士在追杀你 没人看这个东西

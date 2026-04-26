@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1000
+title: 公子斩妖 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 仙侠
+  - 斩妖除魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分码，我觉得流畅，但确实内容还是需要就是套路化 | 文笔流畅但八股文，套路化严重，缺乏反转。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔流畅但八股文，套路化严重，缺乏反转。 | 剧情套路老套，缺乏反转，读者看腻;无功无过，八股文
+  observable:
+  - 'hook维度: 剧情套路老套，缺乏反转，读者看腻'
+  - 'highpoint维度: 无功无过，八股文'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 1647
+  - 1748
+  score: 40
+  score_raw: 40分码，我觉得流畅，但确实内容还是需要就是套路化
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 公子斩妖
+  genre_guess:
+  - 仙侠
+  - 斩妖除魔
+  overall_comment: 文笔流畅但八股文，套路化严重，缺乏反转。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 剧情套路老套，缺乏反转，读者看腻
+    raw_quote: 太俗套了……本质上没什么好看的，这种是妖的反杀的，读者都看腻了
+  - dimension: highpoint
+    severity: negative
+    content: 无功无过，八股文
+    raw_quote: 无功无过，不过大哥现在不是什么锦衣卫……就是八股嘛

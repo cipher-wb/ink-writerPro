@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0416
+title: 全职法师同人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 全职法师同人
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 比例没问题，真实感可以，但同人上限太低，建议直发看数据
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例没问题，真实感可以，但同人上限太低，建议直发看数据
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1099
+  - 1148
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 全职法师同人
+  genre_guess:
+  - 全职法师同人
+  - 奇幻
+  overall_comment: 比例没问题，真实感可以，但同人上限太低，建议直发看数据
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 全职法师同人有时效性，上限太低，可能够不上编辑业绩
+    raw_quote: 这种同人是有时效性的...现在全职法师感觉这几个月都没见过千株以上
+  - dimension: simplicity
+    severity: positive
+    content: 比例没问题，小对话有点实用，整体也流畅
+    raw_quote: 比例没啥问题...我感觉实力还行吧，我感觉还是一些小代入感和小对话，还是有点实用，整体也流畅

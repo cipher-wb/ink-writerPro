@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0348
+title: 空梦者：曹氏后人 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 都市
+  - 梦境
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分吧 | 清明梦无限流思路绝佳但笔力不足，三国曹操元素突兀，可塑性高。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 清明梦无限流思路绝佳但笔力不足，三国曹操元素突兀，可塑性高。 | 比例跟不上野心，曹操血脉设定崩坏主线
+  observable:
+  - 'pacing维度: 比例跟不上野心，曹操血脉设定崩坏主线'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 3060
+  - 3179
+  score: 59
+  score_raw: 59分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 空梦者：曹氏后人
+  genre_guess:
+  - 都市
+  - 梦境
+  - 悬疑
+  overall_comment: 清明梦无限流思路绝佳但笔力不足，三国曹操元素突兀，可塑性高。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 梦境论坛及控梦设定有新意，可发展副本流
+    raw_quote: 有点意思…像鬼设那种 能发展成副本流 然后操控梦境
+  - dimension: pacing
+    severity: negative
+    content: 比例跟不上野心，曹操血脉设定崩坏主线
+    raw_quote: 这里为什么要引入曹操…这个老东西你放了

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0096
+title: 三国重路人/我以时空回溯成就道祖 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 仙侠
+  - 科幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你18分 | 题材老套写法小白，人设像张无忌郭靖太憨厚无聊，找不到优点，需要练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套写法小白，人设像张无忌郭靖太憨厚无聊，找不到优点，需要练笔。 | 人设太小白太憨厚，像张无忌郭靖那种;遣词造句太白了，描述能力得练;故事老套，境界设定一点意思都没有
+  observable:
+  - 'character维度: 人设太小白太憨厚，像张无忌郭靖那种'
+  - 'simplicity维度: 遣词造句太白了，描述能力得练'
+  - 'genre维度: 故事老套，境界设定一点意思都没有'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 211
+  - 310
+  score: 18
+  score_raw: 就给你18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国重路人/我以时空回溯成就道祖
+  genre_guess:
+  - 仙侠
+  - 科幻
+  - 穿越
+  overall_comment: 题材老套写法小白，人设像张无忌郭靖太憨厚无聊，找不到优点，需要练笔。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 唯一的优点是节奏快
+    raw_quote: 唯一的优点就是节奏快吧
+  - dimension: character
+    severity: negative
+    content: 人设太小白太憨厚，像张无忌郭靖那种
+    raw_quote: 太小白了，太憨厚了，太无聊了，就就纯粹的商山村少年对吧，那种感觉
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句太白了，描述能力得练
+    raw_quote: 遣词造句太白了，描述能力也得练一下
+  - dimension: genre
+    severity: negative
+    content: 故事老套，境界设定一点意思都没有
+    raw_quote: 我觉得这个故事一点意思都没有

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0558
+title: 伏羲挂奇 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 仙侠
+  - 女强男弱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 女主形象崩塌，人设模糊，剧情像西游记，35分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 女主形象崩塌，人设模糊，剧情像西游记，35分 | 女主角人设没有立住，形象模糊;剧情即视感强，像西游记缺乏新意
+  observable:
+  - 'character维度: 女主角人设没有立住，形象模糊'
+  - 'hook维度: 剧情即视感强，像西游记缺乏新意'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 510
+  - 718
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 伏羲挂奇
+  genre_guess:
+  - 仙侠
+  - 女强男弱
+  overall_comment: 女主形象崩塌，人设模糊，剧情像西游记，35分
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主角人设没有立住，形象模糊
+    raw_quote: 女主没立住...根本就不知道他的形象
+  - dimension: hook
+    severity: negative
+    content: 剧情即视感强，像西游记缺乏新意
+    raw_quote: 这真是西游记的感觉啊

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1736
+title: 圣甲战士穿越 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 同仁
+  - 科幻
+  - 特摄
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得也就是个二十二分 | 偏同仁向，代入感差，缺乏主角视角，剧情杂乱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 偏同仁向，代入感差，缺乏主角视角，剧情杂乱。 | 开篇缺乏真实感和主角心理活动，读者难以代入。;金手指（抽奖系统）处理突兀，剧情单调。
+  observable:
+  - 'opening维度: 开篇缺乏真实感和主角心理活动，读者难以代入。'
+  - 'golden_finger维度: 金手指（抽奖系统）处理突兀，剧情单调。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 381
+  - 438
+  score: 22
+  score_raw: 我觉得也就是个二十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 圣甲战士穿越
+  genre_guess:
+  - 同仁
+  - 科幻
+  - 特摄
+  overall_comment: 偏同仁向，代入感差，缺乏主角视角，剧情杂乱。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏真实感和主角心理活动，读者难以代入。
+    raw_quote: 永远不要让自己的稿子变得小众...读着看不懂
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指（抽奖系统）处理突兀，剧情单调。
+    raw_quote: 感觉你这一上来 设定设定抽抽抽抽抽抽 系统系统

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0240
+title: 三星堆考古与都市 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 都市
+  - 考古
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 方婷稿子持续下滑，套路没新意，需要突破。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 方婷稿子持续下滑，套路没新意，需要突破。 | 题材一直掉分;整体无突破
+  observable:
+  - 'genre维度: 题材一直掉分'
+  - 'misc维度: 整体无突破'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 1085
+  - 1150
+  score: 28
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三星堆考古与都市
+  genre_guess:
+  - 都市
+  - 考古
+  - 异能
+  overall_comment: 方婷稿子持续下滑，套路没新意，需要突破。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材一直掉分
+    raw_quote: 一直掉 掉到28分了
+  - dimension: misc
+    severity: negative
+    content: 整体无突破
+    raw_quote: 没什么说的 公事公办吧

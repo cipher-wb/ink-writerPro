@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0700
+title: 美利坚黑道/芝加哥冷血 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 美利坚
+  - 黑道
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 今晚40分扎对了 | 节奏虽然快，但主线太弱太慢，过于依赖刻板印象和白开水剧情，缺乏核心看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏虽然快，但主线太弱太慢，过于依赖刻板印象和白开水剧情，缺乏核心看点。 | 开头节奏快但整体太慢，缺乏有效剧情推进;金手指与都市剧情不搭，显得普通无聊
+  observable:
+  - 'pacing维度: 开头节奏快但整体太慢，缺乏有效剧情推进'
+  - 'golden_finger维度: 金手指与都市剧情不搭，显得普通无聊'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 121
+  - 185
+  score: 40
+  score_raw: 今晚40分扎对了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚黑道/芝加哥冷血
+  genre_guess:
+  - 美利坚
+  - 黑道
+  - 都市
+  overall_comment: 节奏虽然快，但主线太弱太慢，过于依赖刻板印象和白开水剧情，缺乏核心看点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开头节奏快但整体太慢，缺乏有效剧情推进
+    raw_quote: 太慢了。太慢了。世界没什么好世界
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指与都市剧情不搭，显得普通无聊
+    raw_quote: 金手指一般般不知道要干嘛...金手纸跟都市不搭

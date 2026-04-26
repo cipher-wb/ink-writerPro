@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0404
+title: 人在阳间房东孟婆 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 地府
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分是吧 | 设定崩坏，逻辑站不住，没氛围，金手指立不住，当番茄乐子文都勉强
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定崩坏，逻辑站不住，没氛围，金手指立不住，当番茄乐子文都勉强 | 灵异题材不是垃圾，但设定崩了，抛设定不接地气;孟婆人设崩，印象中孟婆是老太婆，这里写成霸道美女房东;金手指和世界观都立不住
+  observable:
+  - 'genre维度: 灵异题材不是垃圾，但设定崩了，抛设定不接地气'
+  - 'character维度: 孟婆人设崩，印象中孟婆是老太婆，这里写成霸道美女房东'
+  - 'golden_finger维度: 金手指和世界观都立不住'
+  - 'misc维度: 整体浅尝辄止，啥都没有，题材太垃圾'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 155
+  - 230
+  score: 48
+  score_raw: 48分是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 人在阳间房东孟婆
+  genre_guess:
+  - 灵异
+  - 都市
+  - 地府
+  overall_comment: 设定崩坏，逻辑站不住，没氛围，金手指立不住，当番茄乐子文都勉强
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 灵异题材不是垃圾，但设定崩了，抛设定不接地气
+    raw_quote: 这大哥这个崩了呀...你这一上来等于说抛设定啊...设定这种东西不接地气，也没有逻辑性
+  - dimension: character
+    severity: negative
+    content: 孟婆人设崩，印象中孟婆是老太婆，这里写成霸道美女房东
+    raw_quote: 孟婆也爱美吗...人设也崩了呀...变成孟婆爱上你，霸道孟婆爱上你
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指和世界观都立不住
+    raw_quote: 世界观立不住，人设又立不住，然后现在金属界立不住，然后主线卖点也立不住
+  - dimension: misc
+    severity: negative
+    content: 整体浅尝辄止，啥都没有，题材太垃圾
+    raw_quote: 雪白也是点到为止就几乎啥都没有，就浅尝辄止...这个就垃圾题材，早点推翻

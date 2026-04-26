@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1831
+title: 天庭邮政日常 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 仙侠
+  - 天庭
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多28分满 | 基本功扎实，但题材完全错误，只能发外部（蓝色软件），起点不适合
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 基本功扎实，但题材完全错误，只能发外部（蓝色软件），起点不适合 | 魔改天庭职场在起点没市场，审核也受限;开篇平淡客观描述，需要小剧场
+  observable:
+  - 'genre维度: 魔改天庭职场在起点没市场，审核也受限'
+  - 'pacing维度: 开篇平淡客观描述，需要小剧场'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 951
+  - 1040
+  score: 28
+  score_raw: 差不多28分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天庭邮政日常
+  genre_guess:
+  - 仙侠
+  - 天庭
+  - 脑洞
+  overall_comment: 基本功扎实，但题材完全错误，只能发外部（蓝色软件），起点不适合
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 魔改天庭职场在起点没市场，审核也受限
+    raw_quote: 你这个西游完全不是仙侠味道你是都市化把它...起点读者不爱看这种都市魔改类的
+  - dimension: pacing
+    severity: negative
+    content: 开篇平淡客观描述，需要小剧场
+    raw_quote: 不能一本正经的讲你要立刻玩梗一个小剧场

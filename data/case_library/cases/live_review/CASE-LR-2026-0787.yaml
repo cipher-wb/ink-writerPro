@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0787
+title: 江小白 (fail / 37分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 软饭
+  - 总裁
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三尺七八分的样子 | 进步明显，文笔和代入感进步大，但卖点驱动力有点毒，能到37分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 进步明显，文笔和代入感进步大，但卖点驱动力有点毒，能到37分。 | 学姐吐身上没魅力;驱动力有点毒
+  observable:
+  - 'opening维度: 学姐吐身上没魅力'
+  - 'hook维度: 驱动力有点毒'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 1001
+  - 1050
+  score: 37
+  score_raw: 三尺七八分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 江小白
+  genre_guess:
+  - 重生
+  - 都市
+  - 软饭
+  - 总裁
+  overall_comment: 进步明显，文笔和代入感进步大，但卖点驱动力有点毒，能到37分。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 女主角人设还行
+    raw_quote: 不就是平胸不是挺好的嘛 周冬雨也平胸啊 无所谓的
+  - dimension: opening
+    severity: negative
+    content: 学姐吐身上没魅力
+    raw_quote: 这感觉主角没什么魅力 主要是在人家身上涂有啥意思
+  - dimension: hook
+    severity: negative
+    content: 驱动力有点毒
+    raw_quote: 这个驱动力是不是有点毒啊 我觉得就是现在就是现实生活 你跟他不能在一起 所以说你重庆要去追他

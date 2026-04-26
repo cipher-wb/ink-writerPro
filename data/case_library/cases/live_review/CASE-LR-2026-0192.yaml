@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0192
+title: 战杀圣母 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 玄幻
+  - 传统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大哥给到16分 | 文笔太白，对话不自然，缺乏玄幻味道，驱动力老套，情节平淡，需要全面推翻重练。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔太白，对话不自然，缺乏玄幻味道，驱动力老套，情节平淡，需要全面推翻重练。 | 对话缺乏张力和玄幻氛围，叙述过于直白平淡;开篇驱动力老套，情节设置简单，没能吸引读者;文笔基础薄弱，未达到网文基本要求
+  observable:
+  - 'pacing维度: 对话缺乏张力和玄幻氛围，叙述过于直白平淡'
+  - 'hook维度: 开篇驱动力老套，情节设置简单，没能吸引读者'
+  - 'misc维度: 文笔基础薄弱，未达到网文基本要求'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 36
+  - 79
+  score: 16
+  score_raw: 只能给大哥给到16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 战杀圣母
+  genre_guess:
+  - 玄幻
+  - 传统
+  overall_comment: 文笔太白，对话不自然，缺乏玄幻味道，驱动力老套，情节平淡，需要全面推翻重练。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 对话缺乏张力和玄幻氛围，叙述过于直白平淡
+    raw_quote: 这对话好白啊 这对话不像是修青雪花
+  - dimension: hook
+    severity: negative
+    content: 开篇驱动力老套，情节设置简单，没能吸引读者
+    raw_quote: 你第一张就这点东西 哎 就是留下百路残嘛 对吧
+  - dimension: misc
+    severity: negative
+    content: 文笔基础薄弱，未达到网文基本要求
+    raw_quote: 就给大哥给到16分 就是得全面推翻

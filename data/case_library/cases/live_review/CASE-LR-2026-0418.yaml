@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0418
+title: 我家娘子会吃人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 仙侠
+  - 娘子
+  - 剧情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 思路能写，节奏快，但金手指和世界观有点离谱，驾驭不住热题材
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路能写，节奏快，但金手指和世界观有点离谱，驾驭不住热题材 | 金手指有点莫名其妙，意识空间出戏;娘子没出来，小翠前面还行，但整体驾驭不住热题材
+  observable:
+  - 'golden_finger维度: 金手指有点莫名其妙，意识空间出戏'
+  - 'character维度: 娘子没出来，小翠前面还行，但整体驾驭不住热题材'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1231
+  - 1330
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 我家娘子会吃人
+  genre_guess:
+  - 仙侠
+  - 娘子
+  - 剧情
+  overall_comment: 思路能写，节奏快，但金手指和世界观有点离谱，驾驭不住热题材
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏比较快
+    raw_quote: 节奏比较快
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指有点莫名其妙，意识空间出戏
+    raw_quote: 金手指有点莫名其妙，我觉得意识空成这个有点莫名其妙，这个很出戏
+  - dimension: character
+    severity: negative
+    content: 娘子没出来，小翠前面还行，但整体驾驭不住热题材
+    raw_quote: 早点写娘子...暂时肯定驾驭不住...一拳之下以后写吧

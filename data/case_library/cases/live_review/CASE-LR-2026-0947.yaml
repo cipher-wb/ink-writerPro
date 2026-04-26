@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0947
+title: 神啊(老龙求雨) (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 仙侠
+  - 求雨
+  - 狐狸大仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就45分吧 | 慢热仙侠，系统蓝精灵混杂，读者看不懂，心态有问题
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 慢热仙侠，系统蓝精灵混杂，读者看不懂，心态有问题 | 节奏极慢，开头铺垫过多，卖点不清;作者心态急躁又盲目自信，劝沉淀
+  observable:
+  - 'pacing维度: 节奏极慢，开头铺垫过多，卖点不清'
+  - 'ops维度: 作者心态急躁又盲目自信，劝沉淀'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 1856
+  - 1977
+  score: 45
+  score_raw: 差不多也就45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 神啊(老龙求雨)
+  genre_guess:
+  - 仙侠
+  - 求雨
+  - 狐狸大仙
+  overall_comment: 慢热仙侠，系统蓝精灵混杂，读者看不懂，心态有问题
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏极慢，开头铺垫过多，卖点不清
+    raw_quote: 这慢疯掉了这搞得根本不如你之前的 这贼慢这就是个虫仙侠
+  - dimension: ops
+    severity: negative
+    content: 作者心态急躁又盲目自信，劝沉淀
+    raw_quote: 心态不对 现在沉淀沉淀嘛 真的不要盲目自信了

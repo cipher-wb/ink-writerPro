@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0285
+title: 厄运轮回异能者 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 末世
+  - 异能
+  - 设定流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分最多吧 | 老卖设定原创世界观，一阶二阶打怪兽没意义
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老卖设定原创世界观，一阶二阶打怪兽没意义 | 异能打怪兽题材没人看，老抛设定
+  observable:
+  - 'genre维度: 异能打怪兽题材没人看，老抛设定'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1756
+  - 1840
+  score: 20
+  score_raw: 20分最多吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 厄运轮回异能者
+  genre_guess:
+  - 末世
+  - 异能
+  - 设定流
+  overall_comment: 老卖设定原创世界观，一阶二阶打怪兽没意义
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 异能打怪兽题材没人看，老抛设定
+    raw_quote: 这题材还要看吗，这不是正常人都知道是个垃圾题材吗

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1448
+title: 死神来了：我能看到死期 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 异能
+  - 末日
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 独角戏过多，应置于废土部落，利用死期设定制造交互和拯救
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 独角戏过多，应置于废土部落，利用死期设定制造交互和拯救 | 独角戏太多，需要人物互动
+  observable:
+  - 'opening维度: 独角戏太多，需要人物互动'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1491
+  - 1580
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 死神来了：我能看到死期
+  genre_guess:
+  - 异能
+  - 末日
+  - 悬疑
+  overall_comment: 独角戏过多，应置于废土部落，利用死期设定制造交互和拯救
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 独角戏太多，需要人物互动
+    raw_quote: 独角戏是不要一直做的 你要跟人物去互动
+  - dimension: golden_finger
+    severity: neutral
+    content: 看到死期的设定有潜力，需要废土部落背景
+    raw_quote: 这种就需要你在一个废土 一个部落 … 那样去切入

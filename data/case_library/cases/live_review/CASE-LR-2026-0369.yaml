@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0369
+title: 我的江湖之旅绝不杀人 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 武侠
+  - 女频
+  - 章回体
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能22分吧 | 遣词造句有古龙金庸味道，但代入感差，女频向且时代错位，22分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句有古龙金庸味道，但代入感差，女频向且时代错位，22分。 | 主角行动缺乏目的，代入感弱;风格过于复古女频，网文市场小
+  observable:
+  - 'character维度: 主角行动缺乏目的，代入感弱'
+  - 'genre维度: 风格过于复古女频，网文市场小'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 721
+  - 800
+  score: 22
+  score_raw: 只能22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的江湖之旅绝不杀人
+  genre_guess:
+  - 武侠
+  - 女频
+  - 章回体
+  overall_comment: 遣词造句有古龙金庸味道，但代入感差，女频向且时代错位，22分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角行动缺乏目的，代入感弱
+    raw_quote: 主线不强 没穿越 代入感
+  - dimension: genre
+    severity: negative
+    content: 风格过于复古女频，网文市场小
+    raw_quote: 写法太女频了 就是日常那种

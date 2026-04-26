@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1431
+title: 幽冥往生录/被女神强制穿越 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 都市
+  - 反套路
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就20分吧 | 小白无厘头，逻辑立不住，穿越后事件无聊，20分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小白无厘头，逻辑立不住，穿越后事件无聊，20分。 | 主角装学渣3年不合理;女神对话太小白
+  observable:
+  - 'character维度: 主角装学渣3年不合理'
+  - 'opening维度: 女神对话太小白'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 1141
+  - 1180
+  score: 20
+  score_raw: 就20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 幽冥往生录/被女神强制穿越
+  genre_guess:
+  - 都市
+  - 反套路
+  - 系统
+  overall_comment: 小白无厘头，逻辑立不住，穿越后事件无聊，20分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角装学渣3年不合理
+    raw_quote: 我装学渣装了3年 就是为了等高考那天一鸣惊人 不是你们这个符合逻辑吗
+  - dimension: opening
+    severity: negative
+    content: 女神对话太小白
+    raw_quote: 这个太老套了 兄弟这太老套了 就是少年女子说这个话是15年前的写法

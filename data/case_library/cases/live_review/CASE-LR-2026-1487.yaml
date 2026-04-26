@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1487
+title: 三少康爷娶天街妖兽 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 诅咒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 事件不接地气，心理活动奇怪，设定出戏，缺少拉扯细节
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件不接地气，心理活动奇怪，设定出戏，缺少拉扯细节 | 天街妖兽事件没意思，不如接地气的娘子拉扯;主角心理活动和情绪安排不对
+  observable:
+  - 'highpoint维度: 天街妖兽事件没意思，不如接地气的娘子拉扯'
+  - 'character维度: 主角心理活动和情绪安排不对'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 253
+  - 310
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三少康爷娶天街妖兽
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 诅咒
+  overall_comment: 事件不接地气，心理活动奇怪，设定出戏，缺少拉扯细节
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 天街妖兽事件没意思，不如接地气的娘子拉扯
+    raw_quote: 你这个什么天街妖兽这玩意 一点感觉都没有
+  - dimension: character
+    severity: negative
+    content: 主角心理活动和情绪安排不对
+    raw_quote: 大哥的心理活动也挺奇怪的

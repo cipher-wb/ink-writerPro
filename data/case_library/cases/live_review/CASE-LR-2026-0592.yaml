@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0592
+title: 穿越修仙界穿成了一股骷髅 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 仙侠
+  - 骷髅
+  - 合欢宗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30多吧，我觉得没进步 | 改为线性叙事后有代入感，但人物缺乏魅力和好故事，整体分数仍不及格。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 改为线性叙事后有代入感，但人物缺乏魅力和好故事，整体分数仍不及格。 | 人物没意思，女性角色身份不够吸引人;内容缺乏感觉，没有好故事
+  observable:
+  - 'character维度: 人物没意思，女性角色身份不够吸引人'
+  - 'misc维度: 内容缺乏感觉，没有好故事'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 527
+  - 650
+  score: null
+  score_raw: 30多吧，我觉得没进步
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越修仙界穿成了一股骷髅
+  genre_guess:
+  - 仙侠
+  - 骷髅
+  - 合欢宗
+  overall_comment: 改为线性叙事后有代入感，但人物缺乏魅力和好故事，整体分数仍不及格。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物没意思，女性角色身份不够吸引人
+    raw_quote: 这些人物也没意思啊...女的身份真不行
+  - dimension: misc
+    severity: negative
+    content: 内容缺乏感觉，没有好故事
+    raw_quote: 我觉得内容区没感觉...本质上没什么好故事

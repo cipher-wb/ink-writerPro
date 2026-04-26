@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0533
+title: 使魔契约 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 轻小说
+  - 奇幻
+  - 西方魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给你20分 | 题材垃圾，切入老套俗套，人设对白一塌糊涂，毫无卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材垃圾，切入老套俗套，人设对白一塌糊涂，毫无卖点。 | 题材设定类没人看，完全是自嗨;人设小白，对白幼稚，老少皆宜崩坏
+  observable:
+  - 'genre维度: 题材设定类没人看，完全是自嗨'
+  - 'character维度: 人设小白，对白幼稚，老少皆宜崩坏'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 611
+  - 730
+  score: 20
+  score_raw: 只能给你20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 使魔契约
+  genre_guess:
+  - 轻小说
+  - 奇幻
+  - 西方魔法
+  overall_comment: 题材垃圾，切入老套俗套，人设对白一塌糊涂，毫无卖点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材设定类没人看，完全是自嗨
+    raw_quote: 一 题材垃圾没人看啊
+  - dimension: character
+    severity: negative
+    content: 人设小白，对白幼稚，老少皆宜崩坏
+    raw_quote: 太小白了 人设对白一塌糊涂

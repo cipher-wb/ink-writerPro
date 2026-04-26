@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0381
+title: 都市系统搞钱 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 暧昧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 是吧，四十二分有的 | 都市系统文，节奏快比例可以，但金手指与当前热文撞车，只能发番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市系统文，节奏快比例可以，但金手指与当前热文撞车，只能发番茄。 | 精神小妹遇大哥的卖点与已有大火书高度雷同，短期只能吃一本。
+  observable:
+  - 'golden_finger维度: 精神小妹遇大哥的卖点与已有大火书高度雷同，短期只能吃一本。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 150
+  - 190
+  score: 42
+  score_raw: 是吧，四十二分有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 都市系统搞钱
+  genre_guess:
+  - 都市
+  - 系统
+  - 暧昧
+  overall_comment: 都市系统文，节奏快比例可以，但金手指与当前热文撞车，只能发番茄。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏很快且比例没问题，吸引读者。
+    raw_quote: 节奏很快，比例没啥问题。
+  - dimension: golden_finger
+    severity: negative
+    content: 精神小妹遇大哥的卖点与已有大火书高度雷同，短期只能吃一本。
+    raw_quote: 卖点太像了，金手指跟精神小妹来一段。

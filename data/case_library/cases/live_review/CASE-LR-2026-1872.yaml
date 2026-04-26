@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1872
+title: 剑与魔法穿越奇幻文（学远瞳风格） (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 奇幻
+  - 穿越
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 想学远瞳但实力完全不够，节奏拖沓角色立不住，比例和基本功都不过关，尊重爱好但浪费时间。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 想学远瞳但实力完全不够，节奏拖沓角色立不住，比例和基本功都不过关，尊重爱好但浪费时间。 | 角色立不住，基本遣词造句不过关;学远瞳风格驾驭不住，比例不够，题材难写
+  observable:
+  - 'character维度: 角色立不住，基本遣词造句不过关'
+  - 'genre维度: 学远瞳风格驾驭不住，比例不够，题材难写'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1463
+  - 1513
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 剑与魔法穿越奇幻文（学远瞳风格）
+  genre_guess:
+  - 奇幻
+  - 穿越
+  - 种田
+  overall_comment: 想学远瞳但实力完全不够，节奏拖沓角色立不住，比例和基本功都不过关，尊重爱好但浪费时间。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 角色立不住，基本遣词造句不过关
+    raw_quote: 角色立不住 这个角色很垃圾 最基本的显示造句都不过关
+  - dimension: genre
+    severity: negative
+    content: 学远瞳风格驾驭不住，比例不够，题材难写
+    raw_quote: 这个实力写悦远瞳 就好似镜中花 水中月是吧

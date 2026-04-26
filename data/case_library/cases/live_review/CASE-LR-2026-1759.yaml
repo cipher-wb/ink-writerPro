@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1759
+title: 三维世界战记 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 武侠网游
+  - 穿越
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分左右吧 | 武侠网游题材已死，原创配件没立住，驱动力无聊，虽然文笔比例还行但注定没市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 武侠网游题材已死，原创配件没立住，驱动力无聊，虽然文笔比例还行但注定没市场。 | 武侠网游现在几乎没人看，题材严重过时;原创配角缺乏魅力，代入感差;高维法宝气灵驱动力牵强，像系统聊天，没剧情
+  observable:
+  - 'genre维度: 武侠网游现在几乎没人看，题材严重过时'
+  - 'character维度: 原创配角缺乏魅力，代入感差'
+  - 'opening维度: 高维法宝气灵驱动力牵强，像系统聊天，没剧情'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 123
+  - 224
+  score: 33
+  score_raw: 33分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三维世界战记
+  genre_guess:
+  - 武侠网游
+  - 穿越
+  - 科幻
+  overall_comment: 武侠网游题材已死，原创配件没立住，驱动力无聊，虽然文笔比例还行但注定没市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 武侠网游现在几乎没人看，题材严重过时
+    raw_quote: 这种武侠列的其实不吸引的没人看，因为武侠现在基本上死了
+  - dimension: character
+    severity: negative
+    content: 原创配角缺乏魅力，代入感差
+    raw_quote: 你这个世界的原创配角你立志没有，没有，那我就对你代入感很差
+  - dimension: opening
+    severity: negative
+    content: 高维法宝气灵驱动力牵强，像系统聊天，没剧情
+    raw_quote: 这个驱动力莫名其妙呀，就天降驱动力……说白了就是跟系统聊天嘛

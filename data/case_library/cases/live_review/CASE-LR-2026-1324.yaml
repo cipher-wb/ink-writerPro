@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1324
+title: 原汁原味的宝可梦 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 宝可梦
+  - 同人
+  - 旅行
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多分 | 切入太慢太日常，后续稍微好点，但距直发水平还差。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入太慢太日常，后续稍微好点，但距直发水平还差。 | 开头童话感，慢悠悠没看点;单元剧未完写法不吸引人
+  observable:
+  - 'opening维度: 开头童话感，慢悠悠没看点'
+  - 'pacing维度: 单元剧未完写法不吸引人'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1821
+  - 1880
+  score: null
+  score_raw: 三十多分
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 原汁原味的宝可梦
+  genre_guess:
+  - 宝可梦
+  - 同人
+  - 旅行
+  overall_comment: 切入太慢太日常，后续稍微好点，但距直发水平还差。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头童话感，慢悠悠没看点
+    raw_quote: 切入确实有点差了 感觉好慢
+  - dimension: pacing
+    severity: negative
+    content: 单元剧未完写法不吸引人
+    raw_quote: 不要寫未完 就別太有懸念去拉一下

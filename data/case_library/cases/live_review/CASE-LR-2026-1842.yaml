@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1842
+title: 截教通天穿越日常 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 洪荒
+  - 截教
+  - 封神
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 34分的样子 | 节奏不错不水，但整活吐槽和玩梗过于离谱不做逼格
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏不错不水，但整活吐槽和玩梗过于离谱不做逼格 | 超级大佬在玩烂梗导致逼格全无;乐子类洪荒纯烂梗难救
+  observable:
+  - 'character维度: 超级大佬在玩烂梗导致逼格全无'
+  - 'genre维度: 乐子类洪荒纯烂梗难救'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1911
+  - 2000
+  score: 34
+  score_raw: 34分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 截教通天穿越日常
+  genre_guess:
+  - 洪荒
+  - 截教
+  - 封神
+  overall_comment: 节奏不错不水，但整活吐槽和玩梗过于离谱不做逼格
+  comments:
+  - dimension: character
+    severity: negative
+    content: 超级大佬在玩烂梗导致逼格全无
+    raw_quote: 通天和元始这种级别的很难和你玩梗的呀
+  - dimension: genre
+    severity: negative
+    content: 乐子类洪荒纯烂梗难救
+    raw_quote: 这个题材太小白了...但是人设问题跟剧情问题其实没得打救不了

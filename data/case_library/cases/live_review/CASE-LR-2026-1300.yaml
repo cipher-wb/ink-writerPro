@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1300
+title: 我只想专心学习 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 学霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吗 | 重生学习文开篇唠叨，缺少有效期待和学霸系统支撑，遗憾驱动不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生学习文开篇唠叨，缺少有效期待和学霸系统支撑，遗憾驱动不足。 | 开篇过多亲戚和家庭背景介绍，未能迅速进入重生学习主线;未配备学霸系统等金手指，导致学习过程缺乏即时爽感和目标引导
+  observable:
+  - 'opening维度: 开篇过多亲戚和家庭背景介绍，未能迅速进入重生学习主线'
+  - 'golden_finger维度: 未配备学霸系统等金手指，导致学习过程缺乏即时爽感和目标引导'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 2820
+  - 2980
+  score: 30
+  score_raw: 30分吗
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我只想专心学习
+  genre_guess:
+  - 都市
+  - 重生
+  - 学霸
+  overall_comment: 重生学习文开篇唠叨，缺少有效期待和学霸系统支撑，遗憾驱动不足。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇过多亲戚和家庭背景介绍，未能迅速进入重生学习主线
+    raw_quote: 我没有舅舅怎么办 … 你怎么代入 … 你这跑了呀
+  - dimension: golden_finger
+    severity: negative
+    content: 未配备学霸系统等金手指，导致学习过程缺乏即时爽感和目标引导
+    raw_quote: 哪怕你有个学霸系统也有卖点

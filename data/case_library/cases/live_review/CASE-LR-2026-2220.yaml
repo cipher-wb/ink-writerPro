@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2220
+title: 魔窟碧阳门 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 修仙
+  - 魔门
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没人看 | 魔门设定太劝退，读者看简介就跑，根本没人追读，适合发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 魔门设定太劝退，读者看简介就跑，根本没人追读，适合发蓝精灵。 | 魔门题材极度劝退，商业化无路
+  observable:
+  - 'genre维度: 魔门题材极度劝退，商业化无路'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 1103
+  - 1119
+  score: null
+  score_raw: 没人看
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 魔窟碧阳门
+  genre_guess:
+  - 修仙
+  - 魔门
+  overall_comment: 魔门设定太劝退，读者看简介就跑，根本没人追读，适合发蓝精灵。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 魔门题材极度劝退，商业化无路
+    raw_quote: 没人看...读者看到某某就跑...蓝精灵...没有其他路

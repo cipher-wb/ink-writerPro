@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-0384
+title: 师父你不要赶我走 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 传统仙侠开局，老头少年美女套路极老，金手指迟迟不出，建议转都市。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统仙侠开局，老头少年美女套路极老，金手指迟迟不出，建议转都市。 | 前两章未出现核心卖点/金手指，错过读者留存时机。;对仙侠的理解和设定脱离当前市场，新人难以驾驭。
+  observable:
+  - 'golden_finger维度: 前两章未出现核心卖点/金手指，错过读者留存时机。'
+  - 'genre维度: 对仙侠的理解和设定脱离当前市场，新人难以驾驭。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 275
+  - 320
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 师父你不要赶我走
+  genre_guess:
+  - 仙侠
+  overall_comment: 传统仙侠开局，老头少年美女套路极老，金手指迟迟不出，建议转都市。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 前两章未出现核心卖点/金手指，错过读者留存时机。
+    raw_quote: 你前两章要出来这种卖点，就你的金手指很退啊。
+  - dimension: genre
+    severity: negative
+    content: 对仙侠的理解和设定脱离当前市场，新人难以驾驭。
+    raw_quote: 你对仙侠的理解也太差了，大概写都市去吧。

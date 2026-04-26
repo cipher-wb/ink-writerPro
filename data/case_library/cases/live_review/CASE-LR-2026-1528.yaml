@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1528
+title: 天降魔法少女 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 都市
+  - 魔法少女
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能写啊 只要你主角有事件就行 | 魔法少女设定有趣，但主角无事件日常水，需加强主角行动力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 魔法少女设定有趣，但主角无事件日常水，需加强主角行动力。 | 主角没有事件，只会日常水;主角没利用魔法少女的能力，人设结合不足
+  observable:
+  - 'opening维度: 主角没有事件，只会日常水'
+  - 'character维度: 主角没利用魔法少女的能力，人设结合不足'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 2101
+  - 2200
+  score: null
+  score_raw: 能写啊 只要你主角有事件就行
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 天降魔法少女
+  genre_guess:
+  - 都市
+  - 魔法少女
+  - 日常
+  overall_comment: 魔法少女设定有趣，但主角无事件日常水，需加强主角行动力。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主角没有事件，只会日常水
+    raw_quote: 主角没事情 就无聊 就劳补一些破事
+  - dimension: character
+    severity: negative
+    content: 主角没利用魔法少女的能力，人设结合不足
+    raw_quote: 这种书的重点不是魔法少女 … 主角就体现出你们的差距了

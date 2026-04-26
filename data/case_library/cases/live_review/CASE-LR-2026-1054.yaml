@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1054
+title: 高考落榜生重生买金镯文 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 黄金
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 15分 | 黄金三章写成卖黄金，拖沓无信息量，人设垃圾
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 黄金三章写成卖黄金，拖沓无信息量，人设垃圾 | 前两章毫无意义，写黄金价格和买镯子，第三章才穿越;主角智商低下，行为像小学生
+  observable:
+  - 'opening维度: 前两章毫无意义，写黄金价格和买镯子，第三章才穿越'
+  - 'character维度: 主角智商低下，行为像小学生'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 3051
+  - 3200
+  score: 15
+  score_raw: 15分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高考落榜生重生买金镯文
+  genre_guess:
+  - 重生
+  - 都市
+  - 黄金
+  overall_comment: 黄金三章写成卖黄金，拖沓无信息量，人设垃圾
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前两章毫无意义，写黄金价格和买镯子，第三章才穿越
+    raw_quote: 大哥说第三天要穿越了 哈哈我现在是人在无语的时候真的会笑 那我折点这干嘛
+  - dimension: character
+    severity: negative
+    content: 主角智商低下，行为像小学生
+    raw_quote: 这人设只能证明主角智商不够呀

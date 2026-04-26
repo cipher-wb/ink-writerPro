@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0012
+title: 真勇者 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11viPBrEPq
+scope:
+  genre:
+  - 奇幻
+  - 西幻
+  - 召唤
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你22分 | 世界观谜语人，场景出戏，词语造成阅读障碍，彻底没入行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11viPBrEPq.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观谜语人，场景出戏，词语造成阅读障碍，彻底没入行。 | 把世界观当谜语人，读者无法进入;开头场景出戏，用词中西混乱;大量生造词导致阅读障碍
+  observable:
+  - 'genre维度: 把世界观当谜语人，读者无法进入'
+  - 'opening维度: 开头场景出戏，用词中西混乱'
+  - 'simplicity维度: 大量生造词导致阅读障碍'
+  - 'character维度: 对话呆板，缺乏生气'
+live_review_meta:
+  source_bvid: BV11viPBrEPq
+  source_line_range:
+  - 447
+  - 623
+  score: 22
+  score_raw: 给你22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 真勇者
+  genre_guess:
+  - 奇幻
+  - 西幻
+  - 召唤
+  overall_comment: 世界观谜语人，场景出戏，词语造成阅读障碍，彻底没入行。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 把世界观当谜语人，读者无法进入
+    raw_quote: 不要把世界观写的云里雾里的题材
+  - dimension: opening
+    severity: negative
+    content: 开头场景出戏，用词中西混乱
+    raw_quote: 这这这开头就很出戏 场景出戏
+  - dimension: simplicity
+    severity: negative
+    content: 大量生造词导致阅读障碍
+    raw_quote: 维尔德大法师 这些我都看不懂
+  - dimension: character
+    severity: negative
+    content: 对话呆板，缺乏生气
+    raw_quote: 对话也比较板

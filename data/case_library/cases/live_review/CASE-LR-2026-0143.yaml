@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0143
+title: 侯总的私人医生 (pass / 91分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 都市
+  - 后宫
+  - 生活流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你给你91分吧 | 切入无敌，水平高但尺度过大已成黄书，不敢推荐签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入无敌，水平高但尺度过大已成黄书，不敢推荐签约。 | 内容过火违法无法过审，编辑不敢碰
+  observable:
+  - 'taboo维度: 内容过火违法无法过审，编辑不敢碰'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 223
+  - 243
+  score: 91
+  score_raw: 给你给你91分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 侯总的私人医生
+  genre_guess:
+  - 都市
+  - 后宫
+  - 生活流
+  overall_comment: 切入无敌，水平高但尺度过大已成黄书，不敢推荐签约。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入身份直接有趣，七八十分水平
+    raw_quote: 这个球就这这句话啊 无敌了 这句话经历哪见过 侯总能不能别那样小静子尝试对吧
+  - dimension: taboo
+    severity: negative
+    content: 内容过火违法无法过审，编辑不敢碰
+    raw_quote: 这过不了过不了审 这过不了审 这个推荐不了了 这已经是全全黄书了 皇叔了

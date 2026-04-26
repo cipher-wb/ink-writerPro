@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0537
+title: 反派皇女总想攻略我 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 轻小说
+  - 西幻
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分 | 大量脚部描写夹带私货，主线内容太弱，啰嗦偏题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 大量脚部描写夹带私货，主线内容太弱，啰嗦偏题。 | 脚部描写重复四五次，水字数且恶心读者;主线剧情薄弱，事件推进糊化
+  observable:
+  - 'pacing维度: 脚部描写重复四五次，水字数且恶心读者'
+  - 'highpoint维度: 主线剧情薄弱，事件推进糊化'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 1181
+  - 1340
+  score: 38
+  score_raw: 38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 反派皇女总想攻略我
+  genre_guess:
+  - 轻小说
+  - 西幻
+  - 恋爱
+  overall_comment: 大量脚部描写夹带私货，主线内容太弱，啰嗦偏题。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 脚部描写重复四五次，水字数且恶心读者
+    raw_quote: 一有空他就要写 就要写这个角 … 香甜又诱人 … 大概形容了四五次了
+  - dimension: highpoint
+    severity: negative
+    content: 主线剧情薄弱，事件推进糊化
+    raw_quote: 主线内容确实太少太虚了 写的模糊 表达不清楚

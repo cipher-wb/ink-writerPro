@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0720
+title: 思念亡妻日记 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 日常/情感
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就33分吧 | 文笔细腻有情感，但剧情平淡太弱，缺少极端事件和情绪爆点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔细腻有情感，但剧情平淡太弱，缺少极端事件和情绪爆点。 | 剧情过于平淡日记化，没有重大冲突或钩子;缺乏极端场景和情绪代入点，纯日常叙述
+  observable:
+  - 'highpoint维度: 剧情过于平淡日记化，没有重大冲突或钩子'
+  - 'hook维度: 缺乏极端场景和情绪代入点，纯日常叙述'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 1376
+  - 1430
+  score: 33
+  score_raw: 差不多就33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 思念亡妻日记
+  genre_guess:
+  - 都市
+  - 重生
+  - 日常/情感
+  overall_comment: 文笔细腻有情感，但剧情平淡太弱，缺少极端事件和情绪爆点。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 剧情过于平淡日记化，没有重大冲突或钩子
+    raw_quote: 太日常了兄弟...剧情太弱了...真的很弱
+  - dimension: hook
+    severity: negative
+    content: 缺乏极端场景和情绪代入点，纯日常叙述
+    raw_quote: 你需要一些极端事件...情感会有一点...但好弱

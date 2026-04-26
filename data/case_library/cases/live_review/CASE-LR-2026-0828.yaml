@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0828
+title: 美利坚人才保障系统 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 美利坚
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分 | 切入拖沓，陈太太废笔，没蹭到有名人物
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入拖沓，陈太太废笔，没蹭到有名人物 | 陈太太矛盾毫无意义，浪费开头篇幅;没有蹭知名人物，爽点不足
+  observable:
+  - 'opening维度: 陈太太矛盾毫无意义，浪费开头篇幅'
+  - 'highpoint维度: 没有蹭知名人物，爽点不足'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 2725
+  - 2880
+  score: 40
+  score_raw: 40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚人才保障系统
+  genre_guess:
+  - 美利坚
+  - 都市
+  - 系统
+  overall_comment: 切入拖沓，陈太太废笔，没蹭到有名人物
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 陈太太矛盾毫无意义，浪费开头篇幅
+    raw_quote: 一个尖酸刻薄 老掉牙的一个丑八怪 你写它干嘛
+  - dimension: highpoint
+    severity: negative
+    content: 没有蹭知名人物，爽点不足
+    raw_quote: 我觉得你写名人 你要去蹭一些名人去啊

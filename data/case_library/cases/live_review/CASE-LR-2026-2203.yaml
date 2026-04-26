@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2203
+title: 精神小妹拍摄日常 (pass / 62分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 都市
+  - 猎奇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分能打60多吧 | 主线切入点很牛，节奏快，人设剧情极端且好看，但开篇情节过审风险极大，修改后可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线切入点很牛，节奏快，人设剧情极端且好看，但开篇情节过审风险极大，修改后可签约。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 214
+  - 293
+  score: 62
+  score_raw: 打分能打60多吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 精神小妹拍摄日常
+  genre_guess:
+  - 都市
+  - 猎奇
+  overall_comment: 主线切入点很牛，节奏快，人设剧情极端且好看，但开篇情节过审风险极大，修改后可签约。
+  comments:
+  - dimension: opening
+    severity: neutral
+    content: 切入很牛逼，但开篇的具体情节有过审风险
+    raw_quote: 这个切入是挺牛逼的...但是嗯是吧...这个我感觉过不了审
+  - dimension: character
+    severity: positive
+    content: 人设到位，女主精神小妹的形象刻画准确
+    raw_quote: 这个发言就很精神小妹了 没问题
+  - dimension: pacing
+    severity: positive
+    content: 小剧场写得极好，节奏把控到位
+    raw_quote: 大哥这小剧场写的特别好啊 你看这小剧场...可以的 没问题

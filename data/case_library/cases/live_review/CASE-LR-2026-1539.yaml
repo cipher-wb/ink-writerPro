@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1539
+title: 影帝是怎样练成的 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就二十分 二十分最多了 | 开头写小孩子无效戏份，严重偏离金手指与修炼主线，太过萌新。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头写小孩子无效戏份，严重偏离金手指与修炼主线，太过萌新。 | 开篇写外甥女戏份太多，偏离主线;金手指错误系统切入方式不对;整体太萌新，看不到写书天赋
+  observable:
+  - 'opening维度: 开篇写外甥女戏份太多，偏离主线'
+  - 'golden_finger维度: 金手指错误系统切入方式不对'
+  - 'misc维度: 整体太萌新，看不到写书天赋'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 1218
+  - 1264
+  score: 20
+  score_raw: 差不多就二十分 二十分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 影帝是怎样练成的
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 武侠
+  overall_comment: 开头写小孩子无效戏份，严重偏离金手指与修炼主线，太过萌新。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇写外甥女戏份太多，偏离主线
+    raw_quote: 开头你能写这么小孩子的狂水啊 大哥
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指错误系统切入方式不对
+    raw_quote: 穿过来系统是凑位这种感觉不是这样的 他这个比例不行
+  - dimension: misc
+    severity: negative
+    content: 整体太萌新，看不到写书天赋
+    raw_quote: 能不能赚点钱 我觉得赚不到钱 写书的天赋暂时看不出来

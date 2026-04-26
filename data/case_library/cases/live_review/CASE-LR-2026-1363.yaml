@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1363
+title: 三国刘和抚汉 (pass / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 释迦沃罗组五十九分有的 | 比例和带入感扎实，会写事和蹭热点，但年代太早受众少，可试水数据。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例和带入感扎实，会写事和蹭热点，但年代太早受众少，可试水数据。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1211
+  - 1300
+  score: 59
+  score_raw: 释迦沃罗组五十九分有的
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 三国刘和抚汉
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  overall_comment: 比例和带入感扎实，会写事和蹭热点，但年代太早受众少，可试水数据。
+  comments:
+  - dimension: misc
+    severity: positive
+    content: 白雪、互动等比例扎实，有签约水平
+    raw_quote: 比例可以的带入感也可以我觉得思路找对了签约不难的
+  - dimension: misc
+    severity: neutral
+    content: 选在189年太早，建安年间以后的受众更多
+    raw_quote: 太早了受众比较少...很少人看这么早的

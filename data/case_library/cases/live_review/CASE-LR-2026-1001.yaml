@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1001
+title: 高武穷学生带妹妹 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 高武
+  - 都市
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没意思，太八股了 | 顶级八股文，模板化严重，毫无新意和看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 顶级八股文，模板化严重，毫无新意和看点。 | 八股到极致，模板化严重;人设毫无新意，穷武妹妹照顾;没人看就是原罪
+  observable:
+  - 'hook维度: 八股到极致，模板化严重'
+  - 'character维度: 人设毫无新意，穷武妹妹照顾'
+  - 'misc维度: 没人看就是原罪'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 1749
+  - 1852
+  score: null
+  score_raw: 没意思，太八股了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 高武穷学生带妹妹
+  genre_guess:
+  - 高武
+  - 都市
+  - 玄幻
+  overall_comment: 顶级八股文，模板化严重，毫无新意和看点。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 八股到极致，模板化严重
+    raw_quote: 这不是一个模子里面套出来的吗……就是八股到极致
+  - dimension: character
+    severity: negative
+    content: 人设毫无新意，穷武妹妹照顾
+    raw_quote: 就找不到一个一个有新意的人设，或者说一个手有新意的剧情
+  - dimension: misc
+    severity: negative
+    content: 没人看就是原罪
+    raw_quote: 没人看呀，他的眼没人看，就是原罪啊

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0823
+title: 女家主的玩物 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 仙侠
+  - 女尊
+  - 妖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分满 | 第一章小剧场切入很好，但圣女展开像NPC，比例不扎实
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章小剧场切入很好，但圣女展开像NPC，比例不扎实 | 圣女情节展开太简单，像短剧NPC
+  observable:
+  - 'character维度: 圣女情节展开太简单，像短剧NPC'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 2025
+  - 2170
+  score: 58
+  score_raw: 58分满
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 女家主的玩物
+  genre_guess:
+  - 仙侠
+  - 女尊
+  - 妖
+  overall_comment: 第一章小剧场切入很好，但圣女展开像NPC，比例不扎实
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章先走小剧情再拉设定，思路对
+    raw_quote: 就是先小剧情 然后拉完之后小剧场嘛拉完之后再讲设定嘛
+  - dimension: character
+    severity: negative
+    content: 圣女情节展开太简单，像短剧NPC
+    raw_quote: 展开这个圣女的情节一般般 有点像NPC了

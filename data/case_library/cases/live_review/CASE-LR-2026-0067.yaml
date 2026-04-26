@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0067
+title: 造反起义 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 起义
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35 | 开局极端剧情有接地气的潜力，但很快又开始卖设定，事件展开没意思，人物没立起来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局极端剧情有接地气的潜力，但很快又开始卖设定，事件展开没意思，人物没立起来。 | 后续又开始卖设定，复杂且无聊;反派没写好，缺乏八卦和秘密来推动剧情
+  observable:
+  - 'simplicity维度: 后续又开始卖设定，复杂且无聊'
+  - 'character维度: 反派没写好，缺乏八卦和秘密来推动剧情'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 421
+  - 485
+  score: 35
+  score_raw: '35'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 造反起义
+  genre_guess:
+  - 历史
+  - 穿越
+  - 起义
+  overall_comment: 开局极端剧情有接地气的潜力，但很快又开始卖设定，事件展开没意思，人物没立起来。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 极端剧情，穿越带入，接地气地把事件写真实
+    raw_quote: 极端剧情，穿越带入...还可以呀，这样可以接地气把事件写得真实
+  - dimension: simplicity
+    severity: negative
+    content: 后续又开始卖设定，复杂且无聊
+    raw_quote: 这个有点复杂了，这个不行了这个得扣分...我以为你要写...事件没想到你还是在卖设定
+  - dimension: character
+    severity: negative
+    content: 反派没写好，缺乏八卦和秘密来推动剧情
+    raw_quote: 我觉得这个拦绝没在写...而且没有女角色没发现...应该是拦绝夫人她在偷情什么的

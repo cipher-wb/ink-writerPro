@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-2104
+title: 奇幻系统修女文 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 奇幻
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 2026年还写这种老套设定，修女人设立不住，没有好事件，全是设定堆砌。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 2026年还写这种老套设定，修女人设立不住，没有好事件，全是设定堆砌。 | 2026年还写这种老套题材和设定介绍;修女写得干巴巴像NPC，没人设;没有事件，就硬水设定介绍
+  observable:
+  - 'opening维度: 2026年还写这种老套题材和设定介绍'
+  - 'character维度: 修女写得干巴巴像NPC，没人设'
+  - 'highpoint维度: 没有事件，就硬水设定介绍'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 146
+  - 185
+  score: 28
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 奇幻系统修女文
+  genre_guess:
+  - 奇幻
+  - 穿越
+  - 系统
+  overall_comment: 2026年还写这种老套设定，修女人设立不住，没有好事件，全是设定堆砌。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 2026年还写这种老套题材和设定介绍
+    raw_quote: 2026年了呀，能不能不要写这种题材
+  - dimension: character
+    severity: negative
+    content: 修女写得干巴巴像NPC，没人设
+    raw_quote: 修女也就干巴巴的，和NPC似的
+  - dimension: highpoint
+    severity: negative
+    content: 没有事件，就硬水设定介绍
+    raw_quote: 没有好的事件就硬写

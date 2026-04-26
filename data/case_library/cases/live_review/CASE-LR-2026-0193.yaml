@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0193
+title: 紫霄 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 传统仙侠
+  - 古典修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 工笔好点我都给你20了 | 题材套路老旧，慢热且对网络市场理解不足，缺乏新意和吸引力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材套路老旧，慢热且对网络市场理解不足，缺乏新意和吸引力。 | 传统仙侠题材过于套路化，未能提供新意;开头进入核心情节过慢，节奏拖沓，缺乏黄金三章的冲击力;叙事节奏慢热，不符合当前读者对快节奏的需求
+  observable:
+  - 'genre维度: 传统仙侠题材过于套路化，未能提供新意'
+  - 'opening维度: 开头进入核心情节过慢，节奏拖沓，缺乏黄金三章的冲击力'
+  - 'pacing维度: 叙事节奏慢热，不符合当前读者对快节奏的需求'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 85
+  - 112
+  score: null
+  score_raw: 工笔好点我都给你20了
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 紫霄
+  genre_guess:
+  - 传统仙侠
+  - 古典修仙
+  overall_comment: 题材套路老旧，慢热且对网络市场理解不足，缺乏新意和吸引力。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 传统仙侠题材过于套路化，未能提供新意
+    raw_quote: 传选无所谓 传选详细也能写 但是不能这么太套路 能不能来点心意
+  - dimension: opening
+    severity: negative
+    content: 开头进入核心情节过慢，节奏拖沓，缺乏黄金三章的冲击力
+    raw_quote: 黄金三道第一张写的主角穿越... 没有人说黄金三道... 没人说过
+  - dimension: pacing
+    severity: negative
+    content: 叙事节奏慢热，不符合当前读者对快节奏的需求
+    raw_quote: 你更喜欢慢条丝 那完蛋了 已经完蛋了 就是要改

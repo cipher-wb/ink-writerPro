@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1778
+title: 蘑菇西游同人 (pass / 70分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pBr2BME1y
+scope:
+  genre:
+  - 西游
+  - 同人
+  - 搞笑
+  - 蘑菇流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 70分吧 | 切入主线后故事很强，签约水平足够，但开篇拖沓且含有违禁内容，需修改过审，得70分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pBr2BME1y.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入主线后故事很强，签约水平足够，但开篇拖沓且含有违禁内容，需修改过审，得70分。 | 蘑菇被放入口中等描写涉性暗示，审核不通过;开篇节奏慢，蘑菇被采前内容太水
+  observable:
+  - 'taboo维度: 蘑菇被放入口中等描写涉性暗示，审核不通过'
+  - 'opening维度: 开篇节奏慢，蘑菇被采前内容太水'
+live_review_meta:
+  source_bvid: BV1pBr2BME1y
+  source_line_range:
+  - 1
+  - 135
+  score: 70
+  score_raw: 70分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 蘑菇西游同人
+  genre_guess:
+  - 西游
+  - 同人
+  - 搞笑
+  - 蘑菇流
+  overall_comment: 切入主线后故事很强，签约水平足够，但开篇拖沓且含有违禁内容，需修改过审，得70分。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 蘑菇被放入口中等描写涉性暗示，审核不通过
+    raw_quote: 不能送到嘴里面啊...这这不不不能进去好吧...这一段肯定过不了审
+  - dimension: opening
+    severity: negative
+    content: 开篇节奏慢，蘑菇被采前内容太水
+    raw_quote: 我觉得慢了啊 这前面慢了 这这这里太慢了
+  - dimension: hook
+    severity: positive
+    content: 切入唐僧肉主线后吸引力强，节奏变好
+    raw_quote: 切入确实没啥问题 挺挺强的

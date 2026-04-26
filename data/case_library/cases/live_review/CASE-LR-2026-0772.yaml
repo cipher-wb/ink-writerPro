@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0772
+title: 大学生写书第一次 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 穿越
+  - 古代
+  - 乞丐
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分 | 剧情崩了，设定老套，事件弱，人物小白，对白需要练，25分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情崩了，设定老套，事件弱，人物小白，对白需要练，25分。 | 开头割裂，失去意识后又吃饭讲设定;对白很小白，人物不自然;开头抛太多设定，读者没耐心
+  observable:
+  - 'opening维度: 开头割裂，失去意识后又吃饭讲设定'
+  - 'character维度: 对白很小白，人物不自然'
+  - 'simplicity维度: 开头抛太多设定，读者没耐心'
+  - 'pacing维度: 事件普通没意思，没有好主线'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 221
+  - 280
+  score: 25
+  score_raw: 差不多就25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大学生写书第一次
+  genre_guess:
+  - 穿越
+  - 古代
+  - 乞丐
+  overall_comment: 剧情崩了，设定老套，事件弱，人物小白，对白需要练，25分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头割裂，失去意识后又吃饭讲设定
+    raw_quote: 你就失去意识了 然后就狼吞虎咽吃 称完了之后就就讲设定 怎么这么写的呀
+  - dimension: character
+    severity: negative
+    content: 对白很小白，人物不自然
+    raw_quote: 这这很小白写的 这古代伸出自己的小手 怎么能这么写呢
+  - dimension: simplicity
+    severity: negative
+    content: 开头抛太多设定，读者没耐心
+    raw_quote: 现在不是个开头 抛这么多设定了是吧 读者没有耐心
+  - dimension: pacing
+    severity: negative
+    content: 事件普通没意思，没有好主线
+    raw_quote: 事件太普通了 这个事件是真的没意思 没什么好主线

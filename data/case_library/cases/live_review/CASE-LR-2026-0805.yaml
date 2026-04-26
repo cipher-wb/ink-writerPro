@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0805
+title: '游戏王: 游亚穿越觉醒纠正系统 (pass / 52分)'
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 游戏王
+  - 同人
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 52 | 节奏快，卖点清晰，代入感强，适合直发，有望签约
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快，卖点清晰，代入感强，适合直发，有望签约
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 2120
+  - 2220
+  score: 52
+  score_raw: '52'
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: '游戏王: 游亚穿越觉醒纠正系统'
+  genre_guess:
+  - 游戏王
+  - 同人
+  - 穿越
+  overall_comment: 节奏快，卖点清晰，代入感强，适合直发，有望签约
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入快，卖点直接
+    raw_quote: 节奏快 出现卖点 然后大入感强

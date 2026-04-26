@@ -1,0 +1,72 @@
+case_id: CASE-LR-2026-1113
+title: 进击的矮人 (pass / 80分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 奇幻
+  - 轻小说
+  - 迪化
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '这个绝对有流量
+
+    我看到肯定会点这80分的说明
+
+    好书好题材 | 书名与题材亮眼，具备流量潜质，人设切入顺畅，但后续设定需补充，强主线略弱。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名与题材亮眼，具备流量潜质，人设切入顺畅，但后续设定需补充，强主线略弱。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 1
+  - 101
+  score: 80
+  score_raw: '这个绝对有流量
+
+    我看到肯定会点这80分的说明
+
+    好书好题材'
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 进击的矮人
+  genre_guess:
+  - 奇幻
+  - 轻小说
+  - 迪化
+  overall_comment: 书名与题材亮眼，具备流量潜质，人设切入顺畅，但后续设定需补充，强主线略弱。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入与人设立住，书名自带流量
+    raw_quote: '进击的矮人
+
+      这个绝对是好书名
+
+      这个说明很厉害的对吧'
+  - dimension: pacing
+    severity: neutral
+    content: 套路熟悉但驱动力不如同类作品
+    raw_quote: '你的强驱动力不如人家
+
+      只是你的金属是比较好玩'
+  - dimension: genre
+    severity: neutral
+    content: 奇幻标签6年前流行，现在可能稍旧
+    raw_quote: '按6年了
+
+      如果只是这个卖点可能有点单薄'

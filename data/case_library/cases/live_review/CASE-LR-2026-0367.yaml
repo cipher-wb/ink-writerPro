@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0367
+title: 完美仙子系统 (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 修仙
+  - 系统流
+  - 轻松向
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 68分 | 思路与小剧场切入很好，流行轻松向，有三江之姿，68分可签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路与小剧场切入很好，流行轻松向，有三江之姿，68分可签。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 541
+  - 640
+  score: 68
+  score_raw: 68分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 完美仙子系统
+  genre_guess:
+  - 修仙
+  - 系统流
+  - 轻松向
+  overall_comment: 思路与小剧场切入很好，流行轻松向，有三江之姿，68分可签。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 小剧场开篇轻松有趣，快速吸引读者
+    raw_quote: 这个切入挺好的挺好的 这些肉挺好的
+  - dimension: character
+    severity: positive
+    content: 人设立体，互动性强
+    raw_quote: 人设立住 思路没问题

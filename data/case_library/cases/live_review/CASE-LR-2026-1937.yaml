@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1937
+title: 想瞌睡的猪猪 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 女频
+  - 仙侠
+  - 大女主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就28分满 | 文字可爱但节奏太慢，内容虚且缺乏卖点，像传统慢热剧作而非网文，读者很难看下去。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文字可爱但节奏太慢，内容虚且缺乏卖点，像传统慢热剧作而非网文，读者很难看下去。 | 节奏太慢，日常平淡，不够紧凑;毫无卖点和期待感，不知道爽点在哪;开头不能日常，抓不住读者
+  observable:
+  - 'pacing维度: 节奏太慢，日常平淡，不够紧凑'
+  - 'golden_finger维度: 毫无卖点和期待感，不知道爽点在哪'
+  - 'opening维度: 开头不能日常，抓不住读者'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 92
+  - 151
+  score: 28
+  score_raw: 差不多就28分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 想瞌睡的猪猪
+  genre_guess:
+  - 女频
+  - 仙侠
+  - 大女主
+  overall_comment: 文字可爱但节奏太慢，内容虚且缺乏卖点，像传统慢热剧作而非网文，读者很难看下去。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，日常平淡，不够紧凑
+    raw_quote: 淡淡的不够紧凑，就是淡淡的不够紧凑，没什么卖点看
+  - dimension: golden_finger
+    severity: negative
+    content: 毫无卖点和期待感，不知道爽点在哪
+    raw_quote: 就看不出来大概的爽点，期待感在哪里这个题材，就没用啊非常传统的一个写法
+  - dimension: opening
+    severity: negative
+    content: 开头不能日常，抓不住读者
+    raw_quote: 日常可以写但开头不能写，开头日常就没人看了

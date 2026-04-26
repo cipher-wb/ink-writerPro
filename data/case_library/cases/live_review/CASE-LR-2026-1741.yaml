@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1741
+title: 魔教圣子过于正派 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 仙侠
+  - 魔教
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得这个题材太垃圾了 | 题材老旧，系统文套路过时，思路需要更新。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老旧，系统文套路过时，思路需要更新。 | 魔教圣子正派卧底题材已被写烂。;系统任务强制驱动，套路化严重。
+  observable:
+  - 'genre维度: 魔教圣子正派卧底题材已被写烂。'
+  - 'golden_finger维度: 系统任务强制驱动，套路化严重。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 825
+  - 905
+  score: null
+  score_raw: 我觉得这个题材太垃圾了
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 魔教圣子过于正派
+  genre_guess:
+  - 仙侠
+  - 魔教
+  - 系统
+  overall_comment: 题材老旧，系统文套路过时，思路需要更新。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 魔教圣子正派卧底题材已被写烂。
+    raw_quote: 这种真的写烂了 感觉没有1000本也有5000本
+  - dimension: golden_finger
+    severity: negative
+    content: 系统任务强制驱动，套路化严重。
+    raw_quote: 全是任务区动力的...太老了兄弟

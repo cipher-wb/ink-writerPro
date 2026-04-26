@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0101
+title: 修道路读/我在杂艺院当造物主 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 仙侠
+  - 种田
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就我一路向北离开 | 节奏太慢，一本正经的种田写设定，缺少强驱动力和极端剧情，开头需要设计小剧场拉人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏太慢，一本正经的种田写设定，缺少强驱动力和极端剧情，开头需要设计小剧场拉人。 | 慢悠悠的种田写设定，现在很难了;开头得设计，不能一本正经写
+  observable:
+  - 'pacing维度: 慢悠悠的种田写设定，现在很难了'
+  - 'opening维度: 开头得设计，不能一本正经写'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 701
+  - 800
+  score: null
+  score_raw: 差不多就我一路向北离开
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 修道路读/我在杂艺院当造物主
+  genre_guess:
+  - 仙侠
+  - 种田
+  - 系统
+  overall_comment: 节奏太慢，一本正经的种田写设定，缺少强驱动力和极端剧情，开头需要设计小剧场拉人。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 慢悠悠的种田写设定，现在很难了
+    raw_quote: 现在写这种书吗，这种书有点像种田啊，偏慢慢的养成的节奏应该比较慢
+  - dimension: opening
+    severity: negative
+    content: 开头得设计，不能一本正经写
+    raw_quote: 开头得设计不能一本正经写，一本正经写，没人看啊

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1549
+title: 人中皇掏粪男孩 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 末日
+  - 搞笑
+  - 重口
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你59分吧 | 流畅有节奏，装逼到位，但题材过重口起点难消化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 流畅有节奏，装逼到位，但题材过重口起点难消化。 | 重口味粪便题材劝退主流读者
+  observable:
+  - 'genre维度: 重口味粪便题材劝退主流读者'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 749
+  - 875
+  score: 59
+  score_raw: 就给你59分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 人中皇掏粪男孩
+  genre_guess:
+  - 末日
+  - 搞笑
+  - 重口
+  overall_comment: 流畅有节奏，装逼到位，但题材过重口起点难消化。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏顺畅，装逼打脸来得及时
+    raw_quote: 很流畅 你是怎么做到的 流畅是真的流畅
+  - dimension: genre
+    severity: negative
+    content: 重口味粪便题材劝退主流读者
+    raw_quote: 读者真代入不了 就太重口味了

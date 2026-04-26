@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-2226
+title: 重生文八股 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 重生
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '58分
+
+    59分大元吧 | 标准重生八股文，无功无过，缺乏新意和卖点，很难出成绩。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 标准重生八股文，无功无过，缺乏新意和卖点，很难出成绩。 | 内容老套，全是标准模板，毫无新意
+  observable:
+  - 'simplicity维度: 内容老套，全是标准模板，毫无新意'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 489
+  - 604
+  score: 58
+  score_raw: '58分
+
+    59分大元吧'
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生文八股
+  genre_guess:
+  - 重生
+  - 都市
+  overall_comment: 标准重生八股文，无功无过，缺乏新意和卖点，很难出成绩。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 内容老套，全是标准模板，毫无新意
+    raw_quote: '方琴这第一张就是无功无过
+
+      就是标准的 非常标准的重生八功'
+  - dimension: character
+    severity: neutral
+    content: 人设装逼前置，但缺乏独特性
+    raw_quote: '人设装逼前置了一点
+
+      有标准的
+
+      八股重生'

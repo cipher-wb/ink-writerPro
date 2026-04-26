@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0467
+title: 文娱刘诗诗 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 文娱
+  - 明星
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 写不了真写不了 | 严重擦边违规，脚汗脚臭抹黑明星，母女暧昧触发审核底线，无法签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 严重擦边违规，脚汗脚臭抹黑明星，母女暧昧触发审核底线，无法签约。 | 写刘诗诗脚臭脚汗，属于抹黑明星，粉丝会举报;母亲也对主角发情，构成母女暧昧，绝对过不了审
+  observable:
+  - 'taboo维度: 写刘诗诗脚臭脚汗，属于抹黑明星，粉丝会举报'
+  - 'ops维度: 母亲也对主角发情，构成母女暧昧，绝对过不了审'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 1091
+  - 1130
+  score: null
+  score_raw: 写不了真写不了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 文娱刘诗诗
+  genre_guess:
+  - 文娱
+  - 明星
+  overall_comment: 严重擦边违规，脚汗脚臭抹黑明星，母女暧昧触发审核底线，无法签约。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 写刘诗诗脚臭脚汗，属于抹黑明星，粉丝会举报
+    raw_quote: 刘诗诗为什么害羞 因为她脚臭 ... 明天就上热搜了 逮捕你了
+  - dimension: ops
+    severity: negative
+    content: 母亲也对主角发情，构成母女暧昧，绝对过不了审
+    raw_quote: 刘诗诗妈妈 现在也什么意思 也发情了意思 ... 这不行啊 这个过不了审

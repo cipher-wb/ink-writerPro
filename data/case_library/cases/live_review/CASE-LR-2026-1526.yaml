@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1526
+title: 豆罗霸王枪 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 玄幻
+  - 豆罗同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 分掉了 | 传统修炼写法在豆罗中已卷，无劳动金手指和雪白，没前途。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统修炼写法在豆罗中已卷，无劳动金手指和雪白，没前途。 | 豆罗同人卷，传统修炼慢热无人看
+  observable:
+  - 'genre维度: 豆罗同人卷，传统修炼慢热无人看'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1901
+  - 2000
+  score: null
+  score_raw: 分掉了
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 豆罗霸王枪
+  genre_guess:
+  - 玄幻
+  - 豆罗同人
+  overall_comment: 传统修炼写法在豆罗中已卷，无劳动金手指和雪白，没前途。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 豆罗同人卷，传统修炼慢热无人看
+    raw_quote: 现在的豆罗都是后宫加劳动 … 你这个是传选写法

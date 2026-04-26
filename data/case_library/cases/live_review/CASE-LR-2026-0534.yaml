@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0534
+title: 身为大反派我只想当个和平主义者 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 仙侠
+  - 迪化
+  - 反派
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分是吧 | 人物刻画能力太差，少女描写干巴，剧情无聊，驾驭不住题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人物刻画能力太差，少女描写干巴，剧情无聊，驾驭不住题材。 | 写女人的水平太低，少女人设干巴;事件无聊，主线没意思，明显退步
+  observable:
+  - 'character维度: 写女人的水平太低，少女人设干巴'
+  - 'pacing维度: 事件无聊，主线没意思，明显退步'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 731
+  - 900
+  score: 33
+  score_raw: 33分是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 身为大反派我只想当个和平主义者
+  genre_guess:
+  - 仙侠
+  - 迪化
+  - 反派
+  overall_comment: 人物刻画能力太差，少女描写干巴，剧情无聊，驾驭不住题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 写女人的水平太低，少女人设干巴
+    raw_quote: 这种少女就是没有练出来写女人的水平
+  - dimension: pacing
+    severity: negative
+    content: 事件无聊，主线没意思，明显退步
+    raw_quote: 事件主线没并不复杂 … 没这个能力

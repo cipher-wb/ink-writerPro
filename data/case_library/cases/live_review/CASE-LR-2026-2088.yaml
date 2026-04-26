@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-2088
+title: 大明崛起，从辽东斩首开始 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 历史
+  - 大明
+  - 军事
+  - 辽东
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例倒是蛮好的，但是有的地方哎30多块有吧 | 写真实感尚可，有天赋但故事编排仍缺目的性，需强化代入感与事件设计。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写真实感尚可，有天赋但故事编排仍缺目的性，需强化代入感与事件设计。 | 代入感弱，主角心理盘算不够，事件推进像流水账
+  observable:
+  - 'opening维度: 代入感弱，主角心理盘算不够，事件推进像流水账'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1125
+  - 1190
+  score: null
+  score_raw: 比例倒是蛮好的，但是有的地方哎30多块有吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 大明崛起，从辽东斩首开始
+  genre_guess:
+  - 历史
+  - 大明
+  - 军事
+  - 辽东
+  overall_comment: 写真实感尚可，有天赋但故事编排仍缺目的性，需强化代入感与事件设计。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 代入感弱，主角心理盘算不够，事件推进像流水账
+    raw_quote: 主角要多有心理活动，多盘算那个多就心里面多想面对什么困境……你这个有点像穷，像写法……感觉还是就没怎么设计

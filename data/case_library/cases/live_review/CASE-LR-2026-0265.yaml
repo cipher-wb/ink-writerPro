@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0265
+title: 诡异复苏死域穿越 (fail / 0分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 诡异复苏
+  - 穿越
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 零分 | 设定复杂看不懂，谜语人式展开，读者不爱看
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定复杂看不懂，谜语人式展开，读者不爱看 | 背景设定过于复杂，读者看不懂;切入点无聊，谜语人式展开不吸引人
+  observable:
+  - 'simplicity维度: 背景设定过于复杂，读者看不懂'
+  - 'opening维度: 切入点无聊，谜语人式展开不吸引人'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 69
+  - 155
+  score: 0
+  score_raw: 零分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异复苏死域穿越
+  genre_guess:
+  - 诡异复苏
+  - 穿越
+  - 末世
+  overall_comment: 设定复杂看不懂，谜语人式展开，读者不爱看
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 背景设定过于复杂，读者看不懂
+    raw_quote: 诡异复苏这么复杂吗
+  - dimension: opening
+    severity: negative
+    content: 切入点无聊，谜语人式展开不吸引人
+    raw_quote: 切入点是不合适不合适，没什么剧情吧

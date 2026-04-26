@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0609
+title: 我的天使好像不太对劲 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 西幻
+  - 天使
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 倒也没有太差吧 我们比什么20分吧 | 西幻设定卖设定太多，无代入感，剧情极差，完全没入行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 西幻设定卖设定太多，无代入感，剧情极差，完全没入行。 | 西幻卖设定，毫无剧情和代入，读者不买账
+  observable:
+  - 'genre维度: 西幻卖设定，毫无剧情和代入，读者不买账'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 3101
+  - 3250
+  score: 20
+  score_raw: 倒也没有太差吧 我们比什么20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的天使好像不太对劲
+  genre_guess:
+  - 西幻
+  - 天使
+  overall_comment: 西幻设定卖设定太多，无代入感，剧情极差，完全没入行。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西幻卖设定，毫无剧情和代入，读者不买账
+    raw_quote: 这个大哥也不去研究市场...没人看

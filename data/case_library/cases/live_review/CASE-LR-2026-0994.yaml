@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0994
+title: 拯救失意女性系统 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 都市
+  - 系统流
+  - 诸天
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 本来40分了，现在只有32分了 | 烂活系统流，无脑爽文，不听劝，浪费了人物描写优势。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 烂活系统流，无脑爽文，不听劝，浪费了人物描写优势。 | 系统设定烂活，驱动力无聊;扬短避长，放弃擅长的人物描写;不听话，闷头写1万6
+  observable:
+  - 'golden_finger维度: 系统设定烂活，驱动力无聊'
+  - 'character维度: 扬短避长，放弃擅长的人物描写'
+  - 'simplicity维度: 不听话，闷头写1万6'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 993
+  - 1115
+  score: 32
+  score_raw: 本来40分了，现在只有32分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 拯救失意女性系统
+  genre_guess:
+  - 都市
+  - 系统流
+  - 诸天
+  overall_comment: 烂活系统流，无脑爽文，不听劝，浪费了人物描写优势。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定烂活，驱动力无聊
+    raw_quote: 这是一个烂活……非常无聊的东西
+  - dimension: character
+    severity: negative
+    content: 扬短避长，放弃擅长的人物描写
+    raw_quote: 大哥把自己的长处全丢了，去写无脑系统爽文去了
+  - dimension: simplicity
+    severity: negative
+    content: 不听话，闷头写1万6
+    raw_quote: 你不听我的劝呀……一上来又写1万6000字，你要干嘛

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0960
+title: 侯总开局(诸天百业) (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 诸天
+  - 影视
+  - 侯总
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分 | 第一章签约水平，天赋高，需打磨主线与系统衔接
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章签约水平，天赋高，需打磨主线与系统衔接 | 世界切换过快，读者未消化
+  observable:
+  - 'pacing维度: 世界切换过快，读者未消化'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 3450
+  - 3540
+  score: 50
+  score_raw: 50分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 侯总开局(诸天百业)
+  genre_guess:
+  - 诸天
+  - 影视
+  - 侯总
+  overall_comment: 第一章签约水平，天赋高，需打磨主线与系统衔接
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 侯总开头抓人，影视梗到位
+    raw_quote: 第一章水平很高的其实
+  - dimension: pacing
+    severity: negative
+    content: 世界切换过快，读者未消化
+    raw_quote: 有点快 读者可能还沉浸在侯总里面

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0017
+title: 美利坚恐怖异能 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 恐怖
+  - 异能
+  - 美利坚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十五十八分打底了 | 遣词造句能力太差，代入感拖沓，题材一般，但思路节奏有进步，建议练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句能力太差，代入感拖沓，题材一般，但思路节奏有进步，建议练笔。 | 开篇自述代入感拖沓;遣词造句干巴巴，角色表达不清晰;题材不太行
+  observable:
+  - 'opening维度: 开篇自述代入感拖沓'
+  - 'character维度: 遣词造句干巴巴，角色表达不清晰'
+  - 'genre维度: 题材不太行'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 15
+  - 45
+  score: null
+  score_raw: 五十五十八分打底了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 美利坚恐怖异能
+  genre_guess:
+  - 恐怖
+  - 异能
+  - 美利坚
+  overall_comment: 遣词造句能力太差，代入感拖沓，题材一般，但思路节奏有进步，建议练笔。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇自述代入感拖沓
+    raw_quote: 就就是自述代入感呢 其实还是写的比较拖沓的
+  - dimension: character
+    severity: negative
+    content: 遣词造句干巴巴，角色表达不清晰
+    raw_quote: 形容出来很干 看着干巴巴的 就非常的刻意套路
+  - dimension: genre
+    severity: negative
+    content: 题材不太行
+    raw_quote: 这个题材其实也不怎么样

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0993
+title: 吞噬星空同人受潮来袭 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 同人
+  - 科幻
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分 | 切入只写战斗，主角存在感弱，缺乏期待感和金手指展示。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入只写战斗，主角存在感弱，缺乏期待感和金手指展示。 | 切入只写战斗，缺少代入感和金手指展示;主角存在感弱，像NPC;缺乏期待感，读者不如看原著
+  observable:
+  - 'opening维度: 切入只写战斗，缺少代入感和金手指展示'
+  - 'character维度: 主角存在感弱，像NPC'
+  - 'hook维度: 缺乏期待感，读者不如看原著'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 889
+  - 992
+  score: 40
+  score_raw: 40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 吞噬星空同人受潮来袭
+  genre_guess:
+  - 同人
+  - 科幻
+  - 末世
+  overall_comment: 切入只写战斗，主角存在感弱，缺乏期待感和金手指展示。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入只写战斗，缺少代入感和金手指展示
+    raw_quote: 切入点不能这样就打怪兽啊……你开头已经崩了呀
+  - dimension: character
+    severity: negative
+    content: 主角存在感弱，像NPC
+    raw_quote: 主角就是完全就是个NPC啊……所以说我需要你的期待感呀
+  - dimension: hook
+    severity: negative
+    content: 缺乏期待感，读者不如看原著
+    raw_quote: 读者不如去看原著来看这个东西

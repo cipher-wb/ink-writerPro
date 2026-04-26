@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2204
+title: 三国从接手荆州开始 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 历史
+  - 三国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能22分满 | 题材太卷，节奏快但脱离实际，不接地气，建议从小事件切入并蹭历史人物。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太卷，节奏快但脱离实际，不接地气，建议从小事件切入并蹭历史人物。 | 节奏过快，大纲流写法，不真实;穿刘琮刘琦的题材竞争激烈，缺乏竞争力;开篇缺乏小事件切入，直接推进庞大计划不合理
+  observable:
+  - 'pacing维度: 节奏过快，大纲流写法，不真实'
+  - 'genre维度: 穿刘琮刘琦的题材竞争激烈，缺乏竞争力'
+  - 'opening维度: 开篇缺乏小事件切入，直接推进庞大计划不合理'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 294
+  - 352
+  score: 22
+  score_raw: 只能22分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国从接手荆州开始
+  genre_guess:
+  - 历史
+  - 三国
+  overall_comment: 题材太卷，节奏快但脱离实际，不接地气，建议从小事件切入并蹭历史人物。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏过快，大纲流写法，不真实
+    raw_quote: 这太快了...不真实...这是干嘛...大纲流吗
+  - dimension: genre
+    severity: negative
+    content: 穿刘琮刘琦的题材竞争激烈，缺乏竞争力
+    raw_quote: 穿刘琦的川流通的太多了...光我在起点我都看到了上百
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏小事件切入，直接推进庞大计划不合理
+    raw_quote: 一定要小事件切入啊 名场面切入...你第一章太吓人了

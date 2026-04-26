@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1163
+title: 修仙路上你跟我使厉害 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 科幻
+  - 末世
+  - 异兽
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30 Anf 3分左右 | 本质是打怪兽的异能小说，非硬科幻。剧情驱动力薄弱，只有爸妈遇害一条情感线，事件没意思。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 本质是打怪兽的异能小说，非硬科幻。剧情驱动力薄弱，只有爸妈遇害一条情感线，事件没意思。 | 披着科幻皮的打怪兽文，内核无趣;杀怪兽剧情是最无聊的，缺乏多人物互动和丰富的情感驱动
+  observable:
+  - 'genre维度: 披着科幻皮的打怪兽文，内核无趣'
+  - 'highpoint维度: 杀怪兽剧情是最无聊的，缺乏多人物互动和丰富的情感驱动'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1390
+  - 1490
+  score: 30
+  score_raw: 30 Anf 3分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙路上你跟我使厉害
+  genre_guess:
+  - 科幻
+  - 末世
+  - 异兽
+  overall_comment: 本质是打怪兽的异能小说，非硬科幻。剧情驱动力薄弱，只有爸妈遇害一条情感线，事件没意思。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 披着科幻皮的打怪兽文，内核无趣
+    raw_quote: 这叫科幻嘛 你们能不能不要黑科幻这个 这是一个打怪兽的易冷小说 别什么都往科幻里面塞
+  - dimension: highpoint
+    severity: negative
+    content: 杀怪兽剧情是最无聊的，缺乏多人物互动和丰富的情感驱动
+    raw_quote: 没意思杀怪兽是最无聊的 你的剧情驱动力情感 情感只有一个爸妈那一块 家人来拉这种氛围很俗套

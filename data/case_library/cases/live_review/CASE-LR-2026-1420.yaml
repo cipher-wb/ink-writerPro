@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1420
+title: 万民之城 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 科幻
+  - 赛博
+  - 星际
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不打分，祝大哥一切都好 | 非网文，自嗨，无信息量，认知有问题，文笔还行但节奏太慢。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 非网文，自嗨，无信息量，认知有问题，文笔还行但节奏太慢。 | 开头全是废话，无卖点;整个作品像电影剧本，不是网文叙事
+  observable:
+  - 'opening维度: 开头全是废话，无卖点'
+  - 'misc维度: 整个作品像电影剧本，不是网文叙事'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 591
+  - 660
+  score: null
+  score_raw: 不打分，祝大哥一切都好
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 万民之城
+  genre_guess:
+  - 科幻
+  - 赛博
+  - 星际
+  overall_comment: 非网文，自嗨，无信息量，认知有问题，文笔还行但节奏太慢。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头全是废话，无卖点
+    raw_quote: 到现在为止 你的书中没有任何的一句话的卖点
+  - dimension: misc
+    severity: negative
+    content: 整个作品像电影剧本，不是网文叙事
+    raw_quote: 你老是写这种文青的一个目光

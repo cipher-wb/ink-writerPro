@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0425
+title: 游戏人反氪金 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 都市
+  - 商战
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 太中二，写法不是节点写法，大妈烂梗不讨喜
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太中二，写法不是节点写法，大妈烂梗不讨喜 | 大妈烂梗在起点不讨喜，换成熟投资者更好;不是节点写法，整体不咋样
+  observable:
+  - 'character维度: 大妈烂梗在起点不讨喜，换成熟投资者更好'
+  - 'misc维度: 不是节点写法，整体不咋样'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1847
+  - 1896
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 游戏人反氪金
+  genre_guess:
+  - 都市
+  - 商战
+  - 游戏
+  overall_comment: 太中二，写法不是节点写法，大妈烂梗不讨喜
+  comments:
+  - dimension: character
+    severity: negative
+    content: 大妈烂梗在起点不讨喜，换成熟投资者更好
+    raw_quote: 大妈这种人是在起点不讨喜的，不讨喜，你不要叫大妈啊，你直接写那种成熟的那种投资者对吧
+  - dimension: misc
+    severity: negative
+    content: 不是节点写法，整体不咋样
+    raw_quote: 第二个完全不是节点写法...其实都不咋样

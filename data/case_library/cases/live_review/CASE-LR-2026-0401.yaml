@@ -1,0 +1,72 @@
+case_id: CASE-LR-2026-0401
+title: 穿越娱乐：刘诗诗脚臭治疗师 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AG9HBAE6R
+scope:
+  genre:
+  - 都市
+  - 娱乐
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个过不了省 | 文笔有实力但严重偏题，大量脚臭脚汗及母亲暧昧描写违反平台规定，无法过审；建议正常写娱乐文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AG9HBAE6R.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有实力但严重偏题，大量脚臭脚汗及母亲暧昧描写违反平台规定，无法过审；建议正常写娱乐文。 | 开篇设定拖沓，读者不爱看;建议大幅简化开篇，430字要精简到一两句;脚臭、脚汗、母亲暧昧等描写触犯平台规则，无法过审
+  observable:
+  - 'pacing维度: 开篇设定拖沓，读者不爱看'
+  - 'simplicity维度: 建议大幅简化开篇，430字要精简到一两句'
+  - 'taboo维度: 脚臭、脚汗、母亲暧昧等描写触犯平台规则，无法过审'
+  - 'highpoint维度: 找不到明确爽点，主线立不住'
+  - 'genre维度: 偏题严重，娱乐文被写成脚臭猎奇'
+live_review_meta:
+  source_bvid: BV1AG9HBAE6R
+  source_line_range:
+  - 30
+  - 382
+  score: null
+  score_raw: 这个过不了省
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 穿越娱乐：刘诗诗脚臭治疗师
+  genre_guess:
+  - 都市
+  - 娱乐
+  - 穿越
+  overall_comment: 文笔有实力但严重偏题，大量脚臭脚汗及母亲暧昧描写违反平台规定，无法过审；建议正常写娱乐文。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开篇设定拖沓，读者不爱看
+    raw_quote: 我觉得好拖沓这点；读着不爱看你这个设定
+  - dimension: simplicity
+    severity: negative
+    content: 建议大幅简化开篇，430字要精简到一两句
+    raw_quote: 我觉得这点你能不能简化吧；就是这430个字；看怎么先简化一两句
+  - dimension: taboo
+    severity: negative
+    content: 脚臭、脚汗、母亲暧昧等描写触犯平台规则，无法过审
+    raw_quote: 这个过不了省；这个审核会出手的兄弟
+  - dimension: highpoint
+    severity: negative
+    content: 找不到明确爽点，主线立不住
+    raw_quote: 你这大概的爽点在哪里
+  - dimension: genre
+    severity: negative
+    content: 偏题严重，娱乐文被写成脚臭猎奇
+    raw_quote: 真偏题了兄弟；真偏题了
+  - dimension: misc
+    severity: positive
+    content: 文笔出色，描写有功力，作者有实力
+    raw_quote: 我必须得承认大哥有实力；有实力

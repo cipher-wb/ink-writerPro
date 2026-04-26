@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0552
+title: 从天后开始 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 都市
+  - 娱乐圈
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 架空娱乐圈没人看，需要蹭具体明星并快速切入吃冰棍等名场面。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 架空娱乐圈没人看，需要蹭具体明星并快速切入吃冰棍等名场面。 | 架空文娱没土壤，必须当同人写蹭具体明星
+  observable:
+  - 'genre维度: 架空文娱没土壤，必须当同人写蹭具体明星'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 2821
+  - 2900
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 从天后开始
+  genre_guess:
+  - 都市
+  - 娱乐圈
+  - 重生
+  overall_comment: 架空娱乐圈没人看，需要蹭具体明星并快速切入吃冰棍等名场面。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空文娱没土壤，必须当同人写蹭具体明星
+    raw_quote: 起点现在没有架空文玉的土壤了 … 你直接划鱼就行了

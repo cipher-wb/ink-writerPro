@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1066
+title: 我家娘子有魔女词条 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 仙侠
+  - 恋爱
+  - 词条
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分还是有的 | 文笔人设尚可，但娘子人设逻辑有漏洞，剧情偏题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔人设尚可，但娘子人设逻辑有漏洞，剧情偏题。 | 娘子智商过低，逻辑不合理;剧情展开偏离娘子主线，写到修炼上
+  observable:
+  - 'character维度: 娘子智商过低，逻辑不合理'
+  - 'pacing维度: 剧情展开偏离娘子主线，写到修炼上'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 681
+  - 740
+  score: 48
+  score_raw: 48分还是有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我家娘子有魔女词条
+  genre_guess:
+  - 仙侠
+  - 恋爱
+  - 词条
+  overall_comment: 文笔人设尚可，但娘子人设逻辑有漏洞，剧情偏题。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 娘子智商过低，逻辑不合理
+    raw_quote: 这个娘子智商有点低 他感觉也没什么智商
+  - dimension: pacing
+    severity: negative
+    content: 剧情展开偏离娘子主线，写到修炼上
+    raw_quote: 不写娘子写这些破事去了

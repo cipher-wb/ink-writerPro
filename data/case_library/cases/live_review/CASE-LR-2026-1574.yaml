@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1574
+title: 外卖人头神神叨叨 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 灵异
+  - 悬疑
+  - 都市
+  - 幻象
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分吧 | 故弄玄虚，文学性差，但氛围和代入感还行，适合灵异类。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故弄玄虚，文学性差，但氛围和代入感还行，适合灵异类。 | 全程故弄玄虚，缺乏真正的伏笔和网文性
+  observable:
+  - 'simplicity维度: 全程故弄玄虚，缺乏真正的伏笔和网文性'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 1901
+  - 2000
+  score: 38
+  score_raw: 38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 外卖人头神神叨叨
+  genre_guess:
+  - 灵异
+  - 悬疑
+  - 都市
+  - 幻象
+  overall_comment: 故弄玄虚，文学性差，但氛围和代入感还行，适合灵异类。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 氛围和代入感表现不错，开篇很真实
+    raw_quote: 比例代入感还可以的，大概写的很真实，仿佛就像是一个身边的事
+  - dimension: simplicity
+    severity: negative
+    content: 全程故弄玄虚，缺乏真正的伏笔和网文性
+    raw_quote: 这有点故弄玄虚了，这个真的全程故弄玄虚，这就是不叫伏笔，文化性太差了

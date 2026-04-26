@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1881
+title: 哀牢山天妒山副本 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 悬疑
+  - 副本流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分吗 | 文笔不错，但事件极端、黑警察等情节过不了审。虽有意思但太炸裂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，但事件极端、黑警察等情节过不了审。虽有意思但太炸裂。 | 黑警察、精神控制等情节严重违规;无法通过平台审核;女明星描写像小学作文，无代入感
+  observable:
+  - 'taboo维度: 黑警察、精神控制等情节严重违规'
+  - 'ops维度: 无法通过平台审核'
+  - 'opening维度: 女明星描写像小学作文，无代入感'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 521
+  - 600
+  score: 38
+  score_raw: 38分吗
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 哀牢山天妒山副本
+  genre_guess:
+  - 都市
+  - 悬疑
+  - 副本流
+  overall_comment: 文笔不错，但事件极端、黑警察等情节过不了审。虽有意思但太炸裂。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 黑警察、精神控制等情节严重违规
+    raw_quote: 这个黑警察呀... 这过不了审... 这这这不用想 这些事件太炸裂了
+  - dimension: ops
+    severity: negative
+    content: 无法通过平台审核
+    raw_quote: 这个肯定过不了 这个肯定过不了
+  - dimension: opening
+    severity: negative
+    content: 女明星描写像小学作文，无代入感
+    raw_quote: 这描写有点像那个大红花啊 那个就小学作文呀

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0063
+title: 勇一开始 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分满 | 题材已不吃香只能拼内功，但人设小白、遣词造句现代感太强，缺乏玄幻味道。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材已不吃香只能拼内功，但人设小白、遣词造句现代感太强，缺乏玄幻味道。 | 人设小白，对话没有古代玄幻味道;遣词造句太白，需要练文笔比例
+  observable:
+  - 'character维度: 人设小白，对话没有古代玄幻味道'
+  - 'ops维度: 遣词造句太白，需要练文笔比例'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 176
+  - 255
+  score: 20
+  score_raw: 20分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 勇一开始
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 题材已不吃香只能拼内功，但人设小白、遣词造句现代感太强，缺乏玄幻味道。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设小白，对话没有古代玄幻味道
+    raw_quote: 根本没有玄幻味道呀对吧...古代人不会这么说话呀
+  - dimension: ops
+    severity: negative
+    content: 遣词造句太白，需要练文笔比例
+    raw_quote: 遣辞造句太白了这个人设...比例写这种不够写

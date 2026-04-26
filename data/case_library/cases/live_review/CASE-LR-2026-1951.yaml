@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1951
+title: 末日杀人狂系统 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 末日
+  - 系统
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分的樣子 | 表达可以，场景画面OK，但系统太毒，前三章没有展现真正的核心看点（丧尸），读者跑完了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达可以，场景画面OK，但系统太毒，前三章没有展现真正的核心看点（丧尸），读者跑完了。 | 每三天必须杀一个人的设定非常毒;核心看点丧尸在第四章才出来，开篇太晚
+  observable:
+  - 'golden_finger维度: 每三天必须杀一个人的设定非常毒'
+  - 'opening维度: 核心看点丧尸在第四章才出来，开篇太晚'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 877
+  - 941
+  score: 35
+  score_raw: 35分的樣子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日杀人狂系统
+  genre_guess:
+  - 末日
+  - 系统
+  - 爽文
+  overall_comment: 表达可以，场景画面OK，但系统太毒，前三章没有展现真正的核心看点（丧尸），读者跑完了。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 每三天必须杀一个人的设定非常毒
+    raw_quote: 我觉得就是系统大毒点...你觉得这种系统不咋样
+  - dimension: opening
+    severity: negative
+    content: 核心看点丧尸在第四章才出来，开篇太晚
+    raw_quote: 第三章就有丧屍了，那你为什么开頭不写

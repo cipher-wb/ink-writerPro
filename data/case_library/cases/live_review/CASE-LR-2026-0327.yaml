@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0327
+title: 重生之断舍离 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真没人看 | 琼瑶风太重，过于专注男女之间的小情小爱，缺乏重生文应有的志向和事业线，读者不爱看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 琼瑶风太重，过于专注男女之间的小情小爱，缺乏重生文应有的志向和事业线，读者不爱看。 | 写法完全像琼瑶，只关注青梅竹马的情爱拉扯，毫无网文看点。;缺少重生文的主线和事业心，一直在进行毫无价值的日常描写。;剧情局限于家庭琐事和害羞的女孩，极度无聊。
+  observable:
+  - 'genre维度: 写法完全像琼瑶，只关注青梅竹马的情爱拉扯，毫无网文看点。'
+  - 'opening维度: 缺少重生文的主线和事业心，一直在进行毫无价值的日常描写。'
+  - 'simplicity维度: 剧情局限于家庭琐事和害羞的女孩，极度无聊。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 1938
+  - 2031
+  score: null
+  score_raw: 真没人看
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 重生之断舍离
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 琼瑶风太重，过于专注男女之间的小情小爱，缺乏重生文应有的志向和事业线，读者不爱看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写法完全像琼瑶，只关注青梅竹马的情爱拉扯，毫无网文看点。
+    raw_quote: 就是琼瑶...就是喜欢写男女之间的那种氛围嘛...读者不爱看
+  - dimension: opening
+    severity: negative
+    content: 缺少重生文的主线和事业心，一直在进行毫无价值的日常描写。
+    raw_quote: 你是重生文...男人的梦想是征途大海...老是回忆眼前青梅竹马一直情
+  - dimension: simplicity
+    severity: negative
+    content: 剧情局限于家庭琐事和害羞的女孩，极度无聊。
+    raw_quote: 老是家里这点破破事吗...读者真不爱看

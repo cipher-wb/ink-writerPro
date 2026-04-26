@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0468
+title: 斗罗同仁两年半 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 斗罗
+  - 同仁
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多18分了 | 小白到极致，前两章拖沓玩梗，后面稍正常但起点不收，蓝精灵也难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小白到极致，前两章拖沓玩梗，后面稍正常但起点不收，蓝精灵也难。 | 开局婴儿喝奶加两年半小黑子梗，多余且劝退;整体太白太幼，恶意玩梗，人设不讨喜
+  observable:
+  - 'opening维度: 开局婴儿喝奶加两年半小黑子梗，多余且劝退'
+  - 'simplicity维度: 整体太白太幼，恶意玩梗，人设不讨喜'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 1131
+  - 1160
+  score: 18
+  score_raw: 差不多18分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗罗同仁两年半
+  genre_guess:
+  - 斗罗
+  - 同仁
+  overall_comment: 小白到极致，前两章拖沓玩梗，后面稍正常但起点不收，蓝精灵也难。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局婴儿喝奶加两年半小黑子梗，多余且劝退
+    raw_quote: 前面都可以删掉呀 为什么非要写个小银行干嘛 就是为了喝奶
+  - dimension: simplicity
+    severity: negative
+    content: 整体太白太幼，恶意玩梗，人设不讨喜
+    raw_quote: 人设不对 人设真的不对 这个起点肯定签不了 可以读我觉得他们也不收

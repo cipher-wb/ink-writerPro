@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1638
+title: 轻松修仙传 (borderline)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 仙侠
+  - 轻松
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 签约水平一点问题都不大 | 签约实力足够，但题材轻松向缺乏冲击力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 签约实力足够，但题材轻松向缺乏冲击力。 | 故事平淡，缺乏高潮和危机感。;轻松向修仙当前市场反馈差。
+  observable:
+  - 'highpoint维度: 故事平淡，缺乏高潮和危机感。'
+  - 'genre维度: 轻松向修仙当前市场反馈差。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 531
+  - 580
+  score: null
+  score_raw: 签约水平一点问题都不大
+  score_signal: sign_phrase
+  verdict: borderline
+  title_guess: 轻松修仙传
+  genre_guess:
+  - 仙侠
+  - 轻松
+  - 系统
+  overall_comment: 签约实力足够，但题材轻松向缺乏冲击力。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 故事平淡，缺乏高潮和危机感。
+    raw_quote: 事件也挺无聊挺淡的
+  - dimension: genre
+    severity: negative
+    content: 轻松向修仙当前市场反馈差。
+    raw_quote: 轻松向修仙，新小说今年真不咋样

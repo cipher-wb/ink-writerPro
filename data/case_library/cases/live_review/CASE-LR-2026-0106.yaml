@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0106
+title: 键盘边境/民国修炼 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 玄幻
+  - 民国
+  - 修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50嗯九分吧 | 彻底入行，起点思路氛围人设都对，但金手指和事件吸引力不够，缺百页书那种好脑洞。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 彻底入行，起点思路氛围人设都对，但金手指和事件吸引力不够，缺百页书那种好脑洞。 | 金手指太老套，事件吸引力不够，缺少强期待感
+  observable:
+  - 'golden_finger维度: 金手指太老套，事件吸引力不够，缺少强期待感'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1121
+  - 1200
+  score: 59
+  score_raw: 50嗯九分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 键盘边境/民国修炼
+  genre_guess:
+  - 玄幻
+  - 民国
+  - 修炼
+  overall_comment: 彻底入行，起点思路氛围人设都对，但金手指和事件吸引力不够，缺百页书那种好脑洞。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指太老套，事件吸引力不够，缺少强期待感
+    raw_quote: 金手指跟你的这些事件的吸引力不够不行

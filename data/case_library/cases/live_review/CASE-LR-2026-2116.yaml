@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2116
+title: 都市重生天庭修仙文 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 系统
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 学了一年还不知道什么是网文，还在写设定世界观，番茄同化太深了，完全不知道读者想看什么。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 学了一年还不知道什么是网文，还在写设定世界观，番茄同化太深了，完全不知道读者想看什么。 | 学了多久还在写设定世界观，不懂网红;完全不知道读者想看什么
+  observable:
+  - 'genre维度: 学了多久还在写设定世界观，不懂网红'
+  - 'simplicity维度: 完全不知道读者想看什么'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 656
+  - 700
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 都市重生天庭修仙文
+  genre_guess:
+  - 都市
+  - 修仙
+  - 系统
+  - 重生
+  overall_comment: 学了一年还不知道什么是网文，还在写设定世界观，番茄同化太深了，完全不知道读者想看什么。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 学了多久还在写设定世界观，不懂网红
+    raw_quote: 你学了一年不知道什么是网红呀
+  - dimension: simplicity
+    severity: negative
+    content: 完全不知道读者想看什么
+    raw_quote: 你还是不懂读者想看什么

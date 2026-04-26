@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0446
+title: 旧日验尸官 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 克苏鲁
+  - 验尸
+  - 神秘
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多四十多多 | 有实力但驾驭庞大世界观能力不足，中段疲劳无期待感
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有实力但驾驭庞大世界观能力不足，中段疲劳无期待感 | 中段单一视角叙事疲劳，期待感弱，流失率高;加入神魔小学生式对话破坏氛围，期待感差
+  observable:
+  - 'pacing维度: 中段单一视角叙事疲劳，期待感弱，流失率高'
+  - 'golden_finger维度: 加入神魔小学生式对话破坏氛围，期待感差'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 1013
+  - 1081
+  score: 40
+  score_raw: 差不多四十多多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 旧日验尸官
+  genre_guess:
+  - 克苏鲁
+  - 验尸
+  - 神秘
+  overall_comment: 有实力但驾驭庞大世界观能力不足，中段疲劳无期待感
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 中段单一视角叙事疲劳，期待感弱，流失率高
+    raw_quote: 我觉得现在有点生命疲劳了...期待感可能就很弱这一段
+  - dimension: golden_finger
+    severity: negative
+    content: 加入神魔小学生式对话破坏氛围，期待感差
+    raw_quote: 神跟你骂这也很熟悉啊...神写的跟小学生一样

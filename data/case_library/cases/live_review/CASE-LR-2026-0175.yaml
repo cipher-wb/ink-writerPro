@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0175
+title: 异能找猫：都市宠物灵探 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 无脑爽
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分水平 | 异能设定无趣，情节平淡如轻小说，缺乏爽点驱动力，整体偏向猫猫日常而非网文节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 异能设定无趣，情节平淡如轻小说，缺乏爽点驱动力，整体偏向猫猫日常而非网文节奏。 | 宠物灵探异能没有任何战斗或爽感，完全撑不起主线。;主线推进缓慢，大量篇幅用在找猫和闲聊。;都市异能应偏向爽文，此文却走向轻小说抓猫日常。
+  observable:
+  - 'golden_finger维度: 宠物灵探异能没有任何战斗或爽感，完全撑不起主线。'
+  - 'pacing维度: 主线推进缓慢，大量篇幅用在找猫和闲聊。'
+  - 'genre维度: 都市异能应偏向爽文，此文却走向轻小说抓猫日常。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 730
+  - 890
+  score: 32
+  score_raw: 30分水平
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 异能找猫：都市宠物灵探
+  genre_guess:
+  - 都市
+  - 异能
+  - 无脑爽
+  overall_comment: 异能设定无趣，情节平淡如轻小说，缺乏爽点驱动力，整体偏向猫猫日常而非网文节奏。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 宠物灵探异能没有任何战斗或爽感，完全撑不起主线。
+    raw_quote: 这种异能贼垃圾吧这也不爽
+  - dimension: pacing
+    severity: negative
+    content: 主线推进缓慢，大量篇幅用在找猫和闲聊。
+    raw_quote: 聊这些东西没人看啊
+  - dimension: genre
+    severity: negative
+    content: 都市异能应偏向爽文，此文却走向轻小说抓猫日常。
+    raw_quote: 我看到了一个都市老动物就一个是而且偏向猫猫轻小说的感觉

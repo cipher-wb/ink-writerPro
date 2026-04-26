@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1770
+title: 晋级巨人永恒乌托邦 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 同仁
+  - 进击的巨人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多 | 文笔扎实但同仁味太重，非粉丝完全看不懂，建议大改开头提升兼容度。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但同仁味太重，非粉丝完全看不懂，建议大改开头提升兼容度。 | 完全按同仁番外写，路人读者无法代入;三十万字未签，重新写开头仍有希望
+  observable:
+  - 'opening维度: 完全按同仁番外写，路人读者无法代入'
+  - 'genre维度: 三十万字未签，重新写开头仍有希望'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 1540
+  - 1620
+  score: 35
+  score_raw: 三十多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 晋级巨人永恒乌托邦
+  genre_guess:
+  - 同仁
+  - 进击的巨人
+  overall_comment: 文笔扎实但同仁味太重，非粉丝完全看不懂，建议大改开头提升兼容度。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 完全按同仁番外写，路人读者无法代入
+    raw_quote: 你这开头要改啊……一般人看不懂怎么办嘛
+  - dimension: genre
+    severity: negative
+    content: 三十万字未签，重新写开头仍有希望
+    raw_quote: 三十万字也不会被签了……你直接换个开头……重新写变

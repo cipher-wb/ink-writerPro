@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1016
+title: 天意修正的系统 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 历史
+  - 三国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十分嘛 | 老动思路太炸裂，刘备篡汉等大毒点，历史读者不接受，建议发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老动思路太炸裂，刘备篡汉等大毒点，历史读者不接受，建议发蓝精灵。 | 刘备篡汉等颠覆设定，触及读者容忍底线;金手指设计老套，无法支撑卖点
+  observable:
+  - 'taboo维度: 刘备篡汉等颠覆设定，触及读者容忍底线'
+  - 'golden_finger维度: 金手指设计老套，无法支撑卖点'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 541
+  - 680
+  score: 40
+  score_raw: 四十分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天意修正的系统
+  genre_guess:
+  - 历史
+  - 三国
+  overall_comment: 老动思路太炸裂，刘备篡汉等大毒点，历史读者不接受，建议发蓝精灵。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 刘备篡汉等颠覆设定，触及读者容忍底线
+    raw_quote: 刘备篡汉 刘备把张飞喊 大概这种事 在起点上 接受不了 这是超级大的大毒点
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设计老套，无法支撑卖点
+    raw_quote: 就大概要改变历史 这个历史比较颠是吧

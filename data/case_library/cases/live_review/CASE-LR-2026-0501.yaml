@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0501
+title: 穿越修仙日常 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30万就吃肉还好点 | 穿越醒来很懵逼，世界脉络不清晰，无卖点。主角名冷门读不出来。推翻找正常题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越醒来很懵逼，世界脉络不清晰，无卖点。主角名冷门读不出来。推翻找正常题材。 | 主角穿越后状态混乱，读者更晕;打怪事件对主线没用，缺少核心冲突
+  observable:
+  - 'opening维度: 主角穿越后状态混乱，读者更晕'
+  - 'highpoint维度: 打怪事件对主线没用，缺少核心冲突'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 2164
+  - 2225
+  score: 30
+  score_raw: 30万就吃肉还好点
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 穿越修仙日常
+  genre_guess:
+  - 玄幻
+  - 修仙
+  - 穿越
+  overall_comment: 穿越醒来很懵逼，世界脉络不清晰，无卖点。主角名冷门读不出来。推翻找正常题材。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主角穿越后状态混乱，读者更晕
+    raw_quote: 穿过来之后就是感觉我很懵逼 大概这个世界没有清晰的一个脉络 没有清晰的一个卖点
+  - dimension: highpoint
+    severity: negative
+    content: 打怪事件对主线没用，缺少核心冲突
+    raw_quote: 这些事件对于你的主线的帮助在哪里...比如有个空境的嘛...这就是一个主线嘛 但是你这个打怪物这点感觉没用啊

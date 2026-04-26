@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1529
+title: 宝可梦漫威 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 同人
+  - 漫威
+  - 宝可梦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 下个三分吧 | 书名优秀，但金手指小众，剧情一般，分段夸张，需精练。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名优秀，但金手指小众，剧情一般，分段夸张，需精练。 | 金手指策略系统可能小众，需要读者懂宝可梦;描写冗长，分段过长，需多分段精简
+  observable:
+  - 'golden_finger维度: 金手指策略系统可能小众，需要读者懂宝可梦'
+  - 'simplicity维度: 描写冗长，分段过长，需多分段精简'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 2201
+  - 2300
+  score: 30
+  score_raw: 下个三分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宝可梦漫威
+  genre_guess:
+  - 同人
+  - 漫威
+  - 宝可梦
+  overall_comment: 书名优秀，但金手指小众，剧情一般，分段夸张，需精练。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指策略系统可能小众，需要读者懂宝可梦
+    raw_quote: 这个系统策略可能有点小众啊 … 不一定读者懂
+  - dimension: simplicity
+    severity: negative
+    content: 描写冗长，分段过长，需多分段精简
+    raw_quote: 这描写有点AR味道 … 不能这么描述太多 多短距 多精简

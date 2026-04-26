@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1040
+title: 火影同仁文 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 火影
+  - 同人
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 少年英雄给你30分吧好吧 | 风格太玩梗，主线剧情推进慢，更像短片意淫而非起点主线叙事
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风格太玩梗，主线剧情推进慢，更像短片意淫而非起点主线叙事 | 雪白情趣过多，主线剧情几乎停滞
+  observable:
+  - 'pacing维度: 雪白情趣过多，主线剧情几乎停滞'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 751
+  - 900
+  score: 30
+  score_raw: 少年英雄给你30分吧好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 火影同仁文
+  genre_guess:
+  - 火影
+  - 同人
+  - 轻松
+  overall_comment: 风格太玩梗，主线剧情推进慢，更像短片意淫而非起点主线叙事
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 雪白情趣过多，主线剧情几乎停滞
+    raw_quote: 太玩梗了 太抢戏了 其实主线剧情没推进多少
+  - dimension: ops
+    severity: neutral
+    content: 封面很吸引人，流量价值高
+    raw_quote: 封面还是加两分 刚刚那个封面吸引人啊

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1206
+title: 植物人穿越架空种田 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 架空历史
+  - 种田
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能18分 | 代入感极差，开头事件烧脑无趣，设定混乱，阅读障碍严重。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感极差，开头事件烧脑无趣，设定混乱，阅读障碍严重。 | 开篇缺乏代入感，信息杂乱让读者无法共情;行文复杂难懂，像是自嗨不考虑读者
+  observable:
+  - 'opening维度: 开篇缺乏代入感，信息杂乱让读者无法共情'
+  - 'simplicity维度: 行文复杂难懂，像是自嗨不考虑读者'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 286
+  - 330
+  score: 18
+  score_raw: 只能18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 植物人穿越架空种田
+  genre_guess:
+  - 架空历史
+  - 种田
+  - 穿越
+  overall_comment: 代入感极差，开头事件烧脑无趣，设定混乱，阅读障碍严重。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏代入感，信息杂乱让读者无法共情
+    raw_quote: 代入感也不行对吧…叽里咕噜各种事件
+  - dimension: simplicity
+    severity: negative
+    content: 行文复杂难懂，像是自嗨不考虑读者
+    raw_quote: 就写这种看不懂的，卖点在哪里内容在哪里

@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1684
+title: 重生觉醒九龙拉棺系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  - 健身
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 健身开局有看点，但过程描写过于详细，穿越后剧情无聊，节奏拖沓。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 健身开局有看点，但过程描写过于详细，穿越后剧情无聊，节奏拖沓。 | 打针过程描写过于详细，节奏拖沓。;穿越后的日常剧情无聊，缺乏冲突看点。
+  observable:
+  - 'pacing维度: 打针过程描写过于详细，节奏拖沓。'
+  - 'opening维度: 穿越后的日常剧情无聊，缺乏冲突看点。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 195
+  - 281
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 重生觉醒九龙拉棺系统
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  - 健身
+  overall_comment: 健身开局有看点，但过程描写过于详细，穿越后剧情无聊，节奏拖沓。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 健身开局有一定代入感和看点。
+    raw_quote: 这个代入感还可以对吧，切入也是有点看点的
+  - dimension: pacing
+    severity: negative
+    content: 打针过程描写过于详细，节奏拖沓。
+    raw_quote: 咳没必要写这么详细了，你这写的太详细了
+  - dimension: opening
+    severity: negative
+    content: 穿越后的日常剧情无聊，缺乏冲突看点。
+    raw_quote: 穿过来之后的时间就一点都没意思的呀

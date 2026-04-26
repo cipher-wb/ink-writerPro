@@ -1,0 +1,66 @@
+case_id: CASE-LR-2026-1904
+title: 龟公修仙 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sSrFB5Eot
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是50多分吧 | 文笔和切入不错，但事件没意思，金手指出戏，主线俗套，整体不如前作。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sSrFB5Eot.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和切入不错，但事件没意思，金手指出戏，主线俗套，整体不如前作。 | 恩重如山却拉扯雪白，情绪处理不好;金手指出戏，与龟公不衔接;主线展开俗套没意思
+  observable:
+  - 'character维度: 恩重如山却拉扯雪白，情绪处理不好'
+  - 'golden_finger维度: 金手指出戏，与龟公不衔接'
+  - 'pacing维度: 主线展开俗套没意思'
+live_review_meta:
+  source_bvid: BV1sSrFB5Eot
+  source_line_range:
+  - 1
+  - 171
+  score: null
+  score_raw: 还是50多分吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 龟公修仙
+  genre_guess:
+  - 修仙
+  - 穿越
+  - 金手指
+  overall_comment: 文笔和切入不错，但事件没意思，金手指出戏，主线俗套，整体不如前作。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头切入较好
+    raw_quote: 切入好嘛 第一章对吧 就切入好吗
+  - dimension: character
+    severity: positive
+    content: 陈小峰人设可以
+    raw_quote: 像立哥这样的 陈小峰的人设也可以
+  - dimension: character
+    severity: negative
+    content: 恩重如山却拉扯雪白，情绪处理不好
+    raw_quote: 你既然说他对你恩重如山 你就不要拉扯雪白了 行不行
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指出戏，与龟公不衔接
+    raw_quote: 这个世界你姐姐这个金手指也挺出戏的 … 跟龟公不衔接啊
+  - dimension: pacing
+    severity: negative
+    content: 主线展开俗套没意思
+    raw_quote: 主线展开就是清玄宗招弟子嘛 很俗的展开 没意思

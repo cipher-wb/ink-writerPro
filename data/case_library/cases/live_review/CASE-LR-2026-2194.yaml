@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2194
+title: 龙月楼 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1y1zbBQEce
+scope:
+  genre:
+  - 都市
+  - 地府
+  - 轻松
+  - 女频
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就30分满分 | 代入感和细节描写不错，但整体过于轻松女频化，缺少起点需要的强主线与爽点，适合投番茄女频。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1y1zbBQEce.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感和细节描写不错，但整体过于轻松女频化，缺少起点需要的强主线与爽点，适合投番茄女频。 | 叙述风格偏女频轻松向，缺乏灵异恐怖氛围和爽点，不符合起点男频定位
+  observable:
+  - 'genre维度: 叙述风格偏女频轻松向，缺乏灵异恐怖氛围和爽点，不符合起点男频定位'
+live_review_meta:
+  source_bvid: BV1y1zbBQEce
+  source_line_range:
+  - 252
+  - 380
+  score: 30
+  score_raw: 差不多就30分满分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 龙月楼
+  genre_guess:
+  - 都市
+  - 地府
+  - 轻松
+  - 女频
+  - 系统
+  overall_comment: 代入感和细节描写不错，但整体过于轻松女频化，缺少起点需要的强主线与爽点，适合投番茄女频。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 男主穿越地府后心理真实，代入感强，细节情绪到位
+    raw_quote: 很有代入感，26岁，猝死在厕所，很真实
+  - dimension: genre
+    severity: negative
+    content: 叙述风格偏女频轻松向，缺乏灵异恐怖氛围和爽点，不符合起点男频定位
+    raw_quote: 有点女频味道太重了，起点不太合适

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1019
+title: 当模架里的 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 修仙
+  - 传统玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23左右吧 | 题材陈旧、烂梗，切入无聊，打分仅23。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材陈旧、烂梗，切入无聊，打分仅23。 | 题材太老，看到当魔门就没人点;开头旁敲侧击写场景，不写主角
+  observable:
+  - 'genre维度: 题材太老，看到当魔门就没人点'
+  - 'opening维度: 开头旁敲侧击写场景，不写主角'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 961
+  - 1050
+  score: 23
+  score_raw: 23左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 当模架里的
+  genre_guess:
+  - 修仙
+  - 传统玄幻
+  overall_comment: 题材陈旧、烂梗，切入无聊，打分仅23。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材太老，看到当魔门就没人点
+    raw_quote: 摩蒙一年了 出生摩蒙去年三月份的书 大家现在看到这种当摩蒙 就根本就不点
+  - dimension: opening
+    severity: negative
+    content: 开头旁敲侧击写场景，不写主角
+    raw_quote: 写主角吧 别写场景了 赶紧写主角

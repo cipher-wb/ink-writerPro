@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0422
+title: 反人类重犯诡异 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 诡异
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35~40之间，35分吧 | 比例还行，但题材太垃圾，设定太多没代入感，建议换都市脑洞文
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例还行，但题材太垃圾，设定太多没代入感，建议换都市脑洞文 | 选题材时已经养猪了，设定太多，缺乏事件和代入感
+  observable:
+  - 'genre维度: 选题材时已经养猪了，设定太多，缺乏事件和代入感'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1587
+  - 1682
+  score: 35
+  score_raw: 35~40之间，35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 反人类重犯诡异
+  genre_guess:
+  - 诡异
+  - 都市
+  - 异能
+  overall_comment: 比例还行，但题材太垃圾，设定太多没代入感，建议换都市脑洞文
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 选题材时已经养猪了，设定太多，缺乏事件和代入感
+    raw_quote: 就当大哥选择这个题萨的时候，其实已经养猪了...你第一章设定太多了，这些破元素太多了，反而主角的代入感以及事件太少了
+  - dimension: simplicity
+    severity: positive
+    content: 比例还行，文笔够，听劝换题材很容易入行
+    raw_quote: 比例还其实没啥问题，文笔挺好的...你写个正常的脑洞...很容易入行的

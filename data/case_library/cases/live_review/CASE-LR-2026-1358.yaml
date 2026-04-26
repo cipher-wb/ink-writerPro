@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1358
+title: 足球詹姆斯系统 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 体育
+  - 足球
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧浪费老动物 | 老手写得一本正经，没抓住詹姆斯梗的乐子精髓，浪费稀缺题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老手写得一本正经，没抓住詹姆斯梗的乐子精髓，浪费稀缺题材。 | 书名玩梗但内容一本正经，没乐趣，不懂玩梗驱动;应该围绕系统玩梗（决定、看书、抱团等）展开
+  observable:
+  - 'misc维度: 书名玩梗但内容一本正经，没乐趣，不懂玩梗驱动'
+  - 'misc维度: 应该围绕系统玩梗（决定、看书、抱团等）展开'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 901
+  - 994
+  score: 35
+  score_raw: 35分吧浪费老动物
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 足球詹姆斯系统
+  genre_guess:
+  - 体育
+  - 足球
+  - 系统
+  overall_comment: 老手写得一本正经，没抓住詹姆斯梗的乐子精髓，浪费稀缺题材。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 书名玩梗但内容一本正经，没乐趣，不懂玩梗驱动
+    raw_quote: 我把饭都喂到你嘴里了...你不要一本正经写
+  - dimension: misc
+    severity: negative
+    content: 应该围绕系统玩梗（决定、看书、抱团等）展开
+    raw_quote: 你要自称你是历史最强呀...加点呀成功呀

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0169
+title: 重申造好安全屋末日不来了 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 末世
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就是20來分的水平嘛 | 主角智商低，无爽点，人设太白，建议加系统或错位卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角智商低，无爽点，人设太白，建议加系统或错位卖点。 | 主角没有智商，缺乏魅力;爽点一直不出，故事平淡
+  observable:
+  - 'character维度: 主角没有智商，缺乏魅力'
+  - 'highpoint维度: 爽点一直不出，故事平淡'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 1888
+  - 1994
+  score: 20
+  score_raw: 也就是20來分的水平嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重申造好安全屋末日不来了
+  genre_guess:
+  - 末世
+  - 重生
+  overall_comment: 主角智商低，无爽点，人设太白，建议加系统或错位卖点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角没有智商，缺乏魅力
+    raw_quote: 這些沒智商 就被人家槍斃了
+  - dimension: highpoint
+    severity: negative
+    content: 爽点一直不出，故事平淡
+    raw_quote: 爽點在哪裡 末日不來了 爽點在哪裡 你還是沒告訴我

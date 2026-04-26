@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2072
+title: 穿越成教堂执事，康斯坦丁副本 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 北美驱魔
+  - 穿越
+  - 神父
+  - 恶魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最后停在了40分 | 切入剧情尚可，但小剧场缺少细腻描写，心理活动与角色反应不足，代入感差；北美驱魔卷，需学金鱼哥强化小剧场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入剧情尚可，但小剧场缺少细腻描写，心理活动与角色反应不足，代入感差；北美驱魔卷，需学金鱼哥强化小剧场。 | 小剧场干巴巴，缺乏代入感与心理活动;整体事件安排不够精彩，纯靠遣词造句撑不起看点
+  observable:
+  - 'opening维度: 小剧场干巴巴，缺乏代入感与心理活动'
+  - 'simplicity维度: 整体事件安排不够精彩，纯靠遣词造句撑不起看点'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 14
+  - 75
+  score: 40
+  score_raw: 最后停在了40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越成教堂执事，康斯坦丁副本
+  genre_guess:
+  - 北美驱魔
+  - 穿越
+  - 神父
+  - 恶魔
+  overall_comment: 切入剧情尚可，但小剧场缺少细腻描写，心理活动与角色反应不足，代入感差；北美驱魔卷，需学金鱼哥强化小剧场。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 小剧场干巴巴，缺乏代入感与心理活动
+    raw_quote: 这个小剧场太差了，你应该重点写这个呀，恶魔从那女孩身体里滚出来，把这个式子写清楚……干巴巴，心理活动少，角色的反应少，互动少主
+  - dimension: simplicity
+    severity: negative
+    content: 整体事件安排不够精彩，纯靠遣词造句撑不起看点
+    raw_quote: 整个事件写的不够精彩，代入感还是比较差，然后这个事件安排不是很好的小剧场

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1610
+title: 月明星稀灵异祷告 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 灵异
+  - 鬼怪
+  - 诅咒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开篇前因后果不明，读者一头雾水，缺乏期待感，灵异感薄弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇前因后果不明，读者一头雾水，缺乏期待感，灵异感薄弱。 | 没有交代主角目的和前因，剧情崩坏，读者看不懂;小剧场不好看，缺乏智斗反转，无吸引力
+  observable:
+  - 'opening维度: 没有交代主角目的和前因，剧情崩坏，读者看不懂'
+  - 'hook维度: 小剧场不好看，缺乏智斗反转，无吸引力'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 410
+  - 489
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: fail
+  title_guess: 月明星稀灵异祷告
+  genre_guess:
+  - 灵异
+  - 鬼怪
+  - 诅咒
+  overall_comment: 开篇前因后果不明，读者一头雾水，缺乏期待感，灵异感薄弱。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 没有交代主角目的和前因，剧情崩坏，读者看不懂
+    raw_quote: 看不懂兄弟看不懂你的前因 … 少一个信息量让读者懂你在这里干嘛
+  - dimension: hook
+    severity: negative
+    content: 小剧场不好看，缺乏智斗反转，无吸引力
+    raw_quote: 小劇場失敗了因為你的小劇場不好看 … 沒有智鬥沒有智商反轉

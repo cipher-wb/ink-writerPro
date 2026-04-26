@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1651
+title: 黑神话大圣归来 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 仙侠
+  - 西游
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是有四十分吧 | 情绪OK但思路过时，沉浸感不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪OK但思路过时，沉浸感不足。 | 黑神话悟空同人，缺乏新意。
+  observable:
+  - 'genre维度: 黑神话悟空同人，缺乏新意。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 1261
+  - 1310
+  score: 40
+  score_raw: 还是有四十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 黑神话大圣归来
+  genre_guess:
+  - 仙侠
+  - 西游
+  - 同人
+  overall_comment: 情绪OK但思路过时，沉浸感不足。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 黑神话悟空同人，缺乏新意。
+    raw_quote: 太像了，大概发给游科吧

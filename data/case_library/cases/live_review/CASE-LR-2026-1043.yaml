@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1043
+title: 道士北美驱魔文 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 都市
+  - 道家
+  - 北美
+  - 驱魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40多分 | 文笔扎实但开头事件设计无聊，像电视剧，缺乏独特的勾子
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但开头事件设计无聊，像电视剧，缺乏独特的勾子 | 开头事件选择太平淡，没有类似神父忏悔那样的强钩子;整体剧情设计不吸引人，过于正经像电视剧
+  observable:
+  - 'opening维度: 开头事件选择太平淡，没有类似神父忏悔那样的强钩子'
+  - 'highpoint维度: 整体剧情设计不吸引人，过于正经像电视剧'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 1201
+  - 1400
+  score: 40
+  score_raw: 40多分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 道士北美驱魔文
+  genre_guess:
+  - 都市
+  - 道家
+  - 北美
+  - 驱魔
+  overall_comment: 文笔扎实但开头事件设计无聊，像电视剧，缺乏独特的勾子
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头事件选择太平淡，没有类似神父忏悔那样的强钩子
+    raw_quote: 你这个开头 你像那个驱魔大哥 开头是神父对吧 忏悔 ... 那种开头就读者一上来就看上去了 你这种没有啊
+  - dimension: highpoint
+    severity: negative
+    content: 整体剧情设计不吸引人，过于正经像电视剧
+    raw_quote: 剧情设计的不吸引人 这个像是电视剧中心

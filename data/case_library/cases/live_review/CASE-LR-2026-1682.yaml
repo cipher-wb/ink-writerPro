@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1682
+title: 宇宙最强者穿越玄幻 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 玄幻
+  - 仙侠
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 设定过多，知识堆砌但用不上，新人应多用现成背景讲故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定过多，知识堆砌但用不上，新人应多用现成背景讲故事。 | 开篇设定过多，缺乏故事性和代入感。;题材混杂不明确，读者难以定位。
+  observable:
+  - 'opening维度: 开篇设定过多，缺乏故事性和代入感。'
+  - 'genre维度: 题材混杂不明确，读者难以定位。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 89
+  - 161
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 宇宙最强者穿越玄幻
+  genre_guess:
+  - 玄幻
+  - 仙侠
+  - 穿越
+  overall_comment: 设定过多，知识堆砌但用不上，新人应多用现成背景讲故事。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇设定过多，缺乏故事性和代入感。
+    raw_quote: 新人写书尽量记得少设定啊，多讲故事背景
+  - dimension: genre
+    severity: negative
+    content: 题材混杂不明确，读者难以定位。
+    raw_quote: 你要确认这是玄幻的仙侠，要明确给读者

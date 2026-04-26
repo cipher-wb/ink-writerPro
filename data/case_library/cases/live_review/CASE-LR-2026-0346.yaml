@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0346
+title: 魔法世界拍魔物 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 游戏异界
+  - 搞笑
+  - 拍摄
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就20分 还是拉垮小卡 | 拍摄神奇动物作为主线毫无吸引力，自嗨成分太重。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 拍摄神奇动物作为主线毫无吸引力，自嗨成分太重。 | 切入点完全崩坏，拍魔物动物照根本没人看;题材极度冷门，JK罗琳也救不了
+  observable:
+  - 'hook维度: 切入点完全崩坏，拍魔物动物照根本没人看'
+  - 'genre维度: 题材极度冷门，JK罗琳也救不了'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 2740
+  - 2929
+  score: 20
+  score_raw: 就20分 还是拉垮小卡
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔法世界拍魔物
+  genre_guess:
+  - 游戏异界
+  - 搞笑
+  - 拍摄
+  overall_comment: 拍摄神奇动物作为主线毫无吸引力，自嗨成分太重。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 切入点完全崩坏，拍魔物动物照根本没人看
+    raw_quote: 关我屁事…谁在乎这些动物的习性拍摄
+  - dimension: genre
+    severity: negative
+    content: 题材极度冷门，JK罗琳也救不了
+    raw_quote: 你把JK罗宁拉过来 拉到起点 他也不敢这样写开头

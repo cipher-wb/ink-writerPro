@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1476
+title: 东京检察官狗男女 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 都市
+  - 检察官
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你58分 | 第一章没写好，后面二三章水平高，雪白牛逼但剧情性不够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章没写好，后面二三章水平高，雪白牛逼但剧情性不够。 | 第一章没写好，事件表达不明显
+  observable:
+  - 'opening维度: 第一章没写好，事件表达不明显'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1441
+  - 1530
+  score: 58
+  score_raw: 给你58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东京检察官狗男女
+  genre_guess:
+  - 都市
+  - 检察官
+  - 雪白
+  overall_comment: 第一章没写好，后面二三章水平高，雪白牛逼但剧情性不够。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章没写好，事件表达不明显
+    raw_quote: 第一章真的不够
+  - dimension: character
+    severity: positive
+    content: 后面女主立得好
+    raw_quote: 这个女的力的特别好

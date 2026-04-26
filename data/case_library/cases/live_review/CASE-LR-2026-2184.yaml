@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2184
+title: 姐姐的亲吻（东京爱情） (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 都市
+  - 爱情
+  - 女频
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分吧 | 文笔非常细腻，像散文女频，但不是起点签约方向，适合晋江。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔非常细腻，像散文女频，但不是起点签约方向，适合晋江。 | 比例很强很细腻，但起点签不了，像晋江
+  observable:
+  - 'genre维度: 比例很强很细腻，但起点签不了，像晋江'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1170
+  - 1213
+  score: 45
+  score_raw: 45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 姐姐的亲吻（东京爱情）
+  genre_guess:
+  - 都市
+  - 爱情
+  - 女频
+  overall_comment: 文笔非常细腻，像散文女频，但不是起点签约方向，适合晋江。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 比例很强很细腻，但起点签不了，像晋江
+    raw_quote: 比例很强 没问题那个 … 但是起点签不了啊 我不是女评编辑嘛
+  - dimension: misc
+    severity: positive
+    content: 非常细腻，文笔扎实，很佩服
+    raw_quote: 比例挺好的 写的挺细腻的 … 很佩服

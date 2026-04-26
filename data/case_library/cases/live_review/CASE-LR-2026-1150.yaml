@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1150
+title: 武川 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 历史
+  - 北魏
+  - 文言
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二三十分的样子 | 文笔不错，但过分文青，第二章直接变成散文，完全没有网文的故事性和代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，但过分文青，第二章直接变成散文，完全没有网文的故事性和代入感。 | 第一章还有点故事，第二章完全沦为自嗨散文;大量少数民族名字，读者无法代入
+  observable:
+  - 'opening维度: 第一章还有点故事，第二章完全沦为自嗨散文'
+  - 'character维度: 大量少数民族名字，读者无法代入'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 1521
+  - 1640
+  score: null
+  score_raw: 二三十分的样子
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 武川
+  genre_guess:
+  - 历史
+  - 北魏
+  - 文言
+  overall_comment: 文笔不错，但过分文青，第二章直接变成散文，完全没有网文的故事性和代入感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章还有点故事，第二章完全沦为自嗨散文
+    raw_quote: 第二章已经完全自嗨了 已经是诗歌了 已经是散文了
+  - dimension: character
+    severity: negative
+    content: 大量少数民族名字，读者无法代入
+    raw_quote: 名字都太难念了 … 读者代入不了 我们都是正常的百家姓
+  - dimension: simplicity
+    severity: neutral
+    content: 文笔确实有一定功力，但不是网文写法
+    raw_quote: 文笔倒也还好 不像初中的 … 文笔还可以的

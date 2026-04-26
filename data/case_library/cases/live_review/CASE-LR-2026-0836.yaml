@@ -1,0 +1,41 @@
+case_id: CASE-LR-2026-0836
+title: 只发七天 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 荒野直播
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 会员稿，提到荒野直播求生有用吗，仅看封面未点评。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 会员稿，提到荒野直播求生有用吗，仅看封面未点评。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 111
+  - 125
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 只发七天
+  genre_guess:
+  - 荒野直播
+  - 求生
+  overall_comment: 会员稿，提到荒野直播求生有用吗，仅看封面未点评。
+  comments: []

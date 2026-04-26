@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0028
+title: 人在三国只想种田行医 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多有个40来分吧 | 节奏快但逻辑性不足，帮曹操压力大，建议发飞卢。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快但逻辑性不足，帮曹操压力大，建议发飞卢。 | 帮曹操势力读者难接受;粮草官教曹操装逼出戏
+  observable:
+  - 'character维度: 帮曹操势力读者难接受'
+  - 'pacing维度: 粮草官教曹操装逼出戏'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 445
+  - 470
+  score: 40
+  score_raw: 差不多有个40来分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 人在三国只想种田行医
+  genre_guess:
+  - 历史
+  - 三国
+  - 种田
+  overall_comment: 节奏快但逻辑性不足，帮曹操压力大，建议发飞卢。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 帮曹操势力读者难接受
+    raw_quote: 在起点 现在七成都是季汉 写曹操 你要面临很大的压力
+  - dimension: pacing
+    severity: negative
+    content: 粮草官教曹操装逼出戏
+    raw_quote: 你一个小小的粮草官 你在这里教曹操做事吗 我不信

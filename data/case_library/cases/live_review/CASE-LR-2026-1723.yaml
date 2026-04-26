@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1723
+title: 异界修仙者（李国强） (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25 兄弟 真的 只能25 | 比例和女角色描写尚可，但主线太弱，专注于设定和功法细节，爽点不明。身份设定俗套，逻辑自洽不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例和女角色描写尚可，但主线太弱，专注于设定和功法细节，爽点不明。身份设定俗套，逻辑自洽不足。 | 主线太弱，专注设定功法，爽点不明
+  observable:
+  - 'pacing维度: 主线太弱，专注设定功法，爽点不明'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1399
+  - 1466
+  score: 25
+  score_raw: 25 兄弟 真的 只能25
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 异界修仙者（李国强）
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 雪白
+  overall_comment: 比例和女角色描写尚可，但主线太弱，专注于设定和功法细节，爽点不明。身份设定俗套，逻辑自洽不足。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 主线太弱，专注设定功法，爽点不明
+    raw_quote: 不是大哥你到底是不是有问题 尽情的推拉 那就好好的
+  - dimension: character
+    severity: positive
+    content: 雪白描写能力得到认可，女角色拉扯有潜力
+    raw_quote: 到此以后的雪白不能为一个心爱的女孩放弃

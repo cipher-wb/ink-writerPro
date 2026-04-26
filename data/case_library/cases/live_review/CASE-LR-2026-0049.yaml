@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0049
+title: 刚穿越重生发现在梅山上 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 历史
+  - 明清
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 黄太极代入感毒点，但文笔节奏可以，建议直发看数据。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 黄太极代入感毒点，但文笔节奏可以，建议直发看数据。 | 黄太极难代入
+  observable:
+  - 'character维度: 黄太极难代入'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 781
+  - 830
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 刚穿越重生发现在梅山上
+  genre_guess:
+  - 历史
+  - 明清
+  overall_comment: 黄太极代入感毒点，但文笔节奏可以，建议直发看数据。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 黄太极难代入
+    raw_quote: 穿成黄太极也挺毒的
+  - dimension: pacing
+    severity: positive
+    content: 节奏和比例没问题
+    raw_quote: 比例没问题

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1461
+title: 末日边缘文娱模仿稿 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 末日
+  - 文娱
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48嘛上不去 | 开头还行，后面节奏不对，配角没立起来，没写出末日文娱的亮点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头还行，后面节奏不对，配角没立起来，没写出末日文娱的亮点。 | 后面节奏不对，水其他内容;顶流影后没续上，配角没力
+  observable:
+  - 'pacing维度: 后面节奏不对，水其他内容'
+  - 'character维度: 顶流影后没续上，配角没力'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 91
+  - 180
+  score: 48
+  score_raw: 48嘛上不去
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日边缘文娱模仿稿
+  genre_guess:
+  - 末日
+  - 文娱
+  - 重生
+  overall_comment: 开头还行，后面节奏不对，配角没立起来，没写出末日文娱的亮点。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 切入好一点，开头还行
+    raw_quote: 开局也好
+  - dimension: pacing
+    severity: negative
+    content: 后面节奏不对，水其他内容
+    raw_quote: 后面节奏不对了 后面的有点水
+  - dimension: character
+    severity: negative
+    content: 顶流影后没续上，配角没力
+    raw_quote: 你的影后 对吧你顶流影后没续上

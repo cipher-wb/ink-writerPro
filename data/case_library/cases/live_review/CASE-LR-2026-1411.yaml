@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-1411
+title: 1977穷山沟捡漏女知青 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1dji6B8EfA
+scope:
+  genre:
+  - 年代
+  - 穿越
+  - 种田
+  - 女知青
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 到现在为止签约水平对啊 | 年代氛围描写到位，人设立体，但第三章需尽快展开主线，主角互动方式需调整，整体可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dji6B8EfA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 年代氛围描写到位，人设立体，但第三章需尽快展开主线，主角互动方式需调整，整体可签约。 | 第三章需尽快展开主线，明确主角能力破局方式;主角追求女主的方式需改为吸引而非舔狗
+  observable:
+  - 'pacing维度: 第三章需尽快展开主线，明确主角能力破局方式'
+  - 'character维度: 主角追求女主的方式需改为吸引而非舔狗'
+live_review_meta:
+  source_bvid: BV1dji6B8EfA
+  source_line_range:
+  - 6
+  - 149
+  score: null
+  score_raw: 到现在为止签约水平对啊
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 1977穷山沟捡漏女知青
+  genre_guess:
+  - 年代
+  - 穿越
+  - 种田
+  - 女知青
+  overall_comment: 年代氛围描写到位，人设立体，但第三章需尽快展开主线，主角互动方式需调整，整体可签约。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇年代气息浓厚，描写不突兀
+    raw_quote: 有种年代气息，没有写那些叽里咕噜那些破东西
+  - dimension: pacing
+    severity: negative
+    content: 第三章需尽快展开主线，明确主角能力破局方式
+    raw_quote: 第三章要出来的
+  - dimension: character
+    severity: negative
+    content: 主角追求女主的方式需改为吸引而非舔狗
+    raw_quote: 就你不要追她呀……都是女的倒贴啊
+  - dimension: character
+    severity: positive
+    content: 女主人设通过芭蕾舞和多人追求提升魅力
+    raw_quote: 女的会跳芭蕾她肯定是加分项呀
+  - dimension: misc
+    severity: positive
+    content: 利用成分问题设置捡漏剧情，增强戏剧性
+    raw_quote: 这正好让大哥捡漏嘛

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0115
+title: 我是吕布/三国穿越 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 三国
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分不错 | 比例好，讲故事水平好，切入名场面可以但三国读者不爱看系统，吕布打不过刘关张逻辑有问题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例好，讲故事水平好，切入名场面可以但三国读者不爱看系统，吕布打不过刘关张逻辑有问题。 | 系统在三国太毒，真吕布也打不过刘关张
+  observable:
+  - 'golden_finger维度: 系统在三国太毒，真吕布也打不过刘关张'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 2001
+  - 2120
+  score: 50
+  score_raw: 50分不错
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 我是吕布/三国穿越
+  genre_guess:
+  - 三国
+  - 穿越
+  - 系统
+  overall_comment: 比例好，讲故事水平好，切入名场面可以但三国读者不爱看系统，吕布打不过刘关张逻辑有问题。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入比例挺好的，讲故事水平在线
+    raw_quote: 大概切入比例挺好的，这个比例在起约起点签约水平
+  - dimension: golden_finger
+    severity: negative
+    content: 系统在三国太毒，真吕布也打不过刘关张
+    raw_quote: 不是你真吕布也打不过刘关张呀，怎么可能呀

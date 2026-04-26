@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0599
+title: 上交国家异世界 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 科幻
+  - 穿越
+  - 上交国家
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例还好呃 题材拉垮38分吧 | 比例还好但题材陈旧，蓝精灵流行过的套路，缺乏新意，人物也不够亮眼。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例还好但题材陈旧，蓝精灵流行过的套路，缺乏新意，人物也不够亮眼。 | 上交国家流在番茄已火过，起点也有，题材拉垮;人设一般，显得老套
+  observable:
+  - 'genre维度: 上交国家流在番茄已火过，起点也有，题材拉垮'
+  - 'character维度: 人设一般，显得老套'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 1601
+  - 1750
+  score: 38
+  score_raw: 比例还好呃 题材拉垮38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 上交国家异世界
+  genre_guess:
+  - 科幻
+  - 穿越
+  - 上交国家
+  overall_comment: 比例还好但题材陈旧，蓝精灵流行过的套路，缺乏新意，人物也不够亮眼。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 上交国家流在番茄已火过，起点也有，题材拉垮
+    raw_quote: 这玩意番茄已经火了大半年了...题材拉垮
+  - dimension: character
+    severity: negative
+    content: 人设一般，显得老套
+    raw_quote: 这人设也垃圾对吧...老套啊

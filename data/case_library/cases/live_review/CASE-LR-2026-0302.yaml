@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0302
+title: 水浒南招安 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 历史
+  - 水浒
+  - 神话版
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44可以了 | 脑洞好，但节奏拖沓，人设低智，需要大改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞好，但节奏拖沓，人设低智，需要大改。 | 情节推进缓慢，解释过多;主角人设愚蠢，不符合现代人预期
+  observable:
+  - 'pacing维度: 情节推进缓慢，解释过多'
+  - 'character维度: 主角人设愚蠢，不符合现代人预期'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 811
+  - 870
+  score: 44
+  score_raw: 44可以了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 水浒南招安
+  genre_guess:
+  - 历史
+  - 水浒
+  - 神话版
+  overall_comment: 脑洞好，但节奏拖沓，人设低智，需要大改。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 情节推进缓慢，解释过多
+    raw_quote: 但是有点拖沓 这个有点拖沓
+  - dimension: character
+    severity: negative
+    content: 主角人设愚蠢，不符合现代人预期
+    raw_quote: 主角人设要注意沉稳... 智商高一点可能会好很多
+  - dimension: highpoint
+    severity: positive
+    content: 杀高俅逼梁山不能招安的设想有创意
+    raw_quote: 这个脑洞挺好的 你这次一上来把高俅杀了 就没办法招安了

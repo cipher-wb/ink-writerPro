@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0032
+title: 明末乱世崇祯 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 历史
+  - 明末
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多30多分吧 | 帮李自成是毒点，主角心理活动少，30多分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 帮李自成是毒点，主角心理活动少，30多分。 | 帮李自成败读者好感;不符合起点大明粉丝口味
+  observable:
+  - 'character维度: 帮李自成败读者好感'
+  - 'ops维度: 不符合起点大明粉丝口味'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 560
+  - 590
+  score: 35
+  score_raw: 差不多30多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 明末乱世崇祯
+  genre_guess:
+  - 历史
+  - 明末
+  overall_comment: 帮李自成是毒点，主角心理活动少，30多分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 帮李自成败读者好感
+    raw_quote: 你帮李自成这个我真不觉得这个 ... 你确定读者爱看吗
+  - dimension: ops
+    severity: negative
+    content: 不符合起点大明粉丝口味
+    raw_quote: 你看大明的不喜欢李自成

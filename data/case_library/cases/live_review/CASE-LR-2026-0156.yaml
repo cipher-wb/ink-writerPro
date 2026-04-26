@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0156
+title: 喵喵喵 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 航海
+  - 海盗
+  - 海战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 哎呦还有30 就这还要30分 节奏快了一点 那要32分 | 节奏着急不接地气，战斗描写过多，缺乏情感和雪白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏着急不接地气，战斗描写过多，缺乏情感和雪白。 | 一上来就开炮，铺垫不足，读者不爱看过程;船长喊秀琴致敬亮剑但缺情感拉扯，无女人浪漫
+  observable:
+  - 'pacing维度: 一上来就开炮，铺垫不足，读者不爱看过程'
+  - 'ops维度: 船长喊秀琴致敬亮剑但缺情感拉扯，无女人浪漫'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 356
+  - 365
+  score: 30
+  score_raw: 哎呦还有30 就这还要30分 节奏快了一点 那要32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 喵喵喵
+  genre_guess:
+  - 航海
+  - 海盗
+  - 海战
+  overall_comment: 节奏着急不接地气，战斗描写过多，缺乏情感和雪白。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 一上来就开炮，铺垫不足，读者不爱看过程
+    raw_quote: 这些打架的东西少写 怎么装填炮弹 谁在乎啊 开炮之前的铺垫啊 这才是重点啊
+  - dimension: ops
+    severity: negative
+    content: 船长喊秀琴致敬亮剑但缺情感拉扯，无女人浪漫
+    raw_quote: 海盗什么叫海盗 就是得有妹妹唉 海上的船上不能没有妹妹

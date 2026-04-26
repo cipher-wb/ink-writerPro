@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1210
+title: 煤老板的重生娱乐帝国 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 文娱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40吧 | 三管齐下的重生煤老板+女明星+年代感思路正确，但当前开篇太虚，需落实年代细节。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 三管齐下的重生煤老板+女明星+年代感思路正确，但当前开篇太虚，需落实年代细节。 | 开头架空虚浮，没有立即落地年代优势
+  observable:
+  - 'opening维度: 开头架空虚浮，没有立即落地年代优势'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 473
+  - 505
+  score: 40
+  score_raw: 差不多40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 煤老板的重生娱乐帝国
+  genre_guess:
+  - 都市
+  - 重生
+  - 文娱
+  overall_comment: 三管齐下的重生煤老板+女明星+年代感思路正确，但当前开篇太虚，需落实年代细节。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头架空虚浮，没有立即落地年代优势
+    raw_quote: 现在架空事件一点意思都没有…什么都没有我来了

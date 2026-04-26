@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1981
+title: 猫城/召唤师 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 轻小说
+  - 猫
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个40分左右 | 故事无聊，只有猫和日常缺少冲突，期待感不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事无聊，只有猫和日常缺少冲突，期待感不足。 | 开局平淡没有吸引人的事件;缺少有人格魅力的角色互动
+  observable:
+  - 'opening维度: 开局平淡没有吸引人的事件'
+  - 'character维度: 缺少有人格魅力的角色互动'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 841
+  - 930
+  score: 40
+  score_raw: 有个40分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 猫城/召唤师
+  genre_guess:
+  - 轻小说
+  - 猫
+  - 日常
+  overall_comment: 故事无聊，只有猫和日常缺少冲突，期待感不足。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局平淡没有吸引人的事件
+    raw_quote: 没极端事件也人设不咋样
+  - dimension: character
+    severity: negative
+    content: 缺少有人格魅力的角色互动
+    raw_quote: 没有人物让你产生互动，没有冲突

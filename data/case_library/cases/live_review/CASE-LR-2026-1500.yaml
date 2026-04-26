@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1500
+title: 重返不平凡的高中生活 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 高中
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你30分 还行吧 | 太写实像日记，缺少重生文的爽点和金手指
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太写实像日记，缺少重生文的爽点和金手指 | 开头过于详细写实，未快速切入重生剧情;需要学习网文套路，不能流水账
+  observable:
+  - 'opening维度: 开头过于详细写实，未快速切入重生剧情'
+  - 'misc维度: 需要学习网文套路，不能流水账'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 871
+  - 915
+  score: 30
+  score_raw: 给你30分 还行吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重返不平凡的高中生活
+  genre_guess:
+  - 都市
+  - 重生
+  - 高中
+  overall_comment: 太写实像日记，缺少重生文的爽点和金手指
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头过于详细写实，未快速切入重生剧情
+    raw_quote: 太详细了网文重生文看得太少了 就是日记的感觉
+  - dimension: misc
+    severity: negative
+    content: 需要学习网文套路，不能流水账
+    raw_quote: 要学习网文的套路思维 不能流水仗

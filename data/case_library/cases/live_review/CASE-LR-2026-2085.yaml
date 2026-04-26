@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-2085
+title: 砸锅卖铁也要开会员的乐子文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 轻小说
+  - 直播文
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 分就不打了 | 纯属整活文，篇幅短小，只为娱乐效果无签约考量。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯属整活文，篇幅短小，只为娱乐效果无签约考量。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1000
+  - 1030
+  score: null
+  score_raw: 分就不打了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 砸锅卖铁也要开会员的乐子文
+  genre_guess:
+  - 轻小说
+  - 直播文
+  - 恶搞
+  overall_comment: 纯属整活文，篇幅短小，只为娱乐效果无签约考量。
+  comments: []

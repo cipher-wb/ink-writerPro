@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0517
+title: 渣男修罗场后宫 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 仙侠
+  - 恋爱
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28撑满 | 前两章系统驱动崩盘，人物像NPC，完全没有仙子拉扯水平。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 前两章系统驱动崩盘，人物像NPC，完全没有仙子拉扯水平。 | 人物立不住，互动无张力，像NPC;前两章完全是系统任务驱动，没正常展开;缺乏写仙子拉扯的水平，直言相告无法改
+  observable:
+  - 'character维度: 人物立不住，互动无张力，像NPC'
+  - 'opening维度: 前两章完全是系统任务驱动，没正常展开'
+  - 'misc维度: 缺乏写仙子拉扯的水平，直言相告无法改'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 571
+  - 605
+  score: 28
+  score_raw: 28撑满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 渣男修罗场后宫
+  genre_guess:
+  - 仙侠
+  - 恋爱
+  - 后宫
+  overall_comment: 前两章系统驱动崩盘，人物像NPC，完全没有仙子拉扯水平。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物立不住，互动无张力，像NPC
+    raw_quote: 人物其实很虚，跟PC4的
+  - dimension: opening
+    severity: negative
+    content: 前两章完全是系统任务驱动，没正常展开
+    raw_quote: 前两章奔往呀，前两章奔完了
+  - dimension: misc
+    severity: negative
+    content: 缺乏写仙子拉扯的水平，直言相告无法改
+    raw_quote: 雪白还是需要一些水平写...没有改了价值

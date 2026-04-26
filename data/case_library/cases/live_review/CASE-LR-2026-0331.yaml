@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0331
+title: 吸血鬼女骑士 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 奇幻
+  - 吸血鬼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 加两分可以，本来58分加两分 | 题材思路能写，变身文有市场潜力，需要加强人设智商和主角性别定位（建议保持男性）。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材思路能写，变身文有市场潜力，需要加强人设智商和主角性别定位（建议保持男性）。 | 人设智商太低，傻白甜让人出戏。;变身成女性会进一步缩小本就小众的受众群体，编辑恳求不要变性。
+  observable:
+  - 'character维度: 人设智商太低，傻白甜让人出戏。'
+  - 'ops维度: 变身成女性会进一步缩小本就小众的受众群体，编辑恳求不要变性。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 2404
+  - 2505
+  score: null
+  score_raw: 加两分可以，本来58分加两分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 吸血鬼女骑士
+  genre_guess:
+  - 奇幻
+  - 吸血鬼
+  overall_comment: 题材思路能写，变身文有市场潜力，需要加强人设智商和主角性别定位（建议保持男性）。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 吸血鬼题材有新鲜感，思路正确。
+    raw_quote: 写吸血鬼倒是挺少的...其实思路倒是能写的
+  - dimension: character
+    severity: negative
+    content: 人设智商太低，傻白甜让人出戏。
+    raw_quote: 感觉全是笨笨的...智商太低了...我觉得这个人设挺差的
+  - dimension: ops
+    severity: negative
+    content: 变身成女性会进一步缩小本就小众的受众群体，编辑恳求不要变性。
+    raw_quote: 不要变女的呀...你让你的受众又成功缩小了一半...不要啊

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0431
+title: 素晴同人魔法少女 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 同人
+  - 奇幻
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数（抄袭不打分） | 轻小说味道足，但如果全是抄原著就不打分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 轻小说味道足，但如果全是抄原著就不打分 | 如果全是抄原著就不打分，不能直接抄
+  observable:
+  - 'misc维度: 如果全是抄原著就不打分，不能直接抄'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 2317
+  - 2396
+  score: null
+  score_raw: 未明确说出分数（抄袭不打分）
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 素晴同人魔法少女
+  genre_guess:
+  - 同人
+  - 奇幻
+  - 轻小说
+  overall_comment: 轻小说味道足，但如果全是抄原著就不打分
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 轻小说味道很足，对话有热性味道
+    raw_quote: 比例味道还是有，轻小说的味道是有的...味道还是有的
+  - dimension: misc
+    severity: negative
+    content: 如果全是抄原著就不打分，不能直接抄
+    raw_quote: 全是超原创...重复度很高吗...如果抄袭，那就不打分了呗

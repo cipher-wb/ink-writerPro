@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1690
+title: 血魔圣体海克斯系统 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 骚扰这个可能也就是个20分左右吧 | 事件无聊，内容空虚，背景世界观混乱，节奏虽快但仅为反杀套路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件无聊，内容空虚，背景世界观混乱，节奏虽快但仅为反杀套路。 | 世界观中西混杂，定位不清，读者看不懂。;爽点仅靠无脑反杀，缺乏人物关系改变和真正爽感。
+  observable:
+  - 'genre维度: 世界观中西混杂，定位不清，读者看不懂。'
+  - 'highpoint维度: 爽点仅靠无脑反杀，缺乏人物关系改变和真正爽感。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 548
+  - 598
+  score: 25
+  score_raw: 骚扰这个可能也就是个20分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 血魔圣体海克斯系统
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 金手指
+  overall_comment: 事件无聊，内容空虚，背景世界观混乱，节奏虽快但仅为反杀套路。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观中西混杂，定位不清，读者看不懂。
+    raw_quote: 你这玩意...也不东方也不仙侠也不民俗，所以说就很出戏
+  - dimension: highpoint
+    severity: negative
+    content: 爽点仅靠无脑反杀，缺乏人物关系改变和真正爽感。
+    raw_quote: 不就是反杀吗...故事就是人物关系的改变呀

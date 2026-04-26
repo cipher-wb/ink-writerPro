@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1460
+title: 武松半演潘金莲 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 戏曲
+  - 民俗
+  - 灵异
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 可能四十五分吧 | 题材炸裂但读者看不懂，文笔氛围好但偏题，建议直接表达不要故弄玄虚。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材炸裂但读者看不懂，文笔氛围好但偏题，建议直接表达不要故弄玄虚。 | 五松半眼攀进脸这个老洞太炸裂，题材可能劝退;开篇装神弄鬼没写清楚是穿越还是幻觉;表达太自嗨，读者看不懂
+  observable:
+  - 'genre维度: 五松半眼攀进脸这个老洞太炸裂，题材可能劝退'
+  - 'opening维度: 开篇装神弄鬼没写清楚是穿越还是幻觉'
+  - 'simplicity维度: 表达太自嗨，读者看不懂'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1
+  - 90
+  score: 45
+  score_raw: 可能四十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 武松半演潘金莲
+  genre_guess:
+  - 戏曲
+  - 民俗
+  - 灵异
+  - 穿越
+  overall_comment: 题材炸裂但读者看不懂，文笔氛围好但偏题，建议直接表达不要故弄玄虚。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 五松半眼攀进脸这个老洞太炸裂，题材可能劝退
+    raw_quote: 但这个五松半眼攀进脸 这个老洞 这个老洞我有点 这个老洞我真有点觉得夸张啊
+  - dimension: opening
+    severity: negative
+    content: 开篇装神弄鬼没写清楚是穿越还是幻觉
+    raw_quote: 你给我写清楚 你是穿越到哪来干嘛的 你写清楚
+  - dimension: simplicity
+    severity: negative
+    content: 表达太自嗨，读者看不懂
+    raw_quote: 读者会觉得故弄玄虚 觉得会跑的

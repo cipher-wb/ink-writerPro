@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-1436
+title: 全民好感度：梦境厌恶 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 系统
+  - 都市
+  - 好感度
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你66吧 | 行文流畅节奏快，但题材老旧系统出戏，角色没立住，梦境卖关子可能劝退读者
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 行文流畅节奏快，但题材老旧系统出戏，角色没立住，梦境卖关子可能劝退读者 | 除了主角其他角色没立住;梦境悬疑一直不说，读者可能失去耐心;全民好感度系统题材过老
+  observable:
+  - 'character维度: 除了主角其他角色没立住'
+  - 'opening维度: 梦境悬疑一直不说，读者可能失去耐心'
+  - 'genre维度: 全民好感度系统题材过老'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 100
+  - 350
+  score: 66
+  score_raw: 就给你66吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 全民好感度：梦境厌恶
+  genre_guess:
+  - 系统
+  - 都市
+  - 好感度
+  - 悬疑
+  overall_comment: 行文流畅节奏快，但题材老旧系统出戏，角色没立住，梦境卖关子可能劝退读者
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏快，讲故事流畅
+    raw_quote: 他比例很扎实 节奏很快 这是短视频吗
+  - dimension: character
+    severity: negative
+    content: 除了主角其他角色没立住
+    raw_quote: 等于说你现在除了主角 没有其他一个人设立柱呀是吧
+  - dimension: opening
+    severity: negative
+    content: 梦境悬疑一直不说，读者可能失去耐心
+    raw_quote: 这个悬疑卖点读者不一定扛得住啊
+  - dimension: genre
+    severity: negative
+    content: 全民好感度系统题材过老
+    raw_quote: 怎么又是全民一起好感度系统

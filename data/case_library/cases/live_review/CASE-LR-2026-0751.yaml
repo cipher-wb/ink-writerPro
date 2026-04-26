@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0751
+title: 寒门布衣腹黑 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 历史
+  - 短剧
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多20分 | 完全短剧剧本，第一人称加小白人设，对演员要求过高。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全短剧剧本，第一人称加小白人设，对演员要求过高。 | 主角人设太小白，反派描写浮夸;写法完全是短剧剧本，不是网文
+  observable:
+  - 'character维度: 主角人设太小白，反派描写浮夸'
+  - 'genre维度: 写法完全是短剧剧本，不是网文'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 561
+  - 640
+  score: 20
+  score_raw: 最多20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 寒门布衣腹黑
+  genre_guess:
+  - 历史
+  - 短剧
+  - 爽文
+  overall_comment: 完全短剧剧本，第一人称加小白人设，对演员要求过高。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设太小白，反派描写浮夸
+    raw_quote: 这个反派也主角也太小白了……笑容诡异的让人窒息
+  - dimension: genre
+    severity: negative
+    content: 写法完全是短剧剧本，不是网文
+    raw_quote: 这百分之百的短剧剧本……像第一人称兄弟写法很奇怪

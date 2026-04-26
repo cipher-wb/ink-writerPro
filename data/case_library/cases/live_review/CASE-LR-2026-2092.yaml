@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2092
+title: 修仙界空气私有制 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 修仙
+  - 轻小说
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大概35分……25分吧 | 包装成修仙实则废土小白，小女孩人设脸谱化，缺乏真正看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 包装成修仙实则废土小白，小女孩人设脸谱化，缺乏真正看点。 | 小女孩角色过于完美善良，缺乏真实感与反转;整体文笔小白，剧情套路化严重
+  observable:
+  - 'character维度: 小女孩角色过于完美善良，缺乏真实感与反转'
+  - 'simplicity维度: 整体文笔小白，剧情套路化严重'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1425
+  - 1470
+  score: 25
+  score_raw: 大概35分……25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙界空气私有制
+  genre_guess:
+  - 修仙
+  - 轻小说
+  - 系统
+  overall_comment: 包装成修仙实则废土小白，小女孩人设脸谱化，缺乏真正看点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 小女孩角色过于完美善良，缺乏真实感与反转
+    raw_quote: 小姑娘也没什么反转，反正就是好娃娃对吧，这就是憨厚嘛，可爱对吧……这种人设太完美了，完美人设是没意思了
+  - dimension: simplicity
+    severity: negative
+    content: 整体文笔小白，剧情套路化严重
+    raw_quote: 这个好小白啊……人设也很小白的人设就就流畅吧……还是太少玩了, 有看点太少了

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0569
+title: 美利坚道爷 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 都市
+  - 海外
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没有流畅的故事 都是设定迷人 | 设定过多无故事，退步明显，建议删掉道归线
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定过多无故事，退步明显，建议删掉道归线 | 人物行为无意义，硬塞微信梗;缺乏有吸引力的故事和高潮
+  observable:
+  - 'character维度: 人物行为无意义，硬塞微信梗'
+  - 'highpoint维度: 缺乏有吸引力的故事和高潮'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 2817
+  - 2914
+  score: null
+  score_raw: 没有流畅的故事 都是设定迷人
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 美利坚道爷
+  genre_guess:
+  - 都市
+  - 海外
+  overall_comment: 设定过多无故事，退步明显，建议删掉道归线
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物行为无意义，硬塞微信梗
+    raw_quote: 能不能不要写他微信...有啥意思要写的呀
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏有吸引力的故事和高潮
+    raw_quote: 并没有流畅的故事 都是设定迷人

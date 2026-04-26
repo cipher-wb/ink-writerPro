@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0484
+title: 少爷我是你最忠诚的狗 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 智斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有点意思 给你给你给个30 | 题材有点意思，专杀穿越者的设定有看点。但主角代入感太弱，像群像戏，大主线没在正文写清楚。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材有点意思，专杀穿越者的设定有看点。但主角代入感太弱，像群像戏，大主线没在正文写清楚。 | 主角代入感太弱，没明确谁是主角，视角不清晰
+  observable:
+  - 'character维度: 主角代入感太弱，没明确谁是主角，视角不清晰'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1028
+  - 1078
+  score: null
+  score_raw: 有点意思 给你给你给个30
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 少爷我是你最忠诚的狗
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 智斗
+  overall_comment: 题材有点意思，专杀穿越者的设定有看点。但主角代入感太弱，像群像戏，大主线没在正文写清楚。
+  comments:
+  - dimension: highpoint
+    severity: positive
+    content: 专杀穿越者的互钓智斗设定有点意思
+    raw_quote: 有点意思 我觉得算是比较有趣的题材 就是智斗嘛 互相算计
+  - dimension: character
+    severity: negative
+    content: 主角代入感太弱，没明确谁是主角，视角不清晰
+    raw_quote: 但是主角的代入感太弱了还是...李昂狗跟少爷谁都是主角的样子

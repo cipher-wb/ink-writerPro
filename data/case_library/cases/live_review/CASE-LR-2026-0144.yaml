@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0144
+title: 开局被御姐带走 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 校园群穿
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 水平可能也还是20多分 | 全班同学被当奴隶采棉花无紧迫感，逻辑不通，写法小白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全班同学被当奴隶采棉花无紧迫感，逻辑不通，写法小白。 | 同学无一人表现出困境感，像大小姐体验生活;题材设定立不住，全班穿越不真实
+  observable:
+  - 'character维度: 同学无一人表现出困境感，像大小姐体验生活'
+  - 'genre维度: 题材设定立不住，全班穿越不真实'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 244
+  - 256
+  score: 25
+  score_raw: 水平可能也还是20多分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 开局被御姐带走
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 校园群穿
+  overall_comment: 全班同学被当奴隶采棉花无紧迫感，逻辑不通，写法小白。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 同学无一人表现出困境感，像大小姐体验生活
+    raw_quote: 你们全班同学被人家关在这里 就感觉你们很很轻松对吧 你们在摸鱼 也没有人悲伤
+  - dimension: genre
+    severity: negative
+    content: 题材设定立不住，全班穿越不真实
+    raw_quote: 主要还是这个题材设定立不住 全班穿过去什么的 这其实也是独角戏

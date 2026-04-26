@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0118
+title: 记忆裁缝/青鸟文化 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 都市
+  - 科幻
+  - 记忆
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30几分吧 | 开头张总那段会写书有水平，但后面开始卖设定烧脑，没解释穿越和世界观衔接。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头张总那段会写书有水平，但后面开始卖设定烧脑，没解释穿越和世界观衔接。 | 后面开始卖设定烧脑，没解释世界观和地球关系
+  observable:
+  - 'genre维度: 后面开始卖设定烧脑，没解释世界观和地球关系'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 2301
+  - 2450
+  score: null
+  score_raw: 30几分吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 记忆裁缝/青鸟文化
+  genre_guess:
+  - 都市
+  - 科幻
+  - 记忆
+  overall_comment: 开头张总那段会写书有水平，但后面开始卖设定烧脑，没解释穿越和世界观衔接。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 张总那段表达比例很好，是会写书的水平
+    raw_quote: 张总那一段是没问题的，那一段是挺有水平的
+  - dimension: genre
+    severity: negative
+    content: 后面开始卖设定烧脑，没解释世界观和地球关系
+    raw_quote: 为什么这个世界有财富守则，为什么你能继续修复...等于没介绍啊，这等于是原创世界啊

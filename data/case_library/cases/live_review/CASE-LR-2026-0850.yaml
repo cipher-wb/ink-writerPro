@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0850
+title: 海洋逃生 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 末日
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就33分 | 番茄风末日逃生，忽略人物互动，苏小小未展开，缺乏期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 番茄风末日逃生，忽略人物互动，苏小小未展开，缺乏期待感。 | 人物互动太少，苏小小这条线浪费;开头死人不帮忙老套，冲突平淡
+  observable:
+  - 'character维度: 人物互动太少，苏小小这条线浪费'
+  - 'opening维度: 开头死人不帮忙老套，冲突平淡'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 871
+  - 940
+  score: 33
+  score_raw: 差不多就33分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 海洋逃生
+  genre_guess:
+  - 末日
+  - 求生
+  overall_comment: 番茄风末日逃生，忽略人物互动，苏小小未展开，缺乏期待感。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物互动太少，苏小小这条线浪费
+    raw_quote: 这没意思啊……给了你一个苏小小你又不写
+  - dimension: opening
+    severity: negative
+    content: 开头死人不帮忙老套，冲突平淡
+    raw_quote: 开头死人不帮他……好老套呀

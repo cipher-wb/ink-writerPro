@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0196
+title: 末世求生流 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 末世
+  - 废土
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 一章十分 永远十分 | 情绪有但故事内核陈旧，属于十几年前的套路，缺乏新意和市场感知。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪有但故事内核陈旧，属于十几年前的套路，缺乏新意和市场感知。 | 受潮求生开局过于老套，15年前的写法已过时
+  observable:
+  - 'hook维度: 受潮求生开局过于老套，15年前的写法已过时'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 204
+  - 256
+  score: null
+  score_raw: 一章十分 永远十分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 末世求生流
+  genre_guess:
+  - 末世
+  - 废土
+  - 求生
+  overall_comment: 情绪有但故事内核陈旧，属于十几年前的套路，缺乏新意和市场感知。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 受潮求生开局过于老套，15年前的写法已过时
+    raw_quote: 受潮来了 没人 十五年前的东西了
+  - dimension: opening
+    severity: neutral
+    content: 虽然情绪渲染尚可，但内核陈旧无法吸引当代读者
+    raw_quote: 情绪我们比还好 但是内核就是古老呀

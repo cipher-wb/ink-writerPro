@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1966
+title: 道士也是魔法 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 都市
+  - 直播
+  - 穿越
+  - 魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这就撑死20分出头吧 | 内容偏题，前三章才穿越，都市直播抓鬼无聊且易违规，建议直接龙虎山天师穿越到魔法世界。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容偏题，前三章才穿越，都市直播抓鬼无聊且易违规，建议直接龙虎山天师穿越到魔法世界。 | 前三章才穿越，节奏拖沓;直播抓鬼题材可能触犯平台规则;金手指不明确，重点未突出
+  observable:
+  - 'opening维度: 前三章才穿越，节奏拖沓'
+  - 'taboo维度: 直播抓鬼题材可能触犯平台规则'
+  - 'golden_finger维度: 金手指不明确，重点未突出'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 561
+  - 640
+  score: 20
+  score_raw: 这就撑死20分出头吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 道士也是魔法
+  genre_guess:
+  - 都市
+  - 直播
+  - 穿越
+  - 魔法
+  overall_comment: 内容偏题，前三章才穿越，都市直播抓鬼无聊且易违规，建议直接龙虎山天师穿越到魔法世界。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前三章才穿越，节奏拖沓
+    raw_quote: 第三张穿越了…为什么要三张穿越
+  - dimension: taboo
+    severity: negative
+    content: 直播抓鬼题材可能触犯平台规则
+    raw_quote: 这个探林主播也容易违规
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指不明确，重点未突出
+    raw_quote: 到现在没有写到你的重点…你是什么能力

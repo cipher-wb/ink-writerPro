@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0459
+title: 刘勇的稿子 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十几分 | 系统去掉后改改可投起点，有七八成签约几率，整体方向对。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统去掉后改改可投起点，有七八成签约几率，整体方向对。 | 需要把系统去掉，变得更合理
+  observable:
+  - 'golden_finger维度: 需要把系统去掉，变得更合理'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 721
+  - 760
+  score: null
+  score_raw: 五十几分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 刘勇的稿子
+  genre_guess:
+  - 历史
+  overall_comment: 系统去掉后改改可投起点，有七八成签约几率，整体方向对。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 需要把系统去掉，变得更合理
+    raw_quote: 你要是想要来起点 把这个系统去掉 弄得合理一点
+  - dimension: genre
+    severity: positive
+    content: 题材方向可投起点，多投几个编辑大概率能过
+    raw_quote: 我觉得多抽几个肯定能过 蓝瓶结道王结遍天下诸侯 选武行就行了

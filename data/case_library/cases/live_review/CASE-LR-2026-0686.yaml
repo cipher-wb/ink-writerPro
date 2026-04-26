@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0686
+title: 重生成极限运动探险主播 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 都市
+  - 探险
+  - 极限运动
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个我就觉得40多分了 最多 | 重生切入过快，现实处境缺失，金手指偏恶搞系统，需要更接地气。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生切入过快，现实处境缺失，金手指偏恶搞系统，需要更接地气。 | 重生后急于进卖点，没有建立合理的都市人物状态;金手指像老套系统恶搞，建议改为打卡世界奖励
+  observable:
+  - 'opening维度: 重生后急于进卖点，没有建立合理的都市人物状态'
+  - 'golden_finger维度: 金手指像老套系统恶搞，建议改为打卡世界奖励'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 237
+  - 307
+  score: 40
+  score_raw: 这个我就觉得40多分了 最多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生成极限运动探险主播
+  genre_guess:
+  - 都市
+  - 探险
+  - 极限运动
+  overall_comment: 重生切入过快，现实处境缺失，金手指偏恶搞系统，需要更接地气。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 重生后急于进卖点，没有建立合理的都市人物状态
+    raw_quote: 急了呀
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指像老套系统恶搞，建议改为打卡世界奖励
+    raw_quote: 这种金手指有点像系统恶搞了
+  - dimension: simplicity
+    severity: positive
+    content: 题材能写，改思路后可提升到50分以上
+    raw_quote: 思路改了肯定就50分起步了

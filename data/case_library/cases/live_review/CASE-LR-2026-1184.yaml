@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1184
+title: 新界青史 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 科幻
+  - 废土
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十二分最多了 | 风景式写法水漫金山，主角模糊，毫无期待感，像在看无意义的电影画面。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风景式写法水漫金山，主角模糊，毫无期待感，像在看无意义的电影画面。 | 主角不明确，读者不知该跟着谁;大量环境描写和配角切换，严重拖慢节奏;风景式写法没有故事，像风静式视频
+  observable:
+  - 'character维度: 主角不明确，读者不知该跟着谁'
+  - 'pacing维度: 大量环境描写和配角切换，严重拖慢节奏'
+  - 'simplicity维度: 风景式写法没有故事，像风静式视频'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 2590
+  - 2740
+  score: 22
+  score_raw: 二十二分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 新界青史
+  genre_guess:
+  - 科幻
+  - 废土
+  - 末日
+  overall_comment: 风景式写法水漫金山，主角模糊，毫无期待感，像在看无意义的电影画面。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角不明确，读者不知该跟着谁
+    raw_quote: 写主角去吧 不写主角我只能睡着了
+  - dimension: pacing
+    severity: negative
+    content: 大量环境描写和配角切换，严重拖慢节奏
+    raw_quote: 就写个主角要干嘛有这么难吗 就睡着了呀 就睡吧
+  - dimension: simplicity
+    severity: negative
+    content: 风景式写法没有故事，像风静式视频
+    raw_quote: 风静式写法 电影画面呀 就是漫悠悠的

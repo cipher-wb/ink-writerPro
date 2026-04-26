@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0113
+title: 将军墨绿/仙侠女评 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 仙侠
+  - 女评
+  - 宫斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分马就太偏题了 | 偏女评文青，节奏太慢卖点找不到，主角像摄像头在看女配表演。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 偏女评文青，节奏太慢卖点找不到，主角像摄像头在看女配表演。 | 主角像摄像头，一直在看叶清影表演;写法偏女评文青，卖点主线找不到
+  observable:
+  - 'character维度: 主角像摄像头，一直在看叶清影表演'
+  - 'genre维度: 写法偏女评文青，卖点主线找不到'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1781
+  - 1880
+  score: 20
+  score_raw: 20分马就太偏题了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 将军墨绿/仙侠女评
+  genre_guess:
+  - 仙侠
+  - 女评
+  - 宫斗
+  overall_comment: 偏女评文青，节奏太慢卖点找不到，主角像摄像头在看女配表演。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角像摄像头，一直在看叶清影表演
+    raw_quote: 铃声现在就是摄像机还在旁边看呀，他是摄像头啊，看叶静表演啊
+  - dimension: genre
+    severity: negative
+    content: 写法偏女评文青，卖点主线找不到
+    raw_quote: 写法整个偏女平偏文青了，我觉得节奏太慢了，卖点找不到

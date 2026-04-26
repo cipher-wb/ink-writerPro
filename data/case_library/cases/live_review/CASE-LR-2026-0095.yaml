@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0095
+title: 东京大小姐毫无破绽 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 东京
+  - 大小姐
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 凉了呀，10万字一点数据都没有 | 说明不错但数据一般，10万字没签约已经死路一条。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 说明不错但数据一般，10万字没签约已经死路一条。 | 10万字没签约，估计没人捞了
+  observable:
+  - 'ops维度: 10万字没签约，估计没人捞了'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 181
+  - 210
+  score: null
+  score_raw: 凉了呀，10万字一点数据都没有
+  score_signal: unknown
+  verdict: fail
+  title_guess: 东京大小姐毫无破绽
+  genre_guess:
+  - 东京
+  - 大小姐
+  overall_comment: 说明不错但数据一般，10万字没签约已经死路一条。
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 说明还不错，但数据一般般
+    raw_quote: 说明还不错了，其实说明还挺好的，数据一般般吗
+  - dimension: ops
+    severity: negative
+    content: 10万字没签约，估计没人捞了
+    raw_quote: 你这10万字一点数据都没有，没签约，估计没人捞了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1675
+title: 玩转蜀汉：汉初开超市 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 历史
+  - 系统
+  - 经营
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数，提到8分 | 身份蹭到刘邦核心圈是亮点，但金手指出场太慢，开篇日常无聊缺乏爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 身份蹭到刘邦核心圈是亮点，但金手指出场太慢，开篇日常无聊缺乏爽点。 | 超市系统和能力应前置到第一章，放到后面节奏全错;开头日常喝酒无冲突，主角没有展现穿越者优势
+  observable:
+  - 'golden_finger维度: 超市系统和能力应前置到第一章，放到后面节奏全错'
+  - 'opening维度: 开头日常喝酒无冲突，主角没有展现穿越者优势'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 481
+  - 540
+  score: null
+  score_raw: 未明确说出分数，提到8分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 玩转蜀汉：汉初开超市
+  genre_guess:
+  - 历史
+  - 系统
+  - 经营
+  overall_comment: 身份蹭到刘邦核心圈是亮点，但金手指出场太慢，开篇日常无聊缺乏爽点。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 超市系统和能力应前置到第一章，放到后面节奏全错
+    raw_quote: 金手指出来太慢了 这个应该前置了
+  - dimension: opening
+    severity: negative
+    content: 开头日常喝酒无冲突，主角没有展现穿越者优势
+    raw_quote: 没事干 大哥没事干 反正就随便喝酒完美美

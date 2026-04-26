@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0817
+title: 权力的游戏后传 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 同人
+  - 奇幻
+  - 权游
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分 | 前两章对冰与火粉丝很有味道，但第三张开始无感，多主角写法不行
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 前两章对冰与火粉丝很有味道，但第三张开始无感，多主角写法不行 | 三兄妹多主角写法不好，应单主角穿越;14年后的切入无感，需要更早进入剧情
+  observable:
+  - 'character维度: 三兄妹多主角写法不好，应单主角穿越'
+  - 'pacing维度: 14年后的切入无感，需要更早进入剧情'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 1125
+  - 1280
+  score: 48
+  score_raw: 48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 权力的游戏后传
+  genre_guess:
+  - 同人
+  - 奇幻
+  - 权游
+  overall_comment: 前两章对冰与火粉丝很有味道，但第三张开始无感，多主角写法不行
+  comments:
+  - dimension: character
+    severity: negative
+    content: 三兄妹多主角写法不好，应单主角穿越
+    raw_quote: 为什么要写三个人 我就写一个人
+  - dimension: opening
+    severity: positive
+    content: 前两章味道对，作为粉丝很喜欢
+    raw_quote: 我作为一个冰与火的粉丝 我挺喜欢你的 第一张 第二张的
+  - dimension: pacing
+    severity: negative
+    content: 14年后的切入无感，需要更早进入剧情
+    raw_quote: 不过14年后这个没啥感觉

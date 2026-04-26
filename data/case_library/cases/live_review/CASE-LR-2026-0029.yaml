@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0029
+title: 灵异副本神人 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 灵异
+  - 副本流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 15分 | 标准蓝精灵风格，切入啰嗦，限制大，15分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 标准蓝精灵风格，切入啰嗦，限制大，15分。 | 切入啰嗦，吓人氛围单一
+  observable:
+  - 'opening维度: 切入啰嗦，吓人氛围单一'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 475
+  - 495
+  score: 15
+  score_raw: 15分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵异副本神人
+  genre_guess:
+  - 灵异
+  - 副本流
+  overall_comment: 标准蓝精灵风格，切入啰嗦，限制大，15分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入啰嗦，吓人氛围单一
+    raw_quote: 切入比较啰嗦 比较吓人

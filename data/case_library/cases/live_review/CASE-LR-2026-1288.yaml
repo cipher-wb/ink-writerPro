@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1288
+title: 斩妖妹妹是妖族 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 玄幻
+  - 斩妖
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就30分吧 | 妹妹亲情线过度赘述，系统设定无强制冲突，核心脑洞立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 妹妹亲情线过度赘述，系统设定无强制冲突，核心脑洞立不住。 | 哥哥妹妹关系描写过多，但因非爱情线，缺少张力和期待;斩妖系统未提供充足冲突，主角没有非杀妹妹不可的理由
+  observable:
+  - 'character维度: 哥哥妹妹关系描写过多，但因非爱情线，缺少张力和期待'
+  - 'golden_finger维度: 斩妖系统未提供充足冲突，主角没有非杀妹妹不可的理由'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 525
+  - 700
+  score: 30
+  score_raw: 差不多就30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斩妖妹妹是妖族
+  genre_guess:
+  - 玄幻
+  - 斩妖
+  - 系统
+  overall_comment: 妹妹亲情线过度赘述，系统设定无强制冲突，核心脑洞立不住。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 哥哥妹妹关系描写过多，但因非爱情线，缺少张力和期待
+    raw_quote: 这然后接触者来了斩妖系统 然后你妹妹是妖吗 … 你找其他人啊 不是又不是非杀妹妹不可
+  - dimension: golden_finger
+    severity: negative
+    content: 斩妖系统未提供充足冲突，主角没有非杀妹妹不可的理由
+    raw_quote: 又不是系统说你不杀妹妹你就要死了

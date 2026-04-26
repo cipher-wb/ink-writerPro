@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1631
+title: 民国抗战谍战 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 民国
+  - 谍战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个不行这个只能去换一下 | 思路不合逻辑，需推倒重来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路不合逻辑，需推倒重来。 | 角色行为逻辑不合常理。
+  observable:
+  - 'misc维度: 角色行为逻辑不合常理。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 221
+  - 270
+  score: null
+  score_raw: 这个不行这个只能去换一下
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 民国抗战谍战
+  genre_guess:
+  - 民国
+  - 谍战
+  overall_comment: 思路不合逻辑，需推倒重来。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 角色行为逻辑不合常理。
+    raw_quote: 一上来就跑路直接跑路嘛，这也太假了

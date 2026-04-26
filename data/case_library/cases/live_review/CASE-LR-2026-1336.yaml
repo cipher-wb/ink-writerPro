@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1336
+title: 重生崇圣抄鱼人二代 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 43嘛 这啥 | 明显抄袭，系统抢戏，人设铺垫不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 明显抄袭，系统抢戏，人设铺垫不足。 | 系统存在感过强，压过主线;保护校花的老套情节缺乏新意;配角校花人设太过千篇一律
+  observable:
+  - 'golden_finger维度: 系统存在感过强，压过主线'
+  - 'opening维度: 保护校花的老套情节缺乏新意'
+  - 'character维度: 配角校花人设太过千篇一律'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 400
+  - 454
+  score: null
+  score_raw: 43嘛 这啥
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 重生崇圣抄鱼人二代
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  overall_comment: 明显抄袭，系统抢戏，人设铺垫不足。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统存在感过强，压过主线
+    raw_quote: 这个系统其实挺抢戏的
+  - dimension: opening
+    severity: negative
+    content: 保护校花的老套情节缺乏新意
+    raw_quote: 保护笑话奖励秘密，太老套了
+  - dimension: character
+    severity: negative
+    content: 配角校花人设太过千篇一律
+    raw_quote: 学霸加笑话，这种人设太多了

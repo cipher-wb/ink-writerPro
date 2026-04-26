@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1005
+title: 重生三界只想喝奶 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 婴儿流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 看下一个 | 开局喝奶无效描写，背景设定宏大但无聊，有女频倾向。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局喝奶无效描写，背景设定宏大但无聊，有女频倾向。 | 开头无效描写，喝奶剧情无聊;设定宏大像女频三生三世，起点不吃
+  observable:
+  - 'opening维度: 开头无效描写，喝奶剧情无聊'
+  - 'genre维度: 设定宏大像女频三生三世，起点不吃'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 2167
+  - 2286
+  score: null
+  score_raw: 看下一个
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 重生三界只想喝奶
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 婴儿流
+  overall_comment: 开局喝奶无效描写，背景设定宏大但无聊，有女频倾向。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头无效描写，喝奶剧情无聊
+    raw_quote: 这前面都是无效描写……就喝奶，就，弟弟怎么了，吐哪了
+  - dimension: genre
+    severity: negative
+    content: 设定宏大像女频三生三世，起点不吃
+    raw_quote: 这三届的是女评小说了……起点的书不开头这么大，真没人看呀

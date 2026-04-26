@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1806
+title: 湘西赶尸匠 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 灵异
+  - 民俗
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔和氛围尚可，但灵异世界架空是大毒，导致分类困难，整体不伦不类。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和氛围尚可，但灵异世界架空是大毒，导致分类困难，整体不伦不类。 | 灵异文完全架空异世界是核心大毒;世界观既非都市也非纯灵异，难以在起点发分类;找不到合适的起点分类发布
+  observable:
+  - 'taboo维度: 灵异文完全架空异世界是核心大毒'
+  - 'genre维度: 世界观既非都市也非纯灵异，难以在起点发分类'
+  - 'ops维度: 找不到合适的起点分类发布'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 245
+  - 310
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 湘西赶尸匠
+  genre_guess:
+  - 灵异
+  - 民俗
+  - 穿越
+  overall_comment: 文笔和氛围尚可，但灵异世界架空是大毒，导致分类困难，整体不伦不类。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 灵异文完全架空异世界是核心大毒
+    raw_quote: 灵异是最忌讳穿越了……你这个是最大的毒点
+  - dimension: genre
+    severity: negative
+    content: 世界观既非都市也非纯灵异，难以在起点发分类
+    raw_quote: 你这哪里是都市呀 你这是看上去像古代一样的背景背景 世界观太乱了
+  - dimension: misc
+    severity: positive
+    content: 文笔和叙述比例不错
+    raw_quote: 努力没问题嗯 也是好
+  - dimension: ops
+    severity: negative
+    content: 找不到合适的起点分类发布
+    raw_quote: 你说发什么地方对吧 你先给我说发什么地方

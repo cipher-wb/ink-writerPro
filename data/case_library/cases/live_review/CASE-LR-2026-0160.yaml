@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-0160
+title: 我的奇宝召唤诸天 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 诸天
+  - 召唤
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分左右 20吧 | 主角毫无代入感，节奏太快，卖点混乱，建议切了重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角毫无代入感，节奏太快，卖点混乱，建议切了重写。 | 开头偏题，没有建立主角代入感;主角缺乏代入感，读者无法共情;节奏太快，一章塞太多问题
+  observable:
+  - 'opening维度: 开头偏题，没有建立主角代入感'
+  - 'character维度: 主角缺乏代入感，读者无法共情'
+  - 'pacing维度: 节奏太快，一章塞太多问题'
+  - 'genre维度: 卖点混乱，诸天与都市混淆'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 62
+  - 266
+  score: 20
+  score_raw: 20分左右 20吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的奇宝召唤诸天
+  genre_guess:
+  - 诸天
+  - 召唤
+  - 穿越
+  overall_comment: 主角毫无代入感，节奏太快，卖点混乱，建议切了重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头偏题，没有建立主角代入感
+    raw_quote: 他這個開頭就是特別的偏題
+  - dimension: character
+    severity: negative
+    content: 主角缺乏代入感，读者无法共情
+    raw_quote: 主角沒大入感
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快，一章塞太多问题
+    raw_quote: 主要是節奏太快了兄弟
+  - dimension: genre
+    severity: negative
+    content: 卖点混乱，诸天与都市混淆
+    raw_quote: 賣點要明確大哥有點亂
+  - dimension: misc
+    severity: positive
+    content: 文笔是唯一优点
+    raw_quote: 文筆好點唯一的優點吧

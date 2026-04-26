@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1033
+title: 神明属于可编辑 (fail / 26分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 科幻
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就按时五六分的样子 | 比例尚可但根本看不懂，主角傲慢不解释，读者秒弃。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例尚可但根本看不懂，主角傲慢不解释，读者秒弃。 | 全程不解释世界观，读者一头雾水;开头没氛围没身份，主角反应异常
+  observable:
+  - 'simplicity维度: 全程不解释世界观，读者一头雾水'
+  - 'opening维度: 开头没氛围没身份，主角反应异常'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 2291
+  - 2370
+  score: 26
+  score_raw: 就按时五六分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 神明属于可编辑
+  genre_guess:
+  - 科幻
+  - 游戏
+  overall_comment: 比例尚可但根本看不懂，主角傲慢不解释，读者秒弃。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 全程不解释世界观，读者一头雾水
+    raw_quote: 就傲慢 不想给读者解释 不想让读者看懂
+  - dimension: opening
+    severity: negative
+    content: 开头没氛围没身份，主角反应异常
+    raw_quote: 看到这种变异狗进来 也不着急 也无所谓吗 那为什么

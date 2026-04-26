@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0798
+title: 爷们叫太一 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 玄幻
+  - 洪荒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 爷们人设有乐子，剧情一般，但有点意思，给28分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 爷们人设有乐子，剧情一般，但有点意思，给28分
+  observable:
+  - 整体被星河直播判定为 fail
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 1070
+  - 1260
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 爷们叫太一
+  genre_guess:
+  - 玄幻
+  - 洪荒
+  overall_comment: 爷们人设有乐子，剧情一般，但有点意思，给28分
+  comments:
+  - dimension: character
+    severity: neutral
+    content: 爷们口癖有特色，但初期难代入
+    raw_quote: 爷们这个写法真的出息

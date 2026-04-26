@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0374
+title: 为了女儿，成为通缉犯 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥给个40吧 | 文笔扎实，但剧情谜语人，科幻当科幻写市场难起，40分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，但剧情谜语人，科幻当科幻写市场难起，40分。 | 硬核科幻风格在网文中缺乏受众;信息混乱，像电影叙事，读者看不懂
+  observable:
+  - 'genre维度: 硬核科幻风格在网文中缺乏受众'
+  - 'pacing维度: 信息混乱，像电影叙事，读者看不懂'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 1111
+  - 1190
+  score: 40
+  score_raw: 给大哥给个40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 为了女儿，成为通缉犯
+  genre_guess:
+  - 科幻
+  - 末日
+  - 悬疑
+  overall_comment: 文笔扎实，但剧情谜语人，科幻当科幻写市场难起，40分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 硬核科幻风格在网文中缺乏受众
+    raw_quote: 你如果把科幻当科幻写 你其实就是就是在跟市场作对
+  - dimension: pacing
+    severity: negative
+    content: 信息混乱，像电影叙事，读者看不懂
+    raw_quote: 讲不清楚啊 你讲不出那个事件啊

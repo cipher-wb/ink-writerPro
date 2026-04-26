@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1658
+title: 剑客修仙 (fail / 10分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 仙侠
+  - 剑客
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就比较老吧 就按十分吧 | 人设小白，开头废笔太多，游戏元素劝退读者，毫无市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设小白，开头废笔太多，游戏元素劝退读者，毫无市场。 | 主角人设太小白，对话浮夸;开头玩游戏闲扯，切入过慢
+  observable:
+  - 'character维度: 主角人设太小白，对话浮夸'
+  - 'opening维度: 开头玩游戏闲扯，切入过慢'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 315
+  - 400
+  score: 10
+  score_raw: 差不多就比较老吧 就按十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 剑客修仙
+  genre_guess:
+  - 仙侠
+  - 剑客
+  overall_comment: 人设小白，开头废笔太多，游戏元素劝退读者，毫无市场。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设太小白，对话浮夸
+    raw_quote: 人设太小白了 然后另外一个是这个故事整体就是非常的……浮浅
+  - dimension: opening
+    severity: negative
+    content: 开头玩游戏闲扯，切入过慢
+    raw_quote: 没人看你打这些破游戏啊……没人看你在这打一个什么莫名其妙的游戏啊

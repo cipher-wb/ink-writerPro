@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0873
+title: 垫底目标明确最强老师 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 都市
+  - 校园
+  - 教师
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 思路大体上可以吧 比例跟不上呀 | 思路和架构尚可，书名简介不错，但遣词造句等基本功远远不够，写出来必爆死。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路和架构尚可，书名简介不错，但遣词造句等基本功远远不够，写出来必爆死。 | 遣词造句、细节安排差距大，无法写出来感觉
+  observable:
+  - 'simplicity维度: 遣词造句、细节安排差距大，无法写出来感觉'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 501
+  - 530
+  score: null
+  score_raw: 思路大体上可以吧 比例跟不上呀
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 垫底目标明确最强老师
+  genre_guess:
+  - 都市
+  - 校园
+  - 教师
+  overall_comment: 思路和架构尚可，书名简介不错，但遣词造句等基本功远远不够，写出来必爆死。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句、细节安排差距大，无法写出来感觉
+    raw_quote: 现在最大问题是比例不够 就体现在方方面面 人设的塑造 节奏的框架以及遣词造句的这些细节安排 导致写不出来感觉
+  - dimension: hook
+    severity: positive
+    content: 思路框架没问题，期待感建立正确
+    raw_quote: 思路大体上可以吧 思路现在大体上可以对吧 架构还好

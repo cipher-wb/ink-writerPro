@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1111
+title: Gala game母鸡农场 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 奇幻
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有38分的 这个是吧 没有黑 38分真有 | 讲故事能力不错，母鸡心理活动有趣，但题材过于猎奇，在起点前景不明
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 讲故事能力不错，母鸡心理活动有趣，但题材过于猎奇，在起点前景不明
+  observable:
+  - 整体被星河直播判定为 fail
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 2070
+  - 2120
+  score: 38
+  score_raw: 有38分的 这个是吧 没有黑 38分真有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: Gala game母鸡农场
+  genre_guess:
+  - 奇幻
+  - 种田
+  overall_comment: 讲故事能力不错，母鸡心理活动有趣，但题材过于猎奇，在起点前景不明
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 听懂母鸡心声的设定有新意，对话生动
+    raw_quote: 能听到它的心声吗 他只是傲娇 吓到鸡屁股着火是吧 是有意思的
+  - dimension: genre
+    severity: neutral
+    content: 建议去蓝精灵（番茄）发展，那里接受度更高
+    raw_quote: 我觉得直接去蓝精灵确实有人看的 那边喜欢猎奇

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0437
+title: 皇女殿下西幻文 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 西幻
+  - 反派
+  - 皇女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是有个三十三分 | 文笔细腻但未对接市场，人设立不住，过程啰嗦缺乏重点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔细腻但未对接市场，人设立不住，过程啰嗦缺乏重点 | 人设切入点失败，前一千字未立女主，书名即人设却不会立;过程描写过于啰嗦，读者不会体验氛围
+  observable:
+  - 'character维度: 人设切入点失败，前一千字未立女主，书名即人设却不会立'
+  - 'pacing维度: 过程描写过于啰嗦，读者不会体验氛围'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 406
+  - 480
+  score: 33
+  score_raw: 还是有个三十三分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 皇女殿下西幻文
+  genre_guess:
+  - 西幻
+  - 反派
+  - 皇女
+  overall_comment: 文笔细腻但未对接市场，人设立不住，过程啰嗦缺乏重点
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设切入点失败，前一千字未立女主，书名即人设却不会立
+    raw_quote: 前一千字没有女角色让我立住就跑了...人设极端剧情小剧场立
+  - dimension: pacing
+    severity: negative
+    content: 过程描写过于啰嗦，读者不会体验氛围
+    raw_quote: 过程是不重要的读者只会跳过的...不该写的狂写
+  - dimension: misc
+    severity: positive
+    content: 文笔犀利细腻，直播间有读者认可
+    raw_quote: 这本文笔很好...文笔还是挺犀利的

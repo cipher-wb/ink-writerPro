@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1070
+title: 真理医生·异界医师 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 巫师
+  - 穿越
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30多分的水平 | 文笔尚可但开头陷入设定叙述，缺乏吸引人的剧情和人物，代入感极低。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但开头陷入设定叙述，缺乏吸引人的剧情和人物，代入感极低。 | 开篇大量设定堆砌，缺乏立刻吸引人的冲突;没有让人喜欢的人物塑造;设定复杂，读者接受成本高
+  observable:
+  - 'opening维度: 开篇大量设定堆砌，缺乏立刻吸引人的冲突'
+  - 'character维度: 没有让人喜欢的人物塑造'
+  - 'simplicity维度: 设定复杂，读者接受成本高'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 390
+  - 460
+  score: null
+  score_raw: 30多分的水平
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 真理医生·异界医师
+  genre_guess:
+  - 巫师
+  - 穿越
+  - 金手指
+  overall_comment: 文笔尚可但开头陷入设定叙述，缺乏吸引人的剧情和人物，代入感极低。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇大量设定堆砌，缺乏立刻吸引人的冲突
+    raw_quote: 这开篇不是没有危机感是很无聊啊
+  - dimension: character
+    severity: negative
+    content: 没有让人喜欢的人物塑造
+    raw_quote: 这里面的人我没有人喜欢
+  - dimension: simplicity
+    severity: negative
+    content: 设定复杂，读者接受成本高
+    raw_quote: 设定元素还是大于事件人物本身

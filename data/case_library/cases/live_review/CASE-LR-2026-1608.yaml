@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1608
+title: 头顶史莱姆的里昂 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 西幻
+  - 史莱姆
+  - 半同人
+  - 冒险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分吧 | 剧情与人设尚可，但主角出场太晚，对话偏白，爽点不足，直发有困难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情与人设尚可，但主角出场太晚，对话偏白，爽点不足，直发有困难。 | 主角出场晚，前两千字找不到主角，读者易流失;剧情偏小白，对话过于直白，缺乏深度
+  observable:
+  - 'opening维度: 主角出场晚，前两千字找不到主角，读者易流失'
+  - 'simplicity维度: 剧情偏小白，对话过于直白，缺乏深度'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 240
+  - 339
+  score: 50
+  score_raw: 50分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 头顶史莱姆的里昂
+  genre_guess:
+  - 西幻
+  - 史莱姆
+  - 半同人
+  - 冒险
+  overall_comment: 剧情与人设尚可，但主角出场太晚，对话偏白，爽点不足，直发有困难。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主角出场晚，前两千字找不到主角，读者易流失
+    raw_quote: 主角到现在为止沒有存在感 … 铺垫型主角写法转化率还是比较低的
+  - dimension: character
+    severity: neutral
+    content: 配角人设立得较好，但主角智商不高，塑造偏弱
+    raw_quote: 主角感覺也至少啊 恍然一笑什麼意思啊 … 主角跟蜜蜂似的
+  - dimension: simplicity
+    severity: negative
+    content: 剧情偏小白，对话过于直白，缺乏深度
+    raw_quote: 對話太白了兄弟 … 劇情主線有點小白

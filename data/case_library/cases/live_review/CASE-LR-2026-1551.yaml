@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1551
+title: 炼气三层粪坑修炼 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 玄幻
+  - 恶搞
+  - 退婚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 九分 | 粪坑修炼设定恶心，且继续侮辱主播。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 粪坑修炼设定恶心，且继续侮辱主播。 | 侮辱主播并影射黑料;退婚流开在粪坑，观感极差
+  observable:
+  - 'taboo维度: 侮辱主播并影射黑料'
+  - 'opening维度: 退婚流开在粪坑，观感极差'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 949
+  - 1060
+  score: null
+  score_raw: 九分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 炼气三层粪坑修炼
+  genre_guess:
+  - 玄幻
+  - 恶搞
+  - 退婚
+  overall_comment: 粪坑修炼设定恶心，且继续侮辱主播。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 侮辱主播并影射黑料
+    raw_quote: 侮辱主播就只能九分
+  - dimension: opening
+    severity: negative
+    content: 退婚流开在粪坑，观感极差
+    raw_quote: 主角在凤坑里面吸收招气 将凤坑里面的灼气转化成修为

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1643
+title: 红楼梦同人宫斗 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 历史
+  - 宫斗
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他个20分 | 题材奇怪，写法过时，缺乏大陆感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材奇怪，写法过时，缺乏大陆感。 | 女频权谋题材在男频起点不受欢迎。
+  observable:
+  - 'genre维度: 女频权谋题材在男频起点不受欢迎。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 791
+  - 850
+  score: 20
+  score_raw: 只能给他个20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 红楼梦同人宫斗
+  genre_guess:
+  - 历史
+  - 宫斗
+  - 同人
+  overall_comment: 题材奇怪，写法过时，缺乏大陆感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 女频权谋题材在男频起点不受欢迎。
+    raw_quote: 这个题材最奇怪了...没人看那种权谋

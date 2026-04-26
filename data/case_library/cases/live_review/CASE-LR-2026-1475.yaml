@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1475
+title: 穷书生娶狐狸精 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 古代
+  - 书生
+  - 妖精
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没明确说出分数 | 比例没问题，但故事太小白，女主没有人设特点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例没问题，但故事太小白，女主没有人设特点。 | 女主没有人设特点，言听计从
+  observable:
+  - 'character维度: 女主没有人设特点，言听计从'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1351
+  - 1440
+  score: null
+  score_raw: 没明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 穷书生娶狐狸精
+  genre_guess:
+  - 古代
+  - 书生
+  - 妖精
+  overall_comment: 比例没问题，但故事太小白，女主没有人设特点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主没有人设特点，言听计从
+    raw_quote: 这种女的没人喜欢 言听计从

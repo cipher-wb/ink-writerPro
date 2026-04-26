@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1437
+title: 末日游戏双面行者 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 末日
+  - 游戏
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就差不多24分 | 末日题材缺乏人性与真实感，脑洞游戏化扯淡，但进步大幅值得肯定
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 末日题材缺乏人性与真实感，脑洞游戏化扯淡，但进步大幅值得肯定 | 末日需要人性和真实感，这篇缺乏;开局讲设定，与丧尸互动尴尬
+  observable:
+  - 'genre维度: 末日需要人性和真实感，这篇缺乏'
+  - 'opening维度: 开局讲设定，与丧尸互动尴尬'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 351
+  - 410
+  score: 24
+  score_raw: 就差不多24分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日游戏双面行者
+  genre_guess:
+  - 末日
+  - 游戏
+  - 系统
+  overall_comment: 末日题材缺乏人性与真实感，脑洞游戏化扯淡，但进步大幅值得肯定
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 末日需要人性和真实感，这篇缺乏
+    raw_quote: 你首先人性得写出来吧对吧 真实感你写出来吧 沉浸感得写出来吧
+  - dimension: opening
+    severity: negative
+    content: 开局讲设定，与丧尸互动尴尬
+    raw_quote: 一上来讲设定 跟你们说过100次了就蹦 … 你怎么跟丧尸在这里直互动呀
+  - dimension: pacing
+    severity: positive
+    content: 一个月进步80%，进步能力很强
+    raw_quote: 14分进不到24分 我觉得很厉害 因为你进步了80%

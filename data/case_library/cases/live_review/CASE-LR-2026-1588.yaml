@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1588
+title: 生命禁区提灯人 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能给30分的 | 比例扎实有氛围感，但写法过于古早，故事节奏与现代读者脱节。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实有氛围感，但写法过于古早，故事节奏与现代读者脱节。 | 灵异类型当前市场冷淡，写法老旧;开场铺垫过多，事件入场迟缓
+  observable:
+  - 'genre维度: 灵异类型当前市场冷淡，写法老旧'
+  - 'pacing维度: 开场铺垫过多，事件入场迟缓'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 156
+  - 220
+  score: 30
+  score_raw: 能给30分的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 生命禁区提灯人
+  genre_guess:
+  - 灵异
+  - 都市
+  - 悬疑
+  overall_comment: 比例扎实有氛围感，但写法过于古早，故事节奏与现代读者脱节。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 灵异类型当前市场冷淡，写法老旧
+    raw_quote: 这倒是就是太古早了 … 现在这种灵异类的书读得现在太慢了 不爱看 … 20年前问题不大 但太老了
+  - dimension: pacing
+    severity: negative
+    content: 开场铺垫过多，事件入场迟缓
+    raw_quote: 这个氛围太多了 … 就前面这些日常 … 我觉得不应该再写日常了是吧 后面应该写鬼的日常
+  - dimension: ops
+    severity: neutral
+    content: 海外意大利读者反馈尚可，文化出海有潜力
+    raw_quote: 大哥还有海外读者 意大利的人都在看 … 意大利的人都在看大哥的书啊

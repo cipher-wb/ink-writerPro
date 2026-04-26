@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2043
+title: 诡异入侵世界（240月宝宝） (fail / 14分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 都市
+  - 诡异
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 说十四分吧 | 不会讲故事，氛围差，离签约标准很远。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不会讲故事，氛围差，离签约标准很远。 | 不会讲故事，氛围营造失败;缺乏代入感和吸引力
+  observable:
+  - 'opening维度: 不会讲故事，氛围营造失败'
+  - 'hook维度: 缺乏代入感和吸引力'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 2041
+  - 2160
+  score: 14
+  score_raw: 说十四分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异入侵世界（240月宝宝）
+  genre_guess:
+  - 都市
+  - 诡异
+  - 灵异
+  overall_comment: 不会讲故事，氛围差，离签约标准很远。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 不会讲故事，氛围营造失败
+    raw_quote: 不会讲故事…灵异要讲故事
+  - dimension: hook
+    severity: negative
+    content: 缺乏代入感和吸引力
+    raw_quote: 没氛围…野猫吓你一跳 这也叫氛围

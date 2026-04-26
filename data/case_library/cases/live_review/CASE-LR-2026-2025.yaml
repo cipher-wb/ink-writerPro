@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2025
+title: 穿越架空历史乞丐 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 历史
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十五分 | 开头用写诗装逼的套路过时，主角智商低下，逻辑立不住，整体节奏慢且无趣。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头用写诗装逼的套路过时，主角智商低下，逻辑立不住，整体节奏慢且无趣。 | 写诗装逼的套路太老土，而且逻辑上站不住脚。;剧情无聊，一直在写无关紧要的吃饭、念诗等琐事。
+  observable:
+  - 'opening维度: 写诗装逼的套路太老土，而且逻辑上站不住脚。'
+  - 'pacing维度: 剧情无聊，一直在写无关紧要的吃饭、念诗等琐事。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1390
+  - 1435
+  score: 25
+  score_raw: 二十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越架空历史乞丐
+  genre_guess:
+  - 历史
+  - 架空
+  overall_comment: 开头用写诗装逼的套路过时，主角智商低下，逻辑立不住，整体节奏慢且无趣。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 写诗装逼的套路太老土，而且逻辑上站不住脚。
+    raw_quote: 网红进化到现在了已经 ... 这太壮了
+  - dimension: pacing
+    severity: negative
+    content: 剧情无聊，一直在写无关紧要的吃饭、念诗等琐事。
+    raw_quote: 目前我就看见你干了两件事情 ... 一个是吃红烧肉一个是吃馒头

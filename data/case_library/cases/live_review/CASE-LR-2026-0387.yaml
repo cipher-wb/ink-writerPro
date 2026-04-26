@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0387
+title: 大明死间 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 历史
+  - 大明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 大明文通篇注水，白描严重，主角缺乏智商，继续写也是浪费字数。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 大明文通篇注水，白描严重，主角缺乏智商，继续写也是浪费字数。 | 68万字内容水漫金山，毫无推进。;清文圣等人物描写如同小学生，只有“疑惑”这类词重复。
+  observable:
+  - 'pacing维度: 68万字内容水漫金山，毫无推进。'
+  - 'character维度: 清文圣等人物描写如同小学生，只有“疑惑”这类词重复。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 400
+  - 470
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 大明死间
+  genre_guess:
+  - 历史
+  - 大明
+  overall_comment: 大明文通篇注水，白描严重，主角缺乏智商，继续写也是浪费字数。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 68万字内容水漫金山，毫无推进。
+    raw_quote: 扑街的原因找到了呀就是喜欢水啊，这跟大明有啥关系啊。
+  - dimension: character
+    severity: negative
+    content: 清文圣等人物描写如同小学生，只有“疑惑”这类词重复。
+    raw_quote: 清文圣没你写的跟个小学生似的。

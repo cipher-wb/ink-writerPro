@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0919
+title: 修仙界的资本家 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 仙侠
+  - 经营
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没意义啊 | 修仙界做资本家等荒诞题材毫无市场，主线无聊，节奏贼慢，基本推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 修仙界做资本家等荒诞题材毫无市场，主线无聊，节奏贼慢，基本推翻。 | 修仙界资本家的题材已被用烂，毫无新意;节奏贼慢，设定介绍冗长;全程系统驱动，人物无主观能动性
+  observable:
+  - 'genre维度: 修仙界资本家的题材已被用烂，毫无新意'
+  - 'pacing维度: 节奏贼慢，设定介绍冗长'
+  - 'golden_finger维度: 全程系统驱动，人物无主观能动性'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 645
+  - 720
+  score: null
+  score_raw: 没意义啊
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 修仙界的资本家
+  genre_guess:
+  - 仙侠
+  - 经营
+  overall_comment: 修仙界做资本家等荒诞题材毫无市场，主线无聊，节奏贼慢，基本推翻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 修仙界资本家的题材已被用烂，毫无新意
+    raw_quote: 修仙界的资本家什么的 唉资本家在直播间都至少来过100次了 这种垃圾题材
+  - dimension: pacing
+    severity: negative
+    content: 节奏贼慢，设定介绍冗长
+    raw_quote: 节奏贼慢 其实以前传玄思路到了宗门之后给你介绍该怎嘛该干嘛
+  - dimension: golden_finger
+    severity: negative
+    content: 全程系统驱动，人物无主观能动性
+    raw_quote: 又是蓝精灵 又是蓝精灵 简单又复杂又又无聊的 又给你任务标杆任务

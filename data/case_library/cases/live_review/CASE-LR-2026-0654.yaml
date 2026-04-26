@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0654
+title: 村里诡异事件智斗流 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 灵异
+  - 乡村
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 你到底要表达什么 | 氛围描写能力强，但故弄玄虚无核心卖点，建议摒弃智斗设定，转写鬼社类灵异副本。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围描写能力强，但故弄玄虚无核心卖点，建议摒弃智斗设定，转写鬼社类灵异副本。 | 前奏冗长，不知重点在哪，卖点迟迟不出
+  observable:
+  - 'opening维度: 前奏冗长，不知重点在哪，卖点迟迟不出'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1141
+  - 1220
+  score: null
+  score_raw: 你到底要表达什么
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 村里诡异事件智斗流
+  genre_guess:
+  - 灵异
+  - 乡村
+  - 悬疑
+  overall_comment: 氛围描写能力强，但故弄玄虚无核心卖点，建议摒弃智斗设定，转写鬼社类灵异副本。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前奏冗长，不知重点在哪，卖点迟迟不出
+    raw_quote: 到底都在哪里...前面有点太水了
+  - dimension: genre
+    severity: neutral
+    content: 建议放弃不切实际的智斗玄幻追求，改学鬼社灵异副本
+    raw_quote: 你去写一下鬼市那种灵异副本...这可能会改变你的思路
+  - dimension: character
+    severity: positive
+    content: 描述人设的能力强，氛围比例好
+    raw_quote: 描画人设的能力也很强...比例氛围挺好的

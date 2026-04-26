@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0234
+title: 系统绑定恶搞 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 9分 | 整活恶搞，内容低俗踩线，没法签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 整活恶搞，内容低俗踩线，没法签约。 | 偷内裤等情节涉嫌猥亵违规;纯恶搞无主线
+  observable:
+  - 'taboo维度: 偷内裤等情节涉嫌猥亵违规'
+  - 'genre维度: 纯恶搞无主线'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 595
+  - 680
+  score: 9
+  score_raw: 9分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 系统绑定恶搞
+  genre_guess:
+  - 都市
+  - 系统
+  - 恶搞
+  overall_comment: 整活恶搞，内容低俗踩线，没法签约。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 偷内裤等情节涉嫌猥亵违规
+    raw_quote: 在起点这种算猥琐罪了
+  - dimension: genre
+    severity: negative
+    content: 纯恶搞无主线
+    raw_quote: 这个系统好奇怪啊

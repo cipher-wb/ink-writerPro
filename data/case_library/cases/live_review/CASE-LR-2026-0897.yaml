@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0897
+title: 中二少年白羽 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 轻小说
+  - 游戏降临
+  - 中二
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分也有 | 有轻小说味道，但游戏降临没写好，题材杂糅写法混乱，起点较难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有轻小说味道，但游戏降临没写好，题材杂糅写法混乱，起点较难。 | 题材杂糅，轻小说与游戏降临不匹配;主线不明，一会儿写人设一会儿打怪
+  observable:
+  - 'genre维度: 题材杂糅，轻小说与游戏降临不匹配'
+  - 'pacing维度: 主线不明，一会儿写人设一会儿打怪'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 622
+  - 855
+  score: 32
+  score_raw: 32分也有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 中二少年白羽
+  genre_guess:
+  - 轻小说
+  - 游戏降临
+  - 中二
+  overall_comment: 有轻小说味道，但游戏降临没写好，题材杂糅写法混乱，起点较难。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材杂糅，轻小说与游戏降临不匹配
+    raw_quote: 本来你轻小说未到，那就按照轻小说写...但是你又想写一个什么游戏降临
+  - dimension: pacing
+    severity: negative
+    content: 主线不明，一会儿写人设一会儿打怪
+    raw_quote: 你现在又去写人设了，又去写下跌到底要写啥啊

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0233
+title: 苟在乱世求长生 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 仙侠
+  - 炼丹
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分 | 套路熟但剧情平淡，人设模板化，缺乏好故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路熟但剧情平淡，人设模板化，缺乏好故事。 | 开局就是八股文介绍;主线太平淡，无情绪波动
+  observable:
+  - 'opening维度: 开局就是八股文介绍'
+  - 'misc维度: 主线太平淡，无情绪波动'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 515
+  - 590
+  score: 50
+  score_raw: 50分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 苟在乱世求长生
+  genre_guess:
+  - 仙侠
+  - 炼丹
+  - 家族
+  overall_comment: 套路熟但剧情平淡，人设模板化，缺乏好故事。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局就是八股文介绍
+    raw_quote: 看这说明就感觉八股文又来了
+  - dimension: misc
+    severity: negative
+    content: 主线太平淡，无情绪波动
+    raw_quote: 整个主线太平淡了
+  - dimension: simplicity
+    severity: positive
+    content: 文笔熟练
+    raw_quote: 比例没什么大问题

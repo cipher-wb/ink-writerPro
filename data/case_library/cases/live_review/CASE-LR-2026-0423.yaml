@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0423
+title: 拜堂成亲修仙恋爱 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 仙侠
+  - 恋爱
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 有天赋，但世界观崩了，事件奇怪，恋爱修仙文要写成熟点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋，但世界观崩了，事件奇怪，恋爱修仙文要写成熟点 | 世界观崩塌，不知道发什么分类，事件奇怪;太小孩子气，读者不爱看，要写成熟点的娘子或女魔头
+  observable:
+  - 'genre维度: 世界观崩塌，不知道发什么分类，事件奇怪'
+  - 'misc维度: 太小孩子气，读者不爱看，要写成熟点的娘子或女魔头'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1683
+  - 1780
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 拜堂成亲修仙恋爱
+  genre_guess:
+  - 仙侠
+  - 恋爱
+  - 轻小说
+  overall_comment: 有天赋，但世界观崩了，事件奇怪，恋爱修仙文要写成熟点
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观崩塌，不知道发什么分类，事件奇怪
+    raw_quote: 一个是世界观崩崩完了，你不知道发什么分类...这个事件...感觉要干嘛...就不懂
+  - dimension: misc
+    severity: negative
+    content: 太小孩子气，读者不爱看，要写成熟点的娘子或女魔头
+    raw_quote: 兄弟想写恋爱修仙文，你就写娘子，写成熟点的读者不爱看这种小孩子...

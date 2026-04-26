@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1965
+title: 官老爷索李命来了 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 历史
+  - 志怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 来吧 差不多38分 就38吧 | 题材奇特，历史志怪无市场，逻辑性不够，虽有乐子但难以成立。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材奇特，历史志怪无市场，逻辑性不够，虽有乐子但难以成立。 | 历史志怪题材小众，缺乏市场参照;关羽追杀吕蒙后人的逻辑牵强;开头神童嫖娼等情节有些偏题
+  observable:
+  - 'genre维度: 历史志怪题材小众，缺乏市场参照'
+  - 'hook维度: 关羽追杀吕蒙后人的逻辑牵强'
+  - 'opening维度: 开头神童嫖娼等情节有些偏题'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 461
+  - 560
+  score: 38
+  score_raw: 来吧 差不多38分 就38吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 官老爷索李命来了
+  genre_guess:
+  - 历史
+  - 志怪
+  overall_comment: 题材奇特，历史志怪无市场，逻辑性不够，虽有乐子但难以成立。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 历史志怪题材小众，缺乏市场参照
+    raw_quote: 没有历史至怪这种说法…我不觉得这个有市场
+  - dimension: hook
+    severity: negative
+    content: 关羽追杀吕蒙后人的逻辑牵强
+    raw_quote: 一边忠义一边又天天想着报仇…这不扯个巴蛋吗
+  - dimension: opening
+    severity: negative
+    content: 开头神童嫖娼等情节有些偏题
+    raw_quote: 开头有点像神童带你去什么嫖娼

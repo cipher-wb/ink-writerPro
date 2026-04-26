@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0509
+title: 我在玄幻世界当魔头 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 夺舍
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吧 | 系统抢戏，圣女拉扯没味道，人物关系改变才是爽点核心。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统抢戏，圣女拉扯没味道，人物关系改变才是爽点核心。 | 系统太抢戏，主线弱;圣女与魔头的关系改变没写出来，缺乏反差;整个文风偏小白，系统物品过多记不住
+  observable:
+  - 'golden_finger维度: 系统太抢戏，主线弱'
+  - 'character维度: 圣女与魔头的关系改变没写出来，缺乏反差'
+  - 'simplicity维度: 整个文风偏小白，系统物品过多记不住'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 249
+  - 285
+  score: 30
+  score_raw: 30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在玄幻世界当魔头
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 夺舍
+  overall_comment: 系统抢戏，圣女拉扯没味道，人物关系改变才是爽点核心。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统太抢戏，主线弱
+    raw_quote: 系统可能太抢心，主线还是弱的
+  - dimension: character
+    severity: negative
+    content: 圣女与魔头的关系改变没写出来，缺乏反差
+    raw_quote: 关系的改变...她以为你是个魔头她以为你是个银贼结果你怎么这样
+  - dimension: simplicity
+    severity: negative
+    content: 整个文风偏小白，系统物品过多记不住
+    raw_quote: 整个文分这篇小白的，少一点读者记不住了

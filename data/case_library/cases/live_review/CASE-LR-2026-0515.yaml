@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0515
+title: 外卖员的系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 诸天
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 反正就是题材可以发线下 | 流畅度尚可，但末日诸天题材在起点几乎必死，危机感浅尝辄止。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 流畅度尚可，但末日诸天题材在起点几乎必死，危机感浅尝辄止。 | 末日类朱天拯救题材没见过起来的新人;危机、爽点、期待感都浅尝辄止
+  observable:
+  - 'genre维度: 末日类朱天拯救题材没见过起来的新人'
+  - 'pacing维度: 危机、爽点、期待感都浅尝辄止'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 481
+  - 520
+  score: null
+  score_raw: 反正就是题材可以发线下
+  score_signal: sign_phrase
+  verdict: unknown
+  title_guess: 外卖员的系统
+  genre_guess:
+  - 科幻
+  - 末日
+  - 诸天
+  overall_comment: 流畅度尚可，但末日诸天题材在起点几乎必死，危机感浅尝辄止。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 末日类朱天拯救题材没见过起来的新人
+    raw_quote: 末日类的朱天，末日拯救的这种朱天，我真没见过起来
+  - dimension: pacing
+    severity: negative
+    content: 危机、爽点、期待感都浅尝辄止
+    raw_quote: 危机浅长折纸，爽店浅长折纸，期待感浅长折纸
+  - dimension: simplicity
+    severity: neutral
+    content: 写法流畅但偏小白昂戏，反套路无聊
+    raw_quote: 其实挺昂戏的，这些事情很小白很无聊

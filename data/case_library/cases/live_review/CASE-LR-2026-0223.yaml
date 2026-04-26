@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0223
+title: 五代十国花蕊夫人穿越文 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15JwWzyELA
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 43分嘛 | 切入快但代入感弱，比例虽好但内容偏甜且开篇雪白直白劝退读者。文笔可但侧重有问题，开局即集邮式写美女不符合争霸主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15JwWzyELA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入快但代入感弱，比例虽好但内容偏甜且开篇雪白直白劝退读者。文笔可但侧重有问题，开局即集邮式写美女不符合争霸主线。 | 切入快但开篇就直白写雪白，缺乏铺垫暗示，第一张代入感很弱;主角穿越一年思维却像古代人，没有现代人感觉，代入感差;历史争霸主线应侧重宏图霸业，却把美女当主线写，属选题偏差
+  observable:
+  - 'opening维度: 切入快但开篇就直白写雪白，缺乏铺垫暗示，第一张代入感很弱'
+  - 'character维度: 主角穿越一年思维却像古代人，没有现代人感觉，代入感差'
+  - 'genre维度: 历史争霸主线应侧重宏图霸业，却把美女当主线写，属选题偏差'
+  - 'taboo维度: 开篇直入花蕊夫人情节过于香艳，出现雪白劝退读者并对青少年有害'
+live_review_meta:
+  source_bvid: BV15JwWzyELA
+  source_line_range:
+  - 1
+  - 138
+  score: 43
+  score_raw: 43分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 五代十国花蕊夫人穿越文
+  genre_guess:
+  - 历史
+  - 穿越
+  - 五代十国
+  overall_comment: 切入快但代入感弱，比例虽好但内容偏甜且开篇雪白直白劝退读者。文笔可但侧重有问题，开局即集邮式写美女不符合争霸主线。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入快但开篇就直白写雪白，缺乏铺垫暗示，第一张代入感很弱
+    raw_quote: 你一上来 红帐垂落 半幅一妇人...你开头第一段就抢了
+  - dimension: character
+    severity: negative
+    content: 主角穿越一年思维却像古代人，没有现代人感觉，代入感差
+    raw_quote: 他蛇属性跟古代人一样 没现在的感觉啊
+  - dimension: genre
+    severity: negative
+    content: 历史争霸主线应侧重宏图霸业，却把美女当主线写，属选题偏差
+    raw_quote: 你主线肯定是争霸啊 争霸当皇上收燕云16州美女只是附带啊
+  - dimension: taboo
+    severity: negative
+    content: 开篇直入花蕊夫人情节过于香艳，出现雪白劝退读者并对青少年有害
+    raw_quote: 宝宝非要在这里害人...宝宝都看哭了呀

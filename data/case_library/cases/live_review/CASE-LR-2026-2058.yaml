@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2058
+title: 仙道长从 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 仙侠
+  - 古典修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得差不多 就四十五分吧 | 小剧场有看点，但大主线俗套，节奏慢，金手指无惊喜。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小剧场有看点，但大主线俗套，节奏慢，金手指无惊喜。 | 金手指无惊喜;主线俗套节奏慢
+  observable:
+  - 'golden_finger维度: 金手指无惊喜'
+  - 'pacing维度: 主线俗套节奏慢'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 2401
+  - 2600
+  score: 45
+  score_raw: 我觉得差不多 就四十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙道长从
+  genre_guess:
+  - 仙侠
+  - 古典修仙
+  overall_comment: 小剧场有看点，但大主线俗套，节奏慢，金手指无惊喜。
+  comments:
+  - dimension: highpoint
+    severity: positive
+    content: 一些小剧场有看点
+    raw_quote: 我觉得这场小剧场 讲的还行两个
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指无惊喜
+    raw_quote: 经手制也没什么惊喜
+  - dimension: pacing
+    severity: negative
+    content: 主线俗套节奏慢
+    raw_quote: 大主线俗 就交租的 欺负的 解决危机的

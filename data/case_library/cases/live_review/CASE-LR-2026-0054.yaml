@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0054
+title: 岳勇 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 历史
+  - 宋朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 岳飞题材毒，节奏快但沉浸感不够，需学秦历写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 岳飞题材毒，节奏快但沉浸感不够，需学秦历写法。 | 装逼太快，缺沉浸感;与秦历差距大
+  observable:
+  - 'pacing维度: 装逼太快，缺沉浸感'
+  - 'misc维度: 与秦历差距大'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 1031
+  - 1080
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 岳勇
+  genre_guess:
+  - 历史
+  - 宋朝
+  overall_comment: 岳飞题材毒，节奏快但沉浸感不够，需学秦历写法。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 装逼太快，缺沉浸感
+    raw_quote: 好快的装逼
+  - dimension: misc
+    severity: negative
+    content: 与秦历差距大
+    raw_quote: 跟秦历的差距很大兄弟

@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-1127
+title: 我的父亲是掌门 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  - 纨绔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个确实太无聊了 | 情节平淡无高潮，反转易被猜到，信息量少，缺乏看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情节平淡无高潮，反转易被猜到，信息量少，缺乏看点。 | 纨绔掌门之子日常无聊，无有效切入事件;反转设计一眼看穿，无惊喜感;遣词造句与人物智商低下，整体偏白
+  observable:
+  - 'opening维度: 纨绔掌门之子日常无聊，无有效切入事件'
+  - 'hook维度: 反转设计一眼看穿，无惊喜感'
+  - 'simplicity维度: 遣词造句与人物智商低下，整体偏白'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 1647
+  - 1782
+  score: null
+  score_raw: 这个确实太无聊了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 我的父亲是掌门
+  genre_guess:
+  - 修仙
+  - 穿越
+  - 纨绔
+  overall_comment: 情节平淡无高潮，反转易被猜到，信息量少，缺乏看点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 纨绔掌门之子日常无聊，无有效切入事件
+    raw_quote: '你爹是掌门
+
+      这有啥意思呢'
+  - dimension: hook
+    severity: negative
+    content: 反转设计一眼看穿，无惊喜感
+    raw_quote: '读者都猜出来了
+
+      没啥意思'
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句与人物智商低下，整体偏白
+    raw_quote: '现有点反差反转吧
+
+      虽然我认为比较昂行'

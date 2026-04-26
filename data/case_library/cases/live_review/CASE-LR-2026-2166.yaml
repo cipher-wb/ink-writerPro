@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-2166
+title: 秦川社火：迷糊子 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 民俗
+  - 灵异
+  - 年代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥38分吧 | 文笔氛围代入感好，有《山河故人》感觉；但传统民俗节奏太慢缺乏卖点，需要加入金手指和年代职场元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔氛围代入感好，有《山河故人》感觉；但传统民俗节奏太慢缺乏卖点，需要加入金手指和年代职场元素。 | 一直在找李婷，节奏太慢没有推进主线卖点;传统民俗没有金手指和快节奏事件，市场接受度低
+  observable:
+  - 'pacing维度: 一直在找李婷，节奏太慢没有推进主线卖点'
+  - 'golden_finger维度: 传统民俗没有金手指和快节奏事件，市场接受度低'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 2826
+  - 2965
+  score: 38
+  score_raw: 给大哥38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 秦川社火：迷糊子
+  genre_guess:
+  - 民俗
+  - 灵异
+  - 年代
+  overall_comment: 文笔氛围代入感好，有《山河故人》感觉；但传统民俗节奏太慢缺乏卖点，需要加入金手指和年代职场元素。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 一直在找李婷，节奏太慢没有推进主线卖点
+    raw_quote: 但一直找他没死，你要出来慢点...读着不看呀
+  - dimension: opening
+    severity: positive
+    content: 文笔好，氛围感和代入感极佳
+    raw_quote: 比例还行...代入感挺好...有种白鹿原的感觉对吧
+  - dimension: golden_finger
+    severity: negative
+    content: 传统民俗没有金手指和快节奏事件，市场接受度低
+    raw_quote: 传统领域现在没有市场...你要加年代...加风水什么的加到职场里面，或者说鉴宝只能这样写

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1731
+title: 大一桌游·拉花重生 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 桌游
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥按摩三分 | 题材太小众，桌游规则复杂没人看。设定自嗨倾向严重，拖沓。建议重生做桌游或狼人杀开店。文笔可，但缺乏市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太小众，桌游规则复杂没人看。设定自嗨倾向严重，拖沓。建议重生做桌游或狼人杀开店。文笔可，但缺乏市场。 | 桌游题材过小，规则复杂读者不看，无市场;自言自语设定过多，拖沓自嗨
+  observable:
+  - 'genre维度: 桌游题材过小，规则复杂读者不看，无市场'
+  - 'pacing维度: 自言自语设定过多，拖沓自嗨'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1862
+  - 1919
+  score: null
+  score_raw: 给大哥按摩三分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 大一桌游·拉花重生
+  genre_guess:
+  - 都市
+  - 重生
+  - 桌游
+  overall_comment: 题材太小众，桌游规则复杂没人看。设定自嗨倾向严重，拖沓。建议重生做桌游或狼人杀开店。文笔可，但缺乏市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 桌游题材过小，规则复杂读者不看，无市场
+    raw_quote: 就规则有点多，我觉得不是多不多，是没人看
+  - dimension: pacing
+    severity: negative
+    content: 自言自语设定过多，拖沓自嗨
+    raw_quote: 自言自语的东西太多了，网络发达时间，这个世界观都是设定的呀

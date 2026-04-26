@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1400
+title: 重生NBA谁还不想做个渣男 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 体育
+  - NBA
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多还是28分吧 | 系统无聊，人设失败，富二代逻辑不合理，需要用放大反差的方式重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统无聊，人设失败，富二代逻辑不合理，需要用放大反差的方式重写。 | 系统极其无聊，纯抽奖流无新意;人设逻辑牵强，富二代成矿胆选秀不可能
+  observable:
+  - 'golden_finger维度: 系统极其无聊，纯抽奖流无新意'
+  - 'character维度: 人设逻辑牵强，富二代成矿胆选秀不可能'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 1251
+  - 1400
+  score: 28
+  score_raw: 差不多还是28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生NBA谁还不想做个渣男
+  genre_guess:
+  - 体育
+  - NBA
+  - 重生
+  overall_comment: 系统无聊，人设失败，富二代逻辑不合理，需要用放大反差的方式重写。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统极其无聊，纯抽奖流无新意
+    raw_quote: 你这个系统好无聊
+  - dimension: character
+    severity: negative
+    content: 人设逻辑牵强，富二代成矿胆选秀不可能
+    raw_quote: 为什么会在NBA 你矿胆你这么有钱

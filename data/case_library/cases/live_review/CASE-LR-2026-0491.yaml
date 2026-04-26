@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0491
+title: 秦始皇重生我成了胡亥 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 历史
+  - 秦朝
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给大哥25分吧 | 脑洞太古早且立不住，秦始皇重生后主角变摄像机，无主角光环。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞太古早且立不住，秦始皇重生后主角变摄像机，无主角光环。 | 秦始皇重生后主角变旁观者，完全没主角光环;秦始皇重生脑洞太古早且立不住
+  observable:
+  - 'character维度: 秦始皇重生后主角变旁观者，完全没主角光环'
+  - 'genre维度: 秦始皇重生脑洞太古早且立不住'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1526
+  - 1587
+  score: 25
+  score_raw: 就给大哥25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 秦始皇重生我成了胡亥
+  genre_guess:
+  - 历史
+  - 秦朝
+  - 重生
+  overall_comment: 脑洞太古早且立不住，秦始皇重生后主角变摄像机，无主角光环。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 秦始皇重生后主角变旁观者，完全没主角光环
+    raw_quote: 秦始皇一旦重生了 你把赵高这些都干掉对吧...跟你没关系了...就这个意思
+  - dimension: genre
+    severity: negative
+    content: 秦始皇重生脑洞太古早且立不住
+    raw_quote: 这玩意太 太晦气了这东西 这太昂气了

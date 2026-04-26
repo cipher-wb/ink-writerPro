@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2037
+title: HRNAT（密教模拟器） (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 密教
+  - 模拟器
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十多这个稿子四十多 四十五分 | 写法太慢太铺垫，金手指和卖点不清晰。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法太慢太铺垫，金手指和卖点不清晰。 | 写法太慢太铺垫，卖点出现太晚;金手指和卖点不突出
+  observable:
+  - 'pacing维度: 写法太慢太铺垫，卖点出现太晚'
+  - 'golden_finger维度: 金手指和卖点不突出'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 1321
+  - 1440
+  score: 45
+  score_raw: 四十多这个稿子四十多 四十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: HRNAT（密教模拟器）
+  genre_guess:
+  - 密教
+  - 模拟器
+  overall_comment: 写法太慢太铺垫，金手指和卖点不清晰。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 写法太慢太铺垫，卖点出现太晚
+    raw_quote: 太慢太铺垫了
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指和卖点不突出
+    raw_quote: 你的金手指跟卖点的 我觉得应该是这样的

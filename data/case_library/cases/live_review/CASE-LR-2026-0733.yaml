@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0733
+title: 重回九八 (borderline / 46分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 年代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十六分吧 | 代入感OK，但金手指复杂过时，与父母的冲突设计显得刻意，建议减少家庭伦理元素，突出年代创业机遇。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感OK，但金手指复杂过时，与父母的冲突设计显得刻意，建议减少家庭伦理元素，突出年代创业机遇。 | 金手指复杂过时，类似十年前的设计;与父母的冲突戏份说教意味浓，是读者的毒点
+  observable:
+  - 'golden_finger维度: 金手指复杂过时，类似十年前的设计'
+  - 'character维度: 与父母的冲突戏份说教意味浓，是读者的毒点'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1121
+  - 1190
+  score: 46
+  score_raw: 四十六分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重回九八
+  genre_guess:
+  - 都市
+  - 重生
+  - 年代
+  overall_comment: 代入感OK，但金手指复杂过时，与父母的冲突设计显得刻意，建议减少家庭伦理元素，突出年代创业机遇。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指复杂过时，类似十年前的设计
+    raw_quote: 金手指十年前了 那个还搞得给复杂了
+  - dimension: character
+    severity: negative
+    content: 与父母的冲突戏份说教意味浓，是读者的毒点
+    raw_quote: 说教父母真的是读点...写出来就没啥意思
+  - dimension: simplicity
+    severity: positive
+    content: 比例好，代入感OK，有一定写作基础
+    raw_quote: 比例好点 重新的比例可以写 代入感OK

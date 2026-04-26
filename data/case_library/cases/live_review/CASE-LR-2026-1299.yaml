@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1299
+title: 刑侦：我从警校开始 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 现实
+  - 刑侦
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话其实有个三四十了 | 实体向写法突出，专业性足够但缺乏网文的爽点设计和情绪共鸣。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 实体向写法突出，专业性足够但缺乏网文的爽点设计和情绪共鸣。 | 偏向实体出版风格，与网文读者需求脱节，缺乏吸引流量的爽点;主角侦破能力未通过配角反应强烈凸显，情绪渲染不足
+  observable:
+  - 'genre维度: 偏向实体出版风格，与网文读者需求脱节，缺乏吸引流量的爽点'
+  - 'character维度: 主角侦破能力未通过配角反应强烈凸显，情绪渲染不足'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 2670
+  - 2810
+  score: null
+  score_raw: 打分的话其实有个三四十了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 刑侦：我从警校开始
+  genre_guess:
+  - 现实
+  - 刑侦
+  - 都市
+  overall_comment: 实体向写法突出，专业性足够但缺乏网文的爽点设计和情绪共鸣。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 偏向实体出版风格，与网文读者需求脱节，缺乏吸引流量的爽点
+    raw_quote: 那是实体写法呀 … 这不像是网文
+  - dimension: character
+    severity: negative
+    content: 主角侦破能力未通过配角反应强烈凸显，情绪渲染不足
+    raw_quote: 你这里没有判断对吧 … 你的配角的判断呢 … 要这样想 … 读者才会有期待感

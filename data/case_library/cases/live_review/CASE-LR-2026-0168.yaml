@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0168
+title: 历死的鱼 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 无限流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分左右吧 | 流水账，啰嗦无卖点，建议早点上岸重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 流水账，啰嗦无卖点，建议早点上岸重写。 | 事件推进啰嗦，全是水;副本迟迟不出现，缺乏爆点
+  observable:
+  - 'pacing维度: 事件推进啰嗦，全是水'
+  - 'hook维度: 副本迟迟不出现，缺乏爆点'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 1701
+  - 1887
+  score: 20
+  score_raw: 20分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 历死的鱼
+  genre_guess:
+  - 都市
+  - 灵异
+  - 无限流
+  overall_comment: 流水账，啰嗦无卖点，建议早点上岸重写。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 事件推进啰嗦，全是水
+    raw_quote: 水水水水水水水 流水戰 有什麼意義呢
+  - dimension: hook
+    severity: negative
+    content: 副本迟迟不出现，缺乏爆点
+    raw_quote: 副本在哪裡啊 都快一萬字了 副本在哪裡啊

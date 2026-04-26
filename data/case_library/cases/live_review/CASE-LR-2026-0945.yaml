@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0945
+title: 元首归来(希特勒重生) (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 军事
+  - 重生
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 9分 | 希特勒重生题材敏感，国内不能签，但写得流畅有天赋
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 希特勒重生题材敏感，国内不能签，但写得流畅有天赋 | 希特勒复活触犯审查，领导会吓傻;虽流畅但起点军事政务不可接受
+  observable:
+  - 'taboo维度: 希特勒复活触犯审查，领导会吓傻'
+  - 'genre维度: 虽流畅但起点军事政务不可接受'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 1678
+  - 1814
+  score: 9
+  score_raw: 9分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 元首归来(希特勒重生)
+  genre_guess:
+  - 军事
+  - 重生
+  - 历史
+  overall_comment: 希特勒重生题材敏感，国内不能签，但写得流畅有天赋
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 希特勒复活触犯审查，领导会吓傻
+    raw_quote: 你这个放国外人家给你举报了 也就是国内了真的
+  - dimension: genre
+    severity: negative
+    content: 虽流畅但起点军事政务不可接受
+    raw_quote: 起点妙太小了 养不下大哥

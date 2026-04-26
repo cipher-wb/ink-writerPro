@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1059
+title: 许涛穿越成青楼龟公 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 架空历史
+  - 青楼
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你58分哎 | 底层人物刻画真实，有写作天赋，但缺少玄幻仙侠元素，市场受限。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 底层人物刻画真实，有写作天赋，但缺少玄幻仙侠元素，市场受限。 | 纯架空历史难签，需加入修炼元素
+  observable:
+  - 'genre维度: 纯架空历史难签，需加入修炼元素'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 241
+  - 320
+  score: 58
+  score_raw: 给你58分哎
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 许涛穿越成青楼龟公
+  genre_guess:
+  - 架空历史
+  - 青楼
+  - 穿越
+  overall_comment: 底层人物刻画真实，有写作天赋，但缺少玄幻仙侠元素，市场受限。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 底层小人物写得栩栩如生，真实感强
+    raw_quote: 这个水平真挺高的 ... 底层的那种感觉 有那种活着的感觉
+  - dimension: genre
+    severity: negative
+    content: 纯架空历史难签，需加入修炼元素
+    raw_quote: 没玄幻仙侠 没修炼啊 ... 总不能架空历史 直接青楼奋斗史吧

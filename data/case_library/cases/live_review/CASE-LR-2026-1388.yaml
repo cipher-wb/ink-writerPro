@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1388
+title: 高五末日觉醒了愿力面板 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 末日
+  - 高武
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就35分吧 | 文笔还好，但题材难驾驭，寡妇人设和进度太快成毒点，需要换一个能引剧情的配角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔还好，但题材难驾驭，寡妇人设和进度太快成毒点，需要换一个能引剧情的配角。 | 第一章女的就想睡觉，进度太快成毒点，配角直接崩人设
+  observable:
+  - 'character维度: 第一章女的就想睡觉，进度太快成毒点，配角直接崩人设'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 836
+  - 908
+  score: 35
+  score_raw: 差不多就35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高五末日觉醒了愿力面板
+  genre_guess:
+  - 末日
+  - 高武
+  - 系统
+  overall_comment: 文笔还好，但题材难驾驭，寡妇人设和进度太快成毒点，需要换一个能引剧情的配角。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 第一章女的就想睡觉，进度太快成毒点，配角直接崩人设
+    raw_quote: 第一章这样女的我想了...这太毒了...这个女的完全失败
+  - dimension: opening
+    severity: neutral
+    content: 会写切入和代入感，但主线事件太弱
+    raw_quote: 你虽然会写切入 会写大入感 但是你主线 这个卖点有啥意思呢
+  - dimension: golden_finger
+    severity: neutral
+    content: 金手指能收割愿力的点子可以，但要靠人设和剧情驱动
+    raw_quote: 你能知道她有什么身份 因为你这个书 只能靠第一个剧情拉进去

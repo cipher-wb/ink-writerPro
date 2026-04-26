@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0987
+title: 穿越武道世界被大舅哥揍 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 玄幻
+  - 武道
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是40出头吧 | 信息重复表达啰嗦，剧情推进慢，女主人设奇怪，缺乏进步。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 信息重复表达啰嗦，剧情推进慢，女主人设奇怪，缺乏进步。 | 信息重复表达，啰嗦;剧情推进慢，大舅哥打人事件纠缠太久;女主人设奇怪，感觉放荡
+  observable:
+  - 'simplicity维度: 信息重复表达，啰嗦'
+  - 'pacing维度: 剧情推进慢，大舅哥打人事件纠缠太久'
+  - 'character维度: 女主人设奇怪，感觉放荡'
+  - 'misc维度: 整体没进步'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 248
+  - 328
+  score: 40
+  score_raw: 还是40出头吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越武道世界被大舅哥揍
+  genre_guess:
+  - 玄幻
+  - 武道
+  - 穿越
+  overall_comment: 信息重复表达啰嗦，剧情推进慢，女主人设奇怪，缺乏进步。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 信息重复表达，啰嗦
+    raw_quote: 我觉得信息表达了读者已经知道了……就没必要一直重复表达，一直重复表达没意思
+  - dimension: pacing
+    severity: negative
+    content: 剧情推进慢，大舅哥打人事件纠缠太久
+    raw_quote: 就这点破事，一直写，大舅哥打你
+  - dimension: character
+    severity: negative
+    content: 女主人设奇怪，感觉放荡
+    raw_quote: 这个女的我感觉写的很奇怪……我不能把她写的这么放荡，我感觉有点放荡了
+  - dimension: misc
+    severity: negative
+    content: 整体没进步
+    raw_quote: 我觉得没进步，兄弟进步不了一倍，我觉得还是40出头吧

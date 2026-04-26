@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1267
+title: 斗罗之立命之路 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 同人
+  - 斗罗大陆
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就18分吧 | 开场AI风严重，节奏慢，缺乏脑洞，同人卷疯掉的赛道里毫无竞争力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开场AI风严重，节奏慢，缺乏脑洞，同人卷疯掉的赛道里毫无竞争力。 | 序章比例描述夸张，像AI跑出来;缺乏脑洞和快节奏，卷不过同类
+  observable:
+  - 'opening维度: 序章比例描述夸张，像AI跑出来'
+  - 'hook维度: 缺乏脑洞和快节奏，卷不过同类'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 726
+  - 780
+  score: 18
+  score_raw: 差不多就18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗罗之立命之路
+  genre_guess:
+  - 同人
+  - 斗罗大陆
+  overall_comment: 开场AI风严重，节奏慢，缺乏脑洞，同人卷疯掉的赛道里毫无竞争力。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 序章比例描述夸张，像AI跑出来
+    raw_quote: 这个比例描述太夸张了...读者只会觉得你是AI直接跑
+  - dimension: hook
+    severity: negative
+    content: 缺乏脑洞和快节奏，卷不过同类
+    raw_quote: 斗罗是非常需要脑洞的...你这种叽里咕噜一开头一大段的都是跑完了

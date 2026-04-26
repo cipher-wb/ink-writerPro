@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0518
+title: 我在泡沫东京当星探 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 都市
+  - 东京
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分，无功无过 | 好题材写得像AI一键生成，灵魂缺失，情节太平庸。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 好题材写得像AI一键生成，灵魂缺失，情节太平庸。 | 主角和中山美穗的互动毫无灵魂，像AR生成;缺乏期待感和有趣的事件，平淡如水
+  observable:
+  - 'character维度: 主角和中山美穗的互动毫无灵魂，像AR生成'
+  - 'hook维度: 缺乏期待感和有趣的事件，平淡如水'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 606
+  - 645
+  score: 40
+  score_raw: 40分，无功无过
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在泡沫东京当星探
+  genre_guess:
+  - 都市
+  - 东京
+  - 重生
+  overall_comment: 好题材写得像AI一键生成，灵魂缺失，情节太平庸。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角和中山美穗的互动毫无灵魂，像AR生成
+    raw_quote: 就是AI一秒生成呀，就太普通了，太正经了
+  - dimension: hook
+    severity: negative
+    content: 缺乏期待感和有趣的事件，平淡如水
+    raw_quote: 就得有期待感，得有一些有点和有趣的事件
+  - dimension: golden_finger
+    severity: neutral
+    content: 可以考虑加金手指或破产等极端开局增加情绪
+    raw_quote: 老怕那个金手指对吧，金手指劳动也行

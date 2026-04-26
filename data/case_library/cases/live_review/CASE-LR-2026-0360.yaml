@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0360
+title: 合欢宗投稿 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 仙侠
+  - 合欢宗
+  - 鼎炉
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分没问题 | 节奏快情绪足有天赋，但尺度太大涉及合欢宗和鼎炉直白描写，必然过不了审，需大幅修改尺度。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快情绪足有天赋，但尺度太大涉及合欢宗和鼎炉直白描写，必然过不了审，需大幅修改尺度。 | 直白描写性器官，明确违规;合欢宗和鼎炉题材在起点不可用
+  observable:
+  - 'taboo维度: 直白描写性器官，明确违规'
+  - 'genre维度: 合欢宗和鼎炉题材在起点不可用'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 436
+  - 531
+  score: 59
+  score_raw: 59分没问题
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 合欢宗投稿
+  genre_guess:
+  - 仙侠
+  - 合欢宗
+  - 鼎炉
+  overall_comment: 节奏快情绪足有天赋，但尺度太大涉及合欢宗和鼎炉直白描写，必然过不了审，需大幅修改尺度。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 直白描写性器官，明确违规
+    raw_quote: 正面描述夸夸大性器官描述 ... 这个审核直接找我了
+  - dimension: genre
+    severity: negative
+    content: 合欢宗和鼎炉题材在起点不可用
+    raw_quote: 首先合欢宗写不了 ... 鼎炉身份也写不了
+  - dimension: simplicity
+    severity: positive
+    content: 简单粗暴，情绪节奏拉满，小白但有效
+    raw_quote: 节奏挺快的嘛对吧 ... 情绪拉的很好 ... 小白也是天才

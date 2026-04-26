@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1366
+title: 东京按摩房东 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 轻小说
+  - 东京
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 涉黄路线风险高，主线驱动力弱，写法过时，需按新潮流改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 涉黄路线风险高，主线驱动力弱，写法过时，需按新潮流改。 | 按摩加点本质属性涉嫌擦边，审核风险极高;前几年雪白开局拉期待感还可，现在过时需更强职业主线
+  observable:
+  - 'taboo维度: 按摩加点本质属性涉嫌擦边，审核风险极高'
+  - 'misc维度: 前几年雪白开局拉期待感还可，现在过时需更强职业主线'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1471
+  - 1520
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 东京按摩房东
+  genre_guess:
+  - 轻小说
+  - 东京
+  - 系统
+  overall_comment: 涉黄路线风险高，主线驱动力弱，写法过时，需按新潮流改。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 按摩加点本质属性涉嫌擦边，审核风险极高
+    raw_quote: 这玩意就是跟女人接触...审核说了算射黄
+  - dimension: misc
+    severity: negative
+    content: 前几年雪白开局拉期待感还可，现在过时需更强职业主线
+    raw_quote: 现在是东京王也进化了...你要走出来走职业

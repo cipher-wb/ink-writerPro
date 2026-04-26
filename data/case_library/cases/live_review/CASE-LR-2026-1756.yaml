@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1756
+title: 刘子恒穿越事件 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给他个十八分真的上不去的 | 纯自嗨写作，无事件无驱动力，注定零追读。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯自嗨写作，无事件无驱动力，注定零追读。 | 开篇完全没有吸引人的事件或冲突。
+  observable:
+  - 'hook维度: 开篇完全没有吸引人的事件或冲突。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 2240
+  - 2330
+  score: 18
+  score_raw: 就给他个十八分真的上不去的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 刘子恒穿越事件
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 纯自嗨写作，无事件无驱动力，注定零追读。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开篇完全没有吸引人的事件或冲突。
+    raw_quote: 大哥这是没事件不管你的妹妹怎么样 没事件

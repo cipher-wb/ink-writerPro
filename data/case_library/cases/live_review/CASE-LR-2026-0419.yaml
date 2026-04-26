@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0419
+title: 女巫花园 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 奇幻
+  - 女巫
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你扣成50 | 比例不够，细节不行，强行写会崩，需抄书练习沉淀
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例不够，细节不行，强行写会崩，需抄书练习沉淀 | 比例不够，雪白需拉人设，改完也不懂，三章后仍崩;反应写不出爽感，不可置信四字没感觉
+  observable:
+  - 'simplicity维度: 比例不够，雪白需拉人设，改完也不懂，三章后仍崩'
+  - 'highpoint维度: 反应写不出爽感，不可置信四字没感觉'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1331
+  - 1420
+  score: 50
+  score_raw: 给你扣成50
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 女巫花园
+  genre_guess:
+  - 奇幻
+  - 女巫
+  - 系统
+  overall_comment: 比例不够，细节不行，强行写会崩，需抄书练习沉淀
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 比例不够，雪白需拉人设，改完也不懂，三章后仍崩
+    raw_quote: 雪白拉一下主角的人设...驾驭不住就是驾驭不住...就是比例不够...你改完之后你还是不懂对吧，三章后还是会崩
+  - dimension: highpoint
+    severity: negative
+    content: 反应写不出爽感，不可置信四字没感觉
+    raw_quote: 这句话如果是高手写这一句话，写出来的爽感比这强多了，你这句话的爽感只有一个，不可置信是吧，红唇微张没感觉啊

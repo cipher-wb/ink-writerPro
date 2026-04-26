@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1044
+title: 龙族西幻文 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 西幻
+  - 龙
+  - 迪化
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是58分吧 | 文笔比例够用，但套路太老，迪化重复冗长，人设单薄
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例够用，但套路太老，迪化重复冗长，人设单薄 | 全篇脑补迪化，没有实质冲突和期待感;人设单薄愚蠢，英雄救美桥段老套出戏
+  observable:
+  - 'hook维度: 全篇脑补迪化，没有实质冲突和期待感'
+  - 'character维度: 人设单薄愚蠢，英雄救美桥段老套出戏'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 1401
+  - 1600
+  score: 58
+  score_raw: 还是58分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 龙族西幻文
+  genre_guess:
+  - 西幻
+  - 龙
+  - 迪化
+  overall_comment: 文笔比例够用，但套路太老，迪化重复冗长，人设单薄
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 全篇脑补迪化，没有实质冲突和期待感
+    raw_quote: 就一直滴话一直脑补
+  - dimension: character
+    severity: negative
+    content: 人设单薄愚蠢，英雄救美桥段老套出戏
+    raw_quote: 人设就显得单薄愚蠢对吧

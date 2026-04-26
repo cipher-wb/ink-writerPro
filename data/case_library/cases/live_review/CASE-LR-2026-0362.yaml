@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0362
+title: 雪白天才顶级放大到普通修仙 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 都市
+  - 脑洞
+  - 修仙
+  - 新媒体爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就18分 | 情绪和节奏快是唯一亮点，但脑洞完全扯淡，缺乏代入感，题材不适合起点，需改为都市修仙或底层生活。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪和节奏快是唯一亮点，但脑洞完全扯淡，缺乏代入感，题材不适合起点，需改为都市修仙或底层生活。 | 题材扯淡，不适合起点;缺乏代入感，逻辑不合理
+  observable:
+  - 'genre维度: 题材扯淡，不适合起点'
+  - 'opening维度: 缺乏代入感，逻辑不合理'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 580
+  - 610
+  score: 18
+  score_raw: 差不多就18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 雪白天才顶级放大到普通修仙
+  genre_guess:
+  - 都市
+  - 脑洞
+  - 修仙
+  - 新媒体爽文
+  overall_comment: 情绪和节奏快是唯一亮点，但脑洞完全扯淡，缺乏代入感，题材不适合起点，需改为都市修仙或底层生活。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材扯淡，不适合起点
+    raw_quote: 这题材完全扯淡了 ... 7点没人看呀
+  - dimension: opening
+    severity: negative
+    content: 缺乏代入感，逻辑不合理
+    raw_quote: 就根本没有代入感
+  - dimension: simplicity
+    severity: positive
+    content: 情绪和节奏快，适合新媒体
+    raw_quote: 情绪节奏还是很快的 情绪也是足的 这是一个优点

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1942
+title: 人生短短几个球 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 废土
+  - 科幻
+  - 争霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 冒充废土 | 强行冒充废土题材，实为都市异能，故事无聊卖点单薄，表达虽流畅但缺乏看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 强行冒充废土题材，实为都市异能，故事无聊卖点单薄，表达虽流畅但缺乏看点。 | 没有废土的感觉，本质是都市异能;卖点太单薄，三句话就能讲完的故事
+  observable:
+  - 'genre维度: 没有废土的感觉，本质是都市异能'
+  - 'golden_finger维度: 卖点太单薄，三句话就能讲完的故事'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 353
+  - 391
+  score: null
+  score_raw: 冒充废土
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 人生短短几个球
+  genre_guess:
+  - 废土
+  - 科幻
+  - 争霸
+  overall_comment: 强行冒充废土题材，实为都市异能，故事无聊卖点单薄，表达虽流畅但缺乏看点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 没有废土的感觉，本质是都市异能
+    raw_quote: 没废土的感觉，强行废土，冒充废土，你换成都市艺能一样写
+  - dimension: golden_finger
+    severity: negative
+    content: 卖点太单薄，三句话就能讲完的故事
+    raw_quote: 你说6300个字是不是我这三句话讲完了...没意思，这个慢点太单薄了

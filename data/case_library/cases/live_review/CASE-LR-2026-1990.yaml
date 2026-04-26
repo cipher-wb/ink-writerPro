@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1990
+title: 道家门徒 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 仙侠
+  - 古典
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分吧 | 比例扎实但写法太老套，不关心读者，从心态到内容都需要更新。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实但写法太老套，不关心读者，从心态到内容都需要更新。 | 土著少年慢悠悠，没有穿越带入感;传统写法脱离现在读者审美
+  observable:
+  - 'opening维度: 土著少年慢悠悠，没有穿越带入感'
+  - 'genre维度: 传统写法脱离现在读者审美'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1531
+  - 1590
+  score: 40
+  score_raw: 40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 道家门徒
+  genre_guess:
+  - 仙侠
+  - 古典
+  - 穿越
+  overall_comment: 比例扎实但写法太老套，不关心读者，从心态到内容都需要更新。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 土著少年慢悠悠，没有穿越带入感
+    raw_quote: 不穿越土著少年没感觉啊
+  - dimension: genre
+    severity: negative
+    content: 传统写法脱离现在读者审美
+    raw_quote: 读者已经全部都更新换代了

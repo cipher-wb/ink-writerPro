@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1311
+title: 蓝鸣我真不是正统 (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 大明
+  - 难民
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 68分 | 真实感强，有《冒姓琅琊》味道，签约没问题，但缺少金手指和明确主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 真实感强，有《冒姓琅琊》味道，签约没问题，但缺少金手指和明确主线。 | 没有外挂，主线模糊
+  observable:
+  - 'golden_finger维度: 没有外挂，主线模糊'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1001
+  - 1100
+  score: 68
+  score_raw: 68分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 蓝鸣我真不是正统
+  genre_guess:
+  - 大明
+  - 难民
+  - 历史
+  overall_comment: 真实感强，有《冒姓琅琊》味道，签约没问题，但缺少金手指和明确主线。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入真实，仿佛真的穿越到大明
+    raw_quote: 冒興狼牙那種 真實感拉滿了
+  - dimension: golden_finger
+    severity: negative
+    content: 没有外挂，主线模糊
+    raw_quote: 没外挂吗 没外挂好难赢啊
+  - dimension: hook
+    severity: neutral
+    content: 后续需要安排主线强化逆袭感
+    raw_quote: 签约没啥问题 能不能出成绩 看你自己的外挂跟主线

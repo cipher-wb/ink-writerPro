@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2055
+title: 天降勇士砸死了天帝后 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 历史
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大概也是给到35分吧 | 有天赋但写法过于冷门，需要学精品，注意人设沉稳。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋但写法过于冷门，需要学精品，注意人设沉稳。 | 时代冷，写法不适合新手;人设不沉稳;开头场景多余，无代入感
+  observable:
+  - 'genre维度: 时代冷，写法不适合新手'
+  - 'character维度: 人设不沉稳'
+  - 'opening维度: 开头场景多余，无代入感'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 1801
+  - 2000
+  score: 35
+  score_raw: 大概也是给到35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天降勇士砸死了天帝后
+  genre_guess:
+  - 历史
+  - 穿越
+  overall_comment: 有天赋但写法过于冷门，需要学精品，注意人设沉稳。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 时代冷，写法不适合新手
+    raw_quote: 你这个写法只有白金大神那种思路 才能写
+  - dimension: character
+    severity: negative
+    content: 人设不沉稳
+    raw_quote: 你的人设一定要沉稳
+  - dimension: opening
+    severity: negative
+    content: 开头场景多余，无代入感
+    raw_quote: 很专业的写一些没用的场景 毫无大辱感

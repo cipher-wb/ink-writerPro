@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2183
+title: 修仙界轻松向 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 修仙
+  - 乐子
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 比例还好吧 | 人设太白，主角没有魅力，对话干巴巴，比例驾驭不住轻松向题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设太白，主角没有魅力，对话干巴巴，比例驾驭不住轻松向题材。 | 主角人设崩，没智商，张口小爷，没有人物魅力;对话没感觉，每个人都没特色，干巴巴
+  observable:
+  - 'character维度: 主角人设崩，没智商，张口小爷，没有人物魅力'
+  - 'misc维度: 对话没感觉，每个人都没特色，干巴巴'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1125
+  - 1168
+  score: 25
+  score_raw: 25分吧 比例还好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙界轻松向
+  genre_guess:
+  - 修仙
+  - 乐子
+  overall_comment: 人设太白，主角没有魅力，对话干巴巴，比例驾驭不住轻松向题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设崩，没智商，张口小爷，没有人物魅力
+    raw_quote: 这种人设就不对 … 你躺平也是有智商的 … 人设已经崩完了
+  - dimension: misc
+    severity: negative
+    content: 对话没感觉，每个人都没特色，干巴巴
+    raw_quote: 这个对话就干妈妈的 每个人都没跟每个人特色

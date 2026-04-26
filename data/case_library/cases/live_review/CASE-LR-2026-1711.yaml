@@ -1,0 +1,66 @@
+case_id: CASE-LR-2026-1711
+title: 冒姓蓝名 (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oX6QBuETp
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 南明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 主线就先给你68分 | 真实感强，历史穿越实感出色，但节奏略慢，缺少金手指和后续主线安排，签约没问题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oX6QBuETp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 真实感强，历史穿越实感出色，但节奏略慢，缺少金手指和后续主线安排，签约没问题。 | 开局节奏偏慢，进展拖沓。;主角没有强力外挂，后续很难打开局面。;缺少明确的后续主线和核心爽点叠加安排。
+  observable:
+  - 'pacing维度: 开局节奏偏慢，进展拖沓。'
+  - 'golden_finger维度: 主角没有强力外挂，后续很难打开局面。'
+  - 'highpoint维度: 缺少明确的后续主线和核心爽点叠加安排。'
+live_review_meta:
+  source_bvid: BV1oX6QBuETp
+  source_line_range:
+  - 5
+  - 257
+  score: 68
+  score_raw: 主线就先给你68分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 冒姓蓝名
+  genre_guess:
+  - 历史
+  - 穿越
+  - 南明
+  overall_comment: 真实感强，历史穿越实感出色，但节奏略慢，缺少金手指和后续主线安排，签约没问题。
+  comments:
+  - dimension: misc
+    severity: positive
+    content: 真实感极强，仿佛真正穿越到永历五年，人物反应和细节很实。
+    raw_quote: 真实感是很重要的史 历史虽然没有历史 但是很真实
+  - dimension: pacing
+    severity: negative
+    content: 开局节奏偏慢，进展拖沓。
+    raw_quote: 一个旅程上课他条件那个有点慢
+  - dimension: golden_finger
+    severity: negative
+    content: 主角没有强力外挂，后续很难打开局面。
+    raw_quote: 没外挂好难赢啊
+  - dimension: ops
+    severity: positive
+    content: 签约方面没有大问题，可以直接通过。
+    raw_quote: 不过签约没啥问题啊
+  - dimension: highpoint
+    severity: negative
+    content: 缺少明确的后续主线和核心爽点叠加安排。
+    raw_quote: 也没有后续的主线啊

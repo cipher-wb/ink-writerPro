@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2013
+title: 我是传奇之狗妖 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 末日
+  - 变身
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 拿25分吧 | 节奏极快但荒诞不真实，融合了东方玄幻和西方丧尸，题材大杂烩，像自嗨作品。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏极快但荒诞不真实，融合了东方玄幻和西方丧尸，题材大杂烩，像自嗨作品。 | 狐仙与西方的世界观割裂，整体太荒诞。;节奏快得莫名其妙，缺乏沉浸感。
+  observable:
+  - 'genre维度: 狐仙与西方的世界观割裂，整体太荒诞。'
+  - 'pacing维度: 节奏快得莫名其妙，缺乏沉浸感。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 952
+  - 985
+  score: 25
+  score_raw: 拿25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我是传奇之狗妖
+  genre_guess:
+  - 末日
+  - 变身
+  - 系统
+  overall_comment: 节奏极快但荒诞不真实，融合了东方玄幻和西方丧尸，题材大杂烩，像自嗨作品。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 狐仙与西方的世界观割裂，整体太荒诞。
+    raw_quote: 狐仙 狐仙是东方的玄幻故事里面的 ... 太搞了 你正常写吧
+  - dimension: pacing
+    severity: negative
+    content: 节奏快得莫名其妙，缺乏沉浸感。
+    raw_quote: 节奏怎么这么快 感觉两万字就写完了

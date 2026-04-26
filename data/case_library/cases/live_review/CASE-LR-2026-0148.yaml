@@ -1,0 +1,41 @@
+case_id: CASE-LR-2026-0148
+title: 四猪斗智斗勇 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那20多分还要怎么样 我又没给他给给多少分 20多分 | 反转有一点意思但整体太弱，设定和战力崩坏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 反转有一点意思但整体太弱，设定和战力崩坏。
+  observable:
+  - 整体被星河直播判定为 fail
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 295
+  - 295
+  score: 22
+  score_raw: 那20多分还要怎么样 我又没给他给给多少分 20多分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 四猪斗智斗勇
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 反转有一点意思但整体太弱，设定和战力崩坏。
+  comments: []

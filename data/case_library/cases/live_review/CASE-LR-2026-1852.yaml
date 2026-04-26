@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1852
+title: 咖啡店聊天穿越科幻文 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 科幻
+  - 穿越
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 节奏太慢，第一章在咖啡店聊天讲设定，完全是起点写法，蓝精灵需要情绪和节奏更快。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏太慢，第一章在咖啡店聊天讲设定，完全是起点写法，蓝精灵需要情绪和节奏更快。 | 开头在咖啡店聊设定推进剧情，节奏太慢，读者不看说明书;写法是起点思维，不适合番茄和蓝精灵的情绪节奏流
+  observable:
+  - 'pacing维度: 开头在咖啡店聊设定推进剧情，节奏太慢，读者不看说明书'
+  - 'genre维度: 写法是起点思维，不适合番茄和蓝精灵的情绪节奏流'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 337
+  - 387
+  score: 55
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 咖啡店聊天穿越科幻文
+  genre_guess:
+  - 科幻
+  - 穿越
+  - 都市
+  overall_comment: 节奏太慢，第一章在咖啡店聊天讲设定，完全是起点写法，蓝精灵需要情绪和节奏更快。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开头在咖啡店聊设定推进剧情，节奏太慢，读者不看说明书
+    raw_quote: 一直聊天推进群其实很很无聊的一种奇葩 要走剧情 不要老是聊天聊天
+  - dimension: genre
+    severity: negative
+    content: 写法是起点思维，不适合番茄和蓝精灵的情绪节奏流
+    raw_quote: 大哥完全不是番茄的写法啊

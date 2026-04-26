@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1438
+title: 电诈园区修仙 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 电诈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多50分左右吧 | 题材大加分但比例跟不上，衔接差，女人描写干巴，建议强化残酷真实感
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材大加分但比例跟不上，衔接差，女人描写干巴，建议强化残酷真实感 | 女大学生描写干巴巴，浪费暧昧场景;章节衔接差，心理活动不够
+  observable:
+  - 'character维度: 女大学生描写干巴巴，浪费暧昧场景'
+  - 'pacing维度: 章节衔接差，心理活动不够'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 411
+  - 580
+  score: 50
+  score_raw: 差不多50分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 电诈园区修仙
+  genre_guess:
+  - 都市
+  - 修仙
+  - 电诈
+  overall_comment: 题材大加分但比例跟不上，衔接差，女人描写干巴，建议强化残酷真实感
+  comments:
+  - dimension: taboo
+    severity: neutral
+    content: 电诈园区题材敏感但可写，需写出真实残酷
+    raw_quote: 你要体现这里的残酷真实
+  - dimension: character
+    severity: negative
+    content: 女大学生描写干巴巴，浪费暧昧场景
+    raw_quote: 就女大学生的这一段 我就断言大哥这个稿子写不起来了呀
+  - dimension: pacing
+    severity: negative
+    content: 章节衔接差，心理活动不够
+    raw_quote: 小胖子第一张跟第二章衔接不够
+  - dimension: genre
+    severity: positive
+    content: 电诈园区题材大加分
+    raw_quote: 他这题材加分 他这个题材大加分

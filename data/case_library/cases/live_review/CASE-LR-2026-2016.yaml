@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-2016
+title: 妇产科医生替嫂嫂接生 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 古代
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没法打分了 | 文笔和情绪没问题，但接生系统、六个寡妇的设定是奇葩恶搞，剧情逻辑生硬，完全写不了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和情绪没问题，但接生系统、六个寡妇的设定是奇葩恶搞，剧情逻辑生硬，完全写不了。 | 穿越古代替嫂嫂接生的主线难拍也难写，比较恶搞。
+  observable:
+  - 'genre维度: 穿越古代替嫂嫂接生的主线难拍也难写，比较恶搞。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1041
+  - 1085
+  score: null
+  score_raw: 没法打分了
+  score_signal: unknown
+  verdict: fail
+  title_guess: 妇产科医生替嫂嫂接生
+  genre_guess:
+  - 古代
+  - 穿越
+  - 系统
+  overall_comment: 文笔和情绪没问题，但接生系统、六个寡妇的设定是奇葩恶搞，剧情逻辑生硬，完全写不了。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 穿越古代替嫂嫂接生的主线难拍也难写，比较恶搞。
+    raw_quote: 这个只能拍短剧去吧 ... 慢点事恶搞啊

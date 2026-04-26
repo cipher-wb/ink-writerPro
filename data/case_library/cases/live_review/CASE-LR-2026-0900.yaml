@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0900
+title: 江彻32岁 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 学霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 哎40分唉 | 重生文平淡无聊，没有卖点，作者理解力不行，看不到希望。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生文平淡无聊，没有卖点，作者理解力不行，看不到希望。 | 开篇缺少看点，慢悠悠讲破事，金手指藏到第三章;整体太平淡太无聊，不会抓重点
+  observable:
+  - 'hook维度: 开篇缺少看点，慢悠悠讲破事，金手指藏到第三章'
+  - 'pacing维度: 整体太平淡太无聊，不会抓重点'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 1288
+  - 1508
+  score: 40
+  score_raw: 哎40分唉
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 江彻32岁
+  genre_guess:
+  - 都市
+  - 重生
+  - 学霸
+  overall_comment: 重生文平淡无聊，没有卖点，作者理解力不行，看不到希望。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开篇缺少看点，慢悠悠讲破事，金手指藏到第三章
+    raw_quote: 你两张一个卖点都没有偏科式的金手指吗？为什么不能放第一第一章第一句话呀
+  - dimension: pacing
+    severity: negative
+    content: 整体太平淡太无聊，不会抓重点
+    raw_quote: 这个事件整体还是太平淡，太无聊了

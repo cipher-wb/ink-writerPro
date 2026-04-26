@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1561
+title: 异界领主女巫懒牛娘 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 异世界
+  - 种田
+  - 领主
+  - 女巫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开头拉扯水平尚可但缺少贯穿全局的强驱动力和金手指，后续事件较弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头拉扯水平尚可但缺少贯穿全局的强驱动力和金手指，后续事件较弱。 | 设定堆积可能拖节奏;缺少贯穿全局的金手指或强主线
+  observable:
+  - 'pacing维度: 设定堆积可能拖节奏'
+  - 'golden_finger维度: 缺少贯穿全局的金手指或强主线'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 1
+  - 200
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 异界领主女巫懒牛娘
+  genre_guess:
+  - 异世界
+  - 种田
+  - 领主
+  - 女巫
+  overall_comment: 开头拉扯水平尚可但缺少贯穿全局的强驱动力和金手指，后续事件较弱。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 拉扯写得有水平
+    raw_quote: 拉扯大概的拉扯水平很高
+  - dimension: pacing
+    severity: negative
+    content: 设定堆积可能拖节奏
+    raw_quote: 他后面那些设定我怕还是写的太复杂
+  - dimension: golden_finger
+    severity: negative
+    content: 缺少贯穿全局的金手指或强主线
+    raw_quote: 少一个贯穿全局的脑洞，就是地下城或者14亿，烂的一个贯穿全局的一个劳动金手指

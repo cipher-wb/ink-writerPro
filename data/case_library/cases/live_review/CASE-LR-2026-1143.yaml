@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1143
+title: 五代十国开局截胡赵匡胤 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  - 军阀
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多58分吧 | 题材切入点很好，危机感和自救逻辑合理，但女性角色塑造和紧迫感描写还需加强。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材切入点很好，危机感和自救逻辑合理，但女性角色塑造和紧迫感描写还需加强。 | 女性角色描写太差，空洞木然
+  observable:
+  - 'character维度: 女性角色描写太差，空洞木然'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 611
+  - 760
+  score: 58
+  score_raw: 差不多58分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 五代十国开局截胡赵匡胤
+  genre_guess:
+  - 历史
+  - 五代十国
+  - 军阀
+  overall_comment: 题材切入点很好，危机感和自救逻辑合理，但女性角色塑造和紧迫感描写还需加强。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局吃人事件切入有代入感
+    raw_quote: 切入稍微有点慢 但是这里这个思路切入是没问题的
+  - dimension: character
+    severity: negative
+    content: 女性角色描写太差，空洞木然
+    raw_quote: 眼神空洞也太蓝了吧 … 没写对 这没感觉
+  - dimension: highpoint
+    severity: neutral
+    content: 需要强调梭哈赌一把的危机感
+    raw_quote: 你要赌一波那种 你要你要深深的看了下 … 成败在此一举
+  - dimension: pacing
+    severity: neutral
+    content: 部分细节和节奏可以再打磨
+    raw_quote: 细节拉一拉 距离签约问题不大的

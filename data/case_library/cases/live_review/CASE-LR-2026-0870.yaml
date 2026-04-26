@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0870
+title: 创业找小秘 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在就是看看就45分吧 | 题材贴近现实，真实感不错，但吐槽过多，驱动力刻意，缺少小秘内容。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材贴近现实，真实感不错，但吐槽过多，驱动力刻意，缺少小秘内容。 | 一直吐槽窝囊，情绪铺垫过长;驱动力强行设定，不够自然
+  observable:
+  - 'hook维度: 一直吐槽窝囊，情绪铺垫过长'
+  - 'opening维度: 驱动力强行设定，不够自然'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 381
+  - 420
+  score: 45
+  score_raw: 现在就是看看就45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 创业找小秘
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 题材贴近现实，真实感不错，但吐槽过多，驱动力刻意，缺少小秘内容。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 一直吐槽窝囊，情绪铺垫过长
+    raw_quote: 一直吐槽真的没意义啊 点到为止嘛 吐槽情绪
+  - dimension: opening
+    severity: negative
+    content: 驱动力强行设定，不够自然
+    raw_quote: 下次必须前100 还要给这个驱动力 有点 不这驱动力下次他必须考进前100 … 我觉得有点刻意了

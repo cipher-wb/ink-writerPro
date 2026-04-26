@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0120
+title: 从小养鱼开始成仙 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  - 升级流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有时33分吧 | 写法偏向轻小说吐槽流但驾驭不住，节奏失控，建议回归正统升级线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法偏向轻小说吐槽流但驾驭不住，节奏失控，建议回归正统升级线。 | 开篇男子女子绕口称呼劝退读者;剧情推进混乱，缺乏主线;强行写乐子人设，应当选择更简单的题材
+  observable:
+  - 'opening维度: 开篇男子女子绕口称呼劝退读者'
+  - 'pacing维度: 剧情推进混乱，缺乏主线'
+  - 'simplicity维度: 强行写乐子人设，应当选择更简单的题材'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 312
+  - 440
+  score: 33
+  score_raw: 有时33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从小养鱼开始成仙
+  genre_guess:
+  - 玄幻
+  - 修仙
+  - 升级流
+  overall_comment: 写法偏向轻小说吐槽流但驾驭不住，节奏失控，建议回归正统升级线。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇男子女子绕口称呼劝退读者
+    raw_quote: 男子女子的读者全跑了啊
+  - dimension: pacing
+    severity: negative
+    content: 剧情推进混乱，缺乏主线
+    raw_quote: 不是这种这种你的比例是写不了
+  - dimension: simplicity
+    severity: negative
+    content: 强行写乐子人设，应当选择更简单的题材
+    raw_quote: 大哥你只能写这种升级线

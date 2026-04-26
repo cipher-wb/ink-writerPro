@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0382
+title: 暴雨孤城 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 与同类书卖点高度相似，只能发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 与同类书卖点高度相似，只能发蓝精灵。 | 核心设定与正在推的书撞车，首轮突围失败。
+  observable:
+  - 'golden_finger维度: 核心设定与正在推的书撞车，首轮突围失败。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 195
+  - 210
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 暴雨孤城
+  genre_guess:
+  - 都市
+  - 系统
+  overall_comment: 与同类书卖点高度相似，只能发蓝精灵。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 核心设定与正在推的书撞车，首轮突围失败。
+    raw_quote: 我觉得太像了，只能发蓝精灵。

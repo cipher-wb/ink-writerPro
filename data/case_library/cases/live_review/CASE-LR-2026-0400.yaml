@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0400
+title: 木乐 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 都市
+  - 第一人称
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不打疯了 | 第一人称且主角在法国的设定导致代入感全无，底层思路完全错误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称且主角在法国的设定导致代入感全无，底层思路完全错误。 | 开篇背景交代不清，代入感断裂，读者完全看不懂。
+  observable:
+  - 'opening维度: 开篇背景交代不清，代入感断裂，读者完全看不懂。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 1085
+  - 1140
+  score: null
+  score_raw: 不打疯了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 木乐
+  genre_guess:
+  - 都市
+  - 第一人称
+  overall_comment: 第一人称且主角在法国的设定导致代入感全无，底层思路完全错误。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇背景交代不清，代入感断裂，读者完全看不懂。
+    raw_quote: 没有代入感，你在法国，要解释清楚。

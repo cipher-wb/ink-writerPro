@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1277
+title: 幻梦游戏自杀仪式 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 诡异
+  - 游戏
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 比例好但核心卖点毒，主线慢且故弄玄虚，题材太小众无受众，前景堪忧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例好但核心卖点毒，主线慢且故弄玄虚，题材太小众无受众，前景堪忧。 | 一体双魂核心卖点太毒找不到爽点;呈现方式太复杂啰嗦，建议简化视角
+  observable:
+  - 'golden_finger维度: 一体双魂核心卖点太毒找不到爽点'
+  - 'simplicity维度: 呈现方式太复杂啰嗦，建议简化视角'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1561
+  - 1640
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 幻梦游戏自杀仪式
+  genre_guess:
+  - 诡异
+  - 游戏
+  - 都市
+  overall_comment: 比例好但核心卖点毒，主线慢且故弄玄虚，题材太小众无受众，前景堪忧。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 一体双魂核心卖点太毒找不到爽点
+    raw_quote: 核心卖点我觉得挺毒的...找不到仙灵感在哪
+  - dimension: simplicity
+    severity: negative
+    content: 呈现方式太复杂啰嗦，建议简化视角
+    raw_quote: 我要给你负责...这个稿子发哪都是铺盖的...还是啰嗦表达的是吧

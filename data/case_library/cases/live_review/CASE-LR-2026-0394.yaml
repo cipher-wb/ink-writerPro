@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0394
+title: 读宠物蛇 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 都市
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个35分的样子 | 都市行证测灵根，代入感和节奏尚可，但题材扣分导致分数较低。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市行证测灵根，代入感和节奏尚可，但题材扣分导致分数较低。 | 题材选择存在问题，扣除约五分。
+  observable:
+  - 'genre维度: 题材选择存在问题，扣除约五分。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 785
+  - 810
+  score: 35
+  score_raw: 有个35分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 读宠物蛇
+  genre_guess:
+  - 都市
+  - 灵异
+  overall_comment: 都市行证测灵根，代入感和节奏尚可，但题材扣分导致分数较低。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 快节奏切入加上良好的氛围代入感，达到了灵异的基本要求。
+    raw_quote: 节奏快跟带入感氛围感好，就是领域的第一要素。
+  - dimension: genre
+    severity: negative
+    content: 题材选择存在问题，扣除约五分。
+    raw_quote: 题材他差了可五分，不然就40。

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0497
+title: 攻略蔡夫人 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分嘛确实 写得确实可以有脑子 | 遣词造句和内容有天赋，但绿刘表吹枕边风匡扶汉室的逻辑太炸裂。只能发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句和内容有天赋，但绿刘表吹枕边风匡扶汉室的逻辑太炸裂。只能发蓝精灵。 | 为匡扶汉室绿刘表逻辑太炸裂立不住，有风险
+  observable:
+  - 'taboo维度: 为匡扶汉室绿刘表逻辑太炸裂立不住，有风险'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1915
+  - 1960
+  score: 42
+  score_raw: 42分嘛确实 写得确实可以有脑子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 攻略蔡夫人
+  genre_guess:
+  - 历史
+  - 三国
+  - 系统
+  overall_comment: 遣词造句和内容有天赋，但绿刘表吹枕边风匡扶汉室的逻辑太炸裂。只能发蓝精灵。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 为匡扶汉室绿刘表逻辑太炸裂立不住，有风险
+    raw_quote: 为了匡扶汉室嘛 然后跟蔡夫人就天天在这里...刘表知道 吗...这这这太炸裂了
+  - dimension: misc
+    severity: positive
+    content: 内容和遣词造句有天赋，写得还行
+    raw_quote: 写的倒是还好吧 其实写的还好 遣词造句啊 内容没啥问题

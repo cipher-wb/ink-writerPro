@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1679
+title: 重生2014：恋爱大师系统 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20分左右吧 22分 | 恋爱攻略思路像PUA爽感不足，角色虚浮没有情绪，缺乏真正的系统支撑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 恋爱攻略思路像PUA爽感不足，角色虚浮没有情绪，缺乏真正的系统支撑。 | 帮别人谈恋爱有送女绿帽嫌疑，爽点难以成立;人物和场景非常虚浮，像短剧剧本没有网文代入
+  observable:
+  - 'hook维度: 帮别人谈恋爱有送女绿帽嫌疑，爽点难以成立'
+  - 'character维度: 人物和场景非常虚浮，像短剧剧本没有网文代入'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 721
+  - 780
+  score: 22
+  score_raw: 差不多就20分左右吧 22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2014：恋爱大师系统
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 恋爱攻略思路像PUA爽感不足，角色虚浮没有情绪，缺乏真正的系统支撑。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 帮别人谈恋爱有送女绿帽嫌疑，爽点难以成立
+    raw_quote: 这疯狂送女嘛 帮了所有人在那
+  - dimension: character
+    severity: negative
+    content: 人物和场景非常虚浮，像短剧剧本没有网文代入
+    raw_quote: 短句风格就很虚浮这些人

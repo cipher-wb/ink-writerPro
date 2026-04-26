@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1884
+title: 领主文穿越家园系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 奇幻
+  - 领主
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 很啰嗦，事件太慢 | 雪白开头合格但事件推进极慢，第一章信息量仅够老手3000字。人设有点屌丝。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白开头合格但事件推进极慢，第一章信息量仅够老手3000字。人设有点屌丝。 | 节奏极慢，第一章应半章完成;主角人设有点屌丝
+  observable:
+  - 'pacing维度: 节奏极慢，第一章应半章完成'
+  - 'character维度: 主角人设有点屌丝'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 791
+  - 880
+  score: null
+  score_raw: 很啰嗦，事件太慢
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 领主文穿越家园系统
+  genre_guess:
+  - 奇幻
+  - 领主
+  - 穿越
+  overall_comment: 雪白开头合格但事件推进极慢，第一章信息量仅够老手3000字。人设有点屌丝。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏极慢，第一章应半章完成
+    raw_quote: 第一张其实应该半章就差不多了... 太慢了... 7800字的信息量 你给人家老字的写3000字有看涨
+  - dimension: character
+    severity: negative
+    content: 主角人设有点屌丝
+    raw_quote: 人设也有点屌丝对吧 一上来就按摩哎呀
+  - dimension: opening
+    severity: positive
+    content: 雪白开局合格
+    raw_quote: 这个其实可以的 睁开眼然后雪白少女在他臂弯里

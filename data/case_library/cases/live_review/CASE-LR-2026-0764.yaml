@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0764
+title: 三角洲降临现实 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 电竞
+  - 系统
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 | 游戏降临同人味重，剧情没紧迫感，人设太小白，起点很难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 游戏降临同人味重，剧情没紧迫感，人设太小白，起点很难。 | 太像三角洲游戏实况，缺乏网文节奏;人物写得非常小白，立不住，像在念稿;开局缺少危机感和主线，日常太多
+  observable:
+  - 'genre维度: 太像三角洲游戏实况，缺乏网文节奏'
+  - 'character维度: 人物写得非常小白，立不住，像在念稿'
+  - 'highpoint维度: 开局缺少危机感和主线，日常太多'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1591
+  - 1680
+  score: 20
+  score_raw: 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三角洲降临现实
+  genre_guess:
+  - 电竞
+  - 系统
+  - 游戏
+  overall_comment: 游戏降临同人味重，剧情没紧迫感，人设太小白，起点很难。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 太像三角洲游戏实况，缺乏网文节奏
+    raw_quote: 就是撇开你的这个题材不谈，能力不够
+  - dimension: character
+    severity: negative
+    content: 人物写得非常小白，立不住，像在念稿
+    raw_quote: 客观讲述……没什么好剧情的对吧
+  - dimension: highpoint
+    severity: negative
+    content: 开局缺少危机感和主线，日常太多
+    raw_quote: 没有什么紧迫感……你觉得不是吗

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1397
+title: 深渊在零售你 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给不了你十八分以上吧 反正就十八分左右吧 | 开头哲学感强，节奏慢，父母双亡梗老套，缺乏网文爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头哲学感强，节奏慢，父母双亡梗老套，缺乏网文爽点。 | 开头像高中作文，网文感太弱;父母双亡的悲情钩子老旧，没有吸引力
+  observable:
+  - 'opening维度: 开头像高中作文，网文感太弱'
+  - 'hook维度: 父母双亡的悲情钩子老旧，没有吸引力'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 801
+  - 950
+  score: 18
+  score_raw: 给不了你十八分以上吧 反正就十八分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 深渊在零售你
+  genre_guess:
+  - 都市
+  - 异能
+  - 悬疑
+  overall_comment: 开头哲学感强，节奏慢，父母双亡梗老套，缺乏网文爽点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头像高中作文，网文感太弱
+    raw_quote: 把这种描述像高中作文啊大哥
+  - dimension: hook
+    severity: negative
+    content: 父母双亡的悲情钩子老旧，没有吸引力
+    raw_quote: 娘死了爹也死了 我到底做错了什么

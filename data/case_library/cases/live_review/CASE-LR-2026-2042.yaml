@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2042
+title: 还挺帅（文娱穿蔡徐空） (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 文娱
+  - 练习生
+  - 娱乐圈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 六十八分吧 | 题材极好，节奏流畅，但开头写帅太多，缺少冲突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材极好，节奏流畅，但开头写帅太多，缺少冲突。 | 开头写自己帅太多，信息量少
+  observable:
+  - 'opening维度: 开头写自己帅太多，信息量少'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 1921
+  - 2040
+  score: 68
+  score_raw: 六十八分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 还挺帅（文娱穿蔡徐空）
+  genre_guess:
+  - 文娱
+  - 练习生
+  - 娱乐圈
+  overall_comment: 题材极好，节奏流畅，但开头写帅太多，缺少冲突。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头写自己帅太多，信息量少
+    raw_quote: 你第一张写自己帅有点多 所以说又耽搁时间了
+  - dimension: genre
+    severity: positive
+    content: 题材极好，蹭蔡徐坤热度
+    raw_quote: 这个题材绝对是好题材 就简单直接直白

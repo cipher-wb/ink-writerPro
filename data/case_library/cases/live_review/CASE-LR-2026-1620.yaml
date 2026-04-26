@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1620
+title: 重生姐姐系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 有情绪遗憾起点不错，但系统毒点大，短剧化严重，人物关系乱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有情绪遗憾起点不错，但系统毒点大，短剧化严重，人物关系乱。 | 系统互动毒点大，频繁打断剧情，破坏沉浸感;短剧化风格在起点不合适，百年世家等元素是毒点
+  observable:
+  - 'golden_finger维度: 系统互动毒点大，频繁打断剧情，破坏沉浸感'
+  - 'genre维度: 短剧化风格在起点不合适，百年世家等元素是毒点'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 1150
+  - 1219
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 重生姐姐系统
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  - 恋爱
+  overall_comment: 有情绪遗憾起点不错，但系统毒点大，短剧化严重，人物关系乱。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统互动毒点大，频繁打断剧情，破坏沉浸感
+    raw_quote: 系統真是大毒點 … 跟系統聊 聊瘋掉了
+  - dimension: genre
+    severity: negative
+    content: 短剧化风格在起点不合适，百年世家等元素是毒点
+    raw_quote: 太短劇化了 … 这些民家越加百年那些东西 … 這是起點大毒點

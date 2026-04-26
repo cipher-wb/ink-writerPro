@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1082
+title: 从被雪修抓走开始 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 复仇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40左右 | 开头梦境反转有趣但后续走向老套复仇玄幻，人设和套路仍需打磨。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头梦境反转有趣但后续走向老套复仇玄幻，人设和套路仍需打磨。 | 梦境后性格崩坏，后续复仇线平庸
+  observable:
+  - 'character维度: 梦境后性格崩坏，后续复仇线平庸'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 1371
+  - 1430
+  score: 40
+  score_raw: 差不多40左右
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 从被雪修抓走开始
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 复仇
+  overall_comment: 开头梦境反转有趣但后续走向老套复仇玄幻，人设和套路仍需打磨。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 砍爹拿头的开场一句话吸睛
+    raw_quote: 你为什么要砍到你爹的脑袋，这么炸裂吗
+  - dimension: character
+    severity: negative
+    content: 梦境后性格崩坏，后续复仇线平庸
+    raw_quote: 这后面都是设定设定...已经崩完了

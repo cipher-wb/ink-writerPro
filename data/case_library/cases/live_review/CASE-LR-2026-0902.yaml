@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0902
+title: 长野修仙界或赊账修长生 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 仙侠
+  - 老赖修仙
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 脑洞有乐子但事件弱，老登梗出戏，还不如正常写，欠缺真正的看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞有乐子但事件弱，老登梗出戏，还不如正常写，欠缺真正的看点。 | 老登、小逼崽子等称呼恶俗出戏，不觉得有乐子;金手指没人看，后面不写乐子，开篇之后乏力
+  observable:
+  - 'character维度: 老登、小逼崽子等称呼恶俗出戏，不觉得有乐子'
+  - 'hook维度: 金手指没人看，后面不写乐子，开篇之后乏力'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 1814
+  - 1930
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 长野修仙界或赊账修长生
+  genre_guess:
+  - 仙侠
+  - 老赖修仙
+  - 搞笑
+  overall_comment: 脑洞有乐子但事件弱，老登梗出戏，还不如正常写，欠缺真正的看点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 老登、小逼崽子等称呼恶俗出戏，不觉得有乐子
+    raw_quote: 我觉得老登非常出戏...就是小逼崽子老登这种东西
+  - dimension: hook
+    severity: negative
+    content: 金手指没人看，后面不写乐子，开篇之后乏力
+    raw_quote: 事件挺弱的，金手指其实没人看，开头有点乐子，后面也不写啥乐子了

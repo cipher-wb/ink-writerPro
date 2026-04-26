@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1885
+title: 重生相亲系统开局 (pass / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40吧，我觉得能上40 | 题材老套但写得栩栩如生，细节印象深刻。有写都市的天赋但缺主线侧重点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套但写得栩栩如生，细节印象深刻。有写都市的天赋但缺主线侧重点。 | 缺乏主线，故事侧重点不清晰;相亲重生开局太套路太小白
+  observable:
+  - 'pacing维度: 缺乏主线，故事侧重点不清晰'
+  - 'genre维度: 相亲重生开局太套路太小白'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 881
+  - 980
+  score: 40
+  score_raw: 40吧，我觉得能上40
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 重生相亲系统开局
+  genre_guess:
+  - 都市
+  - 重生
+  - 日常
+  overall_comment: 题材老套但写得栩栩如生，细节印象深刻。有写都市的天赋但缺主线侧重点。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 接地气，细节生动印象深刻
+    raw_quote: 栩栩如生啊... 各种细节是吧... 还是还是印象深刻的
+  - dimension: pacing
+    severity: negative
+    content: 缺乏主线，故事侧重点不清晰
+    raw_quote: 但问题是美好的主线呀... 得有侧重点对吧... 侧重于什么
+  - dimension: genre
+    severity: negative
+    content: 相亲重生开局太套路太小白
+    raw_quote: 就这种太小白了... 能不能来点新意啊

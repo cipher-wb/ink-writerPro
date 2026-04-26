@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1264
+title: 梦境系统无敌流 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 神豪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分也不低了 | 金手指写法多此一举，梦境股票大忌，现实爽点不足，整体偏蓝精灵风格。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指写法多此一举，梦境股票大忌，现实爽点不足，整体偏蓝精灵风格。 | 梦境K线图金手指拖沓多此一举;都市文一上来写股票是大忌;人设一般，拉扯不够，缺乏极端事件
+  observable:
+  - 'golden_finger维度: 梦境K线图金手指拖沓多此一举'
+  - 'hook维度: 都市文一上来写股票是大忌'
+  - 'character维度: 人设一般，拉扯不够，缺乏极端事件'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 531
+  - 590
+  score: 25
+  score_raw: 25分也不低了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 梦境系统无敌流
+  genre_guess:
+  - 都市
+  - 系统
+  - 神豪
+  overall_comment: 金手指写法多此一举，梦境股票大忌，现实爽点不足，整体偏蓝精灵风格。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 梦境K线图金手指拖沓多此一举
+    raw_quote: 脱裤子放屁...何必要写K线图对吧
+  - dimension: hook
+    severity: negative
+    content: 都市文一上来写股票是大忌
+    raw_quote: 都市文一上来写股票是大忌...随便一个派出所一个公安局吧
+  - dimension: character
+    severity: negative
+    content: 人设一般，拉扯不够，缺乏极端事件
+    raw_quote: 人设一般般，整个对白感觉就像蓝精灵的那种

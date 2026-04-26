@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1260
+title: 侏罗纪老六 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 恐龙
+  - 穿越
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 15分 | 题材代入感差，人设太贱太颠，全是槽点，虽有点乐子但驱动力太装，整体立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材代入感差，人设太贱太颠，全是槽点，虽有点乐子但驱动力太装，整体立不住。 | 人设太贱太傻，恐龙逼格全无;驱动力太装，复仇动机过于直白;老六文化毒点，恐龙修仙也是毒点
+  observable:
+  - 'character维度: 人设太贱太傻，恐龙逼格全无'
+  - 'hook维度: 驱动力太装，复仇动机过于直白'
+  - 'ops维度: 老六文化毒点，恐龙修仙也是毒点'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 216
+  - 295
+  score: 15
+  score_raw: 15分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 侏罗纪老六
+  genre_guess:
+  - 恐龙
+  - 穿越
+  - 都市
+  overall_comment: 题材代入感差，人设太贱太颠，全是槽点，虽有点乐子但驱动力太装，整体立不住。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设太贱太傻，恐龙逼格全无
+    raw_quote: 这个桶哥不要写太贱了对吧，太傻的话就没恐龙的逼格了
+  - dimension: hook
+    severity: negative
+    content: 驱动力太装，复仇动机过于直白
+    raw_quote: 我要报仇...你可以去写眼前的事
+  - dimension: ops
+    severity: negative
+    content: 老六文化毒点，恐龙修仙也是毒点
+    raw_quote: 轻松解压...老六文化是毒点，恐龙修也是毒点

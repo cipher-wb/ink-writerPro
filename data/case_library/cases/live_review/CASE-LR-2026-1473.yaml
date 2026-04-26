@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1473
+title: 三眼就是马王爷全球神明 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 神
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给到28分 | 思路太番茄，起点不适合，转场太唐突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路太番茄，起点不适合，转场太唐突。 | 按摩店变捉妖，世界太昂系
+  observable:
+  - 'genre维度: 按摩店变捉妖，世界太昂系'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1171
+  - 1260
+  score: 28
+  score_raw: 给到28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三眼就是马王爷全球神明
+  genre_guess:
+  - 都市
+  - 异能
+  - 神
+  overall_comment: 思路太番茄，起点不适合，转场太唐突。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 按摩店变捉妖，世界太昂系
+    raw_quote: 这个世界太昂系了

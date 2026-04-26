@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0139
+title: 临屠系 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 都市奇幻
+  - 规则怪谈
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 出差不多35分 | 都市引出灵异思路对，但后续太慢，金手指不搭，水分大。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市引出灵异思路对，但后续太慢，金手指不搭，水分大。 | 第二章必须出卖点，拖沓成都市重生
+  observable:
+  - 'pacing维度: 第二章必须出卖点，拖沓成都市重生'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 184
+  - 190
+  score: 35
+  score_raw: 出差不多35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 临屠系
+  genre_guess:
+  - 都市奇幻
+  - 规则怪谈
+  - 灵异
+  overall_comment: 都市引出灵异思路对，但后续太慢，金手指不搭，水分大。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 物流园领导出事切入吸引人
+    raw_quote: 汉城物流园凌晨三点 领导出事了 可以啊 这个切入是没问题
+  - dimension: pacing
+    severity: negative
+    content: 第二章必须出卖点，拖沓成都市重生
+    raw_quote: 不能一直再聊了 不能你再聊就变成一个都市重生了 就变成厂子里面的事情去了

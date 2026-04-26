@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0427
+title: 重生桃花林天禧年办公室 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 商战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是34分 | 太干，雪白无效，主角人设没立住，事件普通无聊
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太干，雪白无效，主角人设没立住，事件普通无聊 | 主角人设几乎没写，全是配角，雪白无效表现;重生心态不对，写得太平淡，不会写主角人设
+  observable:
+  - 'character维度: 主角人设几乎没写，全是配角，雪白无效表现'
+  - 'opening维度: 重生心态不对，写得太平淡，不会写主角人设'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1969
+  - 2056
+  score: 34
+  score_raw: 还是34分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生桃花林天禧年办公室
+  genre_guess:
+  - 重生
+  - 都市
+  - 商战
+  overall_comment: 太干，雪白无效，主角人设没立住，事件普通无聊
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设几乎没写，全是配角，雪白无效表现
+    raw_quote: 叽哩咕噜1000多字，立住了...女的人设...然后主角几乎没有认识...前面白写了...完全是割裂的
+  - dimension: opening
+    severity: negative
+    content: 重生心态不对，写得太平淡，不会写主角人设
+    raw_quote: 好平淡呀...你前世成功人士那种感叹都没有...两世为人重生过来的心态也不对

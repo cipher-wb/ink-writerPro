@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1921
+title: 童话收养恶龙/少女拉扯 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 西幻
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 但是没意思 | 参考《这个杀手不太冷》的写法很清晰，但光靠与少女拉扯已显无聊，加上黑童话审核极严，不建议写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 参考《这个杀手不太冷》的写法很清晰，但光靠与少女拉扯已显无聊，加上黑童话审核极严，不建议写。 | 童话题材易涉未成年，有审核风险，尤其是黑童话基本不过审。;单纯的少女拉扯套路已泛滥，需要更强的卖点支撑。
+  observable:
+  - 'taboo维度: 童话题材易涉未成年，有审核风险，尤其是黑童话基本不过审。'
+  - 'simplicity维度: 单纯的少女拉扯套路已泛滥，需要更强的卖点支撑。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 530
+  - 570
+  score: null
+  score_raw: 但是没意思
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 童话收养恶龙/少女拉扯
+  genre_guess:
+  - 西幻
+  - 轻小说
+  overall_comment: 参考《这个杀手不太冷》的写法很清晰，但光靠与少女拉扯已显无聊，加上黑童话审核极严，不建议写。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 童话题材易涉未成年，有审核风险，尤其是黑童话基本不过审。
+    raw_quote: 童话其实也很难写，童话现在过不了审...黑童话过不了审
+  - dimension: simplicity
+    severity: negative
+    content: 单纯的少女拉扯套路已泛滥，需要更强的卖点支撑。
+    raw_quote: 这样的写法在起点太多了...除非你有很好的一些设定上的东西...不然光跟少女拉扯已经无聊了

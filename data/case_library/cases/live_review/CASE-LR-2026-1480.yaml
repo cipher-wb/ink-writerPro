@@ -1,0 +1,46 @@
+case_id: CASE-LR-2026-1480
+title: 在下李淡灵异 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 灵异
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 氛围感和比例不错，但事件自嗨，偏题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围感和比例不错，但事件自嗨，偏题。 | 事件不能集中，故弄玄虚
+  observable:
+  - 'pacing维度: 事件不能集中，故弄玄虚'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1801
+  - 1890
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 在下李淡灵异
+  genre_guess:
+  - 灵异
+  - 日常
+  overall_comment: 氛围感和比例不错，但事件自嗨，偏题。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 事件不能集中，故弄玄虚
+    raw_quote: 你的内容太故弄玄虚了

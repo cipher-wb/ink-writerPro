@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1014
+title: 暗环高架上 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得四十五分 | 情节平淡，重生爽点不足，像普通的人生片段缺乏高潮。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情节平淡，重生爽点不足，像普通的人生片段缺乏高潮。 | 整体平淡，缺乏重生应有的爽感和高潮;事件琐碎，节奏拖沓
+  observable:
+  - 'highpoint维度: 整体平淡，缺乏重生应有的爽感和高潮'
+  - 'pacing维度: 事件琐碎，节奏拖沓'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 321
+  - 450
+  score: 45
+  score_raw: 我觉得四十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 暗环高架上
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 情节平淡，重生爽点不足，像普通的人生片段缺乏高潮。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 整体平淡，缺乏重生应有的爽感和高潮
+    raw_quote: 情节确实一般般的情节 不爽啊你赚钱 赚点钱也不爽
+  - dimension: pacing
+    severity: negative
+    content: 事件琐碎，节奏拖沓
+    raw_quote: 没什么好事件 就干巴巴的 都是一些小事

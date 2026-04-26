@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0260
+title: 剑山的修仙虾兵 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 修仙
+  - 洪荒
+  - 半同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材极佳，虾兵视角新颖可蹭哪吒热度，但行文平淡、节奏慢、缺少有趣小剧场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材极佳，虾兵视角新颖可蹭哪吒热度，但行文平淡、节奏慢、缺少有趣小剧场。 | 节奏拖沓，小剧场不精彩，缺乏会心一笑的梗。;开头平淡，没有在1000字内用两个小剧场抓住读者。
+  observable:
+  - 'pacing维度: 节奏拖沓，小剧场不精彩，缺乏会心一笑的梗。'
+  - 'opening维度: 开头平淡，没有在1000字内用两个小剧场抓住读者。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1630
+  - 1720
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 剑山的修仙虾兵
+  genre_guess:
+  - 修仙
+  - 洪荒
+  - 半同人
+  overall_comment: 题材极佳，虾兵视角新颖可蹭哪吒热度，但行文平淡、节奏慢、缺少有趣小剧场。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 虾兵视角蹭陈塘关大战，题材无敌，有万订潜力。
+    raw_quote: 这是今晚最可惜的一个题材 ... 能蹭哪吒蹭陈塘关
+  - dimension: pacing
+    severity: negative
+    content: 节奏拖沓，小剧场不精彩，缺乏会心一笑的梗。
+    raw_quote: 没有有趣的小剧场 ... 每一句都让人会心一笑 那种东西才行
+  - dimension: opening
+    severity: negative
+    content: 开头平淡，没有在1000字内用两个小剧场抓住读者。
+    raw_quote: 开头第一张是4000字 现在200字留了扣子是吧 ... 太慢了

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2213
+title: 清风斩鬼剑 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 加多多35分吧 | 都市部分写得不错，但主线梦境降妖除魔过于老套，建议换一种更有脑洞的灵异设定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市部分写得不错，但主线梦境降妖除魔过于老套，建议换一种更有脑洞的灵异设定。 | 主线梦境拿剑杀鬼的设定太俗套，没人看
+  observable:
+  - 'opening维度: 主线梦境拿剑杀鬼的设定太俗套，没人看'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 773
+  - 818
+  score: 35
+  score_raw: 加多多35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 清风斩鬼剑
+  genre_guess:
+  - 都市
+  - 异能
+  - 灵异
+  overall_comment: 都市部分写得不错，但主线梦境降妖除魔过于老套，建议换一种更有脑洞的灵异设定。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主线梦境拿剑杀鬼的设定太俗套，没人看
+    raw_quote: 太老套了 兄弟番茄现在都不写这种书了...这这主线太无聊了
+  - dimension: genre
+    severity: positive
+    content: 会写都市日常，文笔有生活气息
+    raw_quote: 我就你去写这种场景 就是跟这些妹子什么KTV啊...这些都可以 都市可以
+  - dimension: misc
+    severity: neutral
+    content: 需要把灵异元素融入都市，而不是生硬的梦境
+    raw_quote: 或者你换个其他灵异方式嘛对吧...不要老是梦境

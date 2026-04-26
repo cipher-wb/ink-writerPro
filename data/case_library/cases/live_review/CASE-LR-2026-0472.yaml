@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0472
+title: 拒签后反手把编辑星河献给国家 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 都市
+  - 搞笑
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 诽谤主播肯定9分最多了哈 | 开头引出系统和氛围还行，但后续乱来，没体现主角爽点，作为爽文不及格。且涉及诽谤主播，只能给低分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头引出系统和氛围还行，但后续乱来，没体现主角爽点，作为爽文不及格。且涉及诽谤主播，只能给低分。 | 后续情节乱来，没有体现爽点;作为爽文不及格，缺少打脸和收获
+  observable:
+  - 'misc维度: 后续情节乱来，没有体现爽点'
+  - 'highpoint维度: 作为爽文不及格，缺少打脸和收获'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 89
+  - 179
+  score: 9
+  score_raw: 诽谤主播肯定9分最多了哈
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 拒签后反手把编辑星河献给国家
+  genre_guess:
+  - 都市
+  - 搞笑
+  - 系统
+  overall_comment: 开头引出系统和氛围还行，但后续乱来，没体现主角爽点，作为爽文不及格。且涉及诽谤主播，只能给低分。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头用危机引出系统和世界末日氛围不错
+    raw_quote: 我觉得开头还是很不错的对吧 危机引出系统 然后引出世界末日的这种氛围
+  - dimension: misc
+    severity: negative
+    content: 后续情节乱来，没有体现爽点
+    raw_quote: 但后续就乱来了呀 就体现不出 主角的爽点
+  - dimension: highpoint
+    severity: negative
+    content: 作为爽文不及格，缺少打脸和收获
+    raw_quote: 你要打脸的呀 你要打脸 有收获就作为爽文 还是不及格的呀

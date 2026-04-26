@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0457
+title: 老剑神 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 修仙
+  - 传玄
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这次只能给大哥给30 35分 | 传玄思路太老，没有网文性，冲突压势不压人，退步明显，建议直接穿越增加代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传玄思路太老，没有网文性，冲突压势不压人，退步明显，建议直接穿越增加代入感。 | 传玄写法在当下很难出成绩，文风过虚;开篇装逼尴尬，老剑神登场过猛，缺少现代网文切入节奏;主角人设应穿越以增加代入感，配角嘲讽太个人化显老套
+  observable:
+  - 'genre维度: 传玄写法在当下很难出成绩，文风过虚'
+  - 'opening维度: 开篇装逼尴尬，老剑神登场过猛，缺少现代网文切入节奏'
+  - 'character维度: 主角人设应穿越以增加代入感，配角嘲讽太个人化显老套'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 601
+  - 660
+  score: 30
+  score_raw: 这次只能给大哥给30 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 老剑神
+  genre_guess:
+  - 修仙
+  - 传玄
+  overall_comment: 传玄思路太老，没有网文性，冲突压势不压人，退步明显，建议直接穿越增加代入感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 传玄写法在当下很难出成绩，文风过虚
+    raw_quote: 核心传玄 文芬也是传玄那种 反派这种需要压势不压人 不然很尴尬
+  - dimension: opening
+    severity: negative
+    content: 开篇装逼尴尬，老剑神登场过猛，缺少现代网文切入节奏
+    raw_quote: 一上来这样装逼也很尴尬了 什么应龙咆哮 仰天长笑
+  - dimension: character
+    severity: negative
+    content: 主角人设应穿越以增加代入感，配角嘲讽太个人化显老套
+    raw_quote: 你的主角的人设 你要穿越 你要变得像现代人的思维 合理性

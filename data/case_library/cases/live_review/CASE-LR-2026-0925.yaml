@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0925
+title: 我家娘子不对劲 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 仙侠
+  - 模拟
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就50分吧 | 八股味儿足，模拟加娘子喝药套路已经过时，放在24年有机会，现在基本无望。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股味儿足，模拟加娘子喝药套路已经过时，放在24年有机会，现在基本无望。 | 内核写法过时，娘子喝药+模拟已成过去式;娘子人设看点弱，无惊喜
+  observable:
+  - 'genre维度: 内核写法过时，娘子喝药+模拟已成过去式'
+  - 'character维度: 娘子人设看点弱，无惊喜'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1065
+  - 1140
+  score: 50
+  score_raw: 差不多就50分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 我家娘子不对劲
+  genre_guess:
+  - 仙侠
+  - 模拟
+  - 日常
+  overall_comment: 八股味儿足，模拟加娘子喝药套路已经过时，放在24年有机会，现在基本无望。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 内核写法过时，娘子喝药+模拟已成过去式
+    raw_quote: 这个书放到24年可能还有机会 放到现在我觉得没啥机会
+  - dimension: character
+    severity: negative
+    content: 娘子人设看点弱，无惊喜
+    raw_quote: 这个娘子我觉得就是偏八股 四五十分的水平差不多有 但是你放现在想出成绩没有意义了

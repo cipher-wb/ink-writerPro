@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2069
+title: 全职猎人同人 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 同人
+  - 全职猎人
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分嘛 | 文笔扎实但节奏慢太平淡，同人选材受众小，建议改写大众同人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但节奏慢太平淡，同人选材受众小，建议改写大众同人。 | 节奏慢，太平淡日常;全职猎人受众小
+  observable:
+  - 'pacing维度: 节奏慢，太平淡日常'
+  - 'genre维度: 全职猎人受众小'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 4601
+  - 4800
+  score: 35
+  score_raw: 35分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全职猎人同人
+  genre_guess:
+  - 同人
+  - 全职猎人
+  - 穿越
+  overall_comment: 文笔扎实但节奏慢太平淡，同人选材受众小，建议改写大众同人。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏慢，太平淡日常
+    raw_quote: 写的太慢太平了 ... 很慢 很平 很淡
+  - dimension: genre
+    severity: negative
+    content: 全职猎人受众小
+    raw_quote: 全职列人可能有点 ... 最好去写写火影什么的

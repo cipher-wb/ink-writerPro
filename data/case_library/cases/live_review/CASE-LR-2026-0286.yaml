@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0286
+title: 东京教师相亲系统 (pass / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 东京
+  - 教师
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大概50分有 | 切入还可以，少女大胆泼辣立人设好，但主线偏弱
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入还可以，少女大胆泼辣立人设好，但主线偏弱 | 7000字可精简成4000字，拉扯写太多
+  observable:
+  - 'pacing维度: 7000字可精简成4000字，拉扯写太多'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1841
+  - 1920
+  score: 50
+  score_raw: 大概50分有
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 东京教师相亲系统
+  genre_guess:
+  - 东京
+  - 教师
+  - 系统
+  overall_comment: 切入还可以，少女大胆泼辣立人设好，但主线偏弱
+  comments:
+  - dimension: character
+    severity: positive
+    content: 问题少女一句话立住人设
+    raw_quote: 这个可以的，就是极端剧情立人设
+  - dimension: pacing
+    severity: negative
+    content: 7000字可精简成4000字，拉扯写太多
+    raw_quote: 拉扯有点写的太多了复杂了，可以精简一下

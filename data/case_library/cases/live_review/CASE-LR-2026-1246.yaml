@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1246
+title: 为了找婆娘 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 西幻
+  - 重生
+  - 魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真的给不了太高了 | 节奏快但像大纲，代入感极差，写小孩子视角无法代入，建议推翻，用成年人思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快但像大纲，代入感极差，写小孩子视角无法代入，建议推翻，用成年人思路。 | 写六岁小孩的成长，读者完全代入不了;节奏过于快，像大纲文，缺乏细节和代入感
+  observable:
+  - 'character维度: 写六岁小孩的成长，读者完全代入不了'
+  - 'pacing维度: 节奏过于快，像大纲文，缺乏细节和代入感'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1122
+  - 1173
+  score: 20
+  score_raw: 真的给不了太高了
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 为了找婆娘
+  genre_guess:
+  - 西幻
+  - 重生
+  - 魔法
+  overall_comment: 节奏快但像大纲，代入感极差，写小孩子视角无法代入，建议推翻，用成年人思路。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 写六岁小孩的成长，读者完全代入不了
+    raw_quote: 你要写事件，不要写小屁孩了，小屁孩代入不了
+  - dimension: pacing
+    severity: negative
+    content: 节奏过于快，像大纲文，缺乏细节和代入感
+    raw_quote: 节奏好快，跟大纲似的

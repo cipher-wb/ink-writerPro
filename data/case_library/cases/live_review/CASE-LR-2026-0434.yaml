@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0434
+title: 蓝精灵短剧式都市文 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 都市
+  - 短剧
+  - 送外挂
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有55分 | 短剧感极强，切入情绪张力不错，但整体风格不适配起点，更像蓝精灵短剧剧本
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 短剧感极强，切入情绪张力不错，但整体风格不适配起点，更像蓝精灵短剧剧本 | 整篇风格、人设标签金属纸均似蓝精灵短剧，不适合起点
+  observable:
+  - 'genre维度: 整篇风格、人设标签金属纸均似蓝精灵短剧，不适合起点'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 131
+  - 253
+  score: 55
+  score_raw: 有55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 蓝精灵短剧式都市文
+  genre_guess:
+  - 都市
+  - 短剧
+  - 送外挂
+  overall_comment: 短剧感极强，切入情绪张力不错，但整体风格不适配起点，更像蓝精灵短剧剧本
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 整篇风格、人设标签金属纸均似蓝精灵短剧，不适合起点
+    raw_quote: 这太蓝精灵了...这个切入挺好的...我真不知道怎么改成起点
+  - dimension: opening
+    severity: positive
+    content: 开头切入短暂张力好，适合短剧引入
+    raw_quote: 作为短句的开头也绝对牛逼

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0977
+title: 吐槽系穿越者 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 轻小说
+  - 奇幻
+  - 吐槽
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 肯定没有40分...是自嗨的稿子 | 自嗨过头，人设立不住、主线没有。吐槽太多不管读者，慢热疯掉，3万字肯定零追。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 自嗨过头，人设立不住、主线没有。吐槽太多不管读者，慢热疯掉，3万字肯定零追。 | 慢热，不解释代入感，读者看不懂。;傲慢不管读者，只写爽自己，缺乏主线。
+  observable:
+  - 'opening维度: 慢热，不解释代入感，读者看不懂。'
+  - 'simplicity维度: 傲慢不管读者，只写爽自己，缺乏主线。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 2691
+  - 2840
+  score: 15
+  score_raw: 肯定没有40分...是自嗨的稿子
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 吐槽系穿越者
+  genre_guess:
+  - 轻小说
+  - 奇幻
+  - 吐槽
+  overall_comment: 自嗨过头，人设立不住、主线没有。吐槽太多不管读者，慢热疯掉，3万字肯定零追。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 慢热，不解释代入感，读者看不懂。
+    raw_quote: 这这轻小说写法也不说是什么地方...就不解释...就莫名其妙...默认大家能懂...这到底什么地方要干嘛呀
+  - dimension: simplicity
+    severity: negative
+    content: 傲慢不管读者，只写爽自己，缺乏主线。
+    raw_quote: 你不管读者呀...你写爽了...人设立不住主线没有...然后根本不考虑读者

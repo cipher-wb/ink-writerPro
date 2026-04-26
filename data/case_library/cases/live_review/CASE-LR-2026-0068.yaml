@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0068
+title: 修仙 AR (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 修仙
+  - AR
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十三 | 修仙加AR的组合违和出戏，开篇干巴巴地讲设定和人物，无聊到让人睡着。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 修仙加AR的组合违和出戏，开篇干巴巴地讲设定和人物，无聊到让人睡着。 | 修仙题材已有金手指系统，再加AR非常出戏;开篇干巴巴，无聊到让人睡着
+  observable:
+  - 'genre维度: 修仙题材已有金手指系统，再加AR非常出戏'
+  - 'opening维度: 开篇干巴巴，无聊到让人睡着'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 486
+  - 535
+  score: 33
+  score_raw: 三十三
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙 AR
+  genre_guess:
+  - 修仙
+  - AR
+  overall_comment: 修仙加AR的组合违和出戏，开篇干巴巴地讲设定和人物，无聊到让人睡着。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 修仙题材已有金手指系统，再加AR非常出戏
+    raw_quote: 修仙加AR...本来就有系统本来就有老爷 他本来就有AR 所以说你加上反而出系
+  - dimension: opening
+    severity: negative
+    content: 开篇干巴巴，无聊到让人睡着
+    raw_quote: 就干巴巴的讲着...好无聊啊...看到的人给我睡着了

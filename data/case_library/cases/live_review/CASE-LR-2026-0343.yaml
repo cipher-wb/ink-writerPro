@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0343
+title: 哈利波特之麻瓜巫师 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 同人
+  - 巫师
+  - 慢节奏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 慢热实体风真挚但完全不符合网文需求，建议重写标准巫师流。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 慢热实体风真挚但完全不符合网文需求，建议重写标准巫师流。 | 节奏极慢，近乎传统文学写法
+  observable:
+  - 'pacing维度: 节奏极慢，近乎传统文学写法'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 2346
+  - 2444
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 哈利波特之麻瓜巫师
+  genre_guess:
+  - 同人
+  - 巫师
+  - 慢节奏
+  overall_comment: 慢热实体风真挚但完全不符合网文需求，建议重写标准巫师流。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏极慢，近乎传统文学写法
+    raw_quote: 太慢了 太慢了 有点像实体文学了
+  - dimension: genre
+    severity: neutral
+    content: 对前女友的感情真挚，但缺乏网文市场触觉
+    raw_quote: 为了前女友写这样一本书 我们能感受到…确实不太适合现在的节奏

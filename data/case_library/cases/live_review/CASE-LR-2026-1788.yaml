@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1788
+title: 东京怪谈契约加叶子 (borderline / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 灵异
+  - 东京
+  - 怪谈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就48分吧 | 题材和思路对了，但人设（舔脚）崩坏。签约水平有，但需修改细节。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材和思路对了，但人设（舔脚）崩坏。签约水平有，但需修改细节。 | 女主加叶子人设崩塌，舔脚剧情让角色失去魅力。
+  observable:
+  - 'character维度: 女主加叶子人设崩塌，舔脚剧情让角色失去魅力。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 578
+  - 656
+  score: 48
+  score_raw: 就48分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东京怪谈契约加叶子
+  genre_guess:
+  - 灵异
+  - 东京
+  - 怪谈
+  overall_comment: 题材和思路对了，但人设（舔脚）崩坏。签约水平有，但需修改细节。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主加叶子人设崩塌，舔脚剧情让角色失去魅力。
+    raw_quote: 舔啦...你就甭啦...她在我心里面就甭啦当不了女主了
+  - dimension: genre
+    severity: positive
+    content: 东京怪谈契约题材找对了。
+    raw_quote: 现在至少把题材确定了...签约吧

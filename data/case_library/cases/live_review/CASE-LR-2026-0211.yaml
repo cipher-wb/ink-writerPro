@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0211
+title: 空岛噩梦 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 奇幻
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十八分最多了 | 文艺散文化，缺乏网文节奏和看点，题材奇怪。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文艺散文化，缺乏网文节奏和看点，题材奇怪。 | 开头偏散文和哲学，没有快速建立网文必需的代入感和悬念;题材不明，内容沉闷，不符合网文市场
+  observable:
+  - 'opening维度: 开头偏散文和哲学，没有快速建立网文必需的代入感和悬念'
+  - 'genre维度: 题材不明，内容沉闷，不符合网文市场'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 992
+  - 1012
+  score: 18
+  score_raw: 十八分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 空岛噩梦
+  genre_guess:
+  - 奇幻
+  - 悬疑
+  overall_comment: 文艺散文化，缺乏网文节奏和看点，题材奇怪。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头偏散文和哲学，没有快速建立网文必需的代入感和悬念
+    raw_quote: 怎么这样写 这个有点散文有点哲学了
+  - dimension: genre
+    severity: negative
+    content: 题材不明，内容沉闷，不符合网文市场
+    raw_quote: 比例还好但这题材很奇怪 ... 还是推翻吧

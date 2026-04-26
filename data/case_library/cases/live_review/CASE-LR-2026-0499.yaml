@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0499
+title: 诡秘赞美愚者 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 玄幻
+  - 诡秘
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 切入和比例可以 | 切入和文笔比例不错，但写成原创了，没诡秘那味。需要多蹭原作热点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入和文笔比例不错，但写成原创了，没诡秘那味。需要多蹭原作热点。 | 作为同人没写出原作感觉，像原创
+  observable:
+  - 'misc维度: 作为同人没写出原作感觉，像原创'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 2058
+  - 2105
+  score: 35
+  score_raw: 35分吧 切入和比例可以
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡秘赞美愚者
+  genre_guess:
+  - 玄幻
+  - 诡秘
+  - 同人
+  overall_comment: 切入和文笔比例不错，但写成原创了，没诡秘那味。需要多蹭原作热点。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入和文笔熟练，冲突有驱动力
+    raw_quote: 比例倒是挺好的 切入第一章写的话可以...包括这个冲突 就前面1，000多字都不用改
+  - dimension: misc
+    severity: negative
+    content: 作为同人没写出原作感觉，像原创
+    raw_quote: 这个切入感觉没有什么诡秘的感觉啊...展开我感觉就写成原创了 我感觉不到是在诡秘的世界

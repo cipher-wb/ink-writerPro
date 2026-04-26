@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0572
+title: 煤老板重生文娱 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 文娱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分吧 | 黑道情节过多，文娱内容偏题，但真实感还行，48分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 黑道情节过多，文娱内容偏题，但真实感还行，48分 | 文娱题材写成了黑道文，侧重点偏离;关键情节处理不当（无法过审的劣迹艺人）
+  observable:
+  - 'genre维度: 文娱题材写成了黑道文，侧重点偏离'
+  - 'highpoint维度: 关键情节处理不当（无法过审的劣迹艺人）'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 3131
+  - 3225
+  score: 48
+  score_raw: 48分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 煤老板重生文娱
+  genre_guess:
+  - 都市
+  - 重生
+  - 文娱
+  overall_comment: 黑道情节过多，文娱内容偏题，但真实感还行，48分
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 文娱题材写成了黑道文，侧重点偏离
+    raw_quote: 我能感觉文娱在哪里啊 你侧重点怎么是黑道啊
+  - dimension: highpoint
+    severity: negative
+    content: 关键情节处理不当（无法过审的劣迹艺人）
+    raw_quote: 这种劣迹艺人不能念的

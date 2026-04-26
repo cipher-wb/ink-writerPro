@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1031
+title: 秦先生帮扶苏 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 历史
+  - 秦朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分嘛 | 帮扶苏老掉牙，玩梗太多破坏氛围，适合蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 帮扶苏老掉牙，玩梗太多破坏氛围，适合蓝精灵。 | 帮扶苏题材已经写烂，无新意;烂梗过多，破坏历史沉浸感
+  observable:
+  - 'genre维度: 帮扶苏题材已经写烂，无新意'
+  - 'taboo维度: 烂梗过多，破坏历史沉浸感'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 2131
+  - 2210
+  score: 40
+  score_raw: 40分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 秦先生帮扶苏
+  genre_guess:
+  - 历史
+  - 秦朝
+  overall_comment: 帮扶苏老掉牙，玩梗太多破坏氛围，适合蓝精灵。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 帮扶苏题材已经写烂，无新意
+    raw_quote: 以前的大秦全是这个题材的歌 都看兔啦
+  - dimension: taboo
+    severity: negative
+    content: 烂梗过多，破坏历史沉浸感
+    raw_quote: 起点的历史 不太适合玩这种烂梗

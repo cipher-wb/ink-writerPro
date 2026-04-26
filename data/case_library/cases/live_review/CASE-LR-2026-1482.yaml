@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1482
+title: 谋修少堂主 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 玄幻
+  - 谋教
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 题材还写的话能写啊能写 | 谋修套路尚可，比例还行，但主播未深入点评，未给出分数
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 谋修套路尚可，比例还行，但主播未深入点评，未给出分数
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 1
+  - 38
+  score: null
+  score_raw: 题材还写的话能写啊能写
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 谋修少堂主
+  genre_guess:
+  - 玄幻
+  - 谋教
+  - 穿越
+  overall_comment: 谋修套路尚可，比例还行，但主播未深入点评，未给出分数
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 谋教题材可写，但偏套路
+    raw_quote: 反正就是还是比较套路吧 谋修了一套

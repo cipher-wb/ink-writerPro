@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0954
+title: 西游(金蝉子重生) (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 西游
+  - 重生
+  - 唐僧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四个多分吧 | 穿唐僧题材数据普遍差，开头慢热胆子大，文笔扎实但无期待感
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿唐僧题材数据普遍差，开头慢热胆子大，文笔扎实但无期待感 | 开头六百多字不让读者看懂卖点
+  observable:
+  - 'opening维度: 开头六百多字不让读者看懂卖点'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 2790
+  - 2860
+  score: 40
+  score_raw: 四个多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 西游(金蝉子重生)
+  genre_guess:
+  - 西游
+  - 重生
+  - 唐僧
+  overall_comment: 穿唐僧题材数据普遍差，开头慢热胆子大，文笔扎实但无期待感
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头六百多字不让读者看懂卖点
+    raw_quote: 前面很多人可能会跑 胆子大就是胆子大

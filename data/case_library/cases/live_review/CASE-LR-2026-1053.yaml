@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1053
+title: 战锤第四天灾文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 战锤
+  - 同人
+  - 第四天灾
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 368 | 战锤题材可行但玩梗低级，龙傲天烂梗削弱了卖点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 战锤题材可行但玩梗低级，龙傲天烂梗削弱了卖点 | 基尼太美等烂梗让人设变得无趣
+  observable:
+  - 'hook维度: 基尼太美等烂梗让人设变得无趣'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 2901
+  - 3050
+  score: null
+  score_raw: '368'
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 战锤第四天灾文
+  genre_guess:
+  - 战锤
+  - 同人
+  - 第四天灾
+  overall_comment: 战锤题材可行但玩梗低级，龙傲天烂梗削弱了卖点
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 基尼太美等烂梗让人设变得无趣
+    raw_quote: 这种龙傲天这种烂梗 我觉得不要用了 这不是让你的数增加卖点 是让你的数增加读点

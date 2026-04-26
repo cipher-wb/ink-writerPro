@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2065
+title: 万红翻 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 喜剧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多20吧 | 题材灵异喜剧混搭失败，无厘头烂梗，剧情无聊，需推翻重选。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材灵异喜剧混搭失败，无厘头烂梗，剧情无聊，需推翻重选。 | 灵异加喜剧风格四不像;全是烂梗和无力吐槽的对话
+  observable:
+  - 'genre维度: 灵异加喜剧风格四不像'
+  - 'simplicity维度: 全是烂梗和无力吐槽的对话'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 3801
+  - 4000
+  score: 20
+  score_raw: 差不多20吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 万红翻
+  genre_guess:
+  - 都市
+  - 灵异
+  - 喜剧
+  overall_comment: 题材灵异喜剧混搭失败，无厘头烂梗，剧情无聊，需推翻重选。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 灵异加喜剧风格四不像
+    raw_quote: 灵异怎么喜剧 ... 不能想着既要又要
+  - dimension: simplicity
+    severity: negative
+    content: 全是烂梗和无力吐槽的对话
+    raw_quote: 这些对白好无聊啊 ... 都是一些烂梗

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1310
+title: 客经休闲 修仙借贷 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 修仙
+  - 借贷
+  - 打工人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分的样子 | 借贷修仙题材毫无市场，内容差，卖点不成立。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 借贷修仙题材毫无市场，内容差，卖点不成立。 | 金融修仙没市场，全是自嗨;一直在讲借贷设定，读者会跑
+  observable:
+  - 'genre维度: 金融修仙没市场，全是自嗨'
+  - 'pacing维度: 一直在讲借贷设定，读者会跑'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 901
+  - 1000
+  score: 23
+  score_raw: 23分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 客经休闲 修仙借贷
+  genre_guess:
+  - 修仙
+  - 借贷
+  - 打工人
+  overall_comment: 借贷修仙题材毫无市场，内容差，卖点不成立。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 金融修仙没市场，全是自嗨
+    raw_quote: 金融体系内的修仙真的没市场
+  - dimension: pacing
+    severity: negative
+    content: 一直在讲借贷设定，读者会跑
+    raw_quote: 会跑的这样写 会跑的

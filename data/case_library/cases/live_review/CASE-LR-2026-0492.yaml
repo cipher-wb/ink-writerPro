@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0492
+title: 食人鬼女友 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 轻小说
+  - 搞笑
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能发蓝精灵就9分好吧 好吧sorry | 天才级别的癫狂搞笑文，各种反转和金句频出。但涉及未成年和尺度问题，只能发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 天才级别的癫狂搞笑文，各种反转和金句频出。但涉及未成年和尺度问题，只能发蓝精灵。 | 涉及未成年和较大尺度，无法在正常平台签约
+  observable:
+  - 'taboo维度: 涉及未成年和较大尺度，无法在正常平台签约'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1608
+  - 1700
+  score: null
+  score_raw: 只能发蓝精灵就9分好吧 好吧sorry
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 食人鬼女友
+  genre_guess:
+  - 轻小说
+  - 搞笑
+  - 灵异
+  overall_comment: 天才级别的癫狂搞笑文，各种反转和金句频出。但涉及未成年和尺度问题，只能发蓝精灵。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 涉及未成年和较大尺度，无法在正常平台签约
+    raw_quote: 但是因为你这里面涉及到了未成年 对吧涉及到了这些东西就只能9分了
+  - dimension: misc
+    severity: positive
+    content: 极其有天赋的癫文，节奏紧凑，反转不断，金句频出
+    raw_quote: 真是真天才...关键你开头这样写不铺垫 不是跑完了对吧...确实确实好看的好看的

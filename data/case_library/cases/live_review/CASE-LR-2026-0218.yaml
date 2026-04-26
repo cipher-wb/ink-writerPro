@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0218
+title: 仿十四亿（秦世民） (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 西幻
+  - 多元种族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 退步 给你30分 | 仿写但人设拉垮，烂梗多，氛围不对，驾驭不住西幻原创。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 仿写但人设拉垮，烂梗多，氛围不对，驾驭不住西幻原创。 | 主角言行像小学生，人设崩塌;西幻原创氛围和世界观都错误，缺乏主流爽点
+  observable:
+  - 'character维度: 主角言行像小学生，人设崩塌'
+  - 'genre维度: 西幻原创氛围和世界观都错误，缺乏主流爽点'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1302
+  - 1332
+  score: null
+  score_raw: 退步 给你30分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 仿十四亿（秦世民）
+  genre_guess:
+  - 西幻
+  - 多元种族
+  overall_comment: 仿写但人设拉垮，烂梗多，氛围不对，驾驭不住西幻原创。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角言行像小学生，人设崩塌
+    raw_quote: 妈妈我要回家 这句话出来就奔亡了 主角就感觉这个小学生呀
+  - dimension: genre
+    severity: negative
+    content: 西幻原创氛围和世界观都错误，缺乏主流爽点
+    raw_quote: 西幻原创不是个大赛 ... 氛围不对 世界观不贵

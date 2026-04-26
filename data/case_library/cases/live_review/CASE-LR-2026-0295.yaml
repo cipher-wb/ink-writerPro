@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0295
+title: 校园霸凌一笔带过 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 校园
+  - 霸凌
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就是个16分吧 | 对网文理解浅，没有主线和驱动力，像小学生思路的童话，完全不适合起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对网文理解浅，没有主线和驱动力，像小学生思路的童话，完全不适合起点。 | 故事缺乏核心主线和驱动力;写作思路接近童话，脱离网文范畴;剧情平淡无冲突
+  observable:
+  - 'pacing维度: 故事缺乏核心主线和驱动力'
+  - 'misc维度: 写作思路接近童话，脱离网文范畴'
+  - 'highpoint维度: 剧情平淡无冲突'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 391
+  - 450
+  score: 16
+  score_raw: 差不多也就是个16分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 校园霸凌一笔带过
+  genre_guess:
+  - 校园
+  - 霸凌
+  - 轻小说
+  overall_comment: 对网文理解浅，没有主线和驱动力，像小学生思路的童话，完全不适合起点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 故事缺乏核心主线和驱动力
+    raw_quote: 没什么主线 没什么驱动力是吧
+  - dimension: misc
+    severity: negative
+    content: 写作思路接近童话，脱离网文范畴
+    raw_quote: 现在不经变成童话了吗
+  - dimension: highpoint
+    severity: negative
+    content: 剧情平淡无冲突
+    raw_quote: 没什么冲突啊 没矛盾啊

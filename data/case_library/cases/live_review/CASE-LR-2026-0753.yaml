@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0753
+title: 美利坚偷渡主线任务 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 都市
+  - 美利坚
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分左右吧 | 开头完全失败，金属手游戏化，需要按照线性叙事重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头完全失败，金属手游戏化，需要按照线性叙事重写。 | 开头切入太慢像群像文，读者没代入;偷渡剧情无聊，美利坚题材需要常见的穿越+亲属设定
+  observable:
+  - 'opening维度: 开头切入太慢像群像文，读者没代入'
+  - 'genre维度: 偷渡剧情无聊，美利坚题材需要常见的穿越+亲属设定'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 781
+  - 860
+  score: 25
+  score_raw: 25分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚偷渡主线任务
+  genre_guess:
+  - 都市
+  - 美利坚
+  - 系统
+  overall_comment: 开头完全失败，金属手游戏化，需要按照线性叙事重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头切入太慢像群像文，读者没代入
+    raw_quote: 这个切入太慢了好吧……就明确明确
+  - dimension: genre
+    severity: negative
+    content: 偷渡剧情无聊，美利坚题材需要常见的穿越+亲属设定
+    raw_quote: 美利坚都是穿过来带一个什么叔叔……这个太啰嗦了

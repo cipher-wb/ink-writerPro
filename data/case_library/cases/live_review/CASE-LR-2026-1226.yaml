@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1226
+title: 血族修女的圣光之夜 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 西幻
+  - 血族
+  - 修女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50多分的样子 | 切入思路对了，但修女人设立不住，拉扯太生硬，互动不够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入思路对了，但修女人设立不住，拉扯太生硬，互动不够。 | 修女人物立不住，主角缺乏有效互动;金手指血精纯度等描写复杂多余
+  observable:
+  - 'character维度: 修女人物立不住，主角缺乏有效互动'
+  - 'simplicity维度: 金手指血精纯度等描写复杂多余'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 1122
+  - 1163
+  score: 50
+  score_raw: 50多分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 血族修女的圣光之夜
+  genre_guess:
+  - 西幻
+  - 血族
+  - 修女
+  overall_comment: 切入思路对了，但修女人设立不住，拉扯太生硬，互动不够。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 修女人物立不住，主角缺乏有效互动
+    raw_quote: 修女人设立不住呀…写人啊写的太慢了呀你要跟他聊天呀
+  - dimension: simplicity
+    severity: negative
+    content: 金手指血精纯度等描写复杂多余
+    raw_quote: 血精纯度实力等级看不懂…这感觉就凑字数

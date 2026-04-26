@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0826
+title: 用情歌拯救世界 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 文娱
+  - 情歌
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 系统是超级毒点，但作者有写现实文娱的潜力
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统是超级毒点，但作者有写现实文娱的潜力 | 系统设计极毒，9527烂梗
+  observable:
+  - 'golden_finger维度: 系统设计极毒，9527烂梗'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 2485
+  - 2580
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 用情歌拯救世界
+  genre_guess:
+  - 文娱
+  - 情歌
+  - 系统
+  overall_comment: 系统是超级毒点，但作者有写现实文娱的潜力
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设计极毒，9527烂梗
+    raw_quote: 系统是大毒点 兄弟好吧 超级大毒点
+  - dimension: genre
+    severity: positive
+    content: 节奏有飞卢风，人物描写可以
+    raw_quote: 这个作者应该以前写过飞卢风吧 感觉节奏这么快吗

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1402
+title: 重回2010我全要 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 商战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就50分左右吧 | 流畅但无惊喜，人设套路化，创意不足，难出成绩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 流畅但无惊喜，人设套路化，创意不足，难出成绩。 | 重生后没有亮眼卖点，平淡无奇;职场打压情节老套，节奏慢
+  observable:
+  - 'hook维度: 重生后没有亮眼卖点，平淡无奇'
+  - 'opening维度: 职场打压情节老套，节奏慢'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 1551
+  - 1700
+  score: 50
+  score_raw: 差不多就50分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重回2010我全要
+  genre_guess:
+  - 都市
+  - 重生
+  - 商战
+  overall_comment: 流畅但无惊喜，人设套路化，创意不足，难出成绩。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 重生后没有亮眼卖点，平淡无奇
+    raw_quote: 这种卖点很无聊
+  - dimension: opening
+    severity: negative
+    content: 职场打压情节老套，节奏慢
+    raw_quote: 就是很无聊了 领导骂你 欺负你

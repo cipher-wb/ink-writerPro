@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0228
+title: 冒充魔王 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 魔王
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 题材有想法但文笔太白，主角智商不足，代入感差。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材有想法但文笔太白，主角智商不足，代入感差。 | 主角智商低，缺乏危机感;对白太直白无盘算
+  observable:
+  - 'character维度: 主角智商低，缺乏危机感'
+  - 'pacing维度: 对白太直白无盘算'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 135
+  - 200
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 冒充魔王
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 魔王
+  overall_comment: 题材有想法但文笔太白，主角智商不足，代入感差。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角智商低，缺乏危机感
+    raw_quote: 感觉智商也不高啊
+  - dimension: genre
+    severity: positive
+    content: 替身魔王题材可保留
+    raw_quote: 题材还是可以吧
+  - dimension: pacing
+    severity: negative
+    content: 对白太直白无盘算
+    raw_quote: 对白一出来就太白了

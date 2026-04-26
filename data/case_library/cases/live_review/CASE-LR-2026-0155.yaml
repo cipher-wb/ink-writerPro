@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0155
+title: 认真小鼠 (fail / 26分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 恐怖
+  - 悬疑
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在我估计只有二十六七分的样子了 | 氛围感尚可但完全独角戏，人物像NPC，灵异文致命伤。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围感尚可但完全独角戏，人物像NPC，灵异文致命伤。 | 写人能力差，角色像NPC，毁灭整体氛围
+  observable:
+  - 'character维度: 写人能力差，角色像NPC，毁灭整体氛围'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 350
+  - 355
+  score: 26
+  score_raw: 现在我估计只有二十六七分的样子了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 认真小鼠
+  genre_guess:
+  - 恐怖
+  - 悬疑
+  - 灵异
+  overall_comment: 氛围感尚可但完全独角戏，人物像NPC，灵异文致命伤。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 写人能力差，角色像NPC，毁灭整体氛围
+    raw_quote: 你写人能力太差了啊 本来有30分的 现在我估计只有二十六七分的样子了

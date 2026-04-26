@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1542
+title: 乌庸 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 奇幻
+  - 战斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个最多最多就是15分码 | 全是战斗场面拼凑，完全不会讲故事，没有主角和主线，极差。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全是战斗场面拼凑，完全不会讲故事，没有主角和主线，极差。 | 开篇全是战斗，不接地气，完全不懂网文;没有主角，无法代入;根本不会流畅地讲故事
+  observable:
+  - 'opening维度: 开篇全是战斗，不接地气，完全不懂网文'
+  - 'character维度: 没有主角，无法代入'
+  - 'simplicity维度: 根本不会流畅地讲故事'
+  - 'misc维度: 主题和题材完全不明'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 1483
+  - 1587
+  score: 15
+  score_raw: 这个最多最多就是15分码
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 乌庸
+  genre_guess:
+  - 奇幻
+  - 战斗
+  overall_comment: 全是战斗场面拼凑，完全不会讲故事，没有主角和主线，极差。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇全是战斗，不接地气，完全不懂网文
+    raw_quote: 这全是战斗场面 这干嘛的 这不接地气啊 这完全不是讲故事兄弟
+  - dimension: character
+    severity: negative
+    content: 没有主角，无法代入
+    raw_quote: 谁是主角 谁待入赶在哪
+  - dimension: simplicity
+    severity: negative
+    content: 根本不会流畅地讲故事
+    raw_quote: 不会流畅的讲故事根本就
+  - dimension: misc
+    severity: negative
+    content: 主题和题材完全不明
+    raw_quote: 我也不知道什么题材 我也不知道到底要干嘛

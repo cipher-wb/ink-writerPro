@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2093
+title: 镇元王府魔童修仙乐子文 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 修仙
+  - 乐子文
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 乐子倒还好吧，有些小剧场还行，好一点, 28分吧 | 始终沉迷烂梗与自嗨，系统说明铺满全文，真正剧情推进乏力，极其适合发番茄娱乐，但绝不是起点文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 始终沉迷烂梗与自嗨，系统说明铺满全文，真正剧情推进乏力，极其适合发番茄娱乐，但绝不是起点文。 | 通篇在自嗨讲设定，缺乏真实人物互动事件;幽默乐子文对起点读者要求太高，建议发蓝精灵
+  observable:
+  - 'simplicity维度: 通篇在自嗨讲设定，缺乏真实人物互动事件'
+  - 'genre维度: 幽默乐子文对起点读者要求太高，建议发蓝精灵'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1480
+  - 1540
+  score: 28
+  score_raw: 乐子倒还好吧，有些小剧场还行，好一点, 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 镇元王府魔童修仙乐子文
+  genre_guess:
+  - 修仙
+  - 乐子文
+  - 系统
+  overall_comment: 始终沉迷烂梗与自嗨，系统说明铺满全文，真正剧情推进乏力，极其适合发番茄娱乐，但绝不是起点文。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 通篇在自嗨讲设定，缺乏真实人物互动事件
+    raw_quote: 就是自嗨，说白了对你说对了，就是自嗨，没什么乐子的这种哪有哪有太大的乐子啊，靠各种梗来对劲
+  - dimension: genre
+    severity: negative
+    content: 幽默乐子文对起点读者要求太高，建议发蓝精灵
+    raw_quote: 幽默是很难的……就发发番茄吧，蓝精灵就就就发蓝精灵嘛

@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-1474
+title: 重生96年何范帝国 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 年代
+  - 重生
+  - 商业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十 | 思路可以切入，节奏需要加强，年代感不够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路可以切入，节奏需要加强，年代感不够。 | 年代文的味道不够，节奏差
+  observable:
+  - 'highpoint维度: 年代文的味道不够，节奏差'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1261
+  - 1350
+  score: 30
+  score_raw: 三十
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生96年何范帝国
+  genre_guess:
+  - 年代
+  - 重生
+  - 商业
+  overall_comment: 思路可以切入，节奏需要加强，年代感不够。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 年代文的味道不够，节奏差
+    raw_quote: 年代文的味道还是得不够呀 节奏也得加强

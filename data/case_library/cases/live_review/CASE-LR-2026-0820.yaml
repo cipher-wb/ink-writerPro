@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0820
+title: 高伟的山海经 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 山海经同人
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 脑洞完全立不住，逻辑崩，主角是高中生代入极差
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞完全立不住，逻辑崩，主角是高中生代入极差 | 山海经加日常的脑洞太强行，没有合理性;高二学生当主角让人无法代入
+  observable:
+  - 'genre维度: 山海经加日常的脑洞太强行，没有合理性'
+  - 'character维度: 高二学生当主角让人无法代入'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 1585
+  - 1720
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高伟的山海经
+  genre_guess:
+  - 山海经同人
+  - 都市
+  - 系统
+  overall_comment: 脑洞完全立不住，逻辑崩，主角是高中生代入极差
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 山海经加日常的脑洞太强行，没有合理性
+    raw_quote: 这种老洞真立不住啊
+  - dimension: character
+    severity: negative
+    content: 高二学生当主角让人无法代入
+    raw_quote: 高昂学生啊 大哥怎么代入啊

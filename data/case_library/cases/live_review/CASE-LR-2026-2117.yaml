@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2117
+title: 职场满意系统文 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 职场
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分最多了 | 番茄系统驱动力文，不接地气，人物没立好，只适合蓝精灵但情绪驱动力也不够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 番茄系统驱动力文，不接地气，人物没立好，只适合蓝精灵但情绪驱动力也不够。 | 人物不真实，系统驱动像牵线木偶;太番茄了，起点肯定签不了
+  observable:
+  - 'character维度: 人物不真实，系统驱动像牵线木偶'
+  - 'genre维度: 太番茄了，起点肯定签不了'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 701
+  - 740
+  score: 38
+  score_raw: 38分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 职场满意系统文
+  genre_guess:
+  - 都市
+  - 职场
+  - 系统
+  overall_comment: 番茄系统驱动力文，不接地气，人物没立好，只适合蓝精灵但情绪驱动力也不够。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物不真实，系统驱动像牵线木偶
+    raw_quote: 系统驱动力，人物不真实
+  - dimension: genre
+    severity: negative
+    content: 太番茄了，起点肯定签不了
+    raw_quote: 这玩意起点肯定潜不了

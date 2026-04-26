@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1557
+title: 第二次投稿杂糅大佬末日雪白 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 末日
+  - 雪白
+  - 综漫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就九分吧 | 缝合怪，末日雪白过多，前文无法直视。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缝合怪，末日雪白过多，前文无法直视。 | 题材大杂烩，风格撕裂;开头混乱，缝合辰东等大佬却揉进雪白
+  observable:
+  - 'genre维度: 题材大杂烩，风格撕裂'
+  - 'opening维度: 开头混乱，缝合辰东等大佬却揉进雪白'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1641
+  - 1750
+  score: null
+  score_raw: 差不多就九分吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 第二次投稿杂糅大佬末日雪白
+  genre_guess:
+  - 末日
+  - 雪白
+  - 综漫
+  overall_comment: 缝合怪，末日雪白过多，前文无法直视。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材大杂烩，风格撕裂
+    raw_quote: 就各种融分掉 我这时候在里面看到的十个题材
+  - dimension: opening
+    severity: negative
+    content: 开头混乱，缝合辰东等大佬却揉进雪白
+    raw_quote: 冰冷孤寂的宇宙神说 怎么是 这是刘慈星的吗

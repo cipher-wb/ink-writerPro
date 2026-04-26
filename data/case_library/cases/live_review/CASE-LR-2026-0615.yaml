@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0615
+title: 女帝朝堂 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 历史
+  - 架空
+  - 女帝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分马归来半年 | 朝堂政治太无聊，分镜式描述，不懂市场，没进步。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 朝堂政治太无聊，分镜式描述，不懂市场，没进步。 | 朝堂政治没人看，架空历史只有大神撑得住
+  observable:
+  - 'genre维度: 朝堂政治没人看，架空历史只有大神撑得住'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 4001
+  - 4150
+  score: 35
+  score_raw: 35分马归来半年
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 女帝朝堂
+  genre_guess:
+  - 历史
+  - 架空
+  - 女帝
+  overall_comment: 朝堂政治太无聊，分镜式描述，不懂市场，没进步。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 朝堂政治没人看，架空历史只有大神撑得住
+    raw_quote: 蓝屏不看这些架空历史...没人看呀

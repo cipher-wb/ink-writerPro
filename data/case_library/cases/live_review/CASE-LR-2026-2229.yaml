@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-2229
+title: 穿游戏遇黑袍少女 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 穿越
+  - 游戏
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还好好吧 我离那次都崩了 | 穿游戏设定减分，开局故弄玄虚，但女主和人设有潜力，需大改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿游戏设定减分，开局故弄玄虚，但女主和人设有潜力，需大改。 | 开局故弄玄虚，无记忆点，读者看不懂;穿游戏设定受众窄，难出成绩;开局涉及暧昧拉扯，上不上马都崩人设
+  observable:
+  - 'opening维度: 开局故弄玄虚，无记忆点，读者看不懂'
+  - 'genre维度: 穿游戏设定受众窄，难出成绩'
+  - 'taboo维度: 开局涉及暧昧拉扯，上不上马都崩人设'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 872
+  - 1010
+  score: null
+  score_raw: 还好好吧 我离那次都崩了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿游戏遇黑袍少女
+  genre_guess:
+  - 穿越
+  - 游戏
+  - 仙侠
+  overall_comment: 穿游戏设定减分，开局故弄玄虚，但女主和人设有潜力，需大改。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局故弄玄虚，无记忆点，读者看不懂
+    raw_quote: '因为你没有继承记
+
+      她这种说话我根本就看不懂
+
+      读着看不懂啊'
+  - dimension: genre
+    severity: negative
+    content: 穿游戏设定受众窄，难出成绩
+    raw_quote: '同样的实力穿游戏肯定是比不上
+
+      不穿游戏的成绩'
+  - dimension: taboo
+    severity: negative
+    content: 开局涉及暧昧拉扯，上不上马都崩人设
+    raw_quote: '就冲药的这种东西
+
+      就不要提这种东西 我就没意义了
+
+      因为你上不上都有问题'

@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0785
+title: 封官见礼 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 武侠
+  - 权谋
+  - 穷相
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十二分 | 不是网文，是自嗨，剧情老套无看点，前两章毫无意义，32分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不是网文，是自嗨，剧情老套无看点，前两章毫无意义，32分。 | 不是网文，根本没认知;开头傲慢不解释，全是无效信息;第三章才进主线，前两章是玩
+  observable:
+  - 'genre维度: 不是网文，根本没认知'
+  - 'opening维度: 开头傲慢不解释，全是无效信息'
+  - 'pacing维度: 第三章才进主线，前两章是玩'
+  - 'character维度: 主角是小孩子，无聊'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 901
+  - 950
+  score: 32
+  score_raw: 三十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 封官见礼
+  genre_guess:
+  - 武侠
+  - 权谋
+  - 穷相
+  overall_comment: 不是网文，是自嗨，剧情老套无看点，前两章毫无意义，32分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 不是网文，根本没认知
+    raw_quote: 大哥你基本已经告别网红了 因为你对网红根本就没有一点认知
+  - dimension: opening
+    severity: negative
+    content: 开头傲慢不解释，全是无效信息
+    raw_quote: 不解释就太傲慢了呀 你们啊 网红是服务业
+  - dimension: pacing
+    severity: negative
+    content: 第三章才进主线，前两章是玩
+    raw_quote: 第三章双重生前两章等于是 那那你写前两章干嘛 你还是不懂
+  - dimension: character
+    severity: negative
+    content: 主角是小孩子，无聊
+    raw_quote: 两个小娃娃 两个小娃娃有啥意思啊 这哪怕作为武侠也是严重不及格的

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1010
+title: 圣杯战争第一人称 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 同人
+  - 奇幻
+  - 圣杯战争
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没人看兄弟，我觉得没人看 | 第一人称毒点，日常拖沓，同人过于宅白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称毒点，日常拖沓，同人过于宅白。 | 第一人称必须改，不改必死;主线进展慢，日常拖沓
+  observable:
+  - 'opening维度: 第一人称必须改，不改必死'
+  - 'pacing维度: 主线进展慢，日常拖沓'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 2672
+  - 2780
+  score: null
+  score_raw: 没人看兄弟，我觉得没人看
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 圣杯战争第一人称
+  genre_guess:
+  - 同人
+  - 奇幻
+  - 圣杯战争
+  overall_comment: 第一人称毒点，日常拖沓，同人过于宅白。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一人称必须改，不改必死
+    raw_quote: 不要第一人称啊……第一人称第一称称要包改，不改就找死
+  - dimension: pacing
+    severity: negative
+    content: 主线进展慢，日常拖沓
+    raw_quote: 代入感过多，太拖沓了，主线进展慢

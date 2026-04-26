@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1349
+title: 废土世界规则化 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 科幻
+  - 废土
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话我觉得比例好但是事件太弱，三十多分三十三分 | 世界原创世界观太复杂，事件弱，不好看，不建议新人尝试。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界原创世界观太复杂，事件弱，不好看，不建议新人尝试。 | 原创世界观太复杂，新人资格不够，读者不买账;事件不好看，一直靠奇物世界观支撑，缺乏冲突看点;表达力还行但世界观太杂，基础不清晰，像瞎拼乱凑
+  observable:
+  - 'misc维度: 原创世界观太复杂，新人资格不够，读者不买账'
+  - 'highpoint维度: 事件不好看，一直靠奇物世界观支撑，缺乏冲突看点'
+  - 'simplicity维度: 表达力还行但世界观太杂，基础不清晰，像瞎拼乱凑'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 250
+  - 357
+  score: 33
+  score_raw: 打分的话我觉得比例好但是事件太弱，三十多分三十三分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 废土世界规则化
+  genre_guess:
+  - 科幻
+  - 废土
+  - 末世
+  overall_comment: 世界原创世界观太复杂，事件弱，不好看，不建议新人尝试。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 原创世界观太复杂，新人资格不够，读者不买账
+    raw_quote: 你这个实力没资格去搞这种东西啊真没资格
+  - dimension: highpoint
+    severity: negative
+    content: 事件不好看，一直靠奇物世界观支撑，缺乏冲突看点
+    raw_quote: 事件不好看就是冒充青山那种写法
+  - dimension: simplicity
+    severity: negative
+    content: 表达力还行但世界观太杂，基础不清晰，像瞎拼乱凑
+    raw_quote: 废土那就是废土的背景世界观...科幻就科幻都是就都是这种杂志我来

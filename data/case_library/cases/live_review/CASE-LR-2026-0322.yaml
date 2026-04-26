@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0322
+title: 蒸汽魔法与猎龙人 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 奇幻
+  - 蒸汽朋克
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能过审就签 | 文笔和讲故事能力尚可，但过程性描写擦边过多，编辑认为能过审就能签，但风险太大。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和讲故事能力尚可，但过程性描写擦边过多，编辑认为能过审就能签，但风险太大。 | 每一句都像是在开车，魔力灌输等桥段容易引发审核误判封书。;作者有辱骂审核的前科，可能会影响书的命运。
+  observable:
+  - 'taboo维度: 每一句都像是在开车，魔力灌输等桥段容易引发审核误判封书。'
+  - 'ops维度: 作者有辱骂审核的前科，可能会影响书的命运。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 1327
+  - 1438
+  score: null
+  score_raw: 能过审就签
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 蒸汽魔法与猎龙人
+  genre_guess:
+  - 奇幻
+  - 蒸汽朋克
+  - 西幻
+  overall_comment: 文笔和讲故事能力尚可，但过程性描写擦边过多，编辑认为能过审就能签，但风险太大。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 每一句都像是在开车，魔力灌输等桥段容易引发审核误判封书。
+    raw_quote: 你别管结果是不是，你过程就是皇叔啊...审核单独截这个片段过来，我怎么办
+  - dimension: ops
+    severity: negative
+    content: 作者有辱骂审核的前科，可能会影响书的命运。
+    raw_quote: 他直接在单张里面说审核那个什么的...大哥性情中人，直接单杀呀
+  - dimension: opening
+    severity: neutral
+    content: 讲故事循序渐进，徐徐道来，尚可。
+    raw_quote: 徐徐道来...娓娓道来，循序渐循序渐进

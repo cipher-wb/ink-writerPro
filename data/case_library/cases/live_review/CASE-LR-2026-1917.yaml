@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1917
+title: S15电竞重生文 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 游戏
+  - 电竞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我要48分嘛 | 文笔尚可但蹭的S15热度太低，建议改写LCK或早期热度高的赛季。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但蹭的S15热度太低，建议改写LCK或早期热度高的赛季。 | S15赛季热度太低，寒假发更是死路一条，建议写LCK。
+  observable:
+  - 'genre维度: S15赛季热度太低，寒假发更是死路一条，建议写LCK。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 367
+  - 405
+  score: 48
+  score_raw: 我要48分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: S15电竞重生文
+  genre_guess:
+  - 游戏
+  - 电竞
+  overall_comment: 文笔尚可但蹭的S15热度太低，建议改写LCK或早期热度高的赛季。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: S15赛季热度太低，寒假发更是死路一条，建议写LCK。
+    raw_quote: S15的看点太少了...寒假写撸啊撸真的有点找死
+  - dimension: pacing
+    severity: positive
+    content: 拉情绪和写法本身没问题。
+    raw_quote: 拉情绪嘛，拉情绪倒也还好...写的倒是没啥问题

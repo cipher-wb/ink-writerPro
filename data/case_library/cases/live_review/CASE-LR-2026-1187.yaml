@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1187
+title: 盛夏夜雪凌 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 玄幻
+  - 说书人
+  - 灭门
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十来分 | 传统玄幻灭门复仇，说书人视角夹杂大量设定，毫无新意，需要推翻重来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统玄幻灭门复仇，说书人视角夹杂大量设定，毫无新意，需要推翻重来。 | 灭门复仇套路老旧，无创新元素;用说书人讲设定，读者根本不关心什么道
+  observable:
+  - 'genre维度: 灭门复仇套路老旧，无创新元素'
+  - 'simplicity维度: 用说书人讲设定，读者根本不关心什么道'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 3070
+  - 3220
+  score: null
+  score_raw: 二十来分
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 盛夏夜雪凌
+  genre_guess:
+  - 玄幻
+  - 说书人
+  - 灭门
+  overall_comment: 传统玄幻灭门复仇，说书人视角夹杂大量设定，毫无新意，需要推翻重来。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 灭门复仇套路老旧，无创新元素
+    raw_quote: 太传统了 兄弟 太传统了 这些都是设定呀
+  - dimension: simplicity
+    severity: negative
+    content: 用说书人讲设定，读者根本不关心什么道
+    raw_quote: 别讲了 不讲了不听 没人关心什么道啊 大哥

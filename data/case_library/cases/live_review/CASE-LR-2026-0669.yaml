@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0669
+title: 绝世唐门同人 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HCzwBuEV6
+scope:
+  genre:
+  - 同人
+  - 斗罗大陆
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三分马上三分 | 开头太慢，文青写法，不符合斗罗读者口味，核心是五红和女角色，不要搞复杂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HCzwBuEV6.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头太慢，文青写法，不符合斗罗读者口味，核心是五红和女角色，不要搞复杂。 | 第一章太文青，像冒充极品家丁，节奏拖沓;整体推进慢，像龙族慢悠悠，不适合小白读者
+  observable:
+  - 'opening维度: 第一章太文青，像冒充极品家丁，节奏拖沓'
+  - 'pacing维度: 整体推进慢，像龙族慢悠悠，不适合小白读者'
+live_review_meta:
+  source_bvid: BV1HCzwBuEV6
+  source_line_range:
+  - 432
+  - 549
+  score: 30
+  score_raw: 三分马上三分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 绝世唐门同人
+  genre_guess:
+  - 同人
+  - 斗罗大陆
+  - 穿越
+  overall_comment: 开头太慢，文青写法，不符合斗罗读者口味，核心是五红和女角色，不要搞复杂。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章太文青，像冒充极品家丁，节奏拖沓
+    raw_quote: 第一章太文青了...写的跟极品家丁似的
+  - dimension: pacing
+    severity: negative
+    content: 整体推进慢，像龙族慢悠悠，不适合小白读者
+    raw_quote: 这个太慢了...写的跟龙族似的慢慢悠的
+  - dimension: simplicity
+    severity: positive
+    content: 建议简化，贴紧斗罗核心爽点写小白文
+    raw_quote: 就那么两种物一下就行了...动脑写一下就行

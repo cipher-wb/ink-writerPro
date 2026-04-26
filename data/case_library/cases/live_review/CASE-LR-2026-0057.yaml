@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0057
+title: 炼金术士 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 都市
+  - 职业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大概三十多分吧 | 有天赋但比例不够，驾驭不住大场面，建议从小事件练起。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋但比例不够，驾驭不住大场面，建议从小事件练起。 | 元素太多，比例不够;写人物挺差的
+  observable:
+  - 'simplicity维度: 元素太多，比例不够'
+  - 'character维度: 写人物挺差的'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 1181
+  - 1230
+  score: null
+  score_raw: 大概三十多分吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 炼金术士
+  genre_guess:
+  - 都市
+  - 职业
+  overall_comment: 有天赋但比例不够，驾驭不住大场面，建议从小事件练起。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 元素太多，比例不够
+    raw_quote: 你根本驾驭不住的
+  - dimension: character
+    severity: negative
+    content: 写人物挺差的
+    raw_quote: 写人物其实挺差的

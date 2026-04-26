@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0470
+title: 入侵告我 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 武侠
+  - 入侵
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你三十二分 | 文笔好但人设有致命毒点，路见不平不敢帮显得很毒，需要合理避开。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔好但人设有致命毒点，路见不平不敢帮显得很毒，需要合理避开。 | 主角路径不平一声吼却不敢帮忙，眼睁睁看同伴被打死，主角人设崩塌;第一章只展现了乱世，缺乏明确主线和期待感
+  observable:
+  - 'character维度: 主角路径不平一声吼却不敢帮忙，眼睁睁看同伴被打死，主角人设崩塌'
+  - 'hook维度: 第一章只展现了乱世，缺乏明确主线和期待感'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 1201
+  - 1240
+  score: 32
+  score_raw: 给你三十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 入侵告我
+  genre_guess:
+  - 武侠
+  - 入侵
+  overall_comment: 文笔好但人设有致命毒点，路见不平不敢帮显得很毒，需要合理避开。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角路径不平一声吼却不敢帮忙，眼睁睁看同伴被打死，主角人设崩塌
+    raw_quote: 你说话了又不敢帮 这个其实很毒就是 ... 看着把同伴被人家打死 你是主角
+  - dimension: hook
+    severity: negative
+    content: 第一章只展现了乱世，缺乏明确主线和期待感
+    raw_quote: 第一章就说了个乱世 然后很危险 你要活下去 ... 第二章还是在提前乱世

@@ -1,0 +1,68 @@
+case_id: CASE-LR-2026-0449
+title: 现代历史学家魏孚 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1BFA2zSEZj
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 宋朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 期待感弱，穿越啰嗦，没有蹭上名场面，身份缺失导致故事无法展开。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1BFA2zSEZj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 期待感弱，穿越啰嗦，没有蹭上名场面，身份缺失导致故事无法展开。 | 穿越过程过于啰嗦，迟迟不进入故事;没有任何期待感，读者不会翻页;配角扁平，人物立不住
+  observable:
+  - 'opening维度: 穿越过程过于啰嗦，迟迟不进入故事'
+  - 'hook维度: 没有任何期待感，读者不会翻页'
+  - 'character维度: 配角扁平，人物立不住'
+  - 'genre维度: 历史文必须要有明确身份，本书身份缺失'
+  - 'pacing维度: 节奏太慢，一直在内心独白和评价'
+live_review_meta:
+  source_bvid: BV1BFA2zSEZj
+  source_line_range:
+  - 622
+  - 822
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 现代历史学家魏孚
+  genre_guess:
+  - 历史
+  - 穿越
+  - 宋朝
+  overall_comment: 期待感弱，穿越啰嗦，没有蹭上名场面，身份缺失导致故事无法展开。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越过程过于啰嗦，迟迟不进入故事
+    raw_quote: 穿越太啰嗦了
+  - dimension: hook
+    severity: negative
+    content: 没有任何期待感，读者不会翻页
+    raw_quote: 没期待感就不翻脸不看脸
+  - dimension: character
+    severity: negative
+    content: 配角扁平，人物立不住
+    raw_quote: 这些人物没意思 立不住呀
+  - dimension: genre
+    severity: negative
+    content: 历史文必须要有明确身份，本书身份缺失
+    raw_quote: 历史文最重要是身份
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，一直在内心独白和评价
+    raw_quote: 太慢了

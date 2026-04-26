@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0983
+title: 诡异投资人游戏 (pass / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 悬疑
+  - 诡异
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分有吧 | 文笔氛围好，会讲故事。但投资这个点很出戏，主角人设像弥留之界第三季装逼配角。题材很难写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔氛围好，会讲故事。但投资这个点很出戏，主角人设像弥留之界第三季装逼配角。题材很难写。 | 投资这个金手指太出戏，强行装逼，感觉像说教。
+  observable:
+  - 'golden_finger维度: 投资这个金手指太出戏，强行装逼，感觉像说教。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 3651
+  - 3840
+  score: 50
+  score_raw: 50分有吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 诡异投资人游戏
+  genre_guess:
+  - 悬疑
+  - 诡异
+  - 游戏
+  overall_comment: 文笔氛围好，会讲故事。但投资这个点很出戏，主角人设像弥留之界第三季装逼配角。题材很难写。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 文笔和氛围感拉满，几个字就能写出惊悚感。
+    raw_quote: 水平挺高的...遣词造句...你看几个字就能写出来氛围...他满身满脸是血...惊恐万状...这种就挺好的
+  - dimension: golden_finger
+    severity: negative
+    content: 投资这个金手指太出戏，强行装逼，感觉像说教。
+    raw_quote: 投资这个点...好出戏...就感觉很没有意思...有点像那个弥留之界...第三季那个人设一样...很垃圾...老式的强行装逼

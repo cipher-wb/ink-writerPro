@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1919
+title: 黑诊所变苍蝇异能 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分 | 19岁新人，代入感和笔力尚可，但变成苍蝇的卖点单薄且老套，配角塑造是大问题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 19岁新人，代入感和笔力尚可，但变成苍蝇的卖点单薄且老套，配角塑造是大问题。 | 金手指是变成苍蝇，这和孙悟空变苍蝇一样，卖点无新意。;配角像是街边混混，没有反派的样子。
+  observable:
+  - 'golden_finger维度: 金手指是变成苍蝇，这和孙悟空变苍蝇一样，卖点无新意。'
+  - 'character维度: 配角像是街边混混，没有反派的样子。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 452
+  - 490
+  score: 22
+  score_raw: 22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 黑诊所变苍蝇异能
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 19岁新人，代入感和笔力尚可，但变成苍蝇的卖点单薄且老套，配角塑造是大问题。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指是变成苍蝇，这和孙悟空变苍蝇一样，卖点无新意。
+    raw_quote: 你就变成个苍蝇...这就不找印找印度啊，这是孙悟空就就常变呀，这个卖点也没意思呀
+  - dimension: character
+    severity: negative
+    content: 配角像是街边混混，没有反派的样子。
+    raw_quote: 我感觉都不能作为你的反派存在...哪怕作为一个漫威对吧，你超级英雄干坏人那坏人也很有逼格

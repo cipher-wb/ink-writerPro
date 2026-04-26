@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1088
+title: 法师开高达 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 西幻
+  - 机甲
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你28分吧 | 题材老旧且驾驭困难，机甲元素劝退新人，建议替换题材
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老旧且驾驭困难，机甲元素劝退新人，建议替换题材 | 机甲高达题材被时代淘汰，新人难出成绩;简介过长，信息臃肿
+  observable:
+  - 'genre维度: 机甲高达题材被时代淘汰，新人难出成绩'
+  - 'simplicity维度: 简介过长，信息臃肿'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 230
+  - 300
+  score: 28
+  score_raw: 给你28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 法师开高达
+  genre_guess:
+  - 西幻
+  - 机甲
+  overall_comment: 题材老旧且驾驭困难，机甲元素劝退新人，建议替换题材
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 机甲高达题材被时代淘汰，新人难出成绩
+    raw_quote: 就是被时代淘汰的东西了 机甲高达这种新人尽量不要加嘛
+  - dimension: simplicity
+    severity: negative
+    content: 简介过长，信息臃肿
+    raw_quote: 叽里咕噜的写个400多字500字的谁看呀

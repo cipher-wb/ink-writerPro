@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0336
+title: 下班然后打穿误读 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 清小说
+  - 穿越
+  - 英伦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多就到20分了 | 翻译腔有西幻味道，但信息量极低，第一章无任何卖点，完全失败。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 翻译腔有西幻味道，但信息量极低，第一章无任何卖点，完全失败。 | 第一章信息量几乎为零，面试报社毫无看点;金手指和卖点拖到第二章末尾，严重滞后;日常描写过多，沙丁鱼等细节毫无推动力
+  observable:
+  - 'opening维度: 第一章信息量几乎为零，面试报社毫无看点'
+  - 'golden_finger维度: 金手指和卖点拖到第二章末尾，严重滞后'
+  - 'simplicity维度: 日常描写过多，沙丁鱼等细节毫无推动力'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 910
+  - 1078
+  score: 20
+  score_raw: 最多就到20分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 下班然后打穿误读
+  genre_guess:
+  - 清小说
+  - 穿越
+  - 英伦
+  overall_comment: 翻译腔有西幻味道，但信息量极低，第一章无任何卖点，完全失败。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章信息量几乎为零，面试报社毫无看点
+    raw_quote: 第一张信息量太少了…就这一点信息量
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指和卖点拖到第二章末尾，严重滞后
+    raw_quote: 大概是第二章结尾才出来
+  - dimension: simplicity
+    severity: negative
+    content: 日常描写过多，沙丁鱼等细节毫无推动力
+    raw_quote: 什么三文鱼 沙丁鱼 没人在乎呀

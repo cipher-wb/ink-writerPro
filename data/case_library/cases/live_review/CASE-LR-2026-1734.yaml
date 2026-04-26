@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1734
+title: 异世大陆历史武将抽卡 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 玄幻
+  - 历史
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分差不多吧 | 有进步，剧情流畅且正能量，但整体仍显稚嫩，分数较去年提升。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有进步，剧情流畅且正能量，但整体仍显稚嫩，分数较去年提升。
+  observable:
+  - 整体被星河直播判定为 fail
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 211
+  - 285
+  score: 18
+  score_raw: 18分差不多吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 异世大陆历史武将抽卡
+  genre_guess:
+  - 玄幻
+  - 历史
+  - 系统
+  overall_comment: 有进步，剧情流畅且正能量，但整体仍显稚嫩，分数较去年提升。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 主角正能量、幽默且不近女色，人物塑造有进步。
+    raw_quote: 我觉得大概写的很有意思 正能量 救别人 不投回报

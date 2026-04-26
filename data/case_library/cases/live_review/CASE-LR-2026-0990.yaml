@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0990
+title: 皇宫里的猫 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 玄幻
+  - 架空历史
+  - 宫廷
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 养猪去吧 | 主线太弱，期待感差，变成猫后缺乏有效看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线太弱，期待感差，变成猫后缺乏有效看点。 | 主线太弱，期待感差，读者不想跟读;变成猫的设定无效，不如假太监;思路不对，建议大改
+  observable:
+  - 'hook维度: 主线太弱，期待感差，读者不想跟读'
+  - 'golden_finger维度: 变成猫的设定无效，不如假太监'
+  - 'ops维度: 思路不对，建议大改'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 566
+  - 669
+  score: null
+  score_raw: 养猪去吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 皇宫里的猫
+  genre_guess:
+  - 玄幻
+  - 架空历史
+  - 宫廷
+  overall_comment: 主线太弱，期待感差，变成猫后缺乏有效看点。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 主线太弱，期待感差，读者不想跟读
+    raw_quote: 就是你的主线太弱了，导致读者根本就不想跟着你，就期待感很弱
+  - dimension: golden_finger
+    severity: negative
+    content: 变成猫的设定无效，不如假太监
+    raw_quote: 真不如假太监大哥，假太监在宫里面都比你这个猫猫好啊
+  - dimension: ops
+    severity: negative
+    content: 思路不对，建议大改
+    raw_quote: 大哥你要换成假太监什么就行了

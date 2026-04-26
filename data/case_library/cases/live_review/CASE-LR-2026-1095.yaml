@@ -1,0 +1,46 @@
+case_id: CASE-LR-2026-1095
+title: 杂役逐道长生 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 修仙
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48份吧 说不定以前也有也也签约过的 | 比例套路扎实，真实感好，但主线平淡单一，缺乏新意
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例套路扎实，真实感好，但主线平淡单一，缺乏新意 | 剧情缺少高潮和新颖卖点，主线只是成长变强
+  observable:
+  - 'highpoint维度: 剧情缺少高潮和新颖卖点，主线只是成长变强'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 830
+  - 900
+  score: 48
+  score_raw: 48份吧 说不定以前也有也也签约过的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 杂役逐道长生
+  genre_guess:
+  - 修仙
+  - 凡人流
+  overall_comment: 比例套路扎实，真实感好，但主线平淡单一，缺乏新意
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 剧情缺少高潮和新颖卖点，主线只是成长变强
+    raw_quote: 剧情没意思 这个就代入感很好 套路很熟 文笔也很扎实 但是剧情真没新意啊

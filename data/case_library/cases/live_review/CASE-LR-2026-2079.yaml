@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2079
+title: 未尽心之躯 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 修仙
+  - 成长
+  - 冒险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能给你给到40多分，但是签不了 | 文笔扎实有天赋，但正文主线过老套，情节老气，放十年前或许能熬，如今必须融入现代技巧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实有天赋，但正文主线过老套，情节老气，放十年前或许能熬，如今必须融入现代技巧。 | 开头传统不服潮，节奏过时，缺乏穿越等现代脑洞
+  observable:
+  - 'opening维度: 开头传统不服潮，节奏过时，缺乏穿越等现代脑洞'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 545
+  - 600
+  score: 40
+  score_raw: 能给你给到40多分，但是签不了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 未尽心之躯
+  genre_guess:
+  - 修仙
+  - 成长
+  - 冒险
+  overall_comment: 文笔扎实有天赋，但正文主线过老套，情节老气，放十年前或许能熬，如今必须融入现代技巧。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头传统不服潮，节奏过时，缺乏穿越等现代脑洞
+    raw_quote: 大哥的正文主线还是太老套了，放10年前可能能熬一熬……加个穿越就有意思了，其实加个穿越，其实瞬间这搞子又盘活了
+  - dimension: pacing
+    severity: neutral
+    content: 第一章还稍有看点，第二章事件显无聊
+    raw_quote: 第一章还是有点意思的，第二张一般般，如果你第一章加个穿越就有意思了

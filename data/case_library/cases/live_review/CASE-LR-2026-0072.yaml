@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0072
+title: 圣天毒蘑菇 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 玄幻
+  - 学院
+  - 设定流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分左右吧 | 全文都在堆砌设定，没有事件，读者全跑完了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全文都在堆砌设定，没有事件，读者全跑完了。 | 全是设定，没有事件，导致读者流失
+  observable:
+  - 'simplicity维度: 全是设定，没有事件，导致读者流失'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 721
+  - 770
+  score: 30
+  score_raw: 30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 圣天毒蘑菇
+  genre_guess:
+  - 玄幻
+  - 学院
+  - 设定流
+  overall_comment: 全文都在堆砌设定，没有事件，读者全跑完了。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 全是设定，没有事件，导致读者流失
+    raw_quote: 全都是设定...没人看...就跑了，一辈跑全跑完了

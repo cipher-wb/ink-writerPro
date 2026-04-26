@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1211
+title: 末日当鼠王 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 末日
+  - 游戏
+  - DND
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分吧 | 设定像网游近战法师，事件一本正经缺乏幽默感和地气，读者难带入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定像网游近战法师，事件一本正经缺乏幽默感和地气，读者难带入。 | 开篇大场面战争却毫无吸引力;主角鼠怪的人设立不住，缺乏趣味
+  observable:
+  - 'hook维度: 开篇大场面战争却毫无吸引力'
+  - 'character维度: 主角鼠怪的人设立不住，缺乏趣味'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 506
+  - 553
+  score: 22
+  score_raw: 22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日当鼠王
+  genre_guess:
+  - 末日
+  - 游戏
+  - DND
+  overall_comment: 设定像网游近战法师，事件一本正经缺乏幽默感和地气，读者难带入。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开篇大场面战争却毫无吸引力
+    raw_quote: 一上来军团在此一举哎呀好无聊啊
+  - dimension: character
+    severity: negative
+    content: 主角鼠怪的人设立不住，缺乏趣味
+    raw_quote: 就找不到这种书的精髓…主角的人设一定要特别强对吧

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1923
+title: 猪头少年/学宫恋爱修仙 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 仙侠
+  - 言情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50多分吧 | 文青风影视感强，但事件内核弱，主角逼格掉光，疑似女频写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文青风影视感强，但事件内核弱，主角逼格掉光，疑似女频写法。 | 主角为活命故意服软，言辞像小喽啰，逼格掉光，在读者心中已经死了。;事件内核较弱，像女频小说。
+  observable:
+  - 'character维度: 主角为活命故意服软，言辞像小喽啰，逼格掉光，在读者心中已经死了。'
+  - 'simplicity维度: 事件内核较弱，像女频小说。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 612
+  - 660
+  score: 50
+  score_raw: 50多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 猪头少年/学宫恋爱修仙
+  genre_guess:
+  - 仙侠
+  - 言情
+  overall_comment: 文青风影视感强，但事件内核弱，主角逼格掉光，疑似女频写法。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角为活命故意服软，言辞像小喽啰，逼格掉光，在读者心中已经死了。
+    raw_quote: 哪怕你装逼也是这对吧...这就反派了呀...这么装主角已经死掉了，没逼格
+  - dimension: simplicity
+    severity: negative
+    content: 事件内核较弱，像女频小说。
+    raw_quote: 真有点女神了，女频小说

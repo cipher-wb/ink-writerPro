@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0962
+title: 美利坚警察(修仙系统) (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 美利坚
+  - 警察
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就35分 | 需加穿越主角，金手指应简化，切入无带入感
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 需加穿越主角，金手指应简化，切入无带入感 | 土著视角无穿越重生，读者难代入
+  observable:
+  - 'hook维度: 土著视角无穿越重生，读者难代入'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 3700
+  - 3780
+  score: 35
+  score_raw: 差不多就35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚警察(修仙系统)
+  genre_guess:
+  - 美利坚
+  - 警察
+  - 修仙
+  overall_comment: 需加穿越主角，金手指应简化，切入无带入感
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 土著视角无穿越重生，读者难代入
+    raw_quote: 你要中国人穿越过去 就现代的年轻人这种的

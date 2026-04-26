@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0065
+title: 第四身中竞技狩猎 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 奇幻
+  - 游戏降临
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能二十个 | 开篇直接进入副本，像中期剧情而不是开头，设定和人物交代不清楚，缺乏代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇直接进入副本，像中期剧情而不是开头，设定和人物交代不清楚，缺乏代入感。 | 开头直接进入副本，没有铺垫，读者无法带入;文笔不够精简，需要集中写重点冲突
+  observable:
+  - 'opening维度: 开头直接进入副本，没有铺垫，读者无法带入'
+  - 'simplicity维度: 文笔不够精简，需要集中写重点冲突'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 331
+  - 375
+  score: 20
+  score_raw: 只能二十个
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 第四身中竞技狩猎
+  genre_guess:
+  - 奇幻
+  - 游戏降临
+  overall_comment: 开篇直接进入副本，像中期剧情而不是开头，设定和人物交代不清楚，缺乏代入感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头直接进入副本，没有铺垫，读者无法带入
+    raw_quote: 你像什么临近行者啊...也没一上来就副本啊...开头线不要进入副本啊
+  - dimension: simplicity
+    severity: negative
+    content: 文笔不够精简，需要集中写重点冲突
+    raw_quote: 比例也不够啊比例也得精简一下

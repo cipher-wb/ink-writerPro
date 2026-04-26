@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0107
+title: 和美利坚/东京日常 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 东京
+  - 日常
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 反过来就好很多了 | 应该在主线之余加拉扯，不要反过来。以医学生身份切入拉代入感，再接触异能。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 应该在主线之余加拉扯，不要反过来。以医学生身份切入拉代入感，再接触异能。 | 纯粹轻小说味道没人看，应改成正常主线写法;不要只在拉扯之余加主线，应该反过来，在主线之余加拉扯
+  observable:
+  - 'genre维度: 纯粹轻小说味道没人看，应改成正常主线写法'
+  - 'opening维度: 不要只在拉扯之余加主线，应该反过来，在主线之余加拉扯'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1201
+  - 1280
+  score: null
+  score_raw: 反过来就好很多了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 和美利坚/东京日常
+  genre_guess:
+  - 东京
+  - 日常
+  - 异能
+  overall_comment: 应该在主线之余加拉扯，不要反过来。以医学生身份切入拉代入感，再接触异能。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯粹轻小说味道没人看，应改成正常主线写法
+    raw_quote: 你不要这一上来就叽里咕噜的的一个轻小说一样的一个味道，都是不爱看的
+  - dimension: opening
+    severity: negative
+    content: 不要只在拉扯之余加主线，应该反过来，在主线之余加拉扯
+    raw_quote: 在主线之余这下拉扯，不要在拉扯之余加主线，那个是偏题了，反过来对吧

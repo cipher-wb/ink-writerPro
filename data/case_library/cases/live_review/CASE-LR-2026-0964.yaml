@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-0964
+title: 猎户修仙登顶武圣 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能就四五十分 | 剧情人设没新意，很八股很老套。遣词造句没问题，写得中规中矩，但找不到优点，需要加反转和内容。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情人设没新意，很八股很老套。遣词造句没问题，写得中规中矩，但找不到优点，需要加反转和内容。 | 猎户姐姐病重，练武驱动力太老套，读者看到就跑。;从剑术开始成神和金手指熟练度设定没有新意。;缺乏反转和让人眼前一亮的看点，剧情平平。
+  observable:
+  - 'opening维度: 猎户姐姐病重，练武驱动力太老套，读者看到就跑。'
+  - 'golden_finger维度: 从剑术开始成神和金手指熟练度设定没有新意。'
+  - 'highpoint维度: 缺乏反转和让人眼前一亮的看点，剧情平平。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 1
+  - 610
+  score: 45
+  score_raw: 只能就四五十分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 猎户修仙登顶武圣
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 剧情人设没新意，很八股很老套。遣词造句没问题，写得中规中矩，但找不到优点，需要加反转和内容。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 猎户姐姐病重，练武驱动力太老套，读者看到就跑。
+    raw_quote: 猎户主要是写烂了...姐姐病重...你去练武这个驱动力...读者看到就跑
+  - dimension: golden_finger
+    severity: negative
+    content: 从剑术开始成神和金手指熟练度设定没有新意。
+    raw_quote: 这也没新意啊...1~100又开始练了吗...熟练度割包皮哦...这割皮术这精通了又能怎么样呢
+  - dimension: character
+    severity: neutral
+    content: 姐姐病美人没意思，人物写得平平淡淡。
+    raw_quote: 那姐姐跟NPC一样...病美人有啥意思...没有什么特征...生病了
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏反转和让人眼前一亮的看点，剧情平平。
+    raw_quote: 我在找你的人物冲突举主线...有没有新意没有...都没有...就平平淡淡

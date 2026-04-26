@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0207
+title: 红楼太虚幻境 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 历史
+  - 古典
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 创意古怪，情节有恶俗倾向，文笔扎实但题材和切入角度有问题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 创意古怪，情节有恶俗倾向，文笔扎实但题材和切入角度有问题。 | 涉及未成年黛玉的暧昧互动，有擦边风险;红楼同人处理不当，恶搞成分破坏古典美
+  observable:
+  - 'taboo维度: 涉及未成年黛玉的暧昧互动，有擦边风险'
+  - 'genre维度: 红楼同人处理不当，恶搞成分破坏古典美'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 785
+  - 820
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 红楼太虚幻境
+  genre_guess:
+  - 历史
+  - 古典
+  - 同人
+  overall_comment: 创意古怪，情节有恶俗倾向，文笔扎实但题材和切入角度有问题。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 涉及未成年黛玉的暧昧互动，有擦边风险
+    raw_quote: 就为什么抱着林黛玉 ... 有那种 练右屁那种感觉
+  - dimension: genre
+    severity: negative
+    content: 红楼同人处理不当，恶搞成分破坏古典美
+    raw_quote: 不知道怎么找来这种题材 ... 这个太虚幻境里这张可以

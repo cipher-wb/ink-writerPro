@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0922
+title: 掌机玩家：头号玩家还债中 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 游戏
+  - 第四天灾
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分左右吧 | 设定占比过大，不专业，游戏文需要更具体的游戏元素结合，而不是纯设定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定占比过大，不专业，游戏文需要更具体的游戏元素结合，而不是纯设定。 | 设定篇幅占八九十%，毫无故事推进;缺乏具体游戏侧重点，不专业
+  observable:
+  - 'pacing维度: 设定篇幅占八九十%，毫无故事推进'
+  - 'genre维度: 缺乏具体游戏侧重点，不专业'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 865
+  - 930
+  score: 30
+  score_raw: 30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 掌机玩家：头号玩家还债中
+  genre_guess:
+  - 游戏
+  - 第四天灾
+  - 科幻
+  overall_comment: 设定占比过大，不专业，游戏文需要更具体的游戏元素结合，而不是纯设定。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 设定篇幅占八九十%，毫无故事推进
+    raw_quote: 设定篇幅得占八九十%了 谁不想上一天班回来看大哥的设定
+  - dimension: genre
+    severity: negative
+    content: 缺乏具体游戏侧重点，不专业
+    raw_quote: 我看了就是一个不专业的人写的书 他不是说专业性好吧

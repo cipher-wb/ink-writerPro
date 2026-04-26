@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0056
+title: 我的修炼速度超快 (fail / 26分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 都市异能
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 26分吧 | 人设普通，缺乏爽点，开局校园老套，26分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设普通，缺乏爽点，开局校园老套，26分。 | 人设普通无亮点;金手指当卖点但写不出来
+  observable:
+  - 'character维度: 人设普通无亮点'
+  - 'golden_finger维度: 金手指当卖点但写不出来'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 1131
+  - 1180
+  score: 26
+  score_raw: 26分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的修炼速度超快
+  genre_guess:
+  - 都市异能
+  - 校园
+  overall_comment: 人设普通，缺乏爽点，开局校园老套，26分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设普通无亮点
+    raw_quote: 人设什么的都普通
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指当卖点但写不出来
+    raw_quote: 就是一个金手指当做卖点但是又写不出来的感觉

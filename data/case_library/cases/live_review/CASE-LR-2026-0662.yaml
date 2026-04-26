@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0662
+title: 五国金乌区刀神 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 玄幻
+  - 东方
+  - 传统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你18封吧 | 对网文理解极差，写的全是十几年前的传权废柴退婚流，虽然节奏快但毫无意义，只能给18分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对网文理解极差，写的全是十几年前的传权废柴退婚流，虽然节奏快但毫无意义，只能给18分。 | 十几年前的废柴退婚流，完全跟不上时代
+  observable:
+  - 'genre维度: 十几年前的废柴退婚流，完全跟不上时代'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1781
+  - 1860
+  score: 18
+  score_raw: 就给你18封吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 五国金乌区刀神
+  genre_guess:
+  - 玄幻
+  - 东方
+  - 传统
+  overall_comment: 对网文理解极差，写的全是十几年前的传权废柴退婚流，虽然节奏快但毫无意义，只能给18分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 十几年前的废柴退婚流，完全跟不上时代
+    raw_quote: 你这是传权了呀...就是那种斗破苍穹更早
+  - dimension: pacing
+    severity: positive
+    content: 节奏很快且不水文，是唯一优点
+    raw_quote: 节奏倒是快的...但是对网文的理解太差了

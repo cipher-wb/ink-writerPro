@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0152
+title: 荷包蛋 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 娱乐
+  - 文娱
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥就28分吧 | 文娱题材好但逻辑架空乱来，女明星粉丝槽点，缺乏代入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文娱题材好但逻辑架空乱来，女明星粉丝槽点，缺乏代入。 | 乱改真实时间线和世界杯结果，架空到读者全跑
+  observable:
+  - 'hook维度: 乱改真实时间线和世界杯结果，架空到读者全跑'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 319
+  - 330
+  score: 28
+  score_raw: 给大哥就28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 荷包蛋
+  genre_guess:
+  - 娱乐
+  - 文娱
+  - 重生
+  overall_comment: 文娱题材好但逻辑架空乱来，女明星粉丝槽点，缺乏代入。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 文娱题材最容易出成绩，书名已有20分基础
+    raw_quote: 都市的这种文娱真的是最容易出成绩了啊 终于有人写了 就这个书名已经有20分了
+  - dimension: hook
+    severity: negative
+    content: 乱改真实时间线和世界杯结果，架空到读者全跑
+    raw_quote: 大哥14年的世界杯是把大哥自己架空了 那那扯淡了

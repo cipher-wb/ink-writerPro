@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1517
+title: 摩门修仙 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 仙侠
+  - 摩门
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分 | 标准番茄风，节奏快但缺乏起点沉浸感，设定为主，核心卖点弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 标准番茄风，节奏快但缺乏起点沉浸感，设定为主，核心卖点弱。 | 纯番茄风，起点读者可能不买账;人物没立住，着急铺设定
+  observable:
+  - 'genre维度: 纯番茄风，起点读者可能不买账'
+  - 'character维度: 人物没立住，着急铺设定'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 981
+  - 1080
+  score: 48
+  score_raw: 48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 摩门修仙
+  genre_guess:
+  - 仙侠
+  - 摩门
+  overall_comment: 标准番茄风，节奏快但缺乏起点沉浸感，设定为主，核心卖点弱。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯番茄风，起点读者可能不买账
+    raw_quote: 大哥这就是标准的番茄分 … 作为起点我觉得还是不能害你
+  - dimension: character
+    severity: negative
+    content: 人物没立住，着急铺设定
+    raw_quote: 王出圣的身体我感觉人物没立柱

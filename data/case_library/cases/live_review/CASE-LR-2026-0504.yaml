@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0504
+title: 大宋病亡，开局只剩一年阳寿 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 历史
+  - 宋朝
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多58分，实力不笨 | 历史功底扎实，但宋英宗赵曙知名度低，切入事件偏小众，建议蹭欧阳修、苏轼等名人改书名。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史功底扎实，但宋英宗赵曙知名度低，切入事件偏小众，建议蹭欧阳修、苏轼等名人改书名。 | 书名和历史人物知名度低，读者代入有门槛;切入的历史事件和人物上限偏低，缺乏爆款潜质
+  observable:
+  - 'simplicity维度: 书名和历史人物知名度低，读者代入有门槛'
+  - 'opening维度: 切入的历史事件和人物上限偏低，缺乏爆款潜质'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 1
+  - 91
+  score: 58
+  score_raw: 差不多58分，实力不笨
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 大宋病亡，开局只剩一年阳寿
+  genre_guess:
+  - 历史
+  - 宋朝
+  - 穿越
+  overall_comment: 历史功底扎实，但宋英宗赵曙知名度低，切入事件偏小众，建议蹭欧阳修、苏轼等名人改书名。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 书名和历史人物知名度低，读者代入有门槛
+    raw_quote: 大宋病亡然后开局就是XX欧阳修这种
+  - dimension: opening
+    severity: negative
+    content: 切入的历史事件和人物上限偏低，缺乏爆款潜质
+    raw_quote: 我觉得这段历史感觉上限也就精品了吧
+  - dimension: genre
+    severity: neutral
+    content: 历史文需要蹭名人提高接受度
+    raw_quote: 你赵曙不出名但是你欧阳修苏轼这些出名

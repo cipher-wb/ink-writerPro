@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1534
+title: 时间鬼幕 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 灵异
+  - 盗墓
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35吧 | 盗墓文切入太急，缺少人物与时代铺垫，无法建立代入感，节奏严重失控。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 盗墓文切入太急，缺少人物与时代铺垫，无法建立代入感，节奏严重失控。 | 开篇过急，直接写墓中吓人，完全跳过必要铺垫;人物身份、年龄、年代全未交代，读者无法代入;节奏过快，两张写完别人一整卷的剧情
+  observable:
+  - 'opening维度: 开篇过急，直接写墓中吓人，完全跳过必要铺垫'
+  - 'character维度: 人物身份、年龄、年代全未交代，读者无法代入'
+  - 'pacing维度: 节奏过快，两张写完别人一整卷的剧情'
+  - 'simplicity维度: 缺乏以假乱真的真实感，灵异文大忌'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 187
+  - 261
+  score: 35
+  score_raw: 35吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 时间鬼幕
+  genre_guess:
+  - 灵异
+  - 盗墓
+  overall_comment: 盗墓文切入太急，缺少人物与时代铺垫，无法建立代入感，节奏严重失控。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇过急，直接写墓中吓人，完全跳过必要铺垫
+    raw_quote: 急了呀 已经去写古墓里面吓人的了 没必要
+  - dimension: character
+    severity: negative
+    content: 人物身份、年龄、年代全未交代，读者无法代入
+    raw_quote: 你是干道墓的 那你是谁 什么年代 年代很重要
+  - dimension: pacing
+    severity: negative
+    content: 节奏过快，两张写完别人一整卷的剧情
+    raw_quote: 大概你用了两张 你把那个蓝派三珠的一卷写完了
+  - dimension: simplicity
+    severity: negative
+    content: 缺乏以假乱真的真实感，灵异文大忌
+    raw_quote: 灵异以假乱真特别重要 尤其是盗木 就是你要写得好像真的有这样一回事

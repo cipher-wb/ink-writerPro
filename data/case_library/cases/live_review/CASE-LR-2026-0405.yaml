@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0405
+title: 金庸武侠同人穿越 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 武侠同人
+  - 金庸
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大哥那个是21分是吧 | 主角登场太晚，硬抄原文，没主角，没意义，绝对没人看
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角登场太晚，硬抄原文，没主角，没意义，绝对没人看 | 主角晚了几章才登场，金庸可以玩但你不行;没主角，纯客观旁白，同人必须立刻写主角;两张没主角，读者早跑了
+  observable:
+  - 'opening维度: 主角晚了几章才登场，金庸可以玩但你不行'
+  - 'character维度: 没主角，纯客观旁白，同人必须立刻写主角'
+  - 'opening维度: 两张没主角，读者早跑了'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 231
+  - 302
+  score: 21
+  score_raw: 大哥那个是21分是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 金庸武侠同人穿越
+  genre_guess:
+  - 武侠同人
+  - 金庸
+  - 穿越
+  overall_comment: 主角登场太晚，硬抄原文，没主角，没意义，绝对没人看
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主角晚了几章才登场，金庸可以玩但你不行
+    raw_quote: 主角登场晚了几张，这个有点不行啊...你又不是金庸，敢玩几张呢对吧
+  - dimension: character
+    severity: negative
+    content: 没主角，纯客观旁白，同人必须立刻写主角
+    raw_quote: 不是不行不行...这第一张纯扯淡了...完全就是客观旁白对吧...同人是立刻写主角
+  - dimension: opening
+    severity: negative
+    content: 两张没主角，读者早跑了
+    raw_quote: 你主角不出来，两张没主角，我怎么办

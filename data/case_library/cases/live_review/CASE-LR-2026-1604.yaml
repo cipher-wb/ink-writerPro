@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1604
+title: 丧尸狂潮社畜狂喜 (pass / 67分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 轻小说
+  - 末世
+  - 丧尸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 67分吧 | 轻小说味道极其纯正，社畜情绪真实，魔法少女丧尸开篇惊艳，天赋型作者。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 轻小说味道极其纯正，社畜情绪真实，魔法少女丧尸开篇惊艳，天赋型作者。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 771
+  - 820
+  score: 67
+  score_raw: 67分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 丧尸狂潮社畜狂喜
+  genre_guess:
+  - 轻小说
+  - 末世
+  - 丧尸
+  overall_comment: 轻小说味道极其纯正，社畜情绪真实，魔法少女丧尸开篇惊艳，天赋型作者。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头就用魔法少女丧尸制造强烈期待感
+    raw_quote: 魔法少女丧尸 … 这个事件发轻小说没问题 … 真的很有日漫那味
+  - dimension: character
+    severity: positive
+    content: 主角社畜心理活动生动，共情力强
+    raw_quote: 这玩就很有宅味啊 … 心理活动啊 … 这口可乐也是一杯尽末日
+  - dimension: pacing
+    severity: neutral
+    content: 日常片段有趣但缺中期主线钩子
+    raw_quote: 还是日常啊 … 感觉跟懒霸王似的 … 还是加个中期目标会好一点

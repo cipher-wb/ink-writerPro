@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1887
+title: 渣男祖师爷觉醒奶爸系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 奶爸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能发蓝精灵... 能上40多分 | 蹭童锦程热度但时效性短，事件本身偏毒。可发番茄练笔但起点难成。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蹭童锦程热度但时效性短，事件本身偏毒。可发番茄练笔但起点难成。 | 蹭热点事件时效性短，推书时已无人记得;骂自己儿子杂种等情节有毒
+  observable:
+  - 'highpoint维度: 蹭热点事件时效性短，推书时已无人记得'
+  - 'taboo维度: 骂自己儿子杂种等情节有毒'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1061
+  - 1140
+  score: null
+  score_raw: 能发蓝精灵... 能上40多分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 渣男祖师爷觉醒奶爸系统
+  genre_guess:
+  - 都市
+  - 系统
+  - 奶爸
+  overall_comment: 蹭童锦程热度但时效性短，事件本身偏毒。可发番茄练笔但起点难成。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 蹭热点事件时效性短，推书时已无人记得
+    raw_quote: 梗是有时效性的... 等你发书上推荐 没人记得同锦城了
+  - dimension: taboo
+    severity: negative
+    content: 骂自己儿子杂种等情节有毒
+    raw_quote: 你不能把你儿子叫杂种吗... 这个事件其实本质还是有点毒的

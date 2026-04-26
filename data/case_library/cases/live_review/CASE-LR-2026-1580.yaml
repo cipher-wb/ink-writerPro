@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1580
+title: 穿越到二次元你会干什么 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gbwWzBEje
+scope:
+  genre:
+  - 文娱
+  - 二次元
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没啥大问题，我觉得会签 | 开篇用身份继承困境与雪白秘书双线切入，拉扯水平高，文娱类方便过审，书名有三江爆款相，整体可签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gbwWzBEje.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇用身份继承困境与雪白秘书双线切入，拉扯水平高，文娱类方便过审，书名有三江爆款相，整体可签。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1gbwWzBEje
+  source_line_range:
+  - 31
+  - 211
+  score: null
+  score_raw: 没啥大问题，我觉得会签
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 穿越到二次元你会干什么
+  genre_guess:
+  - 文娱
+  - 二次元
+  - 穿越
+  overall_comment: 开篇用身份继承困境与雪白秘书双线切入，拉扯水平高，文娱类方便过审，书名有三江爆款相，整体可签。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇切入点新颖，身份困境与雪白秘书多线并进吸引眼球
+    raw_quote: 他这个切入其实挺好的 就是一边讲身份继承困境 一边旁边弄个雪白对吧
+  - dimension: character
+    severity: positive
+    content: 人物互动拉扯水平高，能勾住读者
+    raw_quote: 这拉扯一点问题都没有
+  - dimension: genre
+    severity: positive
+    content: 定位为文娱类非纯同人，过审难度低
+    raw_quote: 这是文娱类的 不算同人
+  - dimension: ops
+    severity: positive
+    content: 书名主流气很强，三江级别包装潜力
+    raw_quote: 他这个书名就是一个三江书名好吧

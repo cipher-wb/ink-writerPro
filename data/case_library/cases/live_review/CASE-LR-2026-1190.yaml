@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-1190
+title: 民国词条：坦克引擎姨太太 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 民国
+  - 玄幻
+  - 词条
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多有个五十分 | 金手指和题材思路可以，但节奏拖沓，细节与尺度需调整。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指和题材思路可以，但节奏拖沓，细节与尺度需调整。 | 八千字事件拖沓，需要压缩并前置词条;肉腿描写可能不适合起点读者;细节描写需要加强
+  observable:
+  - 'pacing维度: 八千字事件拖沓，需要压缩并前置词条'
+  - 'character维度: 肉腿描写可能不适合起点读者'
+  - 'misc维度: 细节描写需要加强'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 101
+  - 350
+  score: 50
+  score_raw: 差不多有个五十分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国词条：坦克引擎姨太太
+  genre_guess:
+  - 民国
+  - 玄幻
+  - 词条
+  - 民俗
+  overall_comment: 金手指和题材思路可以，但节奏拖沓，细节与尺度需调整。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 八千字事件拖沓，需要压缩并前置词条
+    raw_quote: 八千字就词条反成个以太堂有啥意思 ... 节奏架个问题
+  - dimension: character
+    severity: negative
+    content: 肉腿描写可能不适合起点读者
+    raw_quote: 肉腿有点不好 ... 起点现在还是小畜兰比较多的
+  - dimension: genre
+    severity: positive
+    content: 题材思路正确，可以继续写
+    raw_quote: 目前是这个题材这个思路是对的
+  - dimension: misc
+    severity: negative
+    content: 细节描写需要加强
+    raw_quote: 我觉得细节描写还是加强吧

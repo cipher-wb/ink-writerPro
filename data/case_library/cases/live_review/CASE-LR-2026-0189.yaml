@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0189
+title: 机甲纪元：坑中怪兽 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 机甲
+  - 都市
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分也还是有的 | 节奏快，文笔扎实，但开头在厕所里出来怪兽太恶搞，题材冷门，不适合起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快，文笔扎实，但开头在厕所里出来怪兽太恶搞，题材冷门，不适合起点。 | 开篇就是拉屎、隔壁战斗，下三路描写劝退读者。;机甲本来就是大冷门，加上恶搞开头更难出头。
+  observable:
+  - 'opening维度: 开篇就是拉屎、隔壁战斗，下三路描写劝退读者。'
+  - 'genre维度: 机甲本来就是大冷门，加上恶搞开头更难出头。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 2980
+  - 3120
+  score: 38
+  score_raw: 38分也还是有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 机甲纪元：坑中怪兽
+  genre_guess:
+  - 机甲
+  - 都市
+  - 搞笑
+  overall_comment: 节奏快，文笔扎实，但开头在厕所里出来怪兽太恶搞，题材冷门，不适合起点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇就是拉屎、隔壁战斗，下三路描写劝退读者。
+    raw_quote: 这个太恶心了吧
+  - dimension: genre
+    severity: negative
+    content: 机甲本来就是大冷门，加上恶搞开头更难出头。
+    raw_quote: 机甲确实是个非常非常冷门的题材

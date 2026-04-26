@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0426
+title: 穿越万米高空召唤西幻 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 36分 | 表达流畅有天赋，但事件太白，金手指无聊，没有期待感
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达流畅有天赋，但事件太白，金手指无聊，没有期待感 | 金手指无聊，少女和世界观很普通，没反转没期待感
+  observable:
+  - 'highpoint维度: 金手指无聊，少女和世界观很普通，没反转没期待感'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1897
+  - 1968
+  score: 36
+  score_raw: 36分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越万米高空召唤西幻
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 魔法
+  overall_comment: 表达流畅有天赋，但事件太白，金手指无聊，没有期待感
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 故事讲得流畅，真实性表达好，有天赋
+    raw_quote: 其实代入感还好的对吧，代入感真实性表达还是流畅的，还是有优点，能把这个故事讲流畅
+  - dimension: highpoint
+    severity: negative
+    content: 金手指无聊，少女和世界观很普通，没反转没期待感
+    raw_quote: 开头的金手指你自己也说了嘛，很无聊对吧...也没什么反转，也没有什么好的期待感

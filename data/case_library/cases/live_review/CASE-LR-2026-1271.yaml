@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1271
+title: 原神星源游戏穿越 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 游戏
+  - 穿越
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多有个30多吧，35左右吧 | 表达还好但设定多题材拉胯，被同人写法局限，浪费了本可充分发展的实力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达还好但设定多题材拉胯，被同人写法局限，浪费了本可充分发展的实力。 | 题材太拉胯，同人写法限制自身;不会用雪白切入来拉期待感
+  observable:
+  - 'genre维度: 题材太拉胯，同人写法限制自身'
+  - 'hook维度: 不会用雪白切入来拉期待感'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1036
+  - 1100
+  score: 35
+  score_raw: 差不多有个30多吧，35左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 原神星源游戏穿越
+  genre_guess:
+  - 游戏
+  - 穿越
+  - 奇幻
+  overall_comment: 表达还好但设定多题材拉胯，被同人写法局限，浪费了本可充分发展的实力。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材太拉胯，同人写法限制自身
+    raw_quote: 设定多抢戏题材太拉几了...自己把自己限制了
+  - dimension: hook
+    severity: negative
+    content: 不会用雪白切入来拉期待感
+    raw_quote: 大哥您写雪白呀...这种设定类的东西你不不用少女去拉吗

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0043
+title: 仙武世界搜打车 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 仙武
+  - 都市异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分 | 世界观混乱，剧情薄弱，设定复杂，金手指无趣，读者受众模糊，22分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观混乱，剧情薄弱，设定复杂，金手指无趣，读者受众模糊，22分。 | 世界观崩坏，四不像;金手指复杂无趣;故事性很弱
+  observable:
+  - 'genre维度: 世界观崩坏，四不像'
+  - 'golden_finger维度: 金手指复杂无趣'
+  - 'pacing维度: 故事性很弱'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 461
+  - 510
+  score: 22
+  score_raw: 22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙武世界搜打车
+  genre_guess:
+  - 仙武
+  - 都市异能
+  overall_comment: 世界观混乱，剧情薄弱，设定复杂，金手指无趣，读者受众模糊，22分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观崩坏，四不像
+    raw_quote: 这个仙武世界是崩的
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指复杂无趣
+    raw_quote: 金手指也搞复杂了
+  - dimension: pacing
+    severity: negative
+    content: 故事性很弱
+    raw_quote: 就故事性很弱大哥

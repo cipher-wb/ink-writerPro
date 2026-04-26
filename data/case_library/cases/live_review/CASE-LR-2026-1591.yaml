@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1591
+title: 无敌篮球说书人孙燕传承 (fail / 46分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 武侠
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 46分没问题啊 | 文笔和比例出色但剧情老套，像十几年前的网文，缺乏新鲜感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和比例出色但剧情老套，像十几年前的网文，缺乏新鲜感。 | 老乞丐桥段太俗套，一眼望穿;故弄玄虚的上古奇宝、戒指老爷爷等梗已过时
+  observable:
+  - 'opening维度: 老乞丐桥段太俗套，一眼望穿'
+  - 'golden_finger维度: 故弄玄虚的上古奇宝、戒指老爷爷等梗已过时'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 301
+  - 340
+  score: 46
+  score_raw: 46分没问题啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 无敌篮球说书人孙燕传承
+  genre_guess:
+  - 武侠
+  - 仙侠
+  overall_comment: 文笔和比例出色但剧情老套，像十几年前的网文，缺乏新鲜感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 老乞丐桥段太俗套，一眼望穿
+    raw_quote: 这事件老乞丐那肯尺写的确实挺专注的 … 这太老套了 … 这东西让人度过 … 现在的小说真不这么写
+  - dimension: golden_finger
+    severity: negative
+    content: 故弄玄虚的上古奇宝、戒指老爷爷等梗已过时
+    raw_quote: 上古奇宝 … 戒指老爷爷了呀 … 这太老了 … 就是十几年前的写法

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1895
+title: 创世文第一人称叙事 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 玄幻
+  - 创世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分 | 第一人称写不了，主角毫无心理活动像NPC，事件无聊，传玄套路太老。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称写不了，主角毫无心理活动像NPC，事件无聊，传玄套路太老。 | 第一人称代入感差，主角无心理活动;事件无聊，世界观代入感差
+  observable:
+  - 'character维度: 第一人称代入感差，主角无心理活动'
+  - 'pacing维度: 事件无聊，世界观代入感差'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1761
+  - 1850
+  score: 16
+  score_raw: 16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 创世文第一人称叙事
+  genre_guess:
+  - 玄幻
+  - 创世
+  overall_comment: 第一人称写不了，主角毫无心理活动像NPC，事件无聊，传玄套路太老。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 第一人称代入感差，主角无心理活动
+    raw_quote: 第一人称写不了... 主角心理活动 主角的盘算什么没有和NPC似的
+  - dimension: pacing
+    severity: negative
+    content: 事件无聊，世界观代入感差
+    raw_quote: 事件挺无聊的... 世界观什么带入感太差了

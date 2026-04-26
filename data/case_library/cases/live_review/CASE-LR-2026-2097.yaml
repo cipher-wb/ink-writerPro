@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2097
+title: 杀手温柔的散文？赛博朋克妹控 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 赛博
+  - 散文
+  - 妹控
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大哥给到16分 | 标准自嗨文，长句泛滥、无视读者认知，赛博背景毫无解释，没有任何市场可言。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 标准自嗨文，长句泛滥、无视读者认知，赛博背景毫无解释，没有任何市场可言。 | 完全不给读者解释世界观，全部依赖读者脑补;通篇用长达四五十字的句子，阅读体验极差
+  observable:
+  - 'opening维度: 完全不给读者解释世界观，全部依赖读者脑补'
+  - 'simplicity维度: 通篇用长达四五十字的句子，阅读体验极差'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1720
+  - 1765
+  score: 16
+  score_raw: 只能给大哥给到16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 杀手温柔的散文？赛博朋克妹控
+  genre_guess:
+  - 赛博
+  - 散文
+  - 妹控
+  overall_comment: 标准自嗨文，长句泛滥、无视读者认知，赛博背景毫无解释，没有任何市场可言。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 完全不给读者解释世界观，全部依赖读者脑补
+    raw_quote: 这是标准的自嗨文……不解释，大概就是看不上解释，你爱懂懂你不懂就别懂
+  - dimension: simplicity
+    severity: negative
+    content: 通篇用长达四五十字的句子，阅读体验极差
+    raw_quote: 能不能接点地气啊，就不要写长句，你看你这句多长，你这句至少得有60个字了吧

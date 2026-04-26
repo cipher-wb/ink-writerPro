@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0236
+title: 女巫领主 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 西幻
+  - 领主
+  - 女巫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 简介有亮点但正文水封掉，场景干巴无看点，退步严重。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介有亮点但正文水封掉，场景干巴无看点，退步严重。 | 开头连续场景无看点;讨价还价细节太水
+  observable:
+  - 'opening维度: 开头连续场景无看点'
+  - 'pacing维度: 讨价还价细节太水'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 755
+  - 840
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 女巫领主
+  genre_guess:
+  - 西幻
+  - 领主
+  - 女巫
+  overall_comment: 简介有亮点但正文水封掉，场景干巴无看点，退步严重。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头连续场景无看点
+    raw_quote: 开头这两个连续两个场景 都没什么事
+  - dimension: pacing
+    severity: negative
+    content: 讨价还价细节太水
+    raw_quote: 叽里咕噜了半天买了个少娘 这水水封掉了

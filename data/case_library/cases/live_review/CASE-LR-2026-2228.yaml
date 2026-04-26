@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-2228
+title: 精神小妹场妹流 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 生活流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58吧 | 思路对但高度雷同电神，主线相似易判抄袭，人设需修改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路对但高度雷同电神，主线相似易判抄袭，人设需修改。 | 主线、人设、剧情与电神作品高度相似，存在抄袭风险
+  observable:
+  - 'simplicity维度: 主线、人设、剧情与电神作品高度相似，存在抄袭风险'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 730
+  - 871
+  score: 58
+  score_raw: 58吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 精神小妹场妹流
+  genre_guess:
+  - 都市
+  - 系统
+  - 生活流
+  overall_comment: 思路对但高度雷同电神，主线相似易判抄袭，人设需修改。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 主线、人设、剧情与电神作品高度相似，存在抄袭风险
+    raw_quote: '太像了基本上
+
+      七成主线一样...这种很容易判定
+
+      抄袭的主线内容'
+  - dimension: character
+    severity: neutral
+    content: 场妹人设思路正确，但可挖掘其他身份
+    raw_quote: '场妹嘛思路倒是
+
+      对独木姑这个稿子思路对'
+  - dimension: misc
+    severity: neutral
+    content: 建议修改人设，如女技师等身份
+    raw_quote: '还是得想想其他的人设...女技师可以
+
+      女技师可以的'

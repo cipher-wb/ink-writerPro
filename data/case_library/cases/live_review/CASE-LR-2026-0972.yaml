@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0972
+title: 真迪迦奥特曼打怪兽 (pass / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 都市
+  - 奇幻
+  - 特摄
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多50分吧 | 书名息量好，开头场景有味儿，脑洞有意思。但都市背景下写不长，像精神病一样，更适合蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名息量好，开头场景有味儿，脑洞有意思。但都市背景下写不长，像精神病一样，更适合蓝精灵。 | 本质还是都市，写不长；有警察局限制发挥。
+  observable:
+  - 'genre维度: 本质还是都市，写不长；有警察局限制发挥。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 1821
+  - 1990
+  score: 50
+  score_raw: 差不多50分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 真迪迦奥特曼打怪兽
+  genre_guess:
+  - 都市
+  - 奇幻
+  - 特摄
+  overall_comment: 书名息量好，开头场景有味儿，脑洞有意思。但都市背景下写不长，像精神病一样，更适合蓝精灵。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头场景搭建有味道，节奏快，错位梗好笑。
+    raw_quote: 这个场景真有那样吧...错位嘛...错位正好奥特曼就任务能完成...我觉得还挺好的
+  - dimension: genre
+    severity: negative
+    content: 本质还是都市，写不长；有警察局限制发挥。
+    raw_quote: 你这个本质还是都市...毒市哪有那么多怪物呀...你成怎么成为东南亚之王...我感觉写不长

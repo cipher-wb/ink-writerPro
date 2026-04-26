@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0176
+title: 全知武圣 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 游戏降临
+  - 网游
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分吧 | 创意类似全知读者视角，但铺垫过长，第二张才进入游戏降临，节奏拖沓，卖点不够新颖。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 创意类似全知读者视角，但铺垫过长，第二张才进入游戏降临，节奏拖沓，卖点不够新颖。 | 开篇全是废话，铺垫过久，应直接给出游戏降临倒计时。;两张才正式降临，节奏太慢，读者早已流失。;核心卖点与全知读者视角过于雷同，缺乏区分度。
+  observable:
+  - 'opening维度: 开篇全是废话，铺垫过久，应直接给出游戏降临倒计时。'
+  - 'pacing维度: 两张才正式降临，节奏太慢，读者早已流失。'
+  - 'highpoint维度: 核心卖点与全知读者视角过于雷同，缺乏区分度。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 910
+  - 1060
+  score: 32
+  score_raw: 32分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全知武圣
+  genre_guess:
+  - 游戏降临
+  - 网游
+  - 系统流
+  overall_comment: 创意类似全知读者视角，但铺垫过长，第二张才进入游戏降临，节奏拖沓，卖点不够新颖。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇全是废话，铺垫过久，应直接给出游戏降临倒计时。
+    raw_quote: 全是废话你直接开头倒计时我都没啥问题对吧
+  - dimension: pacing
+    severity: negative
+    content: 两张才正式降临，节奏太慢，读者早已流失。
+    raw_quote: 大哥没有降临因为大哥第二张还没降临呢
+  - dimension: highpoint
+    severity: negative
+    content: 核心卖点与全知读者视角过于雷同，缺乏区分度。
+    raw_quote: 杀死一个生命体这种游戏降临这个所以说这个脑洞还是不太行啊

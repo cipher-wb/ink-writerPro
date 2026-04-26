@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1933
+title: 史莱姆地下城冒险小队 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 西幻
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这40分还是有还是套路熟的 | 套路熟，流水线产品，但人设和对白偏小白，史莱姆题材读者已审美疲劳。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路熟，流水线产品，但人设和对白偏小白，史莱姆题材读者已审美疲劳。 | 对白和反应太小白，主角一说话就出戏。;史莱姆/哥布林/冒险小队套路已写烂，读者看腻了。
+  observable:
+  - 'character维度: 对白和反应太小白，主角一说话就出戏。'
+  - 'genre维度: 史莱姆/哥布林/冒险小队套路已写烂，读者看腻了。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 1062
+  - 1100
+  score: 40
+  score_raw: 这40分还是有还是套路熟的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 史莱姆地下城冒险小队
+  genre_guess:
+  - 西幻
+  - 轻小说
+  overall_comment: 套路熟，流水线产品，但人设和对白偏小白，史莱姆题材读者已审美疲劳。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 对白和反应太小白，主角一说话就出戏。
+    raw_quote: 你能不能不要老是说话了一说话我就出戏...完蛋啦混蛋呀都感觉很出戏
+  - dimension: genre
+    severity: negative
+    content: 史莱姆/哥布林/冒险小队套路已写烂，读者看腻了。
+    raw_quote: 全都是史莱姆啊哥布林啊然后看到冒险小队啊...这一套书读者都看腻了读者都看吐了

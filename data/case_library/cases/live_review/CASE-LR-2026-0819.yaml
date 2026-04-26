@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0819
+title: 灰雾之主 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 科幻
+  - 克苏鲁
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30左右吧 | 节奏慢，日常流水账像日记，美剧写法不适合网文
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏慢，日常流水账像日记，美剧写法不适合网文 | 日常流水账，节奏特别慢;开头没有故事，全是日常琐碎;克苏鲁悬疑题材太冷，没人看
+  observable:
+  - 'pacing维度: 日常流水账，节奏特别慢'
+  - 'opening维度: 开头没有故事，全是日常琐碎'
+  - 'genre维度: 克苏鲁悬疑题材太冷，没人看'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 1425
+  - 1580
+  score: 30
+  score_raw: 30左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灰雾之主
+  genre_guess:
+  - 科幻
+  - 克苏鲁
+  - 都市
+  overall_comment: 节奏慢，日常流水账像日记，美剧写法不适合网文
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 日常流水账，节奏特别慢
+    raw_quote: 这是流水账啊是吧 纯流水状
+  - dimension: opening
+    severity: negative
+    content: 开头没有故事，全是日常琐碎
+    raw_quote: 好日常 兄弟比例没啥问题 但好日常
+  - dimension: genre
+    severity: negative
+    content: 克苏鲁悬疑题材太冷，没人看
+    raw_quote: 悬疑也不是什么卖点 都什么年代了

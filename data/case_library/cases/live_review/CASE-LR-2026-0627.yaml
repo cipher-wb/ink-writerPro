@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0627
+title: 我在修仙界卖西游 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 仙侠
+  - 幕后流
+  - 地霸
+  - 书店
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40分 有的42分 | 写人能力尚可，但题材老旧且违和梗过多，正常写仙侠尚有出路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写人能力尚可，但题材老旧且违和梗过多，正常写仙侠尚有出路。 | 四大名著、高等数学等烂梗既过时又出戏。;书店地霸、十里坡剑神等拼接痕迹过重，缺乏新意。
+  observable:
+  - 'genre维度: 四大名著、高等数学等烂梗既过时又出戏。'
+  - 'golden_finger维度: 书店地霸、十里坡剑神等拼接痕迹过重，缺乏新意。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 816
+  - 905
+  score: 42
+  score_raw: 差不多40分 有的42分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在修仙界卖西游
+  genre_guess:
+  - 仙侠
+  - 幕后流
+  - 地霸
+  - 书店
+  overall_comment: 写人能力尚可，但题材老旧且违和梗过多，正常写仙侠尚有出路。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 文笔和刻画人物的能力不错。
+    raw_quote: 大哥你这比例写人物的能力 我觉得你可以正常写 ... 比例真挺好的
+  - dimension: genre
+    severity: negative
+    content: 四大名著、高等数学等烂梗既过时又出戏。
+    raw_quote: 不要四大名著叫王晓 ... 高等数学的怎么加进去的
+  - dimension: golden_finger
+    severity: negative
+    content: 书店地霸、十里坡剑神等拼接痕迹过重，缺乏新意。
+    raw_quote: 题材过时了 ... 融了很多 ... 有十里坡剑神的思路

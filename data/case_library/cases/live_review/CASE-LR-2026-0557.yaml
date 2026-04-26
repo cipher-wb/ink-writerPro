@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0557
+title: 末日推演系统 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 末世
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就48 | 卖设定无剧情，没有人物互动，评分48不及格
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 卖设定无剧情，没有人物互动，评分48不及格 | 缺乏人物互动，剧情空洞;抓不住末日文的重点，缺乏冲突矛盾
+  observable:
+  - 'character维度: 缺乏人物互动，剧情空洞'
+  - 'highpoint维度: 抓不住末日文的重点，缺乏冲突矛盾'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 320
+  - 463
+  score: 48
+  score_raw: 也就48
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日推演系统
+  genre_guess:
+  - 末世
+  - 系统
+  overall_comment: 卖设定无剧情，没有人物互动，评分48不及格
+  comments:
+  - dimension: character
+    severity: negative
+    content: 缺乏人物互动，剧情空洞
+    raw_quote: 没有人物互动呀
+  - dimension: highpoint
+    severity: negative
+    content: 抓不住末日文的重点，缺乏冲突矛盾
+    raw_quote: 抓不住末日文的重点就是身临其境 合理的剧情冲突 矛盾看点

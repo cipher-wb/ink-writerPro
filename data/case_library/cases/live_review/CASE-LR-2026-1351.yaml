@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1351
+title: 神秘地下室搜救 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 悬疑
+  - 求生
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 设定堆砌过多，剧情无聊，缺乏卖点和角色互动，越写越浪费时间。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定堆砌过多，剧情无聊，缺乏卖点和角色互动，越写越浪费时间。 | 设定太多，开头没有直接切入剧情，读者劝退;剧情平淡乏味，没有核心矛盾或期待感;独自求生，没有其他角色互动，太孤单无卖点
+  observable:
+  - 'misc维度: 设定太多，开头没有直接切入剧情，读者劝退'
+  - 'hook维度: 剧情平淡乏味，没有核心矛盾或期待感'
+  - 'character维度: 独自求生，没有其他角色互动，太孤单无卖点'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 405
+  - 455
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 神秘地下室搜救
+  genre_guess:
+  - 悬疑
+  - 求生
+  - 科幻
+  overall_comment: 设定堆砌过多，剧情无聊，缺乏卖点和角色互动，越写越浪费时间。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 设定太多，开头没有直接切入剧情，读者劝退
+    raw_quote: 设定太多了那个比例勉勉强强...没人看
+  - dimension: hook
+    severity: negative
+    content: 剧情平淡乏味，没有核心矛盾或期待感
+    raw_quote: 但是我觉得没啥浪费时间了...就会表达但没人看
+  - dimension: character
+    severity: negative
+    content: 独自求生，没有其他角色互动，太孤单无卖点
+    raw_quote: 没其他人互动没卖点看点

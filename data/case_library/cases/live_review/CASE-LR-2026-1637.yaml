@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1637
+title: 重生拯救破碎家庭 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就是四十分左右吧 | 主角缺乏个人欲望，题材视角不佳。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角缺乏个人欲望，题材视角不佳。 | 主线围绕家人，缺乏足够爽点。
+  observable:
+  - 'misc维度: 主线围绕家人，缺乏足够爽点。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 481
+  - 530
+  score: 40
+  score_raw: 就是四十分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生拯救破碎家庭
+  genre_guess:
+  - 都市
+  - 重生
+  - 日常
+  overall_comment: 主角缺乏个人欲望，题材视角不佳。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 主线围绕家人，缺乏足够爽点。
+    raw_quote: 读者对家里人真的不关心啊

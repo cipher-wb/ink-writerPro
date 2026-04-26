@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0127
+title: 收尸笔记 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 悬疑
+  - 奇幻
+  - 查案
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你28分吧 真上不了30 | 文笔萌新，世界观与人物同时展开写不了，28分劝其重新学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔萌新，世界观与人物同时展开写不了，28分劝其重新学习。 | 开头平行推进世界观和事件，阅读体验极差;建议用脑洞小剧场弥补比例不足
+  observable:
+  - 'pacing维度: 开头平行推进世界观和事件，阅读体验极差'
+  - 'simplicity维度: 建议用脑洞小剧场弥补比例不足'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 1120
+  - 1180
+  score: 28
+  score_raw: 给你28分吧 真上不了30
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 收尸笔记
+  genre_guess:
+  - 悬疑
+  - 奇幻
+  - 查案
+  overall_comment: 文笔萌新，世界观与人物同时展开写不了，28分劝其重新学习。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开头平行推进世界观和事件，阅读体验极差
+    raw_quote: 你没那个比例啊，你根本写不了对吧
+  - dimension: simplicity
+    severity: negative
+    content: 建议用脑洞小剧场弥补比例不足
+    raw_quote: 只有一种靠前面的小剧场脑洞去写

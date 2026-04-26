@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0349
+title: 大宋天子1066 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 历史
+  - 宋朝
+  - 朝堂
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分吧 | 历史功底扎实但开篇急于输出政策，应侧重代入感和生存危机。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史功底扎实但开篇急于输出政策，应侧重代入感和生存危机。 | 第一章输出观点过多，严重拖慢代入
+  observable:
+  - 'opening维度: 第一章输出观点过多，严重拖慢代入'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 3180
+  - 3299
+  score: 59
+  score_raw: 59分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 大宋天子1066
+  genre_guess:
+  - 历史
+  - 宋朝
+  - 朝堂
+  overall_comment: 历史功底扎实但开篇急于输出政策，应侧重代入感和生存危机。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章输出观点过多，严重拖慢代入
+    raw_quote: 刚登基我觉得急了真的急了就是…天赋没问题但是真的急了
+  - dimension: simplicity
+    severity: positive
+    content: 若偏重角色互动和生存危机可大幅提升留存
+    raw_quote: 你先拉拢文官嘛 你想想谁对你好…稳不稳这个皇位

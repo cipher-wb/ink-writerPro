@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1617
+title: 分神斩妖仙侠 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 仙侠
+  - 妖怪
+  - 系统
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 66分 | 第一章切入极佳，主线明确，题材好，可签约，但后续节奏需放缓。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章切入极佳，主线明确，题材好，可签约，但后续节奏需放缓。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 930
+  - 1009
+  score: 66
+  score_raw: 66分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 分神斩妖仙侠
+  genre_guess:
+  - 仙侠
+  - 妖怪
+  - 系统
+  - 穿越
+  overall_comment: 第一章切入极佳，主线明确，题材好，可签约，但后续节奏需放缓。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头切入非常棒，切肉有水平，胆大且一语双关
+    raw_quote: 這切肉隨便切有水平 … 跟女力鬼是一個檔次的
+  - dimension: pacing
+    severity: neutral
+    content: 后续节奏略快，一张一个故事，主线的连贯性和支线需要更慢展开
+    raw_quote: 二 三 張就可以放緩了 … 不要讓節奏太快

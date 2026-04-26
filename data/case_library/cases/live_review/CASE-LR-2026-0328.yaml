@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0328
+title: 上交国家山海经 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 爱国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分的路口 | 标准的山海经上交国家爽文模板，节奏快，切入好，非常适合番茄平台。但缺乏独特看点和炸裂爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 标准的山海经上交国家爽文模板，节奏快，切入好，非常适合番茄平台。但缺乏独特看点和炸裂爽点。 | 套路娴熟但模板化严重，缺乏自己独到的看点和炸裂爽点。
+  observable:
+  - 'highpoint维度: 套路娴熟但模板化严重，缺乏自己独到的看点和炸裂爽点。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 2040
+  - 2150
+  score: 55
+  score_raw: 55分的路口
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 上交国家山海经
+  genre_guess:
+  - 都市
+  - 异能
+  - 爱国
+  overall_comment: 标准的山海经上交国家爽文模板，节奏快，切入好，非常适合番茄平台。但缺乏独特看点和炸裂爽点。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏很快，切入干净利落，直奔主题，是标准的爽文节奏。
+    raw_quote: 这开头我觉得没啥问题是吧...就很标准的一个爽文...节奏快
+  - dimension: opening
+    severity: neutral
+    content: 开局爽利，正能量满满，适合特定群体。
+    raw_quote: 正能量...很标准...直奔主题...很适合番茄
+  - dimension: highpoint
+    severity: negative
+    content: 套路娴熟但模板化严重，缺乏自己独到的看点和炸裂爽点。
+    raw_quote: 太像了...很像那本书...我觉得看点还是少了...爽点下一把

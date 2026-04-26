@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0082
+title: 鬼秘八卦五行符 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 开头平淡，事件毫无看点，题材老旧，早点放弃为好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头平淡，事件毫无看点，题材老旧，早点放弃为好。 | 开局平淡，事件没意思;题材老旧，类似一人之下的设定但写得毫无新意
+  observable:
+  - 'opening维度: 开局平淡，事件没意思'
+  - 'genre维度: 题材老旧，类似一人之下的设定但写得毫无新意'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1246
+  - 1285
+  score: 22
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼秘八卦五行符
+  genre_guess:
+  - 都市
+  - 灵异
+  - 异能
+  overall_comment: 开头平淡，事件毫无看点，题材老旧，早点放弃为好。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局平淡，事件没意思
+    raw_quote: 好无聊啊...这有啥看的呀...没意思啊 这东西写出来
+  - dimension: genre
+    severity: negative
+    content: 题材老旧，类似一人之下的设定但写得毫无新意
+    raw_quote: 对网路理解太老套了

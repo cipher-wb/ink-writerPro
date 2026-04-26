@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1657
+title: 上交末日之规则怪谈 (fail / 1分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 整活
+  - 蓝铜
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 一分吧 | 纯整活搞蓝铜内容，毫无网文价值，仅给一分慰劳。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯整活搞蓝铜内容，毫无网文价值，仅给一分慰劳。 | 纯粹为整活而写，无任何签约可能
+  observable:
+  - 'misc维度: 纯粹为整活而写，无任何签约可能'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 235
+  - 310
+  score: 1
+  score_raw: 一分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 上交末日之规则怪谈
+  genre_guess:
+  - 整活
+  - 蓝铜
+  - 末日
+  overall_comment: 纯整活搞蓝铜内容，毫无网文价值，仅给一分慰劳。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 纯粹为整活而写，无任何签约可能
+    raw_quote: 这个没法 这个一分 一分就看在大缸写的不容易

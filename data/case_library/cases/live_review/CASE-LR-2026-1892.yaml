@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1892
+title: 心脏小世界神王盟末日 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话还差25分 | 昂蟹装逼世界观立不住，周星驰无厘头风格混乱，应正常写书别整活。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 昂蟹装逼世界观立不住，周星驰无厘头风格混乱，应正常写书别整活。 | 世界观立不住，白洁梗无人懂;无厘头风格混乱，像周星驰粉丝乱入
+  observable:
+  - 'opening维度: 世界观立不住，白洁梗无人懂'
+  - 'genre维度: 无厘头风格混乱，像周星驰粉丝乱入'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1501
+  - 1580
+  score: 25
+  score_raw: 打分的话还差25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 心脏小世界神王盟末日
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 昂蟹装逼世界观立不住，周星驰无厘头风格混乱，应正常写书别整活。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 世界观立不住，白洁梗无人懂
+    raw_quote: 其实这个世界立不住... 他们理解不了这些职场这些东西
+  - dimension: genre
+    severity: negative
+    content: 无厘头风格混乱，像周星驰粉丝乱入
+    raw_quote: 大概是周星驰无厘头对吧... 就莫名其妙的就唐伯虎点秋香的感觉

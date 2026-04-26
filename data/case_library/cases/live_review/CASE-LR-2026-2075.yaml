@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2075
+title: 全班穿越机甲爽文 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 都市
+  - 穿越
+  - 机甲
+  - 小白爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给他个加两分吧，是吧，蜜蜂的人设率也挺好的，就20分有点过了，22分吧 | 蓝精灵小白爽文思路，开头做梦穿越、美女老师的剧情过于天真，缺乏逻辑性，整体偏向自嗨，不宜签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蓝精灵小白爽文思路，开头做梦穿越、美女老师的剧情过于天真，缺乏逻辑性，整体偏向自嗨，不宜签约。 | 写法偏向蓝精灵快乐多关心理，不符合起点签约需求;部分情节略有害羞倾向，虽未过火但存在风险
+  observable:
+  - 'genre维度: 写法偏向蓝精灵快乐多关心理，不符合起点签约需求'
+  - 'taboo维度: 部分情节略有害羞倾向，虽未过火但存在风险'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 260
+  - 330
+  score: 22
+  score_raw: 给他个加两分吧，是吧，蜜蜂的人设率也挺好的，就20分有点过了，22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全班穿越机甲爽文
+  genre_guess:
+  - 都市
+  - 穿越
+  - 机甲
+  - 小白爽文
+  overall_comment: 蓝精灵小白爽文思路，开头做梦穿越、美女老师的剧情过于天真，缺乏逻辑性，整体偏向自嗨，不宜签约。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写法偏向蓝精灵快乐多关心理，不符合起点签约需求
+    raw_quote: 就是整个思路剧情写法理解都是汉圈那种，就是蓝精灵那种快乐多关心，其实要符合逻辑性的，这玩意
+  - dimension: taboo
+    severity: negative
+    content: 部分情节略有害羞倾向，虽未过火但存在风险
+    raw_quote: 这个英雄救美这个有点害圈啊……大哥停住了没有干，所以说不害圈了

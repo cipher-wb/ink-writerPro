@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0806
+title: 巨唐朝灭亡造神计划 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 历史
+  - 科幻
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十八最多了 过年加两分 | 题材大杂烩，剧情小白，富家公子反派无脑，推翻重来
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材大杂烩，剧情小白，富家公子反派无脑，推翻重来 | 加了五六种题材，混乱
+  observable:
+  - 'genre维度: 加了五六种题材，混乱'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 2240
+  - 2360
+  score: 20
+  score_raw: 十八最多了 过年加两分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 巨唐朝灭亡造神计划
+  genre_guess:
+  - 历史
+  - 科幻
+  - 诡异
+  overall_comment: 题材大杂烩，剧情小白，富家公子反派无脑，推翻重来
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 加了五六种题材，混乱
+    raw_quote: 容了一大堆元素 历史科幻诡异修炼

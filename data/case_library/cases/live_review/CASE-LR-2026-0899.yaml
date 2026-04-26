@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0899
+title: 山海归途 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 科幻
+  - 异界降临
+  - 巨兽求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材冷门有脑洞，能立住，但实力不足现在写不了，建议以后写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材冷门有脑洞，能立住，但实力不足现在写不了，建议以后写。 | 写法不伦不类，电影画面一样但看不懂
+  observable:
+  - 'simplicity维度: 写法不伦不类，电影画面一样但看不懂'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 1043
+  - 1211
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 山海归途
+  genre_guess:
+  - 科幻
+  - 异界降临
+  - 巨兽求生
+  overall_comment: 题材冷门有脑洞，能立住，但实力不足现在写不了，建议以后写。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 进入怪物肚子求生的题材冷门但有意思
+    raw_quote: 这个题材倒是冷血...以前的科幻倒是有这种题材
+  - dimension: simplicity
+    severity: negative
+    content: 写法不伦不类，电影画面一样但看不懂
+    raw_quote: 人物事件莫名其妙，然后重点还是你这些就是电影画面一样的东西

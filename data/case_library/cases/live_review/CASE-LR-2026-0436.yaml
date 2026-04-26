@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0436
+title: 灵异异能打怪兽文 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 灵异
+  - 异能
+  - 怪兽
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十分 | 文笔细腻，但题材拉垮、代入感极差，缺乏Chinese式共鸣，设定空中楼阁
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔细腻，但题材拉垮、代入感极差，缺乏Chinese式共鸣，设定空中楼阁 | 缺乏代入感，读者无法感同身受;元素杂糅过多，科幻灵异异能堆砌，起点与蓝精灵都难签
+  observable:
+  - 'ops维度: 缺乏代入感，读者无法感同身受'
+  - 'genre维度: 元素杂糅过多，科幻灵异异能堆砌，起点与蓝精灵都难签'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 319
+  - 405
+  score: 20
+  score_raw: 二十分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵异异能打怪兽文
+  genre_guess:
+  - 灵异
+  - 异能
+  - 怪兽
+  overall_comment: 文笔细腻，但题材拉垮、代入感极差，缺乏Chinese式共鸣，设定空中楼阁
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 缺乏代入感，读者无法感同身受
+    raw_quote: 没代入感你设定是没有意义的...空中楼静中花水中月
+  - dimension: genre
+    severity: negative
+    content: 元素杂糅过多，科幻灵异异能堆砌，起点与蓝精灵都难签
+    raw_quote: 这感觉砸揉了好多元素...蓝精灵现在也不签这种书了
+  - dimension: misc
+    severity: positive
+    content: 文笔比例细腻，部分读者认可
+    raw_quote: 文笔挺好的比较细腻

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1168
+title: 觉醒一轮蓝猫交换身体 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 轻小说
+  - 搞笑
+  - 变身
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就二十五封吧兄弟 | 不是搞笑而是恶搞和硬挠人笑，玩的全是尴尬烂梗，人物和对话极度小白。相比之前反而退步了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不是搞笑而是恶搞和硬挠人笑，玩的全是尴尬烂梗，人物和对话极度小白。相比之前反而退步了。 | 文本完全是尴尬的烂梗和恶搞，对话极度小白;沉迷整活，放弃了原本尚可的比例，越写越差
+  observable:
+  - 'simplicity维度: 文本完全是尴尬的烂梗和恶搞，对话极度小白'
+  - 'misc维度: 沉迷整活，放弃了原本尚可的比例，越写越差'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1860
+  - 1960
+  score: 25
+  score_raw: 就二十五封吧兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 觉醒一轮蓝猫交换身体
+  genre_guess:
+  - 轻小说
+  - 搞笑
+  - 变身
+  overall_comment: 不是搞笑而是恶搞和硬挠人笑，玩的全是尴尬烂梗，人物和对话极度小白。相比之前反而退步了。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文本完全是尴尬的烂梗和恶搞，对话极度小白
+    raw_quote: 你看这对华乐很小白…这太小白 这不是搞笑 这是恶搞 恶搞跟搞笑两码东西
+  - dimension: misc
+    severity: negative
+    content: 沉迷整活，放弃了原本尚可的比例，越写越差
+    raw_quote: 大哥你上次三十多 应该就比例还可以的 你为什么这次又整活了呀 就大概更不好写了

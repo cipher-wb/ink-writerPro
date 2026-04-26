@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0600
+title: 末日诡异重生校园 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 末日
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分八洪嘛 | 设定普通，人设崩坏，舔狗情节老套，缺乏新东西。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定普通，人设崩坏，舔狗情节老套，缺乏新东西。 | 女主是绿茶婊，舔狗人设崩塌;老套路囤货，没有新意
+  observable:
+  - 'character维度: 女主是绿茶婊，舔狗人设崩塌'
+  - 'hook维度: 老套路囤货，没有新意'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 1751
+  - 1900
+  score: 40
+  score_raw: 40分八洪嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日诡异重生校园
+  genre_guess:
+  - 都市
+  - 末日
+  - 诡异
+  overall_comment: 设定普通，人设崩坏，舔狗情节老套，缺乏新东西。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主是绿茶婊，舔狗人设崩塌
+    raw_quote: 这个女的已经崩了呀...舔狗死之前还要给人家校花给个斧头
+  - dimension: hook
+    severity: negative
+    content: 老套路囤货，没有新意
+    raw_quote: 没新东西...脑洞大于一切

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0034
+title: 东京教室海克斯系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 东京
+  - 校园
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 期待感不够 | 缺强驱动力和期待感，应集中写一两个学生。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缺强驱动力和期待感，应集中写一两个学生。 | 缺强驱动力，期待感不够
+  observable:
+  - 'hook维度: 缺强驱动力，期待感不够'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 625
+  - 650
+  score: null
+  score_raw: 期待感不够
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 东京教室海克斯系统
+  genre_guess:
+  - 东京
+  - 校园
+  - 系统
+  overall_comment: 缺强驱动力和期待感，应集中写一两个学生。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 缺强驱动力，期待感不够
+    raw_quote: 现在期期期待感不够 这一点就就没期待感

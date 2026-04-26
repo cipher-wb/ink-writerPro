@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0747
+title: 诡异降临词条系统 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 诡异降临
+  - 系统
+  - 蓝精灵
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 其实也就22分了 | 设定太无聊，剧情传统套路无情绪，AI都能替代。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定太无聊，剧情传统套路无情绪，AI都能替代。 | 重点在设定而非剧情情绪，AI即可替代;人物角色平面化，缺乏情绪情感;开篇设定老旧，事件无趣，像19年番茄套路
+  observable:
+  - 'simplicity维度: 重点在设定而非剧情情绪，AI即可替代'
+  - 'character维度: 人物角色平面化，缺乏情绪情感'
+  - 'opening维度: 开篇设定老旧，事件无趣，像19年番茄套路'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 241
+  - 370
+  score: 22
+  score_raw: 其实也就22分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异降临词条系统
+  genre_guess:
+  - 诡异降临
+  - 系统
+  - 蓝精灵
+  overall_comment: 设定太无聊，剧情传统套路无情绪，AI都能替代。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 重点在设定而非剧情情绪，AI即可替代
+    raw_quote: 本质上……AIAI直接把大哥代替了……重点还是在设定上
+  - dimension: character
+    severity: negative
+    content: 人物角色平面化，缺乏情绪情感
+    raw_quote: 因为你没有人物的情绪情感，就是嗷嗷的一叫
+  - dimension: opening
+    severity: negative
+    content: 开篇设定老旧，事件无趣，像19年番茄套路
+    raw_quote: 这种事件太无聊了……写不出来一个回球无旋的人呀

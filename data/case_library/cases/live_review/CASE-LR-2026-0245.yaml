@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0245
+title: 海晏河清 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 历史
+  - 水浒同人
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔扎实但题材不接地气，开头太慢缺乏信息量，建议蹭水浒热点快速切入，不要当成架空历史写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但题材不接地气，开头太慢缺乏信息量，建议蹭水浒热点快速切入，不要当成架空历史写。 | 开篇船上的事件太慢，未快速给出世界观和期待感，读者极易流失。;书名和水浒背景融合不够，不够接地气，读者难以理解。;没有迅速交代主角身份、所处年代和蹭上著名人物，缺乏勾子。
+  observable:
+  - 'opening维度: 开篇船上的事件太慢，未快速给出世界观和期待感，读者极易流失。'
+  - 'genre维度: 书名和水浒背景融合不够，不够接地气，读者难以理解。'
+  - 'hook维度: 没有迅速交代主角身份、所处年代和蹭上著名人物，缺乏勾子。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 235
+  - 305
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 海晏河清
+  genre_guess:
+  - 历史
+  - 水浒同人
+  - 穿越
+  overall_comment: 文笔扎实但题材不接地气，开头太慢缺乏信息量，建议蹭水浒热点快速切入，不要当成架空历史写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇船上的事件太慢，未快速给出世界观和期待感，读者极易流失。
+    raw_quote: 你这个船这个事件就是白写 因为你的船这个事件把读者劝退了
+  - dimension: genre
+    severity: negative
+    content: 书名和水浒背景融合不够，不够接地气，读者难以理解。
+    raw_quote: 这种书名太吓人了 赠送截胡西门庆水浒开局吗
+  - dimension: hook
+    severity: negative
+    content: 没有迅速交代主角身份、所处年代和蹭上著名人物，缺乏勾子。
+    raw_quote: 你要迅速知道这是哪一个年间 ... 你要让读者迅速知道你的信息呀

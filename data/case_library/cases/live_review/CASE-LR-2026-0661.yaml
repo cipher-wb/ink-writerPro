@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0661
+title: 法医穿越美利坚 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 都市
+  - 穿越
+  - 法医
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45抽奖什么分量啊 | 法医身份写得很专业，但信息量依然不足，水多事少，金手指突兀，需要大刀阔斧地精简。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 法医身份写得很专业，但信息量依然不足，水多事少，金手指突兀，需要大刀阔斧地精简。 | 动作描写水太多，读者不是来看疼的;老兵记忆等金手指突兀且没用上
+  observable:
+  - 'pacing维度: 动作描写水太多，读者不是来看疼的'
+  - 'golden_finger维度: 老兵记忆等金手指突兀且没用上'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1701
+  - 1780
+  score: 45
+  score_raw: 45抽奖什么分量啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 法医穿越美利坚
+  genre_guess:
+  - 都市
+  - 穿越
+  - 法医
+  overall_comment: 法医身份写得很专业，但信息量依然不足，水多事少，金手指突兀，需要大刀阔斧地精简。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 法医验尸的专业感写得很好，有看点有魅力
+    raw_quote: 这个法医那一段写的特别好...一看就知道
+  - dimension: pacing
+    severity: negative
+    content: 动作描写水太多，读者不是来看疼的
+    raw_quote: 别写这么详细啊...读者不是来看你动作的呀...太慢了
+  - dimension: golden_finger
+    severity: negative
+    content: 老兵记忆等金手指突兀且没用上
+    raw_quote: 这两个金属的也挺突兀的，用不上

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1430
+title: 非我囚徒（克隆人） (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 科幻
+  - 悬疑
+  - 意识流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你35分结个善缘吧 | 意识流烧脑，文笔撑不起野心，读者看不懂，35分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 意识流烧脑，文笔撑不起野心，读者看不懂，35分。 | 表达奇怪，读者看不懂;独角戏太长，无耐心
+  observable:
+  - 'simplicity维度: 表达奇怪，读者看不懂'
+  - 'opening维度: 独角戏太长，无耐心'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 1101
+  - 1140
+  score: 35
+  score_raw: 给你35分结个善缘吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 非我囚徒（克隆人）
+  genre_guess:
+  - 科幻
+  - 悬疑
+  - 意识流
+  overall_comment: 意识流烧脑，文笔撑不起野心，读者看不懂，35分。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 表达奇怪，读者看不懂
+    raw_quote: 好奇怪啊 我不懂那个这是灵异小说
+  - dimension: opening
+    severity: negative
+    content: 独角戏太长，无耐心
+    raw_quote: 这个开头独角戏太长了 没耐心的读者

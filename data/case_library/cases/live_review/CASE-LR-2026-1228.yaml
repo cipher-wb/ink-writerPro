@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1228
+title: 诡异怪谈世界 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YhDGB7ETi
+scope:
+  genre:
+  - 诡异
+  - 怪谈
+  - BL
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 稿件为男同题材诡异怪谈，编辑极度反感，大概率不签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YhDGB7ETi.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 稿件为男同题材诡异怪谈，编辑极度反感，大概率不签约。 | 稿件为男同诡异题材，编辑极度排斥;内容恶搞，缺乏正经剧情
+  observable:
+  - 'genre维度: 稿件为男同诡异题材，编辑极度排斥'
+  - 'misc维度: 内容恶搞，缺乏正经剧情'
+live_review_meta:
+  source_bvid: BV1YhDGB7ETi
+  source_line_range:
+  - 35
+  - 105
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 诡异怪谈世界
+  genre_guess:
+  - 诡异
+  - 怪谈
+  - BL
+  overall_comment: 稿件为男同题材诡异怪谈，编辑极度反感，大概率不签约。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 稿件为男同诡异题材，编辑极度排斥
+    raw_quote: 我真的很讨厌男童
+  - dimension: misc
+    severity: negative
+    content: 内容恶搞，缺乏正经剧情
+    raw_quote: 这种一双毛腿肩上扛

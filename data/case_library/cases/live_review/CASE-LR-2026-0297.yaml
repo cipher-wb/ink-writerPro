@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0297
+title: 封在瓦罐里的昂童 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 玄幻
+  - 武侠
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多20分吧 | 开篇人设崩溃，偏题武侠，故事老套无市场，浪费学到的节奏技巧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇人设崩溃，偏题武侠，故事老套无市场，浪费学到的节奏技巧。 | 主角人设极其失败，无法代入;玄幻写成纯武侠，偏离主流市场;题材和写法严重过时
+  observable:
+  - 'character维度: 主角人设极其失败，无法代入'
+  - 'genre维度: 玄幻写成纯武侠，偏离主流市场'
+  - 'misc维度: 题材和写法严重过时'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 511
+  - 570
+  score: 20
+  score_raw: 差不多20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 封在瓦罐里的昂童
+  genre_guess:
+  - 玄幻
+  - 武侠
+  - 历史
+  overall_comment: 开篇人设崩溃，偏题武侠，故事老套无市场，浪费学到的节奏技巧。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设极其失败，无法代入
+    raw_quote: 人设不行啊
+  - dimension: genre
+    severity: negative
+    content: 玄幻写成纯武侠，偏离主流市场
+    raw_quote: 这偏题太武侠了，真太武侠
+  - dimension: misc
+    severity: negative
+    content: 题材和写法严重过时
+    raw_quote: 就是20年前的写法了

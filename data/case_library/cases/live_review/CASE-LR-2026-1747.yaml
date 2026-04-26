@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1747
+title: 大凤验试官 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 玄幻
+  - 悬疑
+  - 探案
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十二分吧 | 切入点氛围好，但主线薄弱，缺乏危机感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点氛围好，但主线薄弱，缺乏危机感。 | 过度依赖推理探案，缺乏玄幻修炼主线。
+  observable:
+  - 'pacing维度: 过度依赖推理探案，缺乏玄幻修炼主线。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1365
+  - 1440
+  score: 42
+  score_raw: 四十二分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大凤验试官
+  genre_guess:
+  - 玄幻
+  - 悬疑
+  - 探案
+  overall_comment: 切入点氛围好，但主线薄弱，缺乏危机感。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇氛围描写自然，不啰嗦。
+    raw_quote: 大陆感氛围倒是还好 就是描述恰到好处
+  - dimension: pacing
+    severity: negative
+    content: 过度依赖推理探案，缺乏玄幻修炼主线。
+    raw_quote: 就写行政探去了 等于说 就讲智商去了

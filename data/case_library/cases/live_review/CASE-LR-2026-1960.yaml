@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1960
+title: 苦主视角听墙角 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 都市
+  - 新媒体
+  - 情感
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分有的 | 苦主视角的情绪写得极好，压抑和复仇感强，非常适合新媒体。但这种题材无法在起点等主流发。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 苦主视角的情绪写得极好，压抑和复仇感强，非常适合新媒体。但这种题材无法在起点等主流发。 | 牛头人苦主视角网文太毒，不合主流平台口味
+  observable:
+  - 'genre维度: 牛头人苦主视角网文太毒，不合主流平台口味'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 1532
+  - 1620
+  score: 40
+  score_raw: 40分有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 苦主视角听墙角
+  genre_guess:
+  - 都市
+  - 新媒体
+  - 情感
+  overall_comment: 苦主视角的情绪写得极好，压抑和复仇感强，非常适合新媒体。但这种题材无法在起点等主流发。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 情绪非常足，压抑与复仇的爽感写得极好
+    raw_quote: 你自己想想他的情绪是不是特别足，各种被欺负，各种压抑想复仇
+  - dimension: genre
+    severity: negative
+    content: 牛头人苦主视角网文太毒，不合主流平台口味
+    raw_quote: 我只能给他个九分...高一跟王生...按照齊點的学法肯定是读

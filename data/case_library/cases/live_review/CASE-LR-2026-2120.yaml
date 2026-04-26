@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2120
+title: 复仇系统文 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 复仇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没意义了，别改了 | 系统复仇主线一点意义都没有，发哪都是浪费时间的，和这个题材吻别吧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统复仇主线一点意义都没有，发哪都是浪费时间的，和这个题材吻别吧。 | 系统复仇主线没人看，太白太出戏;这种书发起点读者真要喷，内容和系统都不行
+  observable:
+  - 'hook维度: 系统复仇主线没人看，太白太出戏'
+  - 'genre维度: 这种书发起点读者真要喷，内容和系统都不行'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 826
+  - 870
+  score: null
+  score_raw: 没意义了，别改了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 复仇系统文
+  genre_guess:
+  - 都市
+  - 系统
+  - 复仇
+  overall_comment: 系统复仇主线一点意义都没有，发哪都是浪费时间的，和这个题材吻别吧。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 系统复仇主线没人看，太白太出戏
+    raw_quote: 你这个主线就一点意义都没有了
+  - dimension: genre
+    severity: negative
+    content: 这种书发起点读者真要喷，内容和系统都不行
+    raw_quote: 这太白了，这个这起点怎么可能有这样的书啊

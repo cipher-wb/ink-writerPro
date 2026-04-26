@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1321
+title: 大小姐上学继承家产 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 现代
+  - 恋爱
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给30分吧 | 日常恋爱太平淡，人设不极端，缺少看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 日常恋爱太平淡，人设不极端，缺少看点。 | 纯恋爱太无聊，没市场;缺乏事件和极端人设
+  observable:
+  - 'genre维度: 纯恋爱太无聊，没市场'
+  - 'hook维度: 缺乏事件和极端人设'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1641
+  - 1690
+  score: 30
+  score_raw: 给30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大小姐上学继承家产
+  genre_guess:
+  - 现代
+  - 恋爱
+  - 日常
+  overall_comment: 日常恋爱太平淡，人设不极端，缺少看点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯恋爱太无聊，没市场
+    raw_quote: 从这样的恋爱真没人起来了
+  - dimension: hook
+    severity: negative
+    content: 缺乏事件和极端人设
+    raw_quote: 人设都不极端其实

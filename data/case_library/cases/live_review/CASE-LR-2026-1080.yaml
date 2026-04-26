@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1080
+title: 天才罪犯的52项试炼 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 都市
+  - 超能力
+  - 罪犯
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多就40多分吧 | 题材难度极高，角色人设吊儿郎当无看点，法庭装逼没爽点，签不了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材难度极高，角色人设吊儿郎当无看点，法庭装逼没爽点，签不了。 | 题材太大胆，不敢碰也不敢签;立了低智商打游戏人设，无趣;明确表示肯定签不了
+  observable:
+  - 'genre维度: 题材太大胆，不敢碰也不敢签'
+  - 'character维度: 立了低智商打游戏人设，无趣'
+  - 'misc维度: 明确表示肯定签不了'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 1211
+  - 1285
+  score: null
+  score_raw: 最多就40多分吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 天才罪犯的52项试炼
+  genre_guess:
+  - 都市
+  - 超能力
+  - 罪犯
+  overall_comment: 题材难度极高，角色人设吊儿郎当无看点，法庭装逼没爽点，签不了。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材太大胆，不敢碰也不敢签
+    raw_quote: 这种书你给我钱我都不敢写
+  - dimension: character
+    severity: negative
+    content: 立了低智商打游戏人设，无趣
+    raw_quote: 你看你为什么老要立这种智商不高的人设呀
+  - dimension: misc
+    severity: negative
+    content: 明确表示肯定签不了
+    raw_quote: 这个肯定也签不了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0282
+title: 重生1987野蛮生长 (pass / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 重生
+  - 年代
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 实力有的有个50分左右吧 | 氛围感真实感不错，但第一场景没写好，卖点单薄
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围感真实感不错，但第一场景没写好，卖点单薄 | 校园暴力霸凌剧情可能过不了审;彩礼烂梗太老套，第一个场景没写好
+  observable:
+  - 'taboo维度: 校园暴力霸凌剧情可能过不了审'
+  - 'hook维度: 彩礼烂梗太老套，第一个场景没写好'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1521
+  - 1595
+  score: 50
+  score_raw: 实力有的有个50分左右吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 重生1987野蛮生长
+  genre_guess:
+  - 重生
+  - 年代
+  - 都市
+  overall_comment: 氛围感真实感不错，但第一场景没写好，卖点单薄
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 校园暴力霸凌剧情可能过不了审
+    raw_quote: 这能洗吗...过不了审啊
+  - dimension: hook
+    severity: negative
+    content: 彩礼烂梗太老套，第一个场景没写好
+    raw_quote: 彩礼真的看吐了，别就算一笔带过也还是吐了

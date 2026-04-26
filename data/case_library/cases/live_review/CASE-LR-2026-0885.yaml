@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0885
+title: 末日单女主异能 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 末日
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 把这稿子给我删了 | 世界观复杂设定多，完全不符合起点赚钱逻辑，必须推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观复杂设定多，完全不符合起点赚钱逻辑，必须推翻重写。 | 设定过于复杂，读者根本看不懂
+  observable:
+  - 'simplicity维度: 设定过于复杂，读者根本看不懂'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 991
+  - 1020
+  score: null
+  score_raw: 把这稿子给我删了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 末日单女主异能
+  genre_guess:
+  - 末日
+  - 异能
+  overall_comment: 世界观复杂设定多，完全不符合起点赚钱逻辑，必须推翻重写。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定过于复杂，读者根本看不懂
+    raw_quote: 你想赚钱 你就不要写那么复杂 就是世界观不要复杂 设定不要复杂 重点讲剧情与个人性拉扯

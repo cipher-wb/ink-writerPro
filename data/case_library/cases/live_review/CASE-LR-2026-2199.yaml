@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-2199
+title: 林秀穿成西门庆之水浒神魔 (pass / 63分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yicPzME9X
+scope:
+  genre:
+  - 水浒同人
+  - 神魔
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你63分回答我 | 开篇套路正确，金手指设置需优化，题材虽凉但内容可签，给出63分鼓励直发验证
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yicPzME9X.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇套路正确，金手指设置需优化，题材虽凉但内容可签，给出63分鼓励直发验证 | 系统不应设置失败惩罚，应由事件自然驱动;水浒同人题材近期偏凉，需直发验证数据
+  observable:
+  - 'golden_finger维度: 系统不应设置失败惩罚，应由事件自然驱动'
+  - 'genre维度: 水浒同人题材近期偏凉，需直发验证数据'
+live_review_meta:
+  source_bvid: BV1yicPzME9X
+  source_line_range:
+  - 60
+  - 229
+  score: 63
+  score_raw: 给你63分回答我
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 林秀穿成西门庆之水浒神魔
+  genre_guess:
+  - 水浒同人
+  - 神魔
+  - 穿越
+  overall_comment: 开篇套路正确，金手指设置需优化，题材虽凉但内容可签，给出63分鼓励直发验证
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇切入好，困境与金手指呈现清晰
+    raw_quote: 这个其实切入还挺好的
+  - dimension: golden_finger
+    severity: negative
+    content: 系统不应设置失败惩罚，应由事件自然驱动
+    raw_quote: 系统一般讲不要罚，罚的话你让事件来罚
+  - dimension: genre
+    severity: negative
+    content: 水浒同人题材近期偏凉，需直发验证数据
+    raw_quote: 但是水浒题材最近挺凉的
+  - dimension: misc
+    severity: positive
+    content: 作者进步显著，摆脱自嗨，内容扎实
+    raw_quote: 大哥进步很快啊，摆脱了自嗨

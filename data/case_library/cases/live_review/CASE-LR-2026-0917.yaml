@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0917
+title: 开局一张帅脸 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 仙侠
+  - 恋爱
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分一天 | 帅脸设定有噱头但内容黄暴且毒点密集，金手指冗余，无法签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 帅脸设定有噱头但内容黄暴且毒点密集，金手指冗余，无法签约。 | 涉及强制情节，强抢民男后差点被强暴，触碰审核红线;金手指过多且无用内容抢戏;主角被强抢民男，代入感极差
+  observable:
+  - 'taboo维度: 涉及强制情节，强抢民男后差点被强暴，触碰审核红线'
+  - 'golden_finger维度: 金手指过多且无用内容抢戏'
+  - 'character维度: 主角被强抢民男，代入感极差'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 485
+  - 560
+  score: 22
+  score_raw: 22分一天
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 开局一张帅脸
+  genre_guess:
+  - 仙侠
+  - 恋爱
+  - 系统
+  overall_comment: 帅脸设定有噱头但内容黄暴且毒点密集，金手指冗余，无法签约。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 涉及强制情节，强抢民男后差点被强暴，触碰审核红线
+    raw_quote: 大哥哪怕在女平 这也是比较炸裂的 稿子里
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指过多且无用内容抢戏
+    raw_quote: 金手指太多了 石门看了看着他的脸 … 读者根本就不在乎这个东西
+  - dimension: character
+    severity: negative
+    content: 主角被强抢民男，代入感极差
+    raw_quote: 大哥你不会觉得被人家被人家强奸 很有主角能代入吧

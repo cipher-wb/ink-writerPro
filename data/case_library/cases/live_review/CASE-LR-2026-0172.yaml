@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-0172
+title: 铭集诅咒民集权柄·灾厄本身 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 克苏鲁
+  - 诡异
+  - 第一人称
+  - 学院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分吧 | 文笔尚可但节奏太慢，第一人称加克苏鲁设定让读者难以代入，本质是哈利波特的学院流，缺乏网文需要的期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但节奏太慢，第一人称加克苏鲁设定让读者难以代入，本质是哈利波特的学院流，缺乏网文需要的期待感。 | 开篇第一人称、绿色液体等描写让读者看不懂，劝退。;西幻克苏鲁加学院流，与国内读者审美脱节，像哈利波特。;节奏极慢，第一章几乎无进展，第二张才出现有效事件。
+  observable:
+  - 'opening维度: 开篇第一人称、绿色液体等描写让读者看不懂，劝退。'
+  - 'genre维度: 西幻克苏鲁加学院流，与国内读者审美脱节，像哈利波特。'
+  - 'pacing维度: 节奏极慢，第一章几乎无进展，第二张才出现有效事件。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 180
+  - 330
+  score: 18
+  score_raw: 18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 铭集诅咒民集权柄·灾厄本身
+  genre_guess:
+  - 克苏鲁
+  - 诡异
+  - 第一人称
+  - 学院
+  overall_comment: 文笔尚可但节奏太慢，第一人称加克苏鲁设定让读者难以代入，本质是哈利波特的学院流，缺乏网文需要的期待感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇第一人称、绿色液体等描写让读者看不懂，劝退。
+    raw_quote: 看不懂兄弟这已经看不懂了
+  - dimension: genre
+    severity: negative
+    content: 西幻克苏鲁加学院流，与国内读者审美脱节，像哈利波特。
+    raw_quote: 这就是在写哈利波特大哥
+  - dimension: pacing
+    severity: negative
+    content: 节奏极慢，第一章几乎无进展，第二张才出现有效事件。
+    raw_quote: 你第一张很奇怪几乎没有我觉得你直接开始第二张吧

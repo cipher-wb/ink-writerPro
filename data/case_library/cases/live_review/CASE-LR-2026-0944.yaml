@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0944
+title: 我重启地下庇护所 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 末日
+  - 庇护所
+  - 丧尸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多我觉得有个按十按分吧 | 题材可写但切入无聊，偏战斗缺接地气情绪，文笔还行
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材可写但切入无聊，偏战斗缺接地气情绪，文笔还行 | 开局打怪兽不接地气，应写末日生存困境;偏重战斗场景，忽略人与环境的冲突
+  observable:
+  - 'opening维度: 开局打怪兽不接地气，应写末日生存困境'
+  - 'pacing维度: 偏重战斗场景，忽略人与环境的冲突'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 1384
+  - 1636
+  score: null
+  score_raw: 差不多我觉得有个按十按分吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 我重启地下庇护所
+  genre_guess:
+  - 末日
+  - 庇护所
+  - 丧尸
+  overall_comment: 题材可写但切入无聊，偏战斗缺接地气情绪，文笔还行
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局打怪兽不接地气，应写末日生存困境
+    raw_quote: 开局打怪兽打义仑者是真的无聊呀 谁爱看呀
+  - dimension: pacing
+    severity: negative
+    content: 偏重战斗场景，忽略人与环境的冲突
+    raw_quote: 偏乘义仑打架类的这种情绪读者不接地气的

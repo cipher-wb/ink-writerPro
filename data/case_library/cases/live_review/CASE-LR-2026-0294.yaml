@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0294
+title: 狗在妖鬼乱世修仙 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 仙侠
+  - 两界穿梭
+  - 妖鬼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那给你40吧 | 借鉴两界穿梭思路但开篇拉仇恨太小白，后段剧情尚可但偏重小白文，比例和人物需打磨。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 借鉴两界穿梭思路但开篇拉仇恨太小白，后段剧情尚可但偏重小白文，比例和人物需打磨。 | 开篇拉仇恨桥段过于小白，缺乏高级感;角色塑造和故事编排能力不足
+  observable:
+  - 'opening维度: 开篇拉仇恨桥段过于小白，缺乏高级感'
+  - 'character维度: 角色塑造和故事编排能力不足'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 331
+  - 390
+  score: 40
+  score_raw: 那给你40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 狗在妖鬼乱世修仙
+  genre_guess:
+  - 仙侠
+  - 两界穿梭
+  - 妖鬼
+  overall_comment: 借鉴两界穿梭思路但开篇拉仇恨太小白，后段剧情尚可但偏重小白文，比例和人物需打磨。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇拉仇恨桥段过于小白，缺乏高级感
+    raw_quote: 哎呀这哎不是大哥你写的时候这句话你不觉得老套吗... 就反正就是废柴
+  - dimension: character
+    severity: negative
+    content: 角色塑造和故事编排能力不足
+    raw_quote: 其实你就是不会写人物跟故事对吧
+  - dimension: misc
+    severity: neutral
+    content: 后续剧情有一定改善，但初期问题严重
+    raw_quote: 后面其实有个四五十分了，那给你40吧

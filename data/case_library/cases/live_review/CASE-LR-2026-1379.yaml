@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1379
+title: 陆成被青梅挖出来 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 玄幻
+  - 仙侠
+  - 骷髅
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30吧 | 雪白写法思路不对，人设没立住，苏唐角色太小白无征服欲，对白啰嗦像相声。文笔还好但缺乏主线和看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白写法思路不对，人设没立住，苏唐角色太小白无征服欲，对白啰嗦像相声。文笔还好但缺乏主线和看点。 | 苏唐人设太小白，像个笨蛋女主，缺乏征服欲和拉扯感;开篇对白啰嗦，像斗梗捧梗，没有快速建立期待感;金手指和主角能做什么的期待感没写出来
+  observable:
+  - 'character维度: 苏唐人设太小白，像个笨蛋女主，缺乏征服欲和拉扯感'
+  - 'hook维度: 开篇对白啰嗦，像斗梗捧梗，没有快速建立期待感'
+  - 'golden_finger维度: 金手指和主角能做什么的期待感没写出来'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 233
+  - 310
+  score: 30
+  score_raw: 30吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 陆成被青梅挖出来
+  genre_guess:
+  - 玄幻
+  - 仙侠
+  - 骷髅
+  - 雪白
+  overall_comment: 雪白写法思路不对，人设没立住，苏唐角色太小白无征服欲，对白啰嗦像相声。文笔还好但缺乏主线和看点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 苏唐人设太小白，像个笨蛋女主，缺乏征服欲和拉扯感
+    raw_quote: 苏唐这个人设真不行...这种人设没有征服欲
+  - dimension: hook
+    severity: negative
+    content: 开篇对白啰嗦，像斗梗捧梗，没有快速建立期待感
+    raw_quote: 就相声呀 斗梗捧梗 等于说主角是郭德纲,配角是于谦
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指和主角能做什么的期待感没写出来
+    raw_quote: 你的代入感你的金手指以及你能干嘛的期待感 老对白聊世界

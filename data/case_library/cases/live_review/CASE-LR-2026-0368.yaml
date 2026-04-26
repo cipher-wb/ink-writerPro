@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0368
+title: 三国之合欢宗妖女 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 三国
+  - 合欢
+  - 融合大乱炖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分满 | 大乱炖题材，过于乐子化，不适合起点，发番茄可。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 大乱炖题材，过于乐子化，不适合起点，发番茄可。 | 题材融合过多，四不像，起点受众不接受;设定极度混乱，读者看不懂
+  observable:
+  - 'genre维度: 题材融合过多，四不像，起点受众不接受'
+  - 'simplicity维度: 设定极度混乱，读者看不懂'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 641
+  - 720
+  score: 18
+  score_raw: 18分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国之合欢宗妖女
+  genre_guess:
+  - 三国
+  - 合欢
+  - 融合大乱炖
+  overall_comment: 大乱炖题材，过于乐子化，不适合起点，发番茄可。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材融合过多，四不像，起点受众不接受
+    raw_quote: 这个太乐了 不上不了 真上不了
+  - dimension: simplicity
+    severity: negative
+    content: 设定极度混乱，读者看不懂
+    raw_quote: 看不懂 大哥别骗我

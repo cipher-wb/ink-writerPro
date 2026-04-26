@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0041
+title: 重生女厕所 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十分吧 | 逻辑不合理，人设极端，但比例还行，有蓝精灵资质，50分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 逻辑不合理，人设极端，但比例还行，有蓝精灵资质，50分。 | 人设立不住，极端;兴奋不对点，逻辑崩坏
+  observable:
+  - 'character维度: 人设立不住，极端'
+  - 'pacing维度: 兴奋不对点，逻辑崩坏'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 351
+  - 410
+  score: 50
+  score_raw: 五十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生女厕所
+  genre_guess:
+  - 都市
+  - 重生
+  - 校园
+  overall_comment: 逻辑不合理，人设极端，但比例还行，有蓝精灵资质，50分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设立不住，极端
+    raw_quote: 这真立不住
+  - dimension: pacing
+    severity: negative
+    content: 兴奋不对点，逻辑崩坏
+    raw_quote: 不可能兴奋的
+  - dimension: misc
+    severity: neutral
+    content: 蓝精灵有市场
+    raw_quote: 蓝精灵就爱看这种

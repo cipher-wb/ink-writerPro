@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1718
+title: 罗天穿越诡异房东 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 诡异
+  - 都市
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 题材问题只能四十度 | 文笔扎实，但题材太杂糅，想把灵异、民俗、职业、乐子全写进去，结果不吓人也不职业，不伦不类。应做减法，抓住一个卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，但题材太杂糅，想把灵异、民俗、职业、乐子全写进去，结果不吓人也不职业，不伦不类。应做减法，抓住一个卖点。 | 元素杂糅，灵异不吓人、民俗不氛围、职业不正经，没有核心卖点;开篇出现404擦边描写，可能触发审核
+  observable:
+  - 'genre维度: 元素杂糅，灵异不吓人、民俗不氛围、职业不正经，没有核心卖点'
+  - 'taboo维度: 开篇出现404擦边描写，可能触发审核'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 815
+  - 903
+  score: 44
+  score_raw: 题材问题只能四十度
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 罗天穿越诡异房东
+  genre_guess:
+  - 诡异
+  - 都市
+  - 灵异
+  overall_comment: 文笔扎实，但题材太杂糅，想把灵异、民俗、职业、乐子全写进去，结果不吓人也不职业，不伦不类。应做减法，抓住一个卖点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 元素杂糅，灵异不吓人、民俗不氛围、职业不正经，没有核心卖点
+    raw_quote: 不吓人，也不是只夜文，就不聋不累啊
+  - dimension: simplicity
+    severity: positive
+    content: 文笔过硬，比例不错
+    raw_quote: 文笔倒是扎实了
+  - dimension: taboo
+    severity: negative
+    content: 开篇出现404擦边描写，可能触发审核
+    raw_quote: 没必要加这种，开头放出来不是什么好东西

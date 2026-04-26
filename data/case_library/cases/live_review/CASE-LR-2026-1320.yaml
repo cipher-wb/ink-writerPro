@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1320
+title: 永烁王朝 武侠文青 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 武侠
+  - 王朝
+  - 文青
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 推翻 文笔不错 | 文笔优秀但太文青，缺乏主角心理活动，需要改当网文写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔优秀但太文青，缺乏主角心理活动，需要改当网文写。 | 太文青，场景描写过多;缺少主角目标和心理盘算
+  observable:
+  - 'opening维度: 太文青，场景描写过多'
+  - 'character维度: 缺少主角目标和心理盘算'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1581
+  - 1640
+  score: null
+  score_raw: 推翻 文笔不错
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 永烁王朝 武侠文青
+  genre_guess:
+  - 武侠
+  - 王朝
+  - 文青
+  overall_comment: 文笔优秀但太文青，缺乏主角心理活动，需要改当网文写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 太文青，场景描写过多
+    raw_quote: 太文青了 就九楼里面两个人老是聊 这种
+  - dimension: character
+    severity: negative
+    content: 缺少主角目标和心理盘算
+    raw_quote: 网红是心理活动要多 就主角是穿越了 主角要盘算什么

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0078
+title: 仙侠杀妖加快捕系统 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 仙侠
+  - 斩妖除魔
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十五分吧 | 套路与《斩妖除魔》高度相似已涉抄袭，且开篇水字数严重，读者早跑光了。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路与《斩妖除魔》高度相似已涉抄袭，且开篇水字数严重，读者早跑光了。 | 开篇水字数，几百字没有实质性内容，读者早跑完了;剧情与《斩妖除魔》高度相似，涉嫌抄袭
+  observable:
+  - 'opening维度: 开篇水字数，几百字没有实质性内容，读者早跑完了'
+  - 'simplicity维度: 剧情与《斩妖除魔》高度相似，涉嫌抄袭'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1061
+  - 1120
+  score: 15
+  score_raw: 十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙侠杀妖加快捕系统
+  genre_guess:
+  - 仙侠
+  - 斩妖除魔
+  - 系统
+  overall_comment: 套路与《斩妖除魔》高度相似已涉抄袭，且开篇水字数严重，读者早跑光了。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇水字数，几百字没有实质性内容，读者早跑完了
+    raw_quote: 整整一千多字...没一点实质的内容...跑完了全跑了
+  - dimension: simplicity
+    severity: negative
+    content: 剧情与《斩妖除魔》高度相似，涉嫌抄袭
+    raw_quote: 这跟斩妖除魔的区别在哪里...这个已经涉及到抄袭了兄弟

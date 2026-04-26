@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1766
+title: 金斗勇（西游车迟国） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 西游
+  - 仙侠
+  - 反套路
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 第一名了（未明确分数） | 切入点还行，有仙侠味道，但展开不明确，爽点和主线有待加强。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点还行，有仙侠味道，但展开不明确，爽点和主线有待加强。 | 展开缓慢，没有明确好主线，爽感不足
+  observable:
+  - 'pacing维度: 展开缓慢，没有明确好主线，爽感不足'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 1100
+  - 1170
+  score: null
+  score_raw: 第一名了（未明确分数）
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 金斗勇（西游车迟国）
+  genre_guess:
+  - 西游
+  - 仙侠
+  - 反套路
+  overall_comment: 切入点还行，有仙侠味道，但展开不明确，爽点和主线有待加强。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 欺辱情节能引起读者共鸣，切题有力
+    raw_quote: 就这种吧，让瘾气读者的共鸣嘛……没问题这个欺辱还可以
+  - dimension: pacing
+    severity: negative
+    content: 展开缓慢，没有明确好主线，爽感不足
+    raw_quote: 展开我觉得……没有一个明确的好主线……金斗勇拿了之后能咋样，我也感觉不出来

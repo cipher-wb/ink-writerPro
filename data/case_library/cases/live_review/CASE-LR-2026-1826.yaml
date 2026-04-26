@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1826
+title: 人皇翻玄幻 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 玄幻
+  - 仙侠
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没有任何机会的 | 对市场毫无了解，题材凉中凉，乐子修仙硬伤，直发毫无机会
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对市场毫无了解，题材凉中凉，乐子修仙硬伤，直发毫无机会 | 仙侠乐子类非常凉，选题无市场;开头没有任何沉浸感，玩梗尴尬;人设出戏，主角真实感不对
+  observable:
+  - 'genre维度: 仙侠乐子类非常凉，选题无市场'
+  - 'hook维度: 开头没有任何沉浸感，玩梗尴尬'
+  - 'character维度: 人设出戏，主角真实感不对'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 401
+  - 520
+  score: null
+  score_raw: 没有任何机会的
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 人皇翻玄幻
+  genre_guess:
+  - 玄幻
+  - 仙侠
+  - 乐子文
+  overall_comment: 对市场毫无了解，题材凉中凉，乐子修仙硬伤，直发毫无机会
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 仙侠乐子类非常凉，选题无市场
+    raw_quote: 你没发现起点的仙侠分类其实很凉嘛...乐子类的修仙更凉凉中凉
+  - dimension: hook
+    severity: negative
+    content: 开头没有任何沉浸感，玩梗尴尬
+    raw_quote: 这开头一点都没沉浸感...像一个中年老登在那里故意逗妹妹
+  - dimension: character
+    severity: negative
+    content: 人设出戏，主角真实感不对
+    raw_quote: 系统出戏人设出戏剧情出戏

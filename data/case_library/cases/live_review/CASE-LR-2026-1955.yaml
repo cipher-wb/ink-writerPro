@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1955
+title: 榻上公子 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 玄幻
+  - 雪白
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就40吧 | 水平挺高，雪白拉扯和暧昧场景写得很天才。但逻辑性不足，且部分情节不符合人物身份，主角缺乏期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 水平挺高，雪白拉扯和暧昧场景写得很天才。但逻辑性不足，且部分情节不符合人物身份，主角缺乏期待感。 | 主角缺乏期待感和存在感，全靠雪白支撑;身份设定不合理，影响阅读逻辑
+  observable:
+  - 'character维度: 主角缺乏期待感和存在感，全靠雪白支撑'
+  - 'misc维度: 身份设定不合理，影响阅读逻辑'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 1154
+  - 1219
+  score: 40
+  score_raw: 就40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 榻上公子
+  genre_guess:
+  - 玄幻
+  - 雪白
+  - 后宫
+  overall_comment: 水平挺高，雪白拉扯和暧昧场景写得很天才。但逻辑性不足，且部分情节不符合人物身份，主角缺乏期待感。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角缺乏期待感和存在感，全靠雪白支撑
+    raw_quote: 事件主角从在感...期待感还是弱，重点在雪白
+  - dimension: misc
+    severity: negative
+    content: 身份设定不合理，影响阅读逻辑
+    raw_quote: 郡主在这里跟那两个做贼一样...这么牛逼的郡主

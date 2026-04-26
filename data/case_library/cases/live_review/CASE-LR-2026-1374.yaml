@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1374
+title: 领主被迫娶千金 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 西幻
+  - 领主
+  - 种田
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也上了13分 | 简介能写，但内容没能力展开，情节假，角色立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介能写，但内容没能力展开，情节假，角色立不住。 | 事件老套平白，瞬间牵手太快无戒心，脱离现实;本质无能力写领主雪白文，前几章就是书名扩写
+  observable:
+  - 'misc维度: 事件老套平白，瞬间牵手太快无戒心，脱离现实'
+  - 'misc维度: 本质无能力写领主雪白文，前几章就是书名扩写'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1966
+  - 2015
+  score: 23
+  score_raw: 也上了13分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 领主被迫娶千金
+  genre_guess:
+  - 西幻
+  - 领主
+  - 种田
+  - 穿越
+  overall_comment: 简介能写，但内容没能力展开，情节假，角色立不住。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 事件老套平白，瞬间牵手太快无戒心，脱离现实
+    raw_quote: 两个人也不认识...牵手就走了凭什么
+  - dimension: misc
+    severity: negative
+    content: 本质无能力写领主雪白文，前几章就是书名扩写
+    raw_quote: 事件我觉得不行...前三章就把书名扩写了一下

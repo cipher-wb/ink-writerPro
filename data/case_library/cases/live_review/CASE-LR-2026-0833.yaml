@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0833
+title: 华娱2014背后的男人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 华娱
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 之前也50多分 | 切入能写，但之前分数不高，题材能过审就没啥问题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入能写，但之前分数不高，题材能过审就没啥问题。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 26
+  - 45
+  score: null
+  score_raw: 之前也50多分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 华娱2014背后的男人
+  genre_guess:
+  - 华娱
+  - 重生
+  overall_comment: 切入能写，但之前分数不高，题材能过审就没啥问题。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入没问题，能过审
+    raw_quote: 这个切入没问题，能过审就没啥问题

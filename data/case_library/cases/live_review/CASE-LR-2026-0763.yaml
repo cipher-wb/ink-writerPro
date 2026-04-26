@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0763
+title: 绑了校花女友做同学 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 校园
+  - 恋爱
+  - 短剧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就是25分左右 | 书名逻辑不通，行文太像短剧，遣词造句极白，毫无代入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名逻辑不通，行文太像短剧，遣词造句极白，毫无代入。 | 白描太严重，逻辑性极差，名字起得异常出戏;绑架剧情逻辑立不住，太蓝精灵化
+  observable:
+  - 'simplicity维度: 白描太严重，逻辑性极差，名字起得异常出戏'
+  - 'opening维度: 绑架剧情逻辑立不住，太蓝精灵化'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1501
+  - 1590
+  score: 25
+  score_raw: 也就是25分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 绑了校花女友做同学
+  genre_guess:
+  - 校园
+  - 恋爱
+  - 短剧
+  overall_comment: 书名逻辑不通，行文太像短剧，遣词造句极白，毫无代入。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 白描太严重，逻辑性极差，名字起得异常出戏
+    raw_quote: 白云永跟紫依依……这哎呦……真的太出戏了
+  - dimension: opening
+    severity: negative
+    content: 绑架剧情逻辑立不住，太蓝精灵化
+    raw_quote: 不是大哥……你觉得这逻辑性符合吗……这立不住啊

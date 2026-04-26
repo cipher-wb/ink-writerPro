@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1596
+title: 血色守陵人 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 灵异
+  - 盗墓
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就40分吧 | 摸金校尉背景已烂大街，第一人称叙事过时，故事推进太慢。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 摸金校尉背景已烂大街，第一人称叙事过时，故事推进太慢。 | 摸金校尉等设定卖点已被透支，读者审美疲劳;第一人称缓慢回忆，毫无紧迫感
+  observable:
+  - 'genre维度: 摸金校尉等设定卖点已被透支，读者审美疲劳'
+  - 'opening维度: 第一人称缓慢回忆，毫无紧迫感'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 501
+  - 540
+  score: 40
+  score_raw: 就40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 血色守陵人
+  genre_guess:
+  - 灵异
+  - 盗墓
+  - 都市
+  overall_comment: 摸金校尉背景已烂大街，第一人称叙事过时，故事推进太慢。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 摸金校尉等设定卖点已被透支，读者审美疲劳
+    raw_quote: 以前的卖点就是一些设定元素 … 摸金校尉 … 但现在都烂大街了呀 … 你现在再写这玩意就就没人看
+  - dimension: opening
+    severity: negative
+    content: 第一人称缓慢回忆，毫无紧迫感
+    raw_quote: 又是这种上古年间的秘密嘛 … 该来的还是来 … 好慢呀 … 第一人称这种慢慢的讲过去的故事 … 真没人看

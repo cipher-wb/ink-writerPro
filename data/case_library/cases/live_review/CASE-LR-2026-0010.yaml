@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0010
+title: 功夫家公子李宇 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11viPBrEPq
+scope:
+  genre:
+  - 穿越
+  - 玄幻
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 勉勉强强30分的境界吧 | 事件极弱，设定堆积过多，对话太白，整体崩坏，勉强给30分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11viPBrEPq.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件极弱，设定堆积过多，对话太白，整体崩坏，勉强给30分。 | 事件太弱，无法支撑设定介绍，读者没耐心;连续大段设定介绍，显得臃肿;对话过于直白，缺乏人物魅力
+  observable:
+  - 'pacing维度: 事件太弱，无法支撑设定介绍，读者没耐心'
+  - 'simplicity维度: 连续大段设定介绍，显得臃肿'
+  - 'character维度: 对话过于直白，缺乏人物魅力'
+  - 'pacing维度: 整体节奏崩坏，读者已流失'
+live_review_meta:
+  source_bvid: BV11viPBrEPq
+  source_line_range:
+  - 47
+  - 197
+  score: 30
+  score_raw: 勉勉强强30分的境界吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 功夫家公子李宇
+  genre_guess:
+  - 穿越
+  - 玄幻
+  - 金手指
+  overall_comment: 事件极弱，设定堆积过多，对话太白，整体崩坏，勉强给30分。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 事件太弱，无法支撑设定介绍，读者没耐心
+    raw_quote: 事件好弱
+  - dimension: simplicity
+    severity: negative
+    content: 连续大段设定介绍，显得臃肿
+    raw_quote: 这介绍太多了
+  - dimension: character
+    severity: negative
+    content: 对话过于直白，缺乏人物魅力
+    raw_quote: 对话太白了
+  - dimension: pacing
+    severity: negative
+    content: 整体节奏崩坏，读者已流失
+    raw_quote: 已经已经崩完了

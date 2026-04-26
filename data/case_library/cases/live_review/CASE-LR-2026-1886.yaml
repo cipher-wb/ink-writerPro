@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1886
+title: 超异能组都市异能 (fail / 26分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给你26分 | 一直退步，写群像无代入感。读者看不懂主角要干嘛，需明确年代事件主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 一直退步，写群像无代入感。读者看不懂主角要干嘛，需明确年代事件主线。 | 群像写法无代入感，应聚焦主角视角;背景交代不清，看不懂故事设定
+  observable:
+  - 'character维度: 群像写法无代入感，应聚焦主角视角'
+  - 'opening维度: 背景交代不清，看不懂故事设定'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 981
+  - 1060
+  score: 26
+  score_raw: 只能给你26分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 超异能组都市异能
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 一直退步，写群像无代入感。读者看不懂主角要干嘛，需明确年代事件主线。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 群像写法无代入感，应聚焦主角视角
+    raw_quote: 不要写穷相文... 全程只有主角是重点 其他人就加点笔墨就行... 最基本的代入感要干嘛
+  - dimension: opening
+    severity: negative
+    content: 背景交代不清，看不懂故事设定
+    raw_quote: 你先写清楚什么年代嘛... 你让我看懂行不行

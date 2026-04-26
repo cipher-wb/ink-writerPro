@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0059
+title: 穿越玄荒女帝 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就二三十分的水平嘛 | 设定过多，剧情弱，主角独白，理解不到位，25分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定过多，剧情弱，主角独白，理解不到位，25分。 | 金手指无聊;无事件全是设定
+  observable:
+  - 'golden_finger维度: 金手指无聊'
+  - 'opening维度: 无事件全是设定'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 1281
+  - 1330
+  score: 25
+  score_raw: 就二三十分的水平嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越玄荒女帝
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 设定过多，剧情弱，主角独白，理解不到位，25分。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指无聊
+    raw_quote: 金手指也挺无聊的
+  - dimension: opening
+    severity: negative
+    content: 无事件全是设定
+    raw_quote: 事件在哪里呢

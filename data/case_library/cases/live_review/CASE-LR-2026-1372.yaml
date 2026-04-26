@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1372
+title: 修仙渡劫认亲记 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十三分 | 有点进步，事件设计好，但称呼荒谬，角色关系需理顺。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有点进步，事件设计好，但称呼荒谬，角色关系需理顺。 | 姐弟年龄差设定导致呼叫“娘”极度不合逻辑
+  observable:
+  - 'misc维度: 姐弟年龄差设定导致呼叫“娘”极度不合逻辑'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1836
+  - 1915
+  score: 30
+  score_raw: 三十三分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙渡劫认亲记
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 家族
+  overall_comment: 有点进步，事件设计好，但称呼荒谬，角色关系需理顺。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 姐弟年龄差设定导致呼叫“娘”极度不合逻辑
+    raw_quote: 张仪大你七岁你把她叫妈这对吗
+  - dimension: misc
+    severity: neutral
+    content: 事件展开有设计感，如王麻子阴谋比单纯救美强
+    raw_quote: 并不是说单薄的什么英雄救美...是里面有什么仙人物件

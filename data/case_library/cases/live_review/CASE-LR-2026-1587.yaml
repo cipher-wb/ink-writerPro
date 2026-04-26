@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1587
+title: 三国说书人 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分吧 | 上帝视角说书人写法毫无代入感，完全不像网文，需彻底重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 上帝视角说书人写法毫无代入感，完全不像网文，需彻底重写。 | 采用旁白说书人视角，主角缺失;没有主角视角和心理活动，代入感为零
+  observable:
+  - 'opening维度: 采用旁白说书人视角，主角缺失'
+  - 'character维度: 没有主角视角和心理活动，代入感为零'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 126
+  - 155
+  score: 18
+  score_raw: 18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国说书人
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  overall_comment: 上帝视角说书人写法毫无代入感，完全不像网文，需彻底重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 采用旁白说书人视角，主角缺失
+    raw_quote: 这个写法不像是网文大哥 这个写法怎么就像说书啊 上帝视角 … 这就不是网络不是网文 … 读者看到一句话就跑了
+  - dimension: character
+    severity: negative
+    content: 没有主角视角和心理活动，代入感为零
+    raw_quote: 你应该是你的主角啊 … 你是一个小兵 刘备的亲卫兵 … 这上帝视角血疯掉了

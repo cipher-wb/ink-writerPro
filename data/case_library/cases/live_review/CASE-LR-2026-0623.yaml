@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0623
+title: 除夕夜 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 家庭
+  - 大叔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不到36分吧 | 50岁带外孙女的主角严重缺乏网文代入感，写实过头而丢失爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 50岁带外孙女的主角严重缺乏网文代入感，写实过头而丢失爽点。 | 主角年龄过大且已有孙辈，与主流读者隔阂太深。;太正经的亲情日常流缺少核心卖点。
+  observable:
+  - 'character维度: 主角年龄过大且已有孙辈，与主流读者隔阂太深。'
+  - 'genre维度: 太正经的亲情日常流缺少核心卖点。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 456
+  - 545
+  score: 36
+  score_raw: 不到36分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 除夕夜
+  genre_guess:
+  - 都市
+  - 重生
+  - 家庭
+  - 大叔
+  overall_comment: 50岁带外孙女的主角严重缺乏网文代入感，写实过头而丢失爽点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角年龄过大且已有孙辈，与主流读者隔阂太深。
+    raw_quote: 50岁有点大了 40岁我觉得极限了 ... 怎么代入啊
+  - dimension: genre
+    severity: negative
+    content: 太正经的亲情日常流缺少核心卖点。
+    raw_quote: 原来太正经了 这些元素其实不好代入 ... 还是一本正经的讲
+  - dimension: hook
+    severity: neutral
+    content: 若改成系统流大叔逆袭娱乐圈会更有看点。
+    raw_quote: 大叔款还是很多人喜欢 ... 我觉得应该是走这样的 ... 系统增加魅力

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0915
+title: 赛博艳流：泰坦胸甲 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 科幻
+  - 赛博朋克
+  - 艳流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 科幻题材不接地气，完全无法代入，虽然叙事干练但无市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 科幻题材不接地气，完全无法代入，虽然叙事干练但无市场。 | 题材过于架空，中国人无法代入;驱动力薄弱，单一妹妹救赎线无代入感
+  observable:
+  - 'genre维度: 题材过于架空，中国人无法代入'
+  - 'character维度: 驱动力薄弱，单一妹妹救赎线无代入感'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 345
+  - 410
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 赛博艳流：泰坦胸甲
+  genre_guess:
+  - 科幻
+  - 赛博朋克
+  - 艳流
+  overall_comment: 科幻题材不接地气，完全无法代入，虽然叙事干练但无市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材过于架空，中国人无法代入
+    raw_quote: 兄弟我说实话这个题材我觉得没得救 就是整个题材不接地气 大家看不懂
+  - dimension: character
+    severity: negative
+    content: 驱动力薄弱，单一妹妹救赎线无代入感
+    raw_quote: 驱动力是没意思的 妹妹妈妈的 有个妹妹的用那个 因为没有代入感
+  - dimension: pacing
+    severity: positive
+    content: 节奏干练，讲故事对白能力在
+    raw_quote: 虽然你节奏很干练 但我可以肯定你讲故事对白的实力

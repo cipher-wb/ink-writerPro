@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-1745
+title: 助机器修仙 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这次也是三十八呀 | 重生修炼主线平淡，缺乏冲突，成绩稳定但无突破。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生修炼主线平淡，缺乏冲突，成绩稳定但无突破。 | 剧情平淡，缺乏高潮和冲突。
+  observable:
+  - 'pacing维度: 剧情平淡，缺乏高潮和冲突。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1186
+  - 1270
+  score: 38
+  score_raw: 这次也是三十八呀
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 助机器修仙
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 修炼
+  overall_comment: 重生修炼主线平淡，缺乏冲突，成绩稳定但无突破。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 剧情平淡，缺乏高潮和冲突。
+    raw_quote: 没什么好的冲突 很平淡

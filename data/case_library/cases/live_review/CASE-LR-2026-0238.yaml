@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0238
+title: 三世镜修仙 (borderline)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 专业素养强，但事件平淡，期待感弱，卡在55分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 专业素养强，但事件平淡，期待感弱，卡在55分。 | 冷师伯上门事件无聊
+  observable:
+  - 'misc维度: 冷师伯上门事件无聊'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 935
+  - 1000
+  score: null
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 三世镜修仙
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 金手指
+  overall_comment: 专业素养强，但事件平淡，期待感弱，卡在55分。
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 三世镜金手指有亮点
+    raw_quote: 金手指跟这个设定我是觉得OK
+  - dimension: misc
+    severity: negative
+    content: 冷师伯上门事件无聊
+    raw_quote: 这个冷师伯上门对吧 ... 一点意思都没有

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0094
+title: 少妇装机 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 都市
+  - 人妻
+  - 直播
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分肯定有就42分吧 | 切入场景不错但浅尝辄止，雪白没拉情绪，胆子小不敢写透，简介卖点也难追。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入场景不错但浅尝辄止，雪白没拉情绪，胆子小不敢写透，简介卖点也难追。 | 雪白环节破坏人设太过浪荡;情绪刚吊起来就平淡了，各方面浅尝辄止;胆子小不敢写透，没抓住力道一以贯之
+  observable:
+  - 'character维度: 雪白环节破坏人设太过浪荡'
+  - 'pacing维度: 情绪刚吊起来就平淡了，各方面浅尝辄止'
+  - 'golden_finger维度: 胆子小不敢写透，没抓住力道一以贯之'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 78
+  - 180
+  score: 42
+  score_raw: 40分肯定有就42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 少妇装机
+  genre_guess:
+  - 都市
+  - 人妻
+  - 直播
+  overall_comment: 切入场景不错但浅尝辄止，雪白没拉情绪，胆子小不敢写透，简介卖点也难追。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入场景人设不错，少妇直播修电脑
+    raw_quote: 挺好的一个场景，对我这不就对了嘛
+  - dimension: character
+    severity: negative
+    content: 雪白环节破坏人设太过浪荡
+    raw_quote: 这个有点破坏人设，有点太太浪荡了
+  - dimension: pacing
+    severity: negative
+    content: 情绪刚吊起来就平淡了，各方面浅尝辄止
+    raw_quote: 就是刚吊起来，你就又平常联系了，我是觉得各种东西浅尝辄止了
+  - dimension: golden_finger
+    severity: negative
+    content: 胆子小不敢写透，没抓住力道一以贯之
+    raw_quote: 但胆子又小，后面又就是平淡了，又又变成那种一本正经的起点写法

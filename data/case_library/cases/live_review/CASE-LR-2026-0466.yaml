@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0466
+title: 从杂役弟子开始 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 掉到38去了 | 偏题成蓝精灵系统文，上次58这次毫无沉浸感，需换题材换写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 偏题成蓝精灵系统文，上次58这次毫无沉浸感，需换题材换写法。 | 切入变成系统绑定加恶搞，完全失去了起点气质;整体偏成蓝精灵乐子文，起点签不了
+  observable:
+  - 'opening维度: 切入变成系统绑定加恶搞，完全失去了起点气质'
+  - 'genre维度: 整体偏成蓝精灵乐子文，起点签不了'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 1041
+  - 1090
+  score: 38
+  score_raw: 掉到38去了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从杂役弟子开始
+  genre_guess:
+  - 仙侠
+  - 系统
+  overall_comment: 偏题成蓝精灵系统文，上次58这次毫无沉浸感，需换题材换写法。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入变成系统绑定加恶搞，完全失去了起点气质
+    raw_quote: 这个没五十八分 ... 这已经蓝精灵 ... 系统会根据你的节奏技能啊
+  - dimension: genre
+    severity: negative
+    content: 整体偏成蓝精灵乐子文，起点签不了
+    raw_quote: 这个百分之百蓝精灵是吧 ... 这个已经是要换题材 整个换题材

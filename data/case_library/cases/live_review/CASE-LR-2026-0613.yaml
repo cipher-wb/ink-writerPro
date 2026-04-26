@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-0613
+title: 银砖杠杆谍战 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 谍战
+  - 金融
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个撑死就25 | 不会写书，节奏啰嗦，不会套模板，人设场景全无。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不会写书，节奏啰嗦，不会套模板，人设场景全无。 | 不会进入正题，啰嗦无重点
+  observable:
+  - 'pacing维度: 不会进入正题，啰嗦无重点'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 3701
+  - 3850
+  score: 25
+  score_raw: 这个撑死就25
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 银砖杠杆谍战
+  genre_guess:
+  - 都市
+  - 谍战
+  - 金融
+  overall_comment: 不会写书，节奏啰嗦，不会套模板，人设场景全无。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 不会进入正题，啰嗦无重点
+    raw_quote: 你不进重点老师对吧...直接从800开始嘛

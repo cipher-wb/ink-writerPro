@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1472
+title: 从996开始修仙 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - '996'
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分嘛 | 为玩梗而玩梗，剧情零散，偏题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 为玩梗而玩梗，剧情零散，偏题。 | 梗是为剧情服的，不要为了梗去梗
+  observable:
+  - 'golden_finger维度: 梗是为剧情服的，不要为了梗去梗'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1081
+  - 1170
+  score: 28
+  score_raw: 28分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从996开始修仙
+  genre_guess:
+  - 仙侠
+  - 系统
+  - '996'
+  overall_comment: 为玩梗而玩梗，剧情零散，偏题。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 梗是为剧情服的，不要为了梗去梗
+    raw_quote: 梗是为剧情服的 你不要为了梗去梗

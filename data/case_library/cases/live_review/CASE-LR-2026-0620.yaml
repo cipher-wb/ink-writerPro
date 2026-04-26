@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0620
+title: 三个月内会有巨龙尸体飘来我的领地 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 奇幻
+  - 领主
+  - 种田
+  - 游戏异界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你38号嘛 确实也上不了40 | 开头切入亮眼，但随即陷入游戏设定说明的泥潭，节奏断裂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头切入亮眼，但随即陷入游戏设定说明的泥潭，节奏断裂。 | 游戏设定迫使作者大段交代世界观，劝退读者。;出场人物过多且没有立住。
+  observable:
+  - 'pacing维度: 游戏设定迫使作者大段交代世界观，劝退读者。'
+  - 'simplicity维度: 出场人物过多且没有立住。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 186
+  - 275
+  score: 38
+  score_raw: 就给你38号嘛 确实也上不了40
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三个月内会有巨龙尸体飘来我的领地
+  genre_guess:
+  - 奇幻
+  - 领主
+  - 种田
+  - 游戏异界
+  overall_comment: 开头切入亮眼，但随即陷入游戏设定说明的泥潭，节奏断裂。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 前几句切入颇有吸引力。
+    raw_quote: 其实开头还挺好看的 ... 这种开头还挺好看的
+  - dimension: pacing
+    severity: negative
+    content: 游戏设定迫使作者大段交代世界观，劝退读者。
+    raw_quote: 因为你这样必须得讲设定了 必须得讲这个世界了 读者就跑了
+  - dimension: simplicity
+    severity: negative
+    content: 出场人物过多且没有立住。
+    raw_quote: 人物少一点 ... 最好是女人对吧
+  - dimension: genre
+    severity: neutral
+    content: 建议去掉游戏外皮，直接写成异界穿越领主流。
+    raw_quote: 其实最好不要写游戏 ... 直接穿过来 ... 更适合新人

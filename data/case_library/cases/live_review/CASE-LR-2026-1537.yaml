@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1537
+title: 灵主之主 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 玄幻
+  - 十二常胜
+  - 战斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就差不多二十分左右吧 | 故弄玄虚，题材杂糅无果，完全靠设定堆砌，毫无好主线，极其失败。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故弄玄虚，题材杂糅无果，完全靠设定堆砌，毫无好主线，极其失败。 | 梦境开局毒点，新人通病;设定介绍太多太慢，完全没事件;卖点全是设定和境界，读者不会买账
+  observable:
+  - 'simplicity维度: 梦境开局毒点，新人通病'
+  - 'pacing维度: 设定介绍太多太慢，完全没事件'
+  - 'hook维度: 卖点全是设定和境界，读者不会买账'
+  - 'genre维度: 题材杂糅，写法混乱'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 896
+  - 1105
+  score: 20
+  score_raw: 就差不多二十分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵主之主
+  genre_guess:
+  - 玄幻
+  - 十二常胜
+  - 战斗
+  overall_comment: 故弄玄虚，题材杂糅无果，完全靠设定堆砌，毫无好主线，极其失败。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 梦境开局毒点，新人通病
+    raw_quote: 新人就是喜欢写梦境 就是喜欢写习惯 就是喜欢写设计
+  - dimension: pacing
+    severity: negative
+    content: 设定介绍太多太慢，完全没事件
+    raw_quote: 设定终于介绍了 这个终于介绍了 大哥这一张多少子 你不是在骗我
+  - dimension: hook
+    severity: negative
+    content: 卖点全是设定和境界，读者不会买账
+    raw_quote: 卖点各种境界 那些 就冒充三少的 神印王座呀
+  - dimension: genre
+    severity: negative
+    content: 题材杂糅，写法混乱
+    raw_quote: 题材杂柔 写法乱 元素多

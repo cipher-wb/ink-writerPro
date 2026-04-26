@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1849
+title: 大唐游侠剑客传 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 武侠
+  - 唐朝
+  - 剑客
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多给你38放大哥好吧 | 遣词造句扎实，老派武侠风骨好但生不逢时
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句扎实，老派武侠风骨好但生不逢时 | 纯武侠在起点完全没市场
+  observable:
+  - 'genre维度: 纯武侠在起点完全没市场'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 2531
+  - 2600
+  score: 38
+  score_raw: 差不多给你38放大哥好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大唐游侠剑客传
+  genre_guess:
+  - 武侠
+  - 唐朝
+  - 剑客
+  overall_comment: 遣词造句扎实，老派武侠风骨好但生不逢时
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯武侠在起点完全没市场
+    raw_quote: 现在这些读者不吃了...生不逢时
+  - dimension: opening
+    severity: neutral
+    content: 英雄救美等太传统金庸
+    raw_quote: 太传统了没问题...你肯定出手了

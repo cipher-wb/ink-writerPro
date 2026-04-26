@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0221
+title: 军部何载 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 历史
+  - 军事
+  - 谋略
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 21分 | 切入节奏差，缺乏沉浸感和古代味道，驱动力薄弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入节奏差，缺乏沉浸感和古代味道，驱动力薄弱。 | 切入太暴力，缺乏沉浸感，没有古代氛围;冲突和危机设置不足，驱动力拉胯
+  observable:
+  - 'opening维度: 切入太暴力，缺乏沉浸感，没有古代氛围'
+  - 'hook维度: 冲突和危机设置不足，驱动力拉胯'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1404
+  - 1425
+  score: 21
+  score_raw: 21分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 军部何载
+  genre_guess:
+  - 历史
+  - 军事
+  - 谋略
+  overall_comment: 切入节奏差，缺乏沉浸感和古代味道，驱动力薄弱。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入太暴力，缺乏沉浸感，没有古代氛围
+    raw_quote: 切入有点重 切入一点节奏太快了 有点重 沉静感没有
+  - dimension: hook
+    severity: negative
+    content: 冲突和危机设置不足，驱动力拉胯
+    raw_quote: 这是委屈驱动力 驱动力也比较辣

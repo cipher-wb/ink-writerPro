@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1550
+title: 娘化星河按摩仪 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 恶搞
+  - 直播同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这九分水平 | 侮辱主播，形象娘化，直接九分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 侮辱主播，形象娘化，直接九分。 | 娘化主播并加脚臭等侮辱描写
+  observable:
+  - 'taboo维度: 娘化主播并加脚臭等侮辱描写'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 876
+  - 948
+  score: null
+  score_raw: 这九分水平
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 娘化星河按摩仪
+  genre_guess:
+  - 恶搞
+  - 直播同人
+  overall_comment: 侮辱主播，形象娘化，直接九分。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 娘化主播并加脚臭等侮辱描写
+    raw_quote: 白嫩的脚丫 哎呀我的天哪 好恶心啊

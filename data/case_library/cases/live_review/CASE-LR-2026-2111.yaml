@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-2111
+title: 东京重生按摩师生涯文 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 职业
+  - 东京
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 节奏太慢，三章才进入正题，女性描写没感觉，系统驱动力无聊，容易涉黄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏太慢，三章才进入正题，女性描写没感觉，系统驱动力无聊，容易涉黄。 | 节奏太慢，三章才出来按摩正题;对女性描写太少，没感觉;按摩题材很容易涉黄踩线
+  observable:
+  - 'pacing维度: 节奏太慢，三章才出来按摩正题'
+  - 'character维度: 对女性描写太少，没感觉'
+  - 'taboo维度: 按摩题材很容易涉黄踩线'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 421
+  - 460
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京重生按摩师生涯文
+  genre_guess:
+  - 都市
+  - 重生
+  - 职业
+  - 东京
+  overall_comment: 节奏太慢，三章才进入正题，女性描写没感觉，系统驱动力无聊，容易涉黄。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，三章才出来按摩正题
+    raw_quote: 三张才出来是吧，节奏太慢了
+  - dimension: character
+    severity: negative
+    content: 对女性描写太少，没感觉
+    raw_quote: 你对女性的描写太少了
+  - dimension: taboo
+    severity: negative
+    content: 按摩题材很容易涉黄踩线
+    raw_quote: 这个题材很容易涉黄了

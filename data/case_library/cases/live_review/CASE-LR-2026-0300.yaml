@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0300
+title: 收容笔记 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 灵异
+  - SCP
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分差不多 | 智商在线，故事有水平但题材审核风险高，适合蓝精灵，内投有机会。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 智商在线，故事有水平但题材审核风险高，适合蓝精灵，内投有机会。 | 起点审核与受众上限限制;节奏偏慢，需要更快推进
+  observable:
+  - 'taboo维度: 起点审核与受众上限限制'
+  - 'pacing维度: 节奏偏慢，需要更快推进'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 691
+  - 750
+  score: 59
+  score_raw: 59分差不多
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 收容笔记
+  genre_guess:
+  - 都市
+  - 异能
+  - 灵异
+  - SCP
+  overall_comment: 智商在线，故事有水平但题材审核风险高，适合蓝精灵，内投有机会。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 起点审核与受众上限限制
+    raw_quote: 你审核尺度是一方面... 你要是异能打怪兽... 受众也很窄
+  - dimension: pacing
+    severity: negative
+    content: 节奏偏慢，需要更快推进
+    raw_quote: 节奏要加速啊 不能一直装逼了
+  - dimension: ops
+    severity: neutral
+    content: 更适合发蓝精灵平台
+    raw_quote: 我觉得真适合蓝精灵吧

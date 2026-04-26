@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0216
+title: 女巫与领主（秩序崩坏） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 西方奇幻
+  - 领主
+  - 女巫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 重回五十分的水平 | 角色塑造有进步，人设讨喜，但缺乏主线，日常流和乐子风格需要调整。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 角色塑造有进步，人设讨喜，但缺乏主线，日常流和乐子风格需要调整。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1205
+  - 1268
+  score: null
+  score_raw: 重回五十分的水平
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 女巫与领主（秩序崩坏）
+  genre_guess:
+  - 西方奇幻
+  - 领主
+  - 女巫
+  overall_comment: 角色塑造有进步，人设讨喜，但缺乏主线，日常流和乐子风格需要调整。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 莱雅等女角色塑造可爱，互动有吸引力
+    raw_quote: 确实是这个莱雅人生力好 ... 没有人会讨厌 一个这样的女角色的
+  - dimension: hook
+    severity: neutral
+    content: 风格偏向可爱日常，需加入强力主线以确保读者留存
+    raw_quote: 习惯你還是拉個主線吧 ... 找個小主線 把你這個樂子的 風格改一改

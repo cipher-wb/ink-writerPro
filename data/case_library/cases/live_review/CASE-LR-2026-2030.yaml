@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2030
+title: 开局生死化作契约 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 玄幻
+  - 测灵根
+  - 灵气复苏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多给你20分 | 题材小白套路，设定俗套，只有表达流畅一个优点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材小白套路，设定俗套，只有表达流畅一个优点。 | 题材套路小白，全是设定
+  observable:
+  - 'simplicity维度: 题材套路小白，全是设定'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 481
+  - 600
+  score: 20
+  score_raw: 最多给你20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 开局生死化作契约
+  genre_guess:
+  - 玄幻
+  - 测灵根
+  - 灵气复苏
+  overall_comment: 题材小白套路，设定俗套，只有表达流畅一个优点。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 题材套路小白，全是设定
+    raw_quote: 这怎么建议大哥…20年前都没人看啊
+  - dimension: misc
+    severity: positive
+    content: 表达流畅是唯一优点
+    raw_quote: 表达文件还可以 就是能看懂

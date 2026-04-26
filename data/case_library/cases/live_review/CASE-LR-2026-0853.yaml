@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0853
+title: 从忽悠纳兰嫣然开始 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 同人
+  - 斗破
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只发没成绩了 | 斗破伪同人，小白昂戏互动，节奏快但过时，只发没成绩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 斗破伪同人，小白昂戏互动，节奏快但过时，只发没成绩。 | 招摇撞骗开场太昂气，把纳兰嫣然当弱智;斗破同人早已过时，多女主抢所有女角色纯蹭
+  observable:
+  - 'opening维度: 招摇撞骗开场太昂气，把纳兰嫣然当弱智'
+  - 'genre维度: 斗破同人早已过时，多女主抢所有女角色纯蹭'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1081
+  - 1150
+  score: null
+  score_raw: 只发没成绩了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 从忽悠纳兰嫣然开始
+  genre_guess:
+  - 同人
+  - 斗破
+  overall_comment: 斗破伪同人，小白昂戏互动，节奏快但过时，只发没成绩。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 招摇撞骗开场太昂气，把纳兰嫣然当弱智
+    raw_quote: 就感觉你把纳兰嫣兰当弱智，就这样昂戏
+  - dimension: genre
+    severity: negative
+    content: 斗破同人早已过时，多女主抢所有女角色纯蹭
+    raw_quote: 萧炎的所有女的都被你抢了……这有啥意思

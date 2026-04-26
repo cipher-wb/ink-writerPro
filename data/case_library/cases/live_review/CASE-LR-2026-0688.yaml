@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0688
+title: 选剑先祖 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分对吧 | 核心卖点无聊，丹田被偷的驱动力读者不看，需要换思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 核心卖点无聊，丹田被偷的驱动力读者不看，需要换思路。 | 丹田被偷的卖点无吸引力;高个子矮个子欺负人设定无趣，互动平淡;文笔还行但题材立不住，需要重新构思
+  observable:
+  - 'golden_finger维度: 丹田被偷的卖点无吸引力'
+  - 'character维度: 高个子矮个子欺负人设定无趣，互动平淡'
+  - 'simplicity维度: 文笔还行但题材立不住，需要重新构思'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 428
+  - 511
+  score: 22
+  score_raw: 22分对吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 选剑先祖
+  genre_guess:
+  - 仙侠
+  - 穿越
+  overall_comment: 核心卖点无聊，丹田被偷的驱动力读者不看，需要换思路。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 丹田被偷的卖点无吸引力
+    raw_quote: 核心没意思啊
+  - dimension: character
+    severity: negative
+    content: 高个子矮个子欺负人设定无趣，互动平淡
+    raw_quote: 没意思啊
+  - dimension: simplicity
+    severity: negative
+    content: 文笔还行但题材立不住，需要重新构思
+    raw_quote: 文笔还行 但什么思路啊 题材立不住的

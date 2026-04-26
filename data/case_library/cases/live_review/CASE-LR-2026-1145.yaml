@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1145
+title: 当了三天王子我被宠到了 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 宫廷
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多能给你40分啊 44分啊 大过年的不吉利就给你43嘛 | 开头西幻切入突兀，雪白桥段破坏人设，不过女仆场景写得很真实，主线薄弱需要强化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头西幻切入突兀，雪白桥段破坏人设，不过女仆场景写得很真实，主线薄弱需要强化。 | 开局切入拉垮，突然跪地雪白太突兀
+  observable:
+  - 'opening维度: 开局切入拉垮，突然跪地雪白太突兀'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 881
+  - 1020
+  score: 43
+  score_raw: 差不多能给你40分啊 44分啊 大过年的不吉利就给你43嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 当了三天王子我被宠到了
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 宫廷
+  overall_comment: 开头西幻切入突兀，雪白桥段破坏人设，不过女仆场景写得很真实，主线薄弱需要强化。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局切入拉垮，突然跪地雪白太突兀
+    raw_quote: 忽然之间身体反应很诚实是吧 … 这个有点太突兀了
+  - dimension: pacing
+    severity: positive
+    content: 后面女仆场景真实，有斯巴达克斯的代入感
+    raw_quote: 后面写的比开头好看多了 … 很真实 代入感很强
+  - dimension: golden_finger
+    severity: neutral
+    content: 主线还是弱，可以围绕记忆继承和金手指制造危机
+    raw_quote: 还是主线弱还是随遇而安呀

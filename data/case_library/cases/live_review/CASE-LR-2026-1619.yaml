@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1619
+title: 邪祟规则怪谈 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 灵异
+  - 规则怪谈
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多就30分 | 故弄玄虚，表达混乱，读者完全看不懂主线，退步严重，误入歧途。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故弄玄虚，表达混乱，读者完全看不懂主线，退步严重，误入歧途。 | 谜语人写法，故事看不懂，玄虚过度;缺乏清晰卖点，线性叙事崩坏，投稿建议被曲解
+  observable:
+  - 'simplicity维度: 谜语人写法，故事看不懂，玄虚过度'
+  - 'hook维度: 缺乏清晰卖点，线性叙事崩坏，投稿建议被曲解'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 1080
+  - 1149
+  score: 30
+  score_raw: 最多就30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 邪祟规则怪谈
+  genre_guess:
+  - 灵异
+  - 规则怪谈
+  - 系统
+  overall_comment: 故弄玄虚，表达混乱，读者完全看不懂主线，退步严重，误入歧途。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 谜语人写法，故事看不懂，玄虚过度
+    raw_quote: 故弄玄虚兄弟 … 谜语人就是谜语人 … 讀者看不懂
+  - dimension: hook
+    severity: negative
+    content: 缺乏清晰卖点，线性叙事崩坏，投稿建议被曲解
+    raw_quote: 聽你的建議這麼寫的 … 我没有建议你这么乱写 … 开头线性叙事

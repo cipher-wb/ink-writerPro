@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1943
+title: 铸天无限 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 无限流
+  - 同人
+  - 动漫副本
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分嘛 | 代入感老套，没写出副本和同人的感觉，变成了原创小白文，水平不足需要多练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感老套，没写出副本和同人的感觉，变成了原创小白文，水平不足需要多练笔。 | 没副本的感觉，开局老套劝退;人物人设特别小白;简词造句太百叶，水平不够得抄书
+  observable:
+  - 'opening维度: 没副本的感觉，开局老套劝退'
+  - 'character维度: 人物人设特别小白'
+  - 'misc维度: 简词造句太百叶，水平不够得抄书'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 392
+  - 436
+  score: 20
+  score_raw: 20分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 铸天无限
+  genre_guess:
+  - 无限流
+  - 同人
+  - 动漫副本
+  overall_comment: 代入感老套，没写出副本和同人的感觉，变成了原创小白文，水平不足需要多练笔。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 没副本的感觉，开局老套劝退
+    raw_quote: 就是没副本的感觉...所以说最好还是副本切入，先拉一下
+  - dimension: character
+    severity: negative
+    content: 人物人设特别小白
+    raw_quote: 人物人设特别小白，包括主角包括配角都很小白，然后情绪很老套
+  - dimension: misc
+    severity: negative
+    content: 简词造句太百叶，水平不够得抄书
+    raw_quote: 简词造句也比较百业的去抄书...水平不够啊，还是得超出脸超出脸

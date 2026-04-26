@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1670
+title: 穿越古代猎户保卫家园 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 古代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多最多也就是 15分吧 | 缺乏代入感和期待感，对话无聊，人设像都市小白文，整体太白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缺乏代入感和期待感，对话无聊，人设像都市小白文，整体太白。 | 配角立不住，大小姐猎户言行脱离场景;文风太小白，对话像都市甜宠
+  observable:
+  - 'character维度: 配角立不住，大小姐猎户言行脱离场景'
+  - 'simplicity维度: 文风太小白，对话像都市甜宠'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 171
+  - 230
+  score: 15
+  score_raw: 最多最多也就是 15分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越古代猎户保卫家园
+  genre_guess:
+  - 历史
+  - 穿越
+  - 古代
+  overall_comment: 缺乏代入感和期待感，对话无聊，人设像都市小白文，整体太白。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 配角立不住，大小姐猎户言行脱离场景
+    raw_quote: 这些猎户这些农民的 怎么可能 远房亲 哦他哦 写了是吧 那就大小姐 那行吧
+  - dimension: simplicity
+    severity: negative
+    content: 文风太小白，对话像都市甜宠
+    raw_quote: 大哥太白了 小白兔呀

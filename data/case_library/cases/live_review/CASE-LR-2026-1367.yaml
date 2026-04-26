@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1367
+title: 古惑仔港综 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 港综
+  - 古惑仔
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 前面的话就整个25分 | 设定和切入太慢，乐子加得尴尬，需从剧情本体切入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定和切入太慢，乐子加得尴尬，需从剧情本体切入。 | 用穿越设定直接开头，读者一秒全跑，应直接进入铜锣湾剧情;乐子戏太傻太昂喜，精神病人硬演感，建议去掉
+  observable:
+  - 'opening维度: 用穿越设定直接开头，读者一秒全跑，应直接进入铜锣湾剧情'
+  - 'misc维度: 乐子戏太傻太昂喜，精神病人硬演感，建议去掉'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1521
+  - 1570
+  score: 25
+  score_raw: 前面的话就整个25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 古惑仔港综
+  genre_guess:
+  - 港综
+  - 古惑仔
+  - 穿越
+  overall_comment: 设定和切入太慢，乐子加得尴尬，需从剧情本体切入。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 用穿越设定直接开头，读者一秒全跑，应直接进入铜锣湾剧情
+    raw_quote: 这个设定开了读者就全跑了...你直接从铜锣湾开局行不行
+  - dimension: misc
+    severity: negative
+    content: 乐子戏太傻太昂喜，精神病人硬演感，建议去掉
+    raw_quote: 乐子感觉也挺傻的挺昂喜的挺神经病的

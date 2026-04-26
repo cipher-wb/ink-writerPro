@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0706
+title: 马上飞升（程序员修仙） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 都市修仙
+  - 程序员
+  - 模拟器/修复
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数，仅建议调整思路 | 书名有感觉，设定虽有新意但过于复杂；反派和剧情仍属传统写法，需要降智简化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名有感觉，设定虽有新意但过于复杂；反派和剧情仍属传统写法，需要降智简化。 | 科技感设定复杂，商业化创作需降低门槛;反派过于弱智脸谱化，缺乏当代修仙智商博弈感
+  observable:
+  - 'simplicity维度: 科技感设定复杂，商业化创作需降低门槛'
+  - 'character维度: 反派过于弱智脸谱化，缺乏当代修仙智商博弈感'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 456
+  - 510
+  score: null
+  score_raw: 未明确说出分数，仅建议调整思路
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 马上飞升（程序员修仙）
+  genre_guess:
+  - 都市修仙
+  - 程序员
+  - 模拟器/修复
+  overall_comment: 书名有感觉，设定虽有新意但过于复杂；反派和剧情仍属传统写法，需要降智简化。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 科技感设定复杂，商业化创作需降低门槛
+    raw_quote: 网文是商业化创作，你要让读者懂...第一个很吓人...九百个人全跑了
+  - dimension: character
+    severity: negative
+    content: 反派过于弱智脸谱化，缺乏当代修仙智商博弈感
+    raw_quote: 反派还是太无聊了...就每个人都是那种...满眼荧光就这样的

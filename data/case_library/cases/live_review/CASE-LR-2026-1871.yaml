@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1871
+title: 苟在圣界仙门当邪修 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 仙侠
+  - 邪修
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十十五分 | 仙侠味道足，文笔可以，但代入感太差，剧情推进急没铺垫，读者无法感同身受。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 仙侠味道足，文笔可以，但代入感太差，剧情推进急没铺垫，读者无法感同身受。 | 代入感很差，读者无法对主角的处境感同身受;剧情推进太急，没有铺垫核心主线，读者没耐心
+  observable:
+  - 'character维度: 代入感很差，读者无法对主角的处境感同身受'
+  - 'pacing维度: 剧情推进太急，没有铺垫核心主线，读者没耐心'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1412
+  - 1462
+  score: 35
+  score_raw: 三十十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 苟在圣界仙门当邪修
+  genre_guess:
+  - 仙侠
+  - 邪修
+  - 穿越
+  overall_comment: 仙侠味道足，文笔可以，但代入感太差，剧情推进急没铺垫，读者无法感同身受。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 代入感很差，读者无法对主角的处境感同身受
+    raw_quote: 代入感不够 主要是代入感 你复仇没问题 没什么代入感
+  - dimension: pacing
+    severity: negative
+    content: 剧情推进太急，没有铺垫核心主线，读者没耐心
+    raw_quote: 你的剧情推进太急了对吧 读者不找 没耐心了

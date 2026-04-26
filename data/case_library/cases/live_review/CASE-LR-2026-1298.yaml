@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1298
+title: 贞观太子李承乾 (pass / 65分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 历史
+  - 唐朝
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多65分吧 给你好吧 | 切入高度干练，历史人物互动生动，具备较强签约潜力，但开头躺平人设需微调金手指以提升期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入高度干练，历史人物互动生动，具备较强签约潜力，但开头躺平人设需微调金手指以提升期待感。 | 缺乏金手指或系统加持，主角只想躺平导致读者追读动力不足
+  observable:
+  - 'golden_finger维度: 缺乏金手指或系统加持，主角只想躺平导致读者追读动力不足'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 2420
+  - 2660
+  score: 65
+  score_raw: 差不多65分吧 给你好吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 贞观太子李承乾
+  genre_guess:
+  - 历史
+  - 唐朝
+  - 重生
+  overall_comment: 切入高度干练，历史人物互动生动，具备较强签约潜力，但开头躺平人设需微调金手指以提升期待感。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头通过太子面临被废的危机迅速建立代入和悬念
+    raw_quote: 切入很快 … 这个切入挺好的 这个切入签约视频
+  - dimension: golden_finger
+    severity: negative
+    content: 缺乏金手指或系统加持，主角只想躺平导致读者追读动力不足
+    raw_quote: 我想当个废柴 我就不想死就行了 … 你都没有胸无大志 我追你干啥呀

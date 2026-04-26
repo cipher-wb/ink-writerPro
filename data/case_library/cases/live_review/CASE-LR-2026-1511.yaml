@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1511
+title: 穿越成周瑜 (borderline / 56分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十多分肯定有五十六分吧 | 穿越周瑜与大小乔互动真实有趣，但缺乏公瑾记忆，节奏偏快，有打磨空间。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越周瑜与大小乔互动真实有趣，但缺乏公瑾记忆，节奏偏快，有打磨空间。 | 没继承公瑾记忆，失去历史人物爽点;节奏太快，应适当放慢铺陈
+  observable:
+  - 'golden_finger维度: 没继承公瑾记忆，失去历史人物爽点'
+  - 'pacing维度: 节奏太快，应适当放慢铺陈'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 361
+  - 480
+  score: 56
+  score_raw: 五十多分肯定有五十六分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越成周瑜
+  genre_guess:
+  - 历史
+  - 穿越
+  - 后宫
+  overall_comment: 穿越周瑜与大小乔互动真实有趣，但缺乏公瑾记忆，节奏偏快，有打磨空间。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 与大小乔的互动真实，代入感强
+    raw_quote: 真实感到是没啥问题 那行吧 我仔细想我穿越了我也是这样的没问题
+  - dimension: golden_finger
+    severity: negative
+    content: 没继承公瑾记忆，失去历史人物爽点
+    raw_quote: 没有继承公警的记忆吗 这个要继承吧大哥 没继承就没有公警的爽点了呀
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快，应适当放慢铺陈
+    raw_quote: 节奏有点太快了我觉得稍微慢一点吧

@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0309
+title: 非从尘埃 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 科幻
+  - 科普
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多38分吧 | 把科普当网文，毫无网文思维，需要从零学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 把科普当网文，毫无网文思维，需要从零学习。 | 全文过于专业科普，完全不像网文;缺乏对网文基本认知
+  observable:
+  - 'misc维度: 全文过于专业科普，完全不像网文'
+  - 'genre维度: 缺乏对网文基本认知'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 1231
+  - 1290
+  score: 38
+  score_raw: 差不多38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 非从尘埃
+  genre_guess:
+  - 科幻
+  - 科普
+  overall_comment: 把科普当网文，毫无网文思维，需要从零学习。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 全文过于专业科普，完全不像网文
+    raw_quote: 真不是网文呀 散文呀
+  - dimension: genre
+    severity: negative
+    content: 缺乏对网文基本认知
+    raw_quote: 你对网络一无所知
+  - dimension: misc
+    severity: neutral
+    content: 建议系统学习网文写法
+    raw_quote: 得去扫榜学习啊 就得看书

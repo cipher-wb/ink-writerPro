@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0730
+title: 星空虫族末世 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 科幻
+  - 虫族
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能33了 | 设定拖沓复杂，开篇氛围像游戏画面呈现缺乏网文吸引力，文笔有特点但题材难度高且过审困难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定拖沓复杂，开篇氛围像游戏画面呈现缺乏网文吸引力，文笔有特点但题材难度高且过审困难。 | 开篇设定堆砌过多，读者容易流失;主角设定为蛆类虫子，读者代入困难
+  observable:
+  - 'opening维度: 开篇设定堆砌过多，读者容易流失'
+  - 'character维度: 主角设定为蛆类虫子，读者代入困难'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 781
+  - 870
+  score: 33
+  score_raw: 只能33了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 星空虫族末世
+  genre_guess:
+  - 科幻
+  - 虫族
+  - 末世
+  overall_comment: 设定拖沓复杂，开篇氛围像游戏画面呈现缺乏网文吸引力，文笔有特点但题材难度高且过审困难。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇设定堆砌过多，读者容易流失
+    raw_quote: 设定太拖沓了...读者不看呀
+  - dimension: character
+    severity: negative
+    content: 主角设定为蛆类虫子，读者代入困难
+    raw_quote: 别写蛆啊你就是一个虫子不就行了吗...怎么代入啊
+  - dimension: simplicity
+    severity: positive
+    content: 文笔不错，有美国风那种味道
+    raw_quote: 就是文笔还好 有美美那种

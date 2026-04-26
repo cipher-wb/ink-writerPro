@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0637
+title: 林凡30分钟内 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 作为蓝精灵我觉得有30吧 | 舔狗情绪太憋屈，逻辑不够，适合蓝精灵短剧，不适合起点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 舔狗情绪太憋屈，逻辑不够，适合蓝精灵短剧，不适合起点 | 整篇憋屈没有报仇，完全不爽;剧情逻辑性不够，扯淡成分多
+  observable:
+  - 'highpoint维度: 整篇憋屈没有报仇，完全不爽'
+  - 'simplicity维度: 剧情逻辑性不够，扯淡成分多'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 581
+  - 640
+  score: 30
+  score_raw: 作为蓝精灵我觉得有30吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 林凡30分钟内
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 舔狗情绪太憋屈，逻辑不够，适合蓝精灵短剧，不适合起点
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 整篇憋屈没有报仇，完全不爽
+    raw_quote: 不爽不爽不爽，爽跟可怕一点都不爽
+  - dimension: simplicity
+    severity: negative
+    content: 剧情逻辑性不够，扯淡成分多
+    raw_quote: 逻辑性不够，扯淡了
+  - dimension: misc
+    severity: positive
+    content: 文笔和讲故事能力还可以
+    raw_quote: 文笔跟讲故事的可以

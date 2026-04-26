@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1038
+title: 黑恶势力系统文 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 黑暗势力
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能22发 | 题材和背景过不了审，系统设定老旧，事件设计也有问题
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材和背景过不了审，系统设定老旧，事件设计也有问题 | 黑恶势力背景和警方破案带系统过不了审核;系统设定属于蓝精灵抢戏，模式老旧
+  observable:
+  - 'taboo维度: 黑恶势力背景和警方破案带系统过不了审核'
+  - 'golden_finger维度: 系统设定属于蓝精灵抢戏，模式老旧'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 451
+  - 600
+  score: 22
+  score_raw: 只能22发
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 黑恶势力系统文
+  genre_guess:
+  - 都市
+  - 系统
+  - 黑暗势力
+  overall_comment: 题材和背景过不了审，系统设定老旧，事件设计也有问题
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 黑恶势力背景和警方破案带系统过不了审核
+    raw_quote: 过不了审啊 这个背景过不了审 这个事件也过不了审
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定属于蓝精灵抢戏，模式老旧
+    raw_quote: 现在这系统你这种事件应该是贴吧文那种写法

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2160
+title: 晋朝末年：龙虎山天师 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 历史
+  - 灵异
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 倒数25分吧 | 晋末冷门朝代灵异+历史文，受众叠加极窄，节奏慢且缺乏现代代入感，基本没有市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 晋末冷门朝代灵异+历史文，受众叠加极窄，节奏慢且缺乏现代代入感，基本没有市场。 | 冷门朝代加历史诡异题材受众极窄，发哪里都没人看;缺乏历史文应有的现代人代入感和背景介绍
+  observable:
+  - 'genre维度: 冷门朝代加历史诡异题材受众极窄，发哪里都没人看'
+  - 'opening维度: 缺乏历史文应有的现代人代入感和背景介绍'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 1997
+  - 2135
+  score: 25
+  score_raw: 倒数25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 晋朝末年：龙虎山天师
+  genre_guess:
+  - 历史
+  - 灵异
+  - 穿越
+  overall_comment: 晋末冷门朝代灵异+历史文，受众叠加极窄，节奏慢且缺乏现代代入感，基本没有市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 冷门朝代加历史诡异题材受众极窄，发哪里都没人看
+    raw_quote: 这个题材说白了这个题材是养猪的...没什么潜力，其实真没什么潜力
+  - dimension: opening
+    severity: negative
+    content: 缺乏历史文应有的现代人代入感和背景介绍
+    raw_quote: 你又不拿代入感，又不解释，又不介绍...现代代入感太差了，这些场景被你写成原创了

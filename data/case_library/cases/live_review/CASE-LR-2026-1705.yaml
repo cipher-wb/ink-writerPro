@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1705
+title: 我当过人星际大杂烩 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 科幻
+  - 仙侠
+  - 都市
+  - 大杂烩
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不到28分的样子 | 题材是大杂烩，世界观卖点是死路，事件无聊，应直接推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材是大杂烩，世界观卖点是死路，事件无聊，应直接推翻。 | 科幻、仙侠、都市等多种元素乱炖，定位不清。;开局OB视角，故事无聊，新人以世界观为卖点是死路。
+  observable:
+  - 'genre维度: 科幻、仙侠、都市等多种元素乱炖，定位不清。'
+  - 'opening维度: 开局OB视角，故事无聊，新人以世界观为卖点是死路。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1444
+  - 1500
+  score: 28
+  score_raw: 不到28分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我当过人星际大杂烩
+  genre_guess:
+  - 科幻
+  - 仙侠
+  - 都市
+  - 大杂烩
+  overall_comment: 题材是大杂烩，世界观卖点是死路，事件无聊，应直接推翻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻、仙侠、都市等多种元素乱炖，定位不清。
+    raw_quote: 已经养了好几头猪了，就是杂糅科幻都市仙侠玄幻
+  - dimension: opening
+    severity: negative
+    content: 开局OB视角，故事无聊，新人以世界观为卖点是死路。
+    raw_quote: 以世界观为卖点的书，基本都是找死兄弟

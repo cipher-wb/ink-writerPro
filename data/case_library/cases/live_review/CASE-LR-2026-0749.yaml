@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0749
+title: 工匠开局天下无敌 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 玄幻
+  - 科幻
+  - 工匠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 目前这点，20吧 | 世界观科幻不像科幻玄幻不像玄幻，设定堆砌事件普通。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观科幻不像科幻玄幻不像玄幻，设定堆砌事件普通。 | 世界观混乱，东幻西幻元素杂糅;开篇全是设定解说，事件太普通无法吸引人
+  observable:
+  - 'ops维度: 世界观混乱，东幻西幻元素杂糅'
+  - 'opening维度: 开篇全是设定解说，事件太普通无法吸引人'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 431
+  - 500
+  score: 20
+  score_raw: 目前这点，20吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 工匠开局天下无敌
+  genre_guess:
+  - 玄幻
+  - 科幻
+  - 工匠
+  overall_comment: 世界观科幻不像科幻玄幻不像玄幻，设定堆砌事件普通。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 世界观混乱，东幻西幻元素杂糅
+    raw_quote: 这背景世界观怎么想的……怎么就不谢谢瞎看的会员
+  - dimension: opening
+    severity: negative
+    content: 开篇全是设定解说，事件太普通无法吸引人
+    raw_quote: 这全是设定啊对吧……叽里咕了一大堆事件太普通了

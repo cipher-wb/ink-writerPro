@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1319
+title: 超新星绝症求生 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 科幻
+  - 绝症
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十八成有的啊 | 十年前慢节奏写法，毫无事件冲突，父母拉扯太无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 十年前慢节奏写法，毫无事件冲突，父母拉扯太无聊。 | 故事推进极慢，全是情绪渲染;开头绝症与父母拉扯已劝退读者
+  observable:
+  - 'pacing维度: 故事推进极慢，全是情绪渲染'
+  - 'opening维度: 开头绝症与父母拉扯已劝退读者'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1521
+  - 1580
+  score: 38
+  score_raw: 三十八成有的啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 超新星绝症求生
+  genre_guess:
+  - 科幻
+  - 绝症
+  - 系统
+  overall_comment: 十年前慢节奏写法，毫无事件冲突，父母拉扯太无聊。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 故事推进极慢，全是情绪渲染
+    raw_quote: 慢慢地来 还破百不堪 四肢支撑 就是比例还行 但是问题是 没有好的事件冲突
+  - dimension: opening
+    severity: negative
+    content: 开头绝症与父母拉扯已劝退读者
+    raw_quote: 开头说癌症了 跟爸爸妈妈拉扯了 已经跑完了

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1213
+title: 全能游戏设计师 (fail / 46分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 都市
+  - 游戏
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 满46分吧 | 做游戏是好题材，但开篇职场冲突写得小白，需提升人物沉稳度。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 做游戏是好题材，但开篇职场冲突写得小白，需提升人物沉稳度。 | 主角人设和冲突显得很幼稚
+  observable:
+  - 'character维度: 主角人设和冲突显得很幼稚'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 596
+  - 651
+  score: 46
+  score_raw: 满46分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全能游戏设计师
+  genre_guess:
+  - 都市
+  - 游戏
+  - 系统
+  overall_comment: 做游戏是好题材，但开篇职场冲突写得小白，需提升人物沉稳度。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设和冲突显得很幼稚
+    raw_quote: 好小白啊这个东西这个事件好小白…能不能写的有点沉稳一点
+  - dimension: hook
+    severity: positive
+    content: 古庙逃亡的金手指选择接地气
+    raw_quote: 神庙逃亡什么愤怒的小鸟这些就是大家耳熟能详的游戏

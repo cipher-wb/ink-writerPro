@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1699
+title: 重生成为功德金龙 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 金手指
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分左右 | 题材老套，雪白描写生硬，风格不伦不类，应直接写爽文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套，雪白描写生硬，风格不伦不类，应直接写爽文。 | 起点与番茄风格混搭，不伦不类。;雪白描写初级，出戏且缺乏网文技巧。
+  observable:
+  - 'genre维度: 起点与番茄风格混搭，不伦不类。'
+  - 'character维度: 雪白描写初级，出戏且缺乏网文技巧。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1063
+  - 1124
+  score: 35
+  score_raw: 35分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生成为功德金龙
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 金手指
+  - 爽文
+  overall_comment: 题材老套，雪白描写生硬，风格不伦不类，应直接写爽文。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 起点与番茄风格混搭，不伦不类。
+    raw_quote: 大哥现在本来翻起题材...又莫名其妙变成轻点风格
+  - dimension: character
+    severity: negative
+    content: 雪白描写初级，出戏且缺乏网文技巧。
+    raw_quote: 就什么香艳的曲线...这种勾八话

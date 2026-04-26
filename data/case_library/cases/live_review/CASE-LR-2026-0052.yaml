@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0052
+title: 梦境复仇少女 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 都市
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 字数太少，文笔细腻，但题材不蓝屏，无法评分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 字数太少，文笔细腻，但题材不蓝屏，无法评分。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 931
+  - 980
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 梦境复仇少女
+  genre_guess:
+  - 都市
+  - 灵异
+  overall_comment: 字数太少，文笔细腻，但题材不蓝屏，无法评分。
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 文笔扎实，简洁细腻
+    raw_quote: 比例还可以的

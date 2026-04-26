@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0230
+title: 精灵领主与戈布林 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 奇幻
+  - 领主
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分 | 遣词造句扎实，但节奏慢，进入舒适区狂写恋爱，缺乏爆点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句扎实，但节奏慢，进入舒适区狂写恋爱，缺乏爆点。 | 节奏太慢，开头没有冲突;天赋误写为恋爱小说，偏离主线
+  observable:
+  - 'pacing维度: 节奏太慢，开头没有冲突'
+  - 'golden_finger维度: 天赋误写为恋爱小说，偏离主线'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 275
+  - 370
+  score: 50
+  score_raw: 50分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 精灵领主与戈布林
+  genre_guess:
+  - 奇幻
+  - 领主
+  - 种田
+  overall_comment: 遣词造句扎实，但节奏慢，进入舒适区狂写恋爱，缺乏爆点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，开头没有冲突
+    raw_quote: 节奏很慢 没什么太大的爆点
+  - dimension: golden_finger
+    severity: negative
+    content: 天赋误写为恋爱小说，偏离主线
+    raw_quote: 没有什么天赋 写成恋爱文
+  - dimension: simplicity
+    severity: positive
+    content: 文笔扎实
+    raw_quote: 大哥比例挺好的我觉得

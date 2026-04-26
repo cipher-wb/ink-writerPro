@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1504
+title: 蛇妖女巫游戏先子 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 奇幻
+  - 游戏
+  - 蛇妖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能三十五分解决 | 题材陷阱，事件没意思，拉扯平淡，建议早点换题材
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材陷阱，事件没意思，拉扯平淡，建议早点换题材 | 蛇妖事件不吸引人，对白太轻松;轻松修仙是陷阱题材，天王写也难出成绩
+  observable:
+  - 'misc维度: 蛇妖事件不吸引人，对白太轻松'
+  - 'genre维度: 轻松修仙是陷阱题材，天王写也难出成绩'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 1051
+  - 1095
+  score: 35
+  score_raw: 只能三十五分解决
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蛇妖女巫游戏先子
+  genre_guess:
+  - 奇幻
+  - 游戏
+  - 蛇妖
+  overall_comment: 题材陷阱，事件没意思，拉扯平淡，建议早点换题材
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 蛇妖事件不吸引人，对白太轻松
+    raw_quote: 女蛇妖这个事件一点都不吸引人 你就是想写的轻松
+  - dimension: genre
+    severity: negative
+    content: 轻松修仙是陷阱题材，天王写也难出成绩
+    raw_quote: 这个题材本来就是个陷阱题材 你前人过神武六六也天王过 他写了个也 成绩也不咋样

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0380
+title: 死亡电台 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 都市
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十二分是吧 | 电台题材在起点无法通过审核，建议改为抖音直播选题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 电台题材在起点无法通过审核，建议改为抖音直播选题。 | 死亡电台题材涉及平台违禁，无法过审。;平台审查风险高，直接判定不可签约。
+  observable:
+  - 'genre维度: 死亡电台题材涉及平台违禁，无法过审。'
+  - 'ops维度: 平台审查风险高，直接判定不可签约。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 115
+  - 145
+  score: 32
+  score_raw: 三十二分是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 死亡电台
+  genre_guess:
+  - 都市
+  - 灵异
+  overall_comment: 电台题材在起点无法通过审核，建议改为抖音直播选题。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 死亡电台题材涉及平台违禁，无法过审。
+    raw_quote: 电台感觉没啥，现在不用电台吧，所以说还不如换成直播抖音。
+  - dimension: ops
+    severity: negative
+    content: 平台审查风险高，直接判定不可签约。
+    raw_quote: 电台不能写。

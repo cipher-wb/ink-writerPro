@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-0784
+title: 东京合租日记 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 都市
+  - 东京
+  - 吸血鬼
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 书名好但写得平淡，缺少雪白和拉扯，节奏太快没真实感，需要大改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名好但写得平淡，缺少雪白和拉扯，节奏太快没真实感，需要大改。 | 开头太着急，没有铺垫;没有雪白拉扯，写成了普通日常;缺乏真正吸引人的点
+  observable:
+  - 'pacing维度: 开头太着急，没有铺垫'
+  - 'character维度: 没有雪白拉扯，写成了普通日常'
+  - 'hook维度: 缺乏真正吸引人的点'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 851
+  - 900
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 东京合租日记
+  genre_guess:
+  - 都市
+  - 东京
+  - 吸血鬼
+  - 灵异
+  overall_comment: 书名好但写得平淡，缺少雪白和拉扯，节奏太快没真实感，需要大改。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开头太着急，没有铺垫
+    raw_quote: 这节奏就是我你怎么认识的这个女的 循序渐进啊 400多个字就已经把这个事件没代入感了
+  - dimension: character
+    severity: negative
+    content: 没有雪白拉扯，写成了普通日常
+    raw_quote: 没有雪白 你这个你骗我啊 大哥说里面有雪白没有啊 就是个普通的日常
+  - dimension: hook
+    severity: negative
+    content: 缺乏真正吸引人的点
+    raw_quote: 你这个写法 你这骗子呀 这大过年的骗子 骗分

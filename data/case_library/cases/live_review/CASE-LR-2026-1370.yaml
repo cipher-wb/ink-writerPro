@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1370
+title: 末日求生单人秀 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 末世
+  - 系统
+  - 生存
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分分顶了没办法 | 单人求生独角戏，无故事无冲突，完全不懂小说本质。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 单人求生独角戏，无故事无冲突，完全不懂小说本质。 | 整章都是一人自言自语，无人物拉扯，无冲突亮点;沉迷于特殊描写，却丢失了小说的故事根本
+  observable:
+  - 'misc维度: 整章都是一人自言自语，无人物拉扯，无冲突亮点'
+  - 'misc维度: 沉迷于特殊描写，却丢失了小说的故事根本'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1681
+  - 1750
+  score: 25
+  score_raw: 25分分顶了没办法
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日求生单人秀
+  genre_guess:
+  - 末世
+  - 系统
+  - 生存
+  overall_comment: 单人求生独角戏，无故事无冲突，完全不懂小说本质。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 整章都是一人自言自语，无人物拉扯，无冲突亮点
+    raw_quote: 自言自语独角戏求生然後就讲设定...到底要干嘛呀
+  - dimension: misc
+    severity: negative
+    content: 沉迷于特殊描写，却丢失了小说的故事根本
+    raw_quote: 有什么意义呢过程不重要...故事在哪里

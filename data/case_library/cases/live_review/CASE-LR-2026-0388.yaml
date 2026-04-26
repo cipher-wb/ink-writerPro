@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0388
+title: 分摩度仙 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 仙侠
+  - 女频
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 抱歉 只能16分 | 设定极老，像十年前的晋江女频，完全不符合当前市场，必须换题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定极老，像十年前的晋江女频，完全不符合当前市场，必须换题材。 | 仙侠设定停留在三生三世十里桃花时代，毫无新意。;开局就是上帝视角的神魔大战，不接地气，没有代入。
+  observable:
+  - 'genre维度: 仙侠设定停留在三生三世十里桃花时代，毫无新意。'
+  - 'highpoint维度: 开局就是上帝视角的神魔大战，不接地气，没有代入。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 475
+  - 520
+  score: 16
+  score_raw: 抱歉 只能16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 分摩度仙
+  genre_guess:
+  - 仙侠
+  - 女频
+  overall_comment: 设定极老，像十年前的晋江女频，完全不符合当前市场，必须换题材。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 仙侠设定停留在三生三世十里桃花时代，毫无新意。
+    raw_quote: 有点太老了，女贫的感觉啊，一股静江女贫的味道。
+  - dimension: highpoint
+    severity: negative
+    content: 开局就是上帝视角的神魔大战，不接地气，没有代入。
+    raw_quote: 太大了，这个不接地气啊。

@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1698
+title: 遗忘之地无限流求生 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 无限流
+  - 求生
+  - 游戏
+  - 副本
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 肯定签不了约 | 题材垃圾，代入感极差，侧重点偏离，无限流本质在于现实人设。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材垃圾，代入感极差，侧重点偏离，无限流本质在于现实人设。 | 开局未能立住现实人设，直接进入副本，读者无法代入。;人物众多但一个也立不住，应集中塑造单一人设。
+  observable:
+  - 'opening维度: 开局未能立住现实人设，直接进入副本，读者无法代入。'
+  - 'character维度: 人物众多但一个也立不住，应集中塑造单一人设。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1004
+  - 1062
+  score: null
+  score_raw: 肯定签不了约
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 遗忘之地无限流求生
+  genre_guess:
+  - 无限流
+  - 求生
+  - 游戏
+  - 副本
+  overall_comment: 题材垃圾，代入感极差，侧重点偏离，无限流本质在于现实人设。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局未能立住现实人设，直接进入副本，读者无法代入。
+    raw_quote: 现实的人设没写好，无限就等于空中楼阁
+  - dimension: character
+    severity: negative
+    content: 人物众多但一个也立不住，应集中塑造单一人设。
+    raw_quote: 我都没立住...不要一上来一堆人立一个就行

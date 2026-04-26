@@ -1,0 +1,74 @@
+case_id: CASE-LR-2026-0001
+title: 重生东京律师：开局被诬告痴汉 (pass / 60分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11YFEzkEVu
+scope:
+  genre:
+  - 都市
+  - 穿越
+  - 职场
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就60盎粉吧 | 主线清晰但细节冗杂，存在较多猥琐描写与无关支线，需按建议删改后方可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YFEzkEVu.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线清晰但细节冗杂，存在较多猥琐描写与无关支线，需按建议删改后方可签约。 | 痴汉摸屁股场景应快速推进，原描写过慢拖节奏。;股票等无关细节篇幅过多，拖沓不聚焦。;主角直接打量女性三维，行为过于猥琐，损害正面形象。
+  observable:
+  - 'pacing维度: 痴汉摸屁股场景应快速推进，原描写过慢拖节奏。'
+  - 'pacing维度: 股票等无关细节篇幅过多，拖沓不聚焦。'
+  - 'character维度: 主角直接打量女性三维，行为过于猥琐，损害正面形象。'
+  - 'simplicity维度: 旁枝末节（如听歌环节、臆想加句）喧宾夺主，应果断删减。'
+  - 'genre维度: 频繁出现“真恶心”等强烈贬义词，严重破坏阅读体验与作品调性。'
+live_review_meta:
+  source_bvid: BV11YFEzkEVu
+  source_line_range:
+  - 5
+  - 314
+  score: 60
+  score_raw: 差不多就60盎粉吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 重生东京律师：开局被诬告痴汉
+  genre_guess:
+  - 都市
+  - 穿越
+  - 职场
+  - 系统流
+  overall_comment: 主线清晰但细节冗杂，存在较多猥琐描写与无关支线，需按建议删改后方可签约。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 痴汉摸屁股场景应快速推进，原描写过慢拖节奏。
+    raw_quote: 摸屁股要快啊
+  - dimension: pacing
+    severity: negative
+    content: 股票等无关细节篇幅过多，拖沓不聚焦。
+    raw_quote: 这东西我觉得这东西有点多了 也拖沓了
+  - dimension: character
+    severity: negative
+    content: 主角直接打量女性三维，行为过于猥琐，损害正面形象。
+    raw_quote: 你直接看三维 有点直接
+  - dimension: simplicity
+    severity: negative
+    content: 旁枝末节（如听歌环节、臆想加句）喧宾夺主，应果断删减。
+    raw_quote: 我觉得不该加不该加的 ... 这里应该删掉的
+  - dimension: golden_finger
+    severity: positive
+    content: 金手指（60系统）与主线契合，合理运用可驱动故事。
+    raw_quote: 60系统能用就用嘛
+  - dimension: genre
+    severity: negative
+    content: 频繁出现“真恶心”等强烈贬义词，严重破坏阅读体验与作品调性。
+    raw_quote: 真恶心 ... 这句话非常非常不好 非常破坏观感

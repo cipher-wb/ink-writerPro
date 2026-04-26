@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0158
+title: 梦幻目光 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 历史
+  - 南北朝
+  - 士族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 赌19吧 | 模仿痕迹太重，冷门朝代上限极低，无法签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 模仿痕迹太重，冷门朝代上限极低，无法签。 | 南北朝太冷门，历史之狼都后悔了;完全模仿冒天狼牙，没有自己的东西
+  observable:
+  - 'genre维度: 南北朝太冷门，历史之狼都后悔了'
+  - 'simplicity维度: 完全模仿冒天狼牙，没有自己的东西'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 373
+  - 384
+  score: 19
+  score_raw: 赌19吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 梦幻目光
+  genre_guess:
+  - 历史
+  - 南北朝
+  - 士族
+  overall_comment: 模仿痕迹太重，冷门朝代上限极低，无法签。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 南北朝太冷门，历史之狼都后悔了
+    raw_quote: 冷门朝代 它就是冷门 你少送就是能10万定对吧 但你冷门朝代他就是就是冷门
+  - dimension: simplicity
+    severity: negative
+    content: 完全模仿冒天狼牙，没有自己的东西
+    raw_quote: 这个太像了 这个有点太像了 大哥这个太像了 你怎知道我的身份证假的 就这样录 太像了

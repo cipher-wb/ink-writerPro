@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1802
+title: 无能的丈夫规则怪谈 (pass / 75分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pLzHBFEY2
+scope:
+  genre:
+  - 规则怪谈
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 70分以上了，75分以上水平了 | 脑洞炸裂、代入感和场景描写优秀，但题材涉黄，起点平台无法过审。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pLzHBFEY2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞炸裂、代入感和场景描写优秀，但题材涉黄，起点平台无法过审。 | 内容涉黄NTR，起点过不了审
+  observable:
+  - 'taboo维度: 内容涉黄NTR，起点过不了审'
+live_review_meta:
+  source_bvid: BV1pLzHBFEY2
+  source_line_range:
+  - 1
+  - 231
+  score: 75
+  score_raw: 70分以上了，75分以上水平了
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 无能的丈夫规则怪谈
+  genre_guess:
+  - 规则怪谈
+  - 都市
+  overall_comment: 脑洞炸裂、代入感和场景描写优秀，但题材涉黄，起点平台无法过审。
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 脑洞炸裂，创意很牛
+    raw_quote: 这个脑洞有点炸裂啊 其实很牛逼
+  - dimension: taboo
+    severity: negative
+    content: 内容涉黄NTR，起点过不了审
+    raw_quote: 大哥本来你这个NTR就过不了审
+  - dimension: character
+    severity: positive
+    content: 人设代入感非常厉害
+    raw_quote: 人设代入感都非常厉害是吧
+  - dimension: misc
+    severity: positive
+    content: 真实感好，小场景小段子出彩
+    raw_quote: 真实感挺好的

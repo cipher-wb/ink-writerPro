@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0812
+title: 盖世英雄哑巴乞丐 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 玄幻
+  - 古早逆袭
+  - 虐恋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 正常打的话44分有的 但因为确实圈了 只能九分了 | 情感描写很扎实，但主角偷窥自慰的设定极度劝退，硬伤太致命
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情感描写很扎实，但主角偷窥自慰的设定极度劝退，硬伤太致命 | 主角窝囊偷窥，甚至自慰，代入感崩塌;开篇切入视角怪异，读者无法带入苦主;内容过于重口，触碰读者底线
+  observable:
+  - 'character维度: 主角窝囊偷窥，甚至自慰，代入感崩塌'
+  - 'opening维度: 开篇切入视角怪异，读者无法带入苦主'
+  - 'taboo维度: 内容过于重口，触碰读者底线'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 350
+  - 530
+  score: 9
+  score_raw: 正常打的话44分有的 但因为确实圈了 只能九分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 盖世英雄哑巴乞丐
+  genre_guess:
+  - 玄幻
+  - 古早逆袭
+  - 虐恋
+  overall_comment: 情感描写很扎实，但主角偷窥自慰的设定极度劝退，硬伤太致命
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角窝囊偷窥，甚至自慰，代入感崩塌
+    raw_quote: 哑巴是主角 我真的受不了啊 一边看一边用手来了个 你在这里用手来了个
+  - dimension: highpoint
+    severity: positive
+    content: 后面的情绪爆发有感染力，能让人感同身受
+    raw_quote: 写的好呀大哥我都哭出来了泪流满面 我也哭出来了 大哥的情绪很足
+  - dimension: opening
+    severity: negative
+    content: 开篇切入视角怪异，读者无法带入苦主
+    raw_quote: 哑巴搬石头是想看他心爱的愿望被别人怎么干 不是这怎么带入啊
+  - dimension: taboo
+    severity: negative
+    content: 内容过于重口，触碰读者底线
+    raw_quote: 偷偷看你的心爱的愿望被人家干 然后你在这里用手来了个

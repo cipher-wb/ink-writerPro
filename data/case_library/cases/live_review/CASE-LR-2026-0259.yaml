@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0259
+title: 小兵封神 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 捉妖
+  - 山神
+  - 怪谈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 小剧场和白骨精事件出色，节奏快，有签约潜力，但缺乏世界观危机和主线紧迫感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小剧场和白骨精事件出色，节奏快，有签约潜力，但缺乏世界观危机和主线紧迫感。 | 世界观太过童话，事件不危险，缺少乱世氛围和危机。;穿越代入感缺失，未说明金手指来源和背景。
+  observable:
+  - 'highpoint维度: 世界观太过童话，事件不危险，缺少乱世氛围和危机。'
+  - 'hook维度: 穿越代入感缺失，未说明金手指来源和背景。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1525
+  - 1625
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 小兵封神
+  genre_guess:
+  - 捉妖
+  - 山神
+  - 怪谈
+  overall_comment: 小剧场和白骨精事件出色，节奏快，有签约潜力，但缺乏世界观危机和主线紧迫感。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 小剧场节奏快、梗多，白骨精事件有签约水平。
+    raw_quote: 这个小剧场是牛逼的啊 ... 白骨精绝对是签约水平
+  - dimension: highpoint
+    severity: negative
+    content: 世界观太过童话，事件不危险，缺少乱世氛围和危机。
+    raw_quote: 这个世界不危险就没意思 ... 你感觉写成童话故事了
+  - dimension: hook
+    severity: negative
+    content: 穿越代入感缺失，未说明金手指来源和背景。
+    raw_quote: 没看到你穿越过来 为什么是这个能力对吧

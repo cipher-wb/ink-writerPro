@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2150
+title: 港综：蓝灯笼 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 同人
+  - 港综
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分最多来着 | 选材失败，《天若有情》IP太冷门，不如写古惑仔；节奏和事件都太干巴，没有网文期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 选材失败，《天若有情》IP太冷门，不如写古惑仔；节奏和事件都太干巴，没有网文期待感。 | 蹭的IP《天若有情》不够大众，同人必须选最大众的IP;开头太水，没有进入名场面和冲突;节奏思路不对，事件写得像原创没蹭到IP热度
+  observable:
+  - 'genre维度: 蹭的IP《天若有情》不够大众，同人必须选最大众的IP'
+  - 'opening维度: 开头太水，没有进入名场面和冲突'
+  - 'pacing维度: 节奏思路不对，事件写得像原创没蹭到IP热度'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 637
+  - 773
+  score: 40
+  score_raw: 40分最多来着
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 港综：蓝灯笼
+  genre_guess:
+  - 同人
+  - 港综
+  overall_comment: 选材失败，《天若有情》IP太冷门，不如写古惑仔；节奏和事件都太干巴，没有网文期待感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 蹭的IP《天若有情》不够大众，同人必须选最大众的IP
+    raw_quote: 蓝灯笼很多人不一定熟的...古惑仔就是最大众的，你是个人都知道，所以说你这同人就失败了呀
+  - dimension: opening
+    severity: negative
+    content: 开头太水，没有进入名场面和冲突
+    raw_quote: 前面其实都挺水的...没有到名场面，也没有什么雪白，也没什么冲突
+  - dimension: pacing
+    severity: negative
+    content: 节奏思路不对，事件写得像原创没蹭到IP热度
+    raw_quote: 你一个港综的事件写的跟原创似的...读者都不知道你的期待感在哪里

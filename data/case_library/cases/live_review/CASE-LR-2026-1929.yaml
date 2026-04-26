@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1929
+title: 娘子人设文/女邪神 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 仙侠
+  - 养成
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给了个59分是吧 | 切入熟悉，但人设和拉扯写得虚，情感不够，需要高强度特训人设能力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入熟悉，但人设和拉扯写得虚，情感不够，需要高强度特训人设能力。 | 人设写得虚，拉扯的情感不够，人设能力需要特训。
+  observable:
+  - 'character维度: 人设写得虚，拉扯的情感不够，人设能力需要特训。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 887
+  - 930
+  score: 59
+  score_raw: 给了个59分是吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 娘子人设文/女邪神
+  genre_guess:
+  - 仙侠
+  - 养成
+  overall_comment: 切入熟悉，但人设和拉扯写得虚，情感不够，需要高强度特训人设能力。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入用了几本书的套路，娘子喂药，没问题。
+    raw_quote: 这切入用了好几本书对吧...扬子喂药了嘛
+  - dimension: character
+    severity: negative
+    content: 人设写得虚，拉扯的情感不够，人设能力需要特训。
+    raw_quote: 人设写的太虚...他人设能力不够了...其实情感没写没咋写出来

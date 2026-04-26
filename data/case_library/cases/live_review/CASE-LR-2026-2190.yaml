@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2190
+title: 修仙资本家（矿工穿越） (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 修仙
+  - 智商流
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十二分 | 世界塑造和智商环节挺好，反转不错，但金手指太奇怪，更像番茄风。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界塑造和智商环节挺好，反转不错，但金手指太奇怪，更像番茄风。 | 金手指太奇怪，前世金牌销售和政治经济学像番茄风
+  observable:
+  - 'golden_finger维度: 金手指太奇怪，前世金牌销售和政治经济学像番茄风'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1485
+  - 1536
+  score: 42
+  score_raw: 四十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙资本家（矿工穿越）
+  genre_guess:
+  - 修仙
+  - 智商流
+  - 求生
+  overall_comment: 世界塑造和智商环节挺好，反转不错，但金手指太奇怪，更像番茄风。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 主角有智商，心狠中心，藏东西和玩弄监工写得好
+    raw_quote: 有智商 说明心狠 说明中心 还可以吧 这个世界还可以的
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指太奇怪，前世金牌销售和政治经济学像番茄风
+    raw_quote: 就是金手指挺奇怪的 这个金手指挺是个番茄的 起点的话是有点奇怪

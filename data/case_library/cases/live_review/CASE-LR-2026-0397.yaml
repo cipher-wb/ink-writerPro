@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0397
+title: 文乔谢醒醒 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 第一人称和重练题材双雷，几乎没有起来的机会，建议立即切书。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称和重练题材双雷，几乎没有起来的机会，建议立即切书。 | 第一人称在男频网文市场极难出头，属于自断一臂。
+  observable:
+  - 'genre维度: 第一人称在男频网文市场极难出头，属于自断一臂。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 935
+  - 980
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 文乔谢醒醒
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 第一人称和重练题材双雷，几乎没有起来的机会，建议立即切书。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 第一人称在男频网文市场极难出头，属于自断一臂。
+    raw_quote: 肯定不能第一人称，你先推翻吧大哥。

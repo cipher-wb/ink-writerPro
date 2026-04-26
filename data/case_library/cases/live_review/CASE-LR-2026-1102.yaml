@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1102
+title: 舔狗重生恋爱系统 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 都市
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是35分 | 人设小白，脑洞侧重点不足，系统设定成毒点
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设小白，脑洞侧重点不足，系统设定成毒点 | 中年夫妻设定与重生感矛盾，人设立不住;程序员发明系统本身不合理，是毒点
+  observable:
+  - 'character维度: 中年夫妻设定与重生感矛盾，人设立不住'
+  - 'golden_finger维度: 程序员发明系统本身不合理，是毒点'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1440
+  - 1490
+  score: 35
+  score_raw: 还是35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 舔狗重生恋爱系统
+  genre_guess:
+  - 都市
+  - 恋爱
+  overall_comment: 人设小白，脑洞侧重点不足，系统设定成毒点
+  comments:
+  - dimension: character
+    severity: negative
+    content: 中年夫妻设定与重生感矛盾，人设立不住
+    raw_quote: 就是老夫妻啊 老夫妻有啥意思 当初 这这 没啥意思
+  - dimension: golden_finger
+    severity: negative
+    content: 程序员发明系统本身不合理，是毒点
+    raw_quote: 程序员发明个系统 这不叫侧重点 这是这是毒点

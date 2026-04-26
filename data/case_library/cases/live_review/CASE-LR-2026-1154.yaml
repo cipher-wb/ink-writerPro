@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1154
+title: 骷髅拳（吸血鬼大小姐游戏文） (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 游戏
+  - 西幻
+  - 吸血鬼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 已签约，不另外打分 | 已签约作品，题材少见且人设鲜明，文笔与故事比例不错，但世界观架构过于庞杂，建议前期收束角色与场景，集中写好莉莉丝线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 已签约作品，题材少见且人设鲜明，文笔与故事比例不错，但世界观架构过于庞杂，建议前期收束角色与场景，集中写好莉莉丝线。 | 开篇角色与设定堆叠过多，架构压力大，推荐效果会差;建议前期围绕莉莉丝集中笔墨，晚一点展开大人物
+  observable:
+  - 'simplicity维度: 开篇角色与设定堆叠过多，架构压力大，推荐效果会差'
+  - 'opening维度: 建议前期围绕莉莉丝集中笔墨，晚一点展开大人物'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 175
+  - 341
+  score: null
+  score_raw: 已签约，不另外打分
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 骷髅拳（吸血鬼大小姐游戏文）
+  genre_guess:
+  - 游戏
+  - 西幻
+  - 吸血鬼
+  overall_comment: 已签约作品，题材少见且人设鲜明，文笔与故事比例不错，但世界观架构过于庞杂，建议前期收束角色与场景，集中写好莉莉丝线。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 吸血鬼大小姐人设立得住，适合施展
+    raw_quote: 我觉得他你签你的编辑是比较倾向于喜欢人设的 这个人设是吧吸血鬼大小姐
+  - dimension: simplicity
+    severity: negative
+    content: 开篇角色与设定堆叠过多，架构压力大，推荐效果会差
+    raw_quote: 你这个角色少一点 不然新人写这种我觉得读者 很难给你机会 就是你的推荐效果会很差的这样
+  - dimension: opening
+    severity: negative
+    content: 建议前期围绕莉莉丝集中笔墨，晚一点展开大人物
+    raw_quote: 我觉得你前面的大人物可以先不写 对吧 你先写这个莉莉丝可能就会好一点

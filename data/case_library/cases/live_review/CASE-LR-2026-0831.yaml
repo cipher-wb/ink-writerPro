@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0831
+title: 民俗系统：俗世神选 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 民俗
+  - 悬疑
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 强行吓人，没有故事，民俗像鬼故事合集
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 强行吓人，没有故事，民俗像鬼故事合集 | 一上来全是系统设定，完全没有剧情;没有事件推进，单纯靠诡异吓唬人
+  observable:
+  - 'opening维度: 一上来全是系统设定，完全没有剧情'
+  - 'highpoint维度: 没有事件推进，单纯靠诡异吓唬人'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 3175
+  - 3310
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民俗系统：俗世神选
+  genre_guess:
+  - 民俗
+  - 悬疑
+  - 系统
+  overall_comment: 强行吓人，没有故事，民俗像鬼故事合集
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 一上来全是系统设定，完全没有剧情
+    raw_quote: 一上来啥也不写民俗啥也不写 一上来就本系统
+  - dimension: highpoint
+    severity: negative
+    content: 没有事件推进，单纯靠诡异吓唬人
+    raw_quote: 没事件 纸人在干嘛也没事件啊

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0585
+title: 诡新娘 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 诡异
+  - 游戏
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50不到还是还剩四十七八那样子 | 切入氛围还行但展开无力，主线迟迟不出现，建议把反转前置并明确核心冲突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入氛围还行但展开无力，主线迟迟不出现，建议把反转前置并明确核心冲突。 | 开头切入方式不佳，没有利用好新娘角色制造紧张感;7000字仍没有清晰主线，读者会流失
+  observable:
+  - 'opening维度: 开头切入方式不佳，没有利用好新娘角色制造紧张感'
+  - 'pacing维度: 7000字仍没有清晰主线，读者会流失'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 562
+  - 633
+  score: 48
+  score_raw: 50不到还是还剩四十七八那样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡新娘
+  genre_guess:
+  - 诡异
+  - 游戏
+  - 民俗
+  overall_comment: 切入氛围还行但展开无力，主线迟迟不出现，建议把反转前置并明确核心冲突。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头切入方式不佳，没有利用好新娘角色制造紧张感
+    raw_quote: 我觉得切入不行 把后面其实前置就行
+  - dimension: pacing
+    severity: negative
+    content: 7000字仍没有清晰主线，读者会流失
+    raw_quote: 这7000字到现在还是没没有主线

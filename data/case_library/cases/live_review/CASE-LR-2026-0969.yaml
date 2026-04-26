@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0969
+title: 走阴人乡村灵异 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 灵异
+  - 乡村
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 题材太垃圾...又剑走偏锋 | 文笔和讲故事能力不错，但选题不行。捞尸人不适合新人学，要换题材并迅速出卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和讲故事能力不错，但选题不行。捞尸人不适合新人学，要换题材并迅速出卖点。 | 题材选得太垃圾，走阴人/乡村不是好切入点。;开头家长里短复杂了点，灵异感觉不够。
+  observable:
+  - 'genre维度: 题材选得太垃圾，走阴人/乡村不是好切入点。'
+  - 'opening维度: 开头家长里短复杂了点，灵异感觉不够。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 1341
+  - 1480
+  score: 45
+  score_raw: 题材太垃圾...又剑走偏锋
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 走阴人乡村灵异
+  genre_guess:
+  - 灵异
+  - 乡村
+  overall_comment: 文笔和讲故事能力不错，但选题不行。捞尸人不适合新人学，要换题材并迅速出卖点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材选得太垃圾，走阴人/乡村不是好切入点。
+    raw_quote: 问题都差不多...就是题材找的太垃圾了...走阴人不是雪白吗
+  - dimension: opening
+    severity: negative
+    content: 开头家长里短复杂了点，灵异感觉不够。
+    raw_quote: 我觉得没什么走音了...这个走音的不是灵异吗...你这开头就是家长里短写的简单点
+  - dimension: character
+    severity: neutral
+    content: 乡村文学般的无聊，主角是小孩子不好代入。
+    raw_quote: 这就是个乡村文学对吧...很无聊的乡村文学...我不建议...小孩子主角...

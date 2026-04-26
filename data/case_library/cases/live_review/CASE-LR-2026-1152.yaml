@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1152
+title: 克雷穿越西幻牧师加点 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 西幻
+  - 牧师
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 有进步，剧情框架没问题，但人物立不住，只求签约的心态会毁掉提升空间。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有进步，剧情框架没问题，但人物立不住，只求签约的心态会毁掉提升空间。 | 妹妹等配角没有立住，主角也不出彩;只求签约不愿沉淀，认知错误
+  observable:
+  - 'character维度: 妹妹等配角没有立住，主角也不出彩'
+  - 'misc维度: 只求签约不愿沉淀，认知错误'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 1761
+  - 1880
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 克雷穿越西幻牧师加点
+  genre_guess:
+  - 西幻
+  - 牧师
+  - 系统
+  overall_comment: 有进步，剧情框架没问题，但人物立不住，只求签约的心态会毁掉提升空间。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 妹妹等配角没有立住，主角也不出彩
+    raw_quote: 这个剧情主角存在感有点弱的 … 女的身份没挖掘
+  - dimension: golden_finger
+    severity: positive
+    content: 牧师加点成暴力武僧的设定有看点
+    raw_quote: 暴力牧师就是你的卖点
+  - dimension: misc
+    severity: negative
+    content: 只求签约不愿沉淀，认知错误
+    raw_quote: 你如果只想签约 我觉得你就是个笨蛋

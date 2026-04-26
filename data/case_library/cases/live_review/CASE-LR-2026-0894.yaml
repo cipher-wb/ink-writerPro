@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0894
+title: 广寒道统复兴或部落少年 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 部落
+  - 御兽
+  - 玄幻
+  - 合欢宗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 满28分还是流畅满30分的 | 完美世界既视感太强，部落冲突老套，人设单薄脸谱化，对话白，被时代淘汰，流畅度尚可但上限不高。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完美世界既视感太强，部落冲突老套，人设单薄脸谱化，对话白，被时代淘汰，流畅度尚可但上限不高。 | 开篇部落冲突、十万大山，完美世界既视感太强，题材老套过时;人设单薄，姥姥等配角脸谱化，好坏人标签化;一上来写部落冲突读者不爱看，事件选择过时
+  observable:
+  - 'genre维度: 开篇部落冲突、十万大山，完美世界既视感太强，题材老套过时'
+  - 'character维度: 人设单薄，姥姥等配角脸谱化，好坏人标签化'
+  - 'opening维度: 一上来写部落冲突读者不爱看，事件选择过时'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 1
+  - 208
+  score: null
+  score_raw: 满28分还是流畅满30分的
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 广寒道统复兴或部落少年
+  genre_guess:
+  - 部落
+  - 御兽
+  - 玄幻
+  - 合欢宗
+  overall_comment: 完美世界既视感太强，部落冲突老套，人设单薄脸谱化，对话白，被时代淘汰，流畅度尚可但上限不高。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 开篇部落冲突、十万大山，完美世界既视感太强，题材老套过时
+    raw_quote: 就是完美世界，这个就很老套
+  - dimension: character
+    severity: negative
+    content: 人设单薄，姥姥等配角脸谱化，好坏人标签化
+    raw_quote: 人设也很单薄呀，这些姥姥什么的...都是以前那种非常常见的那种人设吧，好人坏人就是标签一上就全贴上了
+  - dimension: opening
+    severity: negative
+    content: 一上来写部落冲突读者不爱看，事件选择过时
+    raw_quote: 这一上来部落冲突呀，读者不爱看咯

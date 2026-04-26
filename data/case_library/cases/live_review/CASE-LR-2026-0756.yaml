@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0756
+title: 末日死灵术士 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 末日
+  - 丧尸
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42 | 描述干巴，高潮剧情缺乏情绪渲染，笔力不够，降分处理。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 描述干巴，高潮剧情缺乏情绪渲染，笔力不够，降分处理。 | 舍身救人场景写得太干巴，毫无情绪冲击;主仆设定很出戏，都市背景下叫主人奇怪
+  observable:
+  - 'highpoint维度: 舍身救人场景写得太干巴，毫无情绪冲击'
+  - 'character维度: 主仆设定很出戏，都市背景下叫主人奇怪'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1021
+  - 1090
+  score: 42
+  score_raw: '42'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日死灵术士
+  genre_guess:
+  - 末日
+  - 丧尸
+  - 系统
+  overall_comment: 描述干巴，高潮剧情缺乏情绪渲染，笔力不够，降分处理。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 舍身救人场景写得太干巴，毫无情绪冲击
+    raw_quote: 你很平淡淡的过来……你都没没情绪……很干巴呀
+  - dimension: character
+    severity: negative
+    content: 主仆设定很出戏，都市背景下叫主人奇怪
+    raw_quote: 你这个末日一口一个主人呢很出戏啊

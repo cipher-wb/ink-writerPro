@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0181
+title: 武侠试水作 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 武侠
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 34分吧 | 进步明显但雪白描写太多，节奏偏慢，武侠题材本身冷。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 进步明显但雪白描写太多，节奏偏慢，武侠题材本身冷。 | 开篇雪白过多，没有迅速切入矛盾。;武侠题材当前市场接受度低。
+  observable:
+  - 'opening维度: 开篇雪白过多，没有迅速切入矛盾。'
+  - 'genre维度: 武侠题材当前市场接受度低。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 1710
+  - 1860
+  score: 34
+  score_raw: 34分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 武侠试水作
+  genre_guess:
+  - 武侠
+  - 游戏
+  overall_comment: 进步明显但雪白描写太多，节奏偏慢，武侠题材本身冷。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇雪白过多，没有迅速切入矛盾。
+    raw_quote: 雪白太多了
+  - dimension: genre
+    severity: negative
+    content: 武侠题材当前市场接受度低。
+    raw_quote: 武侠试水作你可以投其他组试试吧

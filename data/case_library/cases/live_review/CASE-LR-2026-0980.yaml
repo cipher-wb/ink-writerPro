@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0980
+title: 化神大佬重生撩剑 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 古典
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分差不多 | 老套无聊，人设崩。化神大佬重生心理活动平淡，又带个老爷爷，卖点跟十年前一样。得扫榜学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套无聊，人设崩。化神大佬重生心理活动平淡，又带个老爷爷，卖点跟十年前一样。得扫榜学习。 | 化神重生逼格全无，心理活动平淡，没感叹没目标。;已是化神还要靠老爷爷教练剑，人设崩完。
+  observable:
+  - 'character维度: 化神重生逼格全无，心理活动平淡，没感叹没目标。'
+  - 'golden_finger维度: 已是化神还要靠老爷爷教练剑，人设崩完。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 3161
+  - 3350
+  score: 18
+  score_raw: 18分差不多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 化神大佬重生撩剑
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 古典
+  overall_comment: 老套无聊，人设崩。化神大佬重生心理活动平淡，又带个老爷爷，卖点跟十年前一样。得扫榜学习。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 化神重生逼格全无，心理活动平淡，没感叹没目标。
+    raw_quote: 你是化神大哥...波澜不惊...你不是点头就是摇头的...没心理活动
+  - dimension: golden_finger
+    severity: negative
+    content: 已是化神还要靠老爷爷教练剑，人设崩完。
+    raw_quote: 你都化神了...你拿练剑还需要老爷爷帮忙...你这有多人设崩完了呀

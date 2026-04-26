@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0071
+title: 卖鱼少女 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 都市
+  - 日常
+  - 治愈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 九风啊 | 实体书式的无病呻吟，节奏慢到极点，对网文理解为零，商业价值极低。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 实体书式的无病呻吟，节奏慢到极点，对网文理解为零，商业价值极低。 | 内容无病呻吟，太过文艺，完全不符合网文商业逻辑;节奏太慢，水词太多，没有重点
+  observable:
+  - 'misc维度: 内容无病呻吟，太过文艺，完全不符合网文商业逻辑'
+  - 'pacing维度: 节奏太慢，水词太多，没有重点'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 646
+  - 720
+  score: 9
+  score_raw: 九风啊
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 卖鱼少女
+  genre_guess:
+  - 都市
+  - 日常
+  - 治愈
+  overall_comment: 实体书式的无病呻吟，节奏慢到极点，对网文理解为零，商业价值极低。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 内容无病呻吟，太过文艺，完全不符合网文商业逻辑
+    raw_quote: 这个无病呻吟啊这个...真汗血
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，水词太多，没有重点
+    raw_quote: 好无聊啊，这么水，你这水废话无学大哥

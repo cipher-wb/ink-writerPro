@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-2018
+title: 穿越高武相亲系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 高武
+  - 系统
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没意义 | 题材立不住，相亲系统和高武的结合太生硬，毫无高武的味道，核心卖点缺失。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材立不住，相亲系统和高武的结合太生硬，毫无高武的味道，核心卖点缺失。 | 相亲系统和武道世界强行融合，核心卖点立不住。
+  observable:
+  - 'genre维度: 相亲系统和武道世界强行融合，核心卖点立不住。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1120
+  - 1161
+  score: null
+  score_raw: 没意义
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越高武相亲系统
+  genre_guess:
+  - 高武
+  - 系统
+  - 都市
+  overall_comment: 题材立不住，相亲系统和高武的结合太生硬，毫无高武的味道，核心卖点缺失。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 相亲系统和武道世界强行融合，核心卖点立不住。
+    raw_quote: 你这个相亲跟高武的衔接不是很密切 ... 本账不是高武了

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0076
+title: 黄皮子修仙记 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 民俗
+  - 修仙
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 构思思路有签约水平，但文笔和系统太出戏，切入有些低俗，拉低了整体观感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 构思思路有签约水平，但文笔和系统太出戏，切入有些低俗，拉低了整体观感。 | 系统设定出戏，换成因果缘分更合理
+  observable:
+  - 'golden_finger维度: 系统设定出戏，换成因果缘分更合理'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 951
+  - 1005
+  score: 55
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 黄皮子修仙记
+  genre_guess:
+  - 民俗
+  - 修仙
+  - 凡人流
+  overall_comment: 构思思路有签约水平，但文笔和系统太出戏，切入有些低俗，拉低了整体观感。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定出戏，换成因果缘分更合理
+    raw_quote: 凡人流是好人有好报系统...比这种叮叮叮的好多了...机缘因果这种，比你这什么系统...好多了
+  - dimension: character
+    severity: neutral
+    content: 事件展开闭环思路尚可，但切入有些低俗
+    raw_quote: 切入有点昂系...展开事件闭环啦...思路挺好的

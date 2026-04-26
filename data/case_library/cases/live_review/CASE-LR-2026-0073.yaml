@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0073
+title: 血霸系统 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分嘛 | 有天赋但喜欢整活，重生带入部分可能劝退一半读者，建议正常写重生。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋但喜欢整活，重生带入部分可能劝退一半读者，建议正常写重生。 | 整活式的重生带入可能劝退部分读者;角色名字太出戏，建议修改
+  observable:
+  - 'opening维度: 整活式的重生带入可能劝退部分读者'
+  - 'character维度: 角色名字太出戏，建议修改'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 771
+  - 830
+  score: 55
+  score_raw: 55分嘛
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 血霸系统
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  overall_comment: 有天赋但喜欢整活，重生带入部分可能劝退一半读者，建议正常写重生。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 整活式的重生带入可能劝退部分读者
+    raw_quote: 这个我觉得很奇怪...可能会让你的受众变得很少
+  - dimension: character
+    severity: negative
+    content: 角色名字太出戏，建议修改
+    raw_quote: 不要叫马斯克这个也很出戏...叫马勇嘛
+  - dimension: misc
+    severity: positive
+    content: 擅长贴标签立人设，有签约潜力
+    raw_quote: 你看就贴标签他会贴的...这些没问题...重生味道嘛

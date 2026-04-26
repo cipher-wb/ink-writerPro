@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0413
+title: 轮回乐园同人 (pass / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 无限流
+  - 同人
+  - 轮回乐园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给他40吧 | 表达没问题，有点乐子，有直发线，建议写3万字看数据
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达没问题，有点乐子，有直发线，建议写3万字看数据 | 烂梗有点多，玩梗吐槽加设定，有些尴尬
+  observable:
+  - 'misc维度: 烂梗有点多，玩梗吐槽加设定，有些尴尬'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 843
+  - 920
+  score: 40
+  score_raw: 给他40吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 轮回乐园同人
+  genre_guess:
+  - 无限流
+  - 同人
+  - 轮回乐园
+  overall_comment: 表达没问题，有点乐子，有直发线，建议写3万字看数据
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 说明简介封面都及格，遣词造句没啥问题
+    raw_quote: 遣词造句倒是没啥问题...说明简单直白，简介也会写八股文，简介嘛就是正经还可以看简介
+  - dimension: misc
+    severity: negative
+    content: 烂梗有点多，玩梗吐槽加设定，有些尴尬
+    raw_quote: 感觉就是烂梗...梗太多了，我是感觉梗，然后加设定，就玩梗吐槽...这个太太尴尬了

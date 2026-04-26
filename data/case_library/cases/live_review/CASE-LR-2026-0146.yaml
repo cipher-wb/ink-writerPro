@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0146
+title: 什梦者 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 玄幻
+  - 龙虎山
+  - 天师
+  - 僵尸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 考验种在心中信念丝语两个40吧 | 电神思路但写不来，人物关系弱，小白化严重，不流畅。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 电神思路但写不来，人物关系弱，小白化严重，不流畅。 | 开篇半文不白，看不懂本主概念;众人骂骂咧咧，剧情不流畅，缺少主线执行
+  observable:
+  - 'opening维度: 开篇半文不白，看不懂本主概念'
+  - 'pacing维度: 众人骂骂咧咧，剧情不流畅，缺少主线执行'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 266
+  - 280
+  score: 40
+  score_raw: 考验种在心中信念丝语两个40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 什梦者
+  genre_guess:
+  - 玄幻
+  - 龙虎山
+  - 天师
+  - 僵尸
+  overall_comment: 电神思路但写不来，人物关系弱，小白化严重，不流畅。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇半文不白，看不懂本主概念
+    raw_quote: 就叫赵灵虚成为了粽子 原主是个身为紫袍天师 打开一看就知道嘶额跑了 读者跑了跑了跑了跑了
+  - dimension: pacing
+    severity: negative
+    content: 众人骂骂咧咧，剧情不流畅，缺少主线执行
+    raw_quote: 每个人都在这里骂骂骂 这这你这个要么就发Q阅读 要么就是蓝精灵了 起点肯定必死的

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-2100
+title: 真气魔法与猎龙人 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1wkF8zTEAy
+scope:
+  genre:
+  - 奇幻
+  - 蒸汽朋克
+  - 穿越
+  - 魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 其实也能签 | 作者开车过程过于擦边，需大幅收敛，但叙事实力到位；若修改后通过审核，可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1wkF8zTEAy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者开车过程过于擦边，需大幅收敛，但叙事实力到位；若修改后通过审核，可签约。 | 开篇穿越18年无所作为，节奏拖沓，缺乏冲突;大量擦边性暗示描写，极易触发审核红线
+  observable:
+  - 'opening维度: 开篇穿越18年无所作为，节奏拖沓，缺乏冲突'
+  - 'taboo维度: 大量擦边性暗示描写，极易触发审核红线'
+live_review_meta:
+  source_bvid: BV1wkF8zTEAy
+  source_line_range:
+  - 1
+  - 271
+  score: null
+  score_raw: 其实也能签
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 真气魔法与猎龙人
+  genre_guess:
+  - 奇幻
+  - 蒸汽朋克
+  - 穿越
+  - 魔法
+  overall_comment: 作者开车过程过于擦边，需大幅收敛，但叙事实力到位；若修改后通过审核，可签约。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇穿越18年无所作为，节奏拖沓，缺乏冲突
+    raw_quote: 18年真的是个毒点
+  - dimension: taboo
+    severity: negative
+    content: 大量擦边性暗示描写，极易触发审核红线
+    raw_quote: 全编辑部都认为是皇叔呀
+  - dimension: misc
+    severity: positive
+    content: 作者会讲故事，基本写作能力到位
+    raw_quote: 水平还是到位的啊

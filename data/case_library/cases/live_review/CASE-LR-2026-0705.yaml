@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0705
+title: 反套路烂梗穿书 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 反套路
+  - 穿书
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就24分吧 | 反套路写成烂梗，强行客串致敬显得生硬，缺乏深度发掘。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 反套路写成烂梗，强行客串致敬显得生硬，缺乏深度发掘。 | 反套路如今已成套路，玩梗流于表面;致敬元素过于刻意，影响主线观感
+  observable:
+  - 'genre维度: 反套路如今已成套路，玩梗流于表面'
+  - 'misc维度: 致敬元素过于刻意，影响主线观感'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 401
+  - 455
+  score: 24
+  score_raw: 就24分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 反套路烂梗穿书
+  genre_guess:
+  - 反套路
+  - 穿书
+  - 搞笑
+  overall_comment: 反套路写成烂梗，强行客串致敬显得生硬，缺乏深度发掘。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 反套路如今已成套路，玩梗流于表面
+    raw_quote: 反套路现在也是套路了...烂梗呀
+  - dimension: misc
+    severity: negative
+    content: 致敬元素过于刻意，影响主线观感
+    raw_quote: 没必要强行价...又被星刻大辣度批了

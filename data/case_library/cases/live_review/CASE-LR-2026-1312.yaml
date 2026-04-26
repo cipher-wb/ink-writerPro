@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1312
+title: 重申1985山沟开始发家事 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 重生
+  - 年代
+  - 致富
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你38分 | 写成穿越丢失重生优势，思路偏，但比例没问题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写成穿越丢失重生优势，思路偏，但比例没问题。 | 写成穿越而不是重生，缺乏期待感
+  observable:
+  - 'genre维度: 写成穿越而不是重生，缺乏期待感'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1101
+  - 1180
+  score: 38
+  score_raw: 给你38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重申1985山沟开始发家事
+  genre_guess:
+  - 重生
+  - 年代
+  - 致富
+  overall_comment: 写成穿越丢失重生优势，思路偏，但比例没问题。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写成穿越而不是重生，缺乏期待感
+    raw_quote: 你都不是重生 你这不是重生
+  - dimension: opening
+    severity: neutral
+    content: 人设遗憾可以，但不知道接下来发生什么
+    raw_quote: 你没有 就是你不知道 接下来你的面前发生啥了呀

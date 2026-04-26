@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1925
+title: 克苏鲁/蜥蜴人都市异能 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分天赋真不错 | 作者起点式的写法和讲故事天赋不错，但蜥蜴人等阴谋论梗太过时无趣，之后转变成打怪升级更是俗套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者起点式的写法和讲故事天赋不错，但蜥蜴人等阴谋论梗太过时无趣，之后转变成打怪升级更是俗套。 | 卖点无聊，蜥蜴人阴谋论梗太老，之后又变成系统打怪。
+  observable:
+  - 'golden_finger维度: 卖点无聊，蜥蜴人阴谋论梗太老，之后又变成系统打怪。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 702
+  - 745
+  score: 35
+  score_raw: 35分天赋真不错
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 克苏鲁/蜥蜴人都市异能
+  genre_guess:
+  - 都市
+  - 异能
+  - 轻小说
+  overall_comment: 作者起点式的写法和讲故事天赋不错，但蜥蜴人等阴谋论梗太过时无趣，之后转变成打怪升级更是俗套。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 起点式的写法，讲故事能力很强，有天赋，让人看下去了。
+    raw_quote: 写作法是起点的...讲故事能力也很强有天赋...到现在为止我还挺想看的
+  - dimension: golden_finger
+    severity: negative
+    content: 卖点无聊，蜥蜴人阴谋论梗太老，之后又变成系统打怪。
+    raw_quote: 这个整体慢点好无聊啊...系统出来了...就写着写着就变成奥特曼了

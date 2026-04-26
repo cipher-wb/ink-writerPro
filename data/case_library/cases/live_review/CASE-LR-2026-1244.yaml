@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1244
+title: 东京黑道 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 都市
+  - 黑道
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多我觉得30分吧 | 北美式开局不符合东京文要求，缺乏人物塑造，只在飙车，思路在退步。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 北美式开局不符合东京文要求，缺乏人物塑造，只在飙车，思路在退步。 | 开局是北美悍匪风格，不符合东京文的预期;缺乏人物塑造，没有配角，只有主角飙车
+  observable:
+  - 'genre维度: 开局是北美悍匪风格，不符合东京文的预期'
+  - 'character维度: 缺乏人物塑造，没有配角，只有主角飙车'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 976
+  - 1029
+  score: 30
+  score_raw: 差不多我觉得30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京黑道
+  genre_guess:
+  - 都市
+  - 黑道
+  - 穿越
+  overall_comment: 北美式开局不符合东京文要求，缺乏人物塑造，只在飙车，思路在退步。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 开局是北美悍匪风格，不符合东京文的预期
+    raw_quote: 这开局东京味道没有啊，这个手枪抵着他逼他，这像北美小说兄弟
+  - dimension: character
+    severity: negative
+    content: 缺乏人物塑造，没有配角，只有主角飙车
+    raw_quote: 这都需要写人物，人配角对吧，需要写人物，没有其他配角

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0514
+title: 我的魔法全靠烧钱 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 西幻
+  - 魔法
+  - 烧钱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分最多了 | 少女拉扯完全不会写，切入水平差，白白浪费好题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 少女拉扯完全不会写，切入水平差，白白浪费好题材。 | 少女的神态、体态描写差，互动无味道;开头小说简介场景老套，切入差;拉期待感和代入感都很差
+  observable:
+  - 'character维度: 少女的神态、体态描写差，互动无味道'
+  - 'opening维度: 开头小说简介场景老套，切入差'
+  - 'misc维度: 拉期待感和代入感都很差'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 446
+  - 480
+  score: 25
+  score_raw: 25分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的魔法全靠烧钱
+  genre_guess:
+  - 西幻
+  - 魔法
+  - 烧钱
+  overall_comment: 少女拉扯完全不会写，切入水平差，白白浪费好题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 少女的神态、体态描写差，互动无味道
+    raw_quote: 这完全没一点可爱，喜欢的那种味道
+  - dimension: opening
+    severity: negative
+    content: 开头小说简介场景老套，切入差
+    raw_quote: 这个开头我觉得一般般嘛，反正挺一般的
+  - dimension: misc
+    severity: negative
+    content: 拉期待感和代入感都很差
+    raw_quote: 铺垫期待感下，跳入感也很差

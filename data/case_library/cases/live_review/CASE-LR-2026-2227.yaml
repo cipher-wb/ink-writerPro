@@ -1,0 +1,69 @@
+case_id: CASE-LR-2026-2227
+title: 江湖说书人传播八卦 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 武侠
+  - 系统
+  - 八卦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '比例好大入感好
+
+    我觉得你现在进步还不错 稳定在四楼多分可以 | 切入快，代入感还行，但金手指易崩，题材难写，建议转仙侠。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入快，代入感还行，但金手指易崩，题材难写，建议转仙侠。 | 金手指传播值设定极易崩坏;武侠题材难写，且简介已透支信息
+  observable:
+  - 'golden_finger维度: 金手指传播值设定极易崩坏'
+  - 'genre维度: 武侠题材难写，且简介已透支信息'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 605
+  - 729
+  score: null
+  score_raw: '比例好大入感好
+
+    我觉得你现在进步还不错 稳定在四楼多分可以'
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 江湖说书人传播八卦
+  genre_guess:
+  - 武侠
+  - 系统
+  - 八卦
+  overall_comment: 切入快，代入感还行，但金手指易崩，题材难写，建议转仙侠。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指传播值设定极易崩坏
+    raw_quote: '不是
+
+      就是很快就会崩
+
+      就是这个意思 很快就会崩'
+  - dimension: genre
+    severity: negative
+    content: 武侠题材难写，且简介已透支信息
+    raw_quote: '武侠很难写...就你简介已经聚透了
+
+      就这个啦啦嘛已经聚透了'
+  - dimension: pacing
+    severity: neutral
+    content: 比例和切入感有进步
+    raw_quote: '比例好大入感好
+
+      我觉得你现在进步还不错'

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1323
+title: 清末出海口 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 清末
+  - 历史
+  - 马伯庸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 实体写法画面感强，但不符合网文心理活动要求，可惜了比例。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 实体写法画面感强，但不符合网文心理活动要求，可惜了比例。 | 写法太实体，缺心理活动
+  observable:
+  - 'simplicity维度: 写法太实体，缺心理活动'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1751
+  - 1820
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 清末出海口
+  genre_guess:
+  - 清末
+  - 历史
+  - 马伯庸
+  overall_comment: 实体写法画面感强，但不符合网文心理活动要求，可惜了比例。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 写法太实体，缺心理活动
+    raw_quote: 网红是心理活动要大于画面感 大概明白吧
+  - dimension: genre
+    severity: neutral
+    content: 帮清朝打俄国可能读者不爱看
+    raw_quote: 你帮清朝这个确定可以吗

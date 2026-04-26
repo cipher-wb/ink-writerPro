@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1359
+title: 国内都市驱魔 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 驱魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多三十五 | 国内都市灵异路线难写，建议改北美或番茄网，按欢天喜地套路写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 国内都市灵异路线难写，建议改北美或番茄网，按欢天喜地套路写。 | 国内灵异受限多，作品难成型，劝换北美背景;内容夹杂道士、吸精气等老旧元素，缺乏新颖吸引力
+  observable:
+  - 'misc维度: 国内灵异受限多，作品难成型，劝换北美背景'
+  - 'genre维度: 内容夹杂道士、吸精气等老旧元素，缺乏新颖吸引力'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 995
+  - 1051
+  score: 35
+  score_raw: 差不多三十五
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 国内都市驱魔
+  genre_guess:
+  - 都市
+  - 灵异
+  - 驱魔
+  overall_comment: 国内都市灵异路线难写，建议改北美或番茄网，按欢天喜地套路写。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 国内灵异受限多，作品难成型，劝换北美背景
+    raw_quote: 你这种写北美去吧不要写国内来
+  - dimension: genre
+    severity: negative
+    content: 内容夹杂道士、吸精气等老旧元素，缺乏新颖吸引力
+    raw_quote: 都是写教吗这怎么写这种说

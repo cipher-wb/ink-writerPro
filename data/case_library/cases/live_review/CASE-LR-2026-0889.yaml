@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0889
+title: 五代乱世954开局成了郭荣清兵 (pass / 64分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MawWziEiU
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也是64分了 | 开头套路熟，改用智商解决问题后达到签约水平，但后续发展需作者自己把握。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MawWziEiU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头套路熟，改用智商解决问题后达到签约水平，但后续发展需作者自己把握。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1MawWziEiU
+  source_line_range:
+  - 1
+  - 177
+  score: 64
+  score_raw: 差不多也是64分了
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 五代乱世954开局成了郭荣清兵
+  genre_guess:
+  - 历史
+  - 穿越
+  - 五代十国
+  overall_comment: 开头套路熟，改用智商解决问题后达到签约水平，但后续发展需作者自己把握。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局用智商解决问题，赌赢套路熟，开头问题不大
+    raw_quote: 现在改了 确实用智商去用铁汴京城...就赌赢了嘛 套路倒是问题不大 开头确实问题不大了
+  - dimension: taboo
+    severity: positive
+    content: 历史向吃人描写尊重史实一笔带过不违规
+    raw_quote: 但是你这是历史 你尊重历史 一笔带过 他不违规

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1533
+title: 一家守护者 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个十九分吧 | 脑洞有点意思，但水字严重，三章六千字光说不做，毫无事件，题材本身也很差。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞有点意思，但水字严重，三章六千字光说不做，毫无事件，题材本身也很差。 | 三章六千字全程嘴炮，零事件推进;开篇无事件，一直重复设定，读者会跑光;题材本身缺乏市场价值，写不出成绩
+  observable:
+  - 'pacing维度: 三章六千字全程嘴炮，零事件推进'
+  - 'opening维度: 开篇无事件，一直重复设定，读者会跑光'
+  - 'genre维度: 题材本身缺乏市场价值，写不出成绩'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 125
+  - 186
+  score: 19
+  score_raw: 这个十九分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 一家守护者
+  genre_guess:
+  - 都市
+  - 异能
+  - 搞笑
+  overall_comment: 脑洞有点意思，但水字严重，三章六千字光说不做，毫无事件，题材本身也很差。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 三章六千字全程嘴炮，零事件推进
+    raw_quote: 三张了大概六千字了 还在说
+  - dimension: opening
+    severity: negative
+    content: 开篇无事件，一直重复设定，读者会跑光
+    raw_quote: 不要一直说啊 我觉得你要出来一些证据来
+  - dimension: genre
+    severity: negative
+    content: 题材本身缺乏市场价值，写不出成绩
+    raw_quote: 这个我觉得没有按时分 因为太水了 这个十九分吧 题材也不好其实

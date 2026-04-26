@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1179
+title: 迦勒比海盗系统 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 海盗
+  - 系统
+  - 迦勒比
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 海盗题材思路可行，但第一章代入感过火且拖沓，需删掉重写直接切入事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 海盗题材思路可行，但第一章代入感过火且拖沓，需删掉重写直接切入事件。 | 第一章完全可删，应从第二章事件开始;开头穿越描写过于激动，翻译腔严重，缺乏自然代入
+  observable:
+  - 'opening维度: 第一章完全可删，应从第二章事件开始'
+  - 'hook维度: 开头穿越描写过于激动，翻译腔严重，缺乏自然代入'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 1760
+  - 1920
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 迦勒比海盗系统
+  genre_guess:
+  - 海盗
+  - 系统
+  - 迦勒比
+  - 穿越
+  overall_comment: 海盗题材思路可行，但第一章代入感过火且拖沓，需删掉重写直接切入事件。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章完全可删，应从第二章事件开始
+    raw_quote: 第一章不行 第一章养出去了 第一章直接删了
+  - dimension: hook
+    severity: negative
+    content: 开头穿越描写过于激动，翻译腔严重，缺乏自然代入
+    raw_quote: 这种代入感太过了 就感觉主角像个弱智 oh my god 竟然真的是
+  - dimension: pacing
+    severity: positive
+    content: 第二章起节奏加速，思路可保留
+    raw_quote: 第二章切入 节奏非常加速

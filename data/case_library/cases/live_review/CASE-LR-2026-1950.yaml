@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1950
+title: 白玉武侠风流传 (fail / 26分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 武侠
+  - 古代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 26分 | 基本功扎实，文字有古龙味。但故事事件无聊，缺乏江湖元素变成古代窑子游记，没有签约可能性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 基本功扎实，文字有古龙味。但故事事件无聊，缺乏江湖元素变成古代窑子游记，没有签约可能性。 | 缺乏江湖客栈等武侠核心元素，偏离题材;主角写得不够吸引人，事件很无聊
+  observable:
+  - 'genre维度: 缺乏江湖客栈等武侠核心元素，偏离题材'
+  - 'character维度: 主角写得不够吸引人，事件很无聊'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 814
+  - 876
+  score: 26
+  score_raw: 26分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 白玉武侠风流传
+  genre_guess:
+  - 武侠
+  - 古代
+  overall_comment: 基本功扎实，文字有古龙味。但故事事件无聊，缺乏江湖元素变成古代窑子游记，没有签约可能性。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 缺乏江湖客栈等武侠核心元素，偏离题材
+    raw_quote: 武使味不够兄弟...你本身上就是一个找妓女的古代去
+  - dimension: character
+    severity: negative
+    content: 主角写得不够吸引人，事件很无聊
+    raw_quote: 你不能把这个主角写得特别吸引人

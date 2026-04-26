@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0089
+title: 东京恋人 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 都市
+  - 东京
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分嘛 | 文笔没问题，但开局人物太多，缺乏事件和身份标签，导致感情拉扯无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔没问题，但开局人物太多，缺乏事件和身份标签，导致感情拉扯无聊。 | 人物出场太多，没有社会身份标签加持，拉扯显得无聊;事件太弱，主线世界几乎没有，全是单薄的人物对话
+  observable:
+  - 'character维度: 人物出场太多，没有社会身份标签加持，拉扯显得无聊'
+  - 'highpoint维度: 事件太弱，主线世界几乎没有，全是单薄的人物对话'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1651
+  - 1700
+  score: 33
+  score_raw: 33分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京恋人
+  genre_guess:
+  - 都市
+  - 东京
+  - 恋爱
+  overall_comment: 文笔没问题，但开局人物太多，缺乏事件和身份标签，导致感情拉扯无聊。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物出场太多，没有社会身份标签加持，拉扯显得无聊
+    raw_quote: 这穷相多女主也不是这么写的...这人太多了...没有人物事件没有她的身份
+  - dimension: highpoint
+    severity: negative
+    content: 事件太弱，主线世界几乎没有，全是单薄的人物对话
+    raw_quote: 事件太弱了...主线世界几乎没有...全是人物

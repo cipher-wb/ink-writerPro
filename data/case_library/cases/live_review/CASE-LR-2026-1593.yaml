@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1593
+title: 杂灵根的洞天宗门 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 修仙
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分吧 | 主角独角戏过多，缺乏事件与人物互动，修炼空镜劝退读者。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角独角戏过多，缺乏事件与人物互动，修炼空镜劝退读者。 | 前期大量修炼、升级空镜，无实际剧情推动;主角长时间独白思考，缺少配角互动;开局流于凡人流套路，无新意
+  observable:
+  - 'pacing维度: 前期大量修炼、升级空镜，无实际剧情推动'
+  - 'character维度: 主角长时间独白思考，缺少配角互动'
+  - 'opening维度: 开局流于凡人流套路，无新意'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 371
+  - 405
+  score: 42
+  score_raw: 42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 杂灵根的洞天宗门
+  genre_guess:
+  - 修仙
+  - 凡人流
+  overall_comment: 主角独角戏过多，缺乏事件与人物互动，修炼空镜劝退读者。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 前期大量修炼、升级空镜，无实际剧情推动
+    raw_quote: 重点还是偏偏这个金属值去了 … 就是以前的这些东西其实就是空境嘛 … 不用侧重于修炼空境
+  - dimension: character
+    severity: negative
+    content: 主角长时间独白思考，缺少配角互动
+    raw_quote: 一个人拿了个金属 一个人思考吗 就一直独角戏嘛 这没意思的
+  - dimension: opening
+    severity: negative
+    content: 开局流于凡人流套路，无新意
+    raw_quote: 这就是凡人修仙传的写法 … 现在真不流行了

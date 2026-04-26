@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2158
+title: 国术从加练永春开始 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 都市
+  - 民国
+  - 国术
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就只能48分 | 书名和切入蹭热度很好，文笔有沉浸感，但内功不够写得太平，各种人物和线索浅尝辄止，浪费思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名和切入蹭热度很好，文笔有沉浸感，但内功不够写得太平，各种人物和线索浅尝辄止，浪费思路。 | 故事发展落入俗套，大小姐线消失直接练武
+  observable:
+  - 'pacing维度: 故事发展落入俗套，大小姐线消失直接练武'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 1695
+  - 1835
+  score: 48
+  score_raw: 就只能48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 国术从加练永春开始
+  genre_guess:
+  - 都市
+  - 民国
+  - 国术
+  overall_comment: 书名和切入蹭热度很好，文笔有沉浸感，但内功不够写得太平，各种人物和线索浅尝辄止，浪费思路。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 书名和简介已经把签约水平的卖点做出来了
+    raw_quote: 这个书名已经暴露出大哥确实是个有趣的人了...简介加书名都是60分以上的
+  - dimension: pacing
+    severity: negative
+    content: 故事发展落入俗套，大小姐线消失直接练武
+    raw_quote: 我以为周小姐要拉扯...结果他没写，还是老一套加武馆练武去了...这个就有点俗了

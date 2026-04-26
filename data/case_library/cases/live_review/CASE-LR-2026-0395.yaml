@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0395
+title: WWW (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 历史
+  - 大明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 新人写大明文笔扎实，有天赋，但缺金手指与侧重点，容易扑街。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 新人写大明文笔扎实，有天赋，但缺金手指与侧重点，容易扑街。 | 穿重镇却无独特金手指，难以在同类作品中突围。
+  observable:
+  - 'golden_finger维度: 穿重镇却无独特金手指，难以在同类作品中突围。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 815
+  - 880
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: WWW
+  genre_guess:
+  - 历史
+  - 大明
+  overall_comment: 新人写大明文笔扎实，有天赋，但缺金手指与侧重点，容易扑街。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 穿重镇却无独特金手指，难以在同类作品中突围。
+    raw_quote: 重镇现在看金手指大哥，没有金手指翻不了盘那个。
+  - dimension: character
+    severity: positive
+    content: 人物代入感强，比例扎实，具备写大明的文笔天赋。
+    raw_quote: 代入感写挺好的，文笔也挺好的，比例很扎实。

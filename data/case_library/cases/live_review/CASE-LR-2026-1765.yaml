@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1765
+title: 从精神病院开始打穿朱天 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 精神病院
+  - 都市异能
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十分左右吧 | 第一章有乐子感，但精神病院题材老旧，第二章转入乐园设定劝退，整体成绩难起。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章有乐子感，但精神病院题材老旧，第二章转入乐园设定劝退，整体成绩难起。 | 精神病院题材已经烂大街;第二章转入乐园设定，读者完全看不进去
+  observable:
+  - 'genre维度: 精神病院题材已经烂大街'
+  - 'opening维度: 第二章转入乐园设定，读者完全看不进去'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 980
+  - 1080
+  score: 30
+  score_raw: 三十分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从精神病院开始打穿朱天
+  genre_guess:
+  - 精神病院
+  - 都市异能
+  - 乐子文
+  overall_comment: 第一章有乐子感，但精神病院题材老旧，第二章转入乐园设定劝退，整体成绩难起。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 精神病院题材已经烂大街
+    raw_quote: 精神病院真的不是好东西，精神病院读的现在下意识的反感……原来有很多人写了好多年
+  - dimension: opening
+    severity: negative
+    content: 第二章转入乐园设定，读者完全看不进去
+    raw_quote: 第二章我觉得扯淡了……已经变成了乐园相了，没人看

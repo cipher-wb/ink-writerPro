@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1028
+title: 人在末日抽卡永生 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 末日
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 思路对，带入都市元素，但两名女角薄如纸片，荒岛求生太无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路对，带入都市元素，但两名女角薄如纸片，荒岛求生太无聊。 | 女上司和实习生像NPC，没有性格;求生剧情没高潮，无智斗无危机
+  observable:
+  - 'character维度: 女上司和实习生像NPC，没有性格'
+  - 'highpoint维度: 求生剧情没高潮，无智斗无危机'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1851
+  - 1940
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 人在末日抽卡永生
+  genre_guess:
+  - 末日
+  - 都市
+  overall_comment: 思路对，带入都市元素，但两名女角薄如纸片，荒岛求生太无聊。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女上司和实习生像NPC，没有性格
+    raw_quote: 就感觉两个兄大无老的,没人物世界了
+  - dimension: highpoint
+    severity: negative
+    content: 求生剧情没高潮，无智斗无危机
+    raw_quote: 就三个人求生 也没什么智商 也没什么智斗

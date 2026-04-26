@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1938
+title: 吹牛震盗无敌 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 都市
+  - 灵气复苏
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多16分 | 写法割裂不接地气，信息量突兀，属于中二的乐子写法，需要推翻重来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法割裂不接地气，信息量突兀，属于中二的乐子写法，需要推翻重来。 | 剧情割裂，信息量突兀，缺乏铺垫;完全不接地气，世界观悬浮;写法不对，缺乏对网文的基本认知
+  observable:
+  - 'pacing维度: 剧情割裂，信息量突兀，缺乏铺垫'
+  - 'genre维度: 完全不接地气，世界观悬浮'
+  - 'misc维度: 写法不对，缺乏对网文的基本认知'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 152
+  - 202
+  score: 16
+  score_raw: 最多16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 吹牛震盗无敌
+  genre_guess:
+  - 都市
+  - 灵气复苏
+  - 修仙
+  overall_comment: 写法割裂不接地气，信息量突兀，属于中二的乐子写法，需要推翻重来。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 剧情割裂，信息量突兀，缺乏铺垫
+    raw_quote: 哎呀我的天哪好中昂好割裂啊大哥就你前面那么低身份的一个蓝的忽然之间来这么大的信息量就非常割裂
+  - dimension: genre
+    severity: negative
+    content: 完全不接地气，世界观悬浮
+    raw_quote: 大哥你这个太不接地气了...不接地气啊能不能说点正常的呀兄弟没人看了
+  - dimension: misc
+    severity: negative
+    content: 写法不对，缺乏对网文的基本认知
+    raw_quote: 你是属于要推翻完全去找的，我们看的太少了这种

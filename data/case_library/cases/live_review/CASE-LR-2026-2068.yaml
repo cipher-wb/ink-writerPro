@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2068
+title: 我本无意做先师 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 灵异
+  - 志怪
+  - 古代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 场景单调，缺乏人物互动，反转尚可但主线俗套，市场小。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 场景单调，缺乏人物互动，反转尚可但主线俗套，市场小。 | 破庙场景独角戏无聊;缺乏人物互动和事件
+  observable:
+  - 'opening维度: 破庙场景独角戏无聊'
+  - 'character维度: 缺乏人物互动和事件'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 4401
+  - 4600
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 我本无意做先师
+  genre_guess:
+  - 灵异
+  - 志怪
+  - 古代
+  overall_comment: 场景单调，缺乏人物互动，反转尚可但主线俗套，市场小。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 破庙场景独角戏无聊
+    raw_quote: 就你这个场景下雨了 破庙里面 ... 就要多无聊有多无聊啊
+  - dimension: character
+    severity: negative
+    content: 缺乏人物互动和事件
+    raw_quote: 你去跟人互动吧 ... 睁开眼睛就是人

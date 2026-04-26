@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1873
+title: 亚瑟王英灵殿系统奇幻文 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 奇幻
+  - 领主
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 慢悠悠种田无事件，系统太突兀，需要多坑和危机驱动，学权力游戏铺垫矛盾关系。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 慢悠悠种田无事件，系统太突兀，需要多坑和危机驱动，学权力游戏铺垫矛盾关系。 | 没有事件，慢悠悠种田，读者会觉得突兀和无聊;英灵殿系统太庞大，一上来就很突兀，需恰到好处
+  observable:
+  - 'opening维度: 没有事件，慢悠悠种田，读者会觉得突兀和无聊'
+  - 'golden_finger维度: 英灵殿系统太庞大，一上来就很突兀，需恰到好处'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1514
+  - 1574
+  score: 28
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 亚瑟王英灵殿系统奇幻文
+  genre_guess:
+  - 奇幻
+  - 领主
+  - 系统
+  overall_comment: 慢悠悠种田无事件，系统太突兀，需要多坑和危机驱动，学权力游戏铺垫矛盾关系。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 没有事件，慢悠悠种田，读者会觉得突兀和无聊
+    raw_quote: 又慢又无聊 没什么事件 你本质上你跟前面一个大哥一样 还是在慢悠悠的种田
+  - dimension: golden_finger
+    severity: negative
+    content: 英灵殿系统太庞大，一上来就很突兀，需恰到好处
+    raw_quote: 你这个系统太大了 英灵殿系统没事件 这样上来读者会觉得很突兀的

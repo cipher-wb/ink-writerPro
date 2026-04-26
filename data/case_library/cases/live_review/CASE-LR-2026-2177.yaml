@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2177
+title: 帝国魔女 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 西幻
+  - 政治
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给你28分啊 最多了 | 高难度题材驾驭不住，政治戏没人看，全是犯困的对白，建议推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 高难度题材驾驭不住，政治戏没人看，全是犯困的对白，建议推翻。 | 纯粹的政治戏没人看，驾驭不住高难度题材;对白干巴巴没人看，呈现效果不行
+  observable:
+  - 'genre维度: 纯粹的政治戏没人看，驾驭不住高难度题材'
+  - 'pacing维度: 对白干巴巴没人看，呈现效果不行'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 755
+  - 795
+  score: 28
+  score_raw: 只能给你28分啊 最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 帝国魔女
+  genre_guess:
+  - 西幻
+  - 政治
+  overall_comment: 高难度题材驾驭不住，政治戏没人看，全是犯困的对白，建议推翻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯粹的政治戏没人看，驾驭不住高难度题材
+    raw_quote: 政治政治没人看呀 冲突冲突也没有 … 不要挑战高能度题材
+  - dimension: pacing
+    severity: negative
+    content: 对白干巴巴没人看，呈现效果不行
+    raw_quote: 就是对白对白说两三遍 … 呈现出来的效果就不行呀大哥

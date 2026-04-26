@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2081
+title: 嘉靖二十四年冬野 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 历史
+  - 大明
+  - 锦衣卫
+  - 军事
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就19分，没有没看到就没有 | 开局上门装逼缺乏逻辑，强行高深；建议从重生锦衣卫小人物切入，增加铺垫与合理性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局上门装逼缺乏逻辑，强行高深；建议从重生锦衣卫小人物切入，增加铺垫与合理性。 | 开头装逼太刻意，缺乏合理铺垫，逻辑崩坏;视角切来切去，主次不清
+  observable:
+  - 'opening维度: 开头装逼太刻意，缺乏合理铺垫，逻辑崩坏'
+  - 'character维度: 视角切来切去，主次不清'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 672
+  - 720
+  score: 19
+  score_raw: 差不多就19分，没有没看到就没有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 嘉靖二十四年冬野
+  genre_guess:
+  - 历史
+  - 大明
+  - 锦衣卫
+  - 军事
+  overall_comment: 开局上门装逼缺乏逻辑，强行高深；建议从重生锦衣卫小人物切入，增加铺垫与合理性。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头装逼太刻意，缺乏合理铺垫，逻辑崩坏
+    raw_quote: 这装备也太刻意了吧，把大哥这装逼也太可以了吧……上门装逼是最无聊的，都没见过社会这种东西要有逻辑性啊
+  - dimension: character
+    severity: negative
+    content: 视角切来切去，主次不清
+    raw_quote: 这视角也不对啊……你到底谁啊……没看到就是没有，就是切入有问题

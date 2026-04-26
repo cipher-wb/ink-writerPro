@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2138
+title: 规则怪谈：陈不弃 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 规则怪谈
+  - 无限流
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你25分吧 | 思路有点意思，但主角反应不对，人设失智，猎奇血腥难入V。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路有点意思，但主角反应不对，人设失智，猎奇血腥难入V。 | 主角面对恶性事件反应完全不对，情绪脱节;内容过于猎奇血腥，过审难
+  observable:
+  - 'opening维度: 主角面对恶性事件反应完全不对，情绪脱节'
+  - 'misc维度: 内容过于猎奇血腥，过审难'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 991
+  - 1100
+  score: 25
+  score_raw: 给你25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 规则怪谈：陈不弃
+  genre_guess:
+  - 规则怪谈
+  - 无限流
+  - 诡异
+  overall_comment: 思路有点意思，但主角反应不对，人设失智，猎奇血腥难入V。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主角面对恶性事件反应完全不对，情绪脱节
+    raw_quote: 大哥看到这种惨案 也也也不害怕对吧 也不害怕也不害怕 也也很平淡 大哥也无所谓
+  - dimension: misc
+    severity: negative
+    content: 内容过于猎奇血腥，过审难
+    raw_quote: 光天化日之下 你就直接把人家脖子给拧断了 直接把头给人家摘下来了

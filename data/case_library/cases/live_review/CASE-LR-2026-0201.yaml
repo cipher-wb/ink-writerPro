@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0201
+title: 无限原创 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 无限流
+  - 原创
+  - 反套路
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分吧 | 文笔合格，但故事内核套路化，系统任务过于抢戏，缺乏新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔合格，但故事内核套路化，系统任务过于抢戏，缺乏新意。 | 系统设定过于强大，完全主导剧情，削弱了故事性
+  observable:
+  - 'golden_finger维度: 系统设定过于强大，完全主导剧情，削弱了故事性'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 478
+  - 510
+  score: 42
+  score_raw: 42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 无限原创
+  genre_guess:
+  - 无限流
+  - 原创
+  - 反套路
+  overall_comment: 文笔合格，但故事内核套路化，系统任务过于抢戏，缺乏新意。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定过于强大，完全主导剧情，削弱了故事性
+    raw_quote: 任务太多了 就是系统太抢戏了 他会给你前因后果 过程什么全都给你写的
+  - dimension: hook
+    severity: neutral
+    content: 情绪和文笔在线，但故事内核陈旧
+    raw_quote: 比例跟情绪这块肯定是OK的 但是没意思啦 故事内核太套路化

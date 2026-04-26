@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0683
+title: 铁匠灵气复苏 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HCzwBuEV6
+scope:
+  genre:
+  - 灵气复苏
+  - 铁匠
+  - 番茄风
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 上面这28分了 | 番茄味浓，开头拉仇恨可以，但中间节奏断了，打脸衔接太平淡，建议一镜到底。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HCzwBuEV6.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 番茄味浓，开头拉仇恨可以，但中间节奏断了，打脸衔接太平淡，建议一镜到底。 | 中间节奏断档，拉完仇恨不立刻打脸
+  observable:
+  - 'pacing维度: 中间节奏断档，拉完仇恨不立刻打脸'
+live_review_meta:
+  source_bvid: BV1HCzwBuEV6
+  source_line_range:
+  - 1585
+  - 1660
+  score: 28
+  score_raw: 上面这28分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 铁匠灵气复苏
+  genre_guess:
+  - 灵气复苏
+  - 铁匠
+  - 番茄风
+  overall_comment: 番茄味浓，开头拉仇恨可以，但中间节奏断了，打脸衔接太平淡，建议一镜到底。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入是番茄味道，拉情绪嘲讽到位
+    raw_quote: 这太番茄了这个...上来拉仇恨...切入其实挺番茄的
+  - dimension: pacing
+    severity: negative
+    content: 中间节奏断档，拉完仇恨不立刻打脸
+    raw_quote: 中间断了...第一张的拉仇恨白拉了

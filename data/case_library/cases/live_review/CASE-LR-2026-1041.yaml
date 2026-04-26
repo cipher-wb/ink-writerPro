@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1041
+title: 仙子雪白文 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 仙侠
+  - 雪白
+  - 拉扯
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 雪白描写和仙子人设还可以，但AI感重、审美不足，主角代入感得加强
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白描写和仙子人设还可以，但AI感重、审美不足，主角代入感得加强 | 主角心理活动过多，代入感弱;部分描写太虚且过度，需删减
+  observable:
+  - 'character维度: 主角心理活动过多，代入感弱'
+  - 'simplicity维度: 部分描写太虚且过度，需删减'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 901
+  - 1050
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙子雪白文
+  genre_guess:
+  - 仙侠
+  - 雪白
+  - 拉扯
+  overall_comment: 雪白描写和仙子人设还可以，但AI感重、审美不足，主角代入感得加强
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角心理活动过多，代入感弱
+    raw_quote: 主角的心理活动代入感比较少
+  - dimension: simplicity
+    severity: negative
+    content: 部分描写太虚且过度，需删减
+    raw_quote: 这个有点过 感觉就是其实很虚

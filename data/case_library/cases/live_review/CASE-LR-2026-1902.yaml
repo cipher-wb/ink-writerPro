@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1902
+title: 我家娘子有魔女词条 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 仙侠
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是50多分 | 设定太多且无必要，娘子人设不够出彩。简单化即可能签，但签了包扑街。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定太多且无必要，娘子人设不够出彩。简单化即可能签，但签了包扑街。 | 娘子塑造一般，驱动力不足;设定堆砌过多，应简单化
+  observable:
+  - 'character维度: 娘子塑造一般，驱动力不足'
+  - 'simplicity维度: 设定堆砌过多，应简单化'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 2381
+  - 2470
+  score: 55
+  score_raw: 还是50多分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 我家娘子有魔女词条
+  genre_guess:
+  - 仙侠
+  - 日常
+  overall_comment: 设定太多且无必要，娘子人设不够出彩。简单化即可能签，但签了包扑街。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 娘子塑造一般，驱动力不足
+    raw_quote: 娘子没感觉... 大哥的娘子塑造的其实就那样
+  - dimension: simplicity
+    severity: negative
+    content: 设定堆砌过多，应简单化
+    raw_quote: 你没必要什么设定都加上... 我觉得简单一点就行了

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1375
+title: 美女打脸加点系统 (borderline / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 乐子
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是42分的水平 | 压抑、乐子向，发番茄绝对有受众，有天赋看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 压抑、乐子向，发番茄绝对有受众，有天赋看点。
+  observable:
+  - 整体被星河直播判定为 borderline
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 2016
+  - 2080
+  score: 42
+  score_raw: 也是42分的水平
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 美女打脸加点系统
+  genre_guess:
+  - 都市
+  - 系统
+  - 乐子
+  - 后宫
+  overall_comment: 压抑、乐子向，发番茄绝对有受众，有天赋看点。
+  comments:
+  - dimension: misc
+    severity: positive
+    content: 被美女惩罚加点的乐子很适合蓝精灵/番茄平台
+    raw_quote: 蓝精灵应该还行...就算发配也是42分的水平
+  - dimension: misc
+    severity: neutral
+    content: 套路很烂梗，但互动拉扯别出心裁，有性压抑的看点
+    raw_quote: 这个太YY了...但是我觉得蓝精灵真有时长

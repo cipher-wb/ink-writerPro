@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0804
+title: 斯潘德冒险/捡到精灵少女 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 西幻
+  - 冒险
+  - 多女主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分 | 表达流畅但剧情简单，像饭圈妹妹打怪，太小白
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达流畅但剧情简单，像饭圈妹妹打怪，太小白 | 女主一味夸赞，人设尴尬，像NPC鼓掌;内核俗套，英雄救美没看点
+  observable:
+  - 'character维度: 女主一味夸赞，人设尴尬，像NPC鼓掌'
+  - 'opening维度: 内核俗套，英雄救美没看点'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 1980
+  - 2100
+  score: 32
+  score_raw: 32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斯潘德冒险/捡到精灵少女
+  genre_guess:
+  - 西幻
+  - 冒险
+  - 多女主
+  overall_comment: 表达流畅但剧情简单，像饭圈妹妹打怪，太小白
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主一味夸赞，人设尴尬，像NPC鼓掌
+    raw_quote: 每次都出来啪啪啪 好厉害呀大哥哥
+  - dimension: opening
+    severity: negative
+    content: 内核俗套，英雄救美没看点
+    raw_quote: 就是一个俗套的英雄救美

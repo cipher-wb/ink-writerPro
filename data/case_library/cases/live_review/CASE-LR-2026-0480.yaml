@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0480
+title: 穿越三国从挽救关羽开始 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40多分有 50分 50分差不多吧 | 三国文切入点可以，但代入感太少，缺乏现代人盘算。刘封题材今年太多，缺乏新卖点，出成绩难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 三国文切入点可以，但代入感太少，缺乏现代人盘算。刘封题材今年太多，缺乏新卖点，出成绩难。 | 现代人穿越后的心理盘算和目标太少，代入感弱;刘封题材写得多，没有新卖点，出成绩难
+  observable:
+  - 'character维度: 现代人穿越后的心理盘算和目标太少，代入感弱'
+  - 'genre维度: 刘封题材写得多，没有新卖点，出成绩难'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 700
+  - 756
+  score: 50
+  score_raw: 40多分有 50分 50分差不多吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越三国从挽救关羽开始
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  overall_comment: 三国文切入点可以，但代入感太少，缺乏现代人盘算。刘封题材今年太多，缺乏新卖点，出成绩难。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 现代人穿越后的心理盘算和目标太少，代入感弱
+    raw_quote: 大哥代入感有点少了 你一个现代人啊 你现代人的思路应该一直要盘算的呀...心理活动太少了 你的盘算 你的目标 你的就是你要思考
+  - dimension: genre
+    severity: negative
+    content: 刘封题材写得多，没有新卖点，出成绩难
+    raw_quote: 刘封也大家也看腻了 也没有什么好的一个思路...还是正常写的 正常一本正经的写 代入感又不强

@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1641
+title: 日常捡到少女 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 都市
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就28分那样子 | 日常平淡无奇，缺乏核心看点与冲突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 日常平淡无奇，缺乏核心看点与冲突。 | 开局捡到少女毫无看点。
+  observable:
+  - 'hook维度: 开局捡到少女毫无看点。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 691
+  - 740
+  score: 28
+  score_raw: 差不多也就28分那样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 日常捡到少女
+  genre_guess:
+  - 都市
+  - 日常
+  overall_comment: 日常平淡无奇，缺乏核心看点与冲突。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开局捡到少女毫无看点。
+    raw_quote: 捡到一个少女啊，这有啥意思啊

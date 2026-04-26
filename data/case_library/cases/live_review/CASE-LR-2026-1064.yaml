@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1064
+title: 被魔王包养的勇者 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 奇幻
+  - 魔王
+  - 勇者
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就先给你虚幻50分 | 脑洞有趣但尺度大过不了审，代入感和心理活动需加强。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞有趣但尺度大过不了审，代入感和心理活动需加强。 | 尺度超标，容易被人举报屏蔽
+  observable:
+  - 'taboo维度: 尺度超标，容易被人举报屏蔽'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 561
+  - 610
+  score: 50
+  score_raw: 就先给你虚幻50分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 被魔王包养的勇者
+  genre_guess:
+  - 奇幻
+  - 魔王
+  - 勇者
+  - 雪白
+  overall_comment: 脑洞有趣但尺度大过不了审，代入感和心理活动需加强。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 尺度超标，容易被人举报屏蔽
+    raw_quote: 这能过审吗 大哥你脚都放到你的那个上面了 能放吗
+  - dimension: character
+    severity: neutral
+    content: 主角心理活动少，谋划不足
+    raw_quote: 主角人设还挺好的 但是心理活动什么的有点少

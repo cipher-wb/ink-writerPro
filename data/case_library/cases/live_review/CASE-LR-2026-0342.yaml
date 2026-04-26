@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0342
+title: 女帝别回头，朕真是忠臣 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 历史
+  - 权谋
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十分吧 | 思路混乱，强行加修炼与政治导致四不像，人设工具化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路混乱，强行加修炼与政治导致四不像，人设工具化。 | 女角戏份薄弱，几乎是摆设;杂糅历史、言情、武道，毫无侧重
+  observable:
+  - 'character维度: 女角戏份薄弱，几乎是摆设'
+  - 'pacing维度: 杂糅历史、言情、武道，毫无侧重'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 2261
+  - 2345
+  score: 20
+  score_raw: 二十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 女帝别回头，朕真是忠臣
+  genre_guess:
+  - 历史
+  - 权谋
+  - 雪白
+  overall_comment: 思路混乱，强行加修炼与政治导致四不像，人设工具化。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女角戏份薄弱，几乎是摆设
+    raw_quote: 女的人设 几乎没有有点骗人
+  - dimension: pacing
+    severity: negative
+    content: 杂糅历史、言情、武道，毫无侧重
+    raw_quote: 思路写不对我觉得就是取 一个点…不要乱杂肉

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0612
+title: 普通的冒险故事 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 奇幻
+  - 冒险
+  - 童话
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你22分钟 他比较好看吧 | 童话写法，人设太低幼，内容太空，不适合网文市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 童话写法，人设太低幼，内容太空，不适合网文市场。 | 童话故事不适合网文，受众小
+  observable:
+  - 'genre维度: 童话故事不适合网文，受众小'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 3551
+  - 3700
+  score: 22
+  score_raw: 给你22分钟 他比较好看吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 普通的冒险故事
+  genre_guess:
+  - 奇幻
+  - 冒险
+  - 童话
+  overall_comment: 童话写法，人设太低幼，内容太空，不适合网文市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 童话故事不适合网文，受众小
+    raw_quote: 这童话吧...也不是什么好题材

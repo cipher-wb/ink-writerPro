@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1360
+title: 大汉天子求仙 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 历史
+  - 汉朝
+  - 穿越
+  - 求仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 比例不够，心理活动和视角混乱，虽有进步，但仍需多练笔力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例不够，心理活动和视角混乱，虽有进步，但仍需多练笔力。 | 笔力不够，描写白烂，经常重复使用“不可置信”等词;视角混乱，随意切换心理活动，无视点法
+  observable:
+  - 'misc维度: 笔力不够，描写白烂，经常重复使用“不可置信”等词'
+  - 'misc维度: 视角混乱，随意切换心理活动，无视点法'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1052
+  - 1120
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 大汉天子求仙
+  genre_guess:
+  - 历史
+  - 汉朝
+  - 穿越
+  - 求仙
+  overall_comment: 比例不够，心理活动和视角混乱，虽有进步，但仍需多练笔力。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 笔力不够，描写白烂，经常重复使用“不可置信”等词
+    raw_quote: 都不可置信了...这就是你的描写
+  - dimension: misc
+    severity: negative
+    content: 视角混乱，随意切换心理活动，无视点法
+    raw_quote: 李少君的心理活动你不知道的...怎么知道呢

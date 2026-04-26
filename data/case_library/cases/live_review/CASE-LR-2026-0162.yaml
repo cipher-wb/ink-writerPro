@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-0162
+title: 高级制造经理穿越修仙世界 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 技术流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22 | 理科生思维，内容太专业，读者看不懂；文笔表达好但思路错误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 理科生思维，内容太专业，读者看不懂；文笔表达好但思路错误。 | 不写人物互动，只写说明书;内容太专业，读者看不懂;开头堆设定，直接劝退
+  observable:
+  - 'character维度: 不写人物互动，只写说明书'
+  - 'simplicity维度: 内容太专业，读者看不懂'
+  - 'opening维度: 开头堆设定，直接劝退'
+  - 'hook维度: 没有情绪没有看点'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 482
+  - 706
+  score: 22
+  score_raw: '22'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高级制造经理穿越修仙世界
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 技术流
+  overall_comment: 理科生思维，内容太专业，读者看不懂；文笔表达好但思路错误。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 不写人物互动，只写说明书
+    raw_quote: 寫人物寫人物,不要這樣
+  - dimension: simplicity
+    severity: negative
+    content: 内容太专业，读者看不懂
+    raw_quote: 這是讀著看不懂的東西
+  - dimension: opening
+    severity: negative
+    content: 开头堆设定，直接劝退
+    raw_quote: 這個已經奔完了啊
+  - dimension: hook
+    severity: negative
+    content: 没有情绪没有看点
+    raw_quote: 情緒沒情緒,看點沒看點
+  - dimension: misc
+    severity: positive
+    content: 文笔表达很好
+    raw_quote: 文比表達很好

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-2086
+title: 金牌编辑害圈记 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 同人
+  - 直播文
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 分就不打了 | 熟练运用直播梗的乐子文，人设立体有趣，虽然是恶搞但完成度较高，无法纳入签约标准评判。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 熟练运用直播梗的乐子文，人设立体有趣，虽然是恶搞但完成度较高，无法纳入签约标准评判。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1035
+  - 1090
+  score: null
+  score_raw: 分就不打了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 金牌编辑害圈记
+  genre_guess:
+  - 同人
+  - 直播文
+  - 搞笑
+  overall_comment: 熟练运用直播梗的乐子文，人设立体有趣，虽然是恶搞但完成度较高，无法纳入签约标准评判。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 恶搞他人却写得活灵活现，人设塑造到位
+    raw_quote: 这比例确实挺扎实的，这比例肉感轻盈的……写得好，真好啊对吧

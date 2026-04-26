@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0644
+title: 夕阳如血潮汐牢中 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 玄幻
+  - 武道
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 狗带这种烂梗不要带 | 超级萌新，通篇卖设定无剧情，主角困境、动力全无，金属指老套，不具备签约基础。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 超级萌新，通篇卖设定无剧情，主角困境、动力全无，金属指老套，不具备签约基础。 | 通篇水字数，无事件互动，严重慢热;主角无驱动力，互动对象单一，反派直板;金属指出场过晚且老套
+  observable:
+  - 'pacing维度: 通篇水字数，无事件互动，严重慢热'
+  - 'character维度: 主角无驱动力，互动对象单一，反派直板'
+  - 'golden_finger维度: 金属指出场过晚且老套'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 341
+  - 420
+  score: null
+  score_raw: 狗带这种烂梗不要带
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 夕阳如血潮汐牢中
+  genre_guess:
+  - 玄幻
+  - 武道
+  overall_comment: 超级萌新，通篇卖设定无剧情，主角困境、动力全无，金属指老套，不具备签约基础。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 通篇水字数，无事件互动，严重慢热
+    raw_quote: 还在慢...没剧情...在卖设定
+  - dimension: character
+    severity: negative
+    content: 主角无驱动力，互动对象单一，反派直板
+    raw_quote: 没有人物互动...反派就这么直板嘛
+  - dimension: golden_finger
+    severity: negative
+    content: 金属指出场过晚且老套
+    raw_quote: 金属指就出来了...好老套

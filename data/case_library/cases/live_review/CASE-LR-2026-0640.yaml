@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0640
+title: 穿越平行世界文娱文 (fail / 41分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 文娱
+  - 穿越
+  - 平行世界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只是思路给你41分 | 老套的文抄公架空文，缺乏新人所需的强人物关系，事业线俗套，不推荐签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套的文抄公架空文，缺乏新人所需的强人物关系，事业线俗套，不推荐签约。 | 56年前的飞卢文抄公套路，不适合现在新人碰的架空题材;希望能看到人物关系，而非一本正经的事业线
+  observable:
+  - 'genre维度: 56年前的飞卢文抄公套路，不适合现在新人碰的架空题材'
+  - 'character维度: 希望能看到人物关系，而非一本正经的事业线'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1
+  - 100
+  score: 41
+  score_raw: 只是思路给你41分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越平行世界文娱文
+  genre_guess:
+  - 文娱
+  - 穿越
+  - 平行世界
+  overall_comment: 老套的文抄公架空文，缺乏新人所需的强人物关系，事业线俗套，不推荐签约。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 56年前的飞卢文抄公套路，不适合现在新人碰的架空题材
+    raw_quote: 56年前飞卢啊...现在架空的新人真的不建议碰了
+  - dimension: character
+    severity: negative
+    content: 希望能看到人物关系，而非一本正经的事业线
+    raw_quote: 我希望看人物...事业线很俗套的
+  - dimension: misc
+    severity: positive
+    content: 文笔节奏尚可，烟火气开头有吸引力
+    raw_quote: 这开头烟火气片...文笔应该还可以的节奏也快

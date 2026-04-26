@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1348
+title: 都市异能上古神话 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 神话
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分左右 | 题材远古，剧情无聊，带入伍感差，建议直接推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材远古，剧情无聊，带入伍感差，建议直接推翻。 | 都市异能加揭秘上古神话的题材过于老旧;剧情拖沓，怪物公园围堵等情节毫无吸引力;视角乱，代入伍感弱，读者难进入
+  observable:
+  - 'genre维度: 都市异能加揭秘上古神话的题材过于老旧'
+  - 'hook维度: 剧情拖沓，怪物公园围堵等情节毫无吸引力'
+  - 'character维度: 视角乱，代入伍感弱，读者难进入'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 192
+  - 249
+  score: 20
+  score_raw: 20分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 都市异能上古神话
+  genre_guess:
+  - 都市
+  - 异能
+  - 神话
+  - 悬疑
+  overall_comment: 题材远古，剧情无聊，带入伍感差，建议直接推翻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市异能加揭秘上古神话的题材过于老旧
+    raw_quote: 都市艺人加解密加上古神話真的是一個遠古题材
+  - dimension: hook
+    severity: negative
+    content: 剧情拖沓，怪物公园围堵等情节毫无吸引力
+    raw_quote: 小怪兽来了快跑呀...没人在那个真没人看
+  - dimension: character
+    severity: negative
+    content: 视角乱，代入伍感弱，读者难进入
+    raw_quote: 视角已乱带入伍感比较弱

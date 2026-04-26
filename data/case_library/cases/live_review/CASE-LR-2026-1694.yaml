@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1694
+title: 蚂蚁异界求生金手指 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 异界
+  - 动物
+  - 金手指
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分左右 | 事件详细但题材难以代入，文笔不够，缺乏看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件详细但题材难以代入，文笔不够，缺乏看点。 | 动物题材难以代入，不适合网文市场。
+  observable:
+  - 'genre维度: 动物题材难以代入，不适合网文市场。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 792
+  - 845
+  score: 35
+  score_raw: 35分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蚂蚁异界求生金手指
+  genre_guess:
+  - 异界
+  - 动物
+  - 金手指
+  - 求生
+  overall_comment: 事件详细但题材难以代入，文笔不够，缺乏看点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 动物题材难以代入，不适合网文市场。
+    raw_quote: 真挺难代入的...你比例不够

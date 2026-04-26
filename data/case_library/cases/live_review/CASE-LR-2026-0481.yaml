@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0481
+title: 全国第一杆 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 体育
+  - 台球
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分 32分也很萌 新大哥 | 纯专业台球文，题材太小众。萌新写法，一本正经没设计，人设和冲突都很弱。建议换受众更广的题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯专业台球文，题材太小众。萌新写法，一本正经没设计，人设和冲突都很弱。建议换受众更广的题材。 | 纯体育竞技太小众，受众窄，上限低;开头没有设计，一本正经描述，没有冲突和眼前事件
+  observable:
+  - 'genre维度: 纯体育竞技太小众，受众窄，上限低'
+  - 'opening维度: 开头没有设计，一本正经描述，没有冲突和眼前事件'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 830
+  - 892
+  score: 32
+  score_raw: 32分 32分也很萌 新大哥
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全国第一杆
+  genre_guess:
+  - 体育
+  - 台球
+  - 重生
+  overall_comment: 纯专业台球文，题材太小众。萌新写法，一本正经没设计，人设和冲突都很弱。建议换受众更广的题材。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯体育竞技太小众，受众窄，上限低
+    raw_quote: 你写足球写篮球都比这专业多了 都比这商圈好多了 因为写书是商业化创作 你的实力不能提升100倍 但是你的受众可以提升100倍
+  - dimension: opening
+    severity: negative
+    content: 开头没有设计，一本正经描述，没有冲突和眼前事件
+    raw_quote: 就一本正经的这样讲 然后写的时候读者不爱看...你这样干巴巴的描述是没意思的

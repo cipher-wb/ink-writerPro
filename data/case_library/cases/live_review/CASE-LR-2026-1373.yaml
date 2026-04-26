@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1373
+title: 游戏副本求生日记 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 游戏
+  - 副本
+  - 求生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十三封满 | 设定全是门槛，人设有趣但开局跑题，没人愿看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定全是门槛，人设有趣但开局跑题，没人愿看。 | 开头卖太多设定，无剧情，主角与老板秘书开局不够吸引
+  observable:
+  - 'simplicity维度: 开头卖太多设定，无剧情，主角与老板秘书开局不够吸引'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1916
+  - 1965
+  score: 23
+  score_raw: 二十三封满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 游戏副本求生日记
+  genre_guess:
+  - 游戏
+  - 副本
+  - 求生
+  - 系统
+  overall_comment: 设定全是门槛，人设有趣但开局跑题，没人愿看。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 开头卖太多设定，无剧情，主角与老板秘书开局不够吸引
+    raw_quote: 没人看呀大哥...全是设定根本没给会关注你这个破游戏
+  - dimension: misc
+    severity: neutral
+    content: 可凑，但壮汉、小美之类的配角人设太路人
+    raw_quote: 你这个壮汉没意思...老板他的秘书三个人

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1304
+title: 修仙巫师在西幻 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 西幻
+  - 修仙
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十三分嘛 | 世界观缝合复杂，第一章杂糅，但比例有进步。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观缝合复杂，第一章杂糅，但比例有进步。 | 元素缝合太多，剧情无法展开;第一章设计有伤，缺乏主线事件
+  observable:
+  - 'simplicity维度: 元素缝合太多，剧情无法展开'
+  - 'opening维度: 第一章设计有伤，缺乏主线事件'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 321
+  - 420
+  score: 43
+  score_raw: 四十三分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙巫师在西幻
+  genre_guess:
+  - 西幻
+  - 修仙
+  - 穿越
+  overall_comment: 世界观缝合复杂，第一章杂糅，但比例有进步。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 元素缝合太多，剧情无法展开
+    raw_quote: 第一章真的杂肉太多了
+  - dimension: opening
+    severity: negative
+    content: 第一章设计有伤，缺乏主线事件
+    raw_quote: 第一章我觉得设计有点伤缺

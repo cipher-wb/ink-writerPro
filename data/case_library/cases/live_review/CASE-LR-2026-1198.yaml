@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1198
+title: 诡异梦境高中生 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 一棱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多22分吧 | 表达清楚但题材老旧，一棱类没有新意，没得救。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达清楚但题材老旧，一棱类没有新意，没得救。 | 一棱打怪兽题材老旧没机会;废话过多，需要精简
+  observable:
+  - 'genre维度: 一棱打怪兽题材老旧没机会'
+  - 'simplicity维度: 废话过多，需要精简'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 981
+  - 1000
+  score: 22
+  score_raw: 差不多22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异梦境高中生
+  genre_guess:
+  - 灵异
+  - 都市
+  - 一棱
+  overall_comment: 表达清楚但题材老旧，一棱类没有新意，没得救。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 一棱打怪兽题材老旧没机会
+    raw_quote: 题材没得救呀... 太老了
+  - dimension: simplicity
+    severity: negative
+    content: 废话过多，需要精简
+    raw_quote: 废话写疯掉了
+  - dimension: misc
+    severity: positive
+    content: 基本表达清楚，有基础
+    raw_quote: 简词造句还好

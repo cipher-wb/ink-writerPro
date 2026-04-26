@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1538
+title: 重生青梅，别追了 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 言情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真要发也只能难尽 | 双时空设定但没事件、没记忆代入，内容冒充科幻，展开极度无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 双时空设定但没事件、没记忆代入，内容冒充科幻，展开极度无聊。 | 开篇没有任何事件，平淡如水;明明是普通重生，却强标科幻，没有任何反转;主角穿越后没动力，一心只想回去，读者无法共情
+  observable:
+  - 'opening维度: 开篇没有任何事件，平淡如水'
+  - 'genre维度: 明明是普通重生，却强标科幻，没有任何反转'
+  - 'character维度: 主角穿越后没动力，一心只想回去，读者无法共情'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 1107
+  - 1213
+  score: null
+  score_raw: 真要发也只能难尽
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 重生青梅，别追了
+  genre_guess:
+  - 都市
+  - 重生
+  - 言情
+  overall_comment: 双时空设定但没事件、没记忆代入，内容冒充科幻，展开极度无聊。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇没有任何事件，平淡如水
+    raw_quote: 没事件穿过来这几张一点事件都没有 记忆也没有事件也没有
+  - dimension: genre
+    severity: negative
+    content: 明明是普通重生，却强标科幻，没有任何反转
+    raw_quote: 我以为你两届问 ... 没什么反转
+  - dimension: character
+    severity: negative
+    content: 主角穿越后没动力，一心只想回去，读者无法共情
+    raw_quote: 她来那一世她非常幸福 但是她重生过来了 所以她想回去吧

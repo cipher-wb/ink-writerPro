@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0279
+title: 美利坚驱魔神父忏悔 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 美利坚
+  - 驱魔
+  - 神父
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个估计还是还是40来分 | 开头压力水平太奇怪，神父忏悔那段本该放开头
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头压力水平太奇怪，神父忏悔那段本该放开头 | 前面压力水平写得出戏，真正精彩的神父忏悔在后面;主角耍帅不真实，缺乏情绪代入感
+  observable:
+  - 'opening维度: 前面压力水平写得出戏，真正精彩的神父忏悔在后面'
+  - 'character维度: 主角耍帅不真实，缺乏情绪代入感'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1266
+  - 1370
+  score: 40
+  score_raw: 这个估计还是还是40来分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚驱魔神父忏悔
+  genre_guess:
+  - 美利坚
+  - 驱魔
+  - 神父
+  overall_comment: 开头压力水平太奇怪，神父忏悔那段本该放开头
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前面压力水平写得出戏，真正精彩的神父忏悔在后面
+    raw_quote: 后面这一段挺好的，你把这1000个字放开头第一段就非常牛逼
+  - dimension: character
+    severity: negative
+    content: 主角耍帅不真实，缺乏情绪代入感
+    raw_quote: 你为什么老要把主角塑造这么帅呢，其实搞不懂不真实

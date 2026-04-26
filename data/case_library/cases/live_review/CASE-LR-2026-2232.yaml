@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-2232
+title: 土木老哥放羊修仙 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 修仙
+  - 种田
+  - 乡土
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例还好35从嘛 | 太接地气，主线推进过慢，五千字还在找羊，缺乏修仙看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太接地气，主线推进过慢，五千字还在找羊，缺乏修仙看点。 | 主线推进极慢，四千多字还在找羊，未进入修仙;事件太低级，危机无聊，杀鸡用牛刀
+  observable:
+  - 'pacing维度: 主线推进极慢，四千多字还在找羊，未进入修仙'
+  - 'highpoint维度: 事件太低级，危机无聊，杀鸡用牛刀'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 1285
+  - 1421
+  score: 35
+  score_raw: 比例还好35从嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 土木老哥放羊修仙
+  genre_guess:
+  - 修仙
+  - 种田
+  - 乡土
+  overall_comment: 太接地气，主线推进过慢，五千字还在找羊，缺乏修仙看点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 主线推进极慢，四千多字还在找羊，未进入修仙
+    raw_quote: '都写了多少字了
+
+      还在那羊羊羊羊
+
+      四千字了还在那羊'
+  - dimension: highpoint
+    severity: negative
+    content: 事件太低级，危机无聊，杀鸡用牛刀
+    raw_quote: '你这个危机
+
+      也是龙从那种
+
+      很无聊的危机...杀鸡烟用牛刀'
+  - dimension: character
+    severity: positive
+    content: 乡土人物和空镜写得可以，人设立得住
+    raw_quote: '因为他把香葱写得还可以
+
+      就那个人设立主'

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0241
+title: 被黑经纪整活文 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 都市
+  - 整活
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 整活过度，全是烂梗，无实用主线，只能给这个分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 整活过度，全是烂梗，无实用主线，只能给这个分。 | 烂梗叠加，内容虚浮
+  observable:
+  - 'misc维度: 烂梗叠加，内容虚浮'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 1155
+  - 1220
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 被黑经纪整活文
+  genre_guess:
+  - 都市
+  - 整活
+  - 穿越
+  overall_comment: 整活过度，全是烂梗，无实用主线，只能给这个分。
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 有脑洞整活
+    raw_quote: 水平太高了 结合了人设事件装逼
+  - dimension: misc
+    severity: negative
+    content: 烂梗叠加，内容虚浮
+    raw_quote: 这破题材就20多分撑死了

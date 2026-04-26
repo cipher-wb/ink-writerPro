@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0519
+title: 成仙的唯一 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 仙侠
+  - 民俗
+  - 模拟器
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 文青自嗨，不接用地气 | 第一章几乎无代入感，文青写法找死，第二章稍好但整体需推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章几乎无代入感，文青写法找死，第二章稍好但整体需推翻重写。 | 第一章文青过头，不拉代入感，读者会直接跑;应该学幽冥画皮卷等民俗狗道升级文的路子
+  observable:
+  - 'opening维度: 第一章文青过头，不拉代入感，读者会直接跑'
+  - 'simplicity维度: 应该学幽冥画皮卷等民俗狗道升级文的路子'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 646
+  - 685
+  score: null
+  score_raw: 文青自嗨，不接用地气
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 成仙的唯一
+  genre_guess:
+  - 仙侠
+  - 民俗
+  - 模拟器
+  overall_comment: 第一章几乎无代入感，文青写法找死，第二章稍好但整体需推翻重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章文青过头，不拉代入感，读者会直接跑
+    raw_quote: 第一章代入感几乎没有...你这么写书就是找死啊
+  - dimension: simplicity
+    severity: negative
+    content: 应该学幽冥画皮卷等民俗狗道升级文的路子
+    raw_quote: 就你赶紧推翻呀...写点接地气的东西

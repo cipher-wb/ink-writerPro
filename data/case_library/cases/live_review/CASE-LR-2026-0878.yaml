@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0878
+title: 凉州十八案 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 历史
+  - 探案
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不打分了 | 实体书写法，缺乏网文代入感和爽点，需包装成神探狄仁杰式爽文才可能成立。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 实体书写法，缺乏网文代入感和爽点，需包装成神探狄仁杰式爽文才可能成立。 | 没有代入感，纯粹场景白描;古代探案直接作为卖点没人看，必须包装成爽文
+  observable:
+  - 'character维度: 没有代入感，纯粹场景白描'
+  - 'genre维度: 古代探案直接作为卖点没人看，必须包装成爽文'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 711
+  - 750
+  score: null
+  score_raw: 不打分了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 凉州十八案
+  genre_guess:
+  - 历史
+  - 探案
+  overall_comment: 实体书写法，缺乏网文代入感和爽点，需包装成神探狄仁杰式爽文才可能成立。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 没有代入感，纯粹场景白描
+    raw_quote: 没代入感 就是一个场景嘛 电影画面嘛
+  - dimension: genre
+    severity: negative
+    content: 古代探案直接作为卖点没人看，必须包装成爽文
+    raw_quote: 古代破案这四个字说出来 你觉得读者看嘛 … 你要把它包装进去啊 包装成网文对吧

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1176
+title: 我是天灾 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 土著
+  - 灾星
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就18分吧 | 灾星土著的设定毫无代入感，对话白，情节无冲突，根本没法看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 灾星土著的设定毫无代入感，对话白，情节无冲突，根本没法看。 | 主角人设奇怪，读者无法代入灾星;对话白得像小学生作文，毫无活人感;灾星题材完全脱离网文市场，根本搜不到
+  observable:
+  - 'character维度: 主角人设奇怪，读者无法代入灾星'
+  - 'simplicity维度: 对话白得像小学生作文，毫无活人感'
+  - 'genre维度: 灾星题材完全脱离网文市场，根本搜不到'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 1210
+  - 1380
+  score: 18
+  score_raw: 也就18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我是天灾
+  genre_guess:
+  - 土著
+  - 灾星
+  - 玄幻
+  overall_comment: 灾星土著的设定毫无代入感，对话白，情节无冲突，根本没法看。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设奇怪，读者无法代入灾星
+    raw_quote: 没代入感就没有期待感 期待感是建立在代入感情况下 没代入感
+  - dimension: simplicity
+    severity: negative
+    content: 对话白得像小学生作文，毫无活人感
+    raw_quote: 他也笑了 哈哈哈哈 你贪看这些 你说的毛病是一种 你介绍一下
+  - dimension: genre
+    severity: negative
+    content: 灾星题材完全脱离网文市场，根本搜不到
+    raw_quote: 怎么找到这种题材 我感觉我搜都搜不到

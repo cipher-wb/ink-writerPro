@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0337
+title: 汉字战争 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 玄幻
+  - 文字种族
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多就到20分了 | 世界观过于抽象，将汉字拟人化难以代入，唯一出路是改为金手指。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观过于抽象，将汉字拟人化难以代入，唯一出路是改为金手指。 | 世界观完全无法代入，所有生物都是文字;设定复杂且枯燥，相当于字典搬进小说
+  observable:
+  - 'genre维度: 世界观完全无法代入，所有生物都是文字'
+  - 'simplicity维度: 设定复杂且枯燥，相当于字典搬进小说'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 1080
+  - 1405
+  score: 20
+  score_raw: 最多就到20分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 汉字战争
+  genre_guess:
+  - 玄幻
+  - 文字种族
+  - 系统流
+  overall_comment: 世界观过于抽象，将汉字拟人化难以代入，唯一出路是改为金手指。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观完全无法代入，所有生物都是文字
+    raw_quote: 这个设定 读这根本就不可能看进去了
+  - dimension: simplicity
+    severity: negative
+    content: 设定复杂且枯燥，相当于字典搬进小说
+    raw_quote: 这不就字典吗 他把字典搬过来

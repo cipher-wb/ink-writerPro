@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1949
+title: 勇者战败沦为老补 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 轻小说
+  - 异世界
+  - 迪化
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是依然五十多啊 | 会写人物互动和细节，但一直缺乏好题材。这个龙娘雪白老补题材卖点太弱，强行写无意义。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 会写人物互动和细节，但一直缺乏好题材。这个龙娘雪白老补题材卖点太弱，强行写无意义。 | 没有好题材，雪白卖点单薄;情节爽点太弱，看头就掉，本质思路老
+  observable:
+  - 'genre维度: 没有好题材，雪白卖点单薄'
+  - 'golden_finger维度: 情节爽点太弱，看头就掉，本质思路老'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 751
+  - 813
+  score: 55
+  score_raw: 还是依然五十多啊
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 勇者战败沦为老补
+  genre_guess:
+  - 轻小说
+  - 异世界
+  - 迪化
+  overall_comment: 会写人物互动和细节，但一直缺乏好题材。这个龙娘雪白老补题材卖点太弱，强行写无意义。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 没有好题材，雪白卖点单薄
+    raw_quote: 我觉得你的问题是没有好题材...这个题材不咋样，真不咋样
+  - dimension: golden_finger
+    severity: negative
+    content: 情节爽点太弱，看头就掉，本质思路老
+    raw_quote: 其实爽点就这样嘛，就真的很弱...这种龙啊雪白这么意思的，没题材就是没题材强行写

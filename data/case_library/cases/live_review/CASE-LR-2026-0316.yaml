@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0316
+title: 修仙冤种舔狗 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 思路偏题，用番茄的强金手指写法来写起点风，主线不集中，人设一般，故事缺乏吸引力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路偏题，用番茄的强金手指写法来写起点风，主线不集中，人设一般，故事缺乏吸引力。 | 金手指发放方式偏向番茄风，与起点风格不合，且显得刻意。;开局剧情太差，主线不够集中明确。;人设小白，情感线俗套，如供养道侣多年被抛弃。
+  observable:
+  - 'golden_finger维度: 金手指发放方式偏向番茄风，与起点风格不合，且显得刻意。'
+  - 'opening维度: 开局剧情太差，主线不够集中明确。'
+  - 'character维度: 人设小白，情感线俗套，如供养道侣多年被抛弃。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 478
+  - 592
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙冤种舔狗
+  genre_guess:
+  - 修仙
+  - 系统
+  - 轻小说
+  overall_comment: 思路偏题，用番茄的强金手指写法来写起点风，主线不集中，人设一般，故事缺乏吸引力。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指发放方式偏向番茄风，与起点风格不合，且显得刻意。
+    raw_quote: 番茄写法了呀...这玩意其实就是强强金手指打脸装逼系统...你为什么要冒充起点风格在这慢慢的写呢
+  - dimension: opening
+    severity: negative
+    content: 开局剧情太差，主线不够集中明确。
+    raw_quote: 第一个剧情太差了...兄弟不集中就拉胯
+  - dimension: character
+    severity: negative
+    content: 人设小白，情感线俗套，如供养道侣多年被抛弃。
+    raw_quote: 这人设太小白了...就有点都市被女友考上研究生送外卖养她的感觉

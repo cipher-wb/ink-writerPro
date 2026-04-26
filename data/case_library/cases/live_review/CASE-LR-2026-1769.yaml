@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1769
+title: 东京侦探 (pass / 65分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 都市
+  - 侦探
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 66 / 65吧 | 写法成熟，人设聪明，天赋不错，但金手指奖励违规需修改，可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法成熟，人设聪明，天赋不错，但金手指奖励违规需修改，可签约。 | 奖励双飞等设定涉黄，审核会卡
+  observable:
+  - 'taboo维度: 奖励双飞等设定涉黄，审核会卡'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 1400
+  - 1520
+  score: 65
+  score_raw: 66 / 65吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 东京侦探
+  genre_guess:
+  - 都市
+  - 侦探
+  - 系统
+  overall_comment: 写法成熟，人设聪明，天赋不错，但金手指奖励违规需修改，可签约。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 奖励双飞等设定涉黄，审核会卡
+    raw_quote: 奖励跟你双飞这种……我觉得不要，这个金手指你直接改下去
+  - dimension: pacing
+    severity: positive
+    content: 开头节奏紧凑，天赋反转不错
+    raw_quote: 东京线天赋反转不错……水平挺高的
+  - dimension: misc
+    severity: positive
+    content: 整体水平高，有签约价值
+    raw_quote: 我就给你签了……签约可以签水平挺高的

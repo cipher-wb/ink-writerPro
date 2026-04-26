@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1615
+title: 山阴县护槽历史文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 历史
+  - 种田
+  - 冷门
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40分左右 | 冷门朝代冷门写法，毫无看点，不懂蹭热点，写得非常无聊笨拙。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 冷门朝代冷门写法，毫无看点，不懂蹭热点，写得非常无聊笨拙。 | 开篇查户籍毫无看点，冷门世界冷门事件，读者全无兴趣;不懂蹭热点或快速吸引眼球，埋头写无聊铺垫
+  observable:
+  - 'opening维度: 开篇查户籍毫无看点，冷门世界冷门事件，读者全无兴趣'
+  - 'simplicity维度: 不懂蹭热点或快速吸引眼球，埋头写无聊铺垫'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 790
+  - 859
+  score: null
+  score_raw: 差不多40分左右
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 山阴县护槽历史文
+  genre_guess:
+  - 历史
+  - 种田
+  - 冷门
+  overall_comment: 冷门朝代冷门写法，毫无看点，不懂蹭热点，写得非常无聊笨拙。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇查户籍毫无看点，冷门世界冷门事件，读者全无兴趣
+    raw_quote: 冷门的世界 … 非常冷门的写法 … 连一个能看到点都没有
+  - dimension: simplicity
+    severity: negative
+    content: 不懂蹭热点或快速吸引眼球，埋头写无聊铺垫
+    raw_quote: 蹭和吸引眼球 … 打开思路呀 … 你就 … 一本正经的铺垫 写无聊的东西

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0848
+title: 银龙开局奴隶 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 游戏异界
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 游戏穿设定扣分，开头面板劝退，建议直接穿世界用人设拉扯。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 游戏穿设定扣分，开头面板劝退，建议直接穿世界用人设拉扯。 | 游戏异界设定减分，实力上限被拉低;开头面板设定浪费时间，应直接切入被救剧情
+  observable:
+  - 'genre维度: 游戏异界设定减分，实力上限被拉低'
+  - 'opening维度: 开头面板设定浪费时间，应直接切入被救剧情'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 731
+  - 800
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 银龙开局奴隶
+  genre_guess:
+  - 游戏异界
+  - 西幻
+  overall_comment: 游戏穿设定扣分，开头面板劝退，建议直接穿世界用人设拉扯。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 游戏异界设定减分，实力上限被拉低
+    raw_quote: 你写个什么西幻游戏，其实你的实力上限就50了
+  - dimension: opening
+    severity: negative
+    content: 开头面板设定浪费时间，应直接切入被救剧情
+    raw_quote: 前面的面板那些都该删掉的，穿过来两个人救救你那个女的

@@ -1,0 +1,41 @@
+case_id: CASE-LR-2026-1911
+title: 金融同仁投稿 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 都市
+  - 金融
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没看 | 稿子未找到，无法评价。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 稿子未找到，无法评价。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 147
+  - 175
+  score: null
+  score_raw: 没看
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 金融同仁投稿
+  genre_guess:
+  - 都市
+  - 金融
+  overall_comment: 稿子未找到，无法评价。
+  comments: []

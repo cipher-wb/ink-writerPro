@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2205
+title: 东南亚神话学院 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 科幻
+  - 学院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 可能18了...但加几分吧...到不了20分的水平 | 节奏虽快但完全是卖设定，不像网文，缺乏代入感和主线故事，建议虚心学习讲故事方式。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏虽快但完全是卖设定，不像网文，缺乏代入感和主线故事，建议虚心学习讲故事方式。 | 开篇卖设定，没有剧情铺垫，不像网文;缺乏心理活动，主角是谁、在干什么都不清楚
+  observable:
+  - 'opening维度: 开篇卖设定，没有剧情铺垫，不像网文'
+  - 'character维度: 缺乏心理活动，主角是谁、在干什么都不清楚'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 353
+  - 401
+  score: 18
+  score_raw: 可能18了...但加几分吧...到不了20分的水平
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东南亚神话学院
+  genre_guess:
+  - 科幻
+  - 学院
+  overall_comment: 节奏虽快但完全是卖设定，不像网文，缺乏代入感和主线故事，建议虚心学习讲故事方式。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇卖设定，没有剧情铺垫，不像网文
+    raw_quote: 先拉了个设定 然后其他都是为了设这个设定服务 很无聊啊...这不是网文
+  - dimension: character
+    severity: negative
+    content: 缺乏心理活动，主角是谁、在干什么都不清楚
+    raw_quote: 大哥你没有心理活动啊...不真实
+  - dimension: pacing
+    severity: positive
+    content: 节奏快是个优点
+    raw_quote: 节奏倒是快...节奏快 大概知道是有个优点

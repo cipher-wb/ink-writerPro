@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1462
+title: 穿越修仙界18年系统迟到 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 修仙
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你45分 | 模仿女力鬼等，虽然会讲故事但题材高难度，建议写简单升级。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 模仿女力鬼等，虽然会讲故事但题材高难度，建议写简单升级。 | 系统出戏，新人难驾驭;背景世界观加系统驾驭不了
+  observable:
+  - 'golden_finger维度: 系统出戏，新人难驾驭'
+  - 'genre维度: 背景世界观加系统驾驭不了'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 181
+  - 270
+  score: 45
+  score_raw: 给你45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越修仙界18年系统迟到
+  genre_guess:
+  - 修仙
+  - 系统
+  overall_comment: 模仿女力鬼等，虽然会讲故事但题材高难度，建议写简单升级。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统出戏，新人难驾驭
+    raw_quote: 我就觉得这个系统其实挺出戏的
+  - dimension: genre
+    severity: negative
+    content: 背景世界观加系统驾驭不了
+    raw_quote: 背景世界观加系统 这三个点其实你都驾驭不了

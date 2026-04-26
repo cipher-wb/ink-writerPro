@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1101
+title: 大明1449从坚果开始（第二位） (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 历史
+  - 大明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能签 好吧能签 | 历史文写作扎实，智商在线，但建议删除系统，走真实权谋路线即可签约
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史文写作扎实，智商在线，但建议删除系统，走真实权谋路线即可签约 | 系统多余，去掉后观感更真实
+  observable:
+  - 'golden_finger维度: 系统多余，去掉后观感更真实'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1370
+  - 1420
+  score: null
+  score_raw: 能签 好吧能签
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 大明1449从坚果开始（第二位）
+  genre_guess:
+  - 历史
+  - 大明
+  overall_comment: 历史文写作扎实，智商在线，但建议删除系统，走真实权谋路线即可签约
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统多余，去掉后观感更真实
+    raw_quote: 能不能不加系统啊 这个能不能不加系统 没必要加
+  - dimension: character
+    severity: positive
+    content: 主角智力高，说话合理，符合历史文气质
+    raw_quote: 你第一章要是主角没什么智商 你就把精神力加上嘛 现在不是智商很很高嘛

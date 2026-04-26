@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1569
+title: 圣光世界穿越里昂 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 圣光
+  - 学院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 代入感差，穿越味不浓，事件老套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感差，穿越味不浓，事件老套。 | 穿越身份交代不清，缺乏代入感，像土著而非穿越者;情节慢悠悠，像十几年前的奇幻展开
+  observable:
+  - 'opening维度: 穿越身份交代不清，缺乏代入感，像土著而非穿越者'
+  - 'pacing维度: 情节慢悠悠，像十几年前的奇幻展开'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 1251
+  - 1400
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 圣光世界穿越里昂
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 圣光
+  - 学院
+  overall_comment: 代入感差，穿越味不浓，事件老套。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越身份交代不清，缺乏代入感，像土著而非穿越者
+    raw_quote: 代感在哪里呢，不是没代入感，你这东西里昂来到世界的时候他才里昂是吧，那不就是里昂来的时候里昂在这已经十几年了是吧，就这个意思吧，看不懂啊
+  - dimension: pacing
+    severity: negative
+    content: 情节慢悠悠，像十几年前的奇幻展开
+    raw_quote: 这太老了，这个像十几年前慢悠悠那种展开了，慢悠悠的奇幻了

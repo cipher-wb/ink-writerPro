@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0961
+title: 奥特曼(女主向) (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 奥同仁
+  - 女主
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 按时三分 | 涉真实城市暴力过审难，开篇慢热，应速入怪兽与金手指
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 涉真实城市暴力过审难，开篇慢热，应速入怪兽与金手指 | 开头太慢太水，需道序设计;校门口杀人事件易触发审核
+  observable:
+  - 'opening维度: 开头太慢太水，需道序设计'
+  - 'taboo维度: 校门口杀人事件易触发审核'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 3580
+  - 3680
+  score: 30
+  score_raw: 按时三分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 奥特曼(女主向)
+  genre_guess:
+  - 奥同仁
+  - 女主
+  - 异能
+  overall_comment: 涉真实城市暴力过审难，开篇慢热，应速入怪兽与金手指
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头太慢太水，需道序设计
+    raw_quote: 你的开头太慢太水了
+  - dimension: taboo
+    severity: negative
+    content: 校门口杀人事件易触发审核
+    raw_quote: 学校门口开无双的这个事件过不了审

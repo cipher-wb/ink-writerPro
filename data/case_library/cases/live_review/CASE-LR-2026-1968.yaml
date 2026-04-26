@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1968
+title: 李宁坐在篝火旁 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 史前
+  - 原始社会
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就也上20分左右吧 | 切入点太早，全是猿猴没有配角，独角戏没爽点，像单机游戏，建议写部落冲突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点太早，全是猿猴没有配角，独角戏没爽点，像单机游戏，建议写部落冲突。 | 只有主角和猴子，缺少人类配角交互;史前题材过于小众，市场小;单机种田无冲突，节奏缓慢
+  observable:
+  - 'character维度: 只有主角和猴子，缺少人类配角交互'
+  - 'genre维度: 史前题材过于小众，市场小'
+  - 'pacing维度: 单机种田无冲突，节奏缓慢'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 821
+  - 920
+  score: 20
+  score_raw: 就也上20分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 李宁坐在篝火旁
+  genre_guess:
+  - 史前
+  - 原始社会
+  - 种田
+  overall_comment: 切入点太早，全是猿猴没有配角，独角戏没爽点，像单机游戏，建议写部落冲突。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 只有主角和猴子，缺少人类配角交互
+    raw_quote: 没配角没反馈…全是猿猴
+  - dimension: genre
+    severity: negative
+    content: 史前题材过于小众，市场小
+    raw_quote: 切入点不对啊…太原始人了
+  - dimension: pacing
+    severity: negative
+    content: 单机种田无冲突，节奏缓慢
+    raw_quote: 独角戏玩游戏啊…没爽点了就

@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-0091
+title: 江淮雪（重生大专精神小妹） (pass / 65分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12bFEzLEsy
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 校园
+  - 社会
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分能打60多吧 | 切入角度好，写作水平够签约，但涉未成年拍摄情节易被审核卡死，需大改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12bFEzLEsy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入角度好，写作水平够签约，但涉未成年拍摄情节易被审核卡死，需大改。 | 主角前世参与未成年拍摄，严重触犯审核红线;主角动机‘拍了就能吃饭’过于降智，建议改为欠债等合理理由
+  observable:
+  - 'taboo维度: 主角前世参与未成年拍摄，严重触犯审核红线'
+  - 'simplicity维度: 主角动机‘拍了就能吃饭’过于降智，建议改为欠债等合理理由'
+live_review_meta:
+  source_bvid: BV12bFEzLEsy
+  source_line_range:
+  - 28
+  - 218
+  score: 65
+  score_raw: 打分能打60多吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 江淮雪（重生大专精神小妹）
+  genre_guess:
+  - 都市
+  - 重生
+  - 校园
+  - 社会
+  overall_comment: 切入角度好，写作水平够签约，但涉未成年拍摄情节易被审核卡死，需大改。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 切入角度犀利，符合当下精神小妹热点
+    raw_quote: 这个切入是挺牛逼的
+  - dimension: taboo
+    severity: negative
+    content: 主角前世参与未成年拍摄，严重触犯审核红线
+    raw_quote: 开头主角在跟这个未成年拍片
+  - dimension: simplicity
+    severity: negative
+    content: 主角动机‘拍了就能吃饭’过于降智，建议改为欠债等合理理由
+    raw_quote: 我觉得拍了就要吃饭，这有点太太降智了
+  - dimension: highpoint
+    severity: positive
+    content: 小剧场写得生动有趣
+    raw_quote: 我靠这大哥这小剧场写的特别好啊
+  - dimension: misc
+    severity: positive
+    content: 整体写作水平达到签约标准
+    raw_quote: 大哥大哥绝对是签约水平啊

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-2159
+title: 捉妖大师：苏梅 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 捉鬼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22年金手指 | 都市捉妖流但胆子太小，雪白不敢写，梗太密破坏氛围，整体偏小白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市捉妖流但胆子太小，雪白不敢写，梗太密破坏氛围，整体偏小白。 | 场景该有的紧张感和暧昧感全无，主角像唐僧;为了玩梗而玩梗，破坏故事整体性;整体偏小白，事件潦草，金手指设计老套
+  observable:
+  - 'highpoint维度: 场景该有的紧张感和暧昧感全无，主角像唐僧'
+  - 'character维度: 为了玩梗而玩梗，破坏故事整体性'
+  - 'misc维度: 整体偏小白，事件潦草，金手指设计老套'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 1836
+  - 1996
+  score: null
+  score_raw: 22年金手指
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 捉妖大师：苏梅
+  genre_guess:
+  - 都市
+  - 灵异
+  - 捉鬼
+  overall_comment: 都市捉妖流但胆子太小，雪白不敢写，梗太密破坏氛围，整体偏小白。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 场景该有的紧张感和暧昧感全无，主角像唐僧
+    raw_quote: 胆子太小了...什么都不敢写...大概是唐僧...什么都不敢写，便宜都不敢占
+  - dimension: character
+    severity: negative
+    content: 为了玩梗而玩梗，破坏故事整体性
+    raw_quote: 不要拉乐子...拉乐子很出戏啊
+  - dimension: misc
+    severity: negative
+    content: 整体偏小白，事件潦草，金手指设计老套
+    raw_quote: 前面那个事件太潦草了...太小白了...大哥自己预判了我啊

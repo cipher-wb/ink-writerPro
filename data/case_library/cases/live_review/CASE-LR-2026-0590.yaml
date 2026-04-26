@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0590
+title: 绍宋元年 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1FpDNB6EkY
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 宋哲宗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 66分 | 开篇切入好，考据专业真实感强，但节奏过快、心理活动不足导致阅读门槛偏高，建议放慢并增加内心戏。整体质量能签，评分66。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FpDNB6EkY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇切入好，考据专业真实感强，但节奏过快、心理活动不足导致阅读门槛偏高，建议放慢并增加内心戏。整体质量能签，评分66。 | 叙事节奏过快，一路推进缺少停顿，主角缺乏心理活动，建议放慢;考据专业性过强，导致前期受众小、阅读门槛高，需要适当降低理解成本
+  observable:
+  - 'pacing维度: 叙事节奏过快，一路推进缺少停顿，主角缺乏心理活动，建议放慢'
+  - 'simplicity维度: 考据专业性过强，导致前期受众小、阅读门槛高，需要适当降低理解成本'
+live_review_meta:
+  source_bvid: BV1FpDNB6EkY
+  source_line_range:
+  - 1
+  - 302
+  score: 66
+  score_raw: 66分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 绍宋元年
+  genre_guess:
+  - 历史
+  - 穿越
+  - 宋哲宗
+  overall_comment: 开篇切入好，考据专业真实感强，但节奏过快、心理活动不足导致阅读门槛偏高，建议放慢并增加内心戏。整体质量能签，评分66。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头切入方式好，蹭名人穿越类似《大宋天子》，自然引出背景
+    raw_quote: 我今天看这个稿子，我觉得这个稿子的切入挺好，跟那个大宋天子是差不多的
+  - dimension: hook
+    severity: positive
+    content: 首次写作便有专业水准，真实感与考据结合，极具天赋，未来可期
+    raw_quote: 我感觉大哥你真是第一次写吗...你如果第一次写有这个水平的话，未来必成大器...因为这个真实感跟这个专业性结合了呀
+  - dimension: pacing
+    severity: negative
+    content: 叙事节奏过快，一路推进缺少停顿，主角缺乏心理活动，建议放慢
+    raw_quote: 因为你的心理活动要多一点，多盘算，你不能一直跟他们互动，你要有一些停下的东西，就感觉你一直在走...把你的东西写的慢一点
+  - dimension: simplicity
+    severity: negative
+    content: 考据专业性过强，导致前期受众小、阅读门槛高，需要适当降低理解成本
+    raw_quote: 这个书写得比较专业性，可能会阅读门槛比较高...不然你这个太专业了，前期可能比较受众小

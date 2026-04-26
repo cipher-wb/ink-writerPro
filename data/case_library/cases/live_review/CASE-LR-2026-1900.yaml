@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1900
+title: 人在漫威肘击诸神 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 同人
+  - 漫威
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 作为漫威也不及格 | 节奏极慢，核心卖点展现不出。轻小说写法不适合漫威，喜欢写脚态度有问题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏极慢，核心卖点展现不出。轻小说写法不适合漫威，喜欢写脚态度有问题。 | 节奏极慢，对白水得厉害;过度描写脚而非脸蛋，有问题
+  observable:
+  - 'pacing维度: 节奏极慢，对白水得厉害'
+  - 'opening维度: 过度描写脚而非脸蛋，有问题'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 2201
+  - 2290
+  score: null
+  score_raw: 作为漫威也不及格
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 人在漫威肘击诸神
+  genre_guess:
+  - 同人
+  - 漫威
+  overall_comment: 节奏极慢，核心卖点展现不出。轻小说写法不适合漫威，喜欢写脚态度有问题。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏极慢，对白水得厉害
+    raw_quote: 太慢了... 核心慢点根本展现不出来... 老铺垫老铺垫
+  - dimension: opening
+    severity: negative
+    content: 过度描写脚而非脸蛋，有问题
+    raw_quote: 把脚丫子写这么详细干嘛... 没有人会写小指头的... 真有点问题

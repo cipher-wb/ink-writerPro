@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1057
+title: 灵山已立，大佛已成，浩劫将至 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 西游
+  - 仙侠
+  - 阴谋论
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你25分嘛 | 写法过时，文笔扎实，但缺乏代入感，西游重写市场冷。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法过时，文笔扎实，但缺乏代入感，西游重写市场冷。 | 西游阴谋论已被淘汰，写法文青;开篇像重写西游，慢热无看点
+  observable:
+  - 'genre维度: 西游阴谋论已被淘汰，写法文青'
+  - 'opening维度: 开篇像重写西游，慢热无看点'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 81
+  - 160
+  score: 25
+  score_raw: 就给你25分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵山已立，大佛已成，浩劫将至
+  genre_guess:
+  - 西游
+  - 仙侠
+  - 阴谋论
+  overall_comment: 写法过时，文笔扎实，但缺乏代入感，西游重写市场冷。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西游阴谋论已被淘汰，写法文青
+    raw_quote: 这种西游阴谋论...现在 也正人家是正常写仙侠了
+  - dimension: opening
+    severity: negative
+    content: 开篇像重写西游，慢热无看点
+    raw_quote: 这第一章就没啥看的 第一章就是吴承恩的感觉

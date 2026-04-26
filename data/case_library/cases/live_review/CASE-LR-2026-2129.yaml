@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2129
+title: 放弃洗盘子从斩杀魔鬼开始 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 都市
+  - 西幻
+  - 猎魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就20分最多啦 | 题材怪异、设定晦涩，主线模糊，文笔故弄玄虚，读者看不懂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材怪异、设定晦涩，主线模糊，文笔故弄玄虚，读者看不懂。 | 都市加西幻猎魔元素拼接感强，不是正常网文写法;开头大量设定堆砌，卖点未凸显
+  observable:
+  - 'genre维度: 都市加西幻猎魔元素拼接感强，不是正常网文写法'
+  - 'opening维度: 开头大量设定堆砌，卖点未凸显'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 1
+  - 130
+  score: 20
+  score_raw: 就20分最多啦
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 放弃洗盘子从斩杀魔鬼开始
+  genre_guess:
+  - 都市
+  - 西幻
+  - 猎魔
+  overall_comment: 题材怪异、设定晦涩，主线模糊，文笔故弄玄虚，读者看不懂。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市加西幻猎魔元素拼接感强，不是正常网文写法
+    raw_quote: 题材我觉得最大的是题材 这个能切吗 这个完全不是一个正常网文写法的歌 就太朦胧模糊了 读者看不懂主线
+  - dimension: opening
+    severity: negative
+    content: 开头大量设定堆砌，卖点未凸显
+    raw_quote: 首先卖点都没凸显出来 文笔也故弄玄虚

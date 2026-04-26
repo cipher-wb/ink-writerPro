@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0392
+title: 1920美利坚 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 历史
+  - 美国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 算合格吗 算呀 | 1920年代美国背景可行，但奇才感太弱，缺乏强力看点，建议加上雪白等爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 1920年代美国背景可行，但奇才感太弱，缺乏强力看点，建议加上雪白等爽点。 | 全文期待感和奇遇感极弱，类似美利坚八股的观望感。
+  observable:
+  - 'highpoint维度: 全文期待感和奇遇感极弱，类似美利坚八股的观望感。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 670
+  - 720
+  score: null
+  score_raw: 算合格吗 算呀
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 1920美利坚
+  genre_guess:
+  - 历史
+  - 美国
+  overall_comment: 1920年代美国背景可行，但奇才感太弱，缺乏强力看点，建议加上雪白等爽点。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 全文期待感和奇遇感极弱，类似美利坚八股的观望感。
+    raw_quote: 背点文我觉得奇才感太弱了，我觉得一点没奇才感的书写下去包铺的。
+  - dimension: simplicity
+    severity: positive
+    content: 可以尝试加入雪白或其他人设拉扯来丰富看点。
+    raw_quote: 加个雪白加点其他的人士什么的。

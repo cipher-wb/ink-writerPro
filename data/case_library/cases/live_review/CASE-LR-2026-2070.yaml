@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2070
+title: 我在靈異世界当天使 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40 按分 | 切入有天赋，但金手指俗套，建议加速节奏、加同伴、用辅助系统。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入有天赋，但金手指俗套，建议加速节奏、加同伴、用辅助系统。 | 金手指太小白，破坏智商流
+  observable:
+  - 'golden_finger维度: 金手指太小白，破坏智商流'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 4801
+  - 5000
+  score: 40
+  score_raw: 40 按分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在靈異世界当天使
+  genre_guess:
+  - 都市
+  - 灵异
+  - 诡异
+  overall_comment: 切入有天赋，但金手指俗套，建议加速节奏、加同伴、用辅助系统。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入事件很有代入感
+    raw_quote: 这个事件我觉得没问题 ... 这位李英小说我觉得非常及格
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指太小白，破坏智商流
+    raw_quote: 垃圾 如果说你的中间蓝精灵能写 我觉得这个出来已经崩完了

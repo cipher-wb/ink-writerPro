@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-2145
+title: 我的女儿是窗帘 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 都市
+  - 奇幻
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这次文笔还好一点，我能加两分 | 元素混乱、故弄玄虚，虽然文笔略有进步但仍不是讲故事而是堆设定，读者无法接受。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素混乱、故弄玄虚，虽然文笔略有进步但仍不是讲故事而是堆设定，读者无法接受。 | 元素堆砌过多，读者看不懂也无法代入;使用过气的西方吸血鬼狼人元素，建议写正常东方题材;开篇不是在讲故事而是在讲混乱的设定
+  observable:
+  - 'simplicity维度: 元素堆砌过多，读者看不懂也无法代入'
+  - 'genre维度: 使用过气的西方吸血鬼狼人元素，建议写正常东方题材'
+  - 'opening维度: 开篇不是在讲故事而是在讲混乱的设定'
+  - 'pacing维度: 节奏拖沓，全是设定解释没有推进剧情'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 85
+  - 194
+  score: null
+  score_raw: 这次文笔还好一点，我能加两分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 我的女儿是窗帘
+  genre_guess:
+  - 都市
+  - 奇幻
+  - 悬疑
+  overall_comment: 元素混乱、故弄玄虚，虽然文笔略有进步但仍不是讲故事而是堆设定，读者无法接受。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 元素堆砌过多，读者看不懂也无法代入
+    raw_quote: 你的书其实是有点故弄玄虚的...所有的设定，所有的元素都很故弄玄虚
+  - dimension: genre
+    severity: negative
+    content: 使用过气的西方吸血鬼狼人元素，建议写正常东方题材
+    raw_quote: 能不能找点正常题材...就不要给我西方，也不要给我扯那些吸血鬼这些东西了
+  - dimension: opening
+    severity: negative
+    content: 开篇不是在讲故事而是在讲混乱的设定
+    raw_quote: 你这不是讲故事，你这是讲设定啊...我穿越了，我有个娘子，娘子给我喂我吃药...这么简单的故事不就行了吗
+  - dimension: pacing
+    severity: negative
+    content: 节奏拖沓，全是设定解释没有推进剧情
+    raw_quote: 就就干巴巴的聊，就硬聊...读者看不了这太多的东西啊

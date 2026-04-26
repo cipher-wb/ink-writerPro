@@ -1,0 +1,41 @@
+case_id: CASE-LR-2026-1481
+title: 明日方舟同人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 同人
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不打分了 | 完全不是网文，建议去看网文再写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不是网文，建议去看网文再写。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1891
+  - 1980
+  score: null
+  score_raw: 不打分了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 明日方舟同人
+  genre_guess:
+  - 同人
+  - 奇幻
+  overall_comment: 完全不是网文，建议去看网文再写。
+  comments: []

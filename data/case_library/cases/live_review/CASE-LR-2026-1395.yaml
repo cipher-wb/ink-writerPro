@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1395
+title: 我向伤神借偿人间 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 玄幻
+  - 穷相
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不能给大哥18分嘛 | 找不到主角视角，写法散文式故弄玄虚，缺乏基本代入感，需推倒重学基础。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 找不到主角视角，写法散文式故弄玄虚，缺乏基本代入感，需推倒重学基础。 | 主体视角混乱，读者不知道谁是主角;开篇故弄玄虚，事件奇怪，没有代入感
+  observable:
+  - 'character维度: 主体视角混乱，读者不知道谁是主角'
+  - 'opening维度: 开篇故弄玄虚，事件奇怪，没有代入感'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 501
+  - 650
+  score: null
+  score_raw: 不能给大哥18分嘛
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 我向伤神借偿人间
+  genre_guess:
+  - 玄幻
+  - 穷相
+  - 仙侠
+  overall_comment: 找不到主角视角，写法散文式故弄玄虚，缺乏基本代入感，需推倒重学基础。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主体视角混乱，读者不知道谁是主角
+    raw_quote: 找不到主角呀 就纯粹 不知道怎么代入
+  - dimension: opening
+    severity: negative
+    content: 开篇故弄玄虚，事件奇怪，没有代入感
+    raw_quote: 事件也很奇怪 故弄玄虚

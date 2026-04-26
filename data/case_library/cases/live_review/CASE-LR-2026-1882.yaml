@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1882
+title: 元始天尊穿越无敌文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 玄幻
+  - 无敌流
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没入行，题材垃圾 | 无敌文设定但开头谜语人、描写啰嗦、故弄玄虚。无人关心主角怎么穿越的。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无敌文设定但开头谜语人、描写啰嗦、故弄玄虚。无人关心主角怎么穿越的。 | 开头谜语人，无人关心世界观设定;主角人设不行，撑不起元始天尊;遣词造句过于复杂冗余
+  observable:
+  - 'opening维度: 开头谜语人，无人关心世界观设定'
+  - 'character维度: 主角人设不行，撑不起元始天尊'
+  - 'simplicity维度: 遣词造句过于复杂冗余'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 601
+  - 700
+  score: null
+  score_raw: 没入行，题材垃圾
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 元始天尊穿越无敌文
+  genre_guess:
+  - 玄幻
+  - 无敌流
+  - 后宫
+  overall_comment: 无敌文设定但开头谜语人、描写啰嗦、故弄玄虚。无人关心主角怎么穿越的。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头谜语人，无人关心世界观设定
+    raw_quote: 没入行... 第十章没人看... 开头写的垃圾... 就故弄玄虚啊
+  - dimension: character
+    severity: negative
+    content: 主角人设不行，撑不起元始天尊
+    raw_quote: 人设不行 人设你能当不了原始天尊
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句过于复杂冗余
+    raw_quote: 这浅色造句能不能写的简单点 写的这么复杂

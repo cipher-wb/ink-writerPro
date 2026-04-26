@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1047
+title: 大唐县令系统文 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 历史
+  - 系统
+  - 大唐
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多30 | 会写书但不会写网文，全凭系统没有智商，事件也无趣
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 会写书但不会写网文，全凭系统没有智商，事件也无趣 | 主角没有智商全靠系统，却装立志显得矛盾;核心只是蓝精灵爽文，缺少好事件支撑
+  observable:
+  - 'character维度: 主角没有智商全靠系统，却装立志显得矛盾'
+  - 'golden_finger维度: 核心只是蓝精灵爽文，缺少好事件支撑'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 2001
+  - 2150
+  score: 30
+  score_raw: 最多30
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大唐县令系统文
+  genre_guess:
+  - 历史
+  - 系统
+  - 大唐
+  overall_comment: 会写书但不会写网文，全凭系统没有智商，事件也无趣
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角没有智商全靠系统，却装立志显得矛盾
+    raw_quote: 你没智商呀 你全在靠系统啊 你在这装啥逼啊
+  - dimension: golden_finger
+    severity: negative
+    content: 核心只是蓝精灵爽文，缺少好事件支撑
+    raw_quote: 其实我觉得蓝精灵爽文 但他又不是一个就配角什么写好的 没有事件

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0412
+title: 我在大庸当纨绔断案 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 架空历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十三四分的样子 | 比例扎实，但剧情太弱，偏题成架空历史，装逼打脸写法太老
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实，但剧情太弱，偏题成架空历史，装逼打脸写法太老 | 写的像架空历史，玄幻味道不足，偏题了;境界介绍太多太老，不该写的地方狂写，剧情太弱
+  observable:
+  - 'genre维度: 写的像架空历史，玄幻味道不足，偏题了'
+  - 'ops维度: 境界介绍太多太老，不该写的地方狂写，剧情太弱'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 761
+  - 842
+  score: 34
+  score_raw: 三十三四分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在大庸当纨绔断案
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 架空历史
+  overall_comment: 比例扎实，但剧情太弱，偏题成架空历史，装逼打脸写法太老
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写的像架空历史，玄幻味道不足，偏题了
+    raw_quote: 大概比例是没问题的，但是写的像架空历史啊，玄幻的味道在哪里呢...就偏题了呀
+  - dimension: ops
+    severity: negative
+    content: 境界介绍太多太老，不该写的地方狂写，剧情太弱
+    raw_quote: 介绍太多了...都是十几年前的写法...剧情太弱了，不该写的地方狂写

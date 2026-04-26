@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2001
+title: 回到明朝爽吃停仗 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 历史
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是58分 | 真实感和文笔过关，但题材过于小众，且开篇未快速进入核心看点，建议改个好书名去裸奔试试。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 真实感和文笔过关，但题材过于小众，且开篇未快速进入核心看点，建议改个好书名去裸奔试试。 | 题材过于小众，福王跑路的卖点不咋样。;主角写成肥胖中年人，难以代入。
+  observable:
+  - 'genre维度: 题材过于小众，福王跑路的卖点不咋样。'
+  - 'character维度: 主角写成肥胖中年人，难以代入。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 409
+  - 452
+  score: 58
+  score_raw: 还是58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 回到明朝爽吃停仗
+  genre_guess:
+  - 历史
+  - 穿越
+  overall_comment: 真实感和文笔过关，但题材过于小众，且开篇未快速进入核心看点，建议改个好书名去裸奔试试。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材过于小众，福王跑路的卖点不咋样。
+    raw_quote: 就一方面题材比较 其实你这个偏就是 福王跑路这个题材卖点不咋样
+  - dimension: character
+    severity: negative
+    content: 主角写成肥胖中年人，难以代入。
+    raw_quote: 年过半百 ... 怎么写这么恶心 ... 这怎么代入啊

@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1761
+title: 我带豆包闯历史 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 历史
+  - 明末
+  - AI
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 豆包AI植入历史太尬，对白小白无历史味道，逻辑崩坏，整体无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 豆包AI植入历史太尬，对白小白无历史味道，逻辑崩坏，整体无聊。 | 将豆包硬塞进明末历史，违背基本逻辑，读者不买账;主角像刘备，全靠豆包，缺乏自身魅力;对白太小白，没有历史文的凝重感
+  observable:
+  - 'genre维度: 将豆包硬塞进明末历史，违背基本逻辑，读者不买账'
+  - 'character维度: 主角像刘备，全靠豆包，缺乏自身魅力'
+  - 'simplicity维度: 对白太小白，没有历史文的凝重感'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 340
+  - 600
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我带豆包闯历史
+  genre_guess:
+  - 历史
+  - 明末
+  - AI
+  - 系统
+  overall_comment: 豆包AI植入历史太尬，对白小白无历史味道，逻辑崩坏，整体无聊。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 将豆包硬塞进明末历史，违背基本逻辑，读者不买账
+    raw_quote: 历史还是需要一些逻辑性的嘛……你们写这么慌
+  - dimension: character
+    severity: negative
+    content: 主角像刘备，全靠豆包，缺乏自身魅力
+    raw_quote: 差不多，主角像刘备……你豆包说啥我就听啥
+  - dimension: simplicity
+    severity: negative
+    content: 对白太小白，没有历史文的凝重感
+    raw_quote: 大哥你说话好白啊，没有历史味道啊，小学生啊

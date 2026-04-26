@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1916
+title: 灵异副本/心理咨询 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 悬疑
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是25分 | 氛围感不错，但核心卖点“世界上有没有鬼”太无趣，建议融合其他元素或发往番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围感不错，但核心卖点“世界上有没有鬼”太无趣，建议融合其他元素或发往番茄。 | 核心卖点（证明世界上有鬼）太无趣，无法吸引读者。
+  observable:
+  - 'highpoint维度: 核心卖点（证明世界上有鬼）太无趣，无法吸引读者。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 334
+  - 365
+  score: 25
+  score_raw: 也是25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵异副本/心理咨询
+  genre_guess:
+  - 悬疑
+  - 灵异
+  overall_comment: 氛围感不错，但核心卖点“世界上有没有鬼”太无趣，建议融合其他元素或发往番茄。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 氛围真实感还可以。
+    raw_quote: 氛围真实感还可以对吧，纯真感还可以的
+  - dimension: highpoint
+    severity: negative
+    content: 核心卖点（证明世界上有鬼）太无趣，无法吸引读者。
+    raw_quote: 这个卖点没意思啊，这个世界上有没有鬼这个卖点是没意思的

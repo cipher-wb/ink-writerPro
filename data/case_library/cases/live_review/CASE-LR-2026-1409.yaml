@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1409
+title: 修仙规划师 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 仙侠
+  - 搞笑
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得50分左右有的 | 切入快、人设立得住，但涉嫌影射名人会被举报，起点不能签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入快、人设立得住，但涉嫌影射名人会被举报，起点不能签。 | 蹭张雪峰热度，审核和举报风险高
+  observable:
+  - 'taboo维度: 蹭张雪峰热度，审核和举报风险高'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 2351
+  - 2450
+  score: 50
+  score_raw: 我觉得50分左右有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙规划师
+  genre_guess:
+  - 仙侠
+  - 搞笑
+  - 系统流
+  overall_comment: 切入快、人设立得住，但涉嫌影射名人会被举报，起点不能签。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 蹭张雪峰热度，审核和举报风险高
+    raw_quote: 人家都知道你在蹭 人家肯定会举报的
+  - dimension: golden_finger
+    severity: positive
+    content: 系统契合主题，梗密集有趣
+    raw_quote: 我还觉得写的挺好的 对吧 这个切入还挺快的

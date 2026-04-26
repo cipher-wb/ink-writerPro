@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-1454
+title: 郭道文穿越修仙界 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eEfxBGEfa
+scope:
+  genre:
+  - 修仙
+  - 凡人流
+  - 魔修
+  - 古代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我就32分吧 | 语言接地气流畅，但人设突兀、铺垫不足，剧情偏题，给32分不签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eEfxBGEfa.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 语言接地气流畅，但人设突兀、铺垫不足，剧情偏题，给32分不签约。 | 女性角色人设突兀，缺乏铺垫，直接认命不合理;感情发展太快，铺垫不够，像跳过步骤;开篇事件小白，英雄救美老套，反派无聊
+  observable:
+  - 'character维度: 女性角色人设突兀，缺乏铺垫，直接认命不合理'
+  - 'pacing维度: 感情发展太快，铺垫不够，像跳过步骤'
+  - 'opening维度: 开篇事件小白，英雄救美老套，反派无聊'
+live_review_meta:
+  source_bvid: BV1eEfxBGEfa
+  source_line_range:
+  - 34
+  - 284
+  score: 32
+  score_raw: 我就32分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 郭道文穿越修仙界
+  genre_guess:
+  - 修仙
+  - 凡人流
+  - 魔修
+  - 古代
+  overall_comment: 语言接地气流畅，但人设突兀、铺垫不足，剧情偏题，给32分不签约。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女性角色人设突兀，缺乏铺垫，直接认命不合理
+    raw_quote: 不是你这个反应也没描述出来……不然有点太突兀
+  - dimension: pacing
+    severity: negative
+    content: 感情发展太快，铺垫不够，像跳过步骤
+    raw_quote: 这个你要老婆不要这个老婆过来……这真不行
+  - dimension: opening
+    severity: negative
+    content: 开篇事件小白，英雄救美老套，反派无聊
+    raw_quote: 本来这个事件就很小白……英雄救美把人家老头打一顿……反派太无聊了
+  - dimension: simplicity
+    severity: positive
+    content: 语言接地气流畅，容易看进去
+    raw_quote: 就是写的比较接地气对吧……这个流畅一点是你

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1155
+title: 重生2001许芬 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 重生
+  - 校园
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 兄弟给你三十分吧 | 开头模仿《夏洛特烦恼》痕迹过重，把班主任写成极端反派不符合大众审美，情节恶搞过度，签约无望。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头模仿《夏洛特烦恼》痕迹过重，把班主任写成极端反派不符合大众审美，情节恶搞过度，签约无望。 | 重生上课睡觉被班主任骂的桥段十分俗套;将老师塑造成纯粹反派，尺度过度，违背大众朴素的价值观;情节类似《夏洛特烦恼》的恶搞拼接，缺乏原创代入感
+  observable:
+  - 'opening维度: 重生上课睡觉被班主任骂的桥段十分俗套'
+  - 'taboo维度: 将老师塑造成纯粹反派，尺度过度，违背大众朴素的价值观'
+  - 'misc维度: 情节类似《夏洛特烦恼》的恶搞拼接，缺乏原创代入感'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 345
+  - 506
+  score: 30
+  score_raw: 兄弟给你三十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2001许芬
+  genre_guess:
+  - 重生
+  - 校园
+  - 都市
+  overall_comment: 开头模仿《夏洛特烦恼》痕迹过重，把班主任写成极端反派不符合大众审美，情节恶搞过度，签约无望。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 重生上课睡觉被班主任骂的桥段十分俗套
+    raw_quote: 不是这重生文写烂啊 一觉睡醒上课睡觉 班主任骂你 这个很俗啊
+  - dimension: taboo
+    severity: negative
+    content: 将老师塑造成纯粹反派，尺度过度，违背大众朴素的价值观
+    raw_quote: 我觉得把刘老师变成一个坏蛋 这样欺负你……这是老师啊 这是老师啊 老师的手 你妈 刘妹啊 是老师吧 我没看错吧兄弟 你在干嘛
+  - dimension: misc
+    severity: negative
+    content: 情节类似《夏洛特烦恼》的恶搞拼接，缺乏原创代入感
+    raw_quote: 这不就是下落的烦恼 开头把他狂写……秋牙亲一口 不就这么就就亲牙 秋牙亲一口吗 这不一模一样吗

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1763
+title: 鬼蜜铁粉游戏 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 网游
+  - 游戏异界
+  - 虚拟现实
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就20分 | 游戏IP知名度不够，设定太多不玩游戏的人完全看不懂，结构俗套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 游戏IP知名度不够，设定太多不玩游戏的人完全看不懂，结构俗套。 | 蹭鬼蜜IP但知名度不够，不如去写同仁;第一章全是游戏设定，劝退非玩家
+  observable:
+  - 'genre维度: 蹭鬼蜜IP但知名度不够，不如去写同仁'
+  - 'opening维度: 第一章全是游戏设定，劝退非玩家'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 700
+  - 820
+  score: 20
+  score_raw: 就20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼蜜铁粉游戏
+  genre_guess:
+  - 网游
+  - 游戏异界
+  - 虚拟现实
+  overall_comment: 游戏IP知名度不够，设定太多不玩游戏的人完全看不懂，结构俗套。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 蹭鬼蜜IP但知名度不够，不如去写同仁
+    raw_quote: 鬼蜜的游戏就知名度不够呀兄弟……你不如写鬼蜜同仁
+  - dimension: opening
+    severity: negative
+    content: 第一章全是游戏设定，劝退非玩家
+    raw_quote: 不玩游戏的完全看不懂怎么办，看不懂那读者不看

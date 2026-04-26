@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0777
+title: 说好契约仙子，我成预售了 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 玄幻
+  - 女宗
+  - 养成
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多35分吧 | 题材世界观有意思，但写得不极端不够爽，小剧场平淡，有蓝精灵感，比例可以，35分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材世界观有意思，但写得不极端不够爽，小剧场平淡，有蓝精灵感，比例可以，35分。 | 不够极端，没有极端事件;互动不够，小剧场太普通
+  observable:
+  - 'opening维度: 不够极端，没有极端事件'
+  - 'character维度: 互动不够，小剧场太普通'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 501
+  - 550
+  score: 35
+  score_raw: 差不多35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 说好契约仙子，我成预售了
+  genre_guess:
+  - 玄幻
+  - 女宗
+  - 养成
+  - 后宫
+  overall_comment: 题材世界观有意思，但写得不极端不够爽，小剧场平淡，有蓝精灵感，比例可以，35分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 不够极端，没有极端事件
+    raw_quote: 没有极端事件 女装世界应该有个极端事件了 写的没什么爽的
+  - dimension: character
+    severity: negative
+    content: 互动不够，小剧场太普通
+    raw_quote: 小剧场写的太普通了 这大概是偏偏向他的这个设定去 其实应该先写一些牛逼的剧情
+  - dimension: genre
+    severity: positive
+    content: 世界观有点意思
+    raw_quote: 这个说明还是有点意思对吧 契约仙子嘛 预售嘛

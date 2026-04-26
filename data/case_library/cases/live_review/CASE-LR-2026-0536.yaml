@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0536
+title: 都市里的野兽 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 都市
+  - 职场
+  - 现实
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你给个35分吧 | 笔杆子扎实，但缺乏网文元素，日常过多像三十而已，开头无病呻吟。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 笔杆子扎实，但缺乏网文元素，日常过多像三十而已，开头无病呻吟。 | 更像豆瓣阅读的实体风，网文受众找不到;开头无病呻吟，应直接进入冲突
+  observable:
+  - 'genre维度: 更像豆瓣阅读的实体风，网文受众找不到'
+  - 'opening维度: 开头无病呻吟，应直接进入冲突'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 1061
+  - 1180
+  score: 35
+  score_raw: 给你给个35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 都市里的野兽
+  genre_guess:
+  - 都市
+  - 职场
+  - 现实
+  overall_comment: 笔杆子扎实，但缺乏网文元素，日常过多像三十而已，开头无病呻吟。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 更像豆瓣阅读的实体风，网文受众找不到
+    raw_quote: 这是日常呀是吧 … 他就能立刻找到你这个没有受众的
+  - dimension: opening
+    severity: negative
+    content: 开头无病呻吟，应直接进入冲突
+    raw_quote: 第一章就感觉就无病呻吟

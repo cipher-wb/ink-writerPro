@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0684
+title: 绝命仙师 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 诡异修仙
+  - 都市灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在感觉像30分左右吧 | 切入有新意但爆点缺失，世界观混搭为都市灵异，完成度低。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入有新意但爆点缺失，世界观混搭为都市灵异，完成度低。 | 诡异修仙写成都市灵异，缺少仙侠味道;叙述零散，应该集中写一个爆点
+  observable:
+  - 'genre维度: 诡异修仙写成都市灵异，缺少仙侠味道'
+  - 'pacing维度: 叙述零散，应该集中写一个爆点'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 118
+  - 147
+  score: 30
+  score_raw: 现在感觉像30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 绝命仙师
+  genre_guess:
+  - 诡异修仙
+  - 都市灵异
+  overall_comment: 切入有新意但爆点缺失，世界观混搭为都市灵异，完成度低。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入吸引人，从洞房场景开始
+    raw_quote: 这个切入是对的
+  - dimension: genre
+    severity: negative
+    content: 诡异修仙写成都市灵异，缺少仙侠味道
+    raw_quote: 哪里有修仙味道啊
+  - dimension: pacing
+    severity: negative
+    content: 叙述零散，应该集中写一个爆点
+    raw_quote: 零散的写法

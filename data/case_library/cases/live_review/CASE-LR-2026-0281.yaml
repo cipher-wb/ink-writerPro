@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0281
+title: 修炼复仇救母文 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 玄幻
+  - 复仇
+  - 苦大仇深
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分之前那个 | 内核太老，但流畅度节奏有进步
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内核太老，但流畅度节奏有进步 | 故事内核是15年前的套路
+  observable:
+  - 'genre维度: 故事内核是15年前的套路'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1446
+  - 1520
+  score: 18
+  score_raw: 18分之前那个
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修炼复仇救母文
+  genre_guess:
+  - 玄幻
+  - 复仇
+  - 苦大仇深
+  overall_comment: 内核太老，但流畅度节奏有进步
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 故事内核是15年前的套路
+    raw_quote: 事件内核太老了，世界内核还是15年前呀

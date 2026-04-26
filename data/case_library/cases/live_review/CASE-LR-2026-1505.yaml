@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1505
+title: 魔法少女的宿题 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 轻小说
+  - 日常
+  - 魔法少女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那就25分嘛 | 太日常，视角混乱，有女频味，比例扎实但没用
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太日常，视角混乱，有女频味，比例扎实但没用 | 开篇太日常，读者会跑，没有看点;视角乱转，像女频写法
+  observable:
+  - 'opening维度: 开篇太日常，读者会跑，没有看点'
+  - 'ops维度: 视角乱转，像女频写法'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 1096
+  - 1145
+  score: 25
+  score_raw: 那就25分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔法少女的宿题
+  genre_guess:
+  - 轻小说
+  - 日常
+  - 魔法少女
+  overall_comment: 太日常，视角混乱，有女频味，比例扎实但没用
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇太日常，读者会跑，没有看点
+    raw_quote: 不是你这么日常签 读者跑啊 读者随时会跑
+  - dimension: ops
+    severity: negative
+    content: 视角乱转，像女频写法
+    raw_quote: 一张写女主一张写男主 他他他这怪 感觉真的是女平的味道

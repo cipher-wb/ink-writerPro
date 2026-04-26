@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1209
+title: 重生文娱大佬 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 都市
+  - 文娱
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40吧 | 文笔不错但架空缺失年代感，建议加入煤老板等具体时代卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错但架空缺失年代感，建议加入煤老板等具体时代卖点。 | 纯架空文娱缺少年代实感，市场不讨喜
+  observable:
+  - 'genre维度: 纯架空文娱缺少年代实感，市场不讨喜'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 428
+  - 472
+  score: 40
+  score_raw: 差不多40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生文娱大佬
+  genre_guess:
+  - 都市
+  - 文娱
+  - 重生
+  overall_comment: 文笔不错但架空缺失年代感，建议加入煤老板等具体时代卖点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯架空文娱缺少年代实感，市场不讨喜
+    raw_quote: 平行世界没有没有啥都没有这不行啊这个是10年前的思路
+  - dimension: character
+    severity: positive
+    content: 写雪白和女明星互动有天赋
+    raw_quote: 你女角色写这么好，对吧

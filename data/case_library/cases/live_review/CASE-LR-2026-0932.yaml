@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0932
+title: 克苏鲁菜谱：地狱厨房 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 美食
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 脑洞立不住，克苏鲁题材已死，但笔力与代入感明显进步。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞立不住，克苏鲁题材已死，但笔力与代入感明显进步。 | 克苏鲁在网络里等于垃圾题材，毫无受众
+  observable:
+  - 'genre维度: 克苏鲁在网络里等于垃圾题材，毫无受众'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1535
+  - 1590
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 克苏鲁菜谱：地狱厨房
+  genre_guess:
+  - 都市
+  - 异能
+  - 美食
+  overall_comment: 脑洞立不住，克苏鲁题材已死，但笔力与代入感明显进步。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 克苏鲁在网络里等于垃圾题材，毫无受众
+    raw_quote: 克苏鲁的这个就是个垃圾题材 … 就是垃圾题材
+  - dimension: character
+    severity: positive
+    content: 代入感和笔力比之前强很多
+    raw_quote: 比例还可以 代入感其实还挺好的 我觉得比你之前实力强多了

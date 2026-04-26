@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0999
+title: 都市异能灾厄捉鬼 (fail / 27分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 27分吧 | 老套捉鬼，卖点单薄，描写啰嗦，雪白场景失败。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套捉鬼，卖点单薄，描写啰嗦，雪白场景失败。 | 开篇暧昧场景失败，毫无感觉;描写啰嗦，需要干练直奔主题;卖点单薄，老套一轮
+  observable:
+  - 'opening维度: 开篇暧昧场景失败，毫无感觉'
+  - 'simplicity维度: 描写啰嗦，需要干练直奔主题'
+  - 'hook维度: 卖点单薄，老套一轮'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 1549
+  - 1646
+  score: 27
+  score_raw: 27分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 都市异能灾厄捉鬼
+  genre_guess:
+  - 都市
+  - 异能
+  - 灵异
+  overall_comment: 老套捉鬼，卖点单薄，描写啰嗦，雪白场景失败。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇暧昧场景失败，毫无感觉
+    raw_quote: 暧昧，几乎是镜中花，水中月，一点都没感觉
+  - dimension: simplicity
+    severity: negative
+    content: 描写啰嗦，需要干练直奔主题
+    raw_quote: 就这些这些自我脑补都是水，这个时候就需要很干练，直奔主题
+  - dimension: hook
+    severity: negative
+    content: 卖点单薄，老套一轮
+    raw_quote: 其实就是一个就是捉鬼的老套一轮

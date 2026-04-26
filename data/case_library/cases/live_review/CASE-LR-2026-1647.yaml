@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1647
+title: 游乐园老板系统 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个最多只能给大哥16块 | 主线不清，设定无聊，配角废话极多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线不清，设定无聊，配角废话极多。 | 内容注水严重，无关情节过多。;开头无重点，对话无聊，缺乏主线。
+  observable:
+  - 'pacing维度: 内容注水严重，无关情节过多。'
+  - 'hook维度: 开头无重点，对话无聊，缺乏主线。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 1021
+  - 1080
+  score: 16
+  score_raw: 这个最多只能给大哥16块
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 游乐园老板系统
+  genre_guess:
+  - 都市
+  - 系统
+  - 轻小说
+  overall_comment: 主线不清，设定无聊，配角废话极多。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 内容注水严重，无关情节过多。
+    raw_quote: 你们他妈的太水了...海平面都要上升两厘米
+  - dimension: hook
+    severity: negative
+    content: 开头无重点，对话无聊，缺乏主线。
+    raw_quote: 好无聊啊，这个对白也很无聊

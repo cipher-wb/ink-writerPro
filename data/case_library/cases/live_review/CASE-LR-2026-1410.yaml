@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1410
+title: 如鸭小宝贝的新剧投稿 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 商战
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有天赋给你38分 | 人设撑不起字节副总裁这类顶层大佬，但技师按摩片段有天赋，可转向老本行题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设撑不起字节副总裁这类顶层大佬，但技师按摩片段有天赋，可转向老本行题材。 | 字节跳动副总裁的人设立不住，缺乏真实感
+  observable:
+  - 'character维度: 字节跳动副总裁的人设立不住，缺乏真实感'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 2451
+  - 2550
+  score: 38
+  score_raw: 有天赋给你38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 如鸭小宝贝的新剧投稿
+  genre_guess:
+  - 都市
+  - 商战
+  - 重生
+  overall_comment: 人设撑不起字节副总裁这类顶层大佬，但技师按摩片段有天赋，可转向老本行题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 字节跳动副总裁的人设立不住，缺乏真实感
+    raw_quote: 这种人你写不出来感觉的 兄弟
+  - dimension: character
+    severity: positive
+    content: 写技师做柔式等接地气互动有天赋
+    raw_quote: 写祭师那段写特别好

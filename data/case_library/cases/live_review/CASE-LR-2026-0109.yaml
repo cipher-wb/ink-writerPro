@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0109
+title: 兵马俑/高三学生异能 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能18送了 | 太慢太日常，主卖点迟迟不出。仿完美世界写法句子像AI，建议兵马俑跪下秦始皇转生。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太慢太日常，主卖点迟迟不出。仿完美世界写法句子像AI，建议兵马俑跪下秦始皇转生。 | 四章主线还不出来，节奏太慢太日常;写法小白，对白特别小白像小学生
+  observable:
+  - 'pacing维度: 四章主线还不出来，节奏太慢太日常'
+  - 'simplicity维度: 写法小白，对白特别小白像小学生'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1381
+  - 1520
+  score: 18
+  score_raw: 只能18送了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 兵马俑/高三学生异能
+  genre_guess:
+  - 都市
+  - 异能
+  - 诡异
+  overall_comment: 太慢太日常，主卖点迟迟不出。仿完美世界写法句子像AI，建议兵马俑跪下秦始皇转生。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 四章主线还不出来，节奏太慢太日常
+    raw_quote: 太日常了太日记了...就是老是不出来重点
+  - dimension: simplicity
+    severity: negative
+    content: 写法小白，对白特别小白像小学生
+    raw_quote: 这个有点像超影龙族，小学生初中生对对，他也非常的小白

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0886
+title: 契约魔法少女宠兽 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 奇幻
+  - 契约
+  - 异兽
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多只有22分 | 卖世界观卖设定，事件太弱，人物拉扯浅，本质古典而非乐子。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 卖世界观卖设定，事件太弱，人物拉扯浅，本质古典而非乐子。 | 事件非常弱，一直在设定和世界观
+  observable:
+  - 'hook维度: 事件非常弱，一直在设定和世界观'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 1021
+  - 1060
+  score: 22
+  score_raw: 差不多只有22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 契约魔法少女宠兽
+  genre_guess:
+  - 奇幻
+  - 契约
+  - 异兽
+  overall_comment: 卖世界观卖设定，事件太弱，人物拉扯浅，本质古典而非乐子。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 事件非常弱，一直在设定和世界观
+    raw_quote: 设定也多 那个事件很弱 … 你以为的乐子啊 其实读者看来是古典啊

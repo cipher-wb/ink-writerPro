@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1715
+title: 金阳宗修仙 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 仙侠
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 文笔很好能给你28分 | 文笔扎实，但主线太弱、节奏过慢，大量描写下雨和独自修炼，故事性极弱。建议转向人物关系和拉扯。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，但主线太弱、节奏过慢，大量描写下雨和独自修炼，故事性极弱。建议转向人物关系和拉扯。 | 事件进展极其缓慢，一直描写下雨和独自修炼，拖沓冗长;不写人物关系和女修拉扯，偏题写设定和天气
+  observable:
+  - 'pacing维度: 事件进展极其缓慢，一直描写下雨和独自修炼，拖沓冗长'
+  - 'character维度: 不写人物关系和女修拉扯，偏题写设定和天气'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 581
+  - 688
+  score: 28
+  score_raw: 文笔很好能给你28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 金阳宗修仙
+  genre_guess:
+  - 仙侠
+  - 修仙
+  overall_comment: 文笔扎实，但主线太弱、节奏过慢，大量描写下雨和独自修炼，故事性极弱。建议转向人物关系和拉扯。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 事件进展极其缓慢，一直描写下雨和独自修炼，拖沓冗长
+    raw_quote: 我觉得完全故事性非常非常弱了，就下了一整夜的雨就一直下雨
+  - dimension: character
+    severity: negative
+    content: 不写人物关系和女修拉扯，偏题写设定和天气
+    raw_quote: 大哥你去写什么有什么关系的改变行不行，你去写女修，去写师娘师姐去
+  - dimension: simplicity
+    severity: positive
+    content: 文笔和表达基本功很扎实
+    raw_quote: 比例确实扎实，文笔很好

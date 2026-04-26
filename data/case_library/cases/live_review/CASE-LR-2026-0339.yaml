@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0339
+title: 学霸重生：我能看见工程进度 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 都市
+  - 学霸
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分了 | 学霸卖点被写成低幼日常，情感线尴尬，完全未发挥题材优势。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 学霸卖点被写成低幼日常，情感线尴尬，完全未发挥题材优势。 | 重生开局癌症离婚设定劝退，容易引发读者反感;学霸系统与学习雄权大佬差距极大，毫无爽感;节奏过快，感情和铺垫缺失，像大纲流水账
+  observable:
+  - 'opening维度: 重生开局癌症离婚设定劝退，容易引发读者反感'
+  - 'golden_finger维度: 学霸系统与学习雄权大佬差距极大，毫无爽感'
+  - 'pacing维度: 节奏过快，感情和铺垫缺失，像大纲流水账'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 1578
+  - 1895
+  score: 23
+  score_raw: 23分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 学霸重生：我能看见工程进度
+  genre_guess:
+  - 都市
+  - 学霸
+  - 重生
+  overall_comment: 学霸卖点被写成低幼日常，情感线尴尬，完全未发挥题材优势。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 重生开局癌症离婚设定劝退，容易引发读者反感
+    raw_quote: 大哥就是想写科幻…现在不要写这种东西
+  - dimension: golden_finger
+    severity: negative
+    content: 学霸系统与学习雄权大佬差距极大，毫无爽感
+    raw_quote: 工程控制弄 跟人家学习熊大佬那种金手指的差距也天差地远
+  - dimension: pacing
+    severity: negative
+    content: 节奏过快，感情和铺垫缺失，像大纲流水账
+    raw_quote: 节奏太快了…没什么情感

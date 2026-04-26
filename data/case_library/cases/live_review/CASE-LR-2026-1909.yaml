@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1909
+title: 凡人修仙百草堂 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 仙侠
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没意思呀 | 凡人流小说缺乏看点、卖点和侧重点，驱动力太弱，建议融入更具冲突性的事件和人物关系。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 凡人流小说缺乏看点、卖点和侧重点，驱动力太弱，建议融入更具冲突性的事件和人物关系。 | 求仙问道驱动力太弱，缺乏真实事件和人物立点，难以吸引读者。;凡人流在当前市场环境下不景气，缺乏创新很难起来。
+  observable:
+  - 'simplicity维度: 求仙问道驱动力太弱，缺乏真实事件和人物立点，难以吸引读者。'
+  - 'genre维度: 凡人流在当前市场环境下不景气，缺乏创新很难起来。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 62
+  - 110
+  score: null
+  score_raw: 没意思呀
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 凡人修仙百草堂
+  genre_guess:
+  - 仙侠
+  - 凡人流
+  overall_comment: 凡人流小说缺乏看点、卖点和侧重点，驱动力太弱，建议融入更具冲突性的事件和人物关系。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 求仙问道驱动力太弱，缺乏真实事件和人物立点，难以吸引读者。
+    raw_quote: 你要把这些事件写清楚，哪怕你给个什么对吧，娘子给你喂药那种都行，就是立点人设立点小剧情
+  - dimension: genre
+    severity: negative
+    content: 凡人流在当前市场环境下不景气，缺乏创新很难起来。
+    raw_quote: 今年的反向流唉真真不怎么样嘛...没有创新的反向流现在我感觉就是就是浪费你时间

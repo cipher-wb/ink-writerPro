@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1380
+title: 青山神鱼门门 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 都市
+  - 超凡
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分是吧 | 消化了建议但受益良多只是嘴上说说，实际没什么太大进步。设定卖点、剧情薄弱，只有文笔相对能看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 消化了建议但受益良多只是嘴上说说，实际没什么太大进步。设定卖点、剧情薄弱，只有文笔相对能看。 | 开头仍是设定堆砌，没有用故事带动设定;人物互动太少，故事偏向设定，缺少人的表现
+  observable:
+  - 'opening维度: 开头仍是设定堆砌，没有用故事带动设定'
+  - 'character维度: 人物互动太少，故事偏向设定，缺少人的表现'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 311
+  - 365
+  score: 22
+  score_raw: 22分是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 青山神鱼门门
+  genre_guess:
+  - 都市
+  - 超凡
+  - 系统
+  overall_comment: 消化了建议但受益良多只是嘴上说说，实际没什么太大进步。设定卖点、剧情薄弱，只有文笔相对能看。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头仍是设定堆砌，没有用故事带动设定
+    raw_quote: 設定當賣點...得嘗試沒設定
+  - dimension: character
+    severity: negative
+    content: 人物互动太少，故事偏向设定，缺少人的表现
+    raw_quote: 人物互动太少 讲故事都偏向设定
+  - dimension: pacing
+    severity: neutral
+    content: 行文功底OK，表达能看懂
+    raw_quote: 功比还好吧 表达我能看懂

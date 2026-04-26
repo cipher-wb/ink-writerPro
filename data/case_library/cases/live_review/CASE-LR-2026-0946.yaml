@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0946
+title: 八戒减肥(西游另类) (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 西游
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这没一句读者爱看的 | 五个卖点四个无效，立不住，直接劝退
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 五个卖点四个无效，立不住，直接劝退 | 缺乏有效钩子，读者不会看
+  observable:
+  - 'hook维度: 缺乏有效钩子，读者不会看'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 1833
+  - 1855
+  score: null
+  score_raw: 这没一句读者爱看的
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 八戒减肥(西游另类)
+  genre_guess:
+  - 西游
+  - 恶搞
+  overall_comment: 五个卖点四个无效，立不住，直接劝退
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 缺乏有效钩子，读者不会看
+    raw_quote: 你这没有一句是读者爱看的 是怎么做到的

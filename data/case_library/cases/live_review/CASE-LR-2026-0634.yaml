@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0634
+title: 陈旺英古玉穿越 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 都市
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十五分吧过年加两分 | 题材老套，人物不行，剧情无聊，特别狂写王小美无意义
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套，人物不行，剧情无聊，特别狂写王小美无意义 | 反复描写王小美这个角色毫无意义，读者不感兴趣;开头无聊，没有看点，一直在介绍身份;题材过时，十年前的套路
+  observable:
+  - 'character维度: 反复描写王小美这个角色毫无意义，读者不感兴趣'
+  - 'opening维度: 开头无聊，没有看点，一直在介绍身份'
+  - 'genre维度: 题材过时，十年前的套路'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 371
+  - 440
+  score: 25
+  score_raw: 二十五分吧过年加两分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 陈旺英古玉穿越
+  genre_guess:
+  - 都市
+  - 穿越
+  - 系统
+  overall_comment: 题材老套，人物不行，剧情无聊，特别狂写王小美无意义
+  comments:
+  - dimension: character
+    severity: negative
+    content: 反复描写王小美这个角色毫无意义，读者不感兴趣
+    raw_quote: 老写这个人干嘛，大家不感兴趣
+  - dimension: opening
+    severity: negative
+    content: 开头无聊，没有看点，一直在介绍身份
+    raw_quote: 到现在没有看点，很无聊
+  - dimension: genre
+    severity: negative
+    content: 题材过时，十年前的套路
+    raw_quote: 题材太拉垮了，我觉得题材扣十分

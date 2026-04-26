@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0711
+title: 小兵的自我视角 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 短篇
+  - 游戏衍生
+  - 第一人称
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就可以不打风了 | 漫画灵感类短篇/剧本，不适合网文；需要回归网文主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 漫画灵感类短篇/剧本，不适合网文；需要回归网文主线。 | 形式不像网文，更像短剧剧本或漫画;缺乏主线，每章看完整篇却无实质进展
+  observable:
+  - 'genre维度: 形式不像网文，更像短剧剧本或漫画'
+  - 'pacing维度: 缺乏主线，每章看完整篇却无实质进展'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 761
+  - 810
+  score: null
+  score_raw: 就可以不打风了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 小兵的自我视角
+  genre_guess:
+  - 短篇
+  - 游戏衍生
+  - 第一人称
+  overall_comment: 漫画灵感类短篇/剧本，不适合网文；需要回归网文主线。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 形式不像网文，更像短剧剧本或漫画
+    raw_quote: 不像是网文...是个短篇...不像是网文真不是网文
+  - dimension: pacing
+    severity: negative
+    content: 缺乏主线，每章看完整篇却无实质进展
+    raw_quote: 没什么内容...感觉没什么...要有主线...就没办法

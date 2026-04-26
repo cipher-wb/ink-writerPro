@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0074
+title: 毒蘑菇 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 港岛
+  - 国术
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 选材好，名场面切入有梗，但细节和描写太仓促粗糙，打败龙卷风后无后续思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 选材好，名场面切入有梗，但细节和描写太仓促粗糙，打败龙卷风后无后续思路。 | 人物描写缺乏细节，女主角没立起来;整体节奏仓促，打败龙卷风后的剧情未知
+  observable:
+  - 'character维度: 人物描写缺乏细节，女主角没立起来'
+  - 'pacing维度: 整体节奏仓促，打败龙卷风后的剧情未知'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 831
+  - 895
+  score: 55
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 毒蘑菇
+  genre_guess:
+  - 港岛
+  - 国术
+  - 重生
+  overall_comment: 选材好，名场面切入有梗，但细节和描写太仓促粗糙，打败龙卷风后无后续思路。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 题材选得好，有港片名场面加成
+    raw_quote: 这题材还是加分了...正好那个名场面嘛...他有梗呀
+  - dimension: character
+    severity: negative
+    content: 人物描写缺乏细节，女主角没立起来
+    raw_quote: 这个形容不够啊...红燕是不是美女对吧你要这里写凸显一下
+  - dimension: pacing
+    severity: negative
+    content: 整体节奏仓促，打败龙卷风后的剧情未知
+    raw_quote: 好仓促啊这个...关键后面怎么写

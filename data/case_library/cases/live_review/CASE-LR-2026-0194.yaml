@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0194
+title: JM的幻想 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 凡人流
+  - 慢热
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 凡人流慢热风格在当前市场难有精品，题材时机已过，需要转型。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 凡人流慢热风格在当前市场难有精品，题材时机已过，需要转型。 | 凡人流慢热题材热度下降，难以获得市场认可;慢热节奏在起点当前环境下难以熬出头
+  observable:
+  - 'genre维度: 凡人流慢热题材热度下降，难以获得市场认可'
+  - 'pacing维度: 慢热节奏在起点当前环境下难以熬出头'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 115
+  - 154
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: JM的幻想
+  genre_guess:
+  - 凡人流
+  - 慢热
+  overall_comment: 凡人流慢热风格在当前市场难有精品，题材时机已过，需要转型。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 凡人流慢热题材热度下降，难以获得市场认可
+    raw_quote: 慢热的繁上流 今年也没有精品 问题就在这里 时代在变呀
+  - dimension: pacing
+    severity: negative
+    content: 慢热节奏在起点当前环境下难以熬出头
+    raw_quote: 你繁上流这种 可能几年前能熬 但是你不能说 现在还推荐这些繁上流 熬不动了呀

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1357
+title: 修仙乐子人设 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个sorry这个我觉得生死散属吧 | 题材过时，乐子人设太老套，建议换现代沉稳修仙题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材过时，乐子人设太老套，建议换现代沉稳修仙题材。 | 乐子轻松人设修仙已过时，写法与时代脱节;开局使用烂梗如潘金莲，人设轻浮不吸粉
+  observable:
+  - 'genre维度: 乐子轻松人设修仙已过时，写法与时代脱节'
+  - 'character维度: 开局使用烂梗如潘金莲，人设轻浮不吸粉'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 838
+  - 900
+  score: null
+  score_raw: 这个sorry这个我觉得生死散属吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 修仙乐子人设
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 轻松
+  overall_comment: 题材过时，乐子人设太老套，建议换现代沉稳修仙题材。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 乐子轻松人设修仙已过时，写法与时代脱节
+    raw_quote: 题材过时了...十年前的林建山师兄无剑那个时代可以写写
+  - dimension: character
+    severity: negative
+    content: 开局使用烂梗如潘金莲，人设轻浮不吸粉
+    raw_quote: 银贼潘金莲这是烂梗呀...先写得沉稳一点

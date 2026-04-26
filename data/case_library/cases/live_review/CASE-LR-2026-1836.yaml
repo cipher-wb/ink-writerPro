@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1836
+title: 金融首席吃日料 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 都市
+  - 商战
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得也是30分最多了 | 太假大空不接地气，百万上亿毫无代入感
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太假大空不接地气，百万上亿毫无代入感 | 金融精英设定完全虚浮不接地气
+  observable:
+  - 'character维度: 金融精英设定完全虚浮不接地气'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1371
+  - 1460
+  score: 30
+  score_raw: 我觉得也是30分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 金融首席吃日料
+  genre_guess:
+  - 都市
+  - 商战
+  - 重生
+  overall_comment: 太假大空不接地气，百万上亿毫无代入感
+  comments:
+  - dimension: character
+    severity: negative
+    content: 金融精英设定完全虚浮不接地气
+    raw_quote: 我们普通人可能会去开奶茶店但我们普通人不会搞什么几10亿的投资呀

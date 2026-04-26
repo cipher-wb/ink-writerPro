@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1565
+title: 酒局后穿越修仙界魔女 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 魔女
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分吧 | 小白爽文偏黄，需要沉稳些，加强主角人设和智商。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小白爽文偏黄，需要沉稳些，加强主角人设和智商。 | 主角缺乏智商，纯粹靠系统反杀，偏无脑;风格偏番茄小白文，不适合起点
+  observable:
+  - 'character维度: 主角缺乏智商，纯粹靠系统反杀，偏无脑'
+  - 'genre维度: 风格偏番茄小白文，不适合起点'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 701
+  - 800
+  score: 23
+  score_raw: 23分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 酒局后穿越修仙界魔女
+  genre_guess:
+  - 修仙
+  - 系统
+  - 魔女
+  - 爽文
+  overall_comment: 小白爽文偏黄，需要沉稳些，加强主角人设和智商。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角缺乏智商，纯粹靠系统反杀，偏无脑
+    raw_quote: 靠系统把他反杀嘛，这个啥意思，一点智商都没有
+  - dimension: genre
+    severity: negative
+    content: 风格偏番茄小白文，不适合起点
+    raw_quote: 这个太小白了，小白爽文了，然后又偏偏黄的那种

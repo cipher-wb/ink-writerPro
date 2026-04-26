@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1939
+title: 万红番奇的成道之旅 (fail / 17分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就17分吧 | 设定详细但故事不接地气，缺乏人物互动和事件，文字过于文雅导致看不懂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定详细但故事不接地气，缺乏人物互动和事件，文字过于文雅导致看不懂。 | 全是设定没剧情，开头没有事件;缺乏好的人物互动，都是老套思路;描述太奇怪，不够通俗易懂
+  observable:
+  - 'opening维度: 全是设定没剧情，开头没有事件'
+  - 'character维度: 缺乏好的人物互动，都是老套思路'
+  - 'simplicity维度: 描述太奇怪，不够通俗易懂'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 203
+  - 258
+  score: 17
+  score_raw: 差不多就17分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 万红番奇的成道之旅
+  genre_guess:
+  - 玄幻
+  - 修仙
+  overall_comment: 设定详细但故事不接地气，缺乏人物互动和事件，文字过于文雅导致看不懂。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 全是设定没剧情，开头没有事件
+    raw_quote: 大哥没有异世界了...大概都是设定没剧情，现在就设定设定设定
+  - dimension: character
+    severity: negative
+    content: 缺乏好的人物互动，都是老套思路
+    raw_quote: 本质上没什么好的人物互动，都是老套的一些思路
+  - dimension: simplicity
+    severity: negative
+    content: 描述太奇怪，不够通俗易懂
+    raw_quote: 能不能说点神话大哥...你没必要文字座，你太文字座了

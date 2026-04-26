@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2089
+title: 诸天金牌销售 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 诸天
+  - 穿越
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话比例倒是流畅吧，就停在了15分左右 | 典型的番茄式系统乐子文，烂梗+强行幽默，诸天原创仙侠如此写法毫无市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 典型的番茄式系统乐子文，烂梗+强行幽默，诸天原创仙侠如此写法毫无市场。 | 诸天仙侠结合乐子文无法定位精准受众;内容纯粹为了系统服务，缺乏剧情主动性
+  observable:
+  - 'genre维度: 诸天仙侠结合乐子文无法定位精准受众'
+  - 'simplicity维度: 内容纯粹为了系统服务，缺乏剧情主动性'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1200
+  - 1265
+  score: 15
+  score_raw: 打分的话比例倒是流畅吧，就停在了15分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诸天金牌销售
+  genre_guess:
+  - 诸天
+  - 穿越
+  - 仙侠
+  overall_comment: 典型的番茄式系统乐子文，烂梗+强行幽默，诸天原创仙侠如此写法毫无市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 诸天仙侠结合乐子文无法定位精准受众
+    raw_quote: 诸天分类里原创仙侠套里面其实很难的……就就很难，兄弟好吧
+  - dimension: simplicity
+    severity: negative
+    content: 内容纯粹为了系统服务，缺乏剧情主动性
+    raw_quote: 整个就是番茄写法呀，番茄写法也很喜欢这种是吧……完全为了系统而服务的

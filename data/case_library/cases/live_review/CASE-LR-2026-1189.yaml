@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1189
+title: 乱骨修仙 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 仙侠
+  - 勤勉
+  - 系统
+  - 妖魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 妖魔乱世世界观老套，主角无活人感，开头事件可全删，尚未入门。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 妖魔乱世世界观老套，主角无活人感，开头事件可全删，尚未入门。 | 穿越苏醒的描写冗余，直接继承记忆即可;主角完全没有穿越者应有的活人感和主动性;妖魔乱世设定已经被看吐了，毫无新意
+  observable:
+  - 'opening维度: 穿越苏醒的描写冗余，直接继承记忆即可'
+  - 'character维度: 主角完全没有穿越者应有的活人感和主动性'
+  - 'genre维度: 妖魔乱世设定已经被看吐了，毫无新意'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 3390
+  - 3520
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 乱骨修仙
+  genre_guess:
+  - 仙侠
+  - 勤勉
+  - 系统
+  - 妖魔
+  overall_comment: 妖魔乱世世界观老套，主角无活人感，开头事件可全删，尚未入门。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越苏醒的描写冗余，直接继承记忆即可
+    raw_quote: 你直接接承他记忆就完成 新人就连穿越这点事都处理不好
+  - dimension: character
+    severity: negative
+    content: 主角完全没有穿越者应有的活人感和主动性
+    raw_quote: 没有活人感 主角就不是个活人 就NPC 没有所思所想所感
+  - dimension: genre
+    severity: negative
+    content: 妖魔乱世设定已经被看吐了，毫无新意
+    raw_quote: 又来了 又经典妖魔 人族四分五裂 真是看吐了

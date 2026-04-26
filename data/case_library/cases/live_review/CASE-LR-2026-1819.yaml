@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1819
+title: 北大重生：校草传奇 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 校园
+  - 重生
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20分钟 20分吧 | 毫无重生味道，只是普通校园日常，故弄玄虚且异常无聊，北大背景反而成毒点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 毫无重生味道，只是普通校园日常，故弄玄虚且异常无聊，北大背景反而成毒点。 | 开头故弄玄虚，就是不正常写穿越;写成都市日常，完全不是重生文;北大背景容易让读者挑刺，抬高预期
+  observable:
+  - 'opening维度: 开头故弄玄虚，就是不正常写穿越'
+  - 'genre维度: 写成都市日常，完全不是重生文'
+  - 'ops维度: 北大背景容易让读者挑刺，抬高预期'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 1121
+  - 1185
+  score: 20
+  score_raw: 差不多就20分钟 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 北大重生：校草传奇
+  genre_guess:
+  - 校园
+  - 重生
+  - 日常
+  overall_comment: 毫无重生味道，只是普通校园日常，故弄玄虚且异常无聊，北大背景反而成毒点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头故弄玄虚，就是不正常写穿越
+    raw_quote: 就不能开头写穿越吗 开大写穿越会死吗
+  - dimension: genre
+    severity: negative
+    content: 写成都市日常，完全不是重生文
+    raw_quote: 这不是重生文……就是没侧重点 也看不出主角的人设魅力
+  - dimension: ops
+    severity: negative
+    content: 北大背景容易让读者挑刺，抬高预期
+    raw_quote: 尽量不要写北大 因为你很容易写的没有智商 读者会非常出戏的

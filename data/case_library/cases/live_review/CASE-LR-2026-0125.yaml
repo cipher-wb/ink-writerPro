@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0125
+title: 大明鸦片战争 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 历史架空
+  - 玩梗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不打分了 不是网吧不打分 | 架空历史世界观解释不足，没有主角代入，纯穷相文，不值得评分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 架空历史世界观解释不足，没有主角代入，纯穷相文，不值得评分。 | 缺乏主角和穿越交代，读者无法代入;开头应该有一句解释世界观的钩子，但全文傲慢忽略
+  observable:
+  - 'opening维度: 缺乏主角和穿越交代，读者无法代入'
+  - 'hook维度: 开头应该有一句解释世界观的钩子，但全文傲慢忽略'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 880
+  - 950
+  score: null
+  score_raw: 不打分了 不是网吧不打分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 大明鸦片战争
+  genre_guess:
+  - 历史架空
+  - 玩梗
+  overall_comment: 架空历史世界观解释不足，没有主角代入，纯穷相文，不值得评分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 缺乏主角和穿越交代，读者无法代入
+    raw_quote: 我在找主角 我在找穿越 那个都没有啊
+  - dimension: hook
+    severity: negative
+    content: 开头应该有一句解释世界观的钩子，但全文傲慢忽略
+    raw_quote: 你舍不得写个500字告诉大家

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1945
+title: 大宋王朝 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 历史
+  - 权谋
+  - 古代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 你是今晚的最高分 48 | 事件不无聊，化用名人梗很巧妙，有天赋。但文笔、主线和金手指偏弱，需要练笔提升。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件不无聊，化用名人梗很巧妙，有天赋。但文笔、主线和金手指偏弱，需要练笔提升。 | 主线弱且金手指写得拖沓;文笔不够好，跟不上构思
+  observable:
+  - 'golden_finger维度: 主线弱且金手指写得拖沓'
+  - 'misc维度: 文笔不够好，跟不上构思'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 489
+  - 548
+  score: 48
+  score_raw: 你是今晚的最高分 48
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大宋王朝
+  genre_guess:
+  - 历史
+  - 权谋
+  - 古代
+  overall_comment: 事件不无聊，化用名人梗很巧妙，有天赋。但文笔、主线和金手指偏弱，需要练笔提升。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 西门庆小剧场写得特别好，化用历史名人事件巧妙
+    raw_quote: 这个小局场我觉得是能签约的水平...这个化用是非常好的
+  - dimension: golden_finger
+    severity: negative
+    content: 主线弱且金手指写得拖沓
+    raw_quote: 主线跟比例练一下...金手指写的拖沓
+  - dimension: misc
+    severity: negative
+    content: 文笔不够好，跟不上构思
+    raw_quote: 就是事件好，比例跟不上，主线跟不上

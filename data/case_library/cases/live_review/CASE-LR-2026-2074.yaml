@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2074
+title: 易挂仙门创业路 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 仙侠
+  - 宗门
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最后还是停在了40分吧 | 文笔带修仙味，开局危机设定尚可，但剧情干巴巴，角色单薄，缺少小师妹等互动看点，需要更年轻化的表达。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔带修仙味，开局危机设定尚可，但剧情干巴巴，角色单薄，缺少小师妹等互动看点，需要更年轻化的表达。 | 角色单薄，只有两个老头式人物干巴巴拉扯，缺少生动配角;故事太古板，缺少年轻化的缺点和趣味
+  observable:
+  - 'character维度: 角色单薄，只有两个老头式人物干巴巴拉扯，缺少生动配角'
+  - 'simplicity维度: 故事太古板，缺少年轻化的缺点和趣味'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 187
+  - 245
+  score: 40
+  score_raw: 最后还是停在了40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 易挂仙门创业路
+  genre_guess:
+  - 仙侠
+  - 宗门
+  - 种田
+  overall_comment: 文笔带修仙味，开局危机设定尚可，但剧情干巴巴，角色单薄，缺少小师妹等互动看点，需要更年轻化的表达。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 角色单薄，只有两个老头式人物干巴巴拉扯，缺少生动配角
+    raw_quote: 怎么你老跟这个人拉扯有啥意思啊……感觉就两个很无聊的人在那拉扯……你要写小师妹啊什么的我也写啊，小师妹刚打完猎回来
+  - dimension: simplicity
+    severity: negative
+    content: 故事太古板，缺少年轻化的缺点和趣味
+    raw_quote: 小说要写的有缺点啊，就是因为年轻化嘛，就是写的年轻人爱看的什么东西，你写啊小师妹啊什么的……这些点有趣的东西就没问题

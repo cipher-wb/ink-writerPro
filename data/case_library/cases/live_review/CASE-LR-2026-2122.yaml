@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-2122
+title: 上交修仙界特种兵文 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 系统
+  - 上交国家
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 起点肯定不行，放蓝精灵试试 | 脑洞是人家的，水平不够起点签不了，太小白，可能有审线问题，建议发番茄试试。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞是人家的，水平不够起点签不了，太小白，可能有审线问题，建议发番茄试试。 | 题材太番茄，起点签不了;写得小白，场景人物描述能力不够;起点对政治相关管控严，可能不好过审
+  observable:
+  - 'genre维度: 题材太番茄，起点签不了'
+  - 'character维度: 写得小白，场景人物描述能力不够'
+  - 'taboo维度: 起点对政治相关管控严，可能不好过审'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 936
+  - 975
+  score: null
+  score_raw: 起点肯定不行，放蓝精灵试试
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 上交修仙界特种兵文
+  genre_guess:
+  - 都市
+  - 修仙
+  - 系统
+  - 上交国家
+  overall_comment: 脑洞是人家的，水平不够起点签不了，太小白，可能有审线问题，建议发番茄试试。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材太番茄，起点签不了
+    raw_quote: 起点肯定不行
+  - dimension: character
+    severity: negative
+    content: 写得小白，场景人物描述能力不够
+    raw_quote: 整个场景事件描述能力都太白了
+  - dimension: taboo
+    severity: negative
+    content: 起点对政治相关管控严，可能不好过审
+    raw_quote: 起点对政治这块管的比较严的

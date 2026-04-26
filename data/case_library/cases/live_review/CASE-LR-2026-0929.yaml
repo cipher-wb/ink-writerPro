@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0929
+title: 行李箱里的女鬼 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 都市
+  - 悬疑
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 水到极致，对话毫无信息量，女主一直故弄玄虚，读者没耐心。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 水到极致，对话毫无信息量，女主一直故弄玄虚，读者没耐心。 | 疯狂水对话，信息量极低;女鬼叨叨叨回忆，故弄玄虚
+  observable:
+  - 'pacing维度: 疯狂水对话，信息量极低'
+  - 'character维度: 女鬼叨叨叨回忆，故弄玄虚'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1330
+  - 1390
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 行李箱里的女鬼
+  genre_guess:
+  - 都市
+  - 悬疑
+  - 灵异
+  overall_comment: 水到极致，对话毫无信息量，女主一直故弄玄虚，读者没耐心。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 疯狂水对话，信息量极低
+    raw_quote: 还在聊还在聊还在聊还在聊 送了个行李箱是吧 然后就聊了聊 我叫徐涛 我不认识你
+  - dimension: character
+    severity: negative
+    content: 女鬼叨叨叨回忆，故弄玄虚
+    raw_quote: 就老是这个女鬼叨叨叨 帮你回忆 帮你想帮你想 你猜你是我12岁遇见的那个鬼是吧

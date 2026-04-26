@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1151
+title: 南宋末年仿生人穿越 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 历史
+  - 南宋末年
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 17分吧 过年加三分 15分 | 极度水字数，历史文塞满科幻设定和未来仿生人，毫无代入感，连最基础的网文格式都不具备。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 极度水字数，历史文塞满科幻设定和未来仿生人，毫无代入感，连最基础的网文格式都不具备。 | 1万字还在写驾驶舱，水份严重;历史分类写仿生人和飞船，读者全跑;整体质量极低，只能给能力分
+  observable:
+  - 'simplicity维度: 1万字还在写驾驶舱，水份严重'
+  - 'genre维度: 历史分类写仿生人和飞船，读者全跑'
+  - 'misc维度: 整体质量极低，只能给能力分'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 1641
+  - 1760
+  score: 15
+  score_raw: 17分吧 过年加三分 15分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 南宋末年仿生人穿越
+  genre_guess:
+  - 历史
+  - 南宋末年
+  - 科幻
+  overall_comment: 极度水字数，历史文塞满科幻设定和未来仿生人，毫无代入感，连最基础的网文格式都不具备。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 1万字还在写驾驶舱，水份严重
+    raw_quote: 太水了 这760个字只有有效距离 只有100个字不到
+  - dimension: genre
+    severity: negative
+    content: 历史分类写仿生人和飞船，读者全跑
+    raw_quote: 这是历史文 … 你发不发科幻分类 … 读者跑了呀
+  - dimension: misc
+    severity: negative
+    content: 整体质量极低，只能给能力分
+    raw_quote: 大海都没你水多呀 … 差不多真的真的真的真的只能给大哥17分吧

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1207
+title: 重生之土木打灰 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 土木
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分就中规中矩重生 | 切入尚可但开篇王老师事件代入感差，建议直接从毕业聚会开局。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入尚可但开篇王老师事件代入感差，建议直接从毕业聚会开局。 | 王老师当反派不好代入，缺少共鸣
+  observable:
+  - 'opening维度: 王老师当反派不好代入，缺少共鸣'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 331
+  - 374
+  score: 38
+  score_raw: 38分就中规中矩重生
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生之土木打灰
+  genre_guess:
+  - 重生
+  - 都市
+  - 土木
+  overall_comment: 切入尚可但开篇王老师事件代入感差，建议直接从毕业聚会开局。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 王老师当反派不好代入，缺少共鸣
+    raw_quote: 老王老师当反派用的怎么样了…你身为一个学生这样吊儿郎当也没有代入感
+  - dimension: simplicity
+    severity: positive
+    content: 工地部分描写真实有烟火气
+    raw_quote: 李爸在这个工地上，这一段还好一点

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1398
+title: 实力在上的绑匪 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 强者归来
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 九分嘛好吧 | 雪白情节过多，主线像强奸犯，审核过不了，必须大改思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白情节过多，主线像强奸犯，审核过不了，必须大改思路。 | 内容低俗，过不了审;主角行为像流氓，不像正常网文主角
+  observable:
+  - 'taboo维度: 内容低俗，过不了审'
+  - 'character维度: 主角行为像流氓，不像正常网文主角'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 951
+  - 1100
+  score: 9
+  score_raw: 九分嘛好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 实力在上的绑匪
+  genre_guess:
+  - 都市
+  - 异能
+  - 强者归来
+  overall_comment: 雪白情节过多，主线像强奸犯，审核过不了，必须大改思路。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 内容低俗，过不了审
+    raw_quote: 这怎么过省啊兄弟 这怎么过省啊大哥这 这过不了省啊这
+  - dimension: character
+    severity: negative
+    content: 主角行为像流氓，不像正常网文主角
+    raw_quote: 你這個 我感覺你是個流氓

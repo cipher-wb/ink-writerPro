@@ -1,0 +1,74 @@
+case_id: CASE-LR-2026-1120
+title: 捡到了一个极道大小姐 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 都市
+  - 神豪
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分才满乱 | 事件平淡，系统多余，展开主线不明，比例与情绪不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件平淡，系统多余，展开主线不明，比例与情绪不足。 | 极道大小姐出现过于平淡，缺乏反转与张力;系统存在感弱且出戏，不如去掉直接讲故事;主线展开不明，看不出后续走向
+  observable:
+  - 'opening维度: 极道大小姐出现过于平淡，缺乏反转与张力'
+  - 'golden_finger维度: 系统存在感弱且出戏，不如去掉直接讲故事'
+  - 'pacing维度: 主线展开不明，看不出后续走向'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 720
+  - 841
+  score: 40
+  score_raw: 40分才满乱
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 捡到了一个极道大小姐
+  genre_guess:
+  - 都市
+  - 神豪
+  - 系统
+  overall_comment: 事件平淡，系统多余，展开主线不明，比例与情绪不足。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 极道大小姐出现过于平淡，缺乏反转与张力
+    raw_quote: '这个捡到了这个事件没意思
+
+      没什么猎奇的感觉'
+  - dimension: golden_finger
+    severity: negative
+    content: 系统存在感弱且出戏，不如去掉直接讲故事
+    raw_quote: '我觉得系统其实有点抢戏
+
+      不如正常讲故事了'
+  - dimension: pacing
+    severity: negative
+    content: 主线展开不明，看不出后续走向
+    raw_quote: '你展开了现在啥展开的线是啥
+
+      是神豪吗
+
+      反向吗'
+  - dimension: character
+    severity: neutral
+    content: 人设互补性不够，脑洞发散不足
+    raw_quote: '人设就是要互补
+
+      比如说你有智商
+
+      他有钱'

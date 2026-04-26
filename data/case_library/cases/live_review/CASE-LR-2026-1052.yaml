@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1052
+title: 高中生异能文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 蓝精灵 | 小白爽文但合理性差，人设没有好的，只能发二边推荐
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小白爽文但合理性差，人设没有好的，只能发二边推荐 | 没有一个角色人设是好的，全班像小孩
+  observable:
+  - 'character维度: 没有一个角色人设是好的，全班像小孩'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 2751
+  - 2900
+  score: null
+  score_raw: 蓝精灵
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 高中生异能文
+  genre_guess:
+  - 都市
+  - 异能
+  - 校园
+  overall_comment: 小白爽文但合理性差，人设没有好的，只能发二边推荐
+  comments:
+  - dimension: character
+    severity: negative
+    content: 没有一个角色人设是好的，全班像小孩
+    raw_quote: 没有一个人设好的啊

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1531
+title: 十二生肖机关师 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 玄幻
+  - 生肖
+  - 机关
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个主题能写吗 能写 但是高难度的 非常高难度 以大概目前的水平 我觉得是养猪的 | 十二生肖设定太复杂，配角太多，开篇缺少事件，以当前水平难以驾驭。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 十二生肖设定太复杂，配角太多，开篇缺少事件，以当前水平难以驾驭。 | 配角写得太多太小白，应大幅减少人数;开篇需直接进入事件，而非大段介绍人物;设定过多，缺少剧情推进，一半都是设定
+  observable:
+  - 'simplicity维度: 配角写得太多太小白，应大幅减少人数'
+  - 'opening维度: 开篇需直接进入事件，而非大段介绍人物'
+  - 'pacing维度: 设定过多，缺少剧情推进，一半都是设定'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 16
+  - 55
+  score: null
+  score_raw: 这个主题能写吗 能写 但是高难度的 非常高难度 以大概目前的水平 我觉得是养猪的
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 十二生肖机关师
+  genre_guess:
+  - 玄幻
+  - 生肖
+  - 机关
+  overall_comment: 十二生肖设定太复杂，配角太多，开篇缺少事件，以当前水平难以驾驭。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 配角写得太多太小白，应大幅减少人数
+    raw_quote: 这些配角写的太小白了 你看人家十字中间写的很有智商的
+  - dimension: opening
+    severity: negative
+    content: 开篇需直接进入事件，而非大段介绍人物
+    raw_quote: 你应该睁开眼就是事件 然后在事件过程中慢慢的介绍呀
+  - dimension: pacing
+    severity: negative
+    content: 设定过多，缺少剧情推进，一半都是设定
+    raw_quote: 你现在就是这个书一半是设定

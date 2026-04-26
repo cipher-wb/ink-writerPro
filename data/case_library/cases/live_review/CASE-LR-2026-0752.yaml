@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0752
+title: 无限镜像宇宙科幻 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 科幻
+  - 哲学
+  - 宇宙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个不是网文的写法，就不打分了 | 科幻实体书风格，哲学深度强，但完全不是网文套路，不适合网文市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 科幻实体书风格，哲学深度强，但完全不是网文套路，不适合网文市场。 | 题材是科普科幻，在网文里没人看;第一章水平类似实体书，但第二张起开始变复杂探险
+  observable:
+  - 'genre维度: 题材是科普科幻，在网文里没人看'
+  - 'simplicity维度: 第一章水平类似实体书，但第二张起开始变复杂探险'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 641
+  - 780
+  score: null
+  score_raw: 这个不是网文的写法，就不打分了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 无限镜像宇宙科幻
+  genre_guess:
+  - 科幻
+  - 哲学
+  - 宇宙
+  overall_comment: 科幻实体书风格，哲学深度强，但完全不是网文套路，不适合网文市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材是科普科幻，在网文里没人看
+    raw_quote: 这不是网文，这是科普文……就没人看
+  - dimension: simplicity
+    severity: negative
+    content: 第一章水平类似实体书，但第二张起开始变复杂探险
+    raw_quote: 第一章像人类简史……但第二张确实是衔接第一部的，那就很难了
+  - dimension: opening
+    severity: neutral
+    content: 第一章有哲学思考，比喻出色
+    raw_quote: 有哲学的思考是吧……看得我大受震撼

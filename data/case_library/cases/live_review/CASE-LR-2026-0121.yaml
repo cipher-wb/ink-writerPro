@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0121
+title: 宁古塔女奴 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 历史
+  - 清史
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给他签了吧 | 穿越宁古塔买女奴的切入点接地气，第一章及格，同意签约但需后续优化人物刻画。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 穿越宁古塔买女奴的切入点接地气，第一章及格，同意签约但需后续优化人物刻画。 | 女性配角描写单薄，缺乏生动性
+  observable:
+  - 'character维度: 女性配角描写单薄，缺乏生动性'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 470
+  - 520
+  score: null
+  score_raw: 就给他签了吧
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 宁古塔女奴
+  genre_guess:
+  - 历史
+  - 清史
+  - 穿越
+  overall_comment: 穿越宁古塔买女奴的切入点接地气，第一章及格，同意签约但需后续优化人物刻画。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 小场景切入接地气，容易吸引读者
+    raw_quote: 切入点子比之前好接地气
+  - dimension: character
+    severity: negative
+    content: 女性配角描写单薄，缺乏生动性
+    raw_quote: 这女人现在感觉就是一个木头

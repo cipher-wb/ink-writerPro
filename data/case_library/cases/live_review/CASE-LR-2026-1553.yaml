@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1553
+title: 小蛇腰蛤蟆精 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 吃人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十五 | 恶心吃人，蛤蟆精丑恶，审美崩坏，四十五分已是上限。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 恶心吃人，蛤蟆精丑恶，审美崩坏，四十五分已是上限。 | 开篇蛤蟆吃人极其恶心;主角吃人场面毒点
+  observable:
+  - 'opening维度: 开篇蛤蟆吃人极其恶心'
+  - 'taboo维度: 主角吃人场面毒点'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1176
+  - 1288
+  score: 45
+  score_raw: 四十五
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 小蛇腰蛤蟆精
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 吃人
+  overall_comment: 恶心吃人，蛤蟆精丑恶，审美崩坏，四十五分已是上限。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇蛤蟆吃人极其恶心
+    raw_quote: 蛤蟆消化了是吧 吃人大哥 这不行啊
+  - dimension: taboo
+    severity: negative
+    content: 主角吃人场面毒点
+    raw_quote: 你也不能吃人 好好想想

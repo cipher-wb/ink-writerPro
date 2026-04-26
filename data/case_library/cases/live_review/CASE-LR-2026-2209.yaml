@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2209
+title: 新生代华娱 (fail / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 都市
+  - 文娱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就52嘛 | 套路工整但太八股，缺乏新意，建议换年轻小花并加入亮眼金手指。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路工整但太八股，缺乏新意，建议换年轻小花并加入亮眼金手指。 | 02年文娱题材已被写烂，推荐换时间到08-09年;缺乏有特色的金手指或事件，显得中规中矩
+  observable:
+  - 'genre维度: 02年文娱题材已被写烂，推荐换时间到08-09年'
+  - 'golden_finger维度: 缺乏有特色的金手指或事件，显得中规中矩'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 582
+  - 612
+  score: 52
+  score_raw: 就52嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 新生代华娱
+  genre_guess:
+  - 都市
+  - 文娱
+  overall_comment: 套路工整但太八股，缺乏新意，建议换年轻小花并加入亮眼金手指。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 02年文娱题材已被写烂，推荐换时间到08-09年
+    raw_quote: 02年的文娱真啊真看吐了...我觉得晚一点吧
+  - dimension: golden_finger
+    severity: negative
+    content: 缺乏有特色的金手指或事件，显得中规中矩
+    raw_quote: 没什么太大的卡老动...没有新东西...需要老动一点
+  - dimension: simplicity
+    severity: neutral
+    content: 讲解工整，但平淡
+    raw_quote: 那讲解很工整 但是很八股

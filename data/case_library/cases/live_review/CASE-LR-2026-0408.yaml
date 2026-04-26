@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0408
+title: 重生美利坚甜甜圈斩杀线 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 美国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大概35能上榜吗...能 | 题材能写但不能只靠斩杀线当卖点，节奏慢，写法像祥林嫂絮叨
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材能写但不能只靠斩杀线当卖点，节奏慢，写法像祥林嫂絮叨 | 不要把斩杀线当主卖点，读者不爱看，要用事件体现;节奏太慢，铺垫太久，爽点永远在后面几章
+  observable:
+  - 'highpoint维度: 不要把斩杀线当主卖点，读者不爱看，要用事件体现'
+  - 'pacing维度: 节奏太慢，铺垫太久，爽点永远在后面几章'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 467
+  - 540
+  score: 35
+  score_raw: 大概35能上榜吗...能
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生美利坚甜甜圈斩杀线
+  genre_guess:
+  - 都市
+  - 重生
+  - 美国
+  overall_comment: 题材能写但不能只靠斩杀线当卖点，节奏慢，写法像祥林嫂絮叨
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 不要把斩杀线当主卖点，读者不爱看，要用事件体现
+    raw_quote: 你光以一个斩杀线为卖点，读者也不爱看...就围绕这东西就写不...不要一直在那跟就是跟祥林嫂一样絮叨
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，铺垫太久，爽点永远在后面几章
+    raw_quote: 我不知道你们写书为什么这么man，要铺垫这么久，就是你们的爽点永远在看点永远在三四章之后

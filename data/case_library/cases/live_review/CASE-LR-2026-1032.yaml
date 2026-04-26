@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1032
+title: 一夜梦醒穿越分剑王朝 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 玄幻
+  - 不明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 切入混乱，满篇烂梗自嗨，读者根本看不懂分类。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入混乱，满篇烂梗自嗨，读者根本看不懂分类。 | 题材元素杂乱，无法归入市场分类;全是烂梗和说书人语气，毫无代入
+  observable:
+  - 'genre维度: 题材元素杂乱，无法归入市场分类'
+  - 'misc维度: 全是烂梗和说书人语气，毫无代入'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 2211
+  - 2290
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 一夜梦醒穿越分剑王朝
+  genre_guess:
+  - 玄幻
+  - 不明
+  overall_comment: 切入混乱，满篇烂梗自嗨，读者根本看不懂分类。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材元素杂乱，无法归入市场分类
+    raw_quote: 读者都不知道怎么分类 读者都不知道什么标签
+  - dimension: misc
+    severity: negative
+    content: 全是烂梗和说书人语气，毫无代入
+    raw_quote: 这没人看下这种东西 老是这种烂梗

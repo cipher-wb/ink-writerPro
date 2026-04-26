@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0561
+title: 冒青狼牙五代十国 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分满 | 历史功底不错，但中二文青，节奏略慢，50分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史功底不错，但中二文青，节奏略慢，50分 | 文青风格太重，喊口号式写法出戏
+  observable:
+  - 'simplicity维度: 文青风格太重，喊口号式写法出戏'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 1279
+  - 1551
+  score: 50
+  score_raw: 50分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 冒青狼牙五代十国
+  genre_guess:
+  - 历史
+  - 五代十国
+  - 穿越
+  overall_comment: 历史功底不错，但中二文青，节奏略慢，50分
+  comments:
+  - dimension: pacing
+    severity: neutral
+    content: 节奏稍慢但渐入佳境
+    raw_quote: 节奏也有点慢了 可能节奏也可能有点慢对吧
+  - dimension: simplicity
+    severity: negative
+    content: 文青风格太重，喊口号式写法出戏
+    raw_quote: 你不要一直嗷嗷叫着喊自己是你让别人说嘛

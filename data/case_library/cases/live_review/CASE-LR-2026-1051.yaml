@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1051
+title: 灵异副本笔记文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 灵异
+  - 副本
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有点天赋但是还是不会写 | 氛围和文笔有天赋，但倒叙和人头太出戏，开头要改
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围和文笔有天赋，但倒叙和人头太出戏，开头要改 | 不要用倒叙，开头应该直接拉氛围而非自残换面包
+  observable:
+  - 'opening维度: 不要用倒叙，开头应该直接拉氛围而非自残换面包'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 2601
+  - 2750
+  score: null
+  score_raw: 有点天赋但是还是不会写
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 灵异副本笔记文
+  genre_guess:
+  - 灵异
+  - 副本
+  - 系统
+  overall_comment: 氛围和文笔有天赋，但倒叙和人头太出戏，开头要改
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 不要用倒叙，开头应该直接拉氛围而非自残换面包
+    raw_quote: 不要倒叙了 倒叙真的很出息
+  - dimension: hook
+    severity: positive
+    content: 小剧场式简短干练的语句比较勾人
+    raw_quote: 这就是小剧场 就说明大概会写书 就是很尖 简短干练的语句描述出了那些引人对吧

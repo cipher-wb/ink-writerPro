@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1809
+title: 都市灵异：肥宅与樱岛麻衣 (fail / 27分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也上不了三十二十七分吧 | 第一章反转引子有点意思，但立刻变成灵异系统乱融，后续彻底跑偏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章反转引子有点意思，但立刻变成灵异系统乱融，后续彻底跑偏。 | 开局文艺但伪文艺，切不进故事;系统任务流一出立即变味，沦为蓝精灵式
+  observable:
+  - 'opening维度: 开局文艺但伪文艺，切不进故事'
+  - 'golden_finger维度: 系统任务流一出立即变味，沦为蓝精灵式'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 461
+  - 530
+  score: 27
+  score_raw: 也上不了三十二十七分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 都市灵异：肥宅与樱岛麻衣
+  genre_guess:
+  - 都市
+  - 灵异
+  - 系统
+  overall_comment: 第一章反转引子有点意思，但立刻变成灵异系统乱融，后续彻底跑偏。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局文艺但伪文艺，切不进故事
+    raw_quote: 这文学素养……这什么东西啊 就感觉有点像韩寒的写法
+  - dimension: hook
+    severity: positive
+    content: 结尾的反转有意外效果
+    raw_quote: 这个引出来这个意思还挺有意思的 啧确实可以签了嘛
+  - dimension: golden_finger
+    severity: negative
+    content: 系统任务流一出立即变味，沦为蓝精灵式
+    raw_quote: 第二张偏题了 系统理解不了……任务真的太出戏了

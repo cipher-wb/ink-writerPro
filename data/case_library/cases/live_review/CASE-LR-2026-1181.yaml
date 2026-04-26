@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1181
+title: 谁让他修仙的呀 (fail / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 修仙
+  - 考和
+  - 乐子
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十二分 | 乐子修仙节奏快有看点，活人感稍弱，起点难出成绩但蓝精灵有戏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 乐子修仙节奏快有看点，活人感稍弱，起点难出成绩但蓝精灵有戏。 | 乐子修仙在起点新人极难出头，建议投蓝精灵
+  observable:
+  - 'genre维度: 乐子修仙在起点新人极难出头，建议投蓝精灵'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 2090
+  - 2250
+  score: 52
+  score_raw: 五十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 谁让他修仙的呀
+  genre_guess:
+  - 修仙
+  - 考和
+  - 乐子
+  - 系统
+  overall_comment: 乐子修仙节奏快有看点，活人感稍弱，起点难出成绩但蓝精灵有戏。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 切入快，小剧场节奏好，互动性强
+    raw_quote: 开头虽然俗 但是节奏快 跟人立刻就跟人互动上
+  - dimension: character
+    severity: neutral
+    content: 主角活人感需加强，心理活动和看到美女的反应要更鲜活
+    raw_quote: 主角的收获 主角的叹息 主角看到美女 也要眼睛亮 主角要活人感一点
+  - dimension: genre
+    severity: negative
+    content: 乐子修仙在起点新人极难出头，建议投蓝精灵
+    raw_quote: 起点的乐子修仙 新人 我一年都见不到其他一本

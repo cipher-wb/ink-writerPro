@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1197
+title: 重建美利坚1980 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 都市
+  - 穿越
+  - 美利坚
+  - 黑帮
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十二分嘛 | 文笔还行，但金手指违和，主线建议走黑帮路线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔还行，但金手指违和，主线建议走黑帮路线。 | 人偶系统与剧情背景脱节;架空设定破坏真实感
+  observable:
+  - 'golden_finger维度: 人偶系统与剧情背景脱节'
+  - 'simplicity维度: 架空设定破坏真实感'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 951
+  - 980
+  score: 32
+  score_raw: 三十二分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重建美利坚1980
+  genre_guess:
+  - 都市
+  - 穿越
+  - 美利坚
+  - 黑帮
+  overall_comment: 文笔还行，但金手指违和，主线建议走黑帮路线。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 人偶系统与剧情背景脱节
+    raw_quote: 金手指真不咋样嘛兄弟 ... 跟现在剧情还是违和
+  - dimension: simplicity
+    severity: negative
+    content: 架空设定破坏真实感
+    raw_quote: 不要架空 ... 这不真实
+  - dimension: misc
+    severity: positive
+    content: 文笔尚可，代入感不错
+    raw_quote: 文笔还好

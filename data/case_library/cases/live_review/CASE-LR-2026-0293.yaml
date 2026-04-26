@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-0293
+title: 披着仙侠皮的暗黑赛博 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 仙侠
+  - 暗黑
+  - 赛博
+  - 废土
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 最多 | 世界观混乱，元素杂糅，代入感未建立，主线枯燥，缺乏市场前景。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观混乱，元素杂糅，代入感未建立，主线枯燥，缺乏市场前景。 | 科幻、玄幻、废土、暗黑元素混杂，世界观不统一;缺乏连贯的主线和代入感;内容故弄玄虚，不接地气
+  observable:
+  - 'genre维度: 科幻、玄幻、废土、暗黑元素混杂，世界观不统一'
+  - 'pacing维度: 缺乏连贯的主线和代入感'
+  - 'genre维度: 内容故弄玄虚，不接地气'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 271
+  - 330
+  score: 25
+  score_raw: 25分吧 最多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 披着仙侠皮的暗黑赛博
+  genre_guess:
+  - 仙侠
+  - 暗黑
+  - 赛博
+  - 废土
+  overall_comment: 世界观混乱，元素杂糅，代入感未建立，主线枯燥，缺乏市场前景。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻、玄幻、废土、暗黑元素混杂，世界观不统一
+    raw_quote: 就是东一棒槌 西一榔头 就狂喜
+  - dimension: pacing
+    severity: negative
+    content: 缺乏连贯的主线和代入感
+    raw_quote: 你没有一个连贯的一个代入感的主线
+  - dimension: genre
+    severity: negative
+    content: 内容故弄玄虚，不接地气
+    raw_quote: 我觉得你的书就是写的不接地气

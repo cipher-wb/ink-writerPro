@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0825
+title: 凌晨一点暴雨夜 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 都市异能
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 故弄玄虚的世界观大秘密，没人想看，唯一优点是比例还可以
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故弄玄虚的世界观大秘密，没人想看，唯一优点是比例还可以 | 世界观秘密没卖点，没人爱看;整体内容空洞，只有故弄玄虚
+  observable:
+  - 'genre维度: 世界观秘密没卖点，没人爱看'
+  - 'highpoint维度: 整体内容空洞，只有故弄玄虚'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 2325
+  - 2480
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 凌晨一点暴雨夜
+  genre_guess:
+  - 都市异能
+  - 科幻
+  overall_comment: 故弄玄虚的世界观大秘密，没人想看，唯一优点是比例还可以
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观秘密没卖点，没人爱看
+    raw_quote: 世界观的大秘密 没人看
+  - dimension: highpoint
+    severity: negative
+    content: 整体内容空洞，只有故弄玄虚
+    raw_quote: 内容还是没人看的 本质上异能都市世界观那种

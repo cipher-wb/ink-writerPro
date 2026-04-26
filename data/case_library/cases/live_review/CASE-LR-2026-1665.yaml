@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1665
+title: 仕途归来（再投） (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 日常
+  - 清小说
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 再次投稿依然日常过多、冲突不足，虽然有追读但难出成绩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 再次投稿依然日常过多、冲突不足，虽然有追读但难出成绩。 | 开篇依旧无事件，观感疲惫
+  observable:
+  - 'opening维度: 开篇依旧无事件，观感疲惫'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 925
+  - 1000
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仕途归来（再投）
+  genre_guess:
+  - 日常
+  - 清小说
+  - 奇幻
+  overall_comment: 再次投稿依然日常过多、冲突不足，虽然有追读但难出成绩。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇依旧无事件，观感疲惫
+    raw_quote: 你这个稿子再怎么看还是没冲突 晒太阳舒服 这有什么看的
+  - dimension: character
+    severity: neutral
+    content: 有一个真追读者也算认可，但无法改变平淡
+    raw_quote: 有追读就加一分吧 对吧有追读呀

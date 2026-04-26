@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1724
+title: 穿反派抢女主（一年复仇记） (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 穿书
+  - 玄幻
+  - 反派
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是四十五分吧 | 情绪饱满，人物市井感写得很热闹，但穿书逻辑出现明显漏洞，解释太慢导致读者跑完。题材一般。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪饱满，人物市井感写得很热闹，但穿书逻辑出现明显漏洞，解释太慢导致读者跑完。题材一般。 | 穿书解释太晚，读者全部走光，逻辑漏洞大;穿书太慢，前面逻辑硬伤未解决
+  observable:
+  - 'simplicity维度: 穿书解释太晚，读者全部走光，逻辑漏洞大'
+  - 'pacing维度: 穿书太慢，前面逻辑硬伤未解决'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1479
+  - 1528
+  score: 45
+  score_raw: 还是四十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿反派抢女主（一年复仇记）
+  genre_guess:
+  - 穿书
+  - 玄幻
+  - 反派
+  overall_comment: 情绪饱满，人物市井感写得很热闹，但穿书逻辑出现明显漏洞，解释太慢导致读者跑完。题材一般。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 情绪拉满，群像人物市井生活写得很热闹
+    raw_quote: 大哥写的很热闹呀，这一家子非常热闹，李芳唱罢我登场
+  - dimension: simplicity
+    severity: negative
+    content: 穿书解释太晚，读者全部走光，逻辑漏洞大
+    raw_quote: 读着全跑完了，所有人全跑掉了，大哥终于说了，没想到吧我这是穿书
+  - dimension: pacing
+    severity: negative
+    content: 穿书太慢，前面逻辑硬伤未解决
+    raw_quote: 但穿书太慢了，然后前面读的有理无理然后解释不够

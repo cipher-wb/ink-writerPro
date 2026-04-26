@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0077
+title: 唐人街探案同人 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 都市
+  - 探案
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没办法 这个大哥 | 疯狂偏题，直接写成了电影同人，主线、金手指、核心看点全无。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 疯狂偏题，直接写成了电影同人，主线、金手指、核心看点全无。 | 偏题严重，变成了电影同人剧本，缺乏原创主线和金手指
+  observable:
+  - 'misc维度: 偏题严重，变成了电影同人剧本，缺乏原创主线和金手指'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1006
+  - 1060
+  score: 25
+  score_raw: 没办法 这个大哥
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 唐人街探案同人
+  genre_guess:
+  - 都市
+  - 探案
+  - 同人
+  overall_comment: 疯狂偏题，直接写成了电影同人，主线、金手指、核心看点全无。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 偏题严重，变成了电影同人剧本，缺乏原创主线和金手指
+    raw_quote: 你这直接变同人了...真写成探案了...主线内容 你的能力 你的金手指 你的主线要干啥都没有啊

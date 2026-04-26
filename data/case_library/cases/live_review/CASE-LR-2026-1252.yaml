@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1252
+title: 寒门相术师 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 历史
+  - 相术
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个40来分的，四十二三分的样子 | 文笔扎实，情绪也足，但当前事件太八股，建议更换更高视野的题材来发挥自身的实力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，情绪也足，但当前事件太八股，建议更换更高视野的题材来发挥自身的实力。 | 乡村开局和当前事件很无聊，缺乏发展空间
+  observable:
+  - 'opening维度: 乡村开局和当前事件很无聊，缺乏发展空间'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1510
+  - 1572
+  score: 42
+  score_raw: 有个40来分的，四十二三分的样子
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 寒门相术师
+  genre_guess:
+  - 历史
+  - 相术
+  - 种田
+  overall_comment: 文笔扎实，情绪也足，但当前事件太八股，建议更换更高视野的题材来发挥自身的实力。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 乡村开局和当前事件很无聊，缺乏发展空间
+    raw_quote: 只是你不是白金，你不是大神啊，你其实很难从这种低身份邪气
+  - dimension: misc
+    severity: positive
+    content: 文笔很强，比例扎实，有出成绩的潜力
+    raw_quote: 你的比例绝对够你的比例出成绩，我毫不意外

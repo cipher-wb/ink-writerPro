@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1751
+title: 古炎攻略系统强制爱 (pass / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 女频
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那48分吧 | 女频爽文节奏好，人设立体，代入感强，适合发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 女频爽文节奏好，人设立体，代入感强，适合发蓝精灵。 | 系统戏份过多，部分特权设定存在法律风险。
+  observable:
+  - 'golden_finger维度: 系统戏份过多，部分特权设定存在法律风险。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1730
+  - 1840
+  score: 48
+  score_raw: 那48分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 古炎攻略系统强制爱
+  genre_guess:
+  - 女频
+  - 穿越
+  - 系统
+  overall_comment: 女频爽文节奏好，人设立体，代入感强，适合发蓝精灵。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 傲娇人设讨喜，节奏明快，符合女频市场。
+    raw_quote: 人设可以的 我觉得人设分店人设 傲娇人设挺好的
+  - dimension: golden_finger
+    severity: negative
+    content: 系统戏份过多，部分特权设定存在法律风险。
+    raw_quote: 系统是不是有点太抢税了呀兄弟

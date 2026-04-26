@@ -1,0 +1,73 @@
+case_id: CASE-LR-2026-1125
+title: 北境之王领主种田 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 西幻
+  - 领主
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '已经签约了
+
+    就就不打分了 | 已签约，题材加分，比例扎实，但节奏过慢且无女角，需加速并增加女角色。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 已签约，题材加分，比例扎实，但节奏过慢且无女角，需加速并增加女角色。 | 节奏太慢，每章信息量弱，容易流失读者;三章无女角色，现代西幻大硬伤
+  observable:
+  - 'pacing维度: 节奏太慢，每章信息量弱，容易流失读者'
+  - 'character维度: 三章无女角色，现代西幻大硬伤'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 1346
+  - 1521
+  score: null
+  score_raw: '已经签约了
+
+    就就不打分了'
+  score_signal: unknown
+  verdict: pass
+  title_guess: 北境之王领主种田
+  genre_guess:
+  - 西幻
+  - 领主
+  - 种田
+  overall_comment: 已签约，题材加分，比例扎实，但节奏过慢且无女角，需加速并增加女角色。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，每章信息量弱，容易流失读者
+    raw_quote: '你写的太慢了
+
+      就数据差呀'
+  - dimension: character
+    severity: negative
+    content: 三章无女角色，现代西幻大硬伤
+    raw_quote: '三章里面没有女角色了
+
+      我真真真没见过哪本西幻三张没有女角色'
+  - dimension: genre
+    severity: positive
+    content: 领主种田题材契合市场，金手指设定良好
+    raw_quote: '领主种田文确实有人捞
+
+      金手指还行'
+  - dimension: opening
+    severity: neutral
+    content: 比例与人设身份无大问题，但需精简章节
+    raw_quote: '比例挺好的
+
+      人设身份也没问题'

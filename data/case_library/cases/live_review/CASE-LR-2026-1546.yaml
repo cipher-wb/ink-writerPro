@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1546
+title: 张彪被绿重生复仇 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 都市
+  - 绿帽
+  - 复仇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我只能给他个九分 | 情绪足但主线多，苦主文，新媒体向但起点难推。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪足但主线多，苦主文，新媒体向但起点难推。 | 主线偏多，节奏稍乱
+  observable:
+  - 'pacing维度: 主线偏多，节奏稍乱'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 406
+  - 528
+  score: null
+  score_raw: 我只能给他个九分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 张彪被绿重生复仇
+  genre_guess:
+  - 都市
+  - 绿帽
+  - 复仇
+  overall_comment: 情绪足但主线多，苦主文，新媒体向但起点难推。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 主线偏多，节奏稍乱
+    raw_quote: 但是这个主线太多了 我只能给他个九分
+  - dimension: character
+    severity: positive
+    content: 苦主绝望情绪表达强
+    raw_quote: 情绪很足 情绪很足 情绪很足

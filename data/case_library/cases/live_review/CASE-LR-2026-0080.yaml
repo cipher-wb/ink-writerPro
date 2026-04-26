@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0080
+title: Happy (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 科幻
+  - 番茄
+  - 情绪流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分 | 完全是番茄风的情绪流写法，节奏快情绪拉满，是蓝精灵的天才但不适合起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全是番茄风的情绪流写法，节奏快情绪拉满，是蓝精灵的天才但不适合起点。 | 题材和主线不适合起点，建议去番茄发展
+  observable:
+  - 'genre维度: 题材和主线不适合起点，建议去番茄发展'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1166
+  - 1215
+  score: 33
+  score_raw: 33分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: Happy
+  genre_guess:
+  - 科幻
+  - 番茄
+  - 情绪流
+  overall_comment: 完全是番茄风的情绪流写法，节奏快情绪拉满，是蓝精灵的天才但不适合起点。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 情绪线拉得好，节奏快，是优点
+    raw_quote: 情绪挺好的...疯狂写疯狂立 节奏快 这是你的优点
+  - dimension: genre
+    severity: negative
+    content: 题材和主线不适合起点，建议去番茄发展
+    raw_quote: 题材整个就是番茄的呀...你改不了真的改不了...你是蓝精灵的天才

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0513
+title: 大周说书人 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 说书
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40多分吧 | 文笔和氛围接近古龙风格，但系统任务流破坏氛围，主线太弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和氛围接近古龙风格，但系统任务流破坏氛围，主线太弱。 | 系统任务偏离当前空间，惩罚机制没必要;系统应改成民俗类说法，更接地气;独角戏太多，缺少原创世界人物
+  observable:
+  - 'simplicity维度: 系统任务偏离当前空间，惩罚机制没必要'
+  - 'golden_finger维度: 系统应改成民俗类说法，更接地气'
+  - 'character维度: 独角戏太多，缺少原创世界人物'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 411
+  - 445
+  score: 40
+  score_raw: 40多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大周说书人
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 说书
+  overall_comment: 文笔和氛围接近古龙风格，但系统任务流破坏氛围，主线太弱。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 系统任务偏离当前空间，惩罚机制没必要
+    raw_quote: 你这个氛围完全是蓝精灵的思路，就是强行任务
+  - dimension: golden_finger
+    severity: negative
+    content: 系统应改成民俗类说法，更接地气
+    raw_quote: 系统换一种说法吧，系统换一种民俗类的说法
+  - dimension: character
+    severity: negative
+    content: 独角戏太多，缺少原创世界人物
+    raw_quote: 一个人的独角戏尽量少写...原创世界的人物来一个呀

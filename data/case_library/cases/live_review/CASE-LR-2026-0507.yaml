@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0507
+title: 神秘代表报告 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 奇幻
+  - 龙娘
+  - 调查员
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 天赋是有的，但细节没写好 | 第一次写书天赋不错，少女段落写得好，但开头龙身描写吓人，节奏偏慢。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一次写书天赋不错，少女段落写得好，但开头龙身描写吓人，节奏偏慢。 | 开头写龙身像蟒蛇，吓人出戏，不如直接少女;展开偏慢，类似十四亿国民的套路
+  observable:
+  - 'opening维度: 开头写龙身像蟒蛇，吓人出戏，不如直接少女'
+  - 'pacing维度: 展开偏慢，类似十四亿国民的套路'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 171
+  - 210
+  score: null
+  score_raw: 天赋是有的，但细节没写好
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 神秘代表报告
+  genre_guess:
+  - 奇幻
+  - 龙娘
+  - 调查员
+  overall_comment: 第一次写书天赋不错，少女段落写得好，但开头龙身描写吓人，节奏偏慢。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 小白蛋人设代入感对，喊妈妈那段有趣
+    raw_quote: 不大叫一声妈，可以，人设也可以
+  - dimension: opening
+    severity: negative
+    content: 开头写龙身像蟒蛇，吓人出戏，不如直接少女
+    raw_quote: 猛蛇这种东西很出戏的，龙娘你写的稍微...我是建议你开头就写龙娘了
+  - dimension: pacing
+    severity: negative
+    content: 展开偏慢，类似十四亿国民的套路
+    raw_quote: 展开真的是十四亿的思路，然后慢慢来

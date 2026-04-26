@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1864
+title: 拯救宇宙科幻文 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 科幻
+  - 穿越
+  - 星际
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 题材设定和思路全错，不是网文范畴，科幻元素无画面感读者无法脑补，建议推翻删除。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材设定和思路全错，不是网文范畴，科幻元素无画面感读者无法脑补，建议推翻删除。 | 科幻不是网文，需要写成都市向的大家能看懂的内容;读者不会脑补科幻场景，设定太虚无没人看
+  observable:
+  - 'genre维度: 科幻不是网文，需要写成都市向的大家能看懂的内容'
+  - 'simplicity维度: 读者不会脑补科幻场景，设定太虚无没人看'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1017
+  - 1067
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 拯救宇宙科幻文
+  genre_guess:
+  - 科幻
+  - 穿越
+  - 星际
+  overall_comment: 题材设定和思路全错，不是网文范畴，科幻元素无画面感读者无法脑补，建议推翻删除。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻不是网文，需要写成都市向的大家能看懂的内容
+    raw_quote: 很多人就是被科幻这两个字骗了 其实科幻它是网文类的
+  - dimension: simplicity
+    severity: negative
+    content: 读者不会脑补科幻场景，设定太虚无没人看
+    raw_quote: 我怎么想象你这些画面啊 读者不会去脑补的

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0663
+title: 大明海商不归之旅 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 历史
+  - 大航海
+  - 明朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就40左右 | 专业知识够，但切入完全没蹭到历史名人，第一章必死，老作者应该懂如何去改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 专业知识够，但切入完全没蹭到历史名人，第一章必死，老作者应该懂如何去改。 | 开篇平铺直叙写家族，毫无卖点和名人蹭热度;历史文必须蹭知名人物和时代背景，否则必死
+  observable:
+  - 'opening维度: 开篇平铺直叙写家族，毫无卖点和名人蹭热度'
+  - 'genre维度: 历史文必须蹭知名人物和时代背景，否则必死'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1861
+  - 1940
+  score: 40
+  score_raw: 差不多就40左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明海商不归之旅
+  genre_guess:
+  - 历史
+  - 大航海
+  - 明朝
+  overall_comment: 专业知识够，但切入完全没蹭到历史名人，第一章必死，老作者应该懂如何去改。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇平铺直叙写家族，毫无卖点和名人蹭热度
+    raw_quote: 这段没蹭到什么好东西啊...崩了呀已经，读者啥都不知道
+  - dimension: genre
+    severity: negative
+    content: 历史文必须蹭知名人物和时代背景，否则必死
+    raw_quote: 你这切入真的要有技巧...必须得蹭...读者越来越挑了
+  - dimension: misc
+    severity: positive
+    content: 历史专业知识过硬，基础在那
+    raw_quote: 这专业性没问题...题材也能写

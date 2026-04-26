@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1742
+title: 破裂的镜子 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 都市
+  - 新媒体
+  - 赘婿
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没什么大杠推翻呀兄弟 | 新媒体风格太浓，剧情复杂，金手指突兀，建议推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 新媒体风格太浓，剧情复杂，金手指突兀，建议推翻。 | 金手指（镜子系统）过于复杂且出戏。;多人多线叙事，更像新媒体短剧而非起点爽文。
+  observable:
+  - 'golden_finger维度: 金手指（镜子系统）过于复杂且出戏。'
+  - 'genre维度: 多人多线叙事，更像新媒体短剧而非起点爽文。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 910
+  - 988
+  score: null
+  score_raw: 没什么大杠推翻呀兄弟
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 破裂的镜子
+  genre_guess:
+  - 都市
+  - 新媒体
+  - 赘婿
+  overall_comment: 新媒体风格太浓，剧情复杂，金手指突兀，建议推翻。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指（镜子系统）过于复杂且出戏。
+    raw_quote: 这个经手指太出戏了
+  - dimension: genre
+    severity: negative
+    content: 多人多线叙事，更像新媒体短剧而非起点爽文。
+    raw_quote: 这本账是非常古老的一个题材 就新媒体姐姐爽红呀

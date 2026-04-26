@@ -1,0 +1,68 @@
+case_id: CASE-LR-2026-0745
+title: 缅北佣兵王 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 军事
+  - 兵王
+  - 战狼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多55分吧 | 文笔比例扎实但写法太像剧本，题材敏感难签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例扎实但写法太像剧本，题材敏感难签约。 | 缅北题材审核难过，写法太像剧本而非网文;开篇太复杂，进入状态慢;主角人设矛盾，20岁集团公子不可能是处男且见女孩脸红
+  observable:
+  - 'genre维度: 缅北题材审核难过，写法太像剧本而非网文'
+  - 'opening维度: 开篇太复杂，进入状态慢'
+  - 'character维度: 主角人设矛盾，20岁集团公子不可能是处男且见女孩脸红'
+  - 'taboo维度: 部分情节描写容易过线'
+  - 'pacing维度: 剧情推进方式像分镜剧本，缺乏网文节奏'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 42
+  - 180
+  score: 55
+  score_raw: 差不多55分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 缅北佣兵王
+  genre_guess:
+  - 军事
+  - 兵王
+  - 战狼
+  overall_comment: 文笔比例扎实但写法太像剧本，题材敏感难签约。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 缅北题材审核难过，写法太像剧本而非网文
+    raw_quote: 缅北我能写的真实的省都不让你过了……这百分之百的短剧剧本
+  - dimension: opening
+    severity: negative
+    content: 开篇太复杂，进入状态慢
+    raw_quote: 虽然比例扎实，但是太复杂了
+  - dimension: character
+    severity: negative
+    content: 主角人设矛盾，20岁集团公子不可能是处男且见女孩脸红
+    raw_quote: 你20岁了……不可能啊……我感觉有点假，真立不住逻辑
+  - dimension: taboo
+    severity: negative
+    content: 部分情节描写容易过线
+    raw_quote: 双腿大开……什么东西啊啊这干嘛了
+  - dimension: pacing
+    severity: negative
+    content: 剧情推进方式像分镜剧本，缺乏网文节奏
+    raw_quote: 这全是分镜式叙事……这不是网文写法好吧

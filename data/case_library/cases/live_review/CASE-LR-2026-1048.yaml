@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1048
+title: 赛博朋克AR文 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 赛博
+  - AR
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多20吧 | 题材小众且没出过成绩，设定看不懂，事件无聊，完全自嗨
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材小众且没出过成绩，设定看不懂，事件无聊，完全自嗨 | 赛博朋克没有一本起来的，新人不该碰;读者根本看不懂设定，点都不会点
+  observable:
+  - 'genre维度: 赛博朋克没有一本起来的，新人不该碰'
+  - 'ops维度: 读者根本看不懂设定，点都不会点'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 2151
+  - 2300
+  score: 20
+  score_raw: 差不多20吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 赛博朋克AR文
+  genre_guess:
+  - 赛博
+  - AR
+  - 科幻
+  overall_comment: 题材小众且没出过成绩，设定看不懂，事件无聊，完全自嗨
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 赛博朋克没有一本起来的，新人不该碰
+    raw_quote: 哪一本赛博朋克起来了 哪一本对吧 回答我哪一本三本没问题了
+  - dimension: ops
+    severity: negative
+    content: 读者根本看不懂设定，点都不会点
+    raw_quote: 反正看不懂就看不懂你的设定 别想看进去你的书对吧

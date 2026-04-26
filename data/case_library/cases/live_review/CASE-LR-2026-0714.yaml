@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0714
+title: 东京怪谈（收租情种） (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 东京
+  - 重生
+  - 修罗场/雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十八分 | 人设文笔都好，雪白功力强；但纯雪白没有好主线支撑，缺乏事业/遗憾主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设文笔都好，雪白功力强；但纯雪白没有好主线支撑，缺乏事业/遗憾主线。 | 主线缺失，纯情种收租缺乏职业或重生遗憾主线
+  observable:
+  - 'genre维度: 主线缺失，纯情种收租缺乏职业或重生遗憾主线'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 961
+  - 1040
+  score: 48
+  score_raw: 四十八分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京怪谈（收租情种）
+  genre_guess:
+  - 东京
+  - 重生
+  - 修罗场/雪白
+  overall_comment: 人设文笔都好，雪白功力强；但纯雪白没有好主线支撑，缺乏事业/遗憾主线。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 主线缺失，纯情种收租缺乏职业或重生遗憾主线
+    raw_quote: 没其他主线啊...这主线不是重雪白吗...找个主线去吧
+  - dimension: character
+    severity: positive
+    content: 角色人设和文笔都很强，雪白写得不错
+    raw_quote: 人设文笔蛮好的...雪白其实能到50

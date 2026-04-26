@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1995
+title: 素晴同人/裸男问星野 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 同人
+  - 素晴
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分 | 有轻小说味道，但素晴同人市场太小，上限低签约难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有轻小说味道，但素晴同人市场太小，上限低签约难。 | 素晴同人太过小众，追读数据难达标
+  observable:
+  - 'genre维度: 素晴同人太过小众，追读数据难达标'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1801
+  - 1850
+  score: 50
+  score_raw: 50分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 素晴同人/裸男问星野
+  genre_guess:
+  - 同人
+  - 素晴
+  - 轻小说
+  overall_comment: 有轻小说味道，但素晴同人市场太小，上限低签约难。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 素晴同人太过小众，追读数据难达标
+    raw_quote: 我基本没见过千追以上是素晴同人
+  - dimension: golden_finger
+    severity: neutral
+    content: 建议不写此同人转向原创可提升成绩
+    raw_quote: 你如果不写素晴会好很多

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0628
+title: 从带校花逃课开始 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 校园
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分可以吧 | 进步明显，情绪和女主立得住，恶搞桥段稍落俗套，整体节奏可行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 进步明显，情绪和女主立得住，恶搞桥段稍落俗套，整体节奏可行。 | 开局系统恶搞去女厕所显得刻意，不如直接重生救美。
+  observable:
+  - 'opening维度: 开局系统恶搞去女厕所显得刻意，不如直接重生救美。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 906
+  - 995
+  score: 45
+  score_raw: 45分可以吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从带校花逃课开始
+  genre_guess:
+  - 都市
+  - 重生
+  - 校园
+  - 系统
+  overall_comment: 进步明显，情绪和女主立得住，恶搞桥段稍落俗套，整体节奏可行。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局系统恶搞去女厕所显得刻意，不如直接重生救美。
+    raw_quote: 不要恶搞 ... 你这一上来让你去女卫生间干嘛呀 ... 我觉得你直接重生到女厕所对吧
+  - dimension: pacing
+    severity: positive
+    content: 相比之前投稿，节奏明显加快，已经开始抓爽点。
+    raw_quote: 节奏加快 ... 这真可以 发蓝精灵好吧
+  - dimension: character
+    severity: positive
+    content: 校花形象基本成立，有辨识度。
+    raw_quote: 人设立住了 ... 蓝精灵也很喜欢

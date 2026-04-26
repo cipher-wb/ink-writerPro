@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2126
+title: 水浒燕青玉兔精灵异文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 历史
+  - 同人
+  - 水浒
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40多分左右 | 事件太弱，代入感没现代感，每次都要乱融各种元素，建议写单一题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件太弱，代入感没现代感，每次都要乱融各种元素，建议写单一题材。 | 穿越了但写法像没穿越，没现代人代入感;老是整活乱融，每次都要融合多种名著的元素
+  observable:
+  - 'character维度: 穿越了但写法像没穿越，没现代人代入感'
+  - 'genre维度: 老是整活乱融，每次都要融合多种名著的元素'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 1141
+  - 1195
+  score: null
+  score_raw: 40多分左右
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 水浒燕青玉兔精灵异文
+  genre_guess:
+  - 历史
+  - 同人
+  - 水浒
+  - 灵异
+  overall_comment: 事件太弱，代入感没现代感，每次都要乱融各种元素，建议写单一题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 穿越了但写法像没穿越，没现代人代入感
+    raw_quote: 你这已经是原创人物了，跟你的穿越一点关系都没有
+  - dimension: genre
+    severity: negative
+    content: 老是整活乱融，每次都要融合多种名著的元素
+    raw_quote: 每次都要融融融，没有一次不容的呀

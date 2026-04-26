@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1832
+title: 重生大学生超凡降临 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 都市
+  - 超凡
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 24 23分最多了 | 人设崩，浑水浊，副本世界观生硬无代入，赶紧切掉
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设崩，浑水浊，副本世界观生硬无代入，赶紧切掉 | 主角人设差得崩，阅读代入全无;一切就突然进入游戏模式
+  observable:
+  - 'character维度: 主角人设差得崩，阅读代入全无'
+  - 'pacing维度: 一切就突然进入游戏模式'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1041
+  - 1130
+  score: 23
+  score_raw: 24 23分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生大学生超凡降临
+  genre_guess:
+  - 都市
+  - 超凡
+  - 异能
+  overall_comment: 人设崩，浑水浊，副本世界观生硬无代入，赶紧切掉
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设差得崩，阅读代入全无
+    raw_quote: 你这个人设已经崩完了读者跑完了...我觉得你这个人特别的无聊无趣
+  - dimension: pacing
+    severity: negative
+    content: 一切就突然进入游戏模式
+    raw_quote: 纯游戏...这种游戏设置都无所谓了...感觉主角智商很低

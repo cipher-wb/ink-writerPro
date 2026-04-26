@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0629
+title: 我就是个送外卖的 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 脑洞
+  - 打脸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我给你打个58分啊 | 蓝精灵极致的爽文路线，词条修改设计亮眼，节奏炸裂，老爷爷出场可优化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蓝精灵极致的爽文路线，词条修改设计亮眼，节奏炸裂，老爷爷出场可优化。 | 白胡子老爷爷登场过于传统，换成直接觉醒系统更好。
+  observable:
+  - 'golden_finger维度: 白胡子老爷爷登场过于传统，换成直接觉醒系统更好。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 996
+  - 1085
+  score: 58
+  score_raw: 我给你打个58分啊
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 我就是个送外卖的
+  genre_guess:
+  - 都市
+  - 系统
+  - 脑洞
+  - 打脸
+  overall_comment: 蓝精灵极致的爽文路线，词条修改设计亮眼，节奏炸裂，老爷爷出场可优化。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局外卖被辱冲突立得又快又狠。
+    raw_quote: 胖男人在骂 ... 这开头挺炸裂的是吧
+  - dimension: golden_finger
+    severity: positive
+    content: 万物词条修改能力有趣，能衍生各种爽点。
+    raw_quote: 这个金手指挺好的 ... 万物词条改变现实
+  - dimension: simplicity
+    severity: positive
+    content: 每章都有极端看点，不给读者喘息。
+    raw_quote: 它每一章都有极端据点 ... 全是看点
+  - dimension: golden_finger
+    severity: negative
+    content: 白胡子老爷爷登场过于传统，换成直接觉醒系统更好。
+    raw_quote: 你这个老头能不能不出来啊 ... 这个太古老了

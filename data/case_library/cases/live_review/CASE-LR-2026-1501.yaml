@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1501
+title: 充满设定的西幻 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 西幻
+  - 魔法
+  - 冒险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十二分 | 设定仍太多，虽有进步，但西化原创世界太难，建议换都市题材
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定仍太多，虽有进步，但西化原创世界太难，建议换都市题材 | 忍不住抛设定，原创世界观太复杂;西化流量不行，建议写都市老洞
+  observable:
+  - 'simplicity维度: 忍不住抛设定，原创世界观太复杂'
+  - 'genre维度: 西化流量不行，建议写都市老洞'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 916
+  - 960
+  score: 32
+  score_raw: 三十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 充满设定的西幻
+  genre_guess:
+  - 西幻
+  - 魔法
+  - 冒险
+  overall_comment: 设定仍太多，虽有进步，但西化原创世界太难，建议换都市题材
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 忍不住抛设定，原创世界观太复杂
+    raw_quote: 大哥还是忍不住 疯狂冲指 终于忍不住了
+  - dimension: genre
+    severity: negative
+    content: 西化流量不行，建议写都市老洞
+    raw_quote: 代 就还是得写西化 虽然你啥都得写 但是换题材 就更好

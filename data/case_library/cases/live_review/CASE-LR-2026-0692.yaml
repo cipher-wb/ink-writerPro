@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0692
+title: 玄剑先祖（创意撞车） (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给他个18 | AI味浓，设定堆砌，主角人设崩坏，整体不入流。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: AI味浓，设定堆砌，主角人设崩坏，整体不入流。 | 金手指是酒杯钻进裤裆，低俗烂梗;主角给猪妖磕头，人设极度负分;穿越前写得太细，毫无重点
+  observable:
+  - 'misc维度: 金手指是酒杯钻进裤裆，低俗烂梗'
+  - 'character维度: 主角给猪妖磕头，人设极度负分'
+  - 'pacing维度: 穿越前写得太细，毫无重点'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 889
+  - 1080
+  score: 18
+  score_raw: 给他个18
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玄剑先祖（创意撞车）
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 搞笑
+  overall_comment: AI味浓，设定堆砌，主角人设崩坏，整体不入流。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 金手指是酒杯钻进裤裆，低俗烂梗
+    raw_quote: 酒杯消失了 从你的弟弟那里钻进来了
+  - dimension: character
+    severity: negative
+    content: 主角给猪妖磕头，人设极度负分
+    raw_quote: 主角给猪妖在这磕头 然后说他有脚气
+  - dimension: pacing
+    severity: negative
+    content: 穿越前写得太细，毫无重点
+    raw_quote: 好拖沓呀

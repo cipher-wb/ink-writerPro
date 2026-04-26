@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1423
+title: 亚瑟王哈利波特同人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 同人
+  - 哈利波特
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没给分数，只说切入太慢 | 同人切入太慢，无代入感，建议直发看数据。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 同人切入太慢，无代入感，建议直发看数据。 | 切入太慢，不如之前作品
+  observable:
+  - 'opening维度: 切入太慢，不如之前作品'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 771
+  - 810
+  score: null
+  score_raw: 没给分数，只说切入太慢
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 亚瑟王哈利波特同人
+  genre_guess:
+  - 同人
+  - 哈利波特
+  - 穿越
+  overall_comment: 同人切入太慢，无代入感，建议直发看数据。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入太慢，不如之前作品
+    raw_quote: 切入真的太慢了 真不如你之前的李小龙那些差远了

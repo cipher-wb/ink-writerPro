@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1860
+title: 重生回到高考课堂都市文 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分 | 重生开头太俗套，全是常见流程，虽然有老师怀孕见义勇为事件但处理尴尬，需要独特卖点和合理动机。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生开头太俗套，全是常见流程，虽然有老师怀孕见义勇为事件但处理尴尬，需要独特卖点和合理动机。 | 重生到高考课堂是10万本的套路，毫无新意;见义勇为事件太干巴，没有前置老师对主角好的动机就显得尴尬
+  observable:
+  - 'opening维度: 重生到高考课堂是10万本的套路，毫无新意'
+  - 'character维度: 见义勇为事件太干巴，没有前置老师对主角好的动机就显得尴尬'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 776
+  - 833
+  score: 40
+  score_raw: 40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生回到高考课堂都市文
+  genre_guess:
+  - 重生
+  - 都市
+  - 校园
+  overall_comment: 重生开头太俗套，全是常见流程，虽然有老师怀孕见义勇为事件但处理尴尬，需要独特卖点和合理动机。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 重生到高考课堂是10万本的套路，毫无新意
+    raw_quote: 我在起点真能涨到10万多吧 10万本书全是重生到高考课堂
+  - dimension: character
+    severity: negative
+    content: 见义勇为事件太干巴，没有前置老师对主角好的动机就显得尴尬
+    raw_quote: 你不写老师对你好 或者是那孩子又不是你的 你这么急干嘛

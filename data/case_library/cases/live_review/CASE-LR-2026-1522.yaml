@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1522
+title: 化龙 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 玄幻
+  - 化龙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 传统写法多处设定，但时代已变，读者不买账。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统写法多处设定，但时代已变，读者不买账。 | 凡修转等传统设定已过时，没新鲜感
+  observable:
+  - 'genre维度: 凡修转等传统设定已过时，没新鲜感'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1481
+  - 1580
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: fail
+  title_guess: 化龙
+  genre_guess:
+  - 玄幻
+  - 化龙
+  overall_comment: 传统写法多处设定，但时代已变，读者不买账。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 凡修转等传统设定已过时，没新鲜感
+    raw_quote: 时代变了 以前凡是休闲转 … 你现在什么年代了 这谁看

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1365
+title: 死神小姐轻小说 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 轻小说
+  - 原生幻想
+  - 死神
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 睡着了不看了 | 书名有卖点，但内容水，死神小姐角色迟迟不拉扯，无聊催眠。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名有卖点，但内容水，死神小姐角色迟迟不拉扯，无聊催眠。 | 开篇太水，迟迟不入正题，一直在写无聊日常和贫乏设定;应该快点进入死神小姐与主角的极端人设拉扯
+  observable:
+  - 'pacing维度: 开篇太水，迟迟不入正题，一直在写无聊日常和贫乏设定'
+  - 'misc维度: 应该快点进入死神小姐与主角的极端人设拉扯'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1361
+  - 1470
+  score: null
+  score_raw: 睡着了不看了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 死神小姐轻小说
+  genre_guess:
+  - 轻小说
+  - 原生幻想
+  - 死神
+  overall_comment: 书名有卖点，但内容水，死神小姐角色迟迟不拉扯，无聊催眠。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开篇太水，迟迟不入正题，一直在写无聊日常和贫乏设定
+    raw_quote: 能不能别写这狗八东西都这不看啊根本
+  - dimension: misc
+    severity: negative
+    content: 应该快点进入死神小姐与主角的极端人设拉扯
+    raw_quote: 能不能把极端人设给我立一立让我看到拉扯

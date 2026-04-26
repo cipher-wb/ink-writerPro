@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1936
+title: 队友全是宅的群像异能 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 轻小说
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我也不知道该发哪里 | 想法有趣，类似《超异能族》，但写法偏群像日常，笔力不足导致代入感差，网文味不够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 想法有趣，类似《超异能族》，但写法偏群像日常，笔力不足导致代入感差，网文味不够。 | 代入感是最大问题，主角都不好找，群像写法太难出头。;文笔流畅但网文的味道很不对，对白偏白。
+  observable:
+  - 'opening维度: 代入感是最大问题，主角都不好找，群像写法太难出头。'
+  - 'simplicity维度: 文笔流畅但网文的味道很不对，对白偏白。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 1187
+  - 1225
+  score: null
+  score_raw: 我也不知道该发哪里
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 队友全是宅的群像异能
+  genre_guess:
+  - 轻小说
+  - 异能
+  overall_comment: 想法有趣，类似《超异能族》，但写法偏群像日常，笔力不足导致代入感差，网文味不够。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 代入感是最大问题，主角都不好找，群像写法太难出头。
+    raw_quote: 我是觉得代入感是最大问题...写了很多但主角都不好找吧
+  - dimension: simplicity
+    severity: negative
+    content: 文笔流畅但网文的味道很不对，对白偏白。
+    raw_quote: 额就是比例啦啦恭喜表达还好...但是网文的味道很不错主角都不好找吧

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0188
+title: 无情道重生：三生三世 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 女频
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 题材不适合 | 三生三世重生套路太老，开篇把世界底牌全亮完，没有期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 三生三世重生套路太老，开篇把世界底牌全亮完，没有期待感。 | 风格像女频三生三世，不是当前男频主流。;开篇就把主角前世成就和世界真相全交代，读者阈值过高。
+  observable:
+  - 'genre维度: 风格像女频三生三世，不是当前男频主流。'
+  - 'opening维度: 开篇就把主角前世成就和世界真相全交代，读者阈值过高。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 2840
+  - 2960
+  score: null
+  score_raw: 题材不适合
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 无情道重生：三生三世
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 女频
+  overall_comment: 三生三世重生套路太老，开篇把世界底牌全亮完，没有期待感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 风格像女频三生三世，不是当前男频主流。
+    raw_quote: 这太像三生三世十里桃花那种感觉了
+  - dimension: opening
+    severity: negative
+    content: 开篇就把主角前世成就和世界真相全交代，读者阈值过高。
+    raw_quote: 你这一世上发展到后期不就是把众神杀了吗

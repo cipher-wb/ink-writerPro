@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2034
+title: 只赞长得丑的（民国玄幻） (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 民国
+  - 玄幻
+  - 高武
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分 | 不会写女人，对话尴尬，剧情俗套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不会写女人，对话尴尬，剧情俗套。 | 不会写女人，拉扯尴尬，对话毒点多;剧情俗套，金手指使用简单
+  observable:
+  - 'character维度: 不会写女人，拉扯尴尬，对话毒点多'
+  - 'simplicity维度: 剧情俗套，金手指使用简单'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 961
+  - 1080
+  score: 38
+  score_raw: 38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 只赞长得丑的（民国玄幻）
+  genre_guess:
+  - 民国
+  - 玄幻
+  - 高武
+  overall_comment: 不会写女人，对话尴尬，剧情俗套。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 不会写女人，拉扯尴尬，对话毒点多
+    raw_quote: 不会写女人 这个女的淡的没味道
+  - dimension: simplicity
+    severity: negative
+    content: 剧情俗套，金手指使用简单
+    raw_quote: 这拉扯太俗了兄弟

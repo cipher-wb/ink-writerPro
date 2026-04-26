@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1850
+title: 冰天雪地蒸汽朋克末日废土文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 末日废土
+  - 蒸汽朋克
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 世界观写烂了，冰天雪地加蒸汽朋克等于烂书名，打丧尸没意思，建议加剧情、人物和美女角色。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观写烂了，冰天雪地加蒸汽朋克等于烂书名，打丧尸没意思，建议加剧情、人物和美女角色。 | 世界观写烂了，冰天雪地末日废土加蒸汽朋克没有新意;缺乏有趣的人设和人际关系，慢剧都不看这种;缺乏雪白元素，读者根本不看这种世界观
+  observable:
+  - 'genre维度: 世界观写烂了，冰天雪地末日废土加蒸汽朋克没有新意'
+  - 'character维度: 缺乏有趣的人设和人际关系，慢剧都不看这种'
+  - 'simplicity维度: 缺乏雪白元素，读者根本不看这种世界观'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 238
+  - 276
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 冰天雪地蒸汽朋克末日废土文
+  genre_guess:
+  - 末日废土
+  - 蒸汽朋克
+  - 科幻
+  overall_comment: 世界观写烂了，冰天雪地加蒸汽朋克等于烂书名，打丧尸没意思，建议加剧情、人物和美女角色。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观写烂了，冰天雪地末日废土加蒸汽朋克没有新意
+    raw_quote: 人家冰天雪地的世界不就是末日废土写法吗 加个蒸汽朋克不就是烂书名吗
+  - dimension: character
+    severity: negative
+    content: 缺乏有趣的人设和人际关系，慢剧都不看这种
+    raw_quote: 立不住好人设 也没有什么好的哎 就慢剧都不看 明白吗
+  - dimension: simplicity
+    severity: negative
+    content: 缺乏雪白元素，读者根本不看这种世界观
+    raw_quote: 你不雪白读着不看啊 根本就这种世界观

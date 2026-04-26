@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0652
+title: 燕青误闯红楼 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 历史
+  - 同人
+  - 红楼梦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是还是故事性 | 比例基本功扎实，但不会流畅讲故事，有穷举写法倾向，需沉淀学习取舍。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例基本功扎实，但不会流畅讲故事，有穷举写法倾向，需沉淀学习取舍。 | 故事性弱，东拉西扯，不知道主线取舍;人设错位，燕青是浪子不应有同病相怜之感
+  observable:
+  - 'pacing维度: 故事性弱，东拉西扯，不知道主线取舍'
+  - 'character维度: 人设错位，燕青是浪子不应有同病相怜之感'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 981
+  - 1060
+  score: null
+  score_raw: 还是还是故事性
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 燕青误闯红楼
+  genre_guess:
+  - 历史
+  - 同人
+  - 红楼梦
+  overall_comment: 比例基本功扎实，但不会流畅讲故事，有穷举写法倾向，需沉淀学习取舍。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 故事性弱，东拉西扯，不知道主线取舍
+    raw_quote: 你现在就是穷象写法...每个人都要写一写...不会讲一个吸引人的网文故事
+  - dimension: character
+    severity: negative
+    content: 人设错位，燕青是浪子不应有同病相怜之感
+    raw_quote: 燕青应该是比较潇洒的...生出同病相怜这句话是不对的
+  - dimension: simplicity
+    severity: positive
+    content: 比例够，基本功扎实
+    raw_quote: 你的比例是OK的...基本功绝对够

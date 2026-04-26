@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1247
+title: 最后一个奥特曼 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 同人
+  - 奥特曼
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20 2424风新的锋芒好吧 | 简介不错，但正文开头太慢太水，导致读者没耐心，建议删掉无用日常，并赋予主角能力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介不错，但正文开头太慢太水，导致读者没耐心，建议删掉无用日常，并赋予主角能力。 | 开头太慢太水，铺垫过多;主角像个旁观者，缺少参与感和能力
+  observable:
+  - 'opening维度: 开头太慢太水，铺垫过多'
+  - 'character维度: 主角像个旁观者，缺少参与感和能力'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1184
+  - 1236
+  score: 24
+  score_raw: 20 2424风新的锋芒好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 最后一个奥特曼
+  genre_guess:
+  - 同人
+  - 奥特曼
+  - 都市
+  overall_comment: 简介不错，但正文开头太慢太水，导致读者没耐心，建议删掉无用日常，并赋予主角能力。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头太慢太水，铺垫过多
+    raw_quote: 这开头太慢了，什么补补货，低头补货，这太无聊了，就删掉
+  - dimension: character
+    severity: negative
+    content: 主角像个旁观者，缺少参与感和能力
+    raw_quote: 你不能是一个旁观者，你有什么对吧，异能行者要期待好呀

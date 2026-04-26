@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0153
+title: 圣代麦旋风 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 文娱
+  - 律师
+  - 美利坚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我们差不多就25分了 | 纯美国人主角无法代入，需要穿越成中国人，节奏无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯美国人主角无法代入，需要穿越成中国人，节奏无聊。 | 主角纯美国人没有穿越，中国读者代入不了;缺乏极端案件或大事件吸引眼球
+  observable:
+  - 'character维度: 主角纯美国人没有穿越，中国读者代入不了'
+  - 'highpoint维度: 缺乏极端案件或大事件吸引眼球'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 331
+  - 340
+  score: 25
+  score_raw: 我们差不多就25分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 圣代麦旋风
+  genre_guess:
+  - 文娱
+  - 律师
+  - 美利坚
+  overall_comment: 纯美国人主角无法代入，需要穿越成中国人，节奏无聊。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角纯美国人没有穿越，中国读者代入不了
+    raw_quote: 98年的美国人关我屁事啊 没穿越 大哥28岁了 纯美国人哎我真服了
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏极端案件或大事件吸引眼球
+    raw_quote: 没有什么极端的案件 极端的事件不极端 律师他就来点大案件 来个大调查那种对吧

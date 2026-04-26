@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1667
+title: 重生06之斗破同人 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你28分吧 | 胖婶反派过于小丑化，打脸没爽感，逻辑立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 胖婶反派过于小丑化，打脸没爽感，逻辑立不住。 | 胖婶人设刻意丑化，打脸毫无成就感;主线太收束于一人，显得幼稚
+  observable:
+  - 'character维度: 胖婶人设刻意丑化，打脸毫无成就感'
+  - 'simplicity维度: 主线太收束于一人，显得幼稚'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 1075
+  - 1150
+  score: 28
+  score_raw: 给你28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生06之斗破同人
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  - 同人
+  overall_comment: 胖婶反派过于小丑化，打脸没爽感，逻辑立不住。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 胖婶人设刻意丑化，打脸毫无成就感
+    raw_quote: 打脸没意义呀 没人在乎这种龙葱的长舌妇呀
+  - dimension: simplicity
+    severity: negative
+    content: 主线太收束于一人，显得幼稚
+    raw_quote: 重生回来你在思考的时候你眼前就在这一幕 这个可以但好小白啊

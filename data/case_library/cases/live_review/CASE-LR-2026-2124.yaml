@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2124
+title: 修仙闻香识姑娘文 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 充满举例还好，但内容太帅了，25分 | 节奏太慢，事件太弱，读者跑完了，宁可跟系统聊也不立好故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏太慢，事件太弱，读者跑完了，宁可跟系统聊也不立好故事。 | 穿越出来太慢，节奏太慢;事件太弱，不知道要写啥
+  observable:
+  - 'pacing维度: 穿越出来太慢，节奏太慢'
+  - 'hook维度: 事件太弱，不知道要写啥'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 1031
+  - 1080
+  score: 25
+  score_raw: 充满举例还好，但内容太帅了，25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙闻香识姑娘文
+  genre_guess:
+  - 修仙
+  - 穿越
+  - 系统
+  overall_comment: 节奏太慢，事件太弱，读者跑完了，宁可跟系统聊也不立好故事。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 穿越出来太慢，节奏太慢
+    raw_quote: 太慢了呀，这个穿越出来也太慢了呀
+  - dimension: hook
+    severity: negative
+    content: 事件太弱，不知道要写啥
+    raw_quote: 事件太弱了

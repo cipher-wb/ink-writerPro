@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0696
+title: 异星入侵：新兵任务 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 科幻
+  - 末世
+  - 蓝精灵脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分嘛 | 设定过多、不接地气，无视爽文和读者代入，需扫榜重学。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定过多、不接地气，无视爽文和读者代入，需扫榜重学。 | 开头设定轰炸，读者无认同感;闷头写设定不扫榜，对网文一窍不通
+  observable:
+  - 'opening维度: 开头设定轰炸，读者无认同感'
+  - 'simplicity维度: 闷头写设定不扫榜，对网文一窍不通'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 2016
+  - 2150
+  score: 22
+  score_raw: 22分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 异星入侵：新兵任务
+  genre_guess:
+  - 科幻
+  - 末世
+  - 蓝精灵脑洞
+  overall_comment: 设定过多、不接地气，无视爽文和读者代入，需扫榜重学。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头设定轰炸，读者无认同感
+    raw_quote: 设定设定设定跑了就跑了
+  - dimension: simplicity
+    severity: negative
+    content: 闷头写设定不扫榜，对网文一窍不通
+    raw_quote: 对网文现在是一窍不通呀

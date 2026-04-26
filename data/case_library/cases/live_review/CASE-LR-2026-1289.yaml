@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1289
+title: 乙女世界成神是否搞错了什么 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 西幻
+  - 乙女
+  - 异世界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分告诉你 | 开头女伯爵买药的拉扯尚可，但后续身份、世界观设定冗长，人物小传不接地气。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头女伯爵买药的拉扯尚可，但后续身份、世界观设定冗长，人物小传不接地气。 | 背景设定和境界划分过于繁杂，宛如说明书，读者不易进入;中间大段说明性内容拖垮节奏，情节推进缓慢
+  observable:
+  - 'genre维度: 背景设定和境界划分过于繁杂，宛如说明书，读者不易进入'
+  - 'pacing维度: 中间大段说明性内容拖垮节奏，情节推进缓慢'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 710
+  - 880
+  score: 25
+  score_raw: 25分告诉你
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 乙女世界成神是否搞错了什么
+  genre_guess:
+  - 西幻
+  - 乙女
+  - 异世界
+  overall_comment: 开头女伯爵买药的拉扯尚可，但后续身份、世界观设定冗长，人物小传不接地气。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 女伯爵买药的短互动切入有趣，具备较强吸引力
+    raw_quote: 跟女伯爵拉扯雪白 这个是对的
+  - dimension: genre
+    severity: negative
+    content: 背景设定和境界划分过于繁杂，宛如说明书，读者不易进入
+    raw_quote: 你搞这么大的世界观干嘛 … 各种境界对吧 … 读者都很陌生
+  - dimension: pacing
+    severity: negative
+    content: 中间大段说明性内容拖垮节奏，情节推进缓慢
+    raw_quote: 这后面这好累赘啊 好累赘啊

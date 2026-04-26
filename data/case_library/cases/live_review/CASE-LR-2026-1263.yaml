@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1263
+title: 全球唯一华夏游戏设计师 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 科幻
+  - 游戏
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分左右 | 世界观设定代入感差，缺乏爽点，长篇设定介绍无聊，侧重点错误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观设定代入感差，缺乏爽点，长篇设定介绍无聊，侧重点错误。 | 世界观设定无代入感，爽点缺失;开篇全是设定介绍，没有事件人物冲突
+  observable:
+  - 'genre维度: 世界观设定无代入感，爽点缺失'
+  - 'opening维度: 开篇全是设定介绍，没有事件人物冲突'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 463
+  - 530
+  score: 20
+  score_raw: 20分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全球唯一华夏游戏设计师
+  genre_guess:
+  - 科幻
+  - 游戏
+  - 穿越
+  overall_comment: 世界观设定代入感差，缺乏爽点，长篇设定介绍无聊，侧重点错误。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 世界观设定无代入感，爽点缺失
+    raw_quote: 这种世界观读者代入不了...全世界只有一个华夏...爽点在哪里呢
+  - dimension: opening
+    severity: negative
+    content: 开篇全是设定介绍，没有事件人物冲突
+    raw_quote: 还在介绍这个世界...你的精力就是事件人物冲突

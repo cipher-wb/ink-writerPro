@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1266
+title: 异能太阳风 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分最多了 | 异能设定复杂难懂，缺少爽点，事件弱代入感差，节奏慢，整体未入行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 异能设定复杂难懂，缺少爽点，事件弱代入感差，节奏慢，整体未入行。 | 事件弱，代入感差，节奏慢;异能设定过于复杂，不适合网文
+  observable:
+  - 'opening维度: 事件弱，代入感差，节奏慢'
+  - 'genre维度: 异能设定过于复杂，不适合网文'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 681
+  - 725
+  score: 18
+  score_raw: 18分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 异能太阳风
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 异能设定复杂难懂，缺少爽点，事件弱代入感差，节奏慢，整体未入行。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 事件弱，代入感差，节奏慢
+    raw_quote: 事件贼弱，代入感贼差...节奏慢
+  - dimension: genre
+    severity: negative
+    content: 异能设定过于复杂，不适合网文
+    raw_quote: 异能也一代不如一代，异能都要写这么复杂吗

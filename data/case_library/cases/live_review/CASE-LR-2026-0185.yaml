@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0185
+title: 龙生九子：真龙血脉 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 玄幻
+  - 架空历史
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分 | 文笔扎实但不接地气，大段设定和故弄玄虚的描写让读者跑光。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但不接地气，大段设定和故弄玄虚的描写让读者跑光。 | 设定过于高大上，缺乏凡人视角，读者难以代入。;卖弄文采，战斗描写冗长无感。
+  observable:
+  - 'genre维度: 设定过于高大上，缺乏凡人视角，读者难以代入。'
+  - 'simplicity维度: 卖弄文采，战斗描写冗长无感。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 2380
+  - 2520
+  score: 33
+  score_raw: 33分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 龙生九子：真龙血脉
+  genre_guess:
+  - 玄幻
+  - 架空历史
+  - 家族
+  overall_comment: 文笔扎实但不接地气，大段设定和故弄玄虚的描写让读者跑光。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 设定过于高大上，缺乏凡人视角，读者难以代入。
+    raw_quote: 不接地气
+  - dimension: simplicity
+    severity: negative
+    content: 卖弄文采，战斗描写冗长无感。
+    raw_quote: 老是搬弄文采没死

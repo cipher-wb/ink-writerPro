@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1985
+title: 斗罗古剑肖战穿越 (fail / 1分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 同人
+  - 斗罗
+  - 玩梗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 一分吧 | 玩梗过火涉及敏感危险，完全不能签约，有净网风险。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 玩梗过火涉及敏感危险，完全不能签约，有净网风险。 | 涉及肖战等现实人物，严重违规;内容可能引发平台运营风险
+  observable:
+  - 'taboo维度: 涉及肖战等现实人物，严重违规'
+  - 'ops维度: 内容可能引发平台运营风险'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1181
+  - 1260
+  score: 1
+  score_raw: 一分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗罗古剑肖战穿越
+  genre_guess:
+  - 同人
+  - 斗罗
+  - 玩梗
+  overall_comment: 玩梗过火涉及敏感危险，完全不能签约，有净网风险。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 涉及肖战等现实人物，严重违规
+    raw_quote: 这个肖战真要发律师函了
+  - dimension: ops
+    severity: negative
+    content: 内容可能引发平台运营风险
+    raw_quote: 你小心净网啊

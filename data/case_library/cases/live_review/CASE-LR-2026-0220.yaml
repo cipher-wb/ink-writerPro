@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0220
+title: 日暮中途（大一新生） (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 奇幻
+  - 航海
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 17分 大一加三分 18分 | 文笔功底及格，但题材和内容完全不懂网文，需要从基础学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔功底及格，但题材和内容完全不懂网文，需要从基础学习。 | 题材随意，不懂网文市场和读者口味
+  observable:
+  - 'genre维度: 题材随意，不懂网文市场和读者口味'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1381
+  - 1402
+  score: 18
+  score_raw: 17分 大一加三分 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 日暮中途（大一新生）
+  genre_guess:
+  - 奇幻
+  - 航海
+  overall_comment: 文笔功底及格，但题材和内容完全不懂网文，需要从基础学习。
+  comments:
+  - dimension: misc
+    severity: positive
+    content: 遣词造句表达能力已及格，有写作基础
+    raw_quote: 浅词套句已经及格了 会写书 ... 比例表达这方面已经及格了
+  - dimension: genre
+    severity: negative
+    content: 题材随意，不懂网文市场和读者口味
+    raw_quote: 大哥不知道什么是网红 ... 题材太垃圾了

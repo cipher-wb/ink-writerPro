@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2077
+title: 穿越魔法世界魁地奇 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 魔法
+  - 哈利波特同人
+  - 少年受欺
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能18混……大哥不行，写个哈利波特的同人，也可以看一些同人……18分的 | 少年受欺→金手指→莫欺少年穷的老套路线，遣词造句萌新，但版权意识加分，建议直接写哈利波特同人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 少年受欺→金手指→莫欺少年穷的老套路线，遣词造句萌新，但版权意识加分，建议直接写哈利波特同人。 | 开篇套路过时，十几年前的设定大于剧情
+  observable:
+  - 'opening维度: 开篇套路过时，十几年前的设定大于剧情'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 410
+  - 468
+  score: 18
+  score_raw: 只能18混……大哥不行，写个哈利波特的同人，也可以看一些同人……18分的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越魔法世界魁地奇
+  genre_guess:
+  - 魔法
+  - 哈利波特同人
+  - 少年受欺
+  overall_comment: 少年受欺→金手指→莫欺少年穷的老套路线，遣词造句萌新，但版权意识加分，建议直接写哈利波特同人。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇套路过时，十几年前的设定大于剧情
+    raw_quote: 就是还是10年前的传权嘛……十几年前设定大于剧情，剧情其实就是一个身份的困境嘛，反正就小孩子被欺负嘛
+  - dimension: simplicity
+    severity: positive
+    content: 版权意识强，值得肯定
+    raw_quote: 版权意识没问题了，这别黑啊，大哥有版权意识，这是没没黑啊

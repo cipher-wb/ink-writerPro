@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2056
+title: 休闲街第八年 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 仙侠
+  - 休闲
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个35分吧 | 比例扎实但剧情太虚，缺乏事件，需要推倒重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实但剧情太虚，缺乏事件，需要推倒重写。 | 故事性弱，缺乏事件;偏题，不像仙侠
+  observable:
+  - 'hook维度: 故事性弱，缺乏事件'
+  - 'simplicity维度: 偏题，不像仙侠'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 2001
+  - 2200
+  score: 35
+  score_raw: 这个35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 休闲街第八年
+  genre_guess:
+  - 仙侠
+  - 休闲
+  overall_comment: 比例扎实但剧情太虚，缺乏事件，需要推倒重写。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 故事性弱，缺乏事件
+    raw_quote: 兄弟我觉得这个故事性很弱
+  - dimension: simplicity
+    severity: negative
+    content: 偏题，不像仙侠
+    raw_quote: 除了你的经手者 跟仙侠一点关系都没有

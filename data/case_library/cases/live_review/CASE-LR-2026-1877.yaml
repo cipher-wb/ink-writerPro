@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1877
+title: 西游天庭职场文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 仙侠
+  - 西游
+  - 职场
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例没啥问题，但跟起点不搭 | 比例没问题，但题材太老，像10年前李逵日记风格，与当前起点风格不搭。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例没问题，但题材太老，像10年前李逵日记风格，与当前起点风格不搭。 | 西游天庭职场题材太老，起点当前不接受;唐僧人设崩塌，先干为敬导致主角绿了
+  observable:
+  - 'genre维度: 西游天庭职场题材太老，起点当前不接受'
+  - 'character维度: 唐僧人设崩塌，先干为敬导致主角绿了'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 211
+  - 280
+  score: null
+  score_raw: 比例没啥问题，但跟起点不搭
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 西游天庭职场文
+  genre_guess:
+  - 仙侠
+  - 西游
+  - 职场
+  overall_comment: 比例没问题，但题材太老，像10年前李逵日记风格，与当前起点风格不搭。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西游天庭职场题材太老，起点当前不接受
+    raw_quote: 这种题材还10年前吧... 现在的话起点你还是要接地气的
+  - dimension: character
+    severity: negative
+    content: 唐僧人设崩塌，先干为敬导致主角绿了
+    raw_quote: 那是唐僧... 你不能让唐僧先干... 你不能先干为敬了

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0540
+title: 从魔宗卧底到剑门 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 仙侠
+  - 玄幻
+  - 卧底
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大概给到16分 | 上帝视角说书流，无代入感，完全自嗨，干巴巴的散文说教。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 上帝视角说书流，无代入感，完全自嗨，干巴巴的散文说教。 | 开头文青无病呻吟，上帝视角劝退;没有心理活动，全是作者旁白，零代入感
+  observable:
+  - 'opening维度: 开头文青无病呻吟，上帝视角劝退'
+  - 'simplicity维度: 没有心理活动，全是作者旁白，零代入感'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 1591
+  - 1700
+  score: 16
+  score_raw: 只能给大概给到16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从魔宗卧底到剑门
+  genre_guess:
+  - 仙侠
+  - 玄幻
+  - 卧底
+  overall_comment: 上帝视角说书流，无代入感，完全自嗨，干巴巴的散文说教。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头文青无病呻吟，上帝视角劝退
+    raw_quote: 这开头有文青了啊 … 这干嘛 这无病呻吟啊 … 作者在说书啊
+  - dimension: simplicity
+    severity: negative
+    content: 没有心理活动，全是作者旁白，零代入感
+    raw_quote: 就感觉主角不是主角 … 一点心理活动都没有 … 完全是自嗨的写法

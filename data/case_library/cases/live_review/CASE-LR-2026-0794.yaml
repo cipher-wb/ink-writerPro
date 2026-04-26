@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0794
+title: 众生之龙 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 玄幻
+  - 复仇
+  - 强者归来
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就25分嘛 好吧生日加五分 | 郭靖式正能量人设，但思路需推翻，表达好但过时
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 郭靖式正能量人设，但思路需推翻，表达好但过时 | 开头思路需要重新想
+  observable:
+  - 'opening维度: 开头思路需要重新想'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 520
+  - 690
+  score: 25
+  score_raw: 就25分嘛 好吧生日加五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 众生之龙
+  genre_guess:
+  - 玄幻
+  - 复仇
+  - 强者归来
+  overall_comment: 郭靖式正能量人设，但思路需推翻，表达好但过时
+  comments:
+  - dimension: character
+    severity: positive
+    content: 表达流畅，人物有郭靖感
+    raw_quote: 表达是够的我觉表达是够的
+  - dimension: opening
+    severity: negative
+    content: 开头思路需要重新想
+    raw_quote: 思路整个推翻

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1862
+title: 召唤领主哥布林奇幻文 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 奇幻
+  - 领主
+  - 召唤
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 题材能写但切入太慢，金手指收哥布林没看点，第二章在水文，需要换有成长性的契约对象。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材能写但切入太慢，金手指收哥布林没看点，第二章在水文，需要换有成长性的契约对象。 | 契约对象哥布林是丑陋恶心代名词，没有成长性和看点;第二章基本在水文，切入慢，杀哥布林过程多余
+  observable:
+  - 'golden_finger维度: 契约对象哥布林是丑陋恶心代名词，没有成长性和看点'
+  - 'pacing维度: 第二章基本在水文，切入慢，杀哥布林过程多余'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 896
+  - 952
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 召唤领主哥布林奇幻文
+  genre_guess:
+  - 奇幻
+  - 领主
+  - 召唤
+  overall_comment: 题材能写但切入太慢，金手指收哥布林没看点，第二章在水文，需要换有成长性的契约对象。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 契约对象哥布林是丑陋恶心代名词，没有成长性和看点
+    raw_quote: 哥布林是最没用的领主 就是你这个重点就崩了呀
+  - dimension: pacing
+    severity: negative
+    content: 第二章基本在水文，切入慢，杀哥布林过程多余
+    raw_quote: 这段第三章很垃圾 对第三张我觉得第二张就是在水文

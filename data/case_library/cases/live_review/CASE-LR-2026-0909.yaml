@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0909
+title: 阿白灵异稿 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 代入感可以，节奏快，但事件看不懂，卖点不明，题材不太行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感可以，节奏快，但事件看不懂，卖点不明，题材不太行。 | 卖点模糊，事件不明白，剧情没啥意思
+  observable:
+  - 'misc维度: 卖点模糊，事件不明白，剧情没啥意思'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 3233
+  - 3375
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 阿白灵异稿
+  genre_guess:
+  - 灵异
+  overall_comment: 代入感可以，节奏快，但事件看不懂，卖点不明，题材不太行。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 代入感还可以，节奏也挺快的
+    raw_quote: 他代入感还可以的是吧，代入感可以，节奏也挺快的
+  - dimension: misc
+    severity: negative
+    content: 卖点模糊，事件不明白，剧情没啥意思
+    raw_quote: 但这个事件我还是看不懂啊，到底卖点是啥，到底卖点是啥

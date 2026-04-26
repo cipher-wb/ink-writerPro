@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1491
+title: 东门接班人修仙 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 仙侠
+  - 修仙
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能写吗 不能写 | 题材错误，没人看，思路需要根本改变，不要浪费时间去写
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材错误，没人看，思路需要根本改变，不要浪费时间去写 | 修仙界这种题材没人看，注定劝退;作者不了解市场和读者喜好，需捅破窗户纸
+  observable:
+  - 'genre维度: 修仙界这种题材没人看，注定劝退'
+  - 'misc维度: 作者不了解市场和读者喜好，需捅破窗户纸'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 436
+  - 475
+  score: null
+  score_raw: 能写吗 不能写
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 东门接班人修仙
+  genre_guess:
+  - 仙侠
+  - 修仙
+  - 穿越
+  overall_comment: 题材错误，没人看，思路需要根本改变，不要浪费时间去写
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 修仙界这种题材没人看，注定劝退
+    raw_quote: 这题材没人看 就这么简单就没人看这题材
+  - dimension: misc
+    severity: negative
+    content: 作者不了解市场和读者喜好，需捅破窗户纸
+    raw_quote: 你这个人比较笨写书 最重要是题材对吧题材错了 没人看

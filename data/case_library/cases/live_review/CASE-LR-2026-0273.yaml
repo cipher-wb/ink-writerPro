@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0273
+title: 乱世系人演艺圈穿越 (fail / 27分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 娱乐圈
+  - 穿越
+  - 架空历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 27分 | 事件奇怪，解密太多没人看，像庆余年味但没讲清楚
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件奇怪，解密太多没人看，像庆余年味但没讲清楚 | 开头没讲清楚我是谁、我在哪、我要干什么;三章还在解密女子身份，没人有耐心
+  observable:
+  - 'opening维度: 开头没讲清楚我是谁、我在哪、我要干什么'
+  - 'pacing维度: 三章还在解密女子身份，没人有耐心'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 763
+  - 855
+  score: 27
+  score_raw: 27分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 乱世系人演艺圈穿越
+  genre_guess:
+  - 娱乐圈
+  - 穿越
+  - 架空历史
+  overall_comment: 事件奇怪，解密太多没人看，像庆余年味但没讲清楚
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头没讲清楚我是谁、我在哪、我要干什么
+    raw_quote: 开头只有三件事你讲清楚我是谁我在哪我要干什么
+  - dimension: pacing
+    severity: negative
+    content: 三章还在解密女子身份，没人有耐心
+    raw_quote: 不要解密了没人看

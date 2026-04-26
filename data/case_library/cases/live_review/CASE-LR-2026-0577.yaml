@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0577
+title: 明末强藩 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 历史
+  - 明末
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 再去练再去练 | 思路可以但缺乏标点，剧情水，心理活动少，需要大改
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路可以但缺乏标点，剧情水，心理活动少，需要大改 | 第一章情节啰嗦，读者不爱看;比例不足缺乏心理活动
+  observable:
+  - 'opening维度: 第一章情节啰嗦，读者不爱看'
+  - 'simplicity维度: 比例不足缺乏心理活动'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 3561
+  - 3647
+  score: null
+  score_raw: 再去练再去练
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 明末强藩
+  genre_guess:
+  - 历史
+  - 明末
+  overall_comment: 思路可以但缺乏标点，剧情水，心理活动少，需要大改
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章情节啰嗦，读者不爱看
+    raw_quote: 老卢跟你聊这些东西...读者也不一定爱看
+  - dimension: simplicity
+    severity: negative
+    content: 比例不足缺乏心理活动
+    raw_quote: 历史小说都是心理活动贼多的

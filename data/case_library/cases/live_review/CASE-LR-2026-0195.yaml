@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0195
+title: 民国玄幻 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 民国
+  - 玄幻
+  - 谍战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分 | 题材选择不当，民国玄幻受众窄，故事缺乏重点和方向，基本功尚可但整体不合市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材选择不当，民国玄幻受众窄，故事缺乏重点和方向，基本功尚可但整体不合市场。 | 民国题材加玄幻结合生硬，市场接受度低;情节缺乏核心冲突和高潮点，故事平淡
+  observable:
+  - 'genre维度: 民国题材加玄幻结合生硬，市场接受度低'
+  - 'highpoint维度: 情节缺乏核心冲突和高潮点，故事平淡'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 155
+  - 201
+  score: 23
+  score_raw: 23分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国玄幻
+  genre_guess:
+  - 民国
+  - 玄幻
+  - 谍战
+  overall_comment: 题材选择不当，民国玄幻受众窄，故事缺乏重点和方向，基本功尚可但整体不合市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 民国题材加玄幻结合生硬，市场接受度低
+    raw_quote: 民国现在也不是什么太推荐的题材 ... 你这个民国背景 我也不知道干嘛
+  - dimension: highpoint
+    severity: negative
+    content: 情节缺乏核心冲突和高潮点，故事平淡
+    raw_quote: 感觉就是没有重点 ... 世界也无聊 削入剧情 选择不好

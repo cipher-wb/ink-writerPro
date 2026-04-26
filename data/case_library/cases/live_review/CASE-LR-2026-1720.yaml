@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1720
+title: 大明打更人 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 历史
+  - 大明
+  - 打更人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分 | 基本功不错，但开篇太像老套路（监狱开局），金手指（豆包）是历史文的超级毒点，不符合历史文语境。建议推翻重选题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 基本功不错，但开篇太像老套路（监狱开局），金手指（豆包）是历史文的超级毒点，不符合历史文语境。建议推翻重选题材。 | 历史文中出现豆包AI，被判定为超级毒点，不可写;开篇套路化严重，像青山等老作品的影子太重
+  observable:
+  - 'golden_finger维度: 历史文中出现豆包AI，被判定为超级毒点，不可写'
+  - 'opening维度: 开篇套路化严重，像青山等老作品的影子太重'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1042
+  - 1156
+  score: 38
+  score_raw: 38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明打更人
+  genre_guess:
+  - 历史
+  - 大明
+  - 打更人
+  overall_comment: 基本功不错，但开篇太像老套路（监狱开局），金手指（豆包）是历史文的超级毒点，不符合历史文语境。建议推翻重选题材。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 历史文中出现豆包AI，被判定为超级毒点，不可写
+    raw_quote: 不要叫豆包呀你直接还在那磨修大哥都直接叫豆包了你
+  - dimension: opening
+    severity: negative
+    content: 开篇套路化严重，像青山等老作品的影子太重
+    raw_quote: 兄弟我觉得第一章太像了还是
+  - dimension: simplicity
+    severity: positive
+    content: 第一次写书，文笔特别扎实，比例很好
+    raw_quote: 我觉得文笔是扎舌第一次写书，文笔是特别扎舌的

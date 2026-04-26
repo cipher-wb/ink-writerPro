@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1524
+title: 重生成大凌朝右弟 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 历史
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十五分吧 | 架空历史自嗨无事件，读者跑光，建议改写为仙武王朝。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 架空历史自嗨无事件，读者跑光，建议改写为仙武王朝。 | 架空历史没有修炼和爽点，没人看;开篇无主角事件，全是博王特（跑）
+  observable:
+  - 'genre维度: 架空历史没有修炼和爽点，没人看'
+  - 'opening维度: 开篇无主角事件，全是博王特（跑）'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1701
+  - 1800
+  score: 25
+  score_raw: 二十五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生成大凌朝右弟
+  genre_guess:
+  - 历史
+  - 架空
+  overall_comment: 架空历史自嗨无事件，读者跑光，建议改写为仙武王朝。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空历史没有修炼和爽点，没人看
+    raw_quote: 因为你是个架空历史 谁看呀
+  - dimension: opening
+    severity: negative
+    content: 开篇无主角事件，全是博王特（跑）
+    raw_quote: 主角大陆干几乎没有 事件也没有 … 读者前面跑完了

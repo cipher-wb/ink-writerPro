@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0884
+title: 重生马化腾QQ女装 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 都市
+  - 创业
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有优点有缺点嘛 | 年代感真实，代入感OK，但事件中二、女装梗重口，还需更好衔接。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 年代感真实，代入感OK，但事件中二、女装梗重口，还需更好衔接。 | 女装切入洋气且重口，逻辑略显出戏
+  observable:
+  - 'hook维度: 女装切入洋气且重口，逻辑略显出戏'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 941
+  - 990
+  score: null
+  score_raw: 有优点有缺点嘛
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 重生马化腾QQ女装
+  genre_guess:
+  - 都市
+  - 创业
+  - 重生
+  overall_comment: 年代感真实，代入感OK，但事件中二、女装梗重口，还需更好衔接。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 年代感和真实感很强，有代入感
+    raw_quote: 这个年代感还是足的 代入感也OK
+  - dimension: hook
+    severity: negative
+    content: 女装切入洋气且重口，逻辑略显出戏
+    raw_quote: 女装这个是太太那个了 女装这个是我感觉挺洋气的 就挺重口味

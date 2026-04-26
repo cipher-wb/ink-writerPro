@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0164
+title: 蒙太奇切阶层三国 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 历史
+  - 三国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 连基本故事都讲不清楚，完全是外行，建议安心学习基础。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 连基本故事都讲不清楚，完全是外行，建议安心学习基础。 | 连基本故事都讲不清楚;使用蒙太奇手法毫无意义
+  observable:
+  - 'simplicity维度: 连基本故事都讲不清楚'
+  - 'opening维度: 使用蒙太奇手法毫无意义'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 971
+  - 1024
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: fail
+  title_guess: 蒙太奇切阶层三国
+  genre_guess:
+  - 历史
+  - 三国
+  overall_comment: 连基本故事都讲不清楚，完全是外行，建议安心学习基础。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 连基本故事都讲不清楚
+    raw_quote: 你連最基本的表達 你連那個什麼 就你連灰姑娘你連白雪公主 這種的故事的層面都到不了
+  - dimension: opening
+    severity: negative
+    content: 使用蒙太奇手法毫无意义
+    raw_quote: 第一章你用蒙太奇切了幾個階層 有什麼意義呢

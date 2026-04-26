@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0007
+title: 鬼异世界修真 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV11YrABQEyZ
+scope:
+  genre:
+  - 异世界
+  - 修真
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这种25分吧比例还好 | 笔力比例尚可，但题材和切入方式完全过时，还在用五年前十年前的套路，不学习市场只能被淘汰。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YrABQEyZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 笔力比例尚可，但题材和切入方式完全过时，还在用五年前十年前的套路，不学习市场只能被淘汰。 | 书名带鬼异但内容写科幻/修真，分类不清，题材老旧无人看;完全不跟市场，老作者不学习就会随时被淘汰
+  observable:
+  - 'genre维度: 书名带鬼异但内容写科幻/修真，分类不清，题材老旧无人看'
+  - 'ops维度: 完全不跟市场，老作者不学习就会随时被淘汰'
+live_review_meta:
+  source_bvid: BV11YrABQEyZ
+  source_line_range:
+  - 841
+  - 946
+  score: 25
+  score_raw: 这种25分吧比例还好
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼异世界修真
+  genre_guess:
+  - 异世界
+  - 修真
+  - 科幻
+  overall_comment: 笔力比例尚可，但题材和切入方式完全过时，还在用五年前十年前的套路，不学习市场只能被淘汰。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 书名带鬼异但内容写科幻/修真，分类不清，题材老旧无人看
+    raw_quote: 你这个书名进来就应该拿鬼异啊 你应该跟拱开一样 要写鬼异的 别在这写科幻了呀
+  - dimension: ops
+    severity: negative
+    content: 完全不跟市场，老作者不学习就会随时被淘汰
+    raw_quote: 就是你们新人就是一些老作者不学习的 要被随时淘汰的程度了 你们还敢这样写书

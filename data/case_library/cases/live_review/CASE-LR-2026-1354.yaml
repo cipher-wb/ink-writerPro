@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1354
+title: 美国悬疑死亡回档 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 都市
+  - 穿越
+  - 悬疑
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个50分吧 | 节奏快、比例还行，但事件太像游戏太昂系，虽能力有但建议推翻找小突破。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快、比例还行，但事件太像游戏太昂系，虽能力有但建议推翻找小突破。 | 悬疑、系统、美国背景搅拌太生硬，切入点像过家家
+  observable:
+  - 'misc维度: 悬疑、系统、美国背景搅拌太生硬，切入点像过家家'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 575
+  - 645
+  score: 50
+  score_raw: 有个50分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 美国悬疑死亡回档
+  genre_guess:
+  - 都市
+  - 穿越
+  - 悬疑
+  - 系统
+  overall_comment: 节奏快、比例还行，但事件太像游戏太昂系，虽能力有但建议推翻找小突破。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏快，危机感强，但事件设计太像游戏
+    raw_quote: 节奏倒是快了比例还行但事件很昂系啊
+  - dimension: misc
+    severity: negative
+    content: 悬疑、系统、美国背景搅拌太生硬，切入点像过家家
+    raw_quote: 整个跟游戏画一样...太昂系了

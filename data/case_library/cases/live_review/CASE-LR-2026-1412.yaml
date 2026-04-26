@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1412
+title: 足球文（小罗面板反差） (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 足球
+  - 系统
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真的就是看你58分吧 | 足球文有人设但太正经，上限不高，建议加反差人设。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 足球文有人设但太正经，上限不高，建议加反差人设。 | 人设太正经，缺乏反差
+  observable:
+  - 'character维度: 人设太正经，缺乏反差'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 131
+  - 201
+  score: 58
+  score_raw: 真的就是看你58分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 足球文（小罗面板反差）
+  genre_guess:
+  - 足球
+  - 系统
+  - 重生
+  overall_comment: 足球文有人设但太正经，上限不高，建议加反差人设。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设太正经，缺乏反差
+    raw_quote: 我觉得不行 没人设 你还让人一本正经去吧
+  - dimension: golden_finger
+    severity: positive
+    content: 小罗的金手指概念可用
+    raw_quote: 小罗的金手指是可以的

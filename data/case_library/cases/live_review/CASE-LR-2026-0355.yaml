@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0355
+title: I昂必达遗忘录 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 无限流
+  - 副本
+  - 生存
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就最多最多18分了 兄弟 对吧 大过年的大过年的加两分吧好吧 ... 20 加两份加两份过年嘛不容易 | 主角人设干巴毫无心理活动，太小白，完全不会写网文，需要从人设和真实感从头练起。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角人设干巴毫无心理活动，太小白，完全不会写网文，需要从人设和真实感从头练起。 | 主角人设干巴，没有心理活动，太笨;开篇代入感差，不知主角身份;剧情无期待感，读者厌蠢
+  observable:
+  - 'character维度: 主角人设干巴，没有心理活动，太笨'
+  - 'opening维度: 开篇代入感差，不知主角身份'
+  - 'hook维度: 剧情无期待感，读者厌蠢'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 91
+  - 174
+  score: 20
+  score_raw: 差不多就最多最多18分了 兄弟 对吧 大过年的大过年的加两分吧好吧 ... 20 加两份加两份过年嘛不容易
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: I昂必达遗忘录
+  genre_guess:
+  - 无限流
+  - 副本
+  - 生存
+  overall_comment: 主角人设干巴毫无心理活动，太小白，完全不会写网文，需要从人设和真实感从头练起。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设干巴，没有心理活动，太笨
+    raw_quote: 主角人设干巴巴 主角人设没有一点心理活动对吧 ... 这根本就不会写书啊
+  - dimension: opening
+    severity: negative
+    content: 开篇代入感差，不知主角身份
+    raw_quote: 祭天这名字也好俗啊 ... 你人是谁 我们代入不了
+  - dimension: hook
+    severity: negative
+    content: 剧情无期待感，读者厌蠢
+    raw_quote: 就现在主角太笨了 ... 读者本质是厌宠的

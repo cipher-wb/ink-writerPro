@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1284
+title: 东京警探电影系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 都市
+  - 东京
+  - 警探
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 比例扎实题材可写，但雪白太弱主角人设垃圾无魅力，系统奇怪套不上，缺乏东京味道。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实题材可写，但雪白太弱主角人设垃圾无魅力，系统奇怪套不上，缺乏东京味道。 | 主角人设太垃圾毫无魅力，对妹子也不感兴趣;雪白浅尝辄止，剧情虚，系统爽点不爽
+  observable:
+  - 'character维度: 主角人设太垃圾毫无魅力，对妹子也不感兴趣'
+  - 'hook维度: 雪白浅尝辄止，剧情虚，系统爽点不爽'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 2181
+  - 2280
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 东京警探电影系统
+  genre_guess:
+  - 都市
+  - 东京
+  - 警探
+  overall_comment: 比例扎实题材可写，但雪白太弱主角人设垃圾无魅力，系统奇怪套不上，缺乏东京味道。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设太垃圾毫无魅力，对妹子也不感兴趣
+    raw_quote: 主角真的人设太垃圾了，就没有一点魅力，也对妹子不感兴趣了
+  - dimension: hook
+    severity: negative
+    content: 雪白浅尝辄止，剧情虚，系统爽点不爽
+    raw_quote: 雪白太弱了...没东京味道，剧情也很虚，而且这个系统的爽点我觉得不爽

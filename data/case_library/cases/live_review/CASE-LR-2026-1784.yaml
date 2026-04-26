@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1784
+title: 死亡中介打螺丝穿越骷髅 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 穿越
+  - 死灵
+  - 游戏异界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是30左右吧 | 设定复杂，缺乏爽点，建议简化并加强女配角色。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定复杂，缺乏爽点，建议简化并加强女配角色。 | 设定太复杂，像游戏一样，没写出爽点。;非常需要原创世界熟悉的女配角去拉剧情。
+  observable:
+  - 'simplicity维度: 设定太复杂，像游戏一样，没写出爽点。'
+  - 'character维度: 非常需要原创世界熟悉的女配角去拉剧情。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 392
+  - 425
+  score: 30
+  score_raw: 还是30左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 死亡中介打螺丝穿越骷髅
+  genre_guess:
+  - 穿越
+  - 死灵
+  - 游戏异界
+  overall_comment: 设定复杂，缺乏爽点，建议简化并加强女配角色。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定太复杂，像游戏一样，没写出爽点。
+    raw_quote: 别讲设定了大哥...告诉我这个爽点在哪里
+  - dimension: character
+    severity: negative
+    content: 非常需要原创世界熟悉的女配角去拉剧情。
+    raw_quote: 他没有这个少女就很难写...这个少女特别特别关键

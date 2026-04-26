@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2023
+title: 圣女贞德 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 历史
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分的样子 | 内容写实且尊重历史，但主角如同摄像头，没有任何能力和期待感，读者无法代入。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容写实且尊重历史，但主角如同摄像头，没有任何能力和期待感，读者无法代入。 | 主角只是旁观历史的摄像头，缺乏任何特殊能力和看点。
+  observable:
+  - 'character维度: 主角只是旁观历史的摄像头，缺乏任何特殊能力和看点。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1319
+  - 1350
+  score: 28
+  score_raw: 28分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 圣女贞德
+  genre_guess:
+  - 历史
+  - 穿越
+  overall_comment: 内容写实且尊重历史，但主角如同摄像头，没有任何能力和期待感，读者无法代入。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角只是旁观历史的摄像头，缺乏任何特殊能力和看点。
+    raw_quote: 就大概就摄像头 反正就真德就讲 ... 期待感在哪里啊

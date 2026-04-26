@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1854
+title: 非典型性道士民俗文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 民俗
+  - 灵异
+  - 道士
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 文笔扎实有娓娓道来的感觉，但节奏太慢，缺乏看点和强氛围，像15年前的传统民俗写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实有娓娓道来的感觉，但节奏太慢，缺乏看点和强氛围，像15年前的传统民俗写法。 | 节奏非常慢，聊天家常无剧情推进，像15年前的写法;开头尽是废话，没有强氛围和剧情钩子，读者不关心家常聊天
+  observable:
+  - 'pacing维度: 节奏非常慢，聊天家常无剧情推进，像15年前的写法'
+  - 'opening维度: 开头尽是废话，没有强氛围和剧情钩子，读者不关心家常聊天'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 430
+  - 480
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 非典型性道士民俗文
+  genre_guess:
+  - 民俗
+  - 灵异
+  - 道士
+  overall_comment: 文笔扎实有娓娓道来的感觉，但节奏太慢，缺乏看点和强氛围，像15年前的传统民俗写法。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏非常慢，聊天家常无剧情推进，像15年前的写法
+    raw_quote: 这么慢的节奏吗 这好慢啊 完全没看见兄弟看点在哪里
+  - dimension: opening
+    severity: negative
+    content: 开头尽是废话，没有强氛围和剧情钩子，读者不关心家常聊天
+    raw_quote: 读者不关心 这都是废话 大哥这到现在没有剧情啊
+  - dimension: simplicity
+    severity: positive
+    content: 文笔扎实，讲故事有娓娓道来的感觉
+    raw_quote: 文笔挺不错的 讲故事还是娓娓道来 还是有感觉的

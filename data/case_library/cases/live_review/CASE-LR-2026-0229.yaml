@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0229
+title: 潼关1636 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 历史
+  - 明末
+  - 争霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分 | 节奏快有脑洞，但文风AI味重，无现代人视角，更适合番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快有脑洞，但文风AI味重，无现代人视角，更适合番茄。 | 叙述太细有AI味道，缺乏现代人代入;反大明可能引起读者抵触
+  observable:
+  - 'opening维度: 叙述太细有AI味道，缺乏现代人代入'
+  - 'genre维度: 反大明可能引起读者抵触'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 205
+  - 270
+  score: 30
+  score_raw: 30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 潼关1636
+  genre_guess:
+  - 历史
+  - 明末
+  - 争霸
+  overall_comment: 节奏快有脑洞，但文风AI味重，无现代人视角，更适合番茄。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 叙述太细有AI味道，缺乏现代人代入
+    raw_quote: 这个描述能力有点太详细了,有点AI味道
+  - dimension: pacing
+    severity: positive
+    content: 切入快，节奏不拖沓
+    raw_quote: 节奏挺快的
+  - dimension: genre
+    severity: negative
+    content: 反大明可能引起读者抵触
+    raw_quote: 在起点敢黑大明的 人家都喷死你

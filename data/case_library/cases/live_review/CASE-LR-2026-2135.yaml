@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2135
+title: 东京狐仙 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 东京
+  - 式神
+  - 狐仙
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我感觉可能没有40了 30了 | 式神题材老套，文青化，缺少强剧情主线，容易掉收藏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 式神题材老套，文青化，缺少强剧情主线，容易掉收藏。 | 式神狐仙题材老套，很难写出新意;开头慢热，没有事件，留不住读者
+  observable:
+  - 'genre维度: 式神狐仙题材老套，很难写出新意'
+  - 'hook维度: 开头慢热，没有事件，留不住读者'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 681
+  - 790
+  score: 30
+  score_raw: 我感觉可能没有40了 30了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京狐仙
+  genre_guess:
+  - 东京
+  - 式神
+  - 狐仙
+  - 玄幻
+  overall_comment: 式神题材老套，文青化，缺少强剧情主线，容易掉收藏。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 式神狐仙题材老套，很难写出新意
+    raw_quote: 式神确实很很老套呀
+  - dimension: hook
+    severity: negative
+    content: 开头慢热，没有事件，留不住读者
+    raw_quote: 下来也没事件对吧 你这不知道呀 走到哪发生了 我感觉胆子有点大 你这样写胆子真有点大了 因为你的开头都不息量了

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0647
+title: 华夏神明乱坟岗复苏 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 灵异
+  - 系统
+  - 中二
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给推翻吧 | 世界观混乱人设立不住，中二小白文，发哪里都起不来，建议直接推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观混乱人设立不住，中二小白文，发哪里都起不来，建议直接推翻。 | 剧情颠簸，人设立不住，简直小白文;莫名其妙的金手指，无驱动力;思路太小白，发蓝精灵也起不来
+  observable:
+  - 'pacing维度: 剧情颠簸，人设立不住，简直小白文'
+  - 'golden_finger维度: 莫名其妙的金手指，无驱动力'
+  - 'simplicity维度: 思路太小白，发蓝精灵也起不来'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 581
+  - 660
+  score: null
+  score_raw: 给推翻吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 华夏神明乱坟岗复苏
+  genre_guess:
+  - 灵异
+  - 系统
+  - 中二
+  overall_comment: 世界观混乱人设立不住，中二小白文，发哪里都起不来，建议直接推翻。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 剧情颠簸，人设立不住，简直小白文
+    raw_quote: 这个剧情太颠了...人设我觉得有点颠...真没挺小白的
+  - dimension: golden_finger
+    severity: negative
+    content: 莫名其妙的金手指，无驱动力
+    raw_quote: 多么莫名其妙的金手指...这谁看呀
+  - dimension: simplicity
+    severity: negative
+    content: 思路太小白，发蓝精灵也起不来
+    raw_quote: 你这玩意你发哪都起不来啊...蓝精灵思路嘛

@@ -1,0 +1,68 @@
+case_id: CASE-LR-2026-1905
+title: 回到1992年，我靠买盒饭发家 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sSrFB5Eot
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 商战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 但是大哥这个确实高不了这个36分 | 重生文套路陈旧，人设虚浮，展开太慢且啰嗦，完全不及格。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sSrFB5Eot.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生文套路陈旧，人设虚浮，展开太慢且啰嗦，完全不及格。 | 展开太慢，作为重生文完全不及格;人设不扎实，成功人士很虚;内容太细太啰嗦，需要简化
+  observable:
+  - 'opening维度: 展开太慢，作为重生文完全不及格'
+  - 'character维度: 人设不扎实，成功人士很虚'
+  - 'simplicity维度: 内容太细太啰嗦，需要简化'
+  - 'genre维度: 商业骗局身败名裂穿越套路太老，现在不流行'
+  - 'pacing维度: 没有一个好的主线脉络，节奏不对'
+live_review_meta:
+  source_bvid: BV1sSrFB5Eot
+  source_line_range:
+  - 220
+  - 384
+  score: 36
+  score_raw: 但是大哥这个确实高不了这个36分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 回到1992年，我靠买盒饭发家
+  genre_guess:
+  - 重生
+  - 都市
+  - 商战
+  overall_comment: 重生文套路陈旧，人设虚浮，展开太慢且啰嗦，完全不及格。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 展开太慢，作为重生文完全不及格
+    raw_quote: 展开也太慢了呀 作为重生文完全不及格
+  - dimension: character
+    severity: negative
+    content: 人设不扎实，成功人士很虚
+    raw_quote: 人设不咋样 前置那个成功人士很虚一些的 成功个勾八
+  - dimension: simplicity
+    severity: negative
+    content: 内容太细太啰嗦，需要简化
+    raw_quote: 太细太啰嗦了 … 这个这个一定要简化
+  - dimension: genre
+    severity: negative
+    content: 商业骗局身败名裂穿越套路太老，现在不流行
+    raw_quote: 大哥这个很老套了 这种商业对吧 骗局身败名裂穿越这种苦大仇深的 现在不流行了
+  - dimension: pacing
+    severity: negative
+    content: 没有一个好的主线脉络，节奏不对
+    raw_quote: 你没有一个好的主线脉络

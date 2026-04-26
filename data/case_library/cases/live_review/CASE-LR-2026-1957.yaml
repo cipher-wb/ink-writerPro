@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1957
+title: 陆家的嫡子 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 架空历史
+  - 权谋
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔扎实但故事古早。最大的问题是主角像机器人，严重缺乏情绪和代入感，不符合现代网文需求。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但故事古早。最大的问题是主角像机器人，严重缺乏情绪和代入感，不符合现代网文需求。 | 主角没情绪像机器人，全程不说话或者淡淡的;架空历史加纯权谋题材，题材老旧没人看
+  observable:
+  - 'character维度: 主角没情绪像机器人，全程不说话或者淡淡的'
+  - 'genre维度: 架空历史加纯权谋题材，题材老旧没人看'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 1291
+  - 1384
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 陆家的嫡子
+  genre_guess:
+  - 架空历史
+  - 权谋
+  - 武侠
+  overall_comment: 文笔扎实但故事古早。最大的问题是主角像机器人，严重缺乏情绪和代入感，不符合现代网文需求。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角没情绪像机器人，全程不说话或者淡淡的
+    raw_quote: 路沿没什么情绪...你不能把主角塑造的淡淡的没情绪
+  - dimension: genre
+    severity: negative
+    content: 架空历史加纯权谋题材，题材老旧没人看
+    raw_quote: 就是架空历史加权谋...还是得推翻找题材

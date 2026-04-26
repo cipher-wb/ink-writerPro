@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1931
+title: 高中生被钉石柱/穿越都市异能 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 题材完全写不了 | 开篇涉及残害未成年人，严重违规，直接 pass 掉。笔力再好也没用。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇涉及残害未成年人，严重违规，直接 pass 掉。笔力再好也没用。 | 开篇写六个高中生被钉在石柱上，涉及残害未成年人，铁定过不了审。
+  observable:
+  - 'taboo维度: 开篇写六个高中生被钉在石柱上，涉及残害未成年人，铁定过不了审。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 977
+  - 1010
+  score: null
+  score_raw: 题材完全写不了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 高中生被钉石柱/穿越都市异能
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 开篇涉及残害未成年人，严重违规，直接 pass 掉。笔力再好也没用。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 开篇写六个高中生被钉在石柱上，涉及残害未成年人，铁定过不了审。
+    raw_quote: 六个高中生被钉在石柱上...未成年人啊...反派不能干真的未成年人被你吊在那弄死

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0126
+title: 毒蘑菇民国国术 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 民国
+  - 国术
+  - 港风
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分吧 | 比例不足，细节与顶尖国术文差距大，题材已过气，30分建议换赛道。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例不足，细节与顶尖国术文差距大，题材已过气，30分建议换赛道。 | 国术题材近期表现疲软，推荐效果差;复仇主线小白且中二，缺乏热血层次
+  observable:
+  - 'ops维度: 国术题材近期表现疲软，推荐效果差'
+  - 'character维度: 复仇主线小白且中二，缺乏热血层次'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 1000
+  - 1090
+  score: 30
+  score_raw: 30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 毒蘑菇民国国术
+  genre_guess:
+  - 民国
+  - 国术
+  - 港风
+  overall_comment: 比例不足，细节与顶尖国术文差距大，题材已过气，30分建议换赛道。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 国术题材近期表现疲软，推荐效果差
+    raw_quote: 国树这一阵我感觉已经过去了
+  - dimension: character
+    severity: negative
+    content: 复仇主线小白且中二，缺乏热血层次
+    raw_quote: 你这个热血不能写成中二复仇的主线

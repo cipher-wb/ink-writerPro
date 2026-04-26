@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-2176
+title: 秦时同仁（秦时明月同人） (borderline / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 同人
+  - 秦时明月
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40分有的 | 比例实力没问题，但太过同人向，阅读壁垒高，上限低，建议直发看数据。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例实力没问题，但太过同人向，阅读壁垒高，上限低，建议直发看数据。
+  observable:
+  - 整体被星河直播判定为 borderline
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 685
+  - 740
+  score: 40
+  score_raw: 差不多40分有的
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 秦时同仁（秦时明月同人）
+  genre_guess:
+  - 同人
+  - 秦时明月
+  overall_comment: 比例实力没问题，但太过同人向，阅读壁垒高，上限低，建议直发看数据。
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 太同人向，不看秦时明月就get不到爽点，阅读壁垒高
+    raw_quote: 太同仁相了 … 就是有自己的互成和 不看同仁就看不懂了 这种上限比较低
+  - dimension: ops
+    severity: positive
+    content: 实力挺强，比例没问题，有机会几百均订签约
+    raw_quote: 比例是没啥问题的 实力也挺强 … 几百斤签订的机会还是有机会的

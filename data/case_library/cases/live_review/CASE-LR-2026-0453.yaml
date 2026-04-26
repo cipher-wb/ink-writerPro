@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0453
+title: 穿越的二次元你会干什么 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1BFA2zSEZj
+scope:
+  genre:
+  - 二次元
+  - 都市
+  - 诸天
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 包签了 | 主线与雪白线多管齐下，切入干脆，懂拉扯与审核规避，老作者手法，会签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1BFA2zSEZj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线与雪白线多管齐下，切入干脆，懂拉扯与审核规避，老作者手法，会签。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1BFA2zSEZj
+  source_line_range:
+  - 1553
+  - 1822
+  score: null
+  score_raw: 包签了
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 穿越的二次元你会干什么
+  genre_guess:
+  - 二次元
+  - 都市
+  - 诸天
+  - 雪白
+  overall_comment: 主线与雪白线多管齐下，切入干脆，懂拉扯与审核规避，老作者手法，会签。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 一边接收记忆一边安排秘书跪地系鞋带，多线切入抓人
+    raw_quote: 一边是主线 一边是雪白线 多管齐下
+  - dimension: character
+    severity: positive
+    content: 小秘书角色制造暧昧拉扯，节奏把控好
+    raw_quote: 小秘书跪在旁边要系鞋带嘛 这拉扯一点问题都没有
+  - dimension: ops
+    severity: positive
+    content: 用系鞋带和电视遥控器绕开审核，手法老辣
+    raw_quote: 审核本来坐你旁边了 现在又回去了 大哥啥都没干啊
+  - dimension: simplicity
+    severity: positive
+    content: 点到为止，不油腻，符合签约尺度
+    raw_quote: 点到为止也没写成 合约不出来

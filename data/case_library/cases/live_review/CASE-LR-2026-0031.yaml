@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0031
+title: 界狱之门废土 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 废土
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 15分是因为最低只有五分呀 | 题材废弃，无关注意义，15分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材废弃，无关注意义，15分。 | 废土淘金热无看点
+  observable:
+  - 'genre维度: 废土淘金热无看点'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 525
+  - 555
+  score: 15
+  score_raw: 15分是因为最低只有五分呀
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 界狱之门废土
+  genre_guess:
+  - 废土
+  - 科幻
+  overall_comment: 题材废弃，无关注意义，15分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 废土淘金热无看点
+    raw_quote: 完全是没人看的题材

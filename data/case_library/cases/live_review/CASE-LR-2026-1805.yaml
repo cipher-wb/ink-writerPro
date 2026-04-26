@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1805
+title: 诸天系统：封神世界求生 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 诸天无限
+  - 封神
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这25吧 | 题材老套，节奏过快且杂乱，同人元素乱融，缺乏让读者代入的空间。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套，节奏过快且杂乱，同人元素乱融，缺乏让读者代入的空间。 | 思路老套，简介也毫无吸引力;推进过快，读者跟不上;叙事东一榔头西一棒槌，虽然快但很无聊
+  observable:
+  - 'genre维度: 思路老套，简介也毫无吸引力'
+  - 'pacing维度: 推进过快，读者跟不上'
+  - 'pacing维度: 叙事东一榔头西一棒槌，虽然快但很无聊'
+  - 'genre维度: 胡乱融入同人元素，破坏观感'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 177
+  - 244
+  score: 25
+  score_raw: 这25吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诸天系统：封神世界求生
+  genre_guess:
+  - 诸天无限
+  - 封神
+  - 系统
+  overall_comment: 题材老套，节奏过快且杂乱，同人元素乱融，缺乏让读者代入的空间。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 思路老套，简介也毫无吸引力
+    raw_quote: 这种很老套的思路了 说明简介比较拉跨
+  - dimension: pacing
+    severity: negative
+    content: 推进过快，读者跟不上
+    raw_quote: 节奏太快啦 节奏太快了 读者根本跟不上你的思路
+  - dimension: pacing
+    severity: negative
+    content: 叙事东一榔头西一棒槌，虽然快但很无聊
+    raw_quote: 就这东一榔头 西一棒槌 西一棒槌 东一榔头的 就是看上去节奏很快 但是贼无聊啊
+  - dimension: genre
+    severity: negative
+    content: 胡乱融入同人元素，破坏观感
+    raw_quote: 不要加一些同人元素对吧 你封神三角洲什么不要乱融 乱融就是出戏

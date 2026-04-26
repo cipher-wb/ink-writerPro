@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0679
+title: 天龙八部同人 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HCzwBuEV6
+scope:
+  genre:
+  - 同人
+  - 金庸
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就55分吧 | 切入名场面思路对，但前面写得太菜，人设窝囊，金手指奇怪，后面有改观。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HCzwBuEV6.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入名场面思路对，但前面写得太菜，人设窝囊，金手指奇怪，后面有改观。 | 前面人设窝囊，写得小白，劝退
+  observable:
+  - 'opening维度: 前面人设窝囊，写得小白，劝退'
+live_review_meta:
+  source_bvid: BV1HCzwBuEV6
+  source_line_range:
+  - 1225
+  - 1310
+  score: 55
+  score_raw: 就55分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 天龙八部同人
+  genre_guess:
+  - 同人
+  - 金庸
+  - 穿越
+  overall_comment: 切入名场面思路对，但前面写得太菜，人设窝囊，金手指奇怪，后面有改观。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前面人设窝囊，写得小白，劝退
+    raw_quote: 人设已经崩完了呀...好小白
+  - dimension: highpoint
+    severity: positive
+    content: 后面智商在线，过关接地气，比例好转
+    raw_quote: 现在其实后面比前面好多了...后面还有智商

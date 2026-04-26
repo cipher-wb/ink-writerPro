@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-0455
+title: 高考三谋 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 高五
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 废柴逆袭老套但节奏较快，人物太小缺少配角，需要一个好金手指和有趣的剧情钩子。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 废柴逆袭老套但节奏较快，人物太小缺少配角，需要一个好金手指和有趣的剧情钩子。 | 开篇天才变废柴逻辑刻意，缺少合理原因;人物太小，没有立得住的配角辅助;缺少一个有劳动感的金手指，高五全靠金手指设定吸引人
+  observable:
+  - 'opening维度: 开篇天才变废柴逻辑刻意，缺少合理原因'
+  - 'character维度: 人物太小，没有立得住的配角辅助'
+  - 'golden_finger维度: 缺少一个有劳动感的金手指，高五全靠金手指设定吸引人'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 431
+  - 500
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高考三谋
+  genre_guess:
+  - 高五
+  - 玄幻
+  overall_comment: 废柴逆袭老套但节奏较快，人物太小缺少配角，需要一个好金手指和有趣的剧情钩子。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇天才变废柴逻辑刻意，缺少合理原因
+    raw_quote: 本来超级天才 到考场上忽然发现不对劲了 实力强行退化了 大哥这个不符合逻辑
+  - dimension: character
+    severity: negative
+    content: 人物太小，没有立得住的配角辅助
+    raw_quote: 人物也太小了 这个人物太小了 就这样写 全职法师的开头 太老了兄弟
+  - dimension: golden_finger
+    severity: negative
+    content: 缺少一个有劳动感的金手指，高五全靠金手指设定吸引人
+    raw_quote: 你要有一个好的金手指 因为高五现在基本上都是看金手指怎么设定
+  - dimension: highpoint
+    severity: neutral
+    content: 节奏快干练但剧情老套，需要设计情绪升级与爽点
+    raw_quote: 节奏快没问题 剧情你要选得有趣 不要这么干巴

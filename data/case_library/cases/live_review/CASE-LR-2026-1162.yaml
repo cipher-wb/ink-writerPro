@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1162
+title: 分神从山林开始青通空 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 仙侠
+  - 洪荒
+  - 封神
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分 | 设定思维重，仍然像在写说明书。第二张往后的故事有介入感，但第一章太虚，切入缺乏活人感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定思维重，仍然像在写说明书。第二张往后的故事有介入感，但第一章太虚，切入缺乏活人感。 | 开篇还是在解释设定和世界观，没快速切入故事和卖点;穿越多年缺乏心理活动和活人感，人物很单薄
+  observable:
+  - 'opening维度: 开篇还是在解释设定和世界观，没快速切入故事和卖点'
+  - 'character维度: 穿越多年缺乏心理活动和活人感，人物很单薄'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1280
+  - 1388
+  score: 38
+  score_raw: 38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 分神从山林开始青通空
+  genre_guess:
+  - 仙侠
+  - 洪荒
+  - 封神
+  overall_comment: 设定思维重，仍然像在写说明书。第二张往后的故事有介入感，但第一章太虚，切入缺乏活人感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇还是在解释设定和世界观，没快速切入故事和卖点
+    raw_quote: 我上次给你的评价 是你的稿子在设定 这稿子其实一样的 我感觉他还是从前那个少年 讲故事他不喜欢写人物互动 他老是下意识去介绍 去解释这是什么地方
+  - dimension: character
+    severity: negative
+    content: 穿越多年缺乏心理活动和活人感，人物很单薄
+    raw_quote: 很难写这种写法是十年前了……你看你穿越过来这么多年 你的心理活动只有这些吗

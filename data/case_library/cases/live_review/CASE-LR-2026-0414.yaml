@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0414
+title: 毒蘑菇摸尸成圣 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 摸尸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分左右吧 | 表达流畅，但没新意，偏八股，独角戏太多，事件太弱
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达流畅，但没新意，偏八股，独角戏太多，事件太弱 | 事件太弱，一个人在那独角戏，系统出来后继续叽里咕噜;不该写的地方多，该写的地方少，喜欢心理活动就狂写
+  observable:
+  - 'highpoint维度: 事件太弱，一个人在那独角戏，系统出来后继续叽里咕噜'
+  - 'pacing维度: 不该写的地方多，该写的地方少，喜欢心理活动就狂写'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 921
+  - 1002
+  score: 45
+  score_raw: 45分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 毒蘑菇摸尸成圣
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 摸尸
+  overall_comment: 表达流畅，但没新意，偏八股，独角戏太多，事件太弱
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 事件太弱，一个人在那独角戏，系统出来后继续叽里咕噜
+    raw_quote: 这个危机本身没意思呀，这个实体就一个人在那独角戏啊...第一章压缩一下，加点时间就卖点还是太单薄了
+  - dimension: pacing
+    severity: negative
+    content: 不该写的地方多，该写的地方少，喜欢心理活动就狂写
+    raw_quote: 比例感觉还是就不该写的地方多，该写的地方少...就感觉就无病呻吟，自己在那嗷嗷叫

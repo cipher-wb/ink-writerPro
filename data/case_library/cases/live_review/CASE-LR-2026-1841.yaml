@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1841
+title: 秦汉仙武重生 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 历史
+  - 玄幻
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我可以给他给到36分 | 文笔极扎实，但完全不是网文写法，更像金庸出身
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔极扎实，但完全不是网文写法，更像金庸出身 | 全篇像纯武侠无网文主角代入;没有前因后果和代收点
+  observable:
+  - 'genre维度: 全篇像纯武侠无网文主角代入'
+  - 'hook维度: 没有前因后果和代收点'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 1821
+  - 1910
+  score: 36
+  score_raw: 我可以给他给到36分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 秦汉仙武重生
+  genre_guess:
+  - 历史
+  - 玄幻
+  - 武侠
+  overall_comment: 文笔极扎实，但完全不是网文写法，更像金庸出身
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 全篇像纯武侠无网文主角代入
+    raw_quote: 你这是强行按照自己的武侠写法在写...不配
+  - dimension: hook
+    severity: negative
+    content: 没有前因后果和代收点
+    raw_quote: 这些人物关系他不懂...没人关心打架没人关心

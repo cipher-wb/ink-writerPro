@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0069
+title: 娱乐圈记者情报 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 都市
+  - 娱乐圈
+  - 狗仔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42.5分 | 题材选得很好，书名有看点，但切入事件（吃面）没意思，缺乏爽点和爆点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材选得很好，书名有看点，但切入事件（吃面）没意思，缺乏爽点和爆点。 | 拍到的偷拍事件（吃面）没有爽点，平淡无奇
+  observable:
+  - 'highpoint维度: 拍到的偷拍事件（吃面）没有爽点，平淡无奇'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 536
+  - 580
+  score: 45
+  score_raw: 42.5分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 娱乐圈记者情报
+  genre_guess:
+  - 都市
+  - 娱乐圈
+  - 狗仔
+  overall_comment: 题材选得很好，书名有看点，但切入事件（吃面）没意思，缺乏爽点和爆点。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 娱乐圈记者情报的题材选得好，书名有吸引力
+    raw_quote: 娱乐圈记者带情报...说明挺好的...这说明有把手
+  - dimension: highpoint
+    severity: negative
+    content: 拍到的偷拍事件（吃面）没有爽点，平淡无奇
+    raw_quote: 你吃面这个事件 我还是觉得有点没意思啊...你这个情报真没啥意思

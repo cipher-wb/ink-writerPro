@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2095
+title: 蔚蓝星沧澜魔法大学 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 都市
+  - 魔法
+  - 学院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大哥给到16分，非常抱歉 | 魔法学院日常毫无危机情绪，开学介绍等流水账无法留客，必须推翻重做。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 魔法学院日常毫无危机情绪，开学介绍等流水账无法留客，必须推翻重做。 | 开场平铺直叙介绍学院，毫无矛盾冲突;慢悠悠分学院聊天，完全留不住读者
+  observable:
+  - 'opening维度: 开场平铺直叙介绍学院，毫无矛盾冲突'
+  - 'pacing维度: 慢悠悠分学院聊天，完全留不住读者'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1595
+  - 1655
+  score: 16
+  score_raw: 只能给大哥给到16分，非常抱歉
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蔚蓝星沧澜魔法大学
+  genre_guess:
+  - 都市
+  - 魔法
+  - 学院
+  overall_comment: 魔法学院日常毫无危机情绪，开学介绍等流水账无法留客，必须推翻重做。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开场平铺直叙介绍学院，毫无矛盾冲突
+    raw_quote: 这要冲突呀，同学看你身份证，你也是我也是对吧……这干嘛呀，这东西……早点写啊，早点写，正经不对啊
+  - dimension: pacing
+    severity: negative
+    content: 慢悠悠分学院聊天，完全留不住读者
+    raw_quote: 前面铺垫的有点不好……那一段什么介绍互相介绍，学院那一段跑完了，就是没什么危机

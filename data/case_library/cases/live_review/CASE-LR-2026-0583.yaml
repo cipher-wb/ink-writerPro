@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0583
+title: 五代十国历史穿越 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分满分 | 文笔比例没问题，但穿越到朝堂大喊不可取的写法太小白，且五代十国更适合军阀军队视角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例没问题，但穿越到朝堂大喊不可取的写法太小白，且五代十国更适合军阀军队视角。 | 开篇主角当庭喊叫，行为不合时代背景，显得非常小白;五代十国讲究兵强马壮，朝堂政治戏码代入感极差
+  observable:
+  - 'opening维度: 开篇主角当庭喊叫，行为不合时代背景，显得非常小白'
+  - 'genre维度: 五代十国讲究兵强马壮，朝堂政治戏码代入感极差'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 326
+  - 446
+  score: 40
+  score_raw: 40分满分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 五代十国历史穿越
+  genre_guess:
+  - 历史
+  - 五代十国
+  overall_comment: 文笔比例没问题，但穿越到朝堂大喊不可取的写法太小白，且五代十国更适合军阀军队视角。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇主角当庭喊叫，行为不合时代背景，显得非常小白
+    raw_quote: 大哥穿过来大喊 不可以呀 ... 我真想把大哥给杀了
+  - dimension: genre
+    severity: negative
+    content: 五代十国讲究兵强马壮，朝堂政治戏码代入感极差
+    raw_quote: 五代十国不适合搞朝堂政治 ... 更适合兵头出身

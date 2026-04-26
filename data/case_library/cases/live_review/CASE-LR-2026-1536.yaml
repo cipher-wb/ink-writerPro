@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1536
+title: 身为傀儡的傀儡师 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 战斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十吧 | 讲故事能力尚可，有反转有闭环，但主线异能大战太无聊，题材是硬伤。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 讲故事能力尚可，有反转有闭环，但主线异能大战太无聊，题材是硬伤。 | 主线异能大战超级无聊，毫无吸引力;主角是傀儡，没有家人与身份，读者完全代入不了;都市异能是彻头彻尾的垃圾题材
+  observable:
+  - 'hook维度: 主线异能大战超级无聊，毫无吸引力'
+  - 'character维度: 主角是傀儡，没有家人与身份，读者完全代入不了'
+  - 'genre维度: 都市异能是彻头彻尾的垃圾题材'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 578
+  - 895
+  score: 40
+  score_raw: 四十吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 身为傀儡的傀儡师
+  genre_guess:
+  - 都市
+  - 异能
+  - 战斗
+  overall_comment: 讲故事能力尚可，有反转有闭环，但主线异能大战太无聊，题材是硬伤。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 主线异能大战超级无聊，毫无吸引力
+    raw_quote: 这个主线没意思了 就是一轮只打一轮只 这种主线超无聊
+  - dimension: character
+    severity: negative
+    content: 主角是傀儡，没有家人与身份，读者完全代入不了
+    raw_quote: 你这个傀儡 本身就很毒了其实 因为你没有家人 你没有身份 你没有人类的感觉
+  - dimension: genre
+    severity: negative
+    content: 都市异能是彻头彻尾的垃圾题材
+    raw_quote: 都市一轮就是一个垃圾题材 真的是一个垃圾题材
+  - dimension: opening
+    severity: positive
+    content: 开篇反转与闭环解释不错
+    raw_quote: 这里有反转 还可以这个反转还可以的

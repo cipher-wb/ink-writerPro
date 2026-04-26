@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1600
+title: 迷雾战场 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 科幻
+  - 都市异能
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 撑死20分不到19分了 | 世界观设定轰炸，主角毫无情绪像NPC，第一章吃面听新闻无戏剧性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观设定轰炸，主角毫无情绪像NPC，第一章吃面听新闻无戏剧性。 | 主角全程波澜不惊，没有心理活动，无法代入;设定占比60%，剧情几乎为零
+  observable:
+  - 'character维度: 主角全程波澜不惊，没有心理活动，无法代入'
+  - 'opening维度: 设定占比60%，剧情几乎为零'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 641
+  - 670
+  score: 19
+  score_raw: 撑死20分不到19分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 迷雾战场
+  genre_guess:
+  - 科幻
+  - 都市异能
+  - 末日
+  overall_comment: 世界观设定轰炸，主角毫无情绪像NPC，第一章吃面听新闻无戏剧性。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角全程波澜不惊，没有心理活动，无法代入
+    raw_quote: 一句心理活动都没有 … 大哥已经超凡入胜了 大哥是释迦牟尼 … 就没感觉
+  - dimension: opening
+    severity: negative
+    content: 设定占比60%，剧情几乎为零
+    raw_quote: 设定占60%啊 … 就日常我一个打怪兽升级了 … 这真的适不适合吃这碗饭

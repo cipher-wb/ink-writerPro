@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0415
+title: 纽约地下室军火商 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 都市
+  - 历史
+  - 美国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 43分 | 题材能写，但切入太俗套，胆子太小，不敢蹭，纯原创没意思
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材能写，但切入太俗套，胆子太小，不敢蹭，纯原创没意思 | 整套太俗套，切入要换，找点好故事;胆子太小，不敢写大尺度场景，不敢蹭知名角色
+  observable:
+  - 'opening维度: 整套太俗套，切入要换，找点好故事'
+  - 'misc维度: 胆子太小，不敢写大尺度场景，不敢蹭知名角色'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1003
+  - 1098
+  score: 43
+  score_raw: 43分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 纽约地下室军火商
+  genre_guess:
+  - 都市
+  - 历史
+  - 美国
+  overall_comment: 题材能写，但切入太俗套，胆子太小，不敢蹭，纯原创没意思
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 整套太俗套，切入要换，找点好故事
+    raw_quote: 太太无聊了，整套的就太俗套了...但切入真的就换一个，找点好故事呀
+  - dimension: misc
+    severity: negative
+    content: 胆子太小，不敢写大尺度场景，不敢蹭知名角色
+    raw_quote: 我感觉你们就是啧胆子太小...你不敢蹭你写的任何书...不敢加这些东西

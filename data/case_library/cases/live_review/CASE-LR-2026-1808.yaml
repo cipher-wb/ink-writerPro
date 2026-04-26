@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1808
+title: 重生：从挽回青梅开始 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 校园
+  - 重生
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你42分 | 文笔细腻，情绪营造不错，但卖点单薄，重复啰嗦，像琼瑶剧而非当前网文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔细腻，情绪营造不错，但卖点单薄，重复啰嗦，像琼瑶剧而非当前网文。 | 故事过于平淡，只有你对我好我对你好;一直在重复表达，未能推进剧情
+  observable:
+  - 'simplicity维度: 故事过于平淡，只有你对我好我对你好'
+  - 'pacing维度: 一直在重复表达，未能推进剧情'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 391
+  - 460
+  score: 42
+  score_raw: 给你42分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生：从挽回青梅开始
+  genre_guess:
+  - 校园
+  - 重生
+  - 日常
+  overall_comment: 文笔细腻，情绪营造不错，但卖点单薄，重复啰嗦，像琼瑶剧而非当前网文。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 故事过于平淡，只有你对我好我对你好
+    raw_quote: 就是太平淡了 太平淡了 就这一个主线真的不太够
+  - dimension: pacing
+    severity: negative
+    content: 一直在重复表达，未能推进剧情
+    raw_quote: 一直在这重复重复重复 就是我就是他很好啊 他对我很好 我我这也是对他道歉了呀 就这点破事
+  - dimension: character
+    severity: positive
+    content: 人物描写细腻，有天赋
+    raw_quote: 大哥是有天赋的 就是写人物 写故事写的挺细腻的

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0090
+title: 知识把拔-编程大佬 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 科幻
+  - 战争
+  - 程序员
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25 | 书名无吸引力，开篇全是看不懂的设定，读者会直接跑光。虽有节奏和表达能力，但题材必须大改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名无吸引力，开篇全是看不懂的设定，读者会直接跑光。虽有节奏和表达能力，但题材必须大改。 | 书名和开篇设定直接劝退所有读者;设定多且无意义，读者看不懂也不想看
+  observable:
+  - 'opening维度: 书名和开篇设定直接劝退所有读者'
+  - 'simplicity维度: 设定多且无意义，读者看不懂也不想看'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1701
+  - 1765
+  score: 25
+  score_raw: '25'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 知识把拔-编程大佬
+  genre_guess:
+  - 科幻
+  - 战争
+  - 程序员
+  overall_comment: 书名无吸引力，开篇全是看不懂的设定，读者会直接跑光。虽有节奏和表达能力，但题材必须大改。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 书名和开篇设定直接劝退所有读者
+    raw_quote: 这个书名...根本不想让人看你...全世界观设定啊...这爽吗 谁看呀
+  - dimension: simplicity
+    severity: negative
+    content: 设定多且无意义，读者看不懂也不想看
+    raw_quote: 当你出来那几个设定的时候，其实是已经崩了...这个一出来就所有人全跑了

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0252
+title: pastry的投稿 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 日常
+  - 异世界
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 在每28分想你的夜里 | 偏日常等于慢热无聊，异世界穿越回来难写，建议推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 偏日常等于慢热无聊，异世界穿越回来难写，建议推翻。 | 人设无聊，兄弟情义写法老套，像梁山泊。;异世界舅舅类题材陷阱极深，极难签约。
+  observable:
+  - 'opening维度: 人设无聊，兄弟情义写法老套，像梁山泊。'
+  - 'genre维度: 异世界舅舅类题材陷阱极深，极难签约。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 930
+  - 1000
+  score: 28
+  score_raw: 在每28分想你的夜里
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: pastry的投稿
+  genre_guess:
+  - 日常
+  - 异世界
+  - 轻小说
+  overall_comment: 偏日常等于慢热无聊，异世界穿越回来难写，建议推翻。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 人设无聊，兄弟情义写法老套，像梁山泊。
+    raw_quote: 一天到晚上哥哥兄弟的叫兄弟情啊 ... 全是哥们呀 全是兄弟呀
+  - dimension: genre
+    severity: negative
+    content: 异世界舅舅类题材陷阱极深，极难签约。
+    raw_quote: 这个题材真的特别难写

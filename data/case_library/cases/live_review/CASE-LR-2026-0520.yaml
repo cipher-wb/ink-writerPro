@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0520
+title: 斗破推车人 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 玄幻
+  - 同人
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分 | 简介和书名完美，正文人设小白到难以置信，彻底浪费黄金题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介和书名完美，正文人设小白到难以置信，彻底浪费黄金题材。 | 主角性格小白，对白毫无原著味道;开头慢热且切入尬，建议直接快进到关键剧情
+  observable:
+  - 'character维度: 主角性格小白，对白毫无原著味道'
+  - 'opening维度: 开头慢热且切入尬，建议直接快进到关键剧情'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 686
+  - 730
+  score: 25
+  score_raw: 差不多就25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗破推车人
+  genre_guess:
+  - 玄幻
+  - 同人
+  - 系统
+  overall_comment: 简介和书名完美，正文人设小白到难以置信，彻底浪费黄金题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角性格小白，对白毫无原著味道
+    raw_quote: 对白小白人设小白，每个人出来都感觉没智商
+  - dimension: opening
+    severity: negative
+    content: 开头慢热且切入尬，建议直接快进到关键剧情
+    raw_quote: 开头太小白了，你快速到寒风家里就行
+  - dimension: genre
+    severity: positive
+    content: 推车人系统这个题材和名简介非常出色
+    raw_quote: 简介题材说明你发Q的后台百分百老的

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1956
+title: 雁州武修 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 玄幻
+  - 传统修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 基本功扎实，文笔很有玄幻味，天赋极高。但写法和题材过于古老老套，需要低身份切入、强化危机和现代金手指。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 基本功扎实，文笔很有玄幻味，天赋极高。但写法和题材过于古老老套，需要低身份切入、强化危机和现代金手指。 | 思路和写法太古老，类似十五年前的风格;开头炼功无聊，缺乏事件和危机
+  observable:
+  - 'genre维度: 思路和写法太古老，类似十五年前的风格'
+  - 'opening维度: 开头炼功无聊，缺乏事件和危机'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 1220
+  - 1290
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 雁州武修
+  genre_guess:
+  - 玄幻
+  - 传统修炼
+  overall_comment: 基本功扎实，文笔很有玄幻味，天赋极高。但写法和题材过于古老老套，需要低身份切入、强化危机和现代金手指。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 思路和写法太古老，类似十五年前的风格
+    raw_quote: 大概确实是比较老套，这个思路整个比较老
+  - dimension: opening
+    severity: negative
+    content: 开头炼功无聊，缺乏事件和危机
+    raw_quote: 开头炼功是很无聊的...你应该不在武馆里面练武

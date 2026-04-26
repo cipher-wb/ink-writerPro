@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1701
+title: 墙架里女频仙侠 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 仙侠
+  - 女频
+  - 穿越
+  - 拉扯
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 完全不懂网文，上帝视角、无代入感、故事废话连篇，如女频小儿科。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不懂网文，上帝视角、无代入感、故事废话连篇，如女频小儿科。 | 开局上帝视角，无代入感，像是土著而非穿越。;对白和拉扯像女频写法，男人不爱看。
+  observable:
+  - 'opening维度: 开局上帝视角，无代入感，像是土著而非穿越。'
+  - 'character维度: 对白和拉扯像女频写法，男人不爱看。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1189
+  - 1250
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 墙架里女频仙侠
+  genre_guess:
+  - 仙侠
+  - 女频
+  - 穿越
+  - 拉扯
+  overall_comment: 完全不懂网文，上帝视角、无代入感、故事废话连篇，如女频小儿科。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局上帝视角，无代入感，像是土著而非穿越。
+    raw_quote: 没有代入感啊...这玩意不是网红
+  - dimension: character
+    severity: negative
+    content: 对白和拉扯像女频写法，男人不爱看。
+    raw_quote: 就拉扯对...写这些没人看，太女平心法了

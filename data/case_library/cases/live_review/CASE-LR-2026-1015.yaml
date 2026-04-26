@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1015
+title: 司从委员会 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 科幻
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 设定混乱看不懂，完全不顾读者理解，建议直接删除重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定混乱看不懂，完全不顾读者理解，建议直接删除重写。 | 科幻题材一上来就是找死，读者不关心陌生设定;开头全是设定堆砌，没有代入感;舍不得给读者解释，把自己当导演
+  observable:
+  - 'genre维度: 科幻题材一上来就是找死，读者不关心陌生设定'
+  - 'opening维度: 开头全是设定堆砌，没有代入感'
+  - 'simplicity维度: 舍不得给读者解释，把自己当导演'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 451
+  - 540
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 司从委员会
+  genre_guess:
+  - 科幻
+  - 末世
+  overall_comment: 设定混乱看不懂，完全不顾读者理解，建议直接删除重写。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻题材一上来就是找死，读者不关心陌生设定
+    raw_quote: 你在科幻封内写 科幻就是找死
+  - dimension: opening
+    severity: negative
+    content: 开头全是设定堆砌，没有代入感
+    raw_quote: 司从第一次尾骨骚就被抓 还是被直接引到船上
+  - dimension: simplicity
+    severity: negative
+    content: 舍不得给读者解释，把自己当导演
+    raw_quote: 就是舍不得给读这解释 根本就沉浸在自己的世界里面

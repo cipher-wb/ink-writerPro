@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0646
+title: 末日废土机甲猎杀者 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 科幻
+  - 废土
+  - 机甲
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥给个40分吧 | 短剧编剧大佬，场景画面感强，但缺乏主角视角代入，设定过多显乱，不过天赋可见，结个善缘。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 短剧编剧大佬，场景画面感强，但缺乏主角视角代入，设定过多显乱，不过天赋可见，结个善缘。 | 主角代入感差，视角切换像电影画面，非网文写法;设定穿插虽好，但总体过多导致看不懂，缺乏主心骨
+  observable:
+  - 'character维度: 主角代入感差，视角切换像电影画面，非网文写法'
+  - 'simplicity维度: 设定穿插虽好，但总体过多导致看不懂，缺乏主心骨'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 501
+  - 580
+  score: 40
+  score_raw: 给大哥给个40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日废土机甲猎杀者
+  genre_guess:
+  - 科幻
+  - 废土
+  - 机甲
+  overall_comment: 短剧编剧大佬，场景画面感强，但缺乏主角视角代入，设定过多显乱，不过天赋可见，结个善缘。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角代入感差，视角切换像电影画面，非网文写法
+    raw_quote: 完全不是主角视角...就是画面呀一段一段的
+  - dimension: simplicity
+    severity: negative
+    content: 设定穿插虽好，但总体过多导致看不懂，缺乏主心骨
+    raw_quote: 我觉得我看不懂...完全设定太多了
+  - dimension: opening
+    severity: positive
+    content: 切入的小剧场、妓院开局写得好，两个女角色立住了
+    raw_quote: 切入的...小剧场写的还不错...我觉得这两个女的写的挺好的

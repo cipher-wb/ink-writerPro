@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1253
+title: 开局一把木剑 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 仙侠
+  - 学院
+  - 无厘头
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多我觉得也就20分吧 | 无厘头风格不是正常网文写法，剧情看不懂，建议推翻重写正常故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无厘头风格不是正常网文写法，剧情看不懂，建议推翻重写正常故事。 | 无厘头风格太奇怪，不是网文主流写法;人物和情节写得干巴巴，缺乏主线
+  observable:
+  - 'genre维度: 无厘头风格太奇怪，不是网文主流写法'
+  - 'character维度: 人物和情节写得干巴巴，缺乏主线'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1591
+  - 1632
+  score: 20
+  score_raw: 差不多我觉得也就20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 开局一把木剑
+  genre_guess:
+  - 仙侠
+  - 学院
+  - 无厘头
+  overall_comment: 无厘头风格不是正常网文写法，剧情看不懂，建议推翻重写正常故事。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 无厘头风格太奇怪，不是网文主流写法
+    raw_quote: 就这这这看不懂，你太美
+  - dimension: character
+    severity: negative
+    content: 人物和情节写得干巴巴，缺乏主线
+    raw_quote: 就是一段一段的干干巴巴的无厘头的那种

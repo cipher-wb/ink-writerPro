@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0665
+title: 华语少年重生娱乐圈 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 文娱
+  - 重生
+  - 娱乐圈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在起点不要这么着急 | 老飞卢风爽文，节奏快但逻辑硬伤太大，张若兰秒变舔狗不合理，适合去蓝精灵而非起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老飞卢风爽文，节奏快但逻辑硬伤太大，张若兰秒变舔狗不合理，适合去蓝精灵而非起点。 | 机械降神式邂逅张若兰，太过突兀不合理;张若兰没性张力，且第一张就去酒店开房练演技，完全不符合逻辑;爽文套路太直白，缺乏故事性和沉浸感
+  observable:
+  - 'pacing维度: 机械降神式邂逅张若兰，太过突兀不合理'
+  - 'character维度: 张若兰没性张力，且第一张就去酒店开房练演技，完全不符合逻辑'
+  - 'simplicity维度: 爽文套路太直白，缺乏故事性和沉浸感'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 2021
+  - 2100
+  score: null
+  score_raw: 现在起点不要这么着急
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 华语少年重生娱乐圈
+  genre_guess:
+  - 文娱
+  - 重生
+  - 娱乐圈
+  overall_comment: 老飞卢风爽文，节奏快但逻辑硬伤太大，张若兰秒变舔狗不合理，适合去蓝精灵而非起点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 机械降神式邂逅张若兰，太过突兀不合理
+    raw_quote: 忽然就在你旁边...机械降神...很尴尬的这种
+  - dimension: character
+    severity: negative
+    content: 张若兰没性张力，且第一张就去酒店开房练演技，完全不符合逻辑
+    raw_quote: 大学女生...这就跟你去开房...不可能啊！
+  - dimension: simplicity
+    severity: negative
+    content: 爽文套路太直白，缺乏故事性和沉浸感
+    raw_quote: 我觉得飞卢风爽...但不符合逻辑...现在去蓝精灵嘛

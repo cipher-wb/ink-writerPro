@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0914
+title: 被控制后成为大师兄 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 仙侠
+  - 控制流
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十五六分的样子 | 控制流写法奇怪，人设有迪化感但故事薄弱，缺乏戏剧场面。分数未正式给定，评价模糊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 控制流写法奇怪，人设有迪化感但故事薄弱，缺乏戏剧场面。分数未正式给定，评价模糊。 | 剧情推进太慢，缺乏事件;控制流玩烂梗且开车情节尴尬
+  observable:
+  - 'pacing维度: 剧情推进太慢，缺乏事件'
+  - 'simplicity维度: 控制流玩烂梗且开车情节尴尬'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 285
+  - 340
+  score: null
+  score_raw: 三十五六分的样子
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 被控制后成为大师兄
+  genre_guess:
+  - 仙侠
+  - 控制流
+  - 轻小说
+  overall_comment: 控制流写法奇怪，人设有迪化感但故事薄弱，缺乏戏剧场面。分数未正式给定，评价模糊。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人设带有迪化感，塑造有可取之处
+    raw_quote: 人设有迪化可以
+  - dimension: pacing
+    severity: negative
+    content: 剧情推进太慢，缺乏事件
+    raw_quote: 没引导吗 你怎么控制的 设置键位这么多技能给那个控制仙子呀
+  - dimension: simplicity
+    severity: negative
+    content: 控制流玩烂梗且开车情节尴尬
+    raw_quote: 不是你这个控制流怎么玩烂梗啊 嘿嘿嘿呵 劲舞团高手就在这里控制木啊

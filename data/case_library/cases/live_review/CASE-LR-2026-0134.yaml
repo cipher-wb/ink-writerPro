@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0134
+title: 学习穷 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 都市
+  - 校园
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 配角缺失，新人写爽文不写人物互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 配角缺失，新人写爽文不写人物互动。 | 没有一个好的配角，人物与故事无法兼顾
+  observable:
+  - 'character维度: 没有一个好的配角，人物与故事无法兼顾'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 169
+  - 169
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 学习穷
+  genre_guess:
+  - 都市
+  - 校园
+  - 爽文
+  overall_comment: 配角缺失，新人写爽文不写人物互动。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 没有一个好的配角，人物与故事无法兼顾
+    raw_quote: 那本书没有好的配角吗 他不能兼顾人物与故事

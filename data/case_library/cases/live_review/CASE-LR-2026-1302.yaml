@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1302
+title: 朽树怪谈 (fail / 27分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 灵异
+  - 恐怖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 27分 | 灵异文写法太干，只有探索过程，缺少期待感和氛围塑造。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 灵异文写法太干，只有探索过程，缺少期待感和氛围塑造。 | 开头枯燥，没有代入感和真实感;过程不重要，期待感才关键
+  observable:
+  - 'opening维度: 开头枯燥，没有代入感和真实感'
+  - 'hook维度: 过程不重要，期待感才关键'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 181
+  - 260
+  score: 27
+  score_raw: 27分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 朽树怪谈
+  genre_guess:
+  - 灵异
+  - 恐怖
+  overall_comment: 灵异文写法太干，只有探索过程，缺少期待感和氛围塑造。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头枯燥，没有代入感和真实感
+    raw_quote: 乾巴巴的在讲就很乾
+  - dimension: hook
+    severity: negative
+    content: 过程不重要，期待感才关键
+    raw_quote: 这过程不重要 前期吸引人才是關鍵

@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1527
+title: 修仙界大逃杀 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 仙侠
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十五次 | 修仙大逃杀有创意，但节奏过快人物工具化，可试发番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 修仙大逃杀有创意，但节奏过快人物工具化，可试发番茄。
+  observable:
+  - 整体被星河直播判定为 fail
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 2001
+  - 2100
+  score: 25
+  score_raw: 二十五次
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙界大逃杀
+  genre_guess:
+  - 仙侠
+  - 游戏
+  overall_comment: 修仙大逃杀有创意，但节奏过快人物工具化，可试发番茄。
+  comments:
+  - dimension: opening
+    severity: neutral
+    content: 开局快速进入副本，但少女工具人无反转
+    raw_quote: 少女也是工具人 本账就是卖这个设定
+  - dimension: golden_finger
+    severity: neutral
+    content: 金手指类似开挂雷达，缺乏配套爽点
+    raw_quote: 这大逃杀不是开挂吗 … 没爽点

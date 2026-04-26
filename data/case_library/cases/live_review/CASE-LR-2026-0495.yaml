@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0495
+title: 萝莉掌门逼我直播成圣 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  - 直播
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 世界观混乱融梗，躺平题材过时，读者看不懂也不爱看。只能发蓝精灵当乐子。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观混乱融梗，躺平题材过时，读者看不懂也不爱看。只能发蓝精灵当乐子。 | 躺平题材过时，没人看;世界观乱融，修仙界出现手机直播等让人出戏
+  observable:
+  - 'genre维度: 躺平题材过时，没人看'
+  - 'misc维度: 世界观乱融，修仙界出现手机直播等让人出戏'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1816
+  - 1850
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 萝莉掌门逼我直播成圣
+  genre_guess:
+  - 玄幻
+  - 修仙
+  - 直播
+  overall_comment: 世界观混乱融梗，躺平题材过时，读者看不懂也不爱看。只能发蓝精灵当乐子。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 躺平题材过时，没人看
+    raw_quote: 躺平没人看了 躺平已经是一个很老的一个数据了
+  - dimension: misc
+    severity: negative
+    content: 世界观乱融，修仙界出现手机直播等让人出戏
+    raw_quote: 这是修仙界 他修仙界为什么有手机呢 为什么有 就搞不懂...立不住啊这个 这种世界观

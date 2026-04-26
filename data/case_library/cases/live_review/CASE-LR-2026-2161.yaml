@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2161
+title: 重生2006：面试加油站 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就28分对吧 | 重生文写法太俗，KTV场景不敢写，穿越后流水账没重点，不如夏洛特烦恼。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生文写法太俗，KTV场景不敢写，穿越后流水账没重点，不如夏洛特烦恼。 | 重生文开篇平淡如流水账，没有侧重点和强遗憾;KTV前置情节点到为止不敢写，穿越后也无爆点
+  observable:
+  - 'opening维度: 重生文开篇平淡如流水账，没有侧重点和强遗憾'
+  - 'highpoint维度: KTV前置情节点到为止不敢写，穿越后也无爆点'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 2136
+  - 2283
+  score: 28
+  score_raw: 差不多就28分对吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2006：面试加油站
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 重生文写法太俗，KTV场景不敢写，穿越后流水账没重点，不如夏洛特烦恼。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 重生文开篇平淡如流水账，没有侧重点和强遗憾
+    raw_quote: 还是没有重点...然后就穿越了...这太普通了...不如夏洛吧
+  - dimension: highpoint
+    severity: negative
+    content: KTV前置情节点到为止不敢写，穿越后也无爆点
+    raw_quote: 如果你胆子小你就别写了对吧...就点到为止，他又不写...然后就穿越了

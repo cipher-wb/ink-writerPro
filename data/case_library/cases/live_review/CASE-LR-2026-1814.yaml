@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1814
+title: 蒸汽时代：娘子喂药系统 (fail / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 蒸汽朋克
+  - 诡异
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就52分吧 | 作者会讲故事，雪白描写不错，但世界观设定压倒剧情，节奏慢且复杂，签约就差临门一脚。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者会讲故事，雪白描写不错，但世界观设定压倒剧情，节奏慢且复杂，签约就差临门一脚。 | 世界观设定过于复杂，挤压剧情;开篇喂药事件被问答拖累，节奏极慢
+  observable:
+  - 'simplicity维度: 世界观设定过于复杂，挤压剧情'
+  - 'pacing维度: 开篇喂药事件被问答拖累，节奏极慢'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 781
+  - 850
+  score: 52
+  score_raw: 就52分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蒸汽时代：娘子喂药系统
+  genre_guess:
+  - 蒸汽朋克
+  - 诡异
+  - 系统
+  overall_comment: 作者会讲故事，雪白描写不错，但世界观设定压倒剧情，节奏慢且复杂，签约就差临门一脚。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 世界观设定过于复杂，挤压剧情
+    raw_quote: 百分之六七十都是设定 太复杂了
+  - dimension: pacing
+    severity: negative
+    content: 开篇喂药事件被问答拖累，节奏极慢
+    raw_quote: 就大哥的重点在于这个设定 在于这个世界在于这些莫名其妙的一些诗意 这些东西就导致这个稿子节奏特别慢
+  - dimension: character
+    severity: positive
+    content: 娘子喂药环节的雪白描写到位
+    raw_quote: 你看这雪白丰顺的陶童 这五个字都写的很好

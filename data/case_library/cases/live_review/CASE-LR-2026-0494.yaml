@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0494
+title: 复活吧我的爱人 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 都市
+  - 言情
+  - 治愈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你40分了 已经给你40分了对吧 已经很厉害了 | 文笔比例氛围感极强，情绪铺垫到位，催人泪下。但更适合短篇，缺乏长篇网文卖点和期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例氛围感极强，情绪铺垫到位，催人泪下。但更适合短篇，缺乏长篇网文卖点和期待感。 | 基调偏向短篇言情，缺乏长篇网文的卖点和期待感
+  observable:
+  - 'genre维度: 基调偏向短篇言情，缺乏长篇网文的卖点和期待感'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1754
+  - 1812
+  score: 42
+  score_raw: 给你40分了 已经给你40分了对吧 已经很厉害了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 复活吧我的爱人
+  genre_guess:
+  - 都市
+  - 言情
+  - 治愈
+  overall_comment: 文笔比例氛围感极强，情绪铺垫到位，催人泪下。但更适合短篇，缺乏长篇网文卖点和期待感。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 情绪和氛围感写得极好，爱情感人至深
+    raw_quote: 这个真佩服啊 这个这个不黑...就是情绪很足 就是确实也看出就比例非常强 比例氛围也很强
+  - dimension: genre
+    severity: negative
+    content: 基调偏向短篇言情，缺乏长篇网文的卖点和期待感
+    raw_quote: 但可惜太适合短片那种 就是没什么看点 说白了很老套 就是异能复活7人

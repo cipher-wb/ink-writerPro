@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1008
+title: 天命测灵根 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 玄幻
+  - 算命
+  - 命格
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 测灵根老套，穿越18年啥都没干，节奏慢，缺乏新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 测灵根老套，穿越18年啥都没干，节奏慢，缺乏新意。 | 穿越18年无事发生，节奏极慢;金手指就是测灵根，老套无聊
+  observable:
+  - 'pacing维度: 穿越18年无事发生，节奏极慢'
+  - 'hook维度: 金手指就是测灵根，老套无聊'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 2472
+  - 2574
+  score: 28
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天命测灵根
+  genre_guess:
+  - 玄幻
+  - 算命
+  - 命格
+  overall_comment: 测灵根老套，穿越18年啥都没干，节奏慢，缺乏新意。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 穿越18年无事发生，节奏极慢
+    raw_quote: 这18年啥都没干，而且还会饿死……太废物了
+  - dimension: hook
+    severity: negative
+    content: 金手指就是测灵根，老套无聊
+    raw_quote: 身份无聊，金手指完全就变成测灵根了……真无聊

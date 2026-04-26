@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2024
+title: 月球基地科幻 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 科幻
+  - 星际
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就三十分吧 | 文笔和情绪渲染到位，但背景世界观无聊，本质是披着科幻皮的打怪物故事，难以有商业价值。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和情绪渲染到位，但背景世界观无聊，本质是披着科幻皮的打怪物故事，难以有商业价值。 | 科幻皮下的打怪物套路太无聊，设定复杂劝退。
+  observable:
+  - 'genre维度: 科幻皮下的打怪物套路太无聊，设定复杂劝退。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1352
+  - 1388
+  score: 30
+  score_raw: 就三十分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 月球基地科幻
+  genre_guess:
+  - 科幻
+  - 星际
+  overall_comment: 文笔和情绪渲染到位，但背景世界观无聊，本质是披着科幻皮的打怪物故事，难以有商业价值。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻皮下的打怪物套路太无聊，设定复杂劝退。
+    raw_quote: 这玩意是披着科幻的皮 写一些无聊的东西

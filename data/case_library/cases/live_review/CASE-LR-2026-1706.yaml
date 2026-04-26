@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1706
+title: 刑警侦破父亲悬案 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 悬疑
+  - 侦探
+  - 现实
+  - 刑侦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你23分吧 | 文笔及格但题材冷门至极，事件像日常日记，缺乏看点和金手指。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔及格但题材冷门至极，事件像日常日记，缺乏看点和金手指。 | 纯现实刑侦侦探在起点几乎没有市场，应加异能或融其他元素。;事件如日常日记，毫无意思，缺乏预知危险等卖点。
+  observable:
+  - 'genre维度: 纯现实刑侦侦探在起点几乎没有市场，应加异能或融其他元素。'
+  - 'highpoint维度: 事件如日常日记，毫无意思，缺乏预知危险等卖点。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1501
+  - 1564
+  score: 23
+  score_raw: 给你23分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 刑警侦破父亲悬案
+  genre_guess:
+  - 悬疑
+  - 侦探
+  - 现实
+  - 刑侦
+  overall_comment: 文笔及格但题材冷门至极，事件像日常日记，缺乏看点和金手指。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯现实刑侦侦探在起点几乎没有市场，应加异能或融其他元素。
+    raw_quote: 悬疑侦探...一年内没有一本...一本都没有啊
+  - dimension: highpoint
+    severity: negative
+    content: 事件如日常日记，毫无意思，缺乏预知危险等卖点。
+    raw_quote: 事件有啥意思呢，实践是一点意思都没有

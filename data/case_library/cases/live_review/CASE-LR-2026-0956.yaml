@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0956
+title: 东京楚腰(除灵) (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 东京
+  - 除灵
+  - 黑道
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也是30分 | 毫无东京文味道，拉扯生硬，灵根不在东京，建议推翻
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 毫无东京文味道，拉扯生硬，灵根不在东京，建议推翻 | 没有东京文的细腻与拉扯，像东北大兄弟
+  observable:
+  - 'genre维度: 没有东京文的细腻与拉扯，像东北大兄弟'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 3000
+  - 3080
+  score: 30
+  score_raw: 差不多也是30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京楚腰(除灵)
+  genre_guess:
+  - 东京
+  - 除灵
+  - 黑道
+  overall_comment: 毫无东京文味道，拉扯生硬，灵根不在东京，建议推翻
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 没有东京文的细腻与拉扯，像东北大兄弟
+    raw_quote: 一点东京味道实话实说找不到东京味道

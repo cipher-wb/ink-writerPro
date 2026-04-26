@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1934
+title: 法医穿越时间线/科幻悬疑 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 科幻
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不是网文 | 作者笔力扎实，但完全不懂网文，写的不是网文，法医、穿越等元素太浅，缺乏卖点，建议写法医职业都市文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者笔力扎实，但完全不懂网文，写的不是网文，法医、穿越等元素太浅，缺乏卖点，建议写法医职业都市文。 | 内容不是网文，科幻元素在网文里根本不叫卖点，对小说理解拉胯。;不要写类似时间绑架、修改历史之类的复杂题材，水平不够。
+  observable:
+  - 'simplicity维度: 内容不是网文，科幻元素在网文里根本不叫卖点，对小说理解拉胯。'
+  - 'misc维度: 不要写类似时间绑架、修改历史之类的复杂题材，水平不够。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 1110
+  - 1148
+  score: null
+  score_raw: 不是网文
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 法医穿越时间线/科幻悬疑
+  genre_guess:
+  - 科幻
+  - 悬疑
+  overall_comment: 作者笔力扎实，但完全不懂网文，写的不是网文，法医、穿越等元素太浅，缺乏卖点，建议写法医职业都市文。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 内容不是网文，科幻元素在网文里根本不叫卖点，对小说理解拉胯。
+    raw_quote: 这玩意就不是网...这玩意就不是网红...你对小说理解真的太拉了
+  - dimension: misc
+    severity: negative
+    content: 不要写类似时间绑架、修改历史之类的复杂题材，水平不够。
+    raw_quote: 不要写这种东西，绑架时间线什么的，没那个实力不要揽这个金刚钻了呀

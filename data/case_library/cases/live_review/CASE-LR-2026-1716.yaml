@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1716
+title: 王中王剧本杀悬疑 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 悬疑
+  - 剧本杀
+  - 设定
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不看了 不看了 看你中我去了 | 文笔扎实但题材过于复杂，开局大段设定解释，读者看不懂也代入不了。剧本杀设定卖点完全偏离网络小说读者需求。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但题材过于复杂，开局大段设定解释，读者看不懂也代入不了。剧本杀设定卖点完全偏离网络小说读者需求。 | 设定复杂看不懂，读者无法立刻带入;剧本杀题材本身已过气且挑读者，不适合网文
+  observable:
+  - 'simplicity维度: 设定复杂看不懂，读者无法立刻带入'
+  - 'genre维度: 剧本杀题材本身已过气且挑读者，不适合网文'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 691
+  - 714
+  score: null
+  score_raw: 不看了 不看了 看你中我去了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 王中王剧本杀悬疑
+  genre_guess:
+  - 悬疑
+  - 剧本杀
+  - 设定
+  overall_comment: 文笔扎实但题材过于复杂，开局大段设定解释，读者看不懂也代入不了。剧本杀设定卖点完全偏离网络小说读者需求。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定复杂看不懂，读者无法立刻带入
+    raw_quote: 这太复杂了，就读着看到都吓尿了，就是设定是为了让人能懂的，不能懂的就不叫设定了
+  - dimension: genre
+    severity: negative
+    content: 剧本杀题材本身已过气且挑读者，不适合网文
+    raw_quote: 剧本杀现在都淘汰了，很多剧本杀店都关门了

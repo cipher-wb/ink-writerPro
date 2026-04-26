@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1869
+title: 大明恶少县令规则怪谈文 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 历史
+  - 灵异
+  - 规则怪谈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 比例扎实，民俗灵异味道写得好，但乱融题材，大明加SS级怪谈无法分类，有天赋但瞎选题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实，民俗灵异味道写得好，但乱融题材，大明加SS级怪谈无法分类，有天赋但瞎选题材。 | 题材乱融，大明历史加规则怪谈不搭，智能推无法推送，没有市场
+  observable:
+  - 'genre维度: 题材乱融，大明历史加规则怪谈不搭，智能推无法推送，没有市场'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1311
+  - 1375
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明恶少县令规则怪谈文
+  genre_guess:
+  - 历史
+  - 灵异
+  - 规则怪谈
+  overall_comment: 比例扎实，民俗灵异味道写得好，但乱融题材，大明加SS级怪谈无法分类，有天赋但瞎选题材。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材乱融，大明历史加规则怪谈不搭，智能推无法推送，没有市场
+    raw_quote: 这个题材很难写 就是你的受众不搭了 你这个时候只能发发历史
+  - dimension: simplicity
+    severity: positive
+    content: 比例扎实，民俗灵异味道写得挺好
+    raw_quote: 你看你这民俗味道写的挺好的嘛 灵异味道你就写个修仙吗

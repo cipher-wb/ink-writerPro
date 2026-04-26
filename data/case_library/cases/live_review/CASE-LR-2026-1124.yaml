@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1124
+title: 外卖捉鬼系统 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那是25分嘛 | 中二小白，设定割裂，遣词造句出戏，需简化世界观多看书。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 中二小白，设定割裂，遣词造句出戏，需简化世界观多看书。 | 都市加灵异设定融合奇怪，不如纯都市路线;拉仇恨中二且小白，接地气但欠缺打磨
+  observable:
+  - 'genre维度: 都市加灵异设定融合奇怪，不如纯都市路线'
+  - 'character维度: 拉仇恨中二且小白，接地气但欠缺打磨'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 1199
+  - 1345
+  score: 25
+  score_raw: 那是25分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 外卖捉鬼系统
+  genre_guess:
+  - 都市
+  - 灵异
+  - 系统
+  overall_comment: 中二小白，设定割裂，遣词造句出戏，需简化世界观多看书。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市加灵异设定融合奇怪，不如纯都市路线
+    raw_quote: 不要加一些莫名其妙的设定
+  - dimension: character
+    severity: negative
+    content: 拉仇恨中二且小白，接地气但欠缺打磨
+    raw_quote: '这种低身份的场景
+
+      怎么忽然加上这样中二的台词'
+  - dimension: simplicity
+    severity: positive
+    content: 部分小剧场具有吸引力，有天赋
+    raw_quote: 大哥其实写的故事还是比较吸引人的

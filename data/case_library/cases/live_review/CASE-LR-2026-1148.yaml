@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1148
+title: 猎魔人从龙与魔法开始 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 西幻
+  - 猎魔人
+  - 种田
+  - 魅魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多给你66分 | 兔子人设有趣，主线兽人围城危机明确，狗住发育的节奏很对起点口味，签约没有问题。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 兔子人设有趣，主线兽人围城危机明确，狗住发育的节奏很对起点口味，签约没有问题。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 1251
+  - 1390
+  score: 66
+  score_raw: 差不多给你66分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 猎魔人从龙与魔法开始
+  genre_guess:
+  - 西幻
+  - 猎魔人
+  - 种田
+  - 魅魔
+  overall_comment: 兔子人设有趣，主线兽人围城危机明确，狗住发育的节奏很对起点口味，签约没有问题。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 兔子人设鲜明有特色，好感度系统可圈可点
+    raw_quote: 兔子警官也可以 … 兔子人设也很黑子说话吧
+  - dimension: golden_finger
+    severity: positive
+    content: 魅魔文章和兽人大军主线搭配合理
+    raw_quote: 魅蒙文章选白也恰到好处 … 危急兽人大军围城里 这个主线倒可以
+  - dimension: ops
+    severity: neutral
+    content: 审核尺度上没有问题，雪白描写为剧情服务
+    raw_quote: 雪白也恰到好处 审核 不管我觉得你这个审核应该还好

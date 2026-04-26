@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-0354
+title: 美利坚斩杀线 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 民俗
+  - 灵异
+  - 穿越
+  - 美利坚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 那个40多分啊 | 节奏熟练但故事性不足，剧情隔靴挠痒缺乏期待感，美利坚题材太卷，人物人设浅，签约难度高。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏熟练但故事性不足，剧情隔靴挠痒缺乏期待感，美利坚题材太卷，人物人设浅，签约难度高。 | 反转不够强，剧情平淡;主角人设浅，不够突出;美利坚题材太卷，创新不足
+  observable:
+  - 'highpoint维度: 反转不够强，剧情平淡'
+  - 'character维度: 主角人设浅，不够突出'
+  - 'genre维度: 美利坚题材太卷，创新不足'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 3
+  - 90
+  score: null
+  score_raw: 那个40多分啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚斩杀线
+  genre_guess:
+  - 民俗
+  - 灵异
+  - 穿越
+  - 美利坚
+  overall_comment: 节奏熟练但故事性不足，剧情隔靴挠痒缺乏期待感，美利坚题材太卷，人物人设浅，签约难度高。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏比较快
+    raw_quote: 就唯一就节奏比较快嘛
+  - dimension: highpoint
+    severity: negative
+    content: 反转不够强，剧情平淡
+    raw_quote: 反转味道不够...隔靴挠痒嘛对吧
+  - dimension: character
+    severity: negative
+    content: 主角人设浅，不够突出
+    raw_quote: 包括主角的人设啊 怎选的很清场
+  - dimension: genre
+    severity: negative
+    content: 美利坚题材太卷，创新不足
+    raw_quote: 美利坚太卷了 ... 放现在难度太高了

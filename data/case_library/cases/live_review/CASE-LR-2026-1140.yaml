@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1140
+title: 修仙算卦从都是天灵根开始 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 修仙
+  - 算卦
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 说不定48分吧 | 题材老旧，设定堆砌过多，货币体系崩坏，玩地下城梗破坏代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老旧，设定堆砌过多，货币体系崩坏，玩地下城梗破坏代入感。 | 天灵根、算卦系统等元素都是老题材;设定过于复杂，选择多种价格没必要;货币体系设计失控，12两黄金看灵根完全不合理
+  observable:
+  - 'genre维度: 天灵根、算卦系统等元素都是老题材'
+  - 'pacing维度: 设定过于复杂，选择多种价格没必要'
+  - 'ops维度: 货币体系设计失控，12两黄金看灵根完全不合理'
+  - 'misc维度: 频繁插入地下城游戏梗，出戏严重'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 166
+  - 320
+  score: 48
+  score_raw: 说不定48分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙算卦从都是天灵根开始
+  genre_guess:
+  - 修仙
+  - 算卦
+  - 系统
+  overall_comment: 题材老旧，设定堆砌过多，货币体系崩坏，玩地下城梗破坏代入感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 天灵根、算卦系统等元素都是老题材
+    raw_quote: 修仙算卦人从都是天灵根开始 也是个老题材了
+  - dimension: pacing
+    severity: negative
+    content: 设定过于复杂，选择多种价格没必要
+    raw_quote: 你选择不要这么复杂呀
+  - dimension: ops
+    severity: negative
+    content: 货币体系设计失控，12两黄金看灵根完全不合理
+    raw_quote: 12黄金什么概念啊 大哥购买这个村子里面人的命了
+  - dimension: misc
+    severity: negative
+    content: 频繁插入地下城游戏梗，出戏严重
+    raw_quote: 玩地下城玩疯掉俩 开了两个史诗可还行

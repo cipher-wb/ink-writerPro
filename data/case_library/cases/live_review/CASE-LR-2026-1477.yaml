@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1477
+title: 第七天魔网 (fail / 17分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 玄幻
+  - 日本战国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十七封十八封的样子 | 太小白，蝎子没用，没事件，没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太小白，蝎子没用，没事件，没人看。 | 蝎子没必要，被时代淘汰
+  observable:
+  - 'opening维度: 蝎子没必要，被时代淘汰'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 1531
+  - 1620
+  score: 17
+  score_raw: 十七封十八封的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 第七天魔网
+  genre_guess:
+  - 玄幻
+  - 日本战国
+  overall_comment: 太小白，蝎子没用，没事件，没人看。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 蝎子没必要，被时代淘汰
+    raw_quote: 蝎子已经被时代淘汰了

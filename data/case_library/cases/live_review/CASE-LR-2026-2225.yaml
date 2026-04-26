@@ -1,0 +1,84 @@
+case_id: CASE-LR-2026-2225
+title: 都市校园地雷妹 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 都市
+  - 校园
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分嘛好吧 | 这次不如上次流水线写得好，人设立不住，秘密太无聊，缺乏吸引力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 这次不如上次流水线写得好，人设立不住，秘密太无聊，缺乏吸引力。 | 女主形象不讨喜，追星设定立不住;核心秘密无聊，缺乏驱动力;整体不如上次投稿，质量下滑明显
+  observable:
+  - 'character维度: 女主形象不讨喜，追星设定立不住'
+  - 'highpoint维度: 核心秘密无聊，缺乏驱动力'
+  - 'misc维度: 整体不如上次投稿，质量下滑明显'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 356
+  - 488
+  score: 50
+  score_raw: 50分嘛好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 都市校园地雷妹
+  genre_guess:
+  - 都市
+  - 校园
+  - 轻小说
+  overall_comment: 这次不如上次流水线写得好，人设立不住，秘密太无聊，缺乏吸引力。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主形象不讨喜，追星设定立不住
+    raw_quote: '追星啊
+
+      哥哥跟我
+
+      说你的老公的小脸蛋
+
+      他真这么小
+
+      凭他笑话
+
+      跟破盒子贴贴
+
+      好笨啊
+
+      这种这种女人是不行'
+  - dimension: highpoint
+    severity: negative
+    content: 核心秘密无聊，缺乏驱动力
+    raw_quote: '这个危险程度太差了...这个也叫秘密吗
+
+      这不叫秘密
+
+      这个秘密没意思'
+  - dimension: misc
+    severity: negative
+    content: 整体不如上次投稿，质量下滑明显
+    raw_quote: '哎呀真不如上一次好看
+
+      上一次挺好看的兄弟
+
+      上一次我是十大十的
+
+      给你59
+
+      这一次真没59分'

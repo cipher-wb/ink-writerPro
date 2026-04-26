@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0728
+title: 桃花源记修仙 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分嘛 | 整体设定老套平淡，缺乏好设计和故事突出点，主角身份无聊，仅有文笔比例尚可支撑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 整体设定老套平淡，缺乏好设计和故事突出点，主角身份无聊，仅有文笔比例尚可支撑。 | 开篇设定无意，桃花源设计缺乏新意;主角身份和动机无聊，缺乏代入感
+  observable:
+  - 'opening维度: 开篇设定无意，桃花源设计缺乏新意'
+  - 'character维度: 主角身份和动机无聊，缺乏代入感'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 596
+  - 700
+  score: 35
+  score_raw: 35分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 桃花源记修仙
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 民俗
+  overall_comment: 整体设定老套平淡，缺乏好设计和故事突出点，主角身份无聊，仅有文笔比例尚可支撑。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇设定无意，桃花源设计缺乏新意
+    raw_quote: 太俗了啊桃花源显得相从了 这个桃花源没什么设计
+  - dimension: character
+    severity: negative
+    content: 主角身份和动机无聊，缺乏代入感
+    raw_quote: 主角的身份控制很无聊 想念师傅这个也挺无聊
+  - dimension: simplicity
+    severity: neutral
+    content: 文笔比例尚可，但前期设计缺乏吸引点
+    raw_quote: 比例还好 35分嘛比例还可以

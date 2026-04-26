@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1422
+title: 东莞足浴（南北） (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 年代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 45蓝精灵狂飙 | 题材敏感，雪白尺度大，容易不过审，建议去蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材敏感，雪白尺度大，容易不过审，建议去蓝精灵。 | 东莞足浴极易触发审核;在起点发风险高，可能被封
+  observable:
+  - 'taboo维度: 东莞足浴极易触发审核'
+  - 'ops维度: 在起点发风险高，可能被封'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 721
+  - 770
+  score: 45
+  score_raw: 45分 45蓝精灵狂飙
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东莞足浴（南北）
+  genre_guess:
+  - 都市
+  - 重生
+  - 年代
+  overall_comment: 题材敏感，雪白尺度大，容易不过审，建议去蓝精灵。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 东莞足浴极易触发审核
+    raw_quote: 这句话审核就给你盯上了
+  - dimension: ops
+    severity: negative
+    content: 在起点发风险高，可能被封
+    raw_quote: 起点审核 我估计你过审了也是天天给你屏蔽

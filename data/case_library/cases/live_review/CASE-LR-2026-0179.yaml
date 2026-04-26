@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0179
+title: 蒸汽朋克下坠：海克斯世界 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 蒸汽朋克
+  - 穿越
+  - 世界观
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 到不了40分 | 只有世界观和金手指，完全没剧情，人物没有驱动，纯粹自嗨设定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 只有世界观和金手指，完全没剧情，人物没有驱动，纯粹自嗨设定。 | 蒸汽朋克世界观陌生且没有剧情支撑，读者不爱看。;全篇都在下坠，没有有效冲突和钩子。
+  observable:
+  - 'genre维度: 蒸汽朋克世界观陌生且没有剧情支撑，读者不爱看。'
+  - 'highpoint维度: 全篇都在下坠，没有有效冲突和钩子。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 1410
+  - 1550
+  score: null
+  score_raw: 到不了40分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 蒸汽朋克下坠：海克斯世界
+  genre_guess:
+  - 蒸汽朋克
+  - 穿越
+  - 世界观
+  overall_comment: 只有世界观和金手指，完全没剧情，人物没有驱动，纯粹自嗨设定。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 蒸汽朋克世界观陌生且没有剧情支撑，读者不爱看。
+    raw_quote: 他就是找世界观跟金属者去了没剧情
+  - dimension: highpoint
+    severity: negative
+    content: 全篇都在下坠，没有有效冲突和钩子。
+    raw_quote: 掉下来有啥抽的

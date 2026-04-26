@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1332
+title: 灵异直播鬼故事 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 惊悚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 代入感差，视角乱转，氛围营造失败，不吓人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感差，视角乱转，氛围营造失败，不吓人。 | 视角乱跳，无法建立真实恐怖感;主角人设像小屌丝，缺乏吸引力;叙事节奏混乱，不会讲鬼故事
+  observable:
+  - 'opening维度: 视角乱跳，无法建立真实恐怖感'
+  - 'character维度: 主角人设像小屌丝，缺乏吸引力'
+  - 'pacing维度: 叙事节奏混乱，不会讲鬼故事'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 76
+  - 125
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 灵异直播鬼故事
+  genre_guess:
+  - 灵异
+  - 都市
+  - 惊悚
+  overall_comment: 代入感差，视角乱转，氛围营造失败，不吓人。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 视角乱跳，无法建立真实恐怖感
+    raw_quote: 视角天天变，一点都不吓人
+  - dimension: character
+    severity: negative
+    content: 主角人设像小屌丝，缺乏吸引力
+    raw_quote: 感觉刘玉东没有主角人设，就像一个小屌丝
+  - dimension: pacing
+    severity: negative
+    content: 叙事节奏混乱，不会讲鬼故事
+    raw_quote: 根本不会讲鬼故事，没办法

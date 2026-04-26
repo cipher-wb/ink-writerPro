@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-2047
+title: 试神之路 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 恐怖
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔太水、过度场景描写，缺乏主角目的性和心理活动，属于故弄玄虚。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔太水、过度场景描写，缺乏主角目的性和心理活动，属于故弄玄虚。 | 过于注重场景描写，细节冗余;没有心理活动，主角目的不明;缺乏期待感，读者一头雾水
+  observable:
+  - 'simplicity维度: 过于注重场景描写，细节冗余'
+  - 'character维度: 没有心理活动，主角目的不明'
+  - 'hook维度: 缺乏期待感，读者一头雾水'
+  - 'pacing维度: 节奏太慢，故弄玄虚'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 201
+  - 400
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 试神之路
+  genre_guess:
+  - 都市
+  - 恐怖
+  - 灵异
+  overall_comment: 文笔太水、过度场景描写，缺乏主角目的性和心理活动，属于故弄玄虚。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 过于注重场景描写，细节冗余
+    raw_quote: 老是写这些我无聊的场景 穿个衣服都要这么写
+  - dimension: character
+    severity: negative
+    content: 没有心理活动，主角目的不明
+    raw_quote: 你没心理活动呀 本质上 我不知道你在干嘛
+  - dimension: hook
+    severity: negative
+    content: 缺乏期待感，读者一头雾水
+    raw_quote: 读者你要给读者什么期待感呢 没期待感呀
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，故弄玄虚
+    raw_quote: 太慢了 故动玄学

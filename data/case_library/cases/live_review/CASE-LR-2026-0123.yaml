@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0123
+title: 拯救华夏文明 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 拯救流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话 虽然有点乐子 但是确实也只能给到16分 | 文风太像贴吧第一人称，不入主流网文，16分建议改写东莞往事式都市文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文风太像贴吧第一人称，不入主流网文，16分建议改写东莞往事式都市文。 | 文风极度不匹配网文平台，近似贴吧文;拯救华夏的选题过于宏大，无法落地
+  observable:
+  - 'ops维度: 文风极度不匹配网文平台，近似贴吧文'
+  - 'genre维度: 拯救华夏的选题过于宏大，无法落地'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 650
+  - 740
+  score: 16
+  score_raw: 打分的话 虽然有点乐子 但是确实也只能给到16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 拯救华夏文明
+  genre_guess:
+  - 历史
+  - 穿越
+  - 拯救流
+  overall_comment: 文风太像贴吧第一人称，不入主流网文，16分建议改写东莞往事式都市文。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 文风极度不匹配网文平台，近似贴吧文
+    raw_quote: 写法很有朦胧诗派的感觉，写实试试这个吧
+  - dimension: genre
+    severity: negative
+    content: 拯救华夏的选题过于宏大，无法落地
+    raw_quote: 大哥你把人设写的屌丝了

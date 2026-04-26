@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0598
+title: 帝皇铠甲在迪迦 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 同人
+  - 特摄
+  - 奥特曼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分最多吧 | 情绪变化描写太弱，爽点期待感不足，代入感差，完全没写起来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪变化描写太弱，爽点期待感不足，代入感差，完全没写起来。 | 情绪变化弱，期待感和爽点太少;开篇打斗代入感差，没现代人思维
+  observable:
+  - 'character维度: 情绪变化弱，期待感和爽点太少'
+  - 'opening维度: 开篇打斗代入感差，没现代人思维'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 1451
+  - 1600
+  score: 28
+  score_raw: 28分最多吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 帝皇铠甲在迪迦
+  genre_guess:
+  - 同人
+  - 特摄
+  - 奥特曼
+  overall_comment: 情绪变化描写太弱，爽点期待感不足，代入感差，完全没写起来。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 情绪变化弱，期待感和爽点太少
+    raw_quote: 情绪变化太弱了...多写绝望无力然后爽起来
+  - dimension: opening
+    severity: negative
+    content: 开篇打斗代入感差，没现代人思维
+    raw_quote: 代入感也挺差的...现代人就有现代的思维

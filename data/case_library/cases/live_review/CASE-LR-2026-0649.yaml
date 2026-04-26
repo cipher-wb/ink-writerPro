@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0649
+title: 西游之逆天改命 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 西游
+  - 同人
+  - 阴谋论
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得只能给到给到就20分最多了好吧 | 对网文理解还停留在传权时代，自嗨的阴谋论没人看，建议推翻重来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对网文理解还停留在传权时代，自嗨的阴谋论没人看，建议推翻重来。 | 西游阴谋论太老太套路，天涯十几年前的梗;找不到主角，开局大目标打如来，没有具体事件;孙悟空都立不住，整个书是自嗨产物
+  observable:
+  - 'genre维度: 西游阴谋论太老太套路，天涯十几年前的梗'
+  - 'opening维度: 找不到主角，开局大目标打如来，没有具体事件'
+  - 'character维度: 孙悟空都立不住，整个书是自嗨产物'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 741
+  - 820
+  score: 20
+  score_raw: 我觉得只能给到给到就20分最多了好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 西游之逆天改命
+  genre_guess:
+  - 西游
+  - 同人
+  - 阴谋论
+  overall_comment: 对网文理解还停留在传权时代，自嗨的阴谋论没人看，建议推翻重来。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西游阴谋论太老太套路，天涯十几年前的梗
+    raw_quote: 这个阴谋论太老了...根本就不爱看
+  - dimension: opening
+    severity: negative
+    content: 找不到主角，开局大目标打如来，没有具体事件
+    raw_quote: 找不到主角...不是一个网文...这这不是网文
+  - dimension: character
+    severity: negative
+    content: 孙悟空都立不住，整个书是自嗨产物
+    raw_quote: 没有一个人物能立住...完全是自嗨的东西

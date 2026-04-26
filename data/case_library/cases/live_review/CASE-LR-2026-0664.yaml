@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0664
+title: 民国猎鬼人 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 灵异
+  - 民国
+  - 抗日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个不行这个不行 | 杀洋人加点的主线过不了审，情绪太正太尴尬，像抗日神剧，退步严重。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 杀洋人加点的主线过不了审，情绪太正太尴尬，像抗日神剧，退步严重。 | 杀人加点涉及种族仇杀，审核绝对过不了;忧国忧民情绪写得假大空，像抗日神剧;整体退步，不如以前
+  observable:
+  - 'taboo维度: 杀人加点涉及种族仇杀，审核绝对过不了'
+  - 'character维度: 忧国忧民情绪写得假大空，像抗日神剧'
+  - 'misc维度: 整体退步，不如以前'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1941
+  - 2020
+  score: null
+  score_raw: 这个不行这个不行
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 民国猎鬼人
+  genre_guess:
+  - 灵异
+  - 民国
+  - 抗日
+  overall_comment: 杀洋人加点的主线过不了审，情绪太正太尴尬，像抗日神剧，退步严重。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 杀人加点涉及种族仇杀，审核绝对过不了
+    raw_quote: 这主线过不了审啊...杀洋人都可以加点...就没办法保了
+  - dimension: character
+    severity: negative
+    content: 忧国忧民情绪写得假大空，像抗日神剧
+    raw_quote: 这情绪...写的很尴尬...我感觉你就是神剧看多了
+  - dimension: misc
+    severity: negative
+    content: 整体退步，不如以前
+    raw_quote: 这个思路退步了...尤其开头都是毒点

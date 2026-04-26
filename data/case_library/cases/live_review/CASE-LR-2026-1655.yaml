@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1655
+title: 三体同仁 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 科幻
+  - 穿越
+  - 三体
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 水平还可以 | 蹭三体热度但主线单薄，节奏虽快但驱动力弱，水平尚可但签约意义不大。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蹭三体热度但主线单薄，节奏虽快但驱动力弱，水平尚可但签约意义不大。 | 节奏虽快但故事动机无聊;蹭逻辑梗但缺乏期待感
+  observable:
+  - 'pacing维度: 节奏虽快但故事动机无聊'
+  - 'hook维度: 蹭逻辑梗但缺乏期待感'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 47
+  - 155
+  score: null
+  score_raw: 水平还可以
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 三体同仁
+  genre_guess:
+  - 科幻
+  - 穿越
+  - 三体
+  overall_comment: 蹭三体热度但主线单薄，节奏虽快但驱动力弱，水平尚可但签约意义不大。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏虽快但故事动机无聊
+    raw_quote: 节奏虽然快 但是我觉得这个去动力没意思
+  - dimension: hook
+    severity: negative
+    content: 蹭逻辑梗但缺乏期待感
+    raw_quote: 柳昌也很专业……读者的期待感就是你牛逼啦然后打脸三体人 这个其实很单薄
+  - dimension: genre
+    severity: neutral
+    content: 三体同仁审核风险高，不建议光明正大用
+    raw_quote: 三体同仁不要光明正大地戴……因为三体是有版权的

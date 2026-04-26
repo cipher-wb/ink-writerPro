@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0149
+title: 战争祭祀 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 军事
+  - 间谍
+  - 现代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 垃圾题材就完事了 | 军事间谍题材不接地气，外国人视角代入困难，没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 军事间谍题材不接地气，外国人视角代入困难，没人看。 | 俄乌现实敏感题材，起不了成绩;开头没有中国人视角，读者代入不了
+  observable:
+  - 'genre维度: 俄乌现实敏感题材，起不了成绩'
+  - 'opening维度: 开头没有中国人视角，读者代入不了'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 296
+  - 301
+  score: null
+  score_raw: 垃圾题材就完事了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 战争祭祀
+  genre_guess:
+  - 军事
+  - 间谍
+  - 现代
+  overall_comment: 军事间谍题材不接地气，外国人视角代入困难，没人看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 俄乌现实敏感题材，起不了成绩
+    raw_quote: 你不要觉得这种军事小说能写 其实也写不了
+  - dimension: opening
+    severity: negative
+    content: 开头没有中国人视角，读者代入不了
+    raw_quote: 我们CHNAS 那我们到了一个乌克兰 我们看到什么东西 我们不懂 我们是不是要以中国人的视角去想对吧

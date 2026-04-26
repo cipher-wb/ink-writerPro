@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1492
+title: 美国大战飞疆 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 末世
+  - 僵尸
+  - 美国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就21升吧 | 题材太炸裂好笑，过不了，只是把剧本当小说写
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太炸裂好笑，过不了，只是把剧本当小说写 | 美国僵尸题材太过可笑，根本过不了;缺少小说应有的代入感和主线
+  observable:
+  - 'genre维度: 美国僵尸题材太过可笑，根本过不了'
+  - 'hook维度: 缺少小说应有的代入感和主线'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 476
+  - 525
+  score: 21
+  score_raw: 就21升吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美国大战飞疆
+  genre_guess:
+  - 末世
+  - 僵尸
+  - 美国
+  overall_comment: 题材太炸裂好笑，过不了，只是把剧本当小说写
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 美国僵尸题材太过可笑，根本过不了
+    raw_quote: 这题材太好笑了 这就过不了 过不了
+  - dimension: hook
+    severity: negative
+    content: 缺少小说应有的代入感和主线
+    raw_quote: 主线加入感什么的 写的太少了

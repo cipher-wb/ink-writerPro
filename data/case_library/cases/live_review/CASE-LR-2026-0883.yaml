@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0883
+title: 主神空间无限恐怖同人 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 无限流
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给他个20分吧 | 节奏过快像打游戏，毫无沉浸感，金手指串台严重，人物立不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏过快像打游戏，毫无沉浸感，金手指串台严重，人物立不住。 | 节奏极快且无沉浸感，像NPC赶场;金手指出戏，修仙功法加生化危机极其违和
+  observable:
+  - 'pacing维度: 节奏极快且无沉浸感，像NPC赶场'
+  - 'golden_finger维度: 金手指出戏，修仙功法加生化危机极其违和'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 901
+  - 940
+  score: 20
+  score_raw: 就给他个20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 主神空间无限恐怖同人
+  genre_guess:
+  - 无限流
+  - 同人
+  overall_comment: 节奏过快像打游戏，毫无沉浸感，金手指串台严重，人物立不住。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏极快且无沉浸感，像NPC赶场
+    raw_quote: 太快了 一点都没有沉浸感 … 反正就跟PC一样 都是NPC嘛
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指出戏，修仙功法加生化危机极其违和
+    raw_quote: 金手指是修炼功法 这太出戏了吧 这金手指大哥喜欢弘扬中国传统文化 有什么问题对吧 给爱丽丝上一课呀

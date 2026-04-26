@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2191
+title: 猎魔人罗恩斯不打算配合龙与魔法 荣耀与救赎在引诱谁的歌声中回荡 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xwfTB3Ee2
+scope:
+  genre:
+  - 猎魔人
+  - 龙与魔法
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 设定看似牛逼但步子不能迈太大，建议苟住发展。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwfTB3Ee2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定看似牛逼但步子不能迈太大，建议苟住发展。 | 设定步子太大，需收敛
+  observable:
+  - 'pacing维度: 设定步子太大，需收敛'
+live_review_meta:
+  source_bvid: BV1xwfTB3Ee2
+  source_line_range:
+  - 31
+  - 43
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 猎魔人罗恩斯不打算配合龙与魔法 荣耀与救赎在引诱谁的歌声中回荡
+  genre_guess:
+  - 猎魔人
+  - 龙与魔法
+  - 穿越
+  overall_comment: 设定看似牛逼但步子不能迈太大，建议苟住发展。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 设定步子太大，需收敛
+    raw_quote: 步子不能迈了
+  - dimension: misc
+    severity: positive
+    content: 苟住没问题
+    raw_quote: 苟住没问题

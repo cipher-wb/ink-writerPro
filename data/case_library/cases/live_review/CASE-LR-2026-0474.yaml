@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0474
+title: 凡人乍仙传 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这次22分 | 代入感太差，事件堆砌无重点，双引号大段对话很啰嗦。倒叙8000字完全可以删掉，看书太少，自嗨写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感太差，事件堆砌无重点，双引号大段对话很啰嗦。倒叙8000字完全可以删掉，看书太少，自嗨写法。 | 书名结合修仙和骗子，卖点无聊;代入感极差，不写主角心理盘算和企图;节奏拖沓，8000字倒叙应全删，像小说中期不像开头
+  observable:
+  - 'simplicity维度: 书名结合修仙和骗子，卖点无聊'
+  - 'character维度: 代入感极差，不写主角心理盘算和企图'
+  - 'pacing维度: 节奏拖沓，8000字倒叙应全删，像小说中期不像开头'
+  - 'simplicity维度: 大段双引号对话，写法有问题，需练笔'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 217
+  - 333
+  score: 22
+  score_raw: 这次22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 凡人乍仙传
+  genre_guess:
+  - 修仙
+  - 穿越
+  overall_comment: 代入感太差，事件堆砌无重点，双引号大段对话很啰嗦。倒叙8000字完全可以删掉，看书太少，自嗨写法。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 书名结合修仙和骗子，卖点无聊
+    raw_quote: 当你想出起初这5个字的时候 就说明大家对网络完全不了解...这个卖点根本就很无聊的
+  - dimension: character
+    severity: negative
+    content: 代入感极差，不写主角心理盘算和企图
+    raw_quote: 你你不写代入感 你你写这种场景干嘛...心理活动太少了
+  - dimension: pacing
+    severity: negative
+    content: 节奏拖沓，8000字倒叙应全删，像小说中期不像开头
+    raw_quote: 这像小说的中期啊...他妈的 8，000字了 你真的是倒叙了 8，000字 全删掉
+  - dimension: simplicity
+    severity: negative
+    content: 大段双引号对话，写法有问题，需练笔
+    raw_quote: 你为什么老是这样写啊...就一个双引号 然后说话的方式就一直写一直写

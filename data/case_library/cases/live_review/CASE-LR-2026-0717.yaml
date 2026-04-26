@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0717
+title: 西游：唐僧系统 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 西游
+  - 同人
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十多分吧/金手指太拉胯 | 文笔扎实，有直发水平，但系统突兀、书名不行，金手指缺乏力道。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，有直发水平，但系统突兀、书名不行，金手指缺乏力道。 | 金手指设计出戏，不符合唐三藏爽点
+  observable:
+  - 'golden_finger维度: 金手指设计出戏，不符合唐三藏爽点'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 1166
+  - 1230
+  score: 50
+  score_raw: 五十多分吧/金手指太拉胯
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 西游：唐僧系统
+  genre_guess:
+  - 西游
+  - 同人
+  - 系统流
+  overall_comment: 文笔扎实，有直发水平，但系统突兀、书名不行，金手指缺乏力道。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设计出戏，不符合唐三藏爽点
+    raw_quote: 系统我还是看不懂...系统不咋样兄弟...这个金手指没感觉
+  - dimension: pacing
+    severity: neutral
+    content: 节奏太快，缺适当试剑
+    raw_quote: 节奏太有点太快了...金手指...应该先试剑

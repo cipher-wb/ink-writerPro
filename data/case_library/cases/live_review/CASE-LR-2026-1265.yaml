@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1265
+title: 半人马星系杀虫队 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 科幻
+  - 机甲
+  - 虫族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分是吧 | 硬科幻自嗨，完全不给读者解释，时间地点人物不清，无代入感，读者根本看不懂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 硬科幻自嗨，完全不给读者解释，时间地点人物不清，无代入感，读者根本看不懂。 | 完全自嗨，不解释设定，读者看不懂;机甲元素已被淘汰，代入感差
+  observable:
+  - 'simplicity维度: 完全自嗨，不解释设定，读者看不懂'
+  - 'ops维度: 机甲元素已被淘汰，代入感差'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 591
+  - 680
+  score: 16
+  score_raw: 16分是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 半人马星系杀虫队
+  genre_guess:
+  - 科幻
+  - 机甲
+  - 虫族
+  overall_comment: 硬科幻自嗨，完全不给读者解释，时间地点人物不清，无代入感，读者根本看不懂。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 完全自嗨，不解释设定，读者看不懂
+    raw_quote: 所有的科幻我最怕硬科幻...不给读者解释啊
+  - dimension: ops
+    severity: negative
+    content: 机甲元素已被淘汰，代入感差
+    raw_quote: 机甲元素已经被淘汰了，其实现在读者也不爱看机甲元素

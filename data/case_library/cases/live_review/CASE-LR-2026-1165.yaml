@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1165
+title: 诡异事务术施（鬼疫诊所） (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 诡异
+  - 都市
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20按分吧 | 元素缝合混乱，基调严重不符，‘西西’‘义父’等词严重破坏诡异的严肃氛围，世界观不清不楚。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素缝合混乱，基调严重不符，‘西西’‘义父’等词严重破坏诡异的严肃氛围，世界观不清不楚。 | 鬼疫诊所的沉重氛围与轻小说式的‘西西哈哈’严重不符，破坏了题材的智斗感;世界观介绍不清，中西混杂、用词破坏沉浸感
+  observable:
+  - 'genre维度: 鬼疫诊所的沉重氛围与轻小说式的‘西西哈哈’严重不符，破坏了题材的智斗感'
+  - 'misc维度: 世界观介绍不清，中西混杂、用词破坏沉浸感'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1600
+  - 1675
+  score: 20
+  score_raw: 20按分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异事务术施（鬼疫诊所）
+  genre_guess:
+  - 诡异
+  - 都市
+  - 轻小说
+  overall_comment: 元素缝合混乱，基调严重不符，‘西西’‘义父’等词严重破坏诡异的严肃氛围，世界观不清不楚。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 鬼疫诊所的沉重氛围与轻小说式的‘西西哈哈’严重不符，破坏了题材的智斗感
+    raw_quote: 这个有点太清淡了 你不是鬼疫诊所吗 我觉得这个说的基调不符合 鬼疫诊所这种 不至于清小说 可爱的妹妹这种吧
+  - dimension: misc
+    severity: negative
+    content: 世界观介绍不清，中西混杂、用词破坏沉浸感
+    raw_quote: 棒富婆啊义父啊这种 但是很破坏氛围 你能想在鬼秘之中里面 你出来这种义父啊西西啊

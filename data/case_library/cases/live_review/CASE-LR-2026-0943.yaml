@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0943
+title: 宿舍聊天(南疆大学) (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 宿舍生活
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23吧 | 过时的宿舍聊天+系统驱动力，蓝精灵套路，发起点无意义
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 过时的宿舍聊天+系统驱动力，蓝精灵套路，发起点无意义 | 开头宿舍闲聊无事件，读者直接崩;系统全程牵着鼻子走，缺乏主动驱动力
+  observable:
+  - 'pacing维度: 开头宿舍闲聊无事件，读者直接崩'
+  - 'golden_finger维度: 系统全程牵着鼻子走，缺乏主动驱动力'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 1175
+  - 1383
+  score: 23
+  score_raw: 23吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宿舍聊天(南疆大学)
+  genre_guess:
+  - 都市
+  - 系统
+  - 宿舍生活
+  overall_comment: 过时的宿舍聊天+系统驱动力，蓝精灵套路，发起点无意义
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开头宿舍闲聊无事件，读者直接崩
+    raw_quote: 你宿舍一堆人聊来聊去其实真的是番茄风格
+  - dimension: golden_finger
+    severity: negative
+    content: 系统全程牵着鼻子走，缺乏主动驱动力
+    raw_quote: 系统全程牵着鼻子 蓝精灵啊兄弟

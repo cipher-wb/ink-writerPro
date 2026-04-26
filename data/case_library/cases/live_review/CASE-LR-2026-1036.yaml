@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1036
+title: 养猪系统文 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 系统
+  - 搞笑
+  - 废柴流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就18分 最多了 | 人设过于屌丝，读者无法代入，故事没有正经事件，系统玩法低级小白
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设过于屌丝，读者无法代入，故事没有正经事件，系统玩法低级小白 | 角色人设非常屌丝，缺乏代入感;没有故事性和事件，全靠烂梗和系统任务
+  observable:
+  - 'character维度: 角色人设非常屌丝，缺乏代入感'
+  - 'simplicity维度: 没有故事性和事件，全靠烂梗和系统任务'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 146
+  - 300
+  score: 18
+  score_raw: 差不多就18分 最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 养猪系统文
+  genre_guess:
+  - 系统
+  - 搞笑
+  - 废柴流
+  overall_comment: 人设过于屌丝，读者无法代入，故事没有正经事件，系统玩法低级小白
+  comments:
+  - dimension: character
+    severity: negative
+    content: 角色人设非常屌丝，缺乏代入感
+    raw_quote: 人设非常的屌丝 读者代入不了
+  - dimension: simplicity
+    severity: negative
+    content: 没有故事性和事件，全靠烂梗和系统任务
+    raw_quote: 太小白了 这没法拯救啊

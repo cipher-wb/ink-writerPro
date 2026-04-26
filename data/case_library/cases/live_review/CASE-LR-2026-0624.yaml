@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0624
+title: 古怪包子 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 奇幻
+  - 牧师
+  - 哥布林
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多48分 | 文笔不错，牧师打哥布林构想成立，但节奏磨叽、同伴设计错误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，牧师打哥布林构想成立，但节奏磨叽、同伴设计错误。 | 小女孩同伴在成人向网文中格格不入。;写得太慢，大量笔墨耗费在不必要之处。
+  observable:
+  - 'character维度: 小女孩同伴在成人向网文中格格不入。'
+  - 'pacing维度: 写得太慢，大量笔墨耗费在不必要之处。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 546
+  - 635
+  score: 48
+  score_raw: 差不多48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 古怪包子
+  genre_guess:
+  - 奇幻
+  - 牧师
+  - 哥布林
+  - 系统
+  overall_comment: 文笔不错，牧师打哥布林构想成立，但节奏磨叽、同伴设计错误。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 牧师身份切入哥布林任务代入顺畅。
+    raw_quote: 切入蛮好
+  - dimension: character
+    severity: negative
+    content: 小女孩同伴在成人向网文中格格不入。
+    raw_quote: 肚肚干嘛 ... 换个那种 就是女的的反差人设呀 圣女公主精灵那种
+  - dimension: pacing
+    severity: negative
+    content: 写得太慢，大量笔墨耗费在不必要之处。
+    raw_quote: 写的太慢了 是个大问题 嗯啰嗦

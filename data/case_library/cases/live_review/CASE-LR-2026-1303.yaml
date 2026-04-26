@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1303
+title: 桃胡魔王不会梦见修仙导师 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 日轻
+  - 修仙
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分 | 题材缝合太多，没有剧情只有设定介绍，读者不会给机会。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材缝合太多，没有剧情只有设定介绍，读者不会给机会。 | 修仙与西幻缝合过度，背景太杂;全程介绍设定，缺少剧情推进
+  observable:
+  - 'genre维度: 修仙与西幻缝合过度，背景太杂'
+  - 'simplicity维度: 全程介绍设定，缺少剧情推进'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 261
+  - 320
+  score: 28
+  score_raw: 28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 桃胡魔王不会梦见修仙导师
+  genre_guess:
+  - 日轻
+  - 修仙
+  - 西幻
+  overall_comment: 题材缝合太多，没有剧情只有设定介绍，读者不会给机会。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 修仙与西幻缝合过度，背景太杂
+    raw_quote: 缝合的有点太多了 导致你都不能讲剧情
+  - dimension: simplicity
+    severity: negative
+    content: 全程介绍设定，缺少剧情推进
+    raw_quote: 全程就介绍去

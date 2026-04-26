@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1541
+title: 三十六重天 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 仙侠
+  - 地府
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 你百分百五十九分 | 文笔比例尚可，但故事过于单薄套路，一眼望穿，缺少核心看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例尚可，但故事过于单薄套路，一眼望穿，缺少核心看点。 | 剧情老套，一眼看到底，毫无惊喜;矿区剧情单薄，毫无新意;大陆感不强，读者代入差
+  observable:
+  - 'hook维度: 剧情老套，一眼看到底，毫无惊喜'
+  - 'simplicity维度: 矿区剧情单薄，毫无新意'
+  - 'character维度: 大陆感不强，读者代入差'
+  - 'misc维度: 心态太急，不适合写书'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 1310
+  - 1480
+  score: 59
+  score_raw: 你百分百五十九分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 三十六重天
+  genre_guess:
+  - 仙侠
+  - 地府
+  - 系统
+  overall_comment: 文笔比例尚可，但故事过于单薄套路，一眼望穿，缺少核心看点。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 剧情老套，一眼看到底，毫无惊喜
+    raw_quote: 反派就是一眼变直呀 事件一眼变直
+  - dimension: simplicity
+    severity: negative
+    content: 矿区剧情单薄，毫无新意
+    raw_quote: 感觉还是老套吧 没写出什么新东西
+  - dimension: character
+    severity: negative
+    content: 大陆感不强，读者代入差
+    raw_quote: 因为你大陆感也来得不好 大陆感也不强
+  - dimension: misc
+    severity: negative
+    content: 心态太急，不适合写书
+    raw_quote: 因为你太急了 这个心态写不了数

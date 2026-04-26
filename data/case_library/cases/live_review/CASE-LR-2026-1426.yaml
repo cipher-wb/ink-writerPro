@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1426
+title: 植物德鲁伊（金鱼） (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 异界
+  - 种田
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你55分 | 脑洞好但展开无聊，豺狼人事件得改，55分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞好但展开无聊，豺狼人事件得改，55分。 | 豺狼人事件无聊，拖节奏
+  observable:
+  - 'pacing维度: 豺狼人事件无聊，拖节奏'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 921
+  - 970
+  score: 55
+  score_raw: 给你55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 植物德鲁伊（金鱼）
+  genre_guess:
+  - 异界
+  - 种田
+  - 脑洞
+  overall_comment: 脑洞好但展开无聊，豺狼人事件得改，55分。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头与薇薇安拉扯有效果
+    raw_quote: 上面第一章拉扯是可以的 微微安的拉扯
+  - dimension: pacing
+    severity: negative
+    content: 豺狼人事件无聊，拖节奏
+    raw_quote: 这个豺狼人上门这个事件有点太无聊了

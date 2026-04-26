@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1159
+title: 魁身之名（楚门的世界科幻悬疑） (fail / 10分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 科幻
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是给你按十分 | 设定是楚门的世界式假亲情，但因简介已剧透，失去悬念。写法枯燥，读着累，缺乏改的意义，建议推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定是楚门的世界式假亲情，但因简介已剧透，失去悬念。写法枯燥，读着累，缺乏改的意义，建议推翻。 | 简介已剧透亲情都是假的，相当于侦探片开头告知凶手，没有悬念;写法像说明书，读着累，没有追读欲望
+  observable:
+  - 'hook维度: 简介已剧透亲情都是假的，相当于侦探片开头告知凶手，没有悬念'
+  - 'pacing维度: 写法像说明书，读着累，没有追读欲望'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 887
+  - 1010
+  score: 10
+  score_raw: 还是给你按十分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魁身之名（楚门的世界科幻悬疑）
+  genre_guess:
+  - 科幻
+  - 悬疑
+  overall_comment: 设定是楚门的世界式假亲情，但因简介已剧透，失去悬念。写法枯燥，读着累，缺乏改的意义，建议推翻。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 简介已剧透亲情都是假的，相当于侦探片开头告知凶手，没有悬念
+    raw_quote: 你简介已经说过了 这些亲情都是假的 所以说你已经剧透了 等于说你是神探 你一上来告诉我 他是坏蛋 你是柯兰 你一上来告诉你 他是凶手对吧你已经剧透了
+  - dimension: pacing
+    severity: negative
+    content: 写法像说明书，读着累，没有追读欲望
+    raw_quote: 选一味道没感觉出来 反而读这看着很累 写法问题

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0138
+title: 鬼怕我 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 灵异
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话 sorry只能给到给到20来分 22分40 | 鬼故事不吓人，场景不接地气，纯鬼打鬼文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 鬼故事不吓人，场景不接地气，纯鬼打鬼文。 | 鬼故事应从身边接地气场景切入;破解谜题太快，不会讲鬼故事
+  observable:
+  - 'opening维度: 鬼故事应从身边接地气场景切入'
+  - 'pacing维度: 破解谜题太快，不会讲鬼故事'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 178
+  - 182
+  score: 22
+  score_raw: 打分的话 sorry只能给到给到20来分 22分40
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼怕我
+  genre_guess:
+  - 灵异
+  - 都市
+  overall_comment: 鬼故事不吓人，场景不接地气，纯鬼打鬼文。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 鬼故事应从身边接地气场景切入
+    raw_quote: 我认为现在好的领域要从身边讲起 鬼式的开头 这就吓人
+  - dimension: pacing
+    severity: negative
+    content: 破解谜题太快，不会讲鬼故事
+    raw_quote: 就已经开始破解谜题了 太着急了 兄弟不会讲鬼故事

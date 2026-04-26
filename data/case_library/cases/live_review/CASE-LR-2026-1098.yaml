@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1098
+title: 大汉使臣出使西域 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 历史
+  - 汉朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你45 | 简介极佳，但正文过于小白，三人穿越写法模仿痕迹重，浪费了好题材
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介极佳，但正文过于小白，三人穿越写法模仿痕迹重，浪费了好题材 | 正文太白，人设幼稚，对白出戏;开头直接复制猫想狼牙三人穿越模式
+  observable:
+  - 'simplicity维度: 正文太白，人设幼稚，对白出戏'
+  - 'misc维度: 开头直接复制猫想狼牙三人穿越模式'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1100
+  - 1180
+  score: 45
+  score_raw: 给你45
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大汉使臣出使西域
+  genre_guess:
+  - 历史
+  - 汉朝
+  overall_comment: 简介极佳，但正文过于小白，三人穿越写法模仿痕迹重，浪费了好题材
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 正文太白，人设幼稚，对白出戏
+    raw_quote: 大哥整体太白了 我觉得整体太白了
+  - dimension: misc
+    severity: negative
+    content: 开头直接复制猫想狼牙三人穿越模式
+    raw_quote: 你直接三个人穿 这也要学吗 这不是抄吗这

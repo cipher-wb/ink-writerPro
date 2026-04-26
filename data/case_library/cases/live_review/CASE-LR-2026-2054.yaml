@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2054
+title: 开局主攻时乐 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 历史
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好 给他35分 | 有天赋但节奏太快，人设着急，建议选大众朝代。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋但节奏太快，人设着急，建议选大众朝代。 | 节奏太快，人设着急;时代冷门，写法大神化不适合新手;人设立不住
+  observable:
+  - 'pacing维度: 节奏太快，人设着急'
+  - 'genre维度: 时代冷门，写法大神化不适合新手'
+  - 'character维度: 人设立不住'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 1601
+  - 1800
+  score: 35
+  score_raw: 好 给他35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 开局主攻时乐
+  genre_guess:
+  - 历史
+  - 穿越
+  overall_comment: 有天赋但节奏太快，人设着急，建议选大众朝代。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快，人设着急
+    raw_quote: 装逼太着急了 也就尴尬 太急了
+  - dimension: genre
+    severity: negative
+    content: 时代冷门，写法大神化不适合新手
+    raw_quote: 时代尽量选个大助你 你的成绩会好很多
+  - dimension: character
+    severity: negative
+    content: 人设立不住
+    raw_quote: 人设立不住

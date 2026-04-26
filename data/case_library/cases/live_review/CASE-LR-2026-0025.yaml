@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0025
+title: 天方直剑民俗聊斋 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 民俗
+  - 聊斋
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 兄30的 | 描写尚可但剧情缺乏期待感，金手指缺失，30分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 描写尚可但剧情缺乏期待感，金手指缺失，30分。 | 没有金手指，缺乏期待感;故事核心只是求生杀怪，不吸引人
+  observable:
+  - 'golden_finger维度: 没有金手指，缺乏期待感'
+  - 'hook维度: 故事核心只是求生杀怪，不吸引人'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 340
+  - 375
+  score: 30
+  score_raw: 兄30的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天方直剑民俗聊斋
+  genre_guess:
+  - 民俗
+  - 聊斋
+  - 仙侠
+  overall_comment: 描写尚可但剧情缺乏期待感，金手指缺失，30分。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 没有金手指，缺乏期待感
+    raw_quote: 你觉得我金手指出来的话 没意思呀 就是需要一个这样的一个期待感
+  - dimension: hook
+    severity: negative
+    content: 故事核心只是求生杀怪，不吸引人
+    raw_quote: 叽里咕噜半天 其实就是一个怪兽危机嘛危机 然后你要杀了求生嘛 没意思的呀

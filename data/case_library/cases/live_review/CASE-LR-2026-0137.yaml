@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0137
+title: 我在洪荒开直播 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 洪荒
+  - 直播
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个给你25分吧 | 恶搞神话人物风险大，盘古女娲当榜一太越界。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 恶搞神话人物风险大，盘古女娲当榜一太越界。 | 戏说盘古女娲，可能被举报或平台不允许;题材在起点不适合，容易因恶搞被封
+  observable:
+  - 'taboo维度: 戏说盘古女娲，可能被举报或平台不允许'
+  - 'genre维度: 题材在起点不适合，容易因恶搞被封'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 174
+  - 177
+  score: 25
+  score_raw: 这个给你25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在洪荒开直播
+  genre_guess:
+  - 洪荒
+  - 直播
+  - 恶搞
+  overall_comment: 恶搞神话人物风险大，盘古女娲当榜一太越界。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 戏说盘古女娲，可能被举报或平台不允许
+    raw_quote: 这种有点有点恶搞了 盘古女娲这种给你来打赏 当榜一大姐 你不要黑这些人物啊
+  - dimension: genre
+    severity: negative
+    content: 题材在起点不适合，容易因恶搞被封
+    raw_quote: 我觉得这个脑洞起点肯定不太行 起点肯定不合理 而且你说不定有人举报南京

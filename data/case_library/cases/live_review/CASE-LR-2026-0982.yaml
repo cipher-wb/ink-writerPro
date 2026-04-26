@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0982
+title: 穿越古代救嫂嫂 (pass / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 古代
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40分以上 | 流畅有看点，但剧情俗套容易笼里，卖点单薄。伦理关系暧昧容易踩审底线，需谨慎把握尺度。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 流畅有看点，但剧情俗套容易笼里，卖点单薄。伦理关系暧昧容易踩审底线，需谨慎把握尺度。 | 叔嫂暧昧拉扯很容易擦枪走火，踩伦理红线。
+  observable:
+  - 'taboo维度: 叔嫂暧昧拉扯很容易擦枪走火，踩伦理红线。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 3511
+  - 3650
+  score: 40
+  score_raw: 差不多40分以上
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 穿越古代救嫂嫂
+  genre_guess:
+  - 古代
+  - 穿越
+  overall_comment: 流畅有看点，但剧情俗套容易笼里，卖点单薄。伦理关系暧昧容易踩审底线，需谨慎把握尺度。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 写得流畅，古代叙事也还行，读得下去。
+    raw_quote: 写的倒是流畅的...流畅是流畅的...这很流畅
+  - dimension: taboo
+    severity: negative
+    content: 叔嫂暧昧拉扯很容易擦枪走火，踩伦理红线。
+    raw_quote: 如果你真的上了...那可能会卡...但你要是真的有什么...调教情节...龙女情节...他可能真会卡

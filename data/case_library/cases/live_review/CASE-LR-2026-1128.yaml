@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-1128
+title: 被大卡车撞到异世界 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 变身
+  - 穿越
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你放首小哪吒 | 女生文笔细腻但主线无效，建议改男频男主并加入明确主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 女生文笔细腻但主线无效，建议改男频男主并加入明确主线。 | 穿越后公路文式推进，迟迟无主线;男主思维过于女性化，缺乏代入感
+  observable:
+  - 'opening维度: 穿越后公路文式推进，迟迟无主线'
+  - 'character维度: 男主思维过于女性化，缺乏代入感'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 1783
+  - 1913
+  score: null
+  score_raw: 给你放首小哪吒
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 被大卡车撞到异世界
+  genre_guess:
+  - 变身
+  - 穿越
+  - 都市
+  overall_comment: 女生文笔细腻但主线无效，建议改男频男主并加入明确主线。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越后公路文式推进，迟迟无主线
+    raw_quote: '不要写这种公路文
+
+      就是你展碰到啥写到啥'
+  - dimension: character
+    severity: negative
+    content: 男主思维过于女性化，缺乏代入感
+    raw_quote: '这种想法太女生了
+
+      男的肯定不会这么说话'
+  - dimension: genre
+    severity: neutral
+    content: 书名有市场，但节奏与金手指需要加强
+    raw_quote: '书名不错的
+
+      但是尽量写个拦住文'

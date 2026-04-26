@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2208
+title: 东京律师事 (pass / 60分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 都市
+  - 东京
+  - 律师
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就60分吧 | 主线过关，把握住电车痴汉的爽点，但细节处理过火，修改后可以线下签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线过关，把握住电车痴汉的爽点，但细节处理过火，修改后可以线下签。 | 某些细节过于夸张失实，需要注意尺度;主角不能太猥琐，态度不应出现厌恶词
+  observable:
+  - 'misc维度: 某些细节过于夸张失实，需要注意尺度'
+  - 'character维度: 主角不能太猥琐，态度不应出现厌恶词'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 503
+  - 581
+  score: 60
+  score_raw: 差不多就60分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 东京律师事
+  genre_guess:
+  - 都市
+  - 东京
+  - 律师
+  overall_comment: 主线过关，把握住电车痴汉的爽点，但细节处理过火，修改后可以线下签。
+  comments:
+  - dimension: opening
+    severity: neutral
+    content: 开头要快，多余铺垫可删
+    raw_quote: 摸屁股要快啊...听歌对吧 删掉没有 我觉得不敢加 加了有点慢了
+  - dimension: misc
+    severity: negative
+    content: 某些细节过于夸张失实，需要注意尺度
+    raw_quote: 这3分钟就是另外的电影了...大哥你什么概念啊...你在这个摸就摸了3分钟
+  - dimension: character
+    severity: negative
+    content: 主角不能太猥琐，态度不应出现厌恶词
+    raw_quote: 主角一般都是被动的呀...不要出现这种太贬义的词语

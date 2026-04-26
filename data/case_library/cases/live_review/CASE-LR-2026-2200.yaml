@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2200
+title: 满朝真眼侠 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 历史
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没意思 | 武侠类开局老套，思路陈旧，浪费文笔，建议推翻重来，或在大题材里找微创新。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 武侠类开局老套，思路陈旧，浪费文笔，建议推翻重来，或在大题材里找微创新。 | 破庙开局老套，场景无聊，缺乏新意;题材浪费文笔，建议换大题材加微创新
+  observable:
+  - 'opening维度: 破庙开局老套，场景无聊，缺乏新意'
+  - 'genre维度: 题材浪费文笔，建议换大题材加微创新'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 21
+  - 96
+  score: null
+  score_raw: 没意思
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 满朝真眼侠
+  genre_guess:
+  - 历史
+  - 武侠
+  overall_comment: 武侠类开局老套，思路陈旧，浪费文笔，建议推翻重来，或在大题材里找微创新。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 破庙开局老套，场景无聊，缺乏新意
+    raw_quote: 也是破庙开局嘛...但这个场景还是很无聊
+  - dimension: genre
+    severity: negative
+    content: 题材浪费文笔，建议换大题材加微创新
+    raw_quote: 这题材浪费你的比例了...武侠小说没推荐
+  - dimension: pacing
+    severity: positive
+    content: 文笔干练，事件推进快
+    raw_quote: 事件倒挺快的 节奏快 比例倒是挺干练的

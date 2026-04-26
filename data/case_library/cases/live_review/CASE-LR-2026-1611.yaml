@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1611
+title: 穿越躺平修仙被赶出门 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十盎司马 | 师徒对话太多，设定轰炸，穿越感差，剧情无聊，境界过早抛出。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 师徒对话太多，设定轰炸，穿越感差，剧情无聊，境界过早抛出。 | 开场全是对话设定，缺乏代入感，穿越等于白写;主角人设太屌丝，被仙人跳气死，读者难以代入
+  observable:
+  - 'opening维度: 开场全是对话设定，缺乏代入感，穿越等于白写'
+  - 'character维度: 主角人设太屌丝，被仙人跳气死，读者难以代入'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 490
+  - 569
+  score: 28
+  score_raw: 二十盎司马
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越躺平修仙被赶出门
+  genre_guess:
+  - 修仙
+  - 穿越
+  - 轻松
+  overall_comment: 师徒对话太多，设定轰炸，穿越感差，剧情无聊，境界过早抛出。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开场全是对话设定，缺乏代入感，穿越等于白写
+    raw_quote: 这个穿越等于白写 … 师徒对白太多了 … 没人看兄弟
+  - dimension: character
+    severity: negative
+    content: 主角人设太屌丝，被仙人跳气死，读者难以代入
+    raw_quote: 认识了一个美女网友 … 被仙人跳气死 … 这种人我怎么想跟他们当好主角呢

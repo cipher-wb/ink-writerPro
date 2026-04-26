@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1722
+title: 传玄凡人流 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 仙侠
+  - 传玄
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也快二十五分嘛 | 语文功底扎实但极度缺乏网络意识，纯土著描写无穿越金手指，读着代入感极差。心理活动少，爽点节奏全无。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 语文功底扎实但极度缺乏网络意识，纯土著描写无穿越金手指，读着代入感极差。心理活动少，爽点节奏全无。 | 非穿越、无金手指,纯土著视角，代入感极差;主角心理活动太少，读者无法产生共鸣
+  observable:
+  - 'simplicity维度: 非穿越、无金手指,纯土著视角，代入感极差'
+  - 'character维度: 主角心理活动太少，读者无法产生共鸣'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1262
+  - 1398
+  score: 25
+  score_raw: 也快二十五分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 传玄凡人流
+  genre_guess:
+  - 仙侠
+  - 传玄
+  - 凡人流
+  overall_comment: 语文功底扎实但极度缺乏网络意识，纯土著描写无穿越金手指，读着代入感极差。心理活动少，爽点节奏全无。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 非穿越、无金手指,纯土著视角，代入感极差
+    raw_quote: 穿越加金手指最优解真的是最优先相信我
+  - dimension: character
+    severity: negative
+    content: 主角心理活动太少，读者无法产生共鸣
+    raw_quote: 心里活动太少了，兄弟

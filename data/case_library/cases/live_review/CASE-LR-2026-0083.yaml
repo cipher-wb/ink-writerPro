@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0083
+title: 张骞弟弟 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 历史
+  - 西汉
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十分左右吧 | 切入点偏题到雪白，文笔拖沓像“慢羊羊”，真实感不足，历史文功底不够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点偏题到雪白，文笔拖沓像“慢羊羊”，真实感不足，历史文功底不够。 | 主角心理活动少，像个古代人，真实感弱;文笔拖沓，动作描写全是“缓缓地”，节奏感极差
+  observable:
+  - 'character维度: 主角心理活动少，像个古代人，真实感弱'
+  - 'ops维度: 文笔拖沓，动作描写全是“缓缓地”，节奏感极差'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1286
+  - 1355
+  score: 30
+  score_raw: 三十分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 张骞弟弟
+  genre_guess:
+  - 历史
+  - 西汉
+  - 穿越
+  overall_comment: 切入点偏题到雪白，文笔拖沓像“慢羊羊”，真实感不足，历史文功底不够。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角心理活动少，像个古代人，真实感弱
+    raw_quote: 你是个现代人啊...你在这里有什么目的...心理活动什么的很少
+  - dimension: ops
+    severity: negative
+    content: 文笔拖沓，动作描写全是“缓缓地”，节奏感极差
+    raw_quote: 所有的动作都很慢，缓缓的微微的...九个大哥，太缓了

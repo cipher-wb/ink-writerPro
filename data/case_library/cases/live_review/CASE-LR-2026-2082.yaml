@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2082
+title: 转身成为史莱姆的凌雷 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 奇幻
+  - 变身
+  - 史莱姆
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大概最多只有40多分 | 史莱姆日常缺乏事件冲突，蘑菇戏水等情节过于低幼，需要融入更抓人的创意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 史莱姆日常缺乏事件冲突，蘑菇戏水等情节过于低幼，需要融入更抓人的创意。 | 变身史莱姆卖点单薄，仅靠萌系撑不住长篇;开头水漫金山，直到哥布林抢人方才出现些许看点
+  observable:
+  - 'genre维度: 变身史莱姆卖点单薄，仅靠萌系撑不住长篇'
+  - 'opening维度: 开头水漫金山，直到哥布林抢人方才出现些许看点'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 760
+  - 830
+  score: null
+  score_raw: 大概最多只有40多分
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 转身成为史莱姆的凌雷
+  genre_guess:
+  - 奇幻
+  - 变身
+  - 史莱姆
+  overall_comment: 史莱姆日常缺乏事件冲突，蘑菇戏水等情节过于低幼，需要融入更抓人的创意。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 变身史莱姆卖点单薄，仅靠萌系撑不住长篇
+    raw_quote: 我直播间都欠了两本了，没啥成绩，其实都史莱姆读者也没什么……没事件啊……谁看啊
+  - dimension: opening
+    severity: negative
+    content: 开头水漫金山，直到哥布林抢人方才出现些许看点
+    raw_quote: 前面好水啊对吧……这个可以哎，感觉洛克昂放第一第一句话吧，真不如放第一句话了

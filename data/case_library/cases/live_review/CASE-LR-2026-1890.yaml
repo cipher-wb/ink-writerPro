@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1890
+title: 捡到猫娘都市修仙 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真的太差了，题材扣十分起步 | 风格不伦不类，一会儿都市修仙一会儿轻小说。灵气复苏过时，事件太弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风格不伦不类，一会儿都市修仙一会儿轻小说。灵气复苏过时，事件太弱。 | 风格混乱，都市修仙与轻小说混杂;无事件，纯设定展开
+  observable:
+  - 'genre维度: 风格混乱，都市修仙与轻小说混杂'
+  - 'pacing维度: 无事件，纯设定展开'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1321
+  - 1400
+  score: null
+  score_raw: 真的太差了，题材扣十分起步
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 捡到猫娘都市修仙
+  genre_guess:
+  - 都市
+  - 修仙
+  - 轻小说
+  overall_comment: 风格不伦不类，一会儿都市修仙一会儿轻小说。灵气复苏过时，事件太弱。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 风格混乱，都市修仙与轻小说混杂
+    raw_quote: 现在又冒充轻小说... 不伦不类啊
+  - dimension: pacing
+    severity: negative
+    content: 无事件，纯设定展开
+    raw_quote: 这一上来就是设定啊... 没事件啊

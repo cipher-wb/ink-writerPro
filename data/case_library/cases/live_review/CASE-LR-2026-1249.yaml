@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1249
+title: 全球神话复苏：华夏觉醒 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 都市
+  - 神话
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥给个45分吧 | 情绪和爽点非常到位，适合蓝精灵，但缺一个女性角色作为见证和报恩对象。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪和爽点非常到位，适合蓝精灵，但缺一个女性角色作为见证和报恩对象。 | 缺少一个重要的女性角色和报恩情节来升华爽感
+  observable:
+  - 'character维度: 缺少一个重要的女性角色和报恩情节来升华爽感'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1316
+  - 1382
+  score: 45
+  score_raw: 给大哥给个45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全球神话复苏：华夏觉醒
+  genre_guess:
+  - 都市
+  - 神话
+  - 爽文
+  overall_comment: 情绪和爽点非常到位，适合蓝精灵，但缺一个女性角色作为见证和报恩对象。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 拉仇恨和打脸的情绪非常充足
+    raw_quote: 我觉得情绪很足，解气就解气啊，你拉仇恨我就能把你干翻
+  - dimension: character
+    severity: negative
+    content: 缺少一个重要的女性角色和报恩情节来升华爽感
+    raw_quote: 你需要一个旁边的一个笑话，就是这个圣女落难，他在折服

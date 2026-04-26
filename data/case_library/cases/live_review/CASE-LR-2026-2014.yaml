@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-2014
+title: 传统武侠 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 按时分 | 写法太老气，模仿金庸的江南七怪剧情，过于陈旧，读者已经看腻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法太老气，模仿金庸的江南七怪剧情，过于陈旧，读者已经看腻。 | 剧情和套路太古老，毫无新意。
+  observable:
+  - 'genre维度: 剧情和套路太古老，毫无新意。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 987
+  - 1009
+  score: 30
+  score_raw: 按时分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 传统武侠
+  genre_guess:
+  - 武侠
+  overall_comment: 写法太老气，模仿金庸的江南七怪剧情，过于陈旧，读者已经看腻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 剧情和套路太古老，毫无新意。
+    raw_quote: 这个卖点太古老了 至少五十年了 大哥

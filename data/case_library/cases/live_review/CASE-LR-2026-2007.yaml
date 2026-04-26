@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2007
+title: 赶山人 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 民俗
+  - 仙侠
+  - 志怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 人物和讲故事能力有，但世界观和金手指设定复杂不接地气，上帝视角过多，缺乏好的配角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人物和讲故事能力有，但世界观和金手指设定复杂不接地气，上帝视角过多，缺乏好的配角。 | 上帝视角和设定介绍过多，导致开篇慢热。;金手指和世界观不接地气，难以快速代入。
+  observable:
+  - 'pacing维度: 上帝视角和设定介绍过多，导致开篇慢热。'
+  - 'golden_finger维度: 金手指和世界观不接地气，难以快速代入。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 675
+  - 713
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 赶山人
+  genre_guess:
+  - 民俗
+  - 仙侠
+  - 志怪
+  overall_comment: 人物和讲故事能力有，但世界观和金手指设定复杂不接地气，上帝视角过多，缺乏好的配角。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 上帝视角和设定介绍过多，导致开篇慢热。
+    raw_quote: 还是得提前过来 然后也没有立着一个有人看的配角 ... 上帝视角还是有点多
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指和世界观不接地气，难以快速代入。
+    raw_quote: 你的金手指 我觉得也不接地气 就是你这两个卖点跟金手指不接地气

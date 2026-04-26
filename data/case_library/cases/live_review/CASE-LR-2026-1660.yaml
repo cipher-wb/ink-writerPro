@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1660
+title: 天灾废土重建 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 末世
+  - 废土
+  - 重建
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十分左右吧 | 系统介入生硬，剧情散乱，太文青自嗨缺少网文看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统介入生硬，剧情散乱，太文青自嗨缺少网文看点。 | 系统出现突兀，破坏沉浸感;主角行为逻辑弱，像提线木偶
+  observable:
+  - 'golden_finger维度: 系统出现突兀，破坏沉浸感'
+  - 'character维度: 主角行为逻辑弱，像提线木偶'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 505
+  - 575
+  score: 20
+  score_raw: 二十分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天灾废土重建
+  genre_guess:
+  - 末世
+  - 废土
+  - 重建
+  overall_comment: 系统介入生硬，剧情散乱，太文青自嗨缺少网文看点。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统出现突兀，破坏沉浸感
+    raw_quote: 我觉得这不是一个网络写法……反正就是感觉像那种小时候看的童话冒险记
+  - dimension: character
+    severity: negative
+    content: 主角行为逻辑弱，像提线木偶
+    raw_quote: 就是你的正常的大入感你要干什么你目的性这些看不出来

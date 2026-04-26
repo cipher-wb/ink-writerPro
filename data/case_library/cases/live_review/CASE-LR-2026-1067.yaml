@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-1067
+title: 合欢宗圣女开局吃软饭 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 仙侠
+  - 雪白
+  - 宗门
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三成分吧 | 文笔还行但事件打怪兽无聊，缺乏密闭空间暧昧设计。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔还行但事件打怪兽无聊，缺乏密闭空间暧昧设计。 | 开场事件平淡，应设计二人密闭空间
+  observable:
+  - 'highpoint维度: 开场事件平淡，应设计二人密闭空间'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 741
+  - 770
+  score: 33
+  score_raw: 三成分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 合欢宗圣女开局吃软饭
+  genre_guess:
+  - 仙侠
+  - 雪白
+  - 宗门
+  overall_comment: 文笔还行但事件打怪兽无聊，缺乏密闭空间暧昧设计。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 开场事件平淡，应设计二人密闭空间
+    raw_quote: 一堆人在那打怪兽 ... 这有啥意思啊

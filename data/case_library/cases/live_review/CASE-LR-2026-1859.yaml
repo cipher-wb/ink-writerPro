@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1859
+title: 离婚系统导演娱乐圈文 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 娱乐圈
+  - 系统流
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分 | 切入和第一章没问题，但后续节奏太快人没立好，孟子义梗太小众饭圈化，上限低，缺少大众卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入和第一章没问题，但后续节奏太快人没立好，孟子义梗太小众饭圈化，上限低，缺少大众卖点。 | 孟子义梗太饭圈化小众，受众不广，上限会很低
+  observable:
+  - 'genre维度: 孟子义梗太饭圈化小众，受众不广，上限会很低'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 717
+  - 775
+  score: 59
+  score_raw: 59分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 离婚系统导演娱乐圈文
+  genre_guess:
+  - 娱乐圈
+  - 系统流
+  - 都市
+  overall_comment: 切入和第一章没问题，但后续节奏太快人没立好，孟子义梗太小众饭圈化，上限低，缺少大众卖点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 孟子义梗太饭圈化小众，受众不广，上限会很低
+    raw_quote: 这个东西太饭圈化 可能就是你的受众不是很广 这样的话受众会比较低
+  - dimension: opening
+    severity: positive
+    content: 开头切入没问题，吃冰棍开局有看点
+    raw_quote: 开头我记得是没啥问题 吃冰棍嘛对吧

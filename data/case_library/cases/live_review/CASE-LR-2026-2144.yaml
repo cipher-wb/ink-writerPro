@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-2144
+title: 大明鬼暗路 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 历史
+  - 探案
+  - 大明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这玩意直发到十发子肯定零啊 | 题材太单薄，纯探案在网文里缺乏看点，建议加入玄幻、武侠或历史争霸等元素扩大受众。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太单薄，纯探案在网文里缺乏看点，建议加入玄幻、武侠或历史争霸等元素扩大受众。 | 纯探案题材受众太窄，缺乏网文需要的卖点和驱动力;缺少金手指或穿越等网文核心元素;卖点太单薄，像实体书不像网文
+  observable:
+  - 'genre维度: 纯探案题材受众太窄，缺乏网文需要的卖点和驱动力'
+  - 'golden_finger维度: 缺少金手指或穿越等网文核心元素'
+  - 'simplicity维度: 卖点太单薄，像实体书不像网文'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 1
+  - 84
+  score: null
+  score_raw: 这玩意直发到十发子肯定零啊
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 大明鬼暗路
+  genre_guess:
+  - 历史
+  - 探案
+  - 大明
+  overall_comment: 题材太单薄，纯探案在网文里缺乏看点，建议加入玄幻、武侠或历史争霸等元素扩大受众。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯探案题材受众太窄，缺乏网文需要的卖点和驱动力
+    raw_quote: 这种东西光是一个探案...谁写个什么大名探，能点进去的人都很少呀
+  - dimension: golden_finger
+    severity: negative
+    content: 缺少金手指或穿越等网文核心元素
+    raw_quote: 网红也要穿越金手指，然后要要有那种大卖点嘛
+  - dimension: simplicity
+    severity: negative
+    content: 卖点太单薄，像实体书不像网文
+    raw_quote: 你这个卖点太单薄了...这不是网文，这是这真的是实体写法了对吧

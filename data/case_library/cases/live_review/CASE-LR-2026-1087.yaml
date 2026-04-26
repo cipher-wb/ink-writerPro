@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1087
+title: 幽暗小巷恐怖灵异 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 灵异
+  - 惊悚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就18分吧 | 电影画面式写法，主角辨识度和心理活动缺失，题材模糊，距离发表尚有较大差距
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 电影画面式写法，主角辨识度和心理活动缺失，题材模糊，距离发表尚有较大差距 | 主角身份不明，缺少心理活动与代入感;题材不是网文形态，标签卖点模糊
+  observable:
+  - 'character维度: 主角身份不明，缺少心理活动与代入感'
+  - 'genre维度: 题材不是网文形态，标签卖点模糊'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 109
+  - 215
+  score: 18
+  score_raw: 就18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 幽暗小巷恐怖灵异
+  genre_guess:
+  - 灵异
+  - 惊悚
+  overall_comment: 电影画面式写法，主角辨识度和心理活动缺失，题材模糊，距离发表尚有较大差距
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角身份不明，缺少心理活动与代入感
+    raw_quote: 没没主角 没心理活动 就还是找不到
+  - dimension: genre
+    severity: negative
+    content: 题材不是网文形态，标签卖点模糊
+    raw_quote: 这就不是什么网文 电影画面 开头然后又是重像那种

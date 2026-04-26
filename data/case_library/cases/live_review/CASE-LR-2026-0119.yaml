@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0119
+title: 收养灭世魔女 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 奇幻
+  - 穿越
+  - 魔女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分满偏题了 | 第一章签约潜力良好，但后续剧情偏离魔女主线，节奏拖沓，最终评分48未通过。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章签约潜力良好，但后续剧情偏离魔女主线，节奏拖沓，最终评分48未通过。 | 第二章开始拖沓，偏离魔女卖点，读者会流失;魔女形象被刻画得过于恐怖，应当突出反差与温柔
+  observable:
+  - 'pacing维度: 第二章开始拖沓，偏离魔女卖点，读者会流失'
+  - 'character维度: 魔女形象被刻画得过于恐怖，应当突出反差与温柔'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 3
+  - 260
+  score: 48
+  score_raw: 48分满偏题了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 收养灭世魔女
+  genre_guess:
+  - 奇幻
+  - 穿越
+  - 魔女
+  overall_comment: 第一章签约潜力良好，但后续剧情偏离魔女主线，节奏拖沓，最终评分48未通过。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章写作质量较好，能吸引签约
+    raw_quote: 我觉得第一张挺好的呀
+  - dimension: pacing
+    severity: negative
+    content: 第二章开始拖沓，偏离魔女卖点，读者会流失
+    raw_quote: 第二张拖沓了，读者会跑的大哥
+  - dimension: character
+    severity: negative
+    content: 魔女形象被刻画得过于恐怖，应当突出反差与温柔
+    raw_quote: 魔女吓人干嘛去了吗

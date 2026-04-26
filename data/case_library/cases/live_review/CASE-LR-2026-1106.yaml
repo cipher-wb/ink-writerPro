@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1106
+title: 蓝星已灭·修仙文明终结者长生 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 修仙
+  - 创意
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 脑洞过大，设定冗长且逻辑矛盾，广告营销写法出戏
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞过大，设定冗长且逻辑矛盾，广告营销写法出戏 | 寿命4000亿年设定荒谬，报仇动机不成立;修仙都市化广告喊口号，不伦不类
+  observable:
+  - 'simplicity维度: 寿命4000亿年设定荒谬，报仇动机不成立'
+  - 'misc维度: 修仙都市化广告喊口号，不伦不类'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1730
+  - 1780
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蓝星已灭·修仙文明终结者长生
+  genre_guess:
+  - 修仙
+  - 创意
+  overall_comment: 脑洞过大，设定冗长且逻辑矛盾，广告营销写法出戏
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 寿命4000亿年设定荒谬，报仇动机不成立
+    raw_quote: 你能活4,000一年 你怕啥呀 熬就完事了呀
+  - dimension: misc
+    severity: negative
+    content: 修仙都市化广告喊口号，不伦不类
+    raw_quote: 卖药赚钱 打广告喊口号 这种只能在蓝鲸里

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1432
+title: 双穿巫师世界肌肉狂潮 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 双穿
+  - 巫师
+  - 西幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多32分 | 讲故事流畅但题材世界观奇怪，适合简单高武，32分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 讲故事流畅但题材世界观奇怪，适合简单高武，32分。 | 题材元素组合太乱;开头测试灵根被嘲笑太小白
+  observable:
+  - 'genre维度: 题材元素组合太乱'
+  - 'opening维度: 开头测试灵根被嘲笑太小白'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 1181
+  - 1220
+  score: 32
+  score_raw: 差不多32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 双穿巫师世界肌肉狂潮
+  genre_guess:
+  - 双穿
+  - 巫师
+  - 西幻
+  overall_comment: 讲故事流畅但题材世界观奇怪，适合简单高武，32分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材元素组合太乱
+    raw_quote: 双穿G5五十三个加起来更凉
+  - dimension: opening
+    severity: negative
+    content: 开头测试灵根被嘲笑太小白
+    raw_quote: 你测个灵根一直都有什么嘲笑啊 这个是很老套的写法

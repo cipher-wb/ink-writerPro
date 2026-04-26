@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0333
+title: 血龙回眷 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 炮灰重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我也给大哥给到40分 | 框架套路正确但剧情陈旧，金手指和反派设计出戏，需全换血。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 框架套路正确但剧情陈旧，金手指和反派设计出戏，需全换血。 | 金手指龙回眷不伦不类，缺乏新意;反派塑造像成都人，台词出戏;剧情驱动全换，缺乏同伴互动，单人逃亡无聊
+  observable:
+  - 'golden_finger维度: 金手指龙回眷不伦不类，缺乏新意'
+  - 'character维度: 反派塑造像成都人，台词出戏'
+  - 'pacing维度: 剧情驱动全换，缺乏同伴互动，单人逃亡无聊'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 334
+  - 526
+  score: 40
+  score_raw: 我也给大哥给到40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 血龙回眷
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 炮灰重生
+  overall_comment: 框架套路正确但剧情陈旧，金手指和反派设计出戏，需全换血。
+  comments:
+  - dimension: opening
+    severity: neutral
+    content: 开头控境介绍恰到好处，节奏偏快但尚可
+    raw_quote: 套路是对的…介绍什么的就恰到好处也不多
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指龙回眷不伦不类，缺乏新意
+    raw_quote: 龙回眷这种东西 感觉就是不龙不类
+  - dimension: character
+    severity: negative
+    content: 反派塑造像成都人，台词出戏
+    raw_quote: 这个反派有点像成都人了…蓝的盯着你 说要爽一下
+  - dimension: pacing
+    severity: negative
+    content: 剧情驱动全换，缺乏同伴互动，单人逃亡无聊
+    raw_quote: 剧情全换…没同伴一个人逃亡也没啥意思

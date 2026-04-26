@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0928
+title: 修仙界开美发店 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 仙侠
+  - 经营
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分吧 | 剪头发修仙的设定完全立不住，所有人降智，不可救。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剪头发修仙的设定完全立不住，所有人降智，不可救。 | 剪完头发修炼变快逻辑荒谬，NPC全员降智;所有角色智商不如蜜蜂，毫无真实感
+  observable:
+  - 'golden_finger维度: 剪完头发修炼变快逻辑荒谬，NPC全员降智'
+  - 'character维度: 所有角色智商不如蜜蜂，毫无真实感'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1275
+  - 1325
+  score: 22
+  score_raw: 22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙界开美发店
+  genre_guess:
+  - 仙侠
+  - 经营
+  - 搞笑
+  overall_comment: 剪头发修仙的设定完全立不住，所有人降智，不可救。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 剪完头发修炼变快逻辑荒谬，NPC全员降智
+    raw_quote: 不知道为什么剪完之后反而修炼更快了 … 这个稿子从第一句话到现在就没有立 立不住
+  - dimension: character
+    severity: negative
+    content: 所有角色智商不如蜜蜂，毫无真实感
+    raw_quote: 蜜蜂都不信啊 我说蜜蜂你过来 我给你剪个头发 你的学习会学的更好 蜜蜂说你滚啊

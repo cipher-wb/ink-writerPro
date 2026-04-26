@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0209
+title: 灵异副本求生 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 灵异
+  - 规则怪谈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分吧 | 文笔和氛围感扎实，但卖点不够新颖，属于常规灵异求生流。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和氛围感扎实，但卖点不够新颖，属于常规灵异求生流。 | 缺乏独特的金手指或创新点，难以脱颖而出
+  observable:
+  - 'golden_finger维度: 缺乏独特的金手指或创新点，难以脱颖而出'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 891
+  - 940
+  score: 42
+  score_raw: 42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵异副本求生
+  genre_guess:
+  - 灵异
+  - 规则怪谈
+  overall_comment: 文笔和氛围感扎实，但卖点不够新颖，属于常规灵异求生流。
+  comments:
+  - dimension: hook
+    severity: neutral
+    content: 灵异氛围和文笔到位，但故事内核不够新颖
+    raw_quote: 凤语感跟比例是可以的 ... 这个像是 副本规则挂谈 主角求生那种
+  - dimension: golden_finger
+    severity: negative
+    content: 缺乏独特的金手指或创新点，难以脱颖而出
+    raw_quote: 没什么其他的劳动 ... 这个劳动不够

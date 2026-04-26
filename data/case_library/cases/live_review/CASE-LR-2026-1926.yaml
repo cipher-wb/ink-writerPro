@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1926
+title: 九州传玄武侠复仇 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 玄幻
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没意思呀 | 故事内核太老套，像传统的掉悬崖得奇遇复仇记，这种内容已完全被时代淘汰，AI都能轻易取代。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事内核太老套，像传统的掉悬崖得奇遇复仇记，这种内容已完全被时代淘汰，AI都能轻易取代。 | 故事内核老套，传玄武侠复仇风格已死，没人看。;分段不好，行文不流畅，情绪尴尬，看故事累。
+  observable:
+  - 'genre维度: 故事内核老套，传玄武侠复仇风格已死，没人看。'
+  - 'pacing维度: 分段不好，行文不流畅，情绪尴尬，看故事累。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 747
+  - 790
+  score: null
+  score_raw: 没意思呀
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 九州传玄武侠复仇
+  genre_guess:
+  - 玄幻
+  - 武侠
+  overall_comment: 故事内核太老套，像传统的掉悬崖得奇遇复仇记，这种内容已完全被时代淘汰，AI都能轻易取代。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 故事内核老套，传玄武侠复仇风格已死，没人看。
+    raw_quote: 就是故事的内核太老套了...传权已经被时代淘汰了...就是死掉的东西啊
+  - dimension: pacing
+    severity: negative
+    content: 分段不好，行文不流畅，情绪尴尬，看故事累。
+    raw_quote: 多分段啊...这样有点干是吧...这样看故事累

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1792
+title: 末日北美攻打华盛顿 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 末世
+  - 北美
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 分数掉了 | 主线逻辑奇怪，侵略不是爽点，整体衔接生硬，建议重新回炉。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线逻辑奇怪，侵略不是爽点，整体衔接生硬，建议重新回炉。 | 攻打华盛顿等侵略剧情是毒点，且不符合国人价值观，易被举报。;故事衔接混乱，遗书吃牛排后的发展莫名其妙，都市修真偏题。
+  observable:
+  - 'taboo维度: 攻打华盛顿等侵略剧情是毒点，且不符合国人价值观，易被举报。'
+  - 'misc维度: 故事衔接混乱，遗书吃牛排后的发展莫名其妙，都市修真偏题。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 843
+  - 888
+  score: null
+  score_raw: 分数掉了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 末日北美攻打华盛顿
+  genre_guess:
+  - 末世
+  - 北美
+  - 穿越
+  overall_comment: 主线逻辑奇怪，侵略不是爽点，整体衔接生硬，建议重新回炉。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 攻打华盛顿等侵略剧情是毒点，且不符合国人价值观，易被举报。
+    raw_quote: 这不是爽点这是侵略...到底谁爱攻打别的国家呀...不是不想签...主要是不爽
+  - dimension: misc
+    severity: negative
+    content: 故事衔接混乱，遗书吃牛排后的发展莫名其妙，都市修真偏题。
+    raw_quote: 怎么吃了喝了...没懂那个感觉闷到哪起到了

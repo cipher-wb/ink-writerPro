@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0923
+title: 沈小姐仙侠种田 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 仙侠
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分左右吧 | 故事流畅但文笔过白，毫无仙侠味道，只能算蓝精灵思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事流畅但文笔过白，毫无仙侠味道，只能算蓝精灵思路。 | 文笔和对话太白，缺乏仙侠韵味;蓝精灵套路，起点太单薄
+  observable:
+  - 'simplicity维度: 文笔和对话太白，缺乏仙侠韵味'
+  - 'genre维度: 蓝精灵套路，起点太单薄'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 935
+  - 990
+  score: 30
+  score_raw: 30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 沈小姐仙侠种田
+  genre_guess:
+  - 仙侠
+  - 种田
+  overall_comment: 故事流畅但文笔过白，毫无仙侠味道，只能算蓝精灵思路。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 文笔和对话太白，缺乏仙侠韵味
+    raw_quote: 比例太差了 这个比例浅词造句怎么能这么白呢 一点玄幻仙侠的味道都没有
+  - dimension: genre
+    severity: negative
+    content: 蓝精灵套路，起点太单薄
+    raw_quote: 其实就是蓝精灵思路吧好吧 蓝精没速度 起点太单薄了

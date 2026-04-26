@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1623
+title: 卡牌穿越赌圣 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 玄幻
+  - 卡牌
+  - 系统
+  - 赌圣
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十五分 | 卡牌设定过于详细，故事事件无聊，全为设定服务，不接地气。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 卡牌设定过于详细，故事事件无聊，全为设定服务，不接地气。 | 卡牌系统喧宾夺主，全程讲卡牌无剧情，读者无感;主角名高丸直接劝退，缺乏代入感，事件冲突虚无
+  observable:
+  - 'golden_finger维度: 卡牌系统喧宾夺主，全程讲卡牌无剧情，读者无感'
+  - 'character维度: 主角名高丸直接劝退，缺乏代入感，事件冲突虚无'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 1380
+  - 1459
+  score: 35
+  score_raw: 三十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 卡牌穿越赌圣
+  genre_guess:
+  - 玄幻
+  - 卡牌
+  - 系统
+  - 赌圣
+  overall_comment: 卡牌设定过于详细，故事事件无聊，全为设定服务，不接地气。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 卡牌系统喧宾夺主，全程讲卡牌无剧情，读者无感
+    raw_quote: 就全程卡牌 只有卡牌没其他东西 … 为卡牌狂写
+  - dimension: character
+    severity: negative
+    content: 主角名高丸直接劝退，缺乏代入感，事件冲突虚无
+    raw_quote: 大哥叫高丸我怎麼代入 … 事件没意思

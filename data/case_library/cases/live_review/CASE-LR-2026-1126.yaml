@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1126
+title: 姜葱/斗罗式玄幻 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 玄幻
+  - 斗罗同人
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他个18分的马可爱一点都挡不住 | 套路严重过时，人物与冲突像5年前小白文，需彻底推翻思路。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路严重过时，人物与冲突像5年前小白文，需彻底推翻思路。 | 打狼开局极度老旧，缺乏新鲜感;人物类似小学生斗罗，无魅力;整体思路完全落后当前市场5年以上
+  observable:
+  - 'opening维度: 打狼开局极度老旧，缺乏新鲜感'
+  - 'character维度: 人物类似小学生斗罗，无魅力'
+  - 'genre维度: 整体思路完全落后当前市场5年以上'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 1522
+  - 1646
+  score: 18
+  score_raw: 只能给他个18分的马可爱一点都挡不住
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 姜葱/斗罗式玄幻
+  genre_guess:
+  - 玄幻
+  - 斗罗同人
+  - 穿越
+  overall_comment: 套路严重过时，人物与冲突像5年前小白文，需彻底推翻思路。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 打狼开局极度老旧，缺乏新鲜感
+    raw_quote: '少年就打狼呀
+
+      就新手打狼嘛'
+  - dimension: character
+    severity: negative
+    content: 人物类似小学生斗罗，无魅力
+    raw_quote: 你写的这些人物就是小学生
+  - dimension: genre
+    severity: negative
+    content: 整体思路完全落后当前市场5年以上
+    raw_quote: '真的太老的思路了
+
+      包括人设
+
+      剧情安排'

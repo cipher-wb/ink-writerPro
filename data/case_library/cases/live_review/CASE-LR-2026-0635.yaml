@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0635
+title: 大明宅府 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - AI
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就只能20分20分，过年加两分对22分 | AI设定太离谱，没有政治身份就无法立足，脑洞炸裂但历史文崩坏
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: AI设定太离谱，没有政治身份就无法立足，脑洞炸裂但历史文崩坏 | AI语音放在历史文里是大毒点;身穿大明没有政治身份，起点流行蹭政治;AI皇帝设定过于荒诞，读者无法接受
+  observable:
+  - 'golden_finger维度: AI语音放在历史文里是大毒点'
+  - 'genre维度: 身穿大明没有政治身份，起点流行蹭政治'
+  - 'misc维度: AI皇帝设定过于荒诞，读者无法接受'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 441
+  - 510
+  score: 22
+  score_raw: 就只能20分20分，过年加两分对22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明宅府
+  genre_guess:
+  - 历史
+  - 穿越
+  - AI
+  overall_comment: AI设定太离谱，没有政治身份就无法立足，脑洞炸裂但历史文崩坏
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: AI语音放在历史文里是大毒点
+    raw_quote: 历史文里面加AI语音这不是毒点吗
+  - dimension: genre
+    severity: negative
+    content: 身穿大明没有政治身份，起点流行蹭政治
+    raw_quote: 大明是神圣嘛，其他王朝大写求生嘛，但是大明要政治身份
+  - dimension: misc
+    severity: negative
+    content: AI皇帝设定过于荒诞，读者无法接受
+    raw_quote: 这个脑洞太夸张了，起点都没法达救了

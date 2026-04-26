@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0242
+title: 航海修仙猫猫 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 修仙
+  - 航海
+  - 轻喜
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分加3分 | 乐子有，但求生干巴，人设不立体，养不活。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 乐子有，但求生干巴，人设不立体，养不活。 | 干巴巴的求生没看点
+  observable:
+  - 'opening维度: 干巴巴的求生没看点'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 1225
+  - 1290
+  score: 28
+  score_raw: 25分加3分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 航海修仙猫猫
+  genre_guess:
+  - 修仙
+  - 航海
+  - 轻喜
+  overall_comment: 乐子有，但求生干巴，人设不立体，养不活。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 干巴巴的求生没看点
+    raw_quote: 这种干巴巴的就求生什么的就人设不咋样了

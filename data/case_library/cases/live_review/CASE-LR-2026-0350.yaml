@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0350
+title: 我以陶里挣三千 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 仙侠
+  - 夫子
+  - 古典
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分左右吧 | 古典仙侠文笔极佳但自嗨严重，完全脱离读者，须全推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 古典仙侠文笔极佳但自嗨严重，完全脱离读者，须全推翻。 | 开头讲论语完全无视市场，属于15年前猫腻写法
+  observable:
+  - 'genre维度: 开头讲论语完全无视市场，属于15年前猫腻写法'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 3300
+  - 3419
+  score: 35
+  score_raw: 35分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我以陶里挣三千
+  genre_guess:
+  - 仙侠
+  - 夫子
+  - 古典
+  overall_comment: 古典仙侠文笔极佳但自嗨严重，完全脱离读者，须全推翻。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 遣词造句古典味道足，比例非常扎实
+    raw_quote: 比例很强 大哥 这个潜词造句古典味道很足
+  - dimension: genre
+    severity: negative
+    content: 开头讲论语完全无视市场，属于15年前猫腻写法
+    raw_quote: 14年前的写法了…读者不看呀

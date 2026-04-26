@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1450
+title: 大梁知府修仙 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 架空历史
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多18分吧 | 设定崩塌，结丹知府毫无逻辑，应走纯宗门路线
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定崩塌，结丹知府毫无逻辑，应走纯宗门路线 | 架空历史修仙设定境界崩坏
+  observable:
+  - 'genre维度: 架空历史修仙设定境界崩坏'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1661
+  - 1740
+  score: 18
+  score_raw: 差不多18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大梁知府修仙
+  genre_guess:
+  - 架空历史
+  - 修仙
+  overall_comment: 设定崩塌，结丹知府毫无逻辑，应走纯宗门路线
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空历史修仙设定境界崩坏
+    raw_quote: 大梁朝的知府是结丹境的修士 这什么意思吗 这境界崩

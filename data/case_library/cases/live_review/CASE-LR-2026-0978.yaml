@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0978
+title: 高武重生现代 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 高武
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分...这个真不行 | 全是设定，节奏看似快但很虚。缺一个好脑洞和金手指，推翻好好想一个有意思的卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全是设定，节奏看似快但很虚。缺一个好脑洞和金手指，推翻好好想一个有意思的卖点。 | 金手指缺一个非常特别的好点子，现篇很平淡。;读者接受不了的世界观，不如用现代人穿越人设。
+  observable:
+  - 'golden_finger维度: 金手指缺一个非常特别的好点子，现篇很平淡。'
+  - 'genre维度: 读者接受不了的世界观，不如用现代人穿越人设。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 2841
+  - 2990
+  score: 25
+  score_raw: 差不多就25分...这个真不行
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高武重生现代
+  genre_guess:
+  - 高武
+  - 都市
+  - 重生
+  overall_comment: 全是设定，节奏看似快但很虚。缺一个好脑洞和金手指，推翻好好想一个有意思的卖点。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指缺一个非常特别的好点子，现篇很平淡。
+    raw_quote: 金手指真的是一个需要非常好的精神的...一定一定我觉得这个这这太扯淡了
+  - dimension: genre
+    severity: negative
+    content: 读者接受不了的世界观，不如用现代人穿越人设。
+    raw_quote: 这个世界观读者接受不了高...一定是快节奏加一个好脑洞...两者缺一不少

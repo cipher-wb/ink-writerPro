@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1940
+title: 地球OL身体成城 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38吧 | 表达流畅清晰，但卖点单薄，全程只讲一个设定，事件无聊读者随时会跑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达流畅清晰，但卖点单薄，全程只讲一个设定，事件无聊读者随时会跑。 | 金手指表现太啰嗦，不停问别人显得智商不高;过程太拖沓，读者中途会跑;事件没意思，只有设定卖点
+  observable:
+  - 'golden_finger维度: 金手指表现太啰嗦，不停问别人显得智商不高'
+  - 'pacing维度: 过程太拖沓，读者中途会跑'
+  - 'opening维度: 事件没意思，只有设定卖点'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 259
+  - 305
+  score: 38
+  score_raw: 38吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 地球OL身体成城
+  genre_guess:
+  - 都市
+  - 异能
+  - 系统
+  overall_comment: 表达流畅清晰，但卖点单薄，全程只讲一个设定，事件无聊读者随时会跑。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指表现太啰嗦，不停问别人显得智商不高
+    raw_quote: 有经手指不要老问别人...人家你智商不高
+  - dimension: pacing
+    severity: negative
+    content: 过程太拖沓，读者中途会跑
+    raw_quote: 就中途有无数次读者会跑...因为没有其他看点
+  - dimension: opening
+    severity: negative
+    content: 事件没意思，只有设定卖点
+    raw_quote: 这个事件没意思大哥，睁开眼这个护士医生的没事件，没有参与进入好玩的事件

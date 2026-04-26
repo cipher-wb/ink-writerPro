@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1026
+title: 成炼修仙海神 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 修仙
+  - 废柴流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打风的话能到28分 | 金手指出戏，事件老套，直发也没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指出戏，事件老套，直发也没人看。 | 海神波塞冬出戏，不如传统老爷爷;节奏虽快但剧情无聊，全是猜得到的套路
+  observable:
+  - 'golden_finger维度: 海神波塞冬出戏，不如传统老爷爷'
+  - 'pacing维度: 节奏虽快但剧情无聊，全是猜得到的套路'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1671
+  - 1760
+  score: 28
+  score_raw: 打风的话能到28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 成炼修仙海神
+  genre_guess:
+  - 修仙
+  - 废柴流
+  overall_comment: 金手指出戏，事件老套，直发也没人看。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 海神波塞冬出戏，不如传统老爷爷
+    raw_quote: 金手指很出戏,你这还不如萧颜呢
+  - dimension: pacing
+    severity: negative
+    content: 节奏虽快但剧情无聊，全是猜得到的套路
+    raw_quote: 唉,节奏快,但好传统啊,好无聊

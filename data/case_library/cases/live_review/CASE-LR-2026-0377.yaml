@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0377
+title: 未知修仙 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  - 杂糅
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就25分吧 | 事件无聊，不懂网络小说，比例还行但仍需大改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件无聊，不懂网络小说，比例还行但仍需大改。 | 内容杂糅，不接地气;开局设定劝退，事件无吸引
+  observable:
+  - 'simplicity维度: 内容杂糅，不接地气'
+  - 'opening维度: 开局设定劝退，事件无吸引'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 1351
+  - 1420
+  score: 25
+  score_raw: 就25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 未知修仙
+  genre_guess:
+  - 玄幻
+  - 修仙
+  - 杂糅
+  overall_comment: 事件无聊，不懂网络小说，比例还行但仍需大改。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 内容杂糅，不接地气
+    raw_quote: 不接地气 实践
+  - dimension: opening
+    severity: negative
+    content: 开局设定劝退，事件无吸引
+    raw_quote: 没一点看点这东西

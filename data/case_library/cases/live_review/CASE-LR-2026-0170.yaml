@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0170
+title: 从素人搭讪开始 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 都市
+  - 文娱
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十八分吧 | 老套熟套，没有强驱动力，建议加入具体任务或直播爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套熟套，没有强驱动力，建议加入具体任务或直播爽点。 | 没有具体驱动力，光喊口号
+  observable:
+  - 'hook维度: 没有具体驱动力，光喊口号'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 1995
+  - 2045
+  score: 28
+  score_raw: 二十八分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从素人搭讪开始
+  genre_guess:
+  - 都市
+  - 文娱
+  - 系统
+  overall_comment: 老套熟套，没有强驱动力，建议加入具体任务或直播爽点。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 没有具体驱动力，光喊口号
+    raw_quote: 光是嗷叫我要咋樣,讀者不看

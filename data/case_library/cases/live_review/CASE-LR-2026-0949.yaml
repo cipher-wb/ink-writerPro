@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0949
+title: 修仙我能看见概率分支 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 修仙
+  - 金手指
+  - 概率
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 八股写法，无事件太老套，父母双亡加流氓上门
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股写法，无事件太老套，父母双亡加流氓上门 | 开头老套，流氓上门悲剧感低;孤王无人际关系，无家人铺垫
+  observable:
+  - 'opening维度: 开头老套，流氓上门悲剧感低'
+  - 'character维度: 孤王无人际关系，无家人铺垫'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 2193
+  - 2300
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙我能看见概率分支
+  genre_guess:
+  - 修仙
+  - 金手指
+  - 概率
+  overall_comment: 八股写法，无事件太老套，父母双亡加流氓上门
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头老套，流氓上门悲剧感低
+    raw_quote: 这种上门欺负的只能写 不过写的没 玄幻味道
+  - dimension: character
+    severity: negative
+    content: 孤王无人际关系，无家人铺垫
+    raw_quote: 你独角星你只有一个人啊 你是孤王就意味着你是无敌之人

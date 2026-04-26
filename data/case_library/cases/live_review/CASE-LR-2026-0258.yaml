@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0258
+title: 龙女修仙 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 修仙
+  - 龙族
+  - 洪荒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就50分左右 | 文笔好但题材平淡，事件无聊，龙族设定容易落俗，需自斩一刀雪白但不可取。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔好但题材平淡，事件无聊，龙族设定容易落俗，需自斩一刀雪白但不可取。 | 日常修炼事件太无聊，缺乏冲突危机。
+  observable:
+  - 'simplicity维度: 日常修炼事件太无聊，缺乏冲突危机。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1420
+  - 1520
+  score: 50
+  score_raw: 也就50分左右
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 龙女修仙
+  genre_guess:
+  - 修仙
+  - 龙族
+  - 洪荒
+  overall_comment: 文笔好但题材平淡，事件无聊，龙族设定容易落俗，需自斩一刀雪白但不可取。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 日常修炼事件太无聊，缺乏冲突危机。
+    raw_quote: 美好的冲突 美好的世界 我觉得你就算你想写个玄剑龙族 你也不能这样的事件 这个事件太无聊了
+  - dimension: genre
+    severity: neutral
+    content: 龙族在仙侠中地位尴尬，需要慎选角度。
+    raw_quote: 在修仙界龙其实是落麻的 ... 龙族很垃圾的

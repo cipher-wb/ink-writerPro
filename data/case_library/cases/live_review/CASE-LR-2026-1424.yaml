@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1424
+title: 08年重生网吧（往往高烧） (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 年代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得差不多还是58分 | 开头着急，逻辑不顺，重生感缺失，但思路可以，58分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头着急，逻辑不顺，重生感缺失，但思路可以，58分。 | 开头太着急，重生感假;重生者没有重生思维，人物不真实
+  observable:
+  - 'pacing维度: 开头太着急，重生感假'
+  - 'character维度: 重生者没有重生思维，人物不真实'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 811
+  - 870
+  score: 58
+  score_raw: 我觉得差不多还是58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 08年重生网吧（往往高烧）
+  genre_guess:
+  - 都市
+  - 重生
+  - 年代
+  overall_comment: 开头着急，逻辑不顺，重生感缺失，但思路可以，58分。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开头太着急，重生感假
+    raw_quote: 我觉得有点着急 老急着创业 老急着搞钱 我觉得有点假
+  - dimension: character
+    severity: negative
+    content: 重生者没有重生思维，人物不真实
+    raw_quote: 你在女厕所你会想这些东西吗 我觉得不现实

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0581
+title: 穿越者前反手册 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 诸天流
+  - 穿越
+  - 猎杀
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多55分开始说话吧 | 杀穿越者题材老旧，剧情平淡缺少极端事件，金手指设计食之无味，好在作者有进步。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 杀穿越者题材老旧，剧情平淡缺少极端事件，金手指设计食之无味，好在作者有进步。 | 开篇用侧面描写引入却缺乏接地气代入感，不如用名场面反转直接开场;杀穿越者获取馈赠的设定缺乏吸引力，呈现方式平淡;主角人设一般，缺少鲜明记忆点
+  observable:
+  - 'opening维度: 开篇用侧面描写引入却缺乏接地气代入感，不如用名场面反转直接开场'
+  - 'golden_finger维度: 杀穿越者获取馈赠的设定缺乏吸引力，呈现方式平淡'
+  - 'character维度: 主角人设一般，缺少鲜明记忆点'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 10
+  - 251
+  score: 55
+  score_raw: 差不多55分开始说话吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越者前反手册
+  genre_guess:
+  - 诸天流
+  - 穿越
+  - 猎杀
+  overall_comment: 杀穿越者题材老旧，剧情平淡缺少极端事件，金手指设计食之无味，好在作者有进步。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇用侧面描写引入却缺乏接地气代入感，不如用名场面反转直接开场
+    raw_quote: 大哥一上来就称重灵魂 没有接地气的描写
+  - dimension: golden_finger
+    severity: negative
+    content: 杀穿越者获取馈赠的设定缺乏吸引力，呈现方式平淡
+    raw_quote: 现在是这份金手指原生态 ... 食之无味 弃之可惜
+  - dimension: character
+    severity: negative
+    content: 主角人设一般，缺少鲜明记忆点
+    raw_quote: 哎呀主角人设一般般

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0008
+title: 攻略世界树成最强 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11YrABQEyZ
+scope:
+  genre:
+  - 异界
+  - 系统
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 表达干练直接是唯一优点，但题材拉垮且分类不明，自嗨设定无人关心，建议彻底推翻，从模仿市场热书开始。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YrABQEyZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达干练直接是唯一优点，但题材拉垮且分类不明，自嗨设定无人关心，建议彻底推翻，从模仿市场热书开始。 | 题材像游戏伴侣又像科幻，找不到明确分类，劝退读者
+  observable:
+  - 'genre维度: 题材像游戏伴侣又像科幻，找不到明确分类，劝退读者'
+live_review_meta:
+  source_bvid: BV11YrABQEyZ
+  source_line_range:
+  - 947
+  - 1067
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 攻略世界树成最强
+  genre_guess:
+  - 异界
+  - 系统
+  - 搞笑
+  overall_comment: 表达干练直接是唯一优点，但题材拉垮且分类不明，自嗨设定无人关心，建议彻底推翻，从模仿市场热书开始。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材像游戏伴侣又像科幻，找不到明确分类，劝退读者
+    raw_quote: 哎哟这题材也比较拉垮 表达能力还行吧对吧 但这个题材也是拉垮题材 像游戏伴侣
+  - dimension: simplicity
+    severity: positive
+    content: 语言干练程度尚可，有潜质，但被题材拖累
+    raw_quote: 表达能力还好吧其实 对吧潜质造就其实干练程度还是OK的

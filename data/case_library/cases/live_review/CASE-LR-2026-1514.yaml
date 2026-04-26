@@ -1,0 +1,46 @@
+case_id: CASE-LR-2026-1514
+title: 哆啦A梦同人 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 同人
+  - 动漫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能18分的 | 缺乏事件和人物关系，纯粹介绍设定，远不如原作有趣。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缺乏事件和人物关系，纯粹介绍设定，远不如原作有趣。 | 没有冲突和事件，只是干巴巴介绍
+  observable:
+  - 'pacing维度: 没有冲突和事件，只是干巴巴介绍'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 681
+  - 780
+  score: 18
+  score_raw: 只能18分的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 哆啦A梦同人
+  genre_guess:
+  - 同人
+  - 动漫
+  overall_comment: 缺乏事件和人物关系，纯粹介绍设定，远不如原作有趣。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 没有冲突和事件，只是干巴巴介绍
+    raw_quote: 就介绍呀 没事件没人物呀 … 真不如多莱姆的视频

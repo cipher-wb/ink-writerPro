@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0570
+title: 非主流培养系统 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 都市
+  - 娱乐
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十八四十八也不错了 | 系统太番茄，真实感不够，但进步了，48分可发蓝精灵
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统太番茄，真实感不够，但进步了，48分可发蓝精灵 | 系统过于抢戏像电神崇拜值设定
+  observable:
+  - 'golden_finger维度: 系统过于抢戏像电神崇拜值设定'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 2915
+  - 3018
+  score: 48
+  score_raw: 四十八四十八也不错了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 非主流培养系统
+  genre_guess:
+  - 都市
+  - 娱乐
+  - 系统
+  overall_comment: 系统太番茄，真实感不够，但进步了，48分可发蓝精灵
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统过于抢戏像电神崇拜值设定
+    raw_quote: 后面就完全电神的那个思路的崇拜者
+  - dimension: simplicity
+    severity: neutral
+    content: 缺乏真实感，重生的现实困境没体现
+    raw_quote: 起点的话还是得加这些东西...真实感

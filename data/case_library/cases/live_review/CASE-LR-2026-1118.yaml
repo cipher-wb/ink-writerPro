@@ -1,0 +1,73 @@
+case_id: CASE-LR-2026-1118
+title: 无能的丈夫 (pass / 75分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 规则怪谈
+  - NTR
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '75分以上水平了
+
+    写的真挺好
+
+    75分绝对有了 | 规则怪谈副本设计极佳，人设代入感强，但主线涉黄，起点无法过审。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 规则怪谈副本设计极佳，人设代入感强，但主线涉黄，起点无法过审。 | 主线涉黄，必然无法通过起点审核
+  observable:
+  - 'taboo维度: 主线涉黄，必然无法通过起点审核'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 480
+  - 633
+  score: 75
+  score_raw: '75分以上水平了
+
+    写的真挺好
+
+    75分绝对有了'
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 无能的丈夫
+  genre_guess:
+  - 规则怪谈
+  - NTR
+  - 都市
+  overall_comment: 规则怪谈副本设计极佳，人设代入感强，但主线涉黄，起点无法过审。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 规则怪谈切入抓人，副本设定有趣
+    raw_quote: 规则怪谈世界说明还有点意思
+  - dimension: hook
+    severity: positive
+    content: 脑洞炸裂，NTR压迫感与规则设计巧妙
+    raw_quote: '这个脑洞有点炸裂啊
+
+      其实很牛逼'
+  - dimension: taboo
+    severity: negative
+    content: 主线涉黄，必然无法通过起点审核
+    raw_quote: '这能过审
+
+      你妈的切店倒闭得了'
+  - dimension: genre
+    severity: positive
+    content: 真实感强，人设代入与互动水平很高
+    raw_quote: '小场景内容小段子
+
+      人设代入感都非常厉害'

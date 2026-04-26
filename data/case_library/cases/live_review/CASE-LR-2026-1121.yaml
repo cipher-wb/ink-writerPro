@@ -1,0 +1,66 @@
+case_id: CASE-LR-2026-1121
+title: 无面人/诸天万界 (fail / 17分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 诸天万界
+  - 系统
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '就16分吧吧啊17分吧
+
+    没办法 | 故弄玄虚，剧情混乱，代入感极差，整体不知所云。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故弄玄虚，剧情混乱，代入感极差，整体不知所云。 | 穿越与系统设定混乱，读者完全看不懂;主线目的模糊，杀宿主动机不明;一上来就化繁讲人生道理，极度劝退
+  observable:
+  - 'opening维度: 穿越与系统设定混乱，读者完全看不懂'
+  - 'hook维度: 主线目的模糊，杀宿主动机不明'
+  - 'pacing维度: 一上来就化繁讲人生道理，极度劝退'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 842
+  - 963
+  score: 17
+  score_raw: '就16分吧吧啊17分吧
+
+    没办法'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 无面人/诸天万界
+  genre_guess:
+  - 诸天万界
+  - 系统
+  - 穿越
+  overall_comment: 故弄玄虚，剧情混乱，代入感极差，整体不知所云。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越与系统设定混乱，读者完全看不懂
+    raw_quote: '就就不清楚一个最基本的地球人穿越到异世界的
+
+      都写不清楚'
+  - dimension: hook
+    severity: negative
+    content: 主线目的模糊，杀宿主动机不明
+    raw_quote: 讲不清楚主角到底要干嘛的
+  - dimension: pacing
+    severity: negative
+    content: 一上来就化繁讲人生道理，极度劝退
+    raw_quote: '这雨从天上掠落落到地下
+
+      中间的过程便是人生'

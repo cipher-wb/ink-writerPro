@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1598
+title: 崇祯自爆穿越者 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 历史
+  - 明朝
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分兄弟 | 自爆穿越者的脑洞有强情绪，适合番茄/蓝精灵，起点仍需要更强编排。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 自爆穿越者的脑洞有强情绪，适合番茄/蓝精灵，起点仍需要更强编排。 | 起点历史频道可能不接受此写法，更适合流量平台
+  observable:
+  - 'genre维度: 起点历史频道可能不接受此写法，更适合流量平台'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 576
+  - 605
+  score: 50
+  score_raw: 50分兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 崇祯自爆穿越者
+  genre_guess:
+  - 历史
+  - 明朝
+  - 穿越
+  overall_comment: 自爆穿越者的脑洞有强情绪，适合番茄/蓝精灵，起点仍需要更强编排。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局召唤重臣自爆身份，情绪拉满，很有新意
+    raw_quote: 这个脑洞挺好的 … 全是强情绪 … 开局我给你们自爆了 … 情绪越强越好
+  - dimension: genre
+    severity: negative
+    content: 起点历史频道可能不接受此写法，更适合流量平台
+    raw_quote: 可能太多 我觉得需要反派 … 你发蓝精灵 说不定还真有几10万追读

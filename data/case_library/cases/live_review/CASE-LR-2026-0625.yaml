@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0625
+title: 滴答滴答 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 历史
+  - 明朝
+  - 商业
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥35分吧 | 历史考据有功底，但商人题材爽点不足，缺乏权谋与美人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史考据有功底，但商人题材爽点不足，缺乏权谋与美人。 | 古代走商人路线难以形成有效爽点，缺少政治权柄。;开篇变成风景描写，迟迟未进入故事。
+  observable:
+  - 'genre维度: 古代走商人路线难以形成有效爽点，缺少政治权柄。'
+  - 'opening维度: 开篇变成风景描写，迟迟未进入故事。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 636
+  - 725
+  score: 35
+  score_raw: 给大哥35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 滴答滴答
+  genre_guess:
+  - 历史
+  - 明朝
+  - 商业
+  - 穿越
+  overall_comment: 历史考据有功底，但商人题材爽点不足，缺乏权谋与美人。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 古代走商人路线难以形成有效爽点，缺少政治权柄。
+    raw_quote: 历史文就是同仁 ... 当商人装逼真的很无聊 ... 天下权美人心都没有
+  - dimension: opening
+    severity: negative
+    content: 开篇变成风景描写，迟迟未进入故事。
+    raw_quote: 怎么就开始写清明上河图啊 ... 没必要
+  - dimension: simplicity
+    severity: positive
+    content: 看得出做了历史功课，文笔扎实。
+    raw_quote: 比例倒是还行吧 挺扎实

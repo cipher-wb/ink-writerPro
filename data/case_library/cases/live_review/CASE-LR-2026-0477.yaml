@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0477
+title: 骑士美德 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 西幻
+  - 骑士
+  - 言情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 66分 好吧没啥问题 66分直接加我 | 开篇人设立得住，框架结构好，拉扯有味道。66分直接签约。但作者装作新手，实际有百万字完结经验。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇人设立得住，框架结构好，拉扯有味道。66分直接签约。但作者装作新手，实际有百万字完结经验。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 494
+  - 563
+  score: 66
+  score_raw: 66分 好吧没啥问题 66分直接加我
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 骑士美德
+  genre_guess:
+  - 西幻
+  - 骑士
+  - 言情
+  overall_comment: 开篇人设立得住，框架结构好，拉扯有味道。66分直接签约。但作者装作新手，实际有百万字完结经验。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇画面吸引人，柔弱未亡人标签立得好
+    raw_quote: 这个画面已经吸引人了呀 对吧柔弱就是标签呀 对吧未亡人呀 已经出来了呀
+  - dimension: character
+    severity: positive
+    content: 人设立得住，第一章框架结构好
+    raw_quote: 你看他第一章的框架结构都挺好的 然后卡点这里也卡住了
+  - dimension: pacing
+    severity: neutral
+    content: 后面可能稍慢，主线驱动力稍弱
+    raw_quote: 就是后面可能有点慢了 有点慢就主线危机驱动力这些弱点

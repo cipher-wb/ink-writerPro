@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0658
+title: 赵匡胤天空一声巨响 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 弹雨也就30满 | 逻辑硬伤致命，从天而降给皇帝治病太过儿戏，只适合发蓝精灵且需大改身份设定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 逻辑硬伤致命，从天而降给皇帝治病太过儿戏，只适合发蓝精灵且需大改身份设定。 | 天空一声巨响的出场极其中二无逻辑，人直接就被砍了;在起点写历史需逻辑，这书完全不合理，只能去蓝精灵;皇帝不会信从天而降的陌生人，人设逻辑崩
+  observable:
+  - 'opening维度: 天空一声巨响的出场极其中二无逻辑，人直接就被砍了'
+  - 'genre维度: 在起点写历史需逻辑，这书完全不合理，只能去蓝精灵'
+  - 'character维度: 皇帝不会信从天而降的陌生人，人设逻辑崩'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1461
+  - 1540
+  score: 30
+  score_raw: 弹雨也就30满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 赵匡胤天空一声巨响
+  genre_guess:
+  - 历史
+  - 穿越
+  - 搞笑
+  overall_comment: 逻辑硬伤致命，从天而降给皇帝治病太过儿戏，只适合发蓝精灵且需大改身份设定。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 天空一声巨响的出场极其中二无逻辑，人直接就被砍了
+    raw_quote: 凭什么你一发难就信你啊...这不可能信你的
+  - dimension: genre
+    severity: negative
+    content: 在起点写历史需逻辑，这书完全不合理，只能去蓝精灵
+    raw_quote: 我觉得你发蓝精灵...就不用解释这么多...直接治病就完事了
+  - dimension: character
+    severity: negative
+    content: 皇帝不会信从天而降的陌生人，人设逻辑崩
+    raw_quote: 五代十国能当上皇帝的能是弱智呀

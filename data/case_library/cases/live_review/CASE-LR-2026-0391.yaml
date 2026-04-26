@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0391
+title: 背心大 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分 | 反转过多导致节奏和比例崩坏，描写也有缺失，距离签约尚缺一口气。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 反转过多导致节奏和比例崩坏，描写也有缺失，距离签约尚缺一口气。 | 为求反转把节奏拉得太快，反而显得刻意和混乱。;人物描写约等于没有，完全靠事件硬推。
+  observable:
+  - 'pacing维度: 为求反转把节奏拉得太快，反而显得刻意和混乱。'
+  - 'character维度: 人物描写约等于没有，完全靠事件硬推。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 615
+  - 665
+  score: 58
+  score_raw: 58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 背心大
+  genre_guess:
+  - 修仙
+  overall_comment: 反转过多导致节奏和比例崩坏，描写也有缺失，距离签约尚缺一口气。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 为求反转把节奏拉得太快，反而显得刻意和混乱。
+    raw_quote: 这个稿子反转有点太多了，我觉得有点，其实不太好。
+  - dimension: character
+    severity: negative
+    content: 人物描写约等于没有，完全靠事件硬推。
+    raw_quote: 后面这两个描写等于没有，还挺奇怪的这么写。

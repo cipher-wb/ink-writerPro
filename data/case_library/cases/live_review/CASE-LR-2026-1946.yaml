@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1946
+title: 后周显德六年 (fail / 47分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 接受47吧 | 战术感和文笔不错，但心理盘算过多导致事件弱，缺乏炸裂看点，题材和写法让自己受众太窄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 战术感和文笔不错，但心理盘算过多导致事件弱，缺乏炸裂看点，题材和写法让自己受众太窄。 | 心理描写太多，事件与盘算比例失衡;五代十国写法大明化太挑受众，看点弱
+  observable:
+  - 'pacing维度: 心理描写太多，事件与盘算比例失衡'
+  - 'genre维度: 五代十国写法大明化太挑受众，看点弱'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 549
+  - 613
+  score: 47
+  score_raw: 接受47吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 后周显德六年
+  genre_guess:
+  - 历史
+  - 五代十国
+  - 穿越
+  overall_comment: 战术感和文笔不错，但心理盘算过多导致事件弱，缺乏炸裂看点，题材和写法让自己受众太窄。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 心理描写太多，事件与盘算比例失衡
+    raw_quote: 感觉思考太多了...思考跟事件要同步进行，就这个度是你能不能出成绩的关键
+  - dimension: genre
+    severity: negative
+    content: 五代十国写法大明化太挑受众，看点弱
+    raw_quote: 五代时过这样的写法可能有点太大明化了...比较小众，上限更低其实

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1693
+title: 穿越七玄界收逆天弟子 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 系统
+  - 收徒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分吧 | 又水又啰嗦，毫无信息量，只会卖设定而毫无事件、危机和冲突。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 又水又啰嗦，毫无信息量，只会卖设定而毫无事件、危机和冲突。 | 开局水字数严重，1万字的剧情6000字足够。;三章仅为卖设定，无人设、无剧情、无危机、无冲突。
+  observable:
+  - 'pacing维度: 开局水字数严重，1万字的剧情6000字足够。'
+  - 'opening维度: 三章仅为卖设定，无人设、无剧情、无危机、无冲突。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 721
+  - 791
+  score: 22
+  score_raw: 22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越七玄界收逆天弟子
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 系统
+  - 收徒
+  overall_comment: 又水又啰嗦，毫无信息量，只会卖设定而毫无事件、危机和冲突。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开局水字数严重，1万字的剧情6000字足够。
+    raw_quote: 前面都可以删掉那个太水了
+  - dimension: opening
+    severity: negative
+    content: 三章仅为卖设定，无人设、无剧情、无危机、无冲突。
+    raw_quote: 没丽人设没利剧情，没有危机，没有冲突

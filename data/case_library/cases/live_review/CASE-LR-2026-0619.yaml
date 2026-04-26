@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0619
+title: 将行 (fail / 26分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 鬼故事
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就30哎 30其实不到这个26吧 | 开篇蝎子段落脱离主线，主角沦为旁观者，强扭鬼故事却无期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇蝎子段落脱离主线，主角沦为旁观者，强扭鬼故事却无期待感。 | 蝎子段落毫无意义，让读者完全摸不着头脑。;主角没有身份、没有心理活动，像摄像头。;鬼故事缺乏悬念铺垫和主角能动性。
+  observable:
+  - 'opening维度: 蝎子段落毫无意义，让读者完全摸不着头脑。'
+  - 'character维度: 主角没有身份、没有心理活动，像摄像头。'
+  - 'highpoint维度: 鬼故事缺乏悬念铺垫和主角能动性。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 96
+  - 185
+  score: 26
+  score_raw: 也就30哎 30其实不到这个26吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 将行
+  genre_guess:
+  - 灵异
+  - 都市
+  - 鬼故事
+  overall_comment: 开篇蝎子段落脱离主线，主角沦为旁观者，强扭鬼故事却无期待感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 蝎子段落毫无意义，让读者完全摸不着头脑。
+    raw_quote: 这开头我不懂啊... 开头是个蝎子吧 跟剧情没关系
+  - dimension: character
+    severity: negative
+    content: 主角没有身份、没有心理活动，像摄像头。
+    raw_quote: 主角就没心理活动对吧 ... 也没什么期待感
+  - dimension: highpoint
+    severity: negative
+    content: 鬼故事缺乏悬念铺垫和主角能动性。
+    raw_quote: 我们期待你主角能干嘛 ... 主角没什么好人设呀 也没什么好主线
+  - dimension: misc
+    severity: positive
+    content: 个别场景描述能力尚可。
+    raw_quote: 你说句场景描述能力还可以

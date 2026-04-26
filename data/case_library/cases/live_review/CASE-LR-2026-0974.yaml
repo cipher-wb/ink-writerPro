@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0974
+title: 灭世魔女养成 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 西幻
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话40分左右吧 | 开头太水，设定过多，节奏慢没重点，金币体系崩坏。但魔女那段心理活动还有一点意思。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头太水，设定过多，节奏慢没重点，金币体系崩坏。但魔女那段心理活动还有一点意思。 | 第一章推荐效果可能垫底，太多啰嗦设定。;第一章读者注意力全在1万金币上，逻辑崩坏。
+  observable:
+  - 'opening维度: 第一章推荐效果可能垫底，太多啰嗦设定。'
+  - 'highpoint维度: 第一章读者注意力全在1万金币上，逻辑崩坏。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 2141
+  - 2290
+  score: 40
+  score_raw: 打分的话40分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灭世魔女养成
+  genre_guess:
+  - 西幻
+  - 奇幻
+  overall_comment: 开头太水，设定过多，节奏慢没重点，金币体系崩坏。但魔女那段心理活动还有一点意思。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章推荐效果可能垫底，太多啰嗦设定。
+    raw_quote: 我觉得你开头很简单...你把这个前面那些啰嗦的屁话...设定少点...又慢又没重点
+  - dimension: highpoint
+    severity: negative
+    content: 第一章读者注意力全在1万金币上，逻辑崩坏。
+    raw_quote: 大哥你是不是金币体系崩掉了...一个奴隶1万多金币...为什么你会有1万金币

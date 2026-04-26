@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0716
+title: 诡异吃我一拳/外卖必须学 (fail / 47分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 都市
+  - 诡异
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十七分 | 文笔好，但第一个事件偏向一轮诡异，缺乏都市日常阶段引入；题材需要换方向。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔好，但第一个事件偏向一轮诡异，缺乏都市日常阶段引入；题材需要换方向。 | 开局诡异事件太突兀，缺少普通日常切入过渡
+  observable:
+  - 'hook维度: 开局诡异事件太突兀，缺少普通日常切入过渡'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 1101
+  - 1165
+  score: 47
+  score_raw: 四十七分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异吃我一拳/外卖必须学
+  genre_guess:
+  - 都市
+  - 诡异
+  - 系统流
+  overall_comment: 文笔好，但第一个事件偏向一轮诡异，缺乏都市日常阶段引入；题材需要换方向。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开局诡异事件太突兀，缺少普通日常切入过渡
+    raw_quote: 第一个事件很无聊...是一轮局诡异...都市一轮也要先写都市
+  - dimension: character
+    severity: positive
+    content: 文笔支撑扎实，有天赋，缺的只是题材和切入点
+    raw_quote: 文笔挺好的...天赋是OK的

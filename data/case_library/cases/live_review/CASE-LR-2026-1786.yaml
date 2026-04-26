@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1786
+title: 金牌技师穿越修仙 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 修仙
+  - 按摩
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 韩设三样多分 | 题材猎奇，逻辑硬伤（炼气给金丹按摩），只适合男频精灵等小众。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材猎奇，逻辑硬伤（炼气给金丹按摩），只适合男频精灵等小众。 | 起点境界崩坏，炼气给金丹按摩，逻辑硬伤。
+  observable:
+  - 'taboo维度: 起点境界崩坏，炼气给金丹按摩，逻辑硬伤。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 500
+  - 525
+  score: null
+  score_raw: 韩设三样多分
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 金牌技师穿越修仙
+  genre_guess:
+  - 修仙
+  - 按摩
+  - 雪白
+  overall_comment: 题材猎奇，逻辑硬伤（炼气给金丹按摩），只适合男频精灵等小众。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 起点境界崩坏，炼气给金丹按摩，逻辑硬伤。
+    raw_quote: 炼气你是不能给金丹按摩的...已经崩完了...起点的境界的开头都比较低
+  - dimension: ops
+    severity: neutral
+    content: 题材只适合男频精灵这类擦边平台。
+    raw_quote: 男精灵比较适合吧...我觉得韩设三样多分

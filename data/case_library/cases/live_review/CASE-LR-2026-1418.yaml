@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1418
+title: 人间修仙扮演法（朱吉吉） (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 仙侠
+  - 现代修真
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 肯定不会有人捞的 没得救 | 世界观立不住，烂梗太多，性压抑，建议删除换题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观立不住，烂梗太多，性压抑，建议删除换题材。 | 现代修真世界观奇怪，立不住;大量性暗示、黄段子，过不了审
+  observable:
+  - 'genre维度: 现代修真世界观奇怪，立不住'
+  - 'ops维度: 大量性暗示、黄段子，过不了审'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 491
+  - 540
+  score: null
+  score_raw: 肯定不会有人捞的 没得救
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 人间修仙扮演法（朱吉吉）
+  genre_guess:
+  - 仙侠
+  - 现代修真
+  - 脑洞
+  overall_comment: 世界观立不住，烂梗太多，性压抑，建议删除换题材。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 现代修真世界观奇怪，立不住
+    raw_quote: 现代修真感觉好奇怪啊 分类真的特别奇怪
+  - dimension: ops
+    severity: negative
+    content: 大量性暗示、黄段子，过不了审
+    raw_quote: 性压抑了 就感觉真的性压抑了

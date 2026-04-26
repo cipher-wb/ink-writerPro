@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1296
+title: 修士证：练气期叶城 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 都市
+  - 修真
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得25分吧 | 世界观设定违背网文默认认知，修仙者被科技压制导致爽感崩坏，缺少情绪驱动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观设定违背网文默认认知，修仙者被科技压制导致爽感崩坏，缺少情绪驱动。 | 元婴修士被高科技武器秒杀，颠覆常规力量体系，读者难以接受;缺乏主角变强的爽点和期待，修仙沦为陪衬
+  observable:
+  - 'genre维度: 元婴修士被高科技武器秒杀，颠覆常规力量体系，读者难以接受'
+  - 'highpoint维度: 缺乏主角变强的爽点和期待，修仙沦为陪衬'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 2060
+  - 2230
+  score: 25
+  score_raw: 我觉得25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修士证：练气期叶城
+  genre_guess:
+  - 都市
+  - 修真
+  - 科幻
+  overall_comment: 世界观设定违背网文默认认知，修仙者被科技压制导致爽感崩坏，缺少情绪驱动。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 元婴修士被高科技武器秒杀，颠覆常规力量体系，读者难以接受
+    raw_quote: 元婴修士也被高科技武武器这个…这个涉及到合理性 … 大家觉得不合理 那就不看
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏主角变强的爽点和期待，修仙沦为陪衬
+    raw_quote: 我练气了 你一枪能把我崩了 … 没爽点了 另一方主角不牛逼也不爽

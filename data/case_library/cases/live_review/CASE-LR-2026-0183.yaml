@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0183
+title: 穿成猪头又何妨 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 修仙
+  - 穿越
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 正经书还是有40多分的 | 流畅但太小白，蹭主播热度写成恶搞，没签约价值。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 流畅但太小白，蹭主播热度写成恶搞，没签约价值。 | 十年前的小白写法，灵根测试、校花嘲讽等桥段过于俗套。
+  observable:
+  - 'simplicity维度: 十年前的小白写法，灵根测试、校花嘲讽等桥段过于俗套。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 2050
+  - 2190
+  score: null
+  score_raw: 正经书还是有40多分的
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 穿成猪头又何妨
+  genre_guess:
+  - 修仙
+  - 穿越
+  - 恶搞
+  overall_comment: 流畅但太小白，蹭主播热度写成恶搞，没签约价值。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 十年前的小白写法，灵根测试、校花嘲讽等桥段过于俗套。
+    raw_quote: 太小白了就是10年前的写法
+  - dimension: character
+    severity: neutral
+    content: 主角变成猪的设定有娱乐性，但缺乏深度。
+    raw_quote: 主播变成土猪了要去修仙了

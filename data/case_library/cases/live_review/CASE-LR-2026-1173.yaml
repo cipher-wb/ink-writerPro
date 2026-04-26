@@ -1,0 +1,60 @@
+case_id: CASE-LR-2026-1173
+title: 人在美利坚枪战每一天 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 都市
+  - 警察
+  - 美利坚
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多分 | 警察日常平淡如水，没有极端事件和高概念脑洞，节奏像游戏录像，找不到看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 警察日常平淡如水，没有极端事件和高概念脑洞，节奏像游戏录像，找不到看点。 | 缺乏抓人的极端事件或新颖设定，看点不明;推进极慢，像在看游戏实况，毫无故事张力;主角缺乏期待感和能力展示，像个NPC
+  observable:
+  - 'hook维度: 缺乏抓人的极端事件或新颖设定，看点不明'
+  - 'pacing维度: 推进极慢，像在看游戏实况，毫无故事张力'
+  - 'character维度: 主角缺乏期待感和能力展示，像个NPC'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 630
+  - 830
+  score: null
+  score_raw: 三十多分
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 人在美利坚枪战每一天
+  genre_guess:
+  - 都市
+  - 警察
+  - 美利坚
+  - 穿越
+  overall_comment: 警察日常平淡如水，没有极端事件和高概念脑洞，节奏像游戏录像，找不到看点。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 缺乏抓人的极端事件或新颖设定，看点不明
+    raw_quote: 我需要你有一个好的一个极端事件 有一个很好的脑洞
+  - dimension: pacing
+    severity: negative
+    content: 推进极慢，像在看游戏实况，毫无故事张力
+    raw_quote: 好慢呀 第二章 这多久才第二章
+  - dimension: character
+    severity: negative
+    content: 主角缺乏期待感和能力展示，像个NPC
+    raw_quote: 没什么好的故事 也没什么主角好的期待感 或者你有什么能力 你能怎么样

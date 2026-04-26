@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0243
+title: 剩女秘密被诬陷 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 西幻
+  - 骑士
+  - 反转
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 66分 | 事件造诣高，智斗自证流畅，尺度需调整，可以签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件造诣高，智斗自证流畅，尺度需调整，可以签。 | 尺度太大需调整
+  observable:
+  - 'taboo维度: 尺度太大需调整'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 1295
+  - 1370
+  score: 66
+  score_raw: 66分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 剩女秘密被诬陷
+  genre_guess:
+  - 西幻
+  - 骑士
+  - 反转
+  overall_comment: 事件造诣高，智斗自证流畅，尺度需调整，可以签。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开局雪白带反转，有看点
+    raw_quote: 这个有意思但是 有点炸裂嘛
+  - dimension: misc
+    severity: positive
+    content: 事件造诣可以，节奏流畅
+    raw_quote: 事件造诣可以 流畅的故事
+  - dimension: taboo
+    severity: negative
+    content: 尺度太大需调整
+    raw_quote: 不一定过审 而且读者有的可能会觉得毒

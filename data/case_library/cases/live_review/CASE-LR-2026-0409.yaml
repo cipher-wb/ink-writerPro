@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0409
+title: 基因链新域星链 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 科幻
+  - 未来
+  - 外星
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20分吧 | 没代入感，设定不接地气，读者看不懂，全是空中楼阁
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 没代入感，设定不接地气，读者看不懂，全是空中楼阁 | 关键元素不接地气，读者没代入感，设定像空中楼阁;钱的概念完全不懂，20万薪金贬值不值钱，读者无法理解
+  observable:
+  - 'simplicity维度: 关键元素不接地气，读者没代入感，设定像空中楼阁'
+  - 'ops维度: 钱的概念完全不懂，20万薪金贬值不值钱，读者无法理解'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 541
+  - 614
+  score: 20
+  score_raw: 差不多就20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 基因链新域星链
+  genre_guess:
+  - 科幻
+  - 未来
+  - 外星
+  overall_comment: 没代入感，设定不接地气，读者看不懂，全是空中楼阁
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 关键元素不接地气，读者没代入感，设定像空中楼阁
+    raw_quote: 就没代入感，这些什么地底战区多少心境，什么基因链，那最关键的元素，读者没有代入感
+  - dimension: ops
+    severity: negative
+    content: 钱的概念完全不懂，20万薪金贬值不值钱，读者无法理解
+    raw_quote: 那20万薪金不值钱，哈哈20万真不值钱，我可以给你一个亿

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0212
+title: 金元巧合三界穿梭 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 仙侠
+  - 凡修
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分吧 | 题材完全脱离市场，人设童话化，节奏慢，需要推翻重学。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材完全脱离市场，人设童话化，节奏慢，需要推翻重学。 | 三界穿梭和统一全球的爽点无人关心，完全自嗨;人设像童话，角色扁平缺乏吸引力
+  observable:
+  - 'genre维度: 三界穿梭和统一全球的爽点无人关心，完全自嗨'
+  - 'character维度: 人设像童话，角色扁平缺乏吸引力'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1014
+  - 1047
+  score: 18
+  score_raw: 18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 金元巧合三界穿梭
+  genre_guess:
+  - 仙侠
+  - 凡修
+  overall_comment: 题材完全脱离市场，人设童话化，节奏慢，需要推翻重学。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 三界穿梭和统一全球的爽点无人关心，完全自嗨
+    raw_quote: 这个题材完全就是养猪的 ... 爽点在哪里根本就不是爽点
+  - dimension: character
+    severity: negative
+    content: 人设像童话，角色扁平缺乏吸引力
+    raw_quote: 人设写的跟童话似的 ... 对白也很小白的

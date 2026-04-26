@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2044
+title: 迷茫的路过（穿越诸天战狼） (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 诸天
+  - 影视
+  - 战狼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多分吧 | 文笔故事能力可以，但选择的世界缺乏遗憾和看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔故事能力可以，但选择的世界缺乏遗憾和看点。 | 战狼世界缺乏可写的遗憾和爽点
+  observable:
+  - 'genre维度: 战狼世界缺乏可写的遗憾和爽点'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 2161
+  - 2280
+  score: 30
+  score_raw: 三十多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 迷茫的路过（穿越诸天战狼）
+  genre_guess:
+  - 诸天
+  - 影视
+  - 战狼
+  overall_comment: 文笔故事能力可以，但选择的世界缺乏遗憾和看点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 战狼世界缺乏可写的遗憾和爽点
+    raw_quote: 战狼昂没爽店
+  - dimension: misc
+    severity: positive
+    content: 讲故事能力文笔不错
+    raw_quote: 其实讲故事能力还可以 这个大哥不菜

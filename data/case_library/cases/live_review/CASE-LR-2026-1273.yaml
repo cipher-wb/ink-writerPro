@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1273
+title: 舔狗女神游戏化 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 都市
+  - 舔狗
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 比例不错但整体花里胡哨偏离故事，纯靠设定在瞎搞，没人设没好故事，读者全跑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例不错但整体花里胡哨偏离故事，纯靠设定在瞎搞，没人设没好故事，读者全跑。 | 花里胡哨的设定乱来，完全跑偏故事;没人设没好故事，纯在天梯乱来
+  observable:
+  - 'opening维度: 花里胡哨的设定乱来，完全跑偏故事'
+  - 'character维度: 没人设没好故事，纯在天梯乱来'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1221
+  - 1310
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 舔狗女神游戏化
+  genre_guess:
+  - 都市
+  - 舔狗
+  - 系统
+  overall_comment: 比例不错但整体花里胡哨偏离故事，纯靠设定在瞎搞，没人设没好故事，读者全跑。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 花里胡哨的设定乱来，完全跑偏故事
+    raw_quote: 你现在是完全偏题...花里胡哨的病毒关闭，让讲故事的能力重新占领高地
+  - dimension: character
+    severity: negative
+    content: 没人设没好故事，纯在天梯乱来
+    raw_quote: 本质上没好人设，天也没好故事，纯粹在天梯乱来一圈

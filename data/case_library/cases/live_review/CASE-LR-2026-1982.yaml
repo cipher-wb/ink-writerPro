@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1982
+title: 人死时有什么感觉 (fail / 12分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 科幻
+  - 设定
+  - 散文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 12分 | AI辅助但不加修饰，大段设定和文青描写毫无网文卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: AI辅助但不加修饰，大段设定和文青描写毫无网文卖点。 | 一开始就抛设定，读者跑光;文青写法，脱离大众阅读习惯
+  observable:
+  - 'opening维度: 一开始就抛设定，读者跑光'
+  - 'simplicity维度: 文青写法，脱离大众阅读习惯'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 931
+  - 1020
+  score: 12
+  score_raw: 12分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 人死时有什么感觉
+  genre_guess:
+  - 科幻
+  - 设定
+  - 散文
+  overall_comment: AI辅助但不加修饰，大段设定和文青描写毫无网文卖点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 一开始就抛设定，读者跑光
+    raw_quote: 你是新人你没有资格说教，也不要开头就给他们讲设定
+  - dimension: simplicity
+    severity: negative
+    content: 文青写法，脱离大众阅读习惯
+    raw_quote: 文青是最讨厌的，没有人看小说的看散文的

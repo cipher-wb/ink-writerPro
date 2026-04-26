@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1170
+title: 三国张角成了我师兄 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 三国
+  - 神话
+  - 历史神话
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十八分最多了 | 开篇完全自嗨，从盘古开天写起，文笔过白，毫无代入感，不具备签约水平。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇完全自嗨，从盘古开天写起，文笔过白，毫无代入感，不具备签约水平。 | 开头从盘古开天辟地写起，全需删掉重写;谴词造句过于小白，缺乏网文基本文笔;主角不突出，心理活动和对话都像诗朗诵，完全没有代入感
+  observable:
+  - 'opening维度: 开头从盘古开天辟地写起，全需删掉重写'
+  - 'simplicity维度: 谴词造句过于小白，缺乏网文基本文笔'
+  - 'character维度: 主角不突出，心理活动和对话都像诗朗诵，完全没有代入感'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 40
+  - 210
+  score: 18
+  score_raw: 十八分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国张角成了我师兄
+  genre_guess:
+  - 三国
+  - 神话
+  - 历史神话
+  overall_comment: 开篇完全自嗨，从盘古开天写起，文笔过白，毫无代入感，不具备签约水平。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头从盘古开天辟地写起，全需删掉重写
+    raw_quote: 你还真从盘古开天辟地开始写啊
+  - dimension: simplicity
+    severity: negative
+    content: 谴词造句过于小白，缺乏网文基本文笔
+    raw_quote: 这浅词道句太白了 小白兔白玉白
+  - dimension: character
+    severity: negative
+    content: 主角不突出，心理活动和对话都像诗朗诵，完全没有代入感
+    raw_quote: 这说话跟读诗那种很无聊的

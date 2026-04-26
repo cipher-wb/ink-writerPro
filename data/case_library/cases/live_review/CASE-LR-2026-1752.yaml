@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1752
+title: 重生零六：从小卖部老板到临时大坟 (pass / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 商战
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十分 | 今晚最高分，开头玩梗幽默，创业线真实好代入，但女主处理有争议。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 今晚最高分，开头玩梗幽默，创业线真实好代入，但女主处理有争议。 | 女主形象前后矛盾，读者可能无法代入。
+  observable:
+  - 'character维度: 女主形象前后矛盾，读者可能无法代入。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1850
+  - 1952
+  score: 50
+  score_raw: 五十分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 重生零六：从小卖部老板到临时大坟
+  genre_guess:
+  - 都市
+  - 重生
+  - 商战
+  overall_comment: 今晚最高分，开头玩梗幽默，创业线真实好代入，但女主处理有争议。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 利用轻松幽默的对话开场，节奏快易代入。
+    raw_quote: 这个开头其实还写得可以的 有看见 玩梗
+  - dimension: character
+    severity: negative
+    content: 女主形象前后矛盾，读者可能无法代入。
+    raw_quote: 沈宁这个人前世你这样说的话 其实已经崩了

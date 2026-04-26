@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0754
+title: 冤中主琵琶岭术士 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 都市
+  - 玄幻
+  - 外星人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 如若不行，请务必抢救一下……没得救呀 | 设定不伦不类，没有穿越无代入感，读者看不进去，绝症无法救。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定不伦不类，没有穿越无代入感，读者看不进去，绝症无法救。 | 没有穿越，世界观过于陌生，国人无法代入;元素太多太复杂，名字像铁岭学院
+  observable:
+  - 'opening维度: 没有穿越，世界观过于陌生，国人无法代入'
+  - 'genre维度: 元素太多太复杂，名字像铁岭学院'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 861
+  - 930
+  score: null
+  score_raw: 如若不行，请务必抢救一下……没得救呀
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 冤中主琵琶岭术士
+  genre_guess:
+  - 都市
+  - 玄幻
+  - 外星人
+  overall_comment: 设定不伦不类，没有穿越无代入感，读者看不进去，绝症无法救。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 没有穿越，世界观过于陌生，国人无法代入
+    raw_quote: 你要写一个中国人来到这个世界呀……不穿就是谜语人
+  - dimension: genre
+    severity: negative
+    content: 元素太多太复杂，名字像铁岭学院
+    raw_quote: 结印师……什么叫束缚师……无效，不要写这些

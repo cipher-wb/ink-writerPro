@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0768
+title: 刑天战魔道 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 玄幻
+  - 洪荒
+  - 传选
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就是个20分左右吧 | 设定讲话连篇，网文大忌开局讲设定，需推翻去看书学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定讲话连篇，网文大忌开局讲设定，需推翻去看书学习。 | 第一章详解设定，极其啰嗦，过时写法;传选刑天代入感极差，跟现代人毫无关系
+  observable:
+  - 'opening维度: 第一章详解设定，极其啰嗦，过时写法'
+  - 'genre维度: 传选刑天代入感极差，跟现代人毫无关系'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1901
+  - 1970
+  score: 20
+  score_raw: 也就是个20分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 刑天战魔道
+  genre_guess:
+  - 玄幻
+  - 洪荒
+  - 传选
+  overall_comment: 设定讲话连篇，网文大忌开局讲设定，需推翻去看书学习。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章详解设定，极其啰嗦，过时写法
+    raw_quote: 现在的书怎么可能一上来……第一章叽里咕噜讲设定啊
+  - dimension: genre
+    severity: negative
+    content: 传选刑天代入感极差，跟现代人毫无关系
+    raw_quote: 刑天残红关我现代人屁事……你不想这个问题吗

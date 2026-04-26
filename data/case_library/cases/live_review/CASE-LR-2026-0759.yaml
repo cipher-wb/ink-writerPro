@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0759
+title: 梦境穿越船悬 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 船悬
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分最多了 | 沉淀两年归来仍是辰东式的假大空，梦境无效信息多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 沉淀两年归来仍是辰东式的假大空，梦境无效信息多。 | 开篇全是拟声词和假大空的战斗描写，像辰东风格但过时了;跑了半天就在梦境里，对剧情推进毫无意义
+  observable:
+  - 'opening维度: 开篇全是拟声词和假大空的战斗描写，像辰东风格但过时了'
+  - 'pacing维度: 跑了半天就在梦境里，对剧情推进毫无意义'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1221
+  - 1280
+  score: 30
+  score_raw: 30分最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 梦境穿越船悬
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 船悬
+  overall_comment: 沉淀两年归来仍是辰东式的假大空，梦境无效信息多。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇全是拟声词和假大空的战斗描写，像辰东风格但过时了
+    raw_quote: 全是拟声词……动不动就什么大道都泯灭了……太大了兄弟
+  - dimension: pacing
+    severity: negative
+    content: 跑了半天就在梦境里，对剧情推进毫无意义
+    raw_quote: 不是大哥……你这歇了半天一个梦境，这要干嘛呀

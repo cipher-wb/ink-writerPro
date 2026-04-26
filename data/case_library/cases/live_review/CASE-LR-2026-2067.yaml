@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2067
+title: 创业到一世纪 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35说嘛 推翻嘛 | 老套的穿越大祭祀套路，缺乏心理活动，比例驾驭不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套的穿越大祭祀套路，缺乏心理活动，比例驾驭不住。 | 完全没有心理活动;比例不行，驾驭不住题材
+  observable:
+  - 'character维度: 完全没有心理活动'
+  - 'simplicity维度: 比例不行，驾驭不住题材'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 4201
+  - 4400
+  score: 35
+  score_raw: 35说嘛 推翻嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 创业到一世纪
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 恶搞
+  overall_comment: 老套的穿越大祭祀套路，缺乏心理活动，比例驾驭不住。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 完全没有心理活动
+    raw_quote: 你心理活动又不写了 你看又不写了 这后面一句心理活动都没有了
+  - dimension: simplicity
+    severity: negative
+    content: 比例不行，驾驭不住题材
+    raw_quote: 比例跟不上老子吧这种东西 ... 推翻嘛

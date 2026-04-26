@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1172
+title: 我以灵符会长生 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 仙侠
+  - 灵符
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多分 | 灵符体系落入请公子斩妖的俗套，写法八股，缺少亮点，但节奏尚可。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 灵符体系落入请公子斩妖的俗套，写法八股，缺少亮点，但节奏尚可。 | 斩妖除魔设定过于泛滥，没有差异化;大纲式写法，第一章AI都能套出来，毫无个人特色;开头雪白加反转也是老套路，缺乏钩子
+  observable:
+  - 'genre维度: 斩妖除魔设定过于泛滥，没有差异化'
+  - 'simplicity维度: 大纲式写法，第一章AI都能套出来，毫无个人特色'
+  - 'opening维度: 开头雪白加反转也是老套路，缺乏钩子'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 430
+  - 620
+  score: null
+  score_raw: 三十多分
+  score_signal: explicit_number
+  verdict: unknown
+  title_guess: 我以灵符会长生
+  genre_guess:
+  - 仙侠
+  - 灵符
+  - 系统
+  overall_comment: 灵符体系落入请公子斩妖的俗套，写法八股，缺少亮点，但节奏尚可。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 斩妖除魔设定过于泛滥，没有差异化
+    raw_quote: 这种书起点没有十万本也有九万本 就请公子斩妖嘛
+  - dimension: simplicity
+    severity: negative
+    content: 大纲式写法，第一章AI都能套出来，毫无个人特色
+    raw_quote: 我找个AI 对吧 把这个大纲提示两百字送给他 他写出来也就这样
+  - dimension: opening
+    severity: negative
+    content: 开头雪白加反转也是老套路，缺乏钩子
+    raw_quote: 又是雪白加反转 就是食之无味 其实可惜兄弟

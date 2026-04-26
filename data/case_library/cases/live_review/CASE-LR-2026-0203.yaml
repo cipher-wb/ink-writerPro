@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0203
+title: 哥布林词条系统 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 西方奇幻
+  - 游戏异界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十九分水平很不错 | 条理清晰，文笔干练，故事有期待感，但后续展开未知，需观望。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 条理清晰，文笔干练，故事有期待感，但后续展开未知，需观望。
+  observable:
+  - 整体被星河直播判定为 borderline
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 556
+  - 604
+  score: 59
+  score_raw: 五十九分水平很不错
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 哥布林词条系统
+  genre_guess:
+  - 西方奇幻
+  - 游戏异界
+  overall_comment: 条理清晰，文笔干练，故事有期待感，但后续展开未知，需观望。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 开局切入快，利用哥布林身份和词条系统制造看点
+    raw_quote: 这个场景是对的 确实大哥乾练 ... 这种就是给读者期待感
+  - dimension: character
+    severity: positive
+    content: 角色关系设计和拉扯到位，有轻小说质感
+    raw_quote: 哥布林他潜伏嘛 确实这个小剧场也挺好的 ... 看看你后面写啥吧

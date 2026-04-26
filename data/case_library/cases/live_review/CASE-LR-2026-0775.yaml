@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0775
+title: 太虚蝉鸣 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 仙侠
+  - 文青
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在就16分 16分就是吉利 | 文笔可以但太文艺，读者会认为是AI写的，故弄玄虚没有代入感，无效描写过多，16分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔可以但太文艺，读者会认为是AI写的，故弄玄虚没有代入感，无效描写过多，16分。 | 开头没人看，全是场景描写;太文艺，像AI写的;主角无心理活动，代入感为零
+  observable:
+  - 'opening维度: 开头没人看，全是场景描写'
+  - 'simplicity维度: 太文艺，像AI写的'
+  - 'character维度: 主角无心理活动，代入感为零'
+  - 'ops维度: 会被读者喷AI'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 401
+  - 450
+  score: 16
+  score_raw: 现在就16分 16分就是吉利
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 太虚蝉鸣
+  genre_guess:
+  - 仙侠
+  - 文青
+  overall_comment: 文笔可以但太文艺，读者会认为是AI写的，故弄玄虚没有代入感，无效描写过多，16分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头没人看，全是场景描写
+    raw_quote: 这些场景没人看 就一个小婴儿嘛 又被人家捡起来了 没人看
+  - dimension: simplicity
+    severity: negative
+    content: 太文艺，像AI写的
+    raw_quote: 以前你可以说文艺是文青 现在你这么写 大概就是说你是AI啊
+  - dimension: character
+    severity: negative
+    content: 主角无心理活动，代入感为零
+    raw_quote: 主角是阴阳 我怎么办嘛 那那怎么办呢 这这太俗啦
+  - dimension: ops
+    severity: negative
+    content: 会被读者喷AI
+    raw_quote: 那直接说你是AI 你怎么办 你怎么洗白

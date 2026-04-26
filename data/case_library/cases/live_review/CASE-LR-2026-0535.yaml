@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0535
+title: 飘渺九州路 (fail / 17分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 仙侠
+  - 九州
+  - 慢热
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他给到17分吧 | 杞人忧天式的设定堆砌，故事无聊，完全自嗨，没人在意九州。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 杞人忧天式的设定堆砌，故事无聊，完全自嗨，没人在意九州。 | 慢热是假，故事无聊是真，没人看;缺少代入感，只关心宏大设定不写眼前事件
+  observable:
+  - 'genre维度: 慢热是假，故事无聊是真，没人看'
+  - 'simplicity维度: 缺少代入感，只关心宏大设定不写眼前事件'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 901
+  - 1060
+  score: 17
+  score_raw: 只能给他给到17分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 飘渺九州路
+  genre_guess:
+  - 仙侠
+  - 九州
+  - 慢热
+  overall_comment: 杞人忧天式的设定堆砌，故事无聊，完全自嗨，没人在意九州。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 慢热是假，故事无聊是真，没人看
+    raw_quote: 这这这些都是设定 … 没人看呀 … 不是慢热的问题 这是你的故事无聊
+  - dimension: simplicity
+    severity: negative
+    content: 缺少代入感，只关心宏大设定不写眼前事件
+    raw_quote: 没人关心什么九州大陆荧惑古星 … 你至少写的写故事 写眼前的事件嘛

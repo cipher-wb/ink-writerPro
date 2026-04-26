@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-2046
+title: 回到过去的起点 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 西方奇幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多25分 最多了 | 世界观杂糅、缺乏代入感，读者难以接受，需要推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观杂糅、缺乏代入感，读者难以接受，需要推翻重写。 | 切入场景陌生，缺乏带入感;世界观杂糅，分类不明确;主角常乐没有真实感，与读者脱节
+  observable:
+  - 'opening维度: 切入场景陌生，缺乏带入感'
+  - 'genre维度: 世界观杂糅，分类不明确'
+  - 'character维度: 主角常乐没有真实感，与读者脱节'
+  - 'pacing维度: 剧情无聊，读者看不进去'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 1
+  - 200
+  score: 25
+  score_raw: 差不多25分 最多了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 回到过去的起点
+  genre_guess:
+  - 西方奇幻
+  - 穿越
+  overall_comment: 世界观杂糅、缺乏代入感，读者难以接受，需要推翻重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入场景陌生，缺乏带入感
+    raw_quote: 问题是没有带入感呀 切入 这样的场景对读者来说非常的陌生
+  - dimension: genre
+    severity: negative
+    content: 世界观杂糅，分类不明确
+    raw_quote: 就世界观杂肉 内容贼虚
+  - dimension: character
+    severity: negative
+    content: 主角常乐没有真实感，与读者脱节
+    raw_quote: 常乐没有真实感呀 常乐这个人跟地球人也没啥关系啊 感觉
+  - dimension: pacing
+    severity: negative
+    content: 剧情无聊，读者看不进去
+    raw_quote: 看不进去啊 这个常乐跟我们中国人没啥关系啊 感觉

@@ -1,0 +1,65 @@
+case_id: CASE-LR-2026-0358
+title: 大明鲁滨逊 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 明朝
+  - 土木堡
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这次我不给他个40分了 | 文笔扎实但剧情老套偏题，文青病重，网文理解差，缺乏有效金手指和看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但剧情老套偏题，文青病重，网文理解差，缺乏有效金手指和看点。 | 开头偏题混乱，没有讲清故事方向;京城保卫战等历史梗用烂;没有金手指改变，平淡重复历史
+  observable:
+  - 'opening维度: 开头偏题混乱，没有讲清故事方向'
+  - 'genre维度: 京城保卫战等历史梗用烂'
+  - 'hook维度: 没有金手指改变，平淡重复历史'
+  - 'simplicity维度: 文青病发作，无效抒情'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 332
+  - 372
+  score: null
+  score_raw: 这次我不给他个40分了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 大明鲁滨逊
+  genre_guess:
+  - 历史
+  - 穿越
+  - 明朝
+  - 土木堡
+  overall_comment: 文笔扎实但剧情老套偏题，文青病重，网文理解差，缺乏有效金手指和看点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头偏题混乱，没有讲清故事方向
+    raw_quote: 偏题了 哥太偏题了 不知道干嘛呢
+  - dimension: genre
+    severity: negative
+    content: 京城保卫战等历史梗用烂
+    raw_quote: 大明这个京城保卫战这玩意起点也太多了 烂梗太多了
+  - dimension: hook
+    severity: negative
+    content: 没有金手指改变，平淡重复历史
+    raw_quote: 金手指也没有改变什么的 到现在看不出来改变
+  - dimension: simplicity
+    severity: negative
+    content: 文青病发作，无效抒情
+    raw_quote: 就忍不住了 就就就就拨弦了... 就就不知道干嘛了

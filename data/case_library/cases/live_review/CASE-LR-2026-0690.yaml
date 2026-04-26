@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0690
+title: 我有一间安全屋 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 恐怖游戏
+  - 副本流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 高分28分了 | 恐怖感缺失，烂梗切入让作品失去紧张氛围，倒叙和日常水掉节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 恐怖感缺失，烂梗切入让作品失去紧张氛围，倒叙和日常水掉节奏。 | 用两年前的短视频钩子切入，读者直接划走;第二章开始灌水，与主线冲突无关;贞子被写成勾宿主找女朋友，破坏恐怖感
+  observable:
+  - 'opening维度: 用两年前的短视频钩子切入，读者直接划走'
+  - 'pacing维度: 第二章开始灌水，与主线冲突无关'
+  - 'taboo维度: 贞子被写成勾宿主找女朋友，破坏恐怖感'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 656
+  - 777
+  score: 28
+  score_raw: 高分28分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我有一间安全屋
+  genre_guess:
+  - 恐怖游戏
+  - 副本流
+  overall_comment: 恐怖感缺失，烂梗切入让作品失去紧张氛围，倒叙和日常水掉节奏。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 用两年前的短视频钩子切入，读者直接划走
+    raw_quote: 这种短视频钩子都是两年前的
+  - dimension: pacing
+    severity: negative
+    content: 第二章开始灌水，与主线冲突无关
+    raw_quote: 第二章水分掉了
+  - dimension: taboo
+    severity: negative
+    content: 贞子被写成勾宿主找女朋友，破坏恐怖感
+    raw_quote: 贞子有勾宿主 找个女朋友

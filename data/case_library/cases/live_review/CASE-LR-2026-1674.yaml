@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1674
+title: 女测绘员异界穿越探险 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 科幻
+  - 穿越
+  - 探险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25、26分的样子 | 表达清楚但事件不吸引人，谜语人式展开太慢，读者没有期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达清楚但事件不吸引人，谜语人式展开太慢，读者没有期待感。 | 十万个为什么式推进，信息量全是未知谜团，让人失去耐心;世界观铺陈过度，元素乱入让读者看不懂
+  observable:
+  - 'pacing维度: 十万个为什么式推进，信息量全是未知谜团，让人失去耐心'
+  - 'simplicity维度: 世界观铺陈过度，元素乱入让读者看不懂'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 421
+  - 480
+  score: 25
+  score_raw: 25、26分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 女测绘员异界穿越探险
+  genre_guess:
+  - 科幻
+  - 穿越
+  - 探险
+  overall_comment: 表达清楚但事件不吸引人，谜语人式展开太慢，读者没有期待感。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 十万个为什么式推进，信息量全是未知谜团，让人失去耐心
+    raw_quote: 就全是问号呀 你没发现吗 大概这短时间点问号就问了五六十个了呀
+  - dimension: simplicity
+    severity: negative
+    content: 世界观铺陈过度，元素乱入让读者看不懂
+    raw_quote: 这些东西读者都不在乎这些元素

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0018
+title: 夏汉卿灵异职场 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 都市
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就32了 | 题材差，人设最差，事件没意思，节奏拖沓，32分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材差，人设最差，事件没意思，节奏拖沓，32分。 | 人设最差，没有氛围感;切入太拖;题材差
+  observable:
+  - 'character维度: 人设最差，没有氛围感'
+  - 'pacing维度: 切入太拖'
+  - 'genre维度: 题材差'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 50
+  - 85
+  score: 32
+  score_raw: 差不多就32了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 夏汉卿灵异职场
+  genre_guess:
+  - 都市
+  - 灵异
+  overall_comment: 题材差，人设最差，事件没意思，节奏拖沓，32分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设最差，没有氛围感
+    raw_quote: 人设是最差的 没有氛围感了
+  - dimension: pacing
+    severity: negative
+    content: 切入太拖
+    raw_quote: 切入太拖
+  - dimension: genre
+    severity: negative
+    content: 题材差
+    raw_quote: 题材其实挺差的

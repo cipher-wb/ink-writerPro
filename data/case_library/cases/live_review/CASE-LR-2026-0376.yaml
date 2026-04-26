@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0376
+title: 权谋穷相 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 权谋
+  - 历史
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就25分吧 | 文笔可以但内容不接地气，不懂网文，事件无聊，25分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔可以但内容不接地气，不懂网文，事件无聊，25分。 | 开篇事件缓慢无聊，读者全跑;描写过于细节琐碎，没有重点
+  observable:
+  - 'opening维度: 开篇事件缓慢无聊，读者全跑'
+  - 'simplicity维度: 描写过于细节琐碎，没有重点'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 1271
+  - 1350
+  score: 25
+  score_raw: 就25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 权谋穷相
+  genre_guess:
+  - 权谋
+  - 历史
+  - 玄幻
+  overall_comment: 文笔可以但内容不接地气，不懂网文，事件无聊，25分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇事件缓慢无聊，读者全跑
+    raw_quote: 读者全跑了 已经跑完了这些事件
+  - dimension: simplicity
+    severity: negative
+    content: 描写过于细节琐碎，没有重点
+    raw_quote: 你写这么详细了 怎么样 谁看啊 读者只会觉得烦

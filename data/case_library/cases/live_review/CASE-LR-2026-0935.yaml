@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0935
+title: 学姐你网恋我吗 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 轻小说
+  - 校园
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 34分吧 | 青春疼痛文学味道对，但写不长，人设需要极强笔力支撑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 青春疼痛文学味道对，但写不长，人设需要极强笔力支撑。 | 主角舔狗感太重，部分情节失真
+  observable:
+  - 'character维度: 主角舔狗感太重，部分情节失真'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1725
+  - 1790
+  score: 34
+  score_raw: 34分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 学姐你网恋我吗
+  genre_guess:
+  - 轻小说
+  - 校园
+  - 恋爱
+  overall_comment: 青春疼痛文学味道对，但写不长，人设需要极强笔力支撑。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角舔狗感太重，部分情节失真
+    raw_quote: 就是舔狗 就舔狗 就舔疯掉了 … 你请他喝营养快线吧
+  - dimension: simplicity
+    severity: positive
+    content: 校园味道写得出来，笔触有宠爱感
+    raw_quote: 能写出来校园味道是吧 韩寒郭敬明那种

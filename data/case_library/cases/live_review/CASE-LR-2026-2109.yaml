@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2109
+title: 英雄无敌西幻穿越文 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 奇幻
+  - 西幻
+  - 游戏
+  - 英雄无敌
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多就23分吧，英语好加一分就24 | 小学生写法，全程震惊水字数，没事件没冲突没人物互动，完全没入行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小学生写法，全程震惊水字数，没事件没冲突没人物互动，完全没入行。 | 完全是小学生写法，写日记记叙文;水疯掉了，就一个人摁水震惊
+  observable:
+  - 'opening维度: 完全是小学生写法，写日记记叙文'
+  - 'pacing维度: 水疯掉了，就一个人摁水震惊'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 351
+  - 385
+  score: 24
+  score_raw: 最多就23分吧，英语好加一分就24
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 英雄无敌西幻穿越文
+  genre_guess:
+  - 奇幻
+  - 西幻
+  - 游戏
+  - 英雄无敌
+  overall_comment: 小学生写法，全程震惊水字数，没事件没冲突没人物互动，完全没入行。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 完全是小学生写法，写日记记叙文
+    raw_quote: 大哥现在网文里这么写，读者只会觉得你小白
+  - dimension: pacing
+    severity: negative
+    content: 水疯掉了，就一个人摁水震惊
+    raw_quote: 这水疯掉了呀，就就水就一个人就摁水

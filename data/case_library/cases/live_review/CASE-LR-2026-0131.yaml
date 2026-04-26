@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0131
+title: 钓鱼诡异事件 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 悬疑
+  - 灵异
+  - 钓鱼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 请骂醒我 | 主角智商过低，剧情不合理，钓鱼佬人设崩塌，无法签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角智商过低，剧情不合理，钓鱼佬人设崩塌，无法签约。 | 主角对尸体、异常浑然不觉，智商硬伤;诡异氛围因主角弱智而全毁
+  observable:
+  - 'character维度: 主角对尸体、异常浑然不觉，智商硬伤'
+  - 'hook维度: 诡异氛围因主角弱智而全毁'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 1550
+  - 1620
+  score: null
+  score_raw: 请骂醒我
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 钓鱼诡异事件
+  genre_guess:
+  - 悬疑
+  - 灵异
+  - 钓鱼
+  overall_comment: 主角智商过低，剧情不合理，钓鱼佬人设崩塌，无法签约。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角对尸体、异常浑然不觉，智商硬伤
+    raw_quote: 你真的是感觉主角没智商
+  - dimension: hook
+    severity: negative
+    content: 诡异氛围因主角弱智而全毁
+    raw_quote: 你都不知道他是尸体吗

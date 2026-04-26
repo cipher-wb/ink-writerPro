@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1844
+title: 刑侦悬疑解密 (fail / 37分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 悬疑
+  - 刑侦
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥37分吧 | 警员依旧偏破案思维，人设不足，悬疑网文自带凉
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 警员依旧偏破案思维，人设不足，悬疑网文自带凉 | 为破案而破案无好的人设爽点;悬疑破案在网文本就凉
+  observable:
+  - 'character维度: 为破案而破案无好的人设爽点'
+  - 'genre维度: 悬疑破案在网文本就凉'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 2081
+  - 2170
+  score: 37
+  score_raw: 给大哥37分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 刑侦悬疑解密
+  genre_guess:
+  - 悬疑
+  - 刑侦
+  - 都市
+  overall_comment: 警员依旧偏破案思维，人设不足，悬疑网文自带凉
+  comments:
+  - dimension: character
+    severity: negative
+    content: 为破案而破案无好的人设爽点
+    raw_quote: 没有好的人设...就是一切就是为了破案
+  - dimension: genre
+    severity: negative
+    content: 悬疑破案在网文本就凉
+    raw_quote: 这个悬疑在网文本来就是凉的

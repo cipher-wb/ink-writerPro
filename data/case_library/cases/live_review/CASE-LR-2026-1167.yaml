@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1167
+title: 默弦穿越仙门测灵根 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 仙侠
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 写不了这种修行乐子文…但你有优势 | 本质是《谁让她修仙的》类合，虽是流畅的乐子文，但题材选择太烂，同质化严重。人物功力不足以支撑起双配角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 本质是《谁让她修仙的》类合，虽是流畅的乐子文，但题材选择太烂，同质化严重。人物功力不足以支撑起双配角。 | 题材是烂大街的乐子文，且是《谁让她修仙的》的模仿品，读者已经免疫;强行立了两个人设但一个都没立起来，内容较虚
+  observable:
+  - 'genre维度: 题材是烂大街的乐子文，且是《谁让她修仙的》的模仿品，读者已经免疫'
+  - 'character维度: 强行立了两个人设但一个都没立起来，内容较虚'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1768
+  - 1858
+  score: null
+  score_raw: 写不了这种修行乐子文…但你有优势
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 默弦穿越仙门测灵根
+  genre_guess:
+  - 仙侠
+  - 乐子文
+  overall_comment: 本质是《谁让她修仙的》类合，虽是流畅的乐子文，但题材选择太烂，同质化严重。人物功力不足以支撑起双配角。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材是烂大街的乐子文，且是《谁让她修仙的》的模仿品，读者已经免疫
+    raw_quote: 核心就是谁让她修仙的 对吧 核心就是要测灵根……读者不看了 读者基本上就看过了这个写法
+  - dimension: character
+    severity: negative
+    content: 强行立了两个人设但一个都没立起来，内容较虚
+    raw_quote: 这些人物我觉得没立住 我觉得你强行选了你家两个 立两个人 其实一个都没立住 你还不如立一个

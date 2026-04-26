@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2096
+title: 车迟国虎力大仙 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 西游
+  - 同人
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就28分 | 世界观混乱，梦境与现实交叉处理生涩，读者容易迷失；必须紧扣“车迟国”主线单线推进。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观混乱，梦境与现实交叉处理生涩，读者容易迷失；必须紧扣“车迟国”主线单线推进。 | 中段偏离西游跑到其他世界，违背读者期待;比例不够沉稳，容易玩梗失控
+  observable:
+  - 'opening维度: 中段偏离西游跑到其他世界，违背读者期待'
+  - 'simplicity维度: 比例不够沉稳，容易玩梗失控'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1660
+  - 1710
+  score: 28
+  score_raw: 差不多就28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 车迟国虎力大仙
+  genre_guess:
+  - 西游
+  - 同人
+  - 仙侠
+  overall_comment: 世界观混乱，梦境与现实交叉处理生涩，读者容易迷失；必须紧扣“车迟国”主线单线推进。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 中段偏离西游跑到其他世界，违背读者期待
+    raw_quote: 那跟西游又没关系啊，永中子不是……这跟西游有啥关系来着……8000字了呀，主角不知道，我也不知道了，不看了呀
+  - dimension: simplicity
+    severity: negative
+    content: 比例不够沉稳，容易玩梗失控
+    raw_quote: 比例要沉稳……玩梗烂梗可以不玩

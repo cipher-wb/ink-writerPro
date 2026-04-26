@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1666
+title: 上分达人系统 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分绝对有 | 悬疑点不错，文笔流畅，但题材悬疑纯度过高难做，需要混入大众元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 悬疑点不错，文笔流畅，但题材悬疑纯度过高难做，需要混入大众元素。 | 纯悬疑在起点难活，需融入都市或灵异
+  observable:
+  - 'genre维度: 纯悬疑在起点难活，需融入都市或灵异'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 1005
+  - 1070
+  score: 45
+  score_raw: 45分绝对有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 上分达人系统
+  genre_guess:
+  - 都市
+  - 系统
+  - 恋爱
+  overall_comment: 悬疑点不错，文笔流畅，但题材悬疑纯度过高难做，需要混入大众元素。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯悬疑在起点难活，需融入都市或灵异
+    raw_quote: 悬疑写不了 我跟你说了 悬疑写不了
+  - dimension: hook
+    severity: positive
+    content: 闭环转场节奏不错，有老梗新用感
+    raw_quote: 这个闭环前后呼应 转场都挺好的

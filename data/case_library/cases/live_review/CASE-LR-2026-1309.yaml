@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1309
+title: 吃糖杀手 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 武侠
+  - 暗黑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 主角全程装逼，无心理活动，故事讲不清楚，需要推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主角全程装逼，无心理活动，故事讲不清楚，需要推翻重写。 | 不交代主角身份目的，只顾耍帅;主角没有心理活动，人设立不住
+  observable:
+  - 'opening维度: 不交代主角身份目的，只顾耍帅'
+  - 'character维度: 主角没有心理活动，人设立不住'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 801
+  - 900
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 吃糖杀手
+  genre_guess:
+  - 武侠
+  - 暗黑
+  overall_comment: 主角全程装逼，无心理活动，故事讲不清楚，需要推翻重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 不交代主角身份目的，只顾耍帅
+    raw_quote: 你誰啊 你是地球人嗎 能不能照顧一下我們Chinus啊
+  - dimension: character
+    severity: negative
+    content: 主角没有心理活动，人设立不住
+    raw_quote: 能不能表达一下 最基本的 主角的心理活动不能写吗

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0299
+title: 废土回收 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 科幻
+  - 废土
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就30分吧 | 设定牛逼但叙事小白，全是打怪无人物，卖点单薄需推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定牛逼但叙事小白，全是打怪无人物，卖点单薄需推翻。 | 缺乏人物关系和互动，纯粹打怪无趣;开篇战斗细节描写不当，劝退读者;核心卖点单一，不够吸引人
+  observable:
+  - 'character维度: 缺乏人物关系和互动，纯粹打怪无趣'
+  - 'opening维度: 开篇战斗细节描写不当，劝退读者'
+  - 'golden_finger维度: 核心卖点单一，不够吸引人'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 631
+  - 690
+  score: 30
+  score_raw: 也就30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 废土回收
+  genre_guess:
+  - 科幻
+  - 废土
+  - 末世
+  overall_comment: 设定牛逼但叙事小白，全是打怪无人物，卖点单薄需推翻。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 缺乏人物关系和互动，纯粹打怪无趣
+    raw_quote: 到现在没有一个人 甚至没有一个人人在哪里
+  - dimension: opening
+    severity: negative
+    content: 开篇战斗细节描写不当，劝退读者
+    raw_quote: 就怎么就左一刀右一刀 上一刀下一刀 这些是大忌
+  - dimension: golden_finger
+    severity: negative
+    content: 核心卖点单一，不够吸引人
+    raw_quote: 卖点太单薄

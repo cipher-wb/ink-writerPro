@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1519
+title: 没钱修什么仙 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 修仙
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十六分 | 题材无趣，事件无聊，但较上次有翻倍进步，仍需大量串书练笔。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材无趣，事件无聊，但较上次有翻倍进步，仍需大量串书练笔。 | 穷人修仙等题材一票否决，没市场
+  observable:
+  - 'genre维度: 穷人修仙等题材一票否决，没市场'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1181
+  - 1280
+  score: 16
+  score_raw: 十六分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 没钱修什么仙
+  genre_guess:
+  - 修仙
+  - 凡人流
+  overall_comment: 题材无趣，事件无聊，但较上次有翻倍进步，仍需大量串书练笔。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 穷人修仙等题材一票否决，没市场
+    raw_quote: 这题材 我绝对不可能给你高分 就没钱修什么仙
+  - dimension: misc
+    severity: positive
+    content: 翻倍进步，继续努力
+    raw_quote: 大哥翻倍了 上次八分钟的十六分 来了

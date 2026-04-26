@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1708
+title: 修真管家系统抽奖 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 修真
+  - 系统
+  - 抽奖
+  - 番茄风
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分吧 | 节奏快、比例没问题，但题材老套，围绕系统转且第二三章不爽。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快、比例没问题，但题材老套，围绕系统转且第二三章不爽。 | 金手指拼多多式激活，老套且围绕系统转，缺乏主动剧情。;第二章第三章不爽，爽点密度不够。
+  observable:
+  - 'golden_finger维度: 金手指拼多多式激活，老套且围绕系统转，缺乏主动剧情。'
+  - 'highpoint维度: 第二章第三章不爽，爽点密度不够。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1623
+  - 1680
+  score: 33
+  score_raw: 33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修真管家系统抽奖
+  genre_guess:
+  - 修真
+  - 系统
+  - 抽奖
+  - 番茄风
+  overall_comment: 节奏快、比例没问题，但题材老套，围绕系统转且第二三章不爽。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指拼多多式激活，老套且围绕系统转，缺乏主动剧情。
+    raw_quote: 全程围绕着这个系统来事件...就是5年前6年前那种题材
+  - dimension: highpoint
+    severity: negative
+    content: 第二章第三章不爽，爽点密度不够。
+    raw_quote: 第二章感觉不爽，第三章又去写系统了

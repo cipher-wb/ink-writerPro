@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0645
+title: 红川穿越斗罗同人 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 同人
+  - 雪白
+  - 斗罗大陆
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 因为重爱加五分...给你35号也不怕重来 | 主线驱动力极差，穿过去只跟丫鬟搞雪白暧昧，坐怀不乱导致剧情毫无看点，唯一亮点是宠爱部分给文章加点温度。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线驱动力极差，穿过去只跟丫鬟搞雪白暧昧，坐怀不乱导致剧情毫无看点，唯一亮点是宠爱部分给文章加点温度。 | 主线驱动力太差，无事件进展，全程跟丫鬟拉扯;男主武痴林人设，对丫鬟无感，缺少互动看点
+  observable:
+  - 'pacing维度: 主线驱动力太差，无事件进展，全程跟丫鬟拉扯'
+  - 'character维度: 男主武痴林人设，对丫鬟无感，缺少互动看点'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 421
+  - 500
+  score: 35
+  score_raw: 因为重爱加五分...给你35号也不怕重来
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 红川穿越斗罗同人
+  genre_guess:
+  - 同人
+  - 雪白
+  - 斗罗大陆
+  overall_comment: 主线驱动力极差，穿过去只跟丫鬟搞雪白暧昧，坐怀不乱导致剧情毫无看点，唯一亮点是宠爱部分给文章加点温度。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 主线驱动力太差，无事件进展，全程跟丫鬟拉扯
+    raw_quote: 大哥没主线...也没其他盘算...反正就看到这个吓人了
+  - dimension: character
+    severity: negative
+    content: 男主武痴林人设，对丫鬟无感，缺少互动看点
+    raw_quote: 大哥是武痴林...什么东西都不如练舞...看不上呀
+  - dimension: misc
+    severity: positive
+    content: 尽管剧情不行，但宠爱丫鬟的桥段立住了，有点真情实感
+    raw_quote: 就宠爱啊...至少我看爽...所以还是有比例的是吧...重爱加五分

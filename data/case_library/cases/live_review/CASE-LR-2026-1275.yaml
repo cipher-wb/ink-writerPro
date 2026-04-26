@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1275
+title: 雷鸣大陆赤霄剑废物 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 玄幻
+  - 剑修
+  - 废柴
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有的35分 | 情绪烘托流畅有优点，但主角人设太窝囊自卑，缺乏期待感，需要加入金手指和报答爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪烘托流畅有优点，但主角人设太窝囊自卑，缺乏期待感，需要加入金手指和报答爽点。 | 主角人设太窝囊自卑，全世界都觉得他是废物他不能自己也觉得;缺少期待感吊着读者，需要尽快放出金手指
+  observable:
+  - 'character维度: 主角人设太窝囊自卑，全世界都觉得他是废物他不能自己也觉得'
+  - 'hook维度: 缺少期待感吊着读者，需要尽快放出金手指'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1381
+  - 1460
+  score: 35
+  score_raw: 有的35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 雷鸣大陆赤霄剑废物
+  genre_guess:
+  - 玄幻
+  - 剑修
+  - 废柴
+  overall_comment: 情绪烘托流畅有优点，但主角人设太窝囊自卑，缺乏期待感，需要加入金手指和报答爽点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设太窝囊自卑，全世界都觉得他是废物他不能自己也觉得
+    raw_quote: 你就自己也觉得自己是废物了吗...主角一定绝对是最最强的
+  - dimension: highpoint
+    severity: positive
+    content: 情绪一直在烘托，表达流畅
+    raw_quote: 你一直在重复表达，就是把这个情绪一直在烘托，而且挺流畅的
+  - dimension: hook
+    severity: negative
+    content: 缺少期待感吊着读者，需要尽快放出金手指
+    raw_quote: 要吊一个期待感的...你在打压主角的同时如果加了能力读者就不会觉得委屈

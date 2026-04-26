@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1240
+title: 富坚义博历史穿越 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 两晋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我们的朋友38分 | 文笔好，但题材受众窄，穿越后缺乏现代人代入感，建议更换朝代或加强真实感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔好，但题材受众窄，穿越后缺乏现代人代入感，建议更换朝代或加强真实感。 | 晋朝题材受众太小，大神已把兵线吃完;穿越后完全变成古代人，缺乏现代人的心理活动和视角
+  observable:
+  - 'genre维度: 晋朝题材受众太小，大神已把兵线吃完'
+  - 'character维度: 穿越后完全变成古代人，缺乏现代人的心理活动和视角'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 740
+  - 787
+  score: 38
+  score_raw: 我们的朋友38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 富坚义博历史穿越
+  genre_guess:
+  - 历史
+  - 穿越
+  - 两晋
+  overall_comment: 文笔好，但题材受众窄，穿越后缺乏现代人代入感，建议更换朝代或加强真实感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 晋朝题材受众太小，大神已把兵线吃完
+    raw_quote: 我还是觉得除非你有那个真没啥人看兄弟，就是上限还是太低了
+  - dimension: character
+    severity: negative
+    content: 穿越后完全变成古代人，缺乏现代人的心理活动和视角
+    raw_quote: 不是现代人吗，现代人你就要有现代人的感觉

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1719
+title: 宠爱战神（轻小说同人） (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 轻小说
+  - 同人
+  - 朱天
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好40分 | 宅文味道有，文笔扎实，但设定轰炸严重，同人元素模糊，简介和正文脱节。写法太幽闭，读者难以看懂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 宅文味道有，文笔扎实，但设定轰炸严重，同人元素模糊，简介和正文脱节。写法太幽闭，读者难以看懂。 | 设定解释不清楚，简介与正文脱节，读者看不懂
+  observable:
+  - 'simplicity维度: 设定解释不清楚，简介与正文脱节，读者看不懂'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 904
+  - 1037
+  score: 40
+  score_raw: 好40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宠爱战神（轻小说同人）
+  genre_guess:
+  - 轻小说
+  - 同人
+  - 朱天
+  overall_comment: 宅文味道有，文笔扎实，但设定轰炸严重，同人元素模糊，简介和正文脱节。写法太幽闭，读者难以看懂。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定解释不清楚，简介与正文脱节，读者看不懂
+    raw_quote: 看不懂我没懂，就每个设定嘛，连接每个人或许基因能力不一样
+  - dimension: genre
+    severity: neutral
+    content: 宅文有其特定市场，但需要明确同人世界观
+    raw_quote: 同仁类东西我真不知道，但是我能从往往的角度跟你说

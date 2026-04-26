@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0703
+title: 哥布林红血王子 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 异兽
+  - 哥布林
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数，有鼓励性评语 | 切入视角不错，但设定和心理活动过多，缺乏即时事件推进，后劲不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入视角不错，但设定和心理活动过多，缺乏即时事件推进，后劲不足。 | 穿越废话和心理活动过多，拖慢节奏
+  observable:
+  - 'pacing维度: 穿越废话和心理活动过多，拖慢节奏'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 291
+  - 345
+  score: null
+  score_raw: 未明确说出分数，有鼓励性评语
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 哥布林红血王子
+  genre_guess:
+  - 异兽
+  - 哥布林
+  - 穿越
+  overall_comment: 切入视角不错，但设定和心理活动过多，缺乏即时事件推进，后劲不足。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头切入感强，群体欢呼场面有画面感
+    raw_quote: 切入挺好的...挺好看的
+  - dimension: pacing
+    severity: negative
+    content: 穿越废话和心理活动过多，拖慢节奏
+    raw_quote: 穿越的废话，然后在家设定一大堆...自言自语太多了

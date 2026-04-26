@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1278
+title: 不死神医五百年 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 神医
+  - 长生
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 脑洞可以但剧情太水太奇怪，主角智商不高，滴血救人少女报警事件搞笑，建议走蓝精灵乐子。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞可以但剧情太水太奇怪，主角智商不高，滴血救人少女报警事件搞笑，建议走蓝精灵乐子。 | 主角活了五百多年却智商不高啥都不知道;剧情水，滴血救人反复拖沓
+  observable:
+  - 'character维度: 主角活了五百多年却智商不高啥都不知道'
+  - 'pacing维度: 剧情水，滴血救人反复拖沓'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1641
+  - 1730
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 不死神医五百年
+  genre_guess:
+  - 神医
+  - 长生
+  - 都市
+  overall_comment: 脑洞可以但剧情太水太奇怪，主角智商不高，滴血救人少女报警事件搞笑，建议走蓝精灵乐子。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角活了五百多年却智商不高啥都不知道
+    raw_quote: 活了几千年的人能不能不要智商不高呀...一问三不知读者不看了
+  - dimension: pacing
+    severity: negative
+    content: 剧情水，滴血救人反复拖沓
+    raw_quote: 你直接让它活着又能怎么样呢是吧...你这等于是水文

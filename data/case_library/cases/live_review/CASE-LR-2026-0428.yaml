@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0428
+title: 柯南同人刚穿越就要死 (fail / 27分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 柯南同人
+  - 侦探
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就27分 | 对网络理解太少，节奏太慢，系统抢戏，人设没拉住
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对网络理解太少，节奏太慢，系统抢戏，人设没拉住 | 前面都可删掉，直接睁开眼蹭到毛利小五郎，前面太啰嗦;人设没体现，探案过程不重要，要先写对柯南的反应
+  observable:
+  - 'opening维度: 前面都可删掉，直接睁开眼蹭到毛利小五郎，前面太啰嗦'
+  - 'character维度: 人设没体现，探案过程不重要，要先写对柯南的反应'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 2057
+  - 2138
+  score: 27
+  score_raw: 差不多就27分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 柯南同人刚穿越就要死
+  genre_guess:
+  - 柯南同人
+  - 侦探
+  - 穿越
+  overall_comment: 对网络理解太少，节奏太慢，系统抢戏，人设没拉住
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前面都可删掉，直接睁开眼蹭到毛利小五郎，前面太啰嗦
+    raw_quote: 你前面都可以删掉，直接睁开眼，到哪里蹭到谁就行了...你前面都给删掉了，直接到这就行了
+  - dimension: character
+    severity: negative
+    content: 人设没体现，探案过程不重要，要先写对柯南的反应
+    raw_quote: 探案这个过程是不重要的，你的人设你在柯南里面扮演什么角色对吧，你看到柯南是什么反应...这些东西自己知道啊

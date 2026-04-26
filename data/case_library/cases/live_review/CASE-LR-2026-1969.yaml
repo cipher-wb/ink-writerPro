@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1969
+title: 夫人请修行 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 古代
+  - 雪白
+  - 修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好继续59分 | 雪白和切入不错，但缺少驱动力和收获反馈，再改一版有机会签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白和切入不错，但缺少驱动力和收获反馈，再改一版有机会签约。 | 缺少眼前的小目标驱动力，主线太虚;收获感不足，盘算和反馈缺失
+  observable:
+  - 'hook维度: 缺少眼前的小目标驱动力，主线太虚'
+  - 'golden_finger维度: 收获感不足，盘算和反馈缺失'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 921
+  - 1050
+  score: 59
+  score_raw: 好继续59分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 夫人请修行
+  genre_guess:
+  - 古代
+  - 雪白
+  - 修炼
+  overall_comment: 雪白和切入不错，但缺少驱动力和收获反馈，再改一版有机会签约。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇按摩切入有趣，雪白设计好
+    raw_quote: 雪白设计的挺好的没问题
+  - dimension: hook
+    severity: negative
+    content: 缺少眼前的小目标驱动力，主线太虚
+    raw_quote: 少一个主线跟收获感的两个表达吧
+  - dimension: golden_finger
+    severity: negative
+    content: 收获感不足，盘算和反馈缺失
+    raw_quote: 你如果盘算有写的真实…爽点的话我觉得就签约不远了

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0479
+title: 退役海王 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 都市
+  - 文娱
+  - 恋综
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分吧 42分套路还是熟 | 架空文娱很难写，恋综卖点单薄。建议结合重生或错位系统等卖点，直接切年代文更好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 架空文娱很难写，恋综卖点单薄。建议结合重生或错位系统等卖点，直接切年代文更好。 | 架空文娱卖点不行，现在很卷，需要融合其他题材;恋综题材过时，看点不足
+  observable:
+  - 'genre维度: 架空文娱卖点不行，现在很卷，需要融合其他题材'
+  - 'highpoint维度: 恋综题材过时，看点不足'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 636
+  - 688
+  score: 42
+  score_raw: 42分吧 42分套路还是熟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 退役海王
+  genre_guess:
+  - 都市
+  - 文娱
+  - 恋综
+  overall_comment: 架空文娱很难写，恋综卖点单薄。建议结合重生或错位系统等卖点，直接切年代文更好。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空文娱卖点不行，现在很卷，需要融合其他题材
+    raw_quote: 起点还是要沉浸式写...架空类的文娱现在真的很难写...你得有现实的...你要跟那个结合
+  - dimension: highpoint
+    severity: negative
+    content: 恋综题材过时，看点不足
+    raw_quote: 恋综也无聊 恋综之前起点是去年年初 还可以但是年底的话 恋综也一般般了

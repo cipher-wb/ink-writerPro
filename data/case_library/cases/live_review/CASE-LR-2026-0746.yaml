@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0746
+title: 校园甜宠 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 校园
+  - 甜宠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我知道我不能签约 | 题材在投稿池接受度低，作者自己也意识到不能签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材在投稿池接受度低，作者自己也意识到不能签。 | 校园甜宠题材编辑很少签
+  observable:
+  - 'genre维度: 校园甜宠题材编辑很少签'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 181
+  - 240
+  score: null
+  score_raw: 我知道我不能签约
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 校园甜宠
+  genre_guess:
+  - 校园
+  - 甜宠
+  overall_comment: 题材在投稿池接受度低，作者自己也意识到不能签。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 校园甜宠题材编辑很少签
+    raw_quote: 我很少签这种设定类的书啊
+  - dimension: simplicity
+    severity: positive
+    content: 签约水平本身没问题
+    raw_quote: 我感觉你这个签约水平没啥问题啊

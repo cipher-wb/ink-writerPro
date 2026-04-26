@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1825
+title: 足坛之龙场悟道系统 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 体育
+  - 足球
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给了45分 | 金手指能用，但中规中矩没惊喜，写法太正经，人设缺少魅力
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指能用，但中规中矩没惊喜，写法太正经，人设缺少魅力 | 主角缺少个人魅力，只靠装逼;一上来拿着系统装逼太俗，需要铺垫
+  observable:
+  - 'character维度: 主角缺少个人魅力，只靠装逼'
+  - 'pacing维度: 一上来拿着系统装逼太俗，需要铺垫'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 297
+  - 400
+  score: 45
+  score_raw: 给了45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 足坛之龙场悟道系统
+  genre_guess:
+  - 体育
+  - 足球
+  - 系统流
+  overall_comment: 金手指能用，但中规中矩没惊喜，写法太正经，人设缺少魅力
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 金手指能用，系统有研究
+    raw_quote: 唉金手指能用啊对吧...大概还是研究了系统的
+  - dimension: character
+    severity: negative
+    content: 主角缺少个人魅力，只靠装逼
+    raw_quote: 这个主角没有个人什么魅力...就是人气牙痒痒但是他又很牛逼就需要这样的好的人设
+  - dimension: pacing
+    severity: negative
+    content: 一上来拿着系统装逼太俗，需要铺垫
+    raw_quote: 这个太俗了...需要一些铺垫

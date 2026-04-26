@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0099
+title: 玉帝死后 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 都市
+  - 仙侠
+  - 灵气复苏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就爱在线 | 比例扎实但偏题，都市文写成仙侠感完全没代入感，不接地气，建议看肾虚学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实但偏题，都市文写成仙侠感完全没代入感，不接地气，建议看肾虚学习。 | 都市文写的像仙侠，完全偏题没代入感;主角没现代人感觉，像山上的老道
+  observable:
+  - 'genre维度: 都市文写的像仙侠，完全偏题没代入感'
+  - 'character维度: 主角没现代人感觉，像山上的老道'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 531
+  - 600
+  score: null
+  score_raw: 差不多就爱在线
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 玉帝死后
+  genre_guess:
+  - 都市
+  - 仙侠
+  - 灵气复苏
+  overall_comment: 比例扎实但偏题，都市文写成仙侠感完全没代入感，不接地气，建议看肾虚学习。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市文写的像仙侠，完全偏题没代入感
+    raw_quote: 你这玩意就是都市里面乱融这些，你的这些莫名其妙的一些设定，就是天地轮回，这欲地轮回这些破设定根本没人在意的
+  - dimension: character
+    severity: negative
+    content: 主角没现代人感觉，像山上的老道
+    raw_quote: 关键你的主角也没有现代人的感觉是吧，不是现代人，反正就像那种土著少年

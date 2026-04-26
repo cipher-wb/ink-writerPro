@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1208
+title: 王五七死亡游戏 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 无限流
+  - 死亡游戏
+  - 散文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就不打分了 | 行文偏散文诗歌，场景描述过于冗长，不符合网文节奏，建议精简分段。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 行文偏散文诗歌，场景描述过于冗长，不符合网文节奏，建议精简分段。 | 场景描写奇诡冗长，阅读障碍大;开头大量内心活动，迟迟不进入事件
+  observable:
+  - 'simplicity维度: 场景描写奇诡冗长，阅读障碍大'
+  - 'opening维度: 开头大量内心活动，迟迟不进入事件'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 375
+  - 427
+  score: null
+  score_raw: 就不打分了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 王五七死亡游戏
+  genre_guess:
+  - 无限流
+  - 死亡游戏
+  - 散文
+  overall_comment: 行文偏散文诗歌，场景描述过于冗长，不符合网文节奏，建议精简分段。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 场景描写奇诡冗长，阅读障碍大
+    raw_quote: 什么微弱的光线精疲力竭的涌入…这都是阅读障碍啊
+  - dimension: opening
+    severity: negative
+    content: 开头大量内心活动，迟迟不进入事件
+    raw_quote: 他迈开腿的瞬间心漏跳了一拍…就散文雅到底是啥啊

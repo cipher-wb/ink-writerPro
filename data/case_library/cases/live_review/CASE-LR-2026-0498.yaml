@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0498
+title: 原因大佬异界游 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例的话有个25分左右吧 | 都市重生修仙题材太老，16-18年全网写烂。比例还行但必须换题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市重生修仙题材太老，16-18年全网写烂。比例还行但必须换题材。 | 都市重生修仙题材太老，全网写烂，没新意;信息量太少，絮絮叨叨，病人活了三个字水一章
+  observable:
+  - 'genre维度: 都市重生修仙题材太老，全网写烂，没新意'
+  - 'opening维度: 信息量太少，絮絮叨叨，病人活了三个字水一章'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1995
+  - 2050
+  score: 25
+  score_raw: 比例的话有个25分左右吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 原因大佬异界游
+  genre_guess:
+  - 都市
+  - 修仙
+  - 重生
+  overall_comment: 都市重生修仙题材太老，16-18年全网写烂。比例还行但必须换题材。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市重生修仙题材太老，全网写烂，没新意
+    raw_quote: 那个时代全网全是都市修仙...就你能想到的东西 人家全写完了已经 所以说没法子写
+  - dimension: opening
+    severity: negative
+    content: 信息量太少，絮絮叨叨，病人活了三个字水一章
+    raw_quote: 大哥你这一张的信息量就是这个 病人活了...太絮絮叨叨了...信息量太少了

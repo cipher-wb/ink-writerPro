@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1238
+title: 穷相权谋 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 架空历史
+  - 武侠
+  - 权谋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分吧 | 文笔好但缺乏代入感，人物过多，建议放弃架空，转写正常历史题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔好但缺乏代入感，人物过多，建议放弃架空，转写正常历史题材。 | 开篇人物出场太多，读者无法代入;开篇缺乏代入感，像个局外人
+  observable:
+  - 'character维度: 开篇人物出场太多，读者无法代入'
+  - 'opening维度: 开篇缺乏代入感，像个局外人'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 586
+  - 637
+  score: 25
+  score_raw: 差不多就25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穷相权谋
+  genre_guess:
+  - 架空历史
+  - 武侠
+  - 权谋
+  overall_comment: 文笔好但缺乏代入感，人物过多，建议放弃架空，转写正常历史题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 开篇人物出场太多，读者无法代入
+    raw_quote: 兄弟人物不要出来太多
+  - dimension: opening
+    severity: negative
+    content: 开篇缺乏代入感，像个局外人
+    raw_quote: 但是真的没代入感，而且真的是武侠加架空历史加穷像我也不知道怎么就无从吐槽
+  - dimension: genre
+    severity: neutral
+    content: 建议放弃架空，写好正常的历史文
+    raw_quote: 如果你喜欢写这段，你去写那个角度多低吗是吧，写清朝去

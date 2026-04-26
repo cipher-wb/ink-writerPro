@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0809
+title: 基因药剂让人类长熟 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 都市
+  - 高武
+  - 药剂
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就按30吧 | 设定复杂，节奏慢，像番茄开头，需简化
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定复杂，节奏慢，像番茄开头，需简化 | 设定太多，开头堆积让人跑
+  observable:
+  - 'simplicity维度: 设定太多，开头堆积让人跑'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 2700
+  - 2850
+  score: 30
+  score_raw: 差不多就按30吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 基因药剂让人类长熟
+  genre_guess:
+  - 都市
+  - 高武
+  - 药剂
+  overall_comment: 设定复杂，节奏慢，像番茄开头，需简化
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定太多，开头堆积让人跑
+    raw_quote: 不要设定详细 尽量简单

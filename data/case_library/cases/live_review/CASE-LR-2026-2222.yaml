@@ -1,0 +1,75 @@
+case_id: CASE-LR-2026-2222
+title: 召唤骑士系统流 (pass / 66分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yzB8BQEoq
+scope:
+  genre:
+  - 西幻
+  - 系统流
+  - 穿越
+  - 骑士
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真的就是帮你对66分好吧 | 开局人设和框架不错，有吸引力，但后续节奏偏慢，主线驱动力弱，综合可签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yzB8BQEoq.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局人设和框架不错，有吸引力，但后续节奏偏慢，主线驱动力弱，综合可签约。 | 金手指与谦卑美德相矛盾;后续节奏偏慢，主线危机驱动力弱
+  observable:
+  - 'golden_finger维度: 金手指与谦卑美德相矛盾'
+  - 'pacing维度: 后续节奏偏慢，主线危机驱动力弱'
+live_review_meta:
+  source_bvid: BV1yzB8BQEoq
+  source_line_range:
+  - 1
+  - 237
+  score: 66
+  score_raw: 真的就是帮你对66分好吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 召唤骑士系统流
+  genre_guess:
+  - 西幻
+  - 系统流
+  - 穿越
+  - 骑士
+  overall_comment: 开局人设和框架不错，有吸引力，但后续节奏偏慢，主线驱动力弱，综合可签约。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头画面感强，冲突立现，吸引力足够
+    raw_quote: 就说这个开头其实已经很有吸引力了
+  - dimension: character
+    severity: positive
+    content: 未亡人人设标签明确，柔弱有记忆点
+    raw_quote: 柔弱就是标签呀对吧 未亡人啊已经出来了呀
+  - dimension: golden_finger
+    severity: positive
+    content: 金手指系统及时上线
+    raw_quote: 突然金手指来了嘛 系统到账了
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指与谦卑美德相矛盾
+    raw_quote: 谦卑的情况 这不是违背了吗
+  - dimension: pacing
+    severity: positive
+    content: 第一章框架结构好，卡点得当
+    raw_quote: 夫人你看他第一章的框架结构都挺好的 然后卡点这里也卡住了
+  - dimension: pacing
+    severity: negative
+    content: 后续节奏偏慢，主线危机驱动力弱
+    raw_quote: 就是后面可能有点慢了 可能有点慢 就主线危机驱动力这些弱点
+  - dimension: genre
+    severity: positive
+    content: 西幻题材有市场，立住配角可行
+    raw_quote: 现在西幻很流血这种 你像地下城蘑菇14亿 这些全是都是就前期列入立住一个配角 就那个他们自己原创的世界的人物就行对吧 这个未亡人嘛 未亡人挺好的

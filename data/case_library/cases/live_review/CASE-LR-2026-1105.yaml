@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1105
+title: 开局遭遇斩杀·番茄风末世 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 末世
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分吧 | 节奏快但人设过于冷血，杀未成年等情节毒点明显
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快但人设过于冷血，杀未成年等情节毒点明显 | 主角毫无情感，杀伐过度显得失真;杀死求助的未成年女孩，严重触雷
+  observable:
+  - 'character维度: 主角毫无情感，杀伐过度显得失真'
+  - 'taboo维度: 杀死求助的未成年女孩，严重触雷'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 1650
+  - 1710
+  score: 33
+  score_raw: 33分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 开局遭遇斩杀·番茄风末世
+  genre_guess:
+  - 末世
+  - 爽文
+  overall_comment: 节奏快但人设过于冷血，杀未成年等情节毒点明显
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角毫无情感，杀伐过度显得失真
+    raw_quote: 大哥一晚上啥都没干 主角很淡定 一点意思都没有 就主角毫无感觉
+  - dimension: taboo
+    severity: negative
+    content: 杀死求助的未成年女孩，严重触雷
+    raw_quote: 你杀未成年啊 未成年儿童啥都没干

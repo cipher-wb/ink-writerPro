@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0488
+title: 罪恶都市通缉令永不消逝 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 都市
+  - 黑道
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分吧 无功无过吧 | GTA5题材在起点过不了审。写法太正经，没极端事件冲突，不如古惑仔有看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: GTA5题材在起点过不了审。写法太正经，没极端事件冲突，不如古惑仔有看点。 | GTA5题材容易触线被封，有前车之鉴;缺乏冲突事件，行文太正经
+  observable:
+  - 'taboo维度: GTA5题材容易触线被封，有前车之鉴'
+  - 'opening维度: 缺乏冲突事件，行文太正经'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1308
+  - 1368
+  score: null
+  score_raw: 40分吧 无功无过吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 罪恶都市通缉令永不消逝
+  genre_guess:
+  - 都市
+  - 黑道
+  - 穿越
+  overall_comment: GTA5题材在起点过不了审。写法太正经，没极端事件冲突，不如古惑仔有看点。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: GTA5题材容易触线被封，有前车之鉴
+    raw_quote: 过不了审的过不了审的过不了审...我以前去年我签了两本 都被审核办掉了
+  - dimension: opening
+    severity: negative
+    content: 缺乏冲突事件，行文太正经
+    raw_quote: 没事件没冲突 现在写书很难了...太一本正经了 你看我给你给的好 好多思路都比你这个好看

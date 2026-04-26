@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0200
+title: 怪谈话识 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 漫画成真
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材有基础但代入感差，事件无聊，对白尴尬，整体水平不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材有基础但代入感差，事件无聊，对白尴尬，整体水平不足。 | 代入感缺失，缺乏真实感和人物动机;对白尴尬，人设不自然，难以让读者产生共鸣
+  observable:
+  - 'opening维度: 代入感缺失，缺乏真实感和人物动机'
+  - 'character维度: 对白尴尬，人设不自然，难以让读者产生共鸣'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 424
+  - 476
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 怪谈话识
+  genre_guess:
+  - 灵异
+  - 都市
+  - 漫画成真
+  overall_comment: 题材有基础但代入感差，事件无聊，对白尴尬，整体水平不足。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 代入感缺失，缺乏真实感和人物动机
+    raw_quote: 代入感好差呀 ... 你是谁 你来这有什么目的 你写事件 为啥要重点放在 对白互动上呀
+  - dimension: character
+    severity: negative
+    content: 对白尴尬，人设不自然，难以让读者产生共鸣
+    raw_quote: 对白也尴尬呀 这个妖魔 你需要多少人才能复活 有点难

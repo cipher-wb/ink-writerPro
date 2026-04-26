@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1493
+title: 美利坚重生本硕 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 美利坚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 满足签约要求 这个不懂 | 比例够用，剧情无聊，事件没看点，缺少有意思的桥段
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例够用，剧情无聊，事件没看点，缺少有意思的桥段 | 事件没意思，太日常缺少看点
+  observable:
+  - 'misc维度: 事件没意思，太日常缺少看点'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 526
+  - 576
+  score: null
+  score_raw: 满足签约要求 这个不懂
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 美利坚重生本硕
+  genre_guess:
+  - 都市
+  - 重生
+  - 美利坚
+  overall_comment: 比例够用，剧情无聊，事件没看点，缺少有意思的桥段
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 事件没意思，太日常缺少看点
+    raw_quote: 事件一点意思都没有 事件没意思
+  - dimension: misc
+    severity: neutral
+    content: 需要加一些小剧场和极端事件增加趣味性
+    raw_quote: 你随便来一些小剧场 随便来一些极端事件

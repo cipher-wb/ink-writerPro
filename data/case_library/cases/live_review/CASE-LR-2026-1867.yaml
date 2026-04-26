@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1867
+title: 诡异降临KTV灵异文 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 诡异复苏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 第一章表达和场景写得好，但后面乱来，打怪兽太快了丢失灵异氛围，主角人设没写好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章表达和场景写得好，但后面乱来，打怪兽太快了丢失灵异氛围，主角人设没写好。 | 灵异小说不要这么快到打怪兽环节，氛围全无
+  observable:
+  - 'pacing维度: 灵异小说不要这么快到打怪兽环节，氛围全无'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1194
+  - 1245
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异降临KTV灵异文
+  genre_guess:
+  - 灵异
+  - 都市
+  - 诡异复苏
+  overall_comment: 第一章表达和场景写得好，但后面乱来，打怪兽太快了丢失灵异氛围，主角人设没写好。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一张表达还好，场景写得有感觉，接地气
+    raw_quote: 第一张其实表达还好 后面我感觉有点乱来
+  - dimension: pacing
+    severity: negative
+    content: 灵异小说不要这么快到打怪兽环节，氛围全无
+    raw_quote: 灵异小说 不要这么快 到打怪兽环节行不行 我真的是求你们了

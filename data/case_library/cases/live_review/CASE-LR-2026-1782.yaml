@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1782
+title: 医学生穿越十六国 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 十六国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分的样子 | 剧情水分大，穿越铺垫啰嗦，医学生金手指浪费。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情水分大，穿越铺垫啰嗦，医学生金手指浪费。 | 穿越前剧情太水、啰嗦，建议直接红穿继承记忆。;没写出医学生应有的金手指爽点。
+  observable:
+  - 'opening维度: 穿越前剧情太水、啰嗦，建议直接红穿继承记忆。'
+  - 'golden_finger维度: 没写出医学生应有的金手指爽点。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 269
+  - 326
+  score: 28
+  score_raw: 28分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 医学生穿越十六国
+  genre_guess:
+  - 历史
+  - 穿越
+  - 十六国
+  overall_comment: 剧情水分大，穿越铺垫啰嗦，医学生金手指浪费。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越前剧情太水、啰嗦，建议直接红穿继承记忆。
+    raw_quote: 读者已经穿越了...这都是无效信息...你红穿继承记忆不就解决了嘛
+  - dimension: golden_finger
+    severity: negative
+    content: 没写出医学生应有的金手指爽点。
+    raw_quote: 你爽点在哪里...你的医学生的爽点在哪里...医学生装逼不是很简单的吗

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1953
+title: 深闷世界酒馆 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 都市
+  - 软科幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 切入氛围很好，但系统（小女孩/小爱同学）出来后设定崩盘劝退，需要一个能提供期待感和互动的人类配角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入氛围很好，但系统（小女孩/小爱同学）出来后设定崩盘劝退，需要一个能提供期待感和互动的人类配角。 | 小爱同学系统劝退，不如换成人形美女配角
+  observable:
+  - 'golden_finger维度: 小爱同学系统劝退，不如换成人形美女配角'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 1012
+  - 1081
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 深闷世界酒馆
+  genre_guess:
+  - 都市
+  - 软科幻
+  - 系统
+  overall_comment: 切入氛围很好，但系统（小女孩/小爱同学）出来后设定崩盘劝退，需要一个能提供期待感和互动的人类配角。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入的前一千字氛围至少是前右水平
+    raw_quote: 你切入前一千字其实是至少是前右水平前一千字
+  - dimension: golden_finger
+    severity: negative
+    content: 小爱同学系统劝退，不如换成人形美女配角
+    raw_quote: 你为什么要小爱同学出来说这些无聊的东西啊...读者真不爱看小爱同学

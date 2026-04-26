@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0048
+title: 魔法少女是魔王最喜欢的食物 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 同人
+  - 魔法少女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分得有 | 逻辑不够，脑洞猎奇，可直发测试，50分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 逻辑不够，脑洞猎奇，可直发测试，50分。
+  observable:
+  - 整体被星河直播判定为 fail
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 731
+  - 780
+  score: 50
+  score_raw: 50分得有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 魔法少女是魔王最喜欢的食物
+  genre_guess:
+  - 同人
+  - 魔法少女
+  overall_comment: 逻辑不够，脑洞猎奇，可直发测试，50分。
+  comments:
+  - dimension: misc
+    severity: neutral
+    content: 脑洞猎奇，可直发
+    raw_quote: 这种判断不了了已经

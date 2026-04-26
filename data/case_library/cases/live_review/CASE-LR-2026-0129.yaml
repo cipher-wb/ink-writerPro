@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0129
+title: 密教教主 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 玄幻
+  - 西幻
+  - 密教
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你28分吧 | 设定宏大但新人根本驾驭不住，开头劝退，28分奉劝放弃。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定宏大但新人根本驾驭不住，开头劝退，28分奉劝放弃。 | 开篇描写拖沓，人设崩坏;新人没有资格写这种大世界观IP式开篇
+  observable:
+  - 'opening维度: 开篇描写拖沓，人设崩坏'
+  - 'simplicity维度: 新人没有资格写这种大世界观IP式开篇'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 1320
+  - 1400
+  score: 28
+  score_raw: 给你28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 密教教主
+  genre_guess:
+  - 玄幻
+  - 西幻
+  - 密教
+  overall_comment: 设定宏大但新人根本驾驭不住，开头劝退，28分奉劝放弃。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇描写拖沓，人设崩坏
+    raw_quote: 这一段已经显得主角智商也不高了
+  - dimension: simplicity
+    severity: negative
+    content: 新人没有资格写这种大世界观IP式开篇
+    raw_quote: 我们没有资格去这样写书

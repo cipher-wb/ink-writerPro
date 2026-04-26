@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0708
+title: 重生商业大佬（温州瘦肉丸） (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 美食创业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十五分 | 小吃店题材有重点能写，但重生遗憾逻辑不成立，缺乏商业线足够戏剧张力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小吃店题材有重点能写，但重生遗憾逻辑不成立，缺乏商业线足够戏剧张力。 | 重生遗憾逻辑不通，身家数亿却不知老婆癌症显得虚假;缺少事业遗憾驱动，纯爱情遗憾张力不足
+  observable:
+  - 'character维度: 重生遗憾逻辑不通，身家数亿却不知老婆癌症显得虚假'
+  - 'highpoint维度: 缺少事业遗憾驱动，纯爱情遗憾张力不足'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 571
+  - 630
+  score: 45
+  score_raw: 四十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生商业大佬（温州瘦肉丸）
+  genre_guess:
+  - 都市
+  - 重生
+  - 美食创业
+  overall_comment: 小吃店题材有重点能写，但重生遗憾逻辑不成立，缺乏商业线足够戏剧张力。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 重生遗憾逻辑不通，身家数亿却不知老婆癌症显得虚假
+    raw_quote: 不合理...身家数亿的...从来不体检是吧...很有问题
+  - dimension: highpoint
+    severity: negative
+    content: 缺少事业遗憾驱动，纯爱情遗憾张力不足
+    raw_quote: 遗憾不是商业上...真爱商上没意思...很弱

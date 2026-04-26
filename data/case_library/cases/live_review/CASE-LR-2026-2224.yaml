@@ -1,0 +1,73 @@
+case_id: CASE-LR-2026-2224
+title: 修仙界公务员系统 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 职场
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '20
+
+    22分吧 | 选题敏感，切入老套，内容像考公记录，缺乏人物互动和故事性。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 选题敏感，切入老套，内容像考公记录，缺乏人物互动和故事性。 | 题材敏感，容易触碰红线;切入一本正经，缺乏吸引力;缺乏人物关系和互动，像独角戏
+  observable:
+  - 'genre维度: 题材敏感，容易触碰红线'
+  - 'opening维度: 切入一本正经，缺乏吸引力'
+  - 'character维度: 缺乏人物关系和互动，像独角戏'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 223
+  - 355
+  score: 20
+  score_raw: '20
+
+    22分吧'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙界公务员系统
+  genre_guess:
+  - 修仙
+  - 系统
+  - 职场
+  overall_comment: 选题敏感，切入老套，内容像考公记录，缺乏人物互动和故事性。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材敏感，容易触碰红线
+    raw_quote: 不是不容许是你不能说的
+  - dimension: opening
+    severity: negative
+    content: 切入一本正经，缺乏吸引力
+    raw_quote: '其实我觉得新人写小说
+
+      不要一本正经的切入
+
+      一本正经的切入很难让你杀出来'
+  - dimension: character
+    severity: negative
+    content: 缺乏人物关系和互动，像独角戏
+    raw_quote: '你为什么老要写自己的独角戏啊
+
+      你是个牛马
+
+      你在这里清除这
+
+      没人看呀那个
+
+      就写人物呀'

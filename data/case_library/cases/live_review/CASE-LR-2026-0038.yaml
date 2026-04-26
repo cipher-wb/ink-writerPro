@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0038
+title: 东京泡沫检察官 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 都市
+  - 官场
+  - 东京
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33 | 题材太正经，开头介绍过多，缺乏吸睛点，建议倒叙切入，胆子太小，无爆点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太正经，开头介绍过多，缺乏吸睛点，建议倒叙切入，胆子太小，无爆点。 | 开头介绍繁多无趣;没有吸睛的钩子;东京烂梗当卖点
+  observable:
+  - 'opening维度: 开头介绍繁多无趣'
+  - 'hook维度: 没有吸睛的钩子'
+  - 'genre维度: 东京烂梗当卖点'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 191
+  - 240
+  score: 33
+  score_raw: '33'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京泡沫检察官
+  genre_guess:
+  - 都市
+  - 官场
+  - 东京
+  overall_comment: 题材太正经，开头介绍过多，缺乏吸睛点，建议倒叙切入，胆子太小，无爆点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头介绍繁多无趣
+    raw_quote: 介绍了半年其实
+  - dimension: hook
+    severity: negative
+    content: 没有吸睛的钩子
+    raw_quote: 你这个不吸睛
+  - dimension: genre
+    severity: negative
+    content: 东京烂梗当卖点
+    raw_quote: 当你写东京我把这个当成你的卖点梗的时候你已经告别写东京了

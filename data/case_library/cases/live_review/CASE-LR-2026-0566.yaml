@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-0566
+title: 觉醒慧根 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30多分的样子吧 | 场景切换太多，人设代入感均不足，30多分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 场景切换太多，人设代入感均不足，30多分 | 一章多个场景，没有重点;人设和带入感没学好
+  observable:
+  - 'opening维度: 一章多个场景，没有重点'
+  - 'character维度: 人设和带入感没学好'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 2452
+  - 2588
+  score: null
+  score_raw: 30多分的样子吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 觉醒慧根
+  genre_guess:
+  - 玄幻
+  overall_comment: 场景切换太多，人设代入感均不足，30多分
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 一章多个场景，没有重点
+    raw_quote: 一章里面写了三个场景 一个场景都没立住
+  - dimension: character
+    severity: negative
+    content: 人设和带入感没学好
+    raw_quote: 你先把人设跟代入感学对吗

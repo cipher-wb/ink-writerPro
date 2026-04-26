@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2221
+title: 仙门废墟救女妖 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 仙侠
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是40多分 | 主线无聊，人设用力过猛，路人少女话唠是毒点，整体拖沓缺乏看点，建议推翻找题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线无聊，人设用力过猛，路人少女话唠是毒点，整体拖沓缺乏看点，建议推翻找题材。 | 主线太差，缺乏有效的看点;少女角色人设毒点，塑造失败;整体拖沓，废话太多
+  observable:
+  - 'opening维度: 主线太差，缺乏有效的看点'
+  - 'character维度: 少女角色人设毒点，塑造失败'
+  - 'pacing维度: 整体拖沓，废话太多'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 1120
+  - 1168
+  score: 44
+  score_raw: 还是40多分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 仙门废墟救女妖
+  genre_guess:
+  - 仙侠
+  - 轻小说
+  overall_comment: 主线无聊，人设用力过猛，路人少女话唠是毒点，整体拖沓缺乏看点，建议推翻找题材。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主线太差，缺乏有效的看点
+    raw_quote: 题材主线太差了...主线主线确实没啥好主线
+  - dimension: character
+    severity: negative
+    content: 少女角色人设毒点，塑造失败
+    raw_quote: 小狐妖这种人是不好呀 真不好...读者真不爱这种人设计的
+  - dimension: pacing
+    severity: negative
+    content: 整体拖沓，废话太多
+    raw_quote: 你觉得写这么多其实没意义的...太拖沓了

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0739
+title: 精神疾病一轮 (borderline / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 一轮
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是了四十多分 题材在起点根本没打久 | 文笔比例节奏都好，但题材设定过于自嗨，读者难以接受世界观设定，建议改为都市开局引入一轮元素。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例节奏都好，但题材设定过于自嗨，读者难以接受世界观设定，建议改为都市开局引入一轮元素。 | 题材在起点无从发展，一轮设定开篇读者不认可;开篇是设定开篇，应该用剧情切入
+  observable:
+  - 'genre维度: 题材在起点无从发展，一轮设定开篇读者不认可'
+  - 'opening维度: 开篇是设定开篇，应该用剧情切入'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1681
+  - 1770
+  score: 44
+  score_raw: 也是了四十多分 题材在起点根本没打久
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 精神疾病一轮
+  genre_guess:
+  - 都市
+  - 异能
+  - 一轮
+  overall_comment: 文笔比例节奏都好，但题材设定过于自嗨，读者难以接受世界观设定，建议改为都市开局引入一轮元素。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材在起点无从发展，一轮设定开篇读者不认可
+    raw_quote: 这种题材我觉得没有一点意义...实话就是浪费你的生命
+  - dimension: opening
+    severity: negative
+    content: 开篇是设定开篇，应该用剧情切入
+    raw_quote: 人家是都市开剧 人家不是设定开剧...一上来基地故路者世界变异了...真没人看
+  - dimension: simplicity
+    severity: positive
+    content: 文笔扎实，遣词造句和比例节奏都挺好
+    raw_quote: 比例肯定是扎实的

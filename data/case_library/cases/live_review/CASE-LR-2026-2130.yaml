@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2130
+title: 考完试这学期又要结束了 (fail / 14分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 穿越
+  - 日常
+  - 小白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就14分吧 | 全文废话连篇，故事白水，人设小白，遣词造句拖沓。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全文废话连篇，故事白水，人设小白，遣词造句拖沓。 | 内容过于小白，废话文学，没有信息量;人设苍白，主角行为无聊
+  observable:
+  - 'simplicity维度: 内容过于小白，废话文学，没有信息量'
+  - 'character维度: 人设苍白，主角行为无聊'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 131
+  - 240
+  score: 14
+  score_raw: 差不多就14分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 考完试这学期又要结束了
+  genre_guess:
+  - 穿越
+  - 日常
+  - 小白
+  overall_comment: 全文废话连篇，故事白水，人设小白，遣词造句拖沓。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 内容过于小白，废话文学，没有信息量
+    raw_quote: 就就抱怨哎呀 学习又结束了呀 感觉一年又结束了 对呀 一年又结束了呀 真是无趣呀
+  - dimension: character
+    severity: negative
+    content: 人设苍白，主角行为无聊
+    raw_quote: 人设也小 自己是个种田者 叫农奴

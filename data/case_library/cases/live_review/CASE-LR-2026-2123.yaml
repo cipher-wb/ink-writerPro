@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-2123
+title: 大清反清复明宁古塔流人文 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 清朝
+  - 反清复明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分 | 题材好加分，少女角色OK，但过多文青细节和赘述，少一个眼前期待感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材好加分，少女角色OK，但过多文青细节和赘述，少一个眼前期待感。 | 切入前面一段可以删掉，介绍太多;文青了点，细节写的太详细没凸显重点
+  observable:
+  - 'opening维度: 切入前面一段可以删掉，介绍太多'
+  - 'simplicity维度: 文青了点，细节写的太详细没凸显重点'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 976
+  - 1030
+  score: 48
+  score_raw: 48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大清反清复明宁古塔流人文
+  genre_guess:
+  - 历史
+  - 穿越
+  - 清朝
+  - 反清复明
+  overall_comment: 题材好加分，少女角色OK，但过多文青细节和赘述，少一个眼前期待感。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 黑大清题材好，当前情绪加分
+    raw_quote: 这题材挺好的呀
+  - dimension: opening
+    severity: negative
+    content: 切入前面一段可以删掉，介绍太多
+    raw_quote: 把前面给我删掉，这段删掉就行了对吧
+  - dimension: simplicity
+    severity: negative
+    content: 文青了点，细节写的太详细没凸显重点
+    raw_quote: 我觉得还是有点文青这一局，其实没体现出重点

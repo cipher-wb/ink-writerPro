@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0105
+title: 曹永川网络小说作家 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 直播
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40万是有的 | 叙事能力没问题，闭合反转和选择道具有设计，但开头日常太多太圈子化。如果对号入座是写给直播间看的还有40分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 叙事能力没问题，闭合反转和选择道具有设计，但开头日常太多太圈子化。如果对号入座是写给直播间看的还有40分。 | 开头日常太多太普通无聊
+  observable:
+  - 'opening维度: 开头日常太多太普通无聊'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1011
+  - 1120
+  score: 40
+  score_raw: 40万是有的
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 曹永川网络小说作家
+  genre_guess:
+  - 都市
+  - 系统
+  - 直播
+  overall_comment: 叙事能力没问题，闭合反转和选择道具有设计，但开头日常太多太圈子化。如果对号入座是写给直播间看的还有40分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头日常太多太普通无聊
+    raw_quote: 作为小说的开头来说，非常的普通无聊嘛
+  - dimension: character
+    severity: positive
+    content: 人设OK，叙事能力没问题，有反转
+    raw_quote: 写的倒是挺好的，有反转是吧，最后有整合人设也OK

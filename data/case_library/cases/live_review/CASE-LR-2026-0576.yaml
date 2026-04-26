@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0576
+title: 东京心理医生 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 都市
+  - 职业
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30多分的样子吧 | 开头水，人设矛盾，缺乏期待感，30分需加速
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头水，人设矛盾，缺乏期待感，30分需加速 | 开头全是水文，节奏慢热不热;女主角人设矛盾混乱
+  observable:
+  - 'opening维度: 开头全是水文，节奏慢热不热'
+  - 'character维度: 女主角人设矛盾混乱'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 3457
+  - 3560
+  score: 30
+  score_raw: 30多分的样子吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京心理医生
+  genre_guess:
+  - 都市
+  - 职业
+  - 重生
+  overall_comment: 开头水，人设矛盾，缺乏期待感，30分需加速
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头全是水文，节奏慢热不热
+    raw_quote: 这是慢热...没有热...全是水文
+  - dimension: character
+    severity: negative
+    content: 女主角人设矛盾混乱
+    raw_quote: 写完之后 就他的人设就互相矛盾了

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0626
+title: 东京合租日记 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GGZfBaEhR
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 东京
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分吧 | 有天赋，雪白切入和反转设计加分，但本土灵异元素缺失、主线偏弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GGZfBaEhR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋，雪白切入和反转设计加分，但本土灵异元素缺失、主线偏弱。 | 东京背景却只有西方吸血鬼狼人，缺乏本土阴阳师等特色。
+  observable:
+  - 'genre维度: 东京背景却只有西方吸血鬼狼人，缺乏本土阴阳师等特色。'
+live_review_meta:
+  source_bvid: BV1GGZfBaEhR
+  source_line_range:
+  - 726
+  - 815
+  score: 55
+  score_raw: 55分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东京合租日记
+  genre_guess:
+  - 都市
+  - 异能
+  - 东京
+  - 灵异
+  overall_comment: 有天赋，雪白切入和反转设计加分，但本土灵异元素缺失、主线偏弱。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 女主上门、雪白描写的切入和后续反转有趣。
+    raw_quote: 雪白切入 ... 昨天大哥忽然反转 ... 我觉得有天赋啊
+  - dimension: genre
+    severity: negative
+    content: 东京背景却只有西方吸血鬼狼人，缺乏本土阴阳师等特色。
+    raw_quote: 跟东京关系不大 ... 你要出来点东京的妖鬼对吧
+  - dimension: pacing
+    severity: neutral
+    content: 目前还在铺设人设，强主线尚未展开。
+    raw_quote: 主线还是太弱了 ... 还是太人物了

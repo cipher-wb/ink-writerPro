@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0290
+title: 水浒同人流落日本 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 水浒同人
+  - 日本
+  - 压身份
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未给分 | 题材太拉，切入老俗套，没感觉
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太拉，切入老俗套，没感觉 | 题材太拉，老写法没感觉
+  observable:
+  - 'genre维度: 题材太拉，老写法没感觉'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 2161
+  - 2240
+  score: null
+  score_raw: 未给分
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 水浒同人流落日本
+  genre_guess:
+  - 水浒同人
+  - 日本
+  - 压身份
+  overall_comment: 题材太拉，切入老俗套，没感觉
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材太拉，老写法没感觉
+    raw_quote: 这个题材太拉了，老写法没感觉

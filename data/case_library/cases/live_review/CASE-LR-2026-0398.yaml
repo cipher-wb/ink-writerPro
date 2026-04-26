@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0398
+title: 文录 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 科幻
+  - 全球融合
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 全球降临养猪文，设定和写法落后五年，毫无市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全球降临养猪文，设定和写法落后五年，毫无市场。 | 全球融合养猪题材早已过时，纯属信息差废稿。;对白和叙事还停留在十年前的青涩写法，极小白。
+  observable:
+  - 'genre维度: 全球融合养猪题材早已过时，纯属信息差废稿。'
+  - 'simplicity维度: 对白和叙事还停留在十年前的青涩写法，极小白。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 985
+  - 1030
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 文录
+  genre_guess:
+  - 科幻
+  - 全球融合
+  overall_comment: 全球降临养猪文，设定和写法落后五年，毫无市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 全球融合养猪题材早已过时，纯属信息差废稿。
+    raw_quote: 特别养猪，间接更养猪了，这种书五年前就被淘汰了。
+  - dimension: simplicity
+    severity: negative
+    content: 对白和叙事还停留在十年前的青涩写法，极小白。
+    raw_quote: 这种对白很小白的，不要写了。

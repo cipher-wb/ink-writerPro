@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1874
+title: 水浒项籍模板历史文 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 历史
+  - 水浒
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分 | 遣词造句可以，但代入感很差，主角穿越没体现现代人思维，水浒流量低，建议换题材。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句可以，但代入感很差，主角穿越没体现现代人思维，水浒流量低，建议换题材。 | 主角是古代人思维，没有体现穿越感，代入感很差;水浒现在流量特别低，老作者都难出成绩
+  observable:
+  - 'character维度: 主角是古代人思维，没有体现穿越感，代入感很差'
+  - 'genre维度: 水浒现在流量特别低，老作者都难出成绩'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1575
+  - 1626
+  score: 32
+  score_raw: 32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 水浒项籍模板历史文
+  genre_guess:
+  - 历史
+  - 水浒
+  - 系统
+  overall_comment: 遣词造句可以，但代入感很差，主角穿越没体现现代人思维，水浒流量低，建议换题材。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角是古代人思维，没有体现穿越感，代入感很差
+    raw_quote: 你不穿越嘛 不是你为什么不穿越啊 古代人我怎么代入啊
+  - dimension: genre
+    severity: negative
+    content: 水浒现在流量特别低，老作者都难出成绩
+    raw_quote: 水浒现在好像好凉啊

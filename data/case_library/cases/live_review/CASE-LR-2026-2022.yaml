@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-2022
+title: 主播修仙 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 直播
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分吧 | 题材老旧，开局设定铺垫过多，没写直播卖点却写了一大堆无用的烂梗和设定，文笔也偏白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老旧，开局设定铺垫过多，没写直播卖点却写了一大堆无用的烂梗和设定，文笔也偏白。 | 开篇浪费在无用的背景介绍上，直播卖点没有第一时间写出来。
+  observable:
+  - 'opening维度: 开篇浪费在无用的背景介绍上，直播卖点没有第一时间写出来。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1283
+  - 1317
+  score: 18
+  score_raw: 18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 主播修仙
+  genre_guess:
+  - 都市
+  - 修仙
+  - 直播
+  overall_comment: 题材老旧，开局设定铺垫过多，没写直播卖点却写了一大堆无用的烂梗和设定，文笔也偏白。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇浪费在无用的背景介绍上，直播卖点没有第一时间写出来。
+    raw_quote: 你不是直播吗 ... 你写这些要干嘛

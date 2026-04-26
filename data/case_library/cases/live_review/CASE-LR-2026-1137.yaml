@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1137
+title: 王狗王之手压红路/红楼同人 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 同人
+  - 红楼
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就28分嘛 | 低俗烂梗堆砌，主线迟迟不进，金手指出戏且可能屏蔽。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 低俗烂梗堆砌，主线迟迟不进，金手指出戏且可能屏蔽。 | 大量低俗与水字数，与红楼无关;加藤之手设计低俗且易触发审核;写法全为番茄风，不适合起点红楼同人
+  observable:
+  - 'opening维度: 大量低俗与水字数，与红楼无关'
+  - 'golden_finger维度: 加藤之手设计低俗且易触发审核'
+  - 'genre维度: 写法全为番茄风，不适合起点红楼同人'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 2806
+  - 2920
+  score: 28
+  score_raw: 就28分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 王狗王之手压红路/红楼同人
+  genre_guess:
+  - 同人
+  - 红楼
+  - 穿越
+  overall_comment: 低俗烂梗堆砌，主线迟迟不进，金手指出戏且可能屏蔽。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 大量低俗与水字数，与红楼无关
+    raw_quote: 前面就叽里咕噜狂水
+  - dimension: golden_finger
+    severity: negative
+    content: 加藤之手设计低俗且易触发审核
+    raw_quote: 你这个加藤之首真的太出戏了
+  - dimension: genre
+    severity: negative
+    content: 写法全为番茄风，不适合起点红楼同人
+    raw_quote: '起点的红楼梦
+
+      哪有这样的'

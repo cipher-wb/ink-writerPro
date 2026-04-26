@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0225
+title: 机甲穿越文 (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV15JwWzyELA
+scope:
+  genre:
+  - 机甲
+  - 穿越
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 68吧 | 拉扯水平较高，但设定堆积过多可能劝退读者。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15JwWzyELA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 拉扯水平较高，但设定堆积过多可能劝退读者。 | 设定密度过大可能拖节奏
+  observable:
+  - 'pacing维度: 设定密度过大可能拖节奏'
+live_review_meta:
+  source_bvid: BV15JwWzyELA
+  source_line_range:
+  - 219
+  - 230
+  score: 68
+  score_raw: 68吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 机甲穿越文
+  genre_guess:
+  - 机甲
+  - 穿越
+  - 末世
+  overall_comment: 拉扯水平较高，但设定堆积过多可能劝退读者。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 拉扯写得有水平
+    raw_quote: 拉扯大概的拉扯水平很高
+  - dimension: pacing
+    severity: negative
+    content: 设定密度过大可能拖节奏
+    raw_quote: 他后面那些设定我怕还是写的太复杂

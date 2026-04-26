@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0372
+title: 青山第一精神病院 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 都市
+  - 抽象
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这书要是能签订 我给你直接打赏盟主啊 | 核心梗立不住，没有乐子，必然扑街。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 核心梗立不住，没有乐子，必然扑街。 | 核心概念无趣，缺乏反差爽点;大专精神病院同质化严重，无新意
+  observable:
+  - 'hook维度: 核心概念无趣，缺乏反差爽点'
+  - 'genre维度: 大专精神病院同质化严重，无新意'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 951
+  - 1030
+  score: null
+  score_raw: 这书要是能签订 我给你直接打赏盟主啊
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 青山第一精神病院
+  genre_guess:
+  - 都市
+  - 抽象
+  - 乐子文
+  overall_comment: 核心梗立不住，没有乐子，必然扑街。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 核心概念无趣，缺乏反差爽点
+    raw_quote: 你这个核心梗就没意思了 核心梗就立不住呀
+  - dimension: genre
+    severity: negative
+    content: 大专精神病院同质化严重，无新意
+    raw_quote: 精神病院开局也很无聊的 番茄感觉了有上万本

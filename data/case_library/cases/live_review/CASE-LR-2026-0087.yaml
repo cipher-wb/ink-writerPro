@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0087
+title: 浮空车少年 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 科幻
+  - 未来
+  - 萌新
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20 | 萌新自嗨写法，完全不考虑读者代入感，设定和世界观全凭自己想象，没人会看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 萌新自嗨写法，完全不考虑读者代入感，设定和世界观全凭自己想象，没人会看。 | 缺乏代入感，读者根本看不懂也不关心这些设定;标准的萌新自嗨写法，不管读者想看什么
+  observable:
+  - 'simplicity维度: 缺乏代入感，读者根本看不懂也不关心这些设定'
+  - 'misc维度: 标准的萌新自嗨写法，不管读者想看什么'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1521
+  - 1595
+  score: 20
+  score_raw: '20'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 浮空车少年
+  genre_guess:
+  - 科幻
+  - 未来
+  - 萌新
+  overall_comment: 萌新自嗨写法，完全不考虑读者代入感，设定和世界观全凭自己想象，没人会看。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 缺乏代入感，读者根本看不懂也不关心这些设定
+    raw_quote: 带入感代入感没有...我怎么带入...读者根本不知道你要干嘛
+  - dimension: misc
+    severity: negative
+    content: 标准的萌新自嗨写法，不管读者想看什么
+    raw_quote: 标准的萌心就这样...自己写自己的根本就不管别人

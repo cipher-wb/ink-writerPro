@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2181
+title: 长生模拟器/退婚宅斗 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 古代
+  - 宅斗
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十四份嘛 | 比例扎实，但内容俗套，宅斗写不出花来，金手指与场景割裂出戏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实，但内容俗套，宅斗写不出花来，金手指与场景割裂出戏。 | 模拟器与当前场景扯不上，很出戏;退婚宅斗写不出新意，太过俗套
+  observable:
+  - 'golden_finger维度: 模拟器与当前场景扯不上，很出戏'
+  - 'genre维度: 退婚宅斗写不出新意，太过俗套'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1010
+  - 1050
+  score: 44
+  score_raw: 四十四份嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 长生模拟器/退婚宅斗
+  genre_guess:
+  - 古代
+  - 宅斗
+  - 修仙
+  overall_comment: 比例扎实，但内容俗套，宅斗写不出花来，金手指与场景割裂出戏。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 模拟器与当前场景扯不上，很出戏
+    raw_quote: 扯不上呀 这个这个东西 跟你现在的现实距离扯不上呀 … 这就很出戏啊
+  - dimension: genre
+    severity: negative
+    content: 退婚宅斗写不出新意，太过俗套
+    raw_quote: 这玩意其实有点宅斗去了 … 怎么写都俗啊 写成花来的

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2010
+title: 长安重阳之躯 (pass / 62分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 五十左右 62左右 | 小姨娘的情节写得不错，但过于想要兼顾，导致割裂，建议单推小姨娘的剧情。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小姨娘的情节写得不错，但过于想要兼顾，导致割裂，建议单推小姨娘的剧情。 | 剧情设计割裂，两边都想要导致都没写好。
+  observable:
+  - 'highpoint维度: 剧情设计割裂，两边都想要导致都没写好。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 812
+  - 858
+  score: 62
+  score_raw: 五十左右 62左右
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 长安重阳之躯
+  genre_guess:
+  - 仙侠
+  - 穿越
+  overall_comment: 小姨娘的情节写得不错，但过于想要兼顾，导致割裂，建议单推小姨娘的剧情。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 小姨娘的部分情节写得有吸引力。
+    raw_quote: 我觉得不如专心写小姨娘
+  - dimension: highpoint
+    severity: negative
+    content: 剧情设计割裂，两边都想要导致都没写好。
+    raw_quote: 你既要又要了... 两张隔离

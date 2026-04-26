@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2020
+title: 少女灭绝之后 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 都市
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我给35分 | 文笔有东京宅味，但世界观设定非常难以代入，建议直接写普通东京故事，别再纠结此稿。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有东京宅味，但世界观设定非常难以代入，建议直接写普通东京故事，别再纠结此稿。 | 九成少女死亡的世界观设定极其奇怪，读者难以代入。
+  observable:
+  - 'genre维度: 九成少女死亡的世界观设定极其奇怪，读者难以代入。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1209
+  - 1239
+  score: 35
+  score_raw: 我给35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 少女灭绝之后
+  genre_guess:
+  - 都市
+  - 悬疑
+  overall_comment: 文笔有东京宅味，但世界观设定非常难以代入，建议直接写普通东京故事，别再纠结此稿。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 九成少女死亡的世界观设定极其奇怪，读者难以代入。
+    raw_quote: 人类死了半数有啥起来 ... 不要加这种设定

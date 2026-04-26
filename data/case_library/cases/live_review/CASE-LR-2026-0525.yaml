@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0525
+title: 西医师傅被抓我变强 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1DViaB8EA4
+scope:
+  genre:
+  - 西游
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 主播快速略过，仅评价不好看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DViaB8EA4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主播快速略过，仅评价不好看。 | 不好看
+  observable:
+  - 'misc维度: 不好看'
+live_review_meta:
+  source_bvid: BV1DViaB8EA4
+  source_line_range:
+  - 1
+  - 4
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 西医师傅被抓我变强
+  genre_guess:
+  - 西游
+  overall_comment: 主播快速略过，仅评价不好看。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 不好看
+    raw_quote: 怎么演都不好看

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0184
+title: 归零：七椅愿望游戏 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 无限流
+  - 副本
+  - 智斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分 | 基本功扎实，但设定复杂有阅读障碍，加入异能让智斗失去紧张感，建议简化。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 基本功扎实，但设定复杂有阅读障碍，加入异能让智斗失去紧张感，建议简化。 | 愿望企业、归零等设定过于复杂，读者难以快速理解。;不该出现异能，智斗副本流一旦有异能就失去紧张感。
+  observable:
+  - 'genre维度: 愿望企业、归零等设定过于复杂，读者难以快速理解。'
+  - 'golden_finger维度: 不该出现异能，智斗副本流一旦有异能就失去紧张感。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 2210
+  - 2360
+  score: 42
+  score_raw: 42分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 归零：七椅愿望游戏
+  genre_guess:
+  - 无限流
+  - 副本
+  - 智斗
+  overall_comment: 基本功扎实，但设定复杂有阅读障碍，加入异能让智斗失去紧张感，建议简化。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 愿望企业、归零等设定过于复杂，读者难以快速理解。
+    raw_quote: 这个望怨气也有这是一个你的一厢情愿它本质上是一个阅读障碍
+  - dimension: golden_finger
+    severity: negative
+    content: 不该出现异能，智斗副本流一旦有异能就失去紧张感。
+    raw_quote: 这种书不能有异能了有异能就崩了

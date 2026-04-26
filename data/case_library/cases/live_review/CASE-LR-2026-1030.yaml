@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1030
+title: 妖鬼图卷 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 古代
+  - 志怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你48分 | 施目前犯切入亮眼，但后续啰嗦，金手指出太晚。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 施目前犯切入亮眼，但后续啰嗦，金手指出太晚。 | 第三章还在水，金手指迟迟未出
+  observable:
+  - 'pacing维度: 第三章还在水，金手指迟迟未出'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 2031
+  - 2130
+  score: 48
+  score_raw: 给你48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 妖鬼图卷
+  genre_guess:
+  - 古代
+  - 志怪
+  overall_comment: 施目前犯切入亮眼，但后续啰嗦，金手指出太晚。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 棺材偷听凶案切入，很有反转感
+    raw_quote: 这个切入还蛮好的 这个切入 就是施目前犯 然后反转这种切入
+  - dimension: pacing
+    severity: negative
+    content: 第三章还在水，金手指迟迟未出
+    raw_quote: 你的金手指应该出来了 才出来嘛 太慢了

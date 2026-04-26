@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1315
+title: 神人病娇少女 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 日轻
+  - 校园
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 日轻校园恋爱元素杂糅，主线不明，没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 日轻校园恋爱元素杂糅，主线不明，没人看。 | 轻小说没人看，设定不突出;杂糅时间穿越游戏等太多元素
+  observable:
+  - 'genre维度: 轻小说没人看，设定不突出'
+  - 'simplicity维度: 杂糅时间穿越游戏等太多元素'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1301
+  - 1350
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 神人病娇少女
+  genre_guess:
+  - 日轻
+  - 校园
+  - 恋爱
+  overall_comment: 日轻校园恋爱元素杂糅，主线不明，没人看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 轻小说没人看，设定不突出
+    raw_quote: 這清小說沒人看啊
+  - dimension: simplicity
+    severity: negative
+    content: 杂糅时间穿越游戏等太多元素
+    raw_quote: 背景啊 世界觀啊 人物啊 什麼的雜肉太多了 不簡單

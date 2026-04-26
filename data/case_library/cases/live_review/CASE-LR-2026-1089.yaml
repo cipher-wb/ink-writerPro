@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1089
+title: 脑子里住着魔王（新铁同人） (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 同人
+  - 游戏系
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话只能给大哥给到 哎 30多吧 | 节奏偏慢，卖点未突出，但写法原理正确，属同人一般水平
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏偏慢，卖点未突出，但写法原理正确，属同人一般水平 | 剧情推进缓慢，缺少冲突和脑洞碰撞;脑海住着魔王的卖点没有体现出来
+  observable:
+  - 'pacing维度: 剧情推进缓慢，缺少冲突和脑洞碰撞'
+  - 'hook维度: 脑海住着魔王的卖点没有体现出来'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 320
+  - 380
+  score: 33
+  score_raw: 打分的话只能给大哥给到 哎 30多吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 脑子里住着魔王（新铁同人）
+  genre_guess:
+  - 同人
+  - 游戏系
+  overall_comment: 节奏偏慢，卖点未突出，但写法原理正确，属同人一般水平
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 剧情推进缓慢，缺少冲突和脑洞碰撞
+    raw_quote: 就是太慢了 没什么劳动内容的摩擦
+  - dimension: hook
+    severity: negative
+    content: 脑海住着魔王的卖点没有体现出来
+    raw_quote: 这个卖点我感觉没感觉啊 脑海里面住着一个这个 这个黑猫的这东西

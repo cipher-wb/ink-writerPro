@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0938
+title: 稀有祖宗人(西游恶搞) (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 西游
+  - 恶搞
+  - 肌肉唐僧
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44不吉利...443是给的 | 文笔有天赋但题材小众，大入感太差，更像土著恶搞
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有天赋但题材小众，大入感太差，更像土著恶搞 | 大入感极差，读者难以代入恶搞唐僧
+  observable:
+  - 'opening维度: 大入感极差，读者难以代入恶搞唐僧'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 316
+  - 496
+  score: 44
+  score_raw: 44不吉利...443是给的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 稀有祖宗人(西游恶搞)
+  genre_guess:
+  - 西游
+  - 恶搞
+  - 肌肉唐僧
+  overall_comment: 文笔有天赋但题材小众，大入感太差，更像土著恶搞
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 大入感极差，读者难以代入恶搞唐僧
+    raw_quote: 你这个大入感其实很差很差
+  - dimension: simplicity
+    severity: positive
+    content: 行文与比例有天赋
+    raw_quote: 气焰 其实比例有天赋的 他那个水虎的西游话 也写出来感觉了

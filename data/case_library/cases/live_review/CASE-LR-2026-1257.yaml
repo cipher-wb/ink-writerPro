@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1257
+title: 苟到武圣重生 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 高武
+  - 重生
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 套路熟就40分吧 | 套路太八股，但写法流畅。坏亲戚、金手指、生病家人的模板化严重，缺乏新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路太八股，但写法流畅。坏亲戚、金手指、生病家人的模板化严重，缺乏新意。 | 情节过于套路化、脸谱化，缺乏新意;开局被打耳光属于侮辱性情节，对主角形象不利
+  observable:
+  - 'opening维度: 情节过于套路化、脸谱化，缺乏新意'
+  - 'character维度: 开局被打耳光属于侮辱性情节，对主角形象不利'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1852
+  - 1915
+  score: 40
+  score_raw: 套路熟就40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 苟到武圣重生
+  genre_guess:
+  - 高武
+  - 重生
+  - 玄幻
+  overall_comment: 套路太八股，但写法流畅。坏亲戚、金手指、生病家人的模板化严重，缺乏新意。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 情节过于套路化、脸谱化，缺乏新意
+    raw_quote: 坏蛋的伯母对你好的爷爷，生病的妈妈，然后穷穷苦的你要去修炼练练功的金手指，我觉得诶
+  - dimension: character
+    severity: negative
+    content: 开局被打耳光属于侮辱性情节，对主角形象不利
+    raw_quote: 你一上来两个耳光抽的天旋地转，你，抽耳光，这是侮辱性的

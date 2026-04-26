@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2219
+title: 真金之塔 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 西方奇幻
+  - 巫师
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你38分嘛是吧 | 作者脑洞大，逻辑没问题，但过分放飞自我，杂糅太多元素，导致读者看不懂，需想好主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者脑洞大，逻辑没问题，但过分放飞自我，杂糅太多元素，导致读者看不懂，需想好主线。 | 元素杂糅，科幻？灵异？异能？读者看不懂就会跑;太放飞自我和故弄玄虚，看不懂
+  observable:
+  - 'genre维度: 元素杂糅，科幻？灵异？异能？读者看不懂就会跑'
+  - 'opening维度: 太放飞自我和故弄玄虚，看不懂'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 1056
+  - 1102
+  score: 38
+  score_raw: 给你38分嘛是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 真金之塔
+  genre_guess:
+  - 西方奇幻
+  - 巫师
+  overall_comment: 作者脑洞大，逻辑没问题，但过分放飞自我，杂糅太多元素，导致读者看不懂，需想好主线。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 元素杂糅，科幻？灵异？异能？读者看不懂就会跑
+    raw_quote: 他根本就不管分类了...太乱了...杂糅太多东西了
+  - dimension: opening
+    severity: negative
+    content: 太放飞自我和故弄玄虚，看不懂
+    raw_quote: 就是故弄玄虚...这事件太癫狂了对吧...看不懂
+  - dimension: simplicity
+    severity: neutral
+    content: 有天赋，但需要明确受众
+    raw_quote: 有天赋...就是太放飞自我了

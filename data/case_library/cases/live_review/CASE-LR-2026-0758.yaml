@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0758
+title: 黄皮子怼天怼地 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 民俗
+  - 仙侠
+  - 妖修
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44分吧 | 写法偏蓝精灵爽文，缺乏起点要求的民俗味道，人设不沉稳。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法偏蓝精灵爽文，缺乏起点要求的民俗味道，人设不沉稳。 | 系统奖励机制太像蓝精灵，没有仙侠底蕴;主角言行太小白，不够沉稳成熟
+  observable:
+  - 'golden_finger维度: 系统奖励机制太像蓝精灵，没有仙侠底蕴'
+  - 'character维度: 主角言行太小白，不够沉稳成熟'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1161
+  - 1220
+  score: 44
+  score_raw: 44分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 黄皮子怼天怼地
+  genre_guess:
+  - 民俗
+  - 仙侠
+  - 妖修
+  overall_comment: 写法偏蓝精灵爽文，缺乏起点要求的民俗味道，人设不沉稳。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统奖励机制太像蓝精灵，没有仙侠底蕴
+    raw_quote: 系统说3日内必须得完成讨分……你放弃店的话，你要写成民俗味道
+  - dimension: character
+    severity: negative
+    content: 主角言行太小白，不够沉稳成熟
+    raw_quote: 像什么干干我呀……主角也尽量不要吐槽沉稳一点

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0865
+title: 蓝星末日4999 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 末日
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分嘛 也就这样 | 文笔流畅但剧情性太弱，每章都在跑读者，世界观设定多而缺乏抓人力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔流畅但剧情性太弱，每章都在跑读者，世界观设定多而缺乏抓人力。 | 每章独立且缺乏看点，读者不断流失;没有事件和人物关系留住读者
+  observable:
+  - 'pacing维度: 每章独立且缺乏看点，读者不断流失'
+  - 'hook维度: 没有事件和人物关系留住读者'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 211
+  - 240
+  score: 25
+  score_raw: 25分嘛 也就这样
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蓝星末日4999
+  genre_guess:
+  - 末日
+  - 玄幻
+  overall_comment: 文笔流畅但剧情性太弱，每章都在跑读者，世界观设定多而缺乏抓人力。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 每章独立且缺乏看点，读者不断流失
+    raw_quote: 每张独立都在跑 都在跑图跑疯掉了 读者会跑 网文是一个读者赛跑的游戏
+  - dimension: hook
+    severity: negative
+    content: 没有事件和人物关系留住读者
+    raw_quote: 没看点啊 怎么办 出来看点出来 强人设强人物极端剧情对吧

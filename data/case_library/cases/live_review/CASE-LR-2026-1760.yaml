@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1760
+title: 显身系统穿越 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 玄幻
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也是33分左右吧 | 设定为主，剧情养猪，开头信息太多读者记不住，缺乏有效期待。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定为主，剧情养猪，开头信息太多读者记不住，缺乏有效期待。 | 开头信息堆砌，读者只能记住时间地点人物;事件迟迟不进，显得很平
+  observable:
+  - 'opening维度: 开头信息堆砌，读者只能记住时间地点人物'
+  - 'pacing维度: 事件迟迟不进，显得很平'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 228
+  - 295
+  score: 33
+  score_raw: 也是33分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 显身系统穿越
+  genre_guess:
+  - 玄幻
+  - 系统流
+  overall_comment: 设定为主，剧情养猪，开头信息太多读者记不住，缺乏有效期待。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头信息堆砌，读者只能记住时间地点人物
+    raw_quote: 我觉得这开头也有点养猪了，这开头太多了，读者记不住了
+  - dimension: pacing
+    severity: negative
+    content: 事件迟迟不进，显得很平
+    raw_quote: 就养猪呀……哎第一章就是没冲突没卖点

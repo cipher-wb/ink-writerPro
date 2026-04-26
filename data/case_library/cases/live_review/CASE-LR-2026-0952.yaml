@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0952
+title: 大鳞夜晨(民俗鬼物) (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 民俗
+  - 鬼物
+  - 朝堂
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能有四十五分左右 | 文笔扎实但开头氛围渲染过多，新人无资格慢热，建议带事件切入
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但开头氛围渲染过多，新人无资格慢热，建议带事件切入 | 开头氛围描写炫退70%读者，应直给事件
+  observable:
+  - 'opening维度: 开头氛围描写炫退70%读者，应直给事件'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 2580
+  - 2650
+  score: 45
+  score_raw: 能有四十五分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大鳞夜晨(民俗鬼物)
+  genre_guess:
+  - 民俗
+  - 鬼物
+  - 朝堂
+  overall_comment: 文笔扎实但开头氛围渲染过多，新人无资格慢热，建议带事件切入
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头氛围描写炫退70%读者，应直给事件
+    raw_quote: 你没有资格这样去拉氛围

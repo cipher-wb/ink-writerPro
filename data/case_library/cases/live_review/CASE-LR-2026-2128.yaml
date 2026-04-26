@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2128
+title: 梦境救妹古希腊神话文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 奇幻
+  - 希腊神话
+  - 女频
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50多分的话，差不多就会被签了 | 女频写法，设定太多太复杂吓跑读者，建议直接写希腊神话同人会更有市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 女频写法，设定太多太复杂吓跑读者，建议直接写希腊神话同人会更有市场。 | 救妹妹这条驱动线本身比较无聊
+  observable:
+  - 'hook维度: 救妹妹这条驱动线本身比较无聊'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 1261
+  - 1310
+  score: null
+  score_raw: 50多分的话，差不多就会被签了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 梦境救妹古希腊神话文
+  genre_guess:
+  - 奇幻
+  - 希腊神话
+  - 女频
+  - 系统
+  overall_comment: 女频写法，设定太多太复杂吓跑读者，建议直接写希腊神话同人会更有市场。
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 女频写法情感驱动，但设定太复杂
+    raw_quote: 这个设定还是复杂的，有点像那种女频的那些复杂的些设定对吧
+  - dimension: hook
+    severity: negative
+    content: 救妹妹这条驱动线本身比较无聊
+    raw_quote: 救妹妹这件事本身比较无聊的

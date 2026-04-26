@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1868
+title: 遮天式都市玄幻文（御天之上） (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 都市
+  - 玄幻
+  - 奇遇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 表达流畅文笔扎实，但内容主线太老，很有年代感，像15年前的都市奇遇玄幻，不符合当前市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达流畅文笔扎实，但内容主线太老，很有年代感，像15年前的都市奇遇玄幻，不符合当前市场。 | 整个思路太老，是15年前的都市奇遇开局玄幻模式
+  observable:
+  - 'genre维度: 整个思路太老，是15年前的都市奇遇开局玄幻模式'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1246
+  - 1310
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 遮天式都市玄幻文（御天之上）
+  genre_guess:
+  - 都市
+  - 玄幻
+  - 奇遇
+  overall_comment: 表达流畅文笔扎实，但内容主线太老，很有年代感，像15年前的都市奇遇玄幻，不符合当前市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 整个思路太老，是15年前的都市奇遇开局玄幻模式
+    raw_quote: 内容主线确实不太符合现在的市场市场变化了
+  - dimension: simplicity
+    severity: positive
+    content: 表达很流畅，文笔还算扎实，有实力
+    raw_quote: 表达很流畅 文笔还算扎实

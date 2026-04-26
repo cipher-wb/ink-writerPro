@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0707
+title: 重生电竞海克斯 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HawKzkErj
+scope:
+  genre:
+  - 电竞
+  - 英雄联盟
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分的样子 | 写法过于老套，仍停留在校园网吧赛阶段，缺乏职业联赛的名场面感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HawKzkErj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法过于老套，仍停留在校园网吧赛阶段，缺乏职业联赛的名场面感。 | 核心思路过时，必须对接职业战队和名场面
+  observable:
+  - 'genre维度: 核心思路过时，必须对接职业战队和名场面'
+live_review_meta:
+  source_bvid: BV1HawKzkErj
+  source_line_range:
+  - 511
+  - 570
+  score: 35
+  score_raw: 35分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生电竞海克斯
+  genre_guess:
+  - 电竞
+  - 英雄联盟
+  - 重生
+  overall_comment: 写法过于老套，仍停留在校园网吧赛阶段，缺乏职业联赛的名场面感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 核心思路过时，必须对接职业战队和名场面
+    raw_quote: 现在鲁瓦鲁进化了，都是一上来是职业队...千万不要去写网吧校队这种东西
+  - dimension: golden_finger
+    severity: positive
+    content: 金手指（距离把控）不涉及开挂，能被接受
+    raw_quote: 提升能力不算开瓜了...这个其实还好，这个轻车就能用

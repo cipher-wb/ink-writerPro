@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0864
+title: 恶龙魔法少女 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 轻小说
+  - 恶龙
+  - 魔法少女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 本来25分吧30分左右 | 题材冷血，正文太小白，缺乏人设拉扯和事件，纯粹猎奇。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材冷血，正文太小白，缺乏人设拉扯和事件，纯粹猎奇。 | 人设过于小白，智商低龄化;开篇没有抓住读者，战斗描写冗余
+  observable:
+  - 'character维度: 人设过于小白，智商低龄化'
+  - 'hook维度: 开篇没有抓住读者，战斗描写冗余'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 181
+  - 210
+  score: 30
+  score_raw: 本来25分吧30分左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 恶龙魔法少女
+  genre_guess:
+  - 轻小说
+  - 恶龙
+  - 魔法少女
+  overall_comment: 题材冷血，正文太小白，缺乏人设拉扯和事件，纯粹猎奇。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设过于小白，智商低龄化
+    raw_quote: 你这人设也太小白了吧 全球智商下降100倍了 小白龙也没智商
+  - dimension: hook
+    severity: negative
+    content: 开篇没有抓住读者，战斗描写冗余
+    raw_quote: 打架你提一嘴就行了嘛 怎么打架了 没人在意啊 控住无知敌人跑完了

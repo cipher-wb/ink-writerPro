@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1135
+title: 霍格沃斯从交界地归来的哈利 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 同人
+  - 哈利波特
+  - 艾尔登法环
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个40分的样子 | 正经切入有味道，但部分细节毒点需改，世界观小众。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 正经切入有味道，但部分细节毒点需改，世界观小众。 | 开头啰嗦，部分回归式写法可精简;节奏需加快，当前事件吸引力不足
+  observable:
+  - 'opening维度: 开头啰嗦，部分回归式写法可精简'
+  - 'pacing维度: 节奏需加快，当前事件吸引力不足'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 2593
+  - 2709
+  score: 40
+  score_raw: 有个40分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 霍格沃斯从交界地归来的哈利
+  genre_guess:
+  - 同人
+  - 哈利波特
+  - 艾尔登法环
+  overall_comment: 正经切入有味道，但部分细节毒点需改，世界观小众。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头啰嗦，部分回归式写法可精简
+    raw_quote: '我觉得这个开头这就是拉个代入感
+
+      其实也有点毒啊'
+  - dimension: character
+    severity: neutral
+    content: 哈利人设变化有体现，方向可行
+    raw_quote: 一些小细节上也体现了海里的人设的变化
+  - dimension: pacing
+    severity: negative
+    content: 节奏需加快，当前事件吸引力不足
+    raw_quote: '没什么好的事件
+
+      走人家援助路线了'

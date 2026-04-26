@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1989
+title: 马顺的秘密/干练过头 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 都市
+  - 悬疑
+  - 文艺
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 | 干练过了头像诗歌，人物纸片，没有情绪和网文节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 干练过了头像诗歌，人物纸片，没有情绪和网文节奏。 | 过于干练，丢失网文必备的情绪和血肉;角色像纸片人，互动没灵魂
+  observable:
+  - 'simplicity维度: 过于干练，丢失网文必备的情绪和血肉'
+  - 'character维度: 角色像纸片人，互动没灵魂'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1471
+  - 1530
+  score: 20
+  score_raw: 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 马顺的秘密/干练过头
+  genre_guess:
+  - 都市
+  - 悬疑
+  - 文艺
+  overall_comment: 干练过了头像诗歌，人物纸片，没有情绪和网文节奏。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 过于干练，丢失网文必备的情绪和血肉
+    raw_quote: 干练的像诗歌了
+  - dimension: character
+    severity: negative
+    content: 角色像纸片人，互动没灵魂
+    raw_quote: 没角色没人物没灵魂

@@ -1,0 +1,41 @@
+case_id: CASE-LR-2026-0942
+title: 记者重生商业大佬 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 重生
+  - 商业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没怎么具体说 | 仅扫了一眼，感觉像重生老动，未深入
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 仅扫了一眼，感觉像重生老动，未深入
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 1155
+  - 1174
+  score: null
+  score_raw: 没怎么具体说
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 记者重生商业大佬
+  genre_guess:
+  - 重生
+  - 商业
+  overall_comment: 仅扫了一眼，感觉像重生老动，未深入
+  comments: []

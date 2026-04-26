@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0545
+title: 穿越到剑与魔法世界成为伯爵 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 领主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 如花42分吧 | 切入很好，但展开偏题乱写，节奏太快代入不够，驾驭不住。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入很好，但展开偏题乱写，节奏太快代入不够，驾驭不住。 | 第一张信息量太多，节奏过快，着急偏题
+  observable:
+  - 'pacing维度: 第一张信息量太多，节奏过快，着急偏题'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 2101
+  - 2220
+  score: 42
+  score_raw: 如花42分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越到剑与魔法世界成为伯爵
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 领主
+  overall_comment: 切入很好，但展开偏题乱写，节奏太快代入不够，驾驭不住。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入代入感还好
+    raw_quote: 这还好吧吧 代入感还好
+  - dimension: pacing
+    severity: negative
+    content: 第一张信息量太多，节奏过快，着急偏题
+    raw_quote: 第一张有点着急 代入感不够 我觉节奏也快了 偏偏了

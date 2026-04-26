@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0959
+title: 重生初三(表白笑话) (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 重生
+  - 校园
+  - 初三
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 题材错误，重生初三恋爱太幼齿，立不住，文笔尚可
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材错误，重生初三恋爱太幼齿，立不住，文笔尚可 | 初三学生恋爱如儿戏，审核也不允许
+  observable:
+  - 'genre维度: 初三学生恋爱如儿戏，审核也不允许'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 3350
+  - 3420
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生初三(表白笑话)
+  genre_guess:
+  - 重生
+  - 校园
+  - 初三
+  overall_comment: 题材错误，重生初三恋爱太幼齿，立不住，文笔尚可
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 初三学生恋爱如儿戏，审核也不允许
+    raw_quote: 高中都不能谈恋爱你他妈初三谈恋爱

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1021
+title: 海国学院审考日 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 玄幻
+  - 学院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 超老套测灵根，反派弱智，毫无新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 超老套测灵根，反派弱智，毫无新意。 | 测灵根开篇十年如一日，毫无看点;反派智商低，嫉妒等情绪表达生硬
+  observable:
+  - 'opening维度: 测灵根开篇十年如一日，毫无看点'
+  - 'character维度: 反派智商低，嫉妒等情绪表达生硬'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1141
+  - 1240
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 海国学院审考日
+  genre_guess:
+  - 玄幻
+  - 学院
+  overall_comment: 超老套测灵根，反派弱智，毫无新意。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 测灵根开篇十年如一日，毫无看点
+    raw_quote: 这是非常老套的一个测灵根
+  - dimension: character
+    severity: negative
+    content: 反派智商低，嫉妒等情绪表达生硬
+    raw_quote: 什么隆隆的嫉妒之意 什么得意之意 什么也不含蓄的

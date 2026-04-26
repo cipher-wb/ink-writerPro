@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1444
+title: 腰鼓大圣 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 民国
+  - 武道
+  - 乱世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分还是没啥大变化 | 八股文开头平淡，卖点单一，需加入女角色互动和悬念
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 八股文开头平淡，卖点单一，需加入女角色互动和悬念 | 切入平淡，没有冲突
+  observable:
+  - 'opening维度: 切入平淡，没有冲突'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1151
+  - 1210
+  score: 42
+  score_raw: 42分还是没啥大变化
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 腰鼓大圣
+  genre_guess:
+  - 民国
+  - 武道
+  - 乱世
+  overall_comment: 八股文开头平淡，卖点单一，需加入女角色互动和悬念
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入平淡，没有冲突
+    raw_quote: 开头好平淡啊 没冲突
+  - dimension: character
+    severity: positive
+    content: 知道设立女性角色，但没利用好
+    raw_quote: 还是有个优点 他在立这个送路书 利他人设立

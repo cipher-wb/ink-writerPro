@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0616
+title: 废土吃妖军阀 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 科幻
+  - 废土
+  - 军事
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30来份 | 设定偏蓝精灵，没有好故事，代入感还行但题材难起。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定偏蓝精灵，没有好故事，代入感还行但题材难起。 | 废土吃妖设定太像蓝精灵，缺乏新鲜感
+  observable:
+  - 'genre维度: 废土吃妖设定太像蓝精灵，缺乏新鲜感'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 4151
+  - 4300
+  score: 30
+  score_raw: 30来份
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 废土吃妖军阀
+  genre_guess:
+  - 科幻
+  - 废土
+  - 军事
+  overall_comment: 设定偏蓝精灵，没有好故事，代入感还行但题材难起。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 废土吃妖设定太像蓝精灵，缺乏新鲜感
+    raw_quote: 这设定有点像蓝精灵...题材我觉得很难行

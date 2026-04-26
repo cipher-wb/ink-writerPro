@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0014
+title: 炎灵系统 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV11viPBrEPq
+scope:
+  genre:
+  - 火影同人
+  - 修仙
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分嘛 | 小白爽文，上帝视角场景赶客，核心金手指姗姗来迟，读者早已跑光。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11viPBrEPq.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小白爽文，上帝视角场景赶客，核心金手指姗姗来迟，读者早已跑光。 | 上帝视角写场景，代入感崩坏;金手指血龙眼拖到两章后才出;火影与修仙系统融合生硬，不会写
+  observable:
+  - 'opening维度: 上帝视角写场景，代入感崩坏'
+  - 'golden_finger维度: 金手指血龙眼拖到两章后才出'
+  - 'ops维度: 火影与修仙系统融合生硬，不会写'
+live_review_meta:
+  source_bvid: BV11viPBrEPq
+  source_line_range:
+  - 816
+  - 964
+  score: 20
+  score_raw: 20分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 炎灵系统
+  genre_guess:
+  - 火影同人
+  - 修仙
+  - 系统流
+  overall_comment: 小白爽文，上帝视角场景赶客，核心金手指姗姗来迟，读者早已跑光。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 上帝视角写场景，代入感崩坏
+    raw_quote: 你这是上帝视角写场景
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指血龙眼拖到两章后才出
+    raw_quote: 血龙眼开头就要出来的呀 叽里咕噜两张才出来
+  - dimension: ops
+    severity: negative
+    content: 火影与修仙系统融合生硬，不会写
+    raw_quote: 这种系统融合 不会写啊

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1794
+title: 从地狱归来复仇 (borderline / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 都市
+  - 复仇
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你48分吧 | 老式新媒体爽文，情绪足、节奏快，但起（起）点审核不认且风格过时。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老式新媒体爽文，情绪足、节奏快，但起（起）点审核不认且风格过时。 | 起点审核不通过，校园霸凌反杀等开篇剧情红线较多。;十年前老题材，目前除了小网站保底几乎无出路。
+  observable:
+  - 'ops维度: 起点审核不通过，校园霸凌反杀等开篇剧情红线较多。'
+  - 'genre维度: 十年前老题材，目前除了小网站保底几乎无出路。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 936
+  - 970
+  score: 48
+  score_raw: 给你48分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 从地狱归来复仇
+  genre_guess:
+  - 都市
+  - 复仇
+  - 爽文
+  overall_comment: 老式新媒体爽文，情绪足、节奏快，但起（起）点审核不认且风格过时。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 起点审核不通过，校园霸凌反杀等开篇剧情红线较多。
+    raw_quote: 题材题点都过不了审...审核也会管的
+  - dimension: genre
+    severity: negative
+    content: 十年前老题材，目前除了小网站保底几乎无出路。
+    raw_quote: 就是16年的题材...起点肯定没这样说...只能回去兄弟

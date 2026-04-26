@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2027
+title: 心灵宝可梦之寇斯普利 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 宝可梦
+  - 同人
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就 三十份还是有啊 | 日常写法平淡，缺乏看点，宝可梦题材目前冷且读者少。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 日常写法平淡，缺乏看点，宝可梦题材目前冷且读者少。 | 平淡没看点，日常无刺激;宝可梦题材冷门，读者可能不感兴趣
+  observable:
+  - 'pacing维度: 平淡没看点，日常无刺激'
+  - 'genre维度: 宝可梦题材冷门，读者可能不感兴趣'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 121
+  - 240
+  score: 30
+  score_raw: 差不多就 三十份还是有啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 心灵宝可梦之寇斯普利
+  genre_guess:
+  - 宝可梦
+  - 同人
+  - 日常
+  overall_comment: 日常写法平淡，缺乏看点，宝可梦题材目前冷且读者少。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 平淡没看点，日常无刺激
+    raw_quote: 好平淡呀 真平淡
+  - dimension: genre
+    severity: negative
+    content: 宝可梦题材冷门，读者可能不感兴趣
+    raw_quote: 宝可梦现在写有点…风吹草动所以也比较危险

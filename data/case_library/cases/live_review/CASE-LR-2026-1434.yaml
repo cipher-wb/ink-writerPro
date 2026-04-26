@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1434
+title: 结缘修行文（白狐） (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 仙侠
+  - 悬疑
+  - 聊斋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分 | 写法奇怪分镜式，没主线爆点，35分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法奇怪分镜式，没主线爆点，35分。 | 切入方式错误，分镜式没主线;没有铺垫爆反转的顺畅主线
+  observable:
+  - 'opening维度: 切入方式错误，分镜式没主线'
+  - 'pacing维度: 没有铺垫爆反转的顺畅主线'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 1261
+  - 1300
+  score: 35
+  score_raw: 35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 结缘修行文（白狐）
+  genre_guess:
+  - 仙侠
+  - 悬疑
+  - 聊斋
+  overall_comment: 写法奇怪分镜式，没主线爆点，35分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入方式错误，分镜式没主线
+    raw_quote: 这个是切入肯定是错的 这个切入真不对 看着一段一段看着很割裂不流畅
+  - dimension: pacing
+    severity: negative
+    content: 没有铺垫爆反转的顺畅主线
+    raw_quote: 没有一个爆点 一个主线 没有这样一个顺畅的一个主线

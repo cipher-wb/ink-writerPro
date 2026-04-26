@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1362
+title: 宇宙神明新手初作 (fail / 13分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 玄幻
+  - 宇宙
+  - 新人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就12分好吧13分吧 | 完全不懂网文，设定堆砌无意义，像剧本，需要从零学起。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不懂网文，设定堆砌无意义，像剧本，需要从零学起。 | 几乎没看过网文，用AR写的设定垃圾，角色事件全无;用第一人称加括号像剧本，完全是网文门槛外
+  observable:
+  - 'misc维度: 几乎没看过网文，用AR写的设定垃圾，角色事件全无'
+  - 'misc维度: 用第一人称加括号像剧本，完全是网文门槛外'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1181
+  - 1210
+  score: 13
+  score_raw: 差不多就12分好吧13分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宇宙神明新手初作
+  genre_guess:
+  - 玄幻
+  - 宇宙
+  - 新人
+  overall_comment: 完全不懂网文，设定堆砌无意义，像剧本，需要从零学起。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 几乎没看过网文，用AR写的设定垃圾，角色事件全无
+    raw_quote: 这些就是翔一点意义都没有
+  - dimension: misc
+    severity: negative
+    content: 用第一人称加括号像剧本，完全是网文门槛外
+    raw_quote: 为什么加括号声音这是剧本吗

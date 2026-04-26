@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1215
+title: 史真人上线了 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 修仙
+  - 直播
+  - 乐子人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 蓝精灵可以试一试 | 直播算命乐子文，梗多但逻辑经不起推敲，适合番茄或蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 直播算命乐子文，梗多但逻辑经不起推敲，适合番茄或蓝精灵。 | 封建迷信直播情节可能过不了审
+  observable:
+  - 'taboo维度: 封建迷信直播情节可能过不了审'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 683
+  - 712
+  score: null
+  score_raw: 蓝精灵可以试一试
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 史真人上线了
+  genre_guess:
+  - 修仙
+  - 直播
+  - 乐子人
+  overall_comment: 直播算命乐子文，梗多但逻辑经不起推敲，适合番茄或蓝精灵。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 封建迷信直播情节可能过不了审
+    raw_quote: 抖音他不会允许封建迷信直播的对吧

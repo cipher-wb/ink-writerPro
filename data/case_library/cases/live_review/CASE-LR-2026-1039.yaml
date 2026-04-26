@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1039
+title: 乐子修仙家仆文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 修仙
+  - 乐子
+  - 家仆
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 写不来 根本写不来 | 自嗨严重，毒点一大堆，金手指名难听，爽点完全看不到
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 自嗨严重，毒点一大堆，金手指名难听，爽点完全看不到 | 开篇毒点极多，恶臭老妇、通奸等元素让人严重不适;金手指双头真难听，毫无吸引力
+  observable:
+  - 'hook维度: 开篇毒点极多，恶臭老妇、通奸等元素让人严重不适'
+  - 'golden_finger维度: 金手指双头真难听，毫无吸引力'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 601
+  - 750
+  score: null
+  score_raw: 写不来 根本写不来
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 乐子修仙家仆文
+  genre_guess:
+  - 修仙
+  - 乐子
+  - 家仆
+  overall_comment: 自嗨严重，毒点一大堆，金手指名难听，爽点完全看不到
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开篇毒点极多，恶臭老妇、通奸等元素让人严重不适
+    raw_quote: 这都毒点 多读点
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指双头真难听，毫无吸引力
+    raw_quote: 金手指双头真难听啊 这个名字

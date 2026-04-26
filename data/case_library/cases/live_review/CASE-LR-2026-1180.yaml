@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1180
+title: 重返2013 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 中考
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 重生写妈妈去世的遗憾毫无吸引力，应改白月光遗憾，事件选错导致代入失败。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生写妈妈去世的遗憾毫无吸引力，应改白月光遗憾，事件选错导致代入失败。 | 用母亲去世作为遗憾钩子，读者根本不爱看;主角缺乏代入感，遗憾事件需改成白月光才有人看
+  observable:
+  - 'hook维度: 用母亲去世作为遗憾钩子，读者根本不爱看'
+  - 'character维度: 主角缺乏代入感，遗憾事件需改成白月光才有人看'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 1930
+  - 2080
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 重返2013
+  genre_guess:
+  - 重生
+  - 都市
+  - 中考
+  overall_comment: 重生写妈妈去世的遗憾毫无吸引力，应改白月光遗憾，事件选错导致代入失败。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 用母亲去世作为遗憾钩子，读者根本不爱看
+    raw_quote: 写妈妈没人看 妈妈谁都爱 但是 your mother not my mother
+  - dimension: character
+    severity: negative
+    content: 主角缺乏代入感，遗憾事件需改成白月光才有人看
+    raw_quote: 写个什么美女 要出事 大家就会想 这我是主角 这个美女要出事 我要去救她

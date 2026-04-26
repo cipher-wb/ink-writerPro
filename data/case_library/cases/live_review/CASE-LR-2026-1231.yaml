@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1231
+title: 大夏王朝穿越加点流 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YmQKBKEDG
+scope:
+  genre:
+  - 穿越
+  - 玄幻
+  - 系统流
+  - 加点
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多九分了 | 文笔尚可但开头人设劝退，主角被动嗜杀，一张内连杀四人，钩子完全失败，无法挽救。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YmQKBKEDG.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但开头人设劝退，主角被动嗜杀，一张内连杀四人，钩子完全失败，无法挽救。 | 开篇主角躺平叼草、冲突上门却漠不关心，读者翻页即流失，淘汰率极高。;主角冷漠自私，遇求救只问回报，回答不满直接剁人，人设令读者极度厌恶。;金手指为加点系统，迫使主角见人就杀以获取点数，驱动逻辑扭曲，劝退读者。
+  observable:
+  - 'opening维度: 开篇主角躺平叼草、冲突上门却漠不关心，读者翻页即流失，淘汰率极高。'
+  - 'character维度: 主角冷漠自私，遇求救只问回报，回答不满直接剁人，人设令读者极度厌恶。'
+  - 'golden_finger维度: 金手指为加点系统，迫使主角见人就杀以获取点数，驱动逻辑扭曲，劝退读者。'
+live_review_meta:
+  source_bvid: BV1YmQKBKEDG
+  source_line_range:
+  - 1
+  - 138
+  score: 9
+  score_raw: 最多九分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大夏王朝穿越加点流
+  genre_guess:
+  - 穿越
+  - 玄幻
+  - 系统流
+  - 加点
+  overall_comment: 文笔尚可但开头人设劝退，主角被动嗜杀，一张内连杀四人，钩子完全失败，无法挽救。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇主角躺平叼草、冲突上门却漠不关心，读者翻页即流失，淘汰率极高。
+    raw_quote: 这种写法我觉得就是读者会跑开头 手机上要翻页的 他这一页就50%淘汰了
+  - dimension: character
+    severity: negative
+    content: 主角冷漠自私，遇求救只问回报，回答不满直接剁人，人设令读者极度厌恶。
+    raw_quote: 你主角就是个懒狗 那我看啥 ... 这怎么会有这么讨厌的主角
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指为加点系统，迫使主角见人就杀以获取点数，驱动逻辑扭曲，劝退读者。
+    raw_quote: 我知道你要加点 但是人啊 这是人啊 大哥他就算是个坏蛋 也也不至于一刀就剁吧
+  - dimension: misc
+    severity: positive
+    content: 文字基本功不错，比例控制尚可，但无法弥补内容致命缺陷。
+    raw_quote: 文笔挺好 但但扯淡了 这个车最多九分了

@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-2237
+title: 仙子好感度修仙 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 302分 | 明明会写人设，却非加毒点，前世聊天像系统，开局劝退。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 明明会写人设，却非加毒点，前世聊天像系统，开局劝退。 | 开局全是前世聊天讲设定，大毒点;强行加毒点毁稿，令人看得难受
+  observable:
+  - 'opening维度: 开局全是前世聊天讲设定，大毒点'
+  - 'misc维度: 强行加毒点毁稿，令人看得难受'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 1925
+  - 2041
+  score: 30
+  score_raw: 302分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙子好感度修仙
+  genre_guess:
+  - 修仙
+  - 系统
+  - 后宫
+  overall_comment: 明明会写人设，却非加毒点，前世聊天像系统，开局劝退。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局全是前世聊天讲设定，大毒点
+    raw_quote: '这是大毒点 你自己的前世跟你聊这些东西
+
+      一点意都没有 因为你没有剧情 你一上来就叽里咕噜全是聊了'
+  - dimension: character
+    severity: positive
+    content: 会写姑娘，人设有潜力
+    raw_quote: '大概写姑娘还是写的可以的
+
+      对 李姑娘这个人算是可以的'
+  - dimension: misc
+    severity: negative
+    content: 强行加毒点毁稿，令人看得难受
+    raw_quote: '明明会写书 会写来个女孩 来个女孩不也挺好的吗
+
+      非要莫名其妙的加这些破设定'

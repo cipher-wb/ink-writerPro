@@ -1,0 +1,70 @@
+case_id: CASE-LR-2026-1114
+title: 小师妹白又白 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 废土
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 36分 | 题材杂糅，卖点不清，前三章后设定压不住，缺乏明确主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材杂糅，卖点不清，前三章后设定压不住，缺乏明确主线。 | 穿越描写过于冗长墨迹，应快速进入事件;都市、灵异、废土等元素杂糅，方向不明;7000字还在故弄玄虚，第三张设定压不住
+  observable:
+  - 'opening维度: 穿越描写过于冗长墨迹，应快速进入事件'
+  - 'genre维度: 都市、灵异、废土等元素杂糅，方向不明'
+  - 'pacing维度: 7000字还在故弄玄虚，第三张设定压不住'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 102
+  - 196
+  score: 36
+  score_raw: 36分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 小师妹白又白
+  genre_guess:
+  - 都市
+  - 灵异
+  - 废土
+  - 科幻
+  overall_comment: 题材杂糅，卖点不清，前三章后设定压不住，缺乏明确主线。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越描写过于冗长墨迹，应快速进入事件
+    raw_quote: 你们老是把这个穿越搞得很复杂对吧
+  - dimension: genre
+    severity: negative
+    content: 都市、灵异、废土等元素杂糅，方向不明
+    raw_quote: '题材杂糅
+
+      卖点也不清晰'
+  - dimension: pacing
+    severity: negative
+    content: 7000字还在故弄玄虚，第三张设定压不住
+    raw_quote: '你看你都7000字了
+
+      还在故弄玄虚
+
+      设定后面有点多了'
+  - dimension: highpoint
+    severity: positive
+    content: 展开部分心理与氛围描写有亮点
+    raw_quote: 展开这里这些事件心理活动氛围还是有的

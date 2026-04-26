@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0852
+title: 恋与克苏鲁仿作 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 怪诞
+  - 恋爱
+  - 无限流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没啥指点的了 | 模仿恋与克苏鲁，书名相同，高难题材且容易举报，不建议碰。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 模仿恋与克苏鲁，书名相同，高难题材且容易举报，不建议碰。 | 仿写难度大，万订作者写都扑，新人驾驭不住
+  observable:
+  - 'genre维度: 仿写难度大，万订作者写都扑，新人驾驭不住'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1021
+  - 1080
+  score: null
+  score_raw: 没啥指点的了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 恋与克苏鲁仿作
+  genre_guess:
+  - 怪诞
+  - 恋爱
+  - 无限流
+  overall_comment: 模仿恋与克苏鲁，书名相同，高难题材且容易举报，不建议碰。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 仿写难度大，万订作者写都扑，新人驾驭不住
+    raw_quote: 他万订作者写这个题他都2000订，然后你是什么定的作者

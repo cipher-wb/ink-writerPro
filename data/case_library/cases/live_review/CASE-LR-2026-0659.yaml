@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0659
+title: 白龙姿态重龙文 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 西幻
+  - 龙
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 跟风必死 | 五百万字老作者，但龙文跟风不可取，建议采用直播间91分大佬的雪白拉扯思路，把龙娘当女主写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 五百万字老作者，但龙文跟风不可取，建议采用直播间91分大佬的雪白拉扯思路，把龙娘当女主写。 | 重生龙文跟风必死，起点市场就那么大;破壳挣扎等开头太冗长，信息量少
+  observable:
+  - 'genre维度: 重生龙文跟风必死，起点市场就那么大'
+  - 'opening维度: 破壳挣扎等开头太冗长，信息量少'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1541
+  - 1620
+  score: null
+  score_raw: 跟风必死
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 白龙姿态重龙文
+  genre_guess:
+  - 西幻
+  - 龙
+  - 重生
+  overall_comment: 五百万字老作者，但龙文跟风不可取，建议采用直播间91分大佬的雪白拉扯思路，把龙娘当女主写。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 重生龙文跟风必死，起点市场就那么大
+    raw_quote: 起点现在有个大问题...一本书起来你去跟风基本就必死
+  - dimension: opening
+    severity: negative
+    content: 破壳挣扎等开头太冗长，信息量少
+    raw_quote: 什么挣扎啊...怎么呼吸啊...真的太多了
+  - dimension: character
+    severity: neutral
+    content: 推荐学习雪白拉扯流的西幻写法
+    raw_quote: 走那种勇士冒险者的风格...去学一下他那个思路

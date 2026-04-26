@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0918
+title: 学习群都是真大佬 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 都市重生
+  - 学霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 介于35~40之间 | 重生学霸题材太老套，节奏拖，缺乏年代文爽感和微观细节。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生学霸题材太老套，节奏拖，缺乏年代文爽感和微观细节。 | 太拖沓，开头堆砌无效日常;缺乏年代文的高认知反差爽感
+  observable:
+  - 'pacing维度: 太拖沓，开头堆砌无效日常'
+  - 'opening维度: 缺乏年代文的高认知反差爽感'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 565
+  - 640
+  score: null
+  score_raw: 介于35~40之间
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 学习群都是真大佬
+  genre_guess:
+  - 都市重生
+  - 学霸
+  overall_comment: 重生学霸题材太老套，节奏拖，缺乏年代文爽感和微观细节。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 太拖沓，开头堆砌无效日常
+    raw_quote: 太慢了 真的太慢了
+  - dimension: opening
+    severity: negative
+    content: 缺乏年代文的高认知反差爽感
+    raw_quote: 年代文是主角 降生到了一帮第一认知人群当中 要有年代文的爽感

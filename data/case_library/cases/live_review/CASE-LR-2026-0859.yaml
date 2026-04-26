@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0859
+title: 重生2014钓鱼 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 文青
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分了 | 退步严重，文青散文写法，开头水文无情绪，无法看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 退步严重，文青散文写法，开头水文无情绪，无法看。 | 开头写钓鱼细节太多，完全无趣;重生前后无情绪人设，看不懂
+  observable:
+  - 'opening维度: 开头写钓鱼细节太多，完全无趣'
+  - 'character维度: 重生前后无情绪人设，看不懂'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1431
+  - 1480
+  score: 28
+  score_raw: 28分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2014钓鱼
+  genre_guess:
+  - 重生
+  - 都市
+  - 文青
+  overall_comment: 退步严重，文青散文写法，开头水文无情绪，无法看。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头写钓鱼细节太多，完全无趣
+    raw_quote: 这开头我完全不懂，这写这东西有什么意思，我认为完全的狂水水疯掉了
+  - dimension: character
+    severity: negative
+    content: 重生前后无情绪人设，看不懂
+    raw_quote: 重生文肯定是都市内容觉得有意思，然后前世拉拉情绪立的人设都没有啊

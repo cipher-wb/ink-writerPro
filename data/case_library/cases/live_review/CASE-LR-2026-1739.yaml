@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1739
+title: 北艺大：天才作曲家之死 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 都市
+  - 悬疑
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分 | 逻辑立意站不住脚，主角夺舍高中生调查自己死亡案件缺乏读者共鸣。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 逻辑立意站不住脚，主角夺舍高中生调查自己死亡案件缺乏读者共鸣。 | 核心事件（调查作曲家死亡）无聊，读者不关心。;主角夺舍高中生缺乏同理心，逻辑立不住。
+  observable:
+  - 'hook维度: 核心事件（调查作曲家死亡）无聊，读者不关心。'
+  - 'character维度: 主角夺舍高中生缺乏同理心，逻辑立不住。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 620
+  - 723
+  score: 32
+  score_raw: 32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 北艺大：天才作曲家之死
+  genre_guess:
+  - 都市
+  - 悬疑
+  - 重生
+  overall_comment: 逻辑立意站不住脚，主角夺舍高中生调查自己死亡案件缺乏读者共鸣。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 核心事件（调查作曲家死亡）无聊，读者不关心。
+    raw_quote: 调查你死亡的案件 本身是没人看的
+  - dimension: character
+    severity: negative
+    content: 主角夺舍高中生缺乏同理心，逻辑立不住。
+    raw_quote: 你夺舍高中生 你有没有想過 高中生的感受

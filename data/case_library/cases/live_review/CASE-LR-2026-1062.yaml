@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1062
+title: 林川穿书拯救女主 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 轻小说
+  - 恋爱
+  - 穿书
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是45分吧 | 恋爱日常互动无聊，剧情不够大胆，需要极端事件制造看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 恋爱日常互动无聊，剧情不够大胆，需要极端事件制造看点。 | 男女互动像背课文，缺乏情绪张力;缺少冲突和高光情节，开头不抓人
+  observable:
+  - 'character维度: 男女互动像背课文，缺乏情绪张力'
+  - 'highpoint维度: 缺少冲突和高光情节，开头不抓人'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 461
+  - 520
+  score: 45
+  score_raw: 还是45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 林川穿书拯救女主
+  genre_guess:
+  - 轻小说
+  - 恋爱
+  - 穿书
+  overall_comment: 恋爱日常互动无聊，剧情不够大胆，需要极端事件制造看点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 男女互动像背课文，缺乏情绪张力
+    raw_quote: 就老是这么互动干嘛 ... How are you I'm fine
+  - dimension: highpoint
+    severity: negative
+    content: 缺少冲突和高光情节，开头不抓人
+    raw_quote: 能不能给我来点极端的剧情啊

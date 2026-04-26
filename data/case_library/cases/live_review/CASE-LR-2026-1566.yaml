@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1566
+title: 穿成反派龙傲天触感 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 穿书
+  - 反派
+  - 龙傲天
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分好吧 | 天赋不错但适合番茄风格，起点需含蓄些。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 天赋不错但适合番茄风格，起点需含蓄些。 | 风格过于炸裂，偏番茄或QQ阅读，与起点调性不搭
+  observable:
+  - 'genre维度: 风格过于炸裂，偏番茄或QQ阅读，与起点调性不搭'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 801
+  - 950
+  score: 45
+  score_raw: 45分好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿成反派龙傲天触感
+  genre_guess:
+  - 穿书
+  - 反派
+  - 龙傲天
+  - 爽文
+  overall_comment: 天赋不错但适合番茄风格，起点需含蓄些。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏快，冲突不断，叙事流畅
+    raw_quote: 我觉得讲故事能力确实挺强，挺有天赋的，因为他节奏很快，每个人的对白，每个事件的冲突对吧，一一直有看点
+  - dimension: genre
+    severity: negative
+    content: 风格过于炸裂，偏番茄或QQ阅读，与起点调性不搭
+    raw_quote: 我觉得发番茄比发起点好，起点读者也不爱看这种有点炸裂

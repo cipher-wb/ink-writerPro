@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1292
+title: 灵异复苏僵尸叔叔 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 灵异
+  - 仙侠
+  - 影视同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得不到40 我觉得38 | 开头悬疑片段有亮点，但主线原创过多，未有效蹭上原作事件，世界观展开缓慢。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头悬疑片段有亮点，但主线原创过多，未有效蹭上原作事件，世界观展开缓慢。 | 诸天流副本未明确蹭上热门IP，第一章完全原创导致期待感缺失
+  observable:
+  - 'genre维度: 诸天流副本未明确蹭上热门IP，第一章完全原创导致期待感缺失'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 1270
+  - 1430
+  score: 38
+  score_raw: 我觉得不到40 我觉得38
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵异复苏僵尸叔叔
+  genre_guess:
+  - 灵异
+  - 仙侠
+  - 影视同人
+  overall_comment: 开头悬疑片段有亮点，但主线原创过多，未有效蹭上原作事件，世界观展开缓慢。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 找师傅做遗像的悬疑开头有吸引力，符合一句话抓人的标准
+    raw_quote: 找师傅做了个很牛逼 但是收服狐妖僵尸不是你…开头的那个可以啊
+  - dimension: genre
+    severity: negative
+    content: 诸天流副本未明确蹭上热门IP，第一章完全原创导致期待感缺失
+    raw_quote: 你的第一章我觉得太原创了 真的太原创了

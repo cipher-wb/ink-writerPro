@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0003
+title: 种田修真灵兽文 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11YrABQEyZ
+scope:
+  genre:
+  - 种田
+  - 修真
+  - 灵兽
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话有个20分吧 | 种田低身份开局思路没问题，但句子冗长拖沓，部分描写油腻跳脱，整体故事表达不流畅，需要精简语言并抓住主角视角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YrABQEyZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 种田低身份开局思路没问题，但句子冗长拖沓，部分描写油腻跳脱，整体故事表达不流畅，需要精简语言并抓住主角视角。 | 描写冗长堆砌，建议句子短一点、简洁叙事;人物互动生硬奇怪，胸脯等描写破坏氛围，人设立不住
+  observable:
+  - 'simplicity维度: 描写冗长堆砌，建议句子短一点、简洁叙事'
+  - 'character维度: 人物互动生硬奇怪，胸脯等描写破坏氛围，人设立不住'
+live_review_meta:
+  source_bvid: BV11YrABQEyZ
+  source_line_range:
+  - 196
+  - 449
+  score: 20
+  score_raw: 打分的话有个20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 种田修真灵兽文
+  genre_guess:
+  - 种田
+  - 修真
+  - 灵兽
+  overall_comment: 种田低身份开局思路没问题，但句子冗长拖沓，部分描写油腻跳脱，整体故事表达不流畅，需要精简语言并抓住主角视角。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 描写冗长堆砌，建议句子短一点、简洁叙事
+    raw_quote: 这是浅词道具 精简点嘛
+  - dimension: character
+    severity: negative
+    content: 人物互动生硬奇怪，胸脯等描写破坏氛围，人设立不住
+    raw_quote: 饱满的胸脯 胸脯因为一颤一颤 勾起了 惊心动魄的 弧度 不至于 不至于

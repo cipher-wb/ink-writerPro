@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0461
+title: 沉默穿越十八年 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多按时五分吧 | 主次不分，世界观揭秘太早，缺乏主线期待感，需要回到人物关系和具体危机。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主次不分，世界观揭秘太早，缺乏主线期待感，需要回到人物关系和具体危机。 | 开篇过多设定回忆，十八年穿越显得毫无意义;支线太多，主框架没收住，世界观揭秘提前毁期待
+  observable:
+  - 'opening维度: 开篇过多设定回忆，十八年穿越显得毫无意义'
+  - 'pacing维度: 支线太多，主框架没收住，世界观揭秘提前毁期待'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 811
+  - 870
+  score: 15
+  score_raw: 差不多按时五分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 沉默穿越十八年
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 主次不分，世界观揭秘太早，缺乏主线期待感，需要回到人物关系和具体危机。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇过多设定回忆，十八年穿越显得毫无意义
+    raw_quote: 你这个18年前的重生 感觉毫无意义 显得跟土著似的
+  - dimension: pacing
+    severity: negative
+    content: 支线太多，主框架没收住，世界观揭秘提前毁期待
+    raw_quote: 你觉得支线多了 你就立刻收到主线上 ... 世界观揭秘你要放在开头 必死无余

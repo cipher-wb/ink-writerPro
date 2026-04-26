@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0641
+title: 从娶妻开始的超凡之路 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 古代
+  - 种田
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也也是就42分 | 开篇牧马人娶妻桥段有可取之处，但很快偏题到修炼系统，女主奇怪人设没交代清楚，导致读者流失。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇牧马人娶妻桥段有可取之处，但很快偏题到修炼系统，女主奇怪人设没交代清楚，导致读者流失。 | 剧情偏题，从娶妻转到修炼系统，核心卖点丢失;女主莫青人设奇怪，一夜从羞涩变反客为主，逻辑崩坏
+  observable:
+  - 'pacing维度: 剧情偏题，从娶妻转到修炼系统，核心卖点丢失'
+  - 'character维度: 女主莫青人设奇怪，一夜从羞涩变反客为主，逻辑崩坏'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 101
+  - 180
+  score: 42
+  score_raw: 也也是就42分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从娶妻开始的超凡之路
+  genre_guess:
+  - 古代
+  - 种田
+  - 灵异
+  overall_comment: 开篇牧马人娶妻桥段有可取之处，但很快偏题到修炼系统，女主奇怪人设没交代清楚，导致读者流失。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 牧马人娶妻开头有期待感，可快速切入
+    raw_quote: 你要老婆吗...就那种...直接扛过来就行
+  - dimension: pacing
+    severity: negative
+    content: 剧情偏题，从娶妻转到修炼系统，核心卖点丢失
+    raw_quote: 偏题了呀...一晚上就结束了...系统出来了
+  - dimension: character
+    severity: negative
+    content: 女主莫青人设奇怪，一夜从羞涩变反客为主，逻辑崩坏
+    raw_quote: 你这个铺垫了半天这个女的非常羞涩...变成反客为主顶分段了

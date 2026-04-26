@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1695
+title: 穿越修仙趋吉避凶系统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 系统
+  - 情报
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开局全是水，一问三不知，该写的不写，完全偏离故事核心。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局全是水，一问三不知，该写的不写，完全偏离故事核心。 | 开局身份一片空白，没有任何代入感和危机。;大量无意义日常描写，重点情节迟迟不展开。
+  observable:
+  - 'opening维度: 开局身份一片空白，没有任何代入感和危机。'
+  - 'pacing维度: 大量无意义日常描写，重点情节迟迟不展开。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 846
+  - 896
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越修仙趋吉避凶系统
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 系统
+  - 情报
+  overall_comment: 开局全是水，一问三不知，该写的不写，完全偏离故事核心。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局身份一片空白，没有任何代入感和危机。
+    raw_quote: 你没有身份啊，一片白纸，啥都不写啊
+  - dimension: pacing
+    severity: negative
+    content: 大量无意义日常描写，重点情节迟迟不展开。
+    raw_quote: 叽里咕噜半天...该写的不写，不该写的狂写

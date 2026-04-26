@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1466
+title: 东京风勇：我的职业技能每月刷新 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eF6CBCEYp
+scope:
+  genre:
+  - 都市
+  - 黑道
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有三十二分吧 | 场景可以但没写好，金手指出戏，看不懂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eF6CBCEYp.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 场景可以但没写好，金手指出戏，看不懂。 | 雪白与记忆恢复写得乱;金手指复杂出戏
+  observable:
+  - 'opening维度: 雪白与记忆恢复写得乱'
+  - 'golden_finger维度: 金手指复杂出戏'
+live_review_meta:
+  source_bvid: BV1eF6CBCEYp
+  source_line_range:
+  - 541
+  - 630
+  score: 32
+  score_raw: 有三十二分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京风勇：我的职业技能每月刷新
+  genre_guess:
+  - 都市
+  - 黑道
+  - 系统
+  overall_comment: 场景可以但没写好，金手指出戏，看不懂。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 雪白与记忆恢复写得乱
+    raw_quote: 就雪白跟你的这个 记忆恢复这一段 我感觉写得挺乱的
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指复杂出戏
+    raw_quote: 金手指又出戏

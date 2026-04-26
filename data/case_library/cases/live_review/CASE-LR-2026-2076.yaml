@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2076
+title: 命运杠杆：从地球赌狗到寰宇古神 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 科幻
+  - 金融
+  - 赌狗
+  - 宇宙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就29分吧……这这就19分嘛，这个是没办法 | 金融术语过多、设定高冷，阅读门槛极高，普通读者完全看不懂，虽有专业功底但严重脱离大众。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金融术语过多、设定高冷，阅读门槛极高，普通读者完全看不懂，虽有专业功底但严重脱离大众。 | 金融主题过于艰深，读者难以共情，更爱简单的刮刮乐;语言啰嗦详细，充满阅读障碍
+  observable:
+  - 'genre维度: 金融主题过于艰深，读者难以共情，更爱简单的刮刮乐'
+  - 'simplicity维度: 语言啰嗦详细，充满阅读障碍'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 345
+  - 405
+  score: 19
+  score_raw: 就29分吧……这这就19分嘛，这个是没办法
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 命运杠杆：从地球赌狗到寰宇古神
+  genre_guess:
+  - 科幻
+  - 金融
+  - 赌狗
+  - 宇宙
+  overall_comment: 金融术语过多、设定高冷，阅读门槛极高，普通读者完全看不懂，虽有专业功底但严重脱离大众。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 金融主题过于艰深，读者难以共情，更爱简单的刮刮乐
+    raw_quote: 金融这种东西读者真不懂，对于读者来说，都不如去刮刮乐吧……你那个打点角色嘛，你穷疯了，没钱了，你去最后十块钱就刮刮乐，刮了个50万出来，那读者就能懂
+  - dimension: simplicity
+    severity: negative
+    content: 语言啰嗦详细，充满阅读障碍
+    raw_quote: 大哥要接地气，写的也太详细了，十点我们读者爱看，那就太风雅而已，高雅的……就19分嘛，这个是没办法，这个看看不懂了

@@ -1,0 +1,70 @@
+case_id: CASE-LR-2026-2231
+title: 穿越大明装仙人 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 历史
+  - 大明
+  - 装逼流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还可以55分啊兄弟 | 节奏快，情绪足，文笔扎实，但手机装逼老套且逻辑硬伤，可投番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快，情绪足，文笔扎实，但手机装逼老套且逻辑硬伤，可投番茄。 | 用手机发光在明朝装逼过于老套且不合逻辑
+  observable:
+  - 'golden_finger维度: 用手机发光在明朝装逼过于老套且不合逻辑'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 1145
+  - 1284
+  score: 55
+  score_raw: 还可以55分啊兄弟
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越大明装仙人
+  genre_guess:
+  - 历史
+  - 大明
+  - 装逼流
+  overall_comment: 节奏快，情绪足，文笔扎实，但手机装逼老套且逻辑硬伤，可投番茄。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏极快，爽点密集，压缩了冒牌狼牙十张内容
+    raw_quote: '节奏这么宽门
+
+      等于说把冒兴狼牙的十张
+
+      大概压缩成一张了'
+  - dimension: golden_finger
+    severity: negative
+    content: 用手机发光在明朝装逼过于老套且不合逻辑
+    raw_quote: '你这个
+
+      大明
+
+      旗舰的大明
+
+      很少有拿着手机装逼的
+
+      这个我真的挺少见的'
+  - dimension: misc
+    severity: positive
+    content: 番茄蓝精灵可能有市场，结个善缘
+    raw_quote: '发蓝精灵
+
+      说不定真起来了...我觉得可以蓝精灵试试'

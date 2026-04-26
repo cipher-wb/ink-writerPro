@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0578
+title: 第四种存在 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 仙侠
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 设定晦涩，主角无代入感，像机器人，25分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定晦涩，主角无代入感，像机器人，25分 | 穿越后无心理活动，缺乏代入感;主角像没有感情的机器人
+  observable:
+  - 'opening维度: 穿越后无心理活动，缺乏代入感'
+  - 'character维度: 主角像没有感情的机器人'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 3672
+  - 3750
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 第四种存在
+  genre_guess:
+  - 仙侠
+  - 悬疑
+  overall_comment: 设定晦涩，主角无代入感，像机器人，25分
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越后无心理活动，缺乏代入感
+    raw_quote: 不拉代入感 不讲你要干嘛 没有心理活动
+  - dimension: character
+    severity: negative
+    content: 主角像没有感情的机器人
+    raw_quote: 感觉就是一个机器人 没有感情 五竹是吧

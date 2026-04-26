@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0523
+title: 幽冥纸人篇 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 灵异
+  - 民俗
+  - 惊悚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有天赋但不够，故弄玄虚 | 氛围和设定极强，但独角戏太重，受众门槛过高，应学新小将的狗道升级融合民俗。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围和设定极强，但独角戏太重，受众门槛过高，应学新小将的狗道升级融合民俗。 | 读者阅读障碍太高，独白和设定铺设过多;独角戏让读者极度缺乏耐心
+  observable:
+  - 'simplicity维度: 读者阅读障碍太高，独白和设定铺设过多'
+  - 'pacing维度: 独角戏让读者极度缺乏耐心'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 811
+  - 860
+  score: null
+  score_raw: 有天赋但不够，故弄玄虚
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 幽冥纸人篇
+  genre_guess:
+  - 灵异
+  - 民俗
+  - 惊悚
+  overall_comment: 氛围和设定极强，但独角戏太重，受众门槛过高，应学新小将的狗道升级融合民俗。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 读者阅读障碍太高，独白和设定铺设过多
+    raw_quote: 你这个书就是受众阅读障碍太高了，读者可能不爱看
+  - dimension: pacing
+    severity: negative
+    content: 独角戏让读者极度缺乏耐心
+    raw_quote: 还是独脚戏，独脚戏不能太多
+  - dimension: genre
+    severity: neutral
+    content: 建议学新小将的民俗职业加升级主线，融合狗道思路
+    raw_quote: 他这个是有升级主线的...更适合学习

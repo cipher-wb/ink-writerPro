@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1269
+title: 穿越18载修仙 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也还是50分上下吧 | 雪白拉扯还可，但铺垫的关键剧情毫无感觉，节奏不对，遣词造句需练，总体改动不大。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白拉扯还可，但铺垫的关键剧情毫无感觉，节奏不对，遣词造句需练，总体改动不大。 | 铺垫的关键角色王嘉小姐毫无感觉;第二章拖沓，剧情节奏不对
+  observable:
+  - 'character维度: 铺垫的关键角色王嘉小姐毫无感觉'
+  - 'pacing维度: 第二章拖沓，剧情节奏不对'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 861
+  - 950
+  score: 50
+  score_raw: 也还是50分上下吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越18载修仙
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 家族
+  overall_comment: 雪白拉扯还可，但铺垫的关键剧情毫无感觉，节奏不对，遣词造句需练，总体改动不大。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 铺垫的关键角色王嘉小姐毫无感觉
+    raw_quote: 王嘉小姐没写出感觉...就跟NPC没什么区别
+  - dimension: pacing
+    severity: negative
+    content: 第二章拖沓，剧情节奏不对
+    raw_quote: 第二章拖沓，然后铺垫的第一章的关键剧情也是没感觉

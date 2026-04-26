@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1405
+title: 惊悚直播之鬼设副本 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 灵异
+  - 直播
+  - 无限流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多35分嘛 | 独角戏缺乏配角互动，开头拖沓，建议增加人物关系。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 独角戏缺乏配角互动，开头拖沓，建议增加人物关系。 | 全程独角戏，读者容易疲劳;开头失业解释太多，拖慢节奏
+  observable:
+  - 'character维度: 全程独角戏，读者容易疲劳'
+  - 'opening维度: 开头失业解释太多，拖慢节奏'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 1951
+  - 2050
+  score: 35
+  score_raw: 差不多35分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 惊悚直播之鬼设副本
+  genre_guess:
+  - 灵异
+  - 直播
+  - 无限流
+  overall_comment: 独角戏缺乏配角互动，开头拖沓，建议增加人物关系。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 全程独角戏，读者容易疲劳
+    raw_quote: 一个人玩副本真没意思兄弟
+  - dimension: opening
+    severity: negative
+    content: 开头失业解释太多，拖慢节奏
+    raw_quote: 开头也比较拖沓

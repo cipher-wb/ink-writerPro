@@ -1,0 +1,69 @@
+case_id: CASE-LR-2026-0555
+title: 封神穿越金手指同人 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Er6PBGEfb
+scope:
+  genre:
+  - 仙侠
+  - 封神
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥一个机会吧 | 封神题材思路新颖，事件节奏不错；但文笔基本功稚嫩，追读比例稍差，编辑仍决定给机会培养。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Er6PBGEfb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 封神题材思路新颖，事件节奏不错；但文笔基本功稚嫩，追读比例稍差，编辑仍决定给机会培养。 | 追读比例偏低，读者容易流失;遣词造句基本功需要练习，文笔稚嫩
+  observable:
+  - 'pacing维度: 追读比例偏低，读者容易流失'
+  - 'simplicity维度: 遣词造句基本功需要练习，文笔稚嫩'
+live_review_meta:
+  source_bvid: BV1Er6PBGEfb
+  source_line_range:
+  - 1
+  - 104
+  score: null
+  score_raw: 给大哥一个机会吧
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 封神穿越金手指同人
+  genre_guess:
+  - 仙侠
+  - 封神
+  - 穿越
+  overall_comment: 封神题材思路新颖，事件节奏不错；但文笔基本功稚嫩，追读比例稍差，编辑仍决定给机会培养。
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 换金手指处理没问题
+    raw_quote: 你换了个金手指嘛 看下换成啥切ERO是没啥问题的
+  - dimension: opening
+    severity: positive
+    content: 开头问题不大，可以接受
+    raw_quote: 我觉得开头问题不大呀
+  - dimension: pacing
+    severity: negative
+    content: 追读比例偏低，读者容易流失
+    raw_quote: 这个他这个就是比例稍微差一点
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句基本功需要练习，文笔稚嫩
+    raw_quote: 遣词造句得练一下其他的内容吧
+  - dimension: genre
+    severity: positive
+    content: 封神题材有吸引力，思路好
+    raw_quote: 这题材挺好的
+  - dimension: pacing
+    severity: positive
+    content: 事件节奏控制恰到好处
+    raw_quote: 然后事件节奏恰到好处

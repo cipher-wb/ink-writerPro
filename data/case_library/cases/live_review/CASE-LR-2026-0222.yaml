@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0222
+title: 都市小圈子（现实文学） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 都市
+  - 现实
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 写法太文艺和日常，缺乏网文所需的极端冲突和期待感，建议参考卖报等作者。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法太文艺和日常，缺乏网文所需的极端冲突和期待感，建议参考卖报等作者。 | 整体偏向现实文学或散文，不符合网文快节奏要求;行文太日常，缺少极端剧情和每句话的期待感
+  observable:
+  - 'genre维度: 整体偏向现实文学或散文，不符合网文快节奏要求'
+  - 'pacing维度: 行文太日常，缺少极端剧情和每句话的期待感'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1427
+  - 1458
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 都市小圈子（现实文学）
+  genre_guess:
+  - 都市
+  - 现实
+  - 重生
+  overall_comment: 写法太文艺和日常，缺乏网文所需的极端冲突和期待感，建议参考卖报等作者。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 整体偏向现实文学或散文，不符合网文快节奏要求
+    raw_quote: 他在写现实文学的小圈子 想要融到大众里面 ... 不网问 这哪里有网问
+  - dimension: pacing
+    severity: negative
+    content: 行文太日常，缺少极端剧情和每句话的期待感
+    raw_quote: 这太日常了 ... 网红就是要有极端剧情 ... 每句话都要有期待感的

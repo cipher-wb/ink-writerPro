@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2167
+title: 穿越异界：刘忽悠在神明面前 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 奇幻
+  - 穿越
+  - 克苏鲁
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大学生给大哥放一首等你下课吧 | 大学生典型的故弄玄虚毛病，总想写复杂世界观和不可名状，建议老老实实临摹都市/西幻/轻小说。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 大学生典型的故弄玄虚毛病，总想写复杂世界观和不可名状，建议老老实实临摹都市/西幻/轻小说。 | 大学生想太多，总写故弄玄虚的东西看不入眼;美国穿越者人设代入感极差
+  observable:
+  - 'simplicity维度: 大学生想太多，总写故弄玄虚的东西看不入眼'
+  - 'character维度: 美国穿越者人设代入感极差'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 2966
+  - 3057
+  score: null
+  score_raw: 大学生给大哥放一首等你下课吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 穿越异界：刘忽悠在神明面前
+  genre_guess:
+  - 奇幻
+  - 穿越
+  - 克苏鲁
+  overall_comment: 大学生典型的故弄玄虚毛病，总想写复杂世界观和不可名状，建议老老实实临摹都市/西幻/轻小说。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 大学生想太多，总写故弄玄虚的东西看不入眼
+    raw_quote: 老是喜欢写一些有的没的故弄玄虚...就看不上那种正常的简单的那些能赚钱的题材
+  - dimension: character
+    severity: negative
+    content: 美国穿越者人设代入感极差
+    raw_quote: 你这个刘忽悠我怎么代入啊对吧...21世纪美国的...代入感很难

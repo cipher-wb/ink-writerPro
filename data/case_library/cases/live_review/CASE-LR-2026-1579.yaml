@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1579
+title: 校园灵异穿越恶鬼 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 灵异
+  - 校园
+  - 穿越
+  - 惊悚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 氛围和比例不错，但校园灵异很难，需要加规则怪谈等前期卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围和比例不错，但校园灵异很难，需要加规则怪谈等前期卖点。 | 校园灵异题材起点受限，审核风险高
+  observable:
+  - 'genre维度: 校园灵异题材起点受限，审核风险高'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 2401
+  - 2500
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 校园灵异穿越恶鬼
+  genre_guess:
+  - 灵异
+  - 校园
+  - 穿越
+  - 惊悚
+  overall_comment: 氛围和比例不错，但校园灵异很难，需要加规则怪谈等前期卖点。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 氛围营造和节奏递进很出色，比例扎实
+    raw_quote: 比例跟氛围没啥问题，层层递进，颤抖还可以，有天赋的很
+  - dimension: genre
+    severity: negative
+    content: 校园灵异题材起点受限，审核风险高
+    raw_quote: 这个题材在起点写不了，因为你是校园灵异，就算写了也会给你禁掉

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1691
+title: 井盖穿越异世界猎人 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 穿越
+  - 西幻
+  - 猎人
+  - 公会
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 玩梗开局但故事节奏极慢，日常流水账，缺乏爽点和信息量，不如短剧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 玩梗开局但故事节奏极慢，日常流水账，缺乏爽点和信息量，不如短剧。 | 穿越方式为玩梗但缺乏必要交代，人设和世界观靠演说而非事件展现。;剧情推进极慢，比短剧更拖沓无聊。
+  observable:
+  - 'opening维度: 穿越方式为玩梗但缺乏必要交代，人设和世界观靠演说而非事件展现。'
+  - 'pacing维度: 剧情推进极慢，比短剧更拖沓无聊。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 599
+  - 666
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 井盖穿越异世界猎人
+  genre_guess:
+  - 穿越
+  - 西幻
+  - 猎人
+  - 公会
+  overall_comment: 玩梗开局但故事节奏极慢，日常流水账，缺乏爽点和信息量，不如短剧。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越方式为玩梗但缺乏必要交代，人设和世界观靠演说而非事件展现。
+    raw_quote: 写人设要用事件来写
+  - dimension: pacing
+    severity: negative
+    content: 剧情推进极慢，比短剧更拖沓无聊。
+    raw_quote: 太慢了，太拖沓了，没有任何信息量对吧

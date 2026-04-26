@@ -1,0 +1,64 @@
+case_id: CASE-LR-2026-1117
+title: 仙草开始成仙了 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 修仙
+  - 脑洞
+  - 宠物
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得这样写真没市场嗯 | 小草视角无人类衔接，缺乏强驱动力和看点，脑洞虽有趣但未落地。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小草视角无人类衔接，缺乏强驱动力和看点，脑洞虽有趣但未落地。 | 开篇平淡，缺乏有效事件与人物;仙草与道姑的衔接过弱，无情感互动
+  observable:
+  - 'opening维度: 开篇平淡，缺乏有效事件与人物'
+  - 'golden_finger维度: 仙草与道姑的衔接过弱，无情感互动'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 393
+  - 479
+  score: null
+  score_raw: 我觉得这样写真没市场嗯
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 仙草开始成仙了
+  genre_guess:
+  - 修仙
+  - 脑洞
+  - 宠物
+  overall_comment: 小草视角无人类衔接，缺乏强驱动力和看点，脑洞虽有趣但未落地。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇平淡，缺乏有效事件与人物
+    raw_quote: '这谁看呀
+
+      他的金也弯了
+
+      根本没啥东西'
+  - dimension: golden_finger
+    severity: negative
+    content: 仙草与道姑的衔接过弱，无情感互动
+    raw_quote: '本草你应该去写人
+
+      不能说草在那里什么喝水啊吸收阳光啊'
+  - dimension: genre
+    severity: neutral
+    content: 脑洞不够大胆，需要更猎奇才能吸引眼球
+    raw_quote: '我觉得就是太猎奇啊
+
+      这种东西啊没市场'

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0213
+title: 诗主请留步 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 灵异
+  - 殡葬
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 灵异题材但氛围不足，系统介入破坏感，文笔偏白。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 灵异题材但氛围不足，系统介入破坏感，文笔偏白。 | 缺乏灵异应有的沉浸感和氛围塑造;系统出现突兀，破坏了故事的自然感
+  observable:
+  - 'opening维度: 缺乏灵异应有的沉浸感和氛围塑造'
+  - 'golden_finger维度: 系统出现突兀，破坏了故事的自然感'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 1049
+  - 1077
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 诗主请留步
+  genre_guess:
+  - 灵异
+  - 殡葬
+  overall_comment: 灵异题材但氛围不足，系统介入破坏感，文笔偏白。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 缺乏灵异应有的沉浸感和氛围塑造
+    raw_quote: 没感觉没感觉穿过来这也没感觉 ... 事件又没有什么氛围感
+  - dimension: golden_finger
+    severity: negative
+    content: 系统出现突兀，破坏了故事的自然感
+    raw_quote: 反鞋你这种系统发什么 起点对吧叮减到 手刺焚身

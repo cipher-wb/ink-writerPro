@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0334
+title: 少年登天路（暂名） (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18yQpBGEnj
+scope:
+  genre:
+  - 玄幻
+  - 传统仙侠
+  - 完美世界like
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在25分吧 | 文笔古典但节奏过慢，玄虚套路完全脱离当前市场，只建议学快节奏传玄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18yQpBGEnj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔古典但节奏过慢，玄虚套路完全脱离当前市场，只建议学快节奏传玄。 | 开篇少年与鞋子过度玄虛，缺乏明确代入;节奏极慢，类似2016年完美世界写法，严重过时;枝节过多，须极度精简开头直奔主线
+  observable:
+  - 'opening维度: 开篇少年与鞋子过度玄虛，缺乏明确代入'
+  - 'pacing维度: 节奏极慢，类似2016年完美世界写法，严重过时'
+  - 'simplicity维度: 枝节过多，须极度精简开头直奔主线'
+live_review_meta:
+  source_bvid: BV18yQpBGEnj
+  source_line_range:
+  - 544
+  - 757
+  score: 25
+  score_raw: 现在25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 少年登天路（暂名）
+  genre_guess:
+  - 玄幻
+  - 传统仙侠
+  - 完美世界like
+  overall_comment: 文笔古典但节奏过慢，玄虚套路完全脱离当前市场，只建议学快节奏传玄。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇少年与鞋子过度玄虛，缺乏明确代入
+    raw_quote: 鞋子就删了吧 删了吧 大家看不懂 也没人爱看
+  - dimension: pacing
+    severity: negative
+    content: 节奏极慢，类似2016年完美世界写法，严重过时
+    raw_quote: 我感觉你这个节奏太慢了 而且是过动玄虛
+  - dimension: simplicity
+    severity: negative
+    content: 枝节过多，须极度精简开头直奔主线
+    raw_quote: 现在的传选你想写的话 只能节奏特别快

@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1824
+title: 诡异民国：11姨太除妖 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1rtDnBHECw
+scope:
+  genre:
+  - 诡异
+  - 民国
+  - 志怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40多分最多了40多分 | 遣词造句还行，但剧情没惊喜，人物设计平淡，代入感弱，开头失败
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1rtDnBHECw.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句还行，但剧情没惊喜，人物设计平淡，代入感弱，开头失败 | 开篇拖沓，身份夹杂不流畅，阅读障碍;缺乏反转和惊喜，场景没有紧张感;人物设计不咋样，代入感很弱
+  observable:
+  - 'opening维度: 开篇拖沓，身份夹杂不流畅，阅读障碍'
+  - 'highpoint维度: 缺乏反转和惊喜，场景没有紧张感'
+  - 'character维度: 人物设计不咋样，代入感很弱'
+live_review_meta:
+  source_bvid: BV1rtDnBHECw
+  source_line_range:
+  - 215
+  - 296
+  score: 45
+  score_raw: 40多分最多了40多分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异民国：11姨太除妖
+  genre_guess:
+  - 诡异
+  - 民国
+  - 志怪
+  overall_comment: 遣词造句还行，但剧情没惊喜，人物设计平淡，代入感弱，开头失败
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇拖沓，身份夹杂不流畅，阅读障碍
+    raw_quote: 我觉得你的这个身份夹杂在这个刘老爷的奇怪的故事里面有点不太流畅，有点阅读障碍
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏反转和惊喜，场景没有紧张感
+    raw_quote: 没什么惊喜啊...剧情真没什么惊喜
+  - dimension: character
+    severity: negative
+    content: 人物设计不咋样，代入感很弱
+    raw_quote: 人物的设计不咋样...你的身份代入感其实也很弱

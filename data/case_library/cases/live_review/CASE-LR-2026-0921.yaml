@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0921
+title: 武道词条 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 玄幻
+  - 武道
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分的时候都掉情歌 | 历史签约水平被浪费，原创词条加玄幻根本写不来，劝回历史。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史签约水平被浪费，原创词条加玄幻根本写不来，劝回历史。 | 玄幻冒充古代味太差，建议老老实实写历史;词条设定累赘复杂，事件人物无感;元素混乱，不伦不类
+  observable:
+  - 'genre维度: 玄幻冒充古代味太差，建议老老实实写历史'
+  - 'simplicity维度: 词条设定累赘复杂，事件人物无感'
+  - 'opening维度: 元素混乱，不伦不类'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 795
+  - 860
+  score: 33
+  score_raw: 33分的时候都掉情歌
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 武道词条
+  genre_guess:
+  - 玄幻
+  - 武道
+  - 金手指
+  overall_comment: 历史签约水平被浪费，原创词条加玄幻根本写不来，劝回历史。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 玄幻冒充古代味太差，建议老老实实写历史
+    raw_quote: 你根本写不来这种原创原创的词条加玄幻了 写不来 真的不是一个写法
+  - dimension: simplicity
+    severity: negative
+    content: 词条设定累赘复杂，事件人物无感
+    raw_quote: 这个词条都写的很很累赘 很很复杂 事件跟人物这些就不说
+  - dimension: opening
+    severity: negative
+    content: 元素混乱，不伦不类
+    raw_quote: 我觉得不伦不类大哥应该是一个玄幻武馆 但是你前面写的又不像玄幻味道

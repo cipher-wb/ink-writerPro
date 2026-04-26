@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2240
+title: 中年失业做主播 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 都市
+  - 现实
+  - 直播
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分 | 太写实，缺乏爽点，九千字才进主线，不符合网文需求。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太写实，缺乏爽点，九千字才进主线，不符合网文需求。 | 节奏太慢，九千字才进入直播主线;内容过于写实，缺乏网文所需的爽点
+  observable:
+  - 'pacing维度: 节奏太慢，九千字才进入直播主线'
+  - 'simplicity维度: 内容过于写实，缺乏网文所需的爽点'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 2233
+  - 2301
+  score: 25
+  score_raw: 差不多就25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 中年失业做主播
+  genre_guess:
+  - 都市
+  - 现实
+  - 直播
+  overall_comment: 太写实，缺乏爽点，九千字才进主线，不符合网文需求。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，九千字才进入直播主线
+    raw_quote: 大哥到三张九千字才出来主线了嘛
+  - dimension: simplicity
+    severity: negative
+    content: 内容过于写实，缺乏网文所需的爽点
+    raw_quote: 这么正亮 没爽点...这不是卖点 小时候是叫卖点的 你不能这么写实呀

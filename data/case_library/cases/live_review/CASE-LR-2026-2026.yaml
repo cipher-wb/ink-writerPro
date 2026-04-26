@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-2026
+title: 王铁柱投稿（雪白测灵根） (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 无敌流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分不管你怎么黑 我觉得大概有45 | 低级小白文，爽但无新意，起点难以签约，建议发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 低级小白文，爽但无新意，起点难以签约，建议发蓝精灵。 | 内容过于小白，缺乏反转;设定堆积冗长，节奏拖沓
+  observable:
+  - 'simplicity维度: 内容过于小白，缺乏反转'
+  - 'pacing维度: 设定堆积冗长，节奏拖沓'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 1
+  - 120
+  score: 45
+  score_raw: 45分不管你怎么黑 我觉得大概有45
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 王铁柱投稿（雪白测灵根）
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 无敌流
+  overall_comment: 低级小白文，爽但无新意，起点难以签约，建议发蓝精灵。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 内容过于小白，缺乏反转
+    raw_quote: 这没反转的话就小白王
+  - dimension: pacing
+    severity: negative
+    content: 设定堆积冗长，节奏拖沓
+    raw_quote: 他后面那些设定我怕还是写的太复杂
+  - dimension: golden_finger
+    severity: neutral
+    content: 金手指测灵根不够独特
+    raw_quote: 经手指反正就比较壮 来吧什么荒谷身体

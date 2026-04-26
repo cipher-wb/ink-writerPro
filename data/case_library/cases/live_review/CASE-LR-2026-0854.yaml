@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0854
+title: 聊斋书生成亲狐妖 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 聊斋
+  - 狐妖
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有40多分吧 | 进步快但细节问题大，主角说话中二，节奏慢，需简化养成种田。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 进步快但细节问题大，主角说话中二，节奏慢，需简化养成种田。 | 主角人设太装，台词中二;节奏太慢，字数可删一半
+  observable:
+  - 'character维度: 主角人设太装，台词中二'
+  - 'pacing维度: 节奏太慢，字数可删一半'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1151
+  - 1210
+  score: 45
+  score_raw: 有40多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 聊斋书生成亲狐妖
+  genre_guess:
+  - 聊斋
+  - 狐妖
+  - 种田
+  overall_comment: 进步快但细节问题大，主角说话中二，节奏慢，需简化养成种田。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设太装，台词中二
+    raw_quote: 你不可能说这种放心吧你是我的妻子只有我能欺负，这不扯勾八蛋吗
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，字数可删一半
+    raw_quote: 其实你拉扯字数删一半都没啥问题

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0045
+title: 诸天万机 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 诸天无限流
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十二分 | 元素堆砌太杂，建议专注一个世界，写得乱，22分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素堆砌太杂，建议专注一个世界，写得乱，22分。 | 乱融封掉了;太杂，不如单写一个世界
+  observable:
+  - 'genre维度: 乱融封掉了'
+  - 'simplicity维度: 太杂，不如单写一个世界'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 571
+  - 620
+  score: 22
+  score_raw: 二十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诸天万机
+  genre_guess:
+  - 诸天无限流
+  - 武侠
+  overall_comment: 元素堆砌太杂，建议专注一个世界，写得乱，22分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 乱融封掉了
+    raw_quote: 乱熔融封掉了
+  - dimension: simplicity
+    severity: negative
+    content: 太杂，不如单写一个世界
+    raw_quote: 你找到一个就行

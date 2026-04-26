@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0454
+title: 英雄众生神明 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 科幻
+  - AR
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 21分 | 切入平淡设定堆积，节奏偏慢缺乏剧情冲突，高难度题材处理太慢，建议换题材并加快节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入平淡设定堆积，节奏偏慢缺乏剧情冲突，高难度题材处理太慢，建议换题材并加快节奏。 | 切入过于普通且描写过多，读者会失去耐心;场景推进缓慢，像卖悠悠的年代文，缺乏事件冲突;代入感偏重外部事件，没有写出主角心理盘算
+  observable:
+  - 'opening维度: 切入过于普通且描写过多，读者会失去耐心'
+  - 'pacing维度: 场景推进缓慢，像卖悠悠的年代文，缺乏事件冲突'
+  - 'character维度: 代入感偏重外部事件，没有写出主角心理盘算'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 351
+  - 430
+  score: 21
+  score_raw: 21分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 英雄众生神明
+  genre_guess:
+  - 科幻
+  - AR
+  - 末世
+  overall_comment: 切入平淡设定堆积，节奏偏慢缺乏剧情冲突，高难度题材处理太慢，建议换题材并加快节奏。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入过于普通且描写过多，读者会失去耐心
+    raw_quote: 那就切入 那就这么很普通的切入 但是有点多 对吧 读者没有耐心的
+  - dimension: pacing
+    severity: negative
+    content: 场景推进缓慢，像卖悠悠的年代文，缺乏事件冲突
+    raw_quote: 没什么剧情冲突 老来来写的又慢 所以打分的话还是按时来分
+  - dimension: character
+    severity: negative
+    content: 代入感偏重外部事件，没有写出主角心理盘算
+    raw_quote: 你的代入感应该是你的心理活动 你的盘算你要干什么

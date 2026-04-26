@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0882
+title: 东京黑道律师 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 都市
+  - 黑道
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四个三分吧 | 比例好但上帝视角严重，节奏慢得像电视剧，4000字才出驱动力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例好但上帝视角严重，节奏慢得像电视剧，4000字才出驱动力。 | 节奏过于缓慢，驱动力出现太迟;纯粹电影画面，没有心理活动和情绪
+  observable:
+  - 'pacing维度: 节奏过于缓慢，驱动力出现太迟'
+  - 'character维度: 纯粹电影画面，没有心理活动和情绪'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 861
+  - 900
+  score: 43
+  score_raw: 四个三分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京黑道律师
+  genre_guess:
+  - 都市
+  - 黑道
+  - 悬疑
+  overall_comment: 比例好但上帝视角严重，节奏慢得像电视剧，4000字才出驱动力。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏过于缓慢，驱动力出现太迟
+    raw_quote: 这个东西一直到第二章一直都4000字了才出来 这不是开头500字写场景对吧 600个字就要出来心理活动 然后1000个字左右就要出来驱动力
+  - dimension: character
+    severity: negative
+    content: 纯粹电影画面，没有心理活动和情绪
+    raw_quote: 这上帝视角主角他没有一句心理活动呀 干巴巴的

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2048
+title: 天道宗 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 修仙
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多23分 | 文笔有氛围但设定老套，金手指奇怪，市场不大。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有氛围但设定老套，金手指奇怪，市场不大。 | 题材老套没市场;金手指设计复杂奇怪;设定需简化，读者难懂
+  observable:
+  - 'genre维度: 题材老套没市场'
+  - 'golden_finger维度: 金手指设计复杂奇怪'
+  - 'simplicity维度: 设定需简化，读者难懂'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 401
+  - 600
+  score: 23
+  score_raw: 差不多23分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天道宗
+  genre_guess:
+  - 修仙
+  - 玄幻
+  overall_comment: 文笔有氛围但设定老套，金手指奇怪，市场不大。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材老套没市场
+    raw_quote: 我直说了大哥 没市场 这种写法没市场
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设计复杂奇怪
+    raw_quote: 这个金手指其实感觉很奇怪
+  - dimension: simplicity
+    severity: negative
+    content: 设定需简化，读者难懂
+    raw_quote: 一定要简化成读者能看懂的东西

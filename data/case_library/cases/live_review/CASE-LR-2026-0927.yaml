@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0927
+title: 1639南洋西班牙 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 历史
+  - 殖民
+  - 洋人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35到不了就32 | 好题材被写成水货，元素混杂四不像，节奏太水。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 好题材被写成水货，元素混杂四不像，节奏太水。 | 元素混杂，都市不都市历史不历史玄幻不玄幻;前期水剧情，集邮式拉人凑队
+  observable:
+  - 'genre维度: 元素混杂，都市不都市历史不历史玄幻不玄幻'
+  - 'pacing维度: 前期水剧情，集邮式拉人凑队'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1205
+  - 1270
+  score: 32
+  score_raw: 35到不了就32
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 1639南洋西班牙
+  genre_guess:
+  - 历史
+  - 殖民
+  - 洋人
+  overall_comment: 好题材被写成水货，元素混杂四不像，节奏太水。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 元素混杂，都市不都市历史不历史玄幻不玄幻
+    raw_quote: 你这现在都市不都市历史不历史 玄幻不玄幻的不伦不类啊
+  - dimension: pacing
+    severity: negative
+    content: 前期水剧情，集邮式拉人凑队
+    raw_quote: 没人看你一个一个人喊过来干嘛呀 这又不是水浒传 这边凑一个 那边凑个干嘛

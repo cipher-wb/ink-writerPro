@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1998
+title: 诡異世界惡鬼變敵 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 诡异
+  - 游戏穿越
+  - 无限流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 撑死二十七分的样子 | 分镜式写法缺乏线性叙事，人物塑造单薄，主线和期待感弱，属于高难度题材但完成度不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 分镜式写法缺乏线性叙事，人物塑造单薄，主线和期待感弱，属于高难度题材但完成度不足。 | 缺乏炸裂的小剧场，开头平淡，直接介绍场景没有看点。;人物描述太单薄，如黄毛、胖子等缺乏辨识度。;节奏慢，群像写法缺乏重点，未快速进入主线。
+  observable:
+  - 'opening维度: 缺乏炸裂的小剧场，开头平淡，直接介绍场景没有看点。'
+  - 'character维度: 人物描述太单薄，如黄毛、胖子等缺乏辨识度。'
+  - 'pacing维度: 节奏慢，群像写法缺乏重点，未快速进入主线。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 142
+  - 228
+  score: 28
+  score_raw: 撑死二十七分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡異世界惡鬼變敵
+  genre_guess:
+  - 诡异
+  - 游戏穿越
+  - 无限流
+  overall_comment: 分镜式写法缺乏线性叙事，人物塑造单薄，主线和期待感弱，属于高难度题材但完成度不足。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 缺乏炸裂的小剧场，开头平淡，直接介绍场景没有看点。
+    raw_quote: 你第一段感觉就 就介绍一下到这了嘛 ... 就没什么画相
+  - dimension: character
+    severity: negative
+    content: 人物描述太单薄，如黄毛、胖子等缺乏辨识度。
+    raw_quote: 黄毛跟胖子这种描述 太单薄了
+  - dimension: pacing
+    severity: negative
+    content: 节奏慢，群像写法缺乏重点，未快速进入主线。
+    raw_quote: 反正就一堆人穷相写法 就探索嘛 就是漫剧啊 就是画面

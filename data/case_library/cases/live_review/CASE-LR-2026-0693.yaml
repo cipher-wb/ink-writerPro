@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0693
+title: 大学生医学生飙车日常 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 都市
+  - 日常
+  - 自嗨
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 兄弟也就20吧 | 自嗨严重，无主线无卖点，日常乱写，未入网文门。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 自嗨严重，无主线无卖点，日常乱写，未入网文门。 | 无法分清主卖点和互动，整体散乱;没有正常的套路写法，需要推翻重学
+  observable:
+  - 'ops维度: 无法分清主卖点和互动，整体散乱'
+  - 'simplicity维度: 没有正常的套路写法，需要推翻重学'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 1614
+  - 1795
+  score: 20
+  score_raw: 兄弟也就20吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大学生医学生飙车日常
+  genre_guess:
+  - 都市
+  - 日常
+  - 自嗨
+  overall_comment: 自嗨严重，无主线无卖点，日常乱写，未入网文门。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 无法分清主卖点和互动，整体散乱
+    raw_quote: 主次不分 无法分清楚主卖点互动
+  - dimension: simplicity
+    severity: negative
+    content: 没有正常的套路写法，需要推翻重学
+    raw_quote: 你现在就最基本的网文你不会写呀

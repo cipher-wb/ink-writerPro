@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0210
+title: 我在都市养大妖 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 都市
+  - 妖怪
+  - 房东
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材老套，内容过于乱炖，乐子设定尴尬，缺乏可读性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套，内容过于乱炖，乐子设定尴尬，缺乏可读性。 | 古今神怪乱斗的设定过于杂乱，像烂片;人物对话和互动设计尴尬，缺乏幽默感
+  observable:
+  - 'genre维度: 古今神怪乱斗的设定过于杂乱，像烂片'
+  - 'character维度: 人物对话和互动设计尴尬，缺乏幽默感'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 942
+  - 990
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: fail
+  title_guess: 我在都市养大妖
+  genre_guess:
+  - 都市
+  - 妖怪
+  - 房东
+  overall_comment: 题材老套，内容过于乱炖，乐子设定尴尬，缺乏可读性。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 古今神怪乱斗的设定过于杂乱，像烂片
+    raw_quote: 古今大战情永情 就是那种烂片 ... 大哥杀了我吧 不乐呀
+  - dimension: character
+    severity: negative
+    content: 人物对话和互动设计尴尬，缺乏幽默感
+    raw_quote: 这玩意不是乐子 这玩意读着 我觉得尴尬啊

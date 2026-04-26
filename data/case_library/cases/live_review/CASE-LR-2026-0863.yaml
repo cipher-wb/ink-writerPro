@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0863
+title: 御妖师道 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 御妖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 后面就35了 | 旧时代写法，御妖师、测灵根等设定太老套，金手指拉胯，节奏和人物塑造尚可但整体乏力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 旧时代写法，御妖师、测灵根等设定太老套，金手指拉胯，节奏和人物塑造尚可但整体乏力。 | 金手指奇怪且出戏，偏向都市化;御妖师、祭司等设定极其老套，缺乏新意
+  observable:
+  - 'golden_finger维度: 金手指奇怪且出戏，偏向都市化'
+  - 'genre维度: 御妖师、祭司等设定极其老套，缺乏新意'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 111
+  - 180
+  score: 35
+  score_raw: 后面就35了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 御妖师道
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 御妖
+  overall_comment: 旧时代写法，御妖师、测灵根等设定太老套，金手指拉胯，节奏和人物塑造尚可但整体乏力。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指奇怪且出戏，偏向都市化
+    raw_quote: 金手指也挺奇怪的 其实金手指不咋样 这金手指太奇怪了 这就有点像番茄了
+  - dimension: character
+    severity: positive
+    content: 人物活灵活现，细节写得好
+    raw_quote: 细节写的好 人物活灵活 现哥哥快跑
+  - dimension: genre
+    severity: negative
+    content: 御妖师、祭司等设定极其老套，缺乏新意
+    raw_quote: 这些设定什么祭司 什么御妖师的东西非常老套 只有那个时代才会这么写书啊

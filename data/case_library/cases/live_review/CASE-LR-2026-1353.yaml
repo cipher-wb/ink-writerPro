@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1353
+title: 地府好人重生 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 灵异
+  - 地府
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 世界观幼稚，人设不符，写法太像番茄小白文，建议直接推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观幼稚，人设不符，写法太像番茄小白文，建议直接推翻。 | 地府保安系统，黑白无常被黑化，世界观立不住;主角设定为纯粹的好人太过天真虚假
+  observable:
+  - 'misc维度: 地府保安系统，黑白无常被黑化，世界观立不住'
+  - 'character维度: 主角设定为纯粹的好人太过天真虚假'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 520
+  - 574
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 地府好人重生
+  genre_guess:
+  - 灵异
+  - 地府
+  - 重生
+  - 系统
+  overall_comment: 世界观幼稚，人设不符，写法太像番茄小白文，建议直接推翻。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 地府保安系统，黑白无常被黑化，世界观立不住
+    raw_quote: 番茄的一个地府小保安那种...世界观背景不行
+  - dimension: character
+    severity: negative
+    content: 主角设定为纯粹的好人太过天真虚假
+    raw_quote: 我觉得大哥很笨啊这种好人好得有点太夸张了

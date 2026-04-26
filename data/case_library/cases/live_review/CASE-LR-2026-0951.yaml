@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0951
+title: 浓稀酷酷(黄书作者) (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 仙侠
+  - 雪白
+  - 龙女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十左右吧 | 有雪白天赋却自废武功写正经，建议回归擅长领域
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有雪白天赋却自废武功写正经，建议回归擅长领域 | 放弃雪白写复仇，尴尬无趣
+  observable:
+  - 'genre维度: 放弃雪白写复仇，尴尬无趣'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 2480
+  - 2560
+  score: 40
+  score_raw: 四十左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 浓稀酷酷(黄书作者)
+  genre_guess:
+  - 仙侠
+  - 雪白
+  - 龙女
+  overall_comment: 有雪白天赋却自废武功写正经，建议回归擅长领域
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 放弃雪白写复仇，尴尬无趣
+    raw_quote: 有这么一本正经写修炼写报仇去 不要这样
+  - dimension: hook
+    severity: positive
+    content: 雪白章节反而好，可惜封印自己
+    raw_quote: 第二章你看写雪白那个就好看 我也不知道为啥就不坚持写

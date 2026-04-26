@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2063
+title: 三年之期生先则生 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 修仙
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20分 | 题材驱动力老套，对话都市化，缺乏修仙味道，人设崩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材驱动力老套，对话都市化，缺乏修仙味道，人设崩。 | 对白和思考都都市化，无修仙感觉;人设崩，野心大导致主线虚
+  observable:
+  - 'genre维度: 对白和思考都都市化，无修仙感觉'
+  - 'character维度: 人设崩，野心大导致主线虚'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 3401
+  - 3600
+  score: 20
+  score_raw: 差不多就20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三年之期生先则生
+  genre_guess:
+  - 修仙
+  - 都市
+  overall_comment: 题材驱动力老套，对话都市化，缺乏修仙味道，人设崩。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 对白和思考都都市化，无修仙感觉
+    raw_quote: 这对话这些思考都不像修仙王
+  - dimension: character
+    severity: negative
+    content: 人设崩，野心大导致主线虚
+    raw_quote: 人设是奔的 那些什么三 ... 看着很虚

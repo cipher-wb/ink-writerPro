@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0438
+title: 树真人系统文 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 树妖
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 其实倒也好30分吧 | 题材老套，金手指卖点不突出，剧情设定小白，整体缺乏新意
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套，金手指卖点不突出，剧情设定小白，整体缺乏新意 | 金手指卖点无聊，树上古传承老套;角色行为小白，逻辑荒诞
+  observable:
+  - 'golden_finger维度: 金手指卖点无聊，树上古传承老套'
+  - 'character维度: 角色行为小白，逻辑荒诞'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 481
+  - 562
+  score: 30
+  score_raw: 其实倒也好30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 树真人系统文
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 树妖
+  overall_comment: 题材老套，金手指卖点不突出，剧情设定小白，整体缺乏新意
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指卖点无聊，树上古传承老套
+    raw_quote: 这太老套了吧这玩意...十年前的写法
+  - dimension: character
+    severity: negative
+    content: 角色行为小白，逻辑荒诞
+    raw_quote: 太小白了吧这东西...怎么可能在树下把这练到这
+  - dimension: simplicity
+    severity: positive
+    content: 叙事比例流畅，阅读节奏尚可
+    raw_quote: 比例还行内容倒也还好...比例流畅

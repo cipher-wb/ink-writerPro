@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0930
+title: 重生找三个女朋友 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 轻小说
+  - 都市重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多32分 | 日轻写法加烂梗，开头全是水，金手指设定介绍过长。没得救。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 日轻写法加烂梗，开头全是水，金手指设定介绍过长。没得救。 | 开头烂梗堆砌，偏离主线;金手指介绍过多，现实剧情极弱
+  observable:
+  - 'opening维度: 开头烂梗堆砌，偏离主线'
+  - 'golden_finger维度: 金手指介绍过多，现实剧情极弱'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1395
+  - 1450
+  score: 32
+  score_raw: 差不多32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生找三个女朋友
+  genre_guess:
+  - 轻小说
+  - 都市重生
+  - 恋爱
+  overall_comment: 日轻写法加烂梗，开头全是水，金手指设定介绍过长。没得救。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头烂梗堆砌，偏离主线
+    raw_quote: 全烂梗村 这个烂梗要改 现在已经不流行这种用烂梗来拉的不好看
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指介绍过多，现实剧情极弱
+    raw_quote: 为什么一个金手指能介绍这么多 我一辈子想不通 … 金手指设定啊 介绍就贼多

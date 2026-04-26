@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1685
+title: 雪白丑男肆意妄为 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 都市
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分少年 | 节奏快、文笔好是仅有的优点，但题材、人设、事件均无趣，不适合起点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快、文笔好是仅有的优点，但题材、人设、事件均无趣，不适合起点。 | 题材和人设过于低俗，缺乏市场。
+  observable:
+  - 'taboo维度: 题材和人设过于低俗，缺乏市场。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 282
+  - 290
+  score: 33
+  score_raw: 33分少年
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 雪白丑男肆意妄为
+  genre_guess:
+  - 都市
+  - 雪白
+  overall_comment: 节奏快、文笔好是仅有的优点，但题材、人设、事件均无趣，不适合起点。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 题材和人设过于低俗，缺乏市场。
+    raw_quote: 就这题材就是还是个番茄的呀

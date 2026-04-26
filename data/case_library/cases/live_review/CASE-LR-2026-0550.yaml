@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0550
+title: 粉丝修仙 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就30 | 设定割裂，一本正经讲粉丝修仙没人看，需要极端事件开局。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定割裂，一本正经讲粉丝修仙没人看，需要极端事件开局。 | 起点读者不接受这种新设定，除非老作者;没有极端事件，剧情平庸
+  observable:
+  - 'simplicity维度: 起点读者不接受这种新设定，除非老作者'
+  - 'hook维度: 没有极端事件，剧情平庸'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 2651
+  - 2740
+  score: 30
+  score_raw: 差不多就30
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 粉丝修仙
+  genre_guess:
+  - 修仙
+  - 系统
+  - 脑洞
+  overall_comment: 设定割裂，一本正经讲粉丝修仙没人看，需要极端事件开局。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 起点读者不接受这种新设定，除非老作者
+    raw_quote: 起点读者就是看仙侠的读者 … 就这种设定 他只接受老作者写
+  - dimension: hook
+    severity: negative
+    content: 没有极端事件，剧情平庸
+    raw_quote: 你这个能有什么极端事件 … 一本正经的讲 就没人看

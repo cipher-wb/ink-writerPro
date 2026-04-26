@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1330
+title: 北楚城破 女频大女主 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 女频
+  - 架空历史
+  - 大女主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十有的 | 女频文笔扎实，画面感足，但主线衔接和节奏需加强。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 女频文笔扎实，画面感足，但主线衔接和节奏需加强。 | 十二天时间跳跃，主线太弱
+  observable:
+  - 'pacing维度: 十二天时间跳跃，主线太弱'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 2161
+  - 2200
+  score: 40
+  score_raw: 四十有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 北楚城破 女频大女主
+  genre_guess:
+  - 女频
+  - 架空历史
+  - 大女主
+  overall_comment: 女频文笔扎实，画面感足，但主线衔接和节奏需加强。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 十二天时间跳跃，主线太弱
+    raw_quote: 十二天之间太弱了 没时间
+  - dimension: opening
+    severity: positive
+    content: 开头节奏快，背景简单
+    raw_quote: 作为女贫小说我觉得写挺好的 节奏快

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1590
+title: 校园强制剪头系统 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 都市
+  - 校园
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你25分 | 题材低龄恶搞，缺乏乐子与看点，读者不会有付费意愿。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材低龄恶搞，缺乏乐子与看点，读者不会有付费意愿。 | 强制剪头梗非常昂气低龄，毫无热度;题材和写法太简单，像小学生玩笑
+  observable:
+  - 'genre维度: 强制剪头梗非常昂气低龄，毫无热度'
+  - 'simplicity维度: 题材和写法太简单，像小学生玩笑'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 271
+  - 300
+  score: 25
+  score_raw: 给你25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 校园强制剪头系统
+  genre_guess:
+  - 都市
+  - 校园
+  - 系统
+  overall_comment: 题材低龄恶搞，缺乏乐子与看点，读者不会有付费意愿。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 强制剪头梗非常昂气低龄，毫无热度
+    raw_quote: 这玩意不是你们说不对 … 我就不知道这到底有啥好看的呀 … 这整个思路就非常的低龄昂 … 这个事到底有啥看好看的呀
+  - dimension: simplicity
+    severity: negative
+    content: 题材和写法太简单，像小学生玩笑
+    raw_quote: 我觉得唉就我根本就不知道怎么改 … 这你叫我给1万块钱我也改不了

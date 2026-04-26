@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0908
+title: 重生系统解码 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 系统
+  - 精神小妹
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 42分有八 | 系统卖点没意思，建议写精神小妹，日记回忆太多需精简，比例尚可。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统卖点没意思，建议写精神小妹，日记回忆太多需精简，比例尚可。 | 卖点老套，系统前世设定冗余，不如精神小妹吸引人;开头日记写法过多，眼前事件需优先解决
+  observable:
+  - 'hook维度: 卖点老套，系统前世设定冗余，不如精神小妹吸引人'
+  - 'opening维度: 开头日记写法过多，眼前事件需优先解决'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 2993
+  - 3229
+  score: 42
+  score_raw: 42分有八
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生系统解码
+  genre_guess:
+  - 都市
+  - 重生
+  - 系统
+  - 精神小妹
+  overall_comment: 系统卖点没意思，建议写精神小妹，日记回忆太多需精简，比例尚可。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 卖点老套，系统前世设定冗余，不如精神小妹吸引人
+    raw_quote: 这个卖点没意思呀...别再拉什么系统欺负你两式这种...写精神小妹去
+  - dimension: opening
+    severity: negative
+    content: 开头日记写法过多，眼前事件需优先解决
+    raw_quote: 不要在这日记了呀...眼前的事情要解决

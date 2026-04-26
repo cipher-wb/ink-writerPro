@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0643
+title: 穿越北美拯救总统 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 都市
+  - 政治
+  - 黑道
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我没办法大哥你给我说我没用啊 | 文笔代入感不错，但因题材敏感、偏题严重，在起点注定写不了，建议改投他站或大修。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔代入感不错，但因题材敏感、偏题严重，在起点注定写不了，建议改投他站或大修。 | 摄政级别太高，起点过审困难;展开拖沓，偏离了原本好看的刺杀/拯救总统主线
+  observable:
+  - 'genre维度: 摄政级别太高，起点过审困难'
+  - 'pacing维度: 展开拖沓，偏离了原本好看的刺杀/拯救总统主线'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 261
+  - 340
+  score: null
+  score_raw: 我没办法大哥你给我说我没用啊
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 穿越北美拯救总统
+  genre_guess:
+  - 都市
+  - 政治
+  - 黑道
+  overall_comment: 文笔代入感不错，但因题材敏感、偏题严重，在起点注定写不了，建议改投他站或大修。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 摄政级别太高，起点过审困难
+    raw_quote: 总统摄政级别太高了...起点这三个字都给你说，过不了审
+  - dimension: pacing
+    severity: negative
+    content: 展开拖沓，偏离了原本好看的刺杀/拯救总统主线
+    raw_quote: 展开我觉得不好看...你是不是怕写总统线有点就是违规呀你就偏其他的
+  - dimension: character
+    severity: positive
+    content: 人设立得住，雪白写得恰到好处
+    raw_quote: 这个身份很重要的...这种标签啊什么...会写人设的

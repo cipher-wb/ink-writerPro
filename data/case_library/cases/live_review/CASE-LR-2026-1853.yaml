@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1853
+title: 民国姨太太驱邪玄幻文 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 民国玄幻
+  - 民俗
+  - 驱邪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 套路熟但不会写，比例和描写太干巴，需要重点练笔提升人物和场景的真实感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路熟但不会写，比例和描写太干巴，需要重点练笔提升人物和场景的真实感。 | 遣词造句和描写很干巴，缺乏画面感和真实感;人物刻画和反转处理生硬，比例不够，需要加强笔力训练
+  observable:
+  - 'simplicity维度: 遣词造句和描写很干巴，缺乏画面感和真实感'
+  - 'character维度: 人物刻画和反转处理生硬，比例不够，需要加强笔力训练'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 388
+  - 429
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国姨太太驱邪玄幻文
+  genre_guess:
+  - 民国玄幻
+  - 民俗
+  - 驱邪
+  overall_comment: 套路熟但不会写，比例和描写太干巴，需要重点练笔提升人物和场景的真实感。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句和描写很干巴，缺乏画面感和真实感
+    raw_quote: 他形容的很干吧 真的学了个学了个思路
+  - dimension: character
+    severity: negative
+    content: 人物刻画和反转处理生硬，比例不够，需要加强笔力训练
+    raw_quote: 套路熟但是不会写 嗯我觉得 我给你的忠告就是练笔去

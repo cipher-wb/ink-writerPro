@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0483
+title: 大湾区镇魔司 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就是2024分 嗯还好 但内容没代入感 也没期待感 | 世界观没解释清楚，代入感为零。涉政且写法像群像，主角不突出。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观没解释清楚，代入感为零。涉政且写法像群像，主角不突出。 | 涉政元素过多，容易踩红线;代入感极差，找不到谁是主角，读者无法认同世界
+  observable:
+  - 'taboo维度: 涉政元素过多，容易踩红线'
+  - 'character维度: 代入感极差，找不到谁是主角，读者无法认同世界'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 970
+  - 1018
+  score: 24
+  score_raw: 就是2024分 嗯还好 但内容没代入感 也没期待感
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大湾区镇魔司
+  genre_guess:
+  - 都市
+  - 异能
+  - 悬疑
+  overall_comment: 世界观没解释清楚，代入感为零。涉政且写法像群像，主角不突出。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 涉政元素过多，容易踩红线
+    raw_quote: 这都不架空了 大湾区都来了对吧 港区的正摩斯都来了...设阵了呀
+  - dimension: character
+    severity: negative
+    content: 代入感极差，找不到谁是主角，读者无法认同世界
+    raw_quote: 没代入感 没介介绍这个世界 为什么我认识的地球不是这样子的呀 你要解释啊...就代入感没有

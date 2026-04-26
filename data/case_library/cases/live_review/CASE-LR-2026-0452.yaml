@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0452
+title: 长生仙道观想师姐 (fail / 46分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1BFA2zSEZj
+scope:
+  genre:
+  - 仙侠
+  - 轻小说
+  - 爆炒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 整体46分那样 | 书名无趣开头俗套，大段描写像AI生成，但师姐角色写得有水平，需要重新设计开篇结构。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1BFA2zSEZj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名无趣开头俗套，大段描写像AI生成，但师姐角色写得有水平，需要重新设计开篇结构。 | 开篇慢热卖关子，观想设定缺乏看点;描写段落太长，容易被当成AI水文;书名《观想师姐》毫无吸引力，应该更直白
+  observable:
+  - 'opening维度: 开篇慢热卖关子，观想设定缺乏看点'
+  - 'simplicity维度: 描写段落太长，容易被当成AI水文'
+  - 'hook维度: 书名《观想师姐》毫无吸引力，应该更直白'
+live_review_meta:
+  source_bvid: BV1BFA2zSEZj
+  source_line_range:
+  - 1348
+  - 1552
+  score: 46
+  score_raw: 整体46分那样
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 长生仙道观想师姐
+  genre_guess:
+  - 仙侠
+  - 轻小说
+  - 爆炒
+  overall_comment: 书名无趣开头俗套，大段描写像AI生成，但师姐角色写得有水平，需要重新设计开篇结构。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇慢热卖关子，观想设定缺乏看点
+    raw_quote: 到现在没有什么看点
+  - dimension: character
+    severity: positive
+    content: 师姐角色塑造有吸引力，拉扯感不错
+    raw_quote: 写女的还可以的
+  - dimension: simplicity
+    severity: negative
+    content: 描写段落太长，容易被当成AI水文
+    raw_quote: 这种描写就扯淡了 最多不会超过100个字一段
+  - dimension: hook
+    severity: negative
+    content: 书名《观想师姐》毫无吸引力，应该更直白
+    raw_quote: 观想师姐 这个感觉一点都不吸引人

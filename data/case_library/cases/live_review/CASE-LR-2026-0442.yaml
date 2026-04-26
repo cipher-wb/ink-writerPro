@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0442
+title: 鬼灭同人文 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AUzbBDEtU
+scope:
+  genre:
+  - 同人
+  - 鬼灭
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就38分差也差不到 | 专精度不足，文慢缺乏看点老洞，非专精同人难起
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AUzbBDEtU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 专精度不足，文慢缺乏看点老洞，非专精同人难起 | 缺乏专精同人需要的老洞与好切入，看点不足;剧情铺叙过慢，描写啰嗦
+  observable:
+  - 'hook维度: 缺乏专精同人需要的老洞与好切入，看点不足'
+  - 'pacing维度: 剧情铺叙过慢，描写啰嗦'
+live_review_meta:
+  source_bvid: BV1AUzbBDEtU
+  source_line_range:
+  - 759
+  - 822
+  score: 38
+  score_raw: 就38分差也差不到
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼灭同人文
+  genre_guess:
+  - 同人
+  - 鬼灭
+  - 穿越
+  overall_comment: 专精度不足，文慢缺乏看点老洞，非专精同人难起
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 缺乏专精同人需要的老洞与好切入，看点不足
+    raw_quote: 好慢没什么老洞没什么好看的...那种专精的人家一上来就是老洞
+  - dimension: pacing
+    severity: negative
+    content: 剧情铺叙过慢，描写啰嗦
+    raw_quote: 好慢啊...描述啰嗦

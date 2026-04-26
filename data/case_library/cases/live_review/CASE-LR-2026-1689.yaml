@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1689
+title: 我的游戏角色化身BOSS (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 游戏
+  - 第四天灾
+  - 幕后流
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材驾驭难度高，本质是卖设定，故事性太弱，不适合新人写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材驾驭难度高，本质是卖设定，故事性太弱，不适合新人写。 | 开篇对白小白，故事性薄弱，仅为设定服务。;万订以上作者才适合写的题材，新人难以驾驭。
+  observable:
+  - 'opening维度: 开篇对白小白，故事性薄弱，仅为设定服务。'
+  - 'genre维度: 万订以上作者才适合写的题材，新人难以驾驭。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 491
+  - 547
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 我的游戏角色化身BOSS
+  genre_guess:
+  - 游戏
+  - 第四天灾
+  - 幕后流
+  - 仙侠
+  overall_comment: 题材驾驭难度高，本质是卖设定，故事性太弱，不适合新人写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇对白小白，故事性薄弱，仅为设定服务。
+    raw_quote: 你们两个人的对白太拉垮了...本质上就是卖设定啊
+  - dimension: genre
+    severity: negative
+    content: 万订以上作者才适合写的题材，新人难以驾驭。
+    raw_quote: 这个题材是万订以上写的

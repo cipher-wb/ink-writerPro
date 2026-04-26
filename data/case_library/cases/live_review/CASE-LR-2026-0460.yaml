@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0460
+title: 江陵度不会太平 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 历史
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分 | 游戏化写法致世界观立不住，题材选错没得救，建议改写成艾斯基式稀幻危机风格。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 游戏化写法致世界观立不住，题材选错没得救，建议改写成艾斯基式稀幻危机风格。 | 架空历史加游戏写法本质上错了，像打游戏没代入感;开头就是操控50打300，太虚没有现实危机感
+  observable:
+  - 'genre维度: 架空历史加游戏写法本质上错了，像打游戏没代入感'
+  - 'opening维度: 开头就是操控50打300，太虚没有现实危机感'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 761
+  - 810
+  score: 23
+  score_raw: 23分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 江陵度不会太平
+  genre_guess:
+  - 历史
+  - 架空
+  overall_comment: 游戏化写法致世界观立不住，题材选错没得救，建议改写成艾斯基式稀幻危机风格。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空历史加游戏写法本质上错了，像打游戏没代入感
+    raw_quote: 我觉得韩式游戏 我真的找不到好的剧情 ... 题材没得救
+  - dimension: opening
+    severity: negative
+    content: 开头就是操控50打300，太虚没有现实危机感
+    raw_quote: 你现在这样只是说有仇恨 敌人的大队要来了 这种不危险

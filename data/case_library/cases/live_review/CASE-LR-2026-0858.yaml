@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0858
+title: 魔幻西幻母亲 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 西幻
+  - 魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 传统西幻写法，主角父母线无聊，太老套，没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统西幻写法，主角父母线无聊，太老套，没人看。 | 父母角色最无聊，西幻应写少女;传统西幻写法非常老套，没有好金手指
+  observable:
+  - 'character维度: 父母角色最无聊，西幻应写少女'
+  - 'genre维度: 传统西幻写法非常老套，没有好金手指'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 1381
+  - 1430
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 魔幻西幻母亲
+  genre_guess:
+  - 西幻
+  - 魔法
+  overall_comment: 传统西幻写法，主角父母线无聊，太老套，没人看。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 父母角色最无聊，西幻应写少女
+    raw_quote: 你你你爸爸跟妈妈的人物是最无聊的
+  - dimension: genre
+    severity: negative
+    content: 传统西幻写法非常老套，没有好金手指
+    raw_quote: 这就是以前的传统西幻写法，你要有好的劳动金手指

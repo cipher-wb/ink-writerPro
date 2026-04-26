@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0549
+title: 大宋医冠 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 历史
+  - 职业
+  - 医学
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 有职业加年代卖点，但开篇看病事件无聊，需要调整切入并衔接妖鬼线索。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有职业加年代卖点，但开篇看病事件无聊，需要调整切入并衔接妖鬼线索。 | 开头正常诊治没有吸引力
+  observable:
+  - 'opening维度: 开头正常诊治没有吸引力'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 2561
+  - 2650
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 大宋医冠
+  genre_guess:
+  - 历史
+  - 职业
+  - 医学
+  overall_comment: 有职业加年代卖点，但开篇看病事件无聊，需要调整切入并衔接妖鬼线索。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头正常诊治没有吸引力
+    raw_quote: 这个放开头呀 比你前面那个毛事件好好看多了 … 正常看病谁看啊

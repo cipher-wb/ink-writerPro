@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0901
+title: 过新关 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 阴阳眼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥给个35分的样子吧 | 书名太差，阴阳眼老掉牙，比例扎实但卖点没人看，发起点死路一条。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 书名太差，阴阳眼老掉牙，比例扎实但卖点没人看，发起点死路一条。 | 书名‘过新关’不知所云，远不如捞尸人清晰;阴阳眼题材9年前就已写烂，毫无卖点
+  observable:
+  - 'misc维度: 书名‘过新关’不知所云，远不如捞尸人清晰'
+  - 'genre维度: 阴阳眼题材9年前就已写烂，毫无卖点'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 1509
+  - 1757
+  score: 35
+  score_raw: 给大哥给个35分的样子吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 过新关
+  genre_guess:
+  - 灵异
+  - 都市
+  - 阴阳眼
+  overall_comment: 书名太差，阴阳眼老掉牙，比例扎实但卖点没人看，发起点死路一条。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 书名‘过新关’不知所云，远不如捞尸人清晰
+    raw_quote: 你这说明都不如捞诗人，你这说明都不如老实人，捞尸人我能懂...那过新关要干嘛
+  - dimension: genre
+    severity: negative
+    content: 阴阳眼题材9年前就已写烂，毫无卖点
+    raw_quote: 阴阳眼在我17年的时候我就已经在我的灵异群里面明确的给大家说不要写了...过去了9年大哥翻出来了阴阳眼之谜

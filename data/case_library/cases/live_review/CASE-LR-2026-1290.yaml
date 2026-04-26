@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1290
+title: 重生2011从手打柠檬水开始实业兴国 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 商业
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多岁48分吧 | 商业创业题材可行，但女性人设失败，整体较平淡，缺乏突出爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 商业创业题材可行，但女性人设失败，整体较平淡，缺乏突出爽点。 | 妹妹形象描写为“婴儿肥、口吃、近视”，人设崩坏，读者难以喜欢;创业线未制造足够期待和高潮，平铺直叙
+  observable:
+  - 'character维度: 妹妹形象描写为“婴儿肥、口吃、近视”，人设崩坏，读者难以喜欢'
+  - 'highpoint维度: 创业线未制造足够期待和高潮，平铺直叙'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 890
+  - 1070
+  score: 48
+  score_raw: 差不多岁48分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生2011从手打柠檬水开始实业兴国
+  genre_guess:
+  - 都市
+  - 重生
+  - 商业
+  overall_comment: 商业创业题材可行，但女性人设失败，整体较平淡，缺乏突出爽点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 妹妹形象描写为“婴儿肥、口吃、近视”，人设崩坏，读者难以喜欢
+    raw_quote: 妹妹肯定不行对吧 … 这个人人只能作为配角了
+  - dimension: highpoint
+    severity: negative
+    content: 创业线未制造足够期待和高潮，平铺直叙
+    raw_quote: 没什么惊喜，感觉写的比较正常

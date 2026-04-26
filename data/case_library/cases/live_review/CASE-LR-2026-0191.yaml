@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-0191
+title: 福报打工人？末日丧尸捡到魔法少女 (pass / 67分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14zFwzeEho
+scope:
+  genre:
+  - 末日
+  - 丧尸
+  - 轻小说
+  - 魔法少女
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多67分吧 | 轻小说味道足，写人物能力强，心理活动与期待感好，但缺乏强主线，细节打磨不够，需加中期目标。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14zFwzeEho.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 轻小说味道足，写人物能力强，心理活动与期待感好，但缺乏强主线，细节打磨不够，需加中期目标。 | 缺乏强主线，内容像公路片容易无聊，需加中期目标;细节需要打磨，打磨不够导致上不了70分
+  observable:
+  - 'pacing维度: 缺乏强主线，内容像公路片容易无聊，需加中期目标'
+  - 'simplicity维度: 细节需要打磨，打磨不够导致上不了70分'
+live_review_meta:
+  source_bvid: BV14zFwzeEho
+  source_line_range:
+  - 1
+  - 195
+  score: 67
+  score_raw: 差不多67分吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 福报打工人？末日丧尸捡到魔法少女
+  genre_guess:
+  - 末日
+  - 丧尸
+  - 轻小说
+  - 魔法少女
+  overall_comment: 轻小说味道足，写人物能力强，心理活动与期待感好，但缺乏强主线，细节打磨不够，需加中期目标。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人物描写自然，少女角色塑造出色
+    raw_quote: 写人物了嘛 没问题 你这不就会写吗
+  - dimension: hook
+    severity: positive
+    content: 心理活动和魔法少女的期待感足，故事吸引力强
+    raw_quote: 心理活动啊 这些还有魔法少女那个期待感
+  - dimension: pacing
+    severity: negative
+    content: 缺乏强主线，内容像公路片容易无聊，需加中期目标
+    raw_quote: 你一直写也挺无聊 就是公路嘛
+  - dimension: genre
+    severity: neutral
+    content: 日系轻小说味道很足，但缺乏强主线成为短板
+    raw_quote: 他这个味道很足那种 就是那种日清比例确实没什么好主线
+  - dimension: simplicity
+    severity: negative
+    content: 细节需要打磨，打磨不够导致上不了70分
+    raw_quote: 细节需要打磨 打磨就上不了70了

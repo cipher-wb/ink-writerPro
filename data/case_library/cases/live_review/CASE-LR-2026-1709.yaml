@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1709
+title: 弱小原罪玄幻爽文 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 玄幻
+  - 爽文
+  - 重生
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 节奏快情绪足，但小人拉仇恨写法过时，建议学《太虚之宗》的节奏情绪。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快情绪足，但小人拉仇恨写法过时，建议学《太虚之宗》的节奏情绪。 | 王婆等小人反派智商太低，拉仇恨方式过时。
+  observable:
+  - 'character维度: 王婆等小人反派智商太低，拉仇恨方式过时。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1681
+  - 1755
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 弱小原罪玄幻爽文
+  genre_guess:
+  - 玄幻
+  - 爽文
+  - 重生
+  - 金手指
+  overall_comment: 节奏快情绪足，但小人拉仇恨写法过时，建议学《太虚之宗》的节奏情绪。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 王婆等小人反派智商太低，拉仇恨方式过时。
+    raw_quote: 这就太小白了...就这种小人，你没必要在这拉仇恨了
+  - dimension: pacing
+    severity: positive
+    content: 节奏较快，爽点OK。
+    raw_quote: 节奏还是挺快的啊，爽点还是OK的对吧

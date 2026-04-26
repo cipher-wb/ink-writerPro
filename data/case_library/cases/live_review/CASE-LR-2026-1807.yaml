@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1807
+title: 三国拦路人 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 三国
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个人给你28分吧 | 文笔有基础，但主角毫无参与感，全程旁观历史事件，黄金三章完全失败。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有基础，但主角毫无参与感，全程旁观历史事件，黄金三章完全失败。 | 主角没有身份，无法参与事件，只是旁观;参与事件太慢，开局就拖沓;开篇没有抛出任何钩子，像战地记者直播历史
+  observable:
+  - 'character维度: 主角没有身份，无法参与事件，只是旁观'
+  - 'pacing维度: 参与事件太慢，开局就拖沓'
+  - 'opening维度: 开篇没有抛出任何钩子，像战地记者直播历史'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 311
+  - 390
+  score: 28
+  score_raw: 这个人给你28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国拦路人
+  genre_guess:
+  - 三国
+  - 历史
+  overall_comment: 文笔有基础，但主角毫无参与感，全程旁观历史事件，黄金三章完全失败。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角没有身份，无法参与事件，只是旁观
+    raw_quote: 这就是你参与不进主线 你只是在旁边看着……主角要参与吗 我来试试……靠力气大呀
+  - dimension: pacing
+    severity: negative
+    content: 参与事件太慢，开局就拖沓
+    raw_quote: 太慢了就太慢了……没意思没意思
+  - dimension: opening
+    severity: negative
+    content: 开篇没有抛出任何钩子，像战地记者直播历史
+    raw_quote: 这就是在给我直播历史呀 就真的是三国拦路人呀

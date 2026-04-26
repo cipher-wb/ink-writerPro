@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1640
+title: 灵异极光旅行 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 悬疑
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你30分 | 文笔有烟火气但故事太弱，视角混乱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有烟火气但故事太弱，视角混乱。 | 主角视角不明确，故事进展慢。
+  observable:
+  - 'misc维度: 主角视角不明确，故事进展慢。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 631
+  - 690
+  score: 30
+  score_raw: 给你30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵异极光旅行
+  genre_guess:
+  - 悬疑
+  - 灵异
+  overall_comment: 文笔有烟火气但故事太弱，视角混乱。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 主角视角不明确，故事进展慢。
+    raw_quote: 老周到底是谁啊，哪有主角叫老周这种

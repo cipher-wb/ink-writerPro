@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1727
+title: 乱世棋局（架空权谋） (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 历史
+  - 架空
+  - 权谋
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他这个38 | 比例扎实但纯架空权谋、不穿越无金手指的写法在起点是死路一条，上限极低，主播断言不可能打脸。建议穿越加雪白剧情。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实但纯架空权谋、不穿越无金手指的写法在起点是死路一条，上限极低，主播断言不可能打脸。建议穿越加雪白剧情。 | 架空历史纯权谋写法上限极低，没有读者基础
+  observable:
+  - 'genre维度: 架空历史纯权谋写法上限极低，没有读者基础'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1622
+  - 1664
+  score: 38
+  score_raw: 只能给他这个38
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 乱世棋局（架空权谋）
+  genre_guess:
+  - 历史
+  - 架空
+  - 权谋
+  overall_comment: 比例扎实但纯架空权谋、不穿越无金手指的写法在起点是死路一条，上限极低，主播断言不可能打脸。建议穿越加雪白剧情。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 架空历史纯权谋写法上限极低，没有读者基础
+    raw_quote: 这种架空历史从穷相没穿越写法死路一条，没有一个人能打我的脸
+  - dimension: simplicity
+    severity: positive
+    content: 比例扎实，语文功底和写书能力具备
+    raw_quote: 比例是没啥问题，比例扎实了，你也你也会写书

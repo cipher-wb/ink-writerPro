@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0110
+title: 奇幻旅行/VR游戏卡带 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 科幻
+  - 游戏
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分成熟 | 完全在写设定，角色碰撞事件冲突矛盾几乎没有，题材没市场，浪费时间等于谋财害命。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全在写设定，角色碰撞事件冲突矛盾几乎没有，题材没市场，浪费时间等于谋财害命。 | 完全写着设定，缺乏看点期待感和爽点;角色像干巴巴的NPC，没感觉
+  observable:
+  - 'genre维度: 完全写着设定，缺乏看点期待感和爽点'
+  - 'character维度: 角色像干巴巴的NPC，没感觉'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1521
+  - 1580
+  score: 20
+  score_raw: 20分成熟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 奇幻旅行/VR游戏卡带
+  genre_guess:
+  - 科幻
+  - 游戏
+  - 末日
+  overall_comment: 完全在写设定，角色碰撞事件冲突矛盾几乎没有，题材没市场，浪费时间等于谋财害命。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 完全写着设定，缺乏看点期待感和爽点
+    raw_quote: 你的简介里的正文，都是在讲你的游戏能拯救未来世界，就是在讲这个设定对吧
+  - dimension: character
+    severity: negative
+    content: 角色像干巴巴的NPC，没感觉
+    raw_quote: 李贝贝也也没什么感觉，就点那首就是干干干巴巴的NPC嘛，你说白了跟PC没啥区别

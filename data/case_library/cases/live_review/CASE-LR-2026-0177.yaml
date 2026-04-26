@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0177
+title: 美墨边境黑拳：继承者 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 黑拳
+  - 都市
+  - 美国背景
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分吧 | 简介干练，文笔老练，但主线单薄，人物关系没有展开，打拳赢本身就缺乏多层次爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 简介干练，文笔老练，但主线单薄，人物关系没有展开，打拳赢本身就缺乏多层次爽点。 | 主角只是打拳求活，没有其他身份关系，缺乏张力。;没有利用舞女等配角去丰富主线，失去潜在期待感。
+  observable:
+  - 'character维度: 主角只是打拳求活，没有其他身份关系，缺乏张力。'
+  - 'highpoint维度: 没有利用舞女等配角去丰富主线，失去潜在期待感。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 1080
+  - 1230
+  score: 55
+  score_raw: 55分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 美墨边境黑拳：继承者
+  genre_guess:
+  - 黑拳
+  - 都市
+  - 美国背景
+  overall_comment: 简介干练，文笔老练，但主线单薄，人物关系没有展开，打拳赢本身就缺乏多层次爽点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角只是打拳求活，没有其他身份关系，缺乏张力。
+    raw_quote: 你没有身份呀你这个人你这个打赢这件事他没有其他的爽点
+  - dimension: highpoint
+    severity: negative
+    content: 没有利用舞女等配角去丰富主线，失去潜在期待感。
+    raw_quote: 你这个舞女这是最重要的卖点你一写带过了呀
+  - dimension: ops
+    severity: positive
+    content: 行文流畅，遣词造句没问题，签约可能有机会。
+    raw_quote: 我觉得哎50分有吧55分吧就单薄但是也流畅了

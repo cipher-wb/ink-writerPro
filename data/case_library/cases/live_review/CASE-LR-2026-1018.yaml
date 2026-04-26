@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1018
+title: 南疆穷杀恶水 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 修仙
+  - 魔门
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三四十的样子吧 | 切入还行但描述啰嗦，老派气殿风格，节奏和代入感待加强。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入还行但描述啰嗦，老派气殿风格，节奏和代入感待加强。 | 第二章起节奏过快，细节心理活动不够
+  observable:
+  - 'pacing维度: 第二章起节奏过快，细节心理活动不够'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 851
+  - 960
+  score: null
+  score_raw: 三四十的样子吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 南疆穷杀恶水
+  genre_guess:
+  - 修仙
+  - 魔门
+  overall_comment: 切入还行但描述啰嗦，老派气殿风格，节奏和代入感待加强。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 场景切入不错，有一定悬念
+    raw_quote: 这个切入是可以的 切入是没问题
+  - dimension: pacing
+    severity: negative
+    content: 第二章起节奏过快，细节心理活动不够
+    raw_quote: 节奏有点快其实

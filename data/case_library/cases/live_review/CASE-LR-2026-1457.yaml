@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1457
+title: 截胡赵匡胤 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eEfxBGEfa
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 军事
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 回头可以发线下59分也可以发 | 题材能写，但文笔细节不够，女主人设奇怪，修一版可线下签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eEfxBGEfa.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材能写，但文笔细节不够，女主人设奇怪，修一版可线下签。 | 女主人设加得突兀，文笔和细节描写尚需打磨;当前直接签水平不到，需要再改一版
+  observable:
+  - 'character维度: 女主人设加得突兀，文笔和细节描写尚需打磨'
+  - 'ops维度: 当前直接签水平不到，需要再改一版'
+live_review_meta:
+  source_bvid: BV1eEfxBGEfa
+  source_line_range:
+  - 703
+  - 900
+  score: 59
+  score_raw: 回头可以发线下59分也可以发
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 截胡赵匡胤
+  genre_guess:
+  - 历史
+  - 穿越
+  - 军事
+  overall_comment: 题材能写，但文笔细节不够，女主人设奇怪，修一版可线下签。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主人设加得突兀，文笔和细节描写尚需打磨
+    raw_quote: 女主人设我觉得加的挺奇怪的对啊 就比例不够
+  - dimension: ops
+    severity: negative
+    content: 当前直接签水平不到，需要再改一版
+    raw_quote: 这个直接签还是不到水平
+  - dimension: genre
+    severity: positive
+    content: 历史截胡题材有机会，改好可签约
+    raw_quote: 签约有机会能签约 改完 其实我再改一版本 我给你签吧

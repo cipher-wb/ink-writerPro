@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0047
+title: 小鸟姐权力游戏恋爱系统 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 美剧同人
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分吧 | 题材不适合，恋爱系统与美剧冲突，建议转东京日常，文笔好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材不适合，恋爱系统与美剧冲突，建议转东京日常，文笔好。 | 题材割裂，恋爱情感不对路
+  observable:
+  - 'genre维度: 题材割裂，恋爱情感不对路'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 681
+  - 730
+  score: 45
+  score_raw: 45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 小鸟姐权力游戏恋爱系统
+  genre_guess:
+  - 美剧同人
+  - 奇幻
+  overall_comment: 题材不适合，恋爱系统与美剧冲突，建议转东京日常，文笔好。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材割裂，恋爱情感不对路
+    raw_quote: 恋爱系统展现不出来
+  - dimension: character
+    severity: positive
+    content: 写人物挺强的
+    raw_quote: 我觉得她写妹妹其实写的特别好

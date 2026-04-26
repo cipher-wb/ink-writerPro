@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1662
+title: 从入赘开始东京建好 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 女频
+  - 清小说
+  - 高武
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给大哥40 | 老作者水平尚可，但开头设定堆砌、缺乏人物关系和爽点，数据不会骗人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老作者水平尚可，但开头设定堆砌、缺乏人物关系和爽点，数据不会骗人。 | 第一章全是设定，没有人物互动和危机;元素过多信息量炸裂，读者根本记不住
+  observable:
+  - 'opening维度: 第一章全是设定，没有人物互动和危机'
+  - 'simplicity维度: 元素过多信息量炸裂，读者根本记不住'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 655
+  - 750
+  score: 40
+  score_raw: 给大哥40
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 从入赘开始东京建好
+  genre_guess:
+  - 女频
+  - 清小说
+  - 高武
+  - 恋爱
+  overall_comment: 老作者水平尚可，但开头设定堆砌、缺乏人物关系和爽点，数据不会骗人。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章全是设定，没有人物互动和危机
+    raw_quote: 这就是讲设定讲设定 就是讲设定讲设定 谁敢这么写出
+  - dimension: simplicity
+    severity: negative
+    content: 元素过多信息量炸裂，读者根本记不住
+    raw_quote: 元素真的有点杂碌的多了 好多信息量 都得根本背不下来这些东西了
+  - dimension: character
+    severity: positive
+    content: 后面渐入佳境，讲故事能力扎实
+    raw_quote: 后面稍微好点嘛 我觉得借入佳境 我觉得大概可能老书写多了

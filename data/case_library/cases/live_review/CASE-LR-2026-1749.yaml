@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1749
+title: 情报系统修仙 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也四十分上不去 | 仙侠雪白套路低级，主线薄弱，建议参考《娘娘别回头》结构。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 仙侠雪白套路低级，主线薄弱，建议参考《娘娘别回头》结构。 | 雪白内容过多，缺乏扎实的主线。
+  observable:
+  - 'golden_finger维度: 雪白内容过多，缺乏扎实的主线。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1525
+  - 1620
+  score: null
+  score_raw: 也四十分上不去
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 情报系统修仙
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 系统
+  overall_comment: 仙侠雪白套路低级，主线薄弱，建议参考《娘娘别回头》结构。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 雪白内容过多，缺乏扎实的主线。
+    raw_quote: 第一章雪白 第二章立刻 主线...雪白写多风不会高

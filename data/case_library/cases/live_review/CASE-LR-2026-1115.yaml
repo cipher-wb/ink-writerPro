@@ -1,0 +1,66 @@
+case_id: CASE-LR-2026-1115
+title: 海贼王之超人血肉金故事 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WGzHBwEv8
+scope:
+  genre:
+  - 同人
+  - 海贼
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '没蹭到什么援助人物啊
+
+    这个就完全自嗨吧 | 同人作品没蹭到原著热点，节奏太慢，内容水，缺乏看点。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WGzHBwEv8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 同人作品没蹭到原著热点，节奏太慢，内容水，缺乏看点。 | 金手指分裂果实切入太晚，未有效利用;行文太慢，大量无意义对话;未与原著人物形成有效互动，蹭不上热度
+  observable:
+  - 'golden_finger维度: 金手指分裂果实切入太晚，未有效利用'
+  - 'pacing维度: 行文太慢，大量无意义对话'
+  - 'hook维度: 未与原著人物形成有效互动，蹭不上热度'
+live_review_meta:
+  source_bvid: BV1WGzHBwEv8
+  source_line_range:
+  - 197
+  - 269
+  score: null
+  score_raw: '没蹭到什么援助人物啊
+
+    这个就完全自嗨吧'
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 海贼王之超人血肉金故事
+  genre_guess:
+  - 同人
+  - 海贼
+  - 穿越
+  overall_comment: 同人作品没蹭到原著热点，节奏太慢，内容水，缺乏看点。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指分裂果实切入太晚，未有效利用
+    raw_quote: '我的果实能分身
+
+      美少女应该是跨点到这里啊'
+  - dimension: pacing
+    severity: negative
+    content: 行文太慢，大量无意义对话
+    raw_quote: 老是写一些读者根本不爱看那些聊天对话
+  - dimension: hook
+    severity: negative
+    content: 未与原著人物形成有效互动，蹭不上热度
+    raw_quote: '我确实蹭到的挺少的
+
+      就用了一下人家的世界观嘛'

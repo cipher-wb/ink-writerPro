@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0039
+title: 蓝海女孩科幻 (fail / 12分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 科幻
+  - 末日
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就十二分最多 | 世界观无代入感，故弄玄虚，看不懂，缺乏网文基本要素，12分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观无代入感，故弄玄虚，看不懂，缺乏网文基本要素，12分。 | 无代入感，看不懂;故弄玄虚，读者看不懂;世界观太复杂
+  observable:
+  - 'hook维度: 无代入感，看不懂'
+  - 'opening维度: 故弄玄虚，读者看不懂'
+  - 'simplicity维度: 世界观太复杂'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 241
+  - 290
+  score: 12
+  score_raw: 差不多就十二分最多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蓝海女孩科幻
+  genre_guess:
+  - 科幻
+  - 末日
+  overall_comment: 世界观无代入感，故弄玄虚，看不懂，缺乏网文基本要素，12分。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 无代入感，看不懂
+    raw_quote: 就不知道你要干嘛就无病生疑
+  - dimension: opening
+    severity: negative
+    content: 故弄玄虚，读者看不懂
+    raw_quote: 不要故弄玄虚
+  - dimension: simplicity
+    severity: negative
+    content: 世界观太复杂
+    raw_quote: 这个世界观我都不知道呀

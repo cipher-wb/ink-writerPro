@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0366
+title: 重生之足球博主 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 体育
+  - 足球
+  - 抽象
+  - 乐子文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分 | 足球专业性足够，但缺乏抽象乐子能力，中规中矩58分，可尝试直发。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 足球专业性足够，但缺乏抽象乐子能力，中规中矩58分，可尝试直发。 | 流量系统显得尴尬，没体现出乐子效果;作者不会玩抽象梗，内容过于老实
+  observable:
+  - 'golden_finger维度: 流量系统显得尴尬，没体现出乐子效果'
+  - 'character维度: 作者不会玩抽象梗，内容过于老实'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 421
+  - 540
+  score: 58
+  score_raw: 58分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生之足球博主
+  genre_guess:
+  - 体育
+  - 足球
+  - 抽象
+  - 乐子文
+  overall_comment: 足球专业性足够，但缺乏抽象乐子能力，中规中矩58分，可尝试直发。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 流量系统显得尴尬，没体现出乐子效果
+    raw_quote: 这个系统好尴尬呀 好出戏
+  - dimension: character
+    severity: negative
+    content: 作者不会玩抽象梗，内容过于老实
+    raw_quote: 老实人写勾八抽象解说

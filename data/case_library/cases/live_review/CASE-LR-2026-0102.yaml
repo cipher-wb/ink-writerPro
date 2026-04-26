@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0102
+title: 饥荒/历史虚构逃荒 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 古代
+  - 逃荒
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多好吧，发如雪 | 慢热不热，兄妹日常太慢没看点，信息量极少，像过家家。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 慢热不热，兄妹日常太慢没看点，信息量极少，像过家家。 | 慢热不热，太慢没看点;每章都要有看点，这对白真无聊
+  observable:
+  - 'pacing维度: 慢热不热，太慢没看点'
+  - 'opening维度: 每章都要有看点，这对白真无聊'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 801
+  - 860
+  score: null
+  score_raw: 差不多好吧，发如雪
+  score_signal: unknown
+  verdict: fail
+  title_guess: 饥荒/历史虚构逃荒
+  genre_guess:
+  - 古代
+  - 逃荒
+  - 种田
+  overall_comment: 慢热不热，兄妹日常太慢没看点，信息量极少，像过家家。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 慢热不热，太慢没看点
+    raw_quote: 这不是慢热没热，那个不热的，根本没人看
+  - dimension: opening
+    severity: negative
+    content: 每章都要有看点，这对白真无聊
+    raw_quote: 这些对白真无聊啊

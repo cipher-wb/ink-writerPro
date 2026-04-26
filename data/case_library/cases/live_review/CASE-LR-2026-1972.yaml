@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-1972
+title: 生肖死斗虚借大逃杀 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 生肖
+  - 死斗
+  - 逃杀
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 点评初始阶段，仅读出开头，无完整评价。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 点评初始阶段，仅读出开头，无完整评价。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 1171
+  - 1220
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 生肖死斗虚借大逃杀
+  genre_guess:
+  - 生肖
+  - 死斗
+  - 逃杀
+  overall_comment: 点评初始阶段，仅读出开头，无完整评价。
+  comments: []

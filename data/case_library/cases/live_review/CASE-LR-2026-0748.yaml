@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0748
+title: 大秦黑暗萝莉至武侠 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 抽象
+  - 穿越
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 降十分吧，30分 | 作者实力撑不起全程玩梗的抽象风格，降分处理。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 作者实力撑不起全程玩梗的抽象风格，降分处理。 | 实力无法支撑全程的玩梗与角色塑造;开篇节奏太慢，缺乏炸裂的脑洞
+  observable:
+  - 'character维度: 实力无法支撑全程的玩梗与角色塑造'
+  - 'opening维度: 开篇节奏太慢，缺乏炸裂的脑洞'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 371
+  - 430
+  score: 30
+  score_raw: 降十分吧，30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大秦黑暗萝莉至武侠
+  genre_guess:
+  - 抽象
+  - 穿越
+  - 搞笑
+  overall_comment: 作者实力撑不起全程玩梗的抽象风格，降分处理。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 实力无法支撑全程的玩梗与角色塑造
+    raw_quote: 这玩意就是一些烂梗……你的实力支撑不住全程玩这样的梗
+  - dimension: opening
+    severity: negative
+    content: 开篇节奏太慢，缺乏炸裂的脑洞
+    raw_quote: 节奏也得加快，节奏跳的节奏太慢了对吧

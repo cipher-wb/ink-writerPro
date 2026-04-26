@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0042
+title: 机甲古武公园打拳 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 机甲
+  - 武道
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 切入老套，没有危机冲突，设定介绍过多，需学飞卢爽点。28分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入老套，没有危机冲突，设定介绍过多，需学飞卢爽点。28分。 | 切入老套，公园打拳无看点;大量设定无剧情;无有效危机和金手指
+  observable:
+  - 'opening维度: 切入老套，公园打拳无看点'
+  - 'pacing维度: 大量设定无剧情'
+  - 'golden_finger维度: 无有效危机和金手指'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 411
+  - 460
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 机甲古武公园打拳
+  genre_guess:
+  - 机甲
+  - 武道
+  overall_comment: 切入老套，没有危机冲突，设定介绍过多，需学飞卢爽点。28分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入老套，公园打拳无看点
+    raw_quote: 这切入也太老套了吧
+  - dimension: pacing
+    severity: negative
+    content: 大量设定无剧情
+    raw_quote: 就都是设定啊
+  - dimension: golden_finger
+    severity: negative
+    content: 无有效危机和金手指
+    raw_quote: 这个社会有什么诱外天谋吗

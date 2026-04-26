@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1169
+title: 老皇帝一拳干爆十万大军 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 历史
+  - 玄幻
+  - 高武
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 遣词造句很有历史味道，文笔扎实，但偏偏要用恶搞系统和烂梗去写。只要抛弃恶搞，走正常老年热血高武爽文路线，大有可为。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句很有历史味道，文笔扎实，但偏偏要用恶搞系统和烂梗去写。只要抛弃恶搞，走正常老年热血高武爽文路线，大有可为。 | 金手指和系统元素属于烂梗和恶搞，严重拉低作品档次
+  observable:
+  - 'golden_finger维度: 金手指和系统元素属于烂梗和恶搞，严重拉低作品档次'
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 1962
+  - 2042
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 老皇帝一拳干爆十万大军
+  genre_guess:
+  - 历史
+  - 玄幻
+  - 高武
+  overall_comment: 遣词造句很有历史味道，文笔扎实，但偏偏要用恶搞系统和烂梗去写。只要抛弃恶搞，走正常老年热血高武爽文路线，大有可为。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 遣词造句有功力，文笔比例扎实
+    raw_quote: 你前面那几句其实很见功利了 就是老 老成给你说什么 陛下怎么怎么样的
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指和系统元素属于烂梗和恶搞，严重拉低作品档次
+    raw_quote: 不要烂梗 攻略角色是个老头 为什么老要这么搞 疯死了 你不要老是恶搞 今时候这也是恶搞 我就正常写冷写
+  - dimension: genre
+    severity: positive
+    content: 建议走老年热血、高武爽文路线，反差感强且有市场
+    raw_quote: 走那种快速爽闻 对吧 高五象应该是 老皇帝嘛 老年热血 然后走正常路线

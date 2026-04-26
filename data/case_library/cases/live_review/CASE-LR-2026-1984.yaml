@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1984
+title: 东京律师/89年涩谷 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 东京
+  - 律师
+  - 社会
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分吧 | 雪白加案件思路对，但脚部互动的游走描写过火扣分，节奏仍需加速。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白加案件思路对，但脚部互动的游走描写过火扣分，节奏仍需加速。 | 桌下脚部游走描写过度，易被审核盯上
+  observable:
+  - 'taboo维度: 桌下脚部游走描写过度，易被审核盯上'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1101
+  - 1180
+  score: 50
+  score_raw: 50分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京律师/89年涩谷
+  genre_guess:
+  - 东京
+  - 律师
+  - 社会
+  overall_comment: 雪白加案件思路对，但脚部互动的游走描写过火扣分，节奏仍需加速。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开头用雪白加律师主线，东晋文正常写法
+    raw_quote: 一边雪白一边按键嘛，就是主线，这次还行
+  - dimension: taboo
+    severity: negative
+    content: 桌下脚部游走描写过度，易被审核盯上
+    raw_quote: 你不要游走好吧，点到为止

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1750
+title: 木业的中心花园 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 同仁
+  - 火影
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十多封有吧 | 节奏快但文风小白，剧情略显尴尬，适合直发测试数据。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快但文风小白，剧情略显尴尬，适合直发测试数据。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1625
+  - 1720
+  score: null
+  score_raw: 四十多封有吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 木业的中心花园
+  genre_guess:
+  - 同仁
+  - 火影
+  - 穿越
+  overall_comment: 节奏快但文风小白，剧情略显尴尬，适合直发测试数据。
+  comments:
+  - dimension: simplicity
+    severity: neutral
+    content: 文笔流畅但偏小白，需要观察读者反馈。
+    raw_quote: 还是流畅的各方面 流畅的 但是小白啊

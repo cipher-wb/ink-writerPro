@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1245
+title: 养猪的西幻 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 求生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就35分呃 | 元素杂糅，设定太多，剧情只是平淡的求生记，缺乏爽点，虽然有白金之姿的玩笑但实际需推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素杂糅，设定太多，剧情只是平淡的求生记，缺乏爽点，虽然有白金之姿的玩笑但实际需推翻。 | 科幻、都市、西幻元素杂糅，设定一大堆;主线平淡，只是求生记，缺乏看点
+  observable:
+  - 'ops维度: 科幻、都市、西幻元素杂糅，设定一大堆'
+  - 'pacing维度: 主线平淡，只是求生记，缺乏看点'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1060
+  - 1117
+  score: 35
+  score_raw: 就35分呃
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 养猪的西幻
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 求生
+  overall_comment: 元素杂糅，设定太多，剧情只是平淡的求生记，缺乏爽点，虽然有白金之姿的玩笑但实际需推翻。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 科幻、都市、西幻元素杂糅，设定一大堆
+    raw_quote: 大哥全是设定，找不到你的剧情
+  - dimension: pacing
+    severity: negative
+    content: 主线平淡，只是求生记，缺乏看点
+    raw_quote: 主线内容其实就是主角求生记，没啥意思的
+  - dimension: misc
+    severity: positive
+    content: 文笔比例还可以
+    raw_quote: 我觉得杂糅比例还挺好

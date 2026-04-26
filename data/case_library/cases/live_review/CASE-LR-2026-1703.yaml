@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1703
+title: 骷髅队友不做人 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 奇幻
+  - 游戏异界
+  - 穿越
+  - 骷髅
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有20分 | 表达还行但事件极弱，人设小白，如同三傻过家家，缺乏代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 表达还行但事件极弱，人设小白，如同三傻过家家，缺乏代入感。 | 开局多人穿越，设定奇怪，代入感极差。;故事如同公路片和三傻大闹宝莱坞，缺乏核心爽点。
+  observable:
+  - 'opening维度: 开局多人穿越，设定奇怪，代入感极差。'
+  - 'highpoint维度: 故事如同公路片和三傻大闹宝莱坞，缺乏核心爽点。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1331
+  - 1381
+  score: 20
+  score_raw: 有20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 骷髅队友不做人
+  genre_guess:
+  - 奇幻
+  - 游戏异界
+  - 穿越
+  - 骷髅
+  overall_comment: 表达还行但事件极弱，人设小白，如同三傻过家家，缺乏代入感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局多人穿越，设定奇怪，代入感极差。
+    raw_quote: 这个人设太奇怪了，人设太小白了
+  - dimension: highpoint
+    severity: negative
+    content: 故事如同公路片和三傻大闹宝莱坞，缺乏核心爽点。
+    raw_quote: 就三个人...好慢呀，公路嘛也没什么内容

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1007
+title: 游戏王专业打牌 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 同人
+  - 游戏王
+  - 竞技
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 直发吧，看你两个字有没有数据的，我觉得我是觉得起不来的 | 太硬核专业，缺乏故事性，受众极窄建议直发看数据。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太硬核专业，缺乏故事性，受众极窄建议直发看数据。 | 专业性过强，受众极窄;第一章纯打牌，缺乏活人感和故事性
+  observable:
+  - 'genre维度: 专业性过强，受众极窄'
+  - 'opening维度: 第一章纯打牌，缺乏活人感和故事性'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 2375
+  - 2471
+  score: null
+  score_raw: 直发吧，看你两个字有没有数据的，我觉得我是觉得起不来的
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 游戏王专业打牌
+  genre_guess:
+  - 同人
+  - 游戏王
+  - 竞技
+  overall_comment: 太硬核专业，缺乏故事性，受众极窄建议直发看数据。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 专业性过强，受众极窄
+    raw_quote: 太硬核了……没什么其他的剧情啊，没什么其他的网红线啊
+  - dimension: opening
+    severity: negative
+    content: 第一章纯打牌，缺乏活人感和故事性
+    raw_quote: 能不能来点故事性，让别人看看……第一张为什么没有啊

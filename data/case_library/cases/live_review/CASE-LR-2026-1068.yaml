@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1068
+title: 穿越红楼成了曾松 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1UMqFBqEKH
+scope:
+  genre:
+  - 红楼梦
+  - 穿越
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 说实话能签 | 文笔扎实，人设与拉扯出色，签约水平足够；但情节进展过快，缺少强主线，后续需明确方向。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1UMqFBqEKH.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，人设与拉扯出色，签约水平足够；但情节进展过快，缺少强主线，后续需明确方向。 | 情节进展过快，所有底牌一次性亮出，可能过早完结;缺少强主线，后续展开不明
+  observable:
+  - 'pacing维度: 情节进展过快，所有底牌一次性亮出，可能过早完结'
+  - 'highpoint维度: 缺少强主线，后续展开不明'
+live_review_meta:
+  source_bvid: BV1UMqFBqEKH
+  source_line_range:
+  - 1
+  - 186
+  score: null
+  score_raw: 说实话能签
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 穿越红楼成了曾松
+  genre_guess:
+  - 红楼梦
+  - 穿越
+  - 同人
+  overall_comment: 文笔扎实，人设与拉扯出色，签约水平足够；但情节进展过快，缺少强主线，后续需明确方向。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 开篇切入可以，第一章没有问题
+    raw_quote: 可以这第一章没问题
+  - dimension: character
+    severity: positive
+    content: 主角人设讨喜，与王熙凤的拉扯写得高水平
+    raw_quote: 跟王熙凤拉扯这点水平还挺高的
+  - dimension: pacing
+    severity: negative
+    content: 情节进展过快，所有底牌一次性亮出，可能过早完结
+    raw_quote: 大哥为了签约是不是有点太急了呀
+  - dimension: highpoint
+    severity: negative
+    content: 缺少强主线，后续展开不明
+    raw_quote: 光一个任务也没啥意思呀

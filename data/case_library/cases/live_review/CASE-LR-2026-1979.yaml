@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1979
+title: 美利坚斩师斩杀线 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 美利坚
+  - 奇幻
+  - 异世界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分 | 世界观胡乱堆砌，元素杂糅吓人，缺乏真实感和主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观胡乱堆砌，元素杂糅吓人，缺乏真实感和主线。 | 西幻、异世界、美利坚杂糅，定位模糊;开头干巴巴交代设定，毫无代入
+  observable:
+  - 'genre维度: 西幻、异世界、美利坚杂糅，定位模糊'
+  - 'opening维度: 开头干巴巴交代设定，毫无代入'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 651
+  - 740
+  score: 23
+  score_raw: 23分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美利坚斩师斩杀线
+  genre_guess:
+  - 美利坚
+  - 奇幻
+  - 异世界
+  overall_comment: 世界观胡乱堆砌，元素杂糅吓人，缺乏真实感和主线。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西幻、异世界、美利坚杂糅，定位模糊
+    raw_quote: 你的世界观吓人，这种两鸡根本就不是卖点
+  - dimension: opening
+    severity: negative
+    content: 开头干巴巴交代设定，毫无代入
+    raw_quote: 开头代入感沉浸感这段不够

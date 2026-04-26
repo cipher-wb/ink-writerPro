@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1241
+title: 高美利坚游戏副本 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 无限流
+  - 副本
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就25分吧最多 | 内容空虚，驱动力俗套，副本设定不接地气，表达虽流畅但建议推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容空虚，驱动力俗套，副本设定不接地气，表达虽流畅但建议推翻重写。 | 驱动力过于俗套无聊，缺钱去玩游戏;副本设定混乱，代入不了
+  observable:
+  - 'opening维度: 驱动力过于俗套无聊，缺钱去玩游戏'
+  - 'hook维度: 副本设定混乱，代入不了'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 802
+  - 852
+  score: 25
+  score_raw: 差不多就25分吧最多
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高美利坚游戏副本
+  genre_guess:
+  - 无限流
+  - 副本
+  - 游戏
+  overall_comment: 内容空虚，驱动力俗套，副本设定不接地气，表达虽流畅但建议推翻重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 驱动力过于俗套无聊，缺钱去玩游戏
+    raw_quote: 因为你的驱动力很无聊啊，缺钱这个事件是直接是规则吗
+  - dimension: hook
+    severity: negative
+    content: 副本设定混乱，代入不了
+    raw_quote: 这这这这这副本乱来设定，我觉得代入不了

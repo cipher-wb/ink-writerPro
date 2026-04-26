@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0967
+title: 穿越经商博弈论 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 古代架空
+  - 穿越
+  - 经商
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个30多分的样子...33分了只能 | 写人物能力还可以，比例挺好。但商业理论、博弈论等太专业出戏，读者不买账。建议改成玄幻修炼套路，不要老加道理说教。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写人物能力还可以，比例挺好。但商业理论、博弈论等太专业出戏，读者不买账。建议改成玄幻修炼套路，不要老加道理说教。 | 囚徒困境、博弈论等内容太专业太枯燥，像在说教。;没人看这种脑洞，读者不来听道理，建议加玄幻修炼系统变爽文。
+  observable:
+  - 'simplicity维度: 囚徒困境、博弈论等内容太专业太枯燥，像在说教。'
+  - 'genre维度: 没人看这种脑洞，读者不来听道理，建议加玄幻修炼系统变爽文。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 911
+  - 1130
+  score: 33
+  score_raw: 有个30多分的样子...33分了只能
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越经商博弈论
+  genre_guess:
+  - 古代架空
+  - 穿越
+  - 经商
+  overall_comment: 写人物能力还可以，比例挺好。但商业理论、博弈论等太专业出戏，读者不买账。建议改成玄幻修炼套路，不要老加道理说教。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 人物写得比较丰富，不是简单的脸谱化。
+    raw_quote: 他这个人设其实写的还可以的...人物是写的比较丰富的...这种是对的
+  - dimension: simplicity
+    severity: negative
+    content: 囚徒困境、博弈论等内容太专业太枯燥，像在说教。
+    raw_quote: 你非要把这玩意弄得这么专业...什么囚徒困境这样...这干嘛呀...哲学就这样...太专业了
+  - dimension: genre
+    severity: negative
+    content: 没人看这种脑洞，读者不来听道理，建议加玄幻修炼系统变爽文。
+    raw_quote: 没人看这个脑洞...没人探讨商业的本质...大家来看网文其实都是来看爽文的

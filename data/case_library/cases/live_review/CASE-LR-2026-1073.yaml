@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1073
+title: 武夫文圣系统流 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 书院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分左右吧 | 纹身系统是毒点，日记切入又过于平淡，整体缺乏新意和金手指卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纹身系统是毒点，日记切入又过于平淡，整体缺乏新意和金手指卖点。 | 纹身系统让读者出戏，是常见毒点;日记流水账式开头无人关心
+  observable:
+  - 'golden_finger维度: 纹身系统让读者出戏，是常见毒点'
+  - 'opening维度: 日记流水账式开头无人关心'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 621
+  - 708
+  score: 33
+  score_raw: 33分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 武夫文圣系统流
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 书院
+  overall_comment: 纹身系统是毒点，日记切入又过于平淡，整体缺乏新意和金手指卖点。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 纹身系统让读者出戏，是常见毒点
+    raw_quote: 纹身系统我真觉得是个毒点
+  - dimension: opening
+    severity: negative
+    content: 日记流水账式开头无人关心
+    raw_quote: 没人关心你一个人力车夫的日常

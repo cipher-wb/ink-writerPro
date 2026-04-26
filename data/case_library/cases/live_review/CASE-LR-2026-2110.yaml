@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2110
+title: 大唐反唐复隋历史文 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 唐朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40分 | 对历史理解太老套，写法像极品家丁时代，建议别写历史换赛道。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对历史理解太老套，写法像极品家丁时代，建议别写历史换赛道。 | 历史文写法太老套，出戏，不像现在的历史文;每个人设都不对，身份反应剧情安排都太古老
+  observable:
+  - 'genre维度: 历史文写法太老套，出戏，不像现在的历史文'
+  - 'character维度: 每个人设都不对，身份反应剧情安排都太古老'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 386
+  - 420
+  score: 40
+  score_raw: 差不多40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大唐反唐复隋历史文
+  genre_guess:
+  - 历史
+  - 穿越
+  - 唐朝
+  overall_comment: 对历史理解太老套，写法像极品家丁时代，建议别写历史换赛道。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 历史文写法太老套，出戏，不像现在的历史文
+    raw_quote: 你这种太出戏了，这个现在的历史哪有这样写的
+  - dimension: character
+    severity: negative
+    content: 每个人设都不对，身份反应剧情安排都太古老
+    raw_quote: 这个东西每个人设我觉得都不对

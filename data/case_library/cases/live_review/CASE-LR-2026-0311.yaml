@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0311
+title: 穿越宝可梦 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 同人
+  - 宝可梦
+  - 修仙
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个40来分马象只发一飞机直发试试 | 题材反差好，但人物描写单薄，节奏慢，加强人设后直发有机会。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材反差好，但人物描写单薄，节奏慢，加强人设后直发有机会。 | 女性角色描写单调，缺乏魅力;个人视角过长，应快速引入互动
+  observable:
+  - 'character维度: 女性角色描写单调，缺乏魅力'
+  - 'pacing维度: 个人视角过长，应快速引入互动'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 1351
+  - 1410
+  score: 40
+  score_raw: 有个40来分马象只发一飞机直发试试
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越宝可梦
+  genre_guess:
+  - 同人
+  - 宝可梦
+  - 修仙
+  - 系统
+  overall_comment: 题材反差好，但人物描写单薄，节奏慢，加强人设后直发有机会。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女性角色描写单调，缺乏魅力
+    raw_quote: 你这写女人的能力很差呀
+  - dimension: pacing
+    severity: negative
+    content: 个人视角过长，应快速引入互动
+    raw_quote: 不要写太多 主角形 你可以独角去切入 但不能写太多
+  - dimension: golden_finger
+    severity: positive
+    content: 修仙与宝可梦结合的反差设定很有卖点
+    raw_quote: 修仙系统就是可以的呀 类似于那个缅甸园区那种脑补修仙的题材都是好题材

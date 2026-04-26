@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1525
+title: 福尔摩斯同人 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 推理
+  - 穿越
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 凉了 已经再见了 | 都市异能穿书，读者根本看不懂，受众极小，建议改成诸天任务流。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市异能穿书，读者根本看不懂，受众极小，建议改成诸天任务流。 | 都市异能加穿书，读者看不懂，凉
+  observable:
+  - 'genre维度: 都市异能加穿书，读者看不懂，凉'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1801
+  - 1900
+  score: null
+  score_raw: 凉了 已经再见了
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 福尔摩斯同人
+  genre_guess:
+  - 推理
+  - 穿越
+  - 都市
+  overall_comment: 都市异能穿书，读者根本看不懂，受众极小，建议改成诸天任务流。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 都市异能加穿书，读者看不懂，凉
+    raw_quote: 都市艺人加穿书那就已经养出去了 … 读者根本看不懂

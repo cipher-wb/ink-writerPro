@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0582
+title: 终焉之时 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 游戏
+  - 同人
+  - 网游
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例可以有35分 这个有38分吧 | 设定杂糅过多，核心剧情打狗毫无看点，比例尚可但整体吸引力极低。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定杂糅过多，核心剧情打狗毫无看点，比例尚可但整体吸引力极低。 | 设定堆砌严重，读者根本看不懂也无法代入;核心剧情全程在打狗，毫无信息量和高光
+  observable:
+  - 'misc维度: 设定堆砌严重，读者根本看不懂也无法代入'
+  - 'pacing维度: 核心剧情全程在打狗，毫无信息量和高光'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 258
+  - 325
+  score: 38
+  score_raw: 比例可以有35分 这个有38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 终焉之时
+  genre_guess:
+  - 游戏
+  - 同人
+  - 网游
+  overall_comment: 设定杂糅过多，核心剧情打狗毫无看点，比例尚可但整体吸引力极低。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 设定堆砌严重，读者根本看不懂也无法代入
+    raw_quote: 大哥这个东西子弹有好多 ... 你这玩意我感觉题材太老套了 没意思呀
+  - dimension: pacing
+    severity: negative
+    content: 核心剧情全程在打狗，毫无信息量和高光
+    raw_quote: 你剧情是在打狗呀 有啥意思啊是吧 ... 谁会看你打狗呀

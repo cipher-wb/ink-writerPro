@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1556
+title: 东京冥污小姐与白桃夫人 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 东京
+  - 魅魔
+  - 怪谈
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 九分吧 | 99%雪白无主线，纯擦边违规。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 99%雪白无主线，纯擦边违规。 | 全程雪白，没有实质剧情;大量细节描写，过审无望
+  observable:
+  - 'genre维度: 全程雪白，没有实质剧情'
+  - 'ops维度: 大量细节描写，过审无望'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1501
+  - 1640
+  score: null
+  score_raw: 九分吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 东京冥污小姐与白桃夫人
+  genre_guess:
+  - 东京
+  - 魅魔
+  - 怪谈
+  - 雪白
+  overall_comment: 99%雪白无主线，纯擦边违规。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 全程雪白，没有实质剧情
+    raw_quote: 除了雪白 你们告诉我她还有什么卖点
+  - dimension: ops
+    severity: negative
+    content: 大量细节描写，过审无望
+    raw_quote: 不是怎么是這樣的呀大哥 这是什么画面大哥

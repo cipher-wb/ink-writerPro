@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0182
+title: 重生08：我能制作游戏 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 游戏制作
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分吧 | 重生文套路老旧，开篇打游戏solo拖沓，欺负小孩事件不爽，卖点不清。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生文套路老旧，开篇打游戏solo拖沓，欺负小孩事件不爽，卖点不清。 | 开头用cf打游戏solo小孩，事件无聊且拖节奏。;主角行为不符合重生大佬应有格调，欺负小孩无爽感。;重生都市题材旧，缺乏新鲜反转。
+  observable:
+  - 'opening维度: 开头用cf打游戏solo小孩，事件无聊且拖节奏。'
+  - 'character维度: 主角行为不符合重生大佬应有格调，欺负小孩无爽感。'
+  - 'genre维度: 重生都市题材旧，缺乏新鲜反转。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 1880
+  - 2030
+  score: 38
+  score_raw: 38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生08：我能制作游戏
+  genre_guess:
+  - 重生
+  - 都市
+  - 游戏制作
+  overall_comment: 重生文套路老旧，开篇打游戏solo拖沓，欺负小孩事件不爽，卖点不清。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头用cf打游戏solo小孩，事件无聊且拖节奏。
+    raw_quote: 第一个卖点卡卡哭小孩哥然后回家
+  - dimension: character
+    severity: negative
+    content: 主角行为不符合重生大佬应有格调，欺负小孩无爽感。
+    raw_quote: 欺负小孩你还高兴了呀
+  - dimension: genre
+    severity: negative
+    content: 重生都市题材旧，缺乏新鲜反转。
+    raw_quote: 这题材太无聊了

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1947
+title: 龙族首富建立万界城 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1u8PfzkEax
+scope:
+  genre:
+  - 同人
+  - 龙族
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 史上最强电转20分 | 完全不会写网文，根本不懂线性叙事和故事表达，开头劝退，缺乏对网文的基本认知需要沉淀学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1u8PfzkEax.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 完全不会写网文，根本不懂线性叙事和故事表达，开头劝退，缺乏对网文的基本认知需要沉淀学习。 | 开头不讲主角，读者全跑完;无法将故事讲得流畅易懂
+  observable:
+  - 'opening维度: 开头不讲主角，读者全跑完'
+  - 'simplicity维度: 无法将故事讲得流畅易懂'
+live_review_meta:
+  source_bvid: BV1u8PfzkEax
+  source_line_range:
+  - 614
+  - 671
+  score: 16
+  score_raw: 史上最强电转20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 龙族首富建立万界城
+  genre_guess:
+  - 同人
+  - 龙族
+  - 都市
+  overall_comment: 完全不会写网文，根本不懂线性叙事和故事表达，开头劝退，缺乏对网文的基本认知需要沉淀学习。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头不讲主角，读者全跑完
+    raw_quote: 开头就不讲...读者就跑完了，前面跑完了内容也跑完了
+  - dimension: simplicity
+    severity: negative
+    content: 无法将故事讲得流畅易懂
+    raw_quote: 我说句蓝天的大哥你根本就不会写，就完全不知道怎么讲网红的这个

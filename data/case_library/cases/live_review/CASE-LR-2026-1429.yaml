@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1429
+title: 近代签到文 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 玄幻
+  - 签到
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分要改的话 | 题材过时，第一章垃圾，第二章日常尚可，33分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材过时，第一章垃圾，第二章日常尚可，33分。 | 签到文早已过时;第一章拉仇恨太老套
+  observable:
+  - 'genre维度: 签到文早已过时'
+  - 'opening维度: 第一章拉仇恨太老套'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 1061
+  - 1100
+  score: 33
+  score_raw: 33分要改的话
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 近代签到文
+  genre_guess:
+  - 玄幻
+  - 签到
+  - 系统
+  overall_comment: 题材过时，第一章垃圾，第二章日常尚可，33分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 签到文早已过时
+    raw_quote: 签到文是22年之前流行的 兄弟可能没研究过签到文 现在写不了了
+  - dimension: opening
+    severity: negative
+    content: 第一章拉仇恨太老套
+    raw_quote: 第一章比较垃圾

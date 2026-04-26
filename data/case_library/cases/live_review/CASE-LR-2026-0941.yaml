@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0941
+title: 系统来临 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 系统
+  - 幽默
+  - 蓝精灵
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 推翻吧 不要浪费时间 | 蓝精灵思路，起点完全不适合，建议推翻
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蓝精灵思路，起点完全不适合，建议推翻 | 系统文标题太直白，起点读者傲娇不接受; 整体为蓝精灵路子，起点无法签约
+  observable:
+  - 'genre维度: 系统文标题太直白，起点读者傲娇不接受'
+  - 'simplicity维度:  整体为蓝精灵路子，起点无法签约'
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 1078
+  - 1154
+  score: null
+  score_raw: 推翻吧 不要浪费时间
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 系统来临
+  genre_guess:
+  - 系统
+  - 幽默
+  - 蓝精灵
+  overall_comment: 蓝精灵思路，起点完全不适合，建议推翻
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 系统文标题太直白，起点读者傲娇不接受
+    raw_quote: 起点的书读者虽然爱看系统 但是不怎么爱看系统在标题的
+  - dimension: simplicity
+    severity: negative
+    content: ' 整体为蓝精灵路子，起点无法签约'
+    raw_quote: 基本都是蓝精灵思路嘛

@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0033
+title: 领主继承手札西幻 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 西幻
+  - 领主
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 事件无聊 | 事件零散，期待感不明确，缺乏金手指。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件零散，期待感不明确，缺乏金手指。 | 没有明确的期待感和金手指
+  observable:
+  - 'hook维度: 没有明确的期待感和金手指'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 595
+  - 620
+  score: null
+  score_raw: 事件无聊
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 领主继承手札西幻
+  genre_guess:
+  - 西幻
+  - 领主
+  overall_comment: 事件零散，期待感不明确，缺乏金手指。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 没有明确的期待感和金手指
+    raw_quote: 现在没有期待感 ... 没有明确的期待感

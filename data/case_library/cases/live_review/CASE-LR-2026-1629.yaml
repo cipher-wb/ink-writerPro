@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1629
+title: 都市强者归来 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 都市
+  - 强者归来
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 肯定不签 | 开篇违反平台规则，硬性fail。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇违反平台规则，硬性fail。 | 主角对老人动手触发平台违禁。;无法过审。
+  observable:
+  - 'taboo维度: 主角对老人动手触发平台违禁。'
+  - 'ops维度: 无法过审。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 141
+  - 175
+  score: null
+  score_raw: 肯定不签
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 都市强者归来
+  genre_guess:
+  - 都市
+  - 强者归来
+  overall_comment: 开篇违反平台规则，硬性fail。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 主角对老人动手触发平台违禁。
+    raw_quote: 主角动手打老人
+  - dimension: ops
+    severity: negative
+    content: 无法过审。
+    raw_quote: 平台规定啊兄弟

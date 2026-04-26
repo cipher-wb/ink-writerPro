@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0975
+title: 潘夫人按摩修仙 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ShX3BLECs
+scope:
+  genre:
+  - 仙侠
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给你55分sorry | 第一章雪白很会写，但后面雪白不够一以贯之。写得太慢太拖沓，故弄玄虚不给明确看点，偏题像悬疑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ShX3BLECs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章雪白很会写，但后面雪白不够一以贯之。写得太慢太拖沓，故弄玄虚不给明确看点，偏题像悬疑。 | 写得太慢太拖沓，第三章了还没重点事件。;二次元少女是毒点，修仙文不爱看二次元。
+  observable:
+  - 'pacing维度: 写得太慢太拖沓，第三章了还没重点事件。'
+  - 'character维度: 二次元少女是毒点，修仙文不爱看二次元。'
+live_review_meta:
+  source_bvid: BV1ShX3BLECs
+  source_line_range:
+  - 2291
+  - 2500
+  score: 55
+  score_raw: 只能给你55分sorry
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 潘夫人按摩修仙
+  genre_guess:
+  - 仙侠
+  - 玄幻
+  overall_comment: 第一章雪白很会写，但后面雪白不够一以贯之。写得太慢太拖沓，故弄玄虚不给明确看点，偏题像悬疑。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章很会写，知道怎么拿点。
+    raw_quote: 第一章会写...这个拿这个点...大哥第一张是选完嘛
+  - dimension: pacing
+    severity: negative
+    content: 写得太慢太拖沓，第三章了还没重点事件。
+    raw_quote: 写的太慢了...写的太慢了...太拖沓了...偏题像悬疑了
+  - dimension: character
+    severity: negative
+    content: 二次元少女是毒点，修仙文不爱看二次元。
+    raw_quote: 二次元少女是个大毒点...修仙文...不爱看二次元...你记住修仙跟二次元天然就不搭

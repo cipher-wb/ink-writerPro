@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2174
+title: 洛雷基（主角名） (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 加个三十二 | 阅读障碍极高，开篇九成是设定，需要做笔记才看懂，写法完全错误。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 阅读障碍极高，开篇九成是设定，需要做笔记才看懂，写法完全错误。 | 开篇堆满设定，阅读障碍极高，需要做笔记才能看懂;一上来就介绍，不会用事件切入
+  observable:
+  - 'simplicity维度: 开篇堆满设定，阅读障碍极高，需要做笔记才能看懂'
+  - 'opening维度: 一上来就介绍，不会用事件切入'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 535
+  - 580
+  score: 32
+  score_raw: 加个三十二
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 洛雷基（主角名）
+  genre_guess:
+  - 西幻
+  - 穿越
+  overall_comment: 阅读障碍极高，开篇九成是设定，需要做笔记才看懂，写法完全错误。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 开篇堆满设定，阅读障碍极高，需要做笔记才能看懂
+    raw_quote: 一张里面九成都是设定 … 就看你的书要带 笔记本要去做笔记
+  - dimension: opening
+    severity: negative
+    content: 一上来就介绍，不会用事件切入
+    raw_quote: 你就介绍呀介绍呀 一张里面九成都是设定

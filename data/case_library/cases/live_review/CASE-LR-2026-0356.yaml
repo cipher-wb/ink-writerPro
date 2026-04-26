@@ -1,0 +1,62 @@
+case_id: CASE-LR-2026-0356
+title: 世界之巅 (fail / 36分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV193ZPBCEuB
+scope:
+  genre:
+  - 游戏异界
+  - 法环
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就36分 | 无功无过的切入，但一直写设定无事件推进，缺乏冲突和雪白，读者会立刻流失。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV193ZPBCEuB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无功无过的切入，但一直写设定无事件推进，缺乏冲突和雪白，读者会立刻流失。 | 开篇无事件，全是介绍，缺乏冲突;节奏拖沓，没有事件推进，读者耐心耗尽;说明书式写设定，信息过多
+  observable:
+  - 'opening维度: 开篇无事件，全是介绍，缺乏冲突'
+  - 'pacing维度: 节奏拖沓，没有事件推进，读者耐心耗尽'
+  - 'simplicity维度: 说明书式写设定，信息过多'
+live_review_meta:
+  source_bvid: BV193ZPBCEuB
+  source_line_range:
+  - 179
+  - 238
+  score: 36
+  score_raw: 差不多就36分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 世界之巅
+  genre_guess:
+  - 游戏异界
+  - 法环
+  - 金手指
+  overall_comment: 无功无过的切入，但一直写设定无事件推进，缺乏冲突和雪白，读者会立刻流失。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇无事件，全是介绍，缺乏冲突
+    raw_quote: 就就一直写 ... 一直写读着就跑了 ... 没事件啊
+  - dimension: pacing
+    severity: negative
+    content: 节奏拖沓，没有事件推进，读者耐心耗尽
+    raw_quote: 着急了嘛 这读者不看了 因为读者的耐心值这里已经满了 一定要有事件了
+  - dimension: golden_finger
+    severity: neutral
+    content: 金手指可用，但缺少立即的危机事件触发
+    raw_quote: 最好用雪白 ... 你有个金手指 ... 叮系统提示
+  - dimension: simplicity
+    severity: negative
+    content: 说明书式写设定，信息过多
+    raw_quote: 一直写就等于是说明书读者看不下去了

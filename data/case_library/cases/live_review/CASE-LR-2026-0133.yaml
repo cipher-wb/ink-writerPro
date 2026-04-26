@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0133
+title: 比根不错 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 仙侠
+  - 玄幻
+  - 人妖对立
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 人妖对立题材老套过时，开篇衙役写法缺乏代入感，强行模仿大神自留地写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人妖对立题材老套过时，开篇衙役写法缺乏代入感，强行模仿大神自留地写法。 | 人妖对立、空降拯救题材早已过时;开篇从衙役切入像大神自留地，新人驾驭不住;梦境金手指多此一举，不如直接情报系统
+  observable:
+  - 'genre维度: 人妖对立、空降拯救题材早已过时'
+  - 'opening维度: 开篇从衙役切入像大神自留地，新人驾驭不住'
+  - 'golden_finger维度: 梦境金手指多此一举，不如直接情报系统'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 153
+  - 165
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 比根不错
+  genre_guess:
+  - 仙侠
+  - 玄幻
+  - 人妖对立
+  overall_comment: 人妖对立题材老套过时，开篇衙役写法缺乏代入感，强行模仿大神自留地写法。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 人妖对立、空降拯救题材早已过时
+    raw_quote: 什么垃圾题材 真的是人妖对立的世界 空降拯救人族
+  - dimension: opening
+    severity: negative
+    content: 开篇从衙役切入像大神自留地，新人驾驭不住
+    raw_quote: 这种就冒充白金去了 不适合了 不适合从这种牙医啊 嗯这种开局的真不行
+  - dimension: golden_finger
+    severity: negative
+    content: 梦境金手指多此一举，不如直接情报系统
+    raw_quote: 金手指梦里面这个多此一举 画蛇添足 脱裤子放屁

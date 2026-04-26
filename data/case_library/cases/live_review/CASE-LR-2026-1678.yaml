@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1678
+title: 西游：黑风山小妖求生 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 西游
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十二分左右吧 | 文笔扎实但角色太原创，没有蹭到知名西游妖怪，紧张感不足，需要加强人物身份。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但角色太原创，没有蹭到知名西游妖怪，紧张感不足，需要加强人物身份。 | 用不知名小妖几乎变成原创，浪费西游ip热度;缺少读者一眼熟悉的元素，期待感不强
+  observable:
+  - 'genre维度: 用不知名小妖几乎变成原创，浪费西游ip热度'
+  - 'hook维度: 缺少读者一眼熟悉的元素，期待感不强'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 661
+  - 720
+  score: 32
+  score_raw: 三十二分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 西游：黑风山小妖求生
+  genre_guess:
+  - 西游
+  - 穿越
+  - 系统
+  overall_comment: 文笔扎实但角色太原创，没有蹭到知名西游妖怪，紧张感不足，需要加强人物身份。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 用不知名小妖几乎变成原创，浪费西游ip热度
+    raw_quote: 你是一个不知名的小妖 不是 他是一个不知名的小妖问题
+  - dimension: hook
+    severity: negative
+    content: 缺少读者一眼熟悉的元素，期待感不强
+    raw_quote: 没蹭到西游啥啊

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0868
+title: 重生李干足球文 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 足球
+  - 重生
+  - 体育
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44分 | 切入李干玩梗有流量，但金手指和队伍选择失败，没蹭到双骄流量。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入李干玩梗有流量，但金手指和队伍选择失败，没蹭到双骄流量。 | 金手指不行，队伍选择没流量
+  observable:
+  - 'golden_finger维度: 金手指不行，队伍选择没流量'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 311
+  - 340
+  score: 44
+  score_raw: 44分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生李干足球文
+  genre_guess:
+  - 足球
+  - 重生
+  - 体育
+  overall_comment: 切入李干玩梗有流量，但金手指和队伍选择失败，没蹭到双骄流量。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 重生李干蹭梅罗热度，切入几百字很有看点
+    raw_quote: 这一点切入绝对够的 这个小剧场 因为李干有流量呀
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指不行，队伍选择没流量
+    raw_quote: 金手指不行 马梗很多 切入几百字也很好 还是想想怎么蹭到双骄吧

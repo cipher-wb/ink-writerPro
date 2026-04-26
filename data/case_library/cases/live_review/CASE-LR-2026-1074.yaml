@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1074
+title: 恶意千金的契约魔术师 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 西幻
+  - 轻小说
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三四十分的样子 | 开头设定冗长像简介，系统选项破坏真实感，但人物互动潜力尚存。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头设定冗长像简介，系统选项破坏真实感，但人物互动潜力尚存。 | 开头大段设定像背景简介，劝退读者;Galgame选项系统让稿子失去真实感
+  observable:
+  - 'opening维度: 开头大段设定像背景简介，劝退读者'
+  - 'ops维度: Galgame选项系统让稿子失去真实感'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 709
+  - 795
+  score: null
+  score_raw: 三四十分的样子
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 恶意千金的契约魔术师
+  genre_guess:
+  - 西幻
+  - 轻小说
+  - 系统
+  overall_comment: 开头设定冗长像简介，系统选项破坏真实感，但人物互动潜力尚存。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头大段设定像背景简介，劝退读者
+    raw_quote: 这不是一一大堆设定吗
+  - dimension: ops
+    severity: negative
+    content: Galgame选项系统让稿子失去真实感
+    raw_quote: 你已经有点差了，就感觉跟玩游戏一样

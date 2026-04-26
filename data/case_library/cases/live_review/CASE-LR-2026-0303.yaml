@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-0303
+title: 穿越斗罗大陆 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 同人
+  - 斗罗
+  - 火影
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分左右的水平 | 平淡缺乏卖点，时间线太早，融合题材没发挥优势。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 平淡缺乏卖点，时间线太早，融合题材没发挥优势。 | 卖点没有前置，开头平淡;缺少高潮和爆点
+  observable:
+  - 'opening维度: 卖点没有前置，开头平淡'
+  - 'highpoint维度: 缺少高潮和爆点'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 871
+  - 930
+  score: 40
+  score_raw: 40分左右的水平
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 穿越斗罗大陆
+  genre_guess:
+  - 同人
+  - 斗罗
+  - 火影
+  - 穿越
+  overall_comment: 平淡缺乏卖点，时间线太早，融合题材没发挥优势。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 卖点没有前置，开头平淡
+    raw_quote: 你还是不能把你的卖点前置
+  - dimension: misc
+    severity: neutral
+    content: 选择唐三觉醒前时间节点，难以出彩
+    raw_quote: 现在很少穿唐三觉醒武魂的时候 因为那个时候太早了
+  - dimension: highpoint
+    severity: negative
+    content: 缺少高潮和爆点
+    raw_quote: 开头无聊了

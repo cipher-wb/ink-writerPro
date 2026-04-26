@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1700
+title: 西门庆红楼无限恐怖 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 无限流
+  - 红楼
+  - 同人
+  - 诸天
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 西门庆人设立得住，文笔可以，但题材跨度过大是乱编，读者基本盘不重叠。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 西门庆人设立得住，文笔可以，但题材跨度过大是乱编，读者基本盘不重叠。 | 红楼梦与无限恐怖读者群完全不重合，题材是死路。
+  observable:
+  - 'genre维度: 红楼梦与无限恐怖读者群完全不重合，题材是死路。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 1125
+  - 1188
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 西门庆红楼无限恐怖
+  genre_guess:
+  - 无限流
+  - 红楼
+  - 同人
+  - 诸天
+  overall_comment: 西门庆人设立得住，文笔可以，但题材跨度过大是乱编，读者基本盘不重叠。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 红楼梦与无限恐怖读者群完全不重合，题材是死路。
+    raw_quote: 喜欢红楼的绝对不可能喜欢无限恐怖曲啊...就两个世界一直传
+  - dimension: character
+    severity: positive
+    content: 西门庆人设立得住，文笔不错。
+    raw_quote: 人设西门庆人设立住的文笔也挺好的

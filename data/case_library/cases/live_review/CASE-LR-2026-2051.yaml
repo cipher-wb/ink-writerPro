@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-2051
+title: 人在高三，能看到他人身份 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 都市
+  - 校园
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多30分 28分 真上不去30分 | 日常平淡，缺乏情绪冲突和期待感，需要大胆增加矛盾。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 日常平淡，缺乏情绪冲突和期待感，需要大胆增加矛盾。 | 切入太日常，没有事件冲突;没有期待感;人设单薄，没有情绪
+  observable:
+  - 'opening维度: 切入太日常，没有事件冲突'
+  - 'hook维度: 没有期待感'
+  - 'character维度: 人设单薄，没有情绪'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 1001
+  - 1200
+  score: 28
+  score_raw: 最多30分 28分 真上不去30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 人在高三，能看到他人身份
+  genre_guess:
+  - 都市
+  - 校园
+  - 系统
+  overall_comment: 日常平淡，缺乏情绪冲突和期待感，需要大胆增加矛盾。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入太日常，没有事件冲突
+    raw_quote: 我觉得太日常了 我觉得这个需要一个 小剧场去切入了
+  - dimension: hook
+    severity: negative
+    content: 没有期待感
+    raw_quote: 就是写的平平淡淡 ... 没感觉有什么期待感
+  - dimension: character
+    severity: negative
+    content: 人设单薄，没有情绪
+    raw_quote: 没情绪 没看点兄弟 都是烂哥

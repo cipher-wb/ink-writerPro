@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0851
+title: 快乐星球初中生 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 校园
+  - 外星人
+  - 童话
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20 | 童话日记写法，太日常，没有网文重点主线，市场不吃。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 童话日记写法，太日常，没有网文重点主线，市场不吃。 | 初中生写不了啥，纯日常无冲突;文笔太细腻但无网文节奏，注水日常
+  observable:
+  - 'genre维度: 初中生写不了啥，纯日常无冲突'
+  - 'simplicity维度: 文笔太细腻但无网文节奏，注水日常'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 941
+  - 1020
+  score: 20
+  score_raw: 差不多就20
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 快乐星球初中生
+  genre_guess:
+  - 校园
+  - 外星人
+  - 童话
+  overall_comment: 童话日记写法，太日常，没有网文重点主线，市场不吃。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 初中生写不了啥，纯日常无冲突
+    raw_quote: 初中生只能写学霸对吧，恋爱不能谈异能，校园异能类的东西也很难诡异
+  - dimension: simplicity
+    severity: negative
+    content: 文笔太细腻但无网文节奏，注水日常
+    raw_quote: 太日常了，你写书要写重点主线

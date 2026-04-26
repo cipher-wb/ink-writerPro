@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1879
+title: 灵气复苏诡异现世 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 灵气复苏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分吧 | 垃圾题材，事件不接地气，读者不在乎主角想回家还是开店。分类混乱，编辑都看不懂发什么分类。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 垃圾题材，事件不接地气，读者不在乎主角想回家还是开店。分类混乱，编辑都看不懂发什么分类。 | 题材过时且定位混乱，无法确定分类;开篇无事件，纯设定，毫无代入感
+  observable:
+  - 'genre维度: 题材过时且定位混乱，无法确定分类'
+  - 'opening维度: 开篇无事件，纯设定，毫无代入感'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 351
+  - 420
+  score: 18
+  score_raw: 18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 灵气复苏诡异现世
+  genre_guess:
+  - 都市
+  - 灵气复苏
+  overall_comment: 垃圾题材，事件不接地气，读者不在乎主角想回家还是开店。分类混乱，编辑都看不懂发什么分类。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材过时且定位混乱，无法确定分类
+    raw_quote: 灵气复苏诡异现世... 垃圾题材... 题材找不对... 太简... 不知道发什么疯了
+  - dimension: opening
+    severity: negative
+    content: 开篇无事件，纯设定，毫无代入感
+    raw_quote: 没事件 你在这讲设定两小时... 一上来就是设定为主

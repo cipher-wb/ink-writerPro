@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2031
+title: 宇宙第一职业玩家 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 网游
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分 | 自嗨设定，缺乏剧情，读者不关心。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 自嗨设定，缺乏剧情，读者不关心。 | 全设定，自嗨，读者不关心;无剧情，一直通关副本没看点
+  observable:
+  - 'ops维度: 全设定，自嗨，读者不关心'
+  - 'pacing维度: 无剧情，一直通关副本没看点'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 601
+  - 720
+  score: 22
+  score_raw: 22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 宇宙第一职业玩家
+  genre_guess:
+  - 网游
+  - 游戏
+  overall_comment: 自嗨设定，缺乏剧情，读者不关心。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 全设定，自嗨，读者不关心
+    raw_quote: 就全设定…读者不可能去记下来
+  - dimension: pacing
+    severity: negative
+    content: 无剧情，一直通关副本没看点
+    raw_quote: 这有什么意思 这是你自己玩的游戏

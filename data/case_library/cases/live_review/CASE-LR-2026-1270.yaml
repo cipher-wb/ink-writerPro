@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1270
+title: 草原武道牧羊人 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 武道
+  - 草原
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分 | 草原题材有新鲜感，开局思路认可，但金手指杀怪加点节奏有毒，事件过于简单。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 草原题材有新鲜感，开局思路认可，但金手指杀怪加点节奏有毒，事件过于简单。 | 杀羊加点逻辑有毒，容易被当成古真人发展
+  observable:
+  - 'golden_finger维度: 杀羊加点逻辑有毒，容易被当成古真人发展'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 951
+  - 1035
+  score: 50
+  score_raw: 50分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 草原武道牧羊人
+  genre_guess:
+  - 武道
+  - 草原
+  - 穿越
+  overall_comment: 草原题材有新鲜感，开局思路认可，但金手指杀怪加点节奏有毒，事件过于简单。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 杀羊加点逻辑有毒，容易被当成古真人发展
+    raw_quote: 如果你的系统是这样的...你杀了就能加点啊...每天拿着刀去杀就行了呀
+  - dimension: genre
+    severity: positive
+    content: 草原牧羊人题材有新鲜感
+    raw_quote: 你立了呀...换个国外的嘛...有时候就有新鲜感

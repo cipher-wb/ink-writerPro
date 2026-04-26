@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0896
+title: 死亡电台或电台退稿信 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 灵异
+  - 都市
+  - 电台
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 比例扎实，写副本能力强，但开场不接地气，缺少身份代入，思路没从昨天调整过来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实，写副本能力强，但开场不接地气，缺少身份代入，思路没从昨天调整过来。 | 开场直接进电台场景，不写身份，缺乏代入感;电台题材本身过时，应该换成抖音等现代媒介;重点放在过程而非都市前置，不接地气
+  observable:
+  - 'opening维度: 开场直接进电台场景，不写身份，缺乏代入感'
+  - 'genre维度: 电台题材本身过时，应该换成抖音等现代媒介'
+  - 'ops维度: 重点放在过程而非都市前置，不接地气'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 384
+  - 587
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 死亡电台或电台退稿信
+  genre_guess:
+  - 灵异
+  - 都市
+  - 电台
+  overall_comment: 比例扎实，写副本能力强，但开场不接地气，缺少身份代入，思路没从昨天调整过来。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开场直接进电台场景，不写身份，缺乏代入感
+    raw_quote: 还是一上来就立刻这个场景...你这个也不写你是什么身份
+  - dimension: genre
+    severity: negative
+    content: 电台题材本身过时，应该换成抖音等现代媒介
+    raw_quote: 电台现在没人看啊，没人听啊，倒闭了呀...换成抖音啊
+  - dimension: ops
+    severity: negative
+    content: 重点放在过程而非都市前置，不接地气
+    raw_quote: 我觉得重点是前置，不是过程...不接地气啊

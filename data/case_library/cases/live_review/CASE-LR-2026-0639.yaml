@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0639
+title: 天地飞扬 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GJZbBLEmA
+scope:
+  genre:
+  - 西幻
+  - 系统
+  - 设定
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 15分吧 | 开头全是设定，没有故事，续章劝退，15分结个善缘
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GJZbBLEmA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头全是设定，没有故事，续章劝退，15分结个善缘 | 开头大量堆砌世界设定，没有剧情，读者立刻跑光;序章是毒点，2026年还写序章劝退;完全不了解读者，没有成功小说会这样开头
+  observable:
+  - 'opening维度: 开头大量堆砌世界设定，没有剧情，读者立刻跑光'
+  - 'opening维度: 序章是毒点，2026年还写序章劝退'
+  - 'misc维度: 完全不了解读者，没有成功小说会这样开头'
+live_review_meta:
+  source_bvid: BV1GJZbBLEmA
+  source_line_range:
+  - 691
+  - 750
+  score: 15
+  score_raw: 15分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天地飞扬
+  genre_guess:
+  - 西幻
+  - 系统
+  - 设定
+  overall_comment: 开头全是设定，没有故事，续章劝退，15分结个善缘
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头大量堆砌世界设定，没有剧情，读者立刻跑光
+    raw_quote: 能不能别讲设定了，讲故事呀
+  - dimension: opening
+    severity: negative
+    content: 序章是毒点，2026年还写序章劝退
+    raw_quote: 序章也是个大毒点，2026年了还在写序章
+  - dimension: misc
+    severity: negative
+    content: 完全不了解读者，没有成功小说会这样开头
+    raw_quote: 没有小说是这样的呀，拉本小说开头是这样哔哩咕噜讲世界的呀

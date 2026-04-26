@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2214
+title: 五代十国补天裂 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分 | 文笔扎实，乱世氛围渲染得好，但切入点不对，小人物土著写法没人看，必须改成穿越带金手指。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，乱世氛围渲染得好，但切入点不对，小人物土著写法没人看，必须改成穿越带金手指。 | 开篇写太多军械战马细节，读者不爱看，应从蹭历史人物切入;土著小人物开局缺乏期待感，应穿成名臣大将
+  observable:
+  - 'opening维度: 开篇写太多军械战马细节，读者不爱看，应从蹭历史人物切入'
+  - 'character维度: 土著小人物开局缺乏期待感，应穿成名臣大将'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 819
+  - 868
+  score: 40
+  score_raw: 40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 五代十国补天裂
+  genre_guess:
+  - 历史
+  - 五代十国
+  overall_comment: 文笔扎实，乱世氛围渲染得好，但切入点不对，小人物土著写法没人看，必须改成穿越带金手指。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 五代十国题材有热度，选材加分
+    raw_quote: 五代十国现在热度高...题材挺好的
+  - dimension: opening
+    severity: negative
+    content: 开篇写太多军械战马细节，读者不爱看，应从蹭历史人物切入
+    raw_quote: 这个没人看的...读者读者想看你蹭呀...别写这些军械战马 这些东西都是不爱看
+  - dimension: character
+    severity: negative
+    content: 土著小人物开局缺乏期待感，应穿成名臣大将
+    raw_quote: 蹭人去啊...你蹭下别...小人物开局没人看的...找好的身份去蹭

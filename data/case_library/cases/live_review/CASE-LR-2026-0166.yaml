@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0166
+title: 黑石岭第七场雪 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 武侠
+  - 传统武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔比例很好，但传统武侠没新意，建议写金庸同人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例很好，但传统武侠没新意，建议写金庸同人。 | 传统武侠缺乏新意;缺少女主角;没有金手指自带期待感
+  observable:
+  - 'genre维度: 传统武侠缺乏新意'
+  - 'character维度: 缺少女主角'
+  - 'hook维度: 没有金手指自带期待感'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 1369
+  - 1486
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 黑石岭第七场雪
+  genre_guess:
+  - 武侠
+  - 传统武侠
+  overall_comment: 文笔比例很好，但传统武侠没新意，建议写金庸同人。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 传统武侠缺乏新意
+    raw_quote: 這玩意五十年前就不看了呀
+  - dimension: character
+    severity: negative
+    content: 缺少女主角
+    raw_quote: 不寫女主角,沒有女主角
+  - dimension: hook
+    severity: negative
+    content: 没有金手指自带期待感
+    raw_quote: 為什麼我老讓你們有金手指,金手指自帶期待感

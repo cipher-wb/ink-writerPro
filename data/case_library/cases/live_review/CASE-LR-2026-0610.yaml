@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0610
+title: 涅槃生灭骷髅 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 仙侠
+  - 骷髅
+  - 冥界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分不一定能有 退步严重 | 开篇讲设定，严重退步，不懂读者，强行加危机不接地气。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇讲设定，严重退步，不懂读者，强行加危机不接地气。 | 开篇狂甩设定，读者看不懂;骷髅开局应该先与人扯上关系，不要回忆视角
+  observable:
+  - 'opening维度: 开篇狂甩设定，读者看不懂'
+  - 'character维度: 骷髅开局应该先与人扯上关系，不要回忆视角'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 3251
+  - 3400
+  score: 30
+  score_raw: 30分不一定能有 退步严重
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 涅槃生灭骷髅
+  genre_guess:
+  - 仙侠
+  - 骷髅
+  - 冥界
+  overall_comment: 开篇讲设定，严重退步，不懂读者，强行加危机不接地气。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇狂甩设定，读者看不懂
+    raw_quote: 这开头这看到狂掉分了...读的根本看不懂
+  - dimension: character
+    severity: negative
+    content: 骷髅开局应该先与人扯上关系，不要回忆视角
+    raw_quote: 你老是以回忆视角没意思啊...直接写啊

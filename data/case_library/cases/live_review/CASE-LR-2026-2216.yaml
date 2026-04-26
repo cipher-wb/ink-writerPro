@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2216
+title: 全班穿越打游戏 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 网游
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 网游打怪写法已被淘汰，设定没意思，建议发蓝精灵，将校花前置并加强人物互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 网游打怪写法已被淘汰，设定没意思，建议发蓝精灵，将校花前置并加强人物互动。 | 网游杀怪写法已过时，读者早跑完;上来就打怪兽，没有吸引力，应改为英雄救美
+  observable:
+  - 'genre维度: 网游杀怪写法已过时，读者早跑完'
+  - 'opening维度: 上来就打怪兽，没有吸引力，应改为英雄救美'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 916
+  - 964
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全班穿越打游戏
+  genre_guess:
+  - 网游
+  - 穿越
+  overall_comment: 网游打怪写法已被淘汰，设定没意思，建议发蓝精灵，将校花前置并加强人物互动。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 网游杀怪写法已过时，读者早跑完
+    raw_quote: 网游写法已经淘汰了...这个太洋气了
+  - dimension: opening
+    severity: negative
+    content: 上来就打怪兽，没有吸引力，应改为英雄救美
+    raw_quote: 杀怪兽真没意思...真不如英雄救美
+  - dimension: simplicity
+    severity: neutral
+    content: 比例基本功没问题，就是思路老
+    raw_quote: 比例我觉得基本功没啥问题...就比较老吧

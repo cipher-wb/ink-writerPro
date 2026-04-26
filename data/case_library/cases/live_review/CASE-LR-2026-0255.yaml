@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0255
+title: 末日开局海克斯 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 末日
+  - 异能
+  - 爽文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分套路熟 但没用 | 末日丧尸切入套路极熟但毫无新意，缺乏反转和人物情绪，纯打金手指已过时。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 末日丧尸切入套路极熟但毫无新意，缺乏反转和人物情绪，纯打金手指已过时。 | 末日打丧尸拿金手指过于俗套，缺乏反转。;没有好配角、没有情绪拉扯，建议写人物和反转。
+  observable:
+  - 'simplicity维度: 末日打丧尸拿金手指过于俗套，缺乏反转。'
+  - 'character维度: 没有好配角、没有情绪拉扯，建议写人物和反转。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1165
+  - 1235
+  score: 40
+  score_raw: 40分套路熟 但没用
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日开局海克斯
+  genre_guess:
+  - 末日
+  - 异能
+  - 爽文
+  overall_comment: 末日丧尸切入套路极熟但毫无新意，缺乏反转和人物情绪，纯打金手指已过时。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 末日打丧尸拿金手指过于俗套，缺乏反转。
+    raw_quote: 打丧尸出金手指吗 哎呦我的天呐 你能再俗一点吗
+  - dimension: character
+    severity: negative
+    content: 没有好配角、没有情绪拉扯，建议写人物和反转。
+    raw_quote: 末日是写人物的 是写炸裂的事件的

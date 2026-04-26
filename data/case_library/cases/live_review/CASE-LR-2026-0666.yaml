@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0666
+title: 绝症患者的沙盒神明游戏 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 轻小说
+  - 沙盒
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十七八分的样子 | 沙盒神明的梗有点乐子，但人物事件太小白，换成正经的历史或都市背景会好很多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 沙盒神明的梗有点乐子，但人物事件太小白，换成正经的历史或都市背景会好很多。 | 绝症开头太狗血，400万手术费不合理;变成异世界神明后剧情小白，马匪抢劫毫无看点
+  observable:
+  - 'opening维度: 绝症开头太狗血，400万手术费不合理'
+  - 'simplicity维度: 变成异世界神明后剧情小白，马匪抢劫毫无看点'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 2101
+  - 2170
+  score: 35
+  score_raw: 三十七八分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 绝症患者的沙盒神明游戏
+  genre_guess:
+  - 轻小说
+  - 沙盒
+  - 都市
+  overall_comment: 沙盒神明的梗有点乐子，但人物事件太小白，换成正经的历史或都市背景会好很多。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 绝症开头太狗血，400万手术费不合理
+    raw_quote: 出期手术就400多万...美国也不可能啊
+  - dimension: simplicity
+    severity: negative
+    content: 变成异世界神明后剧情小白，马匪抢劫毫无看点
+    raw_quote: 哎呀好小白呀...这有点...写得很白
+  - dimension: genre
+    severity: positive
+    content: 建议将世界观换成历史或都市背景会更有吸引力
+    raw_quote: 你就弄成一个都市世界...那种大名那种...都会好很多

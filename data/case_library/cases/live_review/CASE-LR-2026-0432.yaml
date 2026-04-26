@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0432
+title: 斗罗绝世唐门同人 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 斗罗同人
+  - 玄幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分左右吧 | 比例还好，节奏快，蹭得好，但脑洞太老，跟不上现在融合趋势
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例还好，节奏快，蹭得好，但脑洞太老，跟不上现在融合趋势 | 思路是很多年前的写法，现在斗罗都是融合，脑洞太小
+  observable:
+  - 'genre维度: 思路是很多年前的写法，现在斗罗都是融合，脑洞太小'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 2397
+  - 2480
+  score: 30
+  score_raw: 30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 斗罗绝世唐门同人
+  genre_guess:
+  - 斗罗同人
+  - 玄幻
+  - 系统
+  overall_comment: 比例还好，节奏快，蹭得好，但脑洞太老，跟不上现在融合趋势
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 蹭得快，比例够，节奏比较快
+    raw_quote: 蹭是蹭的挺好的...节奏比较快嘛，比例也够
+  - dimension: genre
+    severity: negative
+    content: 思路是很多年前的写法，现在斗罗都是融合，脑洞太小
+    raw_quote: 这个事可能是165年左右的斗罗写法...现在斗罗都已经进化到了题材融合这个层次...这个脑洞有点胆子小，也不咋样啊

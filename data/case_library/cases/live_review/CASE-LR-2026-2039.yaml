@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2039
+title: 手握重装合成银 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 系统
+  - 岳飞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多59分 | 节奏快，情绪到位，尊重岳飞人设，AI辅助但水平不错，发蓝精灵有市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快，情绪到位，尊重岳飞人设，AI辅助但水平不错，发蓝精灵有市场。
+  observable:
+  - 整体被星河直播判定为 borderline
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 1561
+  - 1680
+  score: 59
+  score_raw: 差不多59分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 手握重装合成银
+  genre_guess:
+  - 历史
+  - 穿越
+  - 系统
+  - 岳飞
+  overall_comment: 节奏快，情绪到位，尊重岳飞人设，AI辅助但水平不错，发蓝精灵有市场。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏很快，情绪到位
+    raw_quote: 节奏很快越飞的人设没变呀
+  - dimension: character
+    severity: positive
+    content: 岳飞人设立得好，尊重原著
+    raw_quote: 越飞的人设没变呀 然后你让上下的人帮你

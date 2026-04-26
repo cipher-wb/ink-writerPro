@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1562
+title: 负债律师重生东京 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 都市
+  - 律师
+  - 重生
+  - 东京
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十四十三分吧 | 切入能力还行但卖点单薄，拉扯不够，后期无聊。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入能力还行但卖点单薄，拉扯不够，后期无聊。 | 女角色拉扯太单薄，好人标签重复强化，缺乏魅力;情节推进单调，缺乏起伏和高潮
+  observable:
+  - 'character维度: 女角色拉扯太单薄，好人标签重复强化，缺乏魅力'
+  - 'pacing维度: 情节推进单调，缺乏起伏和高潮'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 201
+  - 400
+  score: 43
+  score_raw: 四十四十三分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 负债律师重生东京
+  genre_guess:
+  - 都市
+  - 律师
+  - 重生
+  - 东京
+  overall_comment: 切入能力还行但卖点单薄，拉扯不够，后期无聊。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 快速进入主题，危机困境身份交代清楚
+    raw_quote: 这160个字就危机困境身份都出来了，其实还好
+  - dimension: character
+    severity: negative
+    content: 女角色拉扯太单薄，好人标签重复强化，缺乏魅力
+    raw_quote: 卖点很单薄啊，这个就这一个啊，就这个破案也没意思啊，你没金手指对吧，妹子也没拉扯
+  - dimension: pacing
+    severity: negative
+    content: 情节推进单调，缺乏起伏和高潮
+    raw_quote: 一夜无话，这不是拉扯不够呀，太正经

@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1156
+title: 穿越户区病 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1WX9cB5E1L
+scope:
+  genre:
+  - 历史
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 稿件未发，直播间暂未看到正文，主播根据书名给了题材思路和方向上的建议，未进行实质性打分和判定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WX9cB5E1L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 稿件未发，直播间暂未看到正文，主播根据书名给了题材思路和方向上的建议，未进行实质性打分和判定。
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV1WX9cB5E1L
+  source_line_range:
+  - 510
+  - 612
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 穿越户区病
+  genre_guess:
+  - 历史
+  - 穿越
+  overall_comment: 稿件未发，直播间暂未看到正文，主播根据书名给了题材思路和方向上的建议，未进行实质性打分和判定。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 穿户区病（霍去病）题材有反差感，思路可行
+    raw_quote: 穿越户区病 户区病真的可以 户区病我觉得这个很好的题材

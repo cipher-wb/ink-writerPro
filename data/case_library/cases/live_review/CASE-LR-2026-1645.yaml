@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1645
+title: 中年人重生反击 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 一只，25分吧 | 开局陈旧，套路化严重，文笔尚可但思路太老。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局陈旧，套路化严重，文笔尚可但思路太老。 | 开头拉情绪手法过时，起点不流行。
+  observable:
+  - 'opening维度: 开头拉情绪手法过时，起点不流行。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 921
+  - 970
+  score: 25
+  score_raw: 一只，25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 中年人重生反击
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 开局陈旧，套路化严重，文笔尚可但思路太老。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头拉情绪手法过时，起点不流行。
+    raw_quote: 拉个情绪嘛，起点不流行这种

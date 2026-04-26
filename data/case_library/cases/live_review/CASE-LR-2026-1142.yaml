@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1142
+title: 种田长生 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1WKfTBBE3L
+scope:
+  genre:
+  - 仙侠
+  - 种田
+  - 炼器
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分啊 | 开局信息混乱，主角完全没有代入感，像NPC，完全没入行，建议先学会讲故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1WKfTBBE3L.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开局信息混乱，主角完全没有代入感，像NPC，完全没入行，建议先学会讲故事。 | 开篇场景混乱，读者看不懂就会跑;主角连续几张没有心理活动，像一个NPC;设定解释太多，沟通困难，完全没入门
+  observable:
+  - 'opening维度: 开篇场景混乱，读者看不懂就会跑'
+  - 'character维度: 主角连续几张没有心理活动，像一个NPC'
+  - 'simplicity维度: 设定解释太多，沟通困难，完全没入门'
+live_review_meta:
+  source_bvid: BV1WKfTBBE3L
+  source_line_range:
+  - 451
+  - 610
+  score: 18
+  score_raw: 18分啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 种田长生
+  genre_guess:
+  - 仙侠
+  - 种田
+  - 炼器
+  overall_comment: 开局信息混乱，主角完全没有代入感，像NPC，完全没入行，建议先学会讲故事。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇场景混乱，读者看不懂就会跑
+    raw_quote: 看不懂就跑了呀
+  - dimension: character
+    severity: negative
+    content: 主角连续几张没有心理活动，像一个NPC
+    raw_quote: 第一章主角跟NPC似的
+  - dimension: simplicity
+    severity: negative
+    content: 设定解释太多，沟通困难，完全没入门
+    raw_quote: 你完全没入行 就比例好一点吧

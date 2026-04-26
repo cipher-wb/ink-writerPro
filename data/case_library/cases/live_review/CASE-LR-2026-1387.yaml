@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1387
+title: 觉醒修仙斧珠系统 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1c9A1zREaY
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 懒精灵
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十八 | 懒精灵小白爽文，开头有看点但驱动力太弱，人物太虚，起点更需要故事性和人物合理性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1c9A1zREaY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 懒精灵小白爽文，开头有看点但驱动力太弱，人物太虚，起点更需要故事性和人物合理性。 | 人物太虚浮，师父也是微小宝人设，不真实;强驱动力太弱，缺乏危机和期待感
+  observable:
+  - 'character维度: 人物太虚浮，师父也是微小宝人设，不真实'
+  - 'pacing维度: 强驱动力太弱，缺乏危机和期待感'
+live_review_meta:
+  source_bvid: BV1c9A1zREaY
+  source_line_range:
+  - 776
+  - 835
+  score: 28
+  score_raw: 二十八
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 觉醒修仙斧珠系统
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 懒精灵
+  overall_comment: 懒精灵小白爽文，开头有看点但驱动力太弱，人物太虚，起点更需要故事性和人物合理性。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 抱着师父腿的禁区设定有点意思
+    raw_quote: 这个一开头还可以 虽然小白但是 有看点这两个字 就是立徒
+  - dimension: character
+    severity: negative
+    content: 人物太虚浮，师父也是微小宝人设，不真实
+    raw_quote: 人设虚幅...这个女的你师父其实不真实
+  - dimension: pacing
+    severity: negative
+    content: 强驱动力太弱，缺乏危机和期待感
+    raw_quote: 强驱动力太弱了 之前前两招根本没看出来强驱动力

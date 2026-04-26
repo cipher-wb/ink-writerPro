@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1188
+title: 炼气修仙从勤勉开始 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1X2A9zhELz
+scope:
+  genre:
+  - 仙侠
+  - 系统
+  - 勤勉
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 24分的样子 25分吧 | 系统升级流老套，主角无活人感，开篇事件毫无意义，节奏再快也救不了无聊的故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1X2A9zhELz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统升级流老套，主角无活人感，开篇事件毫无意义，节奏再快也救不了无聊的故事。 | 主角像NPC，没有所思所想，活人感为零;事件推进虽快但无趣，打斗和测试都是中期内容前置;金手指和主线都老套，没有新脑洞或人设矛盾
+  observable:
+  - 'character维度: 主角像NPC，没有所思所想，活人感为零'
+  - 'pacing维度: 事件推进虽快但无趣，打斗和测试都是中期内容前置'
+  - 'hook维度: 金手指和主线都老套，没有新脑洞或人设矛盾'
+live_review_meta:
+  source_bvid: BV1X2A9zhELz
+  source_line_range:
+  - 3230
+  - 3380
+  score: 25
+  score_raw: 24分的样子 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 炼气修仙从勤勉开始
+  genre_guess:
+  - 仙侠
+  - 系统
+  - 勤勉
+  overall_comment: 系统升级流老套，主角无活人感，开篇事件毫无意义，节奏再快也救不了无聊的故事。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角像NPC，没有所思所想，活人感为零
+    raw_quote: 没有活人感 主角就不是个活人 就NPC
+  - dimension: pacing
+    severity: negative
+    content: 事件推进虽快但无趣，打斗和测试都是中期内容前置
+    raw_quote: 节奏快是唯一的优点兄弟 但是 好无聊啊
+  - dimension: hook
+    severity: negative
+    content: 金手指和主线都老套，没有新脑洞或人设矛盾
+    raw_quote: 这种主线思路写法问题 期待感都太无赖 本质上没有好故事

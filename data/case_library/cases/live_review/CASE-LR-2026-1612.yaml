@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1612
+title: 电诈园区错绑修仙系统 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 系统
+  - 电诈
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多44分吧 | 题材极好，但人设一般，写不出真实感和绝望感，浪费了好设定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材极好，但人设一般，写不出真实感和绝望感，浪费了好设定。 | 人设一般，写不出紧张绝望氛围，女主塑造无力
+  observable:
+  - 'character维度: 人设一般，写不出紧张绝望氛围，女主塑造无力'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 570
+  - 639
+  score: 44
+  score_raw: 差不多44分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 电诈园区错绑修仙系统
+  genre_guess:
+  - 都市
+  - 修仙
+  - 系统
+  - 电诈
+  overall_comment: 题材极好，但人设一般，写不出真实感和绝望感，浪费了好设定。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 电诈园区+错位修仙系统是直播间论证过的好题材
+    raw_quote: 这个题材挺好的 … 蟑螂是妖兽 … 救女子是救仙子 … 都是好设定
+  - dimension: character
+    severity: negative
+    content: 人设一般，写不出紧张绝望氛围，女主塑造无力
+    raw_quote: 这人设挺一般的 … 写不出这种真实感绝望感

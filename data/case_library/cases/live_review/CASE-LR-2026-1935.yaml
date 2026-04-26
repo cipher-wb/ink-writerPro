@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1935
+title: 穿越到修仙界当龟公 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1siiLB6Ehj
+scope:
+  genre:
+  - 仙侠
+  - 市井
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分吧 | 笔力有48分水平，但前两章偏题写成了矿工八股文，第三章应该写的拉扯和雪白出来太晚。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1siiLB6Ehj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 笔力有48分水平，但前两章偏题写成了矿工八股文，第三章应该写的拉扯和雪白出来太晚。 | 写成了套路八股文（危机-修炼解决），不真实，没有小剧场感。;第一章信息量太多，危机感出来后，拉扯和雪白在第三章才立住人设。
+  observable:
+  - 'simplicity维度: 写成了套路八股文（危机-修炼解决），不真实，没有小剧场感。'
+  - 'pacing维度: 第一章信息量太多，危机感出来后，拉扯和雪白在第三章才立住人设。'
+live_review_meta:
+  source_bvid: BV1siiLB6Ehj
+  source_line_range:
+  - 1150
+  - 1185
+  score: 48
+  score_raw: 48分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越到修仙界当龟公
+  genre_guess:
+  - 仙侠
+  - 市井
+  overall_comment: 笔力有48分水平，但前两章偏题写成了矿工八股文，第三章应该写的拉扯和雪白出来太晚。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 写成了套路八股文（危机-修炼解决），不真实，没有小剧场感。
+    raw_quote: 你这方面有点像八股文写法就是危机我要修炼解决危机我要修炼...就不真实没有那种小剧场
+  - dimension: pacing
+    severity: negative
+    content: 第一章信息量太多，危机感出来后，拉扯和雪白在第三章才立住人设。
+    raw_quote: 第一章的信息量其实1000个字就能写完了...前两张拉扯不够...第三张立住你的人设

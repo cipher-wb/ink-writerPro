@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1497
+title: 天命所归系统在美利坚 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 美利坚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就21升吧 | 争霸全球思路无意义，北美写得像东京，缺少美利坚味道
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 争霸全球思路无意义，北美写得像东京，缺少美利坚味道 | 北美文却写成东京味儿，没有自由奔放的大洋马;拉扯太像日式剧情，不符合北美氛围
+  observable:
+  - 'genre维度: 北美文却写成东京味儿，没有自由奔放的大洋马'
+  - 'character维度: 拉扯太像日式剧情，不符合北美氛围'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 721
+  - 775
+  score: 21
+  score_raw: 就21升吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 天命所归系统在美利坚
+  genre_guess:
+  - 都市
+  - 系统
+  - 美利坚
+  overall_comment: 争霸全球思路无意义，北美写得像东京，缺少美利坚味道
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 北美文却写成东京味儿，没有自由奔放的大洋马
+    raw_quote: 这个太像东京了 亲阿里 司徒小姐
+  - dimension: character
+    severity: negative
+    content: 拉扯太像日式剧情，不符合北美氛围
+    raw_quote: 你这样跟人拉扯 太像东京了

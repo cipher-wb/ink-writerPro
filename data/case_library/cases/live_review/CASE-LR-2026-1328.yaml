@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1328
+title: 海克斯修仙 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 修仙
+  - 系统
+  - 学院
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十吧 | 学院设定老套，需要更具体的身份冲突和巨像化故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 学院设定老套，需要更具体的身份冲突和巨像化故事。 | 世界太虚，没有具象化冲突;慢热，读者等不到修炼
+  observable:
+  - 'opening维度: 世界太虚，没有具象化冲突'
+  - 'hook维度: 慢热，读者等不到修炼'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 2051
+  - 2100
+  score: 40
+  score_raw: 四十吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 海克斯修仙
+  genre_guess:
+  - 修仙
+  - 系统
+  - 学院
+  overall_comment: 学院设定老套，需要更具体的身份冲突和巨像化故事。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 世界太虚，没有具象化冲突
+    raw_quote: 这种是虚的 不过巨像化
+  - dimension: hook
+    severity: negative
+    content: 慢热，读者等不到修炼
+    raw_quote: 太慢了呀 就这么慢

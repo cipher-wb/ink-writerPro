@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-2180
+title: 穿越名簿当老千 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 历史
+  - 大明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 偏题严重，挂历史名义写玄幻，不蹭大明热度没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 偏题严重，挂历史名义写玄幻，不蹭大明热度没人看。 | 挂着大明写玄幻，偏题，骗历史读者
+  observable:
+  - 'genre维度: 挂着大明写玄幻，偏题，骗历史读者'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 945
+  - 980
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 穿越名簿当老千
+  genre_guess:
+  - 历史
+  - 大明
+  overall_comment: 偏题严重，挂历史名义写玄幻，不蹭大明热度没人看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 挂着大明写玄幻，偏题，骗历史读者
+    raw_quote: 抢蹭大明 就是个玄幻 就这没意思 … 骗人家大明独立是吧
+  - dimension: ops
+    severity: positive
+    content: 比例其实还好，有市井烟火气
+    raw_quote: 比例其实还好 写烟火器 这种低声讯有味道的 市警器

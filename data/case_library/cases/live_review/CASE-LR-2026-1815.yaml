@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1815
+title: 香火成神：道观小乞丐 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 武侠
+  - 神怪
+  - 传统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30up | 开头童趣小菜有点意思，但随即变成古老的武侠老套路，毫无新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头童趣小菜有点意思，但随即变成古老的武侠老套路，毫无新意。 | 后面变成老掉牙的武侠英雄救美;写法陈旧，像二十年前的英雄志
+  observable:
+  - 'pacing维度: 后面变成老掉牙的武侠英雄救美'
+  - 'genre维度: 写法陈旧，像二十年前的英雄志'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 851
+  - 915
+  score: 30
+  score_raw: 30up
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 香火成神：道观小乞丐
+  genre_guess:
+  - 武侠
+  - 神怪
+  - 传统
+  overall_comment: 开头童趣小菜有点意思，但随即变成古老的武侠老套路，毫无新意。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 道童对话和偷吃香火的切入有点意思
+    raw_quote: 切入起来那个两个小乐童对话有点意思
+  - dimension: pacing
+    severity: negative
+    content: 后面变成老掉牙的武侠英雄救美
+    raw_quote: 后面偏题了 后面太武侠了 反正这英雄救美 上下其手……太小白了
+  - dimension: genre
+    severity: negative
+    content: 写法陈旧，像二十年前的英雄志
+    raw_quote: 2000年的感觉 这太老了

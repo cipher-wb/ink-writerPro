@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0801
+title: 冷宫里的猫 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 穿越
+  - 猫
+  - 宫廷
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多就35 真的没感觉 | 没有主线，平淡日常，人设对话出戏，退步严重
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 没有主线，平淡日常，人设对话出戏，退步严重 | 公主和侍女对话太都市化，出戏;开局没事件，没看点，视角闲散
+  observable:
+  - 'character维度: 公主和侍女对话太都市化，出戏'
+  - 'opening维度: 开局没事件，没看点，视角闲散'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 1560
+  - 1680
+  score: 35
+  score_raw: 最多就35 真的没感觉
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 冷宫里的猫
+  genre_guess:
+  - 穿越
+  - 猫
+  - 宫廷
+  - 日常
+  overall_comment: 没有主线，平淡日常，人设对话出戏，退步严重
+  comments:
+  - dimension: character
+    severity: negative
+    content: 公主和侍女对话太都市化，出戏
+    raw_quote: 这说话太都市化了
+  - dimension: opening
+    severity: negative
+    content: 开局没事件，没看点，视角闲散
+    raw_quote: 没事件 就平平淡淡的

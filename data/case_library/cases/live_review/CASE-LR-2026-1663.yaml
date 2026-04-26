@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1663
+title: 美丽兼找姑妈 (fail / 44分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 都市
+  - 美丽兼
+  - 奇幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 44分嘛流畅 | 行文流畅但套路陈旧，反转太晚，食之无味。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 行文流畅但套路陈旧，反转太晚，食之无味。 | 反转点子要到最后才揭晓，开头就崩了;美丽兼找姑妈套路已被过度使用
+  observable:
+  - 'hook维度: 反转点子要到最后才揭晓，开头就崩了'
+  - 'genre维度: 美丽兼找姑妈套路已被过度使用'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 755
+  - 830
+  score: 44
+  score_raw: 44分嘛流畅
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 美丽兼找姑妈
+  genre_guess:
+  - 都市
+  - 美丽兼
+  - 奇幻
+  overall_comment: 行文流畅但套路陈旧，反转太晚，食之无味。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 反转点子要到最后才揭晓，开头就崩了
+    raw_quote: 你的反转你的吸血鬼啊你的姑妈是黑猫这些其实都在后面 对吧你前面都是就跑完了呀
+  - dimension: genre
+    severity: negative
+    content: 美丽兼找姑妈套路已被过度使用
+    raw_quote: 十本美丽兼九本都是美丽兼找姑妈叔叔这种的 我都看透了

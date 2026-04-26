@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2035
+title: 历史文（五代赵匡胤） (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 历史
+  - 五代
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多四十多吧 四十八分的样子 | 思路可以，但赌得太离谱，需要智商。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 思路可以，但赌得太离谱，需要智商。
+  observable:
+  - 整体被星河直播判定为 fail
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 1081
+  - 1200
+  score: 48
+  score_raw: 差不多四十多吧 四十八分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 历史文（五代赵匡胤）
+  genre_guess:
+  - 历史
+  - 五代
+  - 穿越
+  overall_comment: 思路可以，但赌得太离谱，需要智商。
+  comments:
+  - dimension: opening
+    severity: neutral
+    content: 思路可以，但靠张永救太赌，缺乏智商
+    raw_quote: 你把他赌得太离谱了 我觉得智商嘛 智商很重要
+  - dimension: character
+    severity: positive
+    content: 人设OK，身份切入尚可
+    raw_quote: 比例倒是没啥问题 切肉身份都OK

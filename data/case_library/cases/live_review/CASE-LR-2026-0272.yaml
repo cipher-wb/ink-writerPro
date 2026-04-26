@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0272
+title: 架空历史奴仆与少爷 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 架空历史
+  - 穿越
+  - 人设
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没给分，有天赋 | 人设代入感节奏OK，但世界观不够癫狂
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人设代入感节奏OK，但世界观不够癫狂
+  observable:
+  - 整体被星河直播判定为 unknown
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 661
+  - 762
+  score: null
+  score_raw: 没给分，有天赋
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 架空历史奴仆与少爷
+  genre_guess:
+  - 架空历史
+  - 穿越
+  - 人设
+  overall_comment: 人设代入感节奏OK，但世界观不够癫狂
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 节奏快，内容流畅
+    raw_quote: 节奏挺快的...倒也还好吧
+  - dimension: genre
+    severity: positive
+    content: 癫狂世界观+智商主角有市场潜力
+    raw_quote: 我觉得要写的低一点，颠一点...真的有市场的

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0500
+title: 权谋玄幻 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 玄幻
+  - 权谋
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 比例还可以的 给他加个5分 25分 | 70万字闷头写，主线为爷爷报仇没人看。自创世界观和境界太尬，网文一定要接地气。发番茄吧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 70万字闷头写，主线为爷爷报仇没人看。自创世界观和境界太尬，网文一定要接地气。发番茄吧。 | 自创境界和世界观，读者看不懂，很尴尬;爷爷之死作为前期主线，没期待感没人看
+  observable:
+  - 'genre维度: 自创境界和世界观，读者看不懂，很尴尬'
+  - 'highpoint维度: 爷爷之死作为前期主线，没期待感没人看'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 2110
+  - 2160
+  score: null
+  score_raw: 比例还可以的 给他加个5分 25分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 权谋玄幻
+  genre_guess:
+  - 玄幻
+  - 权谋
+  - 穿越
+  overall_comment: 70万字闷头写，主线为爷爷报仇没人看。自创世界观和境界太尬，网文一定要接地气。发番茄吧。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 自创境界和世界观，读者看不懂，很尴尬
+    raw_quote: 你不要这样原创了好吧 不要这样原创境界了...你就讲故事 修仙 就用人家那个炼气元婴那一套就行了
+  - dimension: highpoint
+    severity: negative
+    content: 爷爷之死作为前期主线，没期待感没人看
+    raw_quote: 就爷爷这个事是没人看的这个...本身读者就会觉得没啥意思不想看 就期待感非常弱

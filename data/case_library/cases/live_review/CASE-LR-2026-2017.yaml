@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2017
+title: 爱吃嘴子的哥布林 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 奇幻
+  - 变身
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十六点 现在也到不了了 | 强吻获取天赋的设定极其雷人和恶搞，剧情、逻辑立不住，充满小白气息。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 强吻获取天赋的设定极其雷人和恶搞，剧情、逻辑立不住，充满小白气息。 | 靠强吻获取能力的设定太恶搞，逻辑漏洞百出。
+  observable:
+  - 'golden_finger维度: 靠强吻获取能力的设定太恶搞，逻辑漏洞百出。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1087
+  - 1118
+  score: 16
+  score_raw: 十六点 现在也到不了了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 爱吃嘴子的哥布林
+  genre_guess:
+  - 奇幻
+  - 变身
+  overall_comment: 强吻获取天赋的设定极其雷人和恶搞，剧情、逻辑立不住，充满小白气息。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 靠强吻获取能力的设定太恶搞，逻辑漏洞百出。
+    raw_quote: 清一口就能获得她的能力 ... 这不就恶搞了嘛

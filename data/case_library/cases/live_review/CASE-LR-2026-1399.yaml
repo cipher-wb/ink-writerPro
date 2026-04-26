@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1399
+title: 徐捕头与柳如燕 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 古代
+  - 灵异
+  - 捕头
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 九分嘛好吧 | 故事依然是雪白流氓路线，主角形同反派，过审无望。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事依然是雪白流氓路线，主角形同反派，过审无望。 | 又一篇纯雪白流氓文，肯定过不了审
+  observable:
+  - 'taboo维度: 又一篇纯雪白流氓文，肯定过不了审'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 1101
+  - 1250
+  score: 9
+  score_raw: 九分嘛好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 徐捕头与柳如燕
+  genre_guess:
+  - 古代
+  - 灵异
+  - 捕头
+  overall_comment: 故事依然是雪白流氓路线，主角形同反派，过审无望。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 又一篇纯雪白流氓文，肯定过不了审
+    raw_quote: 這怎麼過省啊兄弟

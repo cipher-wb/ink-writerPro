@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-2234
+title: 手机穿越萧火火 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 天才流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你28分吧 | 剧情烂俗但情绪拉扯还行，手机穿越设定不合理，建议投番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 剧情烂俗但情绪拉扯还行，手机穿越设定不合理，建议投番茄。 | 手机穿越且联网不合理，逻辑硬伤
+  observable:
+  - 'golden_finger维度: 手机穿越且联网不合理，逻辑硬伤'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 1542
+  - 1665
+  score: 28
+  score_raw: 给你28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 手机穿越萧火火
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 天才流
+  overall_comment: 剧情烂俗但情绪拉扯还行，手机穿越设定不合理，建议投番茄。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 手机穿越且联网不合理，逻辑硬伤
+    raw_quote: '不是 你觉得这合理吗
+
+      手机又来了
+
+      怎么今晚这么多带着手机穿越
+
+      手机还能查新闻是吧'
+  - dimension: opening
+    severity: positive
+    content: 强情绪拉扯，能调动读者情绪
+    raw_quote: 情绪拉得还可以...愣是情绪值拉满了
+  - dimension: misc
+    severity: neutral
+    content: 适合投番茄蓝精灵
+    raw_quote: 这个你删掉法兰禁令只有这一条路...大概在兰禁令有发展

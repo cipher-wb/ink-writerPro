@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1449
+title: 散修修仙记 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 修仙
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十十六分 | 题材太古老，少年修仙毫无新意，书名自我贬低难代入
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太古老，少年修仙毫无新意，书名自我贬低难代入 | 少年立志修仙的题材过于古老;书名‘散修’像傻叉，无法代入
+  observable:
+  - 'genre维度: 少年立志修仙的题材过于古老'
+  - 'opening维度: 书名‘散修’像傻叉，无法代入'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1581
+  - 1660
+  score: 16
+  score_raw: 十十六分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 散修修仙记
+  genre_guess:
+  - 修仙
+  - 凡人流
+  overall_comment: 题材太古老，少年修仙毫无新意，书名自我贬低难代入
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 少年立志修仙的题材过于古老
+    raw_quote: 太老了 兄弟 梦回2008
+  - dimension: opening
+    severity: negative
+    content: 书名‘散修’像傻叉，无法代入
+    raw_quote: 我是个傻叉 这怎么代入啊

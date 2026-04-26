@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1485
+title: Gala Game高手转身一世纪 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 轻小说
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不然就三十二 | 第一人称扣分，有天赋但不该用第一人称，建议转正常题材
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一人称扣分，有天赋但不该用第一人称，建议转正常题材 | 第一人称不适合起点，直接扣十分
+  observable:
+  - 'ops维度: 第一人称不适合起点，直接扣十分'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 146
+  - 192
+  score: 32
+  score_raw: 不然就三十二
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: Gala Game高手转身一世纪
+  genre_guess:
+  - 轻小说
+  - 都市
+  - 系统
+  overall_comment: 第一人称扣分，有天赋但不该用第一人称，建议转正常题材
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 第一人称不适合起点，直接扣十分
+    raw_quote: 第一人称没办法 第一人称扣十分
+  - dimension: genre
+    severity: neutral
+    content: 建议正常找个题材去写，直播间很多雪白题材
+    raw_quote: 你就正常找个题材去啊 这懒吗 直播间那么多雪白题材

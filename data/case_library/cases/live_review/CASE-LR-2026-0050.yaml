@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0050
+title: 三角洲GOAT系统 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 游戏
+  - 电竞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40盎司 | 三角洲热度低，系统无新意，职业味不足，上限低，40分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 三角洲热度低，系统无新意，职业味不足，上限低，40分。 | 题材上限低;GOAT系统没意思
+  observable:
+  - 'genre维度: 题材上限低'
+  - 'golden_finger维度: GOAT系统没意思'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 831
+  - 880
+  score: 40
+  score_raw: 差不多40盎司
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三角洲GOAT系统
+  genre_guess:
+  - 游戏
+  - 电竞
+  overall_comment: 三角洲热度低，系统无新意，职业味不足，上限低，40分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材上限低
+    raw_quote: 上限很低兄弟
+  - dimension: golden_finger
+    severity: negative
+    content: GOAT系统没意思
+    raw_quote: 我帮你实现GOT也太无聊了

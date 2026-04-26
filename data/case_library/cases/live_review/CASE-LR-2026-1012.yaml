@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1012
+title: 盗妖假盗士 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 古代
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开头对白尴尬、烂梗连篇，可以排队但无明显签约信号。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头对白尴尬、烂梗连篇，可以排队但无明显签约信号。 | 对白尴尬，主角设定混乱
+  observable:
+  - 'character维度: 对白尴尬，主角设定混乱'
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 131
+  - 170
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 盗妖假盗士
+  genre_guess:
+  - 古代
+  - 仙侠
+  overall_comment: 开头对白尴尬、烂梗连篇，可以排队但无明显签约信号。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 对白尴尬，主角设定混乱
+    raw_quote: 说话 主要大哥的对白太尴尬了 然后事件也不大

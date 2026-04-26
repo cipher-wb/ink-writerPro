@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1622
+title: 科幻高武推演 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 科幻
+  - 高武
+  - 网游
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能23发 | 本质是传统网游文冒充科幻，元素老套，逻辑立不住，建议切掉。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 本质是传统网游文冒充科幻，元素老套，逻辑立不住，建议切掉。 | 挂科幻卖网游，伪科幻真网游，写作方向错误;设定与写法十年前老套，爽点逻辑不通
+  observable:
+  - 'genre维度: 挂科幻卖网游，伪科幻真网游，写作方向错误'
+  - 'simplicity维度: 设定与写法十年前老套，爽点逻辑不通'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 1300
+  - 1379
+  score: 23
+  score_raw: 只能23发
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 科幻高武推演
+  genre_guess:
+  - 科幻
+  - 高武
+  - 网游
+  overall_comment: 本质是传统网游文冒充科幻，元素老套，逻辑立不住，建议切掉。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 挂科幻卖网游，伪科幻真网游，写作方向错误
+    raw_quote: 本质就是一个传统网游 … 这不是科幻 … 大哥思路
+  - dimension: simplicity
+    severity: negative
+    content: 设定与写法十年前老套，爽点逻辑不通
+    raw_quote: 元素和写法是很老套的网游写法 … 大哥太无聊

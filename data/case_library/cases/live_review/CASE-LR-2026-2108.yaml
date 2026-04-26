@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-2108
+title: 幽冥偷渡客民俗灵异文 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 灵异
+  - 民俗
+  - 规则怪谈
+  - 副本流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分确实大哥深造的不错 | 副本事件作为开局及格了，有氛围，但第三章后还在故弄玄虚，需要明确主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 副本事件作为开局及格了，有氛围，但第三章后还在故弄玄虚，需要明确主线。 | 缺少一个强力配角配合
+  observable:
+  - 'character维度: 缺少一个强力配角配合'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 306
+  - 350
+  score: 55
+  score_raw: 55分确实大哥深造的不错
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 幽冥偷渡客民俗灵异文
+  genre_guess:
+  - 灵异
+  - 民俗
+  - 规则怪谈
+  - 副本流
+  overall_comment: 副本事件作为开局及格了，有氛围，但第三章后还在故弄玄虚，需要明确主线。
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 捡红包事件作为副本开局及格了
+    raw_quote: 这个事件我觉得作为副本也是来说也是及格的
+  - dimension: opening
+    severity: neutral
+    content: 第三章后还在故弄玄虚，需要明确主线
+    raw_quote: 你不能第三章还在那里拉故弄玄虚，读者不看了
+  - dimension: character
+    severity: negative
+    content: 缺少一个强力配角配合
+    raw_quote: 还需要一个强力配角

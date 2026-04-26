@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0248
+title: 可叹投稿 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 短剧
+  - 玄幻
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话就给他个22分吧 | 第一章开篇事件有看点，但后续倒叙扯淡，整体老套，建议直接推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章开篇事件有看点，但后续倒叙扯淡，整体老套，建议直接推翻。 | 后续回忆过多，三天前七天前倒叙导致读者跑光。;主角人设垃圾，现实混得一塌糊涂，没有代入感。
+  observable:
+  - 'pacing维度: 后续回忆过多，三天前七天前倒叙导致读者跑光。'
+  - 'character维度: 主角人设垃圾，现实混得一塌糊涂，没有代入感。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 530
+  - 652
+  score: 22
+  score_raw: 打分的话就给他个22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 可叹投稿
+  genre_guess:
+  - 短剧
+  - 玄幻
+  - 重生
+  overall_comment: 第一章开篇事件有看点，但后续倒叙扯淡，整体老套，建议直接推翻。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章开头有炸裂看点，弟子杀师父较新颖。
+    raw_quote: 这个倒挺新颖的 一般都是师父杀弟子啊 你把师傅弄死了 你这个杀的好
+  - dimension: pacing
+    severity: negative
+    content: 后续回忆过多，三天前七天前倒叙导致读者跑光。
+    raw_quote: 现在又 大哥在疯狂解释前两天创业之前 那你为什么老要这样写呢
+  - dimension: character
+    severity: negative
+    content: 主角人设垃圾，现实混得一塌糊涂，没有代入感。
+    raw_quote: 一个现实里面混的一塌糊涂 然后又没智商对吧 主角也没智商烦人

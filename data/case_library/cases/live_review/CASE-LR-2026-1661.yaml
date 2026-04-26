@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1661
+title: 仕途归来 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 日常
+  - 奇幻
+  - 躺平
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 文笔有味道但开篇日常躺平无冲突，设定介绍过多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔有味道但开篇日常躺平无冲突，设定介绍过多。 | 开篇日常躺平伸懒腰，读者直接跑;设定说明书超过阈值，开局就死
+  observable:
+  - 'opening维度: 开篇日常躺平伸懒腰，读者直接跑'
+  - 'pacing维度: 设定说明书超过阈值，开局就死'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 580
+  - 650
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仕途归来
+  genre_guess:
+  - 日常
+  - 奇幻
+  - 躺平
+  overall_comment: 文笔有味道但开篇日常躺平无冲突，设定介绍过多。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇日常躺平伸懒腰，读者直接跑
+    raw_quote: 你躺平伸个懒腰没人看了呀走了呀那个
+  - dimension: pacing
+    severity: negative
+    content: 设定说明书超过阈值，开局就死
+    raw_quote: 你开头的设定最多最多不会超过300个字 超过300个字你读者就会跑

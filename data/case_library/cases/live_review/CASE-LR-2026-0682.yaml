@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0682
+title: 货车司机小说梦 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HCzwBuEV6
+scope:
+  genre:
+  - 未知
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就不打分了吗？真不打分 | 对网文理解完全没入行，眼睛不好也不适合写，暂时不建议继续写，建议学习市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HCzwBuEV6.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对网文理解完全没入行，眼睛不好也不适合写，暂时不建议继续写，建议学习市场。 | 整体跟不上网文商业逻辑，停留在自我表达;题材无法分类，写法像小学生作文
+  observable:
+  - 'simplicity维度: 整体跟不上网文商业逻辑，停留在自我表达'
+  - 'genre维度: 题材无法分类，写法像小学生作文'
+live_review_meta:
+  source_bvid: BV1HCzwBuEV6
+  source_line_range:
+  - 1495
+  - 1580
+  score: null
+  score_raw: 就不打分了吗？真不打分
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 货车司机小说梦
+  genre_guess:
+  - 未知
+  - 穿越
+  overall_comment: 对网文理解完全没入行，眼睛不好也不适合写，暂时不建议继续写，建议学习市场。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 整体跟不上网文商业逻辑，停留在自我表达
+    raw_quote: 网红是一个商业化创作...你看就是这样还是停留在自我表达
+  - dimension: genre
+    severity: negative
+    content: 题材无法分类，写法像小学生作文
+    raw_quote: 你是不是听的都是什么唐朝诡事录...就基本就是嗯嗯...就完全没入行

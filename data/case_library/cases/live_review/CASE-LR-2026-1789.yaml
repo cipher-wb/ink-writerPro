@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-1789
+title: 东京黑帮魔王少爷 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 东京
+  - 黑帮
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30多空还是35分的水平 | 风格撕裂，都市、黑帮、西幻乱转，建议专注一方。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风格撕裂，都市、黑帮、西幻乱转，建议专注一方。 | 转场突兀混乱，都市按摩、黑帮枪战、西幻魔王连番出戏。
+  observable:
+  - 'pacing维度: 转场突兀混乱，都市按摩、黑帮枪战、西幻魔王连番出戏。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 660
+  - 718
+  score: 35
+  score_raw: 30多空还是35分的水平
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 东京黑帮魔王少爷
+  genre_guess:
+  - 东京
+  - 黑帮
+  - 雪白
+  overall_comment: 风格撕裂，都市、黑帮、西幻乱转，建议专注一方。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 转场突兀混乱，都市按摩、黑帮枪战、西幻魔王连番出戏。
+    raw_quote: 大概转场的三次...这个过程好出戏啊...有点乱

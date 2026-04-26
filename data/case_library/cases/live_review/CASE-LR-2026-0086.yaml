@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0086
+title: 重生18岁 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 日记体
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十六分 | 小学生流水账日记式的开头，无主线、无遗憾、无冲突，完全没有商业看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小学生流水账日记式的开头，无主线、无遗憾、无冲突，完全没有商业看点。 | 开头像小学生日记，流水账，无矛盾冲突;完全不懂重生文的写法
+  observable:
+  - 'opening维度: 开头像小学生日记，流水账，无矛盾冲突'
+  - 'genre维度: 完全不懂重生文的写法'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1476
+  - 1520
+  score: 16
+  score_raw: 十六分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生18岁
+  genre_guess:
+  - 都市
+  - 重生
+  - 日记体
+  overall_comment: 小学生流水账日记式的开头，无主线、无遗憾、无冲突，完全没有商业看点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头像小学生日记，流水账，无矛盾冲突
+    raw_quote: 就日记啊...一点看见都没有...也没主线 也没遗憾
+  - dimension: genre
+    severity: negative
+    content: 完全不懂重生文的写法
+    raw_quote: 根本就不会写重生

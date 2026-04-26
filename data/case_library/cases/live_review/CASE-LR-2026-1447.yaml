@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1447
+title: 重走西游之劫难系统 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 同人
+  - 西游
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分 | 原创西游立不住人设，恶搞无逻辑，缺乏仙侠味，起点无救
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 原创西游立不住人设，恶搞无逻辑，缺乏仙侠味，起点无救 | 不是西游原著，立不住世界观;全部原创妖怪，人设全崩
+  observable:
+  - 'genre维度: 不是西游原著，立不住世界观'
+  - 'character维度: 全部原创妖怪，人设全崩'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1411
+  - 1490
+  score: 32
+  score_raw: 32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重走西游之劫难系统
+  genre_guess:
+  - 同人
+  - 西游
+  - 恶搞
+  overall_comment: 原创西游立不住人设，恶搞无逻辑，缺乏仙侠味，起点无救
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 不是西游原著，立不住世界观
+    raw_quote: 这是西游的原创文 等于是立不住的
+  - dimension: character
+    severity: negative
+    content: 全部原创妖怪，人设全崩
+    raw_quote: 人设也崩了呀

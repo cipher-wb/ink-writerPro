@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1250
+title: 汉献帝刘协 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多也就30分 | 代入感为零，写法像5分钟看完三国，不清楚主角是谁、要干什么，建议写清楚穿越身份和目的。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感为零，写法像5分钟看完三国，不清楚主角是谁、要干什么，建议写清楚穿越身份和目的。 | 代入感为零，像个旁观的摄像头;没写清楚穿越后的身份、目标和金手指
+  observable:
+  - 'opening维度: 代入感为零，像个旁观的摄像头'
+  - 'hook维度: 没写清楚穿越后的身份、目标和金手指'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1389
+  - 1439
+  score: 30
+  score_raw: 差不多也就30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 汉献帝刘协
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  overall_comment: 代入感为零，写法像5分钟看完三国，不清楚主角是谁、要干什么，建议写清楚穿越身份和目的。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 代入感为零，像个旁观的摄像头
+    raw_quote: 这大概是个摄像头对吧，就5分钟看完三国
+  - dimension: hook
+    severity: negative
+    content: 没写清楚穿越后的身份、目标和金手指
+    raw_quote: 你要写明前因，如果写明你要干啥，清晰的目标让读者明白
+  - dimension: misc
+    severity: positive
+    content: 文笔比例扎实
+    raw_quote: 差不多比例扎实，但差不多也就30分

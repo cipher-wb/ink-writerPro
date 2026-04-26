@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-2197
+title: 穿成武大郎被毒杀 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yicPzME9X
+scope:
+  genre:
+  - 水浒同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 水浒同人题材市场冷淡，建议观察市场反馈，未深入审读
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yicPzME9X.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 水浒同人题材市场冷淡，建议观察市场反馈，未深入审读 | 水浒同人题材在当前市场接受度低
+  observable:
+  - 'genre维度: 水浒同人题材在当前市场接受度低'
+live_review_meta:
+  source_bvid: BV1yicPzME9X
+  source_line_range:
+  - 8
+  - 24
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 穿成武大郎被毒杀
+  genre_guess:
+  - 水浒同人
+  overall_comment: 水浒同人题材市场冷淡，建议观察市场反馈，未深入审读
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 水浒同人题材在当前市场接受度低
+    raw_quote: 水浒同人好难啊，市场上如果不行那就别写了

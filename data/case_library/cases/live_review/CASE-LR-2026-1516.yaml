@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1516
+title: 未命名 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 灵异
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能18分吧 sorry | 无名书、无简介，题材不明，读者迷茫，建议先确定分类和卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无名书、无简介，题材不明，读者迷茫，建议先确定分类和卖点。 | 题材不明确，无法判断分类;缺少书名和简介，开篇信息混乱
+  observable:
+  - 'genre维度: 题材不明确，无法判断分类'
+  - 'opening维度: 缺少书名和简介，开篇信息混乱'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 881
+  - 980
+  score: 18
+  score_raw: 只能18分吧 sorry
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 未命名
+  genre_guess:
+  - 灵异
+  - 都市
+  overall_comment: 无名书、无简介，题材不明，读者迷茫，建议先确定分类和卖点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材不明确，无法判断分类
+    raw_quote: 题材不明确 … 我不知道这是什么题材吗
+  - dimension: opening
+    severity: negative
+    content: 缺少书名和简介，开篇信息混乱
+    raw_quote: 没书名没简介然后正文我也不知道什么分类

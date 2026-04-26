@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0304
+title: 我的系统比我还摆烂 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18GDaBwE8x
+scope:
+  genre:
+  - 轻小说
+  - 系统
+  - 搞笑
+  - 穿越
+  - 龙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分兄弟 | 玩梗乐子文但适合蓝精灵，起点无主线，缺乏严肃故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18GDaBwE8x.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 玩梗乐子文但适合蓝精灵，起点无主线，缺乏严肃故事。 | 纯玩梗无实质剧情推进;系统设定乏味，缺乏金手指吸引力
+  observable:
+  - 'pacing维度: 纯玩梗无实质剧情推进'
+  - 'golden_finger维度: 系统设定乏味，缺乏金手指吸引力'
+live_review_meta:
+  source_bvid: BV18GDaBwE8x
+  source_line_range:
+  - 931
+  - 990
+  score: 32
+  score_raw: 32分兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的系统比我还摆烂
+  genre_guess:
+  - 轻小说
+  - 系统
+  - 搞笑
+  - 穿越
+  - 龙
+  overall_comment: 玩梗乐子文但适合蓝精灵，起点无主线，缺乏严肃故事。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 纯玩梗无实质剧情推进
+    raw_quote: 很无聊的龙啊
+  - dimension: ops
+    severity: neutral
+    content: 风格偏欢乐向，更适合蓝精灵
+    raw_quote: 这个你发蓝精灵比这个要好
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定乏味，缺乏金手指吸引力
+    raw_quote: 系统比你还白

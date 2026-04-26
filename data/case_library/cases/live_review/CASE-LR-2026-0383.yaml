@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0383
+title: 我的词条从哈利波特开始 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 同人
+  - 哈利波特
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个打分的话有个35左右吧 | 哈利波特同人配词条系统，开头切入过于小白，书名需蹭霍格沃茨热点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 哈利波特同人配词条系统，开头切入过于小白，书名需蹭霍格沃茨热点。 | 开篇穿越处理得像电影镜头，语言梗使用不当，显得很小白。;翻译、语言不通的桥段属老套烂梗，应直接切入身份和词条。
+  observable:
+  - 'opening维度: 开篇穿越处理得像电影镜头，语言梗使用不当，显得很小白。'
+  - 'simplicity维度: 翻译、语言不通的桥段属老套烂梗，应直接切入身份和词条。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 215
+  - 270
+  score: 35
+  score_raw: 这个打分的话有个35左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的词条从哈利波特开始
+  genre_guess:
+  - 同人
+  - 哈利波特
+  - 系统
+  overall_comment: 哈利波特同人配词条系统，开头切入过于小白，书名需蹭霍格沃茨热点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇穿越处理得像电影镜头，语言梗使用不当，显得很小白。
+    raw_quote: 我觉得就是切入这一段写得太小白了。
+  - dimension: simplicity
+    severity: negative
+    content: 翻译、语言不通的桥段属老套烂梗，应直接切入身份和词条。
+    raw_quote: 说中文，不要烂梗。

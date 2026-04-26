@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0821
+title: 穿越京城反贼 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 架空历史
+  - 女频
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 大女主视角，男频代入感薄弱，像是言情古装剧
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 大女主视角，男频代入感薄弱，像是言情古装剧 | 女频写法，视角全是公主;谈恋爱拉扯，不像男频的天下争霸
+  observable:
+  - 'genre维度: 女频写法，视角全是公主'
+  - 'pacing维度: 谈恋爱拉扯，不像男频的天下争霸'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 1725
+  - 1880
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越京城反贼
+  genre_guess:
+  - 架空历史
+  - 女频
+  overall_comment: 大女主视角，男频代入感薄弱，像是言情古装剧
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 女频写法，视角全是公主
+    raw_quote: 这不是男性写法啊 视角全是公主的视角
+  - dimension: pacing
+    severity: negative
+    content: 谈恋爱拉扯，不像男频的天下争霸
+    raw_quote: 大哥就是谈恋爱 就是跟妹子扯上关系了

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0657
+title: 重生舔富婆 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 真是天才也他妈有侧重点服了 | 比例够，但重生思路极其毒，男主想着怎么舔富婆而非自己变强，读者代入感会极差。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例够，但重生思路极其毒，男主想着怎么舔富婆而非自己变强，读者代入感会极差。 | 重生不图自己变强，先去当舔狗，思路毒瘤;缺乏前世强遗憾支撑，纯粹因重生而舔，行为立不住
+  observable:
+  - 'character维度: 重生不图自己变强，先去当舔狗，思路毒瘤'
+  - 'hook维度: 缺乏前世强遗憾支撑，纯粹因重生而舔，行为立不住'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1381
+  - 1460
+  score: null
+  score_raw: 真是天才也他妈有侧重点服了
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 重生舔富婆
+  genre_guess:
+  - 都市
+  - 重生
+  - 恋爱
+  overall_comment: 比例够，但重生思路极其毒，男主想着怎么舔富婆而非自己变强，读者代入感会极差。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 重生不图自己变强，先去当舔狗，思路毒瘤
+    raw_quote: 大哥重生就在想怎么去舔富婆...真想把大哥给杀了
+  - dimension: hook
+    severity: negative
+    content: 缺乏前世强遗憾支撑，纯粹因重生而舔，行为立不住
+    raw_quote: 你现在跟人家没有交集，前世也不认识这一世就因为重生去当人家舔狗
+  - dimension: pacing
+    severity: positive
+    content: 节奏感有，代入感有，看得出实力
+    raw_quote: 比例够...代入感也有...四个充满重重了

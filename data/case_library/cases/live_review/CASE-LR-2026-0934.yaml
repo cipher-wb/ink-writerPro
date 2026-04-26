@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0934
+title: 我的兄弟会托梦 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 兄弟情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多九分吧 | 男主和兄弟描写过于暧昧，主线混乱，只能发晋江。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 男主和兄弟描写过于暧昧，主线混乱，只能发晋江。 | 兄弟情写得像爱情，过度拥抱同床，涉嫌害圈;两人公园抱睡，兄弟看动作片手放裤裆，害圈实锤
+  observable:
+  - 'character维度: 兄弟情写得像爱情，过度拥抱同床，涉嫌害圈'
+  - 'taboo维度: 两人公园抱睡，兄弟看动作片手放裤裆，害圈实锤'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 1655
+  - 1720
+  score: 9
+  score_raw: 差不多九分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的兄弟会托梦
+  genre_guess:
+  - 都市
+  - 异能
+  - 兄弟情
+  overall_comment: 男主和兄弟描写过于暧昧，主线混乱，只能发晋江。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 兄弟情写得像爱情，过度拥抱同床，涉嫌害圈
+    raw_quote: 这个有点写的像太搞基了 … 我怎么不能允许你跟你的兄弟抱着睡觉
+  - dimension: taboo
+    severity: negative
+    content: 两人公园抱睡，兄弟看动作片手放裤裆，害圈实锤
+    raw_quote: 他兄弟喜欢看看了看那个动作片 在那 然后他就在抱着他兄弟 … 真搞基了 真高级

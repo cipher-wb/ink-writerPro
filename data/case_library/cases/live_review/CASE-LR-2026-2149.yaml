@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-2149
+title: 流浪地球式科幻：前女友观察日志 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xj6aBAErb
+scope:
+  genre:
+  - 科幻
+  - 爱情
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这科幻巨作给不了分 | 文笔氛围好，但本质是披着科幻外衣的爱情舔狗故事，不像网文像科幻短片，受众极窄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xj6aBAErb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔氛围好，但本质是披着科幻外衣的爱情舔狗故事，不像网文像科幻短片，受众极窄。 | 写法太奇怪，不像网文，像科幻短片;故事偏向自嗨式爱情表达，缺乏网文该有的爽点和故事性
+  observable:
+  - 'genre维度: 写法太奇怪，不像网文，像科幻短片'
+  - 'simplicity维度: 故事偏向自嗨式爱情表达，缺乏网文该有的爽点和故事性'
+live_review_meta:
+  source_bvid: BV1xj6aBAErb
+  source_line_range:
+  - 531
+  - 636
+  score: null
+  score_raw: 这科幻巨作给不了分
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 流浪地球式科幻：前女友观察日志
+  genre_guess:
+  - 科幻
+  - 爱情
+  overall_comment: 文笔氛围好，但本质是披着科幻外衣的爱情舔狗故事，不像网文像科幻短片，受众极窄。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 写法太奇怪，不像网文，像科幻短片
+    raw_quote: 这写法太奇怪了...不像网文啊...像是科幻短片
+  - dimension: simplicity
+    severity: negative
+    content: 故事偏向自嗨式爱情表达，缺乏网文该有的爽点和故事性
+    raw_quote: 这不流浪地球吗...就爱情啊，伟大的爱情...好奇怪这个东西
+  - dimension: misc
+    severity: positive
+    content: 文笔和氛围感不错
+    raw_quote: 文笔好，氛围好...但读者看不进去

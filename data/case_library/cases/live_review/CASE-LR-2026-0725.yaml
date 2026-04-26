@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0725
+title: 三国穿越系统 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他个二十八吧 | 风格偏小白乐子文，主角智商堪忧，剧情与三国关联度低，事件设计如玄幻般俗套，仅因欢乐氛围加3分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风格偏小白乐子文，主角智商堪忧，剧情与三国关联度低，事件设计如玄幻般俗套，仅因欢乐氛围加3分。 | 主角展现的智商过低，人设缺乏可信度;三国元素缺失，事件设计与三国背景脱节
+  observable:
+  - 'character维度: 主角展现的智商过低，人设缺乏可信度'
+  - 'genre维度: 三国元素缺失，事件设计与三国背景脱节'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 311
+  - 372
+  score: 28
+  score_raw: 只能给他个二十八吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国穿越系统
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  overall_comment: 风格偏小白乐子文，主角智商堪忧，剧情与三国关联度低，事件设计如玄幻般俗套，仅因欢乐氛围加3分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角展现的智商过低，人设缺乏可信度
+    raw_quote: 这个主角的智商...你这智商哄不了啊大哥
+  - dimension: genre
+    severity: negative
+    content: 三国元素缺失，事件设计与三国背景脱节
+    raw_quote: 这跟三国有什么关系...而且也没什么三国元素呀
+  - dimension: misc
+    severity: positive
+    content: 写得比较欢乐，有一定乐子属性可以加分
+    raw_quote: 写的比较欢乐 欢乐给你加三分吧

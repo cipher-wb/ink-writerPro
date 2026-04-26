@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2172
+title: 机甲是来人的浪漫 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 科幻
+  - 机甲
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给到18分 | 题材太老套，设定堆砌不接地气，全是宏大叙事，缺乏代入感，必须推翻。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材太老套，设定堆砌不接地气，全是宏大叙事，缺乏代入感，必须推翻。 | 机甲守护蓝星设定太老，年轻人不看;全是设定堆砌，不接地气，看不懂
+  observable:
+  - 'genre维度: 机甲守护蓝星设定太老，年轻人不看'
+  - 'simplicity维度: 全是设定堆砌，不接地气，看不懂'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 438
+  - 493
+  score: 18
+  score_raw: 只能给到18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 机甲是来人的浪漫
+  genre_guess:
+  - 科幻
+  - 机甲
+  - 末世
+  overall_comment: 题材太老套，设定堆砌不接地气，全是宏大叙事，缺乏代入感，必须推翻。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 机甲守护蓝星设定太老，年轻人不看
+    raw_quote: 现在年轻人都不看机甲了 还在那来人的浪漫
+  - dimension: simplicity
+    severity: negative
+    content: 全是设定堆砌，不接地气，看不懂
+    raw_quote: 这都看不懂 原来就已经开始吓人了 都是设定对我来说

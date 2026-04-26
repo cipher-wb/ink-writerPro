@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1633
+title: 系统穿越爽文 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 玄幻
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个能过什么的不能吃啊 | 内容涉黄无法过审。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容涉黄无法过审。 | 内容擦边涉黄，过不了审核。
+  observable:
+  - 'taboo维度: 内容擦边涉黄，过不了审核。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 291
+  - 320
+  score: null
+  score_raw: 这个能过什么的不能吃啊
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 系统穿越爽文
+  genre_guess:
+  - 玄幻
+  - 系统流
+  overall_comment: 内容涉黄无法过审。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 内容擦边涉黄，过不了审核。
+    raw_quote: 这个过不了神，真看不了

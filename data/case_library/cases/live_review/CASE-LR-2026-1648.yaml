@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1648
+title: 末日生存 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 末日
+  - 生存
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 切吧切吧 | 独角戏太多，缺乏人物互动和故事性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 独角戏太多，缺乏人物互动和故事性。 | 大量独角戏，缺乏配角和互动。
+  observable:
+  - 'character维度: 大量独角戏，缺乏配角和互动。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 1081
+  - 1140
+  score: null
+  score_raw: 切吧切吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 末日生存
+  genre_guess:
+  - 末日
+  - 生存
+  overall_comment: 独角戏太多，缺乏人物互动和故事性。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 大量独角戏，缺乏配角和互动。
+    raw_quote: 就一个人在这儿独角戏有啥看呀...你要跟人互动呀

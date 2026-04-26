@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1520
+title: 分仙台上 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 仙侠
+  - 传统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 传统仙侠开篇无事件，主角幼小日常，节奏极慢，没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 传统仙侠开篇无事件，主角幼小日常，节奏极慢，没人看。 | 开篇少儿乡村日常，无冲突无看点
+  observable:
+  - 'opening维度: 开篇少儿乡村日常，无冲突无看点'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1281
+  - 1380
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: fail
+  title_guess: 分仙台上
+  genre_guess:
+  - 仙侠
+  - 传统
+  overall_comment: 传统仙侠开篇无事件，主角幼小日常，节奏极慢，没人看。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇少儿乡村日常，无冲突无看点
+    raw_quote: 没人看呀 小屁孩 土著 在哪吃饭 大肚汗

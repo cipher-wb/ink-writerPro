@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0685
+title: 飞龙大陆（废龙） (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个28分最多了啊 | 风控总监人设不接地气，卖点老套，节奏拖沓，思路停留在十几年前。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 风控总监人设不接地气，卖点老套，节奏拖沓，思路停留在十几年前。 | 金手指老套，风控总监的智商卖点无吸引力;开篇疼痛描写过多，拖慢节奏;主角风控总监身份读者不关心
+  observable:
+  - 'golden_finger维度: 金手指老套，风控总监的智商卖点无吸引力'
+  - 'pacing维度: 开篇疼痛描写过多，拖慢节奏'
+  - 'character维度: 主角风控总监身份读者不关心'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 158
+  - 236
+  score: 28
+  score_raw: 这个28分最多了啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 飞龙大陆（废龙）
+  genre_guess:
+  - 西幻
+  - 穿越
+  overall_comment: 风控总监人设不接地气，卖点老套，节奏拖沓，思路停留在十几年前。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指老套，风控总监的智商卖点无吸引力
+    raw_quote: 卖点很老套啊
+  - dimension: pacing
+    severity: negative
+    content: 开篇疼痛描写过多，拖慢节奏
+    raw_quote: 你这个疼痛写太多了
+  - dimension: character
+    severity: negative
+    content: 主角风控总监身份读者不关心
+    raw_quote: 风控总监对读者来说……读者不在乎

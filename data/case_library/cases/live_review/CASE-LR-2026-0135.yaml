@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-0135
+title: RR (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 都市
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 爽文缺人物，只顾爽点忽略角色塑造。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 爽文缺人物，只顾爽点忽略角色塑造。 | 为恋爱而恋爱，没写出好的人物关系
+  observable:
+  - 'character维度: 为恋爱而恋爱，没写出好的人物关系'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 170
+  - 170
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: RR
+  genre_guess:
+  - 都市
+  - 恋爱
+  overall_comment: 爽文缺人物，只顾爽点忽略角色塑造。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 为恋爱而恋爱，没写出好的人物关系
+    raw_quote: 他恋爱是为了舵人 爽点学习群来文最大的问题 他应该写点人物出来

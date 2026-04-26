@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0020
+title: 情感交易私人服务 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 都市
+  - 情感
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就不想给你40分 | 职场描写平淡无味，看点迟迟不出，40分，需大改重主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 职场描写平淡无味，看点迟迟不出，40分，需大改重主线。 | 主角能力未立，小剧场没立住;平淡罗列，主线卖点不出
+  observable:
+  - 'character维度: 主角能力未立，小剧场没立住'
+  - 'pacing维度: 平淡罗列，主线卖点不出'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 135
+  - 175
+  score: 40
+  score_raw: 就不想给你40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 情感交易私人服务
+  genre_guess:
+  - 都市
+  - 情感
+  overall_comment: 职场描写平淡无味，看点迟迟不出，40分，需大改重主线。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角能力未立，小剧场没立住
+    raw_quote: 就不知道你主角的能力去大改 也没好好的立住这个角色
+  - dimension: pacing
+    severity: negative
+    content: 平淡罗列，主线卖点不出
+    raw_quote: 主线卖点迟迟不出

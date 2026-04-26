@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0208
+title: 盛骑士的坐骑 (borderline)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 骑士
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 第一章六十分有 但确实给你四十分 | 第一章真实感强，烟火气足，但后续章节复杂化且主角人设猥琐，可惜了好开头。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章真实感强，烟火气足，但后续章节复杂化且主角人设猥琐，可惜了好开头。 | 主角人设过于猥琐，影响观感;第二章开始节奏变复杂，主线不清
+  observable:
+  - 'character维度: 主角人设过于猥琐，影响观感'
+  - 'pacing维度: 第二章开始节奏变复杂，主线不清'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 822
+  - 889
+  score: null
+  score_raw: 第一章六十分有 但确实给你四十分
+  score_signal: fuzzy
+  verdict: borderline
+  title_guess: 盛骑士的坐骑
+  genre_guess:
+  - 都市
+  - 灵异
+  - 骑士
+  overall_comment: 第一章真实感强，烟火气足，但后续章节复杂化且主角人设猥琐，可惜了好开头。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章代入感真实，灵异氛围和日常融合得好
+    raw_quote: 第一章真牛逼 第一章味道非常强 ... 就很有这种 烟火系的吧
+  - dimension: character
+    severity: negative
+    content: 主角人设过于猥琐，影响观感
+    raw_quote: 人设太猥琐了 主角人设扎扎乎乎的 也没意思
+  - dimension: pacing
+    severity: negative
+    content: 第二章开始节奏变复杂，主线不清
+    raw_quote: 第二章复杂了 ... 感觉后面的这些东西 ... 写的太 ... 默契的也太不好

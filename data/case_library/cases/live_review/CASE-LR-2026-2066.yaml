@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2066
+title: 一枚缺角铜钱 (fail / 34分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 武侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多分 三十四分 | 切入复杂但展开有思路，主线单薄，需要将匪徒联系到宗门。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入复杂但展开有思路，主线单薄，需要将匪徒联系到宗门。 | 切入写的贼复杂，读者会跑
+  observable:
+  - 'opening维度: 切入写的贼复杂，读者会跑'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 4001
+  - 4200
+  score: 34
+  score_raw: 三十多分 三十四分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 一枚缺角铜钱
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 武侠
+  overall_comment: 切入复杂但展开有思路，主线单薄，需要将匪徒联系到宗门。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入写的贼复杂，读者会跑
+    raw_quote: 切入写的贼复杂
+  - dimension: highpoint
+    severity: neutral
+    content: 展开比开头好，但主线单薄
+    raw_quote: 展开比开头好 ... 但是本质上这个主线 我觉得还是很单薄

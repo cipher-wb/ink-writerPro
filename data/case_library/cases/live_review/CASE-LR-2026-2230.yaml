@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-2230
+title: 西幻白龙父子 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 西幻
+  - 巨龙
+  - 种田
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多38分 | 文笔尚可但剧情过于小白，角色智商集体不在线，像过家家。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但剧情过于小白，角色智商集体不在线，像过家家。 | 整体风格太小白，像蓝精灵，起点不吃;角色全员智商掉线，人设崩塌
+  observable:
+  - 'simplicity维度: 整体风格太小白，像蓝精灵，起点不吃'
+  - 'character维度: 角色全员智商掉线，人设崩塌'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 1011
+  - 1144
+  score: 38
+  score_raw: 差不多38分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 西幻白龙父子
+  genre_guess:
+  - 西幻
+  - 巨龙
+  - 种田
+  overall_comment: 文笔尚可但剧情过于小白，角色智商集体不在线，像过家家。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 整体风格太小白，像蓝精灵，起点不吃
+    raw_quote: '但就是感觉好小白啊
+
+      就那种小孩子过家家的'
+  - dimension: character
+    severity: negative
+    content: 角色全员智商掉线，人设崩塌
+    raw_quote: '就感觉没有一个有智商的...人设已经崩了
+
+      这女的骂人骂疯掉'

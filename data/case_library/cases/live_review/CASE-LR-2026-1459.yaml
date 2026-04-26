@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1459
+title: 重生只想赚点小钱 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eEfxBGEfa
+scope:
+  genre:
+  - 重生
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 肯定不能出来 | 开头踩敏感线，肯定过不了审，直接拒稿。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eEfxBGEfa.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头踩敏感线，肯定过不了审，直接拒稿。 | 开头涉及敏感色情暗示，平台违规;内容肯定过不了审
+  observable:
+  - 'taboo维度: 开头涉及敏感色情暗示，平台违规'
+  - 'ops维度: 内容肯定过不了审'
+live_review_meta:
+  source_bvid: BV1eEfxBGEfa
+  source_line_range:
+  - 1125
+  - 1204
+  score: null
+  score_raw: 肯定不能出来
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 重生只想赚点小钱
+  genre_guess:
+  - 重生
+  - 都市
+  overall_comment: 开头踩敏感线，肯定过不了审，直接拒稿。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 开头涉及敏感色情暗示，平台违规
+    raw_quote: 有个赖克包啊 雪白在躺在你旁边 你扯勾八蛋嘛 这不能写
+  - dimension: ops
+    severity: negative
+    content: 内容肯定过不了审
+    raw_quote: 肯定不能出来

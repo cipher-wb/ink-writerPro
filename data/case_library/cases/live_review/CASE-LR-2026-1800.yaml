@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1800
+title: 火影当游戏王卡牌店长 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 同人
+  - 火影
+  - 游戏王
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能直发的水平 | 小众但有受众，节奏快、情绪足、会蹭热度，具备签约指发潜力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小众但有受众，节奏快、情绪足、会蹭热度，具备签约指发潜力。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 1230
+  - 1291
+  score: null
+  score_raw: 能直发的水平
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 火影当游戏王卡牌店长
+  genre_guess:
+  - 同人
+  - 火影
+  - 游戏王
+  overall_comment: 小众但有受众，节奏快、情绪足、会蹭热度，具备签约指发潜力。
+  comments:
+  - dimension: ops
+    severity: positive
+    content: 写得不错，节奏情绪到位，构思独特的同人双修结合，可以直发。
+    raw_quote: 有值发的水平...虽然装但是有感觉的...上限低但比较提...可以给你签
+  - dimension: genre
+    severity: positive
+    content: 游戏王与火影元素结合，题材有人看且很有可能养出万定粉丝。
+    raw_quote: 题材绝对有人看...追定五千为什么是小众...精品就算有受众人群

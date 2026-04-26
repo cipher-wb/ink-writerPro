@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1583
+title: 西格玛身法：拒绝表白就变强 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分有 | 系统卖点单薄，仅靠任务驱动，开局几万字后易崩，简介剧透更伤悬念。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统卖点单薄，仅靠任务驱动，开局几万字后易崩，简介剧透更伤悬念。 | 系统作为主卖点太单薄，追读很低;简介剧透，破坏开局悬念
+  observable:
+  - 'simplicity维度: 系统作为主卖点太单薄，追读很低'
+  - 'opening维度: 简介剧透，破坏开局悬念'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 1
+  - 25
+  score: 55
+  score_raw: 55分有
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 西格玛身法：拒绝表白就变强
+  genre_guess:
+  - 都市
+  - 系统
+  - 恋爱
+  overall_comment: 系统卖点单薄，仅靠任务驱动，开局几万字后易崩，简介剧透更伤悬念。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 系统作为主卖点太单薄，追读很低
+    raw_quote: 唉好无聊啊 还是攻略女人那一套 类似于拒绝他获得积分 然后加点唉 番茄这种满满大街都是起点请前几年也有吧 … 但你起点还是太单薄了 韩式系统为卖点
+      读者看到很烦的这种追读很低
+  - dimension: opening
+    severity: negative
+    content: 简介剧透，破坏开局悬念
+    raw_quote: 简介就剧透了就没意思了 你知道吧 这个知道吧 这种东西不能剧透 就像名侦探柯南 你简介说了啊 你说蜜蜂是凶手 … 没意思啊

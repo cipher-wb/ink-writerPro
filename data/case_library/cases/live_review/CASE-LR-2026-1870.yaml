@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1870
+title: 重生KTV雪白都市文 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sDXBB7ED8
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 16分 | 对网络的认知很乱，没有明确主线，主角人设拉垮，题材卖点找不到，需要从临摹学习开始。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sDXBB7ED8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 对网络的认知很乱，没有明确主线，主角人设拉垮，题材卖点找不到，需要从临摹学习开始。 | 主角人设拉垮，没有设计，智商显得不高;缺乏设计，想到哪写到哪，没有经过设计的主线和卖点
+  observable:
+  - 'character维度: 主角人设拉垮，没有设计，智商显得不高'
+  - 'simplicity维度: 缺乏设计，想到哪写到哪，没有经过设计的主线和卖点'
+live_review_meta:
+  source_bvid: BV1sDXBB7ED8
+  source_line_range:
+  - 1376
+  - 1411
+  score: 16
+  score_raw: 16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生KTV雪白都市文
+  genre_guess:
+  - 都市
+  - 重生
+  - 雪白
+  overall_comment: 对网络的认知很乱，没有明确主线，主角人设拉垮，题材卖点找不到，需要从临摹学习开始。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设拉垮，没有设计，智商显得不高
+    raw_quote: 主角的智商也不高的样子啊
+  - dimension: simplicity
+    severity: negative
+    content: 缺乏设计，想到哪写到哪，没有经过设计的主线和卖点
+    raw_quote: 你是对网络的认知都很乱 没有明确的主线

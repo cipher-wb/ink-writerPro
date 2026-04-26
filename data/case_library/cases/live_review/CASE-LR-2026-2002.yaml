@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2002
+title: 玩为时代 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 科幻
+  - 无限流
+  - 海克斯
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分 | 打怪兽的开头太无聊，人设不接地气，身份不如换成老师、护士等有生活感的职业。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 打怪兽的开头太无聊，人设不接地气，身份不如换成老师、护士等有生活感的职业。 | 人设虚浮不接地气，小队战士身份不如接地气的职业。;开头打怪兽太无聊，劝退读者。
+  observable:
+  - 'character维度: 人设虚浮不接地气，小队战士身份不如接地气的职业。'
+  - 'opening维度: 开头打怪兽太无聊，劝退读者。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 454
+  - 504
+  score: 45
+  score_raw: 45分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玩为时代
+  genre_guess:
+  - 科幻
+  - 无限流
+  - 海克斯
+  overall_comment: 打怪兽的开头太无聊，人设不接地气，身份不如换成老师、护士等有生活感的职业。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人设虚浮不接地气，小队战士身份不如接地气的职业。
+    raw_quote: 接地气的是老师 是护士 是那种电车里面的上班族 ... 我跟你说了 接地气
+  - dimension: opening
+    severity: negative
+    content: 开头打怪兽太无聊，劝退读者。
+    raw_quote: 这个你怎么能把这个末日写这么无聊呢 小队在这打丧尸

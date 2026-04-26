@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-2019
+title: 重生遗憾之回到高三 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35 | 遣词造句还好，但重点不对，开篇沉溺于家庭日常，缺乏抓人的遗憾和重生任务，俗套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句还好，但重点不对，开篇沉溺于家庭日常，缺乏抓人的遗憾和重生任务，俗套。 | 开篇全是跟家人聊天的日常，没有快速切入遗憾和重生主线。
+  observable:
+  - 'opening维度: 开篇全是跟家人聊天的日常，没有快速切入遗憾和重生主线。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1163
+  - 1207
+  score: 35
+  score_raw: '35'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生遗憾之回到高三
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 遣词造句还好，但重点不对，开篇沉溺于家庭日常，缺乏抓人的遗憾和重生任务，俗套。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇全是跟家人聊天的日常，没有快速切入遗憾和重生主线。
+    raw_quote: 见爸妈聊一会 见妹妹聊一会 ... 这全不是卖点

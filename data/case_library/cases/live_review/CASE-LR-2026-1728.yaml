@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1728
+title: 奇葩设定流（禁忌穿越） (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1oXwHzVEk3
+scope:
+  genre:
+  - 设定
+  - 奇葩
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 12.5分吧 | 文笔像小学生作文，开篇纯设定无人物交代，读者看不懂，全部跑光。不会写网文，需要从基础学起。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1oXwHzVEk3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔像小学生作文，开篇纯设定无人物交代，读者看不懂，全部跑光。不会写网文，需要从基础学起。 | 开头未交代人物、世界、主角目标，读者完全迷失;内容像小学生作文，根本不能算网文
+  observable:
+  - 'opening维度: 开头未交代人物、世界、主角目标，读者完全迷失'
+  - 'simplicity维度: 内容像小学生作文，根本不能算网文'
+live_review_meta:
+  source_bvid: BV1oXwHzVEk3
+  source_line_range:
+  - 1665
+  - 1700
+  score: null
+  score_raw: 12.5分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 奇葩设定流（禁忌穿越）
+  genre_guess:
+  - 设定
+  - 奇葩
+  - 都市
+  overall_comment: 文笔像小学生作文，开篇纯设定无人物交代，读者看不懂，全部跑光。不会写网文，需要从基础学起。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头未交代人物、世界、主角目标，读者完全迷失
+    raw_quote: 跑了，全跑了，读者已经跑完了，全跑了
+  - dimension: simplicity
+    severity: negative
+    content: 内容像小学生作文，根本不能算网文
+    raw_quote: 这就不是网红那个，这就是一个小学生作文好吧

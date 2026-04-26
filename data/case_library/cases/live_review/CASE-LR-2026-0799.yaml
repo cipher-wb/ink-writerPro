@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0799
+title: 词母手中剑 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 科幻
+  - 赛博
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 我们一起包饺子呀 | 展开有细节，但切入太俗，元素乱，设定太复杂
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 展开有细节，但切入太俗，元素乱，设定太复杂 | 开头全是无相描写，没切入剧情;设定太多太乱，读者难懂
+  observable:
+  - 'opening维度: 开头全是无相描写，没切入剧情'
+  - 'simplicity维度: 设定太多太乱，读者难懂'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 1280
+  - 1400
+  score: 35
+  score_raw: 35分吧 我们一起包饺子呀
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 词母手中剑
+  genre_guess:
+  - 科幻
+  - 赛博
+  - 穿越
+  overall_comment: 展开有细节，但切入太俗，元素乱，设定太复杂
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头全是无相描写，没切入剧情
+    raw_quote: 作为网文你这开头的六百个字全是无相表写
+  - dimension: simplicity
+    severity: negative
+    content: 设定太多太乱，读者难懂
+    raw_quote: 元素确实有点乱这个世界的设定

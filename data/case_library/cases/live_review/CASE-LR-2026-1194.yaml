@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1194
+title: 西游网游之黑神话 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1XDwSzEEP4
+scope:
+  genre:
+  - 网游
+  - 西游
+  - 同人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十三分吧 | 基本功扎实但题材太差，网游西游难以写出新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1XDwSzEEP4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 基本功扎实但题材太差，网游西游难以写出新意。 | 西游网游类题材很难写出彩;节奏平淡，缺乏浓烈爆点
+  observable:
+  - 'genre维度: 西游网游类题材很难写出彩'
+  - 'pacing维度: 节奏平淡，缺乏浓烈爆点'
+live_review_meta:
+  source_bvid: BV1XDwSzEEP4
+  source_line_range:
+  - 751
+  - 850
+  score: 33
+  score_raw: 三十三分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 西游网游之黑神话
+  genre_guess:
+  - 网游
+  - 西游
+  - 同人
+  overall_comment: 基本功扎实但题材太差，网游西游难以写出新意。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 西游网游类题材很难写出彩
+    raw_quote: 但是题材太差了
+  - dimension: misc
+    severity: positive
+    content: 写作基本功扎实，表达没问题
+    raw_quote: 基本功扎实没问题
+  - dimension: pacing
+    severity: negative
+    content: 节奏平淡，缺乏浓烈爆点
+    raw_quote: 有点不浓不烈了

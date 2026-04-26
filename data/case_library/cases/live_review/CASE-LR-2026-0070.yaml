@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0070
+title: 此书必签 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 奇幻
+  - 系统
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 内容荒诞搞笑但大纲化严重，心理活动少，节奏快到没有细节，无法签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容荒诞搞笑但大纲化严重，心理活动少，节奏快到没有细节，无法签约。 | 节奏太快，缺乏铺垫和心理活动;文笔简陋，像大纲一样，细节描写不足
+  observable:
+  - 'pacing维度: 节奏太快，缺乏铺垫和心理活动'
+  - 'simplicity维度: 文笔简陋，像大纲一样，细节描写不足'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 581
+  - 645
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 此书必签
+  genre_guess:
+  - 奇幻
+  - 系统
+  - 搞笑
+  overall_comment: 内容荒诞搞笑但大纲化严重，心理活动少，节奏快到没有细节，无法签约。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太快，缺乏铺垫和心理活动
+    raw_quote: 就起得太快了...根本就没铺垫,也没细节
+  - dimension: simplicity
+    severity: negative
+    content: 文笔简陋，像大纲一样，细节描写不足
+    raw_quote: 写的太简洁了...心理活动盘算这些太少

@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0227
+title: 修仙打破垄断共长生 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV15eBSBoEik
+scope:
+  genre:
+  - 都市
+  - 修仙
+  - 种姓制度
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分 | 文笔意外的好但题材过时，缺乏逻辑代入感，市场化失败。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV15eBSBoEik.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔意外的好但题材过时，缺乏逻辑代入感，市场化失败。 | 没有逻辑代入，读者无法认同;都市修真题材过时无市场
+  observable:
+  - 'opening维度: 没有逻辑代入，读者无法认同'
+  - 'genre维度: 都市修真题材过时无市场'
+live_review_meta:
+  source_bvid: BV15eBSBoEik
+  source_line_range:
+  - 55
+  - 130
+  score: 22
+  score_raw: 22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 修仙打破垄断共长生
+  genre_guess:
+  - 都市
+  - 修仙
+  - 种姓制度
+  overall_comment: 文笔意外的好但题材过时，缺乏逻辑代入感，市场化失败。
+  comments:
+  - dimension: misc
+    severity: positive
+    content: 文笔扎实
+    raw_quote: 大哥文笔意外的好
+  - dimension: opening
+    severity: negative
+    content: 没有逻辑代入，读者无法认同
+    raw_quote: 但是立不住啊 真立不住啊
+  - dimension: genre
+    severity: negative
+    content: 都市修真题材过时无市场
+    raw_quote: 什么年代了还在写都市修真

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0680
+title: 封神拦路人 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HCzwBuEV6
+scope:
+  genre:
+  - 封神
+  - 同人
+  - 洪荒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50分有倒是还行 | 比例和切入不错，进步大，但封神题材已签两本都扑，建议换西游或其他名著。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HCzwBuEV6.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例和切入不错，进步大，但封神题材已签两本都扑，建议换西游或其他名著。 | 封神拦路人题材小众，之前签约的都没起来
+  observable:
+  - 'genre维度: 封神拦路人题材小众，之前签约的都没起来'
+live_review_meta:
+  source_bvid: BV1HCzwBuEV6
+  source_line_range:
+  - 1315
+  - 1400
+  score: 50
+  score_raw: 50分有倒是还行
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 封神拦路人
+  genre_guess:
+  - 封神
+  - 同人
+  - 洪荒
+  overall_comment: 比例和切入不错，进步大，但封神题材已签两本都扑，建议换西游或其他名著。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 封神拦路人题材小众，之前签约的都没起来
+    raw_quote: 封神现在也小赚了...风神拦路人之前也试过挺难起来
+  - dimension: opening
+    severity: positive
+    content: 切入和比例OK，思路成熟
+    raw_quote: 切入就这样切入...比例也OK

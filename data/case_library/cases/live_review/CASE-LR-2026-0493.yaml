@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0493
+title: 超凡世界我靠系统登顶 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 都市
+  - 系统
+  - 搞笑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能发 蓝精灵就9分吧 好吧sorry | 各种反转和矛盾应接不暇，但主角人设太小学生，反派全是光头，且被摸了两次。只能发蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 各种反转和矛盾应接不暇，但主角人设太小学生，反派全是光头，且被摸了两次。只能发蓝精灵。 | 主角人设太小学生，两世为人行为逻辑尴尬
+  observable:
+  - 'character维度: 主角人设太小学生，两世为人行为逻辑尴尬'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1703
+  - 1750
+  score: 9
+  score_raw: 只能发 蓝精灵就9分吧 好吧sorry
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 超凡世界我靠系统登顶
+  genre_guess:
+  - 都市
+  - 系统
+  - 搞笑
+  overall_comment: 各种反转和矛盾应接不暇，但主角人设太小学生，反派全是光头，且被摸了两次。只能发蓝精灵。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设太小学生，两世为人行为逻辑尴尬
+    raw_quote: 两世为人都这么小学生吗 现在想起来了
+  - dimension: misc
+    severity: positive
+    content: 脑洞炸裂，事件冲突永动机，各种反转
+    raw_quote: 各种反转...永远有矛盾 永远有矛盾是吧 永永永远有冲突

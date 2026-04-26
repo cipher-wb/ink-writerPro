@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-2090
+title: 赛博炼道 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 赛博
+  - 修仙
+  - 科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分吧 | 赛博修仙在起点三年未见成功案例，场景枯燥、情节无聊，完全无法建立读者代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 赛博修仙在起点三年未见成功案例，场景枯燥、情节无聊，完全无法建立读者代入感。 | 赛博修仙属于起点盲区，硬碰题材大概率扑街;开头在车上濒死场景完全无法让读者共情
+  observable:
+  - 'genre维度: 赛博修仙属于起点盲区，硬碰题材大概率扑街'
+  - 'opening维度: 开头在车上濒死场景完全无法让读者共情'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1270
+  - 1330
+  score: 22
+  score_raw: 22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 赛博炼道
+  genre_guess:
+  - 赛博
+  - 修仙
+  - 科幻
+  overall_comment: 赛博修仙在起点三年未见成功案例，场景枯燥、情节无聊，完全无法建立读者代入感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 赛博修仙属于起点盲区，硬碰题材大概率扑街
+    raw_quote: 赛博修仙我在起点没有见过写起来了，已经3年了，你怎么解释嘛……就就赛博日常看上去很紧张
+  - dimension: opening
+    severity: negative
+    content: 开头在车上濒死场景完全无法让读者共情
+    raw_quote: 没人看这个这个这个事件就是无聊无趣，干巴巴，一点事件都没有……这跟打老虎一样，就是标准干巴巴

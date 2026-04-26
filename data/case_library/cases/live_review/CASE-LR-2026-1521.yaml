@@ -1,0 +1,45 @@
+case_id: CASE-LR-2026-1521
+title: 吃妖长修为 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 妖修
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 小妖王设定过时，开篇无剧情卖设定，任何编辑都会直接拒。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 小妖王设定过时，开篇无剧情卖设定，任何编辑都会直接拒。 | 主角八岁小孩，没有成年人故事，编辑扫一眼就拒
+  observable:
+  - 'genre维度: 主角八岁小孩，没有成年人故事，编辑扫一眼就拒'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 1381
+  - 1480
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 吃妖长修为
+  genre_guess:
+  - 妖修
+  - 玄幻
+  overall_comment: 小妖王设定过时，开篇无剧情卖设定，任何编辑都会直接拒。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 主角八岁小孩，没有成年人故事，编辑扫一眼就拒
+    raw_quote: 没有八岁啊现在 … 任何编辑都扫一眼就直接拒了

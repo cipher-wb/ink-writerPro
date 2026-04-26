@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0879
+title: 零售宗 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 女频
+  - 修真
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打分的话有个40分 | 比例可爱，文笔扎实，但上帝视角严重，缺现代穿越代入感，主角视角太少。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例可爱，文笔扎实，但上帝视角严重，缺现代穿越代入感，主角视角太少。 | 主角视角太少，一直在写配角和设定;代入感太差，缺少穿越现代人视角的共鸣
+  observable:
+  - 'character维度: 主角视角太少，一直在写配角和设定'
+  - 'opening维度: 代入感太差，缺少穿越现代人视角的共鸣'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 751
+  - 800
+  score: 40
+  score_raw: 打分的话有个40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 零售宗
+  genre_guess:
+  - 女频
+  - 修真
+  overall_comment: 比例可爱，文笔扎实，但上帝视角严重，缺现代穿越代入感，主角视角太少。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角视角太少，一直在写配角和设定
+    raw_quote: 视角根本就不是主角啊 你试一下写主角视角写主角吧 主角太少了
+  - dimension: opening
+    severity: negative
+    content: 代入感太差，缺少穿越现代人视角的共鸣
+    raw_quote: 代入感太差了 你这里应该要拉代入感了 这个女子一觉睡醒 她是谁对吧 … 我跪下了 我真他妈给你们跪下了 土著好难写啊
+  - dimension: highpoint
+    severity: neutral
+    content: 主线不够明确，写得略随意
+    raw_quote: 主线内容我不知道你要干嘛呀 我知道你的这个主线还是不太明确 写的有点随意的感觉

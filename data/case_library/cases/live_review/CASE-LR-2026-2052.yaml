@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-2052
+title: 大钱女帝 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 玄幻
+  - 女帝
+  - 师徒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多二十分吧 二十分吧 兄弟 | 题材逻辑崩坏，人设夸张，节奏慢，缺乏玄幻味道。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材逻辑崩坏，人设夸张，节奏慢，缺乏玄幻味道。 | 题材涉及龙里敏感内容;人设夸张不合理（18岁天下第一大辱）;节奏慢，政治对话多余
+  observable:
+  - 'taboo维度: 题材涉及龙里敏感内容'
+  - 'character维度: 人设夸张不合理（18岁天下第一大辱）'
+  - 'pacing维度: 节奏慢，政治对话多余'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 1201
+  - 1400
+  score: 20
+  score_raw: 差不多二十分吧 二十分吧 兄弟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大钱女帝
+  genre_guess:
+  - 玄幻
+  - 女帝
+  - 师徒
+  overall_comment: 题材逻辑崩坏，人设夸张，节奏慢，缺乏玄幻味道。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 题材涉及龙里敏感内容
+    raw_quote: 充施力图嘛 这个这么明确的写嘛 ... 涉及到龙里了
+  - dimension: character
+    severity: negative
+    content: 人设夸张不合理（18岁天下第一大辱）
+    raw_quote: 18岁就天下第一大辱了 这 有点假吧
+  - dimension: pacing
+    severity: negative
+    content: 节奏慢，政治对话多余
+    raw_quote: 好慢啊 这卖约的聊疯掉了

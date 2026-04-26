@@ -1,0 +1,68 @@
+case_id: CASE-LR-2026-0447
+title: 无法躺平，我只能靠废品成仙了 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1BFA2zSEZj
+scope:
+  genre:
+  - 诸天无限
+  - 废品流
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 设定卖点缺乏剧情，主角年龄太幼现实剧情为零，过于日常同质化，无法签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1BFA2zSEZj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定卖点缺乏剧情，主角年龄太幼现实剧情为零，过于日常同质化，无法签约。 | 主角五岁妹妹三岁年龄太小，读者无代入感;开篇全是日常无冲突，现实剧情为零;内容太幼稚同质化，只玩泥巴没看点
+  observable:
+  - 'character维度: 主角五岁妹妹三岁年龄太小，读者无代入感'
+  - 'pacing维度: 开篇全是日常无冲突，现实剧情为零'
+  - 'simplicity维度: 内容太幼稚同质化，只玩泥巴没看点'
+  - 'golden_finger维度: 金手指虽强但未与剧情结合，沦为纯设定'
+  - 'hook维度: 毫无期待感，读者会直接弃书'
+live_review_meta:
+  source_bvid: BV1BFA2zSEZj
+  source_line_range:
+  - 119
+  - 255
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 无法躺平，我只能靠废品成仙了
+  genre_guess:
+  - 诸天无限
+  - 废品流
+  - 都市
+  overall_comment: 设定卖点缺乏剧情，主角年龄太幼现实剧情为零，过于日常同质化，无法签约。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角五岁妹妹三岁年龄太小，读者无代入感
+    raw_quote: 不是年龄兄弟年龄真有问题啊五岁三岁这聊啥
+  - dimension: pacing
+    severity: negative
+    content: 开篇全是日常无冲突，现实剧情为零
+    raw_quote: 等于说你现实剧情还是为零嘛
+  - dimension: simplicity
+    severity: negative
+    content: 内容太幼稚同质化，只玩泥巴没看点
+    raw_quote: 玩离吧真没人看
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指虽强但未与剧情结合，沦为纯设定
+    raw_quote: 你这个金手指这么强的金手指 你没世界没危机嘛
+  - dimension: hook
+    severity: negative
+    content: 毫无期待感，读者会直接弃书
+    raw_quote: 没用的这种现实没剧情只是一个卖点设定

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0257
+title: 毒蘑菇的怪谈东京 (fail / 9分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV17pwzzZEc4
+scope:
+  genre:
+  - 怪谈
+  - 东京
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不多就九分吧 | 全篇几乎只有雪白内容，缺乏核心卖点和危机，且尺度涉黄无法过审。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV17pwzzZEc4.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全篇几乎只有雪白内容，缺乏核心卖点和危机，且尺度涉黄无法过审。 | 大量擦边描写，存在涉黄风险，无法签约。;除了雪白毫无其他卖点，主线危机全无。
+  observable:
+  - 'taboo维度: 大量擦边描写，存在涉黄风险，无法签约。'
+  - 'highpoint维度: 除了雪白毫无其他卖点，主线危机全无。'
+live_review_meta:
+  source_bvid: BV17pwzzZEc4
+  source_line_range:
+  - 1335
+  - 1415
+  score: 9
+  score_raw: 不多就九分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 毒蘑菇的怪谈东京
+  genre_guess:
+  - 怪谈
+  - 东京
+  - 雪白
+  overall_comment: 全篇几乎只有雪白内容，缺乏核心卖点和危机，且尺度涉黄无法过审。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 大量擦边描写，存在涉黄风险，无法签约。
+    raw_quote: 这肯定还圈了 没没办法 这这这没法改
+  - dimension: highpoint
+    severity: negative
+    content: 除了雪白毫无其他卖点，主线危机全无。
+    raw_quote: 你告诉我除了雪白 还有什么卖点

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0471
+title: 人在宣线界刚刚穿越 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就35分 | 流畅但卖点单薄，矿工开局太俗，需要副本奖励和立体配角。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 流畅但卖点单薄，矿工开局太俗，需要副本奖励和立体配角。 | 矿工被欺负开局太老套，同类起点书已经装满地球;两张了还没有立得住的配角，只有NPC反派嗷嗷叫
+  observable:
+  - 'opening维度: 矿工被欺负开局太老套，同类起点书已经装满地球'
+  - 'character维度: 两张了还没有立得住的配角，只有NPC反派嗷嗷叫'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 1241
+  - 1280
+  score: 35
+  score_raw: 差不多就35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 人在宣线界刚刚穿越
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 游戏
+  overall_comment: 流畅但卖点单薄，矿工开局太俗，需要副本奖励和立体配角。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 矿工被欺负开局太老套，同类起点书已经装满地球
+    raw_quote: 齐天的矿工已经够多了 天天的猎户愚民 矿工什么药铺学徒 加起来真的能装满一个地球了
+  - dimension: character
+    severity: negative
+    content: 两张了还没有立得住的配角，只有NPC反派嗷嗷叫
+    raw_quote: 你不可能三张了 没有一个立足的配角 只有几个NPC反派 在那里嗷嗷叫吧

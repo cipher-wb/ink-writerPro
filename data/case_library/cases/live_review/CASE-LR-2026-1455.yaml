@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1455
+title: 末日预知半小时 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1eEfxBGEfa
+scope:
+  genre:
+  - 末日
+  - 预知
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 哎35分嘛是吧 | 脑洞太老，像20年前番茄文，但节奏快代入感还过得去，35分不签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eEfxBGEfa.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞太老，像20年前番茄文，但节奏快代入感还过得去，35分不签。 | 脑洞老旧，20年前番茄常见套路，没新意;开头缺乏极端情绪，女角色存在感弱
+  observable:
+  - 'genre维度: 脑洞老旧，20年前番茄常见套路，没新意'
+  - 'opening维度: 开头缺乏极端情绪，女角色存在感弱'
+live_review_meta:
+  source_bvid: BV1eEfxBGEfa
+  source_line_range:
+  - 285
+  - 510
+  score: 35
+  score_raw: 哎35分嘛是吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日预知半小时
+  genre_guess:
+  - 末日
+  - 预知
+  - 都市
+  overall_comment: 脑洞太老，像20年前番茄文，但节奏快代入感还过得去，35分不签。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 脑洞老旧，20年前番茄常见套路，没新意
+    raw_quote: 我在番茄能看到这样的书 真的有几千本了……脑洞很老
+  - dimension: pacing
+    severity: positive
+    content: 节奏快，代入感没问题
+    raw_quote: 大哥写的很急 节奏很好 代入感没问题
+  - dimension: opening
+    severity: negative
+    content: 开头缺乏极端情绪，女角色存在感弱
+    raw_quote: 也没什么极端情绪 那个开头那个女的也没有干嘛

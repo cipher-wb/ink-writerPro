@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-0723
+title: 东京文豪 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 都市
+  - 东京
+  - 文豪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就有五十分的水平 | 题材有市场潜力，但开篇切入场景太弱，女频味道过浓，缺乏性张力和男性读者吸引力，需要更换切入角度。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材有市场潜力，但开篇切入场景太弱，女频味道过浓，缺乏性张力和男性读者吸引力，需要更换切入角度。 | 开篇小剧场切入太弱，缺乏吸引力;男主角缺乏性张力，情节过于正经缺乏吸引力
+  observable:
+  - 'opening维度: 开篇小剧场切入太弱，缺乏吸引力'
+  - 'character维度: 男主角缺乏性张力，情节过于正经缺乏吸引力'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 123
+  - 215
+  score: 50
+  score_raw: 就有五十分的水平
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东京文豪
+  genre_guess:
+  - 都市
+  - 东京
+  - 文豪
+  overall_comment: 题材有市场潜力，但开篇切入场景太弱，女频味道过浓，缺乏性张力和男性读者吸引力，需要更换切入角度。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇小剧场切入太弱，缺乏吸引力
+    raw_quote: 切入的小剧场 换一个 这个小剧场真的太弱了
+  - dimension: genre
+    severity: positive
+    content: 东京文豪题材有市场潜力，签约作品均订不低
+    raw_quote: 东京文豪一直都是 我这边签的东京文豪 目前没有一本五百均订下的
+  - dimension: character
+    severity: negative
+    content: 男主角缺乏性张力，情节过于正经缺乏吸引力
+    raw_quote: 你的男人没有一点性张力...就毫无感觉
+  - dimension: simplicity
+    severity: positive
+    content: 文笔比例扎实，有50分的基础水平
+    raw_quote: 比例不错 没办法 就有五十分的水平

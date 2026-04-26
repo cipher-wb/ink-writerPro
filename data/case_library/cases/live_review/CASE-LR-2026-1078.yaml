@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1078
+title: 重生王莽 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 历史
+  - 重生
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就30而已 | 题材无爽点，前世现代人成废物难以代入，设定复杂读者不爱看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材无爽点，前世现代人成废物难以代入，设定复杂读者不爱看。 | 王莽题材缺乏爽点，立不住脚;主角上一世废物，难以让读者共情
+  observable:
+  - 'genre维度: 王莽题材缺乏爽点，立不住脚'
+  - 'character维度: 主角上一世废物，难以让读者共情'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 1041
+  - 1120
+  score: 30
+  score_raw: 也就30而已
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生王莽
+  genre_guess:
+  - 历史
+  - 重生
+  - 系统
+  overall_comment: 题材无爽点，前世现代人成废物难以代入，设定复杂读者不爱看。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 王莽题材缺乏爽点，立不住脚
+    raw_quote: 你重生王莽的爽点在哪里
+  - dimension: character
+    severity: negative
+    content: 主角上一世废物，难以让读者共情
+    raw_quote: 前世大哥作为一个现代人已经崩完了

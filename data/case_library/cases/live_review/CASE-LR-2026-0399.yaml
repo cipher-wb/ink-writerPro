@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0399
+title: 如切如搓 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 系统流开局过白，节奏不是过快就是躺平，建议发番茄。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统流开局过白，节奏不是过快就是躺平，建议发番茄。 | 第一章事件推进极快，心理描写缺失，导致节奏失真。;主角太躺平，缺少危机和看点事件。
+  observable:
+  - 'pacing维度: 第一章事件推进极快，心理描写缺失，导致节奏失真。'
+  - 'highpoint维度: 主角太躺平，缺少危机和看点事件。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 1035
+  - 1080
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 如切如搓
+  genre_guess:
+  - 玄幻
+  - 系统
+  overall_comment: 系统流开局过白，节奏不是过快就是躺平，建议发番茄。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 第一章事件推进极快，心理描写缺失，导致节奏失真。
+    raw_quote: 节奏有点太快了其实，心理活动什么太少了。
+  - dimension: highpoint
+    severity: negative
+    content: 主角太躺平，缺少危机和看点事件。
+    raw_quote: 你要有危机啊，怎么能太躺平呢。

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1256
+title: 重生之贼行天下 (fail / 3分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Z8A7ziEaJ
+scope:
+  genre:
+  - 网游
+  - 重生
+  - 电竞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多比例还是扎实，给你三分有致敬 | 开篇纯战斗画面是大毒点，读者会直接跑掉。网游题材过时且写法不对，需先立都市人物。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Z8A7ziEaJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇纯战斗画面是大毒点，读者会直接跑掉。网游题材过时且写法不对，需先立都市人物。 | 开头纯游戏战斗画面，是无效描写，读者必跑;网游题材过时，且未加入新元素，开篇方式老旧
+  observable:
+  - 'opening维度: 开头纯游戏战斗画面，是无效描写，读者必跑'
+  - 'genre维度: 网游题材过时，且未加入新元素，开篇方式老旧'
+live_review_meta:
+  source_bvid: BV1Z8A7ziEaJ
+  source_line_range:
+  - 1788
+  - 1843
+  score: 3
+  score_raw: 差不多比例还是扎实，给你三分有致敬
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生之贼行天下
+  genre_guess:
+  - 网游
+  - 重生
+  - 电竞
+  overall_comment: 开篇纯战斗画面是大毒点，读者会直接跑掉。网游题材过时且写法不对，需先立都市人物。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头纯游戏战斗画面，是无效描写，读者必跑
+    raw_quote: 因为你开头是完全是无效描写，你在写战斗画面，...，读者看到就全跑了
+  - dimension: genre
+    severity: negative
+    content: 网游题材过时，且未加入新元素，开篇方式老旧
+    raw_quote: 网游这个题材本来就过时了，你还不加一些元素

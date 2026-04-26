@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1058
+title: 游戏入侵超级马里奥开始登顶 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 游戏
+  - 都市
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给大哥45分嘛 | 游戏题材OK，但人物关系弱，缺乏标签和包装，代入感不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 游戏题材OK，但人物关系弱，缺乏标签和包装，代入感不足。 | 主角身份普通，无人物包装;缺少让读者立刻代入的亮点
+  observable:
+  - 'character维度: 主角身份普通，无人物包装'
+  - 'hook维度: 缺少让读者立刻代入的亮点'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 161
+  - 240
+  score: 45
+  score_raw: 就给大哥45分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 游戏入侵超级马里奥开始登顶
+  genre_guess:
+  - 游戏
+  - 都市
+  - 系统
+  overall_comment: 游戏题材OK，但人物关系弱，缺乏标签和包装，代入感不足。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角身份普通，无人物包装
+    raw_quote: 你这个就是一个普通的社畜 做的烂 也没有什么人物关系
+  - dimension: hook
+    severity: negative
+    content: 缺少让读者立刻代入的亮点
+    raw_quote: 人物没立住啊 这个我觉得人物没记住

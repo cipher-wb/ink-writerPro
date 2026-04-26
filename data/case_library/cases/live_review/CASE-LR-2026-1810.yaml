@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1810
+title: 恋综观察室：暴走离异人妻 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 文娱
+  - 恋综
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 恋综热度一阵一阵，切入平淡，缺乏强情绪引爆点，文案和节奏无竞争力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 恋综热度一阵一阵，切入平淡，缺乏强情绪引爆点，文案和节奏无竞争力。 | 开局信息量少，缺乏爆点;恋综题材目前热度差，不如转纯文娱;没有强情绪或名场面蹭热点
+  observable:
+  - 'opening维度: 开局信息量少，缺乏爆点'
+  - 'genre维度: 恋综题材目前热度差，不如转纯文娱'
+  - 'hook维度: 没有强情绪或名场面蹭热点'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 531
+  - 585
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 恋综观察室：暴走离异人妻
+  genre_guess:
+  - 文娱
+  - 恋综
+  - 系统
+  overall_comment: 恋综热度一阵一阵，切入平淡，缺乏强情绪引爆点，文案和节奏无竞争力。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局信息量少，缺乏爆点
+    raw_quote: 第一张还不如第二章呢 第二章好歹是眼前的世界嘛
+  - dimension: genre
+    severity: negative
+    content: 恋综题材目前热度差，不如转纯文娱
+    raw_quote: 恋综不好写 恋综本来就不练 松一阵一阵的 这一阵没什么热度
+  - dimension: hook
+    severity: negative
+    content: 没有强情绪或名场面蹭热点
+    raw_quote: 文娱真的需要蹭名场面加梗……不然读者也不看

@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1371
+title: 三国曹昂保家业 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  - 宅斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 他妈这下把三郎给杀了...但我决定签了这是不能签 | 创意开局好，但毁于情色过度描写，将正面角色写跑偏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 创意开局好，但毁于情色过度描写，将正面角色写跑偏。 | 涉及强暴及过度情色描写，严重毒点，人物破格;将本来有格局的女人塑造成潘金莲式，核心毒点
+  observable:
+  - 'taboo维度: 涉及强暴及过度情色描写，严重毒点，人物破格'
+  - 'misc维度: 将本来有格局的女人塑造成潘金莲式，核心毒点'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1751
+  - 1835
+  score: null
+  score_raw: 他妈这下把三郎给杀了...但我决定签了这是不能签
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 三国曹昂保家业
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  - 宅斗
+  overall_comment: 创意开局好，但毁于情色过度描写，将正面角色写跑偏。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 涉及强暴及过度情色描写，严重毒点，人物破格
+    raw_quote: 你干了我不签...这些情节呀已经离开不他了
+  - dimension: misc
+    severity: negative
+    content: 将本来有格局的女人塑造成潘金莲式，核心毒点
+    raw_quote: 你把她写成潘金莲...我真忍不了

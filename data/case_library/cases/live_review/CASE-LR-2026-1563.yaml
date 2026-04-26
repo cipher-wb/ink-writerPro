@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1563
+title: 白龙幼龙种田神国 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 奇幻
+  - 种田
+  - 龙
+  - 养成
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 代入感差，设定过多，需要加强人物互动和事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 代入感差，设定过多，需要加强人物互动和事件。 | 沉浸感太差，像玩游戏看NPC，缺乏代入;金手指和设定过多，弱化了人物和事件
+  observable:
+  - 'opening维度: 沉浸感太差，像玩游戏看NPC，缺乏代入'
+  - 'golden_finger维度: 金手指和设定过多，弱化了人物和事件'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 401
+  - 550
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 白龙幼龙种田神国
+  genre_guess:
+  - 奇幻
+  - 种田
+  - 龙
+  - 养成
+  overall_comment: 代入感差，设定过多，需要加强人物互动和事件。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 沉浸感太差，像玩游戏看NPC，缺乏代入
+    raw_quote: 代入感太差了，沉浸感太差了，大哥仿佛跟玩游戏一样
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指和设定过多，弱化了人物和事件
+    raw_quote: 你第一章第二章就是拉代入感呀对吧，应该是要代入感，拉互动呀，而不是系统激活就狂写这玩意

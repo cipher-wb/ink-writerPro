@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1532
+title: 穷狼还寺 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 玄幻
+  - 复仇
+  - 少年
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 文笔勉强 内容太无聊了 | 老套少年复仇主线，内容极度无聊，缺乏金手指和穿越元素，需要推倒重来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 老套少年复仇主线，内容极度无聊，缺乏金手指和穿越元素，需要推倒重来。 | 主线无聊，毫无吸引力;配角形象老套，15年前的老套路毫无新意;缺少金手指，读者无法爽快代入
+  observable:
+  - 'hook维度: 主线无聊，毫无吸引力'
+  - 'character维度: 配角形象老套，15年前的老套路毫无新意'
+  - 'golden_finger维度: 缺少金手指，读者无法爽快代入'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 67
+  - 124
+  score: null
+  score_raw: 文笔勉强 内容太无聊了
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 穷狼还寺
+  genre_guess:
+  - 玄幻
+  - 复仇
+  - 少年
+  overall_comment: 老套少年复仇主线，内容极度无聊，缺乏金手指和穿越元素，需要推倒重来。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 主线无聊，毫无吸引力
+    raw_quote: 主线很无聊 这个没办法改
+  - dimension: character
+    severity: negative
+    content: 配角形象老套，15年前的老套路毫无新意
+    raw_quote: 太老了呀 兄弟 好老头啊 15年前啦 就是少年复仇这种
+  - dimension: golden_finger
+    severity: negative
+    content: 缺少金手指，读者无法爽快代入
+    raw_quote: 穿越加金手指能力 好吧 写清楚 先写清楚

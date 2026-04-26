@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1092
+title: 诚心·都市异能 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 都市
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在有点拉垮了 35 | 第一章人设好，后续改动使女主变成技师，破坏原有拉扯感，金手指太番茄化
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章人设好，后续改动使女主变成技师，破坏原有拉扯感，金手指太番茄化 | 女主角人设从被骗少女变成主动型，失去韵味;系统过于主导，偏向番茄风格
+  observable:
+  - 'character维度: 女主角人设从被骗少女变成主动型，失去韵味'
+  - 'golden_finger维度: 系统过于主导，偏向番茄风格'
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 570
+  - 640
+  score: 35
+  score_raw: 现在有点拉垮了 35
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诚心·都市异能
+  genre_guess:
+  - 都市
+  - 灵异
+  overall_comment: 第一章人设好，后续改动使女主变成技师，破坏原有拉扯感，金手指太番茄化
+  comments:
+  - dimension: character
+    severity: negative
+    content: 女主角人设从被骗少女变成主动型，失去韵味
+    raw_quote: 这这不对啊 这个这没感觉啊这 其实这样是反而没感觉了
+  - dimension: golden_finger
+    severity: negative
+    content: 系统过于主导，偏向番茄风格
+    raw_quote: 为主就是番茄了这种灵异书 你看为主嘛 他如果只给你提供一个能力什么的那就还好

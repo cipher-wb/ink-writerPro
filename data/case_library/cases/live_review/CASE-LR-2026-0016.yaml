@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0016
+title: 苏晨重回09年 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV11viPBrEPq
+scope:
+  genre:
+  - 都市
+  - 重生
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 情绪和代入感不错，但内容太虚，没有侧重点，需要具象化遗憾或创业线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11viPBrEPq.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪和代入感不错，但内容太虚，没有侧重点，需要具象化遗憾或创业线。 | 主线缺乏具象化的遗憾或侧重点
+  observable:
+  - 'hook维度: 主线缺乏具象化的遗憾或侧重点'
+live_review_meta:
+  source_bvid: BV11viPBrEPq
+  source_line_range:
+  - 1421
+  - 1622
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 苏晨重回09年
+  genre_guess:
+  - 都市
+  - 重生
+  overall_comment: 情绪和代入感不错，但内容太虚，没有侧重点，需要具象化遗憾或创业线。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入方式可行，有基础代入感
+    raw_quote: 切入还可以
+  - dimension: character
+    severity: positive
+    content: 能写出情绪与代入感
+    raw_quote: 情绪代入感都挺好的
+  - dimension: hook
+    severity: negative
+    content: 主线缺乏具象化的遗憾或侧重点
+    raw_quote: 没侧重点 那就找个侧重点

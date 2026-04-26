@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2188
+title: 无限率（极端剧情穿越） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 无限流
+  - 穿越
+  - 极端
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 第一章水平高，反杀女伯爵好看，但第二章世界太虚，主角没有活人感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章水平高，反杀女伯爵好看，但第二章世界太虚，主角没有活人感。 | 主角人设虚，没有活人感，代入感弱;第二章世界太无聊，像没有灵魂的副本
+  observable:
+  - 'character维度: 主角人设虚，没有活人感，代入感弱'
+  - 'misc维度: 第二章世界太无聊，像没有灵魂的副本'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 1345
+  - 1405
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 无限率（极端剧情穿越）
+  genre_guess:
+  - 无限流
+  - 穿越
+  - 极端
+  overall_comment: 第一章水平高，反杀女伯爵好看，但第二章世界太虚，主角没有活人感。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章水平高，女伯爵剧情好，五十多分
+    raw_quote: 第一章我觉得水平还挺高的 第一章五十封有的其实
+  - dimension: character
+    severity: negative
+    content: 主角人设虚，没有活人感，代入感弱
+    raw_quote: 主角人设很虚 没有活人感 代入感也比较弱
+  - dimension: misc
+    severity: negative
+    content: 第二章世界太无聊，像没有灵魂的副本
+    raw_quote: 这世界太无聊了 这世界好无聊啊这个世界

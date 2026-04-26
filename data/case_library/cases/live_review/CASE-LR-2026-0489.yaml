@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0489
+title: 骑士开拓者与萌物娘 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 西幻
+  - 萌娘
+  - 契约
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也就28分的样子 | 切入太啰嗦，龙娘没人设没逼格，像动物一样只会吃。契约无爽感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入太啰嗦，龙娘没人设没逼格，像动物一样只会吃。契约无爽感。 | 切入太啰嗦，前面事件与后面无关，冲突太晚出现;龙娘没逼格没人设，像动物一样只会吃，无爽感
+  observable:
+  - 'opening维度: 切入太啰嗦，前面事件与后面无关，冲突太晚出现'
+  - 'character维度: 龙娘没逼格没人设，像动物一样只会吃，无爽感'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 1375
+  - 1436
+  score: 28
+  score_raw: 也就28分的样子
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 骑士开拓者与萌物娘
+  genre_guess:
+  - 西幻
+  - 萌娘
+  - 契约
+  overall_comment: 切入太啰嗦，龙娘没人设没逼格，像动物一样只会吃。契约无爽感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入太啰嗦，前面事件与后面无关，冲突太晚出现
+    raw_quote: 切入有点啰嗦 那个切入太啰嗦 切入等于第一章前面的事件 跟后面没关系
+  - dimension: character
+    severity: negative
+    content: 龙娘没逼格没人设，像动物一样只会吃，无爽感
+    raw_quote: 这个龙也没什么逼格 也没什么感觉 这个龙一般般的...一醒来就知道吃肉 我真的是服了

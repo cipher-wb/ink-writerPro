@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0370
+title: 魔宗天之骄子 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV19KkABPE5g
+scope:
+  genre:
+  - 修仙
+  - 魔宗
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 肯定上不了20 | 脑洞太大，剧情孱弱，读之无味，上不了20分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19KkABPE5g.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞太大，剧情孱弱，读之无味，上不了20分。 | 开局脑洞大开，但无实质剧情;设定混乱，读者抓不住重点
+  observable:
+  - 'opening维度: 开局脑洞大开，但无实质剧情'
+  - 'simplicity维度: 设定混乱，读者抓不住重点'
+live_review_meta:
+  source_bvid: BV19KkABPE5g
+  source_line_range:
+  - 801
+  - 870
+  score: null
+  score_raw: 肯定上不了20
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 魔宗天之骄子
+  genre_guess:
+  - 修仙
+  - 魔宗
+  - 脑洞
+  overall_comment: 脑洞太大，剧情孱弱，读之无味，上不了20分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局脑洞大开，但无实质剧情
+    raw_quote: 这脑洞完全是昂系啊 整个剧情都没有的
+  - dimension: simplicity
+    severity: negative
+    content: 设定混乱，读者抓不住重点
+    raw_quote: 这世界观背景读者根本没意义啊

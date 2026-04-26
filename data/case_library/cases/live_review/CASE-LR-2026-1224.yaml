@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1224
+title: 蓝梁星象 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 星象
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 38分吧 | 文笔干练适合历史，但朝代和星象选材太小众，建议换成大唐袁天罡等有流量的设定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔干练适合历史，但朝代和星象选材太小众，建议换成大唐袁天罡等有流量的设定。 | 南朝梁加星象卖点极度小众，榜单无参考
+  observable:
+  - 'genre维度: 南朝梁加星象卖点极度小众，榜单无参考'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 1038
+  - 1081
+  score: 38
+  score_raw: 38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蓝梁星象
+  genre_guess:
+  - 历史
+  - 穿越
+  - 星象
+  overall_comment: 文笔干练适合历史，但朝代和星象选材太小众，建议换成大唐袁天罡等有流量的设定。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 南朝梁加星象卖点极度小众，榜单无参考
+    raw_quote: 蓝良加一个星象为卖点…就更小众了
+  - dimension: simplicity
+    severity: positive
+    content: 文笔精炼，有历史文该有的扎实感
+    raw_quote: 比例挺干练的…确实挺适合写历史

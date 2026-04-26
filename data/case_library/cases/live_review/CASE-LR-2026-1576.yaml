@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1576
+title: 信仰巨鹰开局吃土 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 异兽
+  - 进化
+  - 宇宙
+  - 克苏鲁
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 题材复杂，鹰变人难写，缺少看点，建议跟人互动。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材复杂，鹰变人难写，缺少看点，建议跟人互动。 | 主角是鹰，缺乏变人的欲望和人类视角，代入感极差;多元宇宙设定过乱，异兽文缺少与人的羁绊
+  observable:
+  - 'character维度: 主角是鹰，缺乏变人的欲望和人类视角，代入感极差'
+  - 'genre维度: 多元宇宙设定过乱，异兽文缺少与人的羁绊'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 2101
+  - 2200
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 信仰巨鹰开局吃土
+  genre_guess:
+  - 异兽
+  - 进化
+  - 宇宙
+  - 克苏鲁
+  overall_comment: 题材复杂，鹰变人难写，缺少看点，建议跟人互动。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角是鹰，缺乏变人的欲望和人类视角，代入感极差
+    raw_quote: 穿成动物最大的爽点是变成人啊，你们为什么就感觉没感觉啊，怎么变成人不写啊
+  - dimension: genre
+    severity: negative
+    content: 多元宇宙设定过乱，异兽文缺少与人的羁绊
+    raw_quote: 多元宇宙，古一法师都要吓哭了，DC加漫威都没你牛逼

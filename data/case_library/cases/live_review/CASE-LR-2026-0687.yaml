@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0687
+title: 红海行动之万界穿越 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HVQTBEEAs
+scope:
+  genre:
+  - 同人
+  - 军事
+  - 无限流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你30分 | 遣词造句尚可，但缺少穿越前因后果，活人感弱，像电影剧本。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HVQTBEEAs.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 遣词造句尚可，但缺少穿越前因后果，活人感弱，像电影剧本。 | 没有交代主角如何穿越、任务是什么;主角像原著人物，没有现代人的情绪和代入感;书名封面简介都需修改，否则直发裸奔无数据
+  observable:
+  - 'opening维度: 没有交代主角如何穿越、任务是什么'
+  - 'character维度: 主角像原著人物，没有现代人的情绪和代入感'
+  - 'ops维度: 书名封面简介都需修改，否则直发裸奔无数据'
+live_review_meta:
+  source_bvid: BV1HVQTBEEAs
+  source_line_range:
+  - 308
+  - 396
+  score: 30
+  score_raw: 给你30分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 红海行动之万界穿越
+  genre_guess:
+  - 同人
+  - 军事
+  - 无限流
+  overall_comment: 遣词造句尚可，但缺少穿越前因后果，活人感弱，像电影剧本。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 没有交代主角如何穿越、任务是什么
+    raw_quote: 你是谁 你在哪 你要干嘛 你写呀写呀
+  - dimension: character
+    severity: negative
+    content: 主角像原著人物，没有现代人的情绪和代入感
+    raw_quote: 这个成分不像是我们地球人
+  - dimension: ops
+    severity: negative
+    content: 书名封面简介都需修改，否则直发裸奔无数据
+    raw_quote: 书名封面简介都得改

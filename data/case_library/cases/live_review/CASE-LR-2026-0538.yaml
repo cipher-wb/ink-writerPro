@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0538
+title: 我在忍者世界做公关 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 同人
+  - 火影
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40左右吧 | 同人蹭得不够彻底，公关技术卖点弱，不伦不类缺乏市场考虑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 同人蹭得不够彻底，公关技术卖点弱，不伦不类缺乏市场考虑。 | 蹭同人但又不写明火影后传，很挑受众;公关技术当卖点没人关心
+  observable:
+  - 'genre维度: 蹭同人但又不写明火影后传，很挑受众'
+  - 'hook维度: 公关技术当卖点没人关心'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 1341
+  - 1470
+  score: 40
+  score_raw: 40左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在忍者世界做公关
+  genre_guess:
+  - 同人
+  - 火影
+  - 脑洞
+  overall_comment: 同人蹭得不够彻底，公关技术卖点弱，不伦不类缺乏市场考虑。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 蹭同人但又不写明火影后传，很挑受众
+    raw_quote: 你又他又不像 … 这题材你知道蹭不蹭同人啊 … 你要考虑市场呀
+  - dimension: hook
+    severity: negative
+    content: 公关技术当卖点没人关心
+    raw_quote: 公关技术到底有啥意思啊 … 真不如当个鸭子

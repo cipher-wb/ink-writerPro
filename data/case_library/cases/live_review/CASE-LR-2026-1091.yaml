@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-1091
+title: 家族修仙·西游花果山 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1W2vmBFEdR
+scope:
+  genre:
+  - 仙侠
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就给你55分 | 人物塑造扎实，比例强，但西游衔接薄弱，建议纯原创仙侠，上限更高
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1W2vmBFEdR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人物塑造扎实，比例强，但西游衔接薄弱，建议纯原创仙侠，上限更高
+  observable:
+  - 整体被星河直播判定为 borderline
+live_review_meta:
+  source_bvid: BV1W2vmBFEdR
+  source_line_range:
+  - 490
+  - 550
+  score: 55
+  score_raw: 就给你55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 家族修仙·西游花果山
+  genre_guess:
+  - 仙侠
+  - 家族
+  overall_comment: 人物塑造扎实，比例强，但西游衔接薄弱，建议纯原创仙侠，上限更高
+  comments:
+  - dimension: character
+    severity: positive
+    content: 比例很强，百字写出翠翠一生，人物立得住
+    raw_quote: 这他这个比例很强啊 就这两句话对吧 体现出人物的悲惨性格了
+  - dimension: genre
+    severity: neutral
+    content: 与西游关联弱，不如去掉西游标签写纯仙侠
+    raw_quote: 别加西游记反而上限更高了 因为你这个不错呀

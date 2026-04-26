@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1408
+title: 大明创业者活命笔记 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 历史
+  - 大明
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多40左右 | 蹭不上知名事件，如同原创历史，缺乏出圈卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 蹭不上知名事件，如同原创历史，缺乏出圈卖点。 | 身份冷门，蹭不到大家熟知的历史事件;开篇危机感不够，节奏太快但无趣
+  observable:
+  - 'genre维度: 身份冷门，蹭不到大家熟知的历史事件'
+  - 'hook维度: 开篇危机感不够，节奏太快但无趣'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 2251
+  - 2350
+  score: 40
+  score_raw: 差不多40左右
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大明创业者活命笔记
+  genre_guess:
+  - 历史
+  - 大明
+  - 穿越
+  overall_comment: 蹭不上知名事件，如同原创历史，缺乏出圈卖点。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 身份冷门，蹭不到大家熟知的历史事件
+    raw_quote: 这个身份怎么样 我感觉还是跟原创似的
+  - dimension: hook
+    severity: negative
+    content: 开篇危机感不够，节奏太快但无趣
+    raw_quote: 节奏太快 这个事件比较 真热门吗

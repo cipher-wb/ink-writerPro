@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-1419
+title: 我杀死自己只为活着 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 科幻
+  - 悬疑
+  - 烧脑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 核心无聊，日常碎碎念，能力不够野心大，不建议写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 核心无聊，日常碎碎念，能力不够野心大，不建议写。 | 内容无聊，全是废话日常
+  observable:
+  - 'pacing维度: 内容无聊，全是废话日常'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 541
+  - 590
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 我杀死自己只为活着
+  genre_guess:
+  - 科幻
+  - 悬疑
+  - 烧脑
+  overall_comment: 核心无聊，日常碎碎念，能力不够野心大，不建议写。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 内容无聊，全是废话日常
+    raw_quote: 就是无聊 就是无聊 就是遣词造句 我觉得可以 但是很无聊

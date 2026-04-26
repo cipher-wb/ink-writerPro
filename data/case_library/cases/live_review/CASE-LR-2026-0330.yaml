@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-0330
+title: 冒险者图鉴 (borderline / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 奇幻
+  - 冒险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 52分吧 | 西幻冒险的八股文，中规中矩，反转平平，但有稳定的写作水平和市场参考价值。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 西幻冒险的八股文，中规中矩，反转平平，但有稳定的写作水平和市场参考价值。 | 反转太弱，强行降智，无法形成实质爆点。;开头无聊，需要加速节奏。
+  observable:
+  - 'highpoint维度: 反转太弱，强行降智，无法形成实质爆点。'
+  - 'pacing维度: 开头无聊，需要加速节奏。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 2270
+  - 2387
+  score: 52
+  score_raw: 52分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 冒险者图鉴
+  genre_guess:
+  - 奇幻
+  - 冒险
+  overall_comment: 西幻冒险的八股文，中规中矩，反转平平，但有稳定的写作水平和市场参考价值。
+  comments:
+  - dimension: opening
+    severity: neutral
+    content: 切入正常，危机建立点到为止，但中规中矩。
+    raw_quote: 眼前的世界也没问题对吧...这个这个这个还行吧，点到为止
+  - dimension: highpoint
+    severity: negative
+    content: 反转太弱，强行降智，无法形成实质爆点。
+    raw_quote: 这个反转有点太弱了吧...正常人都能发现有问题了
+  - dimension: pacing
+    severity: negative
+    content: 开头无聊，需要加速节奏。
+    raw_quote: 开头还是挺无聊的其实...没必要写太多，写太多了就跑了

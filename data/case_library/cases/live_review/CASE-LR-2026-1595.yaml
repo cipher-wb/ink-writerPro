@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1595
+title: 诡异世界开局负债一亿 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 诡异
+  - 系统
+  - 仙侠
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 撑死42分 | 题材本质故弄玄虚，“欠债一亿功德”不是卖点，人物虚假，需推翻重开。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材本质故弄玄虚，“欠债一亿功德”不是卖点，人物虚假，需推翻重开。 | 负债功德设定本身无吸引力，读者看一眼就走;故弄玄虚的倒叙和转场让人出戏
+  observable:
+  - 'genre维度: 负债功德设定本身无吸引力，读者看一眼就走'
+  - 'opening维度: 故弄玄虚的倒叙和转场让人出戏'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 471
+  - 500
+  score: 42
+  score_raw: 撑死42分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异世界开局负债一亿
+  genre_guess:
+  - 诡异
+  - 系统
+  - 仙侠
+  overall_comment: 题材本质故弄玄虚，“欠债一亿功德”不是卖点，人物虚假，需推翻重开。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 负债功德设定本身无吸引力，读者看一眼就走
+    raw_quote: 垃圾题材 垃圾题材故弄玄虚 没人看 … 这个什么负债上亿功德 这玩意不是一个卖点
+  - dimension: opening
+    severity: negative
+    content: 故弄玄虚的倒叙和转场让人出戏
+    raw_quote: 故弄玄虚啊 … 这题材在跟你推翻马好吧 真真的垃圾题材

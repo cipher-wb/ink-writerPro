@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1768
+title: 会逃跑的小兵（核弹小女孩） (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 末日
+  - 丧尸
+  - 生存
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有40分码 | 节奏快、流畅，但剧情老套，是五年前的蓝精灵写法，题材没新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快、流畅，但剧情老套，是五年前的蓝精灵写法，题材没新意。 | 虽快但老套，一眼看到底;人物形象模板化，没有惊喜
+  observable:
+  - 'opening维度: 虽快但老套，一眼看到底'
+  - 'character维度: 人物形象模板化，没有惊喜'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 1280
+  - 1390
+  score: 40
+  score_raw: 有40分码
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 会逃跑的小兵（核弹小女孩）
+  genre_guess:
+  - 末日
+  - 丧尸
+  - 生存
+  overall_comment: 节奏快、流畅，但剧情老套，是五年前的蓝精灵写法，题材没新意。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 虽快但老套，一眼看到底
+    raw_quote: 但很老套……主型剧情看到这剧本上已经知道要写啥了
+  - dimension: character
+    severity: negative
+    content: 人物形象模板化，没有惊喜
+    raw_quote: 人物形象现在是立住了，但是很老套

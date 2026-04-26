@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1502
+title: 雷族阴阳修仙 (fail / 12分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  - 阴阳
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就12分吧 | 写得啰嗦无重点，没有主线看点，开篇太磨叽
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写得啰嗦无重点，没有主线看点，开篇太磨叽 | 开篇全是无意义画面，没事件;对网文的节奏和重点理解太差
+  observable:
+  - 'opening维度: 开篇全是无意义画面，没事件'
+  - 'misc维度: 对网文的节奏和重点理解太差'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 961
+  - 1005
+  score: 12
+  score_raw: 就12分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 雷族阴阳修仙
+  genre_guess:
+  - 玄幻
+  - 修仙
+  - 阴阳
+  overall_comment: 写得啰嗦无重点，没有主线看点，开篇太磨叽
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇全是无意义画面，没事件
+    raw_quote: 这都不是试剂了这莫名其妙的 无病身影了这是
+  - dimension: misc
+    severity: negative
+    content: 对网文的节奏和重点理解太差
+    raw_quote: 大哥对网红的了解太少了 网红是讲究一个松驰有度 要善 要凸显重点

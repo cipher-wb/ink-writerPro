@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1218
+title: 化身万剑 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 仙侠
+  - 金手指
+  - 化身
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没啥指点的 | 开篇剧情老套且无趣，人设太小白，金手指复杂成阅读障碍。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇剧情老套且无趣，人设太小白，金手指复杂成阅读障碍。 | 金手指设定太复杂，像阅读障碍;切入剧情完全无钩子
+  observable:
+  - 'golden_finger维度: 金手指设定太复杂，像阅读障碍'
+  - 'hook维度: 切入剧情完全无钩子'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 793
+  - 830
+  score: null
+  score_raw: 没啥指点的
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 化身万剑
+  genre_guess:
+  - 仙侠
+  - 金手指
+  - 化身
+  overall_comment: 开篇剧情老套且无趣，人设太小白，金手指复杂成阅读障碍。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指设定太复杂，像阅读障碍
+    raw_quote: 这个金手指更无聊啊跟设定一样阅读障碍了
+  - dimension: hook
+    severity: negative
+    content: 切入剧情完全无钩子
+    raw_quote: 这个场景没写出来有趣的东西…直接穿越好吧

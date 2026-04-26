@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0088
+title: 大番鼠爱滑雪 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12Yk3BmEyA
+scope:
+  genre:
+  - 玄幻
+  - 穿越游戏
+  - 智斗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分吧 | 节奏和智斗尚可，但穿越到游戏的题材太小众，且卖点不在读者喜欢的点上。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12Yk3BmEyA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏和智斗尚可，但穿越到游戏的题材太小众，且卖点不在读者喜欢的点上。 | 穿越到游戏的题材极难起来，不建议写;本以为有雪白卖点，结果是和大长老智斗，受众太小
+  observable:
+  - 'genre维度: 穿越到游戏的题材极难起来，不建议写'
+  - 'highpoint维度: 本以为有雪白卖点，结果是和大长老智斗，受众太小'
+live_review_meta:
+  source_bvid: BV12Yk3BmEyA
+  source_line_range:
+  - 1596
+  - 1650
+  score: 28
+  score_raw: 28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大番鼠爱滑雪
+  genre_guess:
+  - 玄幻
+  - 穿越游戏
+  - 智斗
+  overall_comment: 节奏和智斗尚可，但穿越到游戏的题材太小众，且卖点不在读者喜欢的点上。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 穿越到游戏的题材极难起来，不建议写
+    raw_quote: 穿游戏的就是这么说吧...就比例就100比1都不到...就是没必要
+  - dimension: highpoint
+    severity: negative
+    content: 本以为有雪白卖点，结果是和大长老智斗，受众太小
+    raw_quote: 我看你这个嘎啦玄幻，我还以为你要写雪白呢...然后就求生...这种卖点，我觉得挺不在行的

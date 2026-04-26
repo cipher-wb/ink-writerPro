@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1513
+title: 万物律法 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他给到20 还是22分左右吧 | 硬核科学背景穿越，前奏冗长，专业知识劝退，建议精简为2000字经典开局。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 硬核科学背景穿越，前奏冗长，专业知识劝退，建议精简为2000字经典开局。 | 开头六千五百字过于冗长，可精简至两千字;粒子对撞等专业知识堆砌，普通读者看不懂
+  observable:
+  - 'opening维度: 开头六千五百字过于冗长，可精简至两千字'
+  - 'simplicity维度: 粒子对撞等专业知识堆砌，普通读者看不懂'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 581
+  - 680
+  score: 22
+  score_raw: 只能给他给到20 还是22分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 万物律法
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 魔法
+  overall_comment: 硬核科学背景穿越，前奏冗长，专业知识劝退，建议精简为2000字经典开局。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头六千五百字过于冗长，可精简至两千字
+    raw_quote: 你这张六千五百个字你经典上两千字都多了
+  - dimension: simplicity
+    severity: negative
+    content: 粒子对撞等专业知识堆砌，普通读者看不懂
+    raw_quote: 不要弄这么专一啊 过程不重要啊

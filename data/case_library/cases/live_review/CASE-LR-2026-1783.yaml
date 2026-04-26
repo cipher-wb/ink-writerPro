@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1783
+title: 当中有妖魔修仙文 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1pGcdz1EGR
+scope:
+  genre:
+  - 修仙
+  - 妖魔
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分鼓励一下 | 设定假大空，人设干巴，剧情没看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pGcdz1EGR.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定假大空，人设干巴，剧情没看点。 | 开局设定垃圾，故弄玄虚不如写实在的妖怪。;人设干巴，没看点，应该写人物关系和改变。
+  observable:
+  - 'opening维度: 开局设定垃圾，故弄玄虚不如写实在的妖怪。'
+  - 'character维度: 人设干巴，没看点，应该写人物关系和改变。'
+live_review_meta:
+  source_bvid: BV1pGcdz1EGR
+  source_line_range:
+  - 328
+  - 394
+  score: 25
+  score_raw: 25分鼓励一下
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 当中有妖魔修仙文
+  genre_guess:
+  - 修仙
+  - 妖魔
+  overall_comment: 设定假大空，人设干巴，剧情没看点。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局设定垃圾，故弄玄虚不如写实在的妖怪。
+    raw_quote: 这好垃圾啊...为什么要写这样的垃圾设定...没人在乎妖魔跟服神是什么东西
+  - dimension: character
+    severity: negative
+    content: 人设干巴，没看点，应该写人物关系和改变。
+    raw_quote: 写人物关系的改变写代入感写事件...太虚了没人看

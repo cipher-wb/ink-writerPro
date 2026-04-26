@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0668
+title: 重生18岁之同学妈妈 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1HCzwBuEV6
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 脑洞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你40分吧 | 社会经验丰富，场景描写有画面感，但题材过不了审，建议改写精神小妹或相亲系统类。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1HCzwBuEV6.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 社会经验丰富，场景描写有画面感，但题材过不了审，建议改写精神小妹或相亲系统类。 | 同学妈妈等元素过不了审，违禁风险高;题材在起点过审困难，扣分严重
+  observable:
+  - 'taboo维度: 同学妈妈等元素过不了审，违禁风险高'
+  - 'genre维度: 题材在起点过审困难，扣分严重'
+live_review_meta:
+  source_bvid: BV1HCzwBuEV6
+  source_line_range:
+  - 260
+  - 400
+  score: 40
+  score_raw: 给你40分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生18岁之同学妈妈
+  genre_guess:
+  - 都市
+  - 重生
+  - 脑洞
+  overall_comment: 社会经验丰富，场景描写有画面感，但题材过不了审，建议改写精神小妹或相亲系统类。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 同学妈妈等元素过不了审，违禁风险高
+    raw_quote: 过不了审啊...肯定过不了审
+  - dimension: genre
+    severity: negative
+    content: 题材在起点过审困难，扣分严重
+    raw_quote: 这个题材起点过不了审...只能40，这题材问题
+  - dimension: opening
+    severity: positive
+    content: 场景塑造有画面感，社会经验加成
+    raw_quote: 搁这场景的塑造能力可以的

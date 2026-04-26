@@ -1,0 +1,46 @@
+case_id: CASE-LR-2026-1639
+title: 足球体育文 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 体育
+  - 足球
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这不行，换个吧 | 写法过时，题材受众小，缺乏现代网文节奏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法过时，题材受众小，缺乏现代网文节奏。 | 足球文起点太高，年代久远，缺乏流量。
+  observable:
+  - 'pacing维度: 足球文起点太高，年代久远，缺乏流量。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 581
+  - 630
+  score: null
+  score_raw: 这不行，换个吧
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 足球体育文
+  genre_guess:
+  - 体育
+  - 足球
+  overall_comment: 写法过时，题材受众小，缺乏现代网文节奏。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 足球文起点太高，年代久远，缺乏流量。
+    raw_quote: 现在足球文...你写米兰至少也写卡卡这个时代了

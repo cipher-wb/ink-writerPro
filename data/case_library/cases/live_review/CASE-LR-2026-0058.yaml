@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0058
+title: 小阿财卖伞 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 古代
+  - 历史
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十五分 | 故事讲得可以，但土著儿童不好代入，建议穿越，35分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事讲得可以，但土著儿童不好代入，建议穿越，35分。 | 土著小屁孩难代入
+  observable:
+  - 'character维度: 土著小屁孩难代入'
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 1231
+  - 1280
+  score: 35
+  score_raw: 三十五分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 小阿财卖伞
+  genre_guess:
+  - 古代
+  - 历史
+  overall_comment: 故事讲得可以，但土著儿童不好代入，建议穿越，35分。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 土著小屁孩难代入
+    raw_quote: 人家小屁孩真的不能代入
+  - dimension: opening
+    severity: positive
+    content: 故事讲得还可以
+    raw_quote: 其实会讲故事

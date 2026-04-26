@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0614
+title: 诗词消失古墓 (fail / 14分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 诗词
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 14分吧好吧 | 人称混乱，梦来梦去，自嗨设定，完全不是网文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 人称混乱，梦来梦去，自嗨设定，完全不是网文。 | 第一第三人称混乱切换，根本不会写
+  observable:
+  - 'ops维度: 第一第三人称混乱切换，根本不会写'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 3851
+  - 4000
+  score: 14
+  score_raw: 14分吧好吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诗词消失古墓
+  genre_guess:
+  - 都市
+  - 异能
+  - 诗词
+  overall_comment: 人称混乱，梦来梦去，自嗨设定，完全不是网文。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 第一第三人称混乱切换，根本不会写
+    raw_quote: 人称各种换...想到哪写到哪

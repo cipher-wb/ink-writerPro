@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1042
+title: 收养灭世魔女文 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 西幻
+  - 魔女
+  - 收养
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个确实也58了 | 有天赋，魔女反差萌是亮点，但节奏拖沓，细节过多，需再改版
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有天赋，魔女反差萌是亮点，但节奏拖沓，细节过多，需再改版 | 进度拖沓，魔女出场太晚，信息量重复
+  observable:
+  - 'pacing维度: 进度拖沓，魔女出场太晚，信息量重复'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 1051
+  - 1200
+  score: 58
+  score_raw: 这个确实也58了
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 收养灭世魔女文
+  genre_guess:
+  - 西幻
+  - 魔女
+  - 收养
+  overall_comment: 有天赋，魔女反差萌是亮点，但节奏拖沓，细节过多，需再改版
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 进度拖沓，魔女出场太晚，信息量重复
+    raw_quote: 这不还是拖他兄弟 还是拖沓雪白的 还是得第三章出来魔女
+  - dimension: character
+    severity: positive
+    content: 魔女两幅面孔的反差设计有意思
+    raw_quote: 如果能追下来就反差嘛 重点就是魔女对

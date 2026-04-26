@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0204
+title: 精灵女王监禁雪白 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 西方奇幻
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 48分 | 雪白描写过多，剧情占比太低，事件无聊，但雪白文笔确实出色。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白描写过多，剧情占比太低，事件无聊，但雪白文笔确实出色。 | 雪白内容占比过高，近乎纯雪白文，缺乏故事主线;事件设计无聊且老套，缺乏新意
+  observable:
+  - 'genre维度: 雪白内容占比过高，近乎纯雪白文，缺乏故事主线'
+  - 'hook维度: 事件设计无聊且老套，缺乏新意'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 606
+  - 665
+  score: 48
+  score_raw: 48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 精灵女王监禁雪白
+  genre_guess:
+  - 西方奇幻
+  - 雪白
+  overall_comment: 雪白描写过多，剧情占比太低，事件无聊，但雪白文笔确实出色。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 雪白内容占比过高，近乎纯雪白文，缺乏故事主线
+    raw_quote: 第一张雪白占90% ... 没有证物呀 目前聊天内容全是雪白
+  - dimension: hook
+    severity: negative
+    content: 事件设计无聊且老套，缺乏新意
+    raw_quote: 事件挺无聊的 雪白写挺无聊的

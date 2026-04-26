@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1356
+title: 客栈遇仙夺舍 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 夺舍
+  - 悬疑
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 情节太套路，读者易猜到反转脱粉，需要更快进入核心卖点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情节太套路，读者易猜到反转脱粉，需要更快进入核心卖点。 | 开篇全是坏人，套路化严重，缺乏反转新意;切入太慢，憋着一堆废话才到关键点
+  observable:
+  - 'hook维度: 开篇全是坏人，套路化严重，缺乏反转新意'
+  - 'pacing维度: 切入太慢，憋着一堆废话才到关键点'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 756
+  - 837
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 客栈遇仙夺舍
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 夺舍
+  - 悬疑
+  overall_comment: 情节太套路，读者易猜到反转脱粉，需要更快进入核心卖点。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开篇全是坏人，套路化严重，缺乏反转新意
+    raw_quote: 太套路了兄弟...读者都撑不到你的隔壁上门就跑了
+  - dimension: pacing
+    severity: negative
+    content: 切入太慢，憋着一堆废话才到关键点
+    raw_quote: 一个凡人需要这么多废话嘛...带给我弄到关键点

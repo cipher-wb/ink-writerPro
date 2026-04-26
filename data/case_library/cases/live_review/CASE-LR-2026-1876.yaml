@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1876
+title: 神豪流都市文 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 都市
+  - 神豪流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 可以签... 这本咱看完了 | 神豪流题材，内容有点虚但比例较好。参考昨天签的65分同类型。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 神豪流题材，内容有点虚但比例较好。参考昨天签的65分同类型。 | 内容较虚，缺乏实质看点
+  observable:
+  - 'pacing维度: 内容较虚，缺乏实质看点'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 96
+  - 210
+  score: null
+  score_raw: 可以签... 这本咱看完了
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 神豪流都市文
+  genre_guess:
+  - 都市
+  - 神豪流
+  overall_comment: 神豪流题材，内容有点虚但比例较好。参考昨天签的65分同类型。
+  comments:
+  - dimension: genre
+    severity: positive
+    content: 神豪流题材具备签约潜力
+    raw_quote: 这个是神豪流吗 是呃算是神豪流吧 小神豪好吧
+  - dimension: pacing
+    severity: negative
+    content: 内容较虚，缺乏实质看点
+    raw_quote: 但是内容真的太虚了

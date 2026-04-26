@@ -1,0 +1,61 @@
+case_id: CASE-LR-2026-1355
+title: 穿越商贾卧底娘子 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 古代
+  - 穿越
+  - 商贾
+  - 权谋
+  - 后宫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 50也是50分吧 | 文笔不错，事件有反转潜力，但展开太复杂，读者看不清楚人物好坏。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，事件有反转潜力，但展开太复杂，读者看不清楚人物好坏。 | 主角缺乏真实感，像AI、无感情波动;剧情写得过于复杂，以至于角色好坏关系不清晰;角色名（柳如意等）过于雷同造作，带扑街味
+  observable:
+  - 'character维度: 主角缺乏真实感，像AI、无感情波动'
+  - 'misc维度: 剧情写得过于复杂，以至于角色好坏关系不清晰'
+  - 'misc维度: 角色名（柳如意等）过于雷同造作，带扑街味'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 646
+  - 755
+  score: 50
+  score_raw: 50也是50分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 穿越商贾卧底娘子
+  genre_guess:
+  - 古代
+  - 穿越
+  - 商贾
+  - 权谋
+  - 后宫
+  overall_comment: 文笔不错，事件有反转潜力，但展开太复杂，读者看不清楚人物好坏。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角缺乏真实感，像AI、无感情波动
+    raw_quote: 这个人很干巴巴...不真实你这个人
+  - dimension: misc
+    severity: negative
+    content: 剧情写得过于复杂，以至于角色好坏关系不清晰
+    raw_quote: 章太复杂了...我分不清这两个女的谁是好的谁是坏的
+  - dimension: misc
+    severity: negative
+    content: 角色名（柳如意等）过于雷同造作，带扑街味
+    raw_quote: 怎么这么多柳家人...不相信柳会死吗

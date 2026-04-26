@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0604
+title: 美利坚情报系统 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 美利坚
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55写的还是干巴的 | 雪白和人设可看，但主线金手指出太慢，代入感不足，卡在及格边缘。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白和人设可看，但主线金手指出太慢，代入感不足，卡在及格边缘。 | 金手指始终不出现，念咒语打斗拖沓
+  observable:
+  - 'golden_finger维度: 金手指始终不出现，念咒语打斗拖沓'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 2351
+  - 2500
+  score: 55
+  score_raw: 55写的还是干巴的
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 美利坚情报系统
+  genre_guess:
+  - 都市
+  - 异能
+  - 美利坚
+  overall_comment: 雪白和人设可看，但主线金手指出太慢，代入感不足，卡在及格边缘。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指始终不出现，念咒语打斗拖沓
+    raw_quote: 金手指能早点出来...一直不出...金属值也太慢了
+  - dimension: character
+    severity: positive
+    content: 雪白和库博人设还不错
+    raw_quote: 但你的雪白和库博人设也不错

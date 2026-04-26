@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1308
+title: 我的神明是董王 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 科幻
+  - 超凡
+  - 原创世界观
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给到20分 | 原创诸天文没人看，缺乏期待感，世界观繁琐无用。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 原创诸天文没人看，缺乏期待感，世界观繁琐无用。 | 原创诸天世界，读者不关心;毫无期待感，不知道主角要干什么
+  observable:
+  - 'genre维度: 原创诸天世界，读者不关心'
+  - 'hook维度: 毫无期待感，不知道主角要干什么'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 721
+  - 800
+  score: 20
+  score_raw: 只能给到20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我的神明是董王
+  genre_guess:
+  - 科幻
+  - 超凡
+  - 原创世界观
+  overall_comment: 原创诸天文没人看，缺乏期待感，世界观繁琐无用。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 原创诸天世界，读者不关心
+    raw_quote: 原创的诸天世界 你自己去统计一下数据嘛
+  - dimension: hook
+    severity: negative
+    content: 毫无期待感，不知道主角要干什么
+    raw_quote: 最基本的主角的期待感在哪里 我根本找不到啊

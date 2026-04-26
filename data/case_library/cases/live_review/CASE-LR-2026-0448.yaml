@@ -1,0 +1,68 @@
+case_id: CASE-LR-2026-0448
+title: 系统家常家无敌 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1BFA2zSEZj
+scope:
+  genre:
+  - 武侠
+  - 系统
+  - 无敌流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多九二十二分，真的二十二分 | 武侠过时，酒馆日常打斗无看点，第一章全部无效，文气太重缺网文爽感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1BFA2zSEZj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 武侠过时，酒馆日常打斗无看点，第一章全部无效，文气太重缺网文爽感。 | 第一章完全删掉，没有有效切入;武侠题材本身缺乏读者基础;打斗无意义，爽点期待感为零
+  observable:
+  - 'opening维度: 第一章完全删掉，没有有效切入'
+  - 'genre维度: 武侠题材本身缺乏读者基础'
+  - 'highpoint维度: 打斗无意义，爽点期待感为零'
+  - 'simplicity维度: 文字太文气，不符合网文白描要求'
+  - 'pacing维度: 一直在水日常琐事，推进极慢'
+live_review_meta:
+  source_bvid: BV1BFA2zSEZj
+  source_line_range:
+  - 322
+  - 571
+  score: 22
+  score_raw: 差不多九二十二分，真的二十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 系统家常家无敌
+  genre_guess:
+  - 武侠
+  - 系统
+  - 无敌流
+  overall_comment: 武侠过时，酒馆日常打斗无看点，第一章全部无效，文气太重缺网文爽感。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章完全删掉，没有有效切入
+    raw_quote: 第一章全删掉一个字都不要留
+  - dimension: genre
+    severity: negative
+    content: 武侠题材本身缺乏读者基础
+    raw_quote: 本来武侠就没啥人看
+  - dimension: highpoint
+    severity: negative
+    content: 打斗无意义，爽点期待感为零
+    raw_quote: 打斗是没有人看的 根本就没有人看
+  - dimension: simplicity
+    severity: negative
+    content: 文字太文气，不符合网文白描要求
+    raw_quote: 这个有点太文气了嘛
+  - dimension: pacing
+    severity: negative
+    content: 一直在水日常琐事，推进极慢
+    raw_quote: 这是水啊大哥

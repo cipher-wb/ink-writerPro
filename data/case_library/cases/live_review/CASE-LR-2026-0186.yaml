@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0186
+title: 执掌长生锤 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 家族修仙
+  - 求生
+  - 金手指
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 40分有 | 开头切入不错，但主线偏到杀怪兽求生，缺少人与人斗的看点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头切入不错，但主线偏到杀怪兽求生，缺少人与人斗的看点。 | 过度描写杀鬼兽求生，没有家族内斗或人际冲突。;缺乏悬念和起伏，读者没有追读欲望。
+  observable:
+  - 'pacing维度: 过度描写杀鬼兽求生，没有家族内斗或人际冲突。'
+  - 'highpoint维度: 缺乏悬念和起伏，读者没有追读欲望。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 2540
+  - 2670
+  score: 40
+  score_raw: 40分有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 执掌长生锤
+  genre_guess:
+  - 家族修仙
+  - 求生
+  - 金手指
+  overall_comment: 开头切入不错，但主线偏到杀怪兽求生，缺少人与人斗的看点。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 过度描写杀鬼兽求生，没有家族内斗或人际冲突。
+    raw_quote: 仙侠本质就是与人斗就是人是要复仇呢还是要反杀呢
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏悬念和起伏，读者没有追读欲望。
+    raw_quote: 读者不会花钱看你一个杀怪兽的数量篇

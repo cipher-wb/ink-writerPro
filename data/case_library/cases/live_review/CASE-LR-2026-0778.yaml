@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0778
+title: 沉舟玄幻 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1KQZzBPEnX
+scope:
+  genre:
+  - 玄幻
+  - 西幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 过年加两房25 | 题材垃圾，世界观复杂难写，根本不会写世界观，25分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1KQZzBPEnX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材垃圾，世界观复杂难写，根本不会写世界观，25分。 | 题材太垃圾，赶紧切了;世界观太复杂难写;代入感太差，不知道受众
+  observable:
+  - 'genre维度: 题材太垃圾，赶紧切了'
+  - 'simplicity维度: 世界观太复杂难写'
+  - 'opening维度: 代入感太差，不知道受众'
+live_review_meta:
+  source_bvid: BV1KQZzBPEnX
+  source_line_range:
+  - 551
+  - 600
+  score: 25
+  score_raw: 过年加两房25
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 沉舟玄幻
+  genre_guess:
+  - 玄幻
+  - 西幻
+  - 穿越
+  overall_comment: 题材垃圾，世界观复杂难写，根本不会写世界观，25分。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材太垃圾，赶紧切了
+    raw_quote: 题材垃圾题材就赶紧切了 不要想也不要写这玩意了
+  - dimension: simplicity
+    severity: negative
+    content: 世界观太复杂难写
+    raw_quote: 世界观非常难 以前我们那个组 招了七八个人专门研究世界观 就是怎么自圆其说 怎么吸引人
+  - dimension: opening
+    severity: negative
+    content: 代入感太差，不知道受众
+    raw_quote: 那个代入感很差 这个代入感很差 沉舟回到了罗兰大陆 师姐说其实不是很顺

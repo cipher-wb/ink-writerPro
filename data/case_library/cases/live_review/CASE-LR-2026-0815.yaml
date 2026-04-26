@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0815
+title: 93年火葬场 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 灵异
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 | 电影镜头式开头自嗨，故弄玄虚，连基本的故事和设定都不愿说清楚
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 电影镜头式开头自嗨，故弄玄虚，连基本的故事和设定都不愿说清楚 | 用电视剧画面切入，不是小说读法;不解释设定，故弄玄虚，读者根本看不懂;小作文用语不当，饱暖思淫欲用错了
+  observable:
+  - 'opening维度: 用电视剧画面切入，不是小说读法'
+  - 'simplicity维度: 不解释设定，故弄玄虚，读者根本看不懂'
+  - 'misc维度: 小作文用语不当，饱暖思淫欲用错了'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 835
+  - 980
+  score: 20
+  score_raw: 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 93年火葬场
+  genre_guess:
+  - 灵异
+  - 都市
+  overall_comment: 电影镜头式开头自嗨，故弄玄虚，连基本的故事和设定都不愿说清楚
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 用电视剧画面切入，不是小说读法
+    raw_quote: 这电视剧切入 他看电视剧看多了 别给我电视剧画面了
+  - dimension: simplicity
+    severity: negative
+    content: 不解释设定，故弄玄虚，读者根本看不懂
+    raw_quote: 不要故弄玄虚了 有邪祟 你就给读者说
+  - dimension: misc
+    severity: negative
+    content: 小作文用语不当，饱暖思淫欲用错了
+    raw_quote: 正所谓饱暖思淫欲 大哥你你能这么用的吗

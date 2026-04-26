@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0278
+title: 重生学霸系统 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 重生
+  - 学霸系统
+  - 校园
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分吧，领先毒蘑菇十分 | 前两张水平OK但后续很弱，难写长
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 前两张水平OK但后续很弱，难写长 | 金手指只是提一下，后续展开困难
+  observable:
+  - 'pacing维度: 金手指只是提一下，后续展开困难'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 1191
+  - 1265
+  score: 59
+  score_raw: 59分吧，领先毒蘑菇十分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生学霸系统
+  genre_guess:
+  - 重生
+  - 学霸系统
+  - 校园
+  overall_comment: 前两张水平OK但后续很弱，难写长
+  comments:
+  - dimension: hook
+    severity: positive
+    content: 美女老师卖点加持，开头有吸引力
+    raw_quote: 你看这个又有卖点了，可以啊
+  - dimension: pacing
+    severity: negative
+    content: 金手指只是提一下，后续展开困难
+    raw_quote: 你这个金手指也就那样提了一下，我感觉很难写长啊

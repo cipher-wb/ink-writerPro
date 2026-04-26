@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1686
+title: 奶牛娘金手指集邮 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 奇幻
+  - 异界
+  - 金手指
+  - 集邮
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 现在59分有了 | 金手指思路尚可，但人设塑造薄弱，事件乏味，文笔和人物深度有待提升。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指思路尚可，但人设塑造薄弱，事件乏味，文笔和人物深度有待提升。 | 莱纳人设过于弱智，缺乏深度，无法给读者带来爽感。;遣词造句和文笔有待加强，未达到签约水平。
+  observable:
+  - 'character维度: 莱纳人设过于弱智，缺乏深度，无法给读者带来爽感。'
+  - 'simplicity维度: 遣词造句和文笔有待加强，未达到签约水平。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 291
+  - 375
+  score: 59
+  score_raw: 现在59分有了
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 奶牛娘金手指集邮
+  genre_guess:
+  - 奇幻
+  - 异界
+  - 金手指
+  - 集邮
+  overall_comment: 金手指思路尚可，但人设塑造薄弱，事件乏味，文笔和人物深度有待提升。
+  comments:
+  - dimension: golden_finger
+    severity: positive
+    content: 金手指设定和人物动机有一定关联，思路可行。
+    raw_quote: 他是为了这个对啊，就这个思路嘛
+  - dimension: character
+    severity: negative
+    content: 莱纳人设过于弱智，缺乏深度，无法给读者带来爽感。
+    raw_quote: 少女可以可爱，但是能不能不要弱智啊
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句和文笔有待加强，未达到签约水平。
+    raw_quote: 比例还是有点high...比例还是没签约的水平

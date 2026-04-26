@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2127
+title: 兄妹异能精神病院文 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xQzGBCE1q
+scope:
+  genre:
+  - 都市
+  - 异能
+  - 规则怪谈
+  - 副本
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分吧 | 氛围感和比例过关，第一张就有伏笔，有天赋，但主线没意思，天魔入侵没人看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xQzGBCE1q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围感和比例过关，第一张就有伏笔，有天赋，但主线没意思，天魔入侵没人看。 | 主线没意思，天魔入侵没人看
+  observable:
+  - 'hook维度: 主线没意思，天魔入侵没人看'
+live_review_meta:
+  source_bvid: BV1xQzGBCE1q
+  source_line_range:
+  - 1196
+  - 1260
+  score: 45
+  score_raw: 45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 兄妹异能精神病院文
+  genre_guess:
+  - 都市
+  - 异能
+  - 规则怪谈
+  - 副本
+  overall_comment: 氛围感和比例过关，第一张就有伏笔，有天赋，但主线没意思，天魔入侵没人看。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 氛围感可以，比例没啥问题，有伏笔
+    raw_quote: 氛围感还可以啊，可以可以
+  - dimension: hook
+    severity: negative
+    content: 主线没意思，天魔入侵没人看
+    raw_quote: 主线没意思，天魔入侵没意思

@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1567
+title: 模仿黎明之剑的西幻露米娅 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 西幻
+  - 种田
+  - 轻小说
+  - 魔法
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 不适合模仿大神风格，建议轻小说方向。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不适合模仿大神风格，建议轻小说方向。 | 故事缺乏接地气的事件，更像轻小说而不适合奇幻分类;学习远瞳的独特风格难度极高，新人难以驾驭
+  observable:
+  - 'genre维度: 故事缺乏接地气的事件，更像轻小说而不适合奇幻分类'
+  - 'simplicity维度: 学习远瞳的独特风格难度极高，新人难以驾驭'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 951
+  - 1100
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 模仿黎明之剑的西幻露米娅
+  genre_guess:
+  - 西幻
+  - 种田
+  - 轻小说
+  - 魔法
+  overall_comment: 不适合模仿大神风格，建议轻小说方向。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 故事缺乏接地气的事件，更像轻小说而不适合奇幻分类
+    raw_quote: 这些事件一点都不接地气啊，是非要冒充10万订作者？
+  - dimension: simplicity
+    severity: negative
+    content: 学习远瞳的独特风格难度极高，新人难以驾驭
+    raw_quote: 他不是个模仿的，他的书有浓浓的个人风格，你学一点就算了

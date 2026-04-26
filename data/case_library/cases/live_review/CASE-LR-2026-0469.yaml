@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0469
+title: 梅瑟斯 (fail / 26分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CD9HBKED5
+scope:
+  genre:
+  - 悬疑
+  - 副本
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 26分 | 探索导游式写法没主角魅力，中西结合难，建议学石日中烟写眼前危机。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CD9HBKED5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 探索导游式写法没主角魅力，中西结合难，建议学石日中烟写眼前危机。 | 主角醒来就跟着麻雀探索，变成导游介绍设定;主角没有任何魅力，完全像个跟着走的NPC
+  observable:
+  - 'opening维度: 主角醒来就跟着麻雀探索，变成导游介绍设定'
+  - 'character维度: 主角没有任何魅力，完全像个跟着走的NPC'
+live_review_meta:
+  source_bvid: BV1CD9HBKED5
+  source_line_range:
+  - 1161
+  - 1200
+  score: 26
+  score_raw: 26分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 梅瑟斯
+  genre_guess:
+  - 悬疑
+  - 副本
+  overall_comment: 探索导游式写法没主角魅力，中西结合难，建议学石日中烟写眼前危机。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 主角醒来就跟着麻雀探索，变成导游介绍设定
+    raw_quote: 探索是导游写法 两个人在这里导游 没意思
+  - dimension: character
+    severity: negative
+    content: 主角没有任何魅力，完全像个跟着走的NPC
+    raw_quote: 主角不像什么 没有什么主角魅力 感觉现在就像副本里面

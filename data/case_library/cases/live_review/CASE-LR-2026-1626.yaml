@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1626
+title: 重生文娱明星流 (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1k6iPBMEzP
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 文娱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得比例挺好的就50分左右吧 | 拉扯水平尚可，但设定过于复杂可能降低可读性。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1k6iPBMEzP.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 拉扯水平尚可，但设定过于复杂可能降低可读性。 | 设定复杂，节奏可能过慢。
+  observable:
+  - 'pacing维度: 设定复杂，节奏可能过慢。'
+live_review_meta:
+  source_bvid: BV1k6iPBMEzP
+  source_line_range:
+  - 23
+  - 80
+  score: 50
+  score_raw: 我觉得比例挺好的就50分左右吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 重生文娱明星流
+  genre_guess:
+  - 都市
+  - 重生
+  - 文娱
+  overall_comment: 拉扯水平尚可，但设定过于复杂可能降低可读性。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 拉扯水平高，有看点。
+    raw_quote: 拉扯大概的拉扯水平很高
+  - dimension: pacing
+    severity: negative
+    content: 设定复杂，节奏可能过慢。
+    raw_quote: 他后面那些设定我怕还是写的太复杂

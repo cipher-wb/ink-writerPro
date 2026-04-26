@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-0040
+title: 开局成了郭荣清兵 (pass / 65分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV12WcRzEE58
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 65份 | 历史功底扎实，智商解决问题，文笔扎实，签约水平足够。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12WcRzEE58.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 历史功底扎实，智商解决问题，文笔扎实，签约水平足够。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV12WcRzEE58
+  source_line_range:
+  - 291
+  - 350
+  score: 65
+  score_raw: 65份
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 开局成了郭荣清兵
+  genre_guess:
+  - 历史
+  - 五代十国
+  overall_comment: 历史功底扎实，智商解决问题，文笔扎实，签约水平足够。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 用智商解决问题，有看点
+    raw_quote: 就是用智商解决问题
+  - dimension: simplicity
+    severity: positive
+    content: 思路对了，写乱世
+    raw_quote: 思路对了
+  - dimension: opening
+    severity: positive
+    content: 开头问题不大
+    raw_quote: 开头确实问题不大了

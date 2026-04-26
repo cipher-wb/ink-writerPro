@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1894
+title: 穿越克苏鲁游戏开发 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 游戏
+  - 克苏鲁
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分 | 认真但误入歧途，设定无用，读者不关心游戏评测和陌生世界观。建议推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 认真但误入歧途，设定无用，读者不关心游戏评测和陌生世界观。建议推翻重写。 | 开篇AAR游戏评测无人关心，纯设定堆砌;设定无用，AI时代无护城河
+  observable:
+  - 'opening维度: 开篇AAR游戏评测无人关心，纯设定堆砌'
+  - 'simplicity维度: 设定无用，AI时代无护城河'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1681
+  - 1760
+  score: 18
+  score_raw: 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越克苏鲁游戏开发
+  genre_guess:
+  - 游戏
+  - 克苏鲁
+  - 穿越
+  overall_comment: 认真但误入歧途，设定无用，读者不关心游戏评测和陌生世界观。建议推翻重写。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇AAR游戏评测无人关心，纯设定堆砌
+    raw_quote: 你不会以为读者看这玩意吧... 莫名其妙的一个游戏... 都是设定啊
+  - dimension: simplicity
+    severity: negative
+    content: 设定无用，AI时代无护城河
+    raw_quote: 设定是没用的东西... AR1天能生成1万个人... 你还是要写人物写故事

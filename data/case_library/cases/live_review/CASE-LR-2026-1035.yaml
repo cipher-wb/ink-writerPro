@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1035
+title: 仙侠抽签文 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 仙侠
+  - 抽签
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分吧 | 故事性太差，缺乏事件，全靠抽签而没有冲突，设定古老俗套
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事性太差，缺乏事件，全靠抽签而没有冲突，设定古老俗套 | 几乎没有故事线和事件，全是琐碎描写;题材老旧，剧情无聊俗套
+  observable:
+  - 'simplicity维度: 几乎没有故事线和事件，全是琐碎描写'
+  - 'misc维度: 题材老旧，剧情无聊俗套'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 24
+  - 145
+  score: 20
+  score_raw: 20分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙侠抽签文
+  genre_guess:
+  - 仙侠
+  - 抽签
+  overall_comment: 故事性太差，缺乏事件，全靠抽签而没有冲突，设定古老俗套
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 几乎没有故事线和事件，全是琐碎描写
+    raw_quote: 这个仙侠嘛书名是能写 但是事件还是事件还是事件事件不要这样 不要这样看 看简介 感觉就没什么事件
+  - dimension: misc
+    severity: negative
+    content: 题材老旧，剧情无聊俗套
+    raw_quote: 又古老又俗套又无聊

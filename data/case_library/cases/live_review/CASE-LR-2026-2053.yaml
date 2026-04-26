@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2053
+title: 公子来尝尝这颗葡萄 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 玄幻高武
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 好 给他35分 | 切入有反转及格，但后续需要拉代入感，引出宗门争斗，不要写战争。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入有反转及格，但后续需要拉代入感，引出宗门争斗，不要写战争。 | 缺乏代入感和心理活动;写战争没人在意，应专注玄幻宗门
+  observable:
+  - 'character维度: 缺乏代入感和心理活动'
+  - 'genre维度: 写战争没人在意，应专注玄幻宗门'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 1401
+  - 1600
+  score: 35
+  score_raw: 好 给他35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 公子来尝尝这颗葡萄
+  genre_guess:
+  - 玄幻高武
+  - 架空
+  overall_comment: 切入有反转及格，但后续需要拉代入感，引出宗门争斗，不要写战争。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入有反转冲突，及格
+    raw_quote: 有反转 有那个冲突 有美女 其实我觉得这个切入是及格的
+  - dimension: character
+    severity: negative
+    content: 缺乏代入感和心理活动
+    raw_quote: 要拉代入感 你要 你要写啊 ... 你为什么不写呀
+  - dimension: genre
+    severity: negative
+    content: 写战争没人在意，应专注玄幻宗门
+    raw_quote: 战争没人在意 ... 你本质上是玄幻

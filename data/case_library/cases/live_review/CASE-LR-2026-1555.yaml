@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1555
+title: 定海神针鱼套套 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 仙侠
+  - 搞笑
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 9.1分吧 9分吧 | 系统出戏，内容低俗，梗玩过头。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 系统出戏，内容低俗，梗玩过头。 | 系统设计复杂，喧宾夺主;鱼泡当套套等过于低俗
+  observable:
+  - 'golden_finger维度: 系统设计复杂，喧宾夺主'
+  - 'ops维度: 鱼泡当套套等过于低俗'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 1391
+  - 1500
+  score: null
+  score_raw: 9.1分吧 9分吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 定海神针鱼套套
+  genre_guess:
+  - 仙侠
+  - 搞笑
+  - 系统
+  overall_comment: 系统出戏，内容低俗，梗玩过头。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设计复杂，喧宾夺主
+    raw_quote: 这个系统太复杂了 我觉得系统简化吧
+  - dimension: ops
+    severity: negative
+    content: 鱼泡当套套等过于低俗
+    raw_quote: 你去当套套啦 你的鱼塞 不大不小刚好

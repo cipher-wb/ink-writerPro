@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1276
+title: 融合奇怪东西的日清文 (borderline)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ZSNMzUE83
+scope:
+  genre:
+  - 都市
+  - 日清
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分嘛，不过可以给到58 | 比例细节极强属天赋型，但主线太弱无聊，全靠小段子硬撑，故事性不足难以长红。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZSNMzUE83.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例细节极强属天赋型，但主线太弱无聊，全靠小段子硬撑，故事性不足难以长红。 | 节奏稍慢，主线无聊全靠天赋硬怼
+  observable:
+  - 'pacing维度: 节奏稍慢，主线无聊全靠天赋硬怼'
+live_review_meta:
+  source_bvid: BV1ZSNMzUE83
+  source_line_range:
+  - 1461
+  - 1560
+  score: null
+  score_raw: 55分嘛，不过可以给到58
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 融合奇怪东西的日清文
+  genre_guess:
+  - 都市
+  - 日清
+  - 异能
+  overall_comment: 比例细节极强属天赋型，但主线太弱无聊，全靠小段子硬撑，故事性不足难以长红。
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 比例很强，细节拉扯厉害
+    raw_quote: 他这个比例是很厉害的，比例就至少3000以上的水平
+  - dimension: pacing
+    severity: negative
+    content: 节奏稍慢，主线无聊全靠天赋硬怼
+    raw_quote: 完全是靠天赋硬扯...除去这些硬扯你这个故事其实没啥意思

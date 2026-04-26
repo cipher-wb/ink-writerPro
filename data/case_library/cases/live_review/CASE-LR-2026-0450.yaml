@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-0450
+title: 何之许的西游 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1BFA2zSEZj
+scope:
+  genre:
+  - 西游
+  - 仙侠
+  - 灵异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个18方的 | 左看右看水字数，毫无有效信息，完全不会讲故事，建议先去临摹学习。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1BFA2zSEZj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 左看右看水字数，毫无有效信息，完全不会讲故事，建议先去临摹学习。 | 开头像导游一样左看右看，没有直接展开情节;信息量极少，每一帧都是水;重复堆砌无效描写，读者完全失去耐心
+  observable:
+  - 'opening维度: 开头像导游一样左看右看，没有直接展开情节'
+  - 'simplicity维度: 信息量极少，每一帧都是水'
+  - 'pacing维度: 重复堆砌无效描写，读者完全失去耐心'
+  - 'character维度: 主角何之许的行动和心理毫无逻辑'
+live_review_meta:
+  source_bvid: BV1BFA2zSEZj
+  source_line_range:
+  - 876
+  - 1045
+  score: null
+  score_raw: 这个18方的
+  score_signal: fuzzy
+  verdict: fail
+  title_guess: 何之许的西游
+  genre_guess:
+  - 西游
+  - 仙侠
+  - 灵异
+  overall_comment: 左看右看水字数，毫无有效信息，完全不会讲故事，建议先去临摹学习。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头像导游一样左看右看，没有直接展开情节
+    raw_quote: 不要跟导游一样左看右看啊
+  - dimension: simplicity
+    severity: negative
+    content: 信息量极少，每一帧都是水
+    raw_quote: 太水了兄弟 你是怎么水成这样的
+  - dimension: pacing
+    severity: negative
+    content: 重复堆砌无效描写，读者完全失去耐心
+    raw_quote: 这是不是重复了 刚刚是不是看过了当腿棒
+  - dimension: character
+    severity: negative
+    content: 主角何之许的行动和心理毫无逻辑
+    raw_quote: 他他他的想法也很奇怪

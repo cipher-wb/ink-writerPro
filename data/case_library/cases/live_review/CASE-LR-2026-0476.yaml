@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0476
+title: 轻小说投稿 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 轻小说
+  - 系统
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20分 | 全是卖设定卖系统，剧情人物拉扯为零，日常对话无聊到极致，不适合写二次元。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全是卖设定卖系统，剧情人物拉扯为零，日常对话无聊到极致，不适合写二次元。 | 缺乏剧情和人物拉扯，全是设定和系统说明;人设能力差，不适合写轻小说，建议换题材
+  observable:
+  - 'character维度: 缺乏剧情和人物拉扯，全是设定和系统说明'
+  - 'genre维度: 人设能力差，不适合写轻小说，建议换题材'
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 436
+  - 479
+  score: 20
+  score_raw: 20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 轻小说投稿
+  genre_guess:
+  - 轻小说
+  - 系统
+  - 日常
+  overall_comment: 全是卖设定卖系统，剧情人物拉扯为零，日常对话无聊到极致，不适合写二次元。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 缺乏剧情和人物拉扯，全是设定和系统说明
+    raw_quote: 太日常了 都是卖设定卖系统 剧情人物拉扯就会为零...就这样的 一天到晚的see you tomorrow 这真无聊
+  - dimension: genre
+    severity: negative
+    content: 人设能力差，不适合写轻小说，建议换题材
+    raw_quote: 还是推反马不适合 写轻小说 二次元这种找其他其他劳动题材吧

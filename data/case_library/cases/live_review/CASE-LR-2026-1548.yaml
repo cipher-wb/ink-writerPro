@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1548
+title: 乐嘉穿越古希腊多子多福 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1fuXCBSEri
+scope:
+  genre:
+  - 希腊神话
+  - 系统
+  - 恶搞
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 也只能九分吧 | 金手指离谱，恶搞过头无身份，纯猎奇。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fuXCBSEri.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 金手指离谱，恶搞过头无身份，纯猎奇。 | 金手指为多子多福生育系统，立不住;涉及与神明生育等违规擦边
+  observable:
+  - 'golden_finger维度: 金手指为多子多福生育系统，立不住'
+  - 'ops维度: 涉及与神明生育等违规擦边'
+live_review_meta:
+  source_bvid: BV1fuXCBSEri
+  source_line_range:
+  - 659
+  - 748
+  score: null
+  score_raw: 也只能九分吧
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 乐嘉穿越古希腊多子多福
+  genre_guess:
+  - 希腊神话
+  - 系统
+  - 恶搞
+  overall_comment: 金手指离谱，恶搞过头无身份，纯猎奇。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指为多子多福生育系统，立不住
+    raw_quote: 系统太抢袭了兄弟 没蹭到什么神话
+  - dimension: ops
+    severity: negative
+    content: 涉及与神明生育等违规擦边
+    raw_quote: 我为咒词生孩子 我的天哪

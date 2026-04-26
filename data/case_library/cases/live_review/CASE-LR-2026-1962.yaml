@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1962
+title: 穿越成五代军阀杨氏后 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 历史
+  - 五代十国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三十多分吧 | 切入点在五代初期李从旭，流量低，小众历史更难出成绩，建议后推到郭威柴荣时期。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点在五代初期李从旭，流量低，小众历史更难出成绩，建议后推到郭威柴荣时期。 | 选材李从旭在五代流量低，蹭不上历史热点;切入点太早，缺乏大事件支撑;蹭点不够，无法吸引读者
+  observable:
+  - 'genre维度: 选材李从旭在五代流量低，蹭不上历史热点'
+  - 'opening维度: 切入点太早，缺乏大事件支撑'
+  - 'hook维度: 蹭点不够，无法吸引读者'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 181
+  - 260
+  score: 38
+  score_raw: 三十多分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越成五代军阀杨氏后
+  genre_guess:
+  - 历史
+  - 五代十国
+  overall_comment: 切入点在五代初期李从旭，流量低，小众历史更难出成绩，建议后推到郭威柴荣时期。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 选材李从旭在五代流量低，蹭不上历史热点
+    raw_quote: 李从旭的流量不高…你就把小众历史变得更小众了
+  - dimension: opening
+    severity: negative
+    content: 切入点太早，缺乏大事件支撑
+    raw_quote: 太早了切入点就把你的小众历史变得更小众了
+  - dimension: hook
+    severity: negative
+    content: 蹭点不够，无法吸引读者
+    raw_quote: 蹭的点不够大哥

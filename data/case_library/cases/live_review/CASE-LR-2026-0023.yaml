@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0023
+title: 督公长生娘娘别回头 (pass / 70分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV12PFBzPE6h
+scope:
+  genre:
+  - 历史
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 第一张水平绝对有70分以上的 | 雪白拉扯误会水平很高，审核有风险但可签，70分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV12PFBzPE6h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 雪白拉扯误会水平很高，审核有风险但可签，70分。 | 内容有审核风险
+  observable:
+  - 'taboo维度: 内容有审核风险'
+live_review_meta:
+  source_bvid: BV12PFBzPE6h
+  source_line_range:
+  - 265
+  - 300
+  score: 70
+  score_raw: 第一张水平绝对有70分以上的
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 督公长生娘娘别回头
+  genre_guess:
+  - 历史
+  - 雪白
+  overall_comment: 雪白拉扯误会水平很高，审核有风险但可签，70分。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 雪白人设拉扯误会设计强
+    raw_quote: 这个稿子其实他写这个雪白人设水平 第一张水平绝对有70分以上的
+  - dimension: taboo
+    severity: negative
+    content: 内容有审核风险
+    raw_quote: 这这这嗯 对吧 这个在外面看嘛 看到现在嗯对吧 这这这不行 这这太夸张了

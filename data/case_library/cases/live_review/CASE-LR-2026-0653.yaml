@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0653
+title: 重生1999出狱复仇 (fail / 42分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1GSZpBhEKZ
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 复仇
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 我觉得那个40多好像有的 | 套路熟的蓝精灵复仇文，太毒太极端，读者难以代入强绿帽情节，开头需大改。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GSZpBhEKZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路熟的蓝精灵复仇文，太毒太极端，读者难以代入强绿帽情节，开头需大改。 | 强绿帽开局，被反杀更窝囊，起点读者代入不了;主角智商不高，被反杀，只会嗷嗷叫
+  observable:
+  - 'opening维度: 强绿帽开局，被反杀更窝囊，起点读者代入不了'
+  - 'character维度: 主角智商不高，被反杀，只会嗷嗷叫'
+live_review_meta:
+  source_bvid: BV1GSZpBhEKZ
+  source_line_range:
+  - 1061
+  - 1140
+  score: 42
+  score_raw: 我觉得那个40多好像有的
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生1999出狱复仇
+  genre_guess:
+  - 都市
+  - 重生
+  - 复仇
+  overall_comment: 套路熟的蓝精灵复仇文，太毒太极端，读者难以代入强绿帽情节，开头需大改。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 强绿帽开局，被反杀更窝囊，起点读者代入不了
+    raw_quote: 太毒了...起点读者代入不了这种强绿帽...真代入不了
+  - dimension: character
+    severity: negative
+    content: 主角智商不高，被反杀，只会嗷嗷叫
+    raw_quote: 智商不高呀...你打不过别人...嗷嗷叫是最无聊的
+  - dimension: pacing
+    severity: positive
+    content: 节奏快，情绪讲得清楚，有基础
+    raw_quote: 我觉得OK的...把那个故事讲清楚了

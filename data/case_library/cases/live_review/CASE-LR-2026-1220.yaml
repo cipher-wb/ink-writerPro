@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1220
+title: 机甲魔法少女重启计划 (pass / 68分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 机甲
+  - 魔法少女
+  - 轻小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 68吧是吧 | 拉扯和玩梗水平很高，签约没问题，但要注意设定不要搞复杂。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 拉扯和玩梗水平很高，签约没问题，但要注意设定不要搞复杂。 | 担心后面设定写得太复杂拖节奏
+  observable:
+  - 'pacing维度: 担心后面设定写得太复杂拖节奏'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 871
+  - 919
+  score: 68
+  score_raw: 68吧是吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 机甲魔法少女重启计划
+  genre_guess:
+  - 机甲
+  - 魔法少女
+  - 轻小说
+  overall_comment: 拉扯和玩梗水平很高，签约没问题，但要注意设定不要搞复杂。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 男女主拉扯对白有几千订的实力
+    raw_quote: 拉扯大概的拉扯水平很高…这也是70分以上
+  - dimension: pacing
+    severity: negative
+    content: 担心后面设定写得太复杂拖节奏
+    raw_quote: 他后面那些设定我怕还是写的太复杂

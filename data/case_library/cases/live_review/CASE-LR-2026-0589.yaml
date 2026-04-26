@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0589
+title: 全民融合 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1FKf5BQEis
+scope:
+  genre:
+  - 灵气复苏
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就还是30分吧 | 灵气复苏题材拉胯，开篇毫无代入感，设定当卖点，建议先练基础代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1FKf5BQEis.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 灵气复苏题材拉胯，开篇毫无代入感，设定当卖点，建议先练基础代入感。 | 灵气复苏类型当前几乎无人问津，属于垃圾题材;开场干巴巴无代入感，人物和对话都没有吸引力
+  observable:
+  - 'genre维度: 灵气复苏类型当前几乎无人问津，属于垃圾题材'
+  - 'opening维度: 开场干巴巴无代入感，人物和对话都没有吸引力'
+live_review_meta:
+  source_bvid: BV1FKf5BQEis
+  source_line_range:
+  - 879
+  - 935
+  score: 30
+  score_raw: 差不多就还是30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全民融合
+  genre_guess:
+  - 灵气复苏
+  - 末世
+  overall_comment: 灵气复苏题材拉胯，开篇毫无代入感，设定当卖点，建议先练基础代入感。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 灵气复苏类型当前几乎无人问津，属于垃圾题材
+    raw_quote: 灵气复苏就是垃圾题材 那就不要写了
+  - dimension: opening
+    severity: negative
+    content: 开场干巴巴无代入感，人物和对话都没有吸引力
+    raw_quote: 没代入感 又是没代入感 又来了 就干巴巴

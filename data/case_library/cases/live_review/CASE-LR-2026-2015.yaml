@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2015
+title: 盗版武者游戏面板 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uawZzeEtr
+scope:
+  genre:
+  - 玄幻
+  - 系统
+  - 游戏
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35 | 嫂嫂等女性角色塑造得好，但游戏面板的系统和主线剧情太无聊，慢点不够出彩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uawZzeEtr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 嫂嫂等女性角色塑造得好，但游戏面板的系统和主线剧情太无聊，慢点不够出彩。 | 游戏面板的慢点无聊，没有Get到爽点。
+  observable:
+  - 'golden_finger维度: 游戏面板的慢点无聊，没有Get到爽点。'
+live_review_meta:
+  source_bvid: BV1uawZzeEtr
+  source_line_range:
+  - 1011
+  - 1039
+  score: 35
+  score_raw: '35'
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 盗版武者游戏面板
+  genre_guess:
+  - 玄幻
+  - 系统
+  - 游戏
+  overall_comment: 嫂嫂等女性角色塑造得好，但游戏面板的系统和主线剧情太无聊，慢点不够出彩。
+  comments:
+  - dimension: character
+    severity: positive
+    content: 嫂嫂（董一漾）等人物写得有味道，拉扯出色。
+    raw_quote: 嫂嫂这写的没问题 还是写的出色的
+  - dimension: golden_finger
+    severity: negative
+    content: 游戏面板的慢点无聊，没有Get到爽点。
+    raw_quote: 设定系统的卖点太无聊了 ... 没get到

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0564
+title: 地府判官 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 灵异
+  - 地府
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20块比老吗 | 脑洞过时，写地府见闻毫无看点，建议发番茄
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 脑洞过时，写地府见闻毫无看点，建议发番茄 | 地府拉扯早已过时，读者不爱看;进展慢，到处介绍设定
+  observable:
+  - 'genre维度: 地府拉扯早已过时，读者不爱看'
+  - 'pacing维度: 进展慢，到处介绍设定'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 1945
+  - 2109
+  score: null
+  score_raw: 差不多就20块比老吗
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 地府判官
+  genre_guess:
+  - 灵异
+  - 地府
+  overall_comment: 脑洞过时，写地府见闻毫无看点，建议发番茄
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 地府拉扯早已过时，读者不爱看
+    raw_quote: 主角死了 到地府跟判官拉扯...这不是卖点
+  - dimension: pacing
+    severity: negative
+    content: 进展慢，到处介绍设定
+    raw_quote: 事情进展很慢...好慢呀

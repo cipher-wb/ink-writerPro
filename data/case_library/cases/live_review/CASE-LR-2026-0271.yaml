@@ -1,0 +1,48 @@
+case_id: CASE-LR-2026-0271
+title: 骑砍游戏异界 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18BrRBgEvb
+scope:
+  genre:
+  - 游戏异界
+  - 骑砍
+  - 架空
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没给分，不看了 | 游戏画外音切入还行，但老是测试父母没事件
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18BrRBgEvb.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 游戏画外音切入还行，但老是测试父母没事件 | 老是测试母亲的桥段，没有有效事件推进
+  observable:
+  - 'pacing维度: 老是测试母亲的桥段，没有有效事件推进'
+live_review_meta:
+  source_bvid: BV18BrRBgEvb
+  source_line_range:
+  - 608
+  - 660
+  score: null
+  score_raw: 没给分，不看了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 骑砍游戏异界
+  genre_guess:
+  - 游戏异界
+  - 骑砍
+  - 架空
+  overall_comment: 游戏画外音切入还行，但老是测试父母没事件
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 老是测试母亲的桥段，没有有效事件推进
+    raw_quote: 我能不能把你妈删了呀，这老是测试测试

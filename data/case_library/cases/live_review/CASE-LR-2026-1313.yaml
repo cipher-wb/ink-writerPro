@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1313
+title: 牛牛穿越修仙界 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 凡人流
+  - 修仙
+  - 画卷
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你40吧 | 凡人流太正经缺乏新卖点，需要增加娘子、宠物等钩子。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 凡人流太正经缺乏新卖点，需要增加娘子、宠物等钩子。 | 主线只是我要修炼变强，读者不看了;配角全是炼气修士，应写成凡人
+  observable:
+  - 'hook维度: 主线只是我要修炼变强，读者不看了'
+  - 'character维度: 配角全是炼气修士，应写成凡人'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1181
+  - 1250
+  score: 40
+  score_raw: 给你40吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 牛牛穿越修仙界
+  genre_guess:
+  - 凡人流
+  - 修仙
+  - 画卷
+  overall_comment: 凡人流太正经缺乏新卖点，需要增加娘子、宠物等钩子。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 主线只是我要修炼变强，读者不看了
+    raw_quote: 这个卖点在2026年的凡人流 已经不足以支撑读者阅读你的书了
+  - dimension: character
+    severity: negative
+    content: 配角全是炼气修士，应写成凡人
+    raw_quote: 这里面是不是是头猪 都是练气几层

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1435
+title: 果蝇之星（闪电职业） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1dmDmBpEZr
+scope:
+  genre:
+  - 科幻
+  - 脑机
+  - 实验
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 不打分了 | 纯设定独角戏，非网文，水平高但不接地气，不打分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1dmDmBpEZr.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯设定独角戏，非网文，水平高但不接地气，不打分。 | 非网文叙事，全是独角戏设定;水平高但市场不合适
+  observable:
+  - 'opening维度: 非网文叙事，全是独角戏设定'
+  - 'misc维度: 水平高但市场不合适'
+live_review_meta:
+  source_bvid: BV1dmDmBpEZr
+  source_line_range:
+  - 1301
+  - 1340
+  score: null
+  score_raw: 不打分了
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 果蝇之星（闪电职业）
+  genre_guess:
+  - 科幻
+  - 脑机
+  - 实验
+  overall_comment: 纯设定独角戏，非网文，水平高但不接地气，不打分。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 非网文叙事，全是独角戏设定
+    raw_quote: 这是网文 兄弟这是网文 你你要有网文性了
+  - dimension: misc
+    severity: negative
+    content: 水平高但市场不合适
+    raw_quote: 水平挺高的 肯定比我学历高呀 但真的不是网文 不是网文兄弟

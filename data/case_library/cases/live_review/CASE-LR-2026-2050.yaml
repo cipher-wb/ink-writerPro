@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-2050
+title: 玄珠家族 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uqDdBAEKV
+scope:
+  genre:
+  - 修仙
+  - 家族修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打翻的话就只能给大哥给到16分 | 家族修仙题材难以驾驭，烂梗太多，人设不沉稳。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uqDdBAEKV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 家族修仙题材难以驾驭，烂梗太多，人设不沉稳。 | 家族修仙实力不够写不了;人设不沉稳，过于轻松乐子;词句初级，烂梗充数
+  observable:
+  - 'genre维度: 家族修仙实力不够写不了'
+  - 'character维度: 人设不沉稳，过于轻松乐子'
+  - 'simplicity维度: 词句初级，烂梗充数'
+live_review_meta:
+  source_bvid: BV1uqDdBAEKV
+  source_line_range:
+  - 801
+  - 1000
+  score: 16
+  score_raw: 打翻的话就只能给大哥给到16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 玄珠家族
+  genre_guess:
+  - 修仙
+  - 家族修仙
+  overall_comment: 家族修仙题材难以驾驭，烂梗太多，人设不沉稳。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 家族修仙实力不够写不了
+    raw_quote: 家族修仙现在其实很难很难写 ... 就写不了
+  - dimension: character
+    severity: negative
+    content: 人设不沉稳，过于轻松乐子
+    raw_quote: 就小质呀小质的感觉 烂梗太多了
+  - dimension: simplicity
+    severity: negative
+    content: 词句初级，烂梗充数
+    raw_quote: 全烂梗 这个烂梗太多了

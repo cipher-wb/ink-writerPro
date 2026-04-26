@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0140
+title: 监守者 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 灵异
+  - 都市
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个真的只有15分了 | 描述能力太白，AI味道重，缺乏句号分段，故事故弄玄虚。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 描述能力太白，AI味道重，缺乏句号分段，故事故弄玄虚。 | 通篇没有句号，严重基本功问题;写法太像AI，描述过细，故弄玄虚
+  observable:
+  - 'ops维度: 通篇没有句号，严重基本功问题'
+  - 'simplicity维度: 写法太像AI，描述过细，故弄玄虚'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 192
+  - 196
+  score: 15
+  score_raw: 这个真的只有15分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 监守者
+  genre_guess:
+  - 灵异
+  - 都市
+  overall_comment: 描述能力太白，AI味道重，缺乏句号分段，故事故弄玄虚。
+  comments:
+  - dimension: ops
+    severity: negative
+    content: 通篇没有句号，严重基本功问题
+    raw_quote: 就大哥你们那里写一个句号是会罚款吗 就就感觉很奇怪 我现在看了5000字 没有一个句号
+  - dimension: simplicity
+    severity: negative
+    content: 写法太像AI，描述过细，故弄玄虚
+    raw_quote: 这个描述能力确实有点太AI味道了 就大概可能没有用 但是呈现出来的效果就是太像了

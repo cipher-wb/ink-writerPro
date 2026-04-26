@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-0097
+title: 亡灵法师三国演义召唤亡灵 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 奇幻
+  - 三国
+  - 召唤
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就20分 | 主线无聊主角人设不行，写法小白，配角有个性但整体昂气只能蓝精灵。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 主线无聊主角人设不行，写法小白，配角有个性但整体昂气只能蓝精灵。 | 主角人设不行，懵懵懂懂没有人物魅力;主线无聊，就是决斗场装逼;写的比较小白，对白细节不过关
+  observable:
+  - 'character维度: 主角人设不行，懵懵懂懂没有人物魅力'
+  - 'pacing维度: 主线无聊，就是决斗场装逼'
+  - 'simplicity维度: 写的比较小白，对白细节不过关'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 311
+  - 430
+  score: 20
+  score_raw: 差不多就20分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 亡灵法师三国演义召唤亡灵
+  genre_guess:
+  - 奇幻
+  - 三国
+  - 召唤
+  overall_comment: 主线无聊主角人设不行，写法小白，配角有个性但整体昂气只能蓝精灵。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角人设不行，懵懵懂懂没有人物魅力
+    raw_quote: 就感觉主角人设不行...主角又是那种小学生人设，没任任何人物魅力，就懵懵懂懂傻傻乎乎的
+  - dimension: pacing
+    severity: negative
+    content: 主线无聊，就是决斗场装逼
+    raw_quote: 这个主线也无聊啊
+  - dimension: simplicity
+    severity: negative
+    content: 写的比较小白，对白细节不过关
+    raw_quote: 写的其实也比较小白，就是像一些细节，貂蝉啊，莫甘娜这些对白什么的

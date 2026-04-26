@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0006
+title: 五弟的崛起 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV11YrABQEyZ
+scope:
+  genre:
+  - 都市
+  - 崛起
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十八分没入行啊 | 严重的女皮写作倾向，完全没有男性主角的代入感，需要大量抄书练习找感觉，否则很难入行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YrABQEyZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 严重的女皮写作倾向，完全没有男性主角的代入感，需要大量抄书练习找感觉，否则很难入行。 | 行文像女性视角，男人不会这样描写女子，代入感极差;过分追求复杂设定和描写，没有简单清晰地讲清楚主角视角
+  observable:
+  - 'character维度: 行文像女性视角，男人不会这样描写女子，代入感极差'
+  - 'simplicity维度: 过分追求复杂设定和描写，没有简单清晰地讲清楚主角视角'
+live_review_meta:
+  source_bvid: BV11YrABQEyZ
+  source_line_range:
+  - 697
+  - 829
+  score: 18
+  score_raw: 十八分没入行啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 五弟的崛起
+  genre_guess:
+  - 都市
+  - 崛起
+  overall_comment: 严重的女皮写作倾向，完全没有男性主角的代入感，需要大量抄书练习找感觉，否则很难入行。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 行文像女性视角，男人不会这样描写女子，代入感极差
+    raw_quote: 少年看着女子怎么还是女皮的感觉 这不是还是女皮吗大哥
+  - dimension: simplicity
+    severity: negative
+    content: 过分追求复杂设定和描写，没有简单清晰地讲清楚主角视角
+    raw_quote: 这个真得去抄书炼写吧 你每天四千字抄一个月吧

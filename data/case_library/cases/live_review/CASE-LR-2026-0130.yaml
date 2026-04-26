@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0130
+title: 邪神养成计划 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13bF1zcE34
+scope:
+  genre:
+  - 西幻
+  - 邪神
+  - 养成
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能力还是可以的 找点简单的题材 | 比例扎实但题材太难，事件无趣，暂不评分，建议换简单脑洞。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13bF1zcE34.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例扎实但题材太难，事件无趣，暂不评分，建议换简单脑洞。 | 邪神养成、烂梗集合，缺乏真正的看点
+  observable:
+  - 'genre维度: 邪神养成、烂梗集合，缺乏真正的看点'
+live_review_meta:
+  source_bvid: BV13bF1zcE34
+  source_line_range:
+  - 1430
+  - 1520
+  score: null
+  score_raw: 能力还是可以的 找点简单的题材
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 邪神养成计划
+  genre_guess:
+  - 西幻
+  - 邪神
+  - 养成
+  overall_comment: 比例扎实但题材太难，事件无趣，暂不评分，建议换简单脑洞。
+  comments:
+  - dimension: ops
+    severity: neutral
+    content: 基本功扎实，但当前题材吃力不讨好
+    raw_quote: 你有基本功好吧 基本功是很扎实的
+  - dimension: genre
+    severity: negative
+    content: 邪神养成、烂梗集合，缺乏真正的看点
+    raw_quote: 就一本书好不好看 你要看六七章吗

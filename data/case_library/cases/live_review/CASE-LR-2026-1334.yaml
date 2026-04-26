@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1334
+title: 练红宗圣子自爆穿越 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你二十分 | 套路陈旧，五白既视感强，缺乏新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路陈旧，五白既视感强，缺乏新意。 | 明显模仿斗破、光之子等老梗;系统设定过于俗套;开头直接杀人，缺乏铺垫
+  observable:
+  - 'genre维度: 明显模仿斗破、光之子等老梗'
+  - 'golden_finger维度: 系统设定过于俗套'
+  - 'opening维度: 开头直接杀人，缺乏铺垫'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 230
+  - 314
+  score: 20
+  score_raw: 给你二十分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 练红宗圣子自爆穿越
+  genre_guess:
+  - 玄幻
+  - 穿越
+  - 系统
+  overall_comment: 套路陈旧，五白既视感强，缺乏新意。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 明显模仿斗破、光之子等老梗
+    raw_quote: 全干了，把斗破光之子盘龙全偷了
+  - dimension: golden_finger
+    severity: negative
+    content: 系统设定过于俗套
+    raw_quote: 这太小白了兄弟，跟NPC似的
+  - dimension: opening
+    severity: negative
+    content: 开头直接杀人，缺乏铺垫
+    raw_quote: 大哥把这些人已经杀完了反正全杀了

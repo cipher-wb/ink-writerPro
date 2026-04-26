@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1589
+title: 道体变伤肾 (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 玄幻
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 撑死20分不到19分了 | 事件无聊对白拉垮，全篇冷笑毫无情绪，基本功都不过关。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 事件无聊对白拉垮，全篇冷笑毫无情绪，基本功都不过关。 | 人物互动生硬，对白贫乏，反复用“冷笑”;事件毫无看点，没有冲突和代入
+  observable:
+  - 'character维度: 人物互动生硬，对白贫乏，反复用“冷笑”'
+  - 'opening维度: 事件毫无看点，没有冲突和代入'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 221
+  - 270
+  score: 19
+  score_raw: 撑死20分不到19分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 道体变伤肾
+  genre_guess:
+  - 玄幻
+  - 修仙
+  overall_comment: 事件无聊对白拉垮，全篇冷笑毫无情绪，基本功都不过关。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物互动生硬，对白贫乏，反复用“冷笑”
+    raw_quote: 冷笑者冷笑 笑者冷笑 所有人都冷笑 … 你冷笑了多少嘛 … 22次冷笑 … 这遣词造句也太小白了吧
+  - dimension: opening
+    severity: negative
+    content: 事件毫无看点，没有冲突和代入
+    raw_quote: 这个事件一点贼无聊 … 没代入感 事件无聊对白拉垮

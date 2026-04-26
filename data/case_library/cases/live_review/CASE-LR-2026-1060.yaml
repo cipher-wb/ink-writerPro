@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1060
+title: 穿越游戏最终boss化身boss (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 游戏
+  - 异界
+  - BOSS流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 23分呢 | 氛围尚可，但人物标签缺失，代入感差，发番茄也难。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围尚可，但人物标签缺失，代入感差，发番茄也难。 | 人物标签缺失，像NPC，无代入感
+  observable:
+  - 'character维度: 人物标签缺失，像NPC，无代入感'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 321
+  - 380
+  score: 23
+  score_raw: 23分呢
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越游戏最终boss化身boss
+  genre_guess:
+  - 游戏
+  - 异界
+  - BOSS流
+  overall_comment: 氛围尚可，但人物标签缺失，代入感差，发番茄也难。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 人物标签缺失，像NPC，无代入感
+    raw_quote: 这些人物没标签 你跟这些人在这探险一点意思都没有
+  - dimension: ops
+    severity: neutral
+    content: 更适合发番茄，但起点难起
+    raw_quote: 发番茄也没意义 ... 还是番茄兄弟

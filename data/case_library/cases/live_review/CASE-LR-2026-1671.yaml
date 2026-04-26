@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1671
+title: 重生1999成为学霸 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1koc2z9E2q
+scope:
+  genre:
+  - 都市
+  - 重生
+  - 学霸
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 18分吧 | 重生感几乎没有，心理活动缺失，像电视剧日常毫无网感，需推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1koc2z9E2q.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生感几乎没有，心理活动缺失，像电视剧日常毫无网感，需推翻重写。 | 开篇审问切入无法展现人物关系，节奏拖沓;开头没有建立重生期待，像第二张而不是第一章
+  observable:
+  - 'pacing维度: 开篇审问切入无法展现人物关系，节奏拖沓'
+  - 'opening维度: 开头没有建立重生期待，像第二张而不是第一章'
+live_review_meta:
+  source_bvid: BV1koc2z9E2q
+  source_line_range:
+  - 231
+  - 290
+  score: 18
+  score_raw: 18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生1999成为学霸
+  genre_guess:
+  - 都市
+  - 重生
+  - 学霸
+  overall_comment: 重生感几乎没有，心理活动缺失，像电视剧日常毫无网感，需推翻重写。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 开篇审问切入无法展现人物关系，节奏拖沓
+    raw_quote: 你审问的话 你就写不了人物关系 写不了心理活动
+  - dimension: opening
+    severity: negative
+    content: 开头没有建立重生期待，像第二张而不是第一章
+    raw_quote: 感觉像第二张 感觉不像第一张

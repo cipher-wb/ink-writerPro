@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0904
+title: 蒸汽筑基或设定修仙 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1NkvoB9EKW
+scope:
+  genre:
+  - 仙侠
+  - 蒸汽朋克
+  - 凡人流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 32分高了 | 设定太多需要大胆删减，整体思路太老需要推翻，简化金手指会更好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1NkvoB9EKW.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定太多需要大胆删减，整体思路太老需要推翻，简化金手指会更好。 | 设定堆积过多，作者舍不得删，缺乏简洁;金手指复杂，不如偷小绿瓶之类的简单设计
+  observable:
+  - 'simplicity维度: 设定堆积过多，作者舍不得删，缺乏简洁'
+  - 'golden_finger维度: 金手指复杂，不如偷小绿瓶之类的简单设计'
+live_review_meta:
+  source_bvid: BV1NkvoB9EKW
+  source_line_range:
+  - 2179
+  - 2446
+  score: 32
+  score_raw: 32分高了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 蒸汽筑基或设定修仙
+  genre_guess:
+  - 仙侠
+  - 蒸汽朋克
+  - 凡人流
+  overall_comment: 设定太多需要大胆删减，整体思路太老需要推翻，简化金手指会更好。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 设定堆积过多，作者舍不得删，缺乏简洁
+    raw_quote: 设定太多了...你大胆一点删，不要害怕...你觉得啰嗦你就删啊
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指复杂，不如偷小绿瓶之类的简单设计
+    raw_quote: 你把坚持弄简单一点...你找个什么小绿瓶之类不就完事了

@@ -1,0 +1,67 @@
+case_id: CASE-LR-2026-0911
+title: 猫娘家主 (pass / 64分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PQBVBzEMX
+scope:
+  genre:
+  - 西幻
+  - 轻小说
+  - 冒险
+  - 猫娘
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 本来是69分嘛 威胁我扣三分 然后这个喵扣扣三分 69扣三额扣五 然后69-5等于几来着 64是吧 | 切入改善后立住，人设出彩，但主线危机感薄弱，需增加线索和卖点；因男猫娘喵过多和威胁行为扣分至64，仍可签约
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PQBVBzEMX.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入改善后立住，人设出彩，但主线危机感薄弱，需增加线索和卖点；因男猫娘喵过多和威胁行为扣分至64，仍可签约 | 男猫娘每句台词都带喵，过于刻意，扣三分;主线衔接弱，缺少危机感，容易后继无力
+  observable:
+  - 'character维度: 男猫娘每句台词都带喵，过于刻意，扣三分'
+  - 'highpoint维度: 主线衔接弱，缺少危机感，容易后继无力'
+live_review_meta:
+  source_bvid: BV1PQBVBzEMX
+  source_line_range:
+  - 5
+  - 294
+  score: 64
+  score_raw: 本来是69分嘛 威胁我扣三分 然后这个喵扣扣三分 69扣三额扣五 然后69-5等于几来着 64是吧
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 猫娘家主
+  genre_guess:
+  - 西幻
+  - 轻小说
+  - 冒险
+  - 猫娘
+  overall_comment: 切入改善后立住，人设出彩，但主线危机感薄弱，需增加线索和卖点；因男猫娘喵过多和威胁行为扣分至64，仍可签约
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 切入从两件无关事件改为一件事，立住且无问题
+    raw_quote: 现在可以这个切入 我觉得立住了 这个切入没啥问题了
+  - dimension: character
+    severity: positive
+    content: 主角和猫娘人设立住，塑造有实力
+    raw_quote: 你人设已经立住了
+  - dimension: character
+    severity: negative
+    content: 男猫娘每句台词都带喵，过于刻意，扣三分
+    raw_quote: 这种一个男的每一句都是喵 真扣三分了
+  - dimension: highpoint
+    severity: negative
+    content: 主线衔接弱，缺少危机感，容易后继无力
+    raw_quote: 主线还是衔接有点弱 主线危机还是嫌弃
+  - dimension: genre
+    severity: neutral
+    content: 西幻流行一人加一女角色立柱即可，类型没问题
+    raw_quote: 其实现在的西幻就流行这种...主角加一个女角色立柱就行了

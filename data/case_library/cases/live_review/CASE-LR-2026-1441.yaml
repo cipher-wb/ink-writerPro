@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-1441
+title: 晚明博士穿越 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 历史
+  - 穿越
+  - 晚明
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔扎实，但开头太慢需加速，第二章反转可留，可添加雪白元素扩大受众
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，但开头太慢需加速，第二章反转可留，可添加雪白元素扩大受众 | 开头800字慢，应直接穿越删掉
+  observable:
+  - 'opening维度: 开头800字慢，应直接穿越删掉'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 841
+  - 1000
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 晚明博士穿越
+  genre_guess:
+  - 历史
+  - 穿越
+  - 晚明
+  overall_comment: 文笔扎实，但开头太慢需加速，第二章反转可留，可添加雪白元素扩大受众
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头800字慢，应直接穿越删掉
+    raw_quote: 你把开头的800字删掉
+  - dimension: character
+    severity: positive
+    content: 文笔扎实，雪白描写有潜力
+    raw_quote: 我觉得这个大哥最大的优点是文笔扎实
+  - dimension: highpoint
+    severity: positive
+    content: 第二章反转尚可，有亮点
+    raw_quote: 这个反转还可以

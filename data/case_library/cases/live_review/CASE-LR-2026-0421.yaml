@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0421
+title: 少年成为大英雄 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1AGr3BuERn
+scope:
+  genre:
+  - 奇幻
+  - 冒险
+  - 西方
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能有16分 | 太老套，写法像安徒生童话，没有看点，太古老了
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1AGr3BuERn.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 太老套，写法像安徒生童话，没有看点，太古老了 | 慢悠悠的写法，像回到童年听妈妈讲故事，太老套;英文不要出来，写法要推翻，学习网文写法
+  observable:
+  - 'pacing维度: 慢悠悠的写法，像回到童年听妈妈讲故事，太老套'
+  - 'ops维度: 英文不要出来，写法要推翻，学习网文写法'
+live_review_meta:
+  source_bvid: BV1AGr3BuERn
+  source_line_range:
+  - 1507
+  - 1586
+  score: 16
+  score_raw: 只能有16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 少年成为大英雄
+  genre_guess:
+  - 奇幻
+  - 冒险
+  - 西方
+  overall_comment: 太老套，写法像安徒生童话，没有看点，太古老了
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 慢悠悠的写法，像回到童年听妈妈讲故事，太老套
+    raw_quote: 就感觉像回到了小时候对吧...就慢悠的就就就回到了童年了，确实有点太老套
+  - dimension: ops
+    severity: negative
+    content: 英文不要出来，写法要推翻，学习网文写法
+    raw_quote: 还有什么英文，英文英语不要出来，英语就别出来了...要推翻，要真的去学习一下啊

@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1496
+title: 渡劫失败就变强 (borderline / 52分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1eRimBmEfd
+scope:
+  genre:
+  - 仙侠
+  - 心魔
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 52分吧 | 比例老练，但心魔对话太多，事件无推进，像番茄文拿不到起点签约
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1eRimBmEfd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 比例老练，但心魔对话太多，事件无推进，像番茄文拿不到起点签约 | 事件无推进，心魔类似系统对话拖节奏
+  observable:
+  - 'opening维度: 事件无推进，心魔类似系统对话拖节奏'
+live_review_meta:
+  source_bvid: BV1eRimBmEfd
+  source_line_range:
+  - 679
+  - 720
+  score: 52
+  score_raw: 52分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 渡劫失败就变强
+  genre_guess:
+  - 仙侠
+  - 心魔
+  - 系统
+  overall_comment: 比例老练，但心魔对话太多，事件无推进，像番茄文拿不到起点签约
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 事件无推进，心魔类似系统对话拖节奏
+    raw_quote: 一张修炼加心魔 事件就没有推进 根本就没有推进
+  - dimension: genre
+    severity: neutral
+    content: 整体更偏向番茄风格，起点不合适
+    raw_quote: 一眼一眼番茄 喊咱俩坏了 你化成灰我要认识你

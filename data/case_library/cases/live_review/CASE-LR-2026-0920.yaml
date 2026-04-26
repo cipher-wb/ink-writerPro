@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0920
+title: 全家被鬼灭门 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 都市
+  - 灵异
+  - 鬼怪
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多28分 | 氛围营造尚可，但都市灵异事件老套且无聊，缺乏其他元素支撑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 氛围营造尚可，但都市灵异事件老套且无聊，缺乏其他元素支撑。 | 事件太毒，全家献祭死亡，过于卖惨;纯灵异鬼怪文已无市场
+  observable:
+  - 'opening维度: 事件太毒，全家献祭死亡，过于卖惨'
+  - 'genre维度: 纯灵异鬼怪文已无市场'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 725
+  - 790
+  score: 28
+  score_raw: 差不多28分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全家被鬼灭门
+  genre_guess:
+  - 都市
+  - 灵异
+  - 鬼怪
+  overall_comment: 氛围营造尚可，但都市灵异事件老套且无聊，缺乏其他元素支撑。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 事件太毒，全家献祭死亡，过于卖惨
+    raw_quote: 事件太毒了 我觉得这种事情 就起点主角就太毒了呀 全家死光光
+  - dimension: genre
+    severity: negative
+    content: 纯灵异鬼怪文已无市场
+    raw_quote: 这个思路真的太无聊了 无非就是知道世界上有这些异能鬼物流的组织 … 卖点起不来
+  - dimension: character
+    severity: positive
+    content: 笔力氛围不错，有一定代入感
+    raw_quote: 遣词造句还行吧 就是代入感氛围还是有

@@ -1,0 +1,63 @@
+case_id: CASE-LR-2026-1535
+title: 文学少女不会在半夜 (fail / 38分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1fpPHzDEH5
+scope:
+  genre:
+  - 轻小说
+  - 校园
+  - 日常
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 是38分吧 | 东京文豪题材写歪，没有爽点与雪白拉扯，主线极弱，完全无法让编辑兴奋。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1fpPHzDEH5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 东京文豪题材写歪，没有爽点与雪白拉扯，主线极弱，完全无法让编辑兴奋。 | 毫无爽点，读者完全无法代入;男主对美女没兴趣，设定反人类;没有雪白拉扯，写法完全错误
+  observable:
+  - 'hook维度: 毫无爽点，读者完全无法代入'
+  - 'character维度: 男主对美女没兴趣，设定反人类'
+  - 'simplicity维度: 没有雪白拉扯，写法完全错误'
+  - 'genre维度: 完全不懂东京文，写成了让编辑昏昏欲睡的流水账'
+live_review_meta:
+  source_bvid: BV1fpPHzDEH5
+  source_line_range:
+  - 272
+  - 540
+  score: 38
+  score_raw: 是38分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 文学少女不会在半夜
+  genre_guess:
+  - 轻小说
+  - 校园
+  - 日常
+  overall_comment: 东京文豪题材写歪，没有爽点与雪白拉扯，主线极弱，完全无法让编辑兴奋。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 毫无爽点，读者完全无法代入
+    raw_quote: 这有什么爽点啊这个 这爽点散散了
+  - dimension: character
+    severity: negative
+    content: 男主对美女没兴趣，设定反人类
+    raw_quote: 好不容易出来个美女 你没心情搭理她 那写啥呀大哥
+  - dimension: simplicity
+    severity: negative
+    content: 没有雪白拉扯，写法完全错误
+    raw_quote: 雪白也是浅长折纸 根本就不是雪白 也没什么好拉扯
+  - dimension: genre
+    severity: negative
+    content: 完全不懂东京文，写成了让编辑昏昏欲睡的流水账
+    raw_quote: 真正的东京文 是会让我坐起来 你甚至连第二步都没达到

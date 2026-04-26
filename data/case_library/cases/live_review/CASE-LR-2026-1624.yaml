@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-1624
+title: 导演穿越高武世界 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jhAKzTEob
+scope:
+  genre:
+  - 高武
+  - 都市
+  - 导演
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十二分 | 高武题材写偏，变成校园枪击和谈恋爱，缺乏危机升级，建议推翻重写。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jhAKzTEob.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 高武题材写偏，变成校园枪击和谈恋爱，缺乏危机升级，建议推翻重写。 | 高武写成日常恋爱校园案，严重偏题，毫无高武升级本质;校园枪击案架空不足，审核风险高
+  observable:
+  - 'genre维度: 高武写成日常恋爱校园案，严重偏题，毫无高武升级本质'
+  - 'ops维度: 校园枪击案架空不足，审核风险高'
+live_review_meta:
+  source_bvid: BV1jhAKzTEob
+  source_line_range:
+  - 1460
+  - 1529
+  score: 22
+  score_raw: 二十二分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 导演穿越高武世界
+  genre_guess:
+  - 高武
+  - 都市
+  - 导演
+  - 穿越
+  overall_comment: 高武题材写偏，变成校园枪击和谈恋爱，缺乏危机升级，建议推翻重写。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 高武写成日常恋爱校园案，严重偏题，毫无高武升级本质
+    raw_quote: 这高五偏成啥了对不对 没危机没感觉 … 热血升级都没有
+  - dimension: ops
+    severity: negative
+    content: 校园枪击案架空不足，审核风险高
+    raw_quote: 你这个架空不够 … 审核容易找你

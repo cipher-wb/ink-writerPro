@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0830
+title: 德鲁伊的雪白 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1LzPUzRETz
+scope:
+  genre:
+  - 玄幻
+  - 德鲁伊
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 20出头 | 文绉绉故弄玄虚，并没有真正的雪白内容
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LzPUzRETz.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文绉绉故弄玄虚，并没有真正的雪白内容 | 用文言文写雪白，严重增加阅读障碍;号称雪白实则没有，纯属骗人
+  observable:
+  - 'simplicity维度: 用文言文写雪白，严重增加阅读障碍'
+  - 'taboo维度: 号称雪白实则没有，纯属骗人'
+live_review_meta:
+  source_bvid: BV1LzPUzRETz
+  source_line_range:
+  - 3025
+  - 3170
+  score: 20
+  score_raw: 20出头
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 德鲁伊的雪白
+  genre_guess:
+  - 玄幻
+  - 德鲁伊
+  - 雪白
+  overall_comment: 文绉绉故弄玄虚，并没有真正的雪白内容
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 用文言文写雪白，严重增加阅读障碍
+    raw_quote: 我看个雪白 我还要去查字典
+  - dimension: taboo
+    severity: negative
+    content: 号称雪白实则没有，纯属骗人
+    raw_quote: 雪白在哪里

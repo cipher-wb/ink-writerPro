@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0955
+title: 电炸园区(邪修地狱) (borderline / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1R2QQBYEpL
+scope:
+  genre:
+  - 修仙
+  - 智商
+  - 脱困
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 要五十分吧 | 第一章有签约水平，智斗思路对，但后续得跟进园区剧情
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1R2QQBYEpL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章有签约水平，智斗思路对，但后续得跟进园区剧情
+  observable:
+  - 整体被星河直播判定为 borderline
+live_review_meta:
+  source_bvid: BV1R2QQBYEpL
+  source_line_range:
+  - 2900
+  - 2980
+  score: 50
+  score_raw: 要五十分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 电炸园区(邪修地狱)
+  genre_guess:
+  - 修仙
+  - 智商
+  - 脱困
+  overall_comment: 第一章有签约水平，智斗思路对，但后续得跟进园区剧情
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 十字中央思路，用智商脱困有期待感
+    raw_quote: 第一章是用来测试你的系统和立人设的呀 所以需要智商呀

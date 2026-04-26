@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1818
+title: 两界打洞修仙 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1pT6WBTER8
+scope:
+  genre:
+  - 两界
+  - 修仙
+  - 异世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 28分就是无聊 | 节奏尚可但故事干巴，角色全如NPC，毫无期待感，读者根本不想看。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1pT6WBTER8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏尚可但故事干巴，角色全如NPC，毫无期待感，读者根本不想看。 | 缺乏期待感，打洞发育毫无吸引力;所有人物都是NPC，互动没有灵魂;两界题材本来就小众难写，没有亮点别碰
+  observable:
+  - 'highpoint维度: 缺乏期待感，打洞发育毫无吸引力'
+  - 'character维度: 所有人物都是NPC，互动没有灵魂'
+  - 'genre维度: 两界题材本来就小众难写，没有亮点别碰'
+live_review_meta:
+  source_bvid: BV1pT6WBTER8
+  source_line_range:
+  - 1051
+  - 1120
+  score: 28
+  score_raw: 28分就是无聊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 两界打洞修仙
+  genre_guess:
+  - 两界
+  - 修仙
+  - 异世
+  overall_comment: 节奏尚可但故事干巴，角色全如NPC，毫无期待感，读者根本不想看。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏期待感，打洞发育毫无吸引力
+    raw_quote: 就这种故事干巴巴的一点01：30点都没有 真的很无聊
+  - dimension: character
+    severity: negative
+    content: 所有人物都是NPC，互动没有灵魂
+    raw_quote: 碰到的每一个人都是NPC……一点意思都没有
+  - dimension: genre
+    severity: negative
+    content: 两界题材本来就小众难写，没有亮点别碰
+    raw_quote: 两界题材最好别写 特别懒 我没见几个新能两界题材能写起来

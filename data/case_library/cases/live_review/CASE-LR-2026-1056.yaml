@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1056
+title: 当牛马成神 (fail / 20分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1TzvsBiEkL
+scope:
+  genre:
+  - 修仙
+  - 系统流
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能不能拿到20分的分数来来给给你二分 给你20分就差不多吧 | 内容像演讲说教，剧情太弱，遣词造句还行但整体莫名其妙。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TzvsBiEkL.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 内容像演讲说教，剧情太弱，遣词造句还行但整体莫名其妙。 | 题材思路不对，说教式演讲没人看;开篇干巴巴介绍设定，无故事性
+  observable:
+  - 'genre维度: 题材思路不对，说教式演讲没人看'
+  - 'opening维度: 开篇干巴巴介绍设定，无故事性'
+live_review_meta:
+  source_bvid: BV1TzvsBiEkL
+  source_line_range:
+  - 5
+  - 80
+  score: 20
+  score_raw: 能不能拿到20分的分数来来给给你二分 给你20分就差不多吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 当牛马成神
+  genre_guess:
+  - 修仙
+  - 系统流
+  - 穿越
+  overall_comment: 内容像演讲说教，剧情太弱，遣词造句还行但整体莫名其妙。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材思路不对，说教式演讲没人看
+    raw_quote: 不是大哥这这不不是网文啊 ... 这咋搞的对吧
+  - dimension: opening
+    severity: negative
+    content: 开篇干巴巴介绍设定，无故事性
+    raw_quote: 他穿过来之后是什么 就干巴巴的介绍都没故事呀

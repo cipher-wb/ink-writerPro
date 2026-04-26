@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0845
+title: 太平年历史文 (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 历史
+  - 清朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 还是50分吧 | 节奏加快但人物塑造干，女人没写出感觉，情报设定太多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏加快但人物塑造干，女人没写出感觉，情报设定太多。 | 前置情绪太多，显得主角智商不高;情报字数太多，节奏过密读者跑;女性角色海南茶、东腊没感觉，缺乏外貌神态描写
+  observable:
+  - 'opening维度: 前置情绪太多，显得主角智商不高'
+  - 'pacing维度: 情报字数太多，节奏过密读者跑'
+  - 'character维度: 女性角色海南茶、东腊没感觉，缺乏外貌神态描写'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 521
+  - 595
+  score: 50
+  score_raw: 还是50分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 太平年历史文
+  genre_guess:
+  - 历史
+  - 清朝
+  overall_comment: 节奏加快但人物塑造干，女人没写出感觉，情报设定太多。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前置情绪太多，显得主角智商不高
+    raw_quote: 就就是一上来就说前世怎么怎么样，那种情绪太多反而有点装
+  - dimension: pacing
+    severity: negative
+    content: 情报字数太多，节奏过密读者跑
+    raw_quote: 你这情报都400个字了，这五个上来读就跑完了
+  - dimension: character
+    severity: negative
+    content: 女性角色海南茶、东腊没感觉，缺乏外貌神态描写
+    raw_quote: 没有一句关于他的肌肤神态这些的描写，这个没有女人的感觉啊

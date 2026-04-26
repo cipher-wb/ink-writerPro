@@ -1,0 +1,54 @@
+case_id: CASE-LR-2026-2143
+title: 谢向东重返18岁 (borderline / 58分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 乡村
+  - 年代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 58分水平有 | 文笔流畅、细节到位，但主线偏向乡野寡妇威胁，缺乏起点向的强卖点，建议替换核心脑洞。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔流畅、细节到位，但主线偏向乡野寡妇威胁，缺乏起点向的强卖点，建议替换核心脑洞。 | 主线变成乡野小黄文走向，不符合起点主流
+  observable:
+  - 'simplicity维度: 主线变成乡野小黄文走向，不符合起点主流'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 1601
+  - 1800
+  score: 58
+  score_raw: 58分水平有
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 谢向东重返18岁
+  genre_guess:
+  - 重生
+  - 都市
+  - 乡村
+  - 年代
+  overall_comment: 文笔流畅、细节到位，但主线偏向乡野寡妇威胁，缺乏起点向的强卖点，建议替换核心脑洞。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 主线变成乡野小黄文走向，不符合起点主流
+    raw_quote: 还是这个乡村味道太浓了呀 乡野小黄书呀 大哥哈 起点读者也不爱看这种就威胁寡妇啊
+  - dimension: opening
+    severity: positive
+    content: 切入文笔流畅，人物细节真实
+    raw_quote: 流畅是流畅的喇叭裤对吧

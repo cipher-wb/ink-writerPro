@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0180
+title: 反方向的钟：辅助幻觉 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV14aXXBdEJK
+scope:
+  genre:
+  - 科幻
+  - 意识流
+  - 时间穿梭
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 打不了分 | 纯意识流作品，连主角和助理是否真实都不确定，不是网文，无法评价。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV14aXXBdEJK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 纯意识流作品，连主角和助理是否真实都不确定，不是网文，无法评价。 | 完全不是网文，意识流写法让编辑无从下手。
+  observable:
+  - 'misc维度: 完全不是网文，意识流写法让编辑无从下手。'
+live_review_meta:
+  source_bvid: BV14aXXBdEJK
+  source_line_range:
+  - 1570
+  - 1690
+  score: null
+  score_raw: 打不了分
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 反方向的钟：辅助幻觉
+  genre_guess:
+  - 科幻
+  - 意识流
+  - 时间穿梭
+  overall_comment: 纯意识流作品，连主角和助理是否真实都不确定，不是网文，无法评价。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 完全不是网文，意识流写法让编辑无从下手。
+    raw_quote: 这不是网文啊

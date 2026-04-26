@@ -1,0 +1,76 @@
+case_id: CASE-LR-2026-2236
+title: 民国高武卡牌流 (fail / 32分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 民国
+  - 高武
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分左右吧32分 | 文笔尚可但代入感差，心理活动缺失，剧情琐碎转换快，需推翻重构思。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但代入感差，心理活动缺失，剧情琐碎转换快，需推翻重构思。 | 主角毫无心理活动，只有眼神描写，不真实;事件太无聊，鸡毛蒜皮无危机感;场景疯狂转换，故事不流畅
+  observable:
+  - 'character维度: 主角毫无心理活动，只有眼神描写，不真实'
+  - 'highpoint维度: 事件太无聊，鸡毛蒜皮无危机感'
+  - 'pacing维度: 场景疯狂转换，故事不流畅'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 1800
+  - 1924
+  score: 32
+  score_raw: 30分左右吧32分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 民国高武卡牌流
+  genre_guess:
+  - 民国
+  - 高武
+  - 系统
+  overall_comment: 文笔尚可但代入感差，心理活动缺失，剧情琐碎转换快，需推翻重构思。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角毫无心理活动，只有眼神描写，不真实
+    raw_quote: '心理活动没有一句嘛
+
+      你要盘算啊
+
+      大哥没有心理活动
+
+      他只有眼里活动'
+  - dimension: highpoint
+    severity: negative
+    content: 事件太无聊，鸡毛蒜皮无危机感
+    raw_quote: '事件真的很无聊
+
+      说蓝天的一帮破皮无赖
+
+      互相伤害有啥意思
+
+      都是一些破事
+
+      金毛蒜皮这些破事'
+  - dimension: pacing
+    severity: negative
+    content: 场景疯狂转换，故事不流畅
+    raw_quote: '事件转换太多了
+
+      写事件转换不要一直转换
+
+      事件疯狂转换'

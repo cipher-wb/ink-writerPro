@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0565
+title: 天启绝不断更 (borderline / 59分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 历史
+  - 明朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 59分吧 | 文笔可以思路对，但书名差节奏慢，59分需要加速
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔可以思路对，但书名差节奏慢，59分需要加速 | 节奏太慢，信息量少;书名太垃圾影响期待
+  observable:
+  - 'pacing维度: 节奏太慢，信息量少'
+  - 'opening维度: 书名太垃圾影响期待'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 2137
+  - 2331
+  score: 59
+  score_raw: 59分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 天启绝不断更
+  genre_guess:
+  - 历史
+  - 明朝
+  overall_comment: 文笔可以思路对，但书名差节奏慢，59分需要加速
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 节奏太慢，信息量少
+    raw_quote: 节奏太慢了 这两张换完一张可能会好很多
+  - dimension: opening
+    severity: negative
+    content: 书名太垃圾影响期待
+    raw_quote: 我觉得这书名太垃圾了 影响你的正文

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1023
+title: 大明加进26年 (pass / 75分)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1SxzoBuEQA
+scope:
+  genre:
+  - 历史
+  - 明朝
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 大哥70多分 | 文笔扎实，会解释会蹭热点，切入新颖，直接建议签约提分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1SxzoBuEQA.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实，会解释会蹭热点，切入新颖，直接建议签约提分。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1SxzoBuEQA
+  source_line_range:
+  - 1341
+  - 1480
+  score: 75
+  score_raw: 大哥70多分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 大明加进26年
+  genre_guess:
+  - 历史
+  - 明朝
+  overall_comment: 文笔扎实，会解释会蹭热点，切入新颖，直接建议签约提分。
+  comments:
+  - dimension: ops
+    severity: positive
+    content: 像稍送其利一样一直给读者解释，让人看得舒服
+    raw_quote: 会写的历史就是一直给你解释
+  - dimension: opening
+    severity: positive
+    content: 从敬事房提名开局，避开朝堂堆砌
+    raw_quote: 他从敬事敬棒提名开局 这个介入就挺好的 比较新
+  - dimension: genre
+    severity: positive
+    content: 狂蹭严嵩张居正，卖点明确
+    raw_quote: 包括这蹭 张居正 严松 狂蹭

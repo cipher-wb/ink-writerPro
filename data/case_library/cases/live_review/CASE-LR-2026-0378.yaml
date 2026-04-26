@@ -1,0 +1,43 @@
+case_id: CASE-LR-2026-0378
+title: 格瑞丽投稿未知 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV19Wi6BREFk
+scope:
+  genre:
+  - 末世
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材不在起点接受范围，写作退步，疑似番茄蓝精灵风格。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV19Wi6BREFk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材不在起点接受范围，写作退步，疑似番茄蓝精灵风格。 | 题材不适合起点，属于自嗨型。
+  observable:
+  - 'genre维度: 题材不适合起点，属于自嗨型。'
+live_review_meta:
+  source_bvid: BV19Wi6BREFk
+  source_line_range:
+  - 45
+  - 65
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 格瑞丽投稿未知
+  genre_guess:
+  - 末世
+  overall_comment: 题材不在起点接受范围，写作退步，疑似番茄蓝精灵风格。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 题材不适合起点，属于自嗨型。
+    raw_quote: 这个题材我觉得真不在，我觉得大哥在退步。

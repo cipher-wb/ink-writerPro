@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0516
+title: 我用爆款挣碎这天 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1DNFgzfEnC
+scope:
+  genre:
+  - 玄幻
+  - 扑街写手
+  - 网文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 情绪好给大哥22分 | 情绪拉到极致但世界观完全崩了，读者代入不了这种写书装逼设定。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1DNFgzfEnC.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 情绪拉到极致但世界观完全崩了，读者代入不了这种写书装逼设定。 | 世界观设定出戏，读者无法接受扑街写手的排行榜装逼
+  observable:
+  - 'simplicity维度: 世界观设定出戏，读者无法接受扑街写手的排行榜装逼'
+live_review_meta:
+  source_bvid: BV1DNFgzfEnC
+  source_line_range:
+  - 521
+  - 570
+  score: 22
+  score_raw: 情绪好给大哥22分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我用爆款挣碎这天
+  genre_guess:
+  - 玄幻
+  - 扑街写手
+  - 网文
+  overall_comment: 情绪拉到极致但世界观完全崩了，读者代入不了这种写书装逼设定。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 世界观设定出戏，读者无法接受扑街写手的排行榜装逼
+    raw_quote: 这太出戏了，这完全自嗨了，发哪里都出戏
+  - dimension: highpoint
+    severity: positive
+    content: 情绪拉扯和爽点释放能力强，有蓝精灵天赋
+    raw_quote: 大哥我签我签还不行吗...这情绪也太足了吧
+  - dimension: genre
+    severity: neutral
+    content: 发蓝精灵必签，但起点需要更沉稳的现象写法
+    raw_quote: 你发蓝精灵蓝精灵必签了

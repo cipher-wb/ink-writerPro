@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1361
+title: 东京问题女高老师 (borderline / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 都市
+  - 校园
+  - 轻小说
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分吧 | 好题材，切入和设定不错，但比例不够，需加强驱动力和主线。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 好题材，切入和设定不错，但比例不够，需加强驱动力和主线。 | 比例不足，事件太日常，缺少赚钱或系统的主线驱动力;莫名其妙插入LOL戏份，偏离主线，浪费题材
+  observable:
+  - 'misc维度: 比例不足，事件太日常，缺少赚钱或系统的主线驱动力'
+  - 'misc维度: 莫名其妙插入LOL戏份，偏离主线，浪费题材'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1121
+  - 1180
+  score: 45
+  score_raw: 45分吧
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 东京问题女高老师
+  genre_guess:
+  - 都市
+  - 校园
+  - 轻小说
+  - 系统
+  overall_comment: 好题材，切入和设定不错，但比例不够，需加强驱动力和主线。
+  comments:
+  - dimension: misc
+    severity: positive
+    content: 题材极佳，有问题女高加系统标签，大有可为
+    raw_quote: 好题材这个好题材...没问题啊问题少女啊女高
+  - dimension: misc
+    severity: negative
+    content: 比例不足，事件太日常，缺少赚钱或系统的主线驱动力
+    raw_quote: 你要来个驱动力...不然太日常了
+  - dimension: misc
+    severity: negative
+    content: 莫名其妙插入LOL戏份，偏离主线，浪费题材
+    raw_quote: 为啥莫名其妙开始英雄联盟...写着干嘛

@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0757
+title: 医生熟练度系统 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 都市
+  - 医生
+  - 职业文
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 45分吧 | 职业文偏题写成推拿按摩，缺乏专业性和驱动力。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 职业文偏题写成推拿按摩，缺乏专业性和驱动力。 | 医生文写成挂羊头卖狗肉的技师文，读者会跑;第二章就陷入日常恋爱，缺少职业钩子
+  observable:
+  - 'genre维度: 医生文写成挂羊头卖狗肉的技师文，读者会跑'
+  - 'pacing维度: 第二章就陷入日常恋爱，缺少职业钩子'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1091
+  - 1160
+  score: 45
+  score_raw: 45分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 医生熟练度系统
+  genre_guess:
+  - 都市
+  - 医生
+  - 职业文
+  overall_comment: 职业文偏题写成推拿按摩，缺乏专业性和驱动力。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 医生文写成挂羊头卖狗肉的技师文，读者会跑
+    raw_quote: 你不能写的太像技师了……故意在雪白，他可能会走
+  - dimension: pacing
+    severity: negative
+    content: 第二章就陷入日常恋爱，缺少职业钩子
+    raw_quote: 这怎么变成日常谈恋爱了……没有资格去拉扯这些屁事了

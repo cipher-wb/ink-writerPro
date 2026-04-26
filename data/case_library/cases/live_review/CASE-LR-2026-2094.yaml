@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2094
+title: 大魔法时代的秘密 (fail / 15分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1vaBBBbEpY
+scope:
+  genre:
+  - 魔法
+  - 科幻
+  - 游戏竞技
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给大哥给15分抱歉 | 全篇充斥看不懂的竞技设定，完全脱离21世纪中国读者，自嗨程度极高。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1vaBBBbEpY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全篇充斥看不懂的竞技设定，完全脱离21世纪中国读者，自嗨程度极高。 | 开头一堆比赛术语，完全让人摸不着头脑;咬文嚼字式伪科幻，阅读门槛高到自绝于读者
+  observable:
+  - 'opening维度: 开头一堆比赛术语，完全让人摸不着头脑'
+  - 'simplicity维度: 咬文嚼字式伪科幻，阅读门槛高到自绝于读者'
+live_review_meta:
+  source_bvid: BV1vaBBBbEpY
+  source_line_range:
+  - 1550
+  - 1590
+  score: 15
+  score_raw: 只能给大哥给15分抱歉
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 大魔法时代的秘密
+  genre_guess:
+  - 魔法
+  - 科幻
+  - 游戏竞技
+  overall_comment: 全篇充斥看不懂的竞技设定，完全脱离21世纪中国读者，自嗨程度极高。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头一堆比赛术语，完全让人摸不着头脑
+    raw_quote: 根本不知道你在干嘛，根本不知道啊，已经不知道在干嘛了，全是设定……一句都不懂
+  - dimension: simplicity
+    severity: negative
+    content: 咬文嚼字式伪科幻，阅读门槛高到自绝于读者
+    raw_quote: 就是拉跨题材内容太自嗨，完全没看呀……你该去哪去哪去西天取经嘛

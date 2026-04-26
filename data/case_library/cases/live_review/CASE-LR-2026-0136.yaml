@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0136
+title: 堕真人2.0 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13rd4BvEok
+scope:
+  genre:
+  - 异能
+  - 都市
+  - 恋爱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有天赋 但乱来变成一也是30分吧 | 都市感不错但强行加异能世界观破坏节奏，乱来扣分。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13rd4BvEok.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 都市感不错但强行加异能世界观破坏节奏，乱来扣分。 | 乱加世界观和飞行三分钟等奇葩设定，过不了审;切入剁人场景看不懂，世界观交代混乱
+  observable:
+  - 'simplicity维度: 乱加世界观和飞行三分钟等奇葩设定，过不了审'
+  - 'opening维度: 切入剁人场景看不懂，世界观交代混乱'
+live_review_meta:
+  source_bvid: BV13rd4BvEok
+  source_line_range:
+  - 171
+  - 173
+  score: 30
+  score_raw: 有天赋 但乱来变成一也是30分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 堕真人2.0
+  genre_guess:
+  - 异能
+  - 都市
+  - 恋爱
+  overall_comment: 都市感不错但强行加异能世界观破坏节奏，乱来扣分。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 乱加世界观和飞行三分钟等奇葩设定，过不了审
+    raw_quote: 你这个我觉得不要搞这个东西 这个东西会被会很毒的 而且很毒 大哥过不了审
+  - dimension: opening
+    severity: negative
+    content: 切入剁人场景看不懂，世界观交代混乱
+    raw_quote: 没懂的感觉 看不懂了 已经早上没吃人花 后天我的头怎么不见了

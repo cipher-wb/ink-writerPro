@@ -1,0 +1,59 @@
+case_id: CASE-LR-2026-1659
+title: 诡异降临，我靠解剖复制万千序列 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1khD3BbEcU
+scope:
+  genre:
+  - 都市
+  - 诡异
+  - 序列
+  - 超凡
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多三十分有的啊 | 文笔流畅，但题材陈旧、主线无聊，驱动力老套。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1khD3BbEcU.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔流畅，但题材陈旧、主线无聊，驱动力老套。 | 诡异高五套路已是三年前写法，当前市场难出成绩;主线寻找妹妹太老套，缺乏新意
+  observable:
+  - 'genre维度: 诡异高五套路已是三年前写法，当前市场难出成绩'
+  - 'hook维度: 主线寻找妹妹太老套，缺乏新意'
+live_review_meta:
+  source_bvid: BV1khD3BbEcU
+  source_line_range:
+  - 405
+  - 500
+  score: 30
+  score_raw: 差不多三十分有的啊
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异降临，我靠解剖复制万千序列
+  genre_guess:
+  - 都市
+  - 诡异
+  - 序列
+  - 超凡
+  overall_comment: 文笔流畅，但题材陈旧、主线无聊，驱动力老套。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 诡异高五套路已是三年前写法，当前市场难出成绩
+    raw_quote: 这个大概相当于22年之前吧……现在真的写不了了
+  - dimension: hook
+    severity: negative
+    content: 主线寻找妹妹太老套，缺乏新意
+    raw_quote: 这个驱动力没意思了这个主线
+  - dimension: pacing
+    severity: positive
+    content: 讲故事流畅度可以
+    raw_quote: 但是讲故事还是流畅的 挺流畅的这个东西

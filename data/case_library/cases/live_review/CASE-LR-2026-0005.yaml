@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0005
+title: 神雕同人赵齐穿越 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV11YrABQEyZ
+scope:
+  genre:
+  - 武侠同人
+  - 穿越
+  - 神雕
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多三十三分吧 | 套路节奏尚可，但代入感极差，心理活动全无，人物干巴巴，急需补充主角内心反应和活灵活现的细节。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV11YrABQEyZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路节奏尚可，但代入感极差，心理活动全无，人物干巴巴，急需补充主角内心反应和活灵活现的细节。 | 穿越后见到原著人物毫无心理反应，像上帝视角干讲剧情;金手指和爽点写法没点清楚，需要明确期待感
+  observable:
+  - 'character维度: 穿越后见到原著人物毫无心理反应，像上帝视角干讲剧情'
+  - 'golden_finger维度: 金手指和爽点写法没点清楚，需要明确期待感'
+live_review_meta:
+  source_bvid: BV11YrABQEyZ
+  source_line_range:
+  - 569
+  - 696
+  score: 33
+  score_raw: 差不多三十三分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 神雕同人赵齐穿越
+  genre_guess:
+  - 武侠同人
+  - 穿越
+  - 神雕
+  overall_comment: 套路节奏尚可，但代入感极差，心理活动全无，人物干巴巴，急需补充主角内心反应和活灵活现的细节。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 穿越后见到原著人物毫无心理反应，像上帝视角干讲剧情
+    raw_quote: 你看又来了你没心理活动 你一个现代人穿越成了古代人 然后看到了这些小说里面的这些人物你没感觉
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指和爽点写法没点清楚，需要明确期待感
+    raw_quote: 金手指写清楚大肉感写好 然后就英雄大会你恒空出世

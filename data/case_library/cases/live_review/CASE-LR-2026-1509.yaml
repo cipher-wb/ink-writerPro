@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-1509
+title: 重生之议考 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1firJB9ETc
+scope:
+  genre:
+  - 重生
+  - 都市
+  - 高考
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 扣3分嘛 22分嘛 | 重生切入自杀桥段劝退，事件弱，未体现出高考亮点，但比例还行。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1firJB9ETc.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 重生切入自杀桥段劝退，事件弱，未体现出高考亮点，但比例还行。 | 开篇写主角跳楼自杀，严重毒点，读者无法代入;两章没有实质事件，节奏拖沓
+  observable:
+  - 'opening维度: 开篇写主角跳楼自杀，严重毒点，读者无法代入'
+  - 'pacing维度: 两章没有实质事件，节奏拖沓'
+live_review_meta:
+  source_bvid: BV1firJB9ETc
+  source_line_range:
+  - 161
+  - 260
+  score: 22
+  score_raw: 扣3分嘛 22分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 重生之议考
+  genre_guess:
+  - 重生
+  - 都市
+  - 高考
+  overall_comment: 重生切入自杀桥段劝退，事件弱，未体现出高考亮点，但比例还行。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇写主角跳楼自杀，严重毒点，读者无法代入
+    raw_quote: 大哥这是自杀呀 你们穿越了不能换你其他的 … 这种是毒点在起点
+  - dimension: misc
+    severity: neutral
+    content: 父亲黑色袜子等细节描写冗余
+    raw_quote: 你爸的黑色袜子 写着干嘛
+  - dimension: pacing
+    severity: negative
+    content: 两章没有实质事件，节奏拖沓
+    raw_quote: 没什么事件 没事件 两张都没事件

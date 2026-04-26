@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0574
+title: 家族修仙 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 仙侠
+  - 家族
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 给你40分 | 写法传统老派，但文笔扎实，生不逢时，40分鼓励
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法传统老派，但文笔扎实，生不逢时，40分鼓励 | 切入方式太老，打斗开场不适合新人
+  observable:
+  - 'opening维度: 切入方式太老，打斗开场不适合新人'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 3320
+  - 3389
+  score: 40
+  score_raw: 给你40分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 家族修仙
+  genre_guess:
+  - 仙侠
+  - 家族
+  overall_comment: 写法传统老派，但文笔扎实，生不逢时，40分鼓励
+  comments:
+  - dimension: genre
+    severity: neutral
+    content: 题材难写但包容鼓励创新
+    raw_quote: 主播是一个非常包容的人...写自己想写的东西
+  - dimension: opening
+    severity: negative
+    content: 切入方式太老，打斗开场不适合新人
+    raw_quote: 新人不要这样去拉真实感 不要写打架

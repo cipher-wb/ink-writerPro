@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-0206
+title: 偷遍人间为妹妹 (fail / 43分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV152vqBJEaD
+scope:
+  genre:
+  - 都市
+  - 异能
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 43有 | 题材老套，人设和情节与技师类作品雷同，缺乏新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV152vqBJEaD.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套，人设和情节与技师类作品雷同，缺乏新意。 | 开篇动机设定俗套，为了妹妹而行动的模式缺乏新意;题材和整体思路陈旧，属于过时新媒体总裁文流派
+  observable:
+  - 'hook维度: 开篇动机设定俗套，为了妹妹而行动的模式缺乏新意'
+  - 'genre维度: 题材和整体思路陈旧，属于过时新媒体总裁文流派'
+live_review_meta:
+  source_bvid: BV152vqBJEaD
+  source_line_range:
+  - 740
+  - 783
+  score: 43
+  score_raw: 43有
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 偷遍人间为妹妹
+  genre_guess:
+  - 都市
+  - 异能
+  overall_comment: 题材老套，人设和情节与技师类作品雷同，缺乏新意。
+  comments:
+  - dimension: hook
+    severity: negative
+    content: 开篇动机设定俗套，为了妹妹而行动的模式缺乏新意
+    raw_quote: 不是你跟计时没区别 ... 你这个就是太俗了
+  - dimension: genre
+    severity: negative
+    content: 题材和整体思路陈旧，属于过时新媒体总裁文流派
+    raw_quote: 我觉得就是 以前的新媒体 是吧 总裁 兵王 确实还是思路老了

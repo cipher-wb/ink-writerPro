@@ -1,0 +1,70 @@
+case_id: CASE-LR-2026-2241
+title: 外国战场克苏鲁 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1zufxBEEHv
+scope:
+  genre:
+  - 奇幻
+  - 战争
+  - 克苏鲁
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: '比例够的
+
+    他的选择造句还可以的
+
+    选择造句节奏都OK的 | 文笔节奏OK，但全篇外国人无代入感，开篇不知所云，需加中国人穿越设定。'
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1zufxBEEHv.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔节奏OK，但全篇外国人无代入感，开篇不知所云，需加中国人穿越设定。 | 开局全是外国人，无中国人视角，无代入感;缺乏主角心理活动和代入感
+  observable:
+  - 'opening维度: 开局全是外国人，无中国人视角，无代入感'
+  - 'character维度: 缺乏主角心理活动和代入感'
+live_review_meta:
+  source_bvid: BV1zufxBEEHv
+  source_line_range:
+  - 2302
+  - 2390
+  score: null
+  score_raw: '比例够的
+
+    他的选择造句还可以的
+
+    选择造句节奏都OK的'
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 外国战场克苏鲁
+  genre_guess:
+  - 奇幻
+  - 战争
+  - 克苏鲁
+  overall_comment: 文笔节奏OK，但全篇外国人无代入感，开篇不知所云，需加中国人穿越设定。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局全是外国人，无中国人视角，无代入感
+    raw_quote: '能不能写中国人啊
+
+      一上来
+
+      一上来
+
+      就一个外国人...怎么代入啊'
+  - dimension: character
+    severity: negative
+    content: 缺乏主角心理活动和代入感
+    raw_quote: '句心理活动都没有
+
+      也没有代入
+
+      我们看这说干啥'

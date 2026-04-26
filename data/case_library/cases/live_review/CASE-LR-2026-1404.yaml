@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1404
+title: 火影之祸害系统 (fail / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1ckX8BDE9T
+scope:
+  genre:
+  - 动漫同人
+  - 火影忍者
+  - 系统流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 可以给你到四十五 | 同人基础尚可但过度聊天盘算，主角存在感弱，建议精简对话。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ckX8BDE9T.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 同人基础尚可但过度聊天盘算，主角存在感弱，建议精简对话。 | 全程聊天盘算，主线推进缓慢;主角存在感弱，仿佛是蹭原著剧情
+  observable:
+  - 'pacing维度: 全程聊天盘算，主线推进缓慢'
+  - 'character维度: 主角存在感弱，仿佛是蹭原著剧情'
+live_review_meta:
+  source_bvid: BV1ckX8BDE9T
+  source_line_range:
+  - 1851
+  - 1950
+  score: 45
+  score_raw: 可以给你到四十五
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 火影之祸害系统
+  genre_guess:
+  - 动漫同人
+  - 火影忍者
+  - 系统流
+  overall_comment: 同人基础尚可但过度聊天盘算，主角存在感弱，建议精简对话。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 全程聊天盘算，主线推进缓慢
+    raw_quote: 全是狂聊嘛 聊分掉的 聊完就盘算
+  - dimension: character
+    severity: negative
+    content: 主角存在感弱，仿佛是蹭原著剧情
+    raw_quote: 主角从他来感觉就是感觉有点弱

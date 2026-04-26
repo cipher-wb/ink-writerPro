@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1970
+title: 冒险被忘录 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uAPHzvEJ8
+scope:
+  genre:
+  - 西幻
+  - 冒险
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 第一章设定堆砌，第二章小白，传统西幻写法无人看，测重点不对。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uAPHzvEJ8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 第一章设定堆砌，第二章小白，传统西幻写法无人看，测重点不对。 | 第一章静观写法，设定堆砌无代入;故事老一套，节奏和情节无新意
+  observable:
+  - 'opening维度: 第一章静观写法，设定堆砌无代入'
+  - 'simplicity维度: 故事老一套，节奏和情节无新意'
+live_review_meta:
+  source_bvid: BV1uAPHzvEJ8
+  source_line_range:
+  - 1051
+  - 1120
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 冒险被忘录
+  genre_guess:
+  - 西幻
+  - 冒险
+  overall_comment: 第一章设定堆砌，第二章小白，传统西幻写法无人看，测重点不对。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 第一章静观写法，设定堆砌无代入
+    raw_quote: 你这切入就已经把读者吓跑了…全是猪啊
+  - dimension: simplicity
+    severity: negative
+    content: 故事老一套，节奏和情节无新意
+    raw_quote: 还是老一套的虚幻差不多

@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1294
+title: 行星开拓：巨兽袭击 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 科幻
+  - 星际
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多就18分吧 | 设定生硬、代入感极差，开篇人物言行不符设定，整体故事性不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定生硬、代入感极差，开篇人物言行不符设定，整体故事性不足。 | 科幻设定与普通读者距离太远，缺乏认同感和阅读动力;角色行为不符合宇航员人设，显得智商低下
+  observable:
+  - 'genre维度: 科幻设定与普通读者距离太远，缺乏认同感和阅读动力'
+  - 'character维度: 角色行为不符合宇航员人设，显得智商低下'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 1680
+  - 1850
+  score: 18
+  score_raw: 差不多就18分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 行星开拓：巨兽袭击
+  genre_guess:
+  - 科幻
+  - 星际
+  overall_comment: 设定生硬、代入感极差，开篇人物言行不符设定，整体故事性不足。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 科幻设定与普通读者距离太远，缺乏认同感和阅读动力
+    raw_quote: 这些时间地点人物都跟地球人没关系 就不懂呀
+  - dimension: character
+    severity: negative
+    content: 角色行为不符合宇航员人设，显得智商低下
+    raw_quote: 这些不像科技人员呀 … 不可能这么智商低的呀

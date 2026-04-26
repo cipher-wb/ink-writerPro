@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0843
+title: 末日七天科幻 (fail / 28分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1MH6LBREwh
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 倒计时
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个28分吧 | 介绍太正能量，剧情无聊，代入感差，建议推翻换末日异能。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MH6LBREwh.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 介绍太正能量，剧情无聊，代入感差，建议推翻换末日异能。 | 主角无智商无盘算，人物互动产生的冲突没意思;题材判定为科幻但毫无看点，该类不可能起来
+  observable:
+  - 'character维度: 主角无智商无盘算，人物互动产生的冲突没意思'
+  - 'genre维度: 题材判定为科幻但毫无看点，该类不可能起来'
+live_review_meta:
+  source_bvid: BV1MH6LBREwh
+  source_line_range:
+  - 431
+  - 470
+  score: 28
+  score_raw: 有个28分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 末日七天科幻
+  genre_guess:
+  - 科幻
+  - 末日
+  - 倒计时
+  overall_comment: 介绍太正能量，剧情无聊，代入感差，建议推翻换末日异能。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角无智商无盘算，人物互动产生的冲突没意思
+    raw_quote: 这些人物互动产生的这些元素碰撞摩擦冲突矛盾没意思呀
+  - dimension: genre
+    severity: negative
+    content: 题材判定为科幻但毫无看点，该类不可能起来
+    raw_quote: 题材太拉垮了，你就末日吧

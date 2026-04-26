@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0531
+title: 冰彻寒心 (fail / 10分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 奇幻
+  - 异世界
+  - 设定流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他个10分钟 | 设定堆砌，无效描写过多，完全自嗨，停留在十五年前的写法。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定堆砌，无效描写过多，完全自嗨，停留在十五年前的写法。 | 纯卖设定，AR一秒取代，没人看;文笔无病呻吟，对网文理解停留在盘龙老爷爷之前
+  observable:
+  - 'genre维度: 纯卖设定，AR一秒取代，没人看'
+  - 'simplicity维度: 文笔无病呻吟，对网文理解停留在盘龙老爷爷之前'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 321
+  - 430
+  score: 10
+  score_raw: 只能给他个10分钟
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 冰彻寒心
+  genre_guess:
+  - 奇幻
+  - 异世界
+  - 设定流
+  overall_comment: 设定堆砌，无效描写过多，完全自嗨，停留在十五年前的写法。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 纯卖设定，AR一秒取代，没人看
+    raw_quote: 你这玩意是卖设定啊 然后这些无效的描写 … 设定类的确实没人看了
+  - dimension: simplicity
+    severity: negative
+    content: 文笔无病呻吟，对网文理解停留在盘龙老爷爷之前
+    raw_quote: 里面是无病呻吟 … 对网文的理解停留在15年前

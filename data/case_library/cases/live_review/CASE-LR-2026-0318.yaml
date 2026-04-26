@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0318
+title: 盗劫鬼仙 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV18HF8zSEiV
+scope:
+  genre:
+  - 仙侠
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 文笔犀利但思路太老套，开头假大空，缺乏代入感，强烈建议直接写穿越开头，少写大背景。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV18HF8zSEiV.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔犀利但思路太老套，开头假大空，缺乏代入感，强烈建议直接写穿越开头，少写大背景。 | 开头使用假大空的背景描写，缺乏接地气的事件和代入感，不适合放在开头。;写法太老，像很多年前的老派仙侠。;内容理解成本高，信息密度大且不易懂。
+  observable:
+  - 'opening维度: 开头使用假大空的背景描写，缺乏接地气的事件和代入感，不适合放在开头。'
+  - 'genre维度: 写法太老，像很多年前的老派仙侠。'
+  - 'simplicity维度: 内容理解成本高，信息密度大且不易懂。'
+live_review_meta:
+  source_bvid: BV18HF8zSEiV
+  source_line_range:
+  - 798
+  - 908
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 盗劫鬼仙
+  genre_guess:
+  - 仙侠
+  - 玄幻
+  overall_comment: 文笔犀利但思路太老套，开头假大空，缺乏代入感，强烈建议直接写穿越开头，少写大背景。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头使用假大空的背景描写，缺乏接地气的事件和代入感，不适合放在开头。
+    raw_quote: 开头太虚了...这些事件这些场景又大又空的...不如写个穿越，写个眼前的小事件
+  - dimension: genre
+    severity: negative
+    content: 写法太老，像很多年前的老派仙侠。
+    raw_quote: 文笔像一些老派的写法...但确实思路太老了...不是老白吧，就是老套
+  - dimension: simplicity
+    severity: negative
+    content: 内容理解成本高，信息密度大且不易懂。
+    raw_quote: 看不懂好吧...能不能写点接地气的东西...各种死结

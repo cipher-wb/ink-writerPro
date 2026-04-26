@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1994
+title: 我叫郑渊/末日变异 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1uNkHBmER5
+scope:
+  genre:
+  - 末日
+  - 变异
+  - 生存
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 题材是5年前的全球变异老套路，文笔还行但卖点太旧。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uNkHBmER5.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材是5年前的全球变异老套路，文笔还行但卖点太旧。 | 末日全球变异套路过时;新闻播报式开头读感老旧
+  observable:
+  - 'genre维度: 末日全球变异套路过时'
+  - 'opening维度: 新闻播报式开头读感老旧'
+live_review_meta:
+  source_bvid: BV1uNkHBmER5
+  source_line_range:
+  - 1751
+  - 1800
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 我叫郑渊/末日变异
+  genre_guess:
+  - 末日
+  - 变异
+  - 生存
+  overall_comment: 题材是5年前的全球变异老套路，文笔还行但卖点太旧。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 末日全球变异套路过时
+    raw_quote: 这就是5年前的写法了呀
+  - dimension: opening
+    severity: negative
+    content: 新闻播报式开头读感老旧
+    raw_quote: 新闻播报大家怎么怎么样这种记录就太老了

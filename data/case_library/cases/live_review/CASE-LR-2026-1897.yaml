@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1897
+title: 三生得道仙侠文青 (pass / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1sQqTBHEco
+scope:
+  genre:
+  - 仙侠
+  - 文青
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 有个三四十分的样子 | 文笔扎实可达精品水平，但需收文笔、丰富支线卖点。天赋很好但故事内核弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1sQqTBHEco.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实可达精品水平，但需收文笔、丰富支线卖点。天赋很好但故事内核弱。 | 故事内核弱，卖点太少，事件平淡;书名封面太文青，无点击欲望
+  observable:
+  - 'pacing维度: 故事内核弱，卖点太少，事件平淡'
+  - 'opening维度: 书名封面太文青，无点击欲望'
+live_review_meta:
+  source_bvid: BV1sQqTBHEco
+  source_line_range:
+  - 1931
+  - 2020
+  score: 40
+  score_raw: 有个三四十分的样子
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 三生得道仙侠文青
+  genre_guess:
+  - 仙侠
+  - 文青
+  overall_comment: 文笔扎实可达精品水平，但需收文笔、丰富支线卖点。天赋很好但故事内核弱。
+  comments:
+  - dimension: simplicity
+    severity: positive
+    content: 文笔功力扎实，遣词造句达精品水平
+    raw_quote: 你这个遣词造句真的很牛逼的... 至少都是精品以上的水平了
+  - dimension: pacing
+    severity: negative
+    content: 故事内核弱，卖点太少，事件平淡
+    raw_quote: 事件太弱了 太平淡了... 卖点太少了... 你要多支线
+  - dimension: opening
+    severity: negative
+    content: 书名封面太文青，无点击欲望
+    raw_quote: 书名别这样写了... 这样点都没得点 没人点进来

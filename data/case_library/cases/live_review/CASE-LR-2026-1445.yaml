@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1445
+title: 美利坚吸血鬼小姨 (borderline / 55分)
+status: pending
+severity: P1
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1e5QyBGEh9
+scope:
+  genre:
+  - 都市
+  - 美利坚
+  - 奇幻
+  - 百合
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 55分 | 铺垫还行但卖点单薄，仅吸血鬼反转不够，需要狼人或危机丰富
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1e5QyBGEh9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 铺垫还行但卖点单薄，仅吸血鬼反转不够，需要狼人或危机丰富 | 6000字只一个吸血鬼反转，看点太少
+  observable:
+  - 'highpoint维度: 6000字只一个吸血鬼反转，看点太少'
+live_review_meta:
+  source_bvid: BV1e5QyBGEh9
+  source_line_range:
+  - 1211
+  - 1310
+  score: 55
+  score_raw: 55分
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 美利坚吸血鬼小姨
+  genre_guess:
+  - 都市
+  - 美利坚
+  - 奇幻
+  - 百合
+  overall_comment: 铺垫还行但卖点单薄，仅吸血鬼反转不够，需要狼人或危机丰富
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 6000字只一个吸血鬼反转，看点太少
+    raw_quote: 6000字 三张啊 三张读者就看到一个吸血鬼反转了啊

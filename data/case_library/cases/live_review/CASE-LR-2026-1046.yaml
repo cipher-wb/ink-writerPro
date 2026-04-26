@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1046
+title: 高中自嗨梦境文 (fail / 16分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+tags:
+- live_review
+- bvid:BV1TXF9z2Eb3
+scope:
+  genre:
+  - 校园
+  - 梦境
+  - 中二
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多16分 | 全篇就是高中自嗨卖设定，完全没有故事性和读者视角
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1TXF9z2Eb3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 全篇就是高中自嗨卖设定，完全没有故事性和读者视角 | 完全是自说自话，没人会看这种梦境+新纪元描写
+  observable:
+  - 'simplicity维度: 完全是自说自话，没人会看这种梦境+新纪元描写'
+live_review_meta:
+  source_bvid: BV1TXF9z2Eb3
+  source_line_range:
+  - 1801
+  - 2000
+  score: 16
+  score_raw: 最多16分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 高中自嗨梦境文
+  genre_guess:
+  - 校园
+  - 梦境
+  - 中二
+  overall_comment: 全篇就是高中自嗨卖设定，完全没有故事性和读者视角
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 完全是自说自话，没人会看这种梦境+新纪元描写
+    raw_quote: 没人看呀 这些旧纪元新纪元这些场景谁关心啊

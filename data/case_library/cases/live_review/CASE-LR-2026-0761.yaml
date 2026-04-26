@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-0761
+title: 舰娘群星科幻 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1JyXEBSECo
+scope:
+  genre:
+  - 科幻
+  - 舰娘
+  - 宇宙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 30分左右吧 | 元素过多成毒点，设定占比九成事件为零，读者看一眼就全跑。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1JyXEBSECo.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 元素过多成毒点，设定占比九成事件为零，读者看一眼就全跑。 | 开篇全是设定词条介绍，毫无剧情推进;元素过多是堵点，读者会被复杂设定吓死
+  observable:
+  - 'simplicity维度: 开篇全是设定词条介绍，毫无剧情推进'
+  - 'genre维度: 元素过多是堵点，读者会被复杂设定吓死'
+live_review_meta:
+  source_bvid: BV1JyXEBSECo
+  source_line_range:
+  - 1351
+  - 1430
+  score: 30
+  score_raw: 30分左右吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 舰娘群星科幻
+  genre_guess:
+  - 科幻
+  - 舰娘
+  - 宇宙
+  overall_comment: 元素过多成毒点，设定占比九成事件为零，读者看一眼就全跑。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 开篇全是设定词条介绍，毫无剧情推进
+    raw_quote: 这设定占90%了……就没什么剧情，就这样呀
+  - dimension: genre
+    severity: negative
+    content: 元素过多是堵点，读者会被复杂设定吓死
+    raw_quote: 元素多不是卖点，元素多是堵点……读者会吓死的

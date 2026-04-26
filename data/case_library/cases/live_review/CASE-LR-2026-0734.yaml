@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0734
+title: 弼马温 (borderline / 45分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1Jqcaz3Ex9
+scope:
+  genre:
+  - 仙侠
+  - 西游
+  - 天庭
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四十多分 五十分感觉上不去 | 文笔比例尚可，但天庭编制类设定上限低受众小，风格需转向正经仙侠而非乐子向。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Jqcaz3Ex9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔比例尚可，但天庭编制类设定上限低受众小，风格需转向正经仙侠而非乐子向。 | 天庭编制题材上限低，受众狭窄
+  observable:
+  - 'genre维度: 天庭编制题材上限低，受众狭窄'
+live_review_meta:
+  source_bvid: BV1Jqcaz3Ex9
+  source_line_range:
+  - 1191
+  - 1250
+  score: 45
+  score_raw: 四十多分 五十分感觉上不去
+  score_signal: explicit_number
+  verdict: borderline
+  title_guess: 弼马温
+  genre_guess:
+  - 仙侠
+  - 西游
+  - 天庭
+  overall_comment: 文笔比例尚可，但天庭编制类设定上限低受众小，风格需转向正经仙侠而非乐子向。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 天庭编制题材上限低，受众狭窄
+    raw_quote: 你要是走正常的仙侠那你可以去执法 但是你走的是天庭编制这一套 那我就觉得上限很低
+  - dimension: simplicity
+    severity: neutral
+    content: 文笔比例尚可，但风格思路需调整
+    raw_quote: 其实比例还可以...目前这个风格是没机会的

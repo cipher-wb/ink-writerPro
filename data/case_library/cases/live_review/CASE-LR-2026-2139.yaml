@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2139
+title: 我在修仙界练就剑 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xYcPzgE7j
+scope:
+  genre:
+  - 修仙
+  - 剑修
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 就24分吧 | 写法老旧，还停留在十五年前，缺少主角视角和接地气事件。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xYcPzgE7j.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法老旧，还停留在十五年前，缺少主角视角和接地气事件。 | 开头写老头少女场景，不写主角，老套拖沓;整体故事停留在十五年前网文理解层次，不接地气
+  observable:
+  - 'opening维度: 开头写老头少女场景，不写主角，老套拖沓'
+  - 'simplicity维度: 整体故事停留在十五年前网文理解层次，不接地气'
+live_review_meta:
+  source_bvid: BV1xYcPzgE7j
+  source_line_range:
+  - 1101
+  - 1210
+  score: 24
+  score_raw: 就24分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在修仙界练就剑
+  genre_guess:
+  - 修仙
+  - 剑修
+  - 穿越
+  overall_comment: 写法老旧，还停留在十五年前，缺少主角视角和接地气事件。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头写老头少女场景，不写主角，老套拖沓
+    raw_quote: 写主角的是谁 穿越吧 能不能行啊 别写老头跟少女了对吧 老头不是主角 少女也不是主角 这有啥写的 没人看啊
+  - dimension: simplicity
+    severity: negative
+    content: 整体故事停留在十五年前网文理解层次，不接地气
+    raw_quote: 就是你对网络的理解停留在15年前 你要相信我的专业性

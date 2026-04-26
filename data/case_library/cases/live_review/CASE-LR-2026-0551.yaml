@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0551
+title: 我在修仙界搞AI (fail / 17分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Ek6PBrEjj
+scope:
+  genre:
+  - 修仙
+  - 科幻
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这稿子最多最多17分 | AI在仙侠中严重出戏，事件老套，各方面都不行，需要回炉重造。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Ek6PBrEjj.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: AI在仙侠中严重出戏，事件老套，各方面都不行，需要回炉重造。 | AI系统在修仙中是大毒点，出戏;故事讲不清楚，人设切入无技巧
+  observable:
+  - 'golden_finger维度: AI系统在修仙中是大毒点，出戏'
+  - 'character维度: 故事讲不清楚，人设切入无技巧'
+live_review_meta:
+  source_bvid: BV1Ek6PBrEjj
+  source_line_range:
+  - 2741
+  - 2820
+  score: 17
+  score_raw: 这稿子最多最多17分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 我在修仙界搞AI
+  genre_guess:
+  - 修仙
+  - 科幻
+  - 系统
+  overall_comment: AI在仙侠中严重出戏，事件老套，各方面都不行，需要回炉重造。
+  comments:
+  - dimension: golden_finger
+    severity: negative
+    content: AI系统在修仙中是大毒点，出戏
+    raw_quote: AR系统 … 这是大毒点 … 修仙玄幻跟AI这东西天生犯冲
+  - dimension: character
+    severity: negative
+    content: 故事讲不清楚，人设切入无技巧
+    raw_quote: 你连故事都讲不清楚 … 完全没看书

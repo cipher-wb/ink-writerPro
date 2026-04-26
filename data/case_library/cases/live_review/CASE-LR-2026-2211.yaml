@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2211
+title: 修仙从三体星系消失开始 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1yvFEz3E8W
+scope:
+  genre:
+  - 科幻
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 没得救 | 玄幻小说用科幻开局完全错误，分类混淆导致读者跑光，应推翻重写且一句话带过前世。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1yvFEz3E8W.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 玄幻小说用科幻开局完全错误，分类混淆导致读者跑光，应推翻重写且一句话带过前世。 | 玄幻书用科幻开局严重破坏读者代入感;开局大量科幻描写，完全脱离玄幻主线
+  observable:
+  - 'genre维度: 玄幻书用科幻开局严重破坏读者代入感'
+  - 'opening维度: 开局大量科幻描写，完全脱离玄幻主线'
+live_review_meta:
+  source_bvid: BV1yvFEz3E8W
+  source_line_range:
+  - 667
+  - 721
+  score: null
+  score_raw: 没得救
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 修仙从三体星系消失开始
+  genre_guess:
+  - 科幻
+  - 修仙
+  overall_comment: 玄幻小说用科幻开局完全错误，分类混淆导致读者跑光，应推翻重写且一句话带过前世。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 玄幻书用科幻开局严重破坏读者代入感
+    raw_quote: 玄幻读者 你写这个懂吧...三体星系这种太出戏了 这是玄幻仙侠分类了
+  - dimension: opening
+    severity: negative
+    content: 开局大量科幻描写，完全脱离玄幻主线
+    raw_quote: 读者已经跑完了呀...全跑完了...前面的东西一句话就带过了

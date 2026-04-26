@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-2045
+title: 王道玄疾投稿（武侠玄幻） (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1uiP6zREyk
+scope:
+  genre:
+  - 武侠
+  - 玄幻
+  - 古代
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 十八封吧…十八 | 很古老，设定多，代入感差，需要推翻重来。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1uiP6zREyk.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 很古老，设定多，代入感差，需要推翻重来。 | 开篇世界观设定堆砌，没主角代入;文风古老，网文理解停留在高中水平
+  observable:
+  - 'opening维度: 开篇世界观设定堆砌，没主角代入'
+  - 'simplicity维度: 文风古老，网文理解停留在高中水平'
+live_review_meta:
+  source_bvid: BV1uiP6zREyk
+  source_line_range:
+  - 2281
+  - 2400
+  score: 18
+  score_raw: 十八封吧…十八
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 王道玄疾投稿（武侠玄幻）
+  genre_guess:
+  - 武侠
+  - 玄幻
+  - 古代
+  overall_comment: 很古老，设定多，代入感差，需要推翻重来。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开篇世界观设定堆砌，没主角代入
+    raw_quote: 这是自嗨的东西 一看就是设定啊一大堆
+  - dimension: simplicity
+    severity: negative
+    content: 文风古老，网文理解停留在高中水平
+    raw_quote: 对网文的理解 还是我高中的水平

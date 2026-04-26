@@ -1,0 +1,58 @@
+case_id: CASE-LR-2026-1340
+title: 陈川奔世精仙神将 (fail / 22分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1aQcnzwEXJ
+scope:
+  genre:
+  - 仙侠
+  - 重生
+  - 洪荒
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 22分吧 | 设定古老，AI式写作感强，读者不会有耐心。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1aQcnzwEXJ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 设定古老，AI式写作感强，读者不会有耐心。 | 16年老套风格，现代市场不吃;用词华丽却空洞，像AI生成;开头毫无吸引力，全是设定
+  observable:
+  - 'genre维度: 16年老套风格，现代市场不吃'
+  - 'simplicity维度: 用词华丽却空洞，像AI生成'
+  - 'opening维度: 开头毫无吸引力，全是设定'
+live_review_meta:
+  source_bvid: BV1aQcnzwEXJ
+  source_line_range:
+  - 870
+  - 880
+  score: 22
+  score_raw: 22分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 陈川奔世精仙神将
+  genre_guess:
+  - 仙侠
+  - 重生
+  - 洪荒
+  overall_comment: 设定古老，AI式写作感强，读者不会有耐心。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 16年老套风格，现代市场不吃
+    raw_quote: 这玩意16年一现独立了看吐了
+  - dimension: simplicity
+    severity: negative
+    content: 用词华丽却空洞，像AI生成
+    raw_quote: 看到这些词语读者就说AI
+  - dimension: opening
+    severity: negative
+    content: 开头毫无吸引力，全是设定
+    raw_quote: 大哥能听劝吗 你能听劝不给你默契了

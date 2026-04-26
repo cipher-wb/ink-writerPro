@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1307
+title: 入学废物班 我的超能力是不死 (fail / 21分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 学院
+  - 异能
+  - 日漫
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 21分 | 题材老套，写法像十年前日漫，毫无市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 题材老套，写法像十年前日漫，毫无市场。 | 异能学院题材太旧，没人看;全是对话玩梗，没有实质剧情
+  observable:
+  - 'genre维度: 异能学院题材太旧，没人看'
+  - 'opening维度: 全是对话玩梗，没有实质剧情'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 651
+  - 720
+  score: 21
+  score_raw: 21分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 入学废物班 我的超能力是不死
+  genre_guess:
+  - 学院
+  - 异能
+  - 日漫
+  overall_comment: 题材老套，写法像十年前日漫，毫无市场。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 异能学院题材太旧，没人看
+    raw_quote: 题材太垃圾了这个
+  - dimension: opening
+    severity: negative
+    content: 全是对话玩梗，没有实质剧情
+    raw_quote: 就是一直玩梗对话

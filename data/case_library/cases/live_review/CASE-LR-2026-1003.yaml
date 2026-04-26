@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1003
+title: 唯心主义苍生修仙 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 仙侠
+  - 玄幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分吧 | 文笔扎实但套路极老，从盘古开天辟地写起，毫无新意。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔扎实但套路极老，从盘古开天辟地写起，毫无新意。 | 开头日常冗长，像20年前的传统文;套路老，主角为了苍生的设定遍地都是
+  observable:
+  - 'opening维度: 开头日常冗长，像20年前的传统文'
+  - 'hook维度: 套路老，主角为了苍生的设定遍地都是'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 1936
+  - 2043
+  score: 25
+  score_raw: 25分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 唯心主义苍生修仙
+  genre_guess:
+  - 仙侠
+  - 玄幻
+  overall_comment: 文笔扎实但套路极老，从盘古开天辟地写起，毫无新意。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头日常冗长，像20年前的传统文
+    raw_quote: 你怎么不从盘古开天辟地开始写
+  - dimension: hook
+    severity: negative
+    content: 套路老，主角为了苍生的设定遍地都是
+    raw_quote: 太老套了……人家这种主角遍地都是，不需要你来创新了

@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-0810
+title: 鬼异末日降临/异常应对局 (fail / 25分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1LsfrBWE4k
+scope:
+  genre:
+  - 科幻
+  - 末日
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 25分 | 开头炸裂但代入感差，像番茄思路，起点难签
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1LsfrBWE4k.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头炸裂但代入感差，像番茄思路，起点难签 | 开头代入感差，主角不真实
+  observable:
+  - 'opening维度: 开头代入感差，主角不真实'
+live_review_meta:
+  source_bvid: BV1LsfrBWE4k
+  source_line_range:
+  - 2860
+  - 2980
+  score: 25
+  score_raw: 25分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 鬼异末日降临/异常应对局
+  genre_guess:
+  - 科幻
+  - 末日
+  - 诡异
+  overall_comment: 开头炸裂但代入感差，像番茄思路，起点难签
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开头代入感差，主角不真实
+    raw_quote: 写的代入感 真的很差

@@ -1,0 +1,57 @@
+case_id: CASE-LR-2026-0867
+title: 红楼风月宝鉴 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1MQrBB4E4z
+scope:
+  genre:
+  - 红楼同人
+  - 历史
+  - 雪白
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 四五十分的样子吧 | 文笔和代入感有水平，但主线偏黄，强主线缺失，审核风险高，编辑不敢签。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1MQrBB4E4z.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔和代入感有水平，但主线偏黄，强主线缺失，审核风险高，编辑不敢签。 | 大量雪白描写，尺度可能过审风险极高;缺乏强主线和事业成长线，主要靠雪白撑
+  observable:
+  - 'taboo维度: 大量雪白描写，尺度可能过审风险极高'
+  - 'highpoint维度: 缺乏强主线和事业成长线，主要靠雪白撑'
+live_review_meta:
+  source_bvid: BV1MQrBB4E4z
+  source_line_range:
+  - 271
+  - 310
+  score: null
+  score_raw: 四五十分的样子吧
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 红楼风月宝鉴
+  genre_guess:
+  - 红楼同人
+  - 历史
+  - 雪白
+  overall_comment: 文笔和代入感有水平，但主线偏黄，强主线缺失，审核风险高，编辑不敢签。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 大量雪白描写，尺度可能过审风险极高
+    raw_quote: 过不了审 这玩意太过了 我不敢签啊 我签了又过不了审对吧
+  - dimension: opening
+    severity: positive
+    content: 代入感强，有一些小乐子
+    raw_quote: 文笔跟代入感还有点小乐子
+  - dimension: highpoint
+    severity: negative
+    content: 缺乏强主线和事业成长线，主要靠雪白撑
+    raw_quote: 主要就是雪白没涨雪吧 少个强主线

@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0597
+title: 诡异大秦之刘季 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1GFAbzoEUZ
+scope:
+  genre:
+  - 历史
+  - 诡异
+  - 大秦
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这个是稿子真给的帮手了 18分钟 18分 | 世界观乱融，娘化萧何等毒点巨大，自嗨文毫无市场。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1GFAbzoEUZ.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 世界观乱融，娘化萧何等毒点巨大，自嗨文毫无市场。 | 娘化历史人物萧何，严重毒点;世界观异类立不住，只能写漫剧剧本
+  observable:
+  - 'taboo维度: 娘化历史人物萧何，严重毒点'
+  - 'genre维度: 世界观异类立不住，只能写漫剧剧本'
+live_review_meta:
+  source_bvid: BV1GFAbzoEUZ
+  source_line_range:
+  - 1301
+  - 1450
+  score: 18
+  score_raw: 这个是稿子真给的帮手了 18分钟 18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异大秦之刘季
+  genre_guess:
+  - 历史
+  - 诡异
+  - 大秦
+  overall_comment: 世界观乱融，娘化萧何等毒点巨大，自嗨文毫无市场。
+  comments:
+  - dimension: taboo
+    severity: negative
+    content: 娘化历史人物萧何，严重毒点
+    raw_quote: 这是大毒点...你永远不知道把萧何变成女的是什么
+  - dimension: genre
+    severity: negative
+    content: 世界观异类立不住，只能写漫剧剧本
+    raw_quote: 这种世界观立不住...只发漫句剧本

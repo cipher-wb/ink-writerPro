@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0163
+title: 静湖岁月 (fail / 13分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13sPwzUEN3
+scope:
+  genre:
+  - 科幻
+  - 硬科幻
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 最多13次分 | 写法像AI，太硬核，读者完全看不懂，自嗨作品，建议直接放弃。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13sPwzUEN3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 写法像AI，太硬核，读者完全看不懂，自嗨作品，建议直接放弃。 | 根本看不懂，太专业;开头像AI生成，累赘劝退;没有主角，读者毫无代入
+  observable:
+  - 'simplicity维度: 根本看不懂，太专业'
+  - 'opening维度: 开头像AI生成，累赘劝退'
+  - 'character维度: 没有主角，读者毫无代入'
+live_review_meta:
+  source_bvid: BV13sPwzUEN3
+  source_line_range:
+  - 738
+  - 969
+  score: 13
+  score_raw: 最多13次分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 静湖岁月
+  genre_guess:
+  - 科幻
+  - 硬科幻
+  overall_comment: 写法像AI，太硬核，读者完全看不懂，自嗨作品，建议直接放弃。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 根本看不懂，太专业
+    raw_quote: 看不懂 這看不懂 太硬了
+  - dimension: opening
+    severity: negative
+    content: 开头像AI生成，累赘劝退
+    raw_quote: 你這麼寫讀這一上去你覺得你是AI
+  - dimension: character
+    severity: negative
+    content: 没有主角，读者毫无代入
+    raw_quote: 誰是主角啊

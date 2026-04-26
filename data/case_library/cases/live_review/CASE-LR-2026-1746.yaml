@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1746
+title: 三国风浪之旋 (fail / 40分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1orXABiEU8
+scope:
+  genre:
+  - 历史
+  - 三国
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 其实有40分了 | 三国题材写作难度大，文笔偏白，建议发蓝精灵试试。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1orXABiEU8.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 三国题材写作难度大，文笔偏白，建议发蓝精灵试试。 | 写作偏白，沉浸感不足，人物脸谱化。;系统名字和设定毒点较多。
+  observable:
+  - 'simplicity维度: 写作偏白，沉浸感不足，人物脸谱化。'
+  - 'golden_finger维度: 系统名字和设定毒点较多。'
+live_review_meta:
+  source_bvid: BV1orXABiEU8
+  source_line_range:
+  - 1275
+  - 1360
+  score: 40
+  score_raw: 其实有40分了
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 三国风浪之旋
+  genre_guess:
+  - 历史
+  - 三国
+  - 穿越
+  overall_comment: 三国题材写作难度大，文笔偏白，建议发蓝精灵试试。
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 写作偏白，沉浸感不足，人物脸谱化。
+    raw_quote: 写的比较白...沉浸感不够
+  - dimension: golden_finger
+    severity: negative
+    content: 系统名字和设定毒点较多。
+    raw_quote: 进守者太垃圾了 汉朝守护系统

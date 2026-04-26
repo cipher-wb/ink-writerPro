@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0104
+title: 公主那兽人祭司不对劲 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 西幻
+  - 穿越
+  - 兽人
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 确实暂时吃不了这碗饭 | 不会写代入感，穿越不写心理活动，读者全跑完。东一榔头西一棒槌不会讲故事。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 不会写代入感，穿越不写心理活动，读者全跑完。东一榔头西一棒槌不会讲故事。 | 穿越了不写代入感，读者找不到看点直接跑;主角名字严肃让人出戏，缺乏代入感
+  observable:
+  - 'opening维度: 穿越了不写代入感，读者找不到看点直接跑'
+  - 'character维度: 主角名字严肃让人出戏，缺乏代入感'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 941
+  - 1010
+  score: null
+  score_raw: 确实暂时吃不了这碗饭
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 公主那兽人祭司不对劲
+  genre_guess:
+  - 西幻
+  - 穿越
+  - 兽人
+  overall_comment: 不会写代入感，穿越不写心理活动，读者全跑完。东一榔头西一棒槌不会讲故事。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 穿越了不写代入感，读者找不到看点直接跑
+    raw_quote: 就是明明是穿越了，就是不写...读者就先跑完
+  - dimension: character
+    severity: negative
+    content: 主角名字严肃让人出戏，缺乏代入感
+    raw_quote: 西幻你叫严肃...你能不能别别就是不要玩这种啊

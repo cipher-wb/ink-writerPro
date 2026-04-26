@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-2173
+title: 兰西（主角名） (fail / 19分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 都市
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: sorry 19分满 | 切入点太慢，事件无聊，像在写作文，前三章几乎都是水文。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入点太慢，事件无聊，像在写作文，前三章几乎都是水文。 | 切入太慢，第一章基本是水文，事件也无聊;穿越写得像哲学，节奏拖沓
+  observable:
+  - 'opening维度: 切入太慢，第一章基本是水文，事件也无聊'
+  - 'pacing维度: 穿越写得像哲学，节奏拖沓'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 495
+  - 521
+  score: 19
+  score_raw: sorry 19分满
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 兰西（主角名）
+  genre_guess:
+  - 都市
+  - 穿越
+  overall_comment: 切入点太慢，事件无聊，像在写作文，前三章几乎都是水文。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 切入太慢，第一章基本是水文，事件也无聊
+    raw_quote: 切入点太慢了 前两章几乎就是风非常低的 第三章才进入主题
+  - dimension: pacing
+    severity: negative
+    content: 穿越写得像哲学，节奏拖沓
+    raw_quote: 这个穿越的写得跟哲学似的 … 好慢好无聊

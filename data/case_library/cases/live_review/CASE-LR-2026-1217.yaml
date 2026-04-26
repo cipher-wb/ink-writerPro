@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1217
+title: 穿越宗门大比夺舍 (fail / 48分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1YgBZBLEUN
+scope:
+  genre:
+  - 仙侠
+  - 穿越
+  - 夺舍
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 是不是有个48分 | 切入快但随后全是设定，持续纠结穿越方式，对读者极不友好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1YgBZBLEUN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 切入快但随后全是设定，持续纠结穿越方式，对读者极不友好。 | 不断解释穿越和夺舍，严重拖慢节奏;开篇场景描写过于详细像导游
+  observable:
+  - 'pacing维度: 不断解释穿越和夺舍，严重拖慢节奏'
+  - 'opening维度: 开篇场景描写过于详细像导游'
+live_review_meta:
+  source_bvid: BV1YgBZBLEUN
+  source_line_range:
+  - 755
+  - 792
+  score: 48
+  score_raw: 是不是有个48分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越宗门大比夺舍
+  genre_guess:
+  - 仙侠
+  - 穿越
+  - 夺舍
+  overall_comment: 切入快但随后全是设定，持续纠结穿越方式，对读者极不友好。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 不断解释穿越和夺舍，严重拖慢节奏
+    raw_quote: 不要老在纠结这些东西了呀…4000字了还在扯
+  - dimension: opening
+    severity: negative
+    content: 开篇场景描写过于详细像导游
+    raw_quote: 又不是导游你要去张家界玩吗

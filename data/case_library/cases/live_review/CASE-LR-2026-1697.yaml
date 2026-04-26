@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1697
+title: 诡异世界驱魔真君 (fail / 24分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 灵异
+  - 民俗
+  - 系统
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 二十四四分还是稍微高一点 | 故事流畅但事件和系统设置无趣，氛围感和配角塑造薄弱。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 故事流畅但事件和系统设置无趣，氛围感和配角塑造薄弱。 | 冥婚、钟馗等事件无趣，缺乏氛围感和精彩反转。;系统抽卡等设定出戏，不符合民俗氛围。
+  observable:
+  - 'highpoint维度: 冥婚、钟馗等事件无趣，缺乏氛围感和精彩反转。'
+  - 'golden_finger维度: 系统抽卡等设定出戏，不符合民俗氛围。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 956
+  - 1003
+  score: 24
+  score_raw: 二十四四分还是稍微高一点
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 诡异世界驱魔真君
+  genre_guess:
+  - 灵异
+  - 民俗
+  - 系统
+  - 穿越
+  overall_comment: 故事流畅但事件和系统设置无趣，氛围感和配角塑造薄弱。
+  comments:
+  - dimension: highpoint
+    severity: negative
+    content: 冥婚、钟馗等事件无趣，缺乏氛围感和精彩反转。
+    raw_quote: 事件没意思呀，金属值也没意思
+  - dimension: golden_finger
+    severity: negative
+    content: 系统抽卡等设定出戏，不符合民俗氛围。
+    raw_quote: 系统等级CABCDEFG...不要出来这种东西啊

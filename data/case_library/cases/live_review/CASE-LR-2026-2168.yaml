@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-2168
+title: 血路深皮肤虫下（疑似书名） (fail / 50分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1xwB3BNEMN
+scope:
+  genre:
+  - 玄幻
+  - 穿越
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 能给你给到50分 | 套路熟但剧情不吸引人，开头没爆点，恶性循环难出成绩。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1xwB3BNEMN.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 套路熟但剧情不吸引人，开头没爆点，恶性循环难出成绩。 | 前两三章无爆点反转，开头不吸量;剧情讲得不流畅，缺乏吸引力
+  observable:
+  - 'opening维度: 前两三章无爆点反转，开头不吸量'
+  - 'misc维度: 剧情讲得不流畅，缺乏吸引力'
+live_review_meta:
+  source_bvid: BV1xwB3BNEMN
+  source_line_range:
+  - 158
+  - 194
+  score: 50
+  score_raw: 能给你给到50分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 血路深皮肤虫下（疑似书名）
+  genre_guess:
+  - 玄幻
+  - 穿越
+  overall_comment: 套路熟但剧情不吸引人，开头没爆点，恶性循环难出成绩。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 前两三章无爆点反转，开头不吸量
+    raw_quote: 这前两三章真没什么好的爆点 或者好的反转
+  - dimension: misc
+    severity: negative
+    content: 剧情讲得不流畅，缺乏吸引力
+    raw_quote: 但就是故事讲的不流畅

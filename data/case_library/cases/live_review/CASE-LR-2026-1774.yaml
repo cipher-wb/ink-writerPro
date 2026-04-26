@@ -1,0 +1,47 @@
+case_id: CASE-LR-2026-1774
+title: 三国同人投稿 (fail)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEpd
+scope:
+  genre:
+  - 历史
+  - 同人
+  - 三国
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开篇即触发严重问题，直接判定无法签约，强行签约反而害人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEpd.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开篇即触发严重问题，直接判定无法签约，强行签约反而害人。 | 整体质量极差，签约等于害对方
+  observable:
+  - 'misc维度: 整体质量极差，签约等于害对方'
+live_review_meta:
+  source_bvid: BV1p2w5zNEpd
+  source_line_range:
+  - 1
+  - 7
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: sign_phrase
+  verdict: fail
+  title_guess: 三国同人投稿
+  genre_guess:
+  - 历史
+  - 同人
+  - 三国
+  overall_comment: 开篇即触发严重问题，直接判定无法签约，强行签约反而害人。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 整体质量极差，签约等于害对方
+    raw_quote: 就是签了就是害你

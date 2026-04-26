@@ -1,0 +1,50 @@
+case_id: CASE-LR-2026-1002
+title: 全是屁股的农场 (fail / 13分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1StPVzLEsY
+scope:
+  genre:
+  - 轻小说
+  - 意识流
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能13分说出口 | 意识流屁股文学，无法分类，不是正常书。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1StPVzLEsY.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 意识流屁股文学，无法分类，不是正常书。 | 无法分类，意识流;卖点不知道，全是屁股
+  observable:
+  - 'genre维度: 无法分类，意识流'
+  - 'hook维度: 卖点不知道，全是屁股'
+live_review_meta:
+  source_bvid: BV1StPVzLEsY
+  source_line_range:
+  - 1853
+  - 1935
+  score: 13
+  score_raw: 只能13分说出口
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 全是屁股的农场
+  genre_guess:
+  - 轻小说
+  - 意识流
+  overall_comment: 意识流屁股文学，无法分类，不是正常书。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 无法分类，意识流
+    raw_quote: 这就不是一个正常的书……这就不是一个什么分类
+  - dimension: hook
+    severity: negative
+    content: 卖点不知道，全是屁股
+    raw_quote: 这全是屁股聊天记录……不知道慢点是啥

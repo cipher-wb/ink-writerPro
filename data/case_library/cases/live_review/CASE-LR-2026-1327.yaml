@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1327
+title: 雪族西幻 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1Zm6QBkEYy
+scope:
+  genre:
+  - 西幻
+  - 血族
+  - 清小说
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 开头是设定说明书，原创世界观无人看，第二张才稍好。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1Zm6QBkEYy.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头是设定说明书，原创世界观无人看，第二张才稍好。 | 拼命自创世界观，没人关心;第一张视角在女配身上，代入感差
+  observable:
+  - 'genre维度: 拼命自创世界观，没人关心'
+  - 'opening维度: 第一张视角在女配身上，代入感差'
+live_review_meta:
+  source_bvid: BV1Zm6QBkEYy
+  source_line_range:
+  - 1991
+  - 2050
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 雪族西幻
+  genre_guess:
+  - 西幻
+  - 血族
+  - 清小说
+  overall_comment: 开头是设定说明书，原创世界观无人看，第二张才稍好。
+  comments:
+  - dimension: genre
+    severity: negative
+    content: 拼命自创世界观，没人关心
+    raw_quote: 全都在冒充JK罗琳 没人看啊
+  - dimension: opening
+    severity: negative
+    content: 第一张视角在女配身上，代入感差
+    raw_quote: 第一张没有代入感 大家懂了吗

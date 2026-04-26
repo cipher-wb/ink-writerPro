@@ -1,0 +1,55 @@
+case_id: CASE-LR-2026-1570
+title: 修仙界资本重组斩杀线 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1gLiaBFEn1
+scope:
+  genre:
+  - 修仙
+  - 资本
+  - 系统
+  - 经营
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 未明确说出分数 | 高难度题材驾驭不住，故事能力弱，设定多。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1gLiaBFEn1.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 高难度题材驾驭不住，故事能力弱，设定多。 | 故事能力不足，无法兼顾读者吸引力和设定表达;开头就铺设定，读者根本不会看
+  observable:
+  - 'pacing维度: 故事能力不足，无法兼顾读者吸引力和设定表达'
+  - 'golden_finger维度: 开头就铺设定，读者根本不会看'
+live_review_meta:
+  source_bvid: BV1gLiaBFEn1
+  source_line_range:
+  - 1401
+  - 1500
+  score: null
+  score_raw: 未明确说出分数
+  score_signal: unknown
+  verdict: unknown
+  title_guess: 修仙界资本重组斩杀线
+  genre_guess:
+  - 修仙
+  - 资本
+  - 系统
+  - 经营
+  overall_comment: 高难度题材驾驭不住，故事能力弱，设定多。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 故事能力不足，无法兼顾读者吸引力和设定表达
+    raw_quote: 他不能在兼顾读者吸引力的同时，把他的想法表达出来
+  - dimension: golden_finger
+    severity: negative
+    content: 开头就铺设定，读者根本不会看
+    raw_quote: 一上来已经养猪了呀，大哥你开头就讲设定了

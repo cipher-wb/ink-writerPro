@@ -1,0 +1,49 @@
+case_id: CASE-LR-2026-0473
+title: 民俗之馆 (pass)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1CcB8BmEj3
+scope:
+  genre:
+  - 灵异
+  - 民俗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 到这可以签没问题 | 市井气息写得好，小剧场不错，到阳台那段可以签约。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1CcB8BmEj3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 市井气息写得好，小剧场不错，到阳台那段可以签约。
+  observable:
+  - 整体被星河直播判定为 pass
+live_review_meta:
+  source_bvid: BV1CcB8BmEj3
+  source_line_range:
+  - 185
+  - 210
+  score: null
+  score_raw: 到这可以签没问题
+  score_signal: sign_phrase
+  verdict: pass
+  title_guess: 民俗之馆
+  genre_guess:
+  - 灵异
+  - 民俗
+  overall_comment: 市井气息写得好，小剧场不错，到阳台那段可以签约。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 小剧场很有市井气，羊肉汤那一段写得不错
+    raw_quote: 小剧场我觉得是 就给他们喝汤嘛 羊肉羊杂可好吃对不对...然后这两个还行 就是市井气还是有的
+  - dimension: misc
+    severity: positive
+    content: 内容达到签约标准
+    raw_quote: 对到这可签没问题

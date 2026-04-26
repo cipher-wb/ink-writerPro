@@ -1,0 +1,56 @@
+case_id: CASE-LR-2026-0913
+title: 没钱谈什么恋爱 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PnQLB1E2h
+scope:
+  genre:
+  - 都市重生
+  - 同学聚会
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 35分吧 | 节奏太慢，废话太多，重生文核心爽感缺失，但叙事有一定代入感。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PnQLB1E2h.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏太慢，废话太多，重生文核心爽感缺失，但叙事有一定代入感。 | 重生过程太慢，5000字还在说废话;开头引入全是无意义日常，缺乏重点;角色感悟对读者无冲击力
+  observable:
+  - 'pacing维度: 重生过程太慢，5000字还在说废话'
+  - 'opening维度: 开头引入全是无意义日常，缺乏重点'
+  - 'character维度: 角色感悟对读者无冲击力'
+live_review_meta:
+  source_bvid: BV1PnQLB1E2h
+  source_line_range:
+  - 220
+  - 280
+  score: 35
+  score_raw: 35分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 没钱谈什么恋爱
+  genre_guess:
+  - 都市重生
+  - 同学聚会
+  overall_comment: 节奏太慢，废话太多，重生文核心爽感缺失，但叙事有一定代入感。
+  comments:
+  - dimension: pacing
+    severity: negative
+    content: 重生过程太慢，5000字还在说废话
+    raw_quote: 太慢了 兄弟你现在最大问题是慢
+  - dimension: opening
+    severity: negative
+    content: 开头引入全是无意义日常，缺乏重点
+    raw_quote: 还在废话 大哥你都你怎么能废话成这样了 5000字了 还在废话
+  - dimension: character
+    severity: negative
+    content: 角色感悟对读者无冲击力
+    raw_quote: 你得出的人生经验及结论 对于读者毫无冲击力

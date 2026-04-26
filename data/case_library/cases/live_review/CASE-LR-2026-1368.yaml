@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1368
+title: 仙子魂穿红殿 (fail / 31分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ayr4BaEv9
+scope:
+  genre:
+  - 仙侠
+  - 乐子
+  - 系统
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 31分吧 | 有乐子天赋但方向太颠，欠缺真实接地点，建议换成沉稳风。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ayr4BaEv9.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 有乐子天赋但方向太颠，欠缺真实接地点，建议换成沉稳风。 | 仙子只剩魂魄没了肉体，失去了作为“仙子”的核心吸引力;整体感觉很癫，夹杂文青调，风格不伦不类
+  observable:
+  - 'misc维度: 仙子只剩魂魄没了肉体，失去了作为“仙子”的核心吸引力'
+  - 'misc维度: 整体感觉很癫，夹杂文青调，风格不伦不类'
+live_review_meta:
+  source_bvid: BV1ayr4BaEv9
+  source_line_range:
+  - 1571
+  - 1620
+  score: 31
+  score_raw: 31分吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 仙子魂穿红殿
+  genre_guess:
+  - 仙侠
+  - 乐子
+  - 系统
+  overall_comment: 有乐子天赋但方向太颠，欠缺真实接地点，建议换成沉稳风。
+  comments:
+  - dimension: misc
+    severity: negative
+    content: 仙子只剩魂魄没了肉体，失去了作为“仙子”的核心吸引力
+    raw_quote: 仙子吸引人的在于肉体...红魄有啥意思呢
+  - dimension: misc
+    severity: negative
+    content: 整体感觉很癫，夹杂文青调，风格不伦不类
+    raw_quote: 好颠你这个...有点文青...很不接地气

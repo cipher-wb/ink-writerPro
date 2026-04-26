@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1084
+title: 穿越算卦天机不可泄露 (fail / 18分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1V5SXBtEir
+scope:
+  genre:
+  - 仙侠
+  - 日常
+  - 轻松
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 只能给他给到18分 | 缺乏主线，人物互动无聊，卖关子烂梗，完全没爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1V5SXBtEir.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 缺乏主线，人物互动无聊，卖关子烂梗，完全没爽点。 | 天机不可泄露的卖关子人设令人厌烦;没有代入感，场景对话空洞
+  observable:
+  - 'character维度: 天机不可泄露的卖关子人设令人厌烦'
+  - 'opening维度: 没有代入感，场景对话空洞'
+live_review_meta:
+  source_bvid: BV1V5SXBtEir
+  source_line_range:
+  - 1491
+  - 1540
+  score: 18
+  score_raw: 只能给他给到18分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 穿越算卦天机不可泄露
+  genre_guess:
+  - 仙侠
+  - 日常
+  - 轻松
+  overall_comment: 缺乏主线，人物互动无聊，卖关子烂梗，完全没爽点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 天机不可泄露的卖关子人设令人厌烦
+    raw_quote: 你天机不可泄露这种人就该打死
+  - dimension: opening
+    severity: negative
+    content: 没有代入感，场景对话空洞
+    raw_quote: 你先写代入感兄弟永远记住新人先最重要的是代入感

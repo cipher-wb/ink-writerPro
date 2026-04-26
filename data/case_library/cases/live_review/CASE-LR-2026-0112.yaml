@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-0112
+title: 杯仙/先需将彻 (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV13Zf9BJEA2
+scope:
+  genre:
+  - 灵异
+  - 民俗
+  - 诡异
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 节奏很快，氛围思路挺好的 | 节奏快氛围好，思路脑洞挺大。但心理活动少，一直在挖坑缺少期待感和爽点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV13Zf9BJEA2.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 节奏快氛围好，思路脑洞挺大。但心理活动少，一直在挖坑缺少期待感和爽点。 | 心理活动少，一直在故弄玄虚挖坑
+  observable:
+  - 'character维度: 心理活动少，一直在故弄玄虚挖坑'
+live_review_meta:
+  source_bvid: BV13Zf9BJEA2
+  source_line_range:
+  - 1681
+  - 1780
+  score: null
+  score_raw: 节奏很快，氛围思路挺好的
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 杯仙/先需将彻
+  genre_guess:
+  - 灵异
+  - 民俗
+  - 诡异
+  overall_comment: 节奏快氛围好，思路脑洞挺大。但心理活动少，一直在挖坑缺少期待感和爽点。
+  comments:
+  - dimension: pacing
+    severity: positive
+    content: 第一章节奏挺快的，正好卡到这里
+    raw_quote: 第一章节奏挺快的，正好卡到这里
+  - dimension: character
+    severity: negative
+    content: 心理活动少，一直在故弄玄虚挖坑
+    raw_quote: 但是心理活动少的话，再加上写的故弄玄虚，读者不一定爱看

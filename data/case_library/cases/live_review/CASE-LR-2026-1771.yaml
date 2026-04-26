@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1771
+title: 怪异修仙（十岁少主） (unknown)
+status: pending
+severity: P3
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1p2w5zNEoB
+scope:
+  genre:
+  - 修仙
+  - 诡异
+  - 黑暗
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 三百分（疑口误） | 文笔不错，氛围塑造有潜力，但主角年龄太小、题材一般，缺乏金手指亮点。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1p2w5zNEoB.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔不错，氛围塑造有潜力，但主角年龄太小、题材一般，缺乏金手指亮点。 | 10岁主角在仙侠文中很难展开;金手指不明确，缺乏期待感
+  observable:
+  - 'character维度: 10岁主角在仙侠文中很难展开'
+  - 'golden_finger维度: 金手指不明确，缺乏期待感'
+live_review_meta:
+  source_bvid: BV1p2w5zNEoB
+  source_line_range:
+  - 1640
+  - 1700
+  score: null
+  score_raw: 三百分（疑口误）
+  score_signal: fuzzy
+  verdict: unknown
+  title_guess: 怪异修仙（十岁少主）
+  genre_guess:
+  - 修仙
+  - 诡异
+  - 黑暗
+  overall_comment: 文笔不错，氛围塑造有潜力，但主角年龄太小、题材一般，缺乏金手指亮点。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 10岁主角在仙侠文中很难展开
+    raw_quote: 十岁怎么写……最大问题就是14 boss
+  - dimension: golden_finger
+    severity: negative
+    content: 金手指不明确，缺乏期待感
+    raw_quote: 我没感觉大概有什么金手指的期待感

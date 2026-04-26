@@ -1,0 +1,53 @@
+case_id: CASE-LR-2026-1688
+title: 硬科幻戴森球 (fail / 23分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1mMqFBqEZ3
+scope:
+  genre:
+  - 科幻
+  - 硬科幻
+  - 未来世界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 这大概就23分嘛 | 文笔尚可但完全缺乏代入感，开局堆砌看不懂的设定，不把读者当人。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1mMqFBqEZ3.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 文笔尚可但完全缺乏代入感，开局堆砌看不懂的设定，不把读者当人。 | 开局缺乏代入感，信息过载，读者无法理解。;硬科幻写法无人问津，缺乏网红思维。
+  observable:
+  - 'opening维度: 开局缺乏代入感，信息过载，读者无法理解。'
+  - 'simplicity维度: 硬科幻写法无人问津，缺乏网红思维。'
+live_review_meta:
+  source_bvid: BV1mMqFBqEZ3
+  source_line_range:
+  - 445
+  - 490
+  score: 23
+  score_raw: 这大概就23分嘛
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 硬科幻戴森球
+  genre_guess:
+  - 科幻
+  - 硬科幻
+  - 未来世界
+  overall_comment: 文笔尚可但完全缺乏代入感，开局堆砌看不懂的设定，不把读者当人。
+  comments:
+  - dimension: opening
+    severity: negative
+    content: 开局缺乏代入感，信息过载，读者无法理解。
+    raw_quote: 一句代入感都不写...跟我21世纪的都市有啥关系呢
+  - dimension: simplicity
+    severity: negative
+    content: 硬科幻写法无人问津，缺乏网红思维。
+    raw_quote: 纯粹就是你这种发出去的恶心读者的对吧

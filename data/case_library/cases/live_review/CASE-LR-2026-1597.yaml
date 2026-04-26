@@ -1,0 +1,52 @@
+case_id: CASE-LR-2026-1597
+title: 兰斯异世界裸奔之旅 (fail / 33分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1jfFwzDEXM
+scope:
+  genre:
+  - 轻小说
+  - 搞笑
+  - 异世界
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 33分事件 | 无厘头脑洞但文笔小白，人设劝退，读者只会猎奇一瞥，不可能追读付费。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1jfFwzDEXM.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 无厘头脑洞但文笔小白，人设劝退，读者只会猎奇一瞥，不可能追读付费。 | 主角和系统对白极其幼稚，立不住人设;整体梗概太低俗，无任何付费价值
+  observable:
+  - 'character维度: 主角和系统对白极其幼稚，立不住人设'
+  - 'misc维度: 整体梗概太低俗，无任何付费价值'
+live_review_meta:
+  source_bvid: BV1jfFwzDEXM
+  source_line_range:
+  - 541
+  - 575
+  score: 33
+  score_raw: 33分事件
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 兰斯异世界裸奔之旅
+  genre_guess:
+  - 轻小说
+  - 搞笑
+  - 异世界
+  overall_comment: 无厘头脑洞但文笔小白，人设劝退，读者只会猎奇一瞥，不可能追读付费。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 主角和系统对白极其幼稚，立不住人设
+    raw_quote: 这好小白 … 经典的小笨蛋啊 … 你就是个笨蛋 … 这整个思路就太洋气了
+  - dimension: misc
+    severity: negative
+    content: 整体梗概太低俗，无任何付费价值
+    raw_quote: 我真觉得没意义 … 读者根本就不可能为你这玩意付费的 … 只能蓝精灵当一个乐子了

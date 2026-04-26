@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-1297
+title: 十年牢狱末日归途 (fail / 35分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- upstream
+tags:
+- live_review
+- bvid:BV1ZgD6BvEEK
+scope:
+  genre:
+  - 末世
+  - 重生
+  - 监狱
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多35分 | 监狱生存思路尚可，但主角人设难代入，缺少女性角色缓和，情感驱动力不足。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1ZgD6BvEEK.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 监狱生存思路尚可，但主角人设难代入，缺少女性角色缓和，情感驱动力不足。 | 开篇监狱霸凌情节过多，主角十年牢犯身份缺乏共情
+  observable:
+  - 'character维度: 开篇监狱霸凌情节过多，主角十年牢犯身份缺乏共情'
+live_review_meta:
+  source_bvid: BV1ZgD6BvEEK
+  source_line_range:
+  - 2240
+  - 2410
+  score: 35
+  score_raw: 差不多35分
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 十年牢狱末日归途
+  genre_guess:
+  - 末世
+  - 重生
+  - 监狱
+  overall_comment: 监狱生存思路尚可，但主角人设难代入，缺少女性角色缓和，情感驱动力不足。
+  comments:
+  - dimension: character
+    severity: negative
+    content: 开篇监狱霸凌情节过多，主角十年牢犯身份缺乏共情
+    raw_quote: 蹲了10年牢 谁能代入到一个10年牢的劳改犯里面
+  - dimension: golden_finger
+    severity: neutral
+    content: 重生提前布局末日的思路较泛，缺少独特金手指支撑
+    raw_quote: 其实就是就是来了唉 我觉得这个人设不好代入 主要是早料到末日的爆发延后了10年

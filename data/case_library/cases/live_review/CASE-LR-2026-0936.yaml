@@ -1,0 +1,71 @@
+case_id: CASE-LR-2026-0936
+title: 夫人请助我修行 (pass / 63分)
+status: pending
+severity: P2
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1PrwWz8E6r
+scope:
+  genre:
+  - 古代
+  - 系统
+  - 修炼
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 63分 | 开头切入好，有一定天赋，但文笔太白、细节粗糙，签约后需打磨。
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1PrwWz8E6r.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 开头切入好，有一定天赋，但文笔太白、细节粗糙，签约后需打磨。 | 主角盘算收获弱，没有收获感;文笔太白，写得太装，容易劝退;遣词造句萌新，细节粗糙
+  observable:
+  - 'opening维度: 主角盘算收获弱，没有收获感'
+  - 'simplicity维度: 文笔太白，写得太装，容易劝退'
+  - 'simplicity维度: 遣词造句萌新，细节粗糙'
+  - 'simplicity维度: 细节需要打磨'
+live_review_meta:
+  source_bvid: BV1PrwWz8E6r
+  source_line_range:
+  - 1
+  - 171
+  score: 63
+  score_raw: 63分
+  score_signal: explicit_number
+  verdict: pass
+  title_guess: 夫人请助我修行
+  genre_guess:
+  - 古代
+  - 系统
+  - 修炼
+  overall_comment: 开头切入好，有一定天赋，但文笔太白、细节粗糙，签约后需打磨。
+  comments:
+  - dimension: opening
+    severity: positive
+    content: 第一章雪白切入很好
+    raw_quote: 第一张雪白切入很好
+  - dimension: opening
+    severity: negative
+    content: 主角盘算收获弱，没有收获感
+    raw_quote: 主角的盘算收获比较弱是吧
+  - dimension: simplicity
+    severity: negative
+    content: 文笔太白，写得太装，容易劝退
+    raw_quote: 但写的好白啊
+  - dimension: simplicity
+    severity: negative
+    content: 遣词造句萌新，细节粗糙
+    raw_quote: 浅词造句还是萌新
+  - dimension: simplicity
+    severity: negative
+    content: 细节需要打磨
+    raw_quote: 你的细节还是挺粗糙的
+  - dimension: misc
+    severity: positive
+    content: 作者有天赋，值得培养
+    raw_quote: 其实我觉得天赋还是不错的

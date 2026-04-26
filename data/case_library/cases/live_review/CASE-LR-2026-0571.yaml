@@ -1,0 +1,51 @@
+case_id: CASE-LR-2026-0571
+title: 原始修仙 (fail / 30分)
+status: pending
+severity: P0
+domain: live_review
+layer:
+- downstream
+- upstream
+tags:
+- live_review
+- bvid:BV1F6k8BdEzm
+scope:
+  genre:
+  - 原始社会
+  - 修仙
+  chapter:
+  - all_chapters
+source:
+  type: editor_review
+  raw_text: 差不多28分吧...30分能到吧 | 描写太小白，节奏慢，代入感差，30分
+  ingested_at: '2026-04-26'
+  ingested_from: data/live-review/extracted/BV1F6k8BdEzm.jsonl
+  reviewer: deepseek-v4-pro
+failure_pattern:
+  description: 描写太小白，节奏慢，代入感差，30分 | 每个人说话必有动作，描写太小白;事件进展慢，开头冗长
+  observable:
+  - 'simplicity维度: 每个人说话必有动作，描写太小白'
+  - 'pacing维度: 事件进展慢，开头冗长'
+live_review_meta:
+  source_bvid: BV1F6k8BdEzm
+  source_line_range:
+  - 3027
+  - 3130
+  score: 30
+  score_raw: 差不多28分吧...30分能到吧
+  score_signal: explicit_number
+  verdict: fail
+  title_guess: 原始修仙
+  genre_guess:
+  - 原始社会
+  - 修仙
+  overall_comment: 描写太小白，节奏慢，代入感差，30分
+  comments:
+  - dimension: simplicity
+    severity: negative
+    content: 每个人说话必有动作，描写太小白
+    raw_quote: 你每个人都要对吧 都要有个动作才能说话
+  - dimension: pacing
+    severity: negative
+    content: 事件进展慢，开头冗长
+    raw_quote: 事件本身进展慢...代入感太慢了
