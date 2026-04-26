@@ -12,6 +12,18 @@
 2. **分类/规则抽取需要 API Key**：步骤 03_classify 和 05_extract_rules 依赖 ANTHROPIC_API_KEY 环境变量，本机 `.zshrc` 默认 unset 了它
 3. **agent 规格文件统一目录**：所有 agent 规格均在 `ink-writer/agents/`（US-402 已消除双目录）
 
+## Live-Review 模块（新增 v26.x）
+
+基于 174 份起点编辑星河 B 站直播录像字幕稿构建的**作品病例 / 题材接受度信号 / 新原子规则候选**三类产物，分别接入 ink-writer 的 init / write / review 三阶段。与 `editor-wisdom` **并列共存不替换**：editor-wisdom 抽抽象规则，live-review 抽具体反例 + 含分数。
+
+详细文档：[docs/live-review-integration.md](docs/live-review-integration.md)
+
+### Top 3 注意事项
+
+1. **首次接入需跑 §M-1..§M-9**：ralph 跑完 14 条 US 不会自动跑切分 / 聚合 / 索引，必须按 `docs/live-review-integration.md` §M-1..§M-9 顺序手动触发（§M-3 跑 174 份耗时 1-3 小时，§M-7 人工审核 1-2 小时）
+2. **case_id prefix 是 `CASE-LR-2026-`**：底层复用 `case_library._id_alloc.allocate_case_id`，counter file 自动隔离 (`.id_alloc_case_lr_2026.cnt`)；不要新写 ID 分配器
+3. **新规则永远走人工审核闸**：`extract_rule_candidates.py` 抽出的候选 `approved` 字段初始 `null`；只有 `review_rule_candidates.py` 标 `approved=true` 后 `promote_approved_rules.py` 才写入 `data/editor-wisdom/rules.json`（带 `source: live_review`）
+
 ## Windows 兼容守则（feat/windows-compat 起生效）
 
 面向 Claude Code 场景新增的 Windows 兼容层；Mac/Linux 行为与原先**字节级一致**（`.sh` 全部保留不动，所有 Windows 特化代码走 `if sys.platform == "win32":` 分支）。新代码提交前请自检：

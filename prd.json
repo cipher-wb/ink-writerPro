@@ -265,8 +265,8 @@
         "ruff check scripts/live-review/check_links.py tests/live_review/test_docs.py 无新增错误"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "docs/live-review-integration.md 9 章节齐备（模块定位/架构 mermaid/数据流/主题域/添加新数据/调阈值/§M-1..§M-9 用户手动操作清单/FAQ/Smoke test 段）；CLAUDE.md 在编辑智慧模块段后追加 'Live-Review 模块（新增 v26.x）' 段含 Top 3 注意事项；scripts/live-review/check_links.py 提供 check_links(md_path, repo_root) → list[str] API + CLI（http(s)/mailto/anchor-only 跳过 + 同级目录 / repo root 双候选解析 + 行号失败定位）；test_docs.py 13 用例（4 显式 AC + 9 章节哨兵 parametrize）。129 passed in 04:06 整套 live_review 回归 + 380 passed case_library/editor_wisdom 无回归。"
     }
   ]
 }

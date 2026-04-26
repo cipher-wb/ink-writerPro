@@ -596,3 +596,35 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **`# noqa: BLE001` 用法**：smoke_test 三个 step 函数都用 `except Exception as e: ... return StepResult("FAIL", ...)`——故意吞所有异常存到 detail 字段，给报告诊断用。ruff BLE001 默认禁止 broad except，加 `# noqa: BLE001 — surface ... in report` 行级注释 + 注明意图即可。后续所有"先写报告，最后由 main 决定退出码"的脚本沿用此 fail-soft 模式。
 - **`from datetime import UTC, datetime` 是 Py 3.11+ 的标准写法**：`datetime.now(tz=UTC)` 替代 `datetime.utcnow()`（后者在 3.14 deprecated）。smoke_test.py 报告时间戳沿用此写法与 editor-wisdom/smoke_test.py 一致。
 ---
+
+## 2026-04-26 14:35 CST - US-014 用户文档 docs/live-review-integration.md + CLAUDE.md 段 + 内部链接检查
+
+**实现内容：**
+- 新建 `docs/live-review-integration.md`（9 章节齐备）：模块定位 + 与 editor-wisdom 7 维度对照表 / 架构 mermaid（5 子图：源数据 / PipelineA 切分 / PipelineB 三类产物 / 人工闸 / 三阶段接入）/ 数据流（7 步串讲）/ 主题域（11 域 + layer 推导映射）/ 如何添加新数据（5 步）/ 如何调阈值（config/live-review.yaml 8 字段调优指南）/ § 用户手动操作清单（§M-1..§M-9 完整拷自 spec §12，含命令/费用/时长/产物）/ FAQ（9 条）/ Smoke test 段。
+- 新建 `scripts/live-review/check_links.py`：暴露 `check_links(md_path, repo_root) -> list[str]` API + `python3 scripts/live-review/check_links.py <md>` CLI；正则 `(?<!\!)\[([^\]]+)\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)` 跳过图片语法 + 双候选解析（md 同级目录 + repo root 绝对样式）+ 跳过 http(s)/mailto/tel/ftp/anchor-only + 行号失败定位。Windows stdio bootstrap + `_REPO_ROOT = parents[2]` 锚定，与其他 scripts/live-review/*.py 同款。
+- 修改 `CLAUDE.md`：在 `## 编辑智慧模块` 段后追加 `## Live-Review 模块（新增 v26.x）` 段，含模块定位 + 文档链接 + Top 3 注意事项（首次接入需跑 §M-1..§M-9 / case_id prefix 是 CASE-LR-2026- / 新规则永远走人工审核闸）。
+- 新建 `tests/live_review/test_docs.py`：4 显式 AC（doc_exists / mermaid_blocks_valid_syntax / internal_links_resolvable / claude_md_mentions_live_review）+ 9 章节哨兵 parametrize（防 doc 主体被回滚）。`importlib.util.spec_from_file_location` 加载带连字符目录的 check_links.py。
+
+**Files changed:**
+- A docs/live-review-integration.md
+- A scripts/live-review/check_links.py
+- M CLAUDE.md
+- A tests/live_review/test_docs.py
+- M prd.json (US-014 passes: false → true)
+- M progress.txt
+
+**验证：**
+- `python3 scripts/live-review/check_links.py docs/live-review-integration.md` → exit 0 + "OK: all internal links reachable"。
+- `python3 -m pytest tests/live_review/test_docs.py --no-cov -q` → 13 passed in 0.01s。
+- `python3 -m pytest tests/live_review/ --no-cov -q` → 129 passed in 04:06（US-013 的 116 增 13；test_docs.py 13 用例）。
+- `python3 -m pytest tests/case_library tests/editor_wisdom --no-cov -q` → 380 passed in 56s（无回归）。
+- `ruff check scripts/live-review/check_links.py tests/live_review/test_docs.py` → All checks passed（修了 1 个 SIM103：`return bool(...)` 替代 if/return）。
+
+**Learnings for future iterations:**
+- **importlib.util 加载带连字符目录的 Python 模块**：`scripts/live-review/foo.py` 不能 `from scripts.live-review.foo import ...`（连字符在模块名非法）。其它 test 文件用 `subprocess.run([sys.executable, str(_SCRIPT)])` 走子进程；要在测试内 *直接调用函数* 必须用 `importlib.util.spec_from_file_location("alias", str(path))` + `module_from_spec` + `loader.exec_module(module)`。`sys.modules.setdefault` 防止重复加载导致引用比对失败。这套 boilerplate 后续凡是"既要 CLI 又要被测试 import"的脚本都能复用。
+- **markdown 链接正则的图片排除**：`![alt](src)` 与 `[text](url)` 共享 `[](...)` 结构；用 `(?<!\!)` lookbehind 排除前置 `!` 才能避开图片。否则文档里的截图/封面会被误判为不可达内部链接。`.png/.svg` 等图片确实可能不在 repo（远程 CDN），强行检查会噪音爆表。
+- **mermaid 块的 bracket 平衡校验**：`re.findall(r"\`\`\`mermaid\n(.*?)\`\`\`", text, re.DOTALL)` 提块 + `block.count("[") == block.count("]")` 是简易语法 sanity——不需要装 mermaid CLI 就能挡住"打字漏 ]" 这类常见错。后续所有 doc-with-mermaid 章节用此 1-行回归保护即可。
+- **doc 章节哨兵 parametrize**：用 `@pytest.mark.parametrize("section", [...])` + 简单 `assert section in text` 防止 doc 主体被未来 PR 误删；比写一个长 assert chain 更易看哪一节缺失。9 节起点是 PRD 显式列举的最小集，新增章节直接 append parametrize list。
+- **CLAUDE.md 追加新模块段的标准位置**：紧贴 `## 编辑智慧模块` 段末（在 `## Windows 兼容守则` 之前）插入新 `## <模块名>` 段；与 editor-wisdom 段同款 `### Top 3 注意事项` 三条目结构对齐，避免 CLAUDE.md 被裁剪到 200 行截断（当前 ~36 行，安全）。后续新增模块（如 reader-simulator-strict-gate）沿用同款。
+- **check_links 双候选解析模式**：相对链接 `[text](path)` 既可能是"md 同级目录的 path"也可能是"repo root 起点的 path"（如 `docs/foo.md` 从任意层级 md 都该可达）。`_resolve_candidates` 返回 2 个候选 `(md_dir / path).resolve()` + `(repo_root / path.lstrip("/")).resolve()`，任一存在即放行。比单一模式更宽容、贴合人写 doc 的随意性。
+---
