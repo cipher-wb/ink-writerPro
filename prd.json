@@ -211,8 +211,8 @@
         "ruff check ink_writer/live_review/_vector_index.py ink_writer/live_review/genre_retrieval.py ink_writer/live_review/init_injection.py scripts/live-review/build_vector_index.py 无新增错误"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "vector index 写盘格式 index.faiss + meta.jsonl（plan 字面 plus 推断的 jsonl 追加列）；retrieve_similar_cases 走 process-level cache (按 index_dir str 缓存) 避免每次 ink-init 重载 bge 模型。check_genre 多分隔符切分（+,，、/ 空白）兼容 '都市+重生' / '都市,重生'。warning_level 决策按 init_genre_warning_threshold（默认 60）+ score_mean 浮点比较；no_data 当任一候选都不在 genre_acceptance.genres 内时触发。inject_into.init=false 与 enabled=false 都早退到 _disabled_response（warning_level='ok' + similar_cases=[] + render_text=''）。SKILL.md 在 Step 99 后整段追加 Step 99.5（含 PowerShell sibling block + 三分支 warning_level 表 + 关闭开关说明 + 索引前置提示）。tests 新增 16 (genre_retrieval 5 + init_injection 7 + skill_step_99_5 4)；regression 491 passed（US-010 的 475 增 16）。"
     },
     {
       "id": "US-012",

@@ -31,6 +31,9 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - bge-small-zh-v1.5 中文 cosine 体感：相同语义但措辞不同的中文规则文本，cosine 通常 0.75-0.85；想稳过 0.85 需保留核心字面词（"AI生成"/"高潮情节"/"多个版本"等关键 token）。fixture 凡涉及触发 dup_with 的相似度阈值，先用 `from sentence_transformers import SentenceTransformer` 30s 实测验证 — 不要凭直觉。模型加载 30s 是硬约束，pytest 必须 `@pytest.fixture(scope="module")` + `tmp_path_factory` 共享脚本调用结果给所有非异常用例。
 - LLM-coupled 脚本三段式 fail-loud 顺序：`parse JSON` → `validate fields enum/length` → `cosine/heavy compute`（bge 仅在前 2 关全过后才调）。错误路径测试体感 ~1s 即返回 exit 1，不浪费 30s 模型加载。test 用 `--mock-llm <path>` 注入"故意非 JSON / 故意缺字段"的 fixture 验证 fail-loud 路径。
 - mock fixture 字段分层：LLM 只能给"LLM-generated 字段"（如 rule/why/category/severity/applies_to），其余字段（id/source_files/dup_with/approved/source_bvids 等）由脚本统一注入或计算。fixture 越精简，测试断言"字段来自脚本注入路径"才能成立；如果 mock 已包含全字段，则脚本注入逻辑无法被验证。
+- live-review 向量索引落盘格式 `index.faiss + meta.jsonl`（与 editor-wisdom 的 `rules.faiss + metadata.json` 不同）：jsonl 一行一 record 便于增量扩库（追加病例只需 append + 重建 faiss）；统一通过 `ink_writer.live_review._vector_index.load_index` API 隔离差异。下游 retriever 调用走 `genre_retrieval._INDEX_CACHE` process-level dict 缓存（key=resolved index_dir str），避免每次 ink-init 重载 bge ~30s；测试钩子 `clear_index_cache()` 隔离不同 tmp_path 索引。
+- 调用点 master switch 早退模式：`cfg = load_config(config_path); if not cfg.enabled or not cfg.inject_into.<stage>: return _disabled_response()`。`_disabled_response` 返回保持类型一致（dict 字段齐备但内容空：`warning_level='ok' / similar_cases=[] / render_text=''`），调用方无须额外分支判断。后续 ink-review Step 3.6 / smoke_test 注入点沿用此模板。
+- SKILL.md 内嵌 ink-writer Python 调用块：每个 Step 段落 macOS/Linux + PowerShell sibling 双块；测试用 `assert "Step X.Y" in text` + `assert "<api_name>" in text` + `assert "inject_into" in text` 三层 grep 防止段落被回滚，不 assert 详细 markdown 结构（否则微调即破坏 test）。后续 ink-review Step 3.6 / 其他 SKILL.md 注入沿用同款。
 
 ---
 
@@ -402,4 +405,78 @@ Started: 2026年 4月26日 星期日 11时24分11秒 CST
 - **fail-loud schema 校验放在 LLM 输出后立即跑（不要等 cosine 算完）**：bge 加载 30s — 如果先调 cosine 再校验 LLM 输出，fail-loud 路径会浪费 30s。脚本顺序 `_parse_llm_output` → `_validate_candidate_fields` → `_compute_dup_with`（bge 仅在前 2 关全过后才调）。test_fail_loud_on_missing_required_field 仅 ~1s 即可返回 exit 1 — 测试体感证明此顺序正确。
 - **inline 扩展 schema 替代独立 schema 文件的取舍**：候选阶段的 schema 仅在 US-009 测试与 US-010 promote 阶段被引用，建独立 `schemas/live_review_rule_candidates.schema.json` 反而引入未明文要求的资产。我把扩展 schema 写在 test 顶部 `CANDIDATE_SCHEMA` dict — US-010 若需要复用直接 import 测试模块或重新 inline。如果未来 US-013 / US-014 也要校验候选，再考虑提升为独立 schema 文件。
 - **`source_files` 字段在候选阶段就给 promote-ready 形态**：候选每条 `source_files = [f"live_review_bvid:{b}" for b in sorted(bvids)]` 直接给 US-010 promote 时的预期格式（plan §1649 字面 `source_files: ["live_review_bvid:BV12yBoBAEEn", ...]`）。promote 不需要再转换 source_files，只需剥除 dup_with/approved/source_bvids/id 改 EW-NNNN 即可。这是上游设计为下游消费让步的范例。
+---
+
+## 2026-04-26 19:00 CST - US-010 规则候选审核 CLI + 提交工具（人工闸）
+
+**实现内容：**
+- 新建 `scripts/live-review/review_rule_candidates.py`：交互式 CLI 逐条 y/n/s/q + 立即写盘 + resume 跳过 approved!=null。
+- 新建 `scripts/live-review/promote_approved_rules.py`：仅写入 approved=true 的项；max-EW-id+1 分配新 ID；字段重排到标准顺序（id/category/rule/why/severity/applies_to/source_files/source）；现有规则字节级保持不变；严格用 schemas/editor-rules.schema.json 校验失败抛错不动文件。
+- 修改 `schemas/editor-rules.schema.json`：增 optional `source` 字段（enum [editor_wisdom, live_review]）。
+- 新建 fixtures：`sample_rule_candidates.json`（5 条候选 / 前 2 dup_with EW-0001/0002）/ `sample_rules_for_promote.json`（80 条干净 EW-0001..0080）。
+- 新建 `tests/live_review/test_review_rule_candidates.py`（4 用例）+ `tests/live_review/test_promote_approved_rules.py`（7 用例）。
+
+**Files changed:**
+- A scripts/live-review/review_rule_candidates.py
+- A scripts/live-review/promote_approved_rules.py
+- M schemas/editor-rules.schema.json
+- A tests/live_review/fixtures/sample_rule_candidates.json
+- A tests/live_review/fixtures/sample_rules_for_promote.json
+- A tests/live_review/test_review_rule_candidates.py
+- A tests/live_review/test_promote_approved_rules.py
+
+**验证：**
+- `python3 -m pytest tests/live_review/test_review_rule_candidates.py tests/live_review/test_promote_approved_rules.py --no-cov -q` → 11 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 475 passed。
+- `ruff check scripts/live-review/review_rule_candidates.py scripts/live-review/promote_approved_rules.py tests/live_review/test_review_rule_candidates.py tests/live_review/test_promote_approved_rules.py` → All checks passed。
+
+---
+
+## 2026-04-26 19:30 CST - US-011 题材语义检索 + ink-init Step 99.5 D+B 接入
+
+**实现内容：**
+- 新建 `ink_writer/live_review/_vector_index.py`：
+  - `build_index(cases_dir, out_dir)` 扫 CASE-LR-*.yaml → 用 BAAI/bge-small-zh-v1.5 编码 `embedding_text = title_guess + " " + " ".join(genre_guess) + " " + overall_comment` → 写 `index.faiss` (IndexFlatIP) + `meta.jsonl`（每行含 case_id/title_guess/genre_guess/overall_comment/verdict/score/source_bvid/embedding_text）。
+  - `load_index(index_dir)` 读 faiss + meta.jsonl + 加载 SentenceTransformer，缺文件抛 FileNotFoundError 并提示重建命令。
+  - `search(index_data, query, top_k)` 编码 query → IndexFlatIP.search → 注入 cosine_sim 字段返回 list[dict]。
+- 新建 `ink_writer/live_review/genre_retrieval.py`：
+  - `retrieve_similar_cases(query, top_k=3, *, index_dir=None)` 复用 process-level cache `_INDEX_CACHE` 避免 ink-init 多次调用重载 bge 模型；默认 index_dir = `data/live-review/vector_index`。
+- 新建 `ink_writer/live_review/init_injection.py`：
+  - `check_genre(user_genre_input, *, top_k=3, config_path=None, genre_stats_path=None, index_dir=None) -> dict`：
+    - master switch：`enabled=false` 或 `inject_into.init=false` 早退 `_disabled_response`（warning_level='ok' + similar_cases=[] + render_text=''）。
+    - genre 切分：`_GENRE_SPLIT_RE = [+,，、/\s]+` 兼容 '都市+重生' / '都市,重生' / '都市 重生'。
+    - warning_level 决策：未匹配任一候选 → 'no_data'；匹配且 score_mean < init_genre_warning_threshold（默认 60）→ 'warn'；其他 → 'ok'。
+    - similar_cases 通过 retrieve_similar_cases() 取 top_k；render_text 含 '📚 星河直播相似案例 (174 份直播 × 10+ 本/份)' / '🎯 该题材统计' / '💡 写作建议' 三段。
+    - suggested_actions 按 warning_level 分支：warn → 重点审查 top-3 negative dimension；no_data → 提示参考 top-K 案例；ok → 沿用 overall_comment 经验。
+- 新建 `scripts/live-review/build_vector_index.py`：argparse `--cases-dir`（默认 `data/case_library/cases/live_review`）/ `--out-dir`（默认 `data/live-review/vector_index`）；自举 sys.path + windows stdio + 调 `build_index` 写入。
+- 修改 `ink-writer/skills/ink-init/SKILL.md`：在 Step 99 后整段追加 'Step 99.5：星河直播题材审查（live-review）'，含输入说明 / macOS+Windows 调用块 / warning_level 三分支表 / 关闭开关说明（`inject_into.init: false` + 全局 `enabled: false`）/ 索引前置提示（首次跑 build_vector_index.py + bge ~30s）。
+- 新建 `tests/live_review/test_genre_retrieval.py`（5 用例 + module-scoped vector_index_dir fixture）。
+- 新建 `tests/live_review/test_init_injection.py`（7 用例 + 共享 vector_index_dir/genre_stats_path 模块级 fixture）。
+- 新建 `tests/live_review/test_skill_step_99_5.py`（4 用例：render_text 三段含 / inject_into.init=false 短路 / enabled=false 全局短路 / SKILL.md 含 Step 99.5 段）。
+
+**Files changed:**
+- A ink_writer/live_review/_vector_index.py
+- A ink_writer/live_review/genre_retrieval.py
+- A ink_writer/live_review/init_injection.py
+- A scripts/live-review/build_vector_index.py
+- M ink-writer/skills/ink-init/SKILL.md
+- A tests/live_review/test_genre_retrieval.py
+- A tests/live_review/test_init_injection.py
+- A tests/live_review/test_skill_step_99_5.py
+
+**验证：**
+- TDD 顺序确认：写完 16 测试 → pytest 16/16 fail/error（模块不存在；SKILL.md 'Step 99.5' 字符串缺失）→ 实现 4 modules + 修 SKILL.md → 16/16 PASS。
+- `python3 -m pytest tests/live_review/test_genre_retrieval.py tests/live_review/test_init_injection.py tests/live_review/test_skill_step_99_5.py --no-cov -q` → 16 passed。
+- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 491 passed in 202.60s（无回归；US-010 的 475 增 16）。
+- `ruff check ink_writer/live_review/_vector_index.py ink_writer/live_review/genre_retrieval.py ink_writer/live_review/init_injection.py scripts/live-review/build_vector_index.py tests/live_review/test_*.py` → All checks passed (修了 1 处 yield from 替代 for-yield 循环)。
+
+**Learnings for future iterations:**
+- **bge-small-zh-v1.5 加载 ~30s 是硬约束**：测试必须 module-scoped fixture 共享 `vector_index_dir`（`tmp_path_factory.mktemp(...)`）+ `genre_stats_path`（aggregate_genre.py 跑一次的产物）。3 个测试文件共用同一组 fixture 模板，每文件 1 次 build_index ≤30s + 1 次 aggregate ≤2s。`genre_retrieval._INDEX_CACHE` 走 process-level dict 缓存（key=resolved index_dir str），避免 ink-init 多次调用 check_genre 重载模型；`clear_index_cache()` 测试钩子可清空。后续 US-012 ink-review checker 同样需要 retrieve_similar_cases，可直接复用此 cache 不再次加载。
+- **vector_index 写盘格式 index.faiss + meta.jsonl 与 editor-wisdom 不同**：editor-wisdom 用 `rules.faiss + metadata.json`（整个 list dump 为一个 JSON），live-review 改用 `index.faiss + meta.jsonl`（每行一条 record）— 行级 jsonl 便于增量扩库（追加病例只需 append 行 + 重建 faiss），与 editor-wisdom 不冲突。后续如果 US-012 / US-013 需要做"增量索引"，jsonl 比 JSON list 更适合。两种格式并存，下游统一通过 `_vector_index.load_index` API 隔离差异。
+- **check_genre 三层路径独立可控**：config_path（控制 inject 开关）/ genre_stats_path（控制题材聚合数据源）/ index_dir（控制 FAISS 索引位置）。3 个参数都接受 None 走默认（DEFAULT_GENRE_STATS / DEFAULT_INDEX_DIR / 默认 config）。测试时分别指向 tmp_path 即可隔离 — 不污染 repo data 目录。后续 US-012 checker 复用此模式（test 阶段 mock 数据全走 tmp_path）。
+- **warning_level 三分支决策细节**：未匹配 = no_data（None genre_stats）；匹配但 score_mean is None = ok（无打分数据 fall back 通行，避免把校园这类全 null 题材误标 warn）；匹配且 score_mean < threshold = warn；其他 = ok。注意 `if isinstance(score_mean, (int, float)) and score_mean < threshold` 双重护栏 — None 不参与比较防 TypeError。
+- **multi-genre 切分 regex `[+,，、/\s]+`**：用户输入 '都市+重生' / '都市,重生' / '都市 重生' / '都市、重生' 都能正确切分；fallback 给整字串以防用户输入 '都市重生律师' 这种连写形式仍能进 retrieve（虽然 genre_stats 不会命中）。后续 US-012 checker.run_live_review_checker 接受 genre_tags: list[str] 时不需此切分。
+- **render_text 渲染规范化**：3 段固定 emoji 标题 '📚' / '🎯' / '💡' + 二级缩进案例列表（`  [N] title (verdict / Xs)`）。Linux/macOS terminal 默认 emoji 渲染，Windows PowerShell 需 chcp 65001 + UTF-8 BOM —— 与 SKILL.md PowerShell sibling block 已对齐。后续 US-012 review checker 输出走 evidence_chain.json 不直接 render，故无需对齐此格式。
+- **SKILL.md 测试断言策略**：用 `assert "Step 99.5" in text` + `assert "check_genre" in text` + `assert "inject_into" in text` 三层 grep 比 regex 模糊匹配 更稳；不要 assert 过细的 markdown 结构（否则后续 SKILL.md 微调极易 break test）。SKILL.md 字符串测试是"消极保险"防 SKILL.md 被回滚到 Step 99 之前的状态，不是"详细规范"。
+- **process-level cache 与测试隔离的张力**：`_INDEX_CACHE` 全局单例对生产链路是优化，但对 pytest 不同 module 切换 index_dir 时可能拿到旧数据。当前实现按 `str(Path(index_dir).resolve())` 作 key 自然隔离不同 tmp_path，所以 tests pass。后续若加 "动态重建索引" 操作（如 US-013 smoke_test），必须显式调 `clear_index_cache()` 否则索引重建后旧 cache 仍指向被覆盖的文件路径。
 ---

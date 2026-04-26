@@ -1003,3 +1003,55 @@ py -3 -m ink_writer.planning_review.dry_run_report --base-dir data
 - **dry-run（前 5 次）**：阈值未达标也不会终止流程，但 evidence 仍写入；用于观察阻断点。计数器 `data/.planning_dry_run_counter` 独立于 M3 章节级 `dry_run`。
 - **real mode（第 6 次起）**：任一 checker `blocked=True` 即阻断；`cases_hit` 注入对应 `CASE-2026-M4-0001~0004`。
 - **`--skip-planning-review`**：写一条 `outcome=skipped` 的 stage，标 `skip_reason='--skip-planning-review'`；仅紧急情况使用。
+
+---
+
+## Step 99.5：星河直播题材审查（live-review）
+
+`/ink-init` 在用户题材确定后（Quick Step 1.7 结束 / Deep Step 题材锁定），立刻调用 `live_review.init_injection.check_genre`，把"174 份起点编辑直播稿 × 10+ 本/份"沉淀的题材接受度信号反馈给用户：D（反向检索 Top-K 相似案例）+ B（题材均分阈值告警）组合 UI。
+
+### 输入
+
+- `user_genre_input`：用户最终选定的题材字符串（如 `"都市+重生"` / `"玄幻"` / `"职业流"`）。
+
+### 调用方式（macOS / Linux）
+
+```python
+from pathlib import Path
+from ink_writer.live_review.init_injection import check_genre
+
+result = check_genre(
+    user_genre_input,
+    top_k=3,
+    config_path=Path("config/live-review.yaml"),
+)
+print(result["render_text"])
+# 根据 warning_level 分支：
+#   ok     → 通行；
+#   warn   → 用户 y/n 二次确认（题材均分低于阈值）；
+#   no_data → 仅展示 Top-K 案例后通行（174 份直播未覆盖该题材聚合）。
+```
+
+### 调用方式（Windows PowerShell sibling）
+
+```powershell
+py -3 -c "from ink_writer.live_review.init_injection import check_genre; r=check_genre('都市+重生', top_k=3); print(r['render_text']); print('warning_level=' + r['warning_level'])"
+```
+
+### warning_level 三分支
+
+| level | 含义 | 默认动作 |
+|-------|------|----------|
+| `ok` | 题材聚合命中且 `score_mean >= init_genre_warning_threshold` | 通行（继续向下走） |
+| `warn` | 题材聚合命中但 `score_mean < init_genre_warning_threshold`（默认 60） | 展示 `render_text` 后用户 `y/n` 二次确认 |
+| `no_data` | 174 份直播未覆盖该题材聚合（< `min_cases_per_genre`，默认 3） | 仅展示 Top-K 反向检索案例后通行；不阻断 |
+
+### 关闭开关
+
+- 全局关闭：`config/live-review.yaml` 顶层 `enabled: false`。
+- 仅关 init 接入：`config/live-review.yaml` 中 `inject_into.init: false`。
+- 关闭后 `check_genre` 立即返回 `{warning_level: 'ok', similar_cases: [], render_text: ''}` 早退。
+
+### 索引前置
+
+首次调用前必须先跑 `python3 scripts/live-review/build_vector_index.py --cases-dir data/case_library/cases/live_review --out-dir data/live-review/vector_index` 构建 FAISS 索引（bge-small-zh-v1.5 模型加载 ~30s）。索引缺失时 `check_genre` 抛 `FileNotFoundError` 并提示重建命令。
