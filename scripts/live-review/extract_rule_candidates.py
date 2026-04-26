@@ -368,8 +368,22 @@ def run(
                 )
 
     parsed = [_normalize_candidate(c) for c in parsed]
+    valid: list[dict] = []
     for i, c in enumerate(parsed):
-        _validate_candidate_fields(c, i)
+        try:
+            _validate_candidate_fields(c, i)
+        except CandidateExtractionError as exc:
+            print(
+                f"[validate] WARN: candidate #{i} skipped: {exc}",
+                file=sys.stderr,
+            )
+            continue
+        valid.append(c)
+    if not valid:
+        raise CandidateExtractionError(
+            f"all {len(parsed)} parsed candidates failed validation"
+        )
+    parsed = valid
 
     dup_with_list = _compute_dup_with(parsed, existing_rules, threshold)
 

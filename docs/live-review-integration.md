@@ -292,7 +292,9 @@ python3 scripts/live-review/promote_approved_rules.py \
   --rules data/editor-wisdom/rules.json
 
 # 7-C: 重建 editor-wisdom 向量索引（让新规则被 retriever 召回）
-ink editor-wisdom rebuild  # 或 python3 -m ink_writer.editor_wisdom.rebuild
+python3 ink-writer/scripts/ink.py editor-wisdom rebuild --from-step 6
+# 注：--from-step 6 跳过需要 ANTHROPIC_API_KEY 的 03_classify / 05_extract_rules，
+#    只跑 06_build_index 把 promote 后的 rules.json 重建为向量索引（CPU bge < 5 分钟）。
 ```
 
 **预期产物**：`rules.json` 增加若干 `EW-XXXX` 条目（含 `source: live_review`）+ `data/editor-wisdom/vector_index/` 重建
