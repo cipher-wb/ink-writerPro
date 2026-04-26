@@ -14,7 +14,7 @@
       },
       "category": {
         "type": "string",
-        "enum": ["opening", "hook", "golden_finger", "character", "pacing", "highpoint", "taboo", "genre", "ops", "misc"]
+        "enum": ["opening", "hook", "golden_finger", "character", "pacing", "highpoint", "taboo", "genre", "ops", "misc", "simplicity", "prose_shot", "prose_sensory", "prose_rhythm", "prose_density"]
       },
       "rule": {
         "type": "string",
@@ -33,7 +33,7 @@
         "type": "array",
         "items": {
           "type": "string",
-          "enum": ["all_chapters", "golden_three", "opening_only"]
+          "enum": ["all_chapters", "golden_three", "opening_only", "combat", "climax", "high_point"]
         },
         "minItems": 1,
         "description": "Contexts where this rule applies"
