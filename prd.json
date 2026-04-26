@@ -189,8 +189,8 @@
         "ruff check scripts/live-review/review_rule_candidates.py scripts/live-review/promote_approved_rules.py tests/live_review/test_review_rule_candidates.py tests/live_review/test_promote_approved_rules.py 无新增错误"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "schemas/editor-rules.schema.json 扩展可选 source 字段（enum [editor_wisdom, live_review]），现有 402 条规则向后兼容（76 条预先存在的 prose_shot category 违规与本变更无关）。review CLI 用 stdin readline 读 y/n/s/q（EOF=q）+ 每次响应后立即写盘（断点续审友好；resume 时跳过 approved!=null 项）。promote 用 max-EW-id+1 策略分配新 ID + 字段重排到标准顺序（id/category/rule/why/severity/applies_to/source_files/source）+ 严格 schema 校验失败抛错不动文件。fixture sample_rules_for_promote.json 取自 data/editor-wisdom/rules.json[:80] 干净 80 条；fixture sample_rule_candidates.json 5 条候选（前 2 dup_with EW-0001/0002，后 3 不重复）。tests 新增 11 (review 4 + promote 7)。"
     },
     {
       "id": "US-011",

@@ -1,0 +1,1058 @@
+[
+  {
+    "id": "EW-0001",
+    "category": "taboo",
+    "rule": "用AI生成高潮情节的多个版本细纲，对比分析哪种收获感和反馈感最强，以此为蓝本起笔或参考",
+    "why": "编辑星河指出顶级作者的真实AI用法：不是让AI写正文，而是用AI快速穷举高潮方案，再由人判断哪个最有爆发力",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "001_AI写小说是否可行，编辑星河观点分享.md"
+    ]
+  },
+  {
+    "id": "EW-0002",
+    "category": "taboo",
+    "rule": "输入角色的性格与习惯设定，让AI列出配角（尤其女配）遭遇关键事件时的多种反应方式，挑选最合理吸引人的方案加以改编",
+    "why": "用AI穷举角色行为可能性，能快速发现超出作者惯性思维的人物弧光，同时保证最终选择由人审美判断",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "001_AI写小说是否可行，编辑星河观点分享.md"
+    ]
+  },
+  {
+    "id": "EW-0003",
+    "category": "taboo",
+    "rule": "禁止用AI大段生成正文水字数，AI输出的文字必须经过人工深度改写，否则极易触发平台违规判定",
+    "why": "编辑明确指出'只知道水文混字数的AI使用方式是最低级、最容易被网站判定违规的'",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "001_AI写小说是否可行，编辑星河观点分享.md"
+    ]
+  },
+  {
+    "id": "EW-0004",
+    "category": "taboo",
+    "rule": "将AI定位为查资料和扩展思路的工具，核心叙事能力（开头切入、架构、人设塑造、炼句审美、市场判断）必须靠作者自身持续打磨",
+    "why": "编辑强调故事和内容是作者的立身之本，AI锦上添花但不能替代讲故事的整体能力",
+    "severity": "info",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "001_AI写小说是否可行，编辑星河观点分享.md"
+    ]
+  },
+  {
+    "id": "EW-0005",
+    "category": "genre",
+    "rule": "确定个人擅长的题材风格后专精深耕，不要频繁跨类型写作",
+    "why": "编辑案例：新人专攻仙侠四五十万字即月稿费破万，风格聚焦让读者认知清晰、平台算法推荐精准",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "005_新人月稿费破万，26年写小说现状.md"
+    ]
+  },
+  {
+    "id": "EW-0006",
+    "category": "genre",
+    "rule": "闷头持续更新至签约门槛，不要因早期数据惨淡而停更",
+    "why": "编辑案例：西幻新人200首订持续更新至签约，签约后日销稳定破千，坚持更新是平台推荐的前提",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "005_新人月稿费破万，26年写小说现状.md"
+    ]
+  },
+  {
+    "id": "EW-0007",
+    "category": "ops",
+    "rule": "禁止用发红包或购买月票的方式刷假追读数据，平台后台可清晰识别真假追读",
+    "why": "平台后台数据全面，假追读一目了然，刷票不仅无效，还会干扰编辑对作品质量的正常判断，得不偿失",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "007_网文圈刷票运营，新人写小说需要吗.md"
+    ]
+  },
+  {
+    "id": "EW-0008",
+    "category": "ops",
+    "rule": "允许通过作者群、贴吧、读者群等渠道进行真实宣传，吸引真实读者追读",
+    "why": "真实读者产生的追读数据对编辑推荐和平台算法均有正向帮助，是合规的有效运营手段",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "007_网文圈刷票运营，新人写小说需要吗.md"
+    ]
+  },
+  {
+    "id": "EW-0009",
+    "category": "ops",
+    "rule": "不要寄望于营销弥补质量短板，写作水平才是决定收入上限的根本因素",
+    "why": "起点读者需真金白银订阅，质量不足时再多营销投入也无法提升核心数据，应将精力首先投入提升写作质量",
+    "severity": "info",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "007_网文圈刷票运营，新人写小说需要吗.md"
+    ]
+  },
+  {
+    "id": "EW-0010",
+    "category": "genre",
+    "rule": "新人优先选择都市题材起步，而非玄幻或仙侠",
+    "why": "起点1300本万定小说中都市占比超五分之一，且精品率、月入过万率均大幅领先其他分类；玄幻仙侠的万定数据被大神/白金作者拉高，对新人参考价值有限",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "011_新人最容易月入五万的网文小说分类.md"
+    ]
+  },
+  {
+    "id": "EW-0011",
+    "category": "genre",
+    "rule": "写都市题材时充分利用读者已有的世界观和社会逻辑，无需自建体系",
+    "why": "都市题材有现成的世界观、社会运行逻辑和人物关系，读者容易脑补和共情，降低作者和读者双侧的认知成本",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "011_新人最容易月入五万的网文小说分类.md"
+    ]
+  },
+  {
+    "id": "EW-0012",
+    "category": "genre",
+    "rule": "遇到不熟悉的题材细节，查资料或用AI工具补充，不要封闭式创作",
+    "why": "写都市不需要真的有某领域经验，主动获取外部知识比放弃题材或凭空想象更有效",
+    "severity": "info",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "011_新人最容易月入五万的网文小说分类.md"
+    ]
+  },
+  {
+    "id": "EW-0013",
+    "category": "genre",
+    "rule": "新人选题材前先查后台入库数据，月入过万比例极低的题材（如传统玄幻、科幻、灵异）应列为高风险，优先选变现效率更高的品类",
+    "why": "时间成本是最大成本，编辑数据显示传统玄幻入库超三分之一新人但月入过万极少，科幻月入万定几乎全是老作者",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "017_编辑星河谈最不推荐的七大网文题材排名.md"
+    ]
+  },
+  {
+    "id": "EW-0014",
+    "category": "genre",
+    "rule": "避免套路化严重的已烂题材：传统玄幻的「少年崛起+戒指老爷爷」、高武的「高中开局测灵根+对抗怪兽」、都市异能的「奥特曼打怪兽无铺垫」，读者比作者更清楚后续剧情时即为死局",
+    "why": "套路化题材导致读者审美疲劳，无法产生新鲜感，新人写法更难突破前辈的经典框架",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "017_编辑星河谈最不推荐的七大网文题材排名.md"
+    ]
+  },
+  {
+    "id": "EW-0015",
+    "category": "genre",
+    "rule": "受审核限制严重的题材（灵异、都市异能）新人慎写：平台审核导致爽感上限受压，签约率极低，应将灵异/异能元素融入其他大热品类作为辅助元素而非主线",
+    "why": "都市背景下审核限制难以写爽，灵异悬疑新人榜常年凑不满；但灵异元素融入其他题材可成为爆款加分项",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "017_编辑星河谈最不推荐的七大网文题材排名.md"
+    ]
+  },
+  {
+    "id": "EW-0016",
+    "category": "genre",
+    "rule": "架空历史不加修炼/武侠/奇情卖点直写谋商战，属于「不接地气又没代入感」的死亡组合，新人应至少叠加一个网文化元素（锦衣卫、武侠、典故人头）才有可读性",
+    "why": "纯架空谋商战版权IP价值大，大神早已占据，新人既无实力竞争又受众极窄，费力不讨好",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "017_编辑星河谈最不推荐的七大网文题材排名.md"
+    ]
+  },
+  {
+    "id": "EW-0017",
+    "category": "ops",
+    "rule": "新人入行前先研究市场榜单和编辑推荐题材，不要闷头写字",
+    "why": "同等实力下题材选择决定能否签约入行，选错题材等于白费力气",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "025_起点编辑星河谈如何月稿费七万.md"
+    ]
+  },
+  {
+    "id": "EW-0018",
+    "category": "ops",
+    "rule": "实力不变的情况下优先选择平台当前蓝海题材，避开已饱和赛道",
+    "why": "题材选择对新人成绩影响远大于写作技巧本身，同等水平结果天差地别",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "025_起点编辑星河谈如何月稿费七万.md"
+    ]
+  },
+  {
+    "id": "EW-0019",
+    "category": "ops",
+    "rule": "听从编辑建议，冷起来的书果断完结或切掉，不要死磕扑街书",
+    "why": "时间成本极高，有实力的作者死磕扑街书是在浪费最宝贵的创作时间",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "025_起点编辑星河谈如何月稿费七万.md"
+    ]
+  },
+  {
+    "id": "EW-0020",
+    "category": "ops",
+    "rule": "上架后成绩短期下滑时保持心态稳定，不要轻易切书或陷入焦虑",
+    "why": "前期积累需要时间发酵，智能推爆发需要心态稳定才能接住流量",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "025_起点编辑星河谈如何月稿费七万.md"
+    ]
+  },
+  {
+    "id": "EW-0021",
+    "category": "ops",
+    "rule": "新人应充分发挥自身特长（如写人设、写女角色）而非追求全面均衡",
+    "why": "特长鲜明的作品追订更稳，上架即能形成差异化竞争优势",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "025_起点编辑星河谈如何月稿费七万.md"
+    ]
+  },
+  {
+    "id": "EW-0022",
+    "category": "misc",
+    "rule": "遇到卡壳的词句先用标注跳过，写完整章后再回头修改查资料，不要中途打断写作流",
+    "why": "中途停顿查资料会打断灵感和写作节奏，导致整体效率下降",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "027_起点编辑星河谈网文作者码字速度如何提升.md"
+    ]
+  },
+  {
+    "id": "EW-0023",
+    "category": "misc",
+    "rule": "将章节预先拆分为人物描述、景物描写、战斗、陈述等模块标注，写完后再润色填充",
+    "why": "模块化写作让作者专注于叙事推进，避免同时处理细节导致思路中断",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "027_起点编辑星河谈网文作者码字速度如何提升.md"
+    ]
+  },
+  {
+    "id": "EW-0024",
+    "category": "misc",
+    "rule": "使用专注码字软件（如作家助手、大神码字）锁屏隔离干扰，保持全神贯注状态写作",
+    "why": "外部干扰是码字效率的主要杀手，强制专注环境可显著提升时速",
+    "severity": "info",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "027_起点编辑星河谈网文作者码字速度如何提升.md"
+    ]
+  },
+  {
+    "id": "EW-0025",
+    "category": "pacing",
+    "rule": "不要在开头几万字里消耗所有精华设定，将核心亮点和脑洞分散分布于全书各阶段",
+    "why": "前期精华耗尽后剧情难以为继，追订数据持续下滑，作者心态崩溃，最终导致断更或烂尾",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "031_起点编辑星河谈网文断更烂尾切书.md"
+    ]
+  },
+  {
+    "id": "EW-0026",
+    "category": "pacing",
+    "rule": "提前规划完整剧情骨架，不依赖临时灵感和激情驱动创作，确保平缓期有章可循",
+    "why": "激情消退后缺乏结构支撑必然卡文，成绩下滑与心态崩溃形成恶性循环，最终断更",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "031_起点编辑星河谈网文断更烂尾切书.md"
+    ]
+  },
+  {
+    "id": "EW-0027",
+    "category": "pacing",
+    "rule": "上架后平缓期主动安排新爆点或转折，防止追订断崖式下跌",
+    "why": "追订从万级跌至千级会严重打击作者心态，一旦失去动力极难恢复，读者骂声又加剧恶性循环",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "031_起点编辑星河谈网文断更烂尾切书.md"
+    ]
+  },
+  {
+    "id": "EW-0028",
+    "category": "pacing",
+    "rule": "避免「换地图」套路或同人式靠单一卖点撑全书，确保核心看点可持续延伸",
+    "why": "同人和换地图套路本质上都是消耗单一亮点，写完即无法续更，完本均订远低于首订",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "031_起点编辑星河谈网文断更烂尾切书.md"
+    ]
+  },
+  {
+    "id": "EW-0029",
+    "category": "taboo",
+    "rule": "禁止将AI生成内容直接复制粘贴作为正文提交，可用AI查资料、搜风景描写、辅助灵感扩散",
+    "why": "起点等平台有技术手段检测AI段落重复度，编辑会人工确认；直接复制属于走捷径且会荒废创作能力",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "035_起点编辑星河谈AI写作写网文.md"
+    ]
+  },
+  {
+    "id": "EW-0030",
+    "category": "taboo",
+    "rule": "禁止直接抄袭他人剧情、复制大纲脉络或剽窃点子创意，借鉴须经融合举一反三转化为自身内容",
+    "why": "抄袭侵犯著作权属违法行为，轻则下架扣收入，重则追回稿费及连带责任",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "035_起点编辑星河谈AI写作写网文.md"
+    ]
+  },
+  {
+    "id": "EW-0031",
+    "category": "taboo",
+    "rule": "可用AI生成参考书目的大纲脉络和人设介绍，但须对比自身内容进行差异化雕琢，不得照搬节奏安排",
+    "why": "编辑星河明确指出此为可接受的辅助方式，前提是用于启发而非直接使用",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "035_起点编辑星河谈AI写作写网文.md"
+    ]
+  },
+  {
+    "id": "EW-0032",
+    "category": "opening",
+    "rule": "发书前必须找编辑或作者朋友看过开头并收到具体修改意见，不要贸然发出未经审视的开头",
+    "why": "开头错了改动成本仅一两天，但发出糟糕开头会浪费几周甚至几个月时间，时间是最大成本",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "037_起点编辑星河谈写网文之前的准备工作.md"
+    ]
+  },
+  {
+    "id": "EW-0033",
+    "category": "opening",
+    "rule": "发书前必须确认已有后续大纲或细纲，明确知道后续几万字乃至几十万字的大概内容走向",
+    "why": "头脑一热写完开头却不知后续如何写，即使过审也会陷入断更或质量崩塌",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "037_起点编辑星河谈写网文之前的准备工作.md"
+    ]
+  },
+  {
+    "id": "EW-0034",
+    "category": "opening",
+    "rule": "发书前确认每天具备稳定更新4000字以上的客观条件，否则先存稿再发书",
+    "why": "开工没有回头箭，发书后必须稳定更新才能维持读者黏性和平台推荐资格",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "037_起点编辑星河谈写网文之前的准备工作.md"
+    ]
+  },
+  {
+    "id": "EW-0035",
+    "category": "opening",
+    "rule": "开书前调查同类题材已有书籍的市场表现，确认目标平台有该题材的读者受众",
+    "why": "脱离网文主流（如莫名设定堆砌的传统硬科幻）等于在错误场合卖错误商品，无人问津",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "037_起点编辑星河谈写网文之前的准备工作.md"
+    ]
+  },
+  {
+    "id": "EW-0036",
+    "category": "taboo",
+    "rule": "禁止写乱伦关系及以未成年为性行为目标对象；性描写须一笔带过，不得详写接吻细节或性行为过程",
+    "why": "起点平台对色情擦边有明确红线，涉及乱伦与未成年是最易触发屏蔽章节或封号的硬违规",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "039_起点编辑星河谈网文审核尺度.md"
+    ]
+  },
+  {
+    "id": "EW-0037",
+    "category": "taboo",
+    "rule": "禁止主角蔑视、屠杀无辜普通人；复仇等暗黑动机须有正当边界，不得写价值观扭曲的暗黑主角",
+    "why": "平台审核'不良导向'要求主角三观端正，主线行为动机需符合正向价值观，否则整本书面临违规风险",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "039_起点编辑星河谈网文审核尺度.md"
+    ]
+  },
+  {
+    "id": "EW-0038",
+    "category": "taboo",
+    "rule": "禁止在文中夹带黑化国家体制、涉及民族宗教矛盾等私货内容",
+    "why": "属于平台政治红线，无论以何种隐晦方式植入均构成违规，是影响签约和上架的硬封禁项",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "039_起点编辑星河谈网文审核尺度.md"
+    ]
+  },
+  {
+    "id": "EW-0039",
+    "category": "taboo",
+    "rule": "战斗场面及暴力画面须一笔带过，禁止详细描写血腥细节、校园暴力过程、涉黑涉恐情节",
+    "why": "血腥暴力细节是平台审核重点，过度描写会导致章节被屏蔽，涉黑涉恐属于绝对禁区",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "039_起点编辑星河谈网文审核尺度.md"
+    ]
+  },
+  {
+    "id": "EW-0040",
+    "category": "taboo",
+    "rule": "以当前平台最新审核尺度为准，禁止参照过去宽松标准写作；不同平台男频女频要求不同，投稿前需确认目标站点规则",
+    "why": "网文审核尺度持续收紧，用旧尺度写当下内容极易触雷，且各平台要求存在差异",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "039_起点编辑星河谈网文审核尺度.md"
+    ]
+  },
+  {
+    "id": "EW-0041",
+    "category": "taboo",
+    "rule": "禁止使用明显失真的身体比例数据（如腰围54、胸围108、臀围为腰围两倍），女性角色体型描写须符合基本生理常识",
+    "why": "编辑直播中点名批评此类数字描写，认为作者「没见过妹子」，严重破坏读者代入感",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "043_起点编辑星河直播审稿系列.md"
+    ]
+  },
+  {
+    "id": "EW-0042",
+    "category": "taboo",
+    "rule": "禁止将真实宗教神明（如如来佛祖、玉皇大帝）直接用作主角或重要角色的姓名",
+    "why": "编辑明确指出此做法「骇人听闻」，属于触碰平台禁忌的违规行为，可能导致直接打回",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three",
+      "all_chapters"
+    ],
+    "source_files": [
+      "043_起点编辑星河直播审稿系列.md"
+    ]
+  },
+  {
+    "id": "EW-0043",
+    "category": "taboo",
+    "rule": "仙侠/玄幻背景中禁止出现现代地球的具体参照物或强烈违和感的现实元素，保持世界观内部一致",
+    "why": "编辑吐槽「在茫茫仙侠中居然找到了地球的感觉」，跨次元违和感是破坏沉浸度的硬伤",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "043_起点编辑星河直播审稿系列.md"
+    ]
+  },
+  {
+    "id": "EW-0044",
+    "category": "taboo",
+    "rule": "招式、功法、剑式名称须有明确的意象逻辑，禁止堆砌无意义汉字组合",
+    "why": "编辑朗读「双兔剑飞草浅，同国爱静帆卓涛侠剑锤天和，倒挂玉壶纺形」并嘲讽「我全看懂了怎么办」，表明此类命名是低质标志",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "043_起点编辑星河直播审稿系列.md"
+    ]
+  },
+  {
+    "id": "EW-0045",
+    "category": "taboo",
+    "rule": "角色的行为必须与其职业身份和所处世界的规则保持一致，法院工作者不能公然下毒",
+    "why": "编辑直接指出角色身份与行为的逻辑矛盾，此类「人设打架」是被打回的常见原因",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "043_起点编辑星河直播审稿系列.md"
+    ]
+  },
+  {
+    "id": "EW-0046",
+    "category": "ops",
+    "rule": "不要模仿大神、白金或万订老作者的开头写法，即使其架构和大纲值得学习",
+    "why": "顶级作者的开头依赖积累的读者基本盘和品牌效应，新人照学会越学越偏，无法适应当前新书市场的冷启动逻辑",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "047_新人写小说赚稿费扫榜技巧.md"
+    ]
+  },
+  {
+    "id": "EW-0047",
+    "category": "ops",
+    "rule": "参考学习时优先使用「签约作者新书榜」前50和各分类「新书畅销榜」前30的书目，避免参考三江榜和超过两年的老书",
+    "why": "三江有品类保护倾斜会误导新人高估冷门题材可行性；老书题材和写法存在时效性问题，不代表当前市场审美",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "047_新人写小说赚稿费扫榜技巧.md"
+    ]
+  },
+  {
+    "id": "EW-0048",
+    "category": "ops",
+    "rule": "看竞品书时须带目的性地拆书做笔记，明确记录「开头钩子」「人物塑造手法」「节奏安排」等具体技巧，而非娱乐性阅读",
+    "why": "纯享受性阅读只能记住情节和人设，无法提炼可迁移的写作技法，等于白看",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "047_新人写小说赚稿费扫榜技巧.md"
+    ]
+  },
+  {
+    "id": "EW-0049",
+    "category": "taboo",
+    "rule": "开头禁止写楔子、序章或大段世界观铺设，直接切入核心冲突或人物",
+    "why": "现代网文读者耐心极低，开篇的世界观轰炸会直接劝退读者，导致追读率崩塌",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "051_编辑星河讲新人写小说十大容易踩的坑.md"
+    ]
+  },
+  {
+    "id": "EW-0050",
+    "category": "taboo",
+    "rule": "禁止在正文中大篇幅书写与主线卖点无关的剧情，做到主次分明、学会留白",
+    "why": "过度解释和无关细节是水字数的典型AI/新人特征，消耗读者耐心，稀释爽点密度",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "051_编辑星河讲新人写小说十大容易踩的坑.md"
+    ]
+  },
+  {
+    "id": "EW-0051",
+    "category": "taboo",
+    "rule": "禁止使用AI生成的文笔直接上稿，开头必须亲自认真撰写",
+    "why": "AI味文笔是编辑识别新人稿件的核心信号，会被直接打回；读者也能感知并流失",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "051_编辑星河讲新人写小说十大容易踩的坑.md"
+    ]
+  },
+  {
+    "id": "EW-0052",
+    "category": "taboo",
+    "rule": "摒弃华丽辞藻堆砌的'文青病'写法，始终以人物塑造和剧情推进为写作核心",
+    "why": "网文的核心竞争力是人物和剧情，而非文笔炫技；晦涩词汇只会增加阅读门槛",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "051_编辑星河讲新人写小说十大容易踩的坑.md"
+    ]
+  },
+  {
+    "id": "EW-0053",
+    "category": "taboo",
+    "rule": "新人阶段禁止给章节分卷，避免引导读者形成养书习惯",
+    "why": "分卷制造心理断点，读者容易在卷末停止追读并转向其他作品，对新人极其致命",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "051_编辑星河讲新人写小说十大容易踩的坑.md"
+    ]
+  },
+  {
+    "id": "EW-0054",
+    "category": "ops",
+    "rule": "新人确定一个擅长的类型方向后专精写下去，不要题材写得太杂",
+    "why": "风格专精能让作者更快积累读者认知和写作深度，跨类型写作分散精力且难以形成辨识度",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "【合集】编辑星河_全部视频内容.md"
+    ]
+  },
+  {
+    "id": "EW-0055",
+    "category": "ops",
+    "rule": "写历史题材前先研究当前大众情绪，避免选择与主流情绪相悖的历史立场",
+    "why": "大众情绪直接决定历史题材小说的成绩上限，如当前写清朝正面题材会触发读者反感",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "【合集】编辑星河_全部视频内容.md"
+    ]
+  },
+  {
+    "id": "EW-0056",
+    "category": "ops",
+    "rule": "不要发红包或刷假追读数据来凑成绩，只争取真实读者",
+    "why": "网站后台能一眼区分真假追读，假数据不仅无用反而影响编辑对作品的正常判断",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "【合集】编辑星河_全部视频内容.md"
+    ]
+  },
+  {
+    "id": "EW-0057",
+    "category": "ops",
+    "rule": "主角人设应参照当前流行的性格模板，研究近期爆款主角的性格特征再塑造",
+    "why": "网文主角人设随时代变化，早期老实敦厚型→苟发育型→口才智商型→极端利益化，偏离当前主流人设会降低读者代入感",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "【合集】编辑星河_全部视频内容.md"
+    ]
+  },
+  {
+    "id": "EW-0058",
+    "category": "opening",
+    "rule": "开头几十字内必须交代主角核心处境、关键人物关系和主要遗憾/期待，禁止用一两章铺垫前世或背景",
+    "why": "读者上来就是找信息，无效信息堆砌会让读者失去耐心直接划走",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "001_小说开头吸引人的具体实操分析.md"
+    ]
+  },
+  {
+    "id": "EW-0059",
+    "category": "opening",
+    "rule": "使用道序（倒叙）技法将金手指或核心爽点前置，先展示结果或能力再交代身份背景",
+    "why": "金手指前置+道序能让器材杆拉满，比同类型其他书高出一大截，读者立刻产生期待感",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "001_小说开头吸引人的具体实操分析.md"
+    ]
+  },
+  {
+    "id": "EW-0060",
+    "category": "opening",
+    "rule": "第一页视线范围内（手机屏幕首屏）必须让读者知道：主角是谁、人际处境、接下来要做什么",
+    "why": "读者注意力是最稀缺资源，第一页没抓住就永远失去了",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "001_小说开头吸引人的具体实操分析.md"
+    ]
+  },
+  {
+    "id": "EW-0061",
+    "category": "opening",
+    "rule": "都市爽文在前几百字内必须触发情绪共鸣或逻辑认同，让读者对主角处境或观念产生代入感",
+    "why": "只要读者点开第二页、第三页，都市爽文就已经成功一大半，首屏情绪共鸣是关键触发点",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "001_小说开头吸引人的具体实操分析.md"
+    ]
+  },
+  {
+    "id": "EW-0062",
+    "category": "opening",
+    "rule": "开头第一句话必须抛出一个让读者产生疑问或想继续看的信息钩子，不得以平铺直叙的身份介绍起笔",
+    "why": "《百年孤独》《了不起的盖茨比》等经典均以制造悬念的钩子句开篇，万法相通，网文同理",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "001_小说开头吸引人的具体实操分析.md"
+    ]
+  },
+  {
+    "id": "EW-0063",
+    "category": "opening",
+    "rule": "第一句话必须制造疑问、强烈情绪或好奇心，不得以铺垫为由推迟吸引力",
+    "why": "读者与作者是陌生人关系，对人物和世界毫无感情，随时准备划走；后台数据显示曝光到翻第二页的转化率极低",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "002_网文的开头，一句话吸引读者？.md"
+    ]
+  },
+  {
+    "id": "EW-0064",
+    "category": "opening",
+    "rule": "书名必须具备独立吸引力，书名差则读者连简介都不会看",
+    "why": "读者决策链是：书名→简介→第一页，任一环节失去兴趣即流失，书名是最前置的过滤器",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "002_网文的开头，一句话吸引读者？.md"
+    ]
+  },
+  {
+    "id": "EW-0065",
+    "category": "opening",
+    "rule": "禁止以'慢热''铺垫''深度'为借口忽视开头吸引力",
+    "why": "网文竞争对手是抖音、游戏等全部泛娱乐产品，慢热在快节奏阅读场景中等同于主动放弃读者，是傲慢而非深度",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three",
+      "all_chapters"
+    ],
+    "source_files": [
+      "002_网文的开头，一句话吸引读者？.md"
+    ]
+  },
+  {
+    "id": "EW-0066",
+    "category": "opening",
+    "rule": "开头可引入惊悚、悬疑、好玩、有趣等情绪元素来建立初始吸引力",
+    "why": "情绪是最快建立代入感的手段，比世界观铺垫或人物介绍更能触发读者本能反应",
+    "severity": "soft",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "002_网文的开头，一句话吸引读者？.md"
+    ]
+  },
+  {
+    "id": "EW-0067",
+    "category": "opening",
+    "rule": "第一章写作目标定为：让读者主动翻到第二页",
+    "why": "编辑后台数据显示第一章翻页率极低，以翻页为目标而非完整章节为目标，能倒逼每一段都保持悬念或驱动力",
+    "severity": "soft",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "002_网文的开头，一句话吸引读者？.md"
+    ]
+  },
+  {
+    "id": "EW-0068",
+    "category": "character",
+    "rule": "爽点要分级升级，不让主角过早接触太高层次；前期只展示部分实力，保留读者期待感",
+    "why": "主角太快太顺会导致后续章节无法升级，读者失去期待感，书崩在所难免",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "010_小说网文如何写长不崩，七个技巧分享.md"
+    ]
+  },
+  {
+    "id": "EW-0069",
+    "category": "character",
+    "rule": "塑造让读者能无缝代入行为逻辑的主角人设，哪怕情节跑偏读者也不会弃书",
+    "why": "强人设是长期追读的核心锚点，读者追的是人物而非情节，郭靖杨过无论做什么读者都愿意看",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "010_小说网文如何写长不崩，七个技巧分享.md"
+    ]
+  },
+  {
+    "id": "EW-0070",
+    "category": "character",
+    "rule": "开头多埋钩子和伏笔，不要急于兑现正反馈；藏比直给更能拉住追读",
+    "why": "过早兑现导致精华前置，后期无牌可打；钩子制造悬念，让读者主动追更",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "010_小说网文如何写长不崩，七个技巧分享.md"
+    ]
+  },
+  {
+    "id": "EW-0071",
+    "category": "character",
+    "rule": "按章节里程碑规划不同卖点：前期装逼爽点、20万字后身份地位、百万字后世界观揭秘",
+    "why": "不同阶段读者诉求不同，用同一套卖点撑全书必崩；提前规划卖点迭代才能写长不崩",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "010_小说网文如何写长不崩，七个技巧分享.md"
+    ]
+  },
+  {
+    "id": "EW-0072",
+    "category": "character",
+    "rule": "不要为了追读数据选择自己驾驭不了的题材，宁可写熟悉的慢热也不强行堆砌精华",
+    "why": "题材超出驾驭能力会导致开头虚高、后劲不足，早崩比晚崩更伤成绩",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "010_小说网文如何写长不崩，七个技巧分享.md"
+    ]
+  },
+  {
+    "id": "EW-0073",
+    "category": "ops",
+    "rule": "将AI定位为降低思考和创作成本的工具，核心创意、细纲和人物设定必须由作者自主构建",
+    "why": "AI能输出文字，但书的灵魂是创意和细纲；作者的创意才是作品的核心价值，不可被工具替代",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "012_AI写网文违规吗_第134集AI写作的上限，能否使用.md"
+    ]
+  },
+  {
+    "id": "EW-0074",
+    "category": "ops",
+    "rule": "以最终呈现质量为唯一衡量标准，平台打击的是低质量灌水，而非AI辅助本身",
+    "why": "平台封禁的根本原因是内容伤害用户体验和破坏算法，质量过关的内容无论用何种工具创作都不会被打击",
+    "severity": "info",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "012_AI写网文违规吗_第134集AI写作的上限，能否使用.md"
+    ]
+  },
+  {
+    "id": "EW-0075",
+    "category": "ops",
+    "rule": "AI的使用效果与作者自身写作审美能力成正比，须持续提升个人写作鉴赏力而非单纯依赖工具",
+    "why": "写作审美低的作者即使用AI也写不出精品；工具只是放大器，核心竞争力仍在作者本身的审美判断",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "012_AI写网文违规吗_第134集AI写作的上限，能否使用.md"
+    ]
+  },
+  {
+    "id": "EW-0076",
+    "category": "opening",
+    "rule": "新人写开篇时优先使用线性叙事（第一视角按时间线推进+内心独白），不要频繁切换镜头视角，把真实感和代入感像镜面一样拉出来",
+    "why": "线性叙事是建立读者代入感最稳的方式，开篇随意切镜会打断沉浸感，导致审稿低于50分无缘签约",
+    "severity": "hard",
+    "applies_to": [
+      "golden_three"
+    ],
+    "source_files": [
+      "024_如何流畅写作，冒充顶级作者，讲一讲ai时代的写作技巧.md"
+    ]
+  },
+  {
+    "id": "EW-0077",
+    "category": "opening",
+    "rule": "在情绪爆发、打斗高潮等强节点处插入分镜式叙事：用碎片化视觉细节（呼吸、青筋、配角反应）替代心理陈述，快速堆积情绪画面感",
+    "why": "分镜式写法能让节奏瞬间提速、情绪爆棚，单纯线性叙事高潮段落容易写得平淡拖沓",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "024_如何流畅写作，冒充顶级作者，讲一讲ai时代的写作技巧.md"
+    ]
+  },
+  {
+    "id": "EW-0078",
+    "category": "opening",
+    "rule": "根据题材决定两种叙事的比例：大长篇玄幻/仙侠/重生文以线性叙事为主；脑洞爽文、短剧/漫剧改编以分镜式叙事为主",
+    "why": "不同商业形态对沉浸感与节奏密度的需求不同，用错比例会导致长篇失去代入或爽文节奏拖沓",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "024_如何流畅写作，冒充顶级作者，讲一讲ai时代的写作技巧.md"
+    ]
+  },
+  {
+    "id": "EW-0079",
+    "category": "opening",
+    "rule": "线性叙事段落中必须穿插内心独白、情感铺垫或背景交代，避免纯粹平铺直叙，防止读者中途弃书",
+    "why": "纯平铺直叙是线性叙事最常见的劣化形态，缺乏情感锚点会让读者感觉枯燥、节奏拖沓",
+    "severity": "soft",
+    "applies_to": [
+      "all_chapters",
+      "golden_three"
+    ],
+    "source_files": [
+      "024_如何流畅写作，冒充顶级作者，讲一讲ai时代的写作技巧.md"
+    ]
+  },
+  {
+    "id": "EW-0080",
+    "category": "ops",
+    "rule": "每次更新都必须保持质量水准，杜绝水更；读者耐心已大幅缩短，一旦更新质量下滑，追订立刻流失",
+    "why": "短视频和AI时代读者没耐心，更新水了就会狂掉追订，甚至连大神白金也无法幸免",
+    "severity": "hard",
+    "applies_to": [
+      "all_chapters"
+    ],
+    "source_files": [
+      "028_万订网文作者被逼进厂打工？聊聊全职写书那些事.md"
+    ]
+  }
+]

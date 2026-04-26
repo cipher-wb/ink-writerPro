@@ -45,6 +45,11 @@
         },
         "minItems": 1,
         "description": "Source filenames this rule was extracted from"
+      },
+      "source": {
+        "type": "string",
+        "enum": ["editor_wisdom", "live_review"],
+        "description": "Origin of this rule. Optional; missing => legacy editor_wisdom"
       }
     },
     "additionalProperties": false
