@@ -51,7 +51,9 @@ def _serialize_case(case: Any) -> Any:
     - str → 直接当 case_id 返回。
     - 含 ``case_id`` 属性 → 取出 case_id；若同时有 ``severity``（含 ``.value``）也一起带上。
     - dict → 浅拷贝。
-    - 其它 → 用 ``repr`` 兜底，避免 json.dump 抛 TypeError。
+    - 其它 → 抛 TypeError（fail-loud；旧版用 ``repr`` 兜底写出
+      ``"<MyCase object at 0x...>"`` 对人工 review 零价值，且掩盖上游
+      schema 漂移；review §三 #6 修复）。
     """
     if isinstance(case, str):
         return case
@@ -65,7 +67,9 @@ def _serialize_case(case: Any) -> Any:
         if sev_value is not None:
             payload["severity"] = sev_value
         return payload
-    return repr(case)
+    raise TypeError(
+        f"unsupported case type for human_review jsonl: {type(case).__name__}"
+    )
 
 
 def _atomic_write_text(path: Path, content: str) -> None:

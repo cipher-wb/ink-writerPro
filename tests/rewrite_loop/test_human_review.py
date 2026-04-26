@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from ink_writer.rewrite_loop.human_review import (
     save_rewrite_history,
     write_human_review_record,
@@ -124,6 +126,36 @@ def test_write_human_review_record_single_write_call(tmp_path: Path) -> None:
     )
     assert write_calls[0].endswith("\n")
     assert not write_calls[0].endswith("\n\n")
+
+
+def test_write_human_review_record_raises_on_unknown_case_type(tmp_path: Path) -> None:
+    """review §三 #6 修复：未知 case 类型必须 raise TypeError，不再 ``repr`` 兜底。
+
+    旧实现把 ``object()`` 序列化成 ``"<object object at 0x...>"`` 写进 jsonl，
+    人工 review 零价值且掩盖上游 schema 漂移。新实现 fail-loud：直接抛
+    TypeError，且 jsonl 文件未被打开/写入（所有序列化都在 ``open()`` 之前
+    通过列表推导式完成）。
+    """
+
+    class _Bogus:
+        # 故意没 ``case_id`` 属性、不是 str/dict — 命中 _serialize_case 末路
+        pass
+
+    out_path = tmp_path / "data" / "demo" / "needs_human_review.jsonl"
+
+    with pytest.raises(TypeError, match="unsupported case type"):
+        write_human_review_record(
+            book="demo",
+            chapter="ch001",
+            blocking_cases=[_Bogus()],
+            rewrite_attempts=1,
+            rewrite_history_paths=[],
+            evidence_chain_path=tmp_path / "ev.json",
+            base_dir=tmp_path,
+        )
+
+    # fail before write：jsonl 必须没被创建
+    assert not out_path.exists()
 
 
 def test_write_human_review_appends_not_overwrites(tmp_path: Path) -> None:

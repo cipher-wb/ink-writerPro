@@ -23,6 +23,7 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
 - ``ink_writer/_compat/locking.py:shared_locked_file`` (US-003)：Unix 用 ``fcntl.flock(LOCK_SH)`` 真共享锁，多 reader 并发；Windows ``msvcrt`` 无共享锁概念降级为 ``LK_LOCK`` 独占（reader 也走串行）。任何"读频率高、写频率低、不能容忍 writer 中途状态"的文件读路径优先用此 helper。
 - ``read_dry_run_counter`` retry 模式：用 ``shared_locked_file`` 拿到 raw='' 但 ``path.stat().st_size > 0`` 表示命中 writer ``truncate→write`` 极小窗口；重读一次（**最多 1 次**，避免无限循环）。这个 read-empty + size-positive 检测模式可被其他"writer atomic-replace 风格 + reader 共享锁"组合复用。
 - counter 文件 "open-or-create + lock-internal init" 标准做法（US-004）：``with locked_file(path, "a+") as fh:`` 后立刻 ``fh.seek(0)`` 读 → 空走初始化 → ``fh.seek(0) + truncate + write`` 写回。'a+' 在 Unix/Windows 都 auto-create；O_APPEND 写到 EOF，truncate=0 后 EOF=0 落 0 位置正确。**禁止**再用"锁外 ``if not exists: write_text(...)`` + 锁内救场" 这种旧模式。
+- ``write_human_review_record`` 的 ``blocking_cases`` 序列化全部在 ``open()`` 之前的字典字面量列表推导式中完成（``record = {"blocking_cases": [_serialize_case(c) for c in blocking_cases], ...}``）；任何 _serialize_case 抛错天然 fail-before-write，jsonl 文件不会被创建。这是"序列化先于写盘"模式的清晰例证 — 未来类似 append 风格写盘最好都这样组织：先把所有 entry 序列化成 str（``json.dumps``）再 open+write，避免半截行/部分文件污染。
 
 ---
 
@@ -71,6 +72,18 @@ Started: 2026-04-26 (code-review-followup batch — see archive/2026-04-26-m5-fi
 - **Learnings for future iterations:**
   - 项目对外参数支持 `Path | str` 是常见接受性约定（PathLike-friendly）；函数体内统一用 `<param>_p = Path(<param>)` 局部变量绑定是消除 shadow + pyright/mypy strict 友好的标准做法。如未来发现其他 `param = Path(param)` 同名覆盖，按此模式批量改。
   - `ruff` 默认不 warn 同名 shadow（PLR1704 在禁用集），但 mypy/pyright strict + reviewer 人工审查会 flag；预先消除可减少未来重复噪音。
+---
+
+## 2026-04-26 - US-006
+- `ink_writer/rewrite_loop/human_review.py:_serialize_case` 末路从 `return repr(case)` 改为 `raise TypeError(f"unsupported case type for human_review jsonl: {type(case).__name__}")`：fail-loud，避免旧版用 `repr(case)` 写出 `"<MyCase object at 0x...>"` 进 jsonl 对人工 review 零价值且掩盖上游 schema 漂移。docstring 同步更新（指向 review §三 #6）。
+- 新增 `tests/rewrite_loop/test_human_review.py:test_write_human_review_record_raises_on_unknown_case_type`：传 `_Bogus()`（无 `case_id` 属性、非 str/dict — 命中末路）作为 blocking_cases[0]，断言 `pytest.raises(TypeError, match="unsupported case type")`，且 jsonl 文件未被创建（fail-before-write 天然成立 — 序列化全在 `record = {"blocking_cases": [_serialize_case(c) for c in blocking_cases], ...}` 列表推导式中完成，发生在 `open()` 调用之前）。
+- 现有 4 测试不修改即通过：所有现存测试都传 `str` / `dict` / `Case dataclass`（含 `case_id` 属性）—— 不触发末路。
+- Files changed: `ink_writer/rewrite_loop/human_review.py`, `tests/rewrite_loop/test_human_review.py`。
+- Quality: `pytest tests/rewrite_loop --no-cov` → 32 passed；`ruff check ink_writer/rewrite_loop/human_review.py` → 2 (基线 2 SIM105，无新增)。
+- **Learnings for future iterations:**
+  - "序列化先于写盘"模式天然 fail-before-write：`record = {"blocking_cases": [_serialize_case(c) for c in blocking_cases], ...}` 字典字面量在 `open(path, "a")` 之前求值，任何序列化错误都不会落盘。如未来设计类似 append 风格写盘，请也采用此模式（先把每行序列化成 str 再 open+write，避免半截行污染）。
+  - `_serialize_case` 是渐进式收紧的好例子：旧版 repr 兜底"安全"但掩盖问题；新版 fail-loud 让 schema 漂移立即可见。fail-loud 常常比 silent fallback 更安全 —— 静默"成功"会让上游 bug 拖到后面才被发现，调试成本指数级上升。
+  - `pytest.raises(TypeError, match=...)` 是断言"特定错误类 + 特定错误消息子串"的标准做法，在 fail-loud 改造的测试里反复用得到。
 ---
 
 ## 2026-04-26 - US-004

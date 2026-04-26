@@ -99,8 +99,8 @@
         "ruff check ink_writer/rewrite_loop/human_review.py 无新增错误"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-26：human_review.py _serialize_case 末路 `return repr(case)` 改为 `raise TypeError(f'unsupported case type for human_review jsonl: {type(case).__name__}')`，fail-loud。docstring 同步更新（旧版兜底掩盖 schema 漂移的解释）。新增 tests/rewrite_loop/test_human_review.py:test_write_human_review_record_raises_on_unknown_case_type：传 _Bogus()（无 case_id 属性、非 str/dict）触发 TypeError；jsonl 文件未被创建（序列化在 open() 之前的列表推导式中完成，fail-before-write 天然成立）。pytest tests/rewrite_loop 32 passed；ruff check baseline 2 SIM105 无新增。"
     },
     {
       "id": "US-007",
