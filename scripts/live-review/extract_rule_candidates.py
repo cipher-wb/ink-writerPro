@@ -226,14 +226,13 @@ def _compute_dup_with(
 
 
 def _call_llm(model_name: str, jsonl_records_blob: str) -> str:
-    """实跑 LLM (anthropic SDK)。mock 路径不会进这里。"""
+    """实跑 LLM。env-driven 自动选 GLM / anthropic。mock 路径不会进这里。"""
+    from ink_writer.live_review._llm_provider import make_client  # noqa: PLC0415
+
     try:
-        import anthropic  # noqa: PLC0415
-    except ImportError as exc:
-        raise CandidateExtractionError(
-            "anthropic SDK not installed; install or use --mock-llm"
-        ) from exc
-    client = anthropic.Anthropic()
+        client, effective_model = make_client(default_model=model_name)
+    except RuntimeError as exc:
+        raise CandidateExtractionError(str(exc)) from exc
     prompt = (
         "你是网文写作规则提炼专家。下方是若干本小说被星河直播逐一点评的 jsonl 记录"
         "（含分数 / 评语 / 多维度问题）。请从中提炼**通用规则**（剥离作品语境，"
@@ -246,7 +245,7 @@ def _call_llm(model_name: str, jsonl_records_blob: str) -> str:
         f"{jsonl_records_blob}"
     )
     msg = client.messages.create(
-        model=model_name,
+        model=effective_model,
         max_tokens=4096,
         messages=[{"role": "user", "content": prompt}],
     )

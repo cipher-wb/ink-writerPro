@@ -154,12 +154,15 @@ def _build_llm_prompt(
 
 
 def _call_anthropic(prompt: str, *, model: str) -> str:
-    """真实 LLM 调用 — 仅在 mock_response/llm_call 都不传时走此路径。"""
-    import anthropic
+    """真实 LLM 调用 — 仅在 mock_response/llm_call 都不传时走此路径。
 
-    client = anthropic.Anthropic()
+    走统一 provider：env-driven 自动选 GLM / anthropic（保留函数名兼容历史调用点）。
+    """
+    from ink_writer.live_review._llm_provider import make_client
+
+    client, effective_model = make_client(default_model=model)
     msg = client.messages.create(
-        model=model,
+        model=effective_model,
         max_tokens=4096,
         messages=[{"role": "user", "content": prompt}],
     )

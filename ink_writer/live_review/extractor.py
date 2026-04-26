@@ -78,16 +78,15 @@ def extract_from_text(
         except json.JSONDecodeError as exc:
             raise ExtractionError(f"LLM output is not valid JSON: {exc}") from exc
     else:
-        try:
-            import anthropic
-        except ImportError as exc:
-            raise ExtractionError(
-                "anthropic SDK not installed; install or pass mock_response/llm_call"
-            ) from exc
+        from ink_writer.live_review._llm_provider import make_client
+
         prompt = _load_prompt()
-        client = anthropic.Anthropic()
+        try:
+            client, effective_model = make_client(default_model=model)
+        except RuntimeError as exc:
+            raise ExtractionError(str(exc)) from exc
         resp = client.messages.create(
-            model=model,
+            model=effective_model,
             max_tokens=64000,
             messages=[
                 {
