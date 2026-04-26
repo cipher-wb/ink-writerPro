@@ -90,40 +90,21 @@ def cmd_list(*, library_root: Path, status: str | None = None) -> int:
     return 0
 
 
-def cmd_approve(*, library_root: Path, proposal_id: str) -> int:
-    """Stamp meta_rule_id on covered cases + flip proposal to approved.
+def _stamp_covered_cases(
+    *,
+    store: CaseStore,
+    covered: list[str],
+    proposal_id: str,
+) -> tuple[int, list[tuple[str, str]]]:
+    """对 covered 中尚未持有 ``meta_rule_id == proposal_id`` 的 case 写入 stamp。
 
-    幂等语义（review §二 P1#7 修复）：
-      * status=pending → 正常 approve，rc=0。
-      * status=approved → 真幂等返回 rc=0（不重写 yaml、不再调 store.save），
-        批量脚本网络重试时不会刷日志噪声。
-      * status=rejected → rc=1（拒绝跨状态 approve）。
+    Returns:
+        ``(updated, failed)`` —— ``updated`` 为本次实际写盘的 case 数；
+        ``failed`` 为 ``(case_id, error_msg)`` 列表，``CaseNotFoundError``
+        会被收集而非抛出（与 cmd_approve 旧行为一致）。
     """
-    try:
-        path, data = _load_proposal(library_root, proposal_id)
-    except FileNotFoundError as exc:
-        print(str(exc), file=sys.stderr)
-        return 2
-
-    current_status = data.get("status")
-    if current_status == "approved":
-        # 真幂等：已 approved 直接返回成功，不重新写盘
-        print(
-            f"proposal {proposal_id} already approved; no-op (idempotent)",
-        )
-        return 0
-    if current_status != "pending":
-        print(
-            f"proposal {proposal_id} is not pending (status="
-            f"{current_status}); refusing to approve",
-            file=sys.stderr,
-        )
-        return 1
-
-    store = CaseStore(library_root)
-    covered = data.get("covered_cases") or []
-    failed: list[tuple[str, str]] = []
     updated = 0
+    failed: list[tuple[str, str]] = []
     for case_id in covered:
         try:
             case = store.load(case_id)
@@ -135,6 +116,73 @@ def cmd_approve(*, library_root: Path, proposal_id: str) -> int:
         case.meta_rule_id = proposal_id
         store.save(case)
         updated += 1
+    return updated, failed
+
+
+def cmd_approve(*, library_root: Path, proposal_id: str) -> int:
+    """Stamp meta_rule_id on covered cases + flip proposal to approved.
+
+    幂等语义（review §二 P1#7 + 后续 #1 修复）：
+      * status=pending → 正常 approve；全部 case stamp 成功 rc=0，否则 rc=1
+        但 status 仍翻为 approved（首次行为不变）。
+      * status=approved 且 covered_cases 已全部 stamp → 真幂等 rc=0
+        （不重写 yaml、不调 store.save）。
+      * status=approved 但有未 stamp 的 case（前一次 partial fail）→
+        仅补刀未 stamp 的 case，**不重写 yaml**（status/approved_at 已正确）；
+        全部补齐 rc=0，仍有 failed rc=1。
+      * status=rejected → rc=1（拒绝跨状态 approve）。
+
+    "幂等分支也补刀" 是为了修复 review §三 #1：旧实现首次 partial fail
+    后，retry 进入幂等分支直接返回 0，坏 case 永远不会被补 stamp。
+    """
+    try:
+        path, data = _load_proposal(library_root, proposal_id)
+    except FileNotFoundError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    current_status = data.get("status")
+    if current_status == "approved":
+        # 已 approved：补刀缺 stamp 的 case；全部完整则真幂等不写盘
+        store = CaseStore(library_root)
+        covered = data.get("covered_cases") or []
+        updated, failed = _stamp_covered_cases(
+            store=store, covered=covered, proposal_id=proposal_id
+        )
+        if updated == 0 and not failed:
+            print(
+                f"proposal {proposal_id} already approved; no-op (idempotent)",
+            )
+            return 0
+        if updated > 0:
+            print(
+                f"proposal {proposal_id} already approved; backfilled "
+                f"meta_rule_id on {updated}/{len(covered)} covered cases"
+            )
+        else:
+            print(
+                f"proposal {proposal_id} already approved; no cases to backfill"
+            )
+        if failed:
+            print("first failures (up to 10):", file=sys.stderr)
+            for case_id, err in failed[:10]:
+                print(f"  {case_id}: {err}", file=sys.stderr)
+            return 1
+        return 0
+
+    if current_status != "pending":
+        print(
+            f"proposal {proposal_id} is not pending (status="
+            f"{current_status}); refusing to approve",
+            file=sys.stderr,
+        )
+        return 1
+
+    store = CaseStore(library_root)
+    covered = data.get("covered_cases") or []
+    updated, failed = _stamp_covered_cases(
+        store=store, covered=covered, proposal_id=proposal_id
+    )
 
     data["status"] = "approved"
     data["approved_at"] = _today()
