@@ -61,4 +61,53 @@ def locked_file(path: Path, mode: str):
         fh.close()
 
 
-__all__ = ["locked_file"]
+@contextmanager
+def shared_locked_file(path: Path, mode: str = "r"):
+    """以 ``mode`` 打开 ``path`` 并取**共享**文件锁；with 退出释放并 close。
+
+    Unix 路径使用 ``fcntl.flock(LOCK_SH)``：多 reader 并发持有不互斥，但与
+    ``LOCK_EX``（``locked_file``）互斥——读者等待写者释放后才能拿锁，写者
+    等待所有读者释放后才能进入。这正是 ``read_dry_run_counter`` 需要的语义：
+    避免读到 writer ``r+/seek/truncate/write`` 三连中途的空文件。
+
+    Windows 路径降级为独占锁：``msvcrt`` 没有共享锁概念，``LK_LOCK`` 必然
+    独占——多 reader 会被排成串行，但 (a) 仍正确隔离 writer (b) dry-run
+    counter 读频率低，性能损失可忽略。语义换 fail-loud 一致性，是 reviewer
+    在 review §三 #5 推荐的折中。
+
+    Args:
+        path: 目标文件；调用方保证已存在（共享锁不创建文件）。
+        mode: ``open()`` 模式；默认 ``"r"`` (read-only) 适配读路径。
+
+    Raises:
+        OSError: Windows 下 ``msvcrt.locking`` 多次重试仍拿不到锁；上抛而非
+            silent pass，与 ``locked_file`` 一致。
+    """
+    fh: IO[str] = open(path, mode, encoding="utf-8")  # noqa: SIM115 — yield ownership
+    try:
+        if sys.platform == "win32":
+            import msvcrt
+
+            # msvcrt 无共享锁；LK_LOCK 是独占阻塞锁，对 read 也走串行。
+            msvcrt.locking(fh.fileno(), msvcrt.LK_LOCK, 1)
+            try:
+                yield fh
+            finally:
+                try:
+                    fh.seek(0)
+                    msvcrt.locking(fh.fileno(), msvcrt.LK_UNLCK, 1)
+                except OSError:
+                    pass
+        else:
+            import fcntl
+
+            fcntl.flock(fh.fileno(), fcntl.LOCK_SH)
+            try:
+                yield fh
+            finally:
+                fcntl.flock(fh.fileno(), fcntl.LOCK_UN)
+    finally:
+        fh.close()
+
+
+__all__ = ["locked_file", "shared_locked_file"]

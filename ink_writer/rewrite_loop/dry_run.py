@@ -20,7 +20,7 @@ import os
 from pathlib import Path
 from typing import Any
 
-from ink_writer._compat.locking import locked_file
+from ink_writer._compat.locking import locked_file, shared_locked_file
 
 _DEFAULT_BASE_DIR = Path("data")
 _COUNTER_FILENAME = ".dry_run_counter"
@@ -32,15 +32,31 @@ def _resolve_counter_path(base_dir: Path | str | None) -> Path:
 
 
 def read_dry_run_counter(*, base_dir: Path | str | None = None) -> int:
-    """读取 dry-run 计数；缺文件或解析失败返 0。"""
+    """读取 dry-run 计数；缺文件或解析失败返 0。
+
+    用 ``shared_locked_file`` (LOCK_SH) 避免读到 ``increment_dry_run_counter``
+    在 ``r+/seek/truncate/write`` 三连中途的空文件 (review §三 #5)。
+    若拿到空 raw 但 ``stat().st_size > 0`` 说明命中极小窗口，重读一次（最多 1 次，
+    避免无限循环）。
+    """
     path = _resolve_counter_path(base_dir)
     if not path.exists():
         return 0
-    try:
-        with open(path, encoding="utf-8") as fh:
-            raw = fh.read().strip()
-    except OSError:
-        return 0
+
+    def _read_once() -> tuple[str, int]:
+        """返回 (raw_stripped, st_size_at_read)；任一 OSError 返 ('', 0)。"""
+        try:
+            with shared_locked_file(path, "r") as fh:
+                content = fh.read().strip()
+                size = path.stat().st_size
+        except OSError:
+            return "", 0
+        return content, size
+
+    raw, size = _read_once()
+    if not raw and size > 0:
+        # 命中 writer truncate→write 之间窗口；重试一次拿稳定值
+        raw, _ = _read_once()
     if not raw:
         return 0
     try:

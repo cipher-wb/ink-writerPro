@@ -51,8 +51,8 @@
         "ruff check 无新增错误"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "完成 2026-04-26：ink_writer/_compat/locking.py 新增 shared_locked_file (Unix LOCK_SH 共享锁；Windows msvcrt 无共享语义降级 LK_LOCK 独占 + 注释说明)。read_dry_run_counter 改为用 shared_locked_file('r')，并在 raw='' 但 stat().st_size>0 时触发最多 1 次重读，避免命中 writer truncate→write 中途窗口返 0。新增 tests/rewrite_loop/test_dry_run_read_safety.py 4 测试：(1) 8 worker increment + 1 worker 反复 read 序列单调非递减；(2) monkeypatch shared_locked_file 模拟空读触发 retry 拿稳定 42；(3) 持续空读不无限循环（exact 2 calls）；(4) Windows 共享锁 fail-loud。pytest tests/rewrite_loop tests/_compat tests/case_library tests/evidence_chain → 112 passed；ruff baseline 2 (1 SIM105 + 1 SIM115) 无新增（新 open() 加 noqa: SIM115 配对 yield 所有权语义）。"
     },
     {
       "id": "US-004",
