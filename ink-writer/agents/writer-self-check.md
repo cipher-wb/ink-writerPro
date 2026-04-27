@@ -62,6 +62,19 @@ report = writer_self_check(
   `config/checker-thresholds.yaml` 的 `writer_self_check` 段
   （由 `ink_writer.checker_pipeline.thresholds_loader.load_thresholds()` 加载）。
 
+## L12 对话+动作驱动律检测（US-009）
+
+`writer-agent.md` 铁律 L12（对话+动作驱动律）包含四条子律，起草后自检应覆盖：
+
+- **L12a 对话/动作密度**：每 200 字 ≥ 1 句对话或 1 个具体动作
+- **L12b 段首禁抽象**：段首句不以抽象名词/抽象副词开篇
+- **L12c 段首优先级**：环境段首每章 ≤ 2 处
+- **L12d 场景冲突**：每场景有明确冲突（人 vs 人 / 人 vs 环境 / 人 vs 自己）
+
+检测逻辑由 `colloquial-checker`（C1-C5 白话度）与 `directness-checker`（D1-D7 直白度）联合执行，
+不在 `writer-self-check` 内独立实现。writer-self-check 的 `injected_rules` 应包含 L12a-L12d
+的 rule_id，由 LLM 自评打分。
+
 ## 与下游的衔接
 
 - `evidence_chain.EvidenceChain.record_self_check(round_idx=..., compliance_report=report.to_dict())`
