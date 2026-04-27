@@ -78,8 +78,8 @@
         "Tests pass (pytest tests/prose/test_colloquial_checker.py)"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. Created `ink_writer/prose/idiom_dict.txt` with 914 unique 4-char Chinese idioms (≥500 PRD floor). New `ink_writer/prose/colloquial_checker.py` exports `run_colloquial_check(text, *, thresholds, idiom_set, abstract_nouns, name_whitelist) -> dict`. Five dimensions C1-C5 all lower-is-better. C2 redefined as ≥3 stacked 4-char fragments (avoids false positive on punchy 爆款 2-char-runs like '刀风带响。陈风没躲'). C3 chunk-matches abstract noun at chunk start OR end (handles both '宿命的孤寂的沧桑' modifier slots and '...的宿命' main-noun slot). C4 only counts modifier chains with ≥2 'de'-separated runs. C5 skips paragraphs whose first sentence starts with personal pronoun. 44 new tests in tests/prose/test_colloquial_checker.py covering: idiom dict floor + integrity, 5 single-dimension regressions, score curve, 3 end-to-end fixtures (爆款 green / AI 装逼 red / 严肃 yellow|red + relative ordering), public API edge cases, mtime cache invalidation. Total tests/prose 270 + tests/anti_detection 143 all green. Ruff clean."
     },
     {
       "id": "US-005",

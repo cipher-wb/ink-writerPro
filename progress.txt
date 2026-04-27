@@ -3,6 +3,12 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
 ---
 
 ## Codebase Patterns
+- `ink_writer/prose/colloquial_checker.py` 复用 directness_checker 的 `DimensionScore`/`_score_lower_is_better`/`_rating_from_score` 模式（GREEN_SCORE=8, RED_SCORE=6 同值）；新 checker 走"全场景激活+lower_is_better only" 简化路径，不需要 mid_is_better 桶 / scene 分桶。
+- 直白档"四字格"≠"任意 4 字汉字片段"：爆款 2-char run（"刀风带响。陈风没躲"）是动作节奏，不算装逼；PRD 真信号是 *排比* — 连续 ≥3 个标点分隔的 4 字片段，且扣掉成语 + 名字白名单 + 同字四叠后剩 ≥3 才计入。
+- 抽象名词链 C3 检测 chunk 首尾双向匹配：`A的B的C萦绕` split → ["A","B","C萦绕"]，C 在最后 chunk 起首位置；`他眼中的宿命` split → ["他眼中","宿命"]，宿命在末尾 chunk。`_chunk_matches_abstract` 试 length 4→3→2 的 prefix/suffix 双查。
+- 修饰链 C4 用正则 `(?:[一-龥]{1,6}的){2,}[一-龥]{1,6}` 抓"嵌套≥2"的链；单个 `的` 是底噪不计入。
+- 词典 `idiom_dict.txt` 是纯文本（每行一个成语，`#` 注释，空行 ignore）；loader 用 `(path, mtime_ns)` 缓存。新增成语扫到不要乱删 dup —— set 自动去重，914 raw → 914 unique。
+- 5 维 lower-is-better 评分曲线：value ≤ green_max → 10；green_max..yellow_max → 10..6 线性；> yellow_max → 6..0 线性。**边界值** value=green_max+yellow_max 中点处恰好 score=GREEN_SCORE，rating=green（不是 yellow）。测试 yellow band 要明确取 yellow_max 偏中后段（如 4.5 在 [3,5] 内）。
 - 零容忍规则现在有 `kind` 字段：`regex`（默认，向后兼容历史规则）或 `density`（按 occurrences/千字 阈值阻断）；新规则在 `config/anti-detection.yaml` 加 `kind: density` + `density_threshold` 即可，loader 自动处理。
 - 所有 ZT 规则都带 `whitelist_patterns: []` 字段（loader 强制存在，运行时尚未消费）；后续若要做"对话被打断豁免/引用片段豁免"在 `_rule_violated` 内补豁免逻辑即可，YAML schema 不用动。
 - `check_zero_tolerance` 走 first-match 短路：YAML 顺序决定哪条规则先报；测试 density 规则的细分行为时用 `AntiDetectionConfig(zero_tolerance=[single_rule])` 隔离，比给定 fixture 同时违反多条规则更可控。
@@ -67,4 +73,23 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
   - S1.5 阶段的命中清单 `replacement_hits` 即使在 70% floor rollback 时也保留——这是审计需求（让 polish-agent 报告完整反映"想做了什么"，rollback 只影响最终 simplified_text 不影响元数据）。同样的契约也适用于 `replacement_diff_path`：diff 文件已落盘了不会因 rollback 删除。
   - `ReplacementMap` 的 `forward.keys()` 顺序在 Python 3.12+ 是插入顺序（`dict.__iter__` 保证），即 YAML 解析顺序；这是 polish-agent "YAML 顺序 = 优先级" 契约的实现层依赖。
   - 命中清单格式选择 `tuple[tuple[str, str, int], ...]` 而非 `list[dict]`：frozen + 易序列化 + 测试断言用 `("凝视", "盯着", 1) in result.hits` 直接成立。
+---
+
+## 2026-04-27 15:30 - US-004
+- **What**: colloquial_checker.py 5 维度白话度核心算法 + idiom_dict.txt 词典（914 唯一成语，超 500 阈值）。`run_colloquial_check(text, *, thresholds, idiom_set, abstract_nouns, name_whitelist) -> dict` 统一入口；5 维全部 lower-is-better。配套 `to_checker_output(report, chapter_no)` 把报告包成 checker-output-schema.md 标准结构（`hard_blocked: severity == 'red'`）。
+- **Files changed**:
+  - `ink_writer/prose/idiom_dict.txt` (新增, 914 idioms across 31 themed groups, ASCII headers)
+  - `ink_writer/prose/colloquial_checker.py` (新增 ~470 行, C1-C5 + DimensionScore + ColloquialReport + 缓存 + lazy default abstract noun loader)
+  - `ink_writer/prose/__init__.py` (+`run_colloquial_check`, `ColloquialReport`, `COLLOQUIAL_DIMENSION_KEYS` 公共导出)
+  - `tests/prose/test_colloquial_checker.py` (新增, 44 tests across 6 sections)
+- **Tests**: 44 new + 270 baseline tests/prose + 143 baseline tests/anti_detection = 413 passed, 0 regression. Ruff clean.
+- **Learnings for future iterations**:
+  - PRD AC "正则 [一-龥]{4}" 字面解读会爆量（中文每 4 连字符都计 1）；语义解读应是"片段长度恰好 = 4 的非汉字断点分隔块"。再加 ≥3 stack threshold 才能把"爆款 2 连 4 字短句"和"AI 装逼 排比"区分开。
+  - C5 抽象主语率的"主语判定"用首 8 字内启发式：起首人称代词复数 (他们/我们) → false；起首单字代词 → false；首"的"/标点之前出现抽象名词 → true。比 jieba POS tagging 快 10x 且对短句更稳。
+  - 阈值参数化不仅是"传 thresholds 字典"，还要让 idiom_set / abstract_nouns / name_whitelist 三个词集都可注入——否则单测只能跑 prose-blacklist.yaml 真实词典，难做边界用例。public API 4 个 keyword-only 参数全部 None-defaulted。
+  - Lower-is-better 边界 score 等式：value=green_max → score=10；value=yellow_max → score=6（恰 = RED_SCORE，rating=yellow not red）；value=2*yellow_max → score=0。测试 yellow band 要明确取 (green_max+yellow_max)/2 + ε，否则取整 score=GREEN_SCORE 反而落 green。
+  - `idiom_dict.txt` 用 frozenset 比 list 快 100x（成语查找走 set membership）；缓存 key `(path, mtime_ns)` + 测试 fixture 用 `clear_cache` autouse 保证文件 hot-reload 在测试间不污染。
+  - ruff I001 把 `from X import (Y as Z)` 视为单独 import block，不允许与 `from X import (A, B)` 合并（即使是同一模块）。我们写 `from ink_writer.prose.colloquial_checker import (DIMENSION_KEYS as COLLOQUIAL_DIMENSION_KEYS, ColloquialReport, ...)` 一次声明所有，ruff `--fix` 会拆成两个 import 语句——是 ruff 的 isort 风格，不影响运行时。
+  - `ink_writer/prose/colloquial_checker.py` 是 prose 模块下第二个"7 维度评分体系"checker（前一个是 directness_checker），按 PRD US-007 后续会扩展 directness 到 D1-D7；两个 checker 应共享 `DimensionScore` 数据类（目前各自定义但结构相同，未来重构时可抽公共基础）。
+  - `_chunk_matches_abstract` 双向匹配（首/尾）是 C3 抽象名词链的关键：仅尾匹配会漏掉"宿命的孤寂的沧桑萦绕在心头"中尾 chunk "沧桑萦绕在心头" 起首的"沧桑"。
 ---
