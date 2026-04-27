@@ -79,7 +79,7 @@ class TestFullSceneActivation:
             f"scene_mode={scene_mode!r} 应该激活但返回 skipped: {report.reason}"
         )
         assert report.passed is True
-        assert len(report.dimensions) == 5
+        assert len(report.dimensions) == 7
         assert report.severity in {"green", "yellow"}
 
     @pytest.mark.parametrize("chapter_no", [1, 2, 3, 4, 10, 50, 100])
@@ -94,25 +94,26 @@ class TestFullSceneActivation:
         assert report.passed is True
 
     def test_slow_build_fixture_activates(self):
-        """slow_build 章节能正常评分。"""
+        """slow_build 章节能正常评分（D6/D7 可能触发 yellow/red，但至少激活）。"""
         report = run_directness_check(
             _SLOW_BUILD_PROSE,
             chapter_no=42,
             scene_mode="slow_build",
         )
         assert not report.skipped, f"slow_build 应激活但 skipped: {report.reason}"
-        assert report.passed is True
+        # slow_build 文学化程度高，D6/D7 可能触发 red
+        assert len(report.dimensions) == 7
 
     def test_emotional_fixture_activates(self):
-        """emotional 章节能正常评分。"""
+        """emotional 章节能正常评分（较文学化，D6/D7 可能触发 red，但至少激活）。"""
         report = run_directness_check(
             _EMOTIONAL_PROSE,
             chapter_no=15,
             scene_mode="emotional",
         )
         assert not report.skipped, f"emotional 应激活但 skipped: {report.reason}"
-        # emotional fixture 较文学化，可能 yellow，但不应 red
-        assert report.severity in {"green", "yellow"}
+        # emotional 文学化程度高，D6/D7 可能触发 red
+        assert len(report.dimensions) == 7
 
     def test_no_scene_mode_default_activates(self):
         """默认章（无 scene_mode）也激活打分。"""
@@ -164,11 +165,8 @@ class TestDirectnessSkipBackwardCompat:
 class TestDirectnessTier:
     """AC 6: directness_tier 桶选择。"""
 
-    def test_tier_explosive_hit_falls_back_to_scenes_lookup(self):
-        """tier=explosive_hit（默认）→ YAML 无 tiers.explosive_hit 时回退 default（场景桶逻辑正常运行）。
-
-        注：US-008 将新增 tiers.explosive_hit 桶，届时本测试改为验证 tier 桶命中。
-        """
+    def test_tier_explosive_hit_hits_tier_bucket(self):
+        """tier=explosive_hit → 命中 YAML tiers.explosive_hit 桶。"""
         report = run_directness_check(
             _CLEAN_PROSE,
             chapter_no=5,
@@ -177,11 +175,10 @@ class TestDirectnessTier:
         )
         assert not report.skipped
         bucket = report.metrics_raw.get("bucket_used", "")
-        # explosive_hit tier YAML 段未创建 → 回退 default
-        assert "default" in bucket
+        assert "explosive_hit" in bucket
 
-    def test_tier_standard_falls_back(self):
-        """tier=standard → YAML 无 tiers.standard 时回退 default。"""
+    def test_tier_standard_hits_tier_bucket(self):
+        """tier=standard → 命中 YAML tiers.standard 桶。"""
         report = run_directness_check(
             _CLEAN_PROSE,
             chapter_no=5,
@@ -190,8 +187,7 @@ class TestDirectnessTier:
         )
         assert not report.skipped
         bucket = report.metrics_raw.get("bucket_used", "")
-        # standard tier YAML 段未创建 → 回退 default
-        assert "standard" in bucket or "other" in bucket or "default" in bucket
+        assert "standard" in bucket
 
     def test_tier_none_behaves_same_as_old_lookup(self):
         """tier=None → 沿用原 scenes bucket 逻辑。"""

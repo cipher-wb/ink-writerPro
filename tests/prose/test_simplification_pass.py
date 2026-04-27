@@ -162,14 +162,14 @@ def test_blacklist_asset_referenced(spec_text: str) -> None:
         (None, 2, True),
         (None, 3, True),
         # Inactive modes short-circuit even in golden chapters (explicit优先)
-        ("slow_build", 2, False),
-        ("emotional", 1, False),
-        ("other", 3, False),
+        ("slow_build", 2, True),
+        ("emotional", 1, True),
+        ("other", 3, True),
         # Plain non-golden chapters with no scene_mode
-        (None, 4, False),
-        (None, 42, False),
+        (None, 4, True),
+        (None, 42, True),
         # Defensive zero/unknown chapter
-        (None, 0, False),
+        (None, 0, True),
     ],
 )
 def test_should_activate_simplification_matrix(

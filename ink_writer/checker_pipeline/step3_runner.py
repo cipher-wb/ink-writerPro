@@ -389,14 +389,11 @@ def _make_colloquial_adapter(review_bundle: dict) -> Callable:
 
 
 def _make_directness_adapter(review_bundle: dict) -> Callable:
-    """v22 US-005：directness-checker 程序化适配器（scene_mode 激活门控）。
+    """v22 US-006：directness-checker 程序化适配器（全场景激活 + 章节级 override）。
 
-    激活条件（与 agent spec 同源）：
-      - review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}，或
-      - review_bundle.chapter_no ∈ [1, 3]（缺省 scene_mode 时按黄金三章兜底）
-
-    非激活场景 → 返回 (True, 1.0, "") 视为 PASS（本 gate 对非直白场景保持透明，
-    不影响其他 checker）。激活场景下按 5 维度打分；任一 dim <6 → FAILED + 修复提示。
+    US-006 全场景化：默认所有场景均激活。
+    仅当 chapter_meta.directness_skip == true 时跳过（向后兼容）。
+    chapter_meta.directness_tier 控制阈值桶选择（'explosive_hit' | 'standard'）。
     """
     async def _adapter():
         from ink_writer.prose.directness_checker import (
@@ -407,9 +404,12 @@ def _make_directness_adapter(review_bundle: dict) -> Callable:
         chapter_text = review_bundle.get("chapter_text", "") or ""
         chapter_no = int(review_bundle.get("chapter_no", 0) or 0)
         scene_mode = review_bundle.get("scene_mode")
+        chapter_meta = review_bundle.get("chapter_meta") or {}
+        directness_skip = bool(chapter_meta.get("directness_skip", False))
+        directness_tier = chapter_meta.get("directness_tier")
 
         try:
-            if not is_activated(scene_mode, chapter_no):
+            if not is_activated(scene_mode, chapter_no, directness_skip=directness_skip):
                 return (True, 1.0, "")
             if not chapter_text.strip():
                 # shadow-safe：章节文本缺失不阻断
@@ -420,6 +420,8 @@ def _make_directness_adapter(review_bundle: dict) -> Callable:
                 chapter_text,
                 chapter_no=chapter_no,
                 scene_mode=scene_mode,
+                directness_skip=directness_skip,
+                directness_tier=directness_tier,
             )
             if report.skipped:
                 return (True, 1.0, "")
