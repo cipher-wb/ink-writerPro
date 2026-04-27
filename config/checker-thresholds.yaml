@@ -12,6 +12,10 @@ reader_pull:
   bound_cases_tags:
     - reader_pull
     - hook_density
+  platforms:
+    fanqie:
+      block_threshold: 75
+      warn_threshold: 85
 
 sensory_immersion:
   block_threshold: 65
@@ -20,6 +24,13 @@ sensory_immersion:
 high_point:
   block_threshold: 70
   warn_threshold: 80
+  platforms:
+    qidian:
+      block_threshold: 70
+      warn_threshold: 80
+    fanqie:
+      block_threshold: 85
+      warn_threshold: 90
 
 conflict_skeleton:
   # 章节级 checker，score = 0.5*has_conflict + 0.3*has_three_stage + 0.2*min(count/2, 1)
@@ -97,6 +108,10 @@ chapter_hook_density:
   warn_threshold: 0.85
   case_ids:
     - CASE-2026-M4-0007
+  platforms:
+    fanqie:
+      block_threshold: 0.85
+      warn_threshold: 0.90
 
 # ============================================================
 # prose Anti-AI Overhaul — new checkers (2026-04-27)
@@ -110,6 +125,28 @@ colloquial:
   warn_threshold: 80
   case_ids:
     - CASE-2026-0403
+  platforms:
+    fanqie:
+      block_threshold: 80
+      warn_threshold: 88
+      force_aggressive: true
+
+golden_three:
+  block_threshold: 0.75
+  platforms:
+    qidian:
+      opening_window_chars: 300
+    fanqie:
+      opening_window_chars: 200
+
+emotion_curve:
+  block_threshold: 65
+  warn_threshold: 75
+  platforms:
+    fanqie:
+      block_threshold: 75
+      warn_threshold: 85
+      require_high_frequency_fluctuation: true
 
 # 策划期独立 dry-run 计数器（与 M3 章节级 dry_run 段独立）
 planning_dry_run:
