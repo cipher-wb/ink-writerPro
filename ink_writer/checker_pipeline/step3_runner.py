@@ -15,8 +15,8 @@ CLI:
 
 Exit codes:
   0 = 全 hard pass（或 shadow 模式总是 0）
-  1 = 有 hard fail（enforce 模式才会触发）
-  2 = 内部错误（load state 失败 / gate 本身抛异常）
+  1 = 有 hard fail（enforce 模式才会触发；可重写的阻断）
+  2 = 硬阻断 hard_blocked 需要人工介入（US-013）或内部错误
 """
 from __future__ import annotations
 
@@ -163,22 +163,26 @@ class Step3Result:
     chapter_id: int
     mode: str
     passed: bool
+    hard_blocked: bool = False  # US-013: 重写后仍失败，需人工介入
     hard_fails: list[GateFailure] = field(default_factory=list)
     soft_fails: list[GateFailure] = field(default_factory=list)
     gate_results: dict = field(default_factory=dict)
     duration_ms: int = 0
     error: str | None = None
+    rewrite_attempted: bool = False  # US-013: 是否尝试了全章重写
 
     def to_dict(self) -> dict:
         return {
             "chapter_id": self.chapter_id,
             "mode": self.mode,
             "passed": self.passed,
+            "hard_blocked": self.hard_blocked,
             "hard_fails": [f.to_dict() for f in self.hard_fails],
             "soft_fails": [f.to_dict() for f in self.soft_fails],
             "gate_results": self.gate_results,
             "duration_ms": self.duration_ms,
             "error": self.error,
+            "rewrite_attempted": self.rewrite_attempted,
         }
 
 
@@ -604,6 +608,34 @@ async def run_step3(
         result.passed = True
     else:  # enforce
         result.passed = len(result.hard_fails) == 0
+        # US-013: hard block rewrite — 三个硬门禁失败时全章重写
+        if not result.passed and not dry_run:
+            _HARD_BLOCK_GATES = {"anti_detection", "colloquial", "directness"}
+            hard_block_fails = [f for f in result.hard_fails if f.gate_id in _HARD_BLOCK_GATES]
+            if hard_block_fails:
+                try:
+                    from ink_writer.checker_pipeline.hard_block_rewrite import (
+                        run_hard_block_rewrite,
+                    )
+                    project_root = Path(bundle.get("project_root", "."))
+                    rewrite_result = run_hard_block_rewrite(
+                        chapter_text=bundle.get("chapter_text", ""),
+                        chapter_id=chapter_id,
+                        gate_results=result.gate_results,
+                        project_root=project_root,
+                    )
+                    result.rewrite_attempted = True
+                    if rewrite_result.hard_blocked:
+                        result.hard_blocked = True
+                        result.passed = False
+                    elif rewrite_result.rewritten_text and rewrite_result.retry_count > 0:
+                        # 重写成功 → 标记 passed
+                        result.passed = True
+                        result.hard_fails = [f for f in result.hard_fails
+                                             if f.gate_id not in _HARD_BLOCK_GATES]
+                        result.hard_blocked = False
+                except Exception as exc:
+                    logger.warning("hard block rewrite failed: %s", exc)
 
     result.duration_ms = int((time.time() - t0) * 1000)
 
@@ -646,13 +678,20 @@ def main() -> int:
     if args.json:
         print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
     else:
-        status_icon = "✅" if result.passed else "❌"
+        if result.hard_blocked:
+            print(f"CHAPTER_HARD_BLOCKED: {result.chapter_id}", file=sys.stderr)
+        status_icon = "🚫" if result.hard_blocked else ("✅" if result.passed else "❌")
         print(f"{status_icon} step3_runner ch{result.chapter_id} mode={result.mode} "
-              f"passed={result.passed} hard_fails={len(result.hard_fails)} "
+              f"passed={result.passed} hard_blocked={result.hard_blocked} "
+              f"hard_fails={len(result.hard_fails)} "
               f"soft_fails={len(result.soft_fails)} duration={result.duration_ms}ms",
               file=sys.stderr)
 
     if result.error:
+        return 2
+    if result.hard_blocked:
+        # US-013: 硬阻断 — 重写后仍失败，需人工介入
+        print(f"CHAPTER_HARD_BLOCKED: {result.chapter_id}")
         return 2
     if mode == MODE_ENFORCE and not result.passed:
         return 1

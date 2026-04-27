@@ -666,3 +666,33 @@ prompt = build_polish_prompt(
 原 Step 1.x ~ Step 6 流程在 ink-write 主链路（非 `rewrite_loop`）调用 polish-agent
 时仍是权威路径。后续若把 M3 流程并入 ink-write 主链路（M4+），届时再统一收口。
 
+
+## Hard Block Rewrite Mode (US-013)
+
+> **触发条件**：anti-detection-checker 零容忍命中 OR colloquial-checker severity=red OR directness-checker severity=red
+
+当任一硬门禁触发 red 时，polish-agent 进入**全章重写模式**而非句级修补：
+
+### 执行流程
+
+1. **收集违规清单**：汇总三个 checker 的 issue 列表，按 severity 排序
+2. **注入爆款参考**：调用 `ink_writer.retrieval.inject_explosive_examples()` 检索 3 条爆款段落
+3. **全章重写**：以原章为 reference + 违规清单 + 爆款段落，一次 LLM 调用全章重写
+4. **重写后复检**：重写结果再过 anti-detection / colloquial / directness 三个 checker
+5. **二次仍 red**：标记 `chapter_status: hard_blocked`，写 `reports/blocked/chapter_NNN.md`，退出 code 2
+
+### 配置
+
+- `config/anti-detection.yaml` 中 `max_hard_block_retries: 1`（默认重写 1 次）
+- `prose_overhaul_enabled: false` 时跳过 Hard Block Rewrite Mode（回退旧行为）
+
+### 退出码
+
+- `ink-write` CLI 在 hard_blocked 时退出 code 2
+- stdout 打印 `CHAPTER_HARD_BLOCKED: NNN`
+- 被阻断的章节不写入正文/ 目录（保留原版）
+
+### 与旧行为兼容
+
+- `prose_overhaul_enabled: false` → 所有 hard block 逻辑跳过，走旧 polish 路径
+- `max_hard_block_retries: 0` → 不重写，直接标 hard_blocked

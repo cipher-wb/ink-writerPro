@@ -153,3 +153,6 @@ zero_tolerance:
       - "\\.\\.\\."   # ASCII 三点
     density_threshold: 8.0
     whitelist_patterns: []
+
+# US-013: 硬阻断最大重写次数（默认 1）
+max_hard_block_retries: 1
