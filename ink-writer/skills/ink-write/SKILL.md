@@ -2169,6 +2169,18 @@ if (C.1 == FAIL 且已自动修复) or (C.3 == WARNING):
 - **最多修复 3 章**：超过 3 章受影响说明问题系统性，暂停并输出诊断报告
 - **修复失败不阻断**：记录 WARNING 继续进入 Step 6，留给检查点处理
 
+### Step 5.6：设定集自动同步
+
+```bash
+python3 "${INK_WRITER_ROOT}/ink-writer/scripts/sync_settings.py" \
+  --project-root "${PROJECT_ROOT}"
+```
+
+- 每次写完一章后调用，将 index.db 中的新实体增量同步到 設定集/ markdown 文件。
+- 幂等操作，重复运行不会重复追加。
+- **失败不阻断写作**：若 exit code ≠ 0，输出 WARNING 并继续 Step 6，留给 ink-plan 检查点处理。
+- 若脚本不存在，跳过本步骤。
+
 ### Step 6：Git 备份（可失败但需说明）
 
 ```bash
