@@ -83,7 +83,7 @@ model: inherit
 
 ## 爆款范式锚定（US-012：Explosive Hit Few-Shot）
 
-> **起草前可选执行**：若 `data/explosive_hit_index.json` 索引文件存在，通过 `ink_writer.prose.explosive_retriever.ExplosiveRetriever` 检索 3 条与本章大纲最相似的爆款段落作为风格锚定。本步骤**非硬依赖**——索引缺失时跳过，不影响起草。
+> **起草前可选执行**：若 `data/explosive_hit_index.json` 索引文件存在，通过 `ink_writer.retrieval.explosive_retriever.ExplosiveRetriever` 检索 3 条与本章大纲最相似的爆款段落作为风格锚定。本步骤**非硬依赖**——索引缺失时跳过，不影响起草。
 
 ### 执行流程
 
