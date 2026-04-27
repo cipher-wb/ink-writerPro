@@ -73,11 +73,10 @@ def test_should_skip_sensory_immersion_handles_string_chapter_fallback():
 def test_writer_agent_l10b_marks_non_directness_only():
     text = _WRITER_AGENT_SPEC.read_text(encoding="utf-8")
     assert "L10b 感官锚点法则" in text
-    # 关键短语锚定：US-007 要求 L10b 段显式标注"仅在非 Directness Mode 场景生效"
+    # US-009: L10b 段改为标注"仅在 colloquial-checker 非 red 时生效"
     l10b_idx = text.index("L10b 感官锚点法则")
-    # 取本行为断言区间（标题后 400 字）
     l10b_slice = text[l10b_idx : l10b_idx + 400]
-    assert "仅在非 Directness Mode 场景生效" in l10b_slice
+    assert "colloquial-checker" in l10b_slice
 
 
 def test_writer_agent_l10e_marks_non_directness_only():
@@ -85,7 +84,7 @@ def test_writer_agent_l10e_marks_non_directness_only():
     assert "L10e 感官主导模态法则" in text
     l10e_idx = text.index("L10e 感官主导模态法则")
     l10e_slice = text[l10e_idx : l10e_idx + 400]
-    assert "仅在非 Directness Mode 场景生效" in l10e_slice
+    assert "colloquial-checker" in l10e_slice
 
 
 def test_writer_agent_directness_suspension_protocol_explicit():
