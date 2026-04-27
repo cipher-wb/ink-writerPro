@@ -75,6 +75,14 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--min-corpus-files", type=int, default=100)
     parser.add_argument("--auto-create-infra-cases", action="store_true")
     parser.add_argument("--raise-on-fail", action="store_true")
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=None,
+        help="Project root directory. When set, all relative paths "
+        "(reference-root, case-library-root, editor-wisdom-rules) "
+        "are resolved against this directory.",
+    )
     return parser
 
 
@@ -86,16 +94,24 @@ def _format_report(report: PreflightReport) -> str:
     return "\n".join(lines) + "\n"
 
 
+def _resolve(path: Path, project_root: Path | None) -> Path:
+    """Resolve *path* to absolute if *project_root* is given and *path* is relative."""
+    if project_root is not None and not path.is_absolute():
+        return (project_root / path).resolve()
+    return path
+
+
 def _build_config(args: argparse.Namespace) -> PreflightConfig:
     qdrant_cfg = (
         None
         if args.qdrant_in_memory
         else QdrantConfig(host=args.qdrant_host, port=args.qdrant_port)
     )
+    pr = args.project_root
     return PreflightConfig(
-        reference_root=args.reference_root,
-        case_library_root=args.case_library_root,
-        editor_wisdom_rules_path=args.editor_wisdom_rules,
+        reference_root=_resolve(args.reference_root, pr),
+        case_library_root=_resolve(args.case_library_root, pr),
+        editor_wisdom_rules_path=_resolve(args.editor_wisdom_rules, pr),
         qdrant_config=qdrant_cfg,
         qdrant_in_memory=args.qdrant_in_memory,
         require_embedding_key=args.require_embedding_key,

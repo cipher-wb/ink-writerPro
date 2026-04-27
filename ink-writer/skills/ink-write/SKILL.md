@@ -315,13 +315,13 @@ Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.p
 **在进入后续所有 Step 之前，必须先跑以下 preflight 命令，退出码非 0 时一律阻断后续流程。** 失败会被 `--auto-create-infra-cases` 自动落盘为 `infra_health` 病例（去重到 `data/case_library/cases/CASE-YYYY-NNNN.yaml`），便于运维用 `ink case list` 查看。
 
 ```bash
-python3 -m ink_writer.preflight.cli --auto-create-infra-cases --raise-on-fail
+python3 -m ink_writer.preflight.cli --project-root "${PROJECT_ROOT}" --auto-create-infra-cases --raise-on-fail
 ```
 <!-- windows-ps1-sibling -->
 Windows（PowerShell，与上方 bash 块等价）：
 
 ```powershell
-python -m ink_writer.preflight.cli --auto-create-infra-cases --raise-on-fail
+python -m ink_writer.preflight.cli --project-root "$env:PROJECT_ROOT" --auto-create-infra-cases --raise-on-fail
 ```
 
 退出码约定：`0` 全部通过 → 继续；`1` 至少一项失败（stdout 已列出 `[FAIL] <name>: <detail>`，且失败项已入病例库）；`2` 顶层异常。非 0 退出时**禁止继续后续 Step**。

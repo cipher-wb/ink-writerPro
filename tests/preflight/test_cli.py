@@ -86,3 +86,113 @@ def test_cli_failed_returns_nonzero(
         line.startswith("[FAIL]") and "editor_wisdom_index_loadable" in line
         for line in captured.out.splitlines()
     ), captured.out
+
+
+# ── US-001: --project-root path resolution ──────────────────────────
+
+
+def test_project_root_resolves_relative_paths(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """When --project-root is set, relative --reference-root etc. are
+    resolved against it instead of CWD."""
+    project_root = tmp_path / "my_project"
+    reference_corpus = project_root / "benchmark" / "reference_corpus"
+    case_library = project_root / "data" / "case_library"
+    rules_file = project_root / "data" / "editor-wisdom" / "rules.json"
+
+    _make_reference_corpus(reference_corpus, n=5)
+    (case_library / "cases").mkdir(parents=True, exist_ok=True)
+    _make_rules_file(rules_file)
+
+    argv = [
+        "--project-root",
+        str(project_root),
+        "--reference-root",
+        "benchmark/reference_corpus",
+        "--case-library-root",
+        "data/case_library",
+        "--editor-wisdom-rules",
+        "data/editor-wisdom/rules.json",
+        "--qdrant-in-memory",
+        "--no-require-embedding-key",
+        "--no-require-rerank-key",
+        "--min-corpus-files",
+        "1",
+    ]
+
+    rc = main(argv)
+    captured = capsys.readouterr()
+    assert rc == 0, f"preflight failed:\n{captured.out}"
+    assert captured.out.splitlines()[0] == "all_passed=True"
+
+
+def test_project_root_preserves_absolute_paths(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Absolute paths passed to --reference-root etc. are left untouched
+    even when --project-root is set."""
+    project_root = tmp_path / "my_project"
+    reference_corpus = tmp_path / "standalone_corpus"
+    case_library = tmp_path / "standalone_cases"
+    rules_file = tmp_path / "standalone_rules.json"
+
+    _make_reference_corpus(reference_corpus, n=5)
+    (case_library / "cases").mkdir(parents=True, exist_ok=True)
+    _make_rules_file(rules_file)
+    # Ensure project_root does NOT have these directories.
+    (project_root / "benchmark" / "reference_corpus").mkdir(parents=True, exist_ok=True)
+    # project_root's reference_corpus has NO .txt files.
+
+    argv = [
+        "--project-root",
+        str(project_root),
+        "--reference-root",
+        str(reference_corpus),   # absolute — should win
+        "--case-library-root",
+        str(case_library),
+        "--editor-wisdom-rules",
+        str(rules_file),
+        "--qdrant-in-memory",
+        "--no-require-embedding-key",
+        "--no-require-rerank-key",
+        "--min-corpus-files",
+        "1",
+    ]
+
+    rc = main(argv)
+    captured = capsys.readouterr()
+    assert rc == 0, f"preflight failed:\n{captured.out}"
+    assert captured.out.splitlines()[0] == "all_passed=True"
+
+
+def test_no_project_root_uses_cwd_unchanged(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Without --project-root, paths are used as-is (backward compat)."""
+    reference_corpus = tmp_path / "my_corpus"
+    case_library = tmp_path / "my_cases"
+    rules_file = tmp_path / "my_rules.json"
+
+    _make_reference_corpus(reference_corpus, n=3)
+    (case_library / "cases").mkdir(parents=True, exist_ok=True)
+    _make_rules_file(rules_file)
+
+    argv = [
+        "--reference-root",
+        str(reference_corpus),
+        "--case-library-root",
+        str(case_library),
+        "--editor-wisdom-rules",
+        str(rules_file),
+        "--qdrant-in-memory",
+        "--no-require-embedding-key",
+        "--no-require-rerank-key",
+        "--min-corpus-files",
+        "1",
+    ]
+
+    rc = main(argv)
+    captured = capsys.readouterr()
+    assert rc == 0, f"preflight failed:\n{captured.out}"
+    assert captured.out.splitlines()[0] == "all_passed=True"
