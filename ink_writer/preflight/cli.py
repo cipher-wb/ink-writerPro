@@ -59,7 +59,12 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--editor-wisdom-rules", type=Path, default=DEFAULT_EDITOR_WISDOM_RULES
     )
-    parser.add_argument("--qdrant-in-memory", action="store_true")
+    parser.add_argument(
+        "--qdrant-in-memory",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Use in-memory Qdrant (default). Use --no-qdrant-in-memory for real server.",
+    )
     parser.add_argument("--qdrant-host", default="127.0.0.1")
     parser.add_argument("--qdrant-port", type=int, default=6333)
     parser.add_argument(

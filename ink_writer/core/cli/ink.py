@@ -331,6 +331,42 @@ def _build_preflight_report(explicit_project_root: Optional[str]) -> dict:
                 "error": f"RAG 配置加载失败: {exc}",
             })
 
+    # US-003: 委托综合 preflight（6 项检查）统一两个入口的检查逻辑
+    if project_root:
+        try:
+            from ink_writer.preflight.checker import PreflightConfig, run_preflight
+
+            pr = Path(project_root)
+            preflight_config = PreflightConfig(
+                reference_root=pr / "benchmark" / "reference_corpus",
+                case_library_root=pr / "data" / "case_library",
+                editor_wisdom_rules_path=pr / "data" / "editor-wisdom" / "rules.json",
+                qdrant_in_memory=True,
+                require_embedding_key=True,
+                require_rerank_key=True,
+                min_corpus_files=100,
+                project_root=project_root,
+            )
+            preflight_report = run_preflight(
+                preflight_config,
+                raise_on_fail=False,
+                auto_create_infra_cases=False,
+            )
+            for r in preflight_report.results:
+                checks.append({
+                    "name": r.name,
+                    "ok": r.passed,
+                    "path": "",
+                    "detail": r.detail,
+                })
+        except Exception as exc:
+            checks.append({
+                "name": "comprehensive_preflight",
+                "ok": False,
+                "path": "",
+                "error": f"综合 preflight 执行失败: {exc}",
+            })
+
     return {
         "ok": all(bool(item["ok"]) for item in checks),
         "project_root": project_root,
