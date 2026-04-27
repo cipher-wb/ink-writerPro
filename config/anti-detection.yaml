@@ -3,6 +3,9 @@
 
 enabled: true
 
+# Prose Anti-AI Overhaul 总开关（false 时三个子开关全强制 false）
+prose_overhaul_enabled: true
+
 # 综合评分阈值（anti-detection-checker overall_score）
 score_threshold: 70.0
 golden_three_threshold: 80.0
