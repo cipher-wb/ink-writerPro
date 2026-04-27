@@ -91,6 +91,10 @@ class ExplosiveRetriever:
         if not self._slices:
             return []
 
+        # Reject queries with no CJK characters (e.g., pure ASCII/English)
+        if not any('一' <= c <= '鿿' for c in query_text):
+            return []
+
         limit = top_k if top_k is not None else k
 
         candidates = self._slices
