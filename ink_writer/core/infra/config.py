@@ -348,6 +348,30 @@ class DataModulesConfig:
     pacing_words_per_point_good: int = 1500
     pacing_words_per_point_acceptable: int = 2000
 
+    # ================= 平台感知 pacing/strand =================
+    _platform: str = "qidian"
+
+    @property
+    def platform(self) -> str:
+        return self._platform
+
+    @platform.setter
+    def platform(self, value: str) -> None:
+        if value in ("qidian", "fanqie"):
+            self._platform = value
+
+    @property
+    def pacing_words_per_point_block(self) -> int:
+        if self._platform == "fanqie":
+            return 500
+        return self.pacing_words_per_point_acceptable
+
+    @property
+    def strand_quest_max_consecutive_platform(self) -> int:
+        if self._platform == "fanqie":
+            return 3
+        return self.strand_quest_max_consecutive
+
     # ================= RAG 存储 =================
     @property
     def rag_db(self) -> Path:
