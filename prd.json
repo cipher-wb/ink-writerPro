@@ -39,8 +39,8 @@
         "Tests pass (pytest tests/prose/test_blacklist_pretentious_load.py)"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. Added 32 pretentious_verbs + 36 pretentious_nouns + 32 pretentious_adverbs + 100-entry replacement_map to prose-blacklist.yaml (version 2). Loader gained ReplacementMap dataclass with bidirectional forward/reverse lookup + 4 helper loaders. 22 new tests in test_blacklist_pretentious_load.py + 1 regression-fixed in test_simplification_pass.py (苍茫→广袤 fixture swap)."
     },
     {
       "id": "US-003",

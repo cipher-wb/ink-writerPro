@@ -7,6 +7,11 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
 - 所有 ZT 规则都带 `whitelist_patterns: []` 字段（loader 强制存在，运行时尚未消费）；后续若要做"对话被打断豁免/引用片段豁免"在 `_rule_violated` 内补豁免逻辑即可，YAML schema 不用动。
 - `check_zero_tolerance` 走 first-match 短路：YAML 顺序决定哪条规则先报；测试 density 规则的细分行为时用 `AntiDetectionConfig(zero_tolerance=[single_rule])` 隔离，比给定 fixture 同时违反多条规则更可控。
 - 测试样本里的 `「」` (U+300C/D) 是中文方头括号，**不**在 `ZT_AI_QUOTES` 黑名单内（黑名单只针对 U+201C/D/2018/9 + «»）；这是合规的爆款引号风格。
+- `prose-blacklist.yaml` 现在有 6 大类 + replacement_map（version 2）；新增三类（pretentious_verbs/nouns/adverbs）通过 `CATEGORIES` 元组扩展自动落入 `Blacklist.entries` —— 不需要改 `_parse_entry`/`match`，只要把新类目加到 `CATEGORIES` 就被加载。
+- `Blacklist` 数据类增加了 `replacement_map: ReplacementMap` 字段（默认空）；equality 仍然成立因为 frozen dataclass 字段比较走 `__eq__`，旧测试 `Blacklist(version=0, entries=())` 与 `_empty()` 仍然相等。
+- `ReplacementMap.lookup()` 取首项是 polish-agent simplification_pass 的"机械替换"约定；YAML 顺序决定首项 → 改顺序 = 改默认替换。`origins(replacement)` 反查可服务"语义聚类"（盯着 ← 凝视 + 凝望 + 凝眸）。
+- 词表新加词时，**必须**先验证不与 abstract_adjectives/empty_phrases/pretentious_metaphors 重复（test_no_word_collisions_across_pretentious_categories 强制三个新域互斥；与老三域共存的检查靠 spot review）。
+- 改 prose-blacklist.yaml 时 simplification_pass 测试 fixture **可能**被新词命中（test_redundant_paragraph_reduced_and_blacklist_cleared 里"苍茫"被吃进 pretentious_nouns 后就破了）；S1 规则只清 abstract_adjectives，新域要等 US-003 接 replacement_map 才会被自动剥除。
 
 ## 2026-04-27 13:50 - US-001
 - **What**: anti-detection.yaml 新增 5 条标点 AI 指纹零容忍规则（ZT_EM_DASH / ZT_AI_QUOTES / ZT_HYPHEN_AS_DASH / ZT_DENSE_DUNHAO / ZT_ELLIPSIS_OVERUSE），扩展 ZeroToleranceRule 支持 `kind=density` 模式。
@@ -23,4 +28,21 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
   - 项目 ruff 不在 CI 强制（pre-existing F541 长期未修），但 `SIM110` / `I001` / `UP009` 这种新引入的违规要顺手修掉，避免后续清理债。
   - 零容忍规则 first-match 短路：写 fixture 时如果想各自测两条 density 规则，要么用不同 fixture（推荐），要么用 `AntiDetectionConfig(zero_tolerance=[single_rule])` 临时隔离。
   - `tests/anti_detection/test_zt_extended.py::TestRuleInventory.test_eight_rules_loaded` 用 `>= 8` 而非 `==`，加新规则不会破坏它；如果未来要严格锁定数量，记得同步更新此测试的下界。
+---
+
+## 2026-04-27 14:20 - US-002
+- **What**: 扩展 prose-blacklist.yaml 加爆款风装逼词三域 + replacement_map。version: 1 → 2。新增 32 verbs + 36 nouns + 32 adverbs（合计 100，超 90 词阈值）+ 100-条 replacement_map（凝视 → [盯着, 看着, 死盯] 等）。Loader 暴露 `ReplacementMap` 数据类，支持 `lookup(word)` 正向 + `origins(replacement)` 反向查询；新增 4 个模块级 helper：`load_pretentious_{verbs,nouns,adverbs}` + `load_replacement_map`。
+- **Files changed**:
+  - `ink-writer/assets/prose-blacklist.yaml` (+~290 行: 3 个新类 + 100 条 replacement_map + 顶部注释扩到 6 类)
+  - `ink_writer/prose/blacklist_loader.py` (+`ReplacementMap` 数据类, +`Blacklist.replacement_map` 字段, +`_parse_replacement_map` helper, +4 个 module-level loader, +3 个 category property)
+  - `tests/prose/test_blacklist_pretentious_load.py` (新增, 22 tests)
+  - `tests/prose/test_simplification_pass.py` (1 fixture 修复: 苍茫 → 广袤，因为 苍茫 现在在 pretentious_nouns)
+- **Tests**: 89 passed (18 baseline blacklist_loader + 22 new pretentious_load + 49 simplification_pass + others). 0 regression caused by US-002. 4 unrelated pre-existing failures verified via stash test (agent count drift / cli stdio policy / subprocess encoding policy — none touch prose).
+- **Learnings for future iterations**:
+  - 加新 category：扩展 `CATEGORIES` tuple 即可，loader `for category in CATEGORIES` 自动消费；不要在 `_parse_entry` 里硬编码类型分支。
+  - `Blacklist` 用 `field(default_factory=ReplacementMap)` 给新字段一个默认值；这样 `Blacklist(version=0, entries=())` 仍然合法且与 `_empty()` 输出 equal —— 老测试不破。
+  - YAML 词表必须**人工 audit 互斥**：新加词时 grep 确认不在已有 abstract_adjectives/empty_phrases/pretentious_metaphors 里，否则会双计数（test_no_word_collisions_across_pretentious_categories 现在只防三个新域互斥，老域 vs 新域要靠 spot review）。
+  - replacement_map 反向索引"原词共享同一替换"是设计：`盯着 ← 凝视 + 凝望` 让 polish 的语义聚类有线索；构建 reverse 时用 `setdefault(rep, []).append(word)` + 末尾 `tuple()` 转换，保留首见顺序。
+  - 改 prose-blacklist.yaml 加新词时，`tests/prose/test_simplification_pass.py` 的 fixture 文本可能突然命中：因为 `_count_total_hits` 数 ALL 类，而 S1 规则只清 abstract_adjectives。每次新增类要复查 simplification 测试 fixture，必要时把 fixture 替换为不在任一 BL 的近义词（本次：苍茫 → 广袤）。
+  - frozen dataclass + dict field：dataclass 本身 frozen 但 dict 内容可变；运行时不强制不可变性，靠"loader 是唯一构造点"约定。如果将来要真正锁定，换 `MappingProxyType`。
 ---

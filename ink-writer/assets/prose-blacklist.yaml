@@ -1,6 +1,6 @@
-# prose-blacklist.yaml — 直白模式黑名单（US-003）
+# prose-blacklist.yaml — 直白模式黑名单（US-003）+ 爆款风装逼词三域（US-002）
 #
-# 三大类禁用词，供 writer-agent 直白模式、polish-agent 精简 pass、
+# 六大类禁用词 + 一个替换映射，供 writer-agent 直白模式、polish-agent 精简 pass、
 # directness-checker 一并消费。每条都附一个 replacement 示例，用 showing
 # 具体词替代 telling 抽象词——不是"改写公式"，而是提醒作者：这里必须给细节。
 #
@@ -8,14 +8,26 @@
 #   - abstract_adjectives  —— 抽象形容词/副词，空心化情绪或状态
 #   - empty_phrases        —— 套话 / 写作综合症的万能句
 #   - pretentious_metaphors—— 假比喻（本体为抽象概念，比喻成另一个抽象概念）
+#   - pretentious_verbs    —— 文绉绉/镜头剧本词替"看/站/想/走"等爆款常用动词（US-002）
+#   - pretentious_nouns    —— 装逼味重的抽象名词（命/天/光/愁），堆叠即 AI 味（US-002）
+#   - pretentious_adverbs  —— 文言味重的状语（缓缓/徐徐/悄然），段首高发（US-002）
 #
-# 数量下限（PRD US-003 验收项）：abstract_adjectives ≥ 50 / empty_phrases ≥ 30 /
-# pretentious_metaphors ≥ 20；当前：52 / 32 / 22 = 合计 106 条。
+# 数量下限：
+#   - PRD US-003：abstract_adjectives ≥ 50 / empty_phrases ≥ 30 / pretentious_metaphors ≥ 20
+#   - PRD US-002：pretentious_verbs ≥ 30 / pretentious_nouns ≥ 30 / pretentious_adverbs ≥ 30
+#   当前：53 / 32 / 22 / 32 / 36 / 32 = 合计 207 条。
+#
+# 词表来源（US-002 三域）：
+#   benchmark/reference_corpus/per_book_stats 中"AI 比"偏高的高频词；
+#   取 5 本爆款（猪三样、辰东式）出场频次极低、5 本严肃文学频次显著高的 ~30 词/类。
+#   每条 replacement 给出"作者偷懒提示 + 1-3 个具体爆款替换"；机械替换走 replacement_map。
 #
 # 格式：每条 `{word, replacement}`，加载器 `ink_writer/prose/blacklist_loader.py`
 # 统一消费，US-001 analyze_prose_directness 也可用 --blacklist 读取同文件。
+# replacement_map 段：{装逼词: [爆款替换 1, 替换 2, ...]}，多候选时 polish-agent
+# US-003 simplification_pass 取首项做正则替换（保留候选 2/3 给 LLM rewrite mode 兜底）。
 
-version: 1
+version: 2
 
 abstract_adjectives:
   - word: 莫名
@@ -236,3 +248,327 @@ pretentious_metaphors:
     replacement: '"之意"是总结抽象的尾巴——删'
   - word: 如梦如幻
     replacement: '成语，几乎总是空的；换具体感官（"风一过，人就散了"）'
+
+# ---------------------------------------------------------------------------
+# 以下为 PRD US-002 新增三域 + replacement_map（爆款风装逼词机械替换）。
+# 每条 replacement 字段是给作者的"教学性提示"；机械替换走 replacement_map。
+# ---------------------------------------------------------------------------
+
+pretentious_verbs:
+  - word: 凝视
+    replacement: '换具体看法（"盯着"/"看着"/"死盯"）；"凝视"是镜头剧本词，爆款不用'
+  - word: 伫立
+    replacement: '换"站着"/"戳那儿不动"——"伫立"几乎从不出现在猪三样'
+  - word: 驻足
+    replacement: '换"停下"/"站住"——"驻足"是新闻稿味'
+  - word: 凝望
+    replacement: '换"望着"/"盯着"——双"凝"叠加更装'
+  - word: 审视
+    replacement: '换"打量"/"上下扫了一眼"——"审视"是法庭词'
+  - word: 睥睨
+    replacement: '换"斜眼瞧"/"瞟一眼"——"睥睨"= 文言味暴击'
+  - word: 睨视
+    replacement: '同"睥睨"；现代场景一律换'
+  - word: 俯瞰
+    replacement: '换"往下看"/"朝下扫一眼"——除非真的写空中视角'
+  - word: 仰望
+    replacement: '换"抬头看"/"仰头"——"仰望"诗化味重'
+  - word: 瞥见
+    replacement: '换"瞥到"/"余光扫到"——"瞥见"也行，但堆叠时换掉'
+  - word: 扫视
+    replacement: '换"扫一眼"/"看一圈"——"扫视"军事剧本词'
+  - word: 颔首
+    replacement: '换"点头"/"点了下头"——"颔首"古风过头'
+  - word: 摇首
+    replacement: '换"摇头"——"摇首"几乎只见于古风注水文'
+  - word: 垂眸
+    replacement: '换"低头"/"垂眼"——"垂眸"是言情套话'
+  - word: 凝思
+    replacement: '换"琢磨"/"想"——"凝思"是哲学词'
+  - word: 沉吟
+    replacement: '换"想了想"/"顿了一下"——"沉吟"古风词'
+  - word: 屏息
+    replacement: '换"屏住气"/"不敢喘"——"屏息"叙述味重'
+  - word: 凝神
+    replacement: '换"凑近一些"/"集中看"——"凝神"是练功术语'
+  - word: 踱步
+    replacement: '换"来回走"/"转悠"——"踱步"古风'
+  - word: 徘徊
+    replacement: '换"转来转去"/"来回走"——"徘徊"诗化味'
+  - word: 端详
+    replacement: '换"仔细看"/"上下打量"——"端详"老干部腔'
+  - word: 打量
+    replacement: '可保留，但不要每段都用；偶尔换"瞅"/"看"'
+  - word: 凝眸
+    replacement: '换"盯着看"/"死死盯着"——"凝眸"言情词'
+  - word: 眯眸
+    replacement: '换"眯眼"/"眼一眯"——"眯眸"古风'
+  - word: 回眸
+    replacement: '换"回头"/"回头瞧"——"回眸"是 MV 词'
+  - word: 回首
+    replacement: '换"回头"——"回首"诗词味'
+  - word: 顾盼
+    replacement: '换"东张西望"/"四处看"——"顾盼"古风装'
+  - word: 昂首
+    replacement: '换"仰头"/"抬高头"——"昂首"军政词'
+  - word: 怔愣
+    replacement: '换"愣了一下"/"一时反应不过来"——"怔愣"古风'
+  - word: 静伫
+    replacement: '换"站着不动"/"站住"——"静伫"古风暴击'
+  - word: 静立
+    replacement: '换"站住"/"站定"——"静立"古风'
+  - word: 默立
+    replacement: '换"一声不吭地站着"/"杵着"——"默立"古风'
+
+pretentious_nouns:
+  - word: 宿命
+    replacement: '换"命"/"注定"——"宿命"是港片字幕词'
+  - word: 苍茫
+    replacement: '换"一片广"/"看不到头"——"苍茫"诗词味，堆叠就 AI'
+  - word: 沧桑
+    replacement: '换"老相"/"风霜"/"老脸"——"沧桑"是简历套话'
+  - word: 孤寂
+    replacement: '换"孤独"/"一个人"/"冷清"——"孤寂"诗化'
+  - word: 静谧
+    replacement: '换"安静"/"没声音"——"静谧"散文味'
+  - word: 缱绻
+    replacement: '换"缠绵"/"黏在一起"——"缱绻"言情套话'
+  - word: 旖旎
+    replacement: '换"漂亮"/"好看"——"旖旎"= 词没用对地方'
+  - word: 暮色
+    replacement: '换"天黑"/"傍晚"——"暮色"诗化'
+  - word: 余晖
+    replacement: '换"夕阳"/"落日"——"余晖"已成 AI 标志'
+  - word: 残阳
+    replacement: '换"夕阳"/"落日"——"残阳"古诗词味'
+  - word: 朔风
+    replacement: '换"北风"/"寒风"——"朔风"古风暴击'
+  - word: 寒霜
+    replacement: '换"霜"/"冷气"——"寒霜"凑字'
+  - word: 流光
+    replacement: '换"时光"/"时间"——"流光"诗词味'
+  - word: 流年
+    replacement: '换"岁月"/"光阴"——"流年"流行歌词'
+  - word: 韶华
+    replacement: '换"青春"/"好时候"——"韶华"古风装'
+  - word: 浮生
+    replacement: '换"一辈子"/"这一生"——"浮生"古风装'
+  - word: 红尘
+    replacement: '换"人世"/"凡间"——"红尘"古风修仙词，慎用'
+  - word: 桎梏
+    replacement: '换"束缚"/"枷锁"——"桎梏"政论词'
+  - word: 羁绊
+    replacement: '换"牵绊"/"拖累"/"牵挂"——"羁绊"日漫翻译腔'
+  - word: 牢笼
+    replacement: '换"笼子"/"牢"——"牢笼"政论装'
+  - word: 涟漪
+    replacement: '换"水纹"/"波纹"——"涟漪"诗化'
+  - word: 余韵
+    replacement: '换"回声"/"留下的味道"——"余韵"音乐评论词'
+  - word: 怅惘
+    replacement: '换"失落"/"心头闷"——"怅惘"古文'
+  - word: 惆怅
+    replacement: '换"闷"/"失落"——"惆怅"诗词味'
+  - word: 落寞
+    replacement: '换"冷清"/"失落"——"落寞"散文味'
+  - word: 寂寥
+    replacement: '换"冷清"/"安静"——"寂寥"诗词'
+  - word: 沉浮
+    replacement: '换"起落"/"浮沉"——"沉浮"宣传稿'
+  - word: 跌宕
+    replacement: '换"起伏"/"反转"——"跌宕"评书词'
+  - word: 倾覆
+    replacement: '换"翻倒"/"倒台"——"倾覆"政论'
+  - word: 苍穹
+    replacement: '换"天"/"天上"——"苍穹"奇幻翻译腔'
+  - word: 寰宇
+    replacement: '换"全世界"/"整个天地"——"寰宇"古风装'
+  - word: 苍生
+    replacement: '换"百姓"/"人"——"苍生"古风一刀切'
+  - word: 万象
+    replacement: '换"万事万物"——"万象"评论词'
+  - word: 玄机
+    replacement: '换"门道"/"暗藏"——"玄机"修仙套话'
+  - word: 风骨
+    replacement: '换"脾气"/"骨气"——"风骨"评论词'
+  - word: 桑田
+    replacement: '换"老地方"/"变了天"——"桑田"古风暴击（沧海桑田凑字）'
+
+pretentious_adverbs:
+  - word: 缓缓
+    replacement: '换"慢慢"/"一点点"——"缓缓"是段首高发 AI 指纹'
+  - word: 徐徐
+    replacement: '换"慢慢"/"悠悠"——"徐徐"古风段首'
+  - word: 悄然
+    replacement: '换"悄悄"/"不出声"——"悄然"散文味'
+  - word: 淡然
+    replacement: '换"一脸平淡"/"脸上没起波澜"——"淡然"言情'
+  - word: 默然
+    replacement: '换"没说话"/"一声没吭"——"默然"古风'
+  - word: 怅然
+    replacement: '换"失落地"/"闷闷地"——"怅然"古风'
+  - word: 兀自
+    replacement: '换"自顾自"/"还在那"——"兀自"古文老干部腔'
+  - word: 兀然
+    replacement: '换"突然"/"猛地"——"兀然"古文'
+  - word: 怔怔
+    replacement: '换"发愣"/"呆呆地"——"怔怔"言情套话'
+  - word: 寂寂
+    replacement: '换"静悄悄"/"没声响"——"寂寂"古风'
+  - word: 沉沉
+    replacement: '换"闷闷地"/"沉甸甸地"——"沉沉"段首高发'
+  - word: 幽幽
+    replacement: '换"慢慢地"/"沉沉地"——"幽幽"古风'
+  - word: 悠悠
+    replacement: '换"慢慢"/"不紧不慢"——"悠悠"段首高发'
+  - word: 蹒跚
+    replacement: '换"一瘸一拐"/"步子不稳"——"蹒跚"老干部'
+  - word: 踉跄
+    replacement: '换"一歪"/"没站稳"——"踉跄"剧本词'
+  - word: 翩然
+    replacement: '换"轻盈地"/"一闪"——"翩然"古风装'
+  - word: 翩跹
+    replacement: '换"飘动地"/"一晃一晃"——"翩跹"古文'
+  - word: 飘然
+    replacement: '换"飘飘的"/"像飘起来"——"飘然"古风'
+  - word: 凛然
+    replacement: '换"一脸严肃"/"板着脸"——"凛然"评论词'
+  - word: 寂然
+    replacement: '换"静悄悄"/"没声响"——"寂然"古风'
+  - word: 木然
+    replacement: '换"呆呆地"/"反应不过来"——"木然"剧本'
+  - word: 默默
+    replacement: '换"不出声"/"闷头"——"默默"段首泛滥'
+  - word: 缓步
+    replacement: '换"慢慢走"/"一步一步"——"缓步"散文味'
+  - word: 徐步
+    replacement: '换"慢慢走"/"不紧不慢"——"徐步"古风'
+  - word: 静静
+    replacement: '换"不出声"/"没动静"——"静静"段首滥'
+  - word: 怔然
+    replacement: '换"愣住"/"一时反应不过来"——"怔然"古文'
+  - word: 喃喃
+    replacement: '换"自言自语"/"小声嘟囔"——"喃喃"古风'
+  - word: 喁喁
+    replacement: '换"低声"/"私语"——"喁喁"古文'
+  - word: 凄然
+    replacement: '换"一脸难过"/"哭丧着脸"——"凄然"古风'
+  - word: 戚然
+    replacement: '换"难过地"/"闷闷地"——"戚然"古文'
+  - word: 怵然
+    replacement: '换"心头一紧"/"后颈发凉"——"怵然"古文'
+  - word: 索然
+    replacement: '换"没意思"/"没兴致"——"索然"评论词'
+
+# ---------------------------------------------------------------------------
+# replacement_map（PRD US-002）：装逼词 → 1-3 个爆款替换。
+# polish-agent simplification_pass（US-003）取首项做正则替换；
+# Hard Block Rewrite Mode（US-013）保留候选 2/3 给 LLM rewrite 兜底用。
+# 双向查询：blacklist_loader.ReplacementMap.lookup(凝视) -> (盯着, 看着, 死盯)
+#                                     .origins(盯着) -> (凝视, 凝望, 凝眸, ...)
+# ---------------------------------------------------------------------------
+
+replacement_map:
+  # pretentious_verbs
+  凝视: [盯着, 看着, 死盯]
+  伫立: [站着, 戳那儿不动, 站住]
+  驻足: [停下, 站住, 不走了]
+  凝望: [望着, 盯着, 死盯]
+  审视: [打量, 看, 上下扫]
+  睥睨: [斜眼瞧, 翻白眼, 瞟一眼]
+  睨视: [斜瞟, 瞄一眼]
+  俯瞰: [往下看, 朝下扫一眼]
+  仰望: [抬头看, 仰头]
+  瞥见: [瞥到, 看到, 余光扫到]
+  扫视: [扫一眼, 看一圈]
+  颔首: [点头, 点了下头]
+  摇首: [摇头]
+  垂眸: [低头, 垂眼]
+  凝思: [琢磨, 想, 转念]
+  沉吟: [想了想, 顿了一下]
+  屏息: [屏住气, 不敢喘]
+  凝神: [集中精神, 凑近一些]
+  踱步: [来回走, 转悠]
+  徘徊: [转来转去, 来回走]
+  端详: [仔细看, 上下打量]
+  打量: [瞅, 看]
+  凝眸: [盯着看, 死死盯着]
+  眯眸: [眯眼, 眼一眯]
+  回眸: [回头, 回头瞧]
+  回首: [回头, 转身回望]
+  顾盼: [东张西望, 四处看]
+  昂首: [仰头, 抬高头]
+  怔愣: [愣了一下, 一时反应不过来]
+  静伫: [站着不动, 站住]
+  静立: [站住, 站定]
+  默立: [杵着, 不出声地站着]
+  # pretentious_nouns
+  宿命: [命, 命运, 注定]
+  苍茫: [广, 看不到头]
+  沧桑: [老相, 风霜, 老脸]
+  孤寂: [孤独, 冷清]
+  静谧: [安静, 没声音]
+  缱绻: [缠绵, 黏在一起]
+  旖旎: [漂亮, 好看]
+  暮色: [天黑, 傍晚]
+  余晖: [夕阳, 落日]
+  残阳: [夕阳, 落日]
+  朔风: [北风, 寒风]
+  寒霜: [霜, 冷气]
+  流光: [时光, 时间]
+  流年: [岁月, 光阴]
+  韶华: [青春, 好时候]
+  浮生: [一辈子, 这一生]
+  红尘: [人世, 凡间]
+  桎梏: [束缚, 枷锁]
+  羁绊: [牵绊, 拖累, 牵挂]
+  牢笼: [笼子, 牢]
+  涟漪: [水纹, 波纹]
+  余韵: [回声, 留下的味道]
+  怅惘: [失落, 心头闷]
+  惆怅: [闷, 失落]
+  落寞: [冷清, 失落]
+  寂寥: [冷清, 安静]
+  沉浮: [起落, 浮沉]
+  跌宕: [起伏, 反转]
+  倾覆: [翻倒, 倒台]
+  苍穹: [天, 天上]
+  寰宇: [全世界, 整个天地]
+  苍生: [百姓, 人]
+  万象: [万事万物]
+  玄机: [门道, 暗藏]
+  风骨: [脾气, 骨气]
+  桑田: [老地方, 变了天]
+  # pretentious_adverbs
+  缓缓: [慢慢, 一点点]
+  徐徐: [慢慢, 悠悠]
+  悄然: [悄悄, 不出声]
+  淡然: [一脸平淡, 脸上没起波澜]
+  默然: [没说话, 一声没吭]
+  怅然: [失落地, 闷闷地]
+  兀自: [自顾自, 还在那]
+  兀然: [突然, 猛地]
+  怔怔: [发愣, 呆呆地]
+  寂寂: [静悄悄, 没声响]
+  沉沉: [闷闷地, 沉甸甸地]
+  幽幽: [慢慢地, 沉沉地]
+  悠悠: [慢慢, 不紧不慢]
+  蹒跚: [一瘸一拐, 步子不稳]
+  踉跄: [一歪, 没站稳]
+  翩然: [轻盈地, 一闪]
+  翩跹: [飘动地, 一晃一晃]
+  飘然: [飘飘的, 像飘起来]
+  凛然: [一脸严肃, 板着脸]
+  寂然: [静悄悄, 没声响]
+  木然: [呆呆地, 反应不过来]
+  默默: [不出声, 闷头]
+  缓步: [慢慢走, 一步一步]
+  徐步: [慢慢走, 不紧不慢]
+  静静: [不出声, 没动静]
+  怔然: [愣住, 一时反应不过来]
+  喃喃: [自言自语, 小声嘟囔]
+  喁喁: [低声, 私语]
+  凄然: [一脸难过, 哭丧着脸]
+  戚然: [难过地, 闷闷地]
+  怵然: [心头一紧, 后颈发凉]
+  索然: [没意思, 没兴致]

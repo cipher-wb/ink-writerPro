@@ -1,11 +1,12 @@
-"""Load and query the prose directness blacklist (US-003).
+"""Load and query the prose directness blacklist (US-003) + 爆款风装逼词三域 (US-002).
 
 The YAML lives at ``ink-writer/assets/prose-blacklist.yaml`` and is consumed by:
 
 * ``writer-agent`` 直白模式（展示前 20 条作反例，US-006）
-* ``polish-agent`` 精简 pass（命中删除/替换，US-008）
+* ``polish-agent`` 精简 pass（命中删除/替换，US-008/US-003）
 * ``directness-checker``（D3 抽象词密度维度，US-005）
 * ``scripts/analyze_prose_directness.py``（``--blacklist`` 覆盖种子表）
+* ``polish-agent`` simplification_pass（``replacement_map`` 机械替换，PRD US-002/003）
 
 Hot reload
 ----------
@@ -17,7 +18,7 @@ tests that patch ``mtime_ns`` equality.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +26,9 @@ CATEGORIES: tuple[str, ...] = (
     "abstract_adjectives",
     "empty_phrases",
     "pretentious_metaphors",
+    "pretentious_verbs",
+    "pretentious_nouns",
+    "pretentious_adverbs",
 )
 
 DEFAULT_BLACKLIST_PATH = (
@@ -42,11 +46,45 @@ class BlacklistEntry:
 
 
 @dataclass(frozen=True)
+class ReplacementMap:
+    """Bidirectional view of 装逼词 → 爆款替换 (PRD US-002).
+
+    ``forward`` maps a blacklisted source word to an ordered tuple of popular
+    replacements (first item is the polish-agent default). ``reverse`` maps any
+    replacement word back to the source words that suggest it (a single
+    replacement may serve multiple originals — e.g. ``盯着`` is suggested by
+    both ``凝视`` and ``凝望``).
+    """
+
+    forward: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    reverse: dict[str, tuple[str, ...]] = field(default_factory=dict)
+
+    def lookup(self, word: str) -> tuple[str, ...]:
+        """Forward query: ``凝视`` → ``("盯着", "看着", "死盯")``. Empty if absent."""
+        return self.forward.get(word, ())
+
+    def origins(self, replacement: str) -> tuple[str, ...]:
+        """Reverse query: ``盯着`` → ``("凝视", "凝望", ...)``. Empty if absent."""
+        return self.reverse.get(replacement, ())
+
+    def words(self) -> tuple[str, ...]:
+        """Source words (forward keys), order preserved from YAML."""
+        return tuple(self.forward.keys())
+
+    def __len__(self) -> int:
+        return len(self.forward)
+
+    def __bool__(self) -> bool:
+        return bool(self.forward)
+
+
+@dataclass(frozen=True)
 class Blacklist:
     """Immutable bundle of all blacklist entries grouped by category."""
 
     version: int
     entries: tuple[BlacklistEntry, ...]
+    replacement_map: ReplacementMap = field(default_factory=ReplacementMap)
 
     @property
     def abstract_adjectives(self) -> tuple[BlacklistEntry, ...]:
@@ -59,6 +97,18 @@ class Blacklist:
     @property
     def pretentious_metaphors(self) -> tuple[BlacklistEntry, ...]:
         return tuple(e for e in self.entries if e.category == "pretentious_metaphors")
+
+    @property
+    def pretentious_verbs(self) -> tuple[BlacklistEntry, ...]:
+        return tuple(e for e in self.entries if e.category == "pretentious_verbs")
+
+    @property
+    def pretentious_nouns(self) -> tuple[BlacklistEntry, ...]:
+        return tuple(e for e in self.entries if e.category == "pretentious_nouns")
+
+    @property
+    def pretentious_adverbs(self) -> tuple[BlacklistEntry, ...]:
+        return tuple(e for e in self.entries if e.category == "pretentious_adverbs")
 
     def words(self, category: str | None = None) -> tuple[str, ...]:
         """Flat list of words, optionally filtered by category."""
@@ -144,9 +194,40 @@ def load_blacklist(path: Path | str | None = None) -> Blacklist:
             if entry is not None:
                 entries.append(entry)
 
-    bundle = Blacklist(version=version, entries=tuple(entries))
+    replacement_map = _parse_replacement_map(raw.get("replacement_map"))
+
+    bundle = Blacklist(
+        version=version,
+        entries=tuple(entries),
+        replacement_map=replacement_map,
+    )
     _CACHE[cache_key] = bundle
     return bundle
+
+
+# ---------------------------------------------------------------------------
+# Convenience loaders for new categories (PRD US-002 验收点)
+# ---------------------------------------------------------------------------
+
+
+def load_pretentious_verbs(path: Path | str | None = None) -> tuple[BlacklistEntry, ...]:
+    """Just the ``pretentious_verbs`` slice of the shipped (or custom) YAML."""
+    return load_blacklist(path).pretentious_verbs
+
+
+def load_pretentious_nouns(path: Path | str | None = None) -> tuple[BlacklistEntry, ...]:
+    """Just the ``pretentious_nouns`` slice."""
+    return load_blacklist(path).pretentious_nouns
+
+
+def load_pretentious_adverbs(path: Path | str | None = None) -> tuple[BlacklistEntry, ...]:
+    """Just the ``pretentious_adverbs`` slice."""
+    return load_blacklist(path).pretentious_adverbs
+
+
+def load_replacement_map(path: Path | str | None = None) -> ReplacementMap:
+    """Just the ``replacement_map`` section, with both forward + reverse indices."""
+    return load_blacklist(path).replacement_map
 
 
 def _parse_entry(item: Any, category: str) -> BlacklistEntry | None:
@@ -171,18 +252,65 @@ def _parse_entry(item: Any, category: str) -> BlacklistEntry | None:
     return None
 
 
+def _parse_replacement_map(raw: Any) -> ReplacementMap:
+    """Parse the ``replacement_map`` YAML dict into bidirectional indices.
+
+    Accepted value shapes per key:
+        - list of strings: each becomes one replacement
+        - single string: becomes a one-element replacement tuple
+        - everything else (None, dict, etc.): silently dropped
+    Empty or whitespace-only words / replacements are skipped. Reverse map is
+    built such that ``reverse[r]`` lists every source word for which ``r``
+    appeared as a replacement (order = first-seen, dedup'd).
+    """
+    if not isinstance(raw, dict):
+        return ReplacementMap()
+
+    forward: dict[str, tuple[str, ...]] = {}
+    reverse_lists: dict[str, list[str]] = {}
+
+    for key, value in raw.items():
+        word = str(key).strip() if key is not None else ""
+        if not word:
+            continue
+
+        if isinstance(value, list):
+            replacements = tuple(
+                str(item).strip()
+                for item in value
+                if item is not None and str(item).strip()
+            )
+        elif isinstance(value, str):
+            cleaned = value.strip()
+            replacements = (cleaned,) if cleaned else ()
+        else:
+            replacements = ()
+
+        if not replacements:
+            continue
+
+        forward[word] = replacements
+        for replacement in replacements:
+            bucket = reverse_lists.setdefault(replacement, [])
+            if word not in bucket:
+                bucket.append(word)
+
+    reverse = {r: tuple(srcs) for r, srcs in reverse_lists.items()}
+    return ReplacementMap(forward=forward, reverse=reverse)
+
+
 def _empty() -> Blacklist:
-    return Blacklist(version=0, entries=())
+    return Blacklist(version=0, entries=(), replacement_map=ReplacementMap())
 
 
 def _count_occurrences(text: str, word: str) -> int:
     """Count occurrences of ``word`` in ``text``; handles ``…`` as a soft wildcard."""
     if not word or not text:
         return 0
-    if "\u2026" not in word and "..." not in word:
+    if "…" not in word and "..." not in word:
         return text.count(word)
 
-    placeholder = "\u2026" if "\u2026" in word else "..."
+    placeholder = "…" if "…" in word else "..."
     parts = [p for p in word.split(placeholder) if p]
     if not parts:
         return 0

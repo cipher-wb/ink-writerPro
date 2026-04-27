@@ -210,8 +210,10 @@ def test_redundant_paragraph_reduced_and_blacklist_cleared() -> None:
     """PRD AC anchor: redundant paragraph reduces ≥20% AND blacklist hits clear to 0."""
     clear_cache()
     redundant = (
+        # 注意 fixture 词汇必须只在 abstract_adjectives 一类（S1 规则覆盖范围）；
+        # PRD US-002 把"苍茫"挪进了 pretentious_nouns，所以改用 "广袤"（非 BL 词）。
         "她莫名感到心头仿佛被无尽的寒意笼罩，"
-        "宛如置身于一片苍茫无边的雪原之中，"
+        "宛如置身于一片广袤无边的雪原之中，"
         "四周静得仿佛时间都已停滞，仿佛连呼吸都成了多余。"
     )
     report = simplify_text(redundant)
