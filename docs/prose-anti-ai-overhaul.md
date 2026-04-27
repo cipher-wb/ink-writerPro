@@ -1,167 +1,113 @@
-# Prose Anti-AI Overhaul -- 架构与运维手册
+# Prose Anti-AI Overhaul — 文笔反 AI 味 + 爆款白话化深层重构
 
-> 版本: 2026-04 | 分支: `ralph/prose-anti-ai-overhaul` | 性质: 七层深层重构
+> 版本: 2026-04 | 分支: `ralph/prose-anti-ai-overhaul` | 16 User Stories
 
-## 一、架构概览
+## 架构概览（七层改造）
 
 ```
-                    +---------------------------+
-                    |  prose_overhaul_enabled   |  <-- 总开关 (config/anti-detection.yaml)
-                    +---------------------------+
-                               |
-              +----------------+----------------+
-              |                |                |
-              v                v                v
-   +------------------+ +-----------+ +-----------------------+
-   | colloquial.yaml  | | anti-detc | | parallel-pipeline.yaml|
-   | enabled: true     | | enabled:  | | enable_explosive: true|
-   +------------------+ +-----------+ +-----------------------+
-              |                |                |
-              v                v                v
-   +------------------+ +-----------+ +-----------------------+
-   | colloquial-checker| | anti-detection| | explosive_retriever|
-   | (C1-C5 5维白话度) | | (ZT 零容忍)  | | (RAG 爆款示例)     |
-   +------------------+ +-----------+ +-----------------------+
-              |                |                |
-              |     +----------+-----------+    |
-              |     |                      |    |
-              v     v                      v    v
-   +-------------------------------------------------+
-   |              polish-agent / writer-agent          |
-   |  (simplification_pass / hard_block_rewrite)       |
-   +-------------------------------------------------+
-                              |
-                              v
-   +-------------------------------------------------+
-   |              directness-checker (D1-D7)           |
-   |  (全场景激活, tier: explosive_hit/standard)       |
-   +-------------------------------------------------+
+                      ┌──────────────────────────────┐
+                      │   config/anti-detection.yaml  │  ← 总开关 prose_overhaul_enabled
+                      │   config/colloquial.yaml      │
+                      │   config/parallel-pipeline.yaml│
+                      └──────────────┬───────────────┘
+                                     │
+   ┌─────────────────────────────────┼─────────────────────────────────┐
+   │                                 │                                 │
+   ▼                                 ▼                                 ▼
+┌──────────┐                 ┌──────────────┐                ┌────────────────┐
+│ 第 1 层   │                 │  第 2-3 层    │                │ 第 4-5 层       │
+│ 标点零容忍 │                 │  装逼词黑名单  │                │ 白话度+直白度   │
+│ US-001   │                 │  US-002,003  │                │ US-004..008    │
+│ em-dash  │                 │  90+ 词 × 3域 │                │ C1-C5 + D1-D7 │
+│ 智能引号  │                 │  + 替换映射   │                │ 全场景激活     │
+└────┬─────┘                 └──────┬───────┘                └──────┬─────────┘
+     │                              │                               │
+     └──────────────────────────────┼───────────────────────────────┘
+                                    │
+                    ┌───────────────┼───────────────┐
+                    │               │               │
+                    ▼               ▼               ▼
+            ┌───────────┐  ┌──────────────┐  ┌──────────────┐
+            │ 第 6 层    │  │ 第 7 层       │  │ 第 8 层       │
+            │ writer-agent│  │ polish-agent  │  │ 评估+回滚     │
+            │ L11 驱动律  │  │ Hard Block    │  │ US-014..016  │
+            │ + RAG few-shot│ │ Rewrite Mode  │  │              │
+            │ US-009..012 │  │ US-013        │  │              │
+            └───────────┘  └──────────────┘  └──────────────┘
 ```
 
-## 二、七层改造清单
+## 阈值表
 
-| 层 | US | 描述 | 文件 |
-|----|-----|------|------|
-| 1 | US-001 | 5条标点AI指纹零容忍规则 | `config/anti-detection.yaml` |
-| 2 | US-002 | 装逼词黑名单三域 + 替换映射 | `ink-writer/assets/prose-blacklist.yaml` |
-| 3 | US-003 | simplification_pass 接入替换映射 | `ink_writer/prose/simplification_pass.py` |
-| 4 | US-004 | 5维白话度核心算法 | `ink_writer/prose/colloquial_checker.py` |
-| 5 | US-005 | colloquial-checker pipeline注册 | `config/colloquial.yaml`, `step3_runner.py` |
-| 6 | US-006 | directness-checker 全场景激活 | `ink_writer/prose/directness_checker.py` |
-| 7 | US-007 | D6嵌套深度 + D7修饰链长 | `ink_writer/prose/directness_checker.py` |
-| 8 | US-008 | explosive_hit 阈值桶 | `reports/seed_thresholds.yaml` |
-| 9 | US-009 | L12 对话+动作驱动律 | `ink-writer/agents/writer-agent.md` |
-| 10 | US-010 | 爆款示例RAG索引构建 | `scripts/build_explosive_hit_index.py` |
-| 11 | US-011 | 爆款示例语义检索器 | `ink_writer/retrieval/explosive_retriever.py` |
-| 12 | US-012 | writer-agent Step 2A检索注入 | `ink_writer/retrieval/inject.py` |
-| 13 | US-013 | Hard Block Rewrite Mode | `ink-writer/agents/polish-agent.md` |
-| 14 | US-014 | 5+5基线校准 | `scripts/calibrate_anti_ai_thresholds.py` |
-| 15 | US-015 | E2E对照评估 | `scripts/e2e_anti_ai_overhaul_eval.py` |
-| 16 | US-016 | 本文档 + 回滚开关 | `docs/prose-anti-ai-overhaul.md` |
+| 维度 | 描述 | 爆款档 green | 爆款档 yellow | 标准档 green | 标准档 yellow |
+|------|------|-------------|--------------|-------------|--------------|
+| D1 | 修辞密度 | ≤ 1.5% | ≤ 3.0% | ≤ 2.0% | ≤ 4.0% |
+| D2 | 形动比 | ≤ 12% | ≤ 16% | ≤ 15% | ≤ 20% |
+| D3 | 抽象词密度 | ≤ 5% | ≤ 10% | ≤ 8% | ≤ 12% |
+| D4 | 句长中位数 | 10-15 | 6-20 | 8-18 | 5-25 |
+| D5 | 空描写率 | ≤ 5% | ≤ 10% | ≤ 8% | ≤ 15% |
+| D6 | 嵌套深度 | ≤ 1.3 | ≤ 1.5 | ≤ 1.5 | ≤ 2.0 |
+| D7 | 修饰链长 | ≤ 1.0 | ≤ 1.5 | ≤ 1.5 | ≤ 2.5 |
+| C1 | 成语密度 | ≤ 2/千字 | ≤ 3/千字 | ≤ 4/千字 | ≤ 6/千字 |
+| C2 | 四字格密度 | ≤ 4/千字 | ≤ 6/千字 | ≤ 6/千字 | ≤ 8/千字 |
 
-## 三、阈值表
+## A/B 开关清单
 
-### directness-checker 7 维度 (D1-D7)
+| 开关 | 文件 | 默认值 | 作用 |
+|------|------|--------|------|
+| `prose_overhaul_enabled` | `config/anti-detection.yaml` | `true` | **总开关** — false 时所有子开关被强制 false |
+| `enabled` | `config/colloquial.yaml` | `true` | 白话度 checker 开关 |
+| `enable_explosive_retrieval` | `config/parallel-pipeline.yaml` | `true` | 爆款示例 RAG 检索开关 |
+| `max_hard_block_retries` | `config/anti-detection.yaml` | `1` | 硬阻断最大重写次数（0=不重写直接阻断） |
+| `INK_STEP3_RUNNER_MODE` | 环境变量 | `enforce` | Step 3 模式（off/shadow/enforce） |
+| `INK_STEP3_LLM_CHECKER` | 环境变量 | (auto) | LLM checker 开关（off=stub） |
+| `INK_STEP3_LLM_POLISH` | 环境变量 | (auto) | LLM polish 开关（off=stub） |
 
-| 维度 | 含义 | explosive_hit green/yellow | standard green/yellow | 方向 |
-|------|------|---------------------------|----------------------|------|
-| D1 | 修辞密度 | ≤0.015 / ≤0.03 | ≤0.025 / ≤0.04 | lower |
-| D2 | 形动比 | ≤0.12 / ≤0.16 | ≤0.16 / ≤0.19 | lower |
-| D3 | 抽象词密度(/100字) | ≤0.05 / ≤0.10 | ≤0.078 / ≤0.14 | lower |
-| D4 | 句长中位数 | 10-15 / 6-20 | 13-18 / 8-22 | mid |
-| D5 | 空段率 | ≤30% / ≤50% | ≤50% / ≤68% | lower |
-| D6 | 嵌套深度(子句/句) | ≤1.3 / ≤1.8 | ≤1.5 / ≤2.0 | lower |
-| D7 | 修饰链长(的字数) | ≤1.2 / ≤2.0 | ≤1.5 / ≤2.5 | lower |
+## 回滚 SOP
 
-### colloquial-checker 5 维度 (C1-C5)
-
-| 维度 | 含义 | green/yellow | 方向 |
-|------|------|-------------|------|
-| C1 | 成语密度(/千字) | ≤3.0 / ≤5.0 | lower |
-| C2 | 四字格排比密度(/千字) | ≤6.0 / ≤10.0 | lower |
-| C3 | 抽象名词链命中(/千字) | ≤1.0 / ≤2.0 | lower |
-| C4 | 多层的修饰链密度(/千字) | ≤1.5 / ≤3.0 | lower |
-| C5 | 抽象主语率 | ≤0.2 / ≤0.4 | lower |
-
-### anti-detection ZT 零容忍
-
-| 规则ID | 描述 | 类型 | 阈值 |
-|--------|------|------|------|
-| ZT_EM_DASH | 双破折号 —— | regex | 任意≥1 |
-| ZT_AI_QUOTES | 智能引号 "" '' «» | regex | 任意≥1 |
-| ZT_HYPHEN_AS_DASH | 中文间ASCII '-` | regex | 任意≥1 |
-| ZT_DENSE_DUNHAO | 顿号密度 | density | >3/千字 |
-| ZT_ELLIPSIS_OVERUSE | 省略号过用 | density | >8/千字 |
-
-## 四、A/B 开关清单
-
-| 开关 | 文件 | 键 | 默认值 | 作用 |
-|------|------|-----|--------|------|
-| 总开关 | `config/anti-detection.yaml` | `prose_overhaul_enabled` | `true` | false时三个子开关全强制false |
-| 白话度门禁 | `config/colloquial.yaml` | `enabled` | `true` | false时colloquial-checker跳过 |
-| 零容忍清单 | `config/anti-detection.yaml` | `enabled` | `true` | false时anti-detection全跳过 |
-| 爆款检索 | `config/parallel-pipeline.yaml` | `enable_explosive_retrieval` | `true` | false时writer-agent不用RAG |
-
-## 五、回滚 SOP
-
-### 快速降级（1分钟）
-
-按顺序修改三个配置文件：
-
-1. `config/anti-detection.yaml` -- 设 `prose_overhaul_enabled: false`
-   ```yaml
-   prose_overhaul_enabled: false
-   ```
-2. 可选：`config/colloquial.yaml` -- 设 `enabled: false`（若仅关白话门禁）
-3. 可选：`config/parallel-pipeline.yaml` -- 设 `enable_explosive_retrieval: false`（若仅关RAG）
-
-### 验证回归
+### 紧急回滚（一键关闭所有新功能）
 
 ```bash
-# 跑完整回归测试集
-pytest tests/prose/ tests/anti_detection/ tests/polish/ tests/eval/ --no-cov
+# 1. 编辑 config/anti-detection.yaml，将 prose_overhaul_enabled 改为 false
+#    这会将 colloquial + hard_block_rewrite 全部禁用
 
-# 跑回滚验证测试
-pytest tests/integration/test_prose_overhaul_rollback.py --no-cov
+# 2. 设置 Step 3 为 shadow 模式（只记录不阻断）
+export INK_STEP3_RUNNER_MODE=shadow
+
+# 3. 跑回归测试确认旧行为恢复
+pytest tests/checker_pipeline/ tests/prose/ -x
+
+# 4. 提交回滚 commit
+git add config/anti-detection.yaml
+git commit -m "rollback: disable prose anti-ai overhaul"
 ```
 
-### 提交回滚
+### 逐层回滚
 
-```bash
-git add config/anti-detection.yaml config/colloquial.yaml config/parallel-pipeline.yaml
-git commit -m "rollback: disable prose anti-AI overhaul"
-```
+1. **只关闭爆款 RAG**: `enable_explosive_retrieval: false` → writer-agent 回退旧提示词
+2. **只关闭白话度检查**: `enabled: false` in `config/colloquial.yaml` → 跳过 C1-C5
+3. **只关闭硬阻断重写**: `max_hard_block_retries: 0` → 不重写，直接按原逻辑阻断
+4. **只关闭标点零容忍**: comment out ZT rules in `anti-detection.yaml`
 
-### 部分回滚（保留部分改造）
+## 模块文件索引
 
-若只想关某个子模块，只改对应的开关：
+| 文件 | 用途 |
+|------|------|
+| `ink_writer/prose/colloquial_checker.py` | C1-C5 白话度五维量化 |
+| `ink_writer/prose/directness_checker.py` | D1-D7 直白度七维评分 |
+| `ink_writer/prose/simplification_pass.py` | 装逼词自动替换 |
+| `ink_writer/retrieval/explosive_retriever.py` | 爆款示例语义检索引擎 |
+| `ink_writer/retrieval/inject.py` | prompt 注入 helper |
+| `ink_writer/checker_pipeline/hard_block_rewrite.py` | 硬阻断全章重写逻辑 |
+| `ink_writer/checker_pipeline/step3_runner.py` | Step 3 编排器 |
+| `scripts/build_explosive_hit_index.py` | 从 corpus 构建爆款索引 |
+| `scripts/calibrate_anti_ai_thresholds.py` | 5+5 基线校准 |
+| `scripts/e2e_anti_ai_overhaul_eval.py` | 旧/新 pipeline 对照评估 |
+| `config/anti-detection.yaml` | 总开关 + 标点零容忍规则 |
+| `config/colloquial.yaml` | 白话度 checker 配置 |
+| `reports/seed_thresholds.yaml` | 双档阈值定义 |
 
-- 只关白话度检查：`config/colloquial.yaml` `enabled: false`
-- 只关零容忍：`config/anti-detection.yaml` `enabled: false`
-- 只关爆款RAG：`config/parallel-pipeline.yaml` `enable_explosive_retrieval: false`
+## 已知限制
 
-## 六、依赖关系
-
-```
-US-002 (黑名单) ──> US-003 (替换映射) ──> US-004 (白话度) ──> US-005 (pipeline)
-US-001 (零容忍) ──────────────────────────────────────────────────> US-013 (硬阻断)
-US-006 (全场景) ──> US-007 (D6/D7) ──> US-008 (阈值桶) ──> US-014 (校准)
-US-010 (索引构建) ──> US-011 (检索器) ──> US-012 (注入)
-```
-
-## 七、性能指标
-
-| 指标 | 目标 | 实际 |
-|------|------|------|
-| 破折号密度 | ≤0.2/千字 | 0.1 (mock) |
-| 嵌套深度 | ≤1.5 | 1.2 (mock) |
-| 成语密度 | ≤3.0/千字 | 2.0 (mock) |
-| 四字格密度 | ≤6.0/千字 | 4.0 (mock) |
-| 对话占比 | ≥0.40 | 0.45 (mock) |
-
-## 八、known-issues
-
-1. `check_zero_tolerance()` 对极短文本返回 `None`（而非空列表）-- 这是设计，调用方需 `is not None` 检查
-2. D4 句长中位数 mid-is-better 对极短句（<8字）触发 red -- 写测试 fixture 时用 13+ 字正常句
-3. 三个开关独立：`prose_overhaul_enabled` 作为总开关强制子开关，但子开关也可单独关闭
-4. `explosive_retriever` 首次加载 sentence-transformers 需 ~30s；测试用 mock 模式跳过
+- 爆款 RAG 索引需预先构建（`python3 scripts/build_explosive_hit_index.py`）
+- 阈值校准需人工确认（mock 模式仅生成近似值）
+- hard_block_rewrite 依赖 ANTHROPIC_API_KEY 进行 LLM 重写
