@@ -93,15 +93,36 @@ def check_qdrant_connection(
         return CheckResult(name, False, f"unexpected error: {err}")
 
 
-def check_embedding_api_reachable() -> CheckResult:
+def _key_from_config(project_root: str | None, attr: str) -> str:
+    """Read *attr* (e.g. ``embed_api_key``) from the project config if
+    *project_root* is set, otherwise from ``os.environ``."""
+    if project_root is not None:
+        try:
+            from ink_writer.core.infra.config import DataModulesConfig
+
+            cfg = DataModulesConfig.from_project_root(project_root)
+            return str(getattr(cfg, attr, "") or "").strip()
+        except Exception:
+            return ""
+    env_key = attr.upper() if attr.endswith("_key") else attr
+    return os.environ.get(env_key, "")
+
+
+def check_embedding_api_reachable(
+    project_root: str | None = None,
+) -> CheckResult:
     name = "embedding_api_reachable"
-    if not os.environ.get("EMBED_API_KEY"):
+    key = _key_from_config(project_root, "embed_api_key")
+    if not key:
         return CheckResult(name, False, "EMBED_API_KEY not set")
     return CheckResult(name, True, "EMBED_API_KEY set")
 
 
-def check_rerank_api_reachable() -> CheckResult:
+def check_rerank_api_reachable(
+    project_root: str | None = None,
+) -> CheckResult:
     name = "rerank_api_reachable"
-    if not os.environ.get("RERANK_API_KEY"):
+    key = _key_from_config(project_root, "rerank_api_key")
+    if not key:
         return CheckResult(name, False, "RERANK_API_KEY not set")
     return CheckResult(name, True, "RERANK_API_KEY set")

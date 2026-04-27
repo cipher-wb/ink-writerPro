@@ -42,6 +42,7 @@ class PreflightConfig:
     require_embedding_key: bool = False
     require_rerank_key: bool = False
     min_corpus_files: int = 100
+    project_root: str | None = None
 
 
 @dataclass(frozen=True)
@@ -73,9 +74,9 @@ def _run_all_checks(config: PreflightConfig) -> list[CheckResult]:
         results.append(check_qdrant_connection(config=config.qdrant_config))
 
     if config.require_embedding_key:
-        results.append(check_embedding_api_reachable())
+        results.append(check_embedding_api_reachable(config.project_root))
     if config.require_rerank_key:
-        results.append(check_rerank_api_reachable())
+        results.append(check_rerank_api_reachable(config.project_root))
     return results
 
 

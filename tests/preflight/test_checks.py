@@ -118,3 +118,92 @@ def test_rerank_api_reachable_no_key(monkeypatch: pytest.MonkeyPatch) -> None:
     result = check_rerank_api_reachable()
     assert result.passed is False
     assert result.detail == "RERANK_API_KEY not set"
+
+
+def test_embedding_api_reachable_from_environ(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("EMBED_API_KEY", "test-key-123")
+    result = check_embedding_api_reachable()
+    assert result.passed is True
+    assert result.detail == "EMBED_API_KEY set"
+
+
+def test_embedding_api_reachable_from_config(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """When project_root is given, read from DataModulesConfig not os.environ."""
+    monkeypatch.delenv("EMBED_API_KEY", raising=False)
+
+    from dataclasses import dataclass
+
+    @dataclass
+    class _FakeConfig:
+        embed_api_key: str = "config-key-456"
+
+    monkeypatch.setattr(
+        "ink_writer.core.infra.config.DataModulesConfig.from_project_root",
+        lambda project_root: _FakeConfig(),
+    )
+    result = check_embedding_api_reachable(project_root="/fake/project")
+    assert result.passed is True
+    assert result.detail == "EMBED_API_KEY set"
+
+
+def test_embedding_api_reachable_config_empty_key_fails(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("EMBED_API_KEY", raising=False)
+
+    from dataclasses import dataclass
+
+    @dataclass
+    class _FakeConfig:
+        embed_api_key: str = ""
+
+    monkeypatch.setattr(
+        "ink_writer.core.infra.config.DataModulesConfig.from_project_root",
+        lambda project_root: _FakeConfig(),
+    )
+    result = check_embedding_api_reachable(project_root="/fake/project")
+    assert result.passed is False
+    assert "EMBED_API_KEY not set" in result.detail
+
+
+def test_rerank_api_reachable_from_config(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """When project_root is given, read from DataModulesConfig."""
+    monkeypatch.delenv("RERANK_API_KEY", raising=False)
+
+    from dataclasses import dataclass
+
+    @dataclass
+    class _FakeConfig:
+        rerank_api_key: str = "rerank-key-789"
+
+    monkeypatch.setattr(
+        "ink_writer.core.infra.config.DataModulesConfig.from_project_root",
+        lambda project_root: _FakeConfig(),
+    )
+    result = check_rerank_api_reachable(project_root="/fake/project")
+    assert result.passed is True
+    assert result.detail == "RERANK_API_KEY set"
+
+
+def test_api_key_config_load_failure_graceful(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """If DataModulesConfig.from_project_root raises, fall back to empty string."""
+    monkeypatch.delenv("EMBED_API_KEY", raising=False)
+
+    def _raise(*args, **kwargs):
+        raise RuntimeError("simulated config load failure")
+
+    monkeypatch.setattr(
+        "ink_writer.core.infra.config.DataModulesConfig.from_project_root",
+        _raise,
+    )
+    result = check_embedding_api_reachable(project_root="/broken/project")
+    assert result.passed is False
+    assert "EMBED_API_KEY not set" in result.detail

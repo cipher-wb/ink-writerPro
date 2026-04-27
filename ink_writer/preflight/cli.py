@@ -117,6 +117,7 @@ def _build_config(args: argparse.Namespace) -> PreflightConfig:
         require_embedding_key=args.require_embedding_key,
         require_rerank_key=args.require_rerank_key,
         min_corpus_files=args.min_corpus_files,
+        project_root=str(pr) if pr is not None else None,
     )
 
 
