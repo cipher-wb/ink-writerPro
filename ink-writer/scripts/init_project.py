@@ -32,6 +32,7 @@ _DEFAULT_CPV = int(os.environ.get("INK_CHAPTERS_PER_VOLUME", "50"))
 # 安全修复：导入安全工具函数
 from security_utils import sanitize_commit_message, atomic_write_json, is_git_available
 from project_locator import write_current_project_pointer
+from ink_writer.platforms.resolver import PLATFORM_DEFAULTS, PLATFORM_LABELS
 try:
     from ink_writer.core.extract.golden_three import build_default_preferences, build_golden_three_plan
 except ImportError:  # pragma: no cover
@@ -313,6 +314,27 @@ def init_project(
     state = _ensure_state_schema(state)
     created_at = state.get("project_info", {}).get("created_at") or datetime.now().strftime("%Y-%m-%d")
 
+    # Normalize platform to internal key
+    _platform_raw = (platform or "").strip()
+    _PLATFORM_ALIASES = {
+        "起点": "qidian", "起点中文网": "qidian", "": "qidian",
+        "番茄": "fanqie", "番茄小说": "fanqie",
+    }
+    platform_key = _PLATFORM_ALIASES.get(_platform_raw, _platform_raw)
+    if platform_key not in ("qidian", "fanqie"):
+        platform_key = "qidian"
+    platform_label = PLATFORM_LABELS.get(platform_key, platform_key)
+
+    # Apply platform defaults for empty/unspecified fields
+    _plat_defaults = PLATFORM_DEFAULTS[platform_key]
+    if not target_reader:
+        target_reader = _plat_defaults["target_reader"]
+    # Adjust target_chapters and target_words if they match the old qidian defaults
+    # (meaning user didn't explicitly set them)
+    if target_chapters == 600 and target_words == 2_000_000:
+        target_chapters = _plat_defaults["target_chapters"]
+        target_words = _plat_defaults["target_words"]
+
     state["project_info"].update(
         {
             "title": title,
@@ -340,7 +362,8 @@ def init_project(
             "gf_visibility": gf_visibility,
             "gf_irreversible_cost": gf_irreversible_cost,
             "target_reader": target_reader,
-            "platform": platform,
+            "platform": platform_key,
+            "platform_label": platform_label,
             "opening_hook": opening_hook,
             "currency_system": currency_system,
             "currency_exchange": currency_exchange,
@@ -892,7 +915,11 @@ def main() -> None:
     parser.add_argument("--protagonist-archetype", default="", help="主角人设类型（深度模式）")
     parser.add_argument("--antagonist-level", default="", help="反派等级（深度模式）")
     parser.add_argument("--target-reader", default="", help="目标读者（深度模式）")
-    parser.add_argument("--platform", default="", help="发布平台（深度模式）")
+    parser.add_argument(
+        "--platform", default="qidian",
+        choices=["qidian", "fanqie", "起点", "起点中文网", "番茄", "番茄小说"],
+        help="发布平台: qidian | fanqie",
+    )
     parser.add_argument("--opening-hook", default="", help="开篇钩子/首章触发点（深度模式）")
 
     args = parser.parse_args()
