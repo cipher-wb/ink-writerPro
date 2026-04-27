@@ -60,6 +60,11 @@ Quick 模式支持三种命令格式传入激进度档位（1 保守 / 2 平衡 
 3. `番茄小说 爆款 套路 2026`
 4. `番茄免费小说 热门 新书`
 
+**平台路由**（v26.2 新增）：
+- `platform=qidian` → 只执行起点 2 条检索（1, 2），跳过番茄检索
+- `platform=fanqie` → 只执行番茄 2 条检索（3, 4），跳过起点检索
+- `platform` 未确定时仍执行全部 4 条（兼容存量）
+
 **缓存路径与命名**：
 
 - 基准目录 `${CLAUDE_PLUGIN_ROOT}/../../data/market-trends/`（见该目录 `README.md`）。
@@ -80,8 +85,23 @@ Quick 模式支持三种命令格式传入激进度档位（1 保守 / 2 平衡 
 
 **消费（Quick Step 1）**：
 
-- 方案生成时 **必须规避两平台共通 Top 5 热门套路关键词**；单平台榜单不强制规避。
+- 方案生成时 **必须规避所选平台的 Top 5 热门套路关键词**（`platform=qidian` 只规避起点共通套路，`platform=fanqie` 只规避番茄共通套路）；`platform` 未确定时规避两平台共通 Top 5。
 - 被规避的关键词记入每套方案字段 `market_avoid`（数组），Quick Step 2 创意指纹消费。
+
+### Quick Step 0.4：平台选择（v26.2 新增）
+
+Quick Step 0 完成后，弹出平台选择（与激进度档位独立）：
+
+调用 `AskUserQuestion`：
+- 题干：目标发布平台？
+- 选项：
+  - 起点中文网（长篇付费，3000-3500字/章，深度世界观，老白读者）
+  - 番茄小说（免费广告，1500-2000字/章，快节奏，下沉市场）
+
+选择后写入会话上下文 `platform ∈ {qidian, fanqie}`，影响：
+- Quick Step 0 WebSearch 源分流（fanqie 只搜番茄榜单，qidian 只搜起点榜单）
+- 默认参数自动映射（fanqie → target_chapters=800, target_words=1,200,000, chapter_word_count=1500, target_reader=35-55岁下沉市场男性）
+- Quick Step 3 初始化时 `--platform` 参数
 
 ## Quick Step 0.5：激进度档位选择
 
@@ -628,6 +648,25 @@ Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.p
 - 优先让用户自由描述，再二次结构化确认。
 - 若用户卡住，给 2-4 个候选方向供选。
 
+### Step 1.5：目标平台选择（v26.2 新增，必收）
+
+在题材和规模确认后，追加平台选择：
+
+调用 `AskUserQuestion`：
+
+```
+题干：目标发布平台？
+选项：
+- 起点中文网（长篇付费，3000-3500字/章，深度世界观，老白读者）
+- 番茄小说（免费广告，1500-2000字/章，快节奏，下沉市场）
+```
+
+选择后：
+- `fanqie` → 自动设置 `target_chapters=800`、`target_words=1,200,000`、`chapter_word_count=1500`、`target_reader=35-55岁下沉市场男性`
+- `qidian` → 保持现有默认值（600章 / 200万字 / 3000字/章）
+
+写入内部数据模型 `project.platform`。
+
 ### Step 2：角色骨架与关系冲突
 
 收集项（必收）：
@@ -821,6 +860,10 @@ Windows（PowerShell，与上方 bash 块等价，由 ink-auto.ps1 / env-setup.p
 
 1. 书名、题材（可复合）已确定。
 2. 目标规模可计算（字数或章数至少一个）。
+2a. **平台已选择**（v26.2 硬阻断）：
+   - `project.platform` ∈ {`qidian`, `fanqie`}，必须非空。
+   - 若缺失 → 阻断并提示"项目未标记平台，请回到 Step 1.5 选择"。
+   - 默认参数（target_chapters / target_words / chapter_word_count / target_reader）已按平台写入。
 3. 主角姓名 + 欲望 + 缺陷完整。
 3a. **角色语言特征档案齐备**（US-002 硬阻断）：
    - `protagonist.voice_profile` 中 `speech_vocabulary_level`、`preferred_sentence_length`、`emotional_tell` 三个字段非空；`verbal_tics` 与 `taboo_topics` 允许为空数组但必须显式存在。
@@ -876,8 +919,10 @@ python3 "${SCRIPTS_DIR}/ink.py" init "{project_root}" "{title}" "{genre}" \
   --sect-hierarchy "{sect_hierarchy}" --cultivation-chain "{cultivation_chain}" \
   --cultivation-subtiers "{cultivation_subtiers}" \
   --core-selling-points "{core_points}" --target-reader "{target_reader}" \
-  --platform "{platform}" --opening-hook "{opening_hook}"
+  --platform "{platform_key}" --opening-hook "{opening_hook}"
 ```
+
+`platform_key` 传 `qidian` 或 `fanqie`（内部枚举 key，不是中文标签）。
 
 ### 2) 写入 `idea_bank.json`
 
