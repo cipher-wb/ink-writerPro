@@ -41,6 +41,12 @@ allowed-tools: Bash Read
 - 检查点在每批完成后统一运行
 - 单章失败触发重试，批次失败中止后续
 
+## 平台感知（v26.2）
+
+ink-auto 本身不改 —— plan → write → review → polish 的编排器逻辑不变，
+平台差异已下沉到各阶段。auto 启动时从 `.ink/state.json` 读取 `project_info.platform`
+并自动传递给每个子步骤。
+
 ## 执行方式
 
 调用 `ink-auto.sh` shell 脚本。脚本自动检测项目路径和 CLI 平台。
