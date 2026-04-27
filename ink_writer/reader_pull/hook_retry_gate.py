@@ -91,6 +91,7 @@ def run_hook_gate(
     checker_fn: Callable[[str, int], dict],
     polish_fn: Callable[[str, str, int], str],
     config: ReaderPullConfig | None = None,
+    platform: str = "qidian",
 ) -> HookGateResult:
     """Run reader-pull hook gate with polish retry loop.
 
@@ -101,12 +102,13 @@ def run_hook_gate(
         checker_fn: Callable(chapter_text, chapter_no) -> raw checker result dict.
         polish_fn: Callable(chapter_text, fix_prompt, chapter_no) -> polished text.
         config: Reader-pull config. If None, loads from default path.
+        platform: Platform key (qidian/fanqie) for platform-aware config.
 
     Returns:
         HookGateResult with pass/fail status and attempt history.
     """
     if config is None:
-        config = load_config()
+        config = load_config(platform=platform)
 
     if not config.enabled:
         return HookGateResult(

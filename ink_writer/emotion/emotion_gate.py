@@ -91,6 +91,7 @@ def run_emotion_gate(
     checker_fn: Callable[[str, int], dict],
     polish_fn: Callable[[str, str, int], str],
     config: EmotionCurveConfig | None = None,
+    platform: str = "qidian",
 ) -> EmotionGateResult:
     """Run emotion-curve gate with polish retry loop.
 
@@ -101,12 +102,13 @@ def run_emotion_gate(
         checker_fn: Callable(chapter_text, chapter_no) -> raw checker result dict.
         polish_fn: Callable(chapter_text, fix_prompt, chapter_no) -> polished text.
         config: Emotion-curve config. If None, loads from default path.
+        platform: Platform key (qidian/fanqie) for platform-aware config.
 
     Returns:
         EmotionGateResult with pass/fail status and attempt history.
     """
     if config is None:
-        config = load_config()
+        config = load_config(platform=platform)
 
     if not config.enabled:
         return EmotionGateResult(

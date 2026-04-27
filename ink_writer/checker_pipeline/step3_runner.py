@@ -1,22 +1,6 @@
 """v14 US-005~011 (FIX-04): Step 3 Gate Orchestrator production entrypoint.
-
-把 v13 孤儿 CheckerRunner + 5 个孤儿 gate 接进生产链路。
-
-Design: tasks/design-fix-04-step3-gate-orchestrator.md
-
-Mode（env INK_STEP3_RUNNER_MODE）:
-  - off：不跑 runner（退回原 LLM 自律流程；紧急降级路径）
-  - shadow：跑 runner 并写 review_metrics，但 exit 0 不阻断（观察用）
-  - enforce（默认 / v16 US-005）：跑 runner，hard fail → exit 1 真阻断
-
-CLI:
-  python3 -m ink_writer.checker_pipeline.step3_runner \\
-      --chapter-id N --state-dir .ink/ [--timeout 300] [--parallel 2] [--dry-run]
-
-Exit codes:
-  0 = 全 hard pass（或 shadow 模式总是 0）
-  1 = 有 hard fail（enforce 模式才会触发；可重写的阻断）
-  2 = 硬阻断 hard_blocked 需要人工介入（US-013）或内部错误
+…
+v26.2 fanqie-platform: _build_review_bundle 抽取 platform 字段，gate adapter 据此消费平台感知配置。
 """
 from __future__ import annotations
 
@@ -192,7 +176,7 @@ class Step3Result:
 
 
 def _make_hook_adapter(review_bundle: dict) -> Callable:
-    """reader_pull.hook_retry_gate adapter（US-003：真 LLM checker / US-004：真 polish）。"""
+    """reader_pull.hook_retry_gate adapter（platform-aware）。"""
     async def _adapter():
         from ink_writer.reader_pull.hook_retry_gate import run_hook_gate
 
@@ -207,6 +191,7 @@ def _make_hook_adapter(review_bundle: dict) -> Callable:
                 project_root=review_bundle.get("project_root", "."),
                 checker_fn=checker_fn,
                 polish_fn=polish_fn,
+                platform=review_bundle.get("platform", "qidian"),
             )
             passed = getattr(result, "passed", True)
             score = getattr(result, "final_score", 1.0)
@@ -233,6 +218,7 @@ def _make_emotion_adapter(review_bundle: dict) -> Callable:
                 project_root=review_bundle.get("project_root", "."),
                 checker_fn=checker_fn,
                 polish_fn=polish_fn,
+                platform=review_bundle.get("platform", "qidian"),
             )
             passed = getattr(result, "passed", True)
             score = getattr(result, "final_score", 1.0)
@@ -317,14 +303,7 @@ def _make_plotline_adapter(review_bundle: dict) -> Callable:
 
 
 def _make_colloquial_adapter(review_bundle: dict) -> Callable:
-    """US-005: colloquial-checker 程序化适配器（全场景激活，无 scene_mode 限制）。
-
-    激活条件：
-      - config/colloquial.yaml enabled=true（且 prose_overhaul_enabled=true）
-      - 全场景激活，无 scene_mode 门控
-
-    severity=red → FAILED + hard_blocked；非 red → PASS。
-    """
+    """US-005: colloquial-checker 程序化适配器（全场景激活 + v26.2 平台感知）。"""
     async def _adapter():
         import yaml
 
@@ -335,10 +314,12 @@ def _make_colloquial_adapter(review_bundle: dict) -> Callable:
 
         chapter_text = review_bundle.get("chapter_text", "") or ""
         chapter_no = int(review_bundle.get("chapter_no", 0) or 0)
+        project_root = review_bundle.get("project_root", ".")
+        platform = review_bundle.get("platform", "qidian")
 
         try:
-            # 读取 colloquial.yaml 开关
-            config_path = Path(review_bundle.get("project_root", ".")) / "config" / "colloquial.yaml"
+            # 平台感知阈值：优先从 checker-thresholds.yaml 读取
+            config_path = Path(project_root) / "config" / "colloquial.yaml"
             colloquial_enabled = True
             thresholds_override = None
             if config_path.exists():
@@ -453,14 +434,11 @@ def _make_directness_adapter(review_bundle: dict) -> Callable:
 
 
 def _build_review_bundle(chapter_id: int, state_dir: Path) -> dict:
-    """Minimal review_bundle from state_dir + chapter text.
-
-    v16 Phase B production：仅提取 step3_runner 基础 orchestration 需要的字段；
-    后续按需扩展。
-    """
+    """Minimal review_bundle from state_dir + chapter text."""
     project_root = state_dir.parent if state_dir.name == ".ink" else state_dir
     db_path = str(state_dir / "index.db")
-    # 简单章节文本定位：正文/第{NNNN}章-*.md（glob 取第一个）
+
+    # 章节文本定位
     chapter_text = ""
     padded = f"{chapter_id:04d}"
     try:
@@ -470,13 +448,25 @@ def _build_review_bundle(chapter_id: int, state_dir: Path) -> dict:
             if matches:
                 chapter_text = matches[0].read_text(encoding="utf-8")
     except Exception:
-        pass  # shadow 模式下章节文本缺失不致命
+        pass
+
+    # v26.2: 提取平台标记
+    platform = "qidian"
+    try:
+        state_path = state_dir / "state.json"
+        if state_path.exists():
+            import json
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+            platform = state.get("project_info", {}).get("platform", "qidian")
+    except Exception:
+        pass
 
     return {
         "chapter_no": chapter_id,
         "chapter_text": chapter_text,
         "project_root": str(project_root),
         "db_path": db_path,
+        "platform": platform,
     }
 
 

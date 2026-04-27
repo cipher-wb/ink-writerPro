@@ -7,6 +7,8 @@ from pathlib import Path
 
 import yaml
 
+from ink_writer.platforms.resolver import resolve_platform_config
+
 DEFAULT_CONFIG_PATH = (
     Path(__file__).resolve().parent.parent.parent / "config" / "emotion-curve.yaml"
 )
@@ -22,8 +24,15 @@ class EmotionCurveConfig:
     score_threshold: float = 60.0
 
 
-def load_config(path: Path | str | None = None) -> EmotionCurveConfig:
-    """Load emotion-curve config from YAML, falling back to defaults."""
+def _resolve_platform_values(raw: dict, platform: str) -> dict:
+    """Resolve platform overrides in the raw YAML dict."""
+    if not isinstance(raw, dict):
+        return raw
+    return resolve_platform_config(raw, platform)
+
+
+def load_config(path: Path | str | None = None, platform: str = "qidian") -> EmotionCurveConfig:
+    """Load emotion-curve config from YAML, resolving platform overrides."""
     if path is None:
         path = DEFAULT_CONFIG_PATH
     path = Path(path)
@@ -35,11 +44,13 @@ def load_config(path: Path | str | None = None) -> EmotionCurveConfig:
     if not isinstance(raw, dict):
         return EmotionCurveConfig()
 
+    resolved = _resolve_platform_values(raw, platform)
+
     return EmotionCurveConfig(
-        enabled=bool(raw.get("enabled", True)),
-        variance_threshold=float(raw.get("variance_threshold", 0.15)),
-        flat_segment_max=int(raw.get("flat_segment_max", 2)),
-        corpus_similarity_threshold=float(raw.get("corpus_similarity_threshold", 0.8)),
-        max_retries=int(raw.get("max_retries", 2)),
-        score_threshold=float(raw.get("score_threshold", 60.0)),
+        enabled=bool(resolved.get("enabled", True)),
+        variance_threshold=float(resolved.get("variance_threshold", 0.15)),
+        flat_segment_max=int(resolved.get("flat_segment_max", 2)),
+        corpus_similarity_threshold=float(resolved.get("corpus_similarity_threshold", 0.8)),
+        max_retries=int(resolved.get("max_retries", 2)),
+        score_threshold=float(resolved.get("score_threshold", 60.0)),
     )
