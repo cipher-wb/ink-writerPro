@@ -20,7 +20,9 @@ from ink_writer.prose.sensory_immersion_gate import (
     should_skip_sensory_immersion,
 )
 from ink_writer.prose.simplification_pass import (
+    ReplacementResult,
     SimplificationReport,
+    apply_replacement_map,
     should_activate_simplification,
     simplify_text,
 )
@@ -32,8 +34,10 @@ __all__ = [
     "FLOW_NATURALNESS_RELAXED_RULES",
     "PROSE_IMPACT_CHECKER_NAME",
     "PROSE_IMPACT_RELAXED_RULES",
+    "ReplacementResult",
     "SENSORY_IMMERSION_CHECKER_NAME",
     "SimplificationReport",
+    "apply_replacement_map",
     "clear_cache",
     "is_relaxed_issue",
     "load_blacklist",

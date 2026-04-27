@@ -57,8 +57,8 @@
         "Tests pass (pytest tests/prose/test_simplification_replacement_map.py tests/prose/test_simplification_pass.py)"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. apply_replacement_map(text, *, replacement_map=None, chapter_no=None, diff_dir=None) -> ReplacementResult. simplify_text() 现在在 S1 之后、S2 之前插入 S1.5 Replacement Map Pass。命中时落 reports/polish_diff/chapter_NNN.diff（unified diff + 头注释命中清单）。SimplificationReport 新增 replacement_hits + replacement_diff_path 字段。tie-break：source words 按字符长度倒序，避免 1-char 前缀误吃 2-char 词。空跑/diff_dir 缺失时不写文件。26 new tests + 49 baseline simplification + 22 pretentious_load + 18 blacklist_loader 全部通过。0 regression。"
     },
     {
       "id": "US-004",

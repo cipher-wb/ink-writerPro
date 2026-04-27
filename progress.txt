@@ -12,6 +12,10 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
 - `ReplacementMap.lookup()` 取首项是 polish-agent simplification_pass 的"机械替换"约定；YAML 顺序决定首项 → 改顺序 = 改默认替换。`origins(replacement)` 反查可服务"语义聚类"（盯着 ← 凝视 + 凝望 + 凝眸）。
 - 词表新加词时，**必须**先验证不与 abstract_adjectives/empty_phrases/pretentious_metaphors 重复（test_no_word_collisions_across_pretentious_categories 强制三个新域互斥；与老三域共存的检查靠 spot review）。
 - 改 prose-blacklist.yaml 时 simplification_pass 测试 fixture **可能**被新词命中（test_redundant_paragraph_reduced_and_blacklist_cleared 里"苍茫"被吃进 pretentious_nouns 后就破了）；S1 规则只清 abstract_adjectives，新域要等 US-003 接 replacement_map 才会被自动剥除。
+- `simplify_text` 流程现在是 S1 (abstract_adj 删除) → S1.5 (replacement_map 替换) → S2/S3/S4 (拆句/修辞/空段) → 70% floor。S1 与 S1.5 词典互斥（YAML 契约 + US-002 测试守护），不会双计或互相抵消。
+- `apply_replacement_map(text, *, replacement_map=None, chapter_no=None, diff_dir=None)` 是独立可复用 API：source words 按字符长度倒序处理避免 1-char 前缀误吃 2-char 词；多候选取 `lookup(word)[0]`（YAML 列表首项）；source==replacement 时跳过；空跑或 diff_dir 缺失时不写文件。
+- diff 文件命名 `chapter_{NNN:03d}.diff`（3 位补零）；同章节多次跑 polish 后写覆盖前写（避免无限增长）；payload = 头注释命中清单 + unified diff body。如果未来要保留多版本，加 timestamp 后缀但需同步更新 polish-agent.md 文档。
+- `SimplificationReport` 新增 `replacement_hits: tuple[(src, rep, count), ...]` + `replacement_diff_path: str | None` 字段。回滚（rolled_back=True）时这两个字段仍保留中间状态供审计——回滚只抹掉 simplified_text 不抹掉元数据。
 
 ## 2026-04-27 13:50 - US-001
 - **What**: anti-detection.yaml 新增 5 条标点 AI 指纹零容忍规则（ZT_EM_DASH / ZT_AI_QUOTES / ZT_HYPHEN_AS_DASH / ZT_DENSE_DUNHAO / ZT_ELLIPSIS_OVERUSE），扩展 ZeroToleranceRule 支持 `kind=density` 模式。
@@ -45,4 +49,22 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
   - replacement_map 反向索引"原词共享同一替换"是设计：`盯着 ← 凝视 + 凝望` 让 polish 的语义聚类有线索；构建 reverse 时用 `setdefault(rep, []).append(word)` + 末尾 `tuple()` 转换，保留首见顺序。
   - 改 prose-blacklist.yaml 加新词时，`tests/prose/test_simplification_pass.py` 的 fixture 文本可能突然命中：因为 `_count_total_hits` 数 ALL 类，而 S1 规则只清 abstract_adjectives。每次新增类要复查 simplification 测试 fixture，必要时把 fixture 替换为不在任一 BL 的近义词（本次：苍茫 → 广袤）。
   - frozen dataclass + dict field：dataclass 本身 frozen 但 dict 内容可变；运行时不强制不可变性，靠"loader 是唯一构造点"约定。如果将来要真正锁定，换 `MappingProxyType`。
+---
+
+## 2026-04-27 14:55 - US-003
+- **What**: polish-agent simplification_pass 接入 replacement_map 自动替换。新增 `apply_replacement_map()` 独立 API + S1.5 阶段集成到 `simplify_text` 流程。命中时落 `reports/polish_diff/chapter_NNN.diff`（unified diff + 头注释命中清单）。新增 `ReplacementResult` frozen dataclass + 在 `SimplificationReport` 加 `replacement_hits` / `replacement_diff_path` 两字段。
+- **Files changed**:
+  - `ink_writer/prose/simplification_pass.py` (+`apply_replacement_map` ~70 行 + `_write_replacement_diff` ~35 行 + `ReplacementResult` dataclass + `SimplificationReport` 加 2 字段 + simplify_text 加 chapter_no/diff_dir 参数 + S1.5 调度)
+  - `ink_writer/prose/__init__.py` (+`apply_replacement_map`, `ReplacementResult` 公共导出)
+  - `ink-writer/agents/polish-agent.md` (+## Replacement Map Pass 子章 + S1.5 行 + 执行顺序更新 + 辅助模块 API 章扩 + 润色报告字段扩 ~50 行)
+  - `tests/prose/test_simplification_replacement_map.py` (新增, 26 tests, 含 3 主 fixture：纯替换 / S1+S1.5 协作 / Diff 落盘 + 多个边界用例：长度倒序 tie-break / 空 replacement / self-replace 跳过 / chapter 补零 / overwrite 行为 / 公共导出 / spec marker 检查)
+- **Tests**: 369 passed (tests/prose 226 + tests/anti_detection 143)。新增 26 = 26 pass。0 regression in 49 baseline simplification_pass + 22 pretentious_load + 18 blacklist_loader。Ruff clean on 3 changed files。
+- **Learnings for future iterations**:
+  - 测试 simplify_text 配合自定义 Blacklist 时，fixture 长度要够大避免触发 70% floor 回滚（删 4 字节后 simplified_char_count / original_char_count 必须 ≥ 0.70 才不回滚）；参考 `test_simplify_text_custom_blacklist_no_replacement_map` 用 24 字 fixture 删 4 字保留 83%。
+  - `apply_replacement_map` 默认实参 `replacement_map=None` 时 lazy 加载 `load_blacklist().replacement_map`；这意味着函数可不依赖外部 fixture 直接调用，但测试隔离时仍应 `clear_cache()` 防 YAML mtime 缓存命中污染。
+  - longest-first tie-break 用 `sorted(words, key=lambda w: (-len(w), 0))`：负号反转长度排序；副 key 为 0 是占位（未来按 frequency 排序时改这里）。
+  - diff 写入用 `difflib.unified_diff` 而非自建格式：lineterm="" + splitlines(keepends=False) 保证跨平台行为一致；加 `# header` 行不会破坏 unified diff 解析（Diff 工具默认忽略以 # 开头的注释）。
+  - S1.5 阶段的命中清单 `replacement_hits` 即使在 70% floor rollback 时也保留——这是审计需求（让 polish-agent 报告完整反映"想做了什么"，rollback 只影响最终 simplified_text 不影响元数据）。同样的契约也适用于 `replacement_diff_path`：diff 文件已落盘了不会因 rollback 删除。
+  - `ReplacementMap` 的 `forward.keys()` 顺序在 Python 3.12+ 是插入顺序（`dict.__iter__` 保证），即 YAML 解析顺序；这是 polish-agent "YAML 顺序 = 优先级" 契约的实现层依赖。
+  - 命中清单格式选择 `tuple[tuple[str, str, int], ...]` 而非 `list[dict]`：frozen + 易序列化 + 测试断言用 `("凝视", "盯着", 1) in result.hits` 直接成立。
 ---
