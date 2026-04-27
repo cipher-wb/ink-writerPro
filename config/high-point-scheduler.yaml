@@ -19,3 +19,9 @@ climax_zone_end: 1.0
 
 # First N chapters get intensity boost (golden opening)
 opening_boost_chapters: 3
+
+platforms:
+  fanqie:
+    max_consecutive_no_hp: 1
+    combo_window: 3
+    opening_boost_chapters: 1

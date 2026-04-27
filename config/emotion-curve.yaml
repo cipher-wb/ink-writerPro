@@ -15,3 +15,9 @@ score_threshold: 60.0
 
 # 最大重试次数（触发 polish 修复）
 max_retries: 2
+
+platforms:
+  fanqie:
+    variance_threshold: 0.10
+    flat_segment_max: 1
+    score_threshold: 70.0

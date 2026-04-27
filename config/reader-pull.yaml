@@ -10,3 +10,9 @@ golden_three_threshold: 80.0
 
 # Maximum polish retries before blocking chapter
 max_retries: 2
+
+platforms:
+  fanqie:
+    score_threshold: 80.0
+    golden_three_threshold: 85.0
+    max_retries: 3
