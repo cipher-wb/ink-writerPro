@@ -78,6 +78,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from ink_writer.creativity.cost_validator import validate_cost_selection
 from ink_writer.creativity.gf_validator import validate_golden_finger
 from ink_writer.creativity.name_validator import (
     ValidationResult,
@@ -87,8 +88,14 @@ from ink_writer.creativity.name_validator import (
 from ink_writer.creativity.sensitive_lexicon_validator import validate_density
 
 
-def _validate_scheme(scheme: dict) -> dict:
-    """单套方案的四维综合校验。"""
+def _validate_scheme(scheme: dict, *, check_cost: bool = False) -> dict:
+    """单套方案的四维综合校验。
+
+    Args:
+        scheme: 方案 dict
+        check_cost: v26 US-014 — 启用代价池强制抽样校验（GF-2 v2.0 + GF-4 + GF-5）。
+            缺省关闭，保持向后兼容；ink-init Quick Mode 默认启用。
+    """
     checks: dict[str, Any] = {}
     suggestions: list[str] = []
     passed = True
@@ -127,6 +134,15 @@ def _validate_scheme(scheme: dict) -> dict:
             passed = False
         if r_gf.suggestion:
             suggestions.append(f"[golden_finger] {r_gf.suggestion}")
+
+        # v26 US-014: 启用 v2.0 代价池强制抽样校验（GF-2 v2.0 + GF-4 + GF-5）
+        if check_cost:
+            r_cost = validate_cost_selection(gf_spec)
+            checks["golden_finger_cost"] = r_cost.to_dict()
+            if not r_cost.passed:
+                passed = False
+            if r_cost.suggestion:
+                suggestions.append(f"[golden_finger_cost] {r_cost.suggestion}")
 
     # sensitive_lexicon（可选：需 voice + aggression + sample_chapter_text）
     text = scheme.get("sample_chapter_text") or ""
@@ -190,7 +206,8 @@ def cmd_validate(args: argparse.Namespace) -> int:
             return 2
 
         schemes = data.get("schemes") or []
-        results = [_validate_scheme(s) for s in schemes]
+        check_cost = bool(getattr(args, "check_cost", False))
+        results = [_validate_scheme(s, check_cost=check_cost) for s in schemes]
         all_passed = bool(results) and all(r["passed"] for r in results)
         output = {"all_passed": all_passed, "results": results}
 
@@ -232,6 +249,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--strict",
         action="store_true",
         help="v18 US-010：业务 fail 时 exit 1（缺省 exit 0 + all_passed=false）",
+    )
+    p_validate.add_argument(
+        "--check-cost",
+        action="store_true",
+        help="v26 US-014：启用代价池强制抽样校验（GF-2 v2.0 + GF-4 反同源闭环 + GF-5 阶梯轴）。"
+             "ink-init Quick Mode 默认启用；CLI 缺省关闭以保持向后兼容。",
     )
     p_validate.set_defaults(func=cmd_validate)
     return parser

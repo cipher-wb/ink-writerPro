@@ -1,0 +1,2089 @@
+{
+  "$schema": "./golden-finger-cost-pool.schema.json",
+  "version": "v1.0",
+  "description": "金手指代价池 v1.0 — 强制抽样源。Quick Mode Step 1 与 Deep Mode Step 3+ 必须从本池随机抽取 1 主代价 + 2 副代价，禁止 LLM 自由发挥。设计目标：消除『失忆/扣寿/血脉反噬』的中位数趋同。",
+  "schema_version": "1.0",
+  "_design_notes": {
+    "category_enum": [
+      "C01_Physical",
+      "C02_Psychological",
+      "C03_Relational",
+      "C04_Material",
+      "C05_Cosmic",
+      "C06_Mechanical",
+      "C07_Sociopolitical",
+      "C08_Environmental"
+    ],
+    "tier_axis": ["T1_minor", "T2_moderate", "T3_major", "T4_extreme"],
+    "trope_freq_enum": [
+      "high (高频趋同区，需触发 cooldown 闸门)",
+      "mid (中频，常规可用)",
+      "low (低频，鼓励使用)",
+      "rare (稀缺，加权抽样)"
+    ],
+    "rarity_scale": "1-5；1 大众/2 市井/3 具备记忆点/4 偏冷/5 极稀缺",
+    "dimension_taboo": "枚举来自 golden-finger-rules.md §GF-1 的 8 类金手指维度（信息/时间/情感/社交/认知/概率/感知/规则）。当 cost.dimension_taboo 含某 dimension 时，禁止该作品的金手指 dimension 与之同源（同源 = 闭环零张力，例：感知类金手指+感官代偿代价）",
+    "selection_rules": {
+      "main_cost": "1 条；优先 trope_freq ∈ {low, rare}；rarity ≥ 3",
+      "side_costs": "2 条；至少 1 条跨大类；trope_freq=high 整体配额上限 1/3",
+      "dimension_check": "main_cost.dimension_taboo ∩ {gf.dimension} = ∅",
+      "cooldown": "同一 cost_id 在单作品内最近 30 章不得复用；trope_freq=high 同子类最近 50 章不得复用"
+    },
+    "scope": "v1.0 共 120 条；后续按需扩展至 v2.0 (200+ 条)。",
+    "cross_refs": [
+      "references/creativity/golden-finger-rules.md §GF-2 §GF-4 §GF-5",
+      "references/creativity/perturbation-engine.md §2 (cost 独立于扰动池)",
+      "templates/golden-finger-templates.md §代价库",
+      "ink_writer/creativity/cost_validator.py"
+    ]
+  },
+  "costs": [
+    {
+      "cost_id": "C01-CON-001",
+      "category": "C01_Physical",
+      "subcategory": "消耗型/寿命",
+      "value": "每次使用扣减若干年阳寿，使用次数可累计计算",
+      "tier_seq": {
+        "T1": "扣减 1 个月（指甲变薄、易疲倦）",
+        "T2": "扣减 1 年（白发新增数十根）",
+        "T3": "扣减 5 年（眼角现细纹、骨密度下降）",
+        "T4": "扣减 20 年（暮气沉沉、心脏负荷预警）"
+      },
+      "rarity": 2,
+      "trope_freq": "high",
+      "genres": ["仙侠", "玄幻", "修真", "高武"],
+      "reverse_exploit_hint": "反派可逼主角连续高频使用，加速透支；或在主角寿元接近临界时强迫战斗",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-CON-002",
+      "category": "C01_Physical",
+      "subcategory": "消耗型/气血",
+      "value": "气血/精元短期重度损耗，需进补恢复",
+      "tier_seq": {
+        "T1": "嘴唇发白、需热汤一碗",
+        "T2": "脸色蜡黄、需进补三日",
+        "T3": "气色枯槁、需药材调养一月",
+        "T4": "气血濒涸、非千年灵药不可恢复"
+      },
+      "rarity": 1,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "武侠"],
+      "reverse_exploit_hint": "反派可断主角药源/封锁医馆，让其陷入慢性虚弱",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-CON-003",
+      "category": "C01_Physical",
+      "subcategory": "消耗型/体能",
+      "value": "透支体能至昏迷或卧床",
+      "tier_seq": {
+        "T1": "脱力 2 小时",
+        "T2": "昏迷 1 天",
+        "T3": "卧床 7 日不起",
+        "T4": "深度昏睡 1 月、苏醒后失语"
+      },
+      "rarity": 1,
+      "trope_freq": "mid",
+      "genres": ["都市", "异能", "末世", "武侠"],
+      "reverse_exploit_hint": "反派趁主角昏迷期内攻击其根据地或挚友",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-CON-004",
+      "category": "C01_Physical",
+      "subcategory": "消耗型/五感暂失",
+      "value": "短暂失明/失聪/失语，时长与使用强度相关",
+      "tier_seq": {
+        "T1": "失明 5 分钟",
+        "T2": "失聪 1 小时",
+        "T3": "失语 1 周",
+        "T4": "三感同失 1 月"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["都市", "悬疑", "武侠", "末世"],
+      "reverse_exploit_hint": "反派精确卡在主角五感关闭的窗口期发动信息战或刺杀",
+      "dimension_taboo": ["感知"]
+    },
+    {
+      "cost_id": "C01-CON-005",
+      "category": "C01_Physical",
+      "subcategory": "消耗型/衰老",
+      "value": "外貌衰老加速，心理年龄不变",
+      "tier_seq": {
+        "T1": "皱纹 +1 道、白发 3 根",
+        "T2": "外貌老 1 岁",
+        "T3": "外貌老 5 岁、关节僵硬",
+        "T4": "外貌老 20 岁、被旧识认不出"
+      },
+      "rarity": 2,
+      "trope_freq": "mid",
+      "genres": ["都市", "言情", "悬疑", "玄幻"],
+      "reverse_exploit_hint": "反派利用主角与所爱之人的年龄差不断扩大，制造情感裂痕",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-PERM-006",
+      "category": "C01_Physical",
+      "subcategory": "永久型/残缺",
+      "value": "永久失去身体一部分（眼/手/腿/耳），不可再生",
+      "tier_seq": {
+        "T1": "失去 1 节小指",
+        "T2": "失去 1 只眼",
+        "T3": "失去 1 条手臂",
+        "T4": "失去 1 条腿 + 1 只耳"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["武侠", "黑道", "末世", "悬疑"],
+      "reverse_exploit_hint": "反派可从残缺部位反推主角能力使用次数与等级",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-PERM-007",
+      "category": "C01_Physical",
+      "subcategory": "永久型/经脉",
+      "value": "经脉损伤或丹田碎裂，修为永久倒退或封顶",
+      "tier_seq": {
+        "T1": "1 条副经脉受伤、修为停滞 1 月",
+        "T2": "3 条主经脉断裂、修为倒退一阶",
+        "T3": "丹田出现裂纹、修为永久封顶在当前境界",
+        "T4": "丹田粉碎、终身废修"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派可在主角经脉接近断裂时强行逼其再用一次",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-PERM-008",
+      "category": "C01_Physical",
+      "subcategory": "永久型/属性禁修",
+      "value": "永久无法再修炼某种属性的功法",
+      "tier_seq": {
+        "T1": "禁修一种次要属性",
+        "T2": "禁修一种主属性",
+        "T3": "禁修两种主属性",
+        "T4": "禁修主属性 + 与之相生的辅助属性"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派施展被禁属性的攻击让主角无解",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-PERM-009",
+      "category": "C01_Physical",
+      "subcategory": "永久型/体质异变",
+      "value": "身体出现某种永久禁忌（怕光/怕水/不能近女色/不能进食特定物）",
+      "tier_seq": {
+        "T1": "畏强光，午时需佩墨镜",
+        "T2": "不能直接见日光，否则灼伤",
+        "T3": "见水即起红疹",
+        "T4": "需常居阴湿洞穴，半步阳光即死"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["玄幻", "修真", "黑暗", "末世"],
+      "reverse_exploit_hint": "反派可故意将主角引至禁忌环境（露天广场、活水池畔）",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-PERM-010",
+      "category": "C01_Physical",
+      "subcategory": "永久型/感官减弱",
+      "value": "永久减弱某种五感（耳聋/色盲/嗅觉缺失/触觉迟钝）",
+      "tier_seq": {
+        "T1": "高频音域听不见",
+        "T2": "失去左耳听力",
+        "T3": "完全色盲",
+        "T4": "全身触觉麻木 + 半耳聋"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "悬疑", "武侠", "黑暗"],
+      "reverse_exploit_hint": "反派精确利用主角缺失的感官（无声暗杀、伪装色彩、毒气无嗅）",
+      "dimension_taboo": ["感知"]
+    },
+    {
+      "cost_id": "C01-ACC-011",
+      "category": "C01_Physical",
+      "subcategory": "累积型/业障",
+      "value": "每次使用累积业障值，到阈值爆发反噬（走火入魔/疯魔/暴体）",
+      "tier_seq": {
+        "T1": "业障 +1，眉间起一颗黑痣",
+        "T2": "业障达半，时常头痛、噩梦",
+        "T3": "业障溢出，幻觉频发",
+        "T4": "业障爆发，疯魔暴体而亡"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "修真", "黑暗"],
+      "reverse_exploit_hint": "反派可设置场景诱导主角连续使用，加速触阈",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-ACC-012",
+      "category": "C01_Physical",
+      "subcategory": "累积型/印记",
+      "value": "黑色印记从某处蔓延，覆盖全身即死",
+      "tier_seq": {
+        "T1": "印记现于左手心、铜钱大",
+        "T2": "印记蔓延至前臂",
+        "T3": "印记覆盖半身",
+        "T4": "印记侵入心脉，三日内死"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["黑暗", "玄幻", "悬疑", "末世"],
+      "reverse_exploit_hint": "反派可凭印记位置精确判断主角剩余可用次数",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-ACC-013",
+      "category": "C01_Physical",
+      "subcategory": "累积型/异力夺舍",
+      "value": "体内异种力量增长，迟早夺舍主角灵魂",
+      "tier_seq": {
+        "T1": "异力 5%，偶尔感到陌生情绪",
+        "T2": "异力 30%，会做不属于自己的梦",
+        "T3": "异力 60%，部分时段意识模糊",
+        "T4": "异力 100%，灵魂被夺、躯壳归他"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["玄幻", "末世", "克苏鲁", "黑暗"],
+      "reverse_exploit_hint": "反派可故意激发异力，加速夺舍进程",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C01-ACC-014",
+      "category": "C01_Physical",
+      "subcategory": "累积型/形质异化",
+      "value": "指甲异常生长 / 头发变白半根 / 体温恒比常人低 0.3 度——日积月累的微小生理偏移",
+      "tier_seq": {
+        "T1": "指甲一日一寸",
+        "T2": "白发增至全数 1/4",
+        "T3": "体温降至 35.0 度，畏寒",
+        "T4": "外貌异化为非人形，无法在人群中露面"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["都市", "悬疑", "克苏鲁", "黑暗"],
+      "reverse_exploit_hint": "反派可凭外貌异化程度公开揭露主角身份",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C01-ACC-015",
+      "category": "C01_Physical",
+      "subcategory": "累积型/汗腺气味",
+      "value": "出汗带特定气味（铁锈/腐草/硫磺/檀香），动物可循味追踪",
+      "tier_seq": {
+        "T1": "汗液有淡淡铁锈味，不易察觉",
+        "T2": "靠近 1 米可嗅出",
+        "T3": "整间屋子都是味道，狗会狂吠",
+        "T4": "气味成实体雾，方圆百米聚集异兽"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["都市", "悬疑", "末世", "玄幻"],
+      "reverse_exploit_hint": "反派训练嗅觉灵敏的猎犬或异兽专项追踪主角",
+      "dimension_taboo": []
+    },
+
+    {
+      "cost_id": "C02-MEM-016",
+      "category": "C02_Psychological",
+      "subcategory": "记忆/通用",
+      "value": "随机抹除一段记忆（趋同高频区，建议慎用）",
+      "tier_seq": {
+        "T1": "丢失某顿饭的味道",
+        "T2": "丢失某段对话",
+        "T3": "丢失某位次要朋友的名字",
+        "T4": "丢失重要亲人的整段共同回忆"
+      },
+      "rarity": 1,
+      "trope_freq": "high",
+      "genres": ["仙侠", "玄幻", "都市", "言情"],
+      "reverse_exploit_hint": "反派可定向设计场景让主角失去关键作证记忆",
+      "dimension_taboo": ["认知"]
+    },
+    {
+      "cost_id": "C02-MEM-017",
+      "category": "C02_Psychological",
+      "subcategory": "记忆/特定人",
+      "value": "针对特定一人的记忆模糊（脸/声音/称呼）",
+      "tier_seq": {
+        "T1": "想不起对方面部细节",
+        "T2": "认不出对方的脸但记得身份",
+        "T3": "听不出对方声音",
+        "T4": "彻底忘记此人存在"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["言情", "悬疑", "都市", "仙侠"],
+      "reverse_exploit_hint": "反派可冒充被遗忘者的位置渗透主角阵营",
+      "dimension_taboo": ["认知"]
+    },
+    {
+      "cost_id": "C02-MEM-018",
+      "category": "C02_Psychological",
+      "subcategory": "记忆/童年替换",
+      "value": "童年某段记忆被外来记忆替换（仿真度极高、主角自觉无异）",
+      "tier_seq": {
+        "T1": "童年某次野餐被替换为另一场",
+        "T2": "童年朋友的面孔被偷换",
+        "T3": "童年家庭关系被重写",
+        "T4": "童年身份被整体替换为他人"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["悬疑", "克苏鲁", "都市", "黑暗"],
+      "reverse_exploit_hint": "反派是替换记忆的执行者，掌握主角行为模式预判",
+      "dimension_taboo": ["认知"]
+    },
+    {
+      "cost_id": "C02-MEM-019",
+      "category": "C02_Psychological",
+      "subcategory": "记忆/错位",
+      "value": "记忆错位（把今天发生的事记成昨天，把朋友 A 做的事记成朋友 B）",
+      "tier_seq": {
+        "T1": "时序错位 1 天",
+        "T2": "人物错位 1 个",
+        "T3": "整段事件张冠李戴",
+        "T4": "整周记忆错位重组"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["悬疑", "都市", "黑暗"],
+      "reverse_exploit_hint": "反派制造证据矛盾让主角自我怀疑、社交破产",
+      "dimension_taboo": ["认知"]
+    },
+    {
+      "cost_id": "C02-EMO-020",
+      "category": "C02_Psychological",
+      "subcategory": "情感剥离",
+      "value": "逐渐失去情绪反应（喜/怒/哀/乐之一）",
+      "tier_seq": {
+        "T1": "对喜事反应迟钝",
+        "T2": "完全感受不到喜悦",
+        "T3": "喜怒两失",
+        "T4": "情感彻底剥离、变冷漠机器"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "黑暗", "言情"],
+      "reverse_exploit_hint": "反派利用主角无法感受恐惧/悲伤进行情感操控",
+      "dimension_taboo": ["情感"]
+    },
+    {
+      "cost_id": "C02-EMO-021",
+      "category": "C02_Psychological",
+      "subcategory": "情感/共情下降",
+      "value": "共情能力衰退，听不懂他人情绪、表情读不准",
+      "tier_seq": {
+        "T1": "无法察觉好友的失落",
+        "T2": "误读上司表情",
+        "T3": "在葬礼上忍不住笑",
+        "T4": "彻底失去识别人类情绪的能力"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "言情", "现实", "悬疑"],
+      "reverse_exploit_hint": "反派伪装情感骗取主角信任",
+      "dimension_taboo": ["情感"]
+    },
+    {
+      "cost_id": "C02-EMO-022",
+      "category": "C02_Psychological",
+      "subcategory": "情感/爱意消失",
+      "value": "失去对特定人的爱意感受能力，理性记得但情感空白",
+      "tier_seq": {
+        "T1": "对暗恋者无感",
+        "T2": "对配偶无感",
+        "T3": "对亲生子女无感",
+        "T4": "对所有曾爱之人感受全部清零"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["言情", "都市", "悬疑"],
+      "reverse_exploit_hint": "反派可放大主角的冷漠表象，让其被亲友误解为薄情",
+      "dimension_taboo": ["情感"]
+    },
+    {
+      "cost_id": "C02-POL-023",
+      "category": "C02_Psychological",
+      "subcategory": "精神污染/幻觉",
+      "value": "产生愈发频繁的视觉/听觉幻觉",
+      "tier_seq": {
+        "T1": "余光偶现黑影",
+        "T2": "梦中频遇陌生人",
+        "T3": "白日撞鬼，分不清虚实",
+        "T4": "幻觉占据 50% 清醒时间"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["悬疑", "克苏鲁", "末世", "黑暗"],
+      "reverse_exploit_hint": "反派伪装成幻觉一员混入主角现实",
+      "dimension_taboo": ["感知"]
+    },
+    {
+      "cost_id": "C02-POL-024",
+      "category": "C02_Psychological",
+      "subcategory": "精神污染/人格分裂",
+      "value": "意识中分裂出新人格，反向接管行为",
+      "tier_seq": {
+        "T1": "深夜偶尔自言自语",
+        "T2": "失忆数小时、第二人格留下笔记",
+        "T3": "第二人格独立行动、伤害他人",
+        "T4": "主人格被压制、第二人格全面接管"
+      },
+      "rarity": 5,
+      "trope_freq": "low",
+      "genres": ["悬疑", "黑暗", "末世", "都市"],
+      "reverse_exploit_hint": "反派可与第二人格签订契约，反向控制主角躯壳",
+      "dimension_taboo": ["认知"]
+    },
+    {
+      "cost_id": "C02-POL-025",
+      "category": "C02_Psychological",
+      "subcategory": "精神污染/噩梦",
+      "value": "每晚重历他人死亡（金手指曾接触过的死者）",
+      "tier_seq": {
+        "T1": "做一晚噩梦",
+        "T2": "连做七夜",
+        "T3": "持续一月、伴随睡眠瘫痪",
+        "T4": "永久失眠、清醒中持续闪回"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["悬疑", "黑暗", "克苏鲁", "玄幻"],
+      "reverse_exploit_hint": "反派定向投喂主角接触特定死者，操控其噩梦内容",
+      "dimension_taboo": ["感知"]
+    },
+    {
+      "cost_id": "C02-POL-026",
+      "category": "C02_Psychological",
+      "subcategory": "精神污染/心魔",
+      "value": "心魔滋生、影响修炼突破或重大决策",
+      "tier_seq": {
+        "T1": "深夜浮现一句魔语",
+        "T2": "突破时受心魔诱导失败",
+        "T3": "重大决策被心魔扭曲",
+        "T4": "心魔成主、入魔不归"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派可在主角突破前夕投放对应主题的心魔诱因",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C02-INT-027",
+      "category": "C02_Psychological",
+      "subcategory": "智性/智商下降",
+      "value": "智商或灵性下降",
+      "tier_seq": {
+        "T1": "心算速度下降",
+        "T2": "智商下降 10 分",
+        "T3": "无法再做高阶谋略推演",
+        "T4": "智商与儿童相当"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "都市", "悬疑"],
+      "reverse_exploit_hint": "反派故意把决策权丢给主角让其判断失误",
+      "dimension_taboo": ["认知"]
+    },
+    {
+      "cost_id": "C02-INT-028",
+      "category": "C02_Psychological",
+      "subcategory": "智性/灵感枯竭",
+      "value": "创造力/灵感永久枯竭（写作、绘画、谋略均受影响）",
+      "tier_seq": {
+        "T1": "下笔三日无灵感",
+        "T2": "整月不能创作",
+        "T3": "永久失去创作能力",
+        "T4": "失去想象力本身、无法构思任何新事物"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "现实", "言情", "悬疑"],
+      "reverse_exploit_hint": "反派抢占主角原本可创作领域的市场地位",
+      "dimension_taboo": ["认知"]
+    },
+    {
+      "cost_id": "C02-INT-029",
+      "category": "C02_Psychological",
+      "subcategory": "智性/性格异化",
+      "value": "性格逐渐反转（温和→偏执 / 理智→疯狂 / 内向→张扬）",
+      "tier_seq": {
+        "T1": "言谈变得尖锐",
+        "T2": "对待亲友刻薄",
+        "T3": "做出违背原则的决定",
+        "T4": "彻底变成另一个人，被亲友疏远"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "都市", "黑暗"],
+      "reverse_exploit_hint": "反派利用主角性格突变制造决裂事件",
+      "dimension_taboo": ["情感"]
+    },
+    {
+      "cost_id": "C02-MEM-030",
+      "category": "C02_Psychological",
+      "subcategory": "记忆/技能遗忘",
+      "value": "用一次就忘记一项后天学习的技能（弹琴/书法/驾车/编程）",
+      "tier_seq": {
+        "T1": "忘记一项业余爱好的技巧",
+        "T2": "忘记一项谋生技能",
+        "T3": "忘记招牌专业技能",
+        "T4": "忘记所有非本能技能、退回原始人状态"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "玄幻", "现实", "悬疑"],
+      "reverse_exploit_hint": "反派可逼主角在战斗时使用早已遗忘的技能",
+      "dimension_taboo": ["认知"]
+    },
+
+    {
+      "cost_id": "C03-KIN-031",
+      "category": "C03_Relational",
+      "subcategory": "至亲代偿/无差别",
+      "value": "用一次，身边离自己最近的至亲会承担一份不可逆代价（不可指定、不可拒绝）",
+      "tier_seq": {
+        "T1": "至亲生一场小病",
+        "T2": "至亲住院 1 周",
+        "T3": "至亲落下永久残疾",
+        "T4": "至亲死亡"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "都市", "言情", "悬疑"],
+      "reverse_exploit_hint": "反派可制造主角必须用金手指的危机，定向打击其至亲",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-KIN-032",
+      "category": "C03_Relational",
+      "subcategory": "至亲代偿/可指定",
+      "value": "可指定一名亲友承担代价（带来道德煎熬）",
+      "tier_seq": {
+        "T1": "选择 1 人、对方头痛 1 日",
+        "T2": "选择 1 人、对方失业 1 月",
+        "T3": "选择 1 人、对方失去一项重要能力",
+        "T4": "选择 1 人、对方死亡"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["黑暗", "悬疑", "末世", "玄幻"],
+      "reverse_exploit_hint": "反派给主角设下两难选择，逼其牺牲指定者",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-KIN-033",
+      "category": "C03_Relational",
+      "subcategory": "至亲代偿/健康转嫁",
+      "value": "至亲健康同步恶化（与主角金手指使用频率正相关）",
+      "tier_seq": {
+        "T1": "母亲多咳一声",
+        "T2": "母亲卧床 1 周",
+        "T3": "母亲查出绝症",
+        "T4": "母亲三月内病故"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "言情", "现实", "玄幻"],
+      "reverse_exploit_hint": "反派记录主角用次数后泄露给医院，反推其能力",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-KIN-034",
+      "category": "C03_Relational",
+      "subcategory": "至亲代偿/厄运转移",
+      "value": "厄运无差别转移给至亲（车祸、失财、被骗）",
+      "tier_seq": {
+        "T1": "至亲钱包被偷",
+        "T2": "至亲车祸轻伤",
+        "T3": "至亲被骗倾家荡产",
+        "T4": "至亲死于飞来横祸"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "悬疑", "现实", "末世"],
+      "reverse_exploit_hint": "反派可主动给主角制造『需要使用金手指』的诱因",
+      "dimension_taboo": ["概率"]
+    },
+    {
+      "cost_id": "C03-FAT-035",
+      "category": "C03_Relational",
+      "subcategory": "因果转嫁/路人",
+      "value": "灾祸落到路人身上（主角无法预知是谁）",
+      "tier_seq": {
+        "T1": "1 名路人擦伤",
+        "T2": "1 名路人住院",
+        "T3": "1 名路人致残",
+        "T4": "1 名路人死亡"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["黑暗", "悬疑", "都市", "末世"],
+      "reverse_exploit_hint": "反派可让某位关键证人巧合成为路人代偿目标",
+      "dimension_taboo": ["概率"]
+    },
+    {
+      "cost_id": "C03-FAT-036",
+      "category": "C03_Relational",
+      "subcategory": "因果转嫁/宠物",
+      "value": "主角的宠物或寄托情感的动物代偿",
+      "tier_seq": {
+        "T1": "宠物食欲不振",
+        "T2": "宠物生病",
+        "T3": "宠物失踪",
+        "T4": "宠物死亡"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["都市", "言情", "悬疑", "玄幻"],
+      "reverse_exploit_hint": "反派可绑架/伤害主角宠物作为情感勒索筹码",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-FOR-037",
+      "category": "C03_Relational",
+      "subcategory": "被遗忘/户籍册",
+      "value": "主角姓名从某本户籍册或档案库的某一页被墨抹去",
+      "tier_seq": {
+        "T1": "村籍册 1 页缺名",
+        "T2": "县档案库 1 卷无名",
+        "T3": "省级档案 + 学籍 + 工作档案全失",
+        "T4": "全国户籍系统查无此人，成黑户"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["历史", "都市", "悬疑", "末世"],
+      "reverse_exploit_hint": "反派可凭主角无法证明身份让其无法办理任何业务",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-FOR-038",
+      "category": "C03_Relational",
+      "subcategory": "被遗忘/朋友",
+      "value": "朋友们逐一忘记主角（按使用次数线性损耗）",
+      "tier_seq": {
+        "T1": "1 名次要朋友忘记",
+        "T2": "3-5 名朋友忘记",
+        "T3": "整个朋友圈无人记得他",
+        "T4": "唯一记得他的人也忘了"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "言情", "悬疑", "玄幻"],
+      "reverse_exploit_hint": "反派可在主角孤立无援时收编其旧友",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-FOR-039",
+      "category": "C03_Relational",
+      "subcategory": "被遗忘/共同回忆",
+      "value": "配偶或挚友想不起与主角的某段共同回忆",
+      "tier_seq": {
+        "T1": "想不起一次旅行",
+        "T2": "想不起初次相遇",
+        "T3": "想不起结婚仪式",
+        "T4": "想不起认识他这件事本身"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["言情", "都市", "悬疑"],
+      "reverse_exploit_hint": "反派可制造伪造的『新』共同记忆顶替主角位置",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-LOV-040",
+      "category": "C03_Relational",
+      "subcategory": "缘分剥离/孤独",
+      "value": "命中注定永久孤独（每靠近一个人就会失去对方）",
+      "tier_seq": {
+        "T1": "新交一友 1 月内疏远",
+        "T2": "亲密关系不超过 100 天",
+        "T3": "所有曾近之人都会主动离开",
+        "T4": "命中注定终生孤老"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["言情", "玄幻", "悬疑", "黑暗"],
+      "reverse_exploit_hint": "反派可作为唯一不离开的人渗透主角心防",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-LOV-041",
+      "category": "C03_Relational",
+      "subcategory": "缘分剥离/所爱离去",
+      "value": "所爱之人会以各种理由必然离开",
+      "tier_seq": {
+        "T1": "暗恋者突然出国",
+        "T2": "恋人被外派外地",
+        "T3": "配偶失踪",
+        "T4": "所爱死于意外"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["言情", "都市", "玄幻"],
+      "reverse_exploit_hint": "反派可主动安排所爱之人的外派/调职/事故",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-LOV-042",
+      "category": "C03_Relational",
+      "subcategory": "缘分剥离/感情凋零",
+      "value": "一段已建立的感情自动凋零（双方仍记得，但情已不在）",
+      "tier_seq": {
+        "T1": "新生暧昧消散",
+        "T2": "恋人之间无话可说",
+        "T3": "夫妻之间形同陌路",
+        "T4": "亲情纽带全部断裂"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["言情", "都市", "悬疑"],
+      "reverse_exploit_hint": "反派可在感情凋零时机精准切入挖走主角伴侣",
+      "dimension_taboo": ["情感"]
+    },
+    {
+      "cost_id": "C03-FAM-043",
+      "category": "C03_Relational",
+      "subcategory": "家族气运",
+      "value": "师门或家族气运被吸取（连带影响所有同门/同宗）",
+      "tier_seq": {
+        "T1": "师门当年弟子收成减半",
+        "T2": "宗门年度大考集体失利",
+        "T3": "家族基业损失三成",
+        "T4": "宗门覆灭、家族绝嗣"
+      },
+      "rarity": 5,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "历史", "宗门"],
+      "reverse_exploit_hint": "反派可故意让主角的师门/家族经历危机迫其用",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C03-FRD-044",
+      "category": "C03_Relational",
+      "subcategory": "友人生隙",
+      "value": "金手指制造误会，让朋友间产生冲突（主角难以解释）",
+      "tier_seq": {
+        "T1": "1 对朋友冷战",
+        "T2": "2 对朋友绝交",
+        "T3": "整个团队内讧分裂",
+        "T4": "宿敌团结起来对付主角"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["都市", "悬疑", "玄幻", "言情"],
+      "reverse_exploit_hint": "反派伪造证据让主角自动成为冲突制造者",
+      "dimension_taboo": ["社交"]
+    },
+    {
+      "cost_id": "C03-FRD-045",
+      "category": "C03_Relational",
+      "subcategory": "友人生隙/同辈嫉妒",
+      "value": "师门或同辈中产生针对主角的嫉妒（影响日常合作）",
+      "tier_seq": {
+        "T1": "1 个同门冷漠相对",
+        "T2": "几个同辈联合排挤",
+        "T3": "整个梯队孤立主角",
+        "T4": "同辈合谋向上举报或暗杀"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "都市", "校园"],
+      "reverse_exploit_hint": "反派可秘密资助这些同辈让其成为打手",
+      "dimension_taboo": ["社交"]
+    },
+
+    {
+      "cost_id": "C04-MON-046",
+      "category": "C04_Material",
+      "subcategory": "金钱/蒸发",
+      "value": "用一次损失等额或随机金额（钱包自动空、银行余额减少）",
+      "tier_seq": {
+        "T1": "丢失 100 元零钱",
+        "T2": "银行卡自动扣 1 万",
+        "T3": "存款一夜归零",
+        "T4": "所有资产清零 + 负债"
+      },
+      "rarity": 2,
+      "trope_freq": "mid",
+      "genres": ["都市", "现实", "悬疑", "异能"],
+      "reverse_exploit_hint": "反派可低价收购主角的不良资产、控制其经济命脉",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-MON-047",
+      "category": "C04_Material",
+      "subcategory": "金钱/账户扣款",
+      "value": "银行账户被自动扣款，款项去向不明",
+      "tier_seq": {
+        "T1": "扣 100 元，无凭证",
+        "T2": "扣 1 万，对账单缺这一条",
+        "T3": "扣 50 万，银行系统说没有这笔",
+        "T4": "整个账户被冻结"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["都市", "现实", "悬疑"],
+      "reverse_exploit_hint": "反派是隐藏收款方，掌握主角资金流向",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-MON-048",
+      "category": "C04_Material",
+      "subcategory": "金钱/资产贬值",
+      "value": "持有资产莫名贬值（房产、股票、收藏品）",
+      "tier_seq": {
+        "T1": "1 件收藏品贬值 30%",
+        "T2": "持有股票当日跌停",
+        "T3": "名下房产被定为危房",
+        "T4": "所有资产估值清零"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["都市", "现实"],
+      "reverse_exploit_hint": "反派提前布局做空主角资产盘口",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-MON-049",
+      "category": "C04_Material",
+      "subcategory": "金钱/工资",
+      "value": "本月工资变零或被克扣（理由总能合理化）",
+      "tier_seq": {
+        "T1": "工资延迟一周",
+        "T2": "扣发本月奖金",
+        "T3": "扣发本月底薪",
+        "T4": "公司单方面宣布主角拖欠 3 月工资"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["都市", "现实", "职场"],
+      "reverse_exploit_hint": "反派若是主角上司可滥用此机制",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-LUC-050",
+      "category": "C04_Material",
+      "subcategory": "气运/透支",
+      "value": "短期无敌后，长期厄运缠身（车祸/失业/失信）",
+      "tier_seq": {
+        "T1": "未来一周诸事不顺",
+        "T2": "未来一月连续小灾",
+        "T3": "未来一年中等灾难连发",
+        "T4": "终生背负沉重业障运"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "都市", "玄幻", "悬疑"],
+      "reverse_exploit_hint": "反派挑选主角厄运期发动总攻",
+      "dimension_taboo": ["概率"]
+    },
+    {
+      "cost_id": "C04-LUC-051",
+      "category": "C04_Material",
+      "subcategory": "气运/抽奖必输",
+      "value": "用一次后，未来一段时间所有概率事件向坏发展",
+      "tier_seq": {
+        "T1": "1 周内抽奖必不中",
+        "T2": "1 月内打牌必输",
+        "T3": "1 年内一切概率事件皆向坏",
+        "T4": "终身概率扭曲"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["都市", "异能", "玄幻"],
+      "reverse_exploit_hint": "反派可与主角对赌，必胜",
+      "dimension_taboo": ["概率"]
+    },
+    {
+      "cost_id": "C04-MER-052",
+      "category": "C04_Material",
+      "subcategory": "功德",
+      "value": "功德值/道行扣除（修仙者经典代价）",
+      "tier_seq": {
+        "T1": "扣 10 功德",
+        "T2": "扣 1000 功德",
+        "T3": "功德归零、不再被天道庇佑",
+        "T4": "功德转负、列入天道清算名单"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派伪造主角恶行加速其功德流失",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-MER-053",
+      "category": "C04_Material",
+      "subcategory": "道行倒退",
+      "value": "道行修为永久倒退一阶或多阶",
+      "tier_seq": {
+        "T1": "倒退 1 个小阶",
+        "T2": "倒退 1 大阶",
+        "T3": "倒退 3 大阶",
+        "T4": "退至凡人之身"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派可攻击主角刚倒退后的薄弱境界",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-EQP-054",
+      "category": "C04_Material",
+      "subcategory": "装备/武器损坏",
+      "value": "贴身武器损坏或失灵",
+      "tier_seq": {
+        "T1": "武器卷刃",
+        "T2": "武器折断",
+        "T3": "武器灵性消散",
+        "T4": "命脉法器粉碎"
+      },
+      "rarity": 2,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "武侠"],
+      "reverse_exploit_hint": "反派可在主角武器损坏的瞬间发动总攻",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-EQP-055",
+      "category": "C04_Material",
+      "subcategory": "装备/法宝失灵",
+      "value": "全部法宝集体失灵 N 日",
+      "tier_seq": {
+        "T1": "失灵 1 日",
+        "T2": "失灵 7 日",
+        "T3": "失灵 30 日",
+        "T4": "全部炸毁，永不再生"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派可在失灵期发动法器连击",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-EQP-056",
+      "category": "C04_Material",
+      "subcategory": "装备/衣物自燃",
+      "value": "贴身衣物随机自燃，需当场更换（公开场合极尴尬）",
+      "tier_seq": {
+        "T1": "袖角微焦",
+        "T2": "外袍烧穿一洞",
+        "T3": "上衣全焚",
+        "T4": "全身赤裸于公开场合"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["都市", "悬疑", "异能"],
+      "reverse_exploit_hint": "反派可记录主角衣物焚烧时间反推使用次数",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-RES-057",
+      "category": "C04_Material",
+      "subcategory": "灵石燃烧",
+      "value": "用一次烧若干灵石（实物消耗，可见可量化）",
+      "tier_seq": {
+        "T1": "烧 1 枚下品灵石",
+        "T2": "烧 100 枚下品",
+        "T3": "烧 1 枚极品",
+        "T4": "烧空整库灵石矿"
+      },
+      "rarity": 1,
+      "trope_freq": "high",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派可断主角灵石供应渠道",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-RES-058",
+      "category": "C04_Material",
+      "subcategory": "储能耗尽",
+      "value": "随身储能装置（电池/灵石/丹药）一次清空",
+      "tier_seq": {
+        "T1": "电量从满至 50%",
+        "T2": "全部储能 1 小时内耗尽",
+        "T3": "储能装置永久损坏",
+        "T4": "辐射污染、不能再充能"
+      },
+      "rarity": 2,
+      "trope_freq": "low",
+      "genres": ["科幻", "末世", "都市"],
+      "reverse_exploit_hint": "反派可在主角储能濒尽时迫其再次使用",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-DBT-059",
+      "category": "C04_Material",
+      "subcategory": "借贷/未来加倍",
+      "value": "现在用，未来加倍偿还（先享受、记账）",
+      "tier_seq": {
+        "T1": "1 个月内偿还 2 倍",
+        "T2": "1 年内偿还 5 倍",
+        "T3": "10 年内偿还 100 倍",
+        "T4": "下一世为奴还债"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "黑暗", "悬疑"],
+      "reverse_exploit_hint": "反派可作为债主出现，掌握主角生死",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C04-MON-060",
+      "category": "C04_Material",
+      "subcategory": "金钱/利息异变",
+      "value": "本人贷款利率被悄悄上调，房贷／助学贷／信用卡利率每用一次微增 0.01%",
+      "tier_seq": {
+        "T1": "房贷利率 +0.01%（无感）",
+        "T2": "利率 +0.5%（月供多 200）",
+        "T3": "利率 +5%（被银行约谈）",
+        "T4": "利率拉到 36%、被列入失信名单"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["都市", "现实", "悬疑"],
+      "reverse_exploit_hint": "反派若是银行高管可主动调高",
+      "dimension_taboo": []
+    },
+
+    {
+      "cost_id": "C05-CAL-061",
+      "category": "C05_Cosmic",
+      "subcategory": "天劫/雷罚",
+      "value": "用一次提前一阶天劫（强行逆天必遭反噬）",
+      "tier_seq": {
+        "T1": "下次小渡劫提前 1 月",
+        "T2": "提前一阶天劫",
+        "T3": "提前两阶 + 强度 +50%",
+        "T4": "立即降下九天九重劫"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派可故意激发主角天劫提前",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C05-CAL-062",
+      "category": "C05_Cosmic",
+      "subcategory": "天劫/雷电频率",
+      "value": "周遭雷电频率上升（出门必中雷击概率提高）",
+      "tier_seq": {
+        "T1": "雷雨天 +50% 概率",
+        "T2": "晴天偶有惊雷",
+        "T3": "随处暴起雷电",
+        "T4": "一出门即遭雷劈"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["仙侠", "玄幻", "都市", "悬疑"],
+      "reverse_exploit_hint": "反派可提前疏散群众，让主角承受集中雷击",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C05-CAL-063",
+      "category": "C05_Cosmic",
+      "subcategory": "天罚/倒计时",
+      "value": "天空出现可见倒计时（其他人也能看见）",
+      "tier_seq": {
+        "T1": "倒计时仅主角自见",
+        "T2": "周围 1 米内可见",
+        "T3": "整座城可见",
+        "T4": "全国乃至全球可见"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["玄幻", "末世", "克苏鲁"],
+      "reverse_exploit_hint": "反派以倒计时为筹码胁迫主角公开身份",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C05-EXP-064",
+      "category": "C05_Cosmic",
+      "subcategory": "暴露/天道标记",
+      "value": "每用一次行踪被天道标记（敌方推算可定位）",
+      "tier_seq": {
+        "T1": "标记保留 1 时辰",
+        "T2": "标记 1 日",
+        "T3": "标记 1 月",
+        "T4": "终生不消"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "末世"],
+      "reverse_exploit_hint": "反派可雇推算师持续锁定主角",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C05-EXP-065",
+      "category": "C05_Cosmic",
+      "subcategory": "暴露/高维存在",
+      "value": "招来更高维度存在的注意",
+      "tier_seq": {
+        "T1": "1 名旁观者瞥了一眼",
+        "T2": "1 名调查者亲自降临",
+        "T3": "整个高维议会立项调查",
+        "T4": "更高维势力派人格神格收回"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["玄幻", "末世", "克苏鲁", "科幻"],
+      "reverse_exploit_hint": "反派可把主角献祭给那位高维存在换利益",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C05-EXP-066",
+      "category": "C05_Cosmic",
+      "subcategory": "暴露/神识扫描",
+      "value": "敌方神识扫描可瞬间定位主角",
+      "tier_seq": {
+        "T1": "扫描精度至省",
+        "T2": "至市",
+        "T3": "至街",
+        "T4": "至门牌号"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻"],
+      "reverse_exploit_hint": "反派可同时雇佣多位术士交叉锁定",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C05-REJ-067",
+      "category": "C05_Cosmic",
+      "subcategory": "排斥/世界排斥度",
+      "value": "天道把主角视为 bug，定期清理（修补程序）",
+      "tier_seq": {
+        "T1": "1 次小修补、主角被惊扰",
+        "T2": "1 次中修补、灵气稀薄一日",
+        "T3": "1 次大清理、强行抹除主角痕迹",
+        "T4": "天道格式化、主角与世界一同消失"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["玄幻", "末世", "无限流"],
+      "reverse_exploit_hint": "反派可加速世界对主角的排斥度",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C05-REJ-068",
+      "category": "C05_Cosmic",
+      "subcategory": "排斥/灵气稀薄",
+      "value": "主角周身灵气持续稀薄（修炼速度负向加成）",
+      "tier_seq": {
+        "T1": "灵气浓度 -30%",
+        "T2": "灵气几乎为零",
+        "T3": "周身呈灵气真空",
+        "T4": "灵气倒吸效应、灭门级灾害"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派把主角软禁在灵气稀薄区慢慢饿死",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C05-TIM-069",
+      "category": "C05_Cosmic",
+      "subcategory": "时空错乱",
+      "value": "时间或空间瞬间错乱（错过约会、错过会议、迷路）",
+      "tier_seq": {
+        "T1": "迟到 30 分钟",
+        "T2": "穿越到旁边楼层",
+        "T3": "穿越到相邻城市",
+        "T4": "穿越到错误时间线"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["科幻", "玄幻", "悬疑", "末世"],
+      "reverse_exploit_hint": "反派可在主角错位时趁机布局",
+      "dimension_taboo": ["时间"]
+    },
+    {
+      "cost_id": "C05-TIM-070",
+      "category": "C05_Cosmic",
+      "subcategory": "时空/时流异常",
+      "value": "主角周身时间流速比外界异常（变慢/变快）",
+      "tier_seq": {
+        "T1": "0.99 倍流速、几无感",
+        "T2": "0.9 倍、约会迟到",
+        "T3": "0.5 倍、错过半生重要事件",
+        "T4": "0.1 倍、与世界彻底脱节"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["科幻", "玄幻", "末世", "克苏鲁"],
+      "reverse_exploit_hint": "反派可在常态时间高速发展、绕过主角",
+      "dimension_taboo": ["时间"]
+    },
+    {
+      "cost_id": "C05-KAR-071",
+      "category": "C05_Cosmic",
+      "subcategory": "因果/下世为奴",
+      "value": "签下因果债，下一世自动为反派/债主之奴",
+      "tier_seq": {
+        "T1": "下世为对方家臣",
+        "T2": "下世为对方仆从",
+        "T3": "下世为对方奴隶",
+        "T4": "下世为对方坐骑/食粮"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["仙侠", "玄幻", "修真", "黑暗"],
+      "reverse_exploit_hint": "反派可故意制造主角必须用的危机签更多债",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C05-KAR-072",
+      "category": "C05_Cosmic",
+      "subcategory": "因果/业力反噬",
+      "value": "业力反噬，每次使用都让主角自己未来栽到自己挖的坑里",
+      "tier_seq": {
+        "T1": "1 月内被自己说过的话打脸",
+        "T2": "1 年内被自己做过的局困住",
+        "T3": "10 年内所有谋略对自己反向作用",
+        "T4": "终生陷入自己设下的因果死局"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "悬疑"],
+      "reverse_exploit_hint": "反派分析主角过往埋下针对其反噬的钩子",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C05-KAR-073",
+      "category": "C05_Cosmic",
+      "subcategory": "因果/线扭曲",
+      "value": "主角因果线扭曲、相关人因此卷入意外",
+      "tier_seq": {
+        "T1": "1 名亲友因主角而生小病",
+        "T2": "3 名亲友连串厄运",
+        "T3": "整个家族因果线打结",
+        "T4": "主角周围数百人卷入崩盘式事故"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["仙侠", "玄幻", "悬疑", "末世"],
+      "reverse_exploit_hint": "反派可加固这种扭曲、把灾难规模放大",
+      "dimension_taboo": ["规则"]
+    },
+    {
+      "cost_id": "C05-EXP-074",
+      "category": "C05_Cosmic",
+      "subcategory": "暴露/星象",
+      "value": "用一次后，星象异变（占星师、钦天监可发现）",
+      "tier_seq": {
+        "T1": "某颗冷星偏移半度",
+        "T2": "北斗位置错位",
+        "T3": "天象失序、官方启动调查",
+        "T4": "整片星空脱轨、王朝大乱"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["仙侠", "历史", "玄幻", "末世"],
+      "reverse_exploit_hint": "反派若是钦天监可第一时间汇报朝廷",
+      "dimension_taboo": ["感知"]
+    },
+    {
+      "cost_id": "C05-CAL-075",
+      "category": "C05_Cosmic",
+      "subcategory": "天罚/天降异象",
+      "value": "用一次随机降下一个天降异象（彗星/血雨/北极光异常）",
+      "tier_seq": {
+        "T1": "彗星划过 1 秒",
+        "T2": "血雨下 1 分钟",
+        "T3": "全国可见的彩虹环 24 小时",
+        "T4": "持续一周的天文级异象"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["历史", "末世", "玄幻", "科幻"],
+      "reverse_exploit_hint": "反派可据异象时间倒推主角使用规律",
+      "dimension_taboo": []
+    },
+
+    {
+      "cost_id": "C06-CD-076",
+      "category": "C06_Mechanical",
+      "subcategory": "冷却/长冷",
+      "value": "用一次长冷却（一日/一月/一年）",
+      "tier_seq": {
+        "T1": "冷却 1 时辰",
+        "T2": "冷却 1 日",
+        "T3": "冷却 1 月",
+        "T4": "冷却 1 年"
+      },
+      "rarity": 1,
+      "trope_freq": "high",
+      "genres": ["仙侠", "都市", "异能", "游戏"],
+      "reverse_exploit_hint": "反派把决定性战斗安排在主角冷却期",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-CD-077",
+      "category": "C06_Mechanical",
+      "subcategory": "冷却/单日单次",
+      "value": "一日仅可使用一次（错过即失）",
+      "tier_seq": {
+        "T1": "已用一次但当日还有备用机会（错觉）",
+        "T2": "用过即冻结至次日",
+        "T3": "若用错时机，当日彻底空缺",
+        "T4": "连续 7 日错失，永久封禁 1 月"
+      },
+      "rarity": 1,
+      "trope_freq": "high",
+      "genres": ["都市", "异能", "玄幻", "游戏"],
+      "reverse_exploit_hint": "反派每日做诱饵骗主角浪费机会",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-CD-078",
+      "category": "C06_Mechanical",
+      "subcategory": "冷却/全年单次",
+      "value": "一年仅可使用一次（节日/特定时辰才有窗口）",
+      "tier_seq": {
+        "T1": "需在特定节气方可激活",
+        "T2": "需对齐某天文坐标",
+        "T3": "需当事人现场亲在",
+        "T4": "需百年一遇的天文巧合"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "悬疑", "历史"],
+      "reverse_exploit_hint": "反派可把主角软禁过那个窗口期",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-TRG-079",
+      "category": "C06_Mechanical",
+      "subcategory": "触发/生死关头",
+      "value": "必须在生死关头才能触发（无法主动调用）",
+      "tier_seq": {
+        "T1": "重伤吐血时可触发",
+        "T2": "丹田受损时可触发",
+        "T3": "心脏停跳前 30 秒可触发",
+        "T4": "已死亡才能反激活、复活后丧失大部分能力"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "末世", "黑暗"],
+      "reverse_exploit_hint": "反派故意制造非生死场景让主角无法用",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-TRG-080",
+      "category": "C06_Mechanical",
+      "subcategory": "触发/必须流血",
+      "value": "必须当场流血方可触发",
+      "tier_seq": {
+        "T1": "刺破指尖一滴",
+        "T2": "割腕一道",
+        "T3": "需流出半斤血",
+        "T4": "需失血至濒死"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "黑暗", "悬疑"],
+      "reverse_exploit_hint": "反派限制主角接触锐器、监控伤口",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-TRG-081",
+      "category": "C06_Mechanical",
+      "subcategory": "触发/必须当众",
+      "value": "必须当众使用，不得隐秘",
+      "tier_seq": {
+        "T1": "需 1 名见证者",
+        "T2": "需 10 名见证者",
+        "T3": "需百人广场",
+        "T4": "需直播全国可见"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["都市", "异能", "悬疑", "末世"],
+      "reverse_exploit_hint": "反派可制造无人之境逼主角无法用",
+      "dimension_taboo": ["社交"]
+    },
+    {
+      "cost_id": "C06-RND-082",
+      "category": "C06_Mechanical",
+      "subcategory": "随机性/结果不可控",
+      "value": "结果完全随机（可能帮倒忙）",
+      "tier_seq": {
+        "T1": "10% 概率反向效果",
+        "T2": "30% 概率反向",
+        "T3": "50% 概率反向",
+        "T4": "100% 反向、变成废柴技能"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["游戏", "异能", "都市"],
+      "reverse_exploit_hint": "反派可逼主角在不能容错场景下用",
+      "dimension_taboo": ["概率"]
+    },
+    {
+      "cost_id": "C06-RND-083",
+      "category": "C06_Mechanical",
+      "subcategory": "随机性/反向报应",
+      "value": "成功一次后，下次必定大失败",
+      "tier_seq": {
+        "T1": "下次效果减半",
+        "T2": "下次完全失败",
+        "T3": "下次反向作用",
+        "T4": "下次反向作用并波及群众"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "异能"],
+      "reverse_exploit_hint": "反派记录主角成功节点、卡其下次失败时机",
+      "dimension_taboo": ["概率"]
+    },
+    {
+      "cost_id": "C06-OFR-084",
+      "category": "C06_Mechanical",
+      "subcategory": "等价物/祭品",
+      "value": "必须献祭一件珍贵物品（书、器、丹）",
+      "tier_seq": {
+        "T1": "献祭一本旧书",
+        "T2": "献祭一件传家宝",
+        "T3": "献祭师门镇宗之器",
+        "T4": "献祭命脉法宝"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "黑暗"],
+      "reverse_exploit_hint": "反派可偷走主角祭品库、断其使用基础",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-OFR-085",
+      "category": "C06_Mechanical",
+      "subcategory": "等价物/烧装备",
+      "value": "用一次烧毁一件主角装备（不可指定）",
+      "tier_seq": {
+        "T1": "烧毁一件辅助装备",
+        "T2": "烧毁副武器",
+        "T3": "烧毁主武器",
+        "T4": "烧毁灵根本命器物"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "游戏"],
+      "reverse_exploit_hint": "反派可逼主角携带最重要装备时被迫使用",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-OFR-086",
+      "category": "C06_Mechanical",
+      "subcategory": "等价物/杀人献祭",
+      "value": "必须杀一人献祭（不可拒绝、否则反噬）",
+      "tier_seq": {
+        "T1": "需杀一只动物",
+        "T2": "需杀一名罪犯",
+        "T3": "需杀一名陌生人",
+        "T4": "需杀一名亲友"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["黑暗", "悬疑", "末世", "克苏鲁"],
+      "reverse_exploit_hint": "反派可故意制造主角『不杀就更糟』的死局",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-OFR-087",
+      "category": "C06_Mechanical",
+      "subcategory": "信息差代价",
+      "value": "用过之后忘记自己是怎么用的（无法复盘）",
+      "tier_seq": {
+        "T1": "忘记触发的具体咒语",
+        "T2": "忘记触发的具体动作",
+        "T3": "忘记自己曾用过",
+        "T4": "彻底失去能力的存在记忆"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["悬疑", "玄幻", "黑暗"],
+      "reverse_exploit_hint": "反派可在主角失忆时栽赃其身份",
+      "dimension_taboo": ["认知"]
+    },
+    {
+      "cost_id": "C06-MOR-088",
+      "category": "C06_Mechanical",
+      "subcategory": "道德/必行善",
+      "value": "用一次必须当日做一件善事（否则下次失效）",
+      "tier_seq": {
+        "T1": "捐 100 元",
+        "T2": "扶老人过马路",
+        "T3": "救一条人命",
+        "T4": "舍身救百人"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["都市", "现实", "玄幻"],
+      "reverse_exploit_hint": "反派可剥夺主角做善事的环境（封城/隔离）",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-MOR-089",
+      "category": "C06_Mechanical",
+      "subcategory": "道德/必行恶",
+      "value": "用一次必须当日做一件恶事（否则下次失效）",
+      "tier_seq": {
+        "T1": "撒一个无伤大雅的谎",
+        "T2": "偷一件物品",
+        "T3": "重伤一个无辜者",
+        "T4": "夺走一个无辜者性命"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["黑暗", "悬疑", "末世"],
+      "reverse_exploit_hint": "反派可设套让主角的『必须作恶』变成血债",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C06-MOR-090",
+      "category": "C06_Mechanical",
+      "subcategory": "道德/当众真话",
+      "value": "用之前必须当众说一句真话（不能撒谎）",
+      "tier_seq": {
+        "T1": "说出今早早餐吃了什么",
+        "T2": "说出对眼前一人的真实看法",
+        "T3": "说出自己最隐私的秘密",
+        "T4": "说出最致命的弱点"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["悬疑", "都市", "黑暗", "言情"],
+      "reverse_exploit_hint": "反派可在公开场合逼问主角致命问题",
+      "dimension_taboo": ["社交"]
+    },
+
+    {
+      "cost_id": "C07-EXP-091",
+      "category": "C07_Sociopolitical",
+      "subcategory": "身份暴露/痕迹",
+      "value": "每用一次留下蛛丝马迹（独特气味、签名笔迹、脚印）",
+      "tier_seq": {
+        "T1": "留下淡淡气味",
+        "T2": "留下独特鞋印",
+        "T3": "留下指纹 + 监控影像",
+        "T4": "现场留下亲笔字条"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["悬疑", "都市", "异能", "黑暗"],
+      "reverse_exploit_hint": "反派组建专项小组追踪主角痕迹",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-EXP-092",
+      "category": "C07_Sociopolitical",
+      "subcategory": "身份暴露/系统标记",
+      "value": "身份证号被某部门系统标记（自己看不到）",
+      "tier_seq": {
+        "T1": "标记保密 1 月",
+        "T2": "进入二级监控",
+        "T3": "进入一级警戒名单",
+        "T4": "国安部门关注、出行受限"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "悬疑", "现实", "异能"],
+      "reverse_exploit_hint": "反派若是部门内部人，可主动标记加码",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-EXP-093",
+      "category": "C07_Sociopolitical",
+      "subcategory": "身份暴露/档案备注",
+      "value": "户籍/学籍/工作档案多一行主角看不见的备注",
+      "tier_seq": {
+        "T1": "1 行模糊备注",
+        "T2": "明确写明『非常人』",
+        "T3": "明确写明『需重点关注』",
+        "T4": "明确写明『建议清除』"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["悬疑", "都市", "末世", "现实"],
+      "reverse_exploit_hint": "反派若知此机制可凭备注合法清除主角",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-EXP-094",
+      "category": "C07_Sociopolitical",
+      "subcategory": "身份暴露/选民名单",
+      "value": "选民名单或公民资格记录中的位置自动后移",
+      "tier_seq": {
+        "T1": "后移 1 位",
+        "T2": "后移到末页",
+        "T3": "被划入待审查",
+        "T4": "公民资格被冻结"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["现实", "悬疑", "都市", "历史"],
+      "reverse_exploit_hint": "反派若是选举操盘者可借此剥夺主角公民权",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-REP-095",
+      "category": "C07_Sociopolitical",
+      "subcategory": "名声/妖魔化",
+      "value": "被传为妖魔/邪修/异类（流言扩散）",
+      "tier_seq": {
+        "T1": "巷里传言",
+        "T2": "本城传遍",
+        "T3": "全国通缉",
+        "T4": "天下共讨"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "黑暗", "悬疑"],
+      "reverse_exploit_hint": "反派可主动散播流言放大效应",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-REP-096",
+      "category": "C07_Sociopolitical",
+      "subcategory": "名声/媒体曝光",
+      "value": "媒体负面曝光（社交媒体或地方报纸）",
+      "tier_seq": {
+        "T1": "知乎匿名提问",
+        "T2": "本地报纸内页",
+        "T3": "全国头条 + 热搜",
+        "T4": "国际媒体跟踪报道"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["都市", "现实", "悬疑"],
+      "reverse_exploit_hint": "反派可买下媒体头条阵地",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-REP-097",
+      "category": "C07_Sociopolitical",
+      "subcategory": "名声/行业黑名单",
+      "value": "行业内被列入黑名单（不能再就业、不能入会、不能投稿）",
+      "tier_seq": {
+        "T1": "1 家公司拒绝合作",
+        "T2": "1 个行业协会拒绝",
+        "T3": "整个行业黑名单",
+        "T4": "全行业 + 跨行业封杀"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "职场", "现实"],
+      "reverse_exploit_hint": "反派若是协会高层可主动操控",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-FAC-098",
+      "category": "C07_Sociopolitical",
+      "subcategory": "阵营/强制变更",
+      "value": "原本正派被迫与黑暗势力沾边、原本中立被迫站队",
+      "tier_seq": {
+        "T1": "传出与某派系合作流言",
+        "T2": "被原阵营怀疑、外派调查",
+        "T3": "被原阵营驱逐、新阵营接收",
+        "T4": "原阵营全力围剿、新阵营把其当烫手山芋"
+      },
+      "rarity": 4,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "都市", "悬疑"],
+      "reverse_exploit_hint": "反派可同时操纵两边推动主角阵营变更",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-FAC-099",
+      "category": "C07_Sociopolitical",
+      "subcategory": "阵营/师门驱逐",
+      "value": "师门或宗派以某种理由驱逐主角",
+      "tier_seq": {
+        "T1": "被师傅训斥",
+        "T2": "被罚禁闭 1 月",
+        "T3": "被逐出师门、削去户籍",
+        "T4": "被列入门派必杀名单"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["仙侠", "玄幻", "武侠"],
+      "reverse_exploit_hint": "反派可伪造主角叛门证据加速驱逐",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-FAC-100",
+      "category": "C07_Sociopolitical",
+      "subcategory": "阵营/国籍异变",
+      "value": "国籍/族籍记录异变（被划为外族/外国人/边缘民族）",
+      "tier_seq": {
+        "T1": "户籍备注错位",
+        "T2": "护照被注销",
+        "T3": "被驱逐出境",
+        "T4": "成无国籍黑户"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["都市", "现实", "悬疑", "历史"],
+      "reverse_exploit_hint": "反派若是入籍审批者可加速操作",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-QUA-101",
+      "category": "C07_Sociopolitical",
+      "subcategory": "资格/科举禁",
+      "value": "永久失去科举或公职考试资格",
+      "tier_seq": {
+        "T1": "本年度禁考",
+        "T2": "禁考 3 年",
+        "T3": "终身禁考",
+        "T4": "禁考 + 株连家族"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["历史", "古言", "悬疑"],
+      "reverse_exploit_hint": "反派若是主考官可单独操作",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-QUA-102",
+      "category": "C07_Sociopolitical",
+      "subcategory": "资格/宗门禁",
+      "value": "永久不能入主流宗门（被所有宗门拒之门外）",
+      "tier_seq": {
+        "T1": "本届招收被拒",
+        "T2": "三大宗门拒收",
+        "T3": "九大宗门联手抵制",
+        "T4": "天下宗门皆不收"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["仙侠", "玄幻", "修真"],
+      "reverse_exploit_hint": "反派可借此让主角彻底没有正派身份",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-QUA-103",
+      "category": "C07_Sociopolitical",
+      "subcategory": "资格/执业禁",
+      "value": "失去某项现代职业的执业资格（医师/律师/教师/会计/工程师）",
+      "tier_seq": {
+        "T1": "暂停执业 1 月",
+        "T2": "吊销执照",
+        "T3": "终生禁业",
+        "T4": "全行业封杀 + 列入失信"
+      },
+      "rarity": 3,
+      "trope_freq": "low",
+      "genres": ["都市", "职场", "现实"],
+      "reverse_exploit_hint": "反派若是行业协会高层可加速操作",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-CMP-104",
+      "category": "C07_Sociopolitical",
+      "subcategory": "同行嫉恨",
+      "value": "被同行集体围猎（嫉恨/竞争）",
+      "tier_seq": {
+        "T1": "1 名同行公开抹黑",
+        "T2": "几名同行联手挤压资源",
+        "T3": "整个圈子集体抵制",
+        "T4": "同行雇佣杀手对付主角"
+      },
+      "rarity": 3,
+      "trope_freq": "mid",
+      "genres": ["都市", "职场", "玄幻", "仙侠"],
+      "reverse_exploit_hint": "反派可作为幕后金主统一指挥同行",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C07-CMP-105",
+      "category": "C07_Sociopolitical",
+      "subcategory": "同行/更高级注意",
+      "value": "招来更高级别的竞争者关注（行业大佬/天才/异能巨头）",
+      "tier_seq": {
+        "T1": "1 位大佬听闻、调档观察",
+        "T2": "亲自出面试探",
+        "T3": "组建专项小组对付主角",
+        "T4": "联手天下顶级势力围剿"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "玄幻", "仙侠", "末世"],
+      "reverse_exploit_hint": "反派可借助这位大佬之手清除主角",
+      "dimension_taboo": []
+    },
+
+    {
+      "cost_id": "C08-WTH-106",
+      "category": "C08_Environmental",
+      "subcategory": "天气/降雨",
+      "value": "触发即在方圆 100 米内下雨（无云也下）",
+      "tier_seq": {
+        "T1": "毛毛细雨 5 分钟",
+        "T2": "中雨 30 分钟",
+        "T3": "暴雨 1 小时",
+        "T4": "倾盆 12 小时、城市内涝"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["都市", "玄幻", "悬疑", "末世"],
+      "reverse_exploit_hint": "反派可凭异常天气推断主角使用时间地点",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-WTH-107",
+      "category": "C08_Environmental",
+      "subcategory": "天气/雷鸣",
+      "value": "触发即在方圆 200 米内有一记雷鸣（晴天也响）",
+      "tier_seq": {
+        "T1": "远雷一声",
+        "T2": "近雷三声",
+        "T3": "连雷十声 + 落雷击树",
+        "T4": "天罚级雷暴持续 1 小时"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["都市", "玄幻", "悬疑", "末世"],
+      "reverse_exploit_hint": "反派可监听雷鸣定位主角",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-WTH-108",
+      "category": "C08_Environmental",
+      "subcategory": "天气/异雾",
+      "value": "触发即起雾，雾内能见度极低",
+      "tier_seq": {
+        "T1": "薄雾 50 米",
+        "T2": "中雾 5 米",
+        "T3": "浓雾 0.5 米",
+        "T4": "化身雾乡、整城无视"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["悬疑", "玄幻", "黑暗", "克苏鲁"],
+      "reverse_exploit_hint": "反派趁雾发动伏击",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-FAU-109",
+      "category": "C08_Environmental",
+      "subcategory": "动植物/植物反应",
+      "value": "触发即周围植物反应异常（低头/枯萎/疯长）",
+      "tier_seq": {
+        "T1": "周身鲜花轻颤",
+        "T2": "灌木低头",
+        "T3": "树叶集体枯落",
+        "T4": "整片森林枯萎"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["玄幻", "末世", "克苏鲁", "悬疑"],
+      "reverse_exploit_hint": "反派凭枯萎线追踪主角行进路线",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-FAU-110",
+      "category": "C08_Environmental",
+      "subcategory": "动植物/鸟兽噤声",
+      "value": "触发即周围某种鸟不再鸣叫（持续 N 时辰）",
+      "tier_seq": {
+        "T1": "麻雀停叫 1 小时",
+        "T2": "全城鸟雀噤声 1 日",
+        "T3": "整省鸟兽不鸣 1 月",
+        "T4": "永久消失某种鸟"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["都市", "玄幻", "克苏鲁", "悬疑"],
+      "reverse_exploit_hint": "反派部署鸟类生态监测、立刻定位主角",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-FAU-111",
+      "category": "C08_Environmental",
+      "subcategory": "动植物/虫类避让",
+      "value": "蚂蚁/虫类绕开主角周身 1 米（永久）",
+      "tier_seq": {
+        "T1": "蚂蚁有意绕行",
+        "T2": "蚊虫不近身",
+        "T3": "整片虫类灭绝",
+        "T4": "周围 1 米空气中所有微生物全部静止"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["都市", "玄幻", "克苏鲁", "悬疑"],
+      "reverse_exploit_hint": "反派靠虫类异常定位主角夜间行动",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-FAU-112",
+      "category": "C08_Environmental",
+      "subcategory": "动植物/家畜炸毛",
+      "value": "周围猫狗炸毛、嘶吼、撤退",
+      "tier_seq": {
+        "T1": "1 只猫炸毛",
+        "T2": "全宅家畜逃逸",
+        "T3": "全街家畜恐慌",
+        "T4": "整城宠物无差别狂躁"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["都市", "悬疑", "玄幻"],
+      "reverse_exploit_hint": "反派饲养灵兽监控主角",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-MED-113",
+      "category": "C08_Environmental",
+      "subcategory": "媒介/手机信号",
+      "value": "触发即周围手机信号干扰（无法通话、无法上网）",
+      "tier_seq": {
+        "T1": "信号格 -1",
+        "T2": "整楼无信号 5 分钟",
+        "T3": "整街无信号 1 小时",
+        "T4": "整城基站异常 1 日"
+      },
+      "rarity": 4,
+      "trope_freq": "low",
+      "genres": ["都市", "悬疑", "异能", "现实"],
+      "reverse_exploit_hint": "反派可监测信号异常区域定位主角",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-MED-114",
+      "category": "C08_Environmental",
+      "subcategory": "媒介/录音失灵",
+      "value": "录音设备失灵（数字格式损坏，模拟磁带消磁）",
+      "tier_seq": {
+        "T1": "1 台录音笔异常",
+        "T2": "周围 1 米所有录音损毁",
+        "T3": "1 公里内监控集体瘫痪",
+        "T4": "整城历史录音存档全部清零"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["悬疑", "都市", "现实", "异能"],
+      "reverse_exploit_hint": "反派可用纸笔做老派记录、不依赖电子",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-MED-115",
+      "category": "C08_Environmental",
+      "subcategory": "媒介/镜头无焦",
+      "value": "镜头无法对焦主角（照片永远糊）",
+      "tier_seq": {
+        "T1": "自拍轻度模糊",
+        "T2": "所有镜头主角呈雾状",
+        "T3": "镜头反射主角处呈黑洞",
+        "T4": "靠近主角的镜头会自爆"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["悬疑", "克苏鲁", "玄幻", "都市"],
+      "reverse_exploit_hint": "反派可凭这种异常证明主角的非人性",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-MED-116",
+      "category": "C08_Environmental",
+      "subcategory": "媒介/钟表停摆",
+      "value": "周围钟表停摆 N 分钟（机械与石英表均受影响）",
+      "tier_seq": {
+        "T1": "1 块手表停 1 分钟",
+        "T2": "整屋钟表停 30 分钟",
+        "T3": "整楼钟表停 2 小时",
+        "T4": "整城时间装置失效一日"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["悬疑", "玄幻", "克苏鲁", "末世"],
+      "reverse_exploit_hint": "反派可凭停摆时段反推主角触发瞬间",
+      "dimension_taboo": ["时间"]
+    },
+    {
+      "cost_id": "C08-AMB-117",
+      "category": "C08_Environmental",
+      "subcategory": "时空环境/局部降温",
+      "value": "触发即半径 50 米温度下降",
+      "tier_seq": {
+        "T1": "降 0.5 度",
+        "T2": "降 5 度",
+        "T3": "降 15 度",
+        "T4": "降 30 度、瞬间冰封"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["玄幻", "克苏鲁", "末世", "悬疑"],
+      "reverse_exploit_hint": "反派可借助温度仪器跟踪主角行迹",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-AMB-118",
+      "category": "C08_Environmental",
+      "subcategory": "时空环境/影子异常",
+      "value": "影子方向与光源不一致（朝错向投射）",
+      "tier_seq": {
+        "T1": "影子稍偏 5 度",
+        "T2": "影子反向",
+        "T3": "影子独立移动",
+        "T4": "影子分裂为多重独立行动体"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["悬疑", "克苏鲁", "玄幻", "黑暗"],
+      "reverse_exploit_hint": "反派若是异能侦察者可凭影子异常立刻识破",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-AMB-119",
+      "category": "C08_Environmental",
+      "subcategory": "时空环境/风向反转",
+      "value": "触发即周围风向反转或停滞",
+      "tier_seq": {
+        "T1": "风向偏转 30 度",
+        "T2": "风向完全反转",
+        "T3": "风停 1 小时",
+        "T4": "整城无风、空气凝滞"
+      },
+      "rarity": 4,
+      "trope_freq": "rare",
+      "genres": ["玄幻", "悬疑", "末世", "都市"],
+      "reverse_exploit_hint": "反派可借此判断主角触发位置",
+      "dimension_taboo": []
+    },
+    {
+      "cost_id": "C08-AMB-120",
+      "category": "C08_Environmental",
+      "subcategory": "时空环境/气味异变",
+      "value": "触发即周围空气出现特定气味（檀香/腐草/铁锈/咸涩）",
+      "tier_seq": {
+        "T1": "淡淡气味、几不可察",
+        "T2": "气味 10 米可嗅",
+        "T3": "气味浓郁、整楼皆觉",
+        "T4": "气味成实体雾、可见"
+      },
+      "rarity": 5,
+      "trope_freq": "rare",
+      "genres": ["悬疑", "玄幻", "克苏鲁", "都市"],
+      "reverse_exploit_hint": "反派训练嗅探犬针对该气味追踪",
+      "dimension_taboo": []
+    }
+  ]
+}

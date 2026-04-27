@@ -1,8 +1,8 @@
 ---
 name: perturbation-engine
-description: Layer 3 扰动引擎。强制方案从种子库抽取 N 对跨 category 稀缺元素混搭注入，避免 LLM 落入语料中位数。
+description: Layer 3 扰动引擎。强制方案从种子库抽取 N 对跨 category 稀缺元素混搭注入，避免 LLM 落入语料中位数。v1.1 显式声明 cost-pool 独立于扰动池。
 type: reference
-version: v1.0
+version: v1.1
 ---
 
 # Layer 3 扰动引擎（Perturbation Engine）
@@ -12,6 +12,18 @@ version: v1.0
 LLM 默认会向训练语料的中位数收敛（修真→宗门、都市→兵王、末世→丧尸）。Layer 1 元规则负责"不许走老路"，Layer 3 扰动引擎负责"强行掰向新路"——通过随机抽取种子库（`anti-trope-seeds.json`）中 2 个**不同 category** 的元素组成"扰动对"，作为方案构思的强制输入注入。
 
 扰动对不是装饰，而是约束：方案必须围绕扰动对展开核心冲突或金手指设计，否则视为未生效，需重抽。
+
+### 扰动池 vs 代价池：独立通道（v1.1 明确）
+
+| 抽样系统 | 数据源 | 角色 | 是否 mandatory |
+|----------|--------|------|----------------|
+| **扰动池** Perturbation | `references/creativity/anti-trope-seeds.json` | "可选注入"—— 方案可借扰动对建立差异化创意 | 受档位 N 控制（1/2/3/5 对） |
+| **代价池** Cost Pool | `data/golden-finger-cost-pool.json` | "必须注入"—— 金手指代价**强制**从此池抽 1 主 + 2 副 | 100% 必须，零例外（详见 `golden-finger-rules.md` §GF-2） |
+
+两套系统不混用：
+- 代价池条目**不进** anti-trope-seeds.json（不参与扰动对抽取）
+- 扰动池条目**不进** cost-pool.json（不充当金手指代价）
+- 唯一交集：扰动对的 `injection_note` 可以引用代价 cost_id（但代价的抽取逻辑独立完成）
 
 ---
 
