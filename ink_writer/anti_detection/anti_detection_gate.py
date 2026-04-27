@@ -8,7 +8,11 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from ink_writer.anti_detection.config import AntiDetectionConfig, load_config
+from ink_writer.anti_detection.config import (
+    AntiDetectionConfig,
+    ZeroToleranceRule,
+    load_config,
+)
 from ink_writer.anti_detection.fix_prompt_builder import normalize_checker_output
 
 
@@ -48,6 +52,37 @@ def _setup_logger(chapter_no: int, project_root: str) -> logging.Logger:
     return logger
 
 
+def _rule_violated(
+    rule: ZeroToleranceRule, text: str, first_line: str
+) -> bool:
+    """Return True iff the given rule is triggered by the text.
+
+    `kind="density"` rules count pattern occurrences (per 1000 chars) and trip
+    when occurrences-per-千字 > rule.density_threshold. `kind="regex"` rules
+    (the default and historical behavior) trigger on first re.search match.
+
+    `whitelist_patterns` is reserved on the dataclass for future context-aware
+    exemptions (e.g. interrupted dialogue). It is intentionally inert in this
+    US — the field exists so the YAML schema is stable and follow-up work can
+    fill in real exemption logic without re-migrating configs.
+    """
+    kind = (rule.kind or "regex").lower()
+
+    if kind == "density":
+        char_total = len(text)
+        if char_total == 0 or not rule.patterns:
+            return False
+        count = 0
+        for pattern in rule.patterns:
+            count += len(re.findall(pattern, text))
+        density_per_kchars = count / char_total * 1000.0
+        return density_per_kchars > rule.density_threshold
+
+    # regex kind (default)
+    scope = first_line if rule.id == "ZT_TIME_OPENING" else text
+    return any(re.search(pattern, scope) for pattern in rule.patterns)
+
+
 def check_zero_tolerance(text: str, config: AntiDetectionConfig) -> str | None:
     """Check text against zero-tolerance rules.
 
@@ -65,13 +100,8 @@ def check_zero_tolerance(text: str, config: AntiDetectionConfig) -> str | None:
             break
 
     for rule in config.zero_tolerance:
-        for pattern in rule.patterns:
-            if rule.id == "ZT_TIME_OPENING":
-                if re.search(pattern, first_line):
-                    return rule.id
-            else:
-                if re.search(pattern, text):
-                    return rule.id
+        if _rule_violated(rule, text, first_line):
+            return rule.id
     return None
 
 

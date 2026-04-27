@@ -109,3 +109,47 @@ zero_tolerance:
       - "值得注意的是"
       - "不得不提的是"
       - "不可否认的是"
+
+  # --- 标点 AI 指纹（US-001 prose anti-AI overhaul）---
+  # 5 条标点零容忍：双破折号 / 智能引号 / 英式连字符 / 过密顿号 / 过用省略号
+  # whitelist_patterns 暂留空数组，预留对话被打断 / 引用片段等豁免
+
+  - id: ZT_EM_DASH
+    description: "双破折号 —— (U+2014×2 及变体) 是最强 AI 标点指纹"
+    kind: regex
+    patterns:
+      - "——"          # U+2014 ×2 (中文标准破折号)
+      - "――"          # U+2015 ×2 (横线变体)
+    whitelist_patterns: []
+
+  - id: ZT_AI_QUOTES
+    description: "智能引号 U+201C/D U+2018/9 或法式 «» 出现即阻断"
+    kind: regex
+    patterns:
+      - "[“”‘’]"   # 中英文智能弯引号
+      - "[«»]"                          # 法式引号
+    whitelist_patterns: []
+
+  - id: ZT_HYPHEN_AS_DASH
+    description: "中文上下文中 ASCII '-' 当破折号使用（如 '他笑了-然后转身'）"
+    kind: regex
+    patterns:
+      - "(?<=[一-龥])-(?=[一-龥])"
+    whitelist_patterns: []
+
+  - id: ZT_DENSE_DUNHAO
+    description: "顿号密度过高（> 3/千字 视为列表化 AI 写作）"
+    kind: density
+    patterns:
+      - "、"
+    density_threshold: 3.0
+    whitelist_patterns: []
+
+  - id: ZT_ELLIPSIS_OVERUSE
+    description: "省略号过用（…… 或 ... > 8/千字）"
+    kind: density
+    patterns:
+      - "……"
+      - "\\.\\.\\."   # ASCII 三点
+    density_threshold: 8.0
+    whitelist_patterns: []
