@@ -83,13 +83,24 @@ def _rule_violated(
     return any(re.search(pattern, scope) for pattern in rule.patterns)
 
 
-def check_zero_tolerance(text: str, config: AntiDetectionConfig) -> str | None:
+def check_zero_tolerance(
+    text: str,
+    config: AntiDetectionConfig,
+    *,
+    zt_rules: list[ZeroToleranceRule] | None = None,
+) -> str | None:
     """Check text against zero-tolerance rules.
 
     Returns the rule ID if any rule is violated, None otherwise.
     Zero-tolerance violations cause immediate block with no retry.
+
+    Args:
+        zt_rules: If provided, use these rules instead of config.zero_tolerance.
+                  Allows callers to inject platform-specific rules without
+                  mutating the config object.
     """
-    if not text or not config.zero_tolerance:
+    rules = zt_rules if zt_rules is not None else config.zero_tolerance
+    if not text or not rules:
         return None
 
     first_line = ""
@@ -99,7 +110,7 @@ def check_zero_tolerance(text: str, config: AntiDetectionConfig) -> str | None:
             first_line = stripped
             break
 
-    for rule in config.zero_tolerance:
+    for rule in rules:
         if _rule_violated(rule, text, first_line):
             return rule.id
     return None
@@ -193,13 +204,13 @@ def run_anti_detection_gate(
             final_text=chapter_text,
         )
 
-    # v26.2: 番茄追加零容忍规则
+    # v26.2: 番茄追加零容忍规则（不修改 config 对象，避免跨调用累积）
     from ink_writer.anti_detection.config import get_zero_tolerance_rules
-    config.zero_tolerance = get_zero_tolerance_rules(platform, config.zero_tolerance)
+    effective_zt_rules = get_zero_tolerance_rules(platform, config.zero_tolerance)
 
     logger = _setup_logger(chapter_no, project_root)
 
-    zt_hit = check_zero_tolerance(chapter_text, config)
+    zt_hit = check_zero_tolerance(chapter_text, config, zt_rules=effective_zt_rules)
     if zt_hit:
         logger.warning("零容忍规则触发: %s — 立即阻断", zt_hit)
         blocked_path = _write_blocked(

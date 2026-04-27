@@ -27,6 +27,10 @@ model: inherit
 
 > **冲突解耦**：直白模式下"镜头多样性 / 感官丰富度"相关软规则被 arbitration 豁免（不升级为 Red），其他维度（句式节奏 / 动词锐度 / 环境情绪 / 特写缺失）保持原判定。hard-block 类规则（`SHOT_SINGLE_DOMINANCE` 等）不豁免，保留文笔硬伤护栏。非直白场景零退化。
 
+## 平台感知权重 (v26.2)
+
+> 调用 `ink_writer.prose.directness_threshold_gates.get_prose_impact_weights(platform)` 获取六维权重。番茄模式下权重偏向动作/节奏（verb_sharpness 升至 0.25，lens_diversity 降至 0.10），契合下沉市场"少描写多动作"的审美。评分时按权重加权计算 overall_score，而非等权平均。
+
 **激活条件（任一满足即放宽）**：
 
 - `review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}`

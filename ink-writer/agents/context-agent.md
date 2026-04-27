@@ -417,8 +417,12 @@ python3 "${SCRIPTS_DIR}/ink.py" --project-root "{project_root}" style benchmark 
 3. 构建检索 query = `{scene_type} {本章大纲概要}`
 4. 调用 `retriever.retrieve(query, k=config.retrieval_top_k)` 获取 top-K 规则
 5. 若 `chapter_no <= 3`（黄金三章），额外检索 `category="opening"` 的规则并合并去重
-6. 若检索结果为空，跳过本步骤
-7. 将规则按 severity 分组（hard → soft → info），写入任务书第 12 板块：
+6. 若 `state.json.project_info.platform == "fanqie"`（番茄模式），额外检索以下 category 的规则并合并去重：
+   - `家庭伦理冲突`
+   - `打脸循环`
+   - `身份掉马`
+7. 若检索结果为空，跳过本步骤
+8. 将规则按 severity 分组（hard → soft → info），写入任务书第 12 板块：
 
 ```markdown
 ### 12. 编辑建议（Editor Wisdom）

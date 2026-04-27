@@ -389,7 +389,19 @@ class DataModulesConfig:
         root = normalize_windows_path(project_root).expanduser().resolve()
         # 在构造配置前加载项目级 `.env`，以确保 EMBED_*/RERANK_* 等字段可生效
         _load_project_dotenv(root)
-        return cls(project_root=root)
+        cfg = cls(project_root=root)
+        # v26.2: 从 state.json 读取平台标记，供 pacing/strand 平台感知属性使用
+        try:
+            state_path = root / ".ink" / "state.json"
+            if state_path.exists():
+                import json
+                state = json.loads(state_path.read_text(encoding="utf-8"))
+                platform_val = state.get("project_info", {}).get("platform", "qidian")
+                if platform_val in ("qidian", "fanqie"):
+                    cfg._platform = platform_val
+        except Exception:
+            pass
+        return cfg
 
 
 _default_config: Optional[DataModulesConfig] = None
