@@ -33,6 +33,12 @@ _DEFAULT_CPV = int(os.environ.get("INK_CHAPTERS_PER_VOLUME", "50"))
 from security_utils import sanitize_commit_message, atomic_write_json, is_git_available
 from project_locator import write_current_project_pointer
 from ink_writer.platforms.resolver import PLATFORM_DEFAULTS, PLATFORM_LABELS
+
+_PLATFORM_ALIASES = {
+    "起点": "qidian", "起点中文网": "qidian", "": "qidian",
+    "番茄": "fanqie", "番茄小说": "fanqie",
+}
+
 try:
     from ink_writer.core.extract.golden_three import build_default_preferences, build_golden_three_plan
 except ImportError:  # pragma: no cover
@@ -316,22 +322,19 @@ def init_project(
 
     # Normalize platform to internal key
     _platform_raw = (platform or "").strip()
-    _PLATFORM_ALIASES = {
-        "起点": "qidian", "起点中文网": "qidian", "": "qidian",
-        "番茄": "fanqie", "番茄小说": "fanqie",
-    }
     platform_key = _PLATFORM_ALIASES.get(_platform_raw, _platform_raw)
     if platform_key not in ("qidian", "fanqie"):
         platform_key = "qidian"
     platform_label = PLATFORM_LABELS.get(platform_key, platform_key)
 
     # Apply platform defaults for empty/unspecified fields
-    _plat_defaults = PLATFORM_DEFAULTS[platform_key]
+    _plat_defaults = PLATFORM_DEFAULTS.get(platform_key, PLATFORM_DEFAULTS["qidian"])
     if not target_reader:
         target_reader = _plat_defaults["target_reader"]
     # Adjust target_chapters and target_words if they match the old qidian defaults
     # (meaning user didn't explicitly set them)
-    if target_chapters == 600 and target_words == 2_000_000:
+    _qidian_defaults = PLATFORM_DEFAULTS["qidian"]
+    if target_chapters == _qidian_defaults["target_chapters"] and target_words == _qidian_defaults["target_words"]:
         target_chapters = _plat_defaults["target_chapters"]
         target_words = _plat_defaults["target_words"]
 
