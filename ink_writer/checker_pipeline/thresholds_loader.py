@@ -1,6 +1,6 @@
-"""M3 阈值加载器：读 config/checker-thresholds.yaml。
+"""M3 阈值加载器：读 config/checker-thresholds.yaml，支持平台解析。
 
-ink-write 启动时调一次 load_thresholds()，把 dict 透传给 rewrite_loop / 各 checker。
+ink-write 启动时调一次 load_thresholds_for_platform(platform)，把 dict 透传给 rewrite_loop / 各 checker。
 M3 期间不做热更新；修改 yaml 后需重启 writer。
 """
 
@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+from ink_writer.platforms.resolver import resolve_platform_config
 
 DEFAULT_CONFIG_PATH = (
     Path(__file__).resolve().parent.parent.parent
@@ -47,3 +49,22 @@ def load_thresholds(path: Path | str | None = None) -> dict[str, Any]:
         )
 
     return raw
+
+
+def load_thresholds_for_platform(
+    platform: str,
+    path: Path | str | None = None,
+) -> dict[str, Any]:
+    """Load thresholds and resolve platform-specific overrides.
+
+    For each top-level key that is a dict, if it has a `platforms`
+    sub-key, merge `platforms.<platform>` into that dict before returning.
+    """
+    raw = load_thresholds(path)
+    resolved: dict[str, Any] = {}
+    for section_key, section_val in raw.items():
+        if isinstance(section_val, dict):
+            resolved[section_key] = resolve_platform_config(section_val, platform)
+        else:
+            resolved[section_key] = section_val
+    return resolved
