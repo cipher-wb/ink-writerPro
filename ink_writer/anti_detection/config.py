@@ -53,6 +53,24 @@ class AntiDetectionConfig:
     zero_tolerance: list[ZeroToleranceRule] = field(default_factory=list)
 
 
+# v26.2 番茄专属规则：超过 25 字复合修饰句 → 下沉用户看不懂 = AI味
+FANQIE_EXTRA_RULES: list[ZeroToleranceRule] = [
+    ZeroToleranceRule(
+        id="FQ-001",
+        description="番茄模式：超过 25 字无句读的复合修饰句，下沉用户看不懂",
+        patterns=[r"[^。！？\n]{25,}"],
+        kind="regex",
+    ),
+]
+
+
+def get_zero_tolerance_rules(platform: str, base_rules: list[ZeroToleranceRule]) -> list[ZeroToleranceRule]:
+    """Return zero_tolerance rules, merging platform-specific extras."""
+    if platform == "fanqie":
+        return base_rules + FANQIE_EXTRA_RULES
+    return base_rules
+
+
 _SCALAR_FIELDS = {
     "enabled", "score_threshold", "golden_three_threshold", "max_retries",
     "sentence_cv_min", "sentence_mean_min", "short_sentence_ratio_max",

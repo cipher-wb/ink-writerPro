@@ -165,6 +165,7 @@ def run_anti_detection_gate(
     checker_fn: Callable[[str, int], dict],
     polish_fn: Callable[[str, str, int], str],
     config: AntiDetectionConfig | None = None,
+    platform: str = "qidian",
 ) -> AntiDetectionResult:
     """Run anti-detection hard gate with zero-tolerance check + polish retry loop.
 
@@ -175,6 +176,7 @@ def run_anti_detection_gate(
         checker_fn: Callable(chapter_text, chapter_no) -> raw checker result dict.
         polish_fn: Callable(chapter_text, fix_prompt, chapter_no) -> polished text.
         config: Anti-detection config. If None, loads from default path.
+        platform: Platform key (qidian/fanqie) for platform-specific rules.
 
     Returns:
         AntiDetectionResult with pass/fail status and attempt history.
@@ -190,6 +192,10 @@ def run_anti_detection_gate(
             threshold=0.0,
             final_text=chapter_text,
         )
+
+    # v26.2: 番茄追加零容忍规则
+    from ink_writer.anti_detection.config import get_zero_tolerance_rules
+    config.zero_tolerance = get_zero_tolerance_rules(platform, config.zero_tolerance)
 
     logger = _setup_logger(chapter_no, project_root)
 

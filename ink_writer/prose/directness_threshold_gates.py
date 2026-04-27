@@ -25,6 +25,28 @@ from ink_writer.prose.directness_checker import is_activated as _directness_is_a
 PROSE_IMPACT_CHECKER_NAME: str = "prose-impact-checker"
 FLOW_NATURALNESS_CHECKER_NAME: str = "flow-naturalness-checker"
 
+# v26.2 平台感知文笔冲击力权重
+def get_prose_impact_weights(platform: str) -> dict[str, float]:
+    """Return dimension weights for prose-impact-checker per platform."""
+    if platform == "fanqie":
+        return {
+            "lens_diversity": 0.10,
+            "sensory_richness": 0.15,
+            "sentence_rhythm": 0.20,
+            "verb_sharpness": 0.25,
+            "env_emotion_resonance": 0.10,
+            "closeup_absence": 0.20,
+        }
+    return {
+        "lens_diversity": 0.20,
+        "sensory_richness": 0.20,
+        "sentence_rhythm": 0.15,
+        "verb_sharpness": 0.15,
+        "env_emotion_resonance": 0.15,
+        "closeup_absence": 0.15,
+    }
+
+
 PROSE_IMPACT_RELAXED_RULES: frozenset[str] = frozenset(
     {
         # 维度1 镜头多样性（战斗/高潮/爽点天然镜头单一，不追求多样性降级）

@@ -7,6 +7,13 @@ from dataclasses import dataclass, field
 from ink_writer.editor_wisdom.config import EditorWisdomConfig, load_config
 from ink_writer.editor_wisdom.exceptions import EditorWisdomIndexMissingError
 from ink_writer.editor_wisdom.golden_three import GOLDEN_THREE_CATEGORIES
+
+# v26.2 番茄小说编辑器规则分类
+FANQIE_EDITOR_CATEGORIES: list[str] = [
+    "家庭伦理冲突",
+    "打脸循环",
+    "身份掉马",
+]
 from ink_writer.editor_wisdom.retriever import Retriever, Rule, get_retriever
 
 
@@ -51,6 +58,7 @@ def build_editor_wisdom_section(
     *,
     config: EditorWisdomConfig | None = None,
     retriever: Retriever | None = None,
+    platform: str = "qidian",
 ) -> EditorWisdomSection:
     """Build the 编辑建议 section for the context-agent execution package.
 
@@ -68,7 +76,7 @@ def build_editor_wisdom_section(
 
     if retriever is None:
         try:
-            retriever = get_retriever()  # v13 US-006：单例复用，避免每章重加载 BAAI 模型
+            retriever = get_retriever()
         except EditorWisdomIndexMissingError:
             if config.enabled:
                 raise
@@ -86,6 +94,16 @@ def build_editor_wisdom_section(
         for cat in sorted(GOLDEN_THREE_CATEGORIES):
             golden_rules = retriever.retrieve(query=query, k=k, category=cat)
             for r in golden_rules:
+                if r.id not in seen_ids:
+                    rules.append(r)
+                    seen_ids.add(r.id)
+
+    # v26.2: 番茄追加专属规则分类
+    if platform == "fanqie":
+        seen_ids = {r.id for r in rules}
+        for cat in FANQIE_EDITOR_CATEGORIES:
+            fanqie_rules = retriever.retrieve(query=query, k=k, category=cat)
+            for r in fanqie_rules:
                 if r.id not in seen_ids:
                     rules.append(r)
                     seen_ids.add(r.id)

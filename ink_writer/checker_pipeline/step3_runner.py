@@ -245,6 +245,7 @@ def _make_anti_detection_adapter(review_bundle: dict) -> Callable:
                 project_root=review_bundle.get("project_root", "."),
                 checker_fn=checker_fn,
                 polish_fn=polish_fn,
+                platform=review_bundle.get("platform", "qidian"),
             )
             passed = getattr(result, "passed", True)
             score = getattr(result, "final_score", 1.0)
