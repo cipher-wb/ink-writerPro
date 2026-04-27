@@ -11,12 +11,11 @@
 
 from __future__ import annotations
 
-import json
-import re
 from pathlib import Path
 from typing import Any
 
 from ink_writer.checkers.golden_finger_spec.models import GoldenFingerSpecReport
+from ink_writer.core.infra.json_util import parse_llm_json_object
 
 PROMPT_PATH = Path(__file__).resolve().parent / "prompts" / "check.txt"
 
@@ -35,24 +34,6 @@ def _load_prompt_template() -> str:
 
 def _build_prompt(*, description: str) -> str:
     return _load_prompt_template().format(description=description)
-
-
-def _extract_json_object(raw: str) -> dict[str, Any]:
-    if not isinstance(raw, str):
-        raise ValueError("llm response is not a string")
-    text = raw.strip()
-    fence = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
-    if fence:
-        text = fence.group(1)
-    if not text.startswith("{"):
-        m = re.search(r"\{.*\}", text, re.DOTALL)
-        if not m:
-            raise ValueError("no JSON object found in llm response")
-        text = m.group(0)
-    parsed = json.loads(text)
-    if not isinstance(parsed, dict):
-        raise ValueError("llm response is not a JSON object")
-    return parsed
 
 
 def _call_llm(llm_client: Any, prompt: str, model: str) -> str:
@@ -95,13 +76,20 @@ def check_golden_finger_spec(
 
     prompt = _build_prompt(description=description)
 
+    _RETRY_SUFFIX = (
+        "\n\nYour previous output was not valid JSON. "
+        "Output ONLY the raw JSON object — no markdown fences, "
+        "no explanation, no additional text. Start with `{` and end with `}`."
+    )
+
     last_err: str = ""
     parsed: dict[str, Any] | None = None
     attempts = max(1, max_retries)
-    for _ in range(attempts):
+    for attempt in range(attempts):
         try:
-            raw = _call_llm(llm_client, prompt, model)
-            parsed = _extract_json_object(raw)
+            current_prompt = prompt if attempt == 0 else prompt + _RETRY_SUFFIX
+            raw = _call_llm(llm_client, current_prompt, model)
+            parsed = parse_llm_json_object(raw)
             break
         except Exception as exc:  # noqa: BLE001  LLM/JSON 失败统一降级
             last_err = str(exc) or exc.__class__.__name__

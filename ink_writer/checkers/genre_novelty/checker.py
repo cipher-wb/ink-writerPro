@@ -13,11 +13,11 @@
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 from typing import Any
 
 from ink_writer.checkers.genre_novelty.models import GenreNoveltyReport
+from ink_writer.core.infra.json_util import parse_llm_json_array
 
 PROMPT_PATH = Path(__file__).resolve().parent / "prompts" / "check.txt"
 
@@ -54,24 +54,6 @@ def _build_prompt(
         main_plot_one_liner=main_plot_one_liner,
         top200_json="\n".join(top200_lines),
     )
-
-
-def _extract_json_array(raw: str) -> list[dict[str, Any]]:
-    if not isinstance(raw, str):
-        raise ValueError("llm response is not a string")
-    text = raw.strip()
-    fence = re.search(r"```(?:json)?\s*(\[.*?\])\s*```", text, re.DOTALL)
-    if fence:
-        text = fence.group(1)
-    if not text.startswith("["):
-        m = re.search(r"\[.*\]", text, re.DOTALL)
-        if not m:
-            raise ValueError("no JSON array found in llm response")
-        text = m.group(0)
-    parsed = json.loads(text)
-    if not isinstance(parsed, list):
-        raise ValueError("llm response is not a JSON array")
-    return parsed
 
 
 def _call_llm(llm_client: Any, prompt: str, model: str) -> str:
@@ -148,13 +130,20 @@ def check_genre_novelty(
         top200=top200,
     )
 
+    _RETRY_SUFFIX = (
+        "\n\nYour previous output was not valid JSON. "
+        "Output ONLY the raw JSON array — no markdown fences, "
+        "no explanation, no additional text. Start with `[` and end with `]`."
+    )
+
     last_err: str = ""
     parsed: list[dict[str, Any]] | None = None
     attempts = max(1, max_retries)
-    for _ in range(attempts):
+    for attempt in range(attempts):
         try:
-            raw = _call_llm(llm_client, prompt, model)
-            parsed = _extract_json_array(raw)
+            current_prompt = prompt if attempt == 0 else prompt + _RETRY_SUFFIX
+            raw = _call_llm(llm_client, current_prompt, model)
+            parsed = parse_llm_json_array(raw)
             break
         except Exception as exc:  # noqa: BLE001  LLM/JSON 失败统一降级
             last_err = str(exc) or exc.__class__.__name__

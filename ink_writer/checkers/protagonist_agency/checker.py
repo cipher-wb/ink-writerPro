@@ -11,12 +11,11 @@
 
 from __future__ import annotations
 
-import json
-import re
 from pathlib import Path
 from typing import Any
 
 from ink_writer.checkers.protagonist_agency.models import AgencyReport
+from ink_writer.core.infra.json_util import parse_llm_json_object
 
 PROMPT_PATH = Path(__file__).resolve().parent / "prompts" / "check.txt"
 
@@ -36,21 +35,6 @@ def _build_prompt(*, chapter_text: str, protagonist_name: str) -> str:
         chapter_text=chapter_text,
         protagonist_name=protagonist_name,
     )
-
-
-def _extract_json(raw: str) -> dict[str, Any]:
-    if not isinstance(raw, str):
-        raise ValueError("llm response is not a string")
-    text = raw.strip()
-    fence = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", text, re.DOTALL)
-    if fence:
-        text = fence.group(1)
-    if not text.startswith("{"):
-        m = re.search(r"\{.*\}", text, re.DOTALL)
-        if not m:
-            raise ValueError("no JSON object found in llm response")
-        text = m.group(0)
-    return json.loads(text)
 
 
 def _call_llm(llm_client: Any, prompt: str, model: str) -> str:
@@ -97,12 +81,19 @@ def check_protagonist_agency(
         protagonist_name=protagonist_name,
     )
 
+    _RETRY_SUFFIX = (
+        "\n\nYour previous output was not valid JSON. "
+        "Output ONLY the raw JSON object — no markdown fences, "
+        "no explanation, no additional text. Start with `{` and end with `}`."
+    )
+
     parsed: dict[str, Any] | None = None
     attempts = max(1, max_retries)
-    for _ in range(attempts):
+    for attempt in range(attempts):
         try:
-            raw = _call_llm(llm_client, prompt, model)
-            parsed = _extract_json(raw)
+            current_prompt = prompt if attempt == 0 else prompt + _RETRY_SUFFIX
+            raw = _call_llm(llm_client, current_prompt, model)
+            parsed = parse_llm_json_object(raw)
             break
         except Exception:  # noqa: BLE001  LLM/JSON 失败统一降级
             parsed = None

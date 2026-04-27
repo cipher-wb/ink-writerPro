@@ -17,12 +17,11 @@
 
 from __future__ import annotations
 
-import json
-import re
 from pathlib import Path
 from typing import Any
 
 from ink_writer.checkers.chapter_hook_density.models import ChapterHookDensityReport
+from ink_writer.core.infra.json_util import parse_llm_json_array
 
 PROMPT_PATH = Path(__file__).resolve().parent / "prompts" / "check.txt"
 
@@ -49,24 +48,6 @@ def _build_prompt(*, outline_volume_skeleton: list[dict[str, Any]]) -> str:
         summary = str(entry.get("summary", "")).strip()
         lines.append(f"第 {idx} 章 — {summary}")
     return _load_prompt_template().format(summaries_text="\n".join(lines))
-
-
-def _extract_json_array(raw: str) -> list[dict[str, Any]]:
-    if not isinstance(raw, str):
-        raise ValueError("llm response is not a string")
-    text = raw.strip()
-    fence = re.search(r"```(?:json)?\s*(\[.*?\])\s*```", text, re.DOTALL)
-    if fence:
-        text = fence.group(1)
-    if not text.startswith("["):
-        m = re.search(r"\[.*\]", text, re.DOTALL)
-        if not m:
-            raise ValueError("no JSON array found in llm response")
-        text = m.group(0)
-    parsed = json.loads(text)
-    if not isinstance(parsed, list):
-        raise ValueError("llm response is not a JSON array")
-    return parsed
 
 
 def _call_llm(llm_client: Any, prompt: str, model: str) -> str:
@@ -143,7 +124,7 @@ def check_chapter_hook_density(
         try:
             current_prompt = prompt if attempt == 0 else prompt + _RETRY_SUFFIX
             raw = _call_llm(llm_client, current_prompt, model)
-            parsed = _extract_json_array(raw)
+            parsed = parse_llm_json_array(raw)
             break
         except Exception as exc:  # noqa: BLE001  LLM/JSON 失败统一降级
             last_err = str(exc) or exc.__class__.__name__
