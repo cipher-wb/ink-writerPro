@@ -136,7 +136,7 @@
         "Tests pass (pytest tests/prose/test_directness_d6_d7.py tests/prose/test_directness_checker.py)"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -155,7 +155,7 @@
         "Tests pass (pytest tests/prose/test_threshold_tier_lookup.py)"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -174,7 +174,7 @@
         "Tests pass (pytest tests/agents/test_writer_l11_self_check.py)"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -193,7 +193,7 @@
         "Tests pass (pytest tests/retrieval/test_build_explosive_hit_index.py)"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -211,7 +211,7 @@
         "Tests pass (pytest tests/retrieval/test_explosive_retriever.py)"
       ],
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -229,7 +229,7 @@
         "Tests pass (pytest tests/agents/test_writer_explosive_retrieval_injection.py)"
       ],
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -249,7 +249,7 @@
         "Tests pass (pytest tests/polish/test_hard_block_rewrite_mode.py)"
       ],
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -268,7 +268,7 @@
         "Tests pass (pytest tests/prose/test_calibration_pipeline.py)"
       ],
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -287,7 +287,7 @@
         "Tests pass (pytest tests/eval/test_e2e_eval_script_smoke.py)"
       ],
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -305,7 +305,7 @@
         "Tests pass (pytest tests/integration/test_prose_overhaul_rollback.py)"
       ],
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "notes": ""
     }
   ]
