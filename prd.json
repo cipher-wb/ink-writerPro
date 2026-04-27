@@ -229,8 +229,8 @@
         "Tests pass (pytest tests/agents/test_writer_explosive_retrieval_injection.py)"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. inject_explosive_examples + <reference_examples> XML block + config/parallel-pipeline.yaml enable_explosive_retrieval switch + graceful fallback."
     },
     {
       "id": "US-013",
@@ -249,8 +249,8 @@
         "Tests pass (pytest tests/polish/test_hard_block_rewrite_mode.py)"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. hard_block_rewrite.py + Step3Result.hard_blocked/rewrite_attempted + max_hard_block_retries config + exit code 2."
     },
     {
       "id": "US-014",
@@ -268,8 +268,8 @@
         "Tests pass (pytest tests/prose/test_calibration_pipeline.py)"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. calibrate_anti_ai_thresholds.py mock/live dual-mode + explosive/serious book groups + reports/calibration output."
     },
     {
       "id": "US-015",
@@ -287,8 +287,8 @@
         "Tests pass (pytest tests/eval/test_e2e_eval_script_smoke.py)"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. e2e_anti_ai_overhaul_eval.py mock mode 4 G1-G3 gates + old/new pipeline comparison."
     },
     {
       "id": "US-016",
@@ -305,8 +305,8 @@
         "Tests pass (pytest tests/integration/test_prose_overhaul_rollback.py)"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. docs/prose-anti-ai-overhaul.md + CLAUDE.md module section + prose_overhaul_enabled master switch + rollback SOP + 10 integration tests."
     }
   ]
 }

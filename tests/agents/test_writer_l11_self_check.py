@@ -151,3 +151,20 @@ class TestAntiDetectionWritingCleanup:
         """Basic integrity: file has expected sections."""
         assert "情感" in adw_text or "节奏" in adw_text
         assert len(adw_text) > 500, "anti-detection-writing.md should be substantial"
+
+
+# ---------------------------------------------------------------------------
+# Section 4: writer-agent.md must NOT promote em-dash (regression guard)
+# ---------------------------------------------------------------------------
+
+class TestWriterAgentNoEmDashPromotion:
+
+    def test_writer_agent_does_not_promote_em_dash(self, spec_text: str) -> None:
+        """writer-agent.md must not encourage em-dash usage — ZT_EM_DASH blocks it."""
+        if "破折号" in spec_text:
+            idx = spec_text.find("破折号")
+            context = spec_text[max(0, idx - 50):idx + 120]
+            assert "禁止" in context or "零容忍" in context or "阻断" in context, (
+                "writer-agent.md must not promote em-dash; "
+                "any mention of 破折号 must be in prohibition context"
+            )
