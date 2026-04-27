@@ -9,6 +9,11 @@ allowed-tools: Read Bash AskUserQuestion
 Purpose: refine 总纲 into volume + chapter outlines. Do not redesign the global story.
 Setting policy: 先基于 init 产出的总纲+世界观补齐设定集基线；再在卷纲完成后，直接对现有设定集做增量补充。
 
+## 平台感知（v26.2）
+
+ink-plan 从 `.ink/state.json` → `project_info.platform` 读取平台（`qidian` | `fanqie`），
+所有章节参数（字数/爽点密度/冲突风格）按平台取值。详见 `references/outlining/chapter-planning.md` §3。
+
 ## Project Root Guard
 - Claude Code 的“工作区根目录”不一定等于“书项目根目录”。常见结构：工作区为 `D:\wk\xiaoshuo`，书项目为 `D:\wk\xiaoshuo\凡人资本论`。
 - 必须先解析 `PROJECT_ROOT` 为真实书项目根（必须包含 `.ink/state.json`），后续所有读写路径都以该目录为准。
