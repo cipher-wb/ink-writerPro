@@ -312,6 +312,82 @@ def _make_plotline_adapter(review_bundle: dict) -> Callable:
     return _adapter
 
 
+def _make_colloquial_adapter(review_bundle: dict) -> Callable:
+    """US-005: colloquial-checker 程序化适配器（全场景激活，无 scene_mode 限制）。
+
+    激活条件：
+      - config/colloquial.yaml enabled=true（且 prose_overhaul_enabled=true）
+      - 全场景激活，无 scene_mode 门控
+
+    severity=red → FAILED + hard_blocked；非 red → PASS。
+    """
+    async def _adapter():
+        import yaml
+
+        from ink_writer.prose.colloquial_checker import (
+            run_colloquial_check,
+            to_checker_output,
+        )
+
+        chapter_text = review_bundle.get("chapter_text", "") or ""
+        chapter_no = int(review_bundle.get("chapter_no", 0) or 0)
+
+        try:
+            # 读取 colloquial.yaml 开关
+            config_path = Path(review_bundle.get("project_root", ".")) / "config" / "colloquial.yaml"
+            colloquial_enabled = True
+            thresholds_override = None
+            if config_path.exists():
+                with open(config_path, "r", encoding="utf-8") as f:
+                    cfg = yaml.safe_load(f) or {}
+                colloquial_enabled = cfg.get("enabled", True)
+                thresholds_override = cfg.get("thresholds")
+
+            # prose_overhaul_enabled 总开关降级
+            ad_config_path = (
+                Path(review_bundle.get("project_root", ".")) / "config" / "anti-detection.yaml"
+            )
+            if ad_config_path.exists():
+                with open(ad_config_path, "r", encoding="utf-8") as f:
+                    ad_cfg = yaml.safe_load(f) or {}
+                if ad_cfg.get("prose_overhaul_enabled") is False:
+                    colloquial_enabled = False
+
+            if not colloquial_enabled:
+                return (True, 1.0, "")
+
+            if not chapter_text.strip():
+                return (True, 1.0, "")
+
+            report = await asyncio.to_thread(
+                run_colloquial_check,
+                chapter_text,
+                thresholds=thresholds_override,
+            )
+            output = to_checker_output(report, chapter_no=chapter_no)
+
+            passed = bool(output.get("pass", False))
+            score = float(output.get("overall_score", 100)) / 100.0
+            fix_prompt = ""
+            if not passed:
+                dims = output.get("metrics", {}).get("dimensions", [])
+                red_dims = [d for d in dims if d.get("rating") == "red"]
+                if red_dims:
+                    fix_prompt = (
+                        "colloquial-checker: "
+                        + "; ".join(
+                            f"{d['key']}={d['score']}"
+                            for d in red_dims[:5]
+                        )
+                    )
+            return (bool(passed), float(score), fix_prompt)
+        except Exception as exc:
+            logger.warning("colloquial adapter error (shadow safe): %s", exc)
+            return (True, 1.0, "")
+
+    return _adapter
+
+
 def _make_directness_adapter(review_bundle: dict) -> Callable:
     """v22 US-005：directness-checker 程序化适配器（scene_mode 激活门控）。
 
@@ -489,6 +565,9 @@ async def run_step3(
     # v22 US-005: directness gate——仅黄金三章/战斗/高潮/爽点场景激活；其他场景透明返回 PASS。
     # is_hard_gate=False：即便评分 Red，也不会 cancel 其他 gate；shadow/enforce 都先观察后阻断。
     runner.add(GateSpec(name="directness", fn=_make_directness_adapter(bundle), is_hard_gate=False))
+    # US-005 prose anti-AI overhaul: colloquial gate——全场景激活，5 维度白话度门禁。
+    # is_hard_gate=True：severity=red 时阻断并触发 polish 重写。
+    runner.add(GateSpec(name="colloquial", fn=_make_colloquial_adapter(bundle), is_hard_gate=True))
 
     try:
         report: PipelineReport = await asyncio.wait_for(runner.run(), timeout=timeout_s)

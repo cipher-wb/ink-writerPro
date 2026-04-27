@@ -93,3 +93,21 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
   - `ink_writer/prose/colloquial_checker.py` 是 prose 模块下第二个"7 维度评分体系"checker（前一个是 directness_checker），按 PRD US-007 后续会扩展 directness 到 D1-D7；两个 checker 应共享 `DimensionScore` 数据类（目前各自定义但结构相同，未来重构时可抽公共基础）。
   - `_chunk_matches_abstract` 双向匹配（首/尾）是 C3 抽象名词链的关键：仅尾匹配会漏掉"宿命的孤寂的沧桑萦绕在心头"中尾 chunk "沧桑萦绕在心头" 起首的"沧桑"。
 ---
+
+## 2026-04-27 15:55 - US-005
+- **What**: colloquial-checker agent 规格 + config/colloquial.yaml + checker-thresholds.yaml 注册 + step3_runner pipeline 接入
+- **Files changed**:
+  - `ink-writer/agents/colloquial-checker.md` (新增, agent 规格：5 维度文档 + 全场景激活 + 输出结构 + 与其他 checker 边界)
+  - `config/colloquial.yaml` (新增, enabled:true + 5 维度阈值 + score_threshold:70 + max_retries:1)
+  - `config/checker-thresholds.yaml` (+colloquial 段, block_threshold:70 + prose_overhaul_enabled 联动)
+  - `ink_writer/checker_pipeline/step3_runner.py` (+_make_colloquial_adapter ~70 行 + gate 注册, is_hard_gate=True)
+  - `tests/checker_pipeline/test_colloquial_checker_pipeline.py` (新增, 13 tests: adapter 行为 / 开关 / prose_overhaul 联动 / 空文本 / 缺 config / gate 注册 / schema 校验)
+- **Tests**: 13 new + all baseline pass (colloquial_checker 44 + simplification_pass 49 + pretentious_load 22 + anti_detection 19 + blacklist_loader 18). 0 regression.
+- **Learnings for future iterations**:
+  - step3_runner gate adapter 模式：每个 checker 一个 `_make_*_adapter(review_bundle) -> async Callable` 工厂函数，返回 `(passed, score, fix_prompt)` 三元组；注册时指定 `is_hard_gate=True/False`。
+  - colloquial adapter 是全场景激活（无 scene_mode 门控），与 directness adapter（有 scene_mode 门控）是两种激活模式；未来新增 checker 先判断哪种模式再写 adapter。
+  - 开关联动：`prose_overhaul_enabled=false` → colloquial `enabled` 被强制 false；adapter 内读两个 yaml 做两层判断。
+  - 测试 adapter 需要创建完整的最小项目结构（config/*.yaml + 正文/ 目录 + .ink/ 目录）；`tmp_path` fixture 是 conftest 内置的。
+  - `run_step3` 集成测试需要写入章节文本文件 + 创建 `.ink/` state_dir；dry_run=True 避免写 DB。
+  - import 路径：adapter 内 lazy import `ink_writer.prose.colloquial_checker` 避免模块加载时拖慢 import 链。
+---
