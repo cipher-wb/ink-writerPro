@@ -97,8 +97,8 @@
         "Tests pass (pytest tests/review/test_colloquial_checker_pipeline.py)"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": " [Updated passes=true 2026-04-27]"
     },
     {
       "id": "US-006",
@@ -116,8 +116,8 @@
         "Tests pass (pytest tests/prose/test_directness_full_scene_activation.py tests/prose/test_directness_checker.py)"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": " [Updated passes=true 2026-04-27]"
     },
     {
       "id": "US-007",
@@ -136,8 +136,8 @@
         "Tests pass (pytest tests/prose/test_directness_d6_d7.py tests/prose/test_directness_checker.py)"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": " [Updated passes=true 2026-04-27]"
     },
     {
       "id": "US-008",
@@ -155,8 +155,8 @@
         "Tests pass (pytest tests/prose/test_threshold_tier_lookup.py)"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": " Implemented 2026-04-27. Added tiers.explosive_hit (tight thresholds: D1≤0.015, D6≤1.3, D7≤1.2 etc.) and tiers.standard to seed_thresholds.yaml. Created regen_directness_thresholds_explosive.py with mock/live modes for corpus-based calibration. 13 new tier lookup tests. tier bucket takes priority over scene bucket in _resolve_scene_bucket."
     },
     {
       "id": "US-009",
