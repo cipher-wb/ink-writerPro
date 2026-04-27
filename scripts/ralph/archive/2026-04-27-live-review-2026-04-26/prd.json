@@ -20,7 +20,7 @@
         "Tests pass (pytest tests/anti_detection/test_punctuation_zero_tolerance.py)"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -39,7 +39,7 @@
         "Tests pass (pytest tests/prose/test_blacklist_pretentious_load.py)"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -57,7 +57,7 @@
         "Tests pass (pytest tests/prose/test_simplification_replacement_map.py tests/prose/test_simplification_pass.py)"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -78,7 +78,7 @@
         "Tests pass (pytest tests/prose/test_colloquial_checker.py)"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -116,7 +116,7 @@
         "Tests pass (pytest tests/prose/test_directness_full_scene_activation.py tests/prose/test_directness_checker.py)"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {

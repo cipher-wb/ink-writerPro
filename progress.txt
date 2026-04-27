@@ -111,3 +111,15 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
   - `run_step3` 集成测试需要写入章节文本文件 + 创建 `.ink/` state_dir；dry_run=True 避免写 DB。
   - import 路径：adapter 内 lazy import `ink_writer.prose.colloquial_checker` 避免模块加载时拖慢 import 链。
 ---
+
+## 2026-04-27 16:10 - US-006
+- **What**: directness-checker 激活条件改全场景 + directness_tier/directness_skip override 字段。is_activated() 已始终返回 True（全场景），仅 directness_skip=true 时跳过。_resolve_scene_bucket 已支持 directness_tier 参数。ChapterMeta extra="allow" 已天然支持新字段。
+- **Files changed**:
+  - `ink-writer/agents/directness-checker.md` (更新 激活条件章 + description frontmatter)
+  - `tests/prose/test_directness_full_scene_activation.py` (新增, 12 tests: slow_build/emotional/no_scene 全场景激活 + directness_skip 向后兼容 + directness_tier 桶回退)
+- **Tests**: 12 new + all baseline pass. 0 regression.
+- **Learnings for future iterations**:
+  - US-006 大部分改造在 US-005 时已提前完成（is_activated() 已改、_resolve_scene_bucket 已支持 tier）；本 US 主要是 agent spec 更新 + 追加测试。
+  - ChapterMeta Pydantic model 用 extra="allow"，新增 directness_tier/directness_skip 字段不需要改 schema。
+  - tier=explosive_hit 在 YAML 无对应桶时回退 default（US-008 将创建 tiers.explosive_hit 桶）。
+---
