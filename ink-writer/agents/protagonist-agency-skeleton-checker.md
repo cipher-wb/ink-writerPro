@@ -19,6 +19,7 @@ model: inherit
 - PRD：`tasks/prd-m4-p0-planning.md` US-010
 - 实现：`ink_writer/checkers/protagonist_agency_skeleton/{__init__,models,checker}.py`
 - prompt：`ink_writer/checkers/protagonist_agency_skeleton/prompts/check.txt`
+- JSON 输出规则（所有 checker 统一）：[json-output-rules.md](shared/json-output-rules.md)
 
 ## 输入（Python 调用）
 
@@ -35,7 +36,7 @@ report = check_protagonist_agency_skeleton(
     ],
     llm_client=llm_client,            # 兼容 .messages.create() 的对象
     block_threshold=0.55,             # 默认 0.55，由 thresholds_loader 注入
-    model="glm-4.6",
+    model="auto",  # glm-4.6 / deepseek-v4-pro / claude — 由调用方注入
     max_retries=2,
 )
 ```
@@ -65,7 +66,9 @@ report = check_protagonist_agency_skeleton(
   notes="checker_failed: <err>"`（保守降级，让 planning_review 拿到失败信号阻断策划期）。
 - **per_chapter 全部条目无法解析**：返回 `score=0.0, blocked=True,
   notes="checker_failed: no valid per_chapter entries"`。
-- 含 markdown ``` 代码块的 LLM 响应自动剥离再解析。
+- 含 markdown \`\`\` 代码块的 LLM 响应自动剥离再解析（3 级容错：直接 parse → regex 提取 → strip fence 后 parse）。
+- LLM prompt 包含模型无关的 JSON 输出硬规则（见 [json-output-rules.md](shared/json-output-rules.md)）：
+  Do NOT wrap JSON in markdown fences；仅输出裸 JSON 数组；首次失败后重试时追加 raw-JSON-only 指令。
 
 ## 阈值
 

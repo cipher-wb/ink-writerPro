@@ -27,7 +27,7 @@ from ink_writer.checkers.chapter_hook_density.models import ChapterHookDensityRe
 PROMPT_PATH = Path(__file__).resolve().parent / "prompts" / "check.txt"
 
 _DEFAULT_MAX_TOKENS = 2048
-_DEFAULT_MODEL = "glm-4.6"
+_DEFAULT_MODEL = "deepseek-v4-pro"
 _DEFAULT_BLOCK_THRESHOLD = 0.70
 _STRONG_THRESHOLD = 0.5
 
@@ -75,7 +75,10 @@ def _call_llm(llm_client: Any, prompt: str, model: str) -> str:
         max_tokens=_DEFAULT_MAX_TOKENS,
         messages=[{"role": "user", "content": prompt}],
     )
-    return response.content[0].text
+    for block in response.content:
+        if hasattr(block, "text"):
+            return block.text
+    return ""
 
 
 def _normalize_per_chapter(parsed: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -127,12 +130,19 @@ def check_chapter_hook_density(
 
     prompt = _build_prompt(outline_volume_skeleton=outline_volume_skeleton)
 
+    _RETRY_SUFFIX = (
+        "\n\nYour previous output was not valid JSON. "
+        "Output ONLY the raw JSON array — no markdown fences, "
+        "no explanation, no additional text. Start with `[` and end with `]`."
+    )
+
     last_err: str = ""
     parsed: list[dict[str, Any]] | None = None
     attempts = max(1, max_retries)
-    for _ in range(attempts):
+    for attempt in range(attempts):
         try:
-            raw = _call_llm(llm_client, prompt, model)
+            current_prompt = prompt if attempt == 0 else prompt + _RETRY_SUFFIX
+            raw = _call_llm(llm_client, current_prompt, model)
             parsed = _extract_json_array(raw)
             break
         except Exception as exc:  # noqa: BLE001  LLM/JSON 失败统一降级
