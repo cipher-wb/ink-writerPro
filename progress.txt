@@ -123,3 +123,16 @@ Started: 2026年 4月27日 星期一 13时44分57秒 CST
   - ChapterMeta Pydantic model 用 extra="allow"，新增 directness_tier/directness_skip 字段不需要改 schema。
   - tier=explosive_hit 在 YAML 无对应桶时回退 default（US-008 将创建 tiers.explosive_hit 桶）。
 ---
+
+## 2026-04-27 16:20 - US-007
+- **What**: directness-checker 新增 D6 嵌套深度 + D7 修饰链长两维度，D1-D5 扩为 D1-D7
+- **Files changed**:
+  - `ink_writer/prose/directness_checker.py` (+D6/D7 keys/labels/thresholds + _calc_d6_nesting_depth + _calc_d7_modifier_chain_length + issue 生成 + metrics_raw 扩展)
+  - `ink-writer/agents/directness-checker.md` (5 维度 → 7 维度)
+  - `tests/prose/test_directness_d6_d7.py` (新增, ~20 tests: D6/D7 算法 + e2e + issues)
+- **Tests**: 48 total (20 d6d7 + 28 baseline directness). 0 regression.
+- **Learnings for future iterations**:
+  - D6 用 。切句 → ，切子句 → 计数的简单算法；比 jieba 管道快。
+  - D7 复用 colloquial_checker C4 的同源逻辑（按 "的" 统计修饰层）；两个 checker 独立计算但公式一致。
+  - 测试全维度检查时注意 D4 (mid_is_better 句长) 易被极短句触发 red——新 fixture 要控制句长在 13-17 字范围内。
+---
