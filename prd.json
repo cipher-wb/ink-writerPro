@@ -193,8 +193,8 @@
         "Tests pass (pytest tests/retrieval/test_build_explosive_hit_index.py)"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. build_explosive_hit_index.py chops chapters into ~200-char slices with scene_type metadata (combat/dialogue/emotional/setup/climax via heuristics). Outputs JSON index to data/explosive_hit_index.json. 12 tests pass."
     },
     {
       "id": "US-011",
@@ -211,8 +211,8 @@
         "Tests pass (pytest tests/retrieval/test_explosive_retriever.py)"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. ExplosiveRetriever class in ink_writer/retrieval/ with keyword-overlap scoring + scene_type filtering. Graceful fallback on missing index (returns empty list, never throws). build_retriever() factory. 11 tests pass."
     },
     {
       "id": "US-012",
