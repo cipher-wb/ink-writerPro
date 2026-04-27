@@ -174,8 +174,8 @@
         "Tests pass (pytest tests/agents/test_writer_l11_self_check.py)"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Implemented 2026-04-27. Added L12 (对话+动作驱动律) with 4 sub-laws to writer-agent.md. L10c updated with 四字格排比 + 抽象名词链 bans. L10b/L10e gating switched from Directness Mode to colloquial-checker red. anti-detection-writing.md 破折号 references updated. writer-self-check.md updated with L12 detection. 12 new tests."
     },
     {
       "id": "US-010",
