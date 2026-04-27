@@ -86,3 +86,5 @@ data/corpus_chunks/
 # Case Library 派生物（YAML 是权威，sqlite/jsonl 可由 yaml 重建）
 data/case_library/index.sqlite
 data/case_library/cases.jsonl
+# Market Trends 当日榜单缓存（quick mode 自动生成，按 90 天滚动清理）
+data/market-trends/cache-*.md
