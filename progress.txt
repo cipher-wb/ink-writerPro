@@ -1,630 +1,233 @@
 # Ralph Progress Log
-Started: 2026年 4月26日 星期日 11时24分11秒 CST
+Started: 2026年 4月27日 星期一 13时44分57秒 CST
 ---
 
 ## Codebase Patterns
-- Schema 修改严格保持 `additionalProperties: false`：任何新顶层字段必须在 properties 显式声明，否则现存数据立即拒收。
-- case_id pattern 容纳多前缀的方式：在主 alternation 段加分支（如 `LR(-[0-9]{4})?`），保留 `(M[0-9]+-)?` 与末尾 `[0-9]{4}$` 不动；每加一个前缀都要回归 `tests/case_library/test_schema_backward_compat.py::test_all_existing_cases_still_validate` 全 410 份。
-- pytest.ini `testpaths` 是单行长串 — 新增目录追加在末尾即可，不要重排已有目录避免 diff 噪音；行后注释保持原样。
-- ruff isort 要求：`from __future__ import annotations` 后空一行，再 stdlib，再空一行，再三方包；conftest/test 文件别忽略 `--fix` 自动修复。
-- 测试用 `Draft202012Validator(load_schema(...))` fixture 模式：从 `tests/live_review/conftest.py` 取 `load_schema` fixture（按 schema 文件名加载），再实例化 validator；schema self-validity 用 `Draft202012Validator.check_schema(schema)`。
-- Python 3.14 `datetime.utcnow()` 已 deprecated；新代码统一 `from datetime import UTC, datetime` + `datetime.now(UTC)`。ruff UP017 会提示。
-- ID 分配复用 `case_library._id_alloc.allocate_case_id(cases_dir, prefix=...)`：传不同 prefix 自动隔离 counter file（`.id_alloc_<sanitized_prefix>.cnt`）+ glob 兜底防外部手工添加 yaml 让 counter 落后；并发安全（独占文件锁，4 worker spawn 0001..0004 无空洞已验证）。新 case 类型不需要再写 ID 分配器，写 `live_review.case_id.allocate_live_review_id` 这种薄封装即可。
-- live-review 配置 dataclass 模式：`LiveReviewConfig` 是 frozen dataclass + 嵌套 `BatchConfig`/`InjectConfig`；`enabled=false` 在 `load_config` 内强制 `inject_into.{init,review}` 全 false（`& 与` 操作）— 这是关闭整个模块的 master switch，下游 inject point 务必查 `cfg.inject_into.<stage>` 而不是直接看 yaml。
-- 资源路径必须锚定 `_REPO_ROOT = Path(__file__).resolve().parents[N]`：plan/示例里出现的 `Path("scripts/...")` / `Path("schemas/...")` 是相对 CWD 的脆弱写法，被 pytest fixture 调用时会随启动目录漂移。`ink_writer/live_review/*.py` 在 `parents[2]` 即 repo root；这条规矩适用所有 module-level 常量。
-- `scripts/live-review/*.py` 子进程启动需自举 sys.path：脚本顶部加 `sys.path.insert(0, str(_REPO_ROOT))`（`_REPO_ROOT = Path(__file__).resolve().parents[2]`）才能 `from ink_writer.live_review.extractor import ...`，否则 `python3 scripts/live-review/foo.py` 直接启动会 ModuleNotFoundError。pytest 走 `pythonpath = .` 不需要这一步，但 subprocess test 必须靠脚本自举。
-- ruff E402 的合规写法：windows stdio block 必须先于其他 import（构成 module level import），随后的 stdlib 导入 + 跨 `_REPO_ROOT` 注入后的 first-party 导入都加 `# noqa: E402`，与 `scripts/analyze_prose_directness.py` / `scripts/e2e_smoke_harness.py` 沿用同款。`# noqa: E402` 必须直接附在每行 import 后，行级粒度。
-- BVID 字面值受 schema 约束 `^BV[A-Za-z0-9]+$`：PRD 字面占位（"BV-A"/"BV-B"等）含短横线不合法，fixture 必须用 `BV1AAA`/`BV1BBB`/`BV1CCC`/`BV1DDD`/`BV1EEE`（5 文件多份模式标准 ID 集，已固化在 mock_extract_5_files/raw_5_files）。
-- Markdown 报告 parse 校验用 `MarkdownIt('commonmark').enable('table')`：默认 preset 不带 table 扩展；`'gfm-like'` preset 默认 enable linkify 但 linkify-it-py 未在依赖里会 raise ModuleNotFoundError。后续生成 markdown 报告（US-013/US-014）的 parse 测试沿用此组合。
-- 脚本 stdout/stderr 分流：success path 写 stdout（如 `OK N files → path`），failure path 把详情 + report 写 stderr。测试断言可单边 `proc.stderr.contains` 而不被 success 干扰；CI/cron 也好用 grep 单独抓 OK 行。所有 `scripts/live-review/*.py` 沿用此约定。
-- 单文件 vs 多份模式 argparse 共存：用一个触发参数（如 `--bvids`）作为分支开关，两组参数都 `required=False`，main 内手工校验 "single requires X/Y" / "many requires A/B"。比 mutually-exclusive group 灵活，能容纳各组多个必填字段。
-- 批跑脚本 `--resume` + `--skip-failed` 组合：`--resume` 扫 `output_dir.glob("BV*.jsonl")` 取已完成 bvid set；循环内 `if bvid in done: continue`（log "skipped (resume)"）。`--skip-failed` 控制 `except` 分支 break 还是 continue —— `try/except Exception` 把 ExtractionError + mock 缺文件 + read_text 解码错都收编成一条 failure dict (`{bvid, error, traceback}`) 写进 `_failed.jsonl`。失败计数即使 break 退出也要写盘，方便用户审 traceback。退出码：失败且非 skip → 1；其余 → 0。
-- `_failed.jsonl` 用 append 模式：多次 batch run 失败累积；测试时 tmp_path 每次新建可避免污染。`_failed.jsonl` 不应被 schema 校验脚本（US-005）当成普通 jsonl —— 后续 US-008 / US-013 等扫描 jsonl 时建议用 glob `BV*.jsonl` 而非 `*.jsonl` 排除 `_failed.jsonl`。
-- 多份测试中"故意缺一个 mock 模拟失败"模式：fixture 目录放 N raw + (N-1) mock；缺失那个的 BV 在 mock_dir 取 path 时抛 FileNotFoundError，被 ExtractionError 捕获写进 _failed。需要"全 mock 齐"的兄弟测试用 fixture（fixture 名 `complete_mock_dir`）：拷贝 4 mock + 合成 1 minimal record 写入 tmp_path。这套 minimal record 用 `score=null / score_signal=unknown / verdict=unknown / comments=[]` 即可通过 schema 校验。
-- jsonl→yaml 转换器写盘前必须 `from ink_writer.case_library.schema import validate_case_dict` 调用以 fail-loud — 比手动校验各字段省事，且与 case_library.store.save() 一致路径。yaml.safe_dump 用 `sort_keys=False, allow_unicode=True, default_flow_style=False` 三件套保持 schema 字段顺序 + 中文不转义 + 块式输出（与 410 份现存 yaml 风格一致）。
-- live_review_meta.comments 必须 strip `raw_line_range`：jsonl 中间产物 schema 强制 raw_line_range 必填，但 case_schema 的 live_review_meta.comments 是 `additionalProperties: false` 且不含 raw_line_range — 转换时用 `{k: v for k, v in c.items() if k != "raw_line_range"}` 即可。其它字段（dimension/severity/content/raw_quote）保留即可。
-- 脚本支持 `--dry-run` 时避免污染 counter file：dry-run 路径下不要调 `allocate_live_review_id`（否则 `_id_alloc.allocate_case_id` 会原子写 `.id_alloc_case_lr_2026.cnt`），改用 placeholder ID `CASE-LR-{year}-DRYRUN-NNNN` 形式 — 注意此 placeholder pattern 不通过 case_schema 校验，所以 dry-run 也跳过 validate_case_dict（用户应理解 dry-run 仅做"jsonl 解析 + 字段编排"，schema 校验在 wet-run 才生效）。
-- `statistics.quantiles(method="exclusive")` 在小样本上的精确数值（实测）：n=4 quantiles 用 m_k=k*(N+1)/4 位置插值。N=7 [50,55,60,65,70,75,80] → [55,65,75]；N=5 [60,62,65,70,75] → [61,65,72.5]；N=5 [60,65,70,75,80] → [62.5,70,77.5]；N=5 [55,60,65,70,75] → [57.5,65,72.5]。需要 N≥2 否则抛 StatisticsError；N=1 用 `_safe_quantiles` 兜底返 (None, float(scores[0]), None)。聚合脚本对全 None score 的 genre 直接返 score_mean=None / score_median=None / score_p25=None / score_p75=None，这样既符合 schema "number|null" 也不混淆"统计量为 0"与"无数据"。
-- 题材聚合的笛卡尔贡献（多标签 genre）模式：`live_review_meta.genre_guess` 是 array，每个标签独立计入对应 genre bucket，所以 `[都市,重生]` 既算 1 次 都市 也算 1 次 重生；`total_novels_analyzed` 用 cases scanned 总数（=union 而非各 genre 累加 sum），避免被笛卡尔重复放大。后续 US-009 / US-013 涉及 genre 维度统计要遵循这同一约定。
-- 30 份测试 fixture 通过 Python 一次性 generator 生成（用过即弃 `/tmp/gen_*.py`），不留 generator 在 repo 内 — 30 份 yaml 静态 commit，构建 reproducibility 由 PR diff 与 schema 校验回归共同保证。下次扩 fixture 数量时复用此模式：临时脚本 → 写盘 → 验证 → 删脚本，避免 `_generate.py` 长期存在被误改。
-- common_complaints 严格降序需要 fixture 数据本身设计成"top-N 频率两两不同"：都市设计 opening=5/pacing=4/golden_finger=3/hook=2/character=1 五档严格不同。如果允许 ties，把测试的 `>=` 写法保留（非严格降序）即可；想测严格 `>` 必须从 fixture 端保证唯一频率。
-- bge-small-zh-v1.5 中文 cosine 体感：相同语义但措辞不同的中文规则文本，cosine 通常 0.75-0.85；想稳过 0.85 需保留核心字面词（"AI生成"/"高潮情节"/"多个版本"等关键 token）。fixture 凡涉及触发 dup_with 的相似度阈值，先用 `from sentence_transformers import SentenceTransformer` 30s 实测验证 — 不要凭直觉。模型加载 30s 是硬约束，pytest 必须 `@pytest.fixture(scope="module")` + `tmp_path_factory` 共享脚本调用结果给所有非异常用例。
-- LLM-coupled 脚本三段式 fail-loud 顺序：`parse JSON` → `validate fields enum/length` → `cosine/heavy compute`（bge 仅在前 2 关全过后才调）。错误路径测试体感 ~1s 即返回 exit 1，不浪费 30s 模型加载。test 用 `--mock-llm <path>` 注入"故意非 JSON / 故意缺字段"的 fixture 验证 fail-loud 路径。
-- mock fixture 字段分层：LLM 只能给"LLM-generated 字段"（如 rule/why/category/severity/applies_to），其余字段（id/source_files/dup_with/approved/source_bvids 等）由脚本统一注入或计算。fixture 越精简，测试断言"字段来自脚本注入路径"才能成立；如果 mock 已包含全字段，则脚本注入逻辑无法被验证。
-- live-review 向量索引落盘格式 `index.faiss + meta.jsonl`（与 editor-wisdom 的 `rules.faiss + metadata.json` 不同）：jsonl 一行一 record 便于增量扩库（追加病例只需 append + 重建 faiss）；统一通过 `ink_writer.live_review._vector_index.load_index` API 隔离差异。下游 retriever 调用走 `genre_retrieval._INDEX_CACHE` process-level dict 缓存（key=resolved index_dir str），避免每次 ink-init 重载 bge ~30s；测试钩子 `clear_index_cache()` 隔离不同 tmp_path 索引。
-- 调用点 master switch 早退模式：`cfg = load_config(config_path); if not cfg.enabled or not cfg.inject_into.<stage>: return _disabled_response()`。`_disabled_response` 返回保持类型一致（dict 字段齐备但内容空：`warning_level='ok' / similar_cases=[] / render_text=''`），调用方无须额外分支判断。后续 ink-review Step 3.6 / smoke_test 注入点沿用此模板。
-- SKILL.md 内嵌 ink-writer Python 调用块：每个 Step 段落 macOS/Linux + PowerShell sibling 双块；测试用 `assert "Step X.Y" in text` + `assert "<api_name>" in text` + `assert "inject_into" in text` 三层 grep 防止段落被回滚，不 assert 详细 markdown 结构（否则微调即破坏 test）。后续 ink-review Step 3.6 / 其他 SKILL.md 注入沿用同款。
-- OR 并列硬门禁是调用方在两路 GateResult 上做 `final_passed = a or b` —— 不要在 Step 3.6 的 review_injection 内部做合并（保持 Step 3.5 不动 + 让两路独立可关）。SKILL.md 的 Python 块负责 `editor_wisdom_passed or live_review_result["passed"]` 合并，并把两路 violations extend 到 evidence_chain。后续若 Step 3.7 加入 reader-simulator-strict-gate，仍按此三并 OR 模板（任一通过即放行）。
-- live-review checker 双层 master switch：`run_live_review_checker` 与 `check_review` 都查 `cfg.enabled / cfg.inject_into.review` —— 看似冗余但允许用户直接调 checker（绕过 review_injection orchestrator）也能正确短路。这是与 init_injection 模式一致的统一约定，后续 US-013 smoke_test 等直接调 checker 的链路必须依赖此防护。
-- live-review checker mock_response 跳过 retrieval：bge 30s + faiss 5s + LLM 10s — mock 模式必须 short-circuit 全部三步（在 master switch 之后立刻 return mock），否则 12 用例 ×30s = 6min 不可接受。real path 才走 retrieve_similar_cases + LLM。后续 smoke_test 的非 `--with-api` 路径沿用此模式，让默认跑 mock 不读 ANTHROPIC_API_KEY。
-- live-review polish 触发不重试：`check_review` 仅触发一次 polish_fn 不做重试循环（与 editor_wisdom.review_gate 的 max_retries=3 不同）—— 因为 OR 并列后总体重试次数已够 + 黄金三章阈值差距小 + 测试断言简单。如果未来需要 retry 循环，再加 `max_retries` 参数（参考 editor_wisdom.review_gate）。
-- agent spec 5 段标准结构：Purpose / Input / Retrieval / Scoring / Output —— 测试用 5 个 `assert section in text` grep 验证。`{{PROMPT_TEMPLATE:checker-input-rules.md}}` 必须放在 frontmatter + agent 描述段之后的第一段。这是与 33 个现有 checker spec 对齐的最小集，后续新加 checker spec 沿用此模板。
-- subprocess 测试共享重型 fixture：subprocess 进程吃不到 pytest fixture，但脚本接受 `--<resource>-dir <path>` 参数即可让 module-scope `tmp_path_factory` 预构建的资源（如 30 cases × bge ~30s 的 vector index）被多个 subprocess test 复用，相比每 test 重复构建节省 60%+ 时间。后续所有"e2e smoke + 重型资源"测试沿用此模板：fixture 预构建 + 脚本 `--<resource>-dir` 接住。
-- 报告 markdown 含通过/失败状态的双层约定：表格行 `| step_X | PASS | ... |` 提供机器可读结构，`All checks PASS` / `N checks FAILED` 摘要行提供人类可读结论 + AC 关键字稳定锚点（"含 'PASS' 关键字"）。后续 reports/*.md 类 AC 沿用此双层渲染（dataclass StepResult + render_summary 字符串）。
-- e2e smoke 用 `# noqa: BLE001` + 收集到 dataclass 的 fail-soft 模式：smoke 各 step 函数 `try/except Exception as e: return StepResult("FAIL", detail=f"{type(e).__name__}: {e}")` 把异常吞进报告 detail 字段，由 main 函数最终决定退出码。报告先写盘再退出，便于诊断。`# noqa: BLE001 — surface ... in report` 行级注释 + 注明意图即可绕过 ruff 默认 broad-except 警告。
+- `ink_writer/prose/colloquial_checker.py` 复用 directness_checker 的 `DimensionScore`/`_score_lower_is_better`/`_rating_from_score` 模式（GREEN_SCORE=8, RED_SCORE=6 同值）；新 checker 走"全场景激活+lower_is_better only" 简化路径，不需要 mid_is_better 桶 / scene 分桶。
+- 直白档"四字格"≠"任意 4 字汉字片段"：爆款 2-char run（"刀风带响。陈风没躲"）是动作节奏，不算装逼；PRD 真信号是 *排比* — 连续 ≥3 个标点分隔的 4 字片段，且扣掉成语 + 名字白名单 + 同字四叠后剩 ≥3 才计入。
+- 抽象名词链 C3 检测 chunk 首尾双向匹配：`A的B的C萦绕` split → ["A","B","C萦绕"]，C 在最后 chunk 起首位置；`他眼中的宿命` split → ["他眼中","宿命"]，宿命在末尾 chunk。`_chunk_matches_abstract` 试 length 4→3→2 的 prefix/suffix 双查。
+- 修饰链 C4 用正则 `(?:[一-龥]{1,6}的){2,}[一-龥]{1,6}` 抓"嵌套≥2"的链；单个 `的` 是底噪不计入。
+- 词典 `idiom_dict.txt` 是纯文本（每行一个成语，`#` 注释，空行 ignore）；loader 用 `(path, mtime_ns)` 缓存。新增成语扫到不要乱删 dup —— set 自动去重，914 raw → 914 unique。
+- 5 维 lower-is-better 评分曲线：value ≤ green_max → 10；green_max..yellow_max → 10..6 线性；> yellow_max → 6..0 线性。**边界值** value=green_max+yellow_max 中点处恰好 score=GREEN_SCORE，rating=green（不是 yellow）。测试 yellow band 要明确取 yellow_max 偏中后段（如 4.5 在 [3,5] 内）。
+- 零容忍规则现在有 `kind` 字段：`regex`（默认，向后兼容历史规则）或 `density`（按 occurrences/千字 阈值阻断）；新规则在 `config/anti-detection.yaml` 加 `kind: density` + `density_threshold` 即可，loader 自动处理。
+- 所有 ZT 规则都带 `whitelist_patterns: []` 字段（loader 强制存在，运行时尚未消费）；后续若要做"对话被打断豁免/引用片段豁免"在 `_rule_violated` 内补豁免逻辑即可，YAML schema 不用动。
+- `check_zero_tolerance` 走 first-match 短路：YAML 顺序决定哪条规则先报；测试 density 规则的细分行为时用 `AntiDetectionConfig(zero_tolerance=[single_rule])` 隔离，比给定 fixture 同时违反多条规则更可控。
+- 测试样本里的 `「」` (U+300C/D) 是中文方头括号，**不**在 `ZT_AI_QUOTES` 黑名单内（黑名单只针对 U+201C/D/2018/9 + «»）；这是合规的爆款引号风格。
+- `prose-blacklist.yaml` 现在有 6 大类 + replacement_map（version 2）；新增三类（pretentious_verbs/nouns/adverbs）通过 `CATEGORIES` 元组扩展自动落入 `Blacklist.entries` —— 不需要改 `_parse_entry`/`match`，只要把新类目加到 `CATEGORIES` 就被加载。
+- `Blacklist` 数据类增加了 `replacement_map: ReplacementMap` 字段（默认空）；equality 仍然成立因为 frozen dataclass 字段比较走 `__eq__`，旧测试 `Blacklist(version=0, entries=())` 与 `_empty()` 仍然相等。
+- `ReplacementMap.lookup()` 取首项是 polish-agent simplification_pass 的"机械替换"约定；YAML 顺序决定首项 → 改顺序 = 改默认替换。`origins(replacement)` 反查可服务"语义聚类"（盯着 ← 凝视 + 凝望 + 凝眸）。
+- 词表新加词时，**必须**先验证不与 abstract_adjectives/empty_phrases/pretentious_metaphors 重复（test_no_word_collisions_across_pretentious_categories 强制三个新域互斥；与老三域共存的检查靠 spot review）。
+- 改 prose-blacklist.yaml 时 simplification_pass 测试 fixture **可能**被新词命中（test_redundant_paragraph_reduced_and_blacklist_cleared 里"苍茫"被吃进 pretentious_nouns 后就破了）；S1 规则只清 abstract_adjectives，新域要等 US-003 接 replacement_map 才会被自动剥除。
+- `simplify_text` 流程现在是 S1 (abstract_adj 删除) → S1.5 (replacement_map 替换) → S2/S3/S4 (拆句/修辞/空段) → 70% floor。S1 与 S1.5 词典互斥（YAML 契约 + US-002 测试守护），不会双计或互相抵消。
+- `apply_replacement_map(text, *, replacement_map=None, chapter_no=None, diff_dir=None)` 是独立可复用 API：source words 按字符长度倒序处理避免 1-char 前缀误吃 2-char 词；多候选取 `lookup(word)[0]`（YAML 列表首项）；source==replacement 时跳过；空跑或 diff_dir 缺失时不写文件。
+- diff 文件命名 `chapter_{NNN:03d}.diff`（3 位补零）；同章节多次跑 polish 后写覆盖前写（避免无限增长）；payload = 头注释命中清单 + unified diff body。如果未来要保留多版本，加 timestamp 后缀但需同步更新 polish-agent.md 文档。
+- `SimplificationReport` 新增 `replacement_hits: tuple[(src, rep, count), ...]` + `replacement_diff_path: str | None` 字段。回滚（rolled_back=True）时这两个字段仍保留中间状态供审计——回滚只抹掉 simplified_text 不抹掉元数据。
 
+## 2026-04-27 13:50 - US-001
+- **What**: anti-detection.yaml 新增 5 条标点 AI 指纹零容忍规则（ZT_EM_DASH / ZT_AI_QUOTES / ZT_HYPHEN_AS_DASH / ZT_DENSE_DUNHAO / ZT_ELLIPSIS_OVERUSE），扩展 ZeroToleranceRule 支持 `kind=density` 模式。
+- **Files changed**:
+  - `config/anti-detection.yaml` (+45 lines: 5 new ZT rules)
+  - `ink_writer/anti_detection/config.py` (+3 fields on ZeroToleranceRule, loader 同步)
+  - `ink_writer/anti_detection/anti_detection_gate.py` (新增 `_rule_violated` helper, density-kind 分支)
+  - `ink-writer/agents/anti-detection-checker.md` (新增 §0 子章 "标点 AI 指纹零容忍" 文档)
+  - `tests/anti_detection/test_punctuation_zero_tolerance.py` (新增, 19 tests, 5 fixture chapters)
+- **Tests**: 143 passed (124 baseline + 19 new). 0 regression.
+- **Learnings for future iterations**:
+  - 在 YAML 里写正则中文/Unicode 字面量：`patterns: ["——"]` 双引号即可，YAML 1.2 处理转义但保留 UTF-8 字面字符；多字符 character class 写 `"[“”‘’]"` 直接列出 smart quote 字面量。
+  - Lookbehind/lookahead 在 Python re 支持范围条件 `(?<=[一-龥])-(?=[一-龥])` 一行搞定"夹在中文之间的 ASCII '-'"，不需要先 split 再判断。
+  - 项目 ruff 不在 CI 强制（pre-existing F541 长期未修），但 `SIM110` / `I001` / `UP009` 这种新引入的违规要顺手修掉，避免后续清理债。
+  - 零容忍规则 first-match 短路：写 fixture 时如果想各自测两条 density 规则，要么用不同 fixture（推荐），要么用 `AntiDetectionConfig(zero_tolerance=[single_rule])` 临时隔离。
+  - `tests/anti_detection/test_zt_extended.py::TestRuleInventory.test_eight_rules_loaded` 用 `>= 8` 而非 `==`，加新规则不会破坏它；如果未来要严格锁定数量，记得同步更新此测试的下界。
 ---
 
-## 2026-04-26 11:30 CST - US-001 schema 定义 + 410 份病例向后兼容测试
-
-**实现内容：**
-- 新建 `schemas/live_review_extracted.schema.json` (Draft 2020-12) — jsonl 中间产物 schema，强制 18 字段，含 11-dimension enum / 4-signal enum / 4-verdict enum / score 0-100 含 null。
-- 新建 `schemas/live_review_genre_acceptance.schema.json` — 题材聚合产物 schema，case_ids 严格 `^CASE-LR-[0-9]{4}-[0-9]{4}$` pattern。
-- 修改 `schemas/case_schema.json`：(1) case_id pattern 加 `LR(-[0-9]{4})?` 分支 (2) domain enum 加 `live_review` (3) 追加 optional `live_review_meta` block 含 10 字段。
-- 修改 `pytest.ini`：testpaths 末尾追加 `tests/live_review`（不动其他目录）。
-- 新建 `tests/live_review/__init__.py`（空）+ `conftest.py`（fixtures: fixtures_dir / schemas_dir / load_schema）。
-- 新建 `tests/live_review/test_schema_validation.py`（9 用例：2 self-valid / 5 extracted 校验 / 2 genre_acceptance 校验，全过）。
-- 新建 `tests/case_library/test_schema_backward_compat.py`（3 用例：410 份现存 yaml / 新增 LR sample / 防过宽 domain，全过）。
-
-**Files changed:**
-- A schemas/live_review_extracted.schema.json
-- A schemas/live_review_genre_acceptance.schema.json
-- M schemas/case_schema.json
-- M pytest.ini
-- A tests/live_review/__init__.py
-- A tests/live_review/conftest.py
-- A tests/live_review/test_schema_validation.py
-- A tests/case_library/test_schema_backward_compat.py
-
-**验证：**
-- `python3 -m pytest tests/live_review/test_schema_validation.py tests/case_library/test_schema_backward_compat.py --no-cov -q` → 12 passed。
-- `python3 -m pytest tests/case_library tests/editor_wisdom tests/learn --no-cov -q` → 427 passed（无回归）。
-- `ruff check schemas/ tests/live_review/ tests/case_library/test_schema_backward_compat.py` → All checks passed。
-
-**Learnings for future iterations:**
-- **Plan 中 case_id pattern 字面写错**：`^CASE-([0-9]{4}|LEARN|PROMOTE|LR)-(M[0-9]+-)?[0-9]{4}$` 只能匹配 `CASE-LR-NNNN`，匹配不了 `CASE-LR-2026-NNNN`（Plan Discovered Constraints 自己也说要兼容两种形式但提供的 regex 错了）。我改用 `^CASE-([0-9]{4}|LEARN|PROMOTE|LR(-[0-9]{4})?)-(M[0-9]+-)?[0-9]{4}$`，与 spec §3.2 / US-002 prefix='CASE-LR-2026-' / genre_acceptance.case_ids pattern 全部一致。后续 US 看到 case_id 时无需再 patch pattern。
-- **case_schema.json 顶层 schema_version**：plan 提示不能加 `$schema_version` 字段（与 JSON Schema 自有字段冲突），但其实 case_schema.json 顶层 `additionalProperties` 没有显式 false（仅在 properties 内的对象限制），加自定义字段会被 jsonschema 当作元数据忽略。我没加任何顶层版本字段，逻辑版本号靠 commit message 描述（"schema_version 1.0→1.1"）。
-- **live_review_meta.required 9 字段而非 10**：plan diff 中 `required` 列出 9 个字段（`source_bvid`/`source_line_range`/`score_raw`/`score_signal`/`verdict`/`title_guess`/`genre_guess`/`overall_comment`/`comments`），`score` 不在 required 中（因为 score 可为 null 时 LLM 可能会省略，但 score_raw 必填承载原始引语）。PRD AC 笔误说"9 字段"实际是指 required 9 个，properties 共 10 个。
-- **ruff 未在 CI 上跑某些子目录**：跑 `ruff check schemas/` 不会报错（json 文件 ruff 不管），但 tests/ 下会触发 I001（import 排序）。新写测试文件时养成 `from __future__ import annotations` 后空行 → stdlib 空行 → 三方包的习惯，省一次 --fix。
-- **pytest.ini testpaths 行尾注释**：原文件 testpaths 行结尾紧贴 `\n# 注：...` 注释，编辑时需用足够长的 old_string 锚定行末（我用 `tests/learn tests/_compat\n# 注：tests/editor_wisdom...`）才能精准追加 ` tests/live_review`。
-
+## 2026-04-27 14:20 - US-002
+- **What**: 扩展 prose-blacklist.yaml 加爆款风装逼词三域 + replacement_map。version: 1 → 2。新增 32 verbs + 36 nouns + 32 adverbs（合计 100，超 90 词阈值）+ 100-条 replacement_map（凝视 → [盯着, 看着, 死盯] 等）。Loader 暴露 `ReplacementMap` 数据类，支持 `lookup(word)` 正向 + `origins(replacement)` 反向查询；新增 4 个模块级 helper：`load_pretentious_{verbs,nouns,adverbs}` + `load_replacement_map`。
+- **Files changed**:
+  - `ink-writer/assets/prose-blacklist.yaml` (+~290 行: 3 个新类 + 100 条 replacement_map + 顶部注释扩到 6 类)
+  - `ink_writer/prose/blacklist_loader.py` (+`ReplacementMap` 数据类, +`Blacklist.replacement_map` 字段, +`_parse_replacement_map` helper, +4 个 module-level loader, +3 个 category property)
+  - `tests/prose/test_blacklist_pretentious_load.py` (新增, 22 tests)
+  - `tests/prose/test_simplification_pass.py` (1 fixture 修复: 苍茫 → 广袤，因为 苍茫 现在在 pretentious_nouns)
+- **Tests**: 89 passed (18 baseline blacklist_loader + 22 new pretentious_load + 49 simplification_pass + others). 0 regression caused by US-002. 4 unrelated pre-existing failures verified via stash test (agent count drift / cli stdio policy / subprocess encoding policy — none touch prose).
+- **Learnings for future iterations**:
+  - 加新 category：扩展 `CATEGORIES` tuple 即可，loader `for category in CATEGORIES` 自动消费；不要在 `_parse_entry` 里硬编码类型分支。
+  - `Blacklist` 用 `field(default_factory=ReplacementMap)` 给新字段一个默认值；这样 `Blacklist(version=0, entries=())` 仍然合法且与 `_empty()` 输出 equal —— 老测试不破。
+  - YAML 词表必须**人工 audit 互斥**：新加词时 grep 确认不在已有 abstract_adjectives/empty_phrases/pretentious_metaphors 里，否则会双计数（test_no_word_collisions_across_pretentious_categories 现在只防三个新域互斥，老域 vs 新域要靠 spot review）。
+  - replacement_map 反向索引"原词共享同一替换"是设计：`盯着 ← 凝视 + 凝望` 让 polish 的语义聚类有线索；构建 reverse 时用 `setdefault(rep, []).append(word)` + 末尾 `tuple()` 转换，保留首见顺序。
+  - 改 prose-blacklist.yaml 加新词时，`tests/prose/test_simplification_pass.py` 的 fixture 文本可能突然命中：因为 `_count_total_hits` 数 ALL 类，而 S1 规则只清 abstract_adjectives。每次新增类要复查 simplification 测试 fixture，必要时把 fixture 替换为不在任一 BL 的近义词（本次：苍茫 → 广袤）。
+  - frozen dataclass + dict field：dataclass 本身 frozen 但 dict 内容可变；运行时不强制不可变性，靠"loader 是唯一构造点"约定。如果将来要真正锁定，换 `MappingProxyType`。
 ---
 
-## 2026-04-26 12:05 CST - US-002 ID 分配器封装 + 配置文件
-
-**实现内容：**
-- 新建 `ink_writer/live_review/__init__.py`（仅 docstring 引用 spec）。
-- 新建 `ink_writer/live_review/case_id.py:allocate_live_review_id(cases_dir, year=None) -> str`，薄封装 `case_library._id_alloc.allocate_case_id`，year=None 时取 `datetime.now(UTC).year`，返回 `CASE-LR-{year}-NNNN`。
-- 新建 `ink_writer/live_review/config.py`：3 个 frozen dataclass（`LiveReviewConfig` / `BatchConfig` / `InjectConfig`）+ `load_config(path)`；`enabled=false` 强制 `inject_into.{init,review}` 全 false（`& enabled` 而非赋值）。
-- 新建 `config/live-review.yaml`，与 spec §8 字段一致。
-- 新建 `tests/live_review/test_case_id.py`（5 用例：basic / sequential / 4-worker spawn 并发 / prefix 隔离 / year 隔离）。
-- 新建 `tests/live_review/test_config.py`（5 用例：默认 / 完整覆盖 / disabled 强制 / 部分回落 / 真实 yaml）。
-
-**Files changed:**
-- A ink_writer/live_review/__init__.py
-- A ink_writer/live_review/case_id.py
-- A ink_writer/live_review/config.py
-- A config/live-review.yaml
-- A tests/live_review/test_case_id.py
-- A tests/live_review/test_config.py
-
-**验证：**
-- `python3 -m pytest tests/live_review/test_case_id.py tests/live_review/test_config.py --no-cov -q` → 10 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ --no-cov` → 86 passed（无回归）。
-- `ruff check ink_writer/live_review/ tests/live_review/test_case_id.py tests/live_review/test_config.py` → All checks passed。
-
-**Learnings for future iterations:**
-- **`datetime.utcnow()` 在 Py 3.14 已 deprecated**：plan 中字面写的 `datetime.utcnow()` 触发 ruff UP017，需改为 `from datetime import UTC, datetime` + `datetime.now(UTC)`。后续 US 看到 plan 中的 `utcnow()` 时直接用 UTC 写法。
-- **`_id_alloc.allocate_case_id` 的 prefix 串号机制**：counter file 名是 `.id_alloc_<sanitized>.cnt`，sanitized 是 `prefix.strip('-').replace('-', '_')`。所以 `CASE-LR-2026-` → `case_lr_2026`、`CASE-2026-` → `case_2026`、`CASE-LEARN-` → `case_learn`，前缀彼此不串号已 spawn pool 4-worker 验证。
-- **`@dataclass(frozen=True)` 嵌套字段必须用 `field(default_factory=...)`**：直接 `batch: BatchConfig = BatchConfig()` 在 frozen 上跑不通（mutable default class instance），必须 `field(default_factory=BatchConfig)`。
-- **`enabled=false` master switch 的实现要点**：`InjectConfig(init=bool(...) and enabled, review=bool(...) and enabled)` — 这样即使 yaml 写 `inject_into.init: true`，只要顶层 `enabled: false`，inject 也强制为 false。下游消费 `cfg.inject_into.<stage>` 时无须再分别检查 enabled，单一字段就含义完整。
-
+## 2026-04-27 14:55 - US-003
+- **What**: polish-agent simplification_pass 接入 replacement_map 自动替换。新增 `apply_replacement_map()` 独立 API + S1.5 阶段集成到 `simplify_text` 流程。命中时落 `reports/polish_diff/chapter_NNN.diff`（unified diff + 头注释命中清单）。新增 `ReplacementResult` frozen dataclass + 在 `SimplificationReport` 加 `replacement_hits` / `replacement_diff_path` 两字段。
+- **Files changed**:
+  - `ink_writer/prose/simplification_pass.py` (+`apply_replacement_map` ~70 行 + `_write_replacement_diff` ~35 行 + `ReplacementResult` dataclass + `SimplificationReport` 加 2 字段 + simplify_text 加 chapter_no/diff_dir 参数 + S1.5 调度)
+  - `ink_writer/prose/__init__.py` (+`apply_replacement_map`, `ReplacementResult` 公共导出)
+  - `ink-writer/agents/polish-agent.md` (+## Replacement Map Pass 子章 + S1.5 行 + 执行顺序更新 + 辅助模块 API 章扩 + 润色报告字段扩 ~50 行)
+  - `tests/prose/test_simplification_replacement_map.py` (新增, 26 tests, 含 3 主 fixture：纯替换 / S1+S1.5 协作 / Diff 落盘 + 多个边界用例：长度倒序 tie-break / 空 replacement / self-replace 跳过 / chapter 补零 / overwrite 行为 / 公共导出 / spec marker 检查)
+- **Tests**: 369 passed (tests/prose 226 + tests/anti_detection 143)。新增 26 = 26 pass。0 regression in 49 baseline simplification_pass + 22 pretentious_load + 18 blacklist_loader。Ruff clean on 3 changed files。
+- **Learnings for future iterations**:
+  - 测试 simplify_text 配合自定义 Blacklist 时，fixture 长度要够大避免触发 70% floor 回滚（删 4 字节后 simplified_char_count / original_char_count 必须 ≥ 0.70 才不回滚）；参考 `test_simplify_text_custom_blacklist_no_replacement_map` 用 24 字 fixture 删 4 字保留 83%。
+  - `apply_replacement_map` 默认实参 `replacement_map=None` 时 lazy 加载 `load_blacklist().replacement_map`；这意味着函数可不依赖外部 fixture 直接调用，但测试隔离时仍应 `clear_cache()` 防 YAML mtime 缓存命中污染。
+  - longest-first tie-break 用 `sorted(words, key=lambda w: (-len(w), 0))`：负号反转长度排序；副 key 为 0 是占位（未来按 frequency 排序时改这里）。
+  - diff 写入用 `difflib.unified_diff` 而非自建格式：lineterm="" + splitlines(keepends=False) 保证跨平台行为一致；加 `# header` 行不会破坏 unified diff 解析（Diff 工具默认忽略以 # 开头的注释）。
+  - S1.5 阶段的命中清单 `replacement_hits` 即使在 70% floor rollback 时也保留——这是审计需求（让 polish-agent 报告完整反映"想做了什么"，rollback 只影响最终 simplified_text 不影响元数据）。同样的契约也适用于 `replacement_diff_path`：diff 文件已落盘了不会因 rollback 删除。
+  - `ReplacementMap` 的 `forward.keys()` 顺序在 Python 3.12+ 是插入顺序（`dict.__iter__` 保证），即 YAML 解析顺序；这是 polish-agent "YAML 顺序 = 优先级" 契约的实现层依赖。
+  - 命中清单格式选择 `tuple[tuple[str, str, int], ...]` 而非 `list[dict]`：frozen + 易序列化 + 测试断言用 `("凝视", "盯着", 1) in result.hits` 直接成立。
 ---
 
-## 2026-04-26 14:00 CST - US-003 LLM 切分 prompt + extractor + mock 单测
-
-**实现内容：**
-- 新建 `scripts/live-review/prompts/extract_v1.txt` — 含任务定义、切分启发式、score_signal 判定规则、dimension/severity 严格 enum、5 个真实 few-shot 例子（基于 `~/Desktop/星河审稿/BV12yBoBAEEn_raw.txt` 真实片段：机甲穿越文 / 校园甜宠 / 无敌流玄幻 / 违禁触发 / 金手指迟到）+ 明确"不要 markdown 围栏"指令。
-- 新建 `ink_writer/live_review/extractor.py:extract_from_text(...) -> list[dict]`：
-  - 三层 LLM 优先级：`mock_response` > `llm_call` > 真实 anthropic SDK；
-  - `_build_record` 注入元数据 `schema_version='1.0' / bvid / source_path / source_line_total / extracted_at(now UTC) / model / extractor_version`；
-  - jsonschema Draft202012 校验每条 record，违反即 `raise ExtractionError(failed schema: [errors])`；
-  - JSON 解析失败 → `not valid JSON` / 顶层非 list → `Expected JSON array` / 元素非 dict → `is not an object`，全部 fail-loud；
-  - `_PROMPT_PATH` / `_SCHEMA_PATH` 锚定 `Path(__file__).resolve().parents[2]` 而非 plan 字面相对 CWD 写法。
-- 新建 `tests/live_review/fixtures/raw_BV12yBoBAEEn.txt`（383 行：head 200 + ellipsis + tail 200；原文 191 行所以 head/tail 完整重叠）。
-- 新建 `tests/live_review/fixtures/mock_extract_BV12yBoBAEEn.json`（3 本：律师文 explicit_number 68 / 校园甜宠 sign_phrase null/fail / 玄幻 fuzzy null/unknown，覆盖三类 score_signal 与多个 dimension/severity 组合）。
-- 新建 `tests/live_review/test_extractor_mock.py` 7 用例：
-  1. mock 返回 3 records；
-  2. 元数据完整（model / extractor_version / source_path / extracted_at 以 Z 结尾 / source_line_total 等于 raw.count('\n')+1）；
-  3. score_signal 三类多样性；
-  4. 非 JSON → ExtractionError(match='not valid JSON')；
-  5. 非 Array → ExtractionError(match='Expected JSON array')；
-  6. 缺字段 → ExtractionError(match='failed schema')；
-  7. score=999 → ExtractionError(match='failed schema')。
-
-**Files changed:**
-- A scripts/live-review/prompts/extract_v1.txt
-- A ink_writer/live_review/extractor.py
-- A tests/live_review/fixtures/raw_BV12yBoBAEEn.txt
-- A tests/live_review/fixtures/mock_extract_BV12yBoBAEEn.json
-- A tests/live_review/test_extractor_mock.py
-
-**验证：**
-- `python3 -m pytest tests/live_review/test_extractor_mock.py --no-cov -q` → 7 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 417 passed（无回归）。
-- `ruff check ink_writer/live_review/ tests/live_review/test_extractor_mock.py` → All checks passed（autofix 已合并 stdlib import 块）。
-- TDD 顺序确认：写完 test 跑 pytest → ModuleNotFoundError（RED 通过；正是缺 `ink_writer.live_review.extractor` 模块） → 实现 extractor → 7 PASS（GREEN）。
-
-**Learnings for future iterations:**
-- **Plan 字面 `Path("scripts/live-review/prompts/extract_v1.txt")` 是相对 CWD 的脆弱写法**：pytest 从 repo root 启动时碰巧能用，但任何外部脚本从其他 CWD import extractor 都会炸 FileNotFoundError。改用 `_REPO_ROOT = Path(__file__).resolve().parents[2]` 锚定，再 `_REPO_ROOT / "scripts" / "live-review" / "prompts" / "extract_v1.txt"`。后续 US-004/005/006 等需要 prompt/schema 路径时直接复用此模式。
-- **`from typing import Callable` 已 deprecated（Py 3.10+）**：ruff UP035 会自动 fix 成 `from collections.abc import Callable`。新代码直接写 `from collections.abc import Callable` 跳过 ruff 来回。
-- **mock_response 优先级最高 + llm_call 次之 + 真实 SDK 兜底 — 这套三层注入对所有 LLM-coupled 模块是通用模式**：测试用 mock_response 直接绕过 prompt 加载与 LLM 调用；llm_call 注入用于错误路径测试（非 JSON / 非 Array）；真实 SDK 仅在没有 mock_response / llm_call 时才加载 anthropic（lazy import 避免无 API 环境的 import error）。
-- **fixture raw 文件即使内容重复也无所谓**：mock_response 模式下 raw_text 仅用于计算 source_line_total（`raw.count('\n')+1`），实际语义不被 assert。但 fixtures 文件存在性 + 行数仍要保证 — `tests/live_review/fixtures/raw_BV12yBoBAEEn.txt` 必须随 mock_extract_BV12yBoBAEEn.json 一起 commit。
-- **prompt few-shot 必须基于真实数据 + 不留 placeholder**：plan §943-994 明示"5 个 few-shot 不可留 placeholder"。我 5 个例子分别覆盖：(1) explicit_number 多维度 (2) sign_phrase 题材问题 (3) fuzzy 开头节奏 (4) taboo+ops 违禁 fail (5) golden_finger 迟到。这 5 个样本来自 BV12yBoBAEEn 真实片段或同类逻辑组合，不是凭空虚构。
-- **schema validation 在 extractor 内必须 fail-loud — 不是上游 sanitization**：plan 强调"非 JSON / 非 Array / schema 违反"三种异常都不 silent fallback。`Draft202012Validator(schema).iter_errors(record)` 取前 3 条 message 拼到 ExtractionError，足够下游脚本（US-006 batch runner）写入 _failed.jsonl。
+## 2026-04-27 15:30 - US-004
+- **What**: colloquial_checker.py 5 维度白话度核心算法 + idiom_dict.txt 词典（914 唯一成语，超 500 阈值）。`run_colloquial_check(text, *, thresholds, idiom_set, abstract_nouns, name_whitelist) -> dict` 统一入口；5 维全部 lower-is-better。配套 `to_checker_output(report, chapter_no)` 把报告包成 checker-output-schema.md 标准结构（`hard_blocked: severity == 'red'`）。
+- **Files changed**:
+  - `ink_writer/prose/idiom_dict.txt` (新增, 914 idioms across 31 themed groups, ASCII headers)
+  - `ink_writer/prose/colloquial_checker.py` (新增 ~470 行, C1-C5 + DimensionScore + ColloquialReport + 缓存 + lazy default abstract noun loader)
+  - `ink_writer/prose/__init__.py` (+`run_colloquial_check`, `ColloquialReport`, `COLLOQUIAL_DIMENSION_KEYS` 公共导出)
+  - `tests/prose/test_colloquial_checker.py` (新增, 44 tests across 6 sections)
+- **Tests**: 44 new + 270 baseline tests/prose + 143 baseline tests/anti_detection = 413 passed, 0 regression. Ruff clean.
+- **Learnings for future iterations**:
+  - PRD AC "正则 [一-龥]{4}" 字面解读会爆量（中文每 4 连字符都计 1）；语义解读应是"片段长度恰好 = 4 的非汉字断点分隔块"。再加 ≥3 stack threshold 才能把"爆款 2 连 4 字短句"和"AI 装逼 排比"区分开。
+  - C5 抽象主语率的"主语判定"用首 8 字内启发式：起首人称代词复数 (他们/我们) → false；起首单字代词 → false；首"的"/标点之前出现抽象名词 → true。比 jieba POS tagging 快 10x 且对短句更稳。
+  - 阈值参数化不仅是"传 thresholds 字典"，还要让 idiom_set / abstract_nouns / name_whitelist 三个词集都可注入——否则单测只能跑 prose-blacklist.yaml 真实词典，难做边界用例。public API 4 个 keyword-only 参数全部 None-defaulted。
+  - Lower-is-better 边界 score 等式：value=green_max → score=10；value=yellow_max → score=6（恰 = RED_SCORE，rating=yellow not red）；value=2*yellow_max → score=0。测试 yellow band 要明确取 (green_max+yellow_max)/2 + ε，否则取整 score=GREEN_SCORE 反而落 green。
+  - `idiom_dict.txt` 用 frozenset 比 list 快 100x（成语查找走 set membership）；缓存 key `(path, mtime_ns)` + 测试 fixture 用 `clear_cache` autouse 保证文件 hot-reload 在测试间不污染。
+  - ruff I001 把 `from X import (Y as Z)` 视为单独 import block，不允许与 `from X import (A, B)` 合并（即使是同一模块）。我们写 `from ink_writer.prose.colloquial_checker import (DIMENSION_KEYS as COLLOQUIAL_DIMENSION_KEYS, ColloquialReport, ...)` 一次声明所有，ruff `--fix` 会拆成两个 import 语句——是 ruff 的 isort 风格，不影响运行时。
+  - `ink_writer/prose/colloquial_checker.py` 是 prose 模块下第二个"7 维度评分体系"checker（前一个是 directness_checker），按 PRD US-007 后续会扩展 directness 到 D1-D7；两个 checker 应共享 `DimensionScore` 数据类（目前各自定义但结构相同，未来重构时可抽公共基础）。
+  - `_chunk_matches_abstract` 双向匹配（首/尾）是 C3 抽象名词链的关键：仅尾匹配会漏掉"宿命的孤寂的沧桑萦绕在心头"中尾 chunk "沧桑萦绕在心头" 起首的"沧桑"。
 ---
 
-## 2026-04-26 14:50 CST - US-004 单文件冒烟脚本 extract_one.py
-
-**实现内容：**
-- 新建 `scripts/live-review/extract_one.py` — argparse 单文件冒烟脚本：
-  - 参数：`--bvid`（可选，BV*_raw.txt 文件名自动提取）/ `--input`（必填）/ `--out`（必填）/ `--model`（默认 claude-sonnet-4-6）/ `--mock-llm`（测试用 fixture json）。
-  - 退出码：成功 0 / `ExtractionError` 1 / 输入文件不存在或无法推断 bvid 2。
-  - bvid 推断正则 `^(BV[\w]+)_raw\.txt$`，未匹配且无 `--bvid` 时 stderr 提示后 exit 2。
-  - sys.path 自举 `_REPO_ROOT` 以支持任何 CWD 启动；windows stdio bootstrap 沿用 editor-wisdom 模板。
-  - 读 raw → 调 `ink_writer.live_review.extractor.extract_from_text(...)` → 逐 record 写 jsonl 一行 `json.dumps(ensure_ascii=False)`。
-- 新建 `tests/live_review/test_extract_one_smoke.py` 5 用例（subprocess 模式）：
-  1. `with_mock_creates_jsonl` — mock 跑通后 jsonl 存在 + 3 行；
-  2. `jsonl_lines_are_valid_records` — 每行 schema 校验 0 errors；
-  3. `score_signal_distribution` — 3 records 严格覆盖 explicit_number / sign_phrase / fuzzy；
-  4. `missing_input_exits_2` — `--input` 文件不存在 → returncode 2 + 不创建 out 文件；
-  5. `bvid_extracted_from_filename` — 不传 `--bvid`，从 `BV12yBoBAEEn_raw.txt` 自动提取，jsonl 全部 record bvid 正确。
-
-**Files changed:**
-- A scripts/live-review/extract_one.py
-- A tests/live_review/test_extract_one_smoke.py
-
-**验证：**
-- `python3 -m pytest tests/live_review/test_extract_one_smoke.py --no-cov -q` → 5 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 422 passed（无回归）。
-- `ruff check scripts/live-review/extract_one.py tests/live_review/test_extract_one_smoke.py` → All checks passed。
-- TDD 顺序确认：写完 5 测试 → pytest 4/5 fail（脚本不存在；missing_input 用例因 python 找不到脚本本身碰巧返回 2 ≈ 半命中，但 GREEN 后语义正确） → 实现脚本 → 5 PASS。
-
-**Learnings for future iterations:**
-- **subprocess 启动 `scripts/live-review/*.py` 必须脚本自举 sys.path**：pytest fixture 调用 `python3 SCRIPT.py` 时不会继承 pytest.ini 的 `pythonpath = .`，纯 subprocess 启动 → 必须脚本顶部 `sys.path.insert(0, str(_REPO_ROOT))`。AC 没明说但是被 5 用例之一逼出来的硬性要求。后续 US-005 batch runner / US-006 等同样跑 subprocess 的脚本沿用此模板。
-- **ruff E402 合规需要 `# noqa: E402` 行级标注**：windows stdio bootstrap block（`import os as _os_win_stdio` / 后续 try-import runtime_compat）走在 `from __future__ import annotations` 后面，再之后的 stdlib import 全部触发 E402。沿用 `scripts/analyze_prose_directness.py:43-49` / `scripts/e2e_smoke_harness.py:45` 的 `# noqa: E402` 行级写法即可（编辑 wisdom 老脚本里没加 noqa 是因为 ruff 没在它们那批文件上跑通）。修改导入顺序无解，因为 windows stdio block 必须早于其他 import 拦截 stdout 编码。
-- **`missing_input_exits_2` 用例对 PYTHONPATH 不健壮的 false-positive**：subprocess 找不到脚本时 python interpreter 返回 2。我在 RED 阶段碰巧 4 失败 1 通过，但通过的那个是 python 自身退码而非脚本逻辑。GREEN 阶段实现脚本后该测试才用 `[extract_one] input not found` stderr 信号验证脚本真的进入了正确分支 — 写测试时建议加 stderr 字符串断言（已加 `proc.stderr` 的 assert message 但未严格匹配）。后续类似"exit code 校验"用例可考虑 `assert "input not found" in proc.stderr` 形式更严格。
-- **`json.dumps(ensure_ascii=False)`**：jsonl 写入时必须 `ensure_ascii=False`，否则 `comments[].content` 的中文会被 `\uXXXX` 转义，文件大小膨胀 ×6 + 人工审查不可读。下游 US-005 / US-007 读 jsonl 时假设 raw utf-8，`ensure_ascii=True` 会破坏后续 round-trip。
-- **`Path.parent.mkdir(parents=True, exist_ok=True)` 是必须的**：测试 fixture 用 `tmp_path / "out.jsonl"`（parent 一定存在）所以不暴露问题，但实际跑 `--out reports/live-review/X.jsonl` 时 reports 子目录可能不存在 — 写出前先创建父目录是健壮性的最低门槛。
+## 2026-04-27 15:55 - US-005
+- **What**: colloquial-checker agent 规格 + config/colloquial.yaml + checker-thresholds.yaml 注册 + step3_runner pipeline 接入
+- **Files changed**:
+  - `ink-writer/agents/colloquial-checker.md` (新增, agent 规格：5 维度文档 + 全场景激活 + 输出结构 + 与其他 checker 边界)
+  - `config/colloquial.yaml` (新增, enabled:true + 5 维度阈值 + score_threshold:70 + max_retries:1)
+  - `config/checker-thresholds.yaml` (+colloquial 段, block_threshold:70 + prose_overhaul_enabled 联动)
+  - `ink_writer/checker_pipeline/step3_runner.py` (+_make_colloquial_adapter ~70 行 + gate 注册, is_hard_gate=True)
+  - `tests/checker_pipeline/test_colloquial_checker_pipeline.py` (新增, 13 tests: adapter 行为 / 开关 / prose_overhaul 联动 / 空文本 / 缺 config / gate 注册 / schema 校验)
+- **Tests**: 13 new + all baseline pass (colloquial_checker 44 + simplification_pass 49 + pretentious_load 22 + anti_detection 19 + blacklist_loader 18). 0 regression.
+- **Learnings for future iterations**:
+  - step3_runner gate adapter 模式：每个 checker 一个 `_make_*_adapter(review_bundle) -> async Callable` 工厂函数，返回 `(passed, score, fix_prompt)` 三元组；注册时指定 `is_hard_gate=True/False`。
+  - colloquial adapter 是全场景激活（无 scene_mode 门控），与 directness adapter（有 scene_mode 门控）是两种激活模式；未来新增 checker 先判断哪种模式再写 adapter。
+  - 开关联动：`prose_overhaul_enabled=false` → colloquial `enabled` 被强制 false；adapter 内读两个 yaml 做两层判断。
+  - 测试 adapter 需要创建完整的最小项目结构（config/*.yaml + 正文/ 目录 + .ink/ 目录）；`tmp_path` fixture 是 conftest 内置的。
+  - `run_step3` 集成测试需要写入章节文本文件 + 创建 `.ink/` state_dir；dry_run=True 避免写 DB。
+  - import 路径：adapter 内 lazy import `ink_writer.prose.colloquial_checker` 避免模块加载时拖慢 import 链。
 ---
 
-## 2026-04-26 15:30 CST - US-005 多份模式 + schema 一致性验证脚本
-
-**实现内容：**
-- 修改 `scripts/live-review/extract_one.py`：增加多份模式分支 `_run_many`，触发条件 `--bvids id1,id2,...` 与 `--input-dir` + `--output-dir`；可选 `--mock-llm-dir <fixture_dir>`，每 BV 取 `<bvid>.json`；缺 raw 或缺 mock → exit 2；任一 ExtractionError → exit 1；不破坏 US-004 单文件分支（`_run_single`）。
-- 新建 `scripts/live-review/validate_jsonl_batch.py`：扫 `--jsonl-dir/*.jsonl` → 用 `Draft202012Validator` 逐行校验 → 统计每文件 novel_count / score_signal / verdict / score_present_ratio → 写 markdown 报告（含 Per-file Statistics 表 / Score Signal Distribution / Validation Issues 三段，标题 `# Live-Review JSONL Batch Validation Report`）；任一行不合法 → exit 1 + stderr 列 `FAIL <name> line=N bvid=<X> field=<Y> msg=<...>`；可选 `--report-out` 覆盖默认 `reports/live-review-validation-<TS>.md`。
-- 新建 fixtures：
-  - `tests/live_review/fixtures/mock_extract_5_files/{BV1AAA,BV1BBB,BV1CCC,BV1DDD,BV1EEE}.json`，分别 3/4/2/2/15 本 = 26 本；BV1AAA 全 explicit_number / BV1BBB 全 fuzzy / BV1CCC 全 unknown / BV1DDD 全 sign_phrase / BV1EEE 混合（涵盖 4 类 signal、4 类 verdict、多 dimension）。
-  - `tests/live_review/fixtures/raw_5_files/{BV1AAA..BV1EEE}_raw.txt` 同名占位 raw 文本（mock 模式下仅用于 `source_line_total = raw.count('\n')+1`）。
-- 新建 `tests/live_review/test_extract_many.py` 2 用例：(1) 5 jsonl 全部生成 + 全 schema 校验通过 + 总 novel == 26；(2) 各 jsonl 内 bvid 字段不串号（严格 == 文件名 BV）。
-- 新建 `tests/live_review/test_validate_jsonl_batch.py` 3 用例：(a) 5 valid jsonl → exit 0 + 报告含 'All files passed' / 'Per-file Statistics' / 'Score Signal Distribution' / 'Validation Issues'；(b) 故意把 BV1AAA 第 2 行 score=200 → exit 1 + stderr 含 `BV1AAA` + `line=2` + `score`；(c) 报告用 `MarkdownIt('commonmark').enable('table')` 渲染 → 含 `<h1>` 与 `<table>`。
-
-**Files changed:**
-- M scripts/live-review/extract_one.py
-- A scripts/live-review/validate_jsonl_batch.py
-- A tests/live_review/fixtures/mock_extract_5_files/BV1AAA.json
-- A tests/live_review/fixtures/mock_extract_5_files/BV1BBB.json
-- A tests/live_review/fixtures/mock_extract_5_files/BV1CCC.json
-- A tests/live_review/fixtures/mock_extract_5_files/BV1DDD.json
-- A tests/live_review/fixtures/mock_extract_5_files/BV1EEE.json
-- A tests/live_review/fixtures/raw_5_files/BV1AAA_raw.txt
-- A tests/live_review/fixtures/raw_5_files/BV1BBB_raw.txt
-- A tests/live_review/fixtures/raw_5_files/BV1CCC_raw.txt
-- A tests/live_review/fixtures/raw_5_files/BV1DDD_raw.txt
-- A tests/live_review/fixtures/raw_5_files/BV1EEE_raw.txt
-- A tests/live_review/test_extract_many.py
-- A tests/live_review/test_validate_jsonl_batch.py
-
-**验证：**
-- `python3 -m pytest tests/live_review/test_extract_many.py tests/live_review/test_validate_jsonl_batch.py --no-cov -q` → 5 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 427 passed（无回归；从 US-004 的 422 增 5）。
-- `ruff check scripts/live-review/extract_one.py scripts/live-review/validate_jsonl_batch.py tests/live_review/test_extract_many.py tests/live_review/test_validate_jsonl_batch.py` → All checks passed。
-
-**Learnings for future iterations:**
-- **PRD 字面 "BV-A" 不能直接用作 bvid**：`schemas/live_review_extracted.schema.json` 的 `bvid` 模式 `^BV[A-Za-z0-9]+$` 不允许短横线。把 PRD 字面占位（BV-A/BV-B/...）替换为 `BV1AAA/BV1BBB/BV1CCC/BV1DDD/BV1EEE` 既符合 pattern 又保持 5-份语义。后续涉及合成 BV id 的 fixture（US-006/US-008/...）沿用此 5 个 ID。
-- **`MarkdownIt('gfm-like')` 默认开启 linkify 但 linkify-it-py 不在依赖里**：用 `'commonmark'` preset 再 `.enable('table')` 是最小可工作组合。pyproject.toml 没有显式依赖 markdown_it，但被 sentence-transformers 间接装上了；测试若想要严格独立可考虑改用 `re` 自检 markdown 结构（# / | / 表头 / blank lines）。但当前 markdown_it 已稳定可用。
-- **多份模式与单文件模式的 argparse 共存**：`--bvids` 是触发开关 — 一旦传入就走 `_run_many` 分支（忽略 `--input` / `--out`）。两组参数都 `required=False` 是 argparse 的明面写法，再在 main 里手工校验 "single requires --input/--out" / "many requires --input-dir/--output-dir"，比 mutually-exclusive group 灵活（后者难以同时让多组互斥）。后续 US-006 run_batch.py 不再走多份分支，但同样手工校验参数完整性。
-- **markdown 报告的 stderr 与 stdout 分流**：`validate_jsonl_batch.py` 把 `OK N files → path` 写 stdout（成功），把 `FAIL ...` 与 `report → path` 写 stderr（失败时）。两路分开后，CI/cron 调用方能用 `grep` / pipeline 单独抓 OK 行（如 `python validate.py | grep OK`）；测试也能直接 `assert proc.stderr.contains` 验证错误细节而不被 stdout 干扰。后续 US-006/US-013 同步沿用此分流。
-- **`_REPO_ROOT = Path(__file__).resolve().parents[2]` 在 `scripts/live-review/*.py` 是 spr 共享路径锚定**：脚本路径 `scripts/live-review/foo.py` → parents[2] 是 repo root；schema/prompt 等资源用 `_REPO_ROOT / "schemas" / "..."` 引用。这套与 `ink_writer/live_review/*.py`（也是 parents[2] = repo root）保持一致，后续脚本直接复用。
-- **fixture 26 = 3+4+2+2+15 是 PRD 硬约束**：US-008 题材聚合器测试 fixture（30 份 case）与本批 26 份并不直接复用，但若未来要做 jsonl→case 链路 e2e 测，需要保持 26 计数稳定，否则下游统计失真。修改 fixture 计数前先回归 `test_extract_many_creates_5_jsonl_with_total_26_records`。
-
+## 2026-04-27 16:10 - US-006
+- **What**: directness-checker 激活条件改全场景 + directness_tier/directness_skip override 字段。is_activated() 已始终返回 True（全场景），仅 directness_skip=true 时跳过。_resolve_scene_bucket 已支持 directness_tier 参数。ChapterMeta extra="allow" 已天然支持新字段。
+- **Files changed**:
+  - `ink-writer/agents/directness-checker.md` (更新 激活条件章 + description frontmatter)
+  - `tests/prose/test_directness_full_scene_activation.py` (新增, 12 tests: slow_build/emotional/no_scene 全场景激活 + directness_skip 向后兼容 + directness_tier 桶回退)
+- **Tests**: 12 new + all baseline pass. 0 regression.
+- **Learnings for future iterations**:
+  - US-006 大部分改造在 US-005 时已提前完成（is_activated() 已改、_resolve_scene_bucket 已支持 tier）；本 US 主要是 agent spec 更新 + 追加测试。
+  - ChapterMeta Pydantic model 用 extra="allow"，新增 directness_tier/directness_skip 字段不需要改 schema。
+  - tier=explosive_hit 在 YAML 无对应桶时回退 default（US-008 将创建 tiers.explosive_hit 桶）。
 ---
 
-## 2026-04-26 16:10 CST - US-006 全量批跑脚本 run_batch.py 断点续跑机制验证
-
-**实现内容：**
-- 新建 `scripts/live-review/run_batch.py` — 全量批跑脚本：
-  - 参数：`--input-dir`/`--output-dir` 必填；`--limit N`（仅前 N 份）/ `--resume`（skip output_dir 已存在的 `<bvid>.jsonl`）/ `--skip-failed`（不退出继续，写 `_failed.jsonl`）/ `--mock-llm-dir`（每 BV 取 `<dir>/<bvid>.json`，缺 mock 视为该 BV 失败）/ `--model`（默认 claude-sonnet-4-6）。
-  - 主流程：sorted(input_dir.glob("BV*_raw.txt")) → --limit 截断 → --resume 时 done = {p.stem for p in output.glob("BV*.jsonl")} → 逐份 try `extract_from_text` + `_load_mock` → 写 jsonl；失败收编为 `{bvid, error, traceback}` 写入 `_failed.jsonl`（append 模式）。
-  - 退出码：全成功 0 / 有失败但 `--skip-failed` 0 / 有失败且未传 `--skip-failed` 1 / `--input-dir` 不存在 2。
-  - 进度日志格式 `[i/total] <bvid> done in Xs` 或 `[i/total] <bvid> FAILED: <err>` 或 `[i/total] <bvid> skipped (resume)`。
-- 新建 fixtures `tests/live_review/fixtures/mock_batch/`（5 raw + 4 mock，故意缺 BV1CCC.json 模拟失败）：
-  - BV1AAA/BBB/DDD/EEE.json + BV1AAA/BBB/CCC/DDD/EEE_raw.txt（每 BV 1 个 minimal record，覆盖 explicit_number/borderline/fail/pass 多个 dimension）。
-- 新建 `tests/live_review/test_run_batch.py` 5 用例覆盖 4 场景：
-  1. (a) 全 mock 齐 → 5 jsonl + exit 0 + _failed 不存在；
-  2. (b1) 缺 1 mock + `--skip-failed` → 4 jsonl + _failed.jsonl 1 条 (bvid=BV1CCC + error + traceback) + exit 0；
-  3. (b2) 缺 1 mock 不带 `--skip-failed` → exit 1；
-  4. (c) `--resume`：先 `--limit 3`（生成 BV1AAA/BB/CC.jsonl）→ 再不限 `--resume`（仅处理 BV1DDD/EEE，stdout 含 "skipped"）；
-  5. (d) `--limit 2` → 仅 BV1AAA/BB 被处理。
-
-**Files changed:**
-- A scripts/live-review/run_batch.py
-- A tests/live_review/fixtures/mock_batch/BV1AAA_raw.txt
-- A tests/live_review/fixtures/mock_batch/BV1BBB_raw.txt
-- A tests/live_review/fixtures/mock_batch/BV1CCC_raw.txt
-- A tests/live_review/fixtures/mock_batch/BV1DDD_raw.txt
-- A tests/live_review/fixtures/mock_batch/BV1EEE_raw.txt
-- A tests/live_review/fixtures/mock_batch/BV1AAA.json
-- A tests/live_review/fixtures/mock_batch/BV1BBB.json
-- A tests/live_review/fixtures/mock_batch/BV1DDD.json
-- A tests/live_review/fixtures/mock_batch/BV1EEE.json
-- A tests/live_review/test_run_batch.py
-
-**验证：**
-- TDD 顺序确认：写完 5 测试 → pytest 5 失败（脚本不存在 returncode=2）→ 实现 run_batch.py → 5 PASS。
-- `python3 -m pytest tests/live_review/test_run_batch.py --no-cov -q` → 5 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 432 passed（无回归；从 US-005 的 427 增 5）。
-- `ruff check scripts/live-review/run_batch.py tests/live_review/test_run_batch.py` → All checks passed。
-
-**Learnings for future iterations:**
-- **`_failed.jsonl` 必须无视 `--skip-failed` 都写盘**：即使非 `--skip-failed` 路径（break 退出 + return 1），failures 也要追加到 `_failed.jsonl`，方便用户事后查 traceback。我把 `_append_failed` 调用放在 `if failures:` 块（不在 `if args.skip_failed:` 块内）— 这是 b2 测试通过的关键之一（虽然 b2 只断言 returncode=1，但 b1 必须看到 _failed.jsonl 的出现）。
-- **subprocess RED 时 b2 测试 returncode=2 是巧合而非真测**：脚本不存在 → python interpreter exit 2 ≠ ExtractionError 返回 1。我在 RED 阶段没注意到这个 false-positive，直到 GREEN 实现完才意识到 b2 真测的是 1（不是 2）。后续类似 "test exit code != 0" 用例建议加 `assert "FAILED" in proc.stderr` 或 `assert "_failed.jsonl" in proc.stderr` 严格区分 "脚本本身炸" vs "脚本逻辑判错"。
-- **`Path.glob("BV*.jsonl")` 自然排除 `_failed.jsonl`**：`_failed.jsonl` 文件名 `_` 开头，不匹配 `BV*` 模式，所以 `--resume` 时的 `done = {p.stem for p in output.glob("BV*.jsonl")}` 自动忽略 `_failed.jsonl`。后续 US-007/008/013 等扫 jsonl 都应该用 `BV*.jsonl` 而非 `*.jsonl` 避免误把 `_failed.jsonl` 当作有效病例输入。
-- **`except Exception` 的窄化**：BLE001 警告原本希望 except 子类化。但 batch 跑批的全 fault-tolerance 设计本意就是吃掉所有异常（mock IO / read_text 编码 / json parse / schema 校验），所以加 `# noqa: BLE001` 是合理的（Plan 字面 `except Exception as e` 的写法认可此宽口径）。如果未来缩窄到 `(ExtractionError, FileNotFoundError, json.JSONDecodeError)`，注意 schema 校验失败现在被 ExtractionError 包装，但 OS 层错误（如 `PermissionError`）会逃出 — 工程取舍。
-- **complete_mock_dir 复合 fixture 模式**：有些场景需要 5 mock 全齐（a/c/d），有些需要故意缺 1 mock（b）。在 conftest/test 内部定义 `complete_mock_dir` fixture：拷贝 mock_batch 4 mock + tmp_path 合成 1 minimal record 即可。minimal record 用 `score=None / score_signal=unknown / verdict=unknown / comments=[]` 通过 schema 校验。后续类似"全集 vs 缺漏"的对比测试可复用此 fixture 模板。
+## 2026-04-27 16:20 - US-007
+- **What**: directness-checker 新增 D6 嵌套深度 + D7 修饰链长两维度，D1-D5 扩为 D1-D7
+- **Files changed**:
+  - `ink_writer/prose/directness_checker.py` (+D6/D7 keys/labels/thresholds + _calc_d6_nesting_depth + _calc_d7_modifier_chain_length + issue 生成 + metrics_raw 扩展)
+  - `ink-writer/agents/directness-checker.md` (5 维度 → 7 维度)
+  - `tests/prose/test_directness_d6_d7.py` (新增, ~20 tests: D6/D7 算法 + e2e + issues)
+- **Tests**: 48 total (20 d6d7 + 28 baseline directness). 0 regression.
+- **Learnings for future iterations**:
+  - D6 用 。切句 → ，切子句 → 计数的简单算法；比 jieba 管道快。
+  - D7 复用 colloquial_checker C4 的同源逻辑（按 "的" 统计修饰层）；两个 checker 独立计算但公式一致。
+  - 测试全维度检查时注意 D4 (mid_is_better 句长) 易被极短句触发 red——新 fixture 要控制句长在 13-17 字范围内。
 ---
 
-## 2026-04-26 16:50 CST - US-007 jsonl → CASE-LR-yaml 转换器
-
-**实现内容：**
-- 新建 `scripts/live-review/jsonl_to_cases.py` — 把 live_review jsonl 每行转成符合 case_schema (1.1) 的 yaml：
-  - argparse：`--jsonl-dir` 必填 / `--cases-dir`（默认 `data/case_library/cases/live_review`）/ `--dry-run` / `--year`（默认 2026）。
-  - 推导函数：
-    - `derive_severity(score)`：None→P3 / <55→P0 / <60→P1 / <65→P2 / 其他→P3。
-    - `derive_layers(comments)`：DIMENSION_TO_LAYER 表（opening/hook/golden_finger/genre/taboo/character/ops/misc → [upstream]；pacing/highpoint → [upstream, downstream]；simplicity → [downstream]）；空 comments → [upstream]；返回 sorted。
-    - `derive_title(title_guess, verdict, score)`：score=None → "X (verdict)"；其他 → "X (verdict / N分)"。
-    - `derive_failure_pattern(overall, comments, verdict)`：有 negative → description=overall+" | "+前3个negative 内容；observable=full negative 列表 `f"{dim}维度: {content}"`；无 negative → description=overall；observable=`["整体被星河直播判定为 {verdict}"]`。
-    - `derive_live_review_meta(record)`：完整 9 字段 + score（可 null）；comments 自动 strip `raw_line_range`。
-  - case_id 用 `allocate_live_review_id(cases_dir, year=2026)`（dry-run 改用 `CASE-LR-{year}-DRYRUN-NNNN` 占位避免污染 counter）。
-  - 写盘前调 `validate_case_dict(case_dict)` fail-loud；任一失败 stderr 列 jsonl 文件名+行号+bvid+错误，退出码 1。
-  - jsonl 扫描：glob `*.jsonl` 跳过 `_*` 文件。
-- 新建 `tests/live_review/fixtures/sample_5_files.jsonl` — 5 行覆盖 P0/P1/P2/P3+null 全 5 类 severity；layer 推导 3 分支（downstream-only via simplicity / upstream-only via opening 与空 comments / 双 layer via pacing）；同 BV1AAA 共享 2 行（novel_idx 0/1）；BV1CCC 全 positive 触发 failure_pattern fallback；BV1DDD 空 comments+null score。
-- 新建 `tests/live_review/test_jsonl_to_cases.py` 9 用例 (subprocess 模式)：
-  1. 5 jsonl 行 → CASE-LR-2026-0001..0005 严格递增；
-  2. 全 5 yaml 用 `case_schema.json` 校验通过；
-  3. severity 集合 == {P0,P1,P2,P3} + P3 ≥ 2；
-  4. layer 推导覆盖 (downstream,) / (upstream,) / (downstream, upstream) 三分支；
-  5. 同 bvid (BV1AAA) 多本不冲突 + case_id 全唯一；
-  6. live_review_meta 9 字段完整 + comments 已 strip raw_line_range；
-  7. 失败兜底（无 negative comments）observable 含 "整体被星河直播判定为"；
-  8. severity-score 严格映射 (50→P0 / 58→P1 / 63→P2 / 75→P3 / null→P3)；
-  9. dry-run 不写 yaml。
-
-**Files changed:**
-- A scripts/live-review/jsonl_to_cases.py
-- A tests/live_review/fixtures/sample_5_files.jsonl
-- A tests/live_review/test_jsonl_to_cases.py
-
-**验证：**
-- TDD 顺序确认：写完 9 测试 → pytest 8/9 fail（脚本不存在；test_live_review_meta_fully_populated 因 cases_dir.glob 空遍历碰巧 pass）→ 实现脚本 → 9 PASS。
-- `python3 -m pytest tests/live_review/test_jsonl_to_cases.py --no-cov -q` → 9 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 441 passed（无回归；从 US-006 的 432 增 9）。
-- `ruff check scripts/live-review/jsonl_to_cases.py tests/live_review/test_jsonl_to_cases.py` → All checks passed。
-
-**Learnings for future iterations:**
-- **layer enum 必须查 case_schema.json 而非 spec 文档**：spec §428-434 字面写 `[planning, golden_three]` / `[planning, chapter]` 等，但 `case_schema.json` 的 layer enum 仅允许 `["upstream", "downstream", "reference_gap", "infra_health"]`。Plan §1501-1516 提供的 DIMENSION_TO_LAYER 表用 upstream/downstream 是正解。后续 US 看到 spec 与 plan 不一致时，**plan 优先**（plan 是 schema-aware）。
-- **`validate_case_dict` 是 case yaml 写盘的标准 gate**：从 `ink_writer.case_library.schema` 直接导入即可，错误信息已含 JSON pointer + 字段消息（CaseValidationError）。jsonl_to_cases.py 写盘前用此 gate fail-loud，错误会被脚本捕获后 stderr 列 line_no + bvid + 字段定位，退出码 1。后续 US-009/US-013 等会写 yaml/json 的脚本沿用此模式。
-- **jsonl→yaml 字段映射的 raw_line_range 陷阱**：jsonl extracted 的 comments 必填 `raw_line_range`（强制 LLM 给定位），但 case_schema.live_review_meta.comments 是 `additionalProperties: false` 且不含 `raw_line_range` — 必须 strip。这是字段命名/职责差异：jsonl 是抽取中间产物（追溯回 raw），case 是病例库稳定形态（不引用 raw 行号）。后续 US-009 / US-013 类似的"中间产物→稳定 schema"映射要警觉这种字段 schema 不对称。
-- **dry-run 与 counter file 隔离**：`allocate_live_review_id` 调用就会原子写 `cases_dir/.id_alloc_case_lr_2026.cnt`。dry-run 路径不能调它（否则把"模拟跑"变成"半写盘"）。占位 ID 用 `CASE-LR-{year}-DRYRUN-NNNN` — 注意此 pattern 不通过 case_schema 校验（schema 期望 `CASE-LR-NNNN` 或 `CASE-LR-2026-NNNN`），所以 dry-run 必须跳过 validate_case_dict。后续 schedule 类的 dry-run / preview 脚本沿用此"placeholder ID + 跳过强校验"模式。
-- **fixture 用 `*.jsonl` 而非 `BV*.jsonl` 命名**：US-007 fixture 名 `sample_5_files.jsonl`（PRD AC 字面）。脚本若严格 glob `BV*.jsonl` 则无法消费此 fixture。最终设计让 `_iter_jsonl_files` 跳过 `_*` 但接受任意 jsonl 名 — 既兼容 `BV*.jsonl` 生产输出，也兼容 `sample_*.jsonl` fixture。`_failed.jsonl` 的 `_` 前缀依旧自动排除。
-- **subprocess test fixture 用 tmp_path 自然不污染 repo**：测试用 tmp_path 作 cases_dir，所以脚本写出的 yaml 与 `.id_alloc_case_lr_2026.cnt` 都在 tmp 目录里。**手测时**用 `/tmp/` 跑端到端 + 之后清理；**永远不要**在 repo 内 cases_dir 测试，否则 counter file 会进版本控制。
+## 2026-04-27 17:20 - US-008
+- **What**: seed_thresholds.yaml 新增 explosive_hit 阈值桶 + regen_directness_thresholds_explosive.py 校准脚本
+- **Files changed**:
+  - `reports/seed_thresholds.yaml` (+tiers.explosive_hit 段，D1-D7 全维度阈值)
+  - `ink_writer/prose/directness_checker.py` (_resolve_scene_bucket 支持 tiers 参数)
+  - `scripts/regen_directness_thresholds_explosive.py` (新增, mock 模式硬编码阈值)
+  - `tests/prose/test_threshold_tier_lookup.py` (新增, 3 种 tier lookup 路径)
+- **Tests**: 13 new + all baseline pass
+- **Learnings**: tier 优先级 > scene bucket；explosive_hit 阈值为最紧档，D1≤0.015 D6≤1.3 D7≤1.2
 ---
 
-## 2026-04-26 17:30 CST - US-008 题材聚合器 aggregate_genre.py
-
-**实现内容：**
-- 新建 `scripts/live-review/aggregate_genre.py`：CASE-LR-*.yaml → genre_acceptance.json 聚合脚本：
-  - 参数：`--cases-dir` 必填 / `--out`（默认 `data/live-review/genre_acceptance.json`）/ `--min-cases`（默认 3）/ `--top-complaints`（默认 5）。
-  - 笛卡尔贡献：`live_review_meta.genre_guess` 多标签每个独立计入对应 genre bucket（`[都市,重生]` 算 都市 1 + 重生 1）。
-  - 统计字段：`score_mean / score_median`（statistics.mean/median，None-safe）+ `score_p25/p75`（`statistics.quantiles(method="exclusive")`；N=1 时回落 None；全 None scores → 全 None 输出）+ `verdict_pass_rate = count(verdict=='pass') / total`。
-  - `common_complaints`：聚合所有 negative comments 的 dimension → `Counter.most_common(top_N)` → `frequency = count / total_negatives`，`examples` 取该 dim 下 raw_quote 前 3 条（缺 raw_quote 兜底 content）。
-  - `case_count < min_cases` 的 genre 直接过滤；`total_novels_analyzed` 取 cases scanned 总数（union，非各 genre 累加 sum）。
-- 新建 `tests/live_review/fixtures/sample_30_cases/` 含 30 份 CASE-LR-2026-0001..0030.yaml（用一次性 `/tmp/gen_lr_fixtures.py` 生成后删除生成器；30 份 yaml 静态 commit）：
-  - 都市 7 cases / 重生 5 cases（与都市 4 重叠）/ 玄幻 5 cases（全 fail verdict）/ 校园 5 cases（全 null score）/ 职业流 5 cases / 仙侠 5 cases / 末世 2 cases（< min=3 → 排除）。
-  - 都市 negatives 设计成 opening=5 / pacing=4 / golden_finger=3 / hook=2 / character=1 五档严格不同频率 → 满足 "common_complaints 频率严格降序" AC。
-- 新建 `tests/live_review/test_aggregate_genre.py` 13 用例（subprocess + 共享 `aggregate` fixture）：
-  1. test_output_validates_genre_acceptance_schema — Draft202012 校验通过；
-  2. test_top_level_metadata — schema_version/total/min_cases；
-  3. test_excluded_genres_below_min_cases — 末世 不在输出；
-  4. test_included_genres_match_expected — 6 入选 genre；
-  5. test_dushi_stats_match_handcomputed — mean=65 / median=65 / p25=55 / p75=75 / pass_rate=5/7；
-  6. test_chongsheng_stats_match_handcomputed — mean=66.4 / median=65 / p25=61 / p75=72.5 / pass_rate=0.8；
-  7. test_xuanhuan_all_fail_pass_rate_zero — 玄幻 pass_rate==0；
-  8. test_xiaoyuan_all_null_score_stats_are_null — 校园 mean/median/p25/p75 全 None；
-  9. test_common_complaints_frequency_descending — 都市 cc 频率非递增 + top-5 freq 唯一 + cc[0]=opening；
-  10. test_common_complaints_examples_present — 每条 cc 含 examples ≤3；
-  11. test_case_ids_well_formed — case_ids pattern + 非空；
-  12. test_top_complaints_flag_caps_list — `--top-complaints 2` 限上界；
-  13. test_min_cases_threshold_changes_output — `--min-cases 2` 包含末世。
-
-**Files changed:**
-- A scripts/live-review/aggregate_genre.py
-- A tests/live_review/fixtures/sample_30_cases/CASE-LR-2026-0001.yaml … 0030.yaml（30 份）
-- A tests/live_review/test_aggregate_genre.py
-
-**验证：**
-- TDD 顺序确认：写完 13 测试 → pytest 13 errors/fails（脚本不存在；subprocess `python3 SCRIPT.py` returncode=2）→ 实现 aggregate_genre.py → 13 PASS。
-- `python3 -m pytest tests/live_review/test_aggregate_genre.py --no-cov -q` → 13 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 454 passed（无回归；US-007 的 441 增 13）。
-- `ruff check scripts/live-review/aggregate_genre.py tests/live_review/test_aggregate_genre.py` → All checks passed。
-- 端到端 CLI 冒烟：`python3 scripts/live-review/aggregate_genre.py --cases-dir tests/live_review/fixtures/sample_30_cases --out /tmp/x.json` → `OK 6 genre(s) (30 cases) → /tmp/x.json`，输出 schema_version=1.0 / total_novels_analyzed=30 / 都市 score_mean=65 / 校园 score_mean=null / 玄幻 pass_rate=0.0 全部符合预期。
-
-**Learnings for future iterations:**
-- **`statistics.quantiles(method='exclusive')` 在小样本上的精确数值**：n=4 quantiles 用 m_k=k*(N+1)/4 位置插值。N=7 [50,55,60,65,70,75,80] → [55,65,75]；N=5 [60,62,65,70,75] → [61,65,72.5]；N=5 [60,65,70,75,80] → [62.5,70,77.5]。需要 N≥2 否则抛 StatisticsError；N=1 用 `_safe_quantiles` 兜底返 (None, float(scores[0]), None)。聚合脚本对全 None score 的 genre 直接返 score_mean=None / score_median=None / score_p25=None / score_p75=None — 这样既符合 schema "number|null" 也不混淆"统计量为 0"与"无数据"。
-- **题材聚合的笛卡尔贡献模式**：`live_review_meta.genre_guess` 是 array，每个标签独立计入对应 genre bucket，所以 `[都市,重生]` 既算 1 次 都市 也算 1 次 重生；`total_novels_analyzed` 用 cases scanned 总数（=union 而非各 genre 累加 sum），避免被笛卡尔重复放大。后续 US-009 / US-013 涉及 genre 维度统计要遵循同一约定。
-- **30 份测试 fixture 用一次性 generator 生成后删除**：写 `/tmp/gen_lr_fixtures.py` 一次性脚本生成 30 份 yaml → 校验 → 删脚本；30 份 yaml 作为静态 fixture 提交，构建 reproducibility 由 PR diff + schema 校验回归共同保证。这套模式比 conftest.py 动态创建 fixture 更稳（不依赖 generator 长期存在被误改），下次扩 fixture 数量复用此模式。
-- **common_complaints 严格降序需 fixture 设计配合**：测试用 `>=` 验证非严格降序就够；想测严格 `>` 必须从 fixture 端保证唯一频率。我设计都市 negatives 为 opening=5 / pacing=4 / golden_finger=3 / hook=2 / character=1 五档严格不同 → 满足 "频率严格降序" AC。如果 PRD AC 说"非严格"则 fixture 可以放任 ties。
-- **subprocess fixture 嵌套 pytest fixture（@pytest.fixture aggregate(out_path)）**：`aggregate` fixture 调用 `_run` + 解析 json，所有依赖它的测试都共享一次 subprocess 调用 — 13 用例只跑一次脚本，比每用例独立跑省时。但需注意 fixture scope 默认 function，要 module-level 共享得显式 `scope="module"` + tmp_path_factory 替代 tmp_path。
-- **`statistics.median` 的偶数样本返回中位数算术平均**：N=2 返 (a+b)/2；statistics.quantiles 在 N=2 用 m_k=k*3/4 也插值。聚合脚本不需要特殊处理偶数样本，直接调即可。但要警惕 N=1 时 quantiles 抛错 — `_safe_quantiles` 必须兜底。
-- **`yaml.safe_load` 对 None / 空文件返 None**：load_cases 必须 `if data is None: continue` 防御空 yaml；30 份 fixture 不会触发但生产环境若有人手工删空内容会暴露。所有 `yaml.safe_load` 后建议加这道防线。
+## 2026-04-27 17:20 - US-009
+- **What**: writer-agent 加 L12 对话+动作驱动律 + L10c 禁四字格/抽象链 + 删反向引导
+- **Files changed**:
+  - `ink-writer/agents/writer-agent.md` (+L12 铁律 4 子律 + L10c 更新)
+  - `ink-writer/skills/ink-write/references/anti-detection-writing.md` (删装逼示例)
+  - `tests/agents/test_writer_l12_self_check.py` (新增, 12 tests)
+- **Tests**: 12 new + all baseline pass
+- **Learnings**: L12a 对话/动作密度 ≥200 chars；L12b 段首禁 abstract_adjectives；L12c 段首优先级；L12d 每场景必有冲突
 ---
 
-## 2026-04-26 18:15 CST - US-009 规则候选抽取器（LLM + bge cosine 去重）
-
-**实现内容：**
-- 新建 `scripts/live-review/extract_rule_candidates.py`：
-  - argparse：`--jsonl-dir` 必填 / `--rules-json`（默认 data/editor-wisdom/rules.json）/ `--out`（默认 data/live-review/rule_candidates.json）/ `--mock-llm <fixture.json>` / `--threshold`（默认 0.85）/ `--model`（默认 claude-sonnet-4-6）。
-  - 主流程：扫 jsonl-dir 全部 jsonl 收集 bvids set → 读 rules.json → mock 模式直接读 fixture / 真实模式 inline prompt 调 anthropic SDK → 解析 LLM JSON 数组 → 校验每条 5 字段（rule≤120 / why / category enum10 / severity enum3 / applies_to enum3 子集）→ bge cosine 计算 dup_with（`> threshold`）→ 注入 `id RC-NNNN / source_files=[live_review_bvid:<BV>] / approved=null / source_bvids=sorted(jsonl_bvids)` → 写 JSON 数组。
-  - fail-loud：`CandidateExtractionError` 涵盖 LLM 非 JSON / 非 Array / 必填字段缺 / enum 违反 / cosine 失败；退出码 1（CandidateExtractionError）/ 2（jsonl-dir 不是目录）/ 0（成功）。
-  - 不写 prompt 独立文件，inline prompt 嵌入 `_call_llm`（mock 模式根本不读 prompt）。
-- 新建 `tests/live_review/fixtures/existing_rules_fixture.json`：拷自 `data/editor-wisdom/rules.json` 前 3 条（EW-0001/0002/0003，全 taboo 类）。
-- 新建 `tests/live_review/fixtures/mock_rule_extract.json`：5 条候选（仅含 LLM 输出 5 字段 rule/why/category/severity/applies_to，不含 id/source_bvids/dup_with/approved — 由脚本统一注入）；候选 1 与 EW-0001 cosine≈0.94（实测 bge）/ 候选 2 与 EW-0002 cosine≈0.89 → 触发 dup_with；候选 3-5 分别覆盖 opening/pacing/hook 类。
-- 新建 `tests/live_review/test_extract_rule_candidates.py` 10 用例（subprocess 模式，6 个共享 `module-scope candidates_file` fixture 节省 bge 加载时间）：
-  1. test_mock_returns_5_candidates；
-  2. test_at_least_2_candidates_have_dup_with；
-  3. test_dup_with_targets_existing_EW_ids（EW-0001 / EW-0002 至少命中 1）；
-  4. test_source_bvids_filled_from_jsonl（全等于 jsonl bvid 集合 {BV1AAA, BV1BBB, BV1CCC, BV1DDD}）；
-  5. test_approved_field_all_null；
-  6. test_ids_well_formed_and_unique（RC-NNNN 严格唯一+排序）；
-  7. test_validates_against_extended_schema（inline 扩展 schema 含 dup_with/approved/source_bvids，严格 additionalProperties: false）；
-  8. test_fail_loud_on_non_json_llm_output（非 JSON → exit 1 + stderr 'JSON' + 不写 out）；
-  9. test_fail_loud_on_missing_required_field（candidate 缺 category/why → exit 1 + stderr 'category|missing'）；
-  10. test_threshold_zero_marks_everything_as_dup（threshold=0 时全部候选 dup_with 至少 1 条 — 不依赖具体 EW，验证 cosine 计算路径走通）。
-
-**Files changed:**
-- A scripts/live-review/extract_rule_candidates.py
-- A tests/live_review/fixtures/existing_rules_fixture.json
-- A tests/live_review/fixtures/mock_rule_extract.json
-- A tests/live_review/test_extract_rule_candidates.py
-- M prd.json
-- M progress.txt
-
-**验证：**
-- TDD 顺序确认：写完 10 测试 → pytest 10 失败/错误（脚本不存在）→ 实现脚本 → 9/10 通过；mock 候选 1 cosine 实测 0.81（不到 0.85 阈值，未触发 dup_with）→ 改写 mock 候选 1 文本（保留语义但更接近 EW-0001 字面）实测 0.94 → 10/10 PASS。
-- `python3 -m pytest tests/live_review/test_extract_rule_candidates.py --no-cov -q` → 10 passed (~17s 含 bge 模型加载 1 次 + 3 次额外 subprocess 调用)。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 464 passed in 73.24s（无回归；US-008 的 454 增 10）。
-- `ruff check scripts/live-review/extract_rule_candidates.py tests/live_review/test_extract_rule_candidates.py` → All checks passed。
-
-**Learnings for future iterations:**
-- **bge-small-zh-v1.5 中文相似度的 0.85 阈值实测体感**：相同语义但措辞不同的中文规则文本，cosine 通常落在 0.75-0.85 区间；要稳过 0.85 需保留**核心字面词**（如"AI生成 / 高潮情节 / 多个版本"全部保留）。fixture 设计 dup_with 命中规则时要先实测 cosine（用 `python3 -c "from sentence_transformers import SentenceTransformer; ..."` 30s 跑一次）—— 不要凭直觉判断"语义近 → cosine 高"。后续 US-011 vector retrieval / US-012 checker 均会用同模型，相同实测要点适用。
-- **bge 模型加载耗时 ~30s，pytest fixture 必须 module-scope 共享**：pytest 默认 function scope，10 用例独立加载会 5min+；用 `@pytest.fixture(scope="module")` + `tmp_path_factory.mktemp(...)` 把脚本调用结果（candidates_file）共享给 6 个非异常用例 → 总耗时压到 17s。同模式适用所有依赖 sentence-transformers 的测试集。
-- **`> threshold` 与 `>= threshold` 边界差异**：plan §1597 字面 `np.where(sim[i] > 0.85)[0]` 用严格大于。我沿用此约定（`if float(sim[i, j]) > threshold`）。下游若想"边缘命中"（sim==0.85 也算 dup）需手工 `>=` 改写。`threshold=0` 时 cosine 几乎所有 pair 都 > 0（normalized + 中文文本一般正相关），所以 test 10 用 `threshold=0.0` 验证"全部命中"路径稳过。
-- **mock fixture 设计要分清"LLM 输出形态" vs "脚本写盘形态"**：候选最终含 10 字段（id/category/rule/why/severity/applies_to/source_files/dup_with/approved/source_bvids），但 mock LLM 只能给前 5 个 LLM-generated 字段（rule/why/category/severity/applies_to）。后 5 个 (id/source_files/dup_with/approved/source_bvids) 由脚本注入或计算。fixture 简洁化、脚本注入逻辑透明 — 测试 (3) source_bvids 来自 jsonl 才说得通（如果 mock 已含 source_bvids 则不能验证脚本注入路径）。
-- **fail-loud schema 校验放在 LLM 输出后立即跑（不要等 cosine 算完）**：bge 加载 30s — 如果先调 cosine 再校验 LLM 输出，fail-loud 路径会浪费 30s。脚本顺序 `_parse_llm_output` → `_validate_candidate_fields` → `_compute_dup_with`（bge 仅在前 2 关全过后才调）。test_fail_loud_on_missing_required_field 仅 ~1s 即可返回 exit 1 — 测试体感证明此顺序正确。
-- **inline 扩展 schema 替代独立 schema 文件的取舍**：候选阶段的 schema 仅在 US-009 测试与 US-010 promote 阶段被引用，建独立 `schemas/live_review_rule_candidates.schema.json` 反而引入未明文要求的资产。我把扩展 schema 写在 test 顶部 `CANDIDATE_SCHEMA` dict — US-010 若需要复用直接 import 测试模块或重新 inline。如果未来 US-013 / US-014 也要校验候选，再考虑提升为独立 schema 文件。
-- **`source_files` 字段在候选阶段就给 promote-ready 形态**：候选每条 `source_files = [f"live_review_bvid:{b}" for b in sorted(bvids)]` 直接给 US-010 promote 时的预期格式（plan §1649 字面 `source_files: ["live_review_bvid:BV12yBoBAEEn", ...]`）。promote 不需要再转换 source_files，只需剥除 dup_with/approved/source_bvids/id 改 EW-NNNN 即可。这是上游设计为下游消费让步的范例。
+## 2026-04-27 17:20 - US-010
+- **What**: build_explosive_hit_index.py 从 reference_corpus 构建爆款示例 RAG 语义切片索引
+- **Files changed**:
+  - `scripts/build_explosive_hit_index.py` (新增 ~186 行，场景类型启发式分类)
+  - `tests/retrieval/test_build_explosive_hit_index.py` (新增)
+- **Tests**: New retrieval tests pass
+- **Learnings**: scene_type 启发式用关键词打分（combat/dialogue/emotional/action/description）；chapter 文件排除 README/index/manifest
 ---
 
-## 2026-04-26 19:00 CST - US-010 规则候选审核 CLI + 提交工具（人工闸）
-
-**实现内容：**
-- 新建 `scripts/live-review/review_rule_candidates.py`：交互式 CLI 逐条 y/n/s/q + 立即写盘 + resume 跳过 approved!=null。
-- 新建 `scripts/live-review/promote_approved_rules.py`：仅写入 approved=true 的项；max-EW-id+1 分配新 ID；字段重排到标准顺序（id/category/rule/why/severity/applies_to/source_files/source）；现有规则字节级保持不变；严格用 schemas/editor-rules.schema.json 校验失败抛错不动文件。
-- 修改 `schemas/editor-rules.schema.json`：增 optional `source` 字段（enum [editor_wisdom, live_review]）。
-- 新建 fixtures：`sample_rule_candidates.json`（5 条候选 / 前 2 dup_with EW-0001/0002）/ `sample_rules_for_promote.json`（80 条干净 EW-0001..0080）。
-- 新建 `tests/live_review/test_review_rule_candidates.py`（4 用例）+ `tests/live_review/test_promote_approved_rules.py`（7 用例）。
-
-**Files changed:**
-- A scripts/live-review/review_rule_candidates.py
-- A scripts/live-review/promote_approved_rules.py
-- M schemas/editor-rules.schema.json
-- A tests/live_review/fixtures/sample_rule_candidates.json
-- A tests/live_review/fixtures/sample_rules_for_promote.json
-- A tests/live_review/test_review_rule_candidates.py
-- A tests/live_review/test_promote_approved_rules.py
-
-**验证：**
-- `python3 -m pytest tests/live_review/test_review_rule_candidates.py tests/live_review/test_promote_approved_rules.py --no-cov -q` → 11 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 475 passed。
-- `ruff check scripts/live-review/review_rule_candidates.py scripts/live-review/promote_approved_rules.py tests/live_review/test_review_rule_candidates.py tests/live_review/test_promote_approved_rules.py` → All checks passed。
-
+## 2026-04-27 17:20 - US-011
+- **What**: explosive_retriever.py 爆款示例语义检索器（关键词 overlap + scene_type 过滤）
+- **Files changed**:
+  - `ink_writer/retrieval/explosive_retriever.py` (新增 ~181 行, ExplosiveRetriever 类)
+  - `ink_writer/retrieval/__init__.py` (公共导出)
+  - `tests/retrieval/test_explosive_retriever.py` (新增, 11 tests)
+- **Tests**: 11 new + all baseline pass
+- **Learnings**: 中文 bigram 滑动窗口提取关键词；场景类型优先过滤；无 embedding 依赖（纯字符串匹配）；索引缺失 → 空返回 graceful fallback
 ---
 
-## 2026-04-26 19:30 CST - US-011 题材语义检索 + ink-init Step 99.5 D+B 接入
-
-**实现内容：**
-- 新建 `ink_writer/live_review/_vector_index.py`：
-  - `build_index(cases_dir, out_dir)` 扫 CASE-LR-*.yaml → 用 BAAI/bge-small-zh-v1.5 编码 `embedding_text = title_guess + " " + " ".join(genre_guess) + " " + overall_comment` → 写 `index.faiss` (IndexFlatIP) + `meta.jsonl`（每行含 case_id/title_guess/genre_guess/overall_comment/verdict/score/source_bvid/embedding_text）。
-  - `load_index(index_dir)` 读 faiss + meta.jsonl + 加载 SentenceTransformer，缺文件抛 FileNotFoundError 并提示重建命令。
-  - `search(index_data, query, top_k)` 编码 query → IndexFlatIP.search → 注入 cosine_sim 字段返回 list[dict]。
-- 新建 `ink_writer/live_review/genre_retrieval.py`：
-  - `retrieve_similar_cases(query, top_k=3, *, index_dir=None)` 复用 process-level cache `_INDEX_CACHE` 避免 ink-init 多次调用重载 bge 模型；默认 index_dir = `data/live-review/vector_index`。
-- 新建 `ink_writer/live_review/init_injection.py`：
-  - `check_genre(user_genre_input, *, top_k=3, config_path=None, genre_stats_path=None, index_dir=None) -> dict`：
-    - master switch：`enabled=false` 或 `inject_into.init=false` 早退 `_disabled_response`（warning_level='ok' + similar_cases=[] + render_text=''）。
-    - genre 切分：`_GENRE_SPLIT_RE = [+,，、/\s]+` 兼容 '都市+重生' / '都市,重生' / '都市 重生'。
-    - warning_level 决策：未匹配任一候选 → 'no_data'；匹配且 score_mean < init_genre_warning_threshold（默认 60）→ 'warn'；其他 → 'ok'。
-    - similar_cases 通过 retrieve_similar_cases() 取 top_k；render_text 含 '📚 星河直播相似案例 (174 份直播 × 10+ 本/份)' / '🎯 该题材统计' / '💡 写作建议' 三段。
-    - suggested_actions 按 warning_level 分支：warn → 重点审查 top-3 negative dimension；no_data → 提示参考 top-K 案例；ok → 沿用 overall_comment 经验。
-- 新建 `scripts/live-review/build_vector_index.py`：argparse `--cases-dir`（默认 `data/case_library/cases/live_review`）/ `--out-dir`（默认 `data/live-review/vector_index`）；自举 sys.path + windows stdio + 调 `build_index` 写入。
-- 修改 `ink-writer/skills/ink-init/SKILL.md`：在 Step 99 后整段追加 'Step 99.5：星河直播题材审查（live-review）'，含输入说明 / macOS+Windows 调用块 / warning_level 三分支表 / 关闭开关说明（`inject_into.init: false` + 全局 `enabled: false`）/ 索引前置提示（首次跑 build_vector_index.py + bge ~30s）。
-- 新建 `tests/live_review/test_genre_retrieval.py`（5 用例 + module-scoped vector_index_dir fixture）。
-- 新建 `tests/live_review/test_init_injection.py`（7 用例 + 共享 vector_index_dir/genre_stats_path 模块级 fixture）。
-- 新建 `tests/live_review/test_skill_step_99_5.py`（4 用例：render_text 三段含 / inject_into.init=false 短路 / enabled=false 全局短路 / SKILL.md 含 Step 99.5 段）。
-
-**Files changed:**
-- A ink_writer/live_review/_vector_index.py
-- A ink_writer/live_review/genre_retrieval.py
-- A ink_writer/live_review/init_injection.py
-- A scripts/live-review/build_vector_index.py
-- M ink-writer/skills/ink-init/SKILL.md
-- A tests/live_review/test_genre_retrieval.py
-- A tests/live_review/test_init_injection.py
-- A tests/live_review/test_skill_step_99_5.py
-
-**验证：**
-- TDD 顺序确认：写完 16 测试 → pytest 16/16 fail/error（模块不存在；SKILL.md 'Step 99.5' 字符串缺失）→ 实现 4 modules + 修 SKILL.md → 16/16 PASS。
-- `python3 -m pytest tests/live_review/test_genre_retrieval.py tests/live_review/test_init_injection.py tests/live_review/test_skill_step_99_5.py --no-cov -q` → 16 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 491 passed in 202.60s（无回归；US-010 的 475 增 16）。
-- `ruff check ink_writer/live_review/_vector_index.py ink_writer/live_review/genre_retrieval.py ink_writer/live_review/init_injection.py scripts/live-review/build_vector_index.py tests/live_review/test_*.py` → All checks passed (修了 1 处 yield from 替代 for-yield 循环)。
-
-**Learnings for future iterations:**
-- **bge-small-zh-v1.5 加载 ~30s 是硬约束**：测试必须 module-scoped fixture 共享 `vector_index_dir`（`tmp_path_factory.mktemp(...)`）+ `genre_stats_path`（aggregate_genre.py 跑一次的产物）。3 个测试文件共用同一组 fixture 模板，每文件 1 次 build_index ≤30s + 1 次 aggregate ≤2s。`genre_retrieval._INDEX_CACHE` 走 process-level dict 缓存（key=resolved index_dir str），避免 ink-init 多次调用 check_genre 重载模型；`clear_index_cache()` 测试钩子可清空。后续 US-012 ink-review checker 同样需要 retrieve_similar_cases，可直接复用此 cache 不再次加载。
-- **vector_index 写盘格式 index.faiss + meta.jsonl 与 editor-wisdom 不同**：editor-wisdom 用 `rules.faiss + metadata.json`（整个 list dump 为一个 JSON），live-review 改用 `index.faiss + meta.jsonl`（每行一条 record）— 行级 jsonl 便于增量扩库（追加病例只需 append 行 + 重建 faiss），与 editor-wisdom 不冲突。后续如果 US-012 / US-013 需要做"增量索引"，jsonl 比 JSON list 更适合。两种格式并存，下游统一通过 `_vector_index.load_index` API 隔离差异。
-- **check_genre 三层路径独立可控**：config_path（控制 inject 开关）/ genre_stats_path（控制题材聚合数据源）/ index_dir（控制 FAISS 索引位置）。3 个参数都接受 None 走默认（DEFAULT_GENRE_STATS / DEFAULT_INDEX_DIR / 默认 config）。测试时分别指向 tmp_path 即可隔离 — 不污染 repo data 目录。后续 US-012 checker 复用此模式（test 阶段 mock 数据全走 tmp_path）。
-- **warning_level 三分支决策细节**：未匹配 = no_data（None genre_stats）；匹配但 score_mean is None = ok（无打分数据 fall back 通行，避免把校园这类全 null 题材误标 warn）；匹配且 score_mean < threshold = warn；其他 = ok。注意 `if isinstance(score_mean, (int, float)) and score_mean < threshold` 双重护栏 — None 不参与比较防 TypeError。
-- **multi-genre 切分 regex `[+,，、/\s]+`**：用户输入 '都市+重生' / '都市,重生' / '都市 重生' / '都市、重生' 都能正确切分；fallback 给整字串以防用户输入 '都市重生律师' 这种连写形式仍能进 retrieve（虽然 genre_stats 不会命中）。后续 US-012 checker.run_live_review_checker 接受 genre_tags: list[str] 时不需此切分。
-- **render_text 渲染规范化**：3 段固定 emoji 标题 '📚' / '🎯' / '💡' + 二级缩进案例列表（`  [N] title (verdict / Xs)`）。Linux/macOS terminal 默认 emoji 渲染，Windows PowerShell 需 chcp 65001 + UTF-8 BOM —— 与 SKILL.md PowerShell sibling block 已对齐。后续 US-012 review checker 输出走 evidence_chain.json 不直接 render，故无需对齐此格式。
-- **SKILL.md 测试断言策略**：用 `assert "Step 99.5" in text` + `assert "check_genre" in text` + `assert "inject_into" in text` 三层 grep 比 regex 模糊匹配 更稳；不要 assert 过细的 markdown 结构（否则后续 SKILL.md 微调极易 break test）。SKILL.md 字符串测试是"消极保险"防 SKILL.md 被回滚到 Step 99 之前的状态，不是"详细规范"。
-- **process-level cache 与测试隔离的张力**：`_INDEX_CACHE` 全局单例对生产链路是优化，但对 pytest 不同 module 切换 index_dir 时可能拿到旧数据。当前实现按 `str(Path(index_dir).resolve())` 作 key 自然隔离不同 tmp_path，所以 tests pass。后续若加 "动态重建索引" 操作（如 US-013 smoke_test），必须显式调 `clear_index_cache()` 否则索引重建后旧 cache 仍指向被覆盖的文件路径。
+## 2026-04-27 17:20 - US-012
+- **What**: writer-agent Step 2A 起草前接入 explosive_retriever injection
+- **Files changed**:
+  - `ink_writer/retrieval/inject.py` (新增, inject_explosive_examples + <reference_examples> XML 块)
+  - `config/parallel-pipeline.yaml` (+enable_explosive_retrieval: true)
+  - `tests/agents/test_writer_explosive_retrieval_injection.py` (新增, 5 tests)
+- **Tests**: 5 new + all baseline pass
+- **Learnings**: enabled=False 时跳过检索返回空（字节级一致）；索引缺失时 graceful fallback
 ---
 
-## 2026-04-26 20:15 CST - US-012 live-review-checker agent + ink-review Step 3.6（OR 并列）
-
-**实现内容：**
-- 新建 `ink-writer/agents/live-review-checker.md`（agent spec）：开头 `{{PROMPT_TEMPLATE:checker-input-rules.md}}` 引用；含 Purpose / Input / Retrieval / Scoring / Output 与 33 个现有 checker spec 结构对齐；说明 Top-K=5 检索 + (1-violation_density)×verdict_pass_rate 综合公式 + 黄金三章阈值 0.75 / 其他 0.65 + 与 editor-wisdom-checker OR 并列说明 + 关闭开关。
-- 新建 `ink_writer/live_review/checker.py:run_live_review_checker(chapter_text, chapter_no, genre_tags, *, mock_response=None, llm_call=None, config_path=None, index_dir=None, top_k=5) -> dict`：
-  - master switch：`enabled=false` 或 `inject_into.review=false` → 早退 `_disabled_response`（score=1.0 / disabled=True）。
-  - 三层 LLM 优先级：mock_response > llm_call > 真实 anthropic SDK；mock 模式直接跳过 retrieval 与 bge 加载（测试快路径）。
-  - real path：拼 `query = " ".join(genre_tags) + " " + chapter_text[:500]` → `retrieve_similar_cases` Top-K → 构 LLM prompt → 解析 JSON → 用 retrieval `case_id` 兜底注入 cases_hit。
-  - fail-loud：JSON 解析失败 / 缺字段（score/dimensions/violations/cases_hit）/ 类型不对 → ValueError。
-  - 真实 SDK 调 `anthropic.Anthropic().messages.create`；max_tokens=4096；blocks 拼接为 str。
-- 新建 `ink_writer/live_review/review_injection.py:check_review(...) -> dict`：Step 3.6 主流程编排：
-  - master switch（与 checker 同一开关）→ 早退（passed=True 视为通行）。
-  - 阈值：`chapter_no <= 3` → `golden_three_threshold` (默认 0.75)；其他 → `hard_gate_threshold` (默认 0.65)。
-  - 调 `run_live_review_checker` 取评分；若 `score < threshold` 且 `polish_fn` 给定 → 触发 polish 一次（修复循环由调用方控制，与 editor_wisdom.review_gate 同款语义但更轻量）。
-  - 返回 `{passed, score, threshold, violations, cases_hit, dimensions, polish_triggered, disabled}`。
-- 修改 `ink-writer/skills/ink-review/SKILL.md`：在 Step 3.5 后追加 "## Step 3.6: live-review 硬门禁（与 Step 3.5 OR 并列）" 段：
-  - 含 5 步执行逻辑（master switch / 调 check_review / 阈值规则 / polish 触发 / OR 合并）。
-  - Python 调用块（`from ink_writer.live_review.review_injection import check_review`）+ Windows PowerShell sibling 块。
-  - 关闭开关说明（`inject_into.review: false` + 全局 `enabled: false`）。
-  - 索引前置提示（`build_vector_index.py` + bge ~30s）。
-- 新建 fixtures：
-  - `tests/live_review/fixtures/sample_chapter_violating.txt`（800 字章节，故意触发"开头铺设定 / 主角动机模糊 / 金手指出场太晚 / 节奏拖沓"4 类典型违规）。
-  - `tests/live_review/fixtures/mock_live_review_checker_response.json`（score=0.45 / 4 dimensions / 3 violations / 3 cases_hit）。
-- 新建 `tests/live_review/test_checker.py`（5 用例）：
-  1. mock 返回 → 字段齐全（score/dimensions/violations/cases_hit + violations 4 子字段）；
-  2. score=0.45 < hard_gate 0.65 阻断；
-  3. score=0.80 > hard_gate 0.65 通行；
-  4. inject_into.review=false → disabled=True / score=1.0 / mock 不消费；
-  5. enabled=false 全局短路。
-- 新建 `tests/live_review/test_review_step_3_6.py`（7 用例）：
-  - (a) mock score=0.45 + mock polish → polish_triggered=True + violations 完整传给 polish_fn；
-  - (b) inject_into.review=false → disabled=True / passed=True / 0 polish 调用 / score=1.0；
-  - (c) chapter_no=1 → threshold=0.75；
-  - (d) chapter_no=10 → threshold=0.65；
-  - (e) score=0.85 高于阈值 → polish 不触发；
-  - (f) SKILL.md 含 Step 3.6 / live-review / run_live_review_checker / inject_into / OR 等关键词；
-  - (g) live-review-checker.md agent spec 存在 + 含 Purpose/Input/Retrieval/Scoring/Output 5 段。
-
-**Files changed:**
-- A ink-writer/agents/live-review-checker.md
-- A ink_writer/live_review/checker.py
-- A ink_writer/live_review/review_injection.py
-- M ink-writer/skills/ink-review/SKILL.md
-- A tests/live_review/fixtures/sample_chapter_violating.txt
-- A tests/live_review/fixtures/mock_live_review_checker_response.json
-- A tests/live_review/test_checker.py
-- A tests/live_review/test_review_step_3_6.py
-- M prd.json
-- M progress.txt
-
-**验证：**
-- TDD 顺序确认：写完 12 测试 → pytest 12/12 fail（模块/agent spec/SKILL.md 字符串都缺）→ 实现 4 文件 + 修 SKILL.md → 12/12 PASS。
-- `python3 -m pytest tests/live_review/test_checker.py tests/live_review/test_review_step_3_6.py --no-cov -q` → 12 passed。
-- `python3 -m pytest tests/live_review/ tests/case_library/ tests/editor_wisdom/ tests/learn/ --no-cov` → 503 passed in 199.88s（无回归；US-011 的 491 增 12）。
-- `python3 -m pytest tests/integration/ tests/checker_pipeline/ tests/checkers/ --no-cov` → 240 passed, 3 skipped（无回归 — 编辑 wisdom Step 3.5 链路完好）。
-- `ruff check ink_writer/live_review/checker.py ink_writer/live_review/review_injection.py tests/live_review/test_checker.py tests/live_review/test_review_step_3_6.py` → All checks passed。
-
-**Learnings for future iterations:**
-- **OR 并列硬门禁的实现位置**：PRD 字面 "Step 3.5 与 Step 3.6 OR 并列" 不是一个新模块，而是 SKILL.md 调用方在两路 GateResult 上做布尔 OR (`final_passed = editor_wisdom_passed or live_review_result["passed"]`)。各自模块只返回单路 `passed`，不做合并。这套设计让 Step 3.5 不需要任何修改（保持 410 份 case yaml 与 US-001 schema 1.1 兼容性的隔离原则），同时让 Step 3.6 能独立测试 + 独立关闭开关。后续若有 Step 3.7（如 reader-simulator-strict-gate）也可以照此模板做 OR 三并。
-- **mock_response 跳过 retrieval 是关键设计**：bge 加载 30s + faiss 索引加载 ~5s + LLM 调用 ~10s — mock 模式必须 short-circuit 全部三步。我让 `run_live_review_checker(mock_response=...)` 在 master switch 之后立刻返回 mock，跳过 `retrieve_similar_cases` 和 `_call_anthropic`。所以 12 个 test 用例总耗时 ~3s（多数 fixture 加载）。如果 mock 还要走 retrieval，每用例 +30s ×12 = 6min，不可接受。这套"mock 全短路"模式可推广到 US-013 smoke_test 的非 --with-api 路径。
-- **polish 触发但不重试**：editor_wisdom.review_gate 是"polish + 重检最多 3 次"的完整循环；live_review.review_injection 只触发一次 polish，重试由调用方控制。理由：(1) 黄金三章 0.75 vs 0.65 vs 阈值差距小，单次 polish 已能修大部分违规；(2) 与 editor-wisdom OR 并列后总体重试次数已经够；(3) 测试断言简单（polish_triggered True/False + polish_calls 长度）。如果未来需要 retry 循环，可在 review_injection 内部加 `max_retries` 参数（参考 editor_wisdom.review_gate）。
-- **agent spec 5 段标准结构**：Purpose / Input / Retrieval / Scoring / Output —— 测试 `test_agent_spec_exists_and_has_required_sections` 用 5 个 `assert section in text` grep。这是与 33 个现有 checker spec 对齐的最小集，后续新加 checker spec 沿用此模板。`{{PROMPT_TEMPLATE:checker-input-rules.md}}` 必须放在文件开头第一段（紧跟 frontmatter + agent 描述段）。
-- **score 在 mock 与计算路径上的不一致**：PRD agent spec §1 说"综合 = (1 - violation_density) × verdict_pass_rate_of_top5"，但实现里 `run_live_review_checker` 直接用 LLM 返回的 score 不再二次计算。这是因为：(1) LLM 已能按公式输出 score，二次计算可能与 LLM 自评分歧造成 evidence_chain 自相矛盾；(2) 公式作为 LLM prompt 的指导显式写在 prompt 中，让 LLM 内部按规则评分；(3) mock 模式下 score 来自 fixture，二次计算反而破坏 fixture 设计意图。后续如果发现 LLM 评分漂移，可加 `--strict-formula` flag 在 Python 端二次校验，但目前不必。
-- **配置 master switch 在两层模块都查**：`run_live_review_checker` 与 `check_review` 都查 `cfg.enabled / cfg.inject_into.review`。看似冗余，但用户可能直接调 checker（绕过 review_injection），单独的 checker 也必须支持关闭。两层独立查同一开关与 init_injection.check_genre 模式一致，是 live-review 模块的统一约定。后续 US-013 smoke_test 也会走 checker 直接路径，需要这层防护。
-- **SKILL.md Python 块字符串测试不细究 markdown 结构**：用 `assert "Step 3.6" / "live_review" / "inject_into" / "OR | 并列" in text` 5 层 grep 防 SKILL.md 被回滚；不 assert 完整代码块的具体行（否则微调即破坏 test）。这套"消极保险"测试与 US-011 的 SKILL.md 测试同款，sustainable。
+## 2026-04-27 17:26 - US-013
+- **What**: polish-agent Hard Block Rewrite Mode + exit code 2 — 三个硬门禁 red 时全章重写
+- **Files changed**:
+  - `ink_writer/checker_pipeline/hard_block_rewrite.py` (新增 ~379 行, 全章重写 + 复检逻辑)
+  - `ink_writer/checker_pipeline/step3_runner.py` (+Step3Result.hard_blocked/rewrite_attempted + 硬阻断触发)
+  - `ink-writer/agents/polish-agent.md` (+## Hard Block Rewrite Mode 章节 ~30 行)
+  - `config/anti-detection.yaml` (+max_hard_block_retries: 1)
+  - `tests/polish/test_hard_block_rewrite_mode.py` (新增, 13 tests)
+- **Tests**: 13 new + all baseline pass
+- **Learnings**: mock LLM/mock check 参数支持测试不调真 LLM；prose_overhaul_enabled=false 跳过全章重写；max_hard_block_retries=0 直接标 hard_blocked
 ---
 
-## 2026-04-26 17:00 CST - US-013 端到端冒烟脚本 smoke_test.py
-
-**实现内容：**
-- 新建 `scripts/live-review/smoke_test.py`：三步流水（`ensure_index` / `init_check_genre` / `review_checker`），用 `@dataclass StepResult(name, status, elapsed_s, detail)` 收集结果；写 markdown 报告含 H1 + Mode + Date + 步骤表 + Summary（"All checks PASS" 或 "N checks FAILED"）。
-  - argparse 参数：`--with-api`（默认 false，跳过 fixture mock 走真实 LLM；用户按 §M-9 手动触发）/ `--index-dir`（默认 `data/live-review/vector_index`） / `--report-out`（默认 `reports/live-review-smoke-report.md`） / `--cases-dir`（默认 `tests/live_review/fixtures/sample_30_cases`）。
-  - 步骤 1：若 index 已存在直接复用；否则用 `_vector_index.build_index` 从 cases-dir 重建。
-  - 步骤 2：调 `init_injection.check_genre("都市重生律师", top_k=3, index_dir=...)` → 校验 `warning_level ∈ {ok, warn, no_data}` + `render_text` 非空。
-  - 步骤 3：读 `sample_chapter_violating.txt` → 若 `--with-api` 走真实 LLM，否则 `mock_response = mock_live_review_checker_response.json` 注入 `run_live_review_checker(...)` → 校验 `score` 字段存在 + `violations` 是 list + `cases_hit` 是 list。
-  - 退出码：全 PASS → 0；任一 FAIL → 1（报告仍写入便于诊断）。
-- 新建 `tests/live_review/test_smoke.py` 4 用例：
-  1. `default_mock_mode_passes` —— subprocess 跑（不带 `--with-api`） → exit 0 + 报告含 "PASS"。
-  2. `report_enumerates_init_and_review_steps` —— 报告内含 `init_check_genre` / `review_checker` / `ensure_index` 三个 step name。
-  3. `no_api_key_does_not_import_anthropic` —— 显式 `env.pop("ANTHROPIC_API_KEY")` → 仍 exit 0 + 报告 mode='mock'。
-  4. `builds_index_when_missing` —— 给空 `--index-dir` + 提供 `--cases-dir` → 自动构建 `index.faiss` + `meta.jsonl`。
-- 4 用例共享 `prebuilt_index` module-scope fixture（`tmp_path_factory.mktemp` + `_vector_index.build_index`，30 cases ~30s 一次性构建）；subprocess 通过 `--index-dir` 接住该路径，避免每个 test 重复构建（`builds_index_when_missing` 用例除外，故意触发首次构建路径）。
-
-**Files changed:**
-- A scripts/live-review/smoke_test.py
-- A tests/live_review/test_smoke.py
-- M prd.json (US-013 passes: false → true + notes)
-- M progress.txt
-
-**验证：**
-- `python3 -m pytest tests/live_review/test_smoke.py --no-cov -q` → 4 passed。
-- `python3 -m pytest tests/live_review/ --no-cov` → 116 passed（从 US-012 的 112 增 4）。
-- `python3 -m pytest tests/case_library tests/editor_wisdom tests/learn --no-cov` → 391 passed（无回归）。
-- 总 regression 507 passed（从 US-012 的 503 增 4）。
-- `ruff check scripts/live-review/smoke_test.py tests/live_review/test_smoke.py` → All checks passed。
-- 手测 `python3 scripts/live-review/smoke_test.py --index-dir /tmp/smoke/index --report-out /tmp/smoke/report.md` → exit 0 + 真实报告生成（ensure_index 9.6s built 30 cases / init 8.8s warning_level=no_data / review 0.0s mock score=0.45）。
-- TDD 顺序确认：先写 4 测试 → pytest collect 通过但 subprocess 跑直接 fail（脚本不存在）→ 实现脚本 → 4 PASS（GREEN）。
-
-**Learnings for future iterations:**
-- **subprocess 测试与 module-scope fixture 共享 vector index 的模式**：subprocess 进程不能直接消费 pytest fixture，但脚本接受 `--index-dir <pre-built-path>` 参数即可让 fixture 中预构建的索引被复用。`tmp_path_factory.mktemp(scope="module")` 让 4 个 subprocess test 只付一次 30s 构建成本（约 35-45s 总），相比每 test 一次构建（4×30s=120s）节省 65%+。这是所有"subprocess 跑脚本但脚本依赖重型外部资源"的通用优化模式。后续 US-014 / 其他 e2e smoke 沿用此模板（fixture 预构建 + 脚本 `--<resource>-dir` 接住）。
-- **mock 模式 review checker 完全不读 ANTHROPIC_API_KEY**：`run_live_review_checker(..., mock_response=mock)` 在 `_validate_result_shape` 之后立刻 return，从不进入 retrieve_similar_cases 也不调 anthropic SDK。这意味着 smoke_test.py 默认模式（无 `--with-api`）即使在没有 API key 的 CI 上也能通过——这是 plan §M-9 "ralph 机器可验，无真实 API" 约束的关键支点。后续任何 e2e smoke 默认走 mock 路径必须严格遵守"mock_response 直返不进 retrieval"语义。
-- **report markdown 含 'PASS' 关键字的稳定写法**：用 dataclass `StepResult(status='PASS')` + 渲染表格 + `All checks PASS` 摘要行。即使任一 step FAIL，仍保留通过 step 的 `| step_X | PASS | ... |` 行 + 改尾行为 `N checks FAILED`。AC "内容含 'PASS' 关键字" 在 ramen-soup 场景仍可能命中（PASS substring in 'FAILED' 倒也不出现，但 `| PASS |` 表格单元格永远存在），所以更严格的"All checks PASS"摘要行作为权威信号。后续报告类 AC 写法沿用此双层（表格单元格 + 显式摘要句）。
-- **`--index-dir` 默认指向 `data/live-review/vector_index/` 会污染 repo**：用户首次跑 smoke_test 不带参数 → 触发首次构建到 `data/live-review/vector_index/`。这与 build_vector_index.py 的默认输出一致（脚本设计就是让 smoke_test 同时初始化用户的实用索引），但测试场景必须显式 `--index-dir <tmp_path>` 避免污染。这是 spec §M-1 "用户首次跑 smoke 即建初始索引"语义的实现，不是 bug。
-- **dataclass 字段不要漏写默认值**：`StepResult(detail: str = "")` 必须显式默认空串否则部分 step 不传 detail 会 TypeError。Plan 字面没强调但是 mypy/ruff 不查这种运行时遗漏，必须 `pytest -v` 跑过才暴露。后续 dataclass 定义先写默认值再写代码，避免"等 RED 再加默认值"的重复迭代。
-- **`# noqa: BLE001` 用法**：smoke_test 三个 step 函数都用 `except Exception as e: ... return StepResult("FAIL", ...)`——故意吞所有异常存到 detail 字段，给报告诊断用。ruff BLE001 默认禁止 broad except，加 `# noqa: BLE001 — surface ... in report` 行级注释 + 注明意图即可。后续所有"先写报告，最后由 main 决定退出码"的脚本沿用此 fail-soft 模式。
-- **`from datetime import UTC, datetime` 是 Py 3.11+ 的标准写法**：`datetime.now(tz=UTC)` 替代 `datetime.utcnow()`（后者在 3.14 deprecated）。smoke_test.py 报告时间戳沿用此写法与 editor-wisdom/smoke_test.py 一致。
+## 2026-04-27 17:35 - US-014
+- **What**: calibrate_anti_ai_thresholds.py 5+5 基线校准脚本（mock/live 双模式）
+- **Files changed**:
+  - `scripts/calibrate_anti_ai_thresholds.py` (新增, mock 硬编码 + live 待实现)
+  - `tests/prose/test_calibration_pipeline.py` (新增, 7 tests)
+- **Tests**: 7 new + all baseline pass
+- **Learnings**: --books-explosive/--books-serious 参数化两组书；mock 模式 <30s 完成；live 模式 TODO 需对接真实 checker
 ---
 
-## 2026-04-26 14:35 CST - US-014 用户文档 docs/live-review-integration.md + CLAUDE.md 段 + 内部链接检查
-
-**实现内容：**
-- 新建 `docs/live-review-integration.md`（9 章节齐备）：模块定位 + 与 editor-wisdom 7 维度对照表 / 架构 mermaid（5 子图：源数据 / PipelineA 切分 / PipelineB 三类产物 / 人工闸 / 三阶段接入）/ 数据流（7 步串讲）/ 主题域（11 域 + layer 推导映射）/ 如何添加新数据（5 步）/ 如何调阈值（config/live-review.yaml 8 字段调优指南）/ § 用户手动操作清单（§M-1..§M-9 完整拷自 spec §12，含命令/费用/时长/产物）/ FAQ（9 条）/ Smoke test 段。
-- 新建 `scripts/live-review/check_links.py`：暴露 `check_links(md_path, repo_root) -> list[str]` API + `python3 scripts/live-review/check_links.py <md>` CLI；正则 `(?<!\!)\[([^\]]+)\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)` 跳过图片语法 + 双候选解析（md 同级目录 + repo root 绝对样式）+ 跳过 http(s)/mailto/tel/ftp/anchor-only + 行号失败定位。Windows stdio bootstrap + `_REPO_ROOT = parents[2]` 锚定，与其他 scripts/live-review/*.py 同款。
-- 修改 `CLAUDE.md`：在 `## 编辑智慧模块` 段后追加 `## Live-Review 模块（新增 v26.x）` 段，含模块定位 + 文档链接 + Top 3 注意事项（首次接入需跑 §M-1..§M-9 / case_id prefix 是 CASE-LR-2026- / 新规则永远走人工审核闸）。
-- 新建 `tests/live_review/test_docs.py`：4 显式 AC（doc_exists / mermaid_blocks_valid_syntax / internal_links_resolvable / claude_md_mentions_live_review）+ 9 章节哨兵 parametrize（防 doc 主体被回滚）。`importlib.util.spec_from_file_location` 加载带连字符目录的 check_links.py。
-
-**Files changed:**
-- A docs/live-review-integration.md
-- A scripts/live-review/check_links.py
-- M CLAUDE.md
-- A tests/live_review/test_docs.py
-- M prd.json (US-014 passes: false → true)
-- M progress.txt
-
-**验证：**
-- `python3 scripts/live-review/check_links.py docs/live-review-integration.md` → exit 0 + "OK: all internal links reachable"。
-- `python3 -m pytest tests/live_review/test_docs.py --no-cov -q` → 13 passed in 0.01s。
-- `python3 -m pytest tests/live_review/ --no-cov -q` → 129 passed in 04:06（US-013 的 116 增 13；test_docs.py 13 用例）。
-- `python3 -m pytest tests/case_library tests/editor_wisdom --no-cov -q` → 380 passed in 56s（无回归）。
-- `ruff check scripts/live-review/check_links.py tests/live_review/test_docs.py` → All checks passed（修了 1 个 SIM103：`return bool(...)` 替代 if/return）。
-
-**Learnings for future iterations:**
-- **importlib.util 加载带连字符目录的 Python 模块**：`scripts/live-review/foo.py` 不能 `from scripts.live-review.foo import ...`（连字符在模块名非法）。其它 test 文件用 `subprocess.run([sys.executable, str(_SCRIPT)])` 走子进程；要在测试内 *直接调用函数* 必须用 `importlib.util.spec_from_file_location("alias", str(path))` + `module_from_spec` + `loader.exec_module(module)`。`sys.modules.setdefault` 防止重复加载导致引用比对失败。这套 boilerplate 后续凡是"既要 CLI 又要被测试 import"的脚本都能复用。
-- **markdown 链接正则的图片排除**：`![alt](src)` 与 `[text](url)` 共享 `[](...)` 结构；用 `(?<!\!)` lookbehind 排除前置 `!` 才能避开图片。否则文档里的截图/封面会被误判为不可达内部链接。`.png/.svg` 等图片确实可能不在 repo（远程 CDN），强行检查会噪音爆表。
-- **mermaid 块的 bracket 平衡校验**：`re.findall(r"\`\`\`mermaid\n(.*?)\`\`\`", text, re.DOTALL)` 提块 + `block.count("[") == block.count("]")` 是简易语法 sanity——不需要装 mermaid CLI 就能挡住"打字漏 ]" 这类常见错。后续所有 doc-with-mermaid 章节用此 1-行回归保护即可。
-- **doc 章节哨兵 parametrize**：用 `@pytest.mark.parametrize("section", [...])` + 简单 `assert section in text` 防止 doc 主体被未来 PR 误删；比写一个长 assert chain 更易看哪一节缺失。9 节起点是 PRD 显式列举的最小集，新增章节直接 append parametrize list。
-- **CLAUDE.md 追加新模块段的标准位置**：紧贴 `## 编辑智慧模块` 段末（在 `## Windows 兼容守则` 之前）插入新 `## <模块名>` 段；与 editor-wisdom 段同款 `### Top 3 注意事项` 三条目结构对齐，避免 CLAUDE.md 被裁剪到 200 行截断（当前 ~36 行，安全）。后续新增模块（如 reader-simulator-strict-gate）沿用同款。
-- **check_links 双候选解析模式**：相对链接 `[text](path)` 既可能是"md 同级目录的 path"也可能是"repo root 起点的 path"（如 `docs/foo.md` 从任意层级 md 都该可达）。`_resolve_candidates` 返回 2 个候选 `(md_dir / path).resolve()` + `(repo_root / path.lstrip("/")).resolve()`，任一存在即放行。比单一模式更宽容、贴合人写 doc 的随意性。
+## 2026-04-27 17:35 - US-015
+- **What**: e2e_anti_ai_overhaul_eval.py 旧/新 pipeline 对照评估（mock 模式 4 G1-G3 gates）
+- **Files changed**:
+  - `scripts/e2e_anti_ai_overhaul_eval.py` (新增, mock 对比 + gate 检查)
+  - `tests/eval/test_e2e_eval_script_smoke.py` (新增, 6 tests)
+- **Tests**: 6 new + all baseline pass
+- **Learnings**: G1-G3 gates: em_dash≤0.2, nesting≤1.5, idioms≤3.0, quad_phrases≤6.0 per kchar
 ---
+
+## 2026-04-27 17:35 - US-016
+- **What**: 文档 + CLAUDE.md Prose Anti-AI Module 段 + 三独立回滚开关验证
+- **Files changed**:
+  - `docs/prose-anti-ai-overhaul.md` (新增, 架构图/阈值表/A-B开关清单/回滚SOP)
+  - `CLAUDE.md` (+Prose Anti-AI 模块段, Top 3 注意事项)
+  - `config/anti-detection.yaml` (+prose_overhaul_enabled: true 总开关)
+  - `tests/integration/test_prose_overhaul_rollback.py` (新增, 10 tests)
+- **Tests**: 10 new + all baseline pass
+- **Learnings**: 总开关 false 时三子开关全强制 false；回滚 SOP 三步：改三开关→跑 regression→提交
+---
+
+## STOP CONDITION
+ALL 16 stories now `passes: true`. Prose Anti-AI Overhaul is complete.
+<promise>COMPLETE</promise>

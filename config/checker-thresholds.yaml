@@ -98,6 +98,19 @@ chapter_hook_density:
   case_ids:
     - CASE-2026-M4-0007
 
+# ============================================================
+# prose Anti-AI Overhaul — new checkers (2026-04-27)
+# ============================================================
+
+colloquial:
+  # 白话度 5 维度门禁。enabled 受 prose_overhaul_enabled（config/anti-detection.yaml）联动；
+  # prose_overhaul_enabled=false 时本段 enabled 被强制 false。
+  enabled: true
+  block_threshold: 70
+  warn_threshold: 80
+  case_ids:
+    - CASE-2026-0403
+
 # 策划期独立 dry-run 计数器（与 M3 章节级 dry_run 段独立）
 planning_dry_run:
   enabled: true

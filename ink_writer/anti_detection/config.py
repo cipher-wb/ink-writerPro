@@ -17,6 +17,12 @@ class ZeroToleranceRule:
     id: str
     description: str
     patterns: list[str] = field(default_factory=list)
+    whitelist_patterns: list[str] = field(default_factory=list)
+    # "regex" (default): patterns are matched via re.search.
+    # "density": patterns are counted; density (per 千字) > density_threshold triggers.
+    kind: str = "regex"
+    # Used only when kind == "density". Max occurrences per 1000 chars before trigger.
+    density_threshold: float = 0.0
 
 
 @dataclass
@@ -85,6 +91,9 @@ def load_config(path: Path | str | None = None) -> AntiDetectionConfig:
                     id=str(item.get("id", "UNKNOWN")),
                     description=str(item.get("description", "")),
                     patterns=list(item.get("patterns", [])),
+                    whitelist_patterns=list(item.get("whitelist_patterns", [])),
+                    kind=str(item.get("kind", "regex")),
+                    density_threshold=float(item.get("density_threshold", 0.0)),
                 ))
         kwargs["zero_tolerance"] = rules
 

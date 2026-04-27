@@ -1,6 +1,6 @@
 # Ink Writer Pro
 
-[![Version](https://img.shields.io/badge/Version-26.0.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-26.1.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-blue.svg)]()
 
@@ -12,7 +12,7 @@
 
 - **一条命令批量产出**：`/ink-auto 10` 自动写 10 章，每章 2200+ 字，写完自动审查、自动修复、大纲不够自动生成
 - **写 300 章不崩**：30+ 张数据表记录角色状态、伏笔、时间线，跨章语义检索确保前后一致
-- **过 AI 检测**：基于 117 本起点标杆统计校准，10 层反 AI 检测 + 场景写作技法，从源头写出人类特征文字
+- **过 AI 检测**：基于 117 本起点标杆统计校准，标点指纹零容忍 + 装逼词黑名单 + 白话度门禁 + 直白度七维评分 + 爆款示例 RAG few-shot + Hard Block Rewrite Mode，从标点、词汇、句式、结构多层消除 AI 痕迹
 - **288 条编辑建议内化**：起点金牌编辑的写作建议结构化为硬约束，不符合直接拦截重写
 - **快速开书**：`/ink-init --quick` 一键生成 3 套完整方案（书名/角色/冲突/金手指），选一个直接开写
 - **断点续写**：中途断了用 `/ink-resume` 从断点继续，已写章节一字不丢
@@ -178,7 +178,7 @@ A: 分层检查点：每 5 章 review+fix / 每 10 章 audit quick / 每 20 章 
 A: 37 种题材模板覆盖修仙、玄幻、都市、末世、言情、悬疑、规则怪谈、系统流、电竞、历史穿越等。
 
 **Q: 能过起点审核吗？**
-A: 10 层反 AI 检测 + 117 本标杆统计校准 + 288 条编辑建议硬约束 + 场景写作技法，从句式、结构、风格多层面接近人类写作。
+A: 七层文笔反 AI 改造（标点指纹零容忍/装逼词黑名单+替换映射/白话度五维门禁/直白度七维评分/writer-agent 对话+动作驱动律/爆款示例 RAG few-shot/Hard Block Rewrite Mode）+ 117 本标杆统计校准 + 288 条编辑建议硬约束 + 场景写作技法，从标点、词汇、句式、结构多层面接近人类写作。
 
 **Q: Windows 上怎么用？**
 A: 和 Mac 完全一样。装好 Python 3.12+ 和 Claude Code，安装插件后直接用。所有 `/ink-*` 命令在两个平台上行为一致。底层 PowerShell 脚本（`.ps1`）和 bash 脚本（`.sh`）并行维护，SKILL.md 按平台自动选择。遇到 UTF-8 乱码 / PowerShell 执行策略 / symlink 权限 / index.db 锁冲突等 Windows 特有问题，见 [docs/windows-troubleshooting.md](docs/windows-troubleshooting.md)。
@@ -211,7 +211,8 @@ py -3 -c "import ink_writer; print('OK')"
 
 | 版本 | 说明 |
 |------|------|
-| **v26.0.0 (当前)** | **5 周质量治理 roadmap 100% 完成 — M3 + M4 + M5 三大 milestone 一次性发布** — 起点编辑评分 30/100 → 60+/100 的工业化产线**结构闭环**。**M5（v26）**：Layer 4 复发追踪（resolved → regressed 升 severity）+ Layer 5 元规则浮现（N=5 + LLM similarity > 0.80 提议合并 → 用户审批 `ink meta-rule {list,approve,reject}`）+ dashboard "M5 Case 治理" 标签页（4 大指标 + M3/M4 dry-run counter + 切换推荐）+ 周报 CLI（`ink dashboard report --week N` 输出 `reports/weekly/<year>-W<NN>.md`）+ A/B 通道（`config/ab_channels.yaml` + `--channel A\|B` flag + evidence_chain 加 channel 字段，向后兼容）+ user_corpus history-travel 样例 + ink-learn 改造（`--auto-case-from-failure` 每周限 5 + `--promote` 短期 → 长期）+ 作者手册 `docs/USER_MANUAL.md` 5 节 + 编辑反馈手册 `docs/EDITOR_FEEDBACK_GUIDE.md` 3 节。case schema 加 3 字段（`recurrence_history` / `meta_rule_id` / `sovereign`）向后兼容现有 410 active cases。pytest 3593 → 3808 passed（M3+M4+M5 累计 +215 新测试，零回归；含 `tests/integration/test_m4_e2e.py` 7 用例 + `tests/integration/test_m5_e2e.py` 6 用例）。tag `m5-final` 已 push 到 origin。 |
+| **v26.1.0 (当前)** | **Prose Anti-AI Overhaul — 文笔反 AI 味 + 爆款白话化深层重构** — 七层改造根治三大痛点：AI 化标点、行文绕读着累、装逼词藻堆叠。**第 1 层**：5 条标点 AI 指纹零容忍规则（双破折号/智能引号/英式连字符/过密顿号/过用省略号）。**第 2-3 层**：90+ 装逼词黑名单 × 3 域 + replacement_map 爆款替换。**第 4-5 层**：colloquial-checker 白话度 C1-C5 五维门禁 + directness-checker 扩展 D1-D7 七维全场景爆款档。**第 6 层**：writer-agent L12 对话+动作驱动律 + 爆款示例 RAG few-shot（语义检索引擎 + prompt 注入）。**第 7 层**：polish-agent Hard Block Rewrite Mode（三门禁任一 red → 全章 LLM 重写 → 复检 → hard_blocked exit code 2）。**评估+回滚**：5+5 基线校准脚本 + E2E 旧/新 pipeline 对照评估 + 三个独立回滚开关 + 总开关保证可降级。pytest 3808 → 3865 passed（+57 新测试，零回归）。`ralph/prose-anti-ai-overhaul`。 |
+| v26.0.0 | **5 周质量治理 roadmap 100% 完成 — M3 + M4 + M5 三大 milestone 一次性发布** — 起点编辑评分 30/100 → 60+/100 的工业化产线**结构闭环**。**M5（v26）**：Layer 4 复发追踪（resolved → regressed 升 severity）+ Layer 5 元规则浮现（N=5 + LLM similarity > 0.80 提议合并 → 用户审批 `ink meta-rule {list,approve,reject}`）+ dashboard "M5 Case 治理" 标签页（4 大指标 + M3/M4 dry-run counter + 切换推荐）+ 周报 CLI（`ink dashboard report --week N` 输出 `reports/weekly/<year>-W<NN>.md`）+ A/B 通道（`config/ab_channels.yaml` + `--channel A\|B` flag + evidence_chain 加 channel 字段，向后兼容）+ user_corpus history-travel 样例 + ink-learn 改造（`--auto-case-from-failure` 每周限 5 + `--promote` 短期 → 长期）+ 作者手册 `docs/USER_MANUAL.md` 5 节 + 编辑反馈手册 `docs/EDITOR_FEEDBACK_GUIDE.md` 3 节。case schema 加 3 字段（`recurrence_history` / `meta_rule_id` / `sovereign`）向后兼容现有 410 active cases。pytest 3593 → 3808 passed（M3+M4+M5 累计 +215 新测试，零回归；含 `tests/integration/test_m4_e2e.py` 7 用例 + `tests/integration/test_m5_e2e.py` 6 用例）。tag `m5-final` 已 push 到 origin。 |
 | v25.0.0 | **M4 P0 上游策划层 — ink-init / ink-plan 阶段强制策划期审查** — 在开新书阶段把 spec §1.3 编辑诊断的 5/8 上游扣分（题材老套 / 金手指模糊 / AI 起名 / 主角动机牵强 / 金手指出场过晚 / 主角骨架级被动 / 章节钩子稀疏）阻断在策划期。新增 7 个 checker：4 个 ink-init（`genre-novelty-checker` LLM 比对起点 top200 / `golden-finger-spec-checker` 4 维度 LLM / `naming-style-checker` 纯规则起名词典 / `protagonist-motive-checker` 3 维度 LLM）+ 3 个 ink-plan（`golden-finger-timing-checker` regex+LLM 双重 / `protagonist-agency-skeleton-checker` 卷骨架级 / `chapter-hook-density-checker`）。配套 2 个数据资产：起点 top200 简介库爬虫（合规：robots.txt + 1 req/s 限速 + UA 礼貌；如反爬触发则 manual-fallback）+ LLM 高频起名词典 331 条 + 24 首字 + 24 末字字根模式（`data/market_intelligence/llm_naming_blacklist.json`）。7 个上游 seed cases（`CASE-2026-M4-0001~0007`）batch approve 入活。`planning_evidence_chain.json` schema（复用 M3 evidence_chain + `phase` 字段向后兼容）+ `--skip-planning-review` 紧急绕过 + `data/.planning_dry_run_counter` 独立护栏。`ink-init` / `ink-plan` SKILL.md 末尾追加 Step 99 章节（含 PowerShell sibling）。tag `m4-p0-planning`。 |
 | v24.0.0 | **M3 P1 下游闭环 — writer-self-check + 阻断重写 + evidence_chain** — 30→50 分质量拐点。把 M2 备齐的 403 cases 注入 writer 链路：写完比对 → 阻断 → 病例驱动重写 → 通过 → 复发监测。新增 `ink_writer/writer_self_check/`（rule_compliance + cases_addressed/violated）+ 2 个章节级 checker（`conflict-skeleton-checker` + `protagonist-agency-checker`）+ rewrite_loop orchestrator（max 3 轮 + 一次一个 case 按 severity 排序 + needs_human_review 兜底 + 4 版保留）+ 现有 3 checker 升级阻断（`reader_pull / sensory_immersion / high_point` 通过 `block_threshold_wrapper`）+ `evidence_chain.json` schema 强制必带（缺则 `EvidenceChainMissingError`）+ dry-run 5 章 auto-switch 真阻断 + 自动出 dry_run_report 报告 + ink-write SKILL.md Step 1.5 集成。`config/checker-thresholds.yaml` 集中阈值（M3 8 段）。LLM 切 glm-4.6（M2 切片用 glm-4-flash）。pytest 3593 → 3700+ passed（M2 partial baseline + M3 +14 US 新测试零回归）。tag `m3-p1-loop`。 |
 | v23.0.0 | **章节字数硬上限对等硬下限 — 删除 LLM 自行豁免路径** — 修复上下限非对称硬化：旧版 `check_word_count` 对超 max_words 仅返回 `severity='soft'`、`ink-auto.sh` 只卡 <2200 单侧、SKILL.md 2A.5 的 >4000 字规则有"关键战斗章/高潮章/卷末章可放行"被 LLM 自我滥用豁免、用户写入 `preferences.json` 的 `pacing.chapter_words` 无任何 caller 读取（实际事故：第 1 章写出 1 万字审查仅软警告放行）。v23 让字数上限与下限对等硬约束，彻底删除 LLM 自行豁免路径：(1) `check_word_count` 新增 `max_words_hard/max_words_soft` 双阈值，超 hard 必返 `severity='hard'`；(2) 新增 `ink_writer/core/preferences.py::load_word_limits` 读取 `pacing.chapter_words` ±500 推导 `[min, max_hard]`，硬下限 2200 永不降（`MIN_WORDS_FLOOR` 红线）；(3) `extract_chapter_context.build_chapter_context_payload` 注入 `target_words_min/max` 透传到执行包，writer-agent 起草阶段硬约束；(4) `ink-auto.sh/ps1` 对称增补 `> MAX_WORDS_HARD` 分支 + 精简循环 `SHRINK_MAX_ROUNDS=3`（下限补写 1 轮不变零回归）；(5) SKILL.md 2A.5 删除按章型/百分比的 LLM 自判豁免条款（`关键.*章.*豁免 \| 上浮 33%` 全仓零匹配）。pytest 3206 → 3593 passed（US-001/002/003/004/006 累计 +40 新测试：word_count 双阈值 4 + preferences 加载 14 + execution pack 注入 7 + ink-auto 上限分支 14 + E2E fixture 5；零回归） |

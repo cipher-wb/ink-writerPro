@@ -15,6 +15,10 @@ Rules applied (PRD US-008 AC):
    条目 → 直接删除 (LLM prompt 会做更细的替换;这里只做硬删除确保 hit_count
    清零)。``empty_phrases`` / ``pretentious_metaphors`` 的处理交给 LLM prompt
    (replacement 字段是启发式建议而非可直接插入的字符串)。
+1.5 Replacement Map Pass (PRD US-003): 在 abstract_adjectives 删除之后、长句拆分
+   之前，按 ``prose-blacklist.yaml`` 的 ``replacement_map`` 做机械替换 (装逼词 →
+   爆款词，多候选取首项)。可选 chapter_no + diff_dir 参数将替换前/后正文写到
+   ``reports/polish_diff/chapter_NNN.diff``。
 2. 长句拆分: 单句 > ``max_sentence_len`` 字时按句中逗号/分号尝试拆为两句,拆
    后两段均 ≤ ``max_sentence_len``。
 3. 连续 ≥2 个修辞格(比喻/拟人/排比标记词): 连续命中时保留第一处,删除后续。
@@ -22,9 +26,10 @@ Rules applied (PRD US-008 AC):
 5. 70% 字数下限保护: 若精简后字数 < ``min_retention_ratio`` × 原字数, 回滚
    到原文 (防过度删减损失剧情信息)。
 
-The helper is **conservative by design**: it will only drop characters, never
-add or rephrase. LLM-level rewrites (e.g. 形容词→动词+细节) remain the
-polish-agent's job — this helper is the programmable deterministic floor.
+The helper is **conservative by design**: it will only drop characters or do
+literal replacement_map substitutions, never add or rephrase. LLM-level
+rewrites (e.g. 形容词→动词+细节) remain the polish-agent's job — this helper
+is the programmable deterministic floor.
 """
 
 from __future__ import annotations
@@ -32,8 +37,13 @@ from __future__ import annotations
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass, field
+from pathlib import Path
 
-from ink_writer.prose.blacklist_loader import Blacklist, load_blacklist
+from ink_writer.prose.blacklist_loader import (
+    Blacklist,
+    ReplacementMap,
+    load_blacklist,
+)
 from ink_writer.prose.directness_checker import is_activated as _directness_is_activated
 
 # ---------------------------------------------------------------------------
@@ -67,6 +77,8 @@ class SimplificationReport:
     blacklist_hits_after: int
     rolled_back: bool
     rules_fired: tuple[str, ...] = field(default_factory=tuple)
+    replacement_hits: tuple[tuple[str, str, int], ...] = field(default_factory=tuple)
+    replacement_diff_path: str | None = None
 
     @property
     def reduction_ratio(self) -> float:
@@ -74,6 +86,30 @@ class SimplificationReport:
         if self.original_char_count == 0:
             return 0.0
         return 1.0 - (self.simplified_char_count / self.original_char_count)
+
+
+@dataclass(frozen=True)
+class ReplacementResult:
+    """Outcome of :func:`apply_replacement_map`.
+
+    ``hits`` is an ordered tuple of ``(source_word, replacement, count)`` —
+    one entry per source word that fired at least once, preserving YAML order.
+    ``diff_path`` is the absolute path to the written diff file if both
+    ``chapter_no`` and ``diff_dir`` were supplied AND replacements actually
+    occurred; ``None`` otherwise (no diff is written for no-op runs).
+    """
+
+    text: str
+    hits: tuple[tuple[str, str, int], ...] = field(default_factory=tuple)
+    diff_path: str | None = None
+
+    @property
+    def total_hits(self) -> int:
+        return sum(count for _, _, count in self.hits)
+
+    @property
+    def changed(self) -> bool:
+        return self.total_hits > 0
 
 
 # ---------------------------------------------------------------------------
@@ -116,6 +152,8 @@ def simplify_text(
     split_target_len: int = 20,
     empty_paragraph_sentence_floor: int = 3,
     min_retention_ratio: float = 0.70,
+    chapter_no: int | None = None,
+    diff_dir: Path | str | None = None,
 ) -> SimplificationReport:
     """Apply the deterministic Simplification Pass rules to ``text``.
 
@@ -151,6 +189,8 @@ def simplify_text(
             blacklist_hits_after=0,
             rolled_back=False,
             rules_fired=(),
+            replacement_hits=(),
+            replacement_diff_path=None,
         )
 
     if blacklist is None:
@@ -168,6 +208,19 @@ def simplify_text(
     if current_after_blacklist != current:
         rules_fired.append("blacklist_abstract_drop")
         current = current_after_blacklist
+
+    # Rule 1.5 (PRD US-003): replacement_map pass — 装逼词 → 爆款词机械替换。
+    # 必须在 abstract_adjective 删除之后、长句拆分之前；否则删除会破坏前后文，
+    # 拆句会改变多字符词的位置。
+    replacement_result = apply_replacement_map(
+        current,
+        replacement_map=blacklist.replacement_map,
+        chapter_no=chapter_no,
+        diff_dir=diff_dir,
+    )
+    if replacement_result.changed:
+        rules_fired.append("replacement_map_pass")
+        current = replacement_result.text
 
     # Rule 4: compress pure-environment paragraphs > 3 sentences to 2.
     current_after_empty = _compress_empty_paragraphs(current, empty_paragraph_sentence_floor)
@@ -200,6 +253,8 @@ def simplify_text(
             blacklist_hits_after=hits_before,
             rolled_back=True,
             rules_fired=tuple(rules_fired),
+            replacement_hits=replacement_result.hits,
+            replacement_diff_path=replacement_result.diff_path,
         )
 
     return SimplificationReport(
@@ -210,7 +265,126 @@ def simplify_text(
         blacklist_hits_after=hits_after,
         rolled_back=False,
         rules_fired=tuple(rules_fired),
+        replacement_hits=replacement_result.hits,
+        replacement_diff_path=replacement_result.diff_path,
     )
+
+
+# ---------------------------------------------------------------------------
+# Replacement Map Pass (PRD US-003)
+# ---------------------------------------------------------------------------
+
+
+_DEFAULT_DIFF_DIR_NAME = "polish_diff"
+
+
+def apply_replacement_map(
+    text: str,
+    *,
+    replacement_map: ReplacementMap | None = None,
+    chapter_no: int | None = None,
+    diff_dir: Path | str | None = None,
+) -> ReplacementResult:
+    """Apply ``replacement_map`` literally to ``text`` (PRD US-003).
+
+    Behaviour:
+
+    * Iterates source words in YAML order, longest-first within ties so that
+      e.g. ``凝视`` is replaced before any 1-char prefix could collide.
+    * Each source word is replaced by the **first** entry of its replacement
+      list (``ReplacementMap.lookup(word)[0]``); multi-candidate semantic
+      choice is the LLM's job, not this deterministic pass.
+    * If ``chapter_no`` and ``diff_dir`` are both supplied AND replacements
+      actually fired, a unified-style diff is written to
+      ``{diff_dir}/chapter_{NNN}.diff`` (3-digit zero-padded).
+
+    Returns
+    -------
+    ReplacementResult
+        Always non-None. ``hits`` is empty when no source words appeared;
+        ``diff_path`` is ``None`` for no-op calls or when ``chapter_no`` /
+        ``diff_dir`` weren't supplied.
+    """
+    if replacement_map is None:
+        replacement_map = load_blacklist().replacement_map
+
+    if not text or not replacement_map:
+        return ReplacementResult(text=text, hits=(), diff_path=None)
+
+    # YAML order is the canonical "first-listed替换 wins" contract; longest-first
+    # tie-break avoids 凝 (1 char) eating into 凝视 (2 char) substring.
+    source_words = sorted(replacement_map.words(), key=lambda w: (-len(w), 0))
+
+    current = text
+    hits: list[tuple[str, str, int]] = []
+    for word in source_words:
+        replacements = replacement_map.lookup(word)
+        if not replacements:
+            continue
+        replacement = replacements[0]
+        if not word or word == replacement or word not in current:
+            continue
+        count = current.count(word)
+        if count <= 0:
+            continue
+        current = current.replace(word, replacement)
+        hits.append((word, replacement, count))
+
+    diff_path: str | None = None
+    if hits and chapter_no is not None and diff_dir is not None:
+        try:
+            diff_path = _write_replacement_diff(
+                chapter_no=int(chapter_no),
+                original=text,
+                replaced=current,
+                hits=tuple(hits),
+                diff_dir=Path(diff_dir),
+            )
+        except OSError:
+            diff_path = None
+
+    return ReplacementResult(text=current, hits=tuple(hits), diff_path=diff_path)
+
+
+def _write_replacement_diff(
+    *,
+    chapter_no: int,
+    original: str,
+    replaced: str,
+    hits: tuple[tuple[str, str, int], ...],
+    diff_dir: Path,
+) -> str:
+    """Write a unified-style diff to ``diff_dir / chapter_{NNN}.diff``.
+
+    Single-source for the polish-agent's ``reports/polish_diff/`` artefact;
+    overwrites prior diffs for the same chapter (each polish run produces one
+    canonical diff).
+    """
+    import difflib
+
+    diff_dir.mkdir(parents=True, exist_ok=True)
+    target = diff_dir / f"chapter_{int(chapter_no):03d}.diff"
+
+    header_lines = [
+        f"# Replacement Map Pass — chapter {int(chapter_no):03d}",
+        f"# Hits: {sum(c for _, _, c in hits)} replacement(s) across {len(hits)} source word(s)",
+    ]
+    for src, rep, count in hits:
+        header_lines.append(f"#   {src} → {rep} ×{count}")
+    header_lines.append("")  # blank line before diff body
+
+    diff_iter = difflib.unified_diff(
+        original.splitlines(keepends=False),
+        replaced.splitlines(keepends=False),
+        fromfile=f"chapter_{int(chapter_no):03d}.before",
+        tofile=f"chapter_{int(chapter_no):03d}.after",
+        lineterm="",
+    )
+    diff_body = list(diff_iter)
+
+    payload = "\n".join(header_lines + diff_body) + "\n"
+    target.write_text(payload, encoding="utf-8")
+    return str(target.resolve())
 
 
 # ---------------------------------------------------------------------------
@@ -383,7 +557,9 @@ def _contains_any(text: str, needles: Iterable[str]) -> bool:
 
 
 __all__ = [
+    "ReplacementResult",
     "SimplificationReport",
+    "apply_replacement_map",
     "should_activate_simplification",
     "simplify_text",
 ]

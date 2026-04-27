@@ -132,16 +132,16 @@ def test_iter_relaxed_rules_yields_both_checkers():
         ("climax", 100, True),
         ("high_point", 7, True),
         # Non-directness scene_mode — never relax regardless of chapter
-        ("slow_build", 1, False),
-        ("emotional", 3, False),
-        ("other", 2, False),
-        # None + chapter bucket — golden-three fallback
+        ("slow_build", 1, True),
+        ("emotional", 3, True),
+        ("other", 2, True),
+        # None + chapter bucket — all activate (US-006)
         (None, 1, True),
         (None, 2, True),
         (None, 3, True),
-        (None, 4, False),
-        (None, 42, False),
-        (None, 0, False),
+        (None, 4, True),
+        (None, 42, True),
+        (None, 0, True),
     ],
 )
 def test_should_relax_prose_impact_matrix(scene_mode, chapter_no, expected):
@@ -155,14 +155,14 @@ def test_should_relax_prose_impact_matrix(scene_mode, chapter_no, expected):
         ("combat", 42, True),
         ("climax", 100, True),
         ("high_point", 7, True),
-        ("slow_build", 1, False),
-        ("emotional", 3, False),
-        ("other", 2, False),
+        ("slow_build", 1, True),
+        ("emotional", 3, True),
+        ("other", 2, True),
         (None, 1, True),
         (None, 2, True),
         (None, 3, True),
-        (None, 4, False),
-        (None, 0, False),
+        (None, 4, True),
+        (None, 0, True),
     ],
 )
 def test_should_relax_flow_naturalness_matrix(scene_mode, chapter_no, expected):
@@ -190,8 +190,8 @@ def test_activation_is_same_as_directness_checker():
 
 def test_chapter_no_fallback_handles_none_and_negative():
     # chapter_no=None / 0 / 负数 → 按 0 处理
-    assert should_relax_prose_impact(None, 0) is False
-    assert should_relax_flow_naturalness(None, 0) is False
+    assert should_relax_prose_impact(None, 0) is True
+    assert should_relax_flow_naturalness(None, 0) is True
 
 
 # ============================================================
@@ -431,22 +431,20 @@ def test_collect_filters_prose_impact_relaxed_in_golden_three_fallback():
     assert issues == []
 
 
-def test_collect_keeps_prose_impact_relaxed_in_slow_build():
+def test_collect_filters_prose_impact_relaxed_in_slow_build():
     metrics = _mk_metrics_prose_impact_relaxed_only()
     issues = collect_issues_from_review_metrics(
         metrics, scene_mode="slow_build", chapter_no=12
     )
-    # 非直白场景 → SHOT_MONOTONY / VISUAL_OVERLOAD 正常保留
-    sources = [i.source for i in issues]
-    assert len(issues) == 2
-    assert all(s.startswith("prose-impact-checker") for s in sources)
+    # US-006 全场景激活 → slow_build 也走直白模式，白名单规则被过滤
+    assert issues == []
 
 
-def test_collect_keeps_prose_impact_relaxed_when_scene_mode_omitted():
+def test_collect_filters_prose_impact_relaxed_when_scene_mode_omitted():
     metrics = _mk_metrics_prose_impact_relaxed_only()
-    # 默认参数 → 保持 v21 行为（不豁免）
+    # US-006: 默认参数也全场景激活 → 白名单规则被过滤
     issues = collect_issues_from_review_metrics(metrics)
-    assert len(issues) == 2
+    assert issues == []
 
 
 def test_collect_mixed_prose_impact_drops_relaxed_keeps_retained():
@@ -461,14 +459,14 @@ def test_collect_mixed_prose_impact_drops_relaxed_keeps_retained():
     assert any("CV_CRITICAL" in s for s in types_seen)
 
 
-def test_collect_mixed_prose_impact_full_in_slow_build():
+def test_collect_mixed_prose_impact_filters_in_slow_build():
     metrics = _mk_metrics_prose_impact_mixed()
     issues = collect_issues_from_review_metrics(
         metrics, scene_mode="slow_build", chapter_no=50
     )
     types_seen = {i.source.split("#", 1)[1] for i in issues}
-    # 非直白场景 → 所有 3 条都保留
-    assert "SHOT_MONOTONY" in types_seen
+    # US-006 全场景激活 → SHOT_MONOTONY 被过滤，WEAK_VERB_OVERLOAD/CV_CRITICAL 保留
+    assert "SHOT_MONOTONY" not in types_seen
     assert "WEAK_VERB_OVERLOAD" in types_seen
     assert any("CV_CRITICAL" in s for s in types_seen)
 
@@ -487,20 +485,18 @@ def test_collect_flow_naturalness_drops_only_relaxed_codes():
     assert "POV_INTRA_PARAGRAPH" in types_seen
 
 
-def test_collect_flow_naturalness_keeps_all_in_emotional():
+def test_collect_flow_naturalness_filters_relaxed_in_emotional():
     metrics = _mk_metrics_flow_naturalness_mixed()
     issues = collect_issues_from_review_metrics(
         metrics, scene_mode="emotional", chapter_no=80
     )
     types_seen = {i.source.split("#", 1)[1] for i in issues}
-    # emotional 是非直白场景 → 4 条全保留
-    for code in (
-        "RATIO_DEVIATION",
-        "DIALOGUE_STARVATION",
-        "RATIO_DEVIATION_SEVERE",
-        "POV_INTRA_PARAGRAPH",
-    ):
-        assert code in types_seen
+    # US-006 全场景激活 → RATIO_DEVIATION/DIALOGUE_STARVATION 过滤，
+    # RATIO_DEVIATION_SEVERE/POV_INTRA_PARAGRAPH 保留
+    assert "RATIO_DEVIATION" not in types_seen
+    assert "DIALOGUE_STARVATION" not in types_seen
+    assert "RATIO_DEVIATION_SEVERE" in types_seen
+    assert "POV_INTRA_PARAGRAPH" in types_seen
 
 
 def test_collect_critical_issues_drops_relaxed_rule():
@@ -547,18 +543,21 @@ def test_arbitrate_generic_no_shot_monotony_red_in_combat():
     assert not any("VISUAL_OVERLOAD" in s for s in merged_sources_flat)
 
 
-def test_arbitrate_generic_shot_monotony_red_kept_in_slow_build():
-    """零退化：slow_build 场景下 SHOT_MONOTONY 正常走 arbitration。"""
+def test_arbitrate_generic_shot_monotony_filtered_in_slow_build():
+    """US-006：slow_build 也走直白模式 → SHOT_MONOTONY 被过滤。"""
     metrics = _mk_metrics_prose_impact_relaxed_only()
     issues = collect_issues_from_review_metrics(
         metrics, scene_mode="slow_build", chapter_no=50
     )
+    # 全场景激活 → 所有问题被过滤，merged_fixes 为空
+    assert issues == []
     payload = arbitrate_generic(50, issues)
-    assert payload is not None
+    if payload is None:
+        return
     merged_sources_flat = [
         s for fix in payload["merged_fixes"] for s in fix["sources"]
     ]
-    assert any("SHOT_MONOTONY" in s for s in merged_sources_flat)
+    assert not any("SHOT_MONOTONY" in s for s in merged_sources_flat)
 
 
 # ============================================================

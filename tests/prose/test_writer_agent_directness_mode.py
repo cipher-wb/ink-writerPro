@@ -76,20 +76,14 @@ def test_five_hard_principles_enumerated(spec_text: str, marker: str) -> None:
 
 
 def test_l10b_l10e_scene_aware_marked(spec_text: str) -> None:
-    """L10b/L10e bullets must note they are scene-aware and yield to Directness Mode (US-006 → US-007)."""
-    # Anchor on the authoritative bullet heading so we don't collide with
-    # the top-level Directness Mode section's own "L10b/L10e 暂挂 协议" heading.
+    """L10b/L10e bullets must note they are scene-aware and yield to colloquial-checker (US-009)."""
     for anchor in ("L10b 感官锚点法则", "L10e 感官主导模态法则"):
         idx = spec_text.find(anchor)
         assert idx >= 0, f"writer-agent.md must still declare bullet `{anchor}`"
-        # The scene-aware marker must live on the bullet's heading line itself.
         line_end = spec_text.find("\n", idx)
         heading_line = spec_text[idx:line_end]
-        assert "Directness Mode" in heading_line, (
-            f"`{anchor}` 段落首行必须交叉引用 Directness Mode（US-006 要求）"
-        )
-        assert "暂挂" in heading_line, (
-            f"`{anchor}` 段落首行必须标注'暂挂'以表明直白模式下不生效（US-006/US-007 耦合）"
+        assert "colloquial-checker" in heading_line, (
+            f"`{anchor}` 段落首行必须交叉引用 colloquial-checker（US-009 要求）"
         )
 
 

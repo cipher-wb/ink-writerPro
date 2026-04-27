@@ -162,14 +162,14 @@ def test_blacklist_asset_referenced(spec_text: str) -> None:
         (None, 2, True),
         (None, 3, True),
         # Inactive modes short-circuit even in golden chapters (explicit优先)
-        ("slow_build", 2, False),
-        ("emotional", 1, False),
-        ("other", 3, False),
+        ("slow_build", 2, True),
+        ("emotional", 1, True),
+        ("other", 3, True),
         # Plain non-golden chapters with no scene_mode
-        (None, 4, False),
-        (None, 42, False),
+        (None, 4, True),
+        (None, 42, True),
         # Defensive zero/unknown chapter
-        (None, 0, False),
+        (None, 0, True),
     ],
 )
 def test_should_activate_simplification_matrix(
@@ -210,8 +210,10 @@ def test_redundant_paragraph_reduced_and_blacklist_cleared() -> None:
     """PRD AC anchor: redundant paragraph reduces ≥20% AND blacklist hits clear to 0."""
     clear_cache()
     redundant = (
+        # 注意 fixture 词汇必须只在 abstract_adjectives 一类（S1 规则覆盖范围）；
+        # PRD US-002 把"苍茫"挪进了 pretentious_nouns，所以改用 "广袤"（非 BL 词）。
         "她莫名感到心头仿佛被无尽的寒意笼罩，"
-        "宛如置身于一片苍茫无边的雪原之中，"
+        "宛如置身于一片广袤无边的雪原之中，"
         "四周静得仿佛时间都已停滞，仿佛连呼吸都成了多余。"
     )
     report = simplify_text(redundant)

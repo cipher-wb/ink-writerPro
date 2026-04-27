@@ -1,0 +1,38 @@
+# 白话度硬门禁配置（US-005 prose anti-AI overhaul）
+# 用于 ink-write Step 3 review pipeline，检测装逼词藻/成语堆叠/四字格排比/抽象名词链/抽象主语率
+#
+# 总开关 prose_overhaul_enabled 在 config/anti-detection.yaml；false 时本文件 enabled 被强制 false。
+# 回滚 SOP：改 enabled: false → 跑 regression suite → 提交。
+
+enabled: true
+
+# 综合评分阈值（colloquial-checker overall_score 0-100 映射）
+score_threshold: 70
+
+# 最大重试次数（severity=red 时触发 polish 重写，超此次数后 hard_blocked）
+max_retries: 1
+
+# 5 维度阈值（全部 lower_is_better）
+# 数值基于 PRD 设计目标 G1-G3：成语 ≤ 3/千字、四字格 ≤ 6/千字、嵌套深度 ≤ 1.5。
+# US-014 calibration 脚本会用 5 爆款 + 5 严肃文学跑回归覆写这些占位值。
+thresholds:
+  C1_idiom_density:
+    direction: lower_is_better
+    green_max: 3.0
+    yellow_max: 5.0
+  C2_quad_phrase_density:
+    direction: lower_is_better
+    green_max: 6.0
+    yellow_max: 10.0
+  C3_abstract_noun_chain:
+    direction: lower_is_better
+    green_max: 0.5
+    yellow_max: 1.5
+  C4_modifier_chain_avg:
+    direction: lower_is_better
+    green_max: 1.5
+    yellow_max: 2.5
+  C5_abstract_subject_rate:
+    direction: lower_is_better
+    green_max: 0.10
+    yellow_max: 0.25

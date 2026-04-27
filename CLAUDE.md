@@ -24,6 +24,18 @@
 2. **case_id prefix 是 `CASE-LR-2026-`**：底层复用 `case_library._id_alloc.allocate_case_id`，counter file 自动隔离 (`.id_alloc_case_lr_2026.cnt`)；不要新写 ID 分配器
 3. **新规则永远走人工审核闸**：`extract_rule_candidates.py` 抽出的候选 `approved` 字段初始 `null`；只有 `review_rule_candidates.py` 标 `approved=true` 后 `promote_approved_rules.py` 才写入 `data/editor-wisdom/rules.json`（带 `source: live_review`）
 
+## Prose Anti-AI 模块（新增 v26.x）
+
+基于文笔反 AI 味 + 爆款白话化深层重构的七层改造：anti-detection 零容忍标点规则 / 装逼词黑名单 + 替换映射 / colloquial-checker 5 维白话度门禁 / directness-checker 全场景 7 维度 + 爆款档 / writer-agent L12 对话+动作驱动律 / 爆款示例 RAG few-shot / polish-agent Hard Block Rewrite Mode。
+
+详细文档：[docs/prose-anti-ai-overhaul.md](docs/prose-anti-ai-overhaul.md)
+
+### Top 3 注意事项
+
+1. **D4 句长中位数 mid-is-better**：极短句（<8字）触发 red。写 prose 测试 fixture 时句子要在 13-17 字范围，否则 D4 会自动 red 破坏预期。
+2. **三个独立回滚开关 + 总开关**：`config/anti-detection.yaml` 的 `prose_overhaul_enabled` 为总开关（false 时 3 个子开关全强制 false）；三个子开关可独立关闭（`colloquial.yaml` / `anti-detection.yaml` / `parallel-pipeline.yaml`）。回滚 SOP 见 `docs/prose-anti-ai-overhaul.md` 第五章。
+3. **`check_zero_tolerance()` 返回 `str | None`**：命中规则→返回 rule ID 字符串，未命中→返回 None。调用方用 `is not None` 检查，不要用 `len()` 或 `bool()`（None 和空字符串 bool 值不一致）。
+
 ## Windows 兼容守则（feat/windows-compat 起生效）
 
 面向 Claude Code 场景新增的 Windows 兼容层；Mac/Linux 行为与原先**字节级一致**（`.sh` 全部保留不动，所有 Windows 特化代码走 `if sys.platform == "win32":` 分支）。新代码提交前请自检：

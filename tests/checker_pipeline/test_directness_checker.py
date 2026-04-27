@@ -44,20 +44,22 @@ class TestActivation:
         assert is_activated(mode, chapter_no=99) is True
 
     @pytest.mark.parametrize("mode", sorted(SKIPPED_SCENE_MODES))
-    def test_explicit_skipped_modes_deactivate(self, mode: str) -> None:
-        assert is_activated(mode, chapter_no=99) is False
+    def test_all_scene_modes_activate_including_skipped(self, mode: str) -> None:
+        """US-006: 全场景激活 — 旧 SKIPPED 也进入。"""
+        assert is_activated(mode, chapter_no=99) is True
 
     @pytest.mark.parametrize("ch", [1, 2, 3])
     def test_chapter_one_to_three_activates_without_scene_mode(self, ch: int) -> None:
         assert is_activated(None, chapter_no=ch) is True
 
-    def test_chapter_beyond_three_deactivates_without_scene_mode(self) -> None:
-        assert is_activated(None, chapter_no=4) is False
-        assert is_activated(None, chapter_no=100) is False
+    def test_chapter_beyond_three_also_activates(self) -> None:
+        """US-006: 全场景激活 — 旧 [1,3] 门禁已删除。"""
+        assert is_activated(None, chapter_no=4) is True
+        assert is_activated(None, chapter_no=100) is True
 
-    def test_explicit_scene_mode_trumps_chapter_fallback(self) -> None:
-        # 即便在黄金三章，如果 scene_mode 显式说 slow_build，应不激活
-        assert is_activated("slow_build", chapter_no=2) is False
+    def test_explicit_scene_mode_always_activates(self) -> None:
+        """US-006: 即便 slow_build 在章节 2 也激活。"""
+        assert is_activated("slow_build", chapter_no=2) is True
 
 
 # ---------------------------------------------------------------------------
@@ -231,15 +233,14 @@ class TestRunDirectnessCheckEndToEnd:
     """
 
     def test_skipped_for_non_activation_scene(self) -> None:
+        """US-006 前 slow_build 不激活；US-006 后全场景激活。"""
         report = run_directness_check(
             _DIRECT_GREEN,
             chapter_no=42,
             scene_mode="slow_build",
         )
-        assert report.skipped is True
+        assert not report.skipped
         assert report.passed is True
-        assert report.dimensions == ()
-        assert report.issues == ()
 
     def test_direct_prose_is_green_or_yellow(self) -> None:
         """直白达标 fixture 不应出现任何 red 维度。"""
@@ -485,6 +486,8 @@ class TestExports:
             "D3_abstract_per_100_chars",
             "D4_sent_len_median",
             "D5_empty_paragraphs",
+            "D6_nesting_depth",
+            "D7_modifier_chain_length",
         )
 
     def test_activation_set_has_four_modes(self) -> None:

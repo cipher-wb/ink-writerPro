@@ -15,8 +15,8 @@ CLI:
 
 Exit codes:
   0 = 全 hard pass（或 shadow 模式总是 0）
-  1 = 有 hard fail（enforce 模式才会触发）
-  2 = 内部错误（load state 失败 / gate 本身抛异常）
+  1 = 有 hard fail（enforce 模式才会触发；可重写的阻断）
+  2 = 硬阻断 hard_blocked 需要人工介入（US-013）或内部错误
 """
 from __future__ import annotations
 
@@ -163,22 +163,26 @@ class Step3Result:
     chapter_id: int
     mode: str
     passed: bool
+    hard_blocked: bool = False  # US-013: 重写后仍失败，需人工介入
     hard_fails: list[GateFailure] = field(default_factory=list)
     soft_fails: list[GateFailure] = field(default_factory=list)
     gate_results: dict = field(default_factory=dict)
     duration_ms: int = 0
     error: str | None = None
+    rewrite_attempted: bool = False  # US-013: 是否尝试了全章重写
 
     def to_dict(self) -> dict:
         return {
             "chapter_id": self.chapter_id,
             "mode": self.mode,
             "passed": self.passed,
+            "hard_blocked": self.hard_blocked,
             "hard_fails": [f.to_dict() for f in self.hard_fails],
             "soft_fails": [f.to_dict() for f in self.soft_fails],
             "gate_results": self.gate_results,
             "duration_ms": self.duration_ms,
             "error": self.error,
+            "rewrite_attempted": self.rewrite_attempted,
         }
 
 
@@ -312,15 +316,88 @@ def _make_plotline_adapter(review_bundle: dict) -> Callable:
     return _adapter
 
 
+def _make_colloquial_adapter(review_bundle: dict) -> Callable:
+    """US-005: colloquial-checker 程序化适配器（全场景激活，无 scene_mode 限制）。
+
+    激活条件：
+      - config/colloquial.yaml enabled=true（且 prose_overhaul_enabled=true）
+      - 全场景激活，无 scene_mode 门控
+
+    severity=red → FAILED + hard_blocked；非 red → PASS。
+    """
+    async def _adapter():
+        import yaml
+
+        from ink_writer.prose.colloquial_checker import (
+            run_colloquial_check,
+            to_checker_output,
+        )
+
+        chapter_text = review_bundle.get("chapter_text", "") or ""
+        chapter_no = int(review_bundle.get("chapter_no", 0) or 0)
+
+        try:
+            # 读取 colloquial.yaml 开关
+            config_path = Path(review_bundle.get("project_root", ".")) / "config" / "colloquial.yaml"
+            colloquial_enabled = True
+            thresholds_override = None
+            if config_path.exists():
+                with open(config_path, "r", encoding="utf-8") as f:
+                    cfg = yaml.safe_load(f) or {}
+                colloquial_enabled = cfg.get("enabled", True)
+                thresholds_override = cfg.get("thresholds")
+
+            # prose_overhaul_enabled 总开关降级
+            ad_config_path = (
+                Path(review_bundle.get("project_root", ".")) / "config" / "anti-detection.yaml"
+            )
+            if ad_config_path.exists():
+                with open(ad_config_path, "r", encoding="utf-8") as f:
+                    ad_cfg = yaml.safe_load(f) or {}
+                if ad_cfg.get("prose_overhaul_enabled") is False:
+                    colloquial_enabled = False
+
+            if not colloquial_enabled:
+                return (True, 1.0, "")
+
+            if not chapter_text.strip():
+                return (True, 1.0, "")
+
+            report = await asyncio.to_thread(
+                run_colloquial_check,
+                chapter_text,
+                thresholds=thresholds_override,
+            )
+            output = to_checker_output(report, chapter_no=chapter_no)
+
+            passed = bool(output.get("pass", False))
+            score = float(output.get("overall_score", 100)) / 100.0
+            fix_prompt = ""
+            if not passed:
+                dims = output.get("metrics", {}).get("dimensions", [])
+                red_dims = [d for d in dims if d.get("rating") == "red"]
+                if red_dims:
+                    fix_prompt = (
+                        "colloquial-checker: "
+                        + "; ".join(
+                            f"{d['key']}={d['score']}"
+                            for d in red_dims[:5]
+                        )
+                    )
+            return (bool(passed), float(score), fix_prompt)
+        except Exception as exc:
+            logger.warning("colloquial adapter error (shadow safe): %s", exc)
+            return (True, 1.0, "")
+
+    return _adapter
+
+
 def _make_directness_adapter(review_bundle: dict) -> Callable:
-    """v22 US-005：directness-checker 程序化适配器（scene_mode 激活门控）。
+    """v22 US-006：directness-checker 程序化适配器（全场景激活 + 章节级 override）。
 
-    激活条件（与 agent spec 同源）：
-      - review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}，或
-      - review_bundle.chapter_no ∈ [1, 3]（缺省 scene_mode 时按黄金三章兜底）
-
-    非激活场景 → 返回 (True, 1.0, "") 视为 PASS（本 gate 对非直白场景保持透明，
-    不影响其他 checker）。激活场景下按 5 维度打分；任一 dim <6 → FAILED + 修复提示。
+    US-006 全场景化：默认所有场景均激活。
+    仅当 chapter_meta.directness_skip == true 时跳过（向后兼容）。
+    chapter_meta.directness_tier 控制阈值桶选择（'explosive_hit' | 'standard'）。
     """
     async def _adapter():
         from ink_writer.prose.directness_checker import (
@@ -331,9 +408,12 @@ def _make_directness_adapter(review_bundle: dict) -> Callable:
         chapter_text = review_bundle.get("chapter_text", "") or ""
         chapter_no = int(review_bundle.get("chapter_no", 0) or 0)
         scene_mode = review_bundle.get("scene_mode")
+        chapter_meta = review_bundle.get("chapter_meta") or {}
+        directness_skip = bool(chapter_meta.get("directness_skip", False))
+        directness_tier = chapter_meta.get("directness_tier")
 
         try:
-            if not is_activated(scene_mode, chapter_no):
+            if not is_activated(scene_mode, chapter_no, directness_skip=directness_skip):
                 return (True, 1.0, "")
             if not chapter_text.strip():
                 # shadow-safe：章节文本缺失不阻断
@@ -344,6 +424,8 @@ def _make_directness_adapter(review_bundle: dict) -> Callable:
                 chapter_text,
                 chapter_no=chapter_no,
                 scene_mode=scene_mode,
+                directness_skip=directness_skip,
+                directness_tier=directness_tier,
             )
             if report.skipped:
                 return (True, 1.0, "")
@@ -489,6 +571,9 @@ async def run_step3(
     # v22 US-005: directness gate——仅黄金三章/战斗/高潮/爽点场景激活；其他场景透明返回 PASS。
     # is_hard_gate=False：即便评分 Red，也不会 cancel 其他 gate；shadow/enforce 都先观察后阻断。
     runner.add(GateSpec(name="directness", fn=_make_directness_adapter(bundle), is_hard_gate=False))
+    # US-005 prose anti-AI overhaul: colloquial gate——全场景激活，5 维度白话度门禁。
+    # is_hard_gate=True：severity=red 时阻断并触发 polish 重写。
+    runner.add(GateSpec(name="colloquial", fn=_make_colloquial_adapter(bundle), is_hard_gate=True))
 
     try:
         report: PipelineReport = await asyncio.wait_for(runner.run(), timeout=timeout_s)
@@ -523,6 +608,34 @@ async def run_step3(
         result.passed = True
     else:  # enforce
         result.passed = len(result.hard_fails) == 0
+        # US-013: hard block rewrite — 三个硬门禁失败时全章重写
+        if not result.passed and not dry_run:
+            _HARD_BLOCK_GATES = {"anti_detection", "colloquial", "directness"}
+            hard_block_fails = [f for f in result.hard_fails if f.gate_id in _HARD_BLOCK_GATES]
+            if hard_block_fails:
+                try:
+                    from ink_writer.checker_pipeline.hard_block_rewrite import (
+                        run_hard_block_rewrite,
+                    )
+                    project_root = Path(bundle.get("project_root", "."))
+                    rewrite_result = run_hard_block_rewrite(
+                        chapter_text=bundle.get("chapter_text", ""),
+                        chapter_id=chapter_id,
+                        gate_results=result.gate_results,
+                        project_root=project_root,
+                    )
+                    result.rewrite_attempted = True
+                    if rewrite_result.hard_blocked:
+                        result.hard_blocked = True
+                        result.passed = False
+                    elif rewrite_result.rewritten_text and rewrite_result.retry_count > 0:
+                        # 重写成功 → 标记 passed
+                        result.passed = True
+                        result.hard_fails = [f for f in result.hard_fails
+                                             if f.gate_id not in _HARD_BLOCK_GATES]
+                        result.hard_blocked = False
+                except Exception as exc:
+                    logger.warning("hard block rewrite failed: %s", exc)
 
     result.duration_ms = int((time.time() - t0) * 1000)
 
@@ -565,13 +678,20 @@ def main() -> int:
     if args.json:
         print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
     else:
-        status_icon = "✅" if result.passed else "❌"
+        if result.hard_blocked:
+            print(f"CHAPTER_HARD_BLOCKED: {result.chapter_id}", file=sys.stderr)
+        status_icon = "🚫" if result.hard_blocked else ("✅" if result.passed else "❌")
         print(f"{status_icon} step3_runner ch{result.chapter_id} mode={result.mode} "
-              f"passed={result.passed} hard_fails={len(result.hard_fails)} "
+              f"passed={result.passed} hard_blocked={result.hard_blocked} "
+              f"hard_fails={len(result.hard_fails)} "
               f"soft_fails={len(result.soft_fails)} duration={result.duration_ms}ms",
               file=sys.stderr)
 
     if result.error:
+        return 2
+    if result.hard_blocked:
+        # US-013: 硬阻断 — 重写后仍失败，需人工介入
+        print(f"CHAPTER_HARD_BLOCKED: {result.chapter_id}")
         return 2
     if mode == MODE_ENFORCE and not result.passed:
         return 1

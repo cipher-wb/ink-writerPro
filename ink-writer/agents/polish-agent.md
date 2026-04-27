@@ -385,10 +385,52 @@ skipped，L10b/L10e 感官丰富度约束照常生效，sensory-immersion-checke
 | 编号 | 规则 | 触发条件 | 处理策略 |
 |------|------|----------|---------|
 | S1 | 黑名单命中词删除 / 替换 | `prose-blacklist.yaml` 三类任一命中（`abstract_adjectives` / `empty_phrases` / `pretentious_metaphors`） | `abstract_adjectives` 可直接删除（如"莫名"/"无尽"/"仿佛"）；`empty_phrases` / `pretentious_metaphors` 按 `replacement` 字段的 showing 指引改写为具体动作/细节 |
+| S1.5 | Replacement Map Pass（PRD US-003） | `prose-blacklist.yaml` 的 `replacement_map` 命中（装逼词 → 爆款词，多候选取首项） | 机械替换；先做 S1 再做 S1.5；替换前/后正文写到 `reports/polish_diff/chapter_NNN.diff`（chapter_no 给定时） |
 | S2 | 长句拆分 | 单句 > 35 字 | 按句中逗号/分号拆为两短句，目标单句 ≤ 20 字；若无自然断点则保留原句并上报 advisory |
 | S3 | 连续修辞压缩 | 同段内连续 ≥ 2 处修辞（仿佛 / 宛如 / 犹如 / 好似 / 恍若 / 仿若 / 如同 / 似乎 等标记词） | 保留第一处，删除后续；与 directness-checker D1 修辞密度维度呼应 |
 | S4 | 空描写段压缩 | 纯环境段落（无对话、无人称代词）超过 3 句 | 压缩到 2 句以内（保留首 + 末）或整段删除；过密空景直接推至下一段的人物动作 |
 | S5 | 形容词→动词+具体细节 | 章级形容词-动词比超 directness-checker D2 yellow_max 阈值 | 把形容词堆叠（"苍茫的 / 无边的 / 辽阔的"）替换为一个具体动作或空间关系（"目光扫过地平线，山脊在远处连成一条起伏的线"） |
+
+### Replacement Map Pass（S1.5 子章，PRD US-003）
+
+**触发条件**：`prose-blacklist.yaml` 顶层 `replacement_map` 段中任一 source word（如 `凝视`/
+`苍茫`/`缓缓`）出现于章节正文，且与 abstract_adjective 删除阶段（S1）后的剩余文本仍然命中。
+
+**行为**：
+
+1. 顺序：S1 → **S1.5** → S2/S3/S4/S5。S1 做 abstract_adjective 硬删除（保证 hit_count 清零），
+   S1.5 做装逼动词/名词/副词的爆款替换；二者**互不抵消**——S1 删除的词不在 replacement_map
+   key 里，S1.5 的 source word 也不在 abstract_adjectives 里（YAML 互斥契约由 US-002 测试守护）。
+2. 替换策略：每个命中 source word 取 `replacement_map.lookup(word)[0]`（YAML 列表首项）做
+   全文 `str.replace`。多候选语义抉择交给 LLM 层 prompt（仍可调 `ReplacementMap.lookup` 拿
+   完整候选列表）；S1.5 只负责"机械确定性"那一档。
+3. Tie-break：source words 按字符长度倒序处理，避免 `凝` 单字误吃 `凝视` 双字词。
+4. Diff 持久化：`apply_replacement_map(..., chapter_no=N, diff_dir=Path("reports/polish_diff"))`
+   会写一份带头注释（命中清单）+ unified diff 体的 `chapter_NNN.diff`；空跑（无命中）不写文件。
+5. 结果回传：`SimplificationReport.replacement_hits` 记录 `(source, replacement, count)` 三元组
+   列表；`replacement_diff_path` 记录 diff 文件绝对路径（未写入则 None）。
+
+**与 S1 的边界**：
+- S1 词典：`prose-blacklist.yaml.abstract_adjectives`（如 `莫名/无尽/仿佛`）→ 直接删除。
+- S1.5 词典：`prose-blacklist.yaml.replacement_map`（如 `凝视→盯着` / `苍茫→广袤` / `缓缓→慢慢`）
+  → 替换为爆款词。
+- 两类**没有交集**（US-002 `test_no_word_collisions_across_pretentious_categories` 守护）。
+
+**Diff 日志样例**（`reports/polish_diff/chapter_007.diff`）：
+
+```diff
+# Replacement Map Pass — chapter 007
+# Hits: 3 replacement(s) across 2 source word(s)
+#   凝视 → 盯着 ×2
+#   缓缓 → 慢慢 ×1
+
+--- chapter_007.before
++++ chapter_007.after
+@@ -1,3 +1,3 @@
+-他凝视着远方，缓缓抬起手。
++他盯着远方，慢慢抬起手。
+ ...
+```
 
 **70% 字数下限保护（硬约束）**：
 
@@ -413,7 +455,7 @@ skipped，L10b/L10e 感官丰富度约束照常生效，sensory-immersion-checke
 **执行顺序（激活时）**：
 
 ```
-Layer 9z 通过 → Simplification Pass S1 → S2 → S3 → S4 → S5
+Layer 9z 通过 → Simplification Pass S1 → S1.5 (Replacement Map) → S2 → S3 → S4 → S5
              → 70% floor 校验 → 写入 simplified.md
              → Step 5 No-Poison 毒点规避
 ```
@@ -432,22 +474,27 @@ Layer 9z 通过 → Simplification Pass S1 → S2 → S3 → S4 → S5
 ```python
 from ink_writer.prose.simplification_pass import (
     should_activate_simplification,   # bool gate
-    simplify_text,                    # (text, *, blacklist=None) -> SimplificationReport
-    SimplificationReport,             # frozen dataclass：字数/命中/回滚/rules_fired
+    simplify_text,                    # (text, *, blacklist=None, chapter_no=None, diff_dir=None) -> SimplificationReport
+    apply_replacement_map,            # (text, *, replacement_map=None, chapter_no=None, diff_dir=None) -> ReplacementResult
+    SimplificationReport,             # frozen dataclass：字数/命中/回滚/rules_fired/replacement_hits/replacement_diff_path
+    ReplacementResult,                # frozen dataclass：text/hits/diff_path
 )
 ```
 
-polish-agent 可选用该辅助模块做机械层精简（S1/S3/S4 三条规则确定性实现），
+polish-agent 可选用该辅助模块做机械层精简（S1/S1.5/S3/S4 四条规则确定性实现），
 S2 拆句 / S5 形容词替换由 LLM 层消费 `entry.replacement` showing 提示完成。
+`apply_replacement_map` 也可单独调用，不进 simplify_text 全流程也能落 diff。
 
 **润色报告追加字段**：
 
 ```text
 - Simplification Pass:
   - 激活: true/false (reason: golden_three / combat / ...)
-  - 规则触发: [S1, S3, ...]
+  - 规则触发: [S1, S1.5, S3, ...]
   - 字数变化: N → N (reduction X%)
   - 黑名单命中: before=N / after=0
+  - Replacement Map 命中: [(凝视→盯着, 2), (缓缓→慢慢, 1)]
+  - Replacement diff: reports/polish_diff/chapter_NNN.diff（未命中则 None）
   - 回滚: false (或 reason: below_70pct_floor)
 ```
 
@@ -619,3 +666,33 @@ prompt = build_polish_prompt(
 原 Step 1.x ~ Step 6 流程在 ink-write 主链路（非 `rewrite_loop`）调用 polish-agent
 时仍是权威路径。后续若把 M3 流程并入 ink-write 主链路（M4+），届时再统一收口。
 
+
+## Hard Block Rewrite Mode (US-013)
+
+> **触发条件**：anti-detection-checker 零容忍命中 OR colloquial-checker severity=red OR directness-checker severity=red
+
+当任一硬门禁触发 red 时，polish-agent 进入**全章重写模式**而非句级修补：
+
+### 执行流程
+
+1. **收集违规清单**：汇总三个 checker 的 issue 列表，按 severity 排序
+2. **注入爆款参考**：调用 `ink_writer.retrieval.inject_explosive_examples()` 检索 3 条爆款段落
+3. **全章重写**：以原章为 reference + 违规清单 + 爆款段落，一次 LLM 调用全章重写
+4. **重写后复检**：重写结果再过 anti-detection / colloquial / directness 三个 checker
+5. **二次仍 red**：标记 `chapter_status: hard_blocked`，写 `reports/blocked/chapter_NNN.md`，退出 code 2
+
+### 配置
+
+- `config/anti-detection.yaml` 中 `max_hard_block_retries: 1`（默认重写 1 次）
+- `prose_overhaul_enabled: false` 时跳过 Hard Block Rewrite Mode（回退旧行为）
+
+### 退出码
+
+- `ink-write` CLI 在 hard_blocked 时退出 code 2
+- stdout 打印 `CHAPTER_HARD_BLOCKED: NNN`
+- 被阻断的章节不写入正文/ 目录（保留原版）
+
+### 与旧行为兼容
+
+- `prose_overhaul_enabled: false` → 所有 hard block 逻辑跳过，走旧 polish 路径
+- `max_hard_block_retries: 0` → 不重写，直接标 hard_blocked

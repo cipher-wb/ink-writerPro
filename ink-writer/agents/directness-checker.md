@@ -1,26 +1,30 @@
 ---
 name: directness-checker
-description: 直白度（场景感知）检查器，5 维度量化评分（修辞/形动比/抽象词/句长/空描写），仅在黄金三章+战斗/高潮/爽点场景激活
+description: 直白度全场景检查器（US-006/007），7 维度量化评分（修辞/形动比/抽象词/句长/空描写/嵌套深度/修饰链长），全场景激活，支持 directness_tier 阈值桶 + directness_skip 章节级 override
 tools: Read
 model: inherit
 ---
 
 # directness-checker (直白度检查器)
 
-> **职责**: 黄金三章 + 战斗/高潮/爽点场景的直白度量化门禁。与 editor-wisdom-checker（规则命中）职责正交；本 agent 专注 5 维度量化指标。其他场景（抒情/慢节奏/日常）直接 `skipped`，**不**产生 issue。
+> **职责**: 全章节直白度量化门禁（US-006 全场景化 / US-007 D6D7 维度扩展）。与 editor-wisdom-checker（规则命中）职责正交；本 agent 专注 7 维度量化指标。所有场景均激活打分；仅当 `chapter_meta.directness_skip == true` 时返回 `skipped`（向后兼容老 outline）。
 
 {{PROMPT_TEMPLATE:checker-output-reference.md}}
 
 {{PROMPT_TEMPLATE:checker-input-rules.md}}
 
-## 激活条件（硬门禁）
+## 激活条件（全场景 + 章节级 override）
 
-**必须同时满足才进入检查**：
+**US-006 起全场景激活**：所有章节、所有 scene_mode 均进入直白度检查。
 
-1. `review_bundle.scene_mode` ∈ `{golden_three, combat, climax, high_point}`，**或**
-2. `review_bundle.chapter_no` ∈ [1, 3]（即便 scene_mode 未声明，也视同 golden_three）
+**章节级 override**（`chapter_meta` 字段）：
 
-任一不满足 → 输出 `pass=true`、`metrics.skipped=true`、`issues=[]`，直接返回。**禁止**在非直白场景强行打分。
+| 字段 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `directness_skip` | bool | `false` | true 时跳过直白检查（向后兼容老 outline 显式跳过） |
+| `directness_tier` | `"explosive_hit"` \| `"standard"` | `"explosive_hit"` | 阈值桶选择；explosive_hit 用黄金三章/战斗桶，standard 用标准桶 |
+
+仅当 `directness_skip == true` 时输出 `pass=true`、`metrics.skipped=true`、`issues=[]`。其他情况**全量打分**，不再因 scene_mode 跳过。
 
 ## 核心参考
 
@@ -30,9 +34,9 @@ model: inherit
 - **editor-wisdom simplicity 域**: `data/editor-wisdom/rules.json`（US-004，14 条 simplicity 规则）
 - **writer-agent 铁律**: L10b/L10e（在本 checker 激活时暂挂，参见 writer-agent.md Directness Mode）
 
-## 5 维度评分
+## 7 维度评分
 
-阈值来自 `seed_thresholds.yaml` 的 `scenes.{golden_three | combat}.thresholds`。`combat`/`climax`/`high_point` 共用 `combat` bucket；`combat` bucket 若 `n=0` 带 `inherits_from: golden_three` 时，自动跟 golden_three 阈值。
+阈值来自 `seed_thresholds.yaml` 的 `scenes.{golden_three | combat}.thresholds` 或 `tiers.{explosive_hit | standard}.thresholds`。`combat`/`climax`/`high_point` 共用 `combat` bucket；`combat` bucket 若 `n=0` 带 `inherits_from: golden_three` 时，自动跟 golden_three 阈值。`directness_tier` 优先于 scene bucket（US-006）。
 
 | # | 维度 | Key | 方向 | 分数公式 |
 |---|------|-----|------|---------|
@@ -41,6 +45,8 @@ model: inherit
 | D3 | 抽象词密度 | `D3_abstract_per_100_chars` | lower_is_better | 同 D1 |
 | D4 | 句长中位数 | `D4_sent_len_median` | mid_is_better | 落 green 带 → 10；落 yellow 带 → 10→6 线性；越界 6→0 |
 | D5 | 空描写段 | `D5_empty_paragraphs` | lower_is_better | 同 D1 |
+| D6 | 嵌套深度 | `D6_nesting_depth` | lower_is_better | 句均子句嵌套层数；同 D1 公式 |
+| D7 | 修饰链长 | `D7_modifier_chain_length` | lower_is_better | "的"字修饰链均长；同 D1 公式 |
 
 ### 评级规则
 
@@ -85,7 +91,7 @@ model: inherit
 }
 ```
 
-**skipped 输出**（非直白场景）：
+**skipped 输出**（仅在 `directness_skip == true` 时）：
 
 ```json
 {
@@ -94,18 +100,20 @@ model: inherit
   "overall_score": 100,
   "pass": true,
   "issues": [],
-  "metrics": {"skipped": true, "reason": "scene_mode='slow_build' chapter_no=42 不激活直白模式"},
-  "summary": "场景无需直白检查（scene_mode='slow_build' chapter_no=42 不激活直白模式）"
+  "metrics": {"skipped": true, "reason": "chapter_meta.directness_skip=true — 向后兼容老 outline"},
+  "summary": "章节级 directness_skip 生效，直白检查已跳过"
 }
 ```
 
 ## 执行流程
 
-### 第一步: 解析激活条件
+### 第一步: 解析激活条件（US-006）
 
-从 `review_bundle` 读取 `chapter_no` 与 `scene_mode`。任一不匹配激活条件 → 直接返回 skipped。
+从 `review_bundle` 读取 `chapter_meta.directness_skip` 与 `chapter_meta.directness_tier`。
+- `directness_skip == true` → 跳过直白检查，返回 skipped 输出。
+- 否则 → 全场景激活，进入第二步。`directness_tier` 决定第三步的阈值桶选择。
 
-### 第二步: 计算 5 维度指标
+### 第二步: 计算 7 维度指标
 
 调用 `ink_writer.prose.directness_checker.run_directness_check(chapter_text, chapter_no=N, scene_mode=M)`，或等价地复用 `scripts.analyze_prose_directness.compute_metrics(text, abstract_words=...)`。抽象词表优先取 `ink-writer/assets/prose-blacklist.yaml` 的 `abstract_adjectives`，fallback 到脚本 `_ABSTRACT_SEED`。
 
@@ -145,10 +153,10 @@ model: inherit
 
 ## 禁止事项
 
-- **禁止**在非直白场景产出 issue（除非 `scene_mode` 被显式误设为激活值——此时以 scene_mode 为准）
+- **禁止**在 `directness_skip == false` 时跳过直白检查（US-006 全场景激活，不再因 scene_mode 跳过）
 - **禁止**加严阈值为高于 `seed_thresholds.yaml` 基线（该文件由 50 本起点实书 P50/P75 量化得出，是业界实书的客观中位数）
 - **禁止**读取 `.db` 文件 / 白名单外相对路径
-- **禁止**在 `overall_score` 汇总中引入非 D1-D5 的私有维度（保持可对比性）
+- **禁止**在 `overall_score` 汇总中引入非 D1-D7 的私有维度（保持可对比性）
 
 ## 典型报告片段
 
@@ -158,7 +166,7 @@ model: inherit
 ## 覆盖范围
 第 1 章（scene_mode=golden_three）
 
-## 5 维度评分
+## 7 维度评分
 
 | 维度 | 原值 | 分数 | 评级 |
 |------|------|------|------|

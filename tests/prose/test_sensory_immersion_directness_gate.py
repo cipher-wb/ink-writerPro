@@ -39,16 +39,16 @@ _SENSORY_SPEC = _REPO_ROOT / "ink-writer" / "agents" / "sensory-immersion-checke
         ("climax", 100, True),
         ("high_point", 7, True),
         # Non-directness scene_mode — should run even in ch1
-        ("slow_build", 1, False),
-        ("emotional", 3, False),
-        ("other", 2, False),
-        # None + chapter bucket — golden-three fallback
+        ("slow_build", 1, True),
+        ("emotional", 3, True),
+        ("other", 2, True),
+        # None + chapter bucket — all activate (US-006)
         (None, 1, True),
         (None, 2, True),
         (None, 3, True),
-        (None, 4, False),
-        (None, 42, False),
-        (None, 0, False),
+        (None, 4, True),
+        (None, 42, True),
+        (None, 0, True),
     ],
 )
 def test_should_skip_sensory_immersion_matrix(scene_mode, chapter_no, expected):
@@ -64,7 +64,7 @@ def test_should_skip_sensory_immersion_checker_name_constant():
 
 def test_should_skip_sensory_immersion_handles_string_chapter_fallback():
     # chapter_no=0 应 fallback 到 False（非黄金三章）
-    assert should_skip_sensory_immersion(None, 0) is False
+    assert should_skip_sensory_immersion(None, 0) is True
 
 
 # ---------------- Section 2: agent spec gating text ----------------
@@ -73,11 +73,10 @@ def test_should_skip_sensory_immersion_handles_string_chapter_fallback():
 def test_writer_agent_l10b_marks_non_directness_only():
     text = _WRITER_AGENT_SPEC.read_text(encoding="utf-8")
     assert "L10b 感官锚点法则" in text
-    # 关键短语锚定：US-007 要求 L10b 段显式标注"仅在非 Directness Mode 场景生效"
+    # US-009: L10b 段改为标注"仅在 colloquial-checker 非 red 时生效"
     l10b_idx = text.index("L10b 感官锚点法则")
-    # 取本行为断言区间（标题后 400 字）
     l10b_slice = text[l10b_idx : l10b_idx + 400]
-    assert "仅在非 Directness Mode 场景生效" in l10b_slice
+    assert "colloquial-checker" in l10b_slice
 
 
 def test_writer_agent_l10e_marks_non_directness_only():
@@ -85,7 +84,7 @@ def test_writer_agent_l10e_marks_non_directness_only():
     assert "L10e 感官主导模态法则" in text
     l10e_idx = text.index("L10e 感官主导模态法则")
     l10e_slice = text[l10e_idx : l10e_idx + 400]
-    assert "仅在非 Directness Mode 场景生效" in l10e_slice
+    assert "colloquial-checker" in l10e_slice
 
 
 def test_writer_agent_directness_suspension_protocol_explicit():
@@ -210,22 +209,20 @@ def test_collect_filters_sensory_in_golden_three_fallback():
     assert issues == []
 
 
-def test_collect_keeps_sensory_in_slow_build_scene():
+def test_collect_filters_sensory_in_slow_build_scene():
     metrics = _mk_metrics_with_sensory_violation()
     issues = collect_issues_from_review_metrics(
         metrics, scene_mode="slow_build", chapter_no=12
     )
-    assert len(issues) == 1
-    assert issues[0].source.startswith("sensory-immersion-checker#")
-    assert "主导感官" in issues[0].fix_prompt
+    # US-006 全场景激活 → sensory-immersion issues 全部过滤
+    assert issues == []
 
 
-def test_collect_keeps_sensory_when_scene_mode_omitted():
-    # 默认参数（未显式传 scene_mode/chapter_no）→ 保持 v18 US-011 原行为
+def test_collect_filters_sensory_when_scene_mode_omitted():
+    # US-006 全场景激活 → 默认参数也过滤 sensory-immersion issues
     metrics = _mk_metrics_with_sensory_violation()
     issues = collect_issues_from_review_metrics(metrics)
-    assert len(issues) == 1
-    assert issues[0].source.startswith("sensory-immersion-checker#")
+    assert issues == []
 
 
 def test_collect_multi_checker_only_drops_sensory_in_combat():
@@ -240,14 +237,14 @@ def test_collect_multi_checker_only_drops_sensory_in_combat():
     assert any(s.startswith("flow-naturalness-checker") for s in sources)
 
 
-def test_collect_multi_checker_keeps_sensory_in_emotional_scene():
+def test_collect_multi_checker_filters_sensory_in_emotional_scene():
     metrics = _mk_metrics_multi_checker()
     issues = collect_issues_from_review_metrics(
         metrics, scene_mode="emotional", chapter_no=50
     )
     sources = [i.source for i in issues]
-    # emotional 是非直白场景 → sensory issues 正常保留（critical + violations 都在）
-    assert any(s.startswith("sensory-immersion-checker#") for s in sources)
+    # US-006 全场景激活 → sensory issues 被过滤，prose-impact 保留
+    assert not any(s.startswith("sensory-immersion-checker#") for s in sources)
     assert any(s.startswith("prose-impact-checker") for s in sources)
 
 
@@ -267,17 +264,16 @@ def test_arbitrate_generic_no_sensory_red_in_combat_scene():
     )
 
 
-def test_arbitrate_generic_sensory_red_kept_in_slow_build():
-    """零退化验证：slow_build 场景下 sensory-immersion 的 Red 正常走 arbitration。"""
+def test_arbitrate_generic_sensory_filtered_in_slow_build():
+    """US-006：slow_build 也走直白模式 → sensory-immersion 的 Red 被过滤。"""
     metrics = _mk_metrics_multi_checker()
     issues = collect_issues_from_review_metrics(
         metrics, scene_mode="slow_build", chapter_no=50
     )
     payload = arbitrate_generic(50, issues)
-    assert payload is not None
     merged_sources_flat = [
-        s for fix in payload["merged_fixes"] for s in fix["sources"]
+        s for fix in (payload or {}).get("merged_fixes", []) for s in fix["sources"]
     ]
-    assert any(
+    assert not any(
         "sensory-immersion-checker" in s for s in merged_sources_flat
     )

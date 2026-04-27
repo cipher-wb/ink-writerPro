@@ -24,3 +24,6 @@ state_lock_timeout: 30
 
 # 批次失败时是否中止剩余
 abort_on_batch_failure: true
+
+# US-012: 爆款示例 RAG 检索开关（false 时跳过 retrieval，走旧路径）
+enable_explosive_retrieval: true

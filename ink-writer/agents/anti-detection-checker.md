@@ -44,6 +44,33 @@ tools: [Read, Grep]
 
 **修复建议**：用行动、对话、感官感知或悬念切入替代时间标记。时间锚点应在前3段内通过角色感知自然带出（如"阳光刺进眼睛"暗示天亮）。
 
+#### 第 0 层 · 子章：标点 AI 指纹零容忍（v26 prose anti-AI overhaul 新增）
+
+**原理**：标点是 AI 文本最强的统计指纹，比词汇/句法更难自然伪装。爆款网文在标点上有极强的"白话化"特征——双破折号几乎不出现，引号统一用直引 "/'，省略号 …… 仅作"欲言又止"使用而非段尾点缀，顿号仅在必要枚举中出现。
+
+**5 条标点零容忍规则**（任一命中立即阻断 → 触发 polish 重写或 hard_blocked）：
+
+| 规则 ID | 触发条件 | 配置 kind | 数据来源 |
+|---------|---------|-----------|---------|
+| `ZT_EM_DASH` | 任意出现中文双破折号 `——` (U+2014×2) 或变体 `――` (U+2015×2) | regex | 起点 / 番茄 top 200 爆款书 `——` 出现频率 < 0.05 / 千字 |
+| `ZT_AI_QUOTES` | 任意出现智能弯引号 `"`/`"`/`'`/`'` (U+201C/D/2018/9) 或法式引号 `«»` | regex | 爆款书统一使用直引或中文方头括号 `「」` |
+| `ZT_HYPHEN_AS_DASH` | 中文上下文中 ASCII `-` 用作破折号（如 "他笑了-然后转身"） | regex | AI 模型常见标点退化模式 |
+| `ZT_DENSE_DUNHAO` | 顿号密度 > 3 / 千字 | density | 爆款 p75 ≈ 1.8 / 千字，AI 文学化文本 p50 ≈ 4-6 |
+| `ZT_ELLIPSIS_OVERUSE` | 省略号 `……` 或 `...` 总密度 > 8 / 千字 | density | 爆款 p90 ≈ 5 / 千字，文学化 AI 容易堆 …… 模拟"留白" |
+
+**配置位置**：`config/anti-detection.yaml` zero_tolerance 段，每条规则含 `description` / `patterns` / `whitelist_patterns`（暂为空数组，预留对话被打断豁免）/ `kind` (`regex` 或 `density`) / `density_threshold`（仅 density kind 使用）。
+
+**判定逻辑**（pure-Python，不调 LLM）：
+- `kind=regex`：`re.search(pattern, text)` 任一命中即阻断
+- `kind=density`：sum(re.findall) / len(text) × 1000 > threshold 即阻断
+
+**修复建议**：
+- `ZT_EM_DASH`：用句号断开 + 短句衔接，被打断的对话改为 `他正要说话，对方抢过去："……"`
+- `ZT_AI_QUOTES`：批量替换为中文方头括号 `「」` 或直引 `""`
+- `ZT_HYPHEN_AS_DASH`：检测后用顿号 / 句号替换，或重构句式
+- `ZT_DENSE_DUNHAO`：枚举改成短句重述（"他带着剑，背着包，提着灯"），或合并简化
+- `ZT_ELLIPSIS_OVERUSE`：删除冗余 ……，仅保留情绪转折点
+
 ### 第1层：句长突发度检测
 
 **原理**：AI文本句长标准差显著低于人类文本。人类写作句长分布像心电图，AI像直线。**标杆小说句长均值约28字，ink-writer默认倾向仅12字——句子碎片化是最大的AI味来源。**

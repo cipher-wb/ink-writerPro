@@ -166,6 +166,8 @@ class ChapterMetaPayload(BaseModel):
     ending: Dict[str, Any] = Field(default_factory=dict)
     golden_three: Dict[str, Any] = Field(default_factory=dict)
     warnings: List[str] = Field(default_factory=list)
+    directness_tier: Optional[str] = None
+    directness_skip: bool = False
 
 
 class DataAgentOutput(BaseModel):

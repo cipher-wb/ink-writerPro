@@ -4,6 +4,71 @@ version: 1
 generated: '2026-04-20'
 source: 'reports/prose-directness-stats.json'
 combat_fallback_scene: 'golden_three'
+tiers:
+  explosive_hit:
+    thresholds:
+      D1_rhetoric_density:
+        direction: lower_is_better
+        green_max: 0.015
+        yellow_max: 0.03
+      D2_adj_verb_ratio:
+        direction: lower_is_better
+        green_max: 0.12
+        yellow_max: 0.16
+      D3_abstract_per_100_chars:
+        direction: lower_is_better
+        green_max: 0.05
+        yellow_max: 0.10
+      D4_sent_len_median:
+        direction: mid_is_better
+        green_low: 10.0
+        green_high: 15.0
+        yellow_low: 6.0
+        yellow_high: 20.0
+      D5_empty_paragraphs:
+        direction: lower_is_better
+        green_max: 30.0
+        yellow_max: 50.0
+      D6_nesting_depth:
+        direction: lower_is_better
+        green_max: 1.3
+        yellow_max: 1.8
+      D7_modifier_chain_length:
+        direction: lower_is_better
+        green_max: 1.2
+        yellow_max: 2.0
+  standard:
+    thresholds:
+      D1_rhetoric_density:
+        direction: lower_is_better
+        green_max: 0.0247
+        yellow_max: 0.0399
+      D2_adj_verb_ratio:
+        direction: lower_is_better
+        green_max: 0.1595
+        yellow_max: 0.1872
+      D3_abstract_per_100_chars:
+        direction: lower_is_better
+        green_max: 0.0776
+        yellow_max: 0.1434
+      D4_sent_len_median:
+        direction: mid_is_better
+        green_low: 13.0
+        green_high: 17.625
+        yellow_low: 8.375
+        yellow_high: 22.25
+      D5_empty_paragraphs:
+        direction: lower_is_better
+        green_max: 50.5
+        yellow_max: 68.25
+      D6_nesting_depth:
+        direction: lower_is_better
+        green_max: 1.5
+        yellow_max: 2.0
+      D7_modifier_chain_length:
+        direction: lower_is_better
+        green_max: 1.5
+        yellow_max: 2.5
 scenes:
   golden_three:
     n: 150
