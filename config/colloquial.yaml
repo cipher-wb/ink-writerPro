@@ -36,3 +36,30 @@ thresholds:
     direction: lower_is_better
     green_max: 0.10
     yellow_max: 0.25
+
+# v26.2 平台感知阈值覆盖
+platforms:
+  fanqie:
+    score_threshold: 80
+    thresholds:
+      C1_idiom_density:
+        direction: lower_is_better
+        green_max: 2.0
+        yellow_max: 3.5
+      C2_quad_phrase_density:
+        direction: lower_is_better
+        green_max: 4.0
+        yellow_max: 7.0
+      C3_abstract_noun_chain:
+        direction: lower_is_better
+        green_max: 0.3
+        yellow_max: 1.0
+      C4_modifier_chain_avg:
+        direction: lower_is_better
+        green_max: 1.0
+        yellow_max: 1.5
+      C5_abstract_subject_rate:
+        direction: lower_is_better
+        green_max: 0.05
+        yellow_max: 0.15
+    force_aggressive: true

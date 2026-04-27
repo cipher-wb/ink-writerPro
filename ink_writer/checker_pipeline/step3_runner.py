@@ -319,13 +319,16 @@ def _make_colloquial_adapter(review_bundle: dict) -> Callable:
         platform = review_bundle.get("platform", "qidian")
 
         try:
-            # 平台感知阈值：优先从 checker-thresholds.yaml 读取
+            from ink_writer.platforms.resolver import resolve_platform_config
+
             config_path = Path(project_root) / "config" / "colloquial.yaml"
             colloquial_enabled = True
             thresholds_override = None
             if config_path.exists():
                 with open(config_path, "r", encoding="utf-8") as f:
                     cfg = yaml.safe_load(f) or {}
+                # v26.2: 解析平台覆盖
+                cfg = resolve_platform_config(cfg, platform)
                 colloquial_enabled = cfg.get("enabled", True)
                 thresholds_override = cfg.get("thresholds")
 
