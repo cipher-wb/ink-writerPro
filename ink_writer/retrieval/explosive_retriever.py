@@ -33,6 +33,22 @@ class ExplosiveRetriever:
         self._slices: list[dict[str, Any]] = []
         self._loaded: bool = False
 
+    # -- compat properties for linter API surface --------------------------
+
+    @property
+    def is_loaded(self) -> bool:
+        return self._loaded
+
+    @property
+    def slice_count(self) -> int:
+        return len(self._slices)
+
+    def load(self) -> None:
+        """公开加载方法（linter API 兼容）。"""
+        self._ensure_loaded()
+
+    # -- core ---------------------------------------------------------------
+
     def _ensure_loaded(self) -> None:
         if self._loaded:
             return
@@ -57,6 +73,7 @@ class ExplosiveRetriever:
         query_text: str,
         scene_type: str | None = None,
         k: int = 3,
+        top_k: int | None = None,
     ) -> list[dict[str, Any]]:
         """返回 top-k 最相关的段落切片。
 
@@ -64,14 +81,17 @@ class ExplosiveRetriever:
             query_text: 大纲/场景描述文本
             scene_type: 过滤场景类型（combat/dialogue/emotional/action/setup/climax）
             k: 返回切片数
+            top_k: k 的别名（linter API 兼容，优先于 k）
 
         Returns:
             [{"excerpt": str, "score": float, "scene_type": str,
-              "source_book": str, "source_chapter": int}, ...]
+              "source_book": str, "source_chapter": int, ...}, ...]
         """
         self._ensure_loaded()
         if not self._slices:
             return []
+
+        limit = top_k if top_k is not None else k
 
         candidates = self._slices
         if scene_type:
@@ -87,7 +107,7 @@ class ExplosiveRetriever:
         query_chars = set(query_text)
         scored: list[tuple[float, dict]] = []
         for s in candidates:
-            text = s.get("excerpt", s.get("text", s.get("content", "")))
+            text = s.get("text", s.get("excerpt", s.get("content", "")))
             if not text:
                 continue
             text_chars = set(text)
@@ -95,17 +115,21 @@ class ExplosiveRetriever:
             scored.append((overlap, s))
 
         scored.sort(key=lambda x: x[0], reverse=True)
-        top_k = scored[:k]
+        top_k_results = scored[:limit]
 
         return [
             {
-                "excerpt": s.get("excerpt", s.get("text", s.get("content", "")))[:300],
+                "excerpt": s.get("text", s.get("excerpt", s.get("content", "")))[:300],
+                "text": s.get("text", s.get("excerpt", s.get("content", "")))[:300],
                 "score": round(score, 4),
                 "scene_type": s.get("scene_type", "unknown"),
-                "source_book": s.get("source_book", s.get("book", "unknown")),
-                "source_chapter": s.get("source_chapter", s.get("chapter", 0)),
+                "source_book": s.get("book", s.get("source_book", "unknown")),
+                "source_chapter": s.get("chapter", s.get("source_chapter", 0)),
+                "book": s.get("book", s.get("source_book", "unknown")),
+                "chapter": s.get("chapter", s.get("source_chapter", 0)),
+                "has_dialogue": s.get("has_dialogue", False),
             }
-            for score, s in top_k
+            for score, s in top_k_results
         ]
 
 
@@ -115,3 +139,10 @@ def build_retriever(index_path: str | Path | None = None) -> ExplosiveRetriever:
     索引缺失时不抛异常，返回空检索器（graceful degradation）。
     """
     return ExplosiveRetriever(index_path)
+
+
+def get_retriever(index_path: str | Path | None = None) -> ExplosiveRetriever:
+    """工厂函数别名：创建并加载检索器（linter API 兼容）。"""
+    r = ExplosiveRetriever(index_path)
+    r.load()
+    return r

@@ -43,7 +43,7 @@ def inject_explosive_examples(
 
     try:
         retriever = ExplosiveRetriever(index_path if index_path else _DEFAULT_INDEX)
-        results = retriever.retrieve(scene_outline, scene_type=scene_type, k=k)
+        results = retriever.retrieve(scene_outline, scene_type=scene_type, top_k=k)
     except Exception as exc:
         logger.warning("ExplosiveRetriever failed, falling back to no-reference mode: %s", exc)
         return ""
@@ -56,11 +56,11 @@ def inject_explosive_examples(
     lines = ["<reference_examples>"]
     for r in results:
         lines.append(
-            f"<!-- source: {r.get('source_book', 'unknown')} "
-            f"ch{r.get('source_chapter', '?')} "
+            f"<!-- source: {r.get('book', 'unknown')} "
+            f"ch{r.get('chapter', '?')} "
             f"scene_type={r.get('scene_type', 'unknown')} "
             f"score={r.get('score', 0):.2f} -->\n"
-            f"{r.get('excerpt', '')}"
+            f"{r.get('text', '')}"
         )
     lines.append("</reference_examples>")
     return "\n".join(lines)
