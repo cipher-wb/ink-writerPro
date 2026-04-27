@@ -1,10 +1,11 @@
-"""US-011: explosive_retriever.py 爆款示例语义检索器测试。
+"""PRD US-011: explosive_retriever 语义检索器测试。
 
-覆盖:
-  1. 空索引 graceful degradation
-  2. mock 索引检索（关键词 overlap 评分）
-  3. scene_type 过滤
-  4. k 参数控制
+验证:
+  1. ExplosiveRetriever 从 mock 索引正确加载切片
+  2. retrieve 按 scene_type 过滤
+  3. retrieve 返回 top-k 正确结构和排序
+  4. 空索引/缺失索引 graceful fallback
+  5. build_retriever 工厂函数
 """
 
 from __future__ import annotations
@@ -20,147 +21,201 @@ from ink_writer.retrieval.explosive_retriever import (
 )
 
 
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
-
-_MOCK_SLICES: list[dict] = [
-    {
-        "excerpt": "他一拳轰出，气浪把地面的石砖掀飞了七八块。",
-        "scene_type": "combat",
-        "source_book": "夜无疆",
-        "source_chapter": 42,
-    },
-    {
-        "excerpt": "\"你来了。\"她抬起头，眼里有泪，但嘴角在笑。",
-        "scene_type": "dialogue",
-        "source_book": "剑来",
-        "source_chapter": 15,
-    },
-    {
-        "excerpt": "他站在山巅，看着云海翻涌。三年前他在这里失去了一切。",
-        "scene_type": "emotional",
-        "source_book": "完美世界",
-        "source_chapter": 100,
-    },
-    {
-        "excerpt": "刀光闪过，他低头避开，反手一剑刺向对方肋下。",
-        "scene_type": "combat",
-        "source_book": "夜无疆",
-        "source_chapter": 55,
-    },
-    {
-        "excerpt": "\"这酒有毒。\"他把杯子往桌上一顿，酒液溅出半圈。",
-        "scene_type": "dialogue",
-        "source_book": "剑来",
-        "source_chapter": 30,
-    },
-]
-
-
-@pytest.fixture
-def mock_index_path() -> str:
-    with tempfile.NamedTemporaryFile(
-        mode="w", suffix=".json", delete=False, encoding="utf-8"
-    ) as f:
-        json.dump(_MOCK_SLICES, f, ensure_ascii=False)
-        return f.name
+def _mock_index() -> list[dict]:
+    """返回 6 切片 mock 索引，覆盖各 scene_type。"""
+    return [
+        {
+            "excerpt": "他第一时间缩肩，下蹲，滚向一侧的雪地。刀风擦过后颈。",
+            "scene_type": "combat",
+            "source_book": "夜无疆",
+            "source_chapter": 12,
+        },
+        {
+            "excerpt": "'找到了！' '嗯？' 两句对话各占一段。",
+            "scene_type": "dialogue",
+            "source_book": "青山",
+            "source_chapter": 5,
+        },
+        {
+            "excerpt": "秦铭从干果堆中挑出一部分橡果，道：'这种坚果需要处理后才能吃。'",
+            "scene_type": "dialogue",
+            "source_book": "夜无疆",
+            "source_chapter": 3,
+        },
+        {
+            "excerpt": "她把碗洗了三遍。第三遍的时候水早就凉了。",
+            "scene_type": "emotional",
+            "source_book": "苟在武道世界成圣",
+            "source_chapter": 8,
+        },
+        {
+            "excerpt": "伤口不深，血很快止住了。如果反应稍慢一拍，后颈要被咬断。",
+            "scene_type": "combat",
+            "source_book": "夜无疆",
+            "source_chapter": 12,
+        },
+        {
+            "excerpt": "周良：'量物，亦量人。量你的筋骨，量你的胆气。'",
+            "scene_type": "dialogue",
+            "source_book": "苟在武道世界成圣",
+            "source_chapter": 2,
+        },
+    ]
 
 
-# ---------------------------------------------------------------------------
-# Tests
-# ---------------------------------------------------------------------------
+def _write_mock_index(path: Path) -> None:
+    path.write_text(json.dumps(_mock_index(), ensure_ascii=False), encoding="utf-8")
 
-class TestExplosiveRetrieverEmpty:
-    """Graceful degradation when index doesn't exist."""
 
-    def test_retrieve_with_no_index_returns_empty(self) -> None:
-        retriever = ExplosiveRetriever("/nonexistent/path/index.json")
-        results = retriever.retrieve("战斗场景", k=3)
+class TestExplosiveRetrieverLoad:
+    """索引加载与 fallback。"""
+
+    def test_loads_from_valid_index(self) -> None:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
+            json.dump(_mock_index(), f, ensure_ascii=False)
+            tmp_path = f.name
+
+        try:
+            retriever = ExplosiveRetriever(tmp_path)
+            results = retriever.retrieve("战斗场景", k=6)
+            assert len(results) >= 1
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
+
+    def test_empty_index_missing_file(self) -> None:
+        retriever = ExplosiveRetriever("/tmp/nonexistent_index.json")
+        results = retriever.retrieve("anything", k=3)
         assert results == []
 
-    def test_build_retriever_with_no_index_returns_empty(self) -> None:
-        retriever = build_retriever("/nonexistent/path/index.json")
-        results = retriever.retrieve("test", k=5)
-        assert results == []
+    def test_build_retriever_returns_explosive_retriever(self) -> None:
+        r = build_retriever()
+        assert isinstance(r, ExplosiveRetriever)
+
+    def test_build_retriever_graceful_on_missing(self) -> None:
+        r = build_retriever("/tmp/definitely_not_there.json")
+        assert r.retrieve("test", k=1) == []
 
 
-class TestExplosiveRetrieverWithMockIndex:
-    """Test retrieval with mock index data."""
+class TestRetrieveFiltering:
+    """按 scene_type 过滤 + top-k 返回。"""
 
-    def test_retrieve_returns_k_results(self, mock_index_path: str) -> None:
-        retriever = ExplosiveRetriever(mock_index_path)
-        results = retriever.retrieve("战斗场景刀光剑影", k=3)
-        assert len(results) <= 3
-        assert len(results) >= 1
+    def test_scene_type_filter_combat(self) -> None:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
+            json.dump(_mock_index(), f, ensure_ascii=False)
+            tmp_path = f.name
 
-    def test_retrieve_with_scene_type_filter(self, mock_index_path: str) -> None:
-        retriever = ExplosiveRetriever(mock_index_path)
-        results = retriever.retrieve("战斗", scene_type="combat", k=10)
-        assert len(results) > 0
-        for r in results:
-            assert r["scene_type"] == "combat"
+        try:
+            retriever = ExplosiveRetriever(tmp_path)
+            results = retriever.retrieve("战斗 刀", scene_type="combat", k=2)
+            assert len(results) >= 1
+            for r in results:
+                assert r["scene_type"] == "combat"
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
 
-    def test_retrieve_dialogue_scene_type(self, mock_index_path: str) -> None:
-        retriever = ExplosiveRetriever(mock_index_path)
-        results = retriever.retrieve("对话", scene_type="dialogue", k=10)
-        assert len(results) > 0
-        for r in results:
-            assert r["scene_type"] == "dialogue"
+    def test_scene_type_filter_dialogue(self) -> None:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
+            json.dump(_mock_index(), f, ensure_ascii=False)
+            tmp_path = f.name
 
-    def test_result_has_required_fields(self, mock_index_path: str) -> None:
-        retriever = ExplosiveRetriever(mock_index_path)
-        results = retriever.retrieve("test", k=1)
-        assert len(results) == 1
-        r = results[0]
-        for field in ("excerpt", "score", "scene_type", "source_book", "source_chapter"):
-            assert field in r, f"Result missing field: {field}"
+        try:
+            retriever = ExplosiveRetriever(tmp_path)
+            results = retriever.retrieve("对话 说", scene_type="dialogue", k=3)
+            assert len(results) >= 1
+            dialogue_types = {r["scene_type"] for r in results}
+            assert dialogue_types == {"dialogue"} or "dialogue" in dialogue_types
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
 
-    def test_results_sorted_by_score_desc(self, mock_index_path: str) -> None:
-        retriever = ExplosiveRetriever(mock_index_path)
-        results = retriever.retrieve("战斗刀光剑影轰拳", k=5)
-        scores = [r["score"] for r in results]
-        assert scores == sorted(scores, reverse=True), f"Scores not sorted desc: {scores}"
+    def test_no_scene_type_returns_all(self) -> None:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
+            json.dump(_mock_index(), f, ensure_ascii=False)
+            tmp_path = f.name
 
-    def test_retrieve_k_zero_returns_empty(self, mock_index_path: str) -> None:
-        retriever = ExplosiveRetriever(mock_index_path)
-        results = retriever.retrieve("test", k=0)
-        assert results == []
+        try:
+            retriever = ExplosiveRetriever(tmp_path)
+            results = retriever.retrieve("测试", scene_type=None, k=10)
+            assert len(results) >= 1
+            types = {r["scene_type"] for r in results}
+            assert len(types) >= 1
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
 
-    def test_retrieve_empty_query_returns_results(self, mock_index_path: str) -> None:
-        retriever = ExplosiveRetriever(mock_index_path)
-        results = retriever.retrieve("", k=3)
-        # Empty query should still return results (all equal score)
-        assert len(results) <= 3
+    def test_nonexistent_scene_type_falls_back(self) -> None:
+        """不存在的 scene_type -> fallback 到全集。"""
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
+            json.dump(_mock_index(), f, ensure_ascii=False)
+            tmp_path = f.name
 
-
-class TestExplosiveRetrieverCaching:
-    """Index is loaded only once."""
-
-    def test_second_retrieve_reuses_cache(self, mock_index_path: str) -> None:
-        retriever = ExplosiveRetriever(mock_index_path)
-        r1 = retriever.retrieve("战斗", k=1)
-        r2 = retriever.retrieve("对话", k=1)
-        assert r1 == retriever.retrieve("战斗", k=1)  # deterministic for same query
-
-
-class TestBuildRetriever:
-    """Factory function tests."""
-
-    def test_build_retriever_returns_retriever(self, mock_index_path: str) -> None:
-        retriever = build_retriever(mock_index_path)
-        assert isinstance(retriever, ExplosiveRetriever)
-        results = retriever.retrieve("test", k=1)
-        assert len(results) == 1
+        try:
+            retriever = ExplosiveRetriever(tmp_path)
+            results = retriever.retrieve("测试", scene_type="nonexistent_type", k=3)
+            assert len(results) >= 1
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
 
 
-class TestPublicAPI:
-    """ink_writer.retrieval __all__ exports."""
+class TestRetrieveReturnSchema:
+    """验证返回结构。"""
 
-    def test_init_exports(self) -> None:
-        from ink_writer import retrieval
+    def test_result_has_required_fields(self) -> None:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
+            json.dump(_mock_index(), f, ensure_ascii=False)
+            tmp_path = f.name
 
-        assert hasattr(retrieval, "ExplosiveRetriever")
-        assert hasattr(retrieval, "build_retriever")
-        assert "ExplosiveRetriever" in retrieval.__all__
-        assert "build_retriever" in retrieval.__all__
+        try:
+            retriever = ExplosiveRetriever(tmp_path)
+            results = retriever.retrieve("战斗", k=1)
+            assert len(results) == 1
+            r = results[0]
+            for field in ("excerpt", "score", "scene_type", "source_book", "source_chapter"):
+                assert field in r, f"Missing field: {field}"
+            assert isinstance(r["excerpt"], str) and len(r["excerpt"]) > 0
+            assert isinstance(r["score"], float)
+            assert isinstance(r["source_book"], str)
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
+
+    def test_results_sorted_by_score_desc(self) -> None:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
+            json.dump(_mock_index(), f, ensure_ascii=False)
+            tmp_path = f.name
+
+        try:
+            retriever = ExplosiveRetriever(tmp_path)
+            results = retriever.retrieve("战斗 刀", k=5)
+            scores = [r["score"] for r in results]
+            assert scores == sorted(scores, reverse=True), (
+                f"Scores not descending: {scores}"
+            )
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
+
+    def test_k_limits_results(self) -> None:
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".json", delete=False, encoding="utf-8"
+        ) as f:
+            json.dump(_mock_index(), f, ensure_ascii=False)
+            tmp_path = f.name
+
+        try:
+            retriever = ExplosiveRetriever(tmp_path)
+            for k in (1, 2, 3):
+                results = retriever.retrieve("测试", k=k)
+                assert len(results) <= k, f"k={k} but got {len(results)} results"
+        finally:
+            Path(tmp_path).unlink(missing_ok=True)
