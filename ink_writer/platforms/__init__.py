@@ -5,4 +5,6 @@ from ink_writer.platforms.resolver import (
     PLATFORM_QIDIAN,
     PLATFORM_FANQIE,
     PLATFORM_DEFAULTS,
+    PLATFORM_LABELS,
+    VALID_PLATFORMS,
 )

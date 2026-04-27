@@ -71,3 +71,29 @@ def test_resolve_platform_config_platform_key_missing_falls_back_to_top():
     }
     result = resolve_platform_config(raw, PLATFORM_FANQIE)
     assert result["block_threshold"] == 70
+
+
+def test_get_platform_handles_corrupt_state_json():
+    root = Path(tempfile.mkdtemp())
+    ink_dir = root / ".ink"
+    ink_dir.mkdir()
+    (ink_dir / "state.json").write_text("not valid json {{{", encoding="utf-8")
+    assert get_platform(root) == PLATFORM_QIDIAN
+
+
+def test_get_platform_migrates_legacy_chinese_label():
+    root = Path(tempfile.mkdtemp())
+    ink_dir = root / ".ink"
+    ink_dir.mkdir()
+    state = {"project_info": {"platform": "起点"}}
+    (ink_dir / "state.json").write_text(json.dumps(state), encoding="utf-8")
+    assert get_platform(root) == PLATFORM_QIDIAN
+
+
+def test_get_platform_migrates_legacy_chinese_label_qidian():
+    root = Path(tempfile.mkdtemp())
+    ink_dir = root / ".ink"
+    ink_dir.mkdir()
+    state = {"project_info": {"platform": "起点中文网"}}
+    (ink_dir / "state.json").write_text(json.dumps(state), encoding="utf-8")
+    assert get_platform(root) == PLATFORM_QIDIAN
