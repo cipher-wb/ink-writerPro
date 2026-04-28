@@ -1,6 +1,7 @@
 """Collector — single write entry point. Failure-soft by design."""
 from __future__ import annotations
 
+import os
 import sys
 import traceback
 from datetime import datetime, timezone
@@ -30,6 +31,16 @@ class Collector:
         path = self._events_path()
         with path.open("a", encoding="utf-8") as f:
             f.write(line)
+        # Best-effort rotation check (cheap stat call).
+        try:
+            from ink_writer.debug.rotate import rotate_if_needed
+            rotate_if_needed(
+                path,
+                max_bytes=self.config.storage.events_max_mb * 1024 * 1024,
+                archive_keep=self.config.storage.archive_keep,
+            )
+        except Exception as e:
+            self._log_error(e)
 
     def _log_error(self, exc: BaseException) -> None:
         try:
@@ -43,8 +54,8 @@ class Collector:
 
     def _stderr_print(self, incident: Incident) -> None:
         msg = f"[debug:{incident.severity}] {incident.kind} {incident.message}"
-        # ANSI red only if tty
-        if sys.stderr.isatty():
+        # ANSI red only if tty AND NO_COLOR is unset (CLAUDE.md / spec §6).
+        if sys.stderr.isatty() and not os.environ.get("NO_COLOR"):
             msg = f"\033[31m{msg}\033[0m"
         print(msg, file=sys.stderr)
 
@@ -54,18 +65,25 @@ class Collector:
             return
 
         # 2. Layer gating.
+        # Note: source="meta" is intentionally ungated — meta events report on the
+        # debug system itself and must surface even if all layer switches are off.
+        # source="layer_d_adversarial" is gated below (default-off until v1.0).
         if incident.source == "layer_c_invariant" and not self.config.layers.layer_c_invariants:
             return
         if incident.source == "layer_b_checker" and not self.config.layers.layer_b_checker_router:
             return
         if incident.source == "layer_a_hook" and not self.config.layers.layer_a_hooks:
             return
+        if incident.source == "layer_d_adversarial" and not self.config.layers.layer_d_adversarial:
+            return
 
-        # 3. Kind validation.
+        # Kind validation.
         if not validate_kind(incident.kind):
             if self.config.strict_mode:
                 raise ValueError(f"unknown kind: {incident.kind}")
-            # Re-emit as meta.unknown_kind (and skip original).
+            # Re-emit as meta.unknown_kind synthetic event; original incident is dropped.
+            # Direct _write_jsonl bypasses validate_kind, preventing infinite recursion
+            # even if meta.unknown_kind is later removed from KIND_WHITELIST.
             try:
                 meta = Incident(
                     ts=incident.ts,
