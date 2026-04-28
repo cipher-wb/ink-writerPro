@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ink-writer"
-version = "26.1.0"
+version = "26.3.0"
 description = "长篇网文创作系统（skills + agents + data chain + RAG）"
 readme = "README.md"
 license = { text = "GPL-3.0" }

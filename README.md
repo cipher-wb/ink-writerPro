@@ -1,6 +1,6 @@
 # Ink Writer Pro
 
-[![Version](https://img.shields.io/badge/Version-26.2.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/Version-26.3.0-green.svg)](ink-writer/.claude-plugin/plugin.json)
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-blue.svg)]()
 
@@ -16,6 +16,7 @@
 - **288 条编辑建议内化**：起点金牌编辑的写作建议结构化为硬约束，不符合直接拦截重写
 - **快速开书**：`/ink-init --quick` 一键生成 3 套完整方案（书名/角色/冲突/金手指），选一个直接开写
 - **断点续写**：中途断了用 `/ink-resume` 从断点继续，已写章节一字不丢
+- **Debug Mode 自我观察**（v26.3+）：写作全链路自动记录"AI 偷懒/契约脱节/工作流偏航"等事件到 `<project>/.ink-debug/`（JSONL + SQLite 双层），`/ink-debug-report` 一键出双视图 markdown 喂给 AI，闭环改 SKILL.md。零侵入、默认开、`INK_DEBUG_OFF=1` 一键关。详见 [docs/USER_MANUAL_DEBUG.md](docs/USER_MANUAL_DEBUG.md)
 - **跨平台**：macOS + Windows 原生支持，同一套数据格式，无缝切换。Windows 特有故障速查：[docs/windows-troubleshooting.md](docs/windows-troubleshooting.md)
 
 ---
@@ -163,6 +164,9 @@ EMBED_API_KEY=你的OpenAI密钥
 | `/ink-learn` | 提取成功写作模式 |
 | `/ink-dashboard` | 启动可视化管理面板 |
 | `/ink-migrate` | 旧版项目迁移到新架构 |
+| `/ink-debug-status` | 看 Debug Mode 当前状态（开关 + 24h 摘要） |
+| `/ink-debug-report` | 出 markdown 双视图报告（喂给 AI 做软件迭代） |
+| `/ink-debug-toggle` | 临时切换 debug 开关，无需手编 yaml |
 
 ---
 
@@ -211,7 +215,8 @@ py -3 -c "import ink_writer; print('OK')"
 
 | 版本 | 说明 |
 |------|------|
-| **v26.2.0 (当前)** | 新增番茄小说平台模式（fanqie）：init 可选平台 → plan/write/auto/checker/prose 全链路按平台区分。番茄独有：1500字/章、每500字爽点、直白打脸冲突、章末钩子硬阻断、colloquial 强制激进档、反AI追加25字复合句规则。 |
+| **v26.3.0 (当前)** | **Debug Mode v0.5 — 软件自观察 + 离线迭代闭环**。新增"上帝视角"观察层：写作流程自动记录 AI 偷懒/契约脱节/硬错误等事件到 `<project>/.ink-debug/`（JSONL + SQLite 双层），不打断主流程。3 上游接入（Claude Code hooks / 5 个已有 checker 输出标准化 / 5 个轻量 invariant）→ 单 collector 总线 → 2 下游消费（per-chapter 收尾摘要 / per-batch markdown 报告 + `/ink-debug-report` 双视图）。9 条 acceptance 全过、73 个测试零回归。配套 `docs/USER_MANUAL_DEBUG.md` 使用说明书 + spec/plan 全程 brainstorm 记录。回滚：`master_enabled: false` 或 `INK_DEBUG_OFF=1` 一键关。v1.0 押后：layer D 对抗复核 / 自动 fix PR / 跨项目聚合 / 周报 cron。 |
+| v26.2.0 | 新增番茄小说平台模式（fanqie）：init 可选平台 → plan/write/auto/checker/prose 全链路按平台区分。番茄独有：1500字/章、每500字爽点、直白打脸冲突、章末钩子硬阻断、colloquial 强制激进档、反AI追加25字复合句规则。 |
 | **v26.1.0** | **Prose Anti-AI Overhaul — 文笔反 AI 味 + 爆款白话化深层重构** — 七层改造根治三大痛点：AI 化标点、行文绕读着累、装逼词藻堆叠。**第 1 层**：5 条标点 AI 指纹零容忍规则（双破折号/智能引号/英式连字符/过密顿号/过用省略号）。**第 2-3 层**：90+ 装逼词黑名单 × 3 域 + replacement_map 爆款替换。**第 4-5 层**：colloquial-checker 白话度 C1-C5 五维门禁 + directness-checker 扩展 D1-D7 七维全场景爆款档。**第 6 层**：writer-agent L12 对话+动作驱动律 + 爆款示例 RAG few-shot（语义检索引擎 + prompt 注入）。**第 7 层**：polish-agent Hard Block Rewrite Mode（三门禁任一 red → 全章 LLM 重写 → 复检 → hard_blocked exit code 2）。**评估+回滚**：5+5 基线校准脚本 + E2E 旧/新 pipeline 对照评估 + 三个独立回滚开关 + 总开关保证可降级。pytest 3808 → 3865 passed（+57 新测试，零回归）。`ralph/prose-anti-ai-overhaul`。 |
 | v26.0.0 | **5 周质量治理 roadmap 100% 完成 — M3 + M4 + M5 三大 milestone 一次性发布** — 起点编辑评分 30/100 → 60+/100 的工业化产线**结构闭环**。**M5（v26）**：Layer 4 复发追踪（resolved → regressed 升 severity）+ Layer 5 元规则浮现（N=5 + LLM similarity > 0.80 提议合并 → 用户审批 `ink meta-rule {list,approve,reject}`）+ dashboard "M5 Case 治理" 标签页（4 大指标 + M3/M4 dry-run counter + 切换推荐）+ 周报 CLI（`ink dashboard report --week N` 输出 `reports/weekly/<year>-W<NN>.md`）+ A/B 通道（`config/ab_channels.yaml` + `--channel A\|B` flag + evidence_chain 加 channel 字段，向后兼容）+ user_corpus history-travel 样例 + ink-learn 改造（`--auto-case-from-failure` 每周限 5 + `--promote` 短期 → 长期）+ 作者手册 `docs/USER_MANUAL.md` 5 节 + 编辑反馈手册 `docs/EDITOR_FEEDBACK_GUIDE.md` 3 节。case schema 加 3 字段（`recurrence_history` / `meta_rule_id` / `sovereign`）向后兼容现有 410 active cases。pytest 3593 → 3808 passed（M3+M4+M5 累计 +215 新测试，零回归；含 `tests/integration/test_m4_e2e.py` 7 用例 + `tests/integration/test_m5_e2e.py` 6 用例）。tag `m5-final` 已 push 到 origin。 |
 | v25.0.0 | **M4 P0 上游策划层 — ink-init / ink-plan 阶段强制策划期审查** — 在开新书阶段把 spec §1.3 编辑诊断的 5/8 上游扣分（题材老套 / 金手指模糊 / AI 起名 / 主角动机牵强 / 金手指出场过晚 / 主角骨架级被动 / 章节钩子稀疏）阻断在策划期。新增 7 个 checker：4 个 ink-init（`genre-novelty-checker` LLM 比对起点 top200 / `golden-finger-spec-checker` 4 维度 LLM / `naming-style-checker` 纯规则起名词典 / `protagonist-motive-checker` 3 维度 LLM）+ 3 个 ink-plan（`golden-finger-timing-checker` regex+LLM 双重 / `protagonist-agency-skeleton-checker` 卷骨架级 / `chapter-hook-density-checker`）。配套 2 个数据资产：起点 top200 简介库爬虫（合规：robots.txt + 1 req/s 限速 + UA 礼貌；如反爬触发则 manual-fallback）+ LLM 高频起名词典 331 条 + 24 首字 + 24 末字字根模式（`data/market_intelligence/llm_naming_blacklist.json`）。7 个上游 seed cases（`CASE-2026-M4-0001~0007`）batch approve 入活。`planning_evidence_chain.json` schema（复用 M3 evidence_chain + `phase` 字段向后兼容）+ `--skip-planning-review` 紧急绕过 + `data/.planning_dry_run_counter` 独立护栏。`ink-init` / `ink-plan` SKILL.md 末尾追加 Step 99 章节（含 PowerShell sibling）。tag `m4-p0-planning`。 |
