@@ -19,6 +19,13 @@
 
 set -euo pipefail
 
+# v27: top-level defaults so trap-driven cleanup paths work even before
+# init_project_paths runs (needed when user Ctrl+C during init bootstrap)
+LOG_DIR=""
+REPORT_FILE=""
+BATCH_START=0
+REPORT_EVENTS=""
+
 # ═══════════════════════════════════════════
 # 参数解析：支持 --parallel N
 # ═══════════════════════════════════════════
@@ -253,6 +260,8 @@ report_event() {
 }
 
 write_report() {
+    [[ -n "$REPORT_FILE" ]] || return 0
+    [[ -n "$LOG_DIR" ]] || return 0
     local end_time_str
     end_time_str=$(date "+%Y-%m-%d %H:%M:%S")
     local end_time
@@ -740,7 +749,8 @@ INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED="${INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED
 if [[ -z "$PROJECT_ROOT" ]]; then
     if [[ "$INK_AUTO_INIT_ENABLED" != "1" ]]; then
         echo "❌ 未找到 .ink/state.json，请在小说项目目录下运行"
-        echo "   提示：设置 INK_AUTO_INIT_ENABLED=1 启用自动初始化"
+        echo "   提示：当前目录无已初始化项目（自动初始化已被 INK_AUTO_INIT_ENABLED=0 禁用）"
+        echo "   解决：移除 INK_AUTO_INIT_ENABLED=0 重新运行，或切换到已初始化的项目目录"
         exit 1
     fi
 
@@ -1236,6 +1246,7 @@ run_checkpoint() {
 # ═══════════════════════════════════════════
 
 print_summary() {
+    [[ -n "$LOG_DIR" ]] || return 0
     local CURRENT_END
     CURRENT_END=$(get_current_chapter 2>/dev/null || echo "?")
 
