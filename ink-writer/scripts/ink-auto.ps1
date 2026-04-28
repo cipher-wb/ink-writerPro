@@ -69,6 +69,13 @@ $startTime     = Get-Date
 $startEpoch    = [int][double]::Parse((Get-Date -UFormat %s))
 $startTimeStr  = $startTime.ToString('yyyy-MM-dd HH:mm:ss')
 
+# v27: top-level defaults for trap-driven cleanup paths (needed when user
+# Ctrl+C during init bootstrap, before Initialize-ProjectPaths has run)
+$script:LogDir       = ""
+$script:ReportFile   = ""
+$script:BatchStart   = 0
+$script:ReportEvents = ""
+
 # ============================================================
 # 路径解析
 # ============================================================
@@ -91,42 +98,48 @@ function Find-ProjectRoot {
 }
 
 $ProjectRoot = Find-ProjectRoot
+# v27 ink-auto 终极自动化：允许 PROJECT_ROOT 暂时为空，后续状态分发处理
 if (-not $ProjectRoot) {
-    Write-Host '❌ 未找到 .ink/state.json，请在小说项目目录下运行'
-    exit 1
+    $ProjectRoot = ""
 }
 
-$LogDir    = Join-Path $ProjectRoot '.ink/logs/auto'
-$ReportDir = Join-Path $ProjectRoot '.ink/reports'
-New-Item -ItemType Directory -Force -Path $LogDir, $ReportDir | Out-Null
-$ReportFile = Join-Path $ReportDir ("auto-{0}.md" -f $startTime.ToString('yyyyMMdd-HHmmss'))
+function Initialize-ProjectPaths {
+    $script:LogDir    = Join-Path $script:ProjectRoot '.ink/logs/auto'
+    $script:ReportDir = Join-Path $script:ProjectRoot '.ink/reports'
+    New-Item -ItemType Directory -Force -Path $script:LogDir, $script:ReportDir | Out-Null
+    $script:ReportFile = Join-Path $script:ReportDir ("auto-{0}.md" -f $startTime.ToString('yyyyMMdd-HHmmss'))
 
-# ============================================================
-# 字数硬上限（US-004）：从 preferences.json 的 pacing.chapter_words 推导 +500
-# 读取失败/损坏/未配置 → 默认 5000（与 load_word_limits 默认一致）。
-# MaxWordsHard 是 Test-Chapter 上限阻断阈值；硬下限 2200 不可降（与 .sh 语义一致）。
-# ============================================================
+    # ============================================================
+    # 字数硬上限（US-004）：从 preferences.json 的 pacing.chapter_words 推导 +500
+    # 读取失败/损坏/未配置 → 默认 5000（与 load_word_limits 默认一致）。
+    # MaxWordsHard 是 Test-Chapter 上限阻断阈值；硬下限 2200 不可降（与 .sh 语义一致）。
+    # ============================================================
 
-$MaxWordsHard = 5000
-try {
-    $prefFile = Join-Path $ProjectRoot '.ink/preferences.json'
-    if (Test-Path -LiteralPath $prefFile -PathType Leaf) {
-        $prefData = Get-Content -LiteralPath $prefFile -Raw -Encoding UTF8 | ConvertFrom-Json
-        if ($prefData -and $prefData.pacing -and $prefData.pacing.chapter_words) {
-            $cw = $prefData.pacing.chapter_words
-            # 仅接受正整数；bool / 非数字 / 非正数 → 保持默认 5000
-            if ($cw -is [int] -and $cw -gt 0) {
-                $MaxWordsHard = $cw + 500
+    $script:MaxWordsHard = 5000
+    try {
+        $prefFile = Join-Path $script:ProjectRoot '.ink/preferences.json'
+        if (Test-Path -LiteralPath $prefFile -PathType Leaf) {
+            $prefData = Get-Content -LiteralPath $prefFile -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($prefData -and $prefData.pacing -and $prefData.pacing.chapter_words) {
+                $cw = $prefData.pacing.chapter_words
+                # 仅接受正整数；bool / 非数字 / 非正数 → 保持默认 5000
+                if ($cw -is [int] -and $cw -gt 0) {
+                    $script:MaxWordsHard = $cw + 500
+                }
             }
         }
+    } catch {
+        $script:MaxWordsHard = 5000
     }
-} catch {
-    $MaxWordsHard = 5000
-}
-if ($MaxWordsHard -lt 2200) { $MaxWordsHard = 5000 }
+    if ($script:MaxWordsHard -lt 2200) { $script:MaxWordsHard = 5000 }
 
-# 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
-$ShrinkMaxRounds = 3
+    # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
+    $script:ShrinkMaxRounds = 3
+}
+
+if ($ProjectRoot) {
+    Initialize-ProjectPaths
+}
 
 # Python launcher
 function Find-PythonLauncher {
@@ -196,6 +209,8 @@ function Format-Duration {
 }
 
 function Write-Report {
+    # v27: guard against early-exit before Initialize-ProjectPaths has run
+    if (-not $script:ReportFile) { return }
     $endTimeStr = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     $endEpoch   = [int][double]::Parse((Get-Date -UFormat %s))
     $duration   = $endEpoch - $startEpoch
@@ -240,7 +255,7 @@ $events
 
 ## 日志目录
 
-``$LogDir``
+``$($script:LogDir)``
 
 ## 报告与产出
 
@@ -250,8 +265,8 @@ $events
 - 章节文件: ``正文/`` 目录
 "@
 
-    $content | Set-Content -Path $ReportFile -Encoding UTF8
-    Write-Host "📄 运行报告: $ReportFile"
+    $content | Set-Content -Path $script:ReportFile -Encoding UTF8
+    Write-Host "📄 运行报告: $script:ReportFile"
 }
 
 # ============================================================
@@ -315,44 +330,46 @@ function Test-ProjectCompleted {
 }
 
 # ============================================================
-# Preflight
+# Preflight（v27: PROJECT_ROOT 为空时跳过，状态分发块会在 Invoke-CliProcess 就绪后处理）
 # ============================================================
 
-try {
-    Invoke-InkCli preflight *>$null
-    if ($LASTEXITCODE -ne 0) { throw '' }
-} catch {
-    Write-Host '❌ 预检失败，请检查项目状态'
-    exit 1
-}
+if ($ProjectRoot) {
+    try {
+        Invoke-InkCli preflight *>$null
+        if ($LASTEXITCODE -ne 0) { throw '' }
+    } catch {
+        Write-Host '❌ 预检失败，请检查项目状态'
+        exit 1
+    }
 
-$ProjectStatus = Test-ProjectCompleted
-if ($ProjectStatus -eq 'completed') {
-    Write-Host '🎉 本书已完结！所有卷章均已写完。'
-    Write-Host '   如需继续创作，请手动修改 .ink/state.json 中的 is_completed 字段。'
-    exit 0
-}
+    $ProjectStatus = Test-ProjectCompleted
+    if ($ProjectStatus -eq 'completed') {
+        Write-Host '🎉 本书已完结！所有卷章均已写完。'
+        Write-Host '   如需继续创作，请手动修改 .ink/state.json 中的 is_completed 字段。'
+        exit 0
+    }
 
-$CurrentCh = Get-CurrentChapter
-$script:BatchStart = $CurrentCh + 1
-$BatchEnd = $CurrentCh + $N
+    $CurrentCh = Get-CurrentChapter
+    $script:BatchStart = $CurrentCh + 1
+    $BatchEnd = $CurrentCh + $N
 
-Report-Event '🚀' '批量写作启动' "计划${N}章，从第${script:BatchStart}章到第${BatchEnd}章"
-Write-Host "🔍 正在扫描第${script:BatchStart}章到第${BatchEnd}章的大纲覆盖..."
+    Report-Event '🚀' '批量写作启动' "计划${N}章，从第${script:BatchStart}章到第${BatchEnd}章"
+    Write-Host "🔍 正在扫描第${script:BatchStart}章到第${BatchEnd}章的大纲覆盖..."
 
-try {
-    Invoke-InkCli check-outline --chapter $script:BatchStart --batch-end $BatchEnd *>$null
-    if ($LASTEXITCODE -ne 0) { throw '' }
-    Write-Host '✅ 大纲覆盖完整'
-    Report-Event '✅' '大纲预检' '全部覆盖'
-} catch {
-    Write-Host ''
-    Write-Host '⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成'
-    Write-Host '    如需手动规划，请按 Ctrl+C 中止后执行 /ink-plan'
-    Write-Host ''
-    Report-Event '⚠️' '大纲预检' '部分章节大纲缺失，将按需自动生成'
-    Start-Sleep -Seconds 5
-}
+    try {
+        Invoke-InkCli check-outline --chapter $script:BatchStart --batch-end $BatchEnd *>$null
+        if ($LASTEXITCODE -ne 0) { throw '' }
+        Write-Host '✅ 大纲覆盖完整'
+        Report-Event '✅' '大纲预检' '全部覆盖'
+    } catch {
+        Write-Host ''
+        Write-Host '⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成'
+        Write-Host '    如需手动规划，请按 Ctrl+C 中止后执行 /ink-plan'
+        Write-Host ''
+        Report-Event '⚠️' '大纲预检' '部分章节大纲缺失，将按需自动生成'
+        Start-Sleep -Seconds 5
+    }
+}  # end: if ($ProjectRoot) (v27 preflight/完结/大纲预检守卫)
 
 # ============================================================
 # CLI 进程执行（Windows 平台探测命令的具体参数对齐 .sh）
@@ -396,10 +413,131 @@ function Invoke-CliProcess {
     return $exitCode
 }
 
+# ═══════════════════════════════════════════
+# v27 状态分发：未初始化项目时自动 init
+# ═══════════════════════════════════════════
+
+$INK_AUTO_INIT_ENABLED                    = if ($env:INK_AUTO_INIT_ENABLED)                    { $env:INK_AUTO_INIT_ENABLED }                    else { "1" }
+$INK_AUTO_BLUEPRINT_ENABLED               = if ($env:INK_AUTO_BLUEPRINT_ENABLED)               { $env:INK_AUTO_BLUEPRINT_ENABLED }               else { "1" }
+$INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED   = if ($env:INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED)   { $env:INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED }   else { "1" }
+
+if (-not $ProjectRoot) {
+    if ($INK_AUTO_INIT_ENABLED -ne "1") {
+        Write-Host "❌ 未找到 .ink/state.json，请在小说项目目录下运行"
+        Write-Host "   提示：当前目录无已初始化项目（自动初始化已被 INK_AUTO_INIT_ENABLED=0 禁用）"
+        Write-Host "   解决：移除 INK_AUTO_INIT_ENABLED=0 重新运行，或切换到已初始化的项目目录"
+        exit 1
+    }
+
+    $ProjectRoot = $PWD.Path
+    Write-Host "════════════════════════════════════════════════════"
+    Write-Host "  ink-auto 终极自动化模式：未检测到已初始化项目"
+    Write-Host "  当前目录：$ProjectRoot"
+    Write-Host "════════════════════════════════════════════════════"
+
+    # 扫描蓝本
+    $BlueprintPath = ""
+    if ($INK_AUTO_BLUEPRINT_ENABLED -eq "1") {
+        $scanScript = @"
+from pathlib import Path
+from ink_writer.core.auto.blueprint_scanner import find_blueprint
+result = find_blueprint(Path(r'$ProjectRoot'))
+print(str(result) if result else '')
+"@
+        $BlueprintPath = & $PyLauncher[0] @($PyLauncher[1..($PyLauncher.Count - 1)]) -X utf8 -c $scanScript 2>$null
+        if (-not $BlueprintPath) { $BlueprintPath = "" }
+    }
+
+    if ($BlueprintPath) {
+        Write-Host "📄 找到蓝本：$BlueprintPath"
+    } else {
+        if ($INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED -ne "1") {
+            Write-Host "❌ 未找到蓝本 .md，且 INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED=0"
+            Write-Host "   请先放置蓝本（参考 $ScriptDir/../templates/blueprint-template.md）"
+            exit 1
+        }
+        $BlueprintPath = Join-Path $ProjectRoot ".ink-auto-blueprint.md"
+        Write-Host "📋 未找到蓝本，启动 7 题交互式 bootstrap..."
+        $psExecutable = (Get-Process -Id $PID).Path
+        & $psExecutable -NoProfile -ExecutionPolicy Bypass -File "$ScriptDir/interactive_bootstrap.ps1" $BlueprintPath
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "❌ 交互式 bootstrap 失败或被中断"
+            exit 1
+        }
+    }
+
+    # 转换蓝本 → quick draft
+    $DraftPath = Join-Path $ProjectRoot ".ink-auto-quick-draft.json"
+    & $PyLauncher[0] @($PyLauncher[1..($PyLauncher.Count - 1)]) -X utf8 -m ink_writer.core.auto.blueprint_to_quick_draft --input $BlueprintPath --output $DraftPath
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "❌ 蓝本校验失败（$BlueprintPath），请修正后重跑 /ink-auto"
+        exit 1
+    }
+
+    # 调用 ink-init Quick 模式（CLI 子进程）
+    $InitLog = Join-Path $ProjectRoot ("ink-auto-init-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    $q = [char] 0x22
+    $InitPrompt = "使用 Skill 工具加载 ${q}ink-init${q}。模式：--quick --blueprint $BlueprintPath。draft.json 路径: $DraftPath。项目目录: $ProjectRoot（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 $ProjectRoot/.ink/state.json）。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
+    Write-Host "⚙️  启动自动初始化（CLI 子进程，约 5-10 分钟）..."
+    $initRc = Invoke-CliProcess -Prompt $InitPrompt -LogFile $InitLog
+    if ($initRc -ne 0) {
+        Write-Host "❌ 自动初始化失败，日志：$InitLog"
+        Write-Host "   蓝本保留：$BlueprintPath"
+        exit 1
+    }
+    Write-Host "✅ 初始化完成"
+
+    # 重新解析项目根
+    $ProjectRoot = Find-ProjectRoot
+    if (-not $ProjectRoot) {
+        Write-Host "❌ init 后仍未找到 .ink/state.json，可能初始化未完整落盘"
+        Write-Host "   日志：$InitLog"
+        exit 1
+    }
+
+    # 此时 PROJECT_ROOT 已就绪，初始化路径相关变量
+    Initialize-ProjectPaths
+
+    # 重新执行预检 / 完结检测 / 大纲预检（之前因 ProjectRoot 为空已跳过）
+    try {
+        Invoke-InkCli preflight *>$null
+        if ($LASTEXITCODE -ne 0) { throw '' }
+    } catch {
+        Write-Host '❌ 预检失败，请检查项目状态'
+        exit 1
+    }
+
+    $ProjectStatus2 = Test-ProjectCompleted
+    if ($ProjectStatus2 -eq 'completed') {
+        Write-Host '🎉 本书已完结！所有卷章均已写完。'
+        exit 0
+    }
+
+    $CurrentCh2 = Get-CurrentChapter
+    $script:BatchStart = $CurrentCh2 + 1
+    $BatchEnd = $CurrentCh2 + $N
+
+    Report-Event '🚀' '批量写作启动（自动初始化后）' "计划${N}章，从第${script:BatchStart}章到第${BatchEnd}章"
+    Write-Host "🔍 正在扫描第${script:BatchStart}章到第${BatchEnd}章的大纲覆盖..."
+
+    try {
+        Invoke-InkCli check-outline --chapter $script:BatchStart --batch-end $BatchEnd *>$null
+        if ($LASTEXITCODE -ne 0) { throw '' }
+        Write-Host '✅ 大纲覆盖完整'
+        Report-Event '✅' '大纲预检' '全部覆盖'
+    } catch {
+        Write-Host ''
+        Write-Host '⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成'
+        Write-Host ''
+        Report-Event '⚠️' '大纲预检' '部分章节大纲缺失，将按需自动生成'
+        Start-Sleep -Seconds 5
+    }
+}
+
 function Invoke-Chapter {
     param([int] $Ch)
     $padded = '{0:D4}' -f $Ch
-    $logFile = Join-Path $LogDir ("ch${padded}-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    $logFile = Join-Path $script:LogDir ("ch${padded}-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
     $q = [char] 0x22
     $prompt = "使用 Skill 工具加载 ${q}ink-write${q} 并完整执行所有步骤（Step 0 到 Step 6）。项目目录: ${ProjectRoot}。禁止省略任何步骤，禁止提问，全程自主执行。完成后输出 INK_DONE。失败则输出 INK_FAILED。"
     $rc = Invoke-CliProcess $prompt $logFile
@@ -414,7 +552,7 @@ function Invoke-Chapter {
 function Invoke-ResumeChapter {
     param([int] $Ch)
     $padded = '{0:D4}' -f $Ch
-    $logFile = Join-Path $LogDir ("ch${padded}-retry-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    $logFile = Join-Path $script:LogDir ("ch${padded}-retry-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
     $q = [char] 0x22
     $prompt = "使用 Skill 工具加载 ${q}ink-resume${q}，恢复第${Ch}章的写作并完成所有剩余步骤。项目目录: ${ProjectRoot}。禁止提问，全程自主执行。完成后输出 INK_DONE。"
     $rc = Invoke-CliProcess $prompt $logFile
@@ -435,7 +573,7 @@ function Test-Chapter {
     $chars = (Get-Content $file.FullName -Raw -Encoding UTF8).Length
     if ($chars -lt 2200) { return $false }
     # US-004：字数硬上限对称阻断（MaxWordsHard 由 preferences.json 推导，默认 5000）
-    if ($chars -gt $MaxWordsHard) { return $false }
+    if ($chars -gt $script:MaxWordsHard) { return $false }
     $cur = Get-CurrentChapter
     if ($cur -lt $Ch) { return $false }
     $summary = Join-Path $ProjectRoot ".ink/summaries/ch${padded}.md"
@@ -477,7 +615,7 @@ function Invoke-AutoGenerateOutline {
 
     Write-Host "    📋 第${vol}卷大纲缺失，自动启动 ink-plan..."
     Report-Event '📋' '自动大纲启动' "第${vol}卷（因第${Ch}章需要）"
-    $logFile = Join-Path $LogDir ("plan-vol${vol}-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    $logFile = Join-Path $script:LogDir ("plan-vol${vol}-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
     $q = [char] 0x22
     $prompt = "使用 Skill 工具加载 ${q}ink-plan${q}。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${ProjectRoot}。禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
     Invoke-CliProcess $prompt $logFile | Out-Null
@@ -506,7 +644,7 @@ if ($Parallel -gt 1) {
     Write-Host "  ink-auto | 写 $N 章 | 并发 $Parallel | $Platform"
     Write-Host "  项目: $ProjectRoot"
     Write-Host '  检查点: 每批次完成后统一运行'
-    Write-Host "  日志: $LogDir"
+    Write-Host "  日志: $script:LogDir"
     Write-Host '═══════════════════════════════════════'
 
     $pythonPathPrefix = "$RepoRoot;$ScriptsDir"
@@ -548,7 +686,7 @@ sys.exit(1 if result['failed'] > 0 else 0)
     $pyScript = $pyTemplate `
         -replace '__PROJECT_ROOT__', $ProjectRoot `
         -replace '__PLUGIN_ROOT__', $PluginRoot `
-        -replace '__REPORT_DIR__', $ReportDir `
+        -replace '__REPORT_DIR__', $script:ReportDir `
         -replace '__PARALLEL__', $Parallel `
         -replace '__COOLDOWN__', $Cooldown `
         -replace '__CHECKPOINT_COOLDOWN__', $CheckpointCooldown `
@@ -566,8 +704,8 @@ Write-Host '══════════════════════�
 Write-Host "  ink-auto | 写 $N 章 | $Platform"
 Write-Host "  项目: $ProjectRoot"
 Write-Host '  检查点: 5章 review+fix / 10章 audit quick / 20章 audit standard+Tier2 / 50章 Tier2+drift / 200章 Tier3'
-Write-Host "  日志: $LogDir"
-Write-Host "  报告: $ReportFile"
+Write-Host "  日志: $script:LogDir"
+Write-Host "  报告: $script:ReportFile"
 Write-Host '═══════════════════════════════════════'
 
 function Invoke-Checkpoint {
@@ -588,7 +726,7 @@ function Invoke-Checkpoint {
 
     $q = [char] 0x22
     if ($cp.audit) {
-        $logFile = Join-Path $LogDir ("audit-$($cp.audit)-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+        $logFile = Join-Path $script:LogDir ("audit-$($cp.audit)-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
         $prompt = "使用 Skill 工具加载 ${q}ink-audit${q}。审计深度：$($cp.audit)。项目目录: ${ProjectRoot}。全程自主执行，禁止提问。完成后输出 INK_AUDIT_DONE。"
         Invoke-CliProcess $prompt $logFile | Out-Null
         $stats.AuditCount++
@@ -596,7 +734,7 @@ function Invoke-Checkpoint {
     }
 
     if ($cp.macro) {
-        $logFile = Join-Path $LogDir ("macro-$($cp.macro)-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+        $logFile = Join-Path $script:LogDir ("macro-$($cp.macro)-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
         $prompt = "使用 Skill 工具加载 ${q}ink-macro-review${q}。审查层级：$($cp.macro)。项目目录: ${ProjectRoot}。全程自主执行，禁止提问。完成后输出 INK_MACRO_DONE。"
         Invoke-CliProcess $prompt $logFile | Out-Null
         $stats.MacroCount++
@@ -604,7 +742,7 @@ function Invoke-Checkpoint {
     }
 
     # 审查 + 修复（始终执行）
-    $logFile = Join-Path $LogDir ("review-ch${reviewStart}-${reviewEnd}-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    $logFile = Join-Path $script:LogDir ("review-ch${reviewStart}-${reviewEnd}-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
     $prompt = "使用 Skill 工具加载 ${q}ink-review${q}。审查范围：第${reviewStart}章到第${reviewEnd}章。审查深度：Core。项目目录: ${ProjectRoot}。全程自主执行，禁止提问。发现 critical 或 high 问题时选择选项 A（立即修复），修复后自动重审验证。完成后输出 INK_REVIEW_DONE。"
     Invoke-CliProcess $prompt $logFile | Out-Null
     $stats.ReviewCount++
@@ -678,9 +816,9 @@ for ($i = 1; $i -le $N; $i++) {
         #   - 字数超限 (> MaxWordsHard) → 精简循环最多 ShrinkMaxRounds（3 轮）
         #   - 其它失败（< 2200 / 文件缺失 / 摘要缺失）→ 保持原 1 轮补写，零回归
         $wcFail = Get-ChapterWordcount -Ch $nextCh
-        if ($wcFail -gt $MaxWordsHard) {
-            $maxRetries = $ShrinkMaxRounds
-            $failReason = "字数超限(${wcFail}>${MaxWordsHard})"
+        if ($wcFail -gt $script:MaxWordsHard) {
+            $maxRetries = $script:ShrinkMaxRounds
+            $failReason = "字数超限(${wcFail}>${script:MaxWordsHard})"
         } else {
             $maxRetries = 1
             $failReason = '验证失败'
@@ -726,6 +864,6 @@ Write-Host '══════════════════════�
 Write-Host '  ink-auto 完成报告'
 Write-Host '═══════════════════════════════════════'
 Write-Host "  生成章节：第${script:BatchStart}-$(Get-CurrentChapter)章（$($stats.Completed)/$N 成功）"
-Write-Host "  📂 日志：$LogDir"
+Write-Host "  📂 日志：$script:LogDir"
 Write-Host '═══════════════════════════════════════'
 Write-Report

@@ -19,6 +19,13 @@
 
 set -euo pipefail
 
+# v27: top-level defaults so trap-driven cleanup paths work even before
+# init_project_paths runs (needed when user Ctrl+C during init bootstrap)
+LOG_DIR=""
+REPORT_FILE=""
+BATCH_START=0
+REPORT_EVENTS=""
+
 # ═══════════════════════════════════════════
 # 参数解析：支持 --parallel N
 # ═══════════════════════════════════════════
@@ -185,26 +192,29 @@ find_project_root() {
     return 1
 }
 
-PROJECT_ROOT="$(find_project_root)" || {
-    echo "❌ 未找到 .ink/state.json，请在小说项目目录下运行"
-    exit 1
-}
-
-LOG_DIR="${PROJECT_ROOT}/.ink/logs/auto"
-REPORT_DIR="${PROJECT_ROOT}/.ink/reports"
-mkdir -p "$LOG_DIR" "$REPORT_DIR"
-
-# 报告文件
-REPORT_FILE="${REPORT_DIR}/auto-$(date +%Y%m%d-%H%M%S).md"
+# v27 ink-auto 终极自动化：允许 PROJECT_ROOT 暂时为空，后续状态分发处理
+PROJECT_ROOT="$(find_project_root)" || PROJECT_ROOT=""
 
 # ═══════════════════════════════════════════
-# 字数硬上限（US-004）：从 preferences.json 的 pacing.chapter_words 推导 +500
-# 读取失败/损坏/未配置 → 默认 5000（与 load_word_limits 默认一致）。
-# MAX_WORDS_HARD 是 verify_chapter 上限阻断阈值；MIN_WORDS_FLOOR=2200 硬下限不可降。
+# v27 路径相关变量初始化（PROJECT_ROOT 就绪后调用）
 # ═══════════════════════════════════════════
 
-MAX_WORDS_HARD=$(
-    "${PY_LAUNCHER}" -X utf8 -c "
+init_project_paths() {
+    LOG_DIR="${PROJECT_ROOT}/.ink/logs/auto"
+    REPORT_DIR="${PROJECT_ROOT}/.ink/reports"
+    mkdir -p "$LOG_DIR" "$REPORT_DIR"
+
+    # 报告文件
+    REPORT_FILE="${REPORT_DIR}/auto-$(date +%Y%m%d-%H%M%S).md"
+
+    # ═══════════════════════════════════════════
+    # 字数硬上限（US-004）：从 preferences.json 的 pacing.chapter_words 推导 +500
+    # 读取失败/损坏/未配置 → 默认 5000（与 load_word_limits 默认一致）。
+    # MAX_WORDS_HARD 是 verify_chapter 上限阻断阈值；MIN_WORDS_FLOOR=2200 硬下限不可降。
+    # ═══════════════════════════════════════════
+
+    MAX_WORDS_HARD=$(
+        "${PY_LAUNCHER}" -X utf8 -c "
 import json, sys
 try:
     with open(r'${PROJECT_ROOT}/.ink/preferences.json', encoding='utf-8') as f:
@@ -217,14 +227,20 @@ try:
 except Exception:
     print(5000)
 " 2>/dev/null || echo 5000
-)
-# 防御：解析异常/非数字 → 兜底 5000
-if ! [[ "$MAX_WORDS_HARD" =~ ^[0-9]+$ ]] || (( MAX_WORDS_HARD < 2200 )); then
-    MAX_WORDS_HARD=5000
-fi
+    )
+    # 防御：解析异常/非数字 → 兜底 5000
+    if ! [[ "$MAX_WORDS_HARD" =~ ^[0-9]+$ ]] || (( MAX_WORDS_HARD < 2200 )); then
+        MAX_WORDS_HARD=5000
+    fi
 
-# 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
-SHRINK_MAX_ROUNDS=3
+    # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
+    SHRINK_MAX_ROUNDS=3
+}
+
+# S1/S2/S3 路径：PROJECT_ROOT 已就绪，立即初始化路径变量
+if [[ -n "$PROJECT_ROOT" ]]; then
+    init_project_paths
+fi
 
 # ═══════════════════════════════════════════
 # 报告系统
@@ -244,6 +260,8 @@ report_event() {
 }
 
 write_report() {
+    [[ -n "$REPORT_FILE" ]] || return 0
+    [[ -n "$LOG_DIR" ]] || return 0
     local end_time_str
     end_time_str=$(date "+%Y-%m-%d %H:%M:%S")
     local end_time
@@ -335,9 +353,12 @@ fi
 # 预检
 # ═══════════════════════════════════════════
 
-if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" preflight 2>/dev/null; then
-    echo "❌ 预检失败，请检查项目状态"
-    exit 1
+# v27: PROJECT_ROOT 为空时跳过预检，状态分发块会在 run_cli_process 就绪后处理
+if [[ -n "$PROJECT_ROOT" ]]; then
+    if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" preflight 2>/dev/null; then
+        echo "❌ 预检失败，请检查项目状态"
+        exit 1
+    fi
 fi
 
 # ═══════════════════════════════════════════
@@ -449,6 +470,9 @@ except Exception:
 " 2>/dev/null
 }
 
+# v27: PROJECT_ROOT 为空时跳过完结/大纲预检，状态分发块就绪后会重新执行
+if [[ -n "$PROJECT_ROOT" ]]; then
+
 # 完结检测 preflight
 PROJECT_STATUS=$(is_project_completed)
 if [[ "$PROJECT_STATUS" == "completed" ]]; then
@@ -489,6 +513,8 @@ else
     echo "✅ 大纲覆盖完整"
     report_event "✅" "大纲预检" "全部覆盖"
 fi
+
+fi  # end: if [[ -n "$PROJECT_ROOT" ]] (v27 完结/大纲预检守卫)
 
 # ═══════════════════════════════════════════
 # 信号处理
@@ -711,6 +737,120 @@ run_cli_process() {
 
     return $exit_code
 }
+
+# ═══════════════════════════════════════════
+# v27 状态分发：未初始化项目时自动 init
+# ═══════════════════════════════════════════
+
+INK_AUTO_INIT_ENABLED="${INK_AUTO_INIT_ENABLED:-1}"
+INK_AUTO_BLUEPRINT_ENABLED="${INK_AUTO_BLUEPRINT_ENABLED:-1}"
+INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED="${INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED:-1}"
+
+if [[ -z "$PROJECT_ROOT" ]]; then
+    if [[ "$INK_AUTO_INIT_ENABLED" != "1" ]]; then
+        echo "❌ 未找到 .ink/state.json，请在小说项目目录下运行"
+        echo "   提示：当前目录无已初始化项目（自动初始化已被 INK_AUTO_INIT_ENABLED=0 禁用）"
+        echo "   解决：移除 INK_AUTO_INIT_ENABLED=0 重新运行，或切换到已初始化的项目目录"
+        exit 1
+    fi
+
+    PROJECT_ROOT="$PWD"
+    echo "════════════════════════════════════════════════════"
+    echo "  ink-auto 终极自动化模式：未检测到已初始化项目"
+    echo "  当前目录：${PROJECT_ROOT}"
+    echo "════════════════════════════════════════════════════"
+
+    # 扫描蓝本
+    BLUEPRINT_PATH=""
+    if [[ "$INK_AUTO_BLUEPRINT_ENABLED" == "1" ]]; then
+        BLUEPRINT_PATH=$(
+            "$PY_LAUNCHER" -X utf8 -c "
+from pathlib import Path
+from ink_writer.core.auto.blueprint_scanner import find_blueprint
+result = find_blueprint(Path('${PROJECT_ROOT}'))
+print(str(result) if result else '')
+" 2>/dev/null || echo ""
+        )
+    fi
+
+    if [[ -n "$BLUEPRINT_PATH" ]]; then
+        echo "📄 找到蓝本：${BLUEPRINT_PATH}"
+    else
+        if [[ "$INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED" != "1" ]]; then
+            echo "❌ 未找到蓝本 .md，且 INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED=0"
+            echo "   请先放置蓝本（参考 ${SCRIPTS_DIR}/../templates/blueprint-template.md）"
+            exit 1
+        fi
+        BLUEPRINT_PATH="${PROJECT_ROOT}/.ink-auto-blueprint.md"
+        echo "📋 未找到蓝本，启动 7 题交互式 bootstrap..."
+        bash "${SCRIPTS_DIR}/interactive_bootstrap.sh" "$BLUEPRINT_PATH" || {
+            echo "❌ 交互式 bootstrap 失败或被中断"
+            exit 1
+        }
+    fi
+
+    # 转换蓝本 → quick draft
+    DRAFT_PATH="${PROJECT_ROOT}/.ink-auto-quick-draft.json"
+    if ! "$PY_LAUNCHER" -X utf8 -m ink_writer.core.auto.blueprint_to_quick_draft \
+        --input "$BLUEPRINT_PATH" --output "$DRAFT_PATH" 2>&1; then
+        echo "❌ 蓝本校验失败，请修正后重跑 /ink-auto"
+        exit 1
+    fi
+
+    # 调用 ink-init Quick 模式（CLI 子进程）
+    INIT_LOG="${PROJECT_ROOT}/.ink-auto-init-$(date +%Y%m%d-%H%M%S).log"
+    INIT_PROMPT="使用 Skill 工具加载 \"ink-init\"。模式：--quick --blueprint ${BLUEPRINT_PATH}。draft.json 路径: ${DRAFT_PATH}。项目目录: ${PROJECT_ROOT}（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 ${PROJECT_ROOT}/.ink/state.json）。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
+    echo "⚙️  启动自动初始化（CLI 子进程，约 5-10 分钟）..."
+    if ! run_cli_process "$INIT_PROMPT" "$INIT_LOG"; then
+        echo "❌ 自动初始化失败，日志：${INIT_LOG}"
+        echo "   蓝本保留：${BLUEPRINT_PATH}"
+        echo "   你可以手动重跑：claude -p '使用 ink-init --quick --blueprint ${BLUEPRINT_PATH}'"
+        exit 1
+    fi
+    echo "✅ 初始化完成"
+
+    # 重新解析项目根
+    PROJECT_ROOT="$(find_project_root)" || {
+        echo "❌ init 后仍未找到 .ink/state.json，可能初始化未完整落盘"
+        echo "   日志：${INIT_LOG}"
+        exit 1
+    }
+
+    # 此时 PROJECT_ROOT 已就绪，初始化路径相关变量
+    init_project_paths
+
+    # 重新执行预检 / 完结检测 / 大纲预检（之前因 PROJECT_ROOT 为空已跳过）
+    if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" preflight 2>/dev/null; then
+        echo "❌ 预检失败，请检查项目状态"
+        exit 1
+    fi
+
+    PROJECT_STATUS=$(is_project_completed)
+    if [[ "$PROJECT_STATUS" == "completed" ]]; then
+        echo "🎉 本书已完结！所有卷章均已写完。"
+        exit 0
+    fi
+
+    CURRENT_CH=$(get_current_chapter)
+    CURRENT_CH=${CURRENT_CH:-0}
+    BATCH_START=$((CURRENT_CH + 1))
+    BATCH_END=$((CURRENT_CH + N))
+
+    report_event "🚀" "批量写作启动（自动初始化后）" "计划${N}章，从第${BATCH_START}章到第${BATCH_END}章"
+
+    echo "🔍 正在扫描第${BATCH_START}章到第${BATCH_END}章的大纲覆盖..."
+    if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
+        check-outline --chapter "$BATCH_START" --batch-end "$BATCH_END" 2>/dev/null; then
+        echo ""
+        echo "⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成"
+        echo ""
+        report_event "⚠️" "大纲预检" "部分章节大纲缺失，将按需自动生成"
+        sleep 5
+    else
+        echo "✅ 大纲覆盖完整"
+        report_event "✅" "大纲预检" "全部覆盖"
+    fi
+fi
 
 # ═══════════════════════════════════════════
 # 单章执行
@@ -1106,6 +1246,7 @@ run_checkpoint() {
 # ═══════════════════════════════════════════
 
 print_summary() {
+    [[ -n "$LOG_DIR" ]] || return 0
     local CURRENT_END
     CURRENT_END=$(get_current_chapter 2>/dev/null || echo "?")
 
