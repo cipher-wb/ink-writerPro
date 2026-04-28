@@ -146,7 +146,7 @@ def to_quick_draft(parsed: dict[str, str | None]) -> dict:
                              "禁忌/避坑提示", "自由备注", "主角职业/身份")
     for field in optional_pass_through:
         val = parsed.get(field)
-        if val and val.upper() != "AUTO":
+        if val and val.strip().upper() != "AUTO":
             draft[field] = val
 
     missing: list[str] = []
