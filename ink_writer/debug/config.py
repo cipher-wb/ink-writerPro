@@ -84,19 +84,36 @@ def deep_merge(base: dict, override: dict) -> dict:
     return out
 
 
+def _safe_load_yaml(path: Path) -> dict | None:
+    """Load yaml file, fail-soft on missing/malformed/IO errors per spec §5.
+
+    Returns parsed dict on success, None on any failure (warning to stderr).
+    """
+    if not path.exists() or not path.is_file():
+        return None
+    try:
+        loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
+        return loaded if isinstance(loaded, dict) else (loaded or None)
+    except (yaml.YAMLError, OSError) as e:
+        import sys
+        sys.stderr.write(f"[debug-config] skipped {path}: {type(e).__name__}: {e}\n")
+        return None
+
+
 def load_config(
     *,
     global_yaml_path: Path,
     project_root: Path,
 ) -> DebugConfig:
-    """Load global config + optional project override + env var override."""
-    raw: dict[str, Any] = {}
-    if global_yaml_path.exists():
-        raw = yaml.safe_load(global_yaml_path.read_text(encoding="utf-8")) or {}
+    """Load global config + optional project override + env var override.
+
+    All yaml-load failures are fail-soft (warning to stderr, fall back to defaults).
+    """
+    raw: dict[str, Any] = _safe_load_yaml(global_yaml_path) or {}
 
     local_path = project_root / ".ink-debug" / "config.local.yaml"
-    if local_path.exists():
-        local_raw = yaml.safe_load(local_path.read_text(encoding="utf-8")) or {}
+    local_raw = _safe_load_yaml(local_path)
+    if local_raw is not None:
         raw = deep_merge(raw, local_raw)
 
     cfg = DebugConfig(

@@ -46,3 +46,33 @@ def test_severity_threshold_passes_warn(tmp_path: Path):
     assert cfg.passes_threshold("warn", "sqlite_threshold") is True
     assert cfg.passes_threshold("info", "sqlite_threshold") is False
     assert cfg.passes_threshold("error", "stderr_threshold") is True
+
+
+def test_malformed_local_yaml_fails_soft(tmp_path: Path, capsys: pytest.CaptureFixture):
+    """Spec §5: corrupted config.local.yaml must not crash the loader."""
+    debug_dir = tmp_path / ".ink-debug"
+    debug_dir.mkdir()
+    (debug_dir / "config.local.yaml").write_text(
+        "this: is: not: valid: yaml: ::",
+        encoding="utf-8",
+    )
+    cfg = load_config(global_yaml_path=Path("config/debug.yaml"), project_root=tmp_path)
+    # Must not raise; should fall back to global defaults
+    assert cfg.master_enabled is True
+    assert cfg.invariants["polish_diff"]["min_diff_chars"] == 50
+    # Should have written a warning to stderr
+    captured = capsys.readouterr()
+    assert "config.local.yaml" in captured.err
+
+
+def test_missing_global_yaml_fails_soft(tmp_path: Path):
+    """If config/debug.yaml doesn't exist, fall back to dataclass defaults."""
+    cfg = load_config(
+        global_yaml_path=tmp_path / "does-not-exist.yaml",
+        project_root=tmp_path,
+    )
+    # All defaults from dataclass field defaults
+    assert cfg.master_enabled is True
+    assert cfg.layers.layer_a_hooks is True
+    assert cfg.severity.jsonl_threshold == "info"
+    assert cfg.invariants == {}
