@@ -502,7 +502,7 @@ cat "${SKILL_ROOT}/references/prose-craft-rules.md"
 
 ### 字数要求
 
-- **硬约束来源（v23 起）**：创作执行包顶层字段 `target_words_min` / `target_words_max`（由 `preferences.pacing.chapter_words` 推导），默认 `(2200, 5000)`
+- **硬约束来源（v27 平台感知）**：创作执行包顶层字段 `target_words_min` / `target_words_max`（由 `load_word_limits()` 按平台从 `preferences.pacing.chapter_words` 推导）。默认范围：qidian `(2200, 5000)` / fanqie `(1500, 2000)`
 - **硬下限**：`target_words_min`（不低于 2200），任何情况不得低于此值（含过渡章）
 - **硬上限**：`target_words_max`，**任何情况不得超越**。v23 US-005 起删除旧版按章节类型放行的豁免条款—— LLM 无自行豁免路径
 - **默认范围**：`[target_words_min, target_words_max]`；无 preferences 配置时为 2200–5000

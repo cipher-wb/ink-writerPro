@@ -197,6 +197,10 @@ $ /ink-auto 10  (current=47, 卷1=1-50)
 
 ### 7.1 番茄字数下限矛盾
 
+> **🟢 已解决（2026-04-28）**: 由 follow-up spec
+> [`2026-04-28-fanqie-min-words-floor-design.md`](./2026-04-28-fanqie-min-words-floor-design.md)
+> 处理。`load_word_limits()` 已平台感知；qidian 维持 `(2200, 5000)`，fanqie 改为 `(1500, 2000)`。
+
 **现象**：`ink-init` Quick Step 0.4 声明 fanqie 默认 `chapter_word_count=1500`，但全系统 `MIN_WORDS_FLOOR=2200` 硬红线（落在 6 处）会把 fanqie 项目的实际章节字数拉到 2200+，与"番茄 1500 字/章下沉市场"定位不符。
 
 **牵涉文件**：
