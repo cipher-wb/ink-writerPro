@@ -68,5 +68,6 @@ max_words_hard = chapter_words + 500
 | fanqie | 缺失 | `(1500, 2000)` fallback | 番茄默认 |
 | fanqie | `2000` | `(1500, 2500)` | 加长番茄章 |
 
-> **零回归承诺**：硬下限 2200 的所有现有阻断点在 v23 前后字节级一致；本机制仅硬化
-> 上限方向，不允许任何弱化下限的逻辑路径。
+> **零回归承诺（v27）**：qidian 项目硬下限 2200 在所有阻断点字节级一致与 v23 之后无变化；
+> fanqie 项目按 v27 平台分档 hard floor 1500（写在 MIN_WORDS_FLOOR_FANQIE）。
+> state.json 损坏 → 默认 qidian-strict 兜底，最严格行为。
