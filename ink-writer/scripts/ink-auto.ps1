@@ -109,29 +109,37 @@ function Initialize-ProjectPaths {
     New-Item -ItemType Directory -Force -Path $script:LogDir, $script:ReportDir | Out-Null
     $script:ReportFile = Join-Path $script:ReportDir ("auto-{0}.md" -f $startTime.ToString('yyyyMMdd-HHmmss'))
 
-    # ============================================================
-    # 字数硬上限（US-004）：从 preferences.json 的 pacing.chapter_words 推导 +500
-    # 读取失败/损坏/未配置 → 默认 5000（与 load_word_limits 默认一致）。
-    # MaxWordsHard 是 Test-Chapter 上限阻断阈值；硬下限 2200 不可降（与 .sh 语义一致）。
-    # ============================================================
+    # ═══════════════════════════════════════════
+    # 字数硬区间（v27 平台感知）：调用 load_word_limits 同时取 min + max
+    # qidian: (2200, 5000) / fanqie: (1500, 2000)
+    # ═══════════════════════════════════════════
 
+    $script:MinWordsHard = 2200
     $script:MaxWordsHard = 5000
+
     try {
-        $prefFile = Join-Path $script:ProjectRoot '.ink/preferences.json'
-        if (Test-Path -LiteralPath $prefFile -PathType Leaf) {
-            $prefData = Get-Content -LiteralPath $prefFile -Raw -Encoding UTF8 | ConvertFrom-Json
-            if ($prefData -and $prefData.pacing -and $prefData.pacing.chapter_words) {
-                $cw = $prefData.pacing.chapter_words
-                # 仅接受正整数；bool / 非数字 / 非正数 → 保持默认 5000
-                if ($cw -is [int] -and $cw -gt 0) {
-                    $script:MaxWordsHard = $cw + 500
-                }
-            }
+        $wordLimitsScript = @"
+import sys
+try:
+    from ink_writer.core.preferences import load_word_limits
+    min_w, max_w = load_word_limits(r'$ProjectRoot')
+    print(f'{min_w} {max_w}')
+except Exception:
+    print('2200 5000')
+"@
+        $output = & $PyLauncher[0] @($PyLauncher[1..($PyLauncher.Count-1)]) -X utf8 -c $wordLimitsScript 2>$null
+        $parts = $output.Trim() -split '\s+'
+        if ($parts.Count -eq 2 -and $parts[0] -match '^\d+$' -and $parts[1] -match '^\d+$') {
+            $script:MinWordsHard = [int]$parts[0]
+            $script:MaxWordsHard = [int]$parts[1]
         }
     } catch {
-        $script:MaxWordsHard = 5000
+        # Fall back to qidian-strict defaults (already initialized above)
     }
-    if ($script:MaxWordsHard -lt 2200) { $script:MaxWordsHard = 5000 }
+
+    if ($script:MaxWordsHard -lt $script:MinWordsHard) {
+        $script:MaxWordsHard = $script:MinWordsHard + 500
+    }
 
     # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
     $script:ShrinkMaxRounds = 3
@@ -571,7 +579,7 @@ function Test-Chapter {
     $file = Get-ChildItem -Path $glob -ErrorAction SilentlyContinue | Select-Object -First 1
     if (-not $file -or $file.Length -eq 0) { return $false }
     $chars = (Get-Content $file.FullName -Raw -Encoding UTF8).Length
-    if ($chars -lt 2200) { return $false }
+    if ($chars -lt $script:MinWordsHard) { return $false }
     # US-004：字数硬上限对称阻断（MaxWordsHard 由 preferences.json 推导，默认 5000）
     if ($chars -gt $script:MaxWordsHard) { return $false }
     $cur = Get-CurrentChapter
@@ -814,7 +822,7 @@ for ($i = 1; $i -le $N; $i++) {
     } else {
         # US-004：根据失败原因分流
         #   - 字数超限 (> MaxWordsHard) → 精简循环最多 ShrinkMaxRounds（3 轮）
-        #   - 其它失败（< 2200 / 文件缺失 / 摘要缺失）→ 保持原 1 轮补写，零回归
+        #   - 其它失败（< MinWordsHard / 文件缺失 / 摘要缺失）→ 保持原 1 轮补写，零回归
         $wcFail = Get-ChapterWordcount -Ch $nextCh
         if ($wcFail -gt $script:MaxWordsHard) {
             $maxRetries = $script:ShrinkMaxRounds
