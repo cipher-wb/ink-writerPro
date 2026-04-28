@@ -49,6 +49,8 @@ def test_kind_whitelist_contains_reserved():
         "hook.pre_tool_use",
         "hook.post_tool_use",
         "hook.subagent_stop",
+        "hook.stop",
+        "hook.session_end",
         "meta.invariant_crashed",
         "meta.unknown_kind",
         "meta.collector_error",
@@ -66,6 +68,28 @@ def test_validate_kind_rejects_unknown():
     assert validate_kind("totally.made.up") is False
 
 
+def test_validate_kind_rejects_non_ascii_or_uppercase():
+    # Unicode in segment
+    assert validate_kind("checker.x.中文") is False
+    # Uppercase
+    assert validate_kind("checker.UPPER.case") is False
+    # Hyphen
+    assert validate_kind("checker.foo-bar.baz") is False
+    # Two-part (too short)
+    assert validate_kind("checker.foo") is False
+    # Empty
+    assert validate_kind("") is False
+    # Underscore-only segment
+    assert validate_kind("checker._.x") is False
+    # Leading digit (not a valid identifier)
+    assert validate_kind("checker.123.foo") is False
+
+
+def test_validate_kind_accepts_all_whitelist():
+    for k in KIND_WHITELIST:
+        assert validate_kind(k) is True, f"validate_kind({k!r}) should be True"
+
+
 def test_severity_validation():
     with pytest.raises(ValueError, match="severity"):
         Incident(
@@ -77,3 +101,32 @@ def test_severity_validation():
             severity="critical",  # invalid
             message="x",
         )
+
+
+def test_to_dict_omits_empty_containers():
+    inc = Incident(
+        ts="2026-04-28T14:23:51Z",
+        run_id="r1",
+        source="layer_c_invariant",
+        skill="x",
+        kind="writer.short_word_count",
+        severity="info",
+        message="x",
+        evidence={},  # empty dict should be omitted
+    )
+    d = inc.to_dict()
+    assert "evidence" not in d
+
+
+def test_incident_is_frozen():
+    inc = Incident(
+        ts="2026-04-28T14:23:51Z",
+        run_id="r1",
+        source="layer_c_invariant",
+        skill="x",
+        kind="writer.short_word_count",
+        severity="info",
+        message="x",
+    )
+    with pytest.raises(Exception):  # FrozenInstanceError or similar
+        inc.severity = "warn"
