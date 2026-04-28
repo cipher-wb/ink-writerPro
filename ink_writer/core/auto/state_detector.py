@@ -33,8 +33,11 @@ def detect_project_state(cwd: Path | str) -> ProjectState:
         return ProjectState.S3_COMPLETED
 
     outline_dir = cwd / "大纲"
-    has_outline = outline_dir.is_dir() and any(outline_dir.iterdir())
-    if not has_outline:
+    if not outline_dir.is_dir():
+        return ProjectState.S1_NO_OUTLINE
+    # 必须存在实际章纲文件（第N章*.md），仅 爽点规划.md / 总纲.md 不算
+    chapter_outlines = list(outline_dir.glob("第*章*.md"))
+    if not chapter_outlines:
         return ProjectState.S1_NO_OUTLINE
 
     return ProjectState.S2_WRITING

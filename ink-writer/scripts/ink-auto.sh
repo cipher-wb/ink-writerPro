@@ -499,16 +499,54 @@ BATCH_END=$((CURRENT_CH + N))
 
 report_event "🚀" "批量写作启动" "计划${N}章，从第${BATCH_START}章到第${BATCH_END}章"
 
-echo "🔍 正在扫描第${BATCH_START}章到第${BATCH_END}章的大纲覆盖..."
+# 检测项目状态：S1（缺大纲）需要主动触发完整卷规划，不能只靠按需补章
+PROJECT_STATE=$(
+    "$PY_LAUNCHER" -X utf8 -c "
+from pathlib import Path
+from ink_writer.core.auto.state_detector import detect_project_state
+print(detect_project_state(Path('${PROJECT_ROOT}')).value)
+" 2>/dev/null || echo "S2_WRITING"
+)
+
+echo "🔍 正在扫描第${BATCH_START}章到第${BATCH_END}章的大纲覆盖...（项目状态: ${PROJECT_STATE}）"
 
 if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
     check-outline --chapter "$BATCH_START" --batch-end "$BATCH_END" 2>/dev/null; then
     echo ""
-    echo "⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成"
-    echo "    如需手动规划，请按 Ctrl+C 中止后执行 /ink-plan"
+    if [[ "$PROJECT_STATE" == "S1_NO_OUTLINE" ]]; then
+        echo "📋 项目缺大纲（S1），自动启动 ink-plan 生成完整卷大纲..."
+        report_event "📋" "S1自动plan启动" "大纲缺失，生成完整卷大纲"
+
+        # 确定需要规划的卷范围：从 BATCH_START 到 BATCH_END 覆盖的所有卷
+        local _plan_vol _plan_vols _last_plan_vol
+        _plan_vols=""
+        _last_plan_vol=""
+        for ((_pc=BATCH_START; _pc<=BATCH_END; _pc++)); do
+            _plan_vol=$(get_volume_for_chapter "$_pc")
+            if [[ -n "$_plan_vol" ]] && [[ "$_plan_vol" != "$_last_plan_vol" ]]; then
+                _plan_vols="${_plan_vols} ${_plan_vol}"
+                _last_plan_vol="$_plan_vol"
+            fi
+        done
+
+        for _plan_vol in $_plan_vols; do
+            echo "    📋 正在生成第${_plan_vol}卷完整大纲..."
+            if auto_plan_volume "$_plan_vol" "$BATCH_START"; then
+                echo "    ✅ 第${_plan_vol}卷大纲生成成功"
+                report_event "✅" "S1自动plan完成" "第${_plan_vol}卷"
+            else
+                echo "    ❌ 第${_plan_vol}卷大纲生成失败，中止批量写作"
+                report_event "❌" "S1自动plan失败" "第${_plan_vol}卷"
+                exit 1
+            fi
+        done
+    else
+        echo "⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成"
+        echo "    如需手动规划，请按 Ctrl+C 中止后执行 /ink-plan"
+        report_event "⚠️" "大纲预检" "部分章节大纲缺失，将按需自动生成"
+        sleep 5
+    fi
     echo ""
-    report_event "⚠️" "大纲预检" "部分章节大纲缺失，将按需自动生成"
-    sleep 5
 else
     echo "✅ 大纲覆盖完整"
     report_event "✅" "大纲预检" "全部覆盖"
@@ -838,14 +876,25 @@ print(str(result) if result else '')
 
     report_event "🚀" "批量写作启动（自动初始化后）" "计划${N}章，从第${BATCH_START}章到第${BATCH_END}章"
 
+    # init 完成后主动触发 ink-plan 生成首卷完整大纲（设计文档 §3.1）
     echo "🔍 正在扫描第${BATCH_START}章到第${BATCH_END}章的大纲覆盖..."
     if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
         check-outline --chapter "$BATCH_START" --batch-end "$BATCH_END" 2>/dev/null; then
         echo ""
-        echo "⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成"
+        echo "⚠️  大纲缺失，init 后自动启动 ink-plan 生成完整卷大纲..."
         echo ""
-        report_event "⚠️" "大纲预检" "部分章节大纲缺失，将按需自动生成"
-        sleep 5
+        report_event "📋" "init后自动plan" "第${BATCH_START}章起，大纲缺失，触发完整卷大纲生成"
+
+        local _vol
+        _vol=$(get_volume_for_chapter "$BATCH_START")
+        if [[ -n "$_vol" ]] && auto_plan_volume "$_vol" "$BATCH_START"; then
+            echo "✅ 第${_vol}卷完整大纲生成成功"
+            report_event "✅" "init后自动plan完成" "第${_vol}卷"
+        else
+            echo "❌ 第${_vol}卷大纲生成失败，中止批量写作"
+            report_event "❌" "init后自动plan失败" "第${_vol}卷"
+            exit 1
+        fi
     else
         echo "✅ 大纲覆盖完整"
         report_event "✅" "大纲预检" "全部覆盖"
