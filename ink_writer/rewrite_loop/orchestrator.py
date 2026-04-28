@@ -140,6 +140,48 @@ def run_rewrite_loop(
     current_text = chapter_text
     history: list[str] = [current_text]
 
+    # Compute debug run_id once for this rewrite_loop invocation (used by all T17/T18/T19 blocks).
+    try:
+        import time as _time
+        _debug_run_id = f"rewrite-{book}-ch{chapter}-{int(_time.time())}"
+    except Exception:
+        _debug_run_id = "rewrite-unknown"
+
+    # --- debug invariant: writer_word_count (T17) ---
+    try:
+        from pathlib import Path as _Path
+        from ink_writer.debug.collector import Collector as _DebugCollector
+        from ink_writer.debug.config import load_config as _load_debug_cfg
+        from ink_writer.debug.invariants.writer_word_count import check as _check_word_count
+
+        _project_root = _Path.cwd()
+        _dbg_cfg = _load_debug_cfg(
+            global_yaml_path=_Path("config/debug.yaml"),
+            project_root=_project_root,
+        )
+        if _dbg_cfg.master_enabled and _dbg_cfg.layers.layer_c_invariants \
+                and _dbg_cfg.invariants.get("writer_word_count", {}).get("enabled", True):
+            try:
+                _chapter_num = int(chapter)
+            except (ValueError, TypeError):
+                _chapter_num = None
+            try:
+                from ink_writer.core.preferences import load_word_limits as _load_word_limits
+                _min_words, _ = _load_word_limits(_project_root)
+            except Exception:
+                _min_words = 2200  # qidian default fallback
+            _inc = _check_word_count(
+                text=current_text,
+                run_id=_debug_run_id,
+                chapter=_chapter_num,
+                min_words=_min_words,
+                skill="ink-write",
+            )
+            if _inc is not None:
+                _DebugCollector(_dbg_cfg).record(_inc)
+    except Exception:
+        pass  # Debug must never break the writing loop.
+
     last_check_results: list[Any] = []
 
     for round_idx in range(max_rounds + 1):
@@ -168,6 +210,52 @@ def run_rewrite_loop(
             chapter_text=current_text, book=book, chapter=chapter
         ) or []
         last_check_results = check_results
+
+        # --- debug invariant: review_dimensions (T19) ---
+        try:
+            from pathlib import Path as _Path
+            from ink_writer.debug.collector import Collector as _DebugCollector
+            from ink_writer.debug.config import load_config as _load_debug_cfg
+            from ink_writer.debug.invariants.review_dimensions import check as _check_review_dims
+
+            _project_root = _Path.cwd()
+            _dbg_cfg = _load_debug_cfg(
+                global_yaml_path=_Path("config/debug.yaml"),
+                project_root=_project_root,
+            )
+            if _dbg_cfg.master_enabled and _dbg_cfg.layers.layer_c_invariants \
+                    and _dbg_cfg.invariants.get("review_dimensions", {}).get("enabled", True):
+                _min_dims = (
+                    _dbg_cfg.invariants.get("review_dimensions", {})
+                    .get("min_dimensions_per_skill", {}).get("ink-review", 7)
+                )
+                try:
+                    _chapter_num = int(chapter)
+                except (ValueError, TypeError):
+                    _chapter_num = None
+                # Synthesize report from check_results: each checker_id is a "dimension".
+                _synth_report = {
+                    "dimensions": {
+                        getattr(r, "checker_id", f"unknown_{i}"): getattr(r, "score", 0)
+                        for i, r in enumerate(check_results)
+                    },
+                }
+                _inc = _check_review_dims(
+                    report=_synth_report,
+                    skill="ink-review",
+                    run_id=_debug_run_id,
+                    chapter=_chapter_num,
+                    min_dimensions=_min_dims,
+                )
+                if _inc is not None:
+                    _DebugCollector(_dbg_cfg).record(_inc)
+        except Exception:
+            pass
+
+        # TODO(spec §13 Q2): wire checker_router (Layer B) once orchestrator's check_results
+        # carry per-violation detail (severity/kind/message). Currently they only carry
+        # checker_id + score + cases_hit, which doesn't match checker_router's input shape.
+
         evidence.record_checkers(
             [
                 {
@@ -210,6 +298,7 @@ def run_rewrite_loop(
         failure_description = getattr(failure_pattern, "description", "") or ""
         observable = list(getattr(failure_pattern, "observable", []) or [])
 
+        _pre_polish_text = current_text
         current_text = polish_fn(
             chapter_text=current_text,
             case_id=case_id,
@@ -217,6 +306,36 @@ def run_rewrite_loop(
             case_observable=observable,
             related_chunks=None,  # M3 期 chunk_borrowing deferred（spec §3.5 风险 8）
         )
+        # --- debug invariant: polish_diff (T18) ---
+        try:
+            from pathlib import Path as _Path
+            from ink_writer.debug.collector import Collector as _DebugCollector
+            from ink_writer.debug.config import load_config as _load_debug_cfg
+            from ink_writer.debug.invariants.polish_diff import check as _check_polish_diff
+
+            _project_root = _Path.cwd()
+            _dbg_cfg = _load_debug_cfg(
+                global_yaml_path=_Path("config/debug.yaml"),
+                project_root=_project_root,
+            )
+            _inv_cfg = _dbg_cfg.invariants.get("polish_diff", {})
+            if _dbg_cfg.master_enabled and _dbg_cfg.layers.layer_c_invariants \
+                    and _inv_cfg.get("enabled", True):
+                try:
+                    _chapter_num = int(chapter)
+                except (ValueError, TypeError):
+                    _chapter_num = None
+                _inc = _check_polish_diff(
+                    before=_pre_polish_text,
+                    after=current_text,
+                    run_id=_debug_run_id,
+                    chapter=_chapter_num,
+                    min_diff_chars=_inv_cfg.get("min_diff_chars", 50),
+                )
+                if _inc is not None:
+                    _DebugCollector(_dbg_cfg).record(_inc)
+        except Exception:
+            pass
         evidence.record_polish(
             round_idx=round_idx + 1,
             case_id=case_id,
