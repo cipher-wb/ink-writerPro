@@ -32,11 +32,11 @@ try {
 
     $genre = Prompt-Required "1/7 题材方向（如：仙侠 / 都市悬疑 / 末世+异能）？"
     $protagonist = Prompt-Required "2/7 主角一句话人设（含欲望+缺陷）？"
-    $gfType = Prompt-Required "3/7 金手指类型？"
-    $gfLine = Prompt-Required "4/7 金手指能力一句话（≤20 字）？"
+    $gfType = Prompt-Required "3/7 金手指类型（信息/时间/情感/社交/认知/概率/感知/规则 8 选 1）？"
+    $gfLine = Prompt-Required "4/7 金手指能力一句话（≤20 字，含具体动作/反直觉维度）？"
     $conflict = Prompt-Required "5/7 核心冲突一句话？"
     $platform = Prompt-WithDefault "6/7 平台 (qidian/fanqie)？" "qidian"
-    $aggression = Prompt-WithDefault "7/7 激进度档位 (1/2/3/4)？" "2"
+    $aggression = Prompt-WithDefault "7/7 激进度档位 (1 保守 / 2 平衡 / 3 激进 / 4 疯批)？" "2"
 
     $body = @"
 # ink-auto 自动 bootstrap 生成的蓝本（空目录场景）
