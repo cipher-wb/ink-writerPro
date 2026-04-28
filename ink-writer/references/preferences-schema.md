@@ -41,8 +41,13 @@ max_words_hard = chapter_words + 500
 ```
 
 - **默认值（未配置或文件损坏）**：`(min=2200, max_hard=5000)`。
-- **硬下限红线**：`min_words` 永不低于 2200，即便 `chapter_words` 配得很小（硬约束，
-  写在 `ink_writer/core/preferences.py::MIN_WORDS_FLOOR`）。
+- **硬下限红线（v27 平台感知）**：`min_words` 按平台分档：
+  - qidian → 永不低于 2200（写在 `MIN_WORDS_FLOOR`）
+  - fanqie → 永不低于 1500（写在 `MIN_WORDS_FLOOR_FANQIE`）
+
+  即便 `chapter_words` 配得很小，也会被对应平台 floor 抬升。平台从
+  `state.json.project_info.platform` 读取；缺失/损坏时默认 qidian-strict
+  作为最严格 fallback。
 - **硬上限对等硬下限**：超过 `max_words_hard` 由 `check_word_count` 返回
   `severity='hard'` 直接阻断；不存在按章节类型、节拍标签或大纲标签级的 LLM 自行
   豁免路径（这是 US-005 收紧的重点——历史版本按章型/百分比的放行条款全部删除）。
@@ -54,12 +59,15 @@ max_words_hard = chapter_words + 500
 
 ### 三组典型示例
 
-| preferences.json | 推导结果 (min, max_hard) | 说明 |
-| ---------------- | ------------------------ | ---- |
-| 未配置 / 文件缺失 | `(2200, 5000)` | 全默认 |
-| `pacing.chapter_words = 3000` | `(2500, 3500)` | 目标 3000 字，±500 区间 |
-| `pacing.chapter_words = 2500` | `(2200, 3000)` | 目标 2500 字，min 被红线托到 2200 |
-| `pacing.chapter_words = 4500` | `(4000, 5000)` | 目标 4500 字，适用节奏更慢的卷首 |
+| 平台 | `pacing.chapter_words` | 推导 `(min, max)` | 备注 |
+|------|------------------------|---------------------|------|
+| qidian | `3000` | `(2500, 3500)` | 标准范围 |
+| qidian | `2500` | `(2200, 3000)` | min 被 floor 抬升 |
+| qidian | 缺失 | `(2200, 5000)` fallback | 最严格 |
+| fanqie | `1500` | `(1500, 2000)` | 番茄标准 |
+| fanqie | 缺失 | `(1500, 2000)` fallback | 番茄默认 |
+| fanqie | `2000` | `(1500, 2500)` | 加长番茄章 |
 
-> **零回归承诺**：硬下限 2200 的所有现有阻断点在 v23 前后字节级一致；本机制仅硬化
-> 上限方向，不允许任何弱化下限的逻辑路径。
+> **零回归承诺（v27）**：qidian 项目硬下限 2200 在所有阻断点字节级一致与 v23 之后无变化；
+> fanqie 项目按 v27 平台分档 hard floor 1500（写在 MIN_WORDS_FLOOR_FANQIE）。
+> state.json 损坏 → 默认 qidian-strict 兜底，最严格行为。
