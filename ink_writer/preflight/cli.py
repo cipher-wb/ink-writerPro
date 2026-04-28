@@ -158,6 +158,37 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     sys.stdout.write(_format_report(report))
 
+    # --- debug invariant: context_required_files (dormant until Context Contract is formalized) ---
+    # Per spec §13 Q2, the canonical list of "required skill files" the context-agent must
+    # read is not yet machine-readable. When that lands, populate _required and _read_files
+    # from the contract; until then this hook is a no-op (invariant returns None on empty
+    # required list, per its fail-soft policy).
+    try:
+        from pathlib import Path as _Path
+        from ink_writer.debug.collector import Collector as _DebugCollector
+        from ink_writer.debug.config import load_config as _load_debug_cfg
+        from ink_writer.debug.invariants.context_required_files import check as _check_ctx
+
+        _project_root = _Path.cwd()
+        _dbg_cfg = _load_debug_cfg(
+            global_yaml_path=_Path("config/debug.yaml"),
+            project_root=_project_root,
+        )
+        if _dbg_cfg.master_enabled and _dbg_cfg.layers.layer_c_invariants \
+                and _dbg_cfg.invariants.get("context_required_files", {}).get("enabled", True):
+            _required: list[str] = []      # TODO: populate from formalized Context Contract
+            _read_files: list[str] = []    # TODO: populate from preflight or context-agent telemetry
+            _inc = _check_ctx(
+                required=_required,
+                actually_read=_read_files,
+                run_id="preflight",
+                chapter=None,
+            )
+            if _inc is not None:
+                _DebugCollector(_dbg_cfg).record(_inc)
+    except Exception:
+        pass  # Debug must never break preflight.
+
     if args.raise_on_fail and not report.all_passed:
         failed_names = [r.name for r in report.failed]
         # Mirror PreflightError's message so ops greps see the same phrase
