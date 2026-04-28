@@ -23,6 +23,8 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 
 校验失败时（缺必填 / 命中黑名单）：直接报错给用户，**不**回退到 deep 模式或弹询问，让用户先改蓝本。
 
+**蓝本模板**：用户参考 `ink-writer/templates/blueprint-template.md`，必填字段 5 个（题材方向 / 核心冲突 / 主角人设 / 金手指类型 / 能力一句话）。
+
 # Project Initialization
 
 ## 模式分支（流程最前端）
