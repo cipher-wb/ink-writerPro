@@ -13,6 +13,9 @@ venv/
 # Local runtime data
 .ink/
 
+# Debug mode runtime
+.ink-debug/
+
 # Test artifacts (leaked MagicMock file names)
 <MagicMock*
 

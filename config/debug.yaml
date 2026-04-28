@@ -1,0 +1,49 @@
+master_enabled: true                    # Master switch, default ON
+
+layers:
+  layer_a_hooks: true
+  layer_b_checker_router: true
+  layer_c_invariants: true
+  layer_d_adversarial: false            # v1.0 only
+
+severity:
+  jsonl_threshold: info                 # info+ to JSONL
+  sqlite_threshold: warn                # warn+ to SQLite index
+  alert_threshold: warn                 # warn+ triggers end-of-run summary
+  stderr_threshold: error               # error gets immediate stderr red
+
+storage:
+  base_dir: ".ink-debug"
+  events_max_mb: 100
+  archive_keep: 5
+
+alerts:
+  per_chapter_summary: true
+  per_batch_report: true
+  warn_window_days: 7
+  warn_window_threshold: 5
+
+invariants:
+  writer_word_count:
+    enabled: true
+  polish_diff:
+    enabled: true
+    min_diff_chars: 50
+  review_dimensions:
+    enabled: true
+    min_dimensions_per_skill:
+      ink-review: 7
+  context_required_files:
+    enabled: true
+  auto_step_skipped:
+    enabled: true
+    expected_steps:
+      ink-auto:
+        - context
+        - draft
+        - review
+        - polish
+        - extract
+        - audit
+
+strict_mode: false                      # If true, unknown kinds raise (test only)

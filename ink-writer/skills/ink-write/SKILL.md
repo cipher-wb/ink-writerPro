@@ -2397,3 +2397,24 @@ END FOR
   ...
 ═══════════════════════════════════════
 ```
+
+## Debug Mode 集成（章节收尾摘要）
+
+> 详见：`docs/superpowers/specs/2026-04-28-debug-mode-design.md`、`docs/USER_MANUAL_DEBUG.md`
+
+完成 Step 0–6 之后，写章流程末尾追加 alerter 调用，输出本章 debug 摘要（warn/error 计数 + top kind）：
+
+```bash
+python3 -c "
+from pathlib import Path
+from ink_writer.debug.config import load_config
+from ink_writer.debug.alerter import Alerter
+import os
+project_root = Path(os.environ['PROJECT_ROOT'])
+run_id = os.environ.get('INK_WRITE_RUN_ID', f'ink-write-ch{os.environ.get(\"CHAPTER\",\"?\")}')
+cfg = load_config(global_yaml_path=Path('config/debug.yaml'), project_root=project_root)
+Alerter(cfg).chapter_summary(run_id=run_id)
+"
+```
+
+环境变量：`PROJECT_ROOT` / `INK_WRITE_RUN_ID` / `CHAPTER`（前两个由 ink-write 编排注入；alerter 内部已 fail-soft，未设置或 master_enabled=false 时静默 no-op）。
