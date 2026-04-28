@@ -175,3 +175,33 @@ def _coerce_int(raw: str | None, default: int) -> int:
         return int(raw.strip())
     except (ValueError, AttributeError):
         return default
+
+
+def _main() -> int:
+    import argparse
+    import json
+    import sys
+
+    parser = argparse.ArgumentParser(description="Convert blueprint .md to Quick draft.json")
+    parser.add_argument("--input", required=True, help="Blueprint .md path")
+    parser.add_argument("--output", required=True, help="Output draft.json path")
+    args = parser.parse_args()
+
+    try:
+        parsed = parse_blueprint(args.input)
+        validate(parsed)
+        draft = to_quick_draft(parsed)
+    except BlueprintValidationError as e:
+        print(f"BLUEPRINT_INVALID: {e}", file=sys.stderr)
+        return 2
+    except OSError as e:
+        print(f"BLUEPRINT_IO_ERROR: {e}", file=sys.stderr)
+        return 3
+
+    Path(args.output).write_text(json.dumps(draft, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"BLUEPRINT_OK: {args.output}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(_main())

@@ -99,3 +99,39 @@ def test_to_quick_draft_marks_missing_optional_for_quick_engine(tmp_path: Path) 
     # Optional fields not provided in minimal blueprint
     assert "书名" in draft["__missing__"]
     assert "女主姓名" in draft["__missing__"]
+
+
+def test_cli_invocation_writes_draft_json(tmp_path: Path) -> None:
+    import subprocess
+    import json
+    import sys
+
+    bp = tmp_path / "bp.md"
+    write_minimal_blueprint(bp)
+    out = tmp_path / "draft.json"
+    result = subprocess.run(
+        [sys.executable, "-m", "ink_writer.core.auto.blueprint_to_quick_draft",
+         "--input", str(bp), "--output", str(out)],
+        capture_output=True, text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "BLUEPRINT_OK" in result.stdout
+    draft = json.loads(out.read_text(encoding="utf-8"))
+    assert draft["platform"] == "qidian"
+    assert draft["题材方向"] == "仙侠"
+
+
+def test_cli_returns_exit2_on_invalid_blueprint(tmp_path: Path) -> None:
+    import subprocess
+    import sys
+
+    bp = tmp_path / "bp.md"
+    write_blueprint_missing_required(bp)
+    out = tmp_path / "draft.json"
+    result = subprocess.run(
+        [sys.executable, "-m", "ink_writer.core.auto.blueprint_to_quick_draft",
+         "--input", str(bp), "--output", str(out)],
+        capture_output=True, text=True,
+    )
+    assert result.returncode == 2
+    assert "BLUEPRINT_INVALID" in result.stderr
