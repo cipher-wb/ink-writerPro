@@ -42,5 +42,5 @@ def test_does_not_recurse_into_subdirs(tmp_path: Path) -> None:
 
 
 def test_blacklist_contents() -> None:
-    expected = {"README.MD", "CLAUDE.MD", "TODO.MD", "CHANGELOG.MD", "LICENSE.MD", "CONTRIBUTING.MD", "AGENTS.MD", "GEMINI.MD"}
-    assert expected.issubset({n.upper() for n in BLACKLIST})
+    expected = {"README.md", "CLAUDE.md", "TODO.md", "CHANGELOG.md", "LICENSE.md", "CONTRIBUTING.md", "AGENTS.md", "GEMINI.md"}
+    assert expected == BLACKLIST

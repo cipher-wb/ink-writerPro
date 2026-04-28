@@ -8,14 +8,14 @@ from __future__ import annotations
 from pathlib import Path
 
 BLACKLIST = {
-    "README.MD",
-    "CLAUDE.MD",
-    "TODO.MD",
-    "CHANGELOG.MD",
-    "LICENSE.MD",
-    "CONTRIBUTING.MD",
-    "AGENTS.MD",
-    "GEMINI.MD",
+    "README.md",
+    "CLAUDE.md",
+    "TODO.md",
+    "CHANGELOG.md",
+    "LICENSE.md",
+    "CONTRIBUTING.md",
+    "AGENTS.md",
+    "GEMINI.md",
 }
 
 
