@@ -41,6 +41,30 @@ allowed-tools: Bash Read
 - 检查点在每批完成后统一运行
 - 单章失败触发重试，批次失败中止后续
 
+## 终极自动化模式（v27 新增）
+
+未初始化项目下运行 `/ink-auto N` 触发自动 bootstrap：
+
+| CWD 状态 | 行为 |
+|----------|------|
+| 顶层有非黑名单 `.md` 蓝本 | 读取最大那份 → 转 quick draft → 自动 init → 自动 plan → 写 N 章 |
+| 空目录（无 `.md`） | 弹 7 题问答 → 落盘 `.ink-auto-blueprint.md` → 同上 |
+| 已 init 但缺当前章卷大纲 | 自动 plan → 写 N 章 |
+| 已 init + 已写一半 | 直接写 N 章（沿用现有逻辑） |
+| 已 init + 已完结 | 报错"项目已完结" |
+
+**蓝本黑名单**：`README.md` / `CLAUDE.md` / `TODO.md` / `CHANGELOG.md` / `LICENSE.md` / `CONTRIBUTING.md` / `AGENTS.md` / `GEMINI.md` / `*.draft.md`。
+
+**蓝本模板**：`ink-writer/templates/blueprint-template.md`，必填字段 5 个：题材方向 / 核心冲突 / 主角人设 / 金手指类型 / 能力一句话。
+
+### 回滚开关
+
+| 环境变量 | 默认 | 关闭后行为 |
+|---------|------|-----------|
+| `INK_AUTO_INIT_ENABLED` | `1` | `0` → 退化到现状（state.json 缺失 → exit 1） |
+| `INK_AUTO_BLUEPRINT_ENABLED` | `1` | `0` → 跳过蓝本扫描，蓝本 `.md` 也走 7 题 |
+| `INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED` | `1` | `0` → 空目录直接报错 |
+
 ## 平台感知（v26.2）
 
 ink-auto 本身不改 —— plan → write → review → polish 的编排器逻辑不变，
