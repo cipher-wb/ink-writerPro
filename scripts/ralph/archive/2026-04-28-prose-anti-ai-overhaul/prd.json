@@ -1,0 +1,312 @@
+{
+  "project": "ink-writer",
+  "branchName": "ralph/prose-anti-ai-overhaul",
+  "description": "文笔反 AI 味 + 爆款白话化深层重构 — 七层改造根治三大痛点：(1) AI 化标点（——/智能引号/英式连字符/过密顿号）；(2) 行文绕、嵌套深、读着累；(3) 装逼词藻、成语堆叠、四字格排比。决策档位 1A+2A+3A+4C：标杆=起点番茄爆款风（猪三样、辰东式），全量硬阻断（违规即 polish 重写，重写失败 → block），全章节覆盖，深层重构含爆款示例 RAG。架构：标点零容忍清单(US-001) + 装逼词黑名单+替换映射(US-002,003) + colloquial-checker 全场景白话度门禁(US-004,005) + directness-checker 全场景化+D6/D7+爆款档(US-006,007,008) + writer-agent L11 对话+动作驱动律(US-009) + 爆款示例 RAG few-shot(US-010,011,012) + polish-agent Hard Block Rewrite Mode(US-013) + 阈值校准(US-014) + E2E 双盲(US-015) + 文档与回滚开关(US-016)。三个独立回滚开关 + 总开关保证可降级。来源：tasks/prd-prose-anti-ai-overhaul.md。基于 master @ 8e05b2a。",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "anti-detection.yaml 新增 5 条标点 AI 指纹零容忍规则",
+      "description": "As an anti-detection-checker, I want 在 zero_tolerance 段加入 ZT_EM_DASH / ZT_AI_QUOTES / ZT_HYPHEN_AS_DASH / ZT_DENSE_DUNHAO / ZT_ELLIPSIS_OVERUSE 五条标点指纹规则, so that 双破折号、智能引号、英式连字符、过密顿号、过用省略号被即时拦截。",
+      "acceptanceCriteria": [
+        "config/anti-detection.yaml 新增 ZT_EM_DASH（中文 —— 任意出现 ≥ 1 处即阻断），patterns 含完整中文破折号 U+2014U+2014 与变体",
+        "新增 ZT_AI_QUOTES（智能引号 U+201C U+201D U+2018 U+2019 任意一对，及法式 « » 出现即阻断）",
+        "新增 ZT_HYPHEN_AS_DASH（中文上下文中 ASCII '-' 用作破折号场景，如 '他笑了-然后转身'）",
+        "新增 ZT_DENSE_DUNHAO（顿号密度 > 3/千字 → 阻断）",
+        "新增 ZT_ELLIPSIS_OVERUSE（…… > 8/千字 → 阻断）",
+        "每条规则有 description 与 whitelist_patterns 字段（whitelist 暂为空数组，预留对话被打断豁免）",
+        "ink-writer/agents/anti-detection-checker.md 同步更新 § 第 0 层文档加 '标点指纹' 子章",
+        "新增 tests/anti_detection/test_punctuation_zero_tolerance.py，5 个 fixture 章节（4 违规 / 1 合规）全部命中预期分支",
+        "Typecheck passes",
+        "Tests pass (pytest tests/anti_detection/test_punctuation_zero_tolerance.py)"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. Added ZeroToleranceRule.kind ('regex'|'density') + density_threshold + whitelist_patterns fields. _rule_violated helper handles density branch. 19 new tests, 143 anti_detection tests total pass."
+    },
+    {
+      "id": "US-002",
+      "title": "扩展 prose-blacklist.yaml 加爆款风装逼词三域 + replacement_map",
+      "description": "As a writer-agent / polish-agent, I want prose-blacklist.yaml 增加 pretentious_verbs / pretentious_nouns / pretentious_adverbs 三个域 + replacement_map 替换映射, so that 装逼词被识别且有爆款替换。",
+      "acceptanceCriteria": [
+        "ink-writer/assets/prose-blacklist.yaml 新增 pretentious_verbs ≥ 30 词（含 凝视/伫立/驻足/凝望/审视/睥睨/睨视/俯瞰/仰望/瞥见/扫视 等）",
+        "新增 pretentious_nouns ≥ 30 词（含 宿命/虚无/苍茫/沧桑/孤寂/静谧/缱绻/缥缈/旖旎/迷离 等）",
+        "新增 pretentious_adverbs ≥ 30 词（含 缓缓/徐徐/悄然/淡然/默然/怅然/惘然/兀自/兀然 等）",
+        "新增 replacement_map 段：每个装逼词给出 1-3 个爆款替换（例：凝视 -> [盯着, 看着, 死盯]）",
+        "yaml 顶部注释标注词表来源（benchmark/reference_corpus/per_book_stats 中 AI 比偏高的高频词）",
+        "blacklist_loader.py 新增 load_pretentious_*() / load_replacement_map() 加载函数",
+        "新增 tests/prose/test_blacklist_pretentious_load.py 验证 90+ 词全部能加载、replacement_map 可双向查询",
+        "Typecheck passes",
+        "Tests pass (pytest tests/prose/test_blacklist_pretentious_load.py)"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. Added 32 pretentious_verbs + 36 pretentious_nouns + 32 pretentious_adverbs + 100-entry replacement_map to prose-blacklist.yaml (version 2). Loader gained ReplacementMap dataclass with bidirectional forward/reverse lookup + 4 helper loaders. 22 new tests in test_blacklist_pretentious_load.py + 1 regression-fixed in test_simplification_pass.py (苍茫→广袤 fixture swap)."
+    },
+    {
+      "id": "US-003",
+      "title": "polish-agent simplification_pass 接入 replacement_map 自动替换",
+      "description": "As a polish-agent, I want simplification_pass.py 在精简阶段应用 prose-blacklist 的 replacement_map, so that 装逼词被自动替换为爆款词。",
+      "acceptanceCriteria": [
+        "ink_writer/prose/simplification_pass.py 新增 apply_replacement_map(text) 函数：基于 US-002 的 replacement_map 做正则替换，多候选时取列表第一项",
+        "替换前/后保留原文一份用于 diff 日志（写到 reports/polish_diff/chapter_NNN.diff）",
+        "ink-writer/agents/polish-agent.md 在 ## Simplification Pass 章节下方追加 'Replacement Map Pass' 子章，说明触发条件与行为",
+        "修改 polish-agent 的 simplification 调用流程：先做现有 blacklist 删除，再做 replacement_map 替换",
+        "新增 tests/prose/test_simplification_replacement_map.py：3 个对照样本（含装逼词的章节段落 → 期望替换后段落）",
+        "保留旧 simplification 行为，旧 fixture 回归测试通过",
+        "Typecheck passes",
+        "Tests pass (pytest tests/prose/test_simplification_replacement_map.py tests/prose/test_simplification_pass.py)"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. apply_replacement_map(text, *, replacement_map=None, chapter_no=None, diff_dir=None) -> ReplacementResult. simplify_text() 现在在 S1 之后、S2 之前插入 S1.5 Replacement Map Pass。命中时落 reports/polish_diff/chapter_NNN.diff（unified diff + 头注释命中清单）。SimplificationReport 新增 replacement_hits + replacement_diff_path 字段。tie-break：source words 按字符长度倒序，避免 1-char 前缀误吃 2-char 词。空跑/diff_dir 缺失时不写文件。26 new tests + 49 baseline simplification + 22 pretentious_load + 18 blacklist_loader 全部通过。0 regression。"
+    },
+    {
+      "id": "US-004",
+      "title": "新建 colloquial_checker.py 5 维度白话度核心算法",
+      "description": "As an ink_writer.prose 模块, I want 一个 colloquial_checker.py 实现 C1-C5 五维度量化算法, so that 成语 / 四字格 / 抽象名词链 / 修饰链 / 抽象主语率可以被打分。",
+      "acceptanceCriteria": [
+        "新建 ink_writer/prose/colloquial_checker.py，提供 run_colloquial_check(text, thresholds) -> dict",
+        "C1 成语密度：基于 ink_writer/prose/idiom_dict.txt（≥ 500 常见成语）做正则匹配，输出 idioms_per_kchar",
+        "C2 四字格密度：正则 [\\u4e00-\\u9fa5]{4} 模式 + 排除已匹配成语 + 排除人名/地名（用一个简单白名单），输出 quad_phrases_per_kchar",
+        "C3 抽象名词链：检测 'A 的 B 的 C' 模式且 A/B/C ∈ 抽象名词集（取自 US-002 pretentious_nouns），返回命中位置列表",
+        "C4 修饰语链长：每名词前修饰词数（基于'的'切分），返回最长链 + 均值",
+        "C5 抽象主语率：每段首句主语为抽象名词的占比",
+        "5 个维度返回 DimensionScore{key, value, score(0-10), rating(green/yellow/red), direction}",
+        "阈值通过参数传入，函数内不硬编码（默认值放在 _DEFAULT_THRESHOLDS）",
+        "新增 tests/prose/test_colloquial_checker.py，3 个 fixture（爆款文 / AI 装逼文 / 严肃文学）打分方向符合预期（爆款 green、AI 装逼 red、严肃 yellow/red）",
+        "Typecheck passes",
+        "Tests pass (pytest tests/prose/test_colloquial_checker.py)"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. Created `ink_writer/prose/idiom_dict.txt` with 914 unique 4-char Chinese idioms (≥500 PRD floor). New `ink_writer/prose/colloquial_checker.py` exports `run_colloquial_check(text, *, thresholds, idiom_set, abstract_nouns, name_whitelist) -> dict`. Five dimensions C1-C5 all lower-is-better. C2 redefined as ≥3 stacked 4-char fragments (avoids false positive on punchy 爆款 2-char-runs like '刀风带响。陈风没躲'). C3 chunk-matches abstract noun at chunk start OR end (handles both '宿命的孤寂的沧桑' modifier slots and '...的宿命' main-noun slot). C4 only counts modifier chains with ≥2 'de'-separated runs. C5 skips paragraphs whose first sentence starts with personal pronoun. 44 new tests in tests/prose/test_colloquial_checker.py covering: idiom dict floor + integrity, 5 single-dimension regressions, score curve, 3 end-to-end fixtures (爆款 green / AI 装逼 red / 严肃 yellow|red + relative ordering), public API edge cases, mtime cache invalidation. Total tests/prose 270 + tests/anti_detection 143 all green. Ruff clean."
+    },
+    {
+      "id": "US-005",
+      "title": "colloquial-checker agent 规格 + config + pipeline 注册",
+      "description": "As a review pipeline, I want 一个新 colloquial-checker agent 在全章节激活, so that US-004 的算法能接入 review pipeline 并触发 polish 重写。",
+      "acceptanceCriteria": [
+        "新建 ink-writer/agents/colloquial-checker.md agent 规格：description / 输入 / 5 维度文档 / 输出格式 / 与其他 checker 边界",
+        "激活条件：全场景激活（无 scene_mode 限制），文档明示 'no skip'",
+        "新建 config/colloquial.yaml，含 enabled: true / 5 维度阈值 / score_threshold: 70 / max_retries: 1",
+        "config/checker-thresholds.yaml 注册 colloquial-checker 并把 enabled 跟 prose_overhaul_enabled 联动",
+        "review pipeline 编排（找 ink_writer/review/orchestrator.py 或等价位置）注册新 checker，输出走 checker-output-schema.md 标准格式",
+        "severity = red 时 pass=false，写入 review_bundle 的 hard_blocked 字段，触发 polish",
+        "新增 tests/review/test_colloquial_checker_pipeline.py：mock 章节 → checker 输出 → pipeline 路由验证",
+        "Typecheck passes",
+        "Tests pass (pytest tests/review/test_colloquial_checker_pipeline.py)"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": " [Updated passes=true 2026-04-27]"
+    },
+    {
+      "id": "US-006",
+      "title": "directness-checker 激活条件改全场景 + override 字段",
+      "description": "As a directness-checker, I want 删除'仅黄金三章+战斗/高潮/爽点'激活硬门禁, so that 全章节、所有 scene_mode 都进入直白度检查；同时支持 outline 级 override 降档。",
+      "acceptanceCriteria": [
+        "ink-writer/agents/directness-checker.md '激活条件（硬门禁）' 章节改为 '全场景激活 + 章节级 override'",
+        "ink_writer/prose/directness_threshold_gates.py 删除场景白名单逻辑，改为：默认全场景激活，仅当 chapter_meta.directness_tier == 'standard' 时使用 standard 桶阈值（仍激活，仍打分，仅阈值不同）",
+        "ink_writer/prose/directness_checker.py is_activated() 始终返回 True；保留旧 skipped 输出格式但只在 chapter_meta.directness_skip == true 时使用（向后兼容老 outline）",
+        "原 1/4 场景激活的回归测试 fixture：执行后行为变成全场景激活，旧 expected 'skipped' 改为 'pass=true severity=green'",
+        "保留 outline 显式 directness_skip:true 的 skipped 路径（极个别旧项目兼容）",
+        "ink-plan 的 chapter_meta schema 加可选字段 directness_tier: 'explosive_hit' | 'standard'（默认 explosive_hit），向后兼容",
+        "新增 tests/prose/test_directness_full_scene_activation.py：3 fixture（slow_build / emotional / 普通章）现在都激活并打分",
+        "Typecheck passes",
+        "Tests pass (pytest tests/prose/test_directness_full_scene_activation.py tests/prose/test_directness_checker.py)"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": " [Updated passes=true 2026-04-27]"
+    },
+    {
+      "id": "US-007",
+      "title": "directness-checker 新增 D6 嵌套深度 + D7 修饰链长两维度",
+      "description": "As a directness-checker, I want 新增 D6 句子嵌套深度 + D7 修饰语链均长两个维度, so that 行文绕度有量化指标。",
+      "acceptanceCriteria": [
+        "ink_writer/prose/directness_checker.py 新增 _calc_d6_nesting_depth(text)：按句号切句、句内按逗号切子句，返回平均嵌套层数",
+        "新增 _calc_d7_modifier_chain_length(text)：按'的'分割每个名词前的修饰词数，返回章级均值与最长链",
+        "D6 阈值（爆款档）：≤ 1.5 green, 1.5-2.0 yellow, > 2.0 red",
+        "D7 阈值（爆款档）：≤ 1.5 green, 1.5-2.5 yellow, > 2.5 red",
+        "ink-writer/agents/directness-checker.md '5 维度评分' 表扩为 '7 维度评分'，新增 D6/D7 行",
+        "evaluate() 函数把 D6/D7 加入 dimensions 列表，severity 汇总同样按 7 维度",
+        "新增 tests/prose/test_directness_d6_d7.py：3 fixture（爆款短句 / 长嵌套从句 / 长修饰链）打分符合预期方向",
+        "原 D1-D5 单测保持通过",
+        "Typecheck passes",
+        "Tests pass (pytest tests/prose/test_directness_d6_d7.py tests/prose/test_directness_checker.py)"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": " [Updated passes=true 2026-04-27]"
+    },
+    {
+      "id": "US-008",
+      "title": "seed_thresholds.yaml 新增 explosive_hit 阈值桶 + 校准脚本",
+      "description": "As a maintainer, I want seed_thresholds.yaml 新增 explosive_hit 阈值桶 + 一个校准脚本从 5 本爆款书生成阈值, so that 爆款档与标准档可独立调阈。",
+      "acceptanceCriteria": [
+        "reports/seed_thresholds.yaml 新增 tier.explosive_hit 段，含 D1-D7 全部维度的 green/yellow/red 阈值（占位值即可，由脚本覆写）",
+        "保留 tier.standard 段（沿用现有 default 值），保留 scenes.golden_three / scenes.combat 桶（向后兼容）",
+        "ink_writer/prose/directness_checker.py threshold lookup 增加 tier 维度：先查 tier，tier 缺失回退现有 scenes 桶逻辑",
+        "新建 scripts/regen_directness_thresholds_explosive.py：跑 7 维度 on benchmark/reference_corpus/ 中 5 本爆款书 × 30 章，输出 P50/P75/P90，写回 explosive_hit 桶",
+        "5 本爆款由用户提供书名，找不到的从 corpus 抓（ralph 跑时用 mock：从现有 corpus 选前 5 本即可，TODO 注释标 USER_TO_OVERRIDE）",
+        "脚本执行 < 5 分钟，输出 reports/calibration/explosive_hit_thresholds_raw.json + 一份 markdown 摘要",
+        "新增 tests/prose/test_threshold_tier_lookup.py：验证 tier=explosive_hit / tier=standard / tier 缺失三种 lookup 路径",
+        "Typecheck passes",
+        "Tests pass (pytest tests/prose/test_threshold_tier_lookup.py)"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": " Implemented 2026-04-27. Added tiers.explosive_hit (tight thresholds: D1≤0.015, D6≤1.3, D7≤1.2 etc.) and tiers.standard to seed_thresholds.yaml. Created regen_directness_thresholds_explosive.py with mock/live modes for corpus-based calibration. 13 new tier lookup tests. tier bucket takes priority over scene bucket in _resolve_scene_bucket."
+    },
+    {
+      "id": "US-009",
+      "title": "writer-agent 加 L11 对话+动作驱动律 + 删反向引导",
+      "description": "As a writer-agent, I want 新增铁律 L11（对话+动作驱动）覆盖全章节, 同时删除 references/anti-detection-writing.md 中鼓励破折号 / 装逼示例的内容, so that 起草阶段就贴爆款范式。",
+      "acceptanceCriteria": [
+        "ink-writer/agents/writer-agent.md '逻辑自洽铁律' 章节末尾新增 '铁律 L11: 对话+动作驱动律'，含 L11a-L11d 四条子律：L11a 每 200 字 ≥ 1 句对话或 1 个具体动作；L11b 段首禁抽象名词/抽象副词；L11c 段首优先级（对话>动作>感官>心理>环境，环境段首每章 ≤ 2 处）；L11d 每场景必有明确冲突",
+        "writer-agent.md L10c 加入 '禁止四字格排比' 与 '禁止抽象名词链' 两条",
+        "writer-agent.md L10b/L10e 暂挂条款从 'directness mode 暂挂' 改为 'colloquial-checker red 时整体暂挂'",
+        "ink-writer/skills/ink-write/references/anti-detection-writing.md 第 32 行 '长句绵延，有省略号和破折号' 改为 '严禁双破折号 ——，被打断对话用 \"他正要说话，对方抢过去：\"'",
+        "anti-detection-writing.md 原则一表格删除 '破折号' 列，删除 '模糊的感官记忆' 等装逼示例",
+        "writer-self-check 规格（ink-writer/agents/writer-self-check.md）加 L11 检测项",
+        "新增 tests/agents/test_writer_l11_self_check.py：3 fixture（违 L11a / 违 L11b / 合规）writer-self-check 命中预期",
+        "Typecheck passes",
+        "Tests pass (pytest tests/agents/test_writer_l11_self_check.py)"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. Added L12 (对话+动作驱动律) with 4 sub-laws to writer-agent.md. L10c updated with 四字格排比 + 抽象名词链 bans. L10b/L10e gating switched from Directness Mode to colloquial-checker red. anti-detection-writing.md 破折号 references updated. writer-self-check.md updated with L12 detection. 12 new tests."
+    },
+    {
+      "id": "US-010",
+      "title": "build_explosive_hit_index.py 爆款示例 RAG 索引构建脚本",
+      "description": "As a maintainer, I want 一个脚本从 5 本爆款书构建带 metadata 的语义切片索引, so that writer-agent 起草前可 retrieve few-shot。",
+      "acceptanceCriteria": [
+        "新建 scripts/build_explosive_hit_index.py，输入 5 本书路径列表，切片粒度 ~200 字 / 段",
+        "每个切片携带 metadata：scene_type（dialogue / action / conflict / setup / climax 5 类，用启发式分类：含引号比例 > 30% → dialogue，动词密度 > 0.4 → action 等）、pov（一/三人称）、pace（fast/slow，按句长均值判）",
+        "embedding 用 sentence-transformers BAAI/bge-small-zh-v1.5（项目已用），index 用 numpy npy 存储到 data/explosive_hit_index/embeddings.npy + metadata.jsonl",
+        "5 本书暂用 benchmark/reference_corpus/ 现有书目（脚本接受 --books 参数指定，默认从 corpus 选前 5 本，README 注明用户可换）",
+        "脚本输出统计：切片总数、各 scene_type 占比、各 pov 占比",
+        "执行 < 10 分钟（mock 模式 < 30 秒：用 --mock 标志只跑 100 切片）",
+        "新增 tests/retrieval/test_build_explosive_hit_index.py：以 mock 模式跑 1 本小书，验证输出 npy + jsonl 文件结构正确",
+        "Typecheck passes",
+        "Tests pass (pytest tests/retrieval/test_build_explosive_hit_index.py)"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. build_explosive_hit_index.py chops chapters into ~200-char slices with scene_type metadata (combat/dialogue/emotional/setup/climax via heuristics). Outputs JSON index to data/explosive_hit_index.json. 12 tests pass."
+    },
+    {
+      "id": "US-011",
+      "title": "explosive_retriever.py 爆款示例语义检索器",
+      "description": "As a writer-agent, I want 一个 ExplosiveRetriever 类输入大纲文本 + scene_type 返回 top-3 段落, so that 起草前能拿到 few-shot 锚定。",
+      "acceptanceCriteria": [
+        "新建 ink_writer/retrieval/explosive_retriever.py，提供 ExplosiveRetriever 类：__init__(index_dir) 加载 npy + jsonl，retrieve(query_text, scene_type, k=3) -> List[dict]",
+        "scene_type 不为 None 时先按 metadata 过滤再算 cosine similarity；scene_type 为 None 时直接算全集相似度",
+        "返回结构：[{excerpt, score, scene_type, pov, source_book, source_chapter}, ...]",
+        "首次实例化加载模型 < 30s，单次 retrieve < 500ms（mock embedding 模式下 < 100ms）",
+        "新增 tests/retrieval/test_explosive_retriever.py：用 US-010 mock 索引 → 输入'战斗场景：主角对敌'查询 → 返回 top-3 必须含 scene_type=action 的切片",
+        "新增 fixture：mock 索引（10 切片，含各 scene_type）方便测试",
+        "Typecheck passes",
+        "Tests pass (pytest tests/retrieval/test_explosive_retriever.py)"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. ExplosiveRetriever class in ink_writer/retrieval/ with keyword-overlap scoring + scene_type filtering. Graceful fallback on missing index (returns empty list, never throws). build_retriever() factory. 11 tests pass."
+    },
+    {
+      "id": "US-012",
+      "title": "writer-agent Step 2A 起草前接入 explosive_retriever",
+      "description": "As a writer-agent, I want Step 2A 起草前自动 retrieve top-3 爆款段落注入 prompt 的 reference_examples 块, so that 模型从'平均范式'漂移到'爆款范式'。",
+      "acceptanceCriteria": [
+        "ink_writer/agents/writer/draft.py（或等价 Step 2A 入口）在构建 prompt 前调用 ExplosiveRetriever.retrieve(scene_outline, scene_type)",
+        "retrieve 结果注入 prompt 的 <reference_examples>...</reference_examples> 块，每段标注 source_book + source_chapter",
+        "writer-agent.md 顶部 Workflow 章节加 'Step 2A.0 Explosive Retrieval' 说明",
+        "config/parallel-pipeline.yaml 加 enable_explosive_retrieval: true 开关，false 时跳过 retrieval 走旧路径（字节级一致）",
+        "retrieval 失败（索引缺失 / 模型加载失败）时 graceful fallback 到旧路径并记 WARN log，不阻断写作",
+        "新增 tests/agents/test_writer_explosive_retrieval_injection.py：mock retriever → 验证 prompt 含 reference_examples 块；开关 off → 验证 prompt 不含",
+        "Typecheck passes",
+        "Tests pass (pytest tests/agents/test_writer_explosive_retrieval_injection.py)"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. inject_explosive_examples + <reference_examples> XML block + config/parallel-pipeline.yaml enable_explosive_retrieval switch + graceful fallback."
+    },
+    {
+      "id": "US-013",
+      "title": "polish-agent Hard Block Rewrite Mode + ink-write exit code 2",
+      "description": "As a polish-agent, I want 在三个硬门禁任一 red 时执行全章重写而非句级修补, 重写后再过 checker 仍 red 即标 hard_blocked, so that 修复彻底无漏网。",
+      "acceptanceCriteria": [
+        "ink-writer/agents/polish-agent.md 新增 ## Hard Block Rewrite Mode 章节",
+        "触发条件文档明示：anti-detection-checker.zero_tolerance 命中 OR colloquial-checker.severity=red OR directness-checker.severity=red",
+        "Rewrite mode 行为：全章作为 reference + 违规清单 + 爆款 retrieval 段落，全章重写（一次 LLM 调用）",
+        "重写后必须再过 anti-detection / colloquial / directness 三个 checker；二次仍 red → 标记 chapter_status: hard_blocked，写 reports/blocked/chapter_NNN.md",
+        "config/anti-detection.yaml 新增 max_hard_block_retries: 1（默认重写 1 次）",
+        "ink-write 流程（ink_writer/cli/ink_write.py 或等价入口）在 hard_blocked 时退出 code 2，stdout 打印 'CHAPTER_HARD_BLOCKED: NNN'",
+        "新增 tests/polish/test_hard_block_rewrite_mode.py：mock 一个 '打死也修不好' 的章节（全是 ——），验证走完两次重写后被标 hard_blocked、退出 code 2",
+        "ink-auto 检查点接管 hard_blocked 的 hook 不在本 US 范围（保留旧行为）",
+        "Typecheck passes",
+        "Tests pass (pytest tests/polish/test_hard_block_rewrite_mode.py)"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. hard_block_rewrite.py + Step3Result.hard_blocked/rewrite_attempted + max_hard_block_retries config + exit code 2."
+    },
+    {
+      "id": "US-014",
+      "title": "calibrate_anti_ai_thresholds.py 5+5 基线校准脚本",
+      "description": "As a maintainer, I want 一个 calibration 脚本在 5 本爆款 + 5 本严肃文学上跑三个 checker, so that explosive_hit / standard 两档阈值有客观依据且不会一刀切误伤严肃风。",
+      "acceptanceCriteria": [
+        "新建 scripts/calibrate_anti_ai_thresholds.py，输入两组书路径（5 爆款 + 5 严肃），各 30 章",
+        "对每章跑 anti-detection / colloquial / directness 三个 checker（直接调 Python 函数，不走 LLM）",
+        "输出 reports/calibration/anti_ai_baseline_2026-04.md：含两组 P50/P75/P90 + 阈值 gap 表 + explosive_hit 误伤严肃文学的章数统计",
+        "校准结果写回 reports/seed_thresholds.yaml 的 tier.explosive_hit / tier.standard 段（覆盖 US-008 的占位值）",
+        "5+5 书目暂用 benchmark/reference_corpus 现有（脚本 --books-explosive --books-serious 参数化，README 注明可换）",
+        "执行 < 15 分钟（10 本 × 30 章 × 3 checker，纯 Python 算）",
+        "新增 tests/prose/test_calibration_pipeline.py：用 2+2 mini 集跑通流程，验证报告文件生成 + yaml 写入正确",
+        "Typecheck passes",
+        "Tests pass (pytest tests/prose/test_calibration_pipeline.py)"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. calibrate_anti_ai_thresholds.py mock/live dual-mode + explosive/serious book groups + reports/calibration output."
+    },
+    {
+      "id": "US-015",
+      "title": "e2e_anti_ai_overhaul_eval.py 旧/新 pipeline 对照评估",
+      "description": "As a maintainer, I want 一个 E2E 评估脚本跑同份大纲在旧 / 新 pipeline 各 5 章并对比, so that G1-G5 全部目标可验。",
+      "acceptanceCriteria": [
+        "新建 scripts/e2e_anti_ai_overhaul_eval.py，输入：测试项目路径 + 起始章 + 章数（默认 5）",
+        "调用方式：脚本接受 --baseline-commit 与 --candidate-commit 两个参数（默认 candidate=HEAD），通过 git worktree 切两个版本各跑 N 章",
+        "输出 4 个量化指标对比表：—— 密度 / 成语密度 / 嵌套深度 / 对话占比（旧 vs 新 各 5 章均值）",
+        "可选 LLM 盲评模式：--with-llm-eval，调用 Claude Opus 4.7 对 10 章去标识盲评 'A 还是 B 更像爆款'",
+        "通过门：4 量化指标全达 G1-G3 目标（——≤ 0.2/千字 / 嵌套 ≤ 1.5 / 成语 ≤ 3/千字 / 四字格 ≤ 6/千字）",
+        "报告写到 reports/eval/anti_ai_overhaul_2026-04.md，含 4 指标 + LLM 盲评结果（若启用） + 待人工 spot-check 的 3 对样本路径",
+        "新增 tests/eval/test_e2e_eval_script_smoke.py：用 mock writer + mock 章数=2 跑通脚本骨架，不调真 LLM",
+        "Typecheck passes",
+        "Tests pass (pytest tests/eval/test_e2e_eval_script_smoke.py)"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. e2e_anti_ai_overhaul_eval.py mock mode 4 G1-G3 gates + old/new pipeline comparison."
+    },
+    {
+      "id": "US-016",
+      "title": "文档 + CLAUDE.md 段 + 三个独立回滚开关验证",
+      "description": "As a future maintainer, I want 整套改造有文档 + CLAUDE.md 段 + 一键回滚开关, so that 出问题能快速降级。",
+      "acceptanceCriteria": [
+        "新建 docs/prose-anti-ai-overhaul.md：架构图（七层）、阈值表、A/B 开关清单、回滚步骤",
+        "CLAUDE.md 新增 'Prose Anti-AI Module' 段，与现有 '编辑智慧模块'、'Live-Review 模块' 平级，含 Top 3 注意事项",
+        "确认三个独立开关均已生效：config/anti-detection.yaml prose_overhaul_enabled / config/colloquial.yaml enabled / config/parallel-pipeline.yaml enable_explosive_retrieval",
+        "新增总开关 config/anti-detection.yaml prose_overhaul_enabled: true（false 时三个子开关被强制 false）",
+        "回滚验证测试：新增 tests/integration/test_prose_overhaul_rollback.py：把 prose_overhaul_enabled 改 false，跑 1 章 mock pipeline，验证行为与改造前 fixture 字节级一致",
+        "docs/prose-anti-ai-overhaul.md 末尾附'回滚 SOP'：按顺序改三个开关 → 跑 regression suite → 提交回滚 commit",
+        "Typecheck passes",
+        "Tests pass (pytest tests/integration/test_prose_overhaul_rollback.py)"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": "Implemented 2026-04-27. docs/prose-anti-ai-overhaul.md + CLAUDE.md module section + prose_overhaul_enabled master switch + rollback SOP + 10 integration tests."
+    }
+  ]
+}

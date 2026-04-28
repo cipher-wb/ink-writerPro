@@ -1,0 +1,5 @@
+{"event": "ingest", "case_id": "CASE-2026-0001", "raw_text_hash": "819b48cdd3928157407a2475c087dad372e1ea298b8aeb1f897a07c828277497", "at": "2026-04-27T04:46:51.745178+00:00"}
+{"event": "ingest", "case_id": "CASE-2026-0002", "raw_text_hash": "b43cf83df0a089503738be8fe0628d7e4f5d5996ace96332cfa8043e3a55f48f", "at": "2026-04-27T04:46:51.746378+00:00"}
+{"event": "ingest", "case_id": "CASE-2026-0003", "raw_text_hash": "961cd95a152568fee1a32b7065e78e3475fa47208781473085c327cf3b6c0781", "at": "2026-04-27T04:46:51.747875+00:00"}
+{"event": "ingest", "case_id": "CASE-2026-0004", "raw_text_hash": "a321eb8fe80be626daf012847d3b7bbde543a8820ecafe5366e414d6b4c3b8f8", "at": "2026-04-27T04:46:51.749834+00:00"}
+{"event": "ingest", "case_id": "CASE-2026-0005", "raw_text_hash": "03becf45ca10228cef98fcc1689265a1da379f4cfd174da120a9c93745115715", "at": "2026-04-27T04:46:51.752182+00:00"}

@@ -9,7 +9,8 @@ from dataclasses import dataclass, field
 from ink_writer.anti_detection.config import AntiDetectionConfig
 
 _SENTENCE_SPLIT = re.compile(r"[。？！…]+")
-_DIALOGUE_RE = re.compile(r"[\u201c\u300c]([^\u201d\u300d]*?)[\u201d\u300d]")
+_DIALOGUE_RE = re.compile(r'[\u201c\u300c]([^\u201d\u300d]*?)[\u201d\u300d]')
+_DIALOGUE_RE_STRAIGHT = re.compile(r'"([^"]*)"')
 _CAUSAL_WORDS = re.compile(r"因为|所以|于是|因此|由于|导致|结果|从而|进而")
 # US-014：连接词密度（递进 / 转折 / 并列 / 总结 / 递进式 AI 书面语）
 _CONJUNCTION_WORDS = re.compile(
@@ -166,6 +167,7 @@ def analyze_diversity(text: str, config: AntiDetectionConfig) -> DiversityReport
             ))
 
     dialogue_chars = sum(len(m.group(1)) for m in _DIALOGUE_RE.finditer(text))
+    dialogue_chars += sum(len(m.group(1)) for m in _DIALOGUE_RE_STRAIGHT.finditer(text))
     total_chars = len(text)
     report.dialogue_ratio = dialogue_chars / total_chars if total_chars > 0 else 0.0
 

@@ -261,7 +261,9 @@ def anti_ai_lint_text(
         penalty += 0.12 if emotional_total_density < 3.0 else 0.06
 
     # --- v10.6: 对话存在性检测 ---
-    dialogue_matches = re.findall(r"\u201c[^\u201d]*\u201d", text)
+    dialogue_matches = []
+    for pattern in [r"\u201c[^\u201d]*\u201d", r"\u300c[^\u300d]*\u300d", '"([^"]*)"']:
+        dialogue_matches.extend(re.findall(pattern, text))
     dialogue_char_count = sum(len(m) - 2 for m in dialogue_matches)  # exclude quotes
     dialogue_ratio = dialogue_char_count / max(1, length)
     if dialogue_ratio < 0.05 and len(sentences) >= 10:

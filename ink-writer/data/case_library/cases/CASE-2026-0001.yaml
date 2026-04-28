@@ -1,0 +1,26 @@
+case_id: CASE-2026-0001
+title: 'preflight failure: reference_corpus_readable'
+status: active
+severity: P0
+domain: infra_health
+layer:
+- infra_health
+tags:
+- preflight
+- reference_corpus_readable
+scope: {}
+source:
+  type: infra_check
+  raw_text: 'preflight check failed: reference_corpus_readable: reference_root benchmark/reference_corpus
+    missing or not a directory'
+  ingested_at: '2026-04-27'
+failure_pattern:
+  description: reference_root benchmark/reference_corpus missing or not a directory
+  observable:
+  - reference_corpus_readable.passed == False
+bound_assets: {}
+resolution: {}
+evidence_links: []
+recurrence_history: []
+meta_rule_id: null
+sovereign: false

@@ -559,10 +559,16 @@ fi  # end: if [[ -n "$PROJECT_ROOT" ]] (v27 完结/大纲预检守卫)
 # ═══════════════════════════════════════════
 
 CHILD_PID=""
+WATCHDOG_PID=""
 INTERRUPTED=0
 
 on_signal() {
     INTERRUPTED=1
+    if [[ -n "$WATCHDOG_PID" ]]; then
+        kill -TERM "$WATCHDOG_PID" 2>/dev/null || true
+        wait "$WATCHDOG_PID" 2>/dev/null || true
+        WATCHDOG_PID=""
+    fi
     if [[ -n "$CHILD_PID" ]]; then
         kill -INT "$CHILD_PID" 2>/dev/null || true
         wait "$CHILD_PID" 2>/dev/null || true
@@ -736,10 +742,39 @@ parse_progress_output() {
 # CLI 进程启动通用函数
 # ═══════════════════════════════════════════
 
+_start_cli_watchdog() {
+    # 启动后台 watchdog：超时后 kill CHILD_PID（pipeline 主进程组）
+    # 避免 Step 3 checker 子代理 API 阻塞导致整个 ink-auto 永久挂起。
+    local timeout_s="$1"
+    local target_pid="$2"
+    (
+        sleep "$timeout_s"
+        if kill -0 "$target_pid" 2>/dev/null; then
+            echo "[ink-auto] watchdog: timeout ${timeout_s}s exceeded for PID $target_pid, sending SIGTERM" >&2
+            kill -TERM "$target_pid" 2>/dev/null || true
+            sleep 8
+            if kill -0 "$target_pid" 2>/dev/null; then
+                echo "[ink-auto] watchdog: SIGTERM ignored, sending SIGKILL" >&2
+                kill -KILL "$target_pid" 2>/dev/null || true
+            fi
+        fi
+    ) &
+    WATCHDOG_PID=$!
+}
+
+_stop_cli_watchdog() {
+    if [[ -n "${WATCHDOG_PID:-}" ]]; then
+        kill -TERM "$WATCHDOG_PID" 2>/dev/null || true
+        wait "$WATCHDOG_PID" 2>/dev/null || true
+        WATCHDOG_PID=""
+    fi
+}
+
 run_cli_process() {
     local prompt="$1"
     local log_file="$2"
     local exit_code=0
+    local timeout_s="${INK_AUTO_CHAPTER_TIMEOUT:-1200}"
 
     case $PLATFORM in
         claude)
@@ -748,28 +783,36 @@ run_cli_process() {
                 --no-session-persistence \
                 2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
+            (( timeout_s > 0 )) && _start_cli_watchdog "$timeout_s" "$CHILD_PID"
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
+            _stop_cli_watchdog
             CHILD_PID=""
             ;;
         gemini)
             echo "$prompt" | gemini --yolo \
                 2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
+            (( timeout_s > 0 )) && _start_cli_watchdog "$timeout_s" "$CHILD_PID"
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
+            _stop_cli_watchdog
             CHILD_PID=""
             ;;
         codex)
             codex --approval-mode full-auto "$prompt" \
                 2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
+            (( timeout_s > 0 )) && _start_cli_watchdog "$timeout_s" "$CHILD_PID"
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
+            _stop_cli_watchdog
             CHILD_PID=""
             ;;
     esac
 
     # US-012 defensive 日志：CLI 子进程非零退出时显式打到 stderr
     # （模仿 US-011 ralph.sh 的 LLM_EXIT 模式；成功时静默避免污染）
-    if (( exit_code != 0 )); then
+    if (( exit_code == 124 || exit_code == 137 || exit_code == 143 )); then
+        echo "[ink-auto] llm_exit=$exit_code timeout=${timeout_s}s tool=$PLATFORM log=$log_file" >&2
+    elif (( exit_code != 0 )); then
         echo "[ink-auto] llm_exit=$exit_code tool=$PLATFORM log=$log_file" >&2
     fi
 
@@ -802,12 +845,8 @@ if [[ -z "$PROJECT_ROOT" ]]; then
     BLUEPRINT_PATH=""
     if [[ "$INK_AUTO_BLUEPRINT_ENABLED" == "1" ]]; then
         BLUEPRINT_PATH=$(
-            "$PY_LAUNCHER" -X utf8 -c "
-from pathlib import Path
-from ink_writer.core.auto.blueprint_scanner import find_blueprint
-result = find_blueprint(Path('${PROJECT_ROOT}'))
-print(str(result) if result else '')
-" 2>/dev/null || echo ""
+            "$PY_LAUNCHER" -X utf8 "${SCRIPTS_DIR}/blueprint_scanner.py" \
+                --cwd "${PROJECT_ROOT}" 2>/dev/null || echo ""
         )
     fi
 
@@ -829,7 +868,7 @@ print(str(result) if result else '')
 
     # 转换蓝本 → quick draft
     DRAFT_PATH="${PROJECT_ROOT}/.ink-auto-quick-draft.json"
-    if ! "$PY_LAUNCHER" -X utf8 -m ink_writer.core.auto.blueprint_to_quick_draft \
+    if ! "$PY_LAUNCHER" -X utf8 "${SCRIPTS_DIR}/blueprint_to_quick_draft.py" \
         --input "$BLUEPRINT_PATH" --output "$DRAFT_PATH" 2>&1; then
         echo "❌ 蓝本校验失败，请修正后重跑 /ink-auto"
         exit 1

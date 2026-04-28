@@ -438,6 +438,7 @@ def check_dialogue_ratio(chapter_text: str) -> CheckResult:
         return CheckResult("dialogue_ratio", True, "soft", "正文过短，跳过对话检查")
 
     dialogue_matches = re.findall(r'[\u201c\u300c][^\u201d\u300d]*[\u201d\u300d]', chapter_text)
+    dialogue_matches += re.findall(r'"[^"]*"', chapter_text)
     dialogue_chars = sum(len(re.sub(r'\s+', '', m)) - 2 for m in dialogue_matches)
     ratio = dialogue_chars / max(1, total_len)
 

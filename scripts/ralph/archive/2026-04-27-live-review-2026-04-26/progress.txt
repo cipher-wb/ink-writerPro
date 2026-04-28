@@ -1,0 +1,5 @@
+# Ralph Progress Log
+Started: 2026年 4月27日 星期一 13时32分00秒 CST
+Branch: ralph/prose-anti-ai-overhaul
+PRD: tasks/prd-prose-anti-ai-overhaul.md
+---

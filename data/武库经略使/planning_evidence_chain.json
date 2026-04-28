@@ -1,0 +1,240 @@
+{
+  "schema_version": "1.0",
+  "phase": "planning",
+  "book": "武库经略使",
+  "stages": [
+    {
+      "$schema": "https://ink-writer/evidence_chain_v1",
+      "book": "武库经略使",
+      "chapter": "",
+      "phase": "planning",
+      "stage": "ink-init",
+      "channel": null,
+      "produced_at": "2026-04-27T03:15:12+00:00",
+      "dry_run": true,
+      "outcome": "passed",
+      "phase_evidence": {
+        "context_agent": {
+          "recalled": {
+            "rules": 0,
+            "chunks": 0,
+            "cases": 0
+          },
+          "recall_quality_avg": null
+        },
+        "writer_agent": {
+          "prompt_hash": "",
+          "model": "",
+          "rounds": []
+        },
+        "checkers": [
+          {
+            "id": "genre-novelty",
+            "score": 1.0,
+            "blocked": false,
+            "cases_hit": [],
+            "notes": "empty_top200_skipped",
+            "details": {
+              "score": 1.0,
+              "blocked": false,
+              "top5_similar": [],
+              "cases_hit": [],
+              "notes": "empty_top200_skipped"
+            }
+          },
+          {
+            "id": "golden-finger-spec",
+            "score": 0.0,
+            "blocked": true,
+            "cases_hit": [
+              "CASE-2026-M4-0002"
+            ],
+            "notes": "checker_failed: \"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\"",
+            "details": {
+              "score": 0.0,
+              "blocked": true,
+              "dim_scores": {
+                "clarity": 0.0,
+                "falsifiability": 0.0,
+                "boundary": 0.0,
+                "growth_curve": 0.0
+              },
+              "cases_hit": [
+                "CASE-2026-M4-0002"
+              ],
+              "notes": "checker_failed: \"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+            }
+          },
+          {
+            "id": "naming-style",
+            "score": 1.0,
+            "blocked": false,
+            "cases_hit": [],
+            "notes": "",
+            "details": {
+              "score": 1.0,
+              "blocked": false,
+              "per_name_scores": [
+                {
+                  "role": "protagonist",
+                  "name": "裴砚",
+                  "score": 1.0,
+                  "hit_type": "clean"
+                },
+                {
+                  "role": "heroine",
+                  "name": "折玥",
+                  "score": 1.0,
+                  "hit_type": "clean"
+                },
+                {
+                  "role": "antagonist_minor",
+                  "name": "何斿",
+                  "score": 1.0,
+                  "hit_type": "clean"
+                },
+                {
+                  "role": "antagonist_mid",
+                  "name": "梁方平",
+                  "score": 1.0,
+                  "hit_type": "clean"
+                },
+                {
+                  "role": "antagonist_major",
+                  "name": "童贯",
+                  "score": 1.0,
+                  "hit_type": "clean"
+                },
+                {
+                  "role": "antagonist_final",
+                  "name": "完颜宗翰",
+                  "score": 1.0,
+                  "hit_type": "clean"
+                }
+              ],
+              "cases_hit": [],
+              "notes": ""
+            }
+          },
+          {
+            "id": "protagonist-motive",
+            "score": 0.0,
+            "blocked": true,
+            "cases_hit": [
+              "CASE-2026-M4-0004"
+            ],
+            "notes": "checker_failed: \"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\"",
+            "details": {
+              "score": 0.0,
+              "blocked": true,
+              "dim_scores": {
+                "resonance": 0.0,
+                "specific_goal": 0.0,
+                "inner_conflict": 0.0
+              },
+              "cases_hit": [
+                "CASE-2026-M4-0004"
+              ],
+              "notes": "checker_failed: \"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+            }
+          }
+        ],
+        "polish_agent": {
+          "rewrite_rounds": 0,
+          "rewrite_drivers": []
+        }
+      },
+      "case_evidence_updates": [],
+      "human_overrides": []
+    },
+    {
+      "$schema": "https://ink-writer/evidence_chain_v1",
+      "book": "武库经略使",
+      "chapter": "",
+      "phase": "planning",
+      "stage": "ink-plan",
+      "channel": null,
+      "produced_at": "2026-04-27T04:10:14+00:00",
+      "dry_run": true,
+      "outcome": "passed",
+      "phase_evidence": {
+        "context_agent": {
+          "recalled": {
+            "rules": 0,
+            "chunks": 0,
+            "cases": 0
+          },
+          "recall_quality_avg": null
+        },
+        "writer_agent": {
+          "prompt_hash": "",
+          "model": "",
+          "rounds": []
+        },
+        "checkers": [
+          {
+            "id": "golden-finger-timing",
+            "score": 1.0,
+            "blocked": false,
+            "cases_hit": [],
+            "notes": "",
+            "details": {
+              "score": 1.0,
+              "blocked": false,
+              "regex_match": true,
+              "llm_match": null,
+              "matched_chapter": 1,
+              "cases_hit": [],
+              "notes": ""
+            }
+          },
+          {
+            "id": "protagonist-agency-skeleton",
+            "score": 0.0,
+            "blocked": true,
+            "cases_hit": [
+              "CASE-2026-M4-0006"
+            ],
+            "notes": "checker_failed: \"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\"",
+            "details": {
+              "score": 0.0,
+              "blocked": true,
+              "per_chapter": [],
+              "cases_hit": [
+                "CASE-2026-M4-0006"
+              ],
+              "notes": "checker_failed: \"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+            }
+          },
+          {
+            "id": "chapter-hook-density",
+            "score": 0.0,
+            "blocked": true,
+            "cases_hit": [
+              "CASE-2026-M4-0007"
+            ],
+            "notes": "checker_failed: \"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\"",
+            "details": {
+              "score": 0.0,
+              "blocked": true,
+              "per_chapter": [],
+              "strong_count": 0,
+              "total_count": 0,
+              "cases_hit": [
+                "CASE-2026-M4-0007"
+              ],
+              "notes": "checker_failed: \"Could not resolve authentication method. Expected either api_key or auth_token to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted\""
+            }
+          }
+        ],
+        "polish_agent": {
+          "rewrite_rounds": 0,
+          "rewrite_drivers": []
+        }
+      },
+      "case_evidence_updates": [],
+      "human_overrides": []
+    }
+  ],
+  "overall_passed": true
+}

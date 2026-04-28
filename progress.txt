@@ -1,233 +1,88 @@
 # Ralph Progress Log
-Started: 2026年 4月27日 星期一 13时44分57秒 CST
+Started: 2026年4月28日 星期三
 ---
 
 ## Codebase Patterns
-- `ink_writer/prose/colloquial_checker.py` 复用 directness_checker 的 `DimensionScore`/`_score_lower_is_better`/`_rating_from_score` 模式（GREEN_SCORE=8, RED_SCORE=6 同值）；新 checker 走"全场景激活+lower_is_better only" 简化路径，不需要 mid_is_better 桶 / scene 分桶。
-- 直白档"四字格"≠"任意 4 字汉字片段"：爆款 2-char run（"刀风带响。陈风没躲"）是动作节奏，不算装逼；PRD 真信号是 *排比* — 连续 ≥3 个标点分隔的 4 字片段，且扣掉成语 + 名字白名单 + 同字四叠后剩 ≥3 才计入。
-- 抽象名词链 C3 检测 chunk 首尾双向匹配：`A的B的C萦绕` split → ["A","B","C萦绕"]，C 在最后 chunk 起首位置；`他眼中的宿命` split → ["他眼中","宿命"]，宿命在末尾 chunk。`_chunk_matches_abstract` 试 length 4→3→2 的 prefix/suffix 双查。
-- 修饰链 C4 用正则 `(?:[一-龥]{1,6}的){2,}[一-龥]{1,6}` 抓"嵌套≥2"的链；单个 `的` 是底噪不计入。
-- 词典 `idiom_dict.txt` 是纯文本（每行一个成语，`#` 注释，空行 ignore）；loader 用 `(path, mtime_ns)` 缓存。新增成语扫到不要乱删 dup —— set 自动去重，914 raw → 914 unique。
-- 5 维 lower-is-better 评分曲线：value ≤ green_max → 10；green_max..yellow_max → 10..6 线性；> yellow_max → 6..0 线性。**边界值** value=green_max+yellow_max 中点处恰好 score=GREEN_SCORE，rating=green（不是 yellow）。测试 yellow band 要明确取 yellow_max 偏中后段（如 4.5 在 [3,5] 内）。
-- 零容忍规则现在有 `kind` 字段：`regex`（默认，向后兼容历史规则）或 `density`（按 occurrences/千字 阈值阻断）；新规则在 `config/anti-detection.yaml` 加 `kind: density` + `density_threshold` 即可，loader 自动处理。
-- 所有 ZT 规则都带 `whitelist_patterns: []` 字段（loader 强制存在，运行时尚未消费）；后续若要做"对话被打断豁免/引用片段豁免"在 `_rule_violated` 内补豁免逻辑即可，YAML schema 不用动。
-- `check_zero_tolerance` 走 first-match 短路：YAML 顺序决定哪条规则先报；测试 density 规则的细分行为时用 `AntiDetectionConfig(zero_tolerance=[single_rule])` 隔离，比给定 fixture 同时违反多条规则更可控。
-- 测试样本里的 `「」` (U+300C/D) 是中文方头括号，**不**在 `ZT_AI_QUOTES` 黑名单内（黑名单只针对 U+201C/D/2018/9 + «»）；这是合规的爆款引号风格。
-- `prose-blacklist.yaml` 现在有 6 大类 + replacement_map（version 2）；新增三类（pretentious_verbs/nouns/adverbs）通过 `CATEGORIES` 元组扩展自动落入 `Blacklist.entries` —— 不需要改 `_parse_entry`/`match`，只要把新类目加到 `CATEGORIES` 就被加载。
-- `Blacklist` 数据类增加了 `replacement_map: ReplacementMap` 字段（默认空）；equality 仍然成立因为 frozen dataclass 字段比较走 `__eq__`，旧测试 `Blacklist(version=0, entries=())` 与 `_empty()` 仍然相等。
-- `ReplacementMap.lookup()` 取首项是 polish-agent simplification_pass 的"机械替换"约定；YAML 顺序决定首项 → 改顺序 = 改默认替换。`origins(replacement)` 反查可服务"语义聚类"（盯着 ← 凝视 + 凝望 + 凝眸）。
-- 词表新加词时，**必须**先验证不与 abstract_adjectives/empty_phrases/pretentious_metaphors 重复（test_no_word_collisions_across_pretentious_categories 强制三个新域互斥；与老三域共存的检查靠 spot review）。
-- 改 prose-blacklist.yaml 时 simplification_pass 测试 fixture **可能**被新词命中（test_redundant_paragraph_reduced_and_blacklist_cleared 里"苍茫"被吃进 pretentious_nouns 后就破了）；S1 规则只清 abstract_adjectives，新域要等 US-003 接 replacement_map 才会被自动剥除。
-- `simplify_text` 流程现在是 S1 (abstract_adj 删除) → S1.5 (replacement_map 替换) → S2/S3/S4 (拆句/修辞/空段) → 70% floor。S1 与 S1.5 词典互斥（YAML 契约 + US-002 测试守护），不会双计或互相抵消。
-- `apply_replacement_map(text, *, replacement_map=None, chapter_no=None, diff_dir=None)` 是独立可复用 API：source words 按字符长度倒序处理避免 1-char 前缀误吃 2-char 词；多候选取 `lookup(word)[0]`（YAML 列表首项）；source==replacement 时跳过；空跑或 diff_dir 缺失时不写文件。
-- diff 文件命名 `chapter_{NNN:03d}.diff`（3 位补零）；同章节多次跑 polish 后写覆盖前写（避免无限增长）；payload = 头注释命中清单 + unified diff body。如果未来要保留多版本，加 timestamp 后缀但需同步更新 polish-agent.md 文档。
-- `SimplificationReport` 新增 `replacement_hits: tuple[(src, rep, count), ...]` + `replacement_diff_path: str | None` 字段。回滚（rolled_back=True）时这两个字段仍保留中间状态供审计——回滚只抹掉 simplified_text 不抹掉元数据。
+- `ink_writer/preflight/cli.py` 的 `_build_config()` 是 preflight 路径解析的集中点；所有 Path 参数在此构造 `PreflightConfig`，新增路径逻辑只需改这一处
+- `ink_writer/preflight/checks.py` 的 6 个 check 函数是纯函数（输入 Path/config → 输出 CheckResult），从不 raise；聚合/报错/病例落盘由 `checker.py:run_preflight()` 统一处理
+- preflight CLI 测试用 `_common_args(tmp_path, with_rules=bool)` 模式构建最小通过参数集；新增测试沿用同一 pattern
 
-## 2026-04-27 13:50 - US-001
-- **What**: anti-detection.yaml 新增 5 条标点 AI 指纹零容忍规则（ZT_EM_DASH / ZT_AI_QUOTES / ZT_HYPHEN_AS_DASH / ZT_DENSE_DUNHAO / ZT_ELLIPSIS_OVERUSE），扩展 ZeroToleranceRule 支持 `kind=density` 模式。
+## 2026-04-28 - US-001
+- **What**: preflight CLI 新增 --project-root 参数，`_resolve()` helper 将相对路径基于 project_root 解析为绝对路径
 - **Files changed**:
-  - `config/anti-detection.yaml` (+45 lines: 5 new ZT rules)
-  - `ink_writer/anti_detection/config.py` (+3 fields on ZeroToleranceRule, loader 同步)
-  - `ink_writer/anti_detection/anti_detection_gate.py` (新增 `_rule_violated` helper, density-kind 分支)
-  - `ink-writer/agents/anti-detection-checker.md` (新增 §0 子章 "标点 AI 指纹零容忍" 文档)
-  - `tests/anti_detection/test_punctuation_zero_tolerance.py` (新增, 19 tests, 5 fixture chapters)
-- **Tests**: 143 passed (124 baseline + 19 new). 0 regression.
+  - `ink_writer/preflight/cli.py` (+--project-root arg + _resolve helper + _build_config 路径解析)
+  - `ink-writer/skills/ink-write/SKILL.md` (Step 0 preflight 命令加 --project-root)
+  - `tests/preflight/test_cli.py` (+3 tests: relative resolution / absolute passthrough / backward compat)
+- **Tests**: 5 passed (2 baseline + 3 new). 0 regression. Ruff clean.
+- **Smoke test**: 从 /tmp 运行 preflight 成功找到 1487 reference files / 411 cases / 685 rules
 - **Learnings for future iterations**:
-  - 在 YAML 里写正则中文/Unicode 字面量：`patterns: ["——"]` 双引号即可，YAML 1.2 处理转义但保留 UTF-8 字面字符；多字符 character class 写 `"[“”‘’]"` 直接列出 smart quote 字面量。
-  - Lookbehind/lookahead 在 Python re 支持范围条件 `(?<=[一-龥])-(?=[一-龥])` 一行搞定"夹在中文之间的 ASCII '-'"，不需要先 split 再判断。
-  - 项目 ruff 不在 CI 强制（pre-existing F541 长期未修），但 `SIM110` / `I001` / `UP009` 这种新引入的违规要顺手修掉，避免后续清理债。
-  - 零容忍规则 first-match 短路：写 fixture 时如果想各自测两条 density 规则，要么用不同 fixture（推荐），要么用 `AntiDetectionConfig(zero_tolerance=[single_rule])` 临时隔离。
-  - `tests/anti_detection/test_zt_extended.py::TestRuleInventory.test_eight_rules_loaded` 用 `>= 8` 而非 `==`，加新规则不会破坏它；如果未来要严格锁定数量，记得同步更新此测试的下界。
----
+  - `_resolve(path, project_root)` 只在 project_root 非 None 且 path 非绝对路径时才改写；绝对路径直通，保证向后兼容
+  - ink-write SKILL.md 的 PowerShell sibling 块也要同步更新（`$env:PROJECT_ROOT` 语法）
 
-## 2026-04-27 14:20 - US-002
-- **What**: 扩展 prose-blacklist.yaml 加爆款风装逼词三域 + replacement_map。version: 1 → 2。新增 32 verbs + 36 nouns + 32 adverbs（合计 100，超 90 词阈值）+ 100-条 replacement_map（凝视 → [盯着, 看着, 死盯] 等）。Loader 暴露 `ReplacementMap` 数据类，支持 `lookup(word)` 正向 + `origins(replacement)` 反向查询；新增 4 个模块级 helper：`load_pretentious_{verbs,nouns,adverbs}` + `load_replacement_map`。
+## 2026-04-28 - US-002
+- **What**: preflight EMBED_API_KEY / RERANK_API_KEY 检查从 DataModulesConfig 读取而不仅 os.environ
 - **Files changed**:
-  - `ink-writer/assets/prose-blacklist.yaml` (+~290 行: 3 个新类 + 100 条 replacement_map + 顶部注释扩到 6 类)
-  - `ink_writer/prose/blacklist_loader.py` (+`ReplacementMap` 数据类, +`Blacklist.replacement_map` 字段, +`_parse_replacement_map` helper, +4 个 module-level loader, +3 个 category property)
-  - `tests/prose/test_blacklist_pretentious_load.py` (新增, 22 tests)
-  - `tests/prose/test_simplification_pass.py` (1 fixture 修复: 苍茫 → 广袤，因为 苍茫 现在在 pretentious_nouns)
-- **Tests**: 89 passed (18 baseline blacklist_loader + 22 new pretentious_load + 49 simplification_pass + others). 0 regression caused by US-002. 4 unrelated pre-existing failures verified via stash test (agent count drift / cli stdio policy / subprocess encoding policy — none touch prose).
-- **Learnings for future iterations**:
-  - 加新 category：扩展 `CATEGORIES` tuple 即可，loader `for category in CATEGORIES` 自动消费；不要在 `_parse_entry` 里硬编码类型分支。
-  - `Blacklist` 用 `field(default_factory=ReplacementMap)` 给新字段一个默认值；这样 `Blacklist(version=0, entries=())` 仍然合法且与 `_empty()` 输出 equal —— 老测试不破。
-  - YAML 词表必须**人工 audit 互斥**：新加词时 grep 确认不在已有 abstract_adjectives/empty_phrases/pretentious_metaphors 里，否则会双计数（test_no_word_collisions_across_pretentious_categories 现在只防三个新域互斥，老域 vs 新域要靠 spot review）。
-  - replacement_map 反向索引"原词共享同一替换"是设计：`盯着 ← 凝视 + 凝望` 让 polish 的语义聚类有线索；构建 reverse 时用 `setdefault(rep, []).append(word)` + 末尾 `tuple()` 转换，保留首见顺序。
-  - 改 prose-blacklist.yaml 加新词时，`tests/prose/test_simplification_pass.py` 的 fixture 文本可能突然命中：因为 `_count_total_hits` 数 ALL 类，而 S1 规则只清 abstract_adjectives。每次新增类要复查 simplification 测试 fixture，必要时把 fixture 替换为不在任一 BL 的近义词（本次：苍茫 → 广袤）。
-  - frozen dataclass + dict field：dataclass 本身 frozen 但 dict 内容可变；运行时不强制不可变性，靠"loader 是唯一构造点"约定。如果将来要真正锁定，换 `MappingProxyType`。
----
+  - `ink_writer/preflight/checks.py` (+_key_from_config() helper, update check_embedding_api_reachable/check_rerank_api_reachable signatures)
+  - `ink_writer/preflight/checker.py` (+PreflightConfig.project_root field, _run_all_checks() 透传)
+  - `ink_writer/preflight/cli.py` (_build_config() 设置 project_root)
+  - `tests/preflight/test_checks.py` (+6 tests: environ/config/empty-key/rerank-config/graceful-fail)
+- **Tests**: 15 passed (9 baseline + 6 new). 0 regression. Ruff clean.
+- **Key design decision**: _key_from_config() 只从 DataModulesConfig 读，不尝试 source .env 文件；非 project_root 路径回退 os.environ 保证向后兼容
 
-## 2026-04-27 14:55 - US-003
-- **What**: polish-agent simplification_pass 接入 replacement_map 自动替换。新增 `apply_replacement_map()` 独立 API + S1.5 阶段集成到 `simplify_text` 流程。命中时落 `reports/polish_diff/chapter_NNN.diff`（unified diff + 头注释命中清单）。新增 `ReplacementResult` frozen dataclass + 在 `SimplificationReport` 加 `replacement_hits` / `replacement_diff_path` 两字段。
+## 2026-04-28 - US-003
+- **What**: preflight Qdrant 默认 in-memory + ink.py 委托给综合 preflight 统一两个入口
 - **Files changed**:
-  - `ink_writer/prose/simplification_pass.py` (+`apply_replacement_map` ~70 行 + `_write_replacement_diff` ~35 行 + `ReplacementResult` dataclass + `SimplificationReport` 加 2 字段 + simplify_text 加 chapter_no/diff_dir 参数 + S1.5 调度)
-  - `ink_writer/prose/__init__.py` (+`apply_replacement_map`, `ReplacementResult` 公共导出)
-  - `ink-writer/agents/polish-agent.md` (+## Replacement Map Pass 子章 + S1.5 行 + 执行顺序更新 + 辅助模块 API 章扩 + 润色报告字段扩 ~50 行)
-  - `tests/prose/test_simplification_replacement_map.py` (新增, 26 tests, 含 3 主 fixture：纯替换 / S1+S1.5 协作 / Diff 落盘 + 多个边界用例：长度倒序 tie-break / 空 replacement / self-replace 跳过 / chapter 补零 / overwrite 行为 / 公共导出 / spec marker 检查)
-- **Tests**: 369 passed (tests/prose 226 + tests/anti_detection 143)。新增 26 = 26 pass。0 regression in 49 baseline simplification_pass + 22 pretentious_load + 18 blacklist_loader。Ruff clean on 3 changed files。
-- **Learnings for future iterations**:
-  - 测试 simplify_text 配合自定义 Blacklist 时，fixture 长度要够大避免触发 70% floor 回滚（删 4 字节后 simplified_char_count / original_char_count 必须 ≥ 0.70 才不回滚）；参考 `test_simplify_text_custom_blacklist_no_replacement_map` 用 24 字 fixture 删 4 字保留 83%。
-  - `apply_replacement_map` 默认实参 `replacement_map=None` 时 lazy 加载 `load_blacklist().replacement_map`；这意味着函数可不依赖外部 fixture 直接调用，但测试隔离时仍应 `clear_cache()` 防 YAML mtime 缓存命中污染。
-  - longest-first tie-break 用 `sorted(words, key=lambda w: (-len(w), 0))`：负号反转长度排序；副 key 为 0 是占位（未来按 frequency 排序时改这里）。
-  - diff 写入用 `difflib.unified_diff` 而非自建格式：lineterm="" + splitlines(keepends=False) 保证跨平台行为一致；加 `# header` 行不会破坏 unified diff 解析（Diff 工具默认忽略以 # 开头的注释）。
-  - S1.5 阶段的命中清单 `replacement_hits` 即使在 70% floor rollback 时也保留——这是审计需求（让 polish-agent 报告完整反映"想做了什么"，rollback 只影响最终 simplified_text 不影响元数据）。同样的契约也适用于 `replacement_diff_path`：diff 文件已落盘了不会因 rollback 删除。
-  - `ReplacementMap` 的 `forward.keys()` 顺序在 Python 3.12+ 是插入顺序（`dict.__iter__` 保证），即 YAML 解析顺序；这是 polish-agent "YAML 顺序 = 优先级" 契约的实现层依赖。
-  - 命中清单格式选择 `tuple[tuple[str, str, int], ...]` 而非 `list[dict]`：frozen + 易序列化 + 测试断言用 `("凝视", "盯着", 1) in result.hits` 直接成立。
----
+  - `ink_writer/preflight/cli.py` (--qdrant-in-memory 改为 BooleanOptionalAction default=True)
+  - `ink_writer/core/cli/ink.py` (_build_preflight_report() 中新增 run_preflight() 调用来委托 6 项综合检查)
+- **Tests**: 56 passed (5+15+36). 0 regression. Ruff clean on preflight module.
+- **Key design decision**: ink.py 保留自身特有的 checks（scripts_dir/entry_script/project_root/index_db/rag_embedding_api），额外追加 6 项综合检查；两个入口对相同命名的 check 结果一致
+- **Smoke test**: 从 /tmp 运行 `python -m ink_writer.preflight.cli --project-root $PROJECT_ROOT` all_passed=True（1487 files/411 cases/685 rules/0 collections in-memory）
 
-## 2026-04-27 15:30 - US-004
-- **What**: colloquial_checker.py 5 维度白话度核心算法 + idiom_dict.txt 词典（914 唯一成语，超 500 阈值）。`run_colloquial_check(text, *, thresholds, idiom_set, abstract_nouns, name_whitelist) -> dict` 统一入口；5 维全部 lower-is-better。配套 `to_checker_output(report, chapter_no)` 把报告包成 checker-output-schema.md 标准结构（`hard_blocked: severity == 'red'`）。
+## 2026-04-28 - US-004
+- **What**: 新增 sync_settings.py 从 index.db 自动回写实体到 設定集/
 - **Files changed**:
-  - `ink_writer/prose/idiom_dict.txt` (新增, 914 idioms across 31 themed groups, ASCII headers)
-  - `ink_writer/prose/colloquial_checker.py` (新增 ~470 行, C1-C5 + DimensionScore + ColloquialReport + 缓存 + lazy default abstract noun loader)
-  - `ink_writer/prose/__init__.py` (+`run_colloquial_check`, `ColloquialReport`, `COLLOQUIAL_DIMENSION_KEYS` 公共导出)
-  - `tests/prose/test_colloquial_checker.py` (新增, 44 tests across 6 sections)
-- **Tests**: 44 new + 270 baseline tests/prose + 143 baseline tests/anti_detection = 413 passed, 0 regression. Ruff clean.
-- **Learnings for future iterations**:
-  - PRD AC "正则 [一-龥]{4}" 字面解读会爆量（中文每 4 连字符都计 1）；语义解读应是"片段长度恰好 = 4 的非汉字断点分隔块"。再加 ≥3 stack threshold 才能把"爆款 2 连 4 字短句"和"AI 装逼 排比"区分开。
-  - C5 抽象主语率的"主语判定"用首 8 字内启发式：起首人称代词复数 (他们/我们) → false；起首单字代词 → false；首"的"/标点之前出现抽象名词 → true。比 jieba POS tagging 快 10x 且对短句更稳。
-  - 阈值参数化不仅是"传 thresholds 字典"，还要让 idiom_set / abstract_nouns / name_whitelist 三个词集都可注入——否则单测只能跑 prose-blacklist.yaml 真实词典，难做边界用例。public API 4 个 keyword-only 参数全部 None-defaulted。
-  - Lower-is-better 边界 score 等式：value=green_max → score=10；value=yellow_max → score=6（恰 = RED_SCORE，rating=yellow not red）；value=2*yellow_max → score=0。测试 yellow band 要明确取 (green_max+yellow_max)/2 + ε，否则取整 score=GREEN_SCORE 反而落 green。
-  - `idiom_dict.txt` 用 frozenset 比 list 快 100x（成语查找走 set membership）；缓存 key `(path, mtime_ns)` + 测试 fixture 用 `clear_cache` autouse 保证文件 hot-reload 在测试间不污染。
-  - ruff I001 把 `from X import (Y as Z)` 视为单独 import block，不允许与 `from X import (A, B)` 合并（即使是同一模块）。我们写 `from ink_writer.prose.colloquial_checker import (DIMENSION_KEYS as COLLOQUIAL_DIMENSION_KEYS, ColloquialReport, ...)` 一次声明所有，ruff `--fix` 会拆成两个 import 语句——是 ruff 的 isort 风格，不影响运行时。
-  - `ink_writer/prose/colloquial_checker.py` 是 prose 模块下第二个"7 维度评分体系"checker（前一个是 directness_checker），按 PRD US-007 后续会扩展 directness 到 D1-D7；两个 checker 应共享 `DimensionScore` 数据类（目前各自定义但结构相同，未来重构时可抽公共基础）。
-  - `_chunk_matches_abstract` 双向匹配（首/尾）是 C3 抽象名词链的关键：仅尾匹配会漏掉"宿命的孤寂的沧桑萦绕在心头"中尾 chunk "沧桑萦绕在心头" 起首的"沧桑"。
----
+  - `ink-writer/scripts/sync_settings.py` (new: sync() + CLI, --project-root / --dry-run / --volume)
+  - `tests/scripts/test_sync_settings.py` (new: 20 tests)
+- **Tests**: 20 passed. Covers core sync / entity-to-markdown / dry-run / idempotent / existing-entity-respect / multi-type routing.
+- **Key design decisions**:
+  - 实体来源：index.db (IndexManager.get_entities_by_type) + outline.json/setting.json (character_names)
+  - 去重：解析 設定集/ markdown ## 标题行匹配 canonical_name，已存在则跳过
+  - 路由：核心角色(is_protagonist/tier核心)→主角组.md，其他角色→角色卡.md，势力/地点/物品→世界观.md
+  - 冲突检测：留白（大纲被视为增量声明，语义冲突需人工审阅）
+  - 幂等：重复运行不追加相同条目
 
-## 2026-04-27 15:55 - US-005
-- **What**: colloquial-checker agent 规格 + config/colloquial.yaml + checker-thresholds.yaml 注册 + step3_runner pipeline 接入
+## 2026-04-28 - US-005
+- **What**: ink-plan Step 7 + ink-write Step 5.6 接入 sync_settings.py
 - **Files changed**:
-  - `ink-writer/agents/colloquial-checker.md` (新增, agent 规格：5 维度文档 + 全场景激活 + 输出结构 + 与其他 checker 边界)
-  - `config/colloquial.yaml` (新增, enabled:true + 5 维度阈值 + score_threshold:70 + max_retries:1)
-  - `config/checker-thresholds.yaml` (+colloquial 段, block_threshold:70 + prose_overhaul_enabled 联动)
-  - `ink_writer/checker_pipeline/step3_runner.py` (+_make_colloquial_adapter ~70 行 + gate 注册, is_hard_gate=True)
-  - `tests/checker_pipeline/test_colloquial_checker_pipeline.py` (新增, 13 tests: adapter 行为 / 开关 / prose_overhaul 联动 / 空文本 / 缺 config / gate 注册 / schema 校验)
-- **Tests**: 13 new + all baseline pass (colloquial_checker 44 + simplification_pass 49 + pretentious_load 22 + anti_detection 19 + blacklist_loader 18). 0 regression.
-- **Learnings for future iterations**:
-  - step3_runner gate adapter 模式：每个 checker 一个 `_make_*_adapter(review_bundle) -> async Callable` 工厂函数，返回 `(passed, score, fix_prompt)` 三元组；注册时指定 `is_hard_gate=True/False`。
-  - colloquial adapter 是全场景激活（无 scene_mode 门控），与 directness adapter（有 scene_mode 门控）是两种激活模式；未来新增 checker 先判断哪种模式再写 adapter。
-  - 开关联动：`prose_overhaul_enabled=false` → colloquial `enabled` 被强制 false；adapter 内读两个 yaml 做两层判断。
-  - 测试 adapter 需要创建完整的最小项目结构（config/*.yaml + 正文/ 目录 + .ink/ 目录）；`tmp_path` fixture 是 conftest 内置的。
-  - `run_step3` 集成测试需要写入章节文本文件 + 创建 `.ink/` state_dir；dry_run=True 避免写 DB。
-  - import 路径：adapter 内 lazy import `ink_writer.prose.colloquial_checker` 避免模块加载时拖慢 import 链。
----
+  - `ink-writer/skills/ink-plan/SKILL.md` (Step 7 重构为 §7.1 自动同步 + §7.2 手动回退 + §7.3 冲突处理)
+  - `ink-writer/skills/ink-write/SKILL.md` (新增 Step 5.6 设定集自动同步，非阻断)
+- **Key design decision**: ink-plan 优先跑 sync_settings.py --volume，脚本不存在时回退到原有手动模式；ink-write 每次写完后调用，失败不阻断写作
 
-## 2026-04-27 16:10 - US-006
-- **What**: directness-checker 激活条件改全场景 + directness_tier/directness_skip override 字段。is_activated() 已始终返回 True（全场景），仅 directness_skip=true 时跳过。_resolve_scene_bucket 已支持 directness_tier 参数。ChapterMeta extra="allow" 已天然支持新字段。
+## 2026-04-28 - US-006
+- **What**: 加固 checker agent spec 的 JSON 输出指令（model-agnostic）+ 统一引用 + retry 指令
 - **Files changed**:
-  - `ink-writer/agents/directness-checker.md` (更新 激活条件章 + description frontmatter)
-  - `tests/prose/test_directness_full_scene_activation.py` (新增, 12 tests: slow_build/emotional/no_scene 全场景激活 + directness_skip 向后兼容 + directness_tier 桶回退)
-- **Tests**: 12 new + all baseline pass. 0 regression.
-- **Learnings for future iterations**:
-  - US-006 大部分改造在 US-005 时已提前完成（is_activated() 已改、_resolve_scene_bucket 已支持 tier）；本 US 主要是 agent spec 更新 + 追加测试。
-  - ChapterMeta Pydantic model 用 extra="allow"，新增 directness_tier/directness_skip 字段不需要改 schema。
-  - tier=explosive_hit 在 YAML 无对应桶时回退 default（US-008 将创建 tiers.explosive_hit 桶）。
----
+  - `ink-writer/agents/shared/json-output-rules.md` (new: hard rules — no markdown fence, bare JSON, all fields required, retry block)
+  - `ink-writer/agents/protagonist-agency-skeleton-checker.md` (ref json-output-rules.md, model="auto")
+  - `ink-writer/agents/chapter-hook-density-checker.md` (same changes)
+- **Key design decision**: 共享引用文件而非在每个 agent spec 中重复 JSON 格式指令；model="auto" 消除硬编码
 
-## 2026-04-27 16:20 - US-007
-- **What**: directness-checker 新增 D6 嵌套深度 + D7 修饰链长两维度，D1-D5 扩为 D1-D7
+## 2026-04-28 - US-007
+- **What**: checker JSON 解析层 3 级容错 — 共享 json_util.py + 所有 8 个 checker 迁移 + _RETRY_SUFFIX
 - **Files changed**:
-  - `ink_writer/prose/directness_checker.py` (+D6/D7 keys/labels/thresholds + _calc_d6_nesting_depth + _calc_d7_modifier_chain_length + issue 生成 + metrics_raw 扩展)
-  - `ink-writer/agents/directness-checker.md` (5 维度 → 7 维度)
-  - `tests/prose/test_directness_d6_d7.py` (新增, ~20 tests: D6/D7 算法 + e2e + issues)
-- **Tests**: 48 total (20 d6d7 + 28 baseline directness). 0 regression.
-- **Learnings for future iterations**:
-  - D6 用 。切句 → ，切子句 → 计数的简单算法；比 jieba 管道快。
-  - D7 复用 colloquial_checker C4 的同源逻辑（按 "的" 统计修饰层）；两个 checker 独立计算但公式一致。
-  - 测试全维度检查时注意 D4 (mid_is_better 句长) 易被极短句触发 red——新 fixture 要控制句长在 13-17 字范围内。
+  - `ink_writer/core/infra/json_util.py` (new: parse_llm_json/parse_llm_json_array/parse_llm_json_object + CheckerJSONParseError)
+  - `ink_writer/checkers/genre_novelty/checker.py` (remove _extract_json_array, use parse_llm_json_array, add _RETRY_SUFFIX)
+  - `ink_writer/checkers/conflict_skeleton/checker.py` (remove _extract_json, use parse_llm_json_object, add _RETRY_SUFFIX)
+  - `ink_writer/checkers/golden_finger_spec/checker.py` (remove _extract_json_object, use parse_llm_json_object, add _RETRY_SUFFIX)
+  - `ink_writer/checkers/protagonist_motive/checker.py` (remove _extract_json_object, use parse_llm_json_object, add _RETRY_SUFFIX)
+  - `ink_writer/checkers/protagonist_agency/checker.py` (remove _extract_json, use parse_llm_json_object, add _RETRY_SUFFIX)
+  - `ink_writer/checkers/golden_finger_timing/checker.py` (remove _extract_json_object, use parse_llm_json_object, add _RETRY_SUFFIX)
+  - `ink_writer/checkers/protagonist_agency_skeleton/checker.py` (remove unused import re)
+  - `ink_writer/checkers/chapter_hook_density/checker.py` (remove unused import re)
+  - `tests/core/infra/test_json_util.py` (new: 25 tests)
+- **Tests**: 25 passed. Covers bare JSON / markdown-fenced / prefixed-suffixed / empty / non-string / type-guarantee.
+- **Key design decisions**:
+  - 3 级容错: L1 direct loads → L2 regex extract {}/[] → L3 strip markdown fence then retry
+  - _RETRY_SUFFIX 差异: array checkers 提示 Start/end with `[`/`]`, object checkers 提示 `{`/`}`
+  - parse_llm_json() 返回 Any，parse_llm_json_array/object 做类型保证 + 清晰错误消息
+  - CheckerJSONParseError 包含 raw[:200] 用于调试
 ---
-
-## 2026-04-27 17:20 - US-008
-- **What**: seed_thresholds.yaml 新增 explosive_hit 阈值桶 + regen_directness_thresholds_explosive.py 校准脚本
-- **Files changed**:
-  - `reports/seed_thresholds.yaml` (+tiers.explosive_hit 段，D1-D7 全维度阈值)
-  - `ink_writer/prose/directness_checker.py` (_resolve_scene_bucket 支持 tiers 参数)
-  - `scripts/regen_directness_thresholds_explosive.py` (新增, mock 模式硬编码阈值)
-  - `tests/prose/test_threshold_tier_lookup.py` (新增, 3 种 tier lookup 路径)
-- **Tests**: 13 new + all baseline pass
-- **Learnings**: tier 优先级 > scene bucket；explosive_hit 阈值为最紧档，D1≤0.015 D6≤1.3 D7≤1.2
----
-
-## 2026-04-27 17:20 - US-009
-- **What**: writer-agent 加 L12 对话+动作驱动律 + L10c 禁四字格/抽象链 + 删反向引导
-- **Files changed**:
-  - `ink-writer/agents/writer-agent.md` (+L12 铁律 4 子律 + L10c 更新)
-  - `ink-writer/skills/ink-write/references/anti-detection-writing.md` (删装逼示例)
-  - `tests/agents/test_writer_l12_self_check.py` (新增, 12 tests)
-- **Tests**: 12 new + all baseline pass
-- **Learnings**: L12a 对话/动作密度 ≥200 chars；L12b 段首禁 abstract_adjectives；L12c 段首优先级；L12d 每场景必有冲突
----
-
-## 2026-04-27 17:20 - US-010
-- **What**: build_explosive_hit_index.py 从 reference_corpus 构建爆款示例 RAG 语义切片索引
-- **Files changed**:
-  - `scripts/build_explosive_hit_index.py` (新增 ~186 行，场景类型启发式分类)
-  - `tests/retrieval/test_build_explosive_hit_index.py` (新增)
-- **Tests**: New retrieval tests pass
-- **Learnings**: scene_type 启发式用关键词打分（combat/dialogue/emotional/action/description）；chapter 文件排除 README/index/manifest
----
-
-## 2026-04-27 17:20 - US-011
-- **What**: explosive_retriever.py 爆款示例语义检索器（关键词 overlap + scene_type 过滤）
-- **Files changed**:
-  - `ink_writer/retrieval/explosive_retriever.py` (新增 ~181 行, ExplosiveRetriever 类)
-  - `ink_writer/retrieval/__init__.py` (公共导出)
-  - `tests/retrieval/test_explosive_retriever.py` (新增, 11 tests)
-- **Tests**: 11 new + all baseline pass
-- **Learnings**: 中文 bigram 滑动窗口提取关键词；场景类型优先过滤；无 embedding 依赖（纯字符串匹配）；索引缺失 → 空返回 graceful fallback
----
-
-## 2026-04-27 17:20 - US-012
-- **What**: writer-agent Step 2A 起草前接入 explosive_retriever injection
-- **Files changed**:
-  - `ink_writer/retrieval/inject.py` (新增, inject_explosive_examples + <reference_examples> XML 块)
-  - `config/parallel-pipeline.yaml` (+enable_explosive_retrieval: true)
-  - `tests/agents/test_writer_explosive_retrieval_injection.py` (新增, 5 tests)
-- **Tests**: 5 new + all baseline pass
-- **Learnings**: enabled=False 时跳过检索返回空（字节级一致）；索引缺失时 graceful fallback
----
-
-## 2026-04-27 17:26 - US-013
-- **What**: polish-agent Hard Block Rewrite Mode + exit code 2 — 三个硬门禁 red 时全章重写
-- **Files changed**:
-  - `ink_writer/checker_pipeline/hard_block_rewrite.py` (新增 ~379 行, 全章重写 + 复检逻辑)
-  - `ink_writer/checker_pipeline/step3_runner.py` (+Step3Result.hard_blocked/rewrite_attempted + 硬阻断触发)
-  - `ink-writer/agents/polish-agent.md` (+## Hard Block Rewrite Mode 章节 ~30 行)
-  - `config/anti-detection.yaml` (+max_hard_block_retries: 1)
-  - `tests/polish/test_hard_block_rewrite_mode.py` (新增, 13 tests)
-- **Tests**: 13 new + all baseline pass
-- **Learnings**: mock LLM/mock check 参数支持测试不调真 LLM；prose_overhaul_enabled=false 跳过全章重写；max_hard_block_retries=0 直接标 hard_blocked
----
-
-## 2026-04-27 17:35 - US-014
-- **What**: calibrate_anti_ai_thresholds.py 5+5 基线校准脚本（mock/live 双模式）
-- **Files changed**:
-  - `scripts/calibrate_anti_ai_thresholds.py` (新增, mock 硬编码 + live 待实现)
-  - `tests/prose/test_calibration_pipeline.py` (新增, 7 tests)
-- **Tests**: 7 new + all baseline pass
-- **Learnings**: --books-explosive/--books-serious 参数化两组书；mock 模式 <30s 完成；live 模式 TODO 需对接真实 checker
----
-
-## 2026-04-27 17:35 - US-015
-- **What**: e2e_anti_ai_overhaul_eval.py 旧/新 pipeline 对照评估（mock 模式 4 G1-G3 gates）
-- **Files changed**:
-  - `scripts/e2e_anti_ai_overhaul_eval.py` (新增, mock 对比 + gate 检查)
-  - `tests/eval/test_e2e_eval_script_smoke.py` (新增, 6 tests)
-- **Tests**: 6 new + all baseline pass
-- **Learnings**: G1-G3 gates: em_dash≤0.2, nesting≤1.5, idioms≤3.0, quad_phrases≤6.0 per kchar
----
-
-## 2026-04-27 17:35 - US-016
-- **What**: 文档 + CLAUDE.md Prose Anti-AI Module 段 + 三独立回滚开关验证
-- **Files changed**:
-  - `docs/prose-anti-ai-overhaul.md` (新增, 架构图/阈值表/A-B开关清单/回滚SOP)
-  - `CLAUDE.md` (+Prose Anti-AI 模块段, Top 3 注意事项)
-  - `config/anti-detection.yaml` (+prose_overhaul_enabled: true 总开关)
-  - `tests/integration/test_prose_overhaul_rollback.py` (新增, 10 tests)
-- **Tests**: 10 new + all baseline pass
-- **Learnings**: 总开关 false 时三子开关全强制 false；回滚 SOP 三步：改三开关→跑 regression→提交
----
-
-## STOP CONDITION
-ALL 16 stories now `passes: true`. Prose Anti-AI Overhaul is complete.
-<promise>COMPLETE</promise>

@@ -1,0 +1,35 @@
+case_id: CASE-2026-0403
+title: 'preflight failure: qdrant_connection'
+status: active
+severity: P0
+domain: infra_health
+layer:
+- infra_health
+tags:
+- preflight
+- qdrant_connection
+scope: {}
+source:
+  type: infra_check
+  raw_text: 'preflight check failed: qdrant_connection: Qdrant unreachable: Qdrant
+    at 127.0.0.1:6333 unreachable: Unexpected Response: 502 (Bad Gateway)
+
+    Raw response content:
+
+    b'''''
+  ingested_at: '2026-04-27'
+failure_pattern:
+  description: 'Qdrant unreachable: Qdrant at 127.0.0.1:6333 unreachable: Unexpected
+    Response: 502 (Bad Gateway)
+
+    Raw response content:
+
+    b'''''
+  observable:
+  - qdrant_connection.passed == False
+bound_assets: {}
+resolution: {}
+evidence_links: []
+recurrence_history: []
+meta_rule_id: null
+sovereign: false

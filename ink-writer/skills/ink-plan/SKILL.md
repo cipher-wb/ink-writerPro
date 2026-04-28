@@ -740,6 +740,27 @@ python3 "${INK_WRITER_ROOT}/ink-writer/scripts/sync_settings.py" \
 ## 8) Validate + save
 ### Validation checks (must pass all)
 
+**0. 黄金三章合规硬门禁（v26.4 新增 — 必须在 1. 之前执行）**
+
+第 1-3 章大纲生成完成后，**必须**调用插件内 verifier 验证与 `.ink/golden_three_plan.json` 对齐：
+
+```bash
+python3 "${SCRIPTS_DIR}/verify_golden_three.py" --project-root "$PROJECT_ROOT"
+```
+<!-- windows-ps1-sibling -->
+Windows（PowerShell，与上方 bash 块等价）：
+
+```powershell
+& python3 "$env:SCRIPTS_DIR/verify_golden_three.py" --project-root $env:PROJECT_ROOT
+```
+
+校验规则：
+- 第 1 章 `大卖点类型` 必须命中 `ch1_cool_point_spec.payoff_form` 枚举（资源获取/敌人击退/他人认可/地位提升/信息解锁/危机解除）
+- 第 1-3 章每章必须有 `倒计时状态`、`大卖点类型`、`钩子`、`章末未闭合问题` 字段
+- 任意违规 → exit 1 → **必须修正章纲后重跑** verifier 直至通过
+
+未通过此 verifier 时**禁止**进入下面的 1. 卖点密度检查。
+
 **1. 卖点密度检查**
 - 每章必须有 1 个大卖点（`大卖点类型` 非空 + `大卖点描述` ≤80字且非空） → 缺失则 hard fail
 - 每章必须有 ≥2 个小卖点（`小卖点` 字段包含 2 条） → 数量<2 则 hard fail

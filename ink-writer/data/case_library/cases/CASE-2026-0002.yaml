@@ -1,0 +1,26 @@
+case_id: CASE-2026-0002
+title: 'preflight failure: case_library_loadable'
+status: active
+severity: P0
+domain: infra_health
+layer:
+- infra_health
+tags:
+- preflight
+- case_library_loadable
+scope: {}
+source:
+  type: infra_check
+  raw_text: 'preflight check failed: case_library_loadable: data/case_library/cases
+    missing or not a directory'
+  ingested_at: '2026-04-27'
+failure_pattern:
+  description: data/case_library/cases missing or not a directory
+  observable:
+  - case_library_loadable.passed == False
+bound_assets: {}
+resolution: {}
+evidence_links: []
+recurrence_history: []
+meta_rule_id: null
+sovereign: false

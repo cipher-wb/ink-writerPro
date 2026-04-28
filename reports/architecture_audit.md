@@ -4,10 +4,10 @@
 
 ## Summary
 
-- **Python modules scanned**: 254
+- **Python modules scanned**: 278
 - **Import cycles found**: 0
 - **Unused module candidates**: 4
-- **Agents scanned**: 33
+- **Agents scanned**: 35
 - **Agent overlap pairs**: 20
 - **Repeated prompt fragments**: 50
 
@@ -28,12 +28,13 @@ No import cycles detected. ✓
 |-------|-------------|-------|--------|---------|
 | anti-detection-checker | AI味检测Agent，从统计特征层面检测文本是否具有AI生成痕迹，输出定位到具体段落的修复建议 | Read, Grep | 与其他 checker 相同，接收 `review_bundle_file` 路径和 `chapte… | 遵循 `checker-output-schema.md` 的统一格式：  ```json {   … |
 | chapter-hook-density-checker | M4 ink-plan 策划期卷骨架钩子密度检查 — LLM 对每章 summary 打 hook_strength 0… | Read | ```python from ink_writer.checkers.chapter_hook_de… | \| 字段 \| 类型 \| 说明 \| \|---\|---\|---\| \| `score` \| float \|… |
+| colloquial-checker | 白话度检查器，5 维度量化评分（成语/四字格/抽象名词链/修饰链/抽象主语率），全场景激活无场景限制，severity=… | Read |  |  |
 | conflict-skeleton-checker | M3 章节级冲突骨架检查 — 显式冲突 + 三段结构（摩擦点→升级→临时收尾），block_threshold=0.60… | Read | ```python from ink_writer.checkers.conflict_skelet… | \| 字段 \| 类型 \| 说明 \| \|---\|---\|---\| \| `has_explicit_con… |
 | consistency-checker | 设定一致性检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | context-agent | 上下文搜集Agent，内置 Context Contract，输出可被 Step 2A 直接消费的创作执行包。 | Read, Grep, Bash | ```json {   "chapter": 100,   "project_root": "D:/… | 输出必须是单一执行包，包含 3 层：  1. **任务书（10+6 板块）** - 本章核心任务（目… |
 | continuity-checker | 连贯性检查，输出结构化报告供润色步骤参考 | Read |  |  |
 | data-agent | 数据处理Agent，负责 AI 实体提取、场景切片、索引构建，并记录钩子/模式/结束状态与章节摘要。 | Read, Write, Bash | ```json {   "chapter": 100,   "chapter_file": "正文/… | ### 输出格式硬约束（纯 JSON，零解释文字）  > **铁律**：Data Agent 的最终… |
-| directness-checker | 直白度（场景感知）检查器，5 维度量化评分（修辞/形动比/抽象词/句长/空描写），仅在黄金三章+战斗/高潮/爽点场景激活 | Read |  |  |
+| directness-checker | 直白度全场景检查器（US-006/007），7 维度量化评分（修辞/形动比/抽象词/句长/空描写/嵌套深度/修饰链长），… | Read |  |  |
 | editor-wisdom-checker | 编辑智慧检查器，基于检索到的编辑规则对章节进行评分，输出违规列表和修复建议。 | Read | - `chapter_text`: 章节正文 - `chapter_no`: 章节号 - `rule… | ```json {   "agent": "editor-wisdom-checker",   "c… |
 | emotion-curve-checker | 情绪心电图检查，检测情绪曲线平淡/单调/与目标曲线偏差，输出结构化报告 | Read |  | ```json {   "agent": "emotion-curve-checker",   "c… |
 | flow-naturalness-checker | 自然流畅度检查器，量化评估信息节奏/融入方式/过渡流畅/对话辨识/对话黄金比例/语气一致/voice 一致七维 | Read |  |  |
@@ -42,6 +43,7 @@ No import cycles detected. ✓
 | golden-finger-timing-checker | M4 ink-plan 策划期金手指出场时机检查 — regex 主 + LLM 回退判断金手指是否在前 3 章 sum… | Read | ```python from ink_writer.checkers.golden_finger_t… | \| 字段 \| 类型 \| 说明 \| \|---\|---\|---\| \| `score` \| float \|… |
 | golden-three-checker | 黄金三章检查器，专门审查第1-3章的开头抓取力、承诺兑现和章末驱动力。 | Read | - `chapter` - `chapter_file` - `project_root` - `.… | ```json {   "agent": "golden-three-checker",   "ch… |
 | high-point-checker | 爽点密度检查，支持迪化误解/身份掉马模式，输出结构化报告 | Read |  |  |
+| live-review-checker | 起点编辑星河直播稿训练的网文审查器，基于 174 份直播 × 10+ 本/份的病例库对章节进行评分，输出 violati… | Read | - `chapter_text`: 章节正文（必填） - `chapter_no`: 章节号（必填）… | ```json {   "score": 0.45,   "dimensions": {     "… |
 | logic-checker | 章内微观逻辑自洽性检查，覆盖数字算术、动作序列、属性一致、空间连续、枚举完整性等9层验证 | Read |  |  |
 | naming-style-checker | M4 ink-init 策划期角色起名风格检查 — 纯规则（无 LLM）：用 data/market_intellige… | Read | ```python from ink_writer.checkers.naming_style im… | \| 字段 \| 类型 \| 说明 \| \|---\|---\|---\| \| `score` \| float \|… |
 | ooc-checker | 人物OOC检查，输出结构化报告供润色步骤参考 | Read |  |  |
@@ -110,7 +112,6 @@ Fragments appearing in 2+ agent specs (top 50):
 - **10x** in [chapter-hook-density-checker, conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker, writer-self-check]: `来源 spec prd spec docs superpowers`
 - **10x** in [chapter-hook-density-checker, conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker, writer-self-check]: `输入 python 调用 python from ink_writer`
 - **9x** in [chapter-hook-density-checker, conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker, writer-self-check]: `__init__ models checker py prompt ink_writer`
-- **9x** in [chapter-hook-density-checker, conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker, writer-self-check]: `txt 输入 python 调用 python from`
 - **9x** in [chapter-hook-density-checker, conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `python 调用 python from ink_writer checkers`
 - **9x** in [chapter-hook-density-checker, conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker, writer-self-check]: `llm_client llm_client 兼容 messages create 的对象`
 - **9x** in [chapter-hook-density-checker, conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `score 0 0 blocked true notes`
@@ -126,33 +127,34 @@ Fragments appearing in 2+ agent specs (top 50):
 - **7x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `prd tasks prd m4 p0 planning`
 - **7x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `cases_hit list str 由 planning_review 在阻断时按`
 - **7x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `to_dict 写入 base_dir book planning_evidence_chain json`
-- **7x** in [conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker, writer-self-check]: `ink_writer checker_pipeline thresholds_loader load_thresholds 加载 与下游的衔接`
+- **7x** in [conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-checker, protagonist-motive-checker, writer-self-check]: `txt 输入 python 调用 python from`
 - **6x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `llm_client 兼容 messages create 的对象 block_threshold`
-- **6x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `由 thresholds_loader 注入 model glm 4`
 - **6x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `planning_review 在阻断时按 config case_ids 注入 本`
 - **6x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `0 blocked true notes checker_failed err`
+- **6x** in [conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-checker, protagonist-motive-checker]: `prompts check txt 输入 python 调用`
+- **6x** in [conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `ink_writer checker_pipeline thresholds_loader load_thresholds 加载 与下游的衔接`
 - **5x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `兼容 messages create 的对象 block_threshold 0`
 - **5x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `true notes checker_failed err 保守降级 让`
-- **5x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `含 markdown 代码块的 llm 响应自动剥离再解析 阈值`
 - **4x** in [chapter-hook-density-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `直接返回 score 0 0 blocked true`
 - **4x** in [conflict-skeleton-checker, golden-finger-spec-checker, protagonist-agency-checker, protagonist-motive-checker]: `本 agent 不主动填充 notes str llm`
 - **4x** in [context-agent, high-point-checker, reader-pull-checker, reader-simulator]: `claude_plugin_root references reading power taxonomy md`
-- **4x** in [directness-checker, flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `review_bundle scene_mode golden_three combat climax high_point`
+- **4x** in [genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-motive-checker]: `由 thresholds_loader 注入 model glm 4`
 - **4x** in [genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `checker_pipeline thresholds_loader load_thresholds 加载 与下游的衔接 ink_writer`
 - **4x** in [genre-novelty-checker, golden-finger-spec-checker, naming-style-checker, protagonist-motive-checker]: `与下游的衔接 ink_writer planning_review ink_init_review run_ink_init_review 把`
 - **4x** in [golden-finger-spec-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `字段 类型 说明 score float mean`
 - **3x** in [chapter-hook-density-checker, golden-finger-timing-checker, protagonist-agency-skeleton-checker]: `与下游的衔接 ink_writer planning_review ink_plan_review run_ink_plan_review 把`
+- **3x** in [colloquial-checker, context-agent, writer-agent]: `golden_three combat climax high_point slow_build emotional`
+- **3x** in [colloquial-checker, directness-checker, writer-agent]: `ink writer assets prose blacklist yaml`
 - **3x** in [conflict-skeleton-checker, protagonist-agency-checker, writer-self-check]: `superpowers specs 2026 04 25 m3`
 - **3x** in [conflict-skeleton-checker, protagonist-agency-checker, writer-self-check]: `prd tasks prd m3 p1 loop`
 - **3x** in [conflict-skeleton-checker, protagonist-agency-checker, writer-self-check]: `book 书名 chapter 0001 llm_client llm_client`
 - **3x** in [conflict-skeleton-checker, protagonist-agency-checker, writer-self-check]: `兼容 messages create 的对象 max_retries 3`
-- **3x** in [conflict-skeleton-checker, protagonist-agency-checker, writer-self-check]: `checker_pipeline thresholds_loader load_thresholds 加载 与下游的衔接 evidence_chain`
 - **3x** in [context-agent, continuity-checker, writer-agent]: `n 1 n 2 n 3`
 - **3x** in [data-agent, polish-agent, writer-agent]: `tools read write bash model inherit`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `本 agent 默认数据源 审查包中的正文 章纲 含`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, writer-agent]: `skills ink review references pacing control`
-- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `golden_three combat climax high_point 或 review_bundle`
-- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `scene_mode 缺省且 chapter_no 1 2 3`
+- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `review_bundle scene_mode golden_three combat climax high_point`
+- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `缺省且 chapter_no 1 2 3 黄金三章兜底`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `段落定位 修复建议 执行流程 第一步 加载目标章节与锚定数据 从`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `黄金三章加严 章节范围 规则 加严处置 ch1 3`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `结论 通过 预警 未通过 简要说明 禁止事项`

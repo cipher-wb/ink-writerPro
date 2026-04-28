@@ -1,0 +1,26 @@
+case_id: CASE-2026-0003
+title: 'preflight failure: editor_wisdom_index_loadable'
+status: active
+severity: P0
+domain: infra_health
+layer:
+- infra_health
+tags:
+- preflight
+- editor_wisdom_index_loadable
+scope: {}
+source:
+  type: infra_check
+  raw_text: 'preflight check failed: editor_wisdom_index_loadable: rules file data/editor-wisdom/rules.json
+    not found'
+  ingested_at: '2026-04-27'
+failure_pattern:
+  description: rules file data/editor-wisdom/rules.json not found
+  observable:
+  - editor_wisdom_index_loadable.passed == False
+bound_assets: {}
+resolution: {}
+evidence_links: []
+recurrence_history: []
+meta_rule_id: null
+sovereign: false

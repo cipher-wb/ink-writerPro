@@ -1852,6 +1852,27 @@ cat "${SKILL_ROOT}/references/writing/typesetting.md"
    - 此检查为 WARNING 级，不阻断流程，仅提示
    - 若 Data Agent 在 Step B.10 产出了 `subtext_markers`，额外检查：润色是否删除或弱化了标记的潜台词段落
 
+5.5. **Polish 后零容忍终检**（v26.4 新增，硬阻断）：
+
+   > 防止 polish-agent 改写时无意识引入 AI 句式（"不仅而且"、"与此同时"、"——"等），抵消 Step 3.8 的过滤。
+
+   ```bash
+   python3 "${SCRIPTS_DIR}/post_polish_zt_check.py" \
+       --chapter "${PROJECT_ROOT}/正文/第${chapter_padded}章${title_suffix}.md" \
+       --config "${SKILL_ROOT}/../../config/anti-detection.yaml" || _zt_rc=$?
+   ```
+   <!-- windows-ps1-sibling -->
+   Windows（PowerShell，与上方 bash 块等价）：
+   ```powershell
+   & python3 "$env:SCRIPTS_DIR/post_polish_zt_check.py" `
+       --chapter "$env:PROJECT_ROOT/正文/第${chapter_padded}章${title_suffix}.md" `
+       --config "$env:SKILL_ROOT/../../config/anti-detection.yaml"
+   ```
+
+   - 退出码 0 → 通过，进入 Step 5
+   - 退出码 1 → 命中零容忍规则，stderr 输出命中规则 ID + 行号；**必须**重新调用 polish-agent 定向修复命中段落，再跑此终检直至通过（最多 2 轮，仍命中则写 `chapters/{n}/anti_detection_blocked.md` 标记本章失败，跳过 Step 5/6）
+   - 退出码 2 → 配置缺失，按现有 fallback（视为通过 + WARNING）
+
 6. **清理快照**（Step 5 开始前）：
    ```bash
    rm -f "${PROJECT_ROOT}/.ink/tmp/pre_polish_ch${chapter_padded}.md"

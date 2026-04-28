@@ -1,5 +1,10 @@
-# ink_writer/core/auto/blueprint_to_quick_draft.py
+#!/usr/bin/env python3
 """Parse blueprint .md file → Quick mode draft.json input.
+
+Plugin-internal copy of ink_writer.core.auto.blueprint_to_quick_draft so it
+runs without depending on the outer Python package (which is not bundled with
+the plugin). Keep logic in lockstep with the source module:
+  ink_writer/core/auto/blueprint_to_quick_draft.py
 
 Public API:
 - parse_blueprint(path) -> dict[str, str | None]
@@ -12,10 +17,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-# Required fields — blueprint must have non-empty values for these or validation fails
 REQUIRED_FIELDS = ("题材方向", "核心冲突", "主角人设", "金手指类型", "能力一句话")
 
-# Golden-finger禁词（命中即失败）
 GF_BLACKLIST = (
     "修为暴涨",
     "无限金币",
@@ -26,13 +29,11 @@ GF_BLACKLIST = (
     "签到系统",
 )
 
-# Platform defaults — sourced from ink-init SKILL.md Quick Step 0.4 v26.2 (line 91-104)
 _PLATFORM_DEFAULTS = {
     "qidian": {"target_chapters": 600, "target_words": 1_800_000, "chapter_words": 3000},
     "fanqie": {"target_chapters": 800, "target_words": 1_200_000, "chapter_words": 1500},
 }
 
-# Optional fields tracked in __missing__ so Quick engine knows to auto-fill
 OPTIONAL_FIELDS_TRACKED = (
     "书名", "核心卖点", "主角姓名", "主代价", "第一章爽点预览",
     "女主姓名", "女主人设", "钩子1", "钩子2", "钩子3",
@@ -43,24 +44,17 @@ class BlueprintValidationError(Exception):
     """Raised when blueprint .md fails parse or value-level validation."""
 
 
-# Section header pattern: "### 字段名" → captures field name; allows trailing spaces / 全角
 _SECTION_RE = re.compile(r"^###\s+(?:[一二三四五六七八九十]+、)?\s*(.+?)\s*$")
 
 
-def parse_blueprint(path: Path | str) -> dict[str, str | None]:
-    """Parse blueprint .md → flat dict {字段名: 值 or None}.
-
-    HTML comments (<!-- ... -->) within section body are stripped.
-    Empty sections map to None.
-    """
+def parse_blueprint(path):
     text = Path(path).read_text(encoding="utf-8")
     lines = text.splitlines()
-    sections: dict[str, list[str]] = {}
-    current: str | None = None
+    sections = {}
+    current = None
     for line in lines:
         m = _SECTION_RE.match(line)
         if m:
-            # Normalise: strip variants like "第 1 章钩子" → "钩子1"
             name = _normalise_field_name(m.group(1).strip())
             current = name
             sections.setdefault(current, [])
@@ -71,13 +65,11 @@ def parse_blueprint(path: Path | str) -> dict[str, str | None]:
     return {name: _clean_body(body) for name, body in sections.items()}
 
 
-def _normalise_field_name(raw: str) -> str:
+def _normalise_field_name(raw):
     raw = raw.strip()
-    # Map "第 N 章钩子" → "钩子N"
     m = re.match(r"^第\s*([123])\s*章钩子$", raw)
     if m:
         return f"钩子{m.group(1)}"
-    # Strip trailing parenthetical hints like "(选填)" / "（选填）" / "【必填】" / "【推荐】" / "【可选】"
     raw = re.sub(r"[\(（].*?[\)）]\s*$", "", raw).strip()
     raw = re.sub(r"【[^】]*】\s*$", "", raw).strip()
     aliases = {
@@ -87,12 +79,10 @@ def _normalise_field_name(raw: str) -> str:
     return aliases.get(raw, raw)
 
 
-def _clean_body(body_lines: list[str]) -> str | None:
-    cleaned: list[str] = []
+def _clean_body(body_lines):
+    cleaned = []
     for ln in body_lines:
-        # Drop HTML comments (single-line)
         ln = re.sub(r"<!--.*?-->", "", ln).strip()
-        # Drop subsection markers and empty
         if ln.startswith("##") or ln.startswith("---"):
             continue
         if not ln:
@@ -103,7 +93,7 @@ def _clean_body(body_lines: list[str]) -> str | None:
     return "\n".join(cleaned)
 
 
-def validate(parsed: dict[str, str | None]) -> None:
+def validate(parsed):
     missing = [f for f in REQUIRED_FIELDS if not (parsed.get(f) or "").strip()]
     if missing:
         raise BlueprintValidationError(f"蓝本缺少必填字段: {', '.join(missing)}")
@@ -116,7 +106,7 @@ def validate(parsed: dict[str, str | None]) -> None:
             )
 
 
-def to_quick_draft(parsed: dict[str, str | None]) -> dict:
+def to_quick_draft(parsed):
     platform_raw = (parsed.get("平台") or "qidian").strip().lower()
     platform = "fanqie" if platform_raw in ("fanqie", "番茄", "番茄小说") else "qidian"
     defaults = _PLATFORM_DEFAULTS[platform]
@@ -128,7 +118,7 @@ def to_quick_draft(parsed: dict[str, str | None]) -> dict:
     target_words = _coerce_int(parsed.get("目标字数"), defaults["target_words"])
     chapter_words = defaults["chapter_words"]
 
-    draft: dict = {
+    draft = {
         "platform": platform,
         "aggression_level": aggression,
         "target_chapters": target_chapters,
@@ -150,7 +140,7 @@ def to_quick_draft(parsed: dict[str, str | None]) -> dict:
         if val and val.strip().upper() != "AUTO":
             draft[field] = val
 
-    missing: list[str] = []
+    missing = []
     for field in OPTIONAL_FIELDS_TRACKED:
         v = parsed.get(field)
         if not v or v.strip().upper() == "AUTO":
@@ -160,7 +150,7 @@ def to_quick_draft(parsed: dict[str, str | None]) -> dict:
     return draft
 
 
-def _coerce_aggression(raw: str) -> int:
+def _coerce_aggression(raw):
     raw = raw.strip().lower()
     mapping = {"1": 1, "保守": 1, "conservative": 1,
                "2": 2, "平衡": 2, "balanced": 2,
@@ -169,7 +159,7 @@ def _coerce_aggression(raw: str) -> int:
     return mapping.get(raw, 2)
 
 
-def _coerce_int(raw: str | None, default: int) -> int:
+def _coerce_int(raw, default):
     if not raw:
         return default
     try:
@@ -178,7 +168,7 @@ def _coerce_int(raw: str | None, default: int) -> int:
         return default
 
 
-def _main() -> int:
+def _main():
     import argparse
     import json
     import sys
@@ -205,14 +195,12 @@ def _main() -> int:
 
 
 if __name__ == "__main__":
-    # CLAUDE.md mandate: Python entry points must enable UTF-8 stdio on Windows
     try:
         import sys as _sys
         from pathlib import Path as _Path
-        _scripts_dir = _Path(__file__).resolve().parent.parent.parent.parent / "ink-writer" / "scripts"
-        _sys.path.insert(0, str(_scripts_dir))
-        from runtime_compat import enable_windows_utf8_stdio  # type: ignore
+        _sys.path.insert(0, str(_Path(__file__).resolve().parent))
+        from runtime_compat import enable_windows_utf8_stdio
         enable_windows_utf8_stdio()
     except Exception:
-        pass  # Best-effort; -X utf8 flag in shell invocation is the primary path
+        pass
     raise SystemExit(_main())
