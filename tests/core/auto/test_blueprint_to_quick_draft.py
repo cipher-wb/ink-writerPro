@@ -135,3 +135,19 @@ def test_cli_returns_exit2_on_invalid_blueprint(tmp_path: Path) -> None:
     )
     assert result.returncode == 2
     assert "BLUEPRINT_INVALID" in result.stderr
+
+
+def test_cli_returns_exit3_on_io_error(tmp_path: Path) -> None:
+    import subprocess
+    import sys
+
+    # Input file does not exist → OSError → exit 3
+    bp = tmp_path / "nonexistent.md"
+    out = tmp_path / "draft.json"
+    result = subprocess.run(
+        [sys.executable, "-m", "ink_writer.core.auto.blueprint_to_quick_draft",
+         "--input", str(bp), "--output", str(out)],
+        capture_output=True, text=True,
+    )
+    assert result.returncode == 3
+    assert "BLUEPRINT_IO_ERROR" in result.stderr

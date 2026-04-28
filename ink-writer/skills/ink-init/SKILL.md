@@ -12,7 +12,7 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 2. **读取蓝本并转换**：
    ```bash
    python -m ink_writer.core.auto.blueprint_to_quick_draft \
-       --input "<path>" --output /tmp/quick_draft.json
+       --input "<path>" --output "<project_root>/.ink-auto-quick-draft.json"
    ```
    （若该 CLI 入口不存在，作为 fallback 直接读 `<path>` 后调用 `parse_blueprint` + `validate` + `to_quick_draft` 序列。）
 3. **跳过 Quick Step 0.4 平台弹询问**：使用 `quick_draft.platform` 字段。
