@@ -799,7 +799,7 @@ print(str(result) if result else '')
 
     # 调用 ink-init Quick 模式（CLI 子进程）
     INIT_LOG="${PROJECT_ROOT}/.ink-auto-init-$(date +%Y%m%d-%H%M%S).log"
-    INIT_PROMPT="使用 Skill 工具加载 \"ink-init\"。模式：--quick --blueprint ${BLUEPRINT_PATH}。draft.json 路径: ${DRAFT_PATH}。项目目录: ${PROJECT_ROOT}。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
+    INIT_PROMPT="使用 Skill 工具加载 \"ink-init\"。模式：--quick --blueprint ${BLUEPRINT_PATH}。draft.json 路径: ${DRAFT_PATH}。项目目录: ${PROJECT_ROOT}（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 ${PROJECT_ROOT}/.ink/state.json）。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
     echo "⚙️  启动自动初始化（CLI 子进程，约 5-10 分钟）..."
     if ! run_cli_process "$INIT_PROMPT" "$INIT_LOG"; then
         echo "❌ 自动初始化失败，日志：${INIT_LOG}"

@@ -8,6 +8,7 @@ allowed-tools: Read Write Edit Grep Bash Task AskUserQuestion WebSearch WebFetch
 
 如果用户输入包含 `--blueprint <path>`（无论是否带 `--quick`），按以下流程处理：
 
+0. **强制原地初始化**：`--blueprint` 模式下，若提示词中给出 `项目目录: <path>`，则**直接使用该路径作为 `project_dir` 参数**调用 `ink.py init`，不再根据书名生成子目录。最终 `.ink/state.json` 必须落在 `<path>/.ink/state.json`，与 ink-auto.sh 的 `find_project_root()` 上行搜索能配合。该规则覆盖正常 ink-init 的"项目目录安全规则"中"由书名安全化生成"的默认行为。
 1. **强制 Quick 模式**：忽略原本的 deep / quick 分支判定，强制走 Quick。
 2. **读取蓝本并转换**：
    ```bash

@@ -204,4 +204,14 @@ def _main() -> int:
 
 
 if __name__ == "__main__":
+    # CLAUDE.md mandate: Python entry points must enable UTF-8 stdio on Windows
+    try:
+        import sys as _sys
+        from pathlib import Path as _Path
+        _scripts_dir = _Path(__file__).resolve().parent.parent.parent.parent / "ink-writer" / "scripts"
+        _sys.path.insert(0, str(_scripts_dir))
+        from runtime_compat import enable_windows_utf8_stdio  # type: ignore
+        enable_windows_utf8_stdio()
+    except Exception:
+        pass  # Best-effort; -X utf8 flag in shell invocation is the primary path
     raise SystemExit(_main())

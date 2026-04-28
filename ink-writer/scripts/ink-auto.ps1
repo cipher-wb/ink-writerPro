@@ -458,7 +458,8 @@ print(str(result) if result else '')
         }
         $BlueprintPath = Join-Path $ProjectRoot ".ink-auto-blueprint.md"
         Write-Host "📋 未找到蓝本，启动 7 题交互式 bootstrap..."
-        & powershell -NoProfile -ExecutionPolicy Bypass -File "$ScriptDir/interactive_bootstrap.ps1" $BlueprintPath
+        $psExecutable = (Get-Process -Id $PID).Path
+        & $psExecutable -NoProfile -ExecutionPolicy Bypass -File "$ScriptDir/interactive_bootstrap.ps1" $BlueprintPath
         if ($LASTEXITCODE -ne 0) {
             Write-Host "❌ 交互式 bootstrap 失败或被中断"
             exit 1
@@ -476,7 +477,7 @@ print(str(result) if result else '')
     # 调用 ink-init Quick 模式（CLI 子进程）
     $InitLog = Join-Path $ProjectRoot ("ink-auto-init-{0}.log" -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
     $q = [char] 0x22
-    $InitPrompt = "使用 Skill 工具加载 ${q}ink-init${q}。模式：--quick --blueprint $BlueprintPath。draft.json 路径: $DraftPath。项目目录: $ProjectRoot。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
+    $InitPrompt = "使用 Skill 工具加载 ${q}ink-init${q}。模式：--quick --blueprint $BlueprintPath。draft.json 路径: $DraftPath。项目目录: $ProjectRoot（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 $ProjectRoot/.ink/state.json）。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
     Write-Host "⚙️  启动自动初始化（CLI 子进程，约 5-10 分钟）..."
     $initRc = Invoke-CliProcess -Prompt $InitPrompt -LogFile $InitLog
     if ($initRc -ne 0) {
