@@ -8,6 +8,21 @@
 
 ---
 
+## 文档导航（先看这里）
+
+| 我是谁 / 我想做啥 | 看哪份文档 |
+|---|---|
+| 完全新手，5 分钟想搞懂这玩意是啥 | [docs/HOW-IT-WORKS-FOR-CIPHER.md](docs/HOW-IT-WORKS-FOR-CIPHER.md) |
+| 第一次配 Embedding API（必做）| [docs/SETUP-EMBEDDING-API-FOR-CIPHER.md](docs/SETUP-EMBEDDING-API-FOR-CIPHER.md) |
+| 日常用 5 个核心命令 | 本文档下方"快速上手"章节 |
+| 高级命令 / 环境变量 / 故障排查 | [docs/ADVANCED-COMMANDS.md](docs/ADVANCED-COMMANDS.md) |
+| 完整用户手册 | [docs/USER_MANUAL.md](docs/USER_MANUAL.md) |
+| 整体架构（开发者）| [docs/architecture.md](docs/architecture.md) |
+
+**日常写作只需要 5 个 slash 命令**：`/ink-init` / `/ink-init --quick` / `/ink-plan` / `/ink-auto` / `/ink-resume`。其余 12 个工具命令是"出问题时才用"，详见 ADVANCED-COMMANDS.md。
+
+---
+
 ## 功能亮点
 
 - **一条命令批量产出**：`/ink-auto 10` 自动写 10 章，每章 2200+ 字，写完自动审查、自动修复、大纲不够自动生成
