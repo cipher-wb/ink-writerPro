@@ -767,8 +767,10 @@ _start_progress_heartbeat() {
     local watch_target="${3:-}"
     local parent_pid="${4:-}"
     local interval="${INK_AUTO_HEARTBEAT_INTERVAL:-30}"
-    # 卡住阈值：连续 N 秒产物 + step 都没变化即视为卡住，默认 600s（10min）。设为 0 关闭。
-    local stall_threshold="${INK_AUTO_STALL_THRESHOLD:-600}"
+    # 卡住阈值：连续 N 秒"产物文件 + workflow step + log 文件大小"三信号都不变即视为卡住。
+    # 默认 1500s（25min）—— Step 0-2A 起草阶段 LLM 常 5-15 分钟不写章节文件（内存中思考），
+    # 旧默认 600s 误杀（cipher 实测 2026-04-29，第 1 章被误判卡住）。设为 0 关闭。
+    local stall_threshold="${INK_AUTO_STALL_THRESHOLD:-1500}"
 
     (
         # 子 shell 退出时清理（防止心跳成为孤儿）
@@ -779,7 +781,8 @@ _start_progress_heartbeat() {
         local last_size=0
         local last_alert_line=""
         local last_step=""
-        local stall_since=0  # 字数 + step 都不变开始的时间戳；为 0 表示尚未开始停滞
+        local last_log_size=0
+        local stall_since=0  # 字数 + step + log size 三信号都不变开始的时间戳；为 0 表示尚未开始停滞
 
         while true; do
             sleep "$interval"
@@ -956,7 +959,11 @@ except Exception:
                         fi
                     fi
 
-                    # 卡住检测：write 模式下，字数 + step 都没变化时累积停滞时长
+                    # 卡住检测（write 模式）：三信号都不变才算卡住。
+                    #   1. 字数（章节文件）—— Step 5+ 才会变
+                    #   2. workflow step —— 依赖 LLM 调 workflow start-step
+                    #   3. log 文件大小 —— claude -p 持续 dump stdout，最稳的活跃信号
+                    # 任一信号在变 = LLM 在工作；三个都不变 = 真卡住。
                     if (( stall_threshold > 0 )); then
                         local step_changed=0
                         if [[ "$cur_step" != "$last_step" ]]; then
@@ -964,14 +971,24 @@ except Exception:
                         fi
                         last_step="$cur_step"
 
-                        if (( size_changed == 0 && step_changed == 0 )); then
+                        # log 文件 size 变化（claude -p stdout 持续输出，最可靠的活跃信号）
+                        local log_changed=0
+                        if [[ -f "$log_file" ]]; then
+                            local cur_log_size
+                            cur_log_size=$(wc -c <"$log_file" 2>/dev/null | tr -d ' ' || echo 0)
+                            if (( cur_log_size > last_log_size )); then
+                                log_changed=1
+                            fi
+                            last_log_size=$cur_log_size
+                        fi
+
+                        if (( size_changed == 0 && step_changed == 0 && log_changed == 0 )); then
                             if (( stall_since == 0 )); then
                                 stall_since=$now
                             fi
                             local stall_dur=$((now - stall_since))
                             if (( stall_dur >= stall_threshold )) && [[ -n "$parent_pid" ]]; then
-                                # 触发 SIGTERM：让 watchdog 接手清理 + 父流程进入 retry
-                                echo "    🚨 [心跳 ${elapsed_str}] 检测到卡住：${stall_dur}s 内字数无增长且 step 未变化 → 终止子进程进入重试" >&2
+                                echo "    🚨 [心跳 ${elapsed_str}] 检测到卡住：${stall_dur}s 内字数/step/log 三信号全无变化 → 终止子进程进入重试" >&2
                                 kill -TERM "$parent_pid" 2>/dev/null || true
                                 pkill -TERM -P "$parent_pid" 2>/dev/null || true
                                 if [[ -n "${INK_AUTO_PID:-}" ]]; then
@@ -979,11 +996,10 @@ except Exception:
                                 fi
                                 exit 0
                             elif (( stall_dur >= stall_threshold / 2 )); then
-                                # 接近一半时提前预警，不立即终止
-                                echo "    ⚠️  [心跳 ${elapsed_str}] 已停滞 ${stall_dur}s（阈值 ${stall_threshold}s）：再无进展将终止" >&2
+                                echo "    ⚠️  [心跳 ${elapsed_str}] 已停滞 ${stall_dur}s（阈值 ${stall_threshold}s）：三信号都不变，再无进展将终止" >&2
                             fi
                         else
-                            stall_since=0  # 任何变化重置计数
+                            stall_since=0  # 任一信号变化即重置（LLM 还在工作）
                         fi
                     fi
                     ;;
@@ -1162,7 +1178,27 @@ run_chapter() {
     local padded
     padded=$(printf "%04d" "$ch")
     local log_file="$LOG_DIR/ch${padded}-$(date +%Y%m%d-%H%M%S).log"
-    local prompt="使用 Skill 工具加载 \"ink-write\" 并完整执行所有步骤（Step 0 到 Step 6）。项目目录: ${PROJECT_ROOT}。禁止省略任何步骤，禁止提问，全程自主执行。完成后输出 INK_DONE。失败则输出 INK_FAILED。"
+    # 进度强约束：在 prompt 里直接命令 LLM 在每个 Step 进入/完成时打 [INK-PROGRESS] 标记。
+    # 这是必读章节级硬要求——LLM 不打这些标记，外层 ink-auto.sh 进度条会失明。
+    local prompt="使用 Skill 工具加载 \"ink-write\" 并完整执行所有步骤（Step 0 到 Step 6 共 13 步）。项目目录: ${PROJECT_ROOT}。
+
+【硬要求：进度透出】
+你必须在每个 Step 开始前 + 完成后用 Bash 工具 echo 一行 [INK-PROGRESS] 标记，
+让外层 ink-auto.sh 终端能展示给用户看。漏打用户体验极差。
+
+具体格式：
+  - 进入 Step 前：echo \"[INK-PROGRESS] step_started <step_id>\"
+  - Step 完成后：echo \"[INK-PROGRESS] step_completed <step_id> <耗时秒数>\"
+  - Step 跳过：echo \"[INK-PROGRESS] step_skipped <step_id>\"
+  - 回退重写：echo \"[INK-PROGRESS] step_retry <from_step> <to_step>\"
+
+step_id 必须用：Step 0, Step 0.7, Step 0.8, Step 1, Step 2A, Step 2A.1,
+Step 2A.5, Step 2B, Step 2C, Step 3, Step 4, Step 5, Step 6（共 13 个）。
+
+例：进入 Step 2A 起草前先 \`echo \"[INK-PROGRESS] step_started Step 2A\"\`，
+   起草完成后 \`echo \"[INK-PROGRESS] step_completed Step 2A 65\"\`。
+
+禁止省略任何步骤，禁止提问，全程自主执行。完成后输出 INK_DONE。失败则输出 INK_FAILED。"
 
     # write 心跳：观测当前章节文件的字数增长 + workflow_state.json 当前 step
     local watch_file="${PROJECT_ROOT}/正文/第${padded}章.md"
@@ -1183,7 +1219,11 @@ retry_chapter() {
     local padded
     padded=$(printf "%04d" "$ch")
     local log_file="$LOG_DIR/ch${padded}-retry-$(date +%Y%m%d-%H%M%S).log"
-    local prompt="使用 Skill 工具加载 \"ink-resume\"，恢复第${ch}章的写作并完成所有剩余步骤。项目目录: ${PROJECT_ROOT}。禁止提问，全程自主执行。完成后输出 INK_DONE。"
+    local prompt="使用 Skill 工具加载 \"ink-resume\"，恢复第${ch}章的写作并完成所有剩余步骤。项目目录: ${PROJECT_ROOT}。
+
+【硬要求：进度透出】每个 Step 开始/完成时用 Bash 工具 echo \"[INK-PROGRESS] step_started <step_id>\" 或 step_completed。
+
+禁止提问，全程自主执行。完成后输出 INK_DONE。"
 
     local watch_file="${PROJECT_ROOT}/正文/第${padded}章.md"
     if ! run_cli_process "$prompt" "$log_file" "${INK_AUTO_CHAPTER_TIMEOUT:-3600}" "write" "$watch_file"; then
@@ -1228,7 +1268,11 @@ auto_generate_outline() {
     report_event "📋" "自动大纲启动" "第${vol}卷（因第${ch}章需要）"
 
     local log_file="$LOG_DIR/plan-vol${vol}-$(date +%Y%m%d-%H%M%S).log"
-    local prompt="使用 Skill 工具加载 \"ink-plan\"。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${PROJECT_ROOT}。禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
+    local prompt="使用 Skill 工具加载 \"ink-plan\"。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${PROJECT_ROOT}。
+
+【硬要求：进度透出】每个 Step 开始/完成时用 Bash 工具 echo \"[INK-PROGRESS] step_started <step_id>\" 或 step_completed <step_id> <耗时秒数>。step_id 取自 ink-plan SKILL.md 进度规范表（Step 1, 1.5, 2, 3, 4, 4.5, 5, 6, 7, 8, 99）。
+
+禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
 
     # ink-plan 整卷大纲耗时最长（30+ 章纲），用 INK_AUTO_PLAN_TIMEOUT（默认 3600s）+ plan 心跳
     run_cli_process "$prompt" "$log_file" "${INK_AUTO_PLAN_TIMEOUT:-3600}" "plan" || true
@@ -1274,7 +1318,11 @@ auto_plan_volume() {
     report_event "📋" "自动大纲启动" "第${vol}卷"
 
     local log_file="$LOG_DIR/plan-vol${vol}-$(date +%Y%m%d-%H%M%S).log"
-    local prompt="使用 Skill 工具加载 \"ink-plan\"。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${PROJECT_ROOT}。禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
+    local prompt="使用 Skill 工具加载 \"ink-plan\"。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${PROJECT_ROOT}。
+
+【硬要求：进度透出】每个 Step 开始/完成时用 Bash 工具 echo \"[INK-PROGRESS] step_started <step_id>\" 或 step_completed <step_id> <耗时秒数>。step_id 取自 ink-plan SKILL.md 进度规范表。
+
+禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
 
     # ink-plan 整卷大纲耗时最长，用 INK_AUTO_PLAN_TIMEOUT（默认 3600s）+ plan 心跳
     run_cli_process "$prompt" "$log_file" "${INK_AUTO_PLAN_TIMEOUT:-3600}" "plan" || true
@@ -1355,7 +1403,11 @@ _v27_init_if_needed() {
     fi
 
     local init_log="${PROJECT_ROOT}/.ink-auto-init-$(date +%Y%m%d-%H%M%S).log"
-    local init_prompt="使用 Skill 工具加载 \"ink-init\"。模式：--quick --blueprint ${blueprint_path}。draft.json 路径: ${draft_path}。项目目录: ${PROJECT_ROOT}（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 ${PROJECT_ROOT}/.ink/state.json）。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
+    local init_prompt="使用 Skill 工具加载 \"ink-init\"。模式：--quick --blueprint ${blueprint_path}。draft.json 路径: ${draft_path}。项目目录: ${PROJECT_ROOT}（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 ${PROJECT_ROOT}/.ink/state.json）。
+
+【硬要求：进度透出】每个 Quick Step 开始/完成时用 Bash 工具 echo \"[INK-PROGRESS] step_started <step_id>\" 或 step_completed <step_id> <耗时秒数>。step_id 取自 ink-init SKILL.md 进度规范表（Step 0, 0.4, 0.5, 1, 1.5, 1.6, 1.7, 2, 3, 99, 99.5）。
+
+禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
     echo "⚙️  启动自动初始化（CLI 子进程，约 5-15 分钟）..."
     # ink-init 一次性初始化，用 INK_AUTO_INIT_TIMEOUT（默认 1800s）+ init 心跳
     if ! run_cli_process "$init_prompt" "$init_log" "${INK_AUTO_INIT_TIMEOUT:-1800}" "init"; then

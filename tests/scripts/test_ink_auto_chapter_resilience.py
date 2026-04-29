@@ -118,6 +118,26 @@ def test_user_facing_hint_on_final_failure():
 # ───────────────────────────────────────────────────────────────
 
 
+def test_stall_detection_uses_triple_signal():
+    """卡住检测必须三信号联动：字数 + workflow step + log 文件 size。
+
+    历史 bug（cipher 实测 2026-04-29）：双信号在 Step 0-2A 起草期间被同时为真，
+    误杀第 1 章。log size 是最稳的"LLM 还活着"信号——claude -p 持续 dump stdout。
+    """
+    src = _read()
+    assert "log_changed" in src, (
+        "卡住检测必须含 log_changed 信号（log 文件 size 增长 = LLM 在输出）"
+    )
+    assert "last_log_size" in src, (
+        "必须用 last_log_size 追踪 log 文件大小变化"
+    )
+    # 三信号联动条件
+    assert re.search(
+        r"size_changed\s*==\s*0\s*&&\s*step_changed\s*==\s*0\s*&&\s*log_changed\s*==\s*0",
+        src,
+    ), "卡住判定必须要求字数/step/log size 三信号都不变"
+
+
 def test_stall_detection_uses_dual_signal():
     """卡住检测必须同时观察"字数无增长" + "workflow step 不变"两个信号。
 
@@ -134,16 +154,17 @@ def test_stall_detection_uses_dual_signal():
 
 
 def test_stall_default_threshold_reasonable():
-    """卡住阈值默认值必须在 300-1200 秒之间（5-20 分钟）。
+    """卡住阈值默认值必须在 1200-3600 秒之间（20-60 分钟）。
 
-    太短易误杀正常 LLM 思考；太长起不到提前救援作用。
+    太短易误杀正常 LLM 思考——cipher 实测 2026-04-29，600s 在 Step 0-2A
+    起草阶段就误杀第 1 章。太长起不到提前救援作用。
     """
     src = _read()
     m = re.search(r"INK_AUTO_STALL_THRESHOLD:-(\d+)", src)
     assert m, "INK_AUTO_STALL_THRESHOLD 必须有默认值"
     threshold = int(m.group(1))
-    assert 300 <= threshold <= 1200, (
-        f"卡住阈值 {threshold}s 不在合理范围 [300, 1200]"
+    assert 1200 <= threshold <= 3600, (
+        f"卡住阈值 {threshold}s 不在合理范围 [1200, 3600]"
     )
 
 

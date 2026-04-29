@@ -271,6 +271,57 @@ def test_write_heartbeat_observes_step_progress_and_log():
     assert "last_log_line" in write_code, "write 心跳必须输出 log 末行"
 
 
+def test_run_chapter_prompt_forces_progress_markers():
+    """run_chapter 的 prompt 必须强约束 LLM echo [INK-PROGRESS] 标记。
+
+    历史 bug：仅靠 SKILL.md 提及不够，LLM 大概率忽略；必须在每次启动子进程
+    的 prompt 里直接命令。
+    """
+    src = _read(INK_AUTO_SH)
+    m = re.search(
+        r"^run_chapter\s*\(\s*\)\s*\{(.*?)^\}",
+        src, re.MULTILINE | re.DOTALL,
+    )
+    assert m
+    body = m.group(1)
+    assert "[INK-PROGRESS]" in body, (
+        "run_chapter prompt 必须含 [INK-PROGRESS] 字面要求"
+    )
+    assert "硬要求" in body or "必须" in body, (
+        "prompt 必须用强约束语气（硬要求/必须）让 LLM 不省略进度标记"
+    )
+    # 必须列出 13 个 step_id
+    assert "Step 2A" in body and "Step 3" in body and "Step 6" in body, (
+        "prompt 必须列出 ink-write 的具体 step_id 让 LLM 知道用什么名字"
+    )
+
+
+def test_init_plan_prompts_also_force_progress_markers():
+    """init / plan 的 prompt 也应有 [INK-PROGRESS] 强约束（不只是 write）。"""
+    src = _read(INK_AUTO_SH)
+    # 抠 _v27_init_if_needed 函数体
+    m_init = re.search(
+        r"^_v27_init_if_needed\s*\(\s*\)\s*\{(.*?)^\}",
+        src, re.MULTILINE | re.DOTALL,
+    )
+    assert m_init
+    init_body = m_init.group(1)
+    assert "[INK-PROGRESS]" in init_body, (
+        "v27 init prompt 必须强约束 LLM 打 [INK-PROGRESS]"
+    )
+
+    # 抠 auto_plan_volume 函数体
+    m_plan = re.search(
+        r"^auto_plan_volume\s*\(\s*\)\s*\{(.*?)^\}",
+        src, re.MULTILINE | re.DOTALL,
+    )
+    assert m_plan
+    plan_body = m_plan.group(1)
+    assert "[INK-PROGRESS]" in plan_body, (
+        "auto_plan_volume prompt 必须强约束 LLM 打 [INK-PROGRESS]"
+    )
+
+
 def test_bash_syntax_check():
     """语法守护——心跳函数等不能引入 bash 解析错误。"""
     import shutil
