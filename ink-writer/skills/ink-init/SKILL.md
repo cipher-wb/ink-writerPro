@@ -53,6 +53,41 @@ Quick 模式支持三种命令格式传入激进度档位（1 保守 / 2 平衡 
 
 一条命令生成 3 套完整小说方案，用户选一个（或混搭/重随）即可进入初始化，跳过 10+ 轮问答。
 
+## 进度输出规范（hard constraint，每个 Step 必须打）
+
+为了让用户跑 `/ink-auto` 时能在终端实时看到 init 进度（避免黑屏 5-15 分钟），**每个 Quick Step 开始和完成时都必须**用 Bash 工具 echo 一行 `[INK-PROGRESS]` 标记：
+
+| 时机 | Bash 命令 | 终端显示 |
+|---|---|---|
+| Step 进入前 | `echo "[INK-PROGRESS] step_started Step <N>"` | `⏳ Step N <名称> ← 执行中...` |
+| Step 完成后 | `echo "[INK-PROGRESS] step_completed Step <N> <耗时秒数>"` | `✅ Step N <名称> (Xs)` |
+| Step 跳过（如 --blueprint 模式跳 Step 0.5） | `echo "[INK-PROGRESS] step_skipped Step <N>"` | `⏭ Step N <名称> (跳过)` |
+
+可用的 step_id（必须用本表，不要自己造）：
+
+| step_id | 名称 |
+|---|---|
+| Step 0 | 加载命名素材 |
+| Step 0.4 | 平台选择 |
+| Step 0.5 | 激进度档位选择 |
+| Step 1 | 生成 3 套方案 |
+| Step 1.5 | 金手指五重校验 |
+| Step 1.6 | 语言风格分配 |
+| Step 1.7 | 书名与人名校验 |
+| Step 2 | 方案输出与选择 |
+| Step 3 | 自动填充与初始化 |
+| Step 99 | 策划期审查 |
+| Step 99.5 | 直播题材审查 |
+
+例（在每个 Step 章节开头插入）：
+```bash
+echo "[INK-PROGRESS] step_started Step 1"
+# ... 这一步的实际工作 ...
+echo "[INK-PROGRESS] step_completed Step 1 89"
+```
+
+耗时秒数取整即可，命令失败也不阻断主流程（这是进度打点，不是 critical path）。
+
 ## Quick Step 0：加载命名素材与参考
 
 必须 Read 以下文件：

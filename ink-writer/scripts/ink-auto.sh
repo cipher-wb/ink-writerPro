@@ -185,6 +185,24 @@ if [ -z "${PY_LAUNCHER:-}" ]; then
 fi
 
 find_project_root() {
+    # 解析顺序（防止 Claude Code 子 shell cwd 不在小说目录时被误判为空项目）：
+    #   1. INK_PROJECT_ROOT env var（用户/外层显式指定，最高优先级）
+    #   2. PROJECT_ROOT env var（env-setup.sh 已计算并 export 的值）
+    #   3. CLAUDE_PROJECT_DIR env var（Claude Code 主项目目录）
+    #   4. 从 $PWD 向上递归找 .ink/state.json（旧行为，最后兜底）
+    # 每个候选都要验证 .ink/state.json 真的存在；不存在就走下一个候选。
+    local cand
+    for cand in \
+        "${INK_PROJECT_ROOT:-}" \
+        "${PROJECT_ROOT:-}" \
+        "${CLAUDE_PROJECT_DIR:-}"; do
+        if [[ -n "$cand" ]] && [[ -f "$cand/.ink/state.json" ]]; then
+            echo "$cand"
+            return 0
+        fi
+    done
+
+    # 兜底：PWD 上溯
     local dir="$PWD"
     while [[ "$dir" != "/" ]]; do
         if [[ -f "$dir/.ink/state.json" ]]; then
@@ -514,6 +532,49 @@ trap on_signal INT TERM
 # 验证章节产出
 # ═══════════════════════════════════════════
 
+# 把不完整草稿（中文字数 < MIN_WORDS_HARD）归档到 .ink/recovery_backups/
+# 避免半成品留在 正文/ 下，让下次 /ink-auto 误判为已完成或拼接错乱。
+# 调用时机：
+#   - run_chapter 后 verify_chapter 失败
+#   - retry 前（保留旧半成品作为参考，不直接覆盖）
+#   - 最终失败 exit 前
+_archive_partial_chapter() {
+    local ch="$1"
+    local padded
+    padded=$(printf "%04d" "$ch")
+    : "${MIN_WORDS_HARD:=2200}"
+
+    local files=()
+    while IFS= read -r f; do
+        files+=("$f")
+    done < <(ls "$PROJECT_ROOT/正文/第${padded}章"*.md 2>/dev/null || true)
+
+    if (( ${#files[@]} == 0 )); then
+        return 0  # 没文件就没事
+    fi
+
+    local archived=0
+    local archive_dir="$PROJECT_ROOT/.ink/recovery_backups/partial_chapters"
+    mkdir -p "$archive_dir"
+
+    for f in "${files[@]}"; do
+        [[ -f "$f" ]] || continue
+        local cc
+        cc=$(wc -m < "$f" 2>/dev/null | tr -d ' ')
+        if [[ -n "$cc" ]] && (( cc < MIN_WORDS_HARD )); then
+            local ts dst
+            ts=$(date +%Y%m%d-%H%M%S)
+            dst="$archive_dir/$(basename "$f" .md)-partial-${cc}字-${ts}.md"
+            mv "$f" "$dst" 2>/dev/null && {
+                echo "    🗄️  归档不完整草稿：$(basename "$f") (${cc}字 < ${MIN_WORDS_HARD}) → recovery_backups/partial_chapters/" >&2
+                archived=$((archived + 1))
+            }
+        fi
+    done
+
+    return 0
+}
+
 verify_chapter() {
     local ch="$1"
     local padded
@@ -575,22 +636,42 @@ get_chapter_wordcount() {
 # 内层进度事件解析
 # ═══════════════════════════════════════════
 
-# step_id → 名称映射
+# step_id → 名称映射（覆盖 ink-init / ink-plan / ink-write 三个 skill）
+# 同名 step（如 Step 1 在 init/plan/write 各有不同含义）由 SKILL.md 的进度规范明确归属，
+# 这里给出"通用首选"名字（与各 SKILL.md 的进度输出规范保持一致）。
 get_step_name() {
     local sid="$1"
     case "$sid" in
-        "Step 0")    echo "预检" ;;
+        # ── ink-init Quick Mode ───────────────────────
+        "Step 0")    echo "预检/加载素材" ;;
+        "Step 0.4")  echo "平台选择" ;;
+        "Step 0.5")  echo "激进度档位选择" ;;
         "Step 0.7")  echo "金丝雀扫描" ;;
         "Step 0.8")  echo "设定校验" ;;
-        "Step 1")    echo "上下文构建" ;;
+        "Step 1")    echo "上下文构建/方案生成" ;;
+        "Step 1.5")  echo "金手指五重校验" ;;
+        "Step 1.6")  echo "语言风格分配" ;;
+        "Step 1.7")  echo "书名/人名校验" ;;
+        # ── ink-plan ──────────────────────────────────
+        "Step 2")    echo "设定基线补齐" ;;
+        "Step 3")    echo "选卷/审查" ;;
+        "Step 4")    echo "节拍表生成/润色" ;;
+        "Step 4.5")  echo "时间线生成" ;;
+        "Step 5")    echo "卷骨架/数据回写" ;;
+        "Step 6")    echo "章纲生成/Git 备份" ;;
+        "Step 7")    echo "设定集回写" ;;
+        "Step 8")    echo "校验+落盘" ;;
+        # ── ink-write 单章特有 ────────────────────────
         "Step 2A")   echo "正文起草" ;;
+        "Step 2A.1") echo "自洽回扫" ;;
         "Step 2A.5") echo "字数校验" ;;
         "Step 2B")   echo "风格适配" ;;
         "Step 2C")   echo "计算型闸门" ;;
-        "Step 3")    echo "审查" ;;
-        "Step 4")    echo "润色" ;;
-        "Step 5")    echo "数据回写" ;;
-        "Step 6")    echo "Git 备份" ;;
+        "Step 4.5")  echo "改写安全校验" ;;
+        "Step 5.5")  echo "前序章修复" ;;
+        # ── 共用 ─────────────────────────────────────
+        "Step 99")   echo "策划期审查" ;;
+        "Step 99.5") echo "直播题材审查" ;;
         *)           echo "" ;;
     esac
 }
@@ -668,6 +749,269 @@ parse_progress_output() {
 }
 
 # ═══════════════════════════════════════════
+# 进度心跳：在 LLM 子进程长时间跑期间，每 30s 主动观测产物 + log
+# 让用户知道"软件还活着 + 当前在干嘛"，不再 1 小时黑屏
+# ═══════════════════════════════════════════
+
+# log 异常关键词正则（API 限流 / 网络 / 服务故障 / token 超限）
+# 命中任一即在心跳里高亮告警
+_HEARTBEAT_ALERT_REGEX='(rate.?limit|429|503|502|504|timeout|overloaded|exceeded.?context|max.?tokens|connection.?refused|network.?error|api.?error|temporarily.?unavailable|too.?many.?requests)'
+
+# $1: op (init / plan / write)
+# $2: log_file（用来扫异常关键词）
+# $3: 观测目标——init 时是 .ink/state.json；plan 时是 大纲/*.md 中最新的；write 时是当前章节文件
+# $4: parent_pid（卡住检测用，超过 INK_AUTO_STALL_THRESHOLD 秒无产物增长 + step 不变 → SIGTERM 父进程的子 LLM）
+_start_progress_heartbeat() {
+    local op="$1"
+    local log_file="$2"
+    local watch_target="${3:-}"
+    local parent_pid="${4:-}"
+    local interval="${INK_AUTO_HEARTBEAT_INTERVAL:-30}"
+    # 卡住阈值：连续 N 秒产物 + step 都没变化即视为卡住，默认 600s（10min）。设为 0 关闭。
+    local stall_threshold="${INK_AUTO_STALL_THRESHOLD:-600}"
+
+    (
+        # 子 shell 退出时清理（防止心跳成为孤儿）
+        trap 'exit 0' TERM INT
+
+        local hb_start
+        hb_start=$(date +%s)
+        local last_size=0
+        local last_alert_line=""
+        local last_step=""
+        local stall_since=0  # 字数 + step 都不变开始的时间戳；为 0 表示尚未开始停滞
+
+        while true; do
+            sleep "$interval"
+            local now elapsed elapsed_str
+            now=$(date +%s)
+            elapsed=$((now - hb_start))
+            elapsed_str=$(format_duration "$elapsed" 2>/dev/null || echo "${elapsed}s")
+
+            # 1. 异常关键词扫描（最近 200 行 log）
+            if [[ -f "$log_file" ]]; then
+                local recent_alert
+                recent_alert=$(tail -n 200 "$log_file" 2>/dev/null \
+                    | grep -iE "$_HEARTBEAT_ALERT_REGEX" \
+                    | tail -n 1 || true)
+                if [[ -n "$recent_alert" ]] && [[ "$recent_alert" != "$last_alert_line" ]]; then
+                    # 截断到 200 字符避免刷屏
+                    local alert_short="${recent_alert:0:200}"
+                    echo "    ⚠️  [心跳 ${elapsed_str}] 检测到 API 异常信号：${alert_short}" >&2
+                    last_alert_line="$recent_alert"
+                fi
+            fi
+
+            # 2. 产物观测：根据 op 类型看不同文件
+            local observation=""
+            case "$op" in
+                init)
+                    # init 看 4 个信号：
+                    #   a) state.json 是否就位（最终标志）
+                    #   b) .ink/ + 设定集/ + 大纲/ 三个目录的文件总数 + 字节
+                    #   c) 最近创建/修改的文件名（让用户知道 LLM 当前在写什么）
+                    #   d) init log 文件最后 1 行非空内容（LLM 进展）
+                    if [[ -n "${PROJECT_ROOT:-}" ]]; then
+                        local total_files=0 total_bytes=0 newest=""
+                        local d
+                        for d in ".ink" "设定集" "大纲"; do
+                            local dpath="$PROJECT_ROOT/$d"
+                            [[ -d "$dpath" ]] || continue
+                            local n
+                            n=$(find "$dpath" -type f 2>/dev/null | wc -l | tr -d ' ')
+                            total_files=$((total_files + n))
+                            local b
+                            b=$(find "$dpath" -type f -exec wc -c {} + 2>/dev/null \
+                                | awk 'END{print $1+0}')
+                            total_bytes=$((total_bytes + ${b:-0}))
+                        done
+                        # 找全项目最新被修改的文件（不限子目录）
+                        newest=$(find "$PROJECT_ROOT" -type f \
+                            \( -name '*.md' -o -name '*.json' -o -name '*.yaml' \) \
+                            -not -path '*/.git/*' -not -path '*/.ink-debug/*' \
+                            -newer "$log_file" 2>/dev/null | head -1)
+                        if [[ -z "$newest" ]]; then
+                            # 回退到 LLM start 之后任何修改过的文件
+                            newest=$(ls -t "$PROJECT_ROOT/.ink/"*.json 2>/dev/null | head -1)
+                        fi
+
+                        if [[ -f "$PROJECT_ROOT/.ink/state.json" ]]; then
+                            observation="✓ state.json 已就位｜${total_files} 文件 ${total_bytes}B"
+                        else
+                            observation="${total_files} 文件 ${total_bytes}B"
+                            [[ -n "$newest" ]] && observation="${observation}｜最新：$(basename "$newest")"
+                        fi
+
+                        # log 文件末行：取最新非空内容（截 100 字符）
+                        # macOS 没 tac，用 awk 取最后一行非空（兼容 mac/linux）
+                        if [[ -f "$log_file" ]]; then
+                            local last_log_line
+                            last_log_line=$(awk 'NF{last=$0} END{print last}' "$log_file" 2>/dev/null)
+                            if [[ -n "$last_log_line" ]]; then
+                                observation="${observation}｜log: ${last_log_line:0:100}"
+                            fi
+                        fi
+                    else
+                        observation="（init 进行中，PROJECT_ROOT 未确定）"
+                    fi
+                    ;;
+                plan)
+                    # plan 看 3 个信号：
+                    #   a) 大纲/ 文件总数 + 总字节
+                    #   b) 最新卷大纲文件 + 字节增长
+                    #   c) 该文件里已生成的章节数（grep "^## 第N章" 数量）
+                    if [[ -n "${PROJECT_ROOT:-}" ]]; then
+                        local outline_count=0 outline_bytes=0
+                        if [[ -d "$PROJECT_ROOT/大纲" ]]; then
+                            outline_count=$(find "$PROJECT_ROOT/大纲" -type f -name '*.md' 2>/dev/null \
+                                | wc -l | tr -d ' ')
+                            outline_bytes=$(find "$PROJECT_ROOT/大纲" -type f -name '*.md' \
+                                -exec wc -c {} + 2>/dev/null | awk 'END{print $1+0}')
+                        fi
+                        # 找最新卷大纲文件
+                        local latest_outline=""
+                        latest_outline=$(ls -t "$PROJECT_ROOT/大纲/"*.md 2>/dev/null | head -1)
+                        if [[ -n "$latest_outline" ]]; then
+                            local size growth=""
+                            size=$(wc -c <"$latest_outline" 2>/dev/null | tr -d ' ' || echo 0)
+                            if (( size > last_size )); then
+                                local delta=$((size - last_size))
+                                growth=" (+${delta}B)"
+                            elif (( size == last_size && last_size > 0 )); then
+                                growth=" (无增长)"
+                            fi
+                            # 数已生成章节
+                            local ch_count
+                            ch_count=$(grep -cE '^##\s*第\s*[0-9]+\s*章' "$latest_outline" 2>/dev/null \
+                                || echo 0)
+                            observation="$(basename "$latest_outline"): ${size}B${growth}｜${ch_count} 章已写"
+                            last_size=$size
+                        else
+                            observation="${outline_count} 大纲文件 ${outline_bytes}B"
+                        fi
+                        # log 末行（mac/linux 兼容：用 awk 而非 tac）
+                        if [[ -f "$log_file" ]]; then
+                            local last_log_line
+                            last_log_line=$(awk 'NF{last=$0} END{print last}' "$log_file" 2>/dev/null)
+                            if [[ -n "$last_log_line" ]]; then
+                                observation="${observation}｜log: ${last_log_line:0:80}"
+                            fi
+                        fi
+                    fi
+                    ;;
+                write)
+                    # write 看 4 个信号：
+                    #   a) 章节文件字数（中文字符数）+ 增量
+                    #   b) workflow_state.json 当前 step
+                    #   c) workflow_state.json 已完成 step 数 / 总 step（13 步流程进度）
+                    #   d) log 末行（LLM 最近输出 / Hard Block Rewrite 提示）
+                    local size_changed=0
+                    local cur_step=""
+                    if [[ -n "$watch_target" ]] && [[ -f "$watch_target" ]]; then
+                        local size char_count growth=""
+                        size=$(wc -c <"$watch_target" 2>/dev/null | tr -d ' ' || echo 0)
+                        char_count=$(wc -m <"$watch_target" 2>/dev/null | tr -d ' ' || echo 0)
+                        if (( size > last_size )); then
+                            local delta=$((size - last_size))
+                            growth=" (+${delta}B)"
+                            size_changed=1
+                        elif (( size == last_size && last_size > 0 )); then
+                            growth=" (无增长)"
+                        fi
+                        observation="$(basename "$watch_target"): ${char_count}字${growth}"
+                        last_size=$size
+                    fi
+                    # 看 workflow_state.json 当前 step + 已完成 step 数
+                    if [[ -n "${PROJECT_ROOT:-}" ]] && [[ -f "$PROJECT_ROOT/.ink/workflow_state.json" ]]; then
+                        local step_info
+                        step_info=$($PY_LAUNCHER -c "
+import json, sys
+try:
+    d = json.load(open('$PROJECT_ROOT/.ink/workflow_state.json'))
+    task = d.get('current_task') or {}
+    cs = task.get('current_step') or {}
+    sid = cs.get('id', '')
+    sname = cs.get('name', '')
+    completed = len(task.get('completed_steps', []) or [])
+    parts = []
+    if sid:
+        parts.append(f'当前 {sid} {sname}'.strip())
+    if completed > 0:
+        parts.append(f'{completed}/13 已完成')
+    print(' | '.join(parts))
+except Exception:
+    pass
+" 2>/dev/null)
+                        cur_step=$(echo "$step_info" | sed -n 's/^当前 \([^|]*\).*$/\1/p' | xargs 2>/dev/null)
+                        if [[ -n "$step_info" ]]; then
+                            observation="${observation}｜${step_info}"
+                        fi
+                    fi
+                    # log 末行（LLM 最近输出，含 Hard Block Rewrite 提示等）
+                    if [[ -f "$log_file" ]]; then
+                        local last_log_line
+                        last_log_line=$(awk 'NF{last=$0} END{print last}' "$log_file" 2>/dev/null)
+                        if [[ -n "$last_log_line" ]]; then
+                            observation="${observation}｜log: ${last_log_line:0:80}"
+                        fi
+                    fi
+
+                    # 卡住检测：write 模式下，字数 + step 都没变化时累积停滞时长
+                    if (( stall_threshold > 0 )); then
+                        local step_changed=0
+                        if [[ "$cur_step" != "$last_step" ]]; then
+                            step_changed=1
+                        fi
+                        last_step="$cur_step"
+
+                        if (( size_changed == 0 && step_changed == 0 )); then
+                            if (( stall_since == 0 )); then
+                                stall_since=$now
+                            fi
+                            local stall_dur=$((now - stall_since))
+                            if (( stall_dur >= stall_threshold )) && [[ -n "$parent_pid" ]]; then
+                                # 触发 SIGTERM：让 watchdog 接手清理 + 父流程进入 retry
+                                echo "    🚨 [心跳 ${elapsed_str}] 检测到卡住：${stall_dur}s 内字数无增长且 step 未变化 → 终止子进程进入重试" >&2
+                                kill -TERM "$parent_pid" 2>/dev/null || true
+                                pkill -TERM -P "$parent_pid" 2>/dev/null || true
+                                if [[ -n "${INK_AUTO_PID:-}" ]]; then
+                                    pkill -TERM -P "$INK_AUTO_PID" -f "claude -p\|gemini --yolo\|codex --approval-mode" 2>/dev/null || true
+                                fi
+                                exit 0
+                            elif (( stall_dur >= stall_threshold / 2 )); then
+                                # 接近一半时提前预警，不立即终止
+                                echo "    ⚠️  [心跳 ${elapsed_str}] 已停滞 ${stall_dur}s（阈值 ${stall_threshold}s）：再无进展将终止" >&2
+                            fi
+                        else
+                            stall_since=0  # 任何变化重置计数
+                        fi
+                    fi
+                    ;;
+            esac
+
+            local op_label
+            case "$op" in
+                init)  op_label="ink-init" ;;
+                plan)  op_label="ink-plan" ;;
+                write) op_label="ink-write" ;;
+                *)     op_label="$op" ;;
+            esac
+
+            echo "    ⏱️  [心跳 ${elapsed_str}] ${op_label} 进行中｜${observation}" >&2
+        done
+    ) &
+    HEARTBEAT_PID=$!
+}
+
+_stop_progress_heartbeat() {
+    if [[ -n "${HEARTBEAT_PID:-}" ]]; then
+        kill -TERM "$HEARTBEAT_PID" 2>/dev/null || true
+        wait "$HEARTBEAT_PID" 2>/dev/null || true
+        HEARTBEAT_PID=""
+    fi
+}
+
+# ═══════════════════════════════════════════
 # CLI 进程启动通用函数
 # ═══════════════════════════════════════════
 
@@ -715,16 +1059,23 @@ run_cli_process() {
     # $1 prompt
     # $2 log_file
     # $3 (可选) timeout_s，覆盖默认值
+    # $4 (可选) op：init / plan / write —— 用于心跳监测产物文件
+    # $5 (可选) watch_target：write 模式下的章节文件路径
     #
     # 默认超时按操作类型分档（由调用方通过 $3 传入；不传则取 INK_AUTO_CHAPTER_TIMEOUT）：
-    #   - ink-write 单章：1800s（30min）—— 含 5 个 checker + Hard Block Rewrite 多轮
+    #   - ink-write 单章：3600s（60min）—— 含 5 个 checker + Hard Block Rewrite 最坏 5 轮
     #   - ink-plan 整卷：3600s（60min）—— 30+ 章纲一次生成
     #   - ink-init：     1800s（30min）—— 一次性初始化
-    # 旧默认 1200s 在 plan 路径几乎必然触发 watchdog（用户实测 2026-04-29 反馈）。
+    # 1800s 在用户实测 2026-04-29 cipher 第 2 章触发 watchdog；提到 3600s 给极端情况留余量。
     local prompt="$1"
     local log_file="$2"
-    local timeout_s="${3:-${INK_AUTO_CHAPTER_TIMEOUT:-1800}}"
+    local timeout_s="${3:-${INK_AUTO_CHAPTER_TIMEOUT:-3600}}"
+    local op="${4:-}"
+    local watch_target="${5:-}"
     local exit_code=0
+
+    # 启动进度心跳（每 30s 报一次产物状态 + 异常关键词 + 卡住检测）
+    # 注意：parent_pid 需要 CHILD_PID 就绪后再传，所以心跳启动放到 pipeline 启动之后
 
     case $PLATFORM in
         claude)
@@ -734,6 +1085,7 @@ run_cli_process() {
                 2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             (( timeout_s > 0 )) && _start_cli_watchdog "$timeout_s" "$CHILD_PID"
+            [[ -n "$op" ]] && _start_progress_heartbeat "$op" "$log_file" "$watch_target" "$CHILD_PID"
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             _stop_cli_watchdog
             CHILD_PID=""
@@ -743,6 +1095,7 @@ run_cli_process() {
                 2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             (( timeout_s > 0 )) && _start_cli_watchdog "$timeout_s" "$CHILD_PID"
+            [[ -n "$op" ]] && _start_progress_heartbeat "$op" "$log_file" "$watch_target" "$CHILD_PID"
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             _stop_cli_watchdog
             CHILD_PID=""
@@ -752,18 +1105,42 @@ run_cli_process() {
                 2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             (( timeout_s > 0 )) && _start_cli_watchdog "$timeout_s" "$CHILD_PID"
+            [[ -n "$op" ]] && _start_progress_heartbeat "$op" "$log_file" "$watch_target" "$CHILD_PID"
             wait $CHILD_PID 2>/dev/null && exit_code=0 || exit_code=$?
             _stop_cli_watchdog
             CHILD_PID=""
             ;;
     esac
 
-    # US-012 defensive 日志：CLI 子进程非零退出时显式打到 stderr
-    # （模仿 US-011 ralph.sh 的 LLM_EXIT 模式；成功时静默避免污染）
+    # 停止心跳（成功/失败都要停，避免后台残留）
+    _stop_progress_heartbeat
+
+    # US-012 defensive 日志：CLI 子进程非零退出时显式打到 stderr（机器可读 marker，被回归测试守护）
+    # 同时打一行中文人类可读说明 + 透出 log 中的具体异常信号，避免"只看到 exit 1 不知道为啥"。
     if (( exit_code == 124 || exit_code == 137 || exit_code == 143 )); then
         echo "[ink-auto] llm_exit=$exit_code timeout=${timeout_s}s tool=$PLATFORM log=$log_file" >&2
+        echo "[ink-auto] ❌ LLM 子进程超时（${timeout_s}s 内未完成，被 watchdog 强制结束）" >&2
     elif (( exit_code != 0 )); then
         echo "[ink-auto] llm_exit=$exit_code tool=$PLATFORM log=$log_file" >&2
+        echo "[ink-auto] ❌ LLM 子进程非零退出 (code=$exit_code)" >&2
+    fi
+    # 失败时不论退出码，扫一遍 log 提取最具体的异常信号给用户
+    if (( exit_code != 0 )) && [[ -f "$log_file" ]]; then
+        local alert_regex="${_HEARTBEAT_ALERT_REGEX:-rate.?limit|429|503|502|504|timeout|overloaded|connection.?refused|api.?error}"
+        local last_alert
+        last_alert=$(tail -n 200 "$log_file" 2>/dev/null \
+            | grep -iE "$alert_regex" \
+            | tail -n 3 || true)
+        if [[ -n "$last_alert" ]]; then
+            echo "[ink-auto] 🔍 log 中检测到的 API/网络异常信号（最近 3 条）：" >&2
+            echo "$last_alert" | sed 's/^/    | /' >&2
+        fi
+        local last_lines
+        last_lines=$(tail -n 5 "$log_file" 2>/dev/null || true)
+        if [[ -n "$last_lines" ]]; then
+            echo "[ink-auto] 📜 log 末尾 5 行（用于诊断）：" >&2
+            echo "$last_lines" | sed 's/^/    | /' >&2
+        fi
     fi
 
     return $exit_code
@@ -787,7 +1164,9 @@ run_chapter() {
     local log_file="$LOG_DIR/ch${padded}-$(date +%Y%m%d-%H%M%S).log"
     local prompt="使用 Skill 工具加载 \"ink-write\" 并完整执行所有步骤（Step 0 到 Step 6）。项目目录: ${PROJECT_ROOT}。禁止省略任何步骤，禁止提问，全程自主执行。完成后输出 INK_DONE。失败则输出 INK_FAILED。"
 
-    if ! run_cli_process "$prompt" "$log_file"; then
+    # write 心跳：观测当前章节文件的字数增长 + workflow_state.json 当前 step
+    local watch_file="${PROJECT_ROOT}/正文/第${padded}章.md"
+    if ! run_cli_process "$prompt" "$log_file" "${INK_AUTO_CHAPTER_TIMEOUT:-3600}" "write" "$watch_file"; then
         echo "⚠️  CLI 进程异常退出"
         echo "    日志文件：$log_file"
         return 1
@@ -806,7 +1185,8 @@ retry_chapter() {
     local log_file="$LOG_DIR/ch${padded}-retry-$(date +%Y%m%d-%H%M%S).log"
     local prompt="使用 Skill 工具加载 \"ink-resume\"，恢复第${ch}章的写作并完成所有剩余步骤。项目目录: ${PROJECT_ROOT}。禁止提问，全程自主执行。完成后输出 INK_DONE。"
 
-    if ! run_cli_process "$prompt" "$log_file"; then
+    local watch_file="${PROJECT_ROOT}/正文/第${padded}章.md"
+    if ! run_cli_process "$prompt" "$log_file" "${INK_AUTO_CHAPTER_TIMEOUT:-3600}" "write" "$watch_file"; then
         echo "⚠️  重试进程异常退出"
         echo "    日志文件：$log_file"
         return 1
@@ -850,8 +1230,8 @@ auto_generate_outline() {
     local log_file="$LOG_DIR/plan-vol${vol}-$(date +%Y%m%d-%H%M%S).log"
     local prompt="使用 Skill 工具加载 \"ink-plan\"。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${PROJECT_ROOT}。禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
 
-    # ink-plan 整卷大纲耗时最长（30+ 章纲），用 INK_AUTO_PLAN_TIMEOUT（默认 3600s）
-    run_cli_process "$prompt" "$log_file" "${INK_AUTO_PLAN_TIMEOUT:-3600}" || true
+    # ink-plan 整卷大纲耗时最长（30+ 章纲），用 INK_AUTO_PLAN_TIMEOUT（默认 3600s）+ plan 心跳
+    run_cli_process "$prompt" "$log_file" "${INK_AUTO_PLAN_TIMEOUT:-3600}" "plan" || true
 
     PLAN_COUNT=$((PLAN_COUNT + 1))
     sleep "$CHECKPOINT_COOLDOWN"
@@ -896,8 +1276,8 @@ auto_plan_volume() {
     local log_file="$LOG_DIR/plan-vol${vol}-$(date +%Y%m%d-%H%M%S).log"
     local prompt="使用 Skill 工具加载 \"ink-plan\"。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${PROJECT_ROOT}。禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
 
-    # ink-plan 整卷大纲耗时最长，用 INK_AUTO_PLAN_TIMEOUT（默认 3600s）
-    run_cli_process "$prompt" "$log_file" "${INK_AUTO_PLAN_TIMEOUT:-3600}" || true
+    # ink-plan 整卷大纲耗时最长，用 INK_AUTO_PLAN_TIMEOUT（默认 3600s）+ plan 心跳
+    run_cli_process "$prompt" "$log_file" "${INK_AUTO_PLAN_TIMEOUT:-3600}" "plan" || true
 
     PLAN_COUNT=$((PLAN_COUNT + 1))
     sleep "$CHECKPOINT_COOLDOWN"
@@ -977,8 +1357,8 @@ _v27_init_if_needed() {
     local init_log="${PROJECT_ROOT}/.ink-auto-init-$(date +%Y%m%d-%H%M%S).log"
     local init_prompt="使用 Skill 工具加载 \"ink-init\"。模式：--quick --blueprint ${blueprint_path}。draft.json 路径: ${draft_path}。项目目录: ${PROJECT_ROOT}（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 ${PROJECT_ROOT}/.ink/state.json）。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
     echo "⚙️  启动自动初始化（CLI 子进程，约 5-15 分钟）..."
-    # ink-init 一次性初始化，用 INK_AUTO_INIT_TIMEOUT（默认 1800s）
-    if ! run_cli_process "$init_prompt" "$init_log" "${INK_AUTO_INIT_TIMEOUT:-1800}"; then
+    # ink-init 一次性初始化，用 INK_AUTO_INIT_TIMEOUT（默认 1800s）+ init 心跳
+    if ! run_cli_process "$init_prompt" "$init_log" "${INK_AUTO_INIT_TIMEOUT:-1800}" "init"; then
         echo "❌ 自动初始化失败，日志：${init_log}"
         echo "   蓝本保留：${blueprint_path}"
         echo "   你可以手动重跑：claude -p '使用 ink-init --quick --blueprint ${blueprint_path}'"
@@ -1645,6 +2025,9 @@ for i in $(seq 1 "$N"); do
         echo "[$i/$N] ⚠️  ${FAIL_REASON}，启动重试（最多 ${MAX_RETRIES} 轮）..."
         report_event "⚠️" "写作验证失败" "第${NEXT_CH}章 ${FAIL_REASON}，最多 ${MAX_RETRIES} 轮"
 
+        # 重试前归档当前不完整草稿，避免 retry_chapter 误判为已存在
+        _archive_partial_chapter "$NEXT_CH"
+
         RETRY_ROUND=0
         RETRY_VERIFIED=0
         while (( RETRY_ROUND < MAX_RETRIES )); do
@@ -1659,6 +2042,8 @@ for i in $(seq 1 "$N"); do
                 RETRY_VERIFIED=1
                 break
             fi
+            # 本轮失败：归档半成品再进入下一轮
+            _archive_partial_chapter "$NEXT_CH"
         done
 
         if (( RETRY_VERIFIED == 1 )); then
@@ -1670,9 +2055,14 @@ for i in $(seq 1 "$N"); do
 
             run_checkpoint "$NEXT_CH"
         else
+            # 最终失败：归档残留半成品，避免下次 ink-auto 误判
+            _archive_partial_chapter "$NEXT_CH"
             echo ""
             echo "═══════════════════════════════════════"
             echo "  ❌ 第${NEXT_CH}章写作失败，批量写作中止"
+            echo "═══════════════════════════════════════"
+            echo "  💡 提示：再次运行 /ink-auto ${N} 会从第${NEXT_CH}章重新开始"
+            echo "      不完整草稿（如有）已自动归档到 .ink/recovery_backups/partial_chapters/"
             echo "═══════════════════════════════════════"
             EXIT_REASON="第${NEXT_CH}章写作失败（${FAIL_REASON}，${MAX_RETRIES}轮重试仍未通过）"
             report_event "❌" "批量写作中止" "第${NEXT_CH}章 ${FAIL_REASON}，已完成${COMPLETED}章"

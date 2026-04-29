@@ -64,6 +64,41 @@ Use progressive disclosure and load only what current step requires:
 7. Enrich existing setting files from volume outline (in-place incremental).
 8. Validate + save + update state（落盘后标记被消化的 debts 为 resolved）。
 
+## 进度输出规范（hard constraint，每个 Step 必须打）
+
+为了让用户跑 `/ink-auto` 时能在终端实时看到进度（而不是黑屏 30 分钟），**每个 Step 开始和完成时都必须**用 Bash 工具 echo 一行 `[INK-PROGRESS]` 标记：
+
+| 时机 | Bash 命令 | 终端显示 |
+|---|---|---|
+| Step 进入前 | `echo "[INK-PROGRESS] step_started Step N"` | `⏳ Step N <名称> ← 执行中...` |
+| Step 完成后 | `echo "[INK-PROGRESS] step_completed Step N <耗时秒数>"` | `✅ Step N <名称> (Xs)` |
+| Step 跳过（条件未触发） | `echo "[INK-PROGRESS] step_skipped Step N"` | `⏭ Step N <名称> (跳过)` |
+
+可用的 step_id 与含义（必须从此表里挑，不要自己造名）：
+
+| step_id | 名称 |
+|---|---|
+| Step 1 | 加载项目数据 |
+| Step 1.5 | 加载 propagation debts |
+| Step 2 | 设定集基线补齐 |
+| Step 3 | 选卷 |
+| Step 4 | 节拍表生成 |
+| Step 4.5 | 时间线生成 |
+| Step 5 | 卷骨架生成 |
+| Step 6 | 章纲分批生成 |
+| Step 7 | 设定集回写 |
+| Step 8 | 校验+落盘 |
+| Step 99 | 策划期审查 |
+
+例（在每个 Step 章节开头插入）：
+```bash
+echo "[INK-PROGRESS] step_started Step 4"
+# ... 这一步的实际工作 ...
+echo "[INK-PROGRESS] step_completed Step 4 152"
+```
+
+耗时秒数取整即可，命令失败也不阻断主流程（这是单纯的进度打点，不是 critical path）。
+
 ## 1) Load project data
 ```bash
 cat "$PROJECT_ROOT/.ink/state.json"
