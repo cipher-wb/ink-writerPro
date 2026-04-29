@@ -14,6 +14,7 @@ from __future__ import annotations
 import asyncio
 import json
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -46,7 +47,7 @@ def _make_project(tmp_path: Path, *, bad: bool = True) -> Path:
     (text_dir / filename).write_text(body * 10, encoding="utf-8")
 
     db_path = ink_dir / "index.db"
-    with sqlite3.connect(str(db_path)) as conn:
+    with closing(sqlite3.connect(str(db_path))) as conn:
         conn.execute("""
             CREATE TABLE review_metrics (
                 start_chapter INTEGER NOT NULL,

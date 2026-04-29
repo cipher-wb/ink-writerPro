@@ -42,6 +42,7 @@ def jsonl_dir(tmp_path, fixtures_dir: Path) -> Path:
         cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=True,
     )
     assert proc.returncode == 0, proc.stderr
@@ -63,6 +64,7 @@ def _run_validate(
         cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
 
 

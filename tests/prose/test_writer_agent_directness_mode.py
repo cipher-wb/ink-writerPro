@@ -43,9 +43,15 @@ def test_directness_mode_section_present(spec_text: str) -> None:
 
 
 def test_activation_conditions_declared(spec_text: str) -> None:
-    """Activation must mention chapter ∈ [1,3] OR scene_mode ∈ {combat, climax, high_point}."""
+    """Activation must declare US-006 full-scene mode and keep legacy重点 buckets visible."""
+    assert "全场景" in spec_text, (
+        "Directness Mode must declare US-006 full-scene activation explicitly"
+    )
+    assert "directness_skip=true" in spec_text, (
+        "Directness Mode must document the only supported skip override"
+    )
     assert "chapter_no ∈ [1, 2, 3]" in spec_text or "chapter_no ∈ [1,2,3]" in spec_text, (
-        "Directness Mode must declare chapter ∈ [1,3] activation explicitly"
+        "Directness Mode must keep chapter ∈ [1,3] as a visible threshold bucket"
     )
     for mode in ("combat", "climax", "high_point"):
         assert mode in spec_text, f"Activation must name scene_mode = {mode!r}"

@@ -63,12 +63,13 @@ graph TB
 
 ### simplicity 域场景感知召回（v22）
 
-`config/editor-wisdom.yaml:directness_recall` 注册场景感知召回：当
-`chapter ∈ [1,3]` 或 `scene_mode ∈ {combat, climax, high_point}` 时，
+`config/editor-wisdom.yaml:directness_recall` 注册场景感知召回：默认
+`chapter ∈ [1,3]`、7 值 `scene_mode` 或缺失 `scene_mode`（按 `other` 兜底）都会激活，
 `ink_writer/editor_wisdom/writer_injection.py:_enforce_category_floor` 保证
 simplicity 类别召回条数不少于 5（与 opening/taboo/hook 同机制）；`applies_to`
-字段扩展支持 `combat` / `climax` / `high_point`，与既有 `golden_three` /
-`all_chapters` / `opening_only` 并存。scoring_dimensions 同步新增
+字段扩展支持 7 值 `scene_mode`（golden_three / combat / climax / high_point /
+slow_build / emotional / other），与 `all_chapters` / `opening_only` 并存。
+scoring_dimensions 同步新增
 `directness` 维度，prose_categories 追加 simplicity 作为硬阻断类别。
 
 ## 如何添加新规则
@@ -118,7 +119,7 @@ A: 仅支持以下枚举值（定义在 `schemas/editor-rules.schema.json`）：
 - `all_chapters` — 适用于所有章节（默认）
 - `golden_three` — 仅适用于黄金三章（第 1-3 章）
 - `opening_only` — 仅适用于开篇
-- `combat` / `climax` / `high_point` — v22 新增，simplicity 域场景感知，随 `scene_mode` 激活
+- `combat` / `climax` / `high_point` / `slow_build` / `emotional` / `other` — v22/US-006 场景感知，随 `scene_mode` 激活；默认策略下与 `golden_three` 一起覆盖全场景
 
 LLM 抽取的自由文本值会被自动过滤，无效值回退为 `["all_chapters"]`。类别属于 `opening`、`hook`、`golden_finger`、`character` 的规则会自动添加 `golden_three` 标签。
 

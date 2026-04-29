@@ -14,7 +14,21 @@ THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$THIS_DIR/../.." && pwd)"
 SCRIPT="$THIS_DIR/check_plugin_version_consistency.py"
 
-PYTHON_LAUNCHER="${PYTHON_LAUNCHER:-python3}"
+find_python_launcher_bash() {
+  if command -v python3 >/dev/null 2>&1; then # c8-ok: detector primitive
+    PYTHON_LAUNCHER="python3" # c8-ok: detector primitive
+  elif command -v python >/dev/null 2>&1; then
+    PYTHON_LAUNCHER="python"
+  else
+    echo "Python launcher not found" >&2
+    exit 127
+  fi
+}
+
+PYTHON_LAUNCHER="${PYTHON_LAUNCHER:-}"
+if [[ -z "$PYTHON_LAUNCHER" ]]; then
+  find_python_launcher_bash
+fi
 
 cd "$REPO_ROOT"
 exec $PYTHON_LAUNCHER -X utf8 "$SCRIPT" "$@"

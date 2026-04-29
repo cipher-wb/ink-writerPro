@@ -2,12 +2,12 @@
 
 Five scenarios covering spec §6.2 acceptance:
 
-1. ``test_rules_conversion_creates_402_cases_with_severity_split`` — real v23
+1. ``test_rules_conversion_creates_current_cases_with_severity_split`` — current
    ``data/editor-wisdom/rules.json`` (skipped if missing) goes through
-   ``convert_rules_to_cases`` end-to-end; verifies created=402 +
-   by_severity={hard:236, soft:147, info:19}.
+   ``convert_rules_to_cases`` end-to-end; verifies created=685 +
+   by_severity={hard:399, soft:258, info:28}.
 2. ``test_active_pending_counts_after_conversion`` — same real rules.json,
-   verifies active=236 (hard→P1 active) + pending=166 (soft+info).
+   verifies active=399 (hard→P1 active) + pending=286 (soft+info).
 3. ``test_approve_batch_yaml_changes_status`` — ingest 5 pending cases,
    write a batch YAML with mixed approve/reject/defer actions, assert each
    case status transitioned correctly.
@@ -34,11 +34,11 @@ _REAL_RULES_PATH = _REPO_ROOT / "data" / "editor-wisdom" / "rules.json"
 
 
 # ---------------------------------------------------------------------------
-# 1) rules.json → 402 cases split by severity
+# 1) rules.json → current cases split by severity
 # ---------------------------------------------------------------------------
 
 
-def test_rules_conversion_creates_402_cases_with_severity_split(
+def test_rules_conversion_creates_current_cases_with_severity_split(
     tmp_path: Path,
 ) -> None:
     if not _REAL_RULES_PATH.exists():
@@ -52,8 +52,8 @@ def test_rules_conversion_creates_402_cases_with_severity_split(
     )
 
     assert report.failed == 0, report.failures[:5]
-    assert report.created == 402, report
-    assert report.by_severity == {"hard": 236, "soft": 147, "info": 19}, (
+    assert report.created == 685, report
+    assert report.by_severity == {"hard": 399, "soft": 258, "info": 28}, (
         report.by_severity
     )
 
@@ -79,9 +79,9 @@ def test_active_pending_counts_after_conversion(tmp_path: Path) -> None:
     for case in store.iter_cases():
         by_status[case.status.value] = by_status.get(case.status.value, 0) + 1
 
-    # hard → active P1 = 236; soft (147) + info (19) = 166 pending.
-    assert by_status.get("active") == 236, by_status
-    assert by_status.get("pending") == 166, by_status
+    # hard → active P1 = 399; soft (258) + info (28) = 286 pending.
+    assert by_status.get("active") == 399, by_status
+    assert by_status.get("pending") == 286, by_status
 
 
 # ---------------------------------------------------------------------------

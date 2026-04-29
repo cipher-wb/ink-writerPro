@@ -31,6 +31,16 @@ REPO = Path(__file__).resolve().parents[1]
 EVAL_DIR = REPO / "reports" / "eval"
 REPORT_MD = EVAL_DIR / "anti_ai_overhaul_2026-04.md"
 
+_RUNTIME_COMPAT_DIR = REPO / "ink-writer" / "scripts"
+if str(_RUNTIME_COMPAT_DIR) not in sys.path:
+    sys.path.insert(0, str(_RUNTIME_COMPAT_DIR))
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+
+    _enable_utf8_stdio()
+except Exception:
+    pass
+
 _MOCK_OLD_TEXT = """
 第一章 初入江湖
 

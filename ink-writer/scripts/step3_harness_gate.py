@@ -32,6 +32,7 @@ import json
 import logging
 import sys
 from collections.abc import Callable
+from contextlib import closing
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -48,7 +49,7 @@ def _load_review_data_from_index_db(project_root: Path, chapter_num: int) -> dic
         return None
     try:
         import sqlite3
-        with sqlite3.connect(str(db_path)) as conn:
+        with closing(sqlite3.connect(str(db_path))) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(

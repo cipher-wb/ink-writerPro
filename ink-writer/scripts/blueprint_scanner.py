@@ -52,6 +52,13 @@ if __name__ == "__main__":
     import argparse
     import sys
 
+    try:
+        from runtime_compat import enable_windows_utf8_stdio
+
+        enable_windows_utf8_stdio()
+    except Exception:
+        pass
+
     parser = argparse.ArgumentParser(description="Scan a directory for a usable blueprint .md")
     parser.add_argument("--cwd", required=True, help="Directory to scan")
     args = parser.parse_args()

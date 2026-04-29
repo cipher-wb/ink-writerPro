@@ -34,7 +34,7 @@ def _run(
         args += ["--min-cases", str(min_cases)]
     if top_complaints is not None:
         args += ["--top-complaints", str(top_complaints)]
-    return subprocess.run(args, capture_output=True, text=True)
+    return subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
 
 
 @pytest.fixture

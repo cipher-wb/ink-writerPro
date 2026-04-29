@@ -191,12 +191,12 @@ class TestM5Methodology:
 
 class TestM6SensoryRegression:
     def test_slow_build_retains_sensory_directness_filters(self) -> None:
-        """Verify US-007 zero-regression guarantee programmatically."""
+        """Verify US-006 full-scene directness filtering programmatically."""
         result = vpd.measure_m6_sensory_regression()
         assert result["passed"] is True
         assert result["directness_scene_filtered"] is True
-        assert result["slow_build_scene_retained"] is True
-        assert result["default_kwargs_retained"] is True
+        assert result["slow_build_scene_filtered"] is True
+        assert result["default_kwargs_filtered"] is True
 
 
 class TestM7SimplicityRecall:
@@ -228,7 +228,7 @@ class TestScoreChapter:
         assert cm.chapter_no == 1
         assert cm.severity in {"green", "yellow", "red"}
         assert cm.char_count > 0
-        assert len(cm.dimensions) == 5
+        assert len(cm.dimensions) == 7
         assert set(cm.dim_scores().keys()) == set(vpd._ABSOLUTE_METRIC_KEYS)
         assert cm.blacklist_hits >= 0
 

@@ -21,7 +21,15 @@ class InjectInto:
 class DirectnessRecall:
     """v22 US-004: scene-aware simplicity recall config for writer-injection."""
 
-    scene_modes: tuple[str, ...] = ("combat", "climax", "high_point")
+    scene_modes: tuple[str, ...] = (
+        "golden_three",
+        "combat",
+        "climax",
+        "high_point",
+        "slow_build",
+        "emotional",
+        "other",
+    )
     floor_categories: tuple[str, ...] = ("simplicity",)
     floor_per_category: int = 5
 

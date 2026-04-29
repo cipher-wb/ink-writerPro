@@ -5,7 +5,7 @@
   2. ``is_relaxed_issue`` 白名单命中（含 hard-block 不豁免护栏）
   3. ``PROSE_IMPACT_RELAXED_RULES`` / ``FLOW_NATURALNESS_RELAXED_RULES`` 常量稳定性
   4. ``arbitration.collect_issues_from_review_metrics`` 在直白模式下过滤两 checker
-     白名单 rule code，非直白模式全量保留——零退化硬约束
+     白名单 rule code；US-006 起全场景使用同一 relax 判定，hard-block 不豁免
   5. agent spec 文件（prose-impact-checker.md / flow-naturalness-checker.md）的
      关键门控文本锁定
   6. 端到端：combat 场景下 arbitrate_generic 不因 SHOT_MONOTONY / RATIO_DEVIATION
@@ -108,7 +108,7 @@ def test_flow_naturalness_hard_block_rules_not_relaxed():
     for rule in forbidden_to_relax:
         assert rule not in FLOW_NATURALNESS_RELAXED_RULES, (
             f"{rule} must never be relaxed — would regress "
-            f"(非直白 checker 也依赖这些 rule 做 hard block)"
+            f"(非豁免 checker 也依赖这些 rule 做 hard block)"
         )
 
 
@@ -236,8 +236,8 @@ def test_is_relaxed_issue_hard_block_not_relaxed():
     )
 
 
-def test_is_relaxed_issue_non_directness_keeps_all_rules():
-    # 非激活场景 → 即便命中白名单 rule code，也返回 False（保持原规则链路）
+def test_is_relaxed_issue_requires_relax_flag():
+    # 显式关闭 relax flag 时，即便命中白名单 rule code，也返回 False。
     assert (
         is_relaxed_issue(
             PROSE_IMPACT_CHECKER_NAME,

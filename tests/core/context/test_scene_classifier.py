@@ -154,7 +154,7 @@ def test_resolve_no_explicit_uses_classifier():
 
 
 # ---------------------------------------------------------------------------
-# 与 directness_checker.is_activated 的一致性（scene_mode → 激活映射稳定）
+# 与 directness_checker.is_activated 的一致性（US-006 全场景激活）
 # ---------------------------------------------------------------------------
 
 
@@ -167,9 +167,9 @@ def test_resolve_no_explicit_uses_classifier():
         (50, "决战终局", True),   # climax
         (50, "反转打脸", True),   # high_point
         (50, "对决激战", True),   # combat
-        (50, "告别思念", False),  # emotional → 不激活
-        (50, "日常铺垫", False),  # slow_build → 不激活
-        (50, "普通叙事", False),  # other → 不激活
+        (50, "告别思念", True),   # emotional → US-006 后全场景激活
+        (50, "日常铺垫", True),   # slow_build → US-006 后全场景激活
+        (50, "普通叙事", True),   # other → US-006 后全场景激活
     ],
 )
 def test_classify_result_consistent_with_is_activated(chapter, outline, expect_active):

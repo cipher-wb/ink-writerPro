@@ -101,12 +101,23 @@ def _find_volume_outline_file(project_root: Path, chapter_num: int) -> Path | No
 
 
 def _extract_outline_section(content: str, chapter_num: int) -> str | None:
+    """提取第 chapter_num 章在卷大纲文件中的章纲段落。
+
+    支持两种章节标题级别（ink-plan 当前产出 `##`，老模板/某些 skill 产出 `###`）：
+        ## 第 1 章：xxx        ← ink-plan 默认，2026-04-29 用户实测
+        ### 第 1 章：xxx       ← 旧模板兼容
+    标题与"章"之间允许有空格，冒号支持中英文。
+    """
     patterns = [
-        rf"###\s*第\s*{chapter_num}\s*章[：:]\s*(.+?)(?=###\s*第\s*\d+\s*章|##\s|$)",
-        rf"###\s*第{chapter_num}章[：:]\s*(.+?)(?=###\s*第\d+章|##\s|$)",
+        # ### 三级标题（旧模板）：下一节边界 = ### 第 N 章 / ## 任何标题 / 文末
+        rf"###\s*第\s*{chapter_num}\s*章[：:]\s*(.+?)(?=###\s*第\s*\d+\s*章|^##\s|\Z)",
+        rf"###\s*第{chapter_num}章[：:]\s*(.+?)(?=###\s*第\d+章|^##\s|\Z)",
+        # ## 二级标题（ink-plan 当前产出）：下一节边界 = ## 第 N 章 / # 任何标题 / 文末
+        rf"##\s*第\s*{chapter_num}\s*章[：:]\s*(.+?)(?=##\s*第\s*\d+\s*章|^#\s|\Z)",
+        rf"##\s*第{chapter_num}章[：:]\s*(.+?)(?=##\s*第\d+章|^#\s|\Z)",
     ]
     for pattern in patterns:
-        match = re.search(pattern, content, re.DOTALL)
+        match = re.search(pattern, content, re.DOTALL | re.MULTILINE)
         if match:
             return match.group(0).strip()
     return None

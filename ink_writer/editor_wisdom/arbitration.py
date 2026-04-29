@@ -343,14 +343,11 @@ def collect_issues_from_review_metrics(
     ``config/arbitration.yaml`` (cached at import time). Callers wanting a
     one-off override (tests, migrations) can still pass an explicit tuple.
 
-    US-007: ``scene_mode`` / ``chapter_no`` allow callers to filter out
-    ``sensory-immersion-checker`` issues whenever directness mode is active
-    (``scene_mode ∈ {golden_three, combat, climax, high_point}`` or
-    ``scene_mode is None`` and ``chapter_no ∈ [1, 3]``). This mirrors the
-    agent-spec skip behavior so stale / mis-configured sensory violations
-    cannot reach polish-agent as Red in directness scenes. Non-directness
-    scenes (``slow_build`` / ``emotional`` / ``other``) retain the full
-    sensory-immersion pipeline — 零退化硬约束.
+    US-006/US-007: ``scene_mode`` / ``chapter_no`` allow callers to filter out
+    ``sensory-immersion-checker`` issues whenever directness mode is active.
+    US-006 made directness mode full-scene by default, so stale /
+    mis-configured sensory violations cannot reach polish-agent as Red in any
+    normal automated scene.
 
     US-010: same activation signal additionally drops "镜头多样性 / 感官丰富度
     / 对话比例" whitelisted rule codes from ``prose-impact-checker`` &

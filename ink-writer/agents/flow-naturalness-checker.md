@@ -27,12 +27,11 @@ model: inherit
 
 ## 直白模式阈值放宽 (v22 US-010)
 
-> **冲突解耦**：直白模式下"对话黄金比例"相关软规则被 arbitration 豁免——战斗/高潮/爽点章天然偏叙述或偏对话，原 40-50% / 30-40% / 10-20% 目标区间未必合理。既有的 `combat_heavy_chapter` 豁免语义被扩展到全部直白场景。其他六维（信息密度 / 融入方式 / 过渡流畅 / 对话辨识 / 语气一致 / voice 一致）保持原判定。非直白场景零退化。
+> **冲突解耦**：US-006 起直白模式全场景激活，"对话黄金比例"相关软规则被 arbitration 豁免。战斗/高潮/爽点章天然偏叙述或偏对话，慢节奏/情感章也不应为满足固定比例而牺牲自然叙事。其他六维（信息密度 / 融入方式 / 过渡流畅 / 对话辨识 / 语气一致 / voice 一致）保持原判定。
 
-**激活条件（任一满足即放宽）**：
+**激活条件**：
 
-- `review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}`
-- 或 `review_bundle.scene_mode` 缺省且 `chapter_no ∈ [1, 2, 3]`（黄金三章兜底）
+- 默认全场景放宽；`review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point, slow_build, emotional, other}` 与 `chapter_no ∈ [1, 2, 3]` 仅作为历史重点场景、普通场景兜底和日志解释保留。
 
 **激活判定（程序化对等）**：`ink_writer.prose.directness_threshold_gates.should_relax_flow_naturalness(scene_mode, chapter_no)`；与 `directness_checker.is_activated` 单源。
 

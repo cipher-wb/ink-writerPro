@@ -86,12 +86,12 @@ golden_three | combat | climax | high_point | slow_build | emotional | other
 
 下游统一激活依据：
 - `writer-agent` → Directness Mode（`## Directness Mode` 章节，见 writer-agent.md）
-- `directness-checker` → ACTIVATION_SCENE_MODES 判定（见 directness-checker.md）
+- `directness-checker` → US-006 全场景激活；scene_mode 仅用于日志、阈值解释和历史重点场景桶（见 directness-checker.md）
 - `sensory-immersion-checker` → 直白模式激活门控（skipped 判定，见 sensory-immersion-checker.md）
 - `polish-agent` → Simplification Pass（见 polish-agent.md）
 
 禁止事项：
-- 不得输出 7 值之外的自定义 scene_mode（writer/checker 会按 `other` 处理，激活失效）
+- 不得输出 7 值之外的自定义 scene_mode（writer/checker 会按 `other` 处理，日志与阈值解释退化）
 - 不得跳过 `meta.scene_mode` 字段（下游消费者假设该字段常驻）
 
 要求：

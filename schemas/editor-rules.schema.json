@@ -33,7 +33,7 @@
         "type": "array",
         "items": {
           "type": "string",
-          "enum": ["all_chapters", "golden_three", "opening_only", "combat", "climax", "high_point"]
+          "enum": ["all_chapters", "golden_three", "opening_only", "combat", "climax", "high_point", "slow_build", "emotional", "other"]
         },
         "minItems": 1,
         "description": "Contexts where this rule applies"

@@ -13,6 +13,17 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_RUNTIME_COMPAT_DIR = _REPO_ROOT / "ink-writer" / "scripts"
+if str(_RUNTIME_COMPAT_DIR) not in sys.path:
+    sys.path.insert(0, str(_RUNTIME_COMPAT_DIR))
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+
+    _enable_utf8_stdio()
+except Exception:
+    pass
+
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")

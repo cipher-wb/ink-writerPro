@@ -147,7 +147,7 @@ model: inherit
 | checker | 关注点 | 场景 | 本 agent 避让 |
 |---------|-------|------|-------------|
 | prose-impact-checker | 镜头/感官/动词锐度/环境共振 | 全场景 | 本 agent 不评镜头/感官 |
-| sensory-immersion-checker | 感官深度/通感/主导轮换 | 非直白场景（US-007 在直白模式 skipped） | 直白模式下本 agent 接替感官相关判定 |
+| sensory-immersion-checker | 感官深度/通感/主导轮换 | 自动流水线全场景 skipped（US-007） | 直白模式下本 agent 接替感官相关判定 |
 | flow-naturalness-checker | 信息节奏/过渡/对话比例 | 全场景 | 本 agent 不评节奏 |
 | editor-wisdom-checker | 规则命中（含 simplicity 主题域） | 全场景 | 规则驱动；本 agent 量化驱动，二者互补 |
 

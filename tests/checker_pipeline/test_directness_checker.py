@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import sqlite3
 import textwrap
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -232,7 +233,7 @@ class TestRunDirectnessCheckEndToEnd:
     注：这里依赖 jieba 分词——首次加载 ~200ms，本文件全部用例共享该模型。
     """
 
-    def test_skipped_for_non_activation_scene(self) -> None:
+    def test_slow_build_runs_after_full_scene_activation(self) -> None:
         """US-006 前 slow_build 不激活；US-006 后全场景激活。"""
         report = run_directness_check(
             _DIRECT_GREEN,
@@ -379,7 +380,7 @@ def _mk_step3_project(tmp_path: Path, chapter_text: str, chapter_no: int) -> Pat
     text_dir.mkdir()
     padded = f"{chapter_no:04d}"
     (text_dir / f"第{padded}章-测试章.md").write_text(chapter_text, encoding="utf-8")
-    with sqlite3.connect(str(ink_dir / "index.db")) as conn:
+    with closing(sqlite3.connect(str(ink_dir / "index.db"))) as conn:
         conn.execute(
             """
             CREATE TABLE review_metrics (
@@ -402,10 +403,10 @@ def _mk_step3_project(tmp_path: Path, chapter_text: str, chapter_no: int) -> Pat
 
 
 class TestStep3RunnerDirectnessAdapter:
-    def test_directness_gate_is_skipped_on_non_activation_chapter(
+    def test_directness_gate_runs_on_chapter_without_scene_mode(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """chapter_no=50 且无 scene_mode → adapter 直接 PASS 不评分。"""
+        """chapter_no=50 且无 scene_mode → 按 other 兜底执行直白评分。"""
         monkeypatch.delenv("INK_STEP3_LLM_CHECKER", raising=False)
         monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
         from ink_writer.checker_pipeline.step3_runner import run_step3

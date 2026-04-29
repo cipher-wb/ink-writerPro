@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import sqlite3
 import sys
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -27,7 +28,7 @@ def test_new_db_does_not_have_protagonist_knowledge(tmp_path, monkeypatch):
     idx = IndexManager(cfg)  # 触发 _init_db
 
     db_path = cfg.ink_dir / "index.db"
-    with sqlite3.connect(str(db_path)) as conn:
+    with closing(sqlite3.connect(str(db_path))) as conn:
         tables = {
             row[0] for row in conn.execute(
                 "SELECT name FROM sqlite_master WHERE type='table'"
@@ -54,7 +55,7 @@ def test_legacy_db_with_protagonist_knowledge_gets_dropped(tmp_path, monkeypatch
     db_path = cfg.ink_dir / "index.db"
 
     # 预先创建旧 protagonist_knowledge
-    with sqlite3.connect(str(db_path)) as conn:
+    with closing(sqlite3.connect(str(db_path))) as conn:
         conn.execute("""
             CREATE TABLE protagonist_knowledge (
                 id INTEGER PRIMARY KEY,
@@ -70,7 +71,7 @@ def test_legacy_db_with_protagonist_knowledge_gets_dropped(tmp_path, monkeypatch
     # 初始化 IndexManager 会触发 DROP TABLE IF EXISTS
     idx = IndexManager(cfg)
 
-    with sqlite3.connect(str(db_path)) as conn:
+    with closing(sqlite3.connect(str(db_path))) as conn:
         tables = {
             row[0] for row in conn.execute(
                 "SELECT name FROM sqlite_master WHERE type='table'"

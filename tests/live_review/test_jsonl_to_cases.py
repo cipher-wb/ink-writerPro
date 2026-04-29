@@ -29,7 +29,7 @@ def _run(jsonl_dir: Path, cases_dir: Path, *, dry_run: bool = False) -> subproce
     ]
     if dry_run:
         args.append("--dry-run")
-    return subprocess.run(args, capture_output=True, text=True)
+    return subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
 
 
 @pytest.fixture

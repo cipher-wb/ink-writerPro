@@ -13,16 +13,17 @@ model: inherit
 
 ## Directness Mode (场景激活硬约束)
 
-> **最高优先级硬约束**。本节在激活条件成立时**优先级高于 L10b/L10e** 的感官丰富度规则——读者要看到剧情推进、角色心理、冲突升级，不是文邹邹的感官排比。违反将被 directness-checker（5 维度评分）带 evidence 驳回，黄金三章命中即 hard block。
+> **最高优先级硬约束**。US-006 起直白模式全场景激活，优先级高于 L10b/L10e 的感官丰富度规则——读者要看到剧情推进、角色心理、冲突升级，不是文邹邹的感官排比。违反将被 directness-checker（7 维度评分）带 evidence 驳回。
 
 ### 激活条件（硬判定）
 
-当以下任一条件成立时，**直白模式**生效：
+默认所有章节、所有 `scene_mode` 均生效；仅当章节元数据显式设置 `directness_skip=true` 时跳过。以下场景仍作为阈值桶/风险重点处理：
 
 - `chapter_no ∈ [1, 2, 3]`（黄金三章——留存率决定生死的开篇）
-- `scene_mode ∈ {combat, climax, high_point}`（战斗 / 高潮 / 爽点场景——爆发段容不下抒情铺设）
+- `scene_mode ∈ {combat, climax, high_point}`（战斗 / 高潮 / 爽点场景——爆发段尤其容不下抒情铺设）
+- `scene_mode ∈ {slow_build, emotional, other}` 也默认激活，仅在阈值解释上按普通场景兜底
 
-> context-agent 会在执行包中装填 `scene_mode` 字段（取值见 US-009：golden_three / combat / climax / high_point / slow_build / emotional / other）；缺失时按 `chapter_no` 兜底判定黄金三章。
+> context-agent 会在执行包中装填 `scene_mode` 字段（取值见 US-009：golden_three / combat / climax / high_point / slow_build / emotional / other）；缺失时仍按全场景直白模式处理。
 
 ### 激活时五条硬原则（按此优先序内化）
 
@@ -34,13 +35,13 @@ model: inherit
 
 ### 激活时 L10b/L10e 暂挂协议（US-007 冲突解耦）
 
-> **硬原则**：L10b（非视觉感官配额）与 L10e（主导感官轮换）**仅在非 Directness Mode 场景生效**。直白模式下两条铁律整体暂挂，**起草时不追求非视觉感官密度、不追求主导感官轮换，专注剧情推进 / 动作节拍 / 对话辨识度**——战斗/爽点/高潮段的节奏决定读者心跳，不容许为了刷感官锚点插入不必要的触觉、嗅觉、温度描写。
+> **硬原则**：L10b（非视觉感官配额）与 L10e（主导感官轮换）在自动写作流水线中默认暂挂，**起草时不追求非视觉感官密度、不追求主导感官轮换，专注剧情推进 / 动作节拍 / 对话辨识度**。需要强感官沉浸的章节应通过章纲目标显式提出，而不是靠通用配额反向补词。
 
 - 直白模式下，**不强求** L10b 的"每 800 字 ≥1 处非视觉感官"配额——可以全段纯动作+对话；感官只在服务冲突升级时自然出现。
 - 直白模式下，**不强求** L10e 的"主导感官轮换必须含触觉+嗅觉"——主导感官由场景功能决定，而非反疲劳模板。
-- 非直白模式（`slow_build` / `emotional` / `other`）保持 L10b/L10e 原约束不变——抒情/慢节奏/铺垫章仍需感官丰富度与主导感官轮换，零退化。
-- 与 checker 联动：`sensory-immersion-checker` 在直白模式下整体 **skipped**（返回"场景无需检查"而非 Red），由 `directness-checker` 接管该段的文笔审查——参见 `ink-writer/agents/sensory-immersion-checker.md` 顶部"## 直白模式激活门控 (v22 US-007)"。
-- 与 polish-agent 联动：Step 4 精简 pass 在直白场景激活（US-008），不会反向补感官词。
+- 慢节奏/情感章节若章纲明确要求感官沉浸，按章纲目标自然写入；但不再用 L10b/L10e 的固定配额制造冗余。
+- 与 checker 联动：`sensory-immersion-checker` 在全场景直白模式下整体 **skipped**（返回"场景无需检查"而非 Red），由 `directness-checker` 接管该段的文笔审查——参见 `ink-writer/agents/sensory-immersion-checker.md` 顶部"## 直白模式激活门控 (v22 US-007)"。
+- 与 polish-agent 联动：Step 4 精简 pass 全场景激活（US-006/US-008），不会反向补感官词。
 
 ### 禁区词反例（消费 `ink-writer/assets/prose-blacklist.yaml`，前 20 条高危词）
 

@@ -25,16 +25,15 @@ model: inherit
 
 ## 直白模式阈值放宽 (v22 US-010)
 
-> **冲突解耦**：直白模式下"镜头多样性 / 感官丰富度"相关软规则被 arbitration 豁免（不升级为 Red），其他维度（句式节奏 / 动词锐度 / 环境情绪 / 特写缺失）保持原判定。hard-block 类规则（`SHOT_SINGLE_DOMINANCE` 等）不豁免，保留文笔硬伤护栏。非直白场景零退化。
+> **冲突解耦**：US-006 起直白模式全场景激活，"镜头多样性 / 感官丰富度"相关软规则被 arbitration 豁免（不升级为 Red），其他维度（句式节奏 / 动词锐度 / 环境情绪 / 特写缺失）保持原判定。hard-block 类规则（`SHOT_SINGLE_DOMINANCE` 等）不豁免，保留文笔硬伤护栏。
 
 ## 平台感知权重 (v26.2)
 
 > 调用 `ink_writer.prose.directness_threshold_gates.get_prose_impact_weights(platform)` 获取六维权重。番茄模式下权重偏向动作/节奏（verb_sharpness 升至 0.25，lens_diversity 降至 0.10），契合下沉市场"少描写多动作"的审美。评分时按权重加权计算 overall_score，而非等权平均。
 
-**激活条件（任一满足即放宽）**：
+**激活条件**：
 
-- `review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point}`
-- 或 `review_bundle.scene_mode` 缺省且 `chapter_no ∈ [1, 2, 3]`（黄金三章兜底）
+- 默认全场景放宽；`review_bundle.scene_mode ∈ {golden_three, combat, climax, high_point, slow_build, emotional, other}` 与 `chapter_no ∈ [1, 2, 3]` 仅作为历史重点场景、普通场景兜底和日志解释保留。
 
 **激活判定（程序化对等）**：`ink_writer.prose.directness_threshold_gates.should_relax_prose_impact(scene_mode, chapter_no)`；与 `directness_checker.is_activated` 单源，避免多处漂移。
 

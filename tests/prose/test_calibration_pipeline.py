@@ -26,14 +26,14 @@ class TestCalibrationScript:
     def test_script_is_valid_python(self) -> None:
         result = subprocess.run(
             [sys.executable, "-c", f"compile(open({str(_SCRIPT)!r}).read(), {str(_SCRIPT)!r}, 'exec')"],
-            capture_output=True, text=True,
+            capture_output=True, text=True, encoding="utf-8",
         )
         assert result.returncode == 0, f"Script has syntax errors: {result.stderr}"
 
     def test_dry_run_succeeds(self) -> None:
         result = subprocess.run(
             [sys.executable, str(_SCRIPT), "--dry-run", "--books-explosive", "2", "--books-serious", "2"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True, text=True, encoding="utf-8", timeout=60,
         )
         assert result.returncode == 0, f"dry-run failed: {result.stderr[:300]}"
         assert "爆款组" in result.stdout
@@ -54,7 +54,7 @@ class TestCalibrationScript:
     def test_output_has_expected_sections(self) -> None:
         result = subprocess.run(
             [sys.executable, str(_SCRIPT), "--dry-run", "--books-explosive", "1", "--books-serious", "1"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True, text=True, encoding="utf-8", timeout=60,
         )
         assert "Gap 分析" in result.stdout
         assert "误伤统计" in result.stdout or "误伤" in result.stdout
@@ -63,7 +63,7 @@ class TestCalibrationScript:
         """mock 模式中爆款组指标应低于严肃组。"""
         result = subprocess.run(
             [sys.executable, str(_SCRIPT), "--dry-run", "--books-explosive", "2", "--books-serious", "2"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True, text=True, encoding="utf-8", timeout=60,
         )
         # 提取 em_dash 的 P50 值
         import re

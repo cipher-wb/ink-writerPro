@@ -336,11 +336,17 @@ def _build_preflight_report(explicit_project_root: Optional[str]) -> dict:
         try:
             from ink_writer.preflight.checker import PreflightConfig, run_preflight
 
-            pr = Path(project_root)
+            # FIX (2026-04-29): 这三类资源是 plugin/repo 级别（每装一次共用一份），
+            # 不是 project 级别。之前挂在 project_root 下导致用户小说项目 100% 预检失败。
+            # 解析顺序：repo_root = scripts_dir.parent.parent
+            #   /repo/ink-writer/scripts/      ← scripts_dir
+            #   /repo/ink-writer/              ← plugin_root
+            #   /repo/                         ← repo_root（含 benchmark/ 和 data/）
+            repo_root = plugin_root.parent
             preflight_config = PreflightConfig(
-                reference_root=pr / "benchmark" / "reference_corpus",
-                case_library_root=pr / "data" / "case_library",
-                editor_wisdom_rules_path=pr / "data" / "editor-wisdom" / "rules.json",
+                reference_root=repo_root / "benchmark" / "reference_corpus",
+                case_library_root=repo_root / "data" / "case_library",
+                editor_wisdom_rules_path=repo_root / "data" / "editor-wisdom" / "rules.json",
                 qdrant_in_memory=True,
                 require_embedding_key=True,
                 require_rerank_key=True,

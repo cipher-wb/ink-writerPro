@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import sys
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -26,7 +27,7 @@ def _setup_project(tmp_path: Path) -> Path:
     ink_dir = project_root / ".ink"
     ink_dir.mkdir(parents=True)
     db_path = ink_dir / "index.db"
-    with sqlite3.connect(str(db_path)) as conn:
+    with closing(sqlite3.connect(str(db_path))) as conn:
         conn.execute(
             """
             CREATE TABLE review_metrics (
@@ -50,7 +51,7 @@ def _setup_project(tmp_path: Path) -> Path:
 
 def _insert_metrics(project_root: Path, start: int, end: int, *, overall_score: float = 80,
                     severity_counts: dict | None = None, payload: dict | None = None) -> None:
-    with sqlite3.connect(str(project_root / ".ink" / "index.db")) as conn:
+    with closing(sqlite3.connect(str(project_root / ".ink" / "index.db"))) as conn:
         conn.execute(
             """
             INSERT INTO review_metrics (start_chapter, end_chapter, overall_score,

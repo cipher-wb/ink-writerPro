@@ -28,6 +28,16 @@ THRESHOLDS_YAML = REPO / "reports" / "seed_thresholds.yaml"
 CALIBRATION_DIR = REPO / "reports" / "calibration"
 REPORT_MD = CALIBRATION_DIR / "anti_ai_baseline_2026-04.md"
 
+_RUNTIME_COMPAT_DIR = REPO / "ink-writer" / "scripts"
+if str(_RUNTIME_COMPAT_DIR) not in sys.path:
+    sys.path.insert(0, str(_RUNTIME_COMPAT_DIR))
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+
+    _enable_utf8_stdio()
+except Exception:
+    pass
+
 _CHAPTER_LIMIT = 30
 
 

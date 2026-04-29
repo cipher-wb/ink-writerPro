@@ -11,12 +11,12 @@
 * **最华丽 Top-5**（神明调查报告 / 异度旅社 / 亡灵法师，召唤 055 什么鬼？/
   真君驾到 / 仙业）代表不激活直白机制时容易产出的"AI 味"文风。
 * M-1 字数缩短通过在 AI 味合成 fixture 上跑 :func:`simplify_text` 量化；
-* M-2 5 维度分均在最直白 Top-5 章 1-3 上取平均（验证阈值可达）；
+* M-2 7 维度分均在最直白 Top-5 章 1-3 上取平均（验证阈值可达）；
 * M-3 黑名单命中在最直白 Top-5 章 1-3 上平均 / 章；
 * M-4 句长中位数取最直白 Top-5 平均，与 benchmark P50=15 比较 ±10%；
 * M-5 读者盲测方法论说明（首版用 LLM judge 替代，live 项目采集）；
-* M-6 零退化通过 :func:`collect_issues_from_review_metrics` 在
-  ``scene_mode=slow_build`` 场景下 sensory issue 仍保留验证；
+* M-6 全场景直白模式通过 :func:`collect_issues_from_review_metrics` 验证
+  ``scene_mode=slow_build`` / 默认参数下 sensory issue 同样被过滤；
 * M-7 simplicity 主题域实际产出 ≥ 12 条规则，召回下限 ≥ 5。
 
 用法::
@@ -111,6 +111,8 @@ _ABSOLUTE_METRIC_KEYS: tuple[str, ...] = (
     "D3_abstract_per_100_chars",
     "D4_sent_len_median",
     "D5_empty_paragraphs",
+    "D6_nesting_depth",
+    "D7_modifier_chain_length",
 )
 
 
@@ -249,7 +251,7 @@ def measure_m1_word_reduction(fixture_text: str = AI_HEAVY_FIXTURE) -> dict[str,
 
 
 def measure_m2_directness_avg(direct_scores: list[ChapterMetrics]) -> dict[str, Any]:
-    """M-2：最直白 Top-5 章 1-3 directness-checker 5 维度平均分 ≥8."""
+    """M-2：最直白 Top-5 章 1-3 directness-checker 7 维度平均分 ≥8."""
     if not direct_scores:
         return {"passed": False, "reason": "no samples", "target": 8.0}
 
@@ -351,7 +353,7 @@ def measure_m5_methodology() -> dict[str, Any]:
 
 
 def measure_m6_sensory_regression() -> dict[str, Any]:
-    """M-6 零退化：slow_build scene 下 sensory-immersion issue 保持通过."""
+    """M-6：US-006 全场景直白模式下 sensory-immersion issue 均被过滤."""
     from ink_writer.editor_wisdom.arbitration import collect_issues_from_review_metrics
 
     fixture_payload = {
@@ -390,9 +392,9 @@ def measure_m6_sensory_regression() -> dict[str, Any]:
 
     return {
         "directness_scene_filtered": not directness_kept,
-        "slow_build_scene_retained": slow_build_kept,
-        "default_kwargs_retained": default_kept,
-        "passed": (not directness_kept) and slow_build_kept and default_kept,
+        "slow_build_scene_filtered": not slow_build_kept,
+        "default_kwargs_filtered": not default_kept,
+        "passed": (not directness_kept) and (not slow_build_kept) and (not default_kept),
     }
 
 
@@ -514,8 +516,8 @@ def render_markdown(results: VerificationResults) -> str:
         m5.get("status", "pending"), m5.get("passed"),
     ))
     lines.append(_row(
-        "M-6", "slow_build 场景 sensory-immersion 零退化",
-        "retained", "retained" if m6.get("slow_build_scene_retained") else "dropped",
+        "M-6", "全场景直白模式 sensory-immersion 过滤",
+        "filtered", "filtered" if m6.get("slow_build_scene_filtered") else "retained",
         m6.get("passed"),
     ))
     lines.append(_row(
@@ -551,7 +553,7 @@ def render_markdown(results: VerificationResults) -> str:
     ))
 
     if m2:
-        lines.append("### M-2 5 维度分均\n")
+        lines.append("### M-2 7 维度分均\n")
         for key, val in (m2.get("avg_by_dim") or {}).items():
             lines.append(f"- {key}: **{val}**")
         lines.append(f"- Overall 均分: **{m2.get('overall_avg', 0.0)}**\n")
@@ -564,18 +566,18 @@ def render_markdown(results: VerificationResults) -> str:
             f"- 容差带: [{m4.get('band_low', 0.0)}, {m4.get('band_high', 0.0)}]\n"
         )
 
-    lines.append("## M-6 零退化验证（sensory-immersion-checker）\n")
+    lines.append("## M-6 全场景直白模式验证（sensory-immersion-checker）\n")
     lines.append(
         "- directness 场景（combat/ch50）: "
         f"sensory issue {'被正确过滤' if m6.get('directness_scene_filtered') else '未被过滤'}"
     )
     lines.append(
         "- slow_build 场景（ch50）: "
-        f"sensory issue {'保留（零退化）' if m6.get('slow_build_scene_retained') else '意外被丢弃'}"
+        f"sensory issue {'被正确过滤' if m6.get('slow_build_scene_filtered') else '未被过滤'}"
     )
     lines.append(
         "- default kwargs（无 scene_mode/chapter_no）: "
-        f"sensory issue {'保留（向后兼容）' if m6.get('default_kwargs_retained') else '丢失（回归！）'}"
+        f"sensory issue {'被正确过滤' if m6.get('default_kwargs_filtered') else '未被过滤'}"
     )
     lines.append("")
 

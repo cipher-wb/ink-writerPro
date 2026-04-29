@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    {
+      "name": "ink-writer",
+      "version": "26.3.0",
+      "source": "./ink-writer"
+    }
+  ]
+}

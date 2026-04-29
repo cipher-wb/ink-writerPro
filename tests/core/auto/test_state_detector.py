@@ -33,7 +33,15 @@ def test_s2_writing_when_state_and_outline_present(tmp_path: Path) -> None:
     _write_state(tmp_path, current_chapter=5, volumes=[{"volume_id": "1", "chapter_range": "1-50"}])
     (tmp_path / "大纲").mkdir()
     (tmp_path / "大纲" / "总纲.md").write_text("# 总纲", encoding="utf-8")
+    (tmp_path / "大纲" / "第1章-开篇.md").write_text("# 第1章", encoding="utf-8")
     assert detect_project_state(tmp_path) == ProjectState.S2_WRITING
+
+
+def test_s1_no_outline_when_only_master_outline_exists(tmp_path: Path) -> None:
+    _write_state(tmp_path, current_chapter=0, volumes=[{"volume_id": "1", "chapter_range": "1-50"}])
+    (tmp_path / "大纲").mkdir()
+    (tmp_path / "大纲" / "总纲.md").write_text("# 总纲", encoding="utf-8")
+    assert detect_project_state(tmp_path) == ProjectState.S1_NO_OUTLINE
 
 
 def test_s3_completed_when_is_completed_true(tmp_path: Path) -> None:

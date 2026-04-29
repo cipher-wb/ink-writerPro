@@ -30,6 +30,7 @@ def _run(args: list[str], **kwargs) -> subprocess.CompletedProcess:
         cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
+        encoding="utf-8",
         **kwargs,
     )
 

@@ -15,7 +15,7 @@ def test_bootstrap_writes_blueprint_with_all_7_answers(tmp_path: Path) -> None:
     ]) + "\n"
     result = subprocess.run(
         ["bash", "ink-writer/scripts/interactive_bootstrap.sh", str(out)],
-        input=answers, capture_output=True, text=True, timeout=10,
+        input=answers, capture_output=True, text=True, encoding="utf-8", timeout=10,
     )
     assert result.returncode == 0, result.stderr
     body = out.read_text(encoding="utf-8")
@@ -33,7 +33,7 @@ def test_bootstrap_uses_defaults_for_platform_and_aggression(tmp_path: Path) -> 
     ]) + "\n"
     result = subprocess.run(
         ["bash", "ink-writer/scripts/interactive_bootstrap.sh", str(out)],
-        input=answers, capture_output=True, text=True, timeout=10,
+        input=answers, capture_output=True, text=True, encoding="utf-8", timeout=10,
     )
     assert result.returncode == 0, result.stderr
     body = out.read_text(encoding="utf-8")
@@ -56,7 +56,7 @@ def test_bootstrap_rejects_empty_required(tmp_path: Path) -> None:
     ]) + "\n"
     result = subprocess.run(
         ["bash", "ink-writer/scripts/interactive_bootstrap.sh", str(out)],
-        input=answers, capture_output=True, text=True, timeout=10,
+        input=answers, capture_output=True, text=True, encoding="utf-8", timeout=10,
     )
     assert result.returncode == 0, result.stderr
     assert "必填" in result.stderr

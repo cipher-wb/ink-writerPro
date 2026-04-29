@@ -161,7 +161,7 @@ def test_blacklist_asset_referenced(spec_text: str) -> None:
         (None, 1, True),
         (None, 2, True),
         (None, 3, True),
-        # Inactive modes short-circuit even in golden chapters (explicit优先)
+        # US-006 起全场景激活；这些旧的非重点模式也应保持 True。
         ("slow_build", 2, True),
         ("emotional", 1, True),
         ("other", 3, True),

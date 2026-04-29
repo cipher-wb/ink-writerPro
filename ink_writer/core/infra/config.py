@@ -144,7 +144,13 @@ class DataModulesConfig:
         return self.embed_base_url
 
     # ================= Rerank API 配置 =================
-    rerank_api_type: str = "openai"
+    # api_type: "openai" (Jina/Cohere 兼容) | "modal" (自定义) | "dashscope" (阿里百炼 native)
+    # 自动判定：base_url 含 "dashscope.aliyuncs.com" 时默认走 dashscope 类型；
+    # 显式 RERANK_API_TYPE 环境变量优先级最高。
+    rerank_api_type: str = field(default_factory=lambda: os.getenv(
+        "RERANK_API_TYPE",
+        "dashscope" if "dashscope.aliyuncs.com" in os.getenv("RERANK_BASE_URL", "") else "openai"
+    ))
     rerank_base_url: str = field(default_factory=lambda: os.getenv("RERANK_BASE_URL", "https://api.jina.ai/v1"))
     rerank_model: str = field(default_factory=lambda: os.getenv("RERANK_MODEL", "jina-reranker-v3"))
     rerank_api_key: str = field(default_factory=lambda: os.getenv("RERANK_API_KEY", ""))

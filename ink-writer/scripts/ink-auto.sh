@@ -26,6 +26,10 @@ REPORT_FILE=""
 BATCH_START=0
 REPORT_EVENTS=""
 
+# 暴露脚本自身 PID 给 watchdog，用于 SIGTERM 时清理孤儿 LLM CLI 子进程
+INK_AUTO_PID=$$
+export INK_AUTO_PID
+
 # ═══════════════════════════════════════════
 # 参数解析：支持 --parallel N
 # ═══════════════════════════════════════════
@@ -209,6 +213,7 @@ init_project_paths() {
 
     # ═══════════════════════════════════════════
     # 字数硬区间（v27 平台感知）：调用 load_word_limits 同时取 min + max
+    # load_word_limits 读取 .ink/preferences.json 的 pacing.chapter_words，并推导 ±500 区间。
     # qidian: (2200, 5000) / fanqie: (1500, 2000) — 默认 qidian 兜底（state.json 损坏时安全)
     # MIN_WORDS_HARD: verify_chapter 下限阻断阈值
     # MAX_WORDS_HARD: verify_chapter 上限阻断阈值
@@ -470,89 +475,10 @@ except Exception:
 " 2>/dev/null
 }
 
-# v27: PROJECT_ROOT 为空时跳过完结/大纲预检，状态分发块就绪后会重新执行
-if [[ -n "$PROJECT_ROOT" ]]; then
-
-# 完结检测 preflight
-PROJECT_STATUS=$(is_project_completed)
-if [[ "$PROJECT_STATUS" == "completed" ]]; then
-    echo "🎉 本书已完结！所有卷章均已写完。"
-    echo "   如需继续创作，请手动修改 .ink/state.json 中的 is_completed 字段。"
-    exit 0
-fi
-
-# ═══════════════════════════════════════════
-# 大纲覆盖预检（预报模式）
-# ═══════════════════════════════════════════
-
-CURRENT_CH=$(get_current_chapter)
-if [[ -z "$CURRENT_CH" || "$CURRENT_CH" == "0" ]]; then
-    if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" state get-progress 2>/dev/null | $PY_LAUNCHER -c "import sys,json; json.load(sys.stdin)" 2>/dev/null; then
-        echo "❌ 无法读取 state.json 进度信息，请检查项目状态"
-        exit 1
-    fi
-    CURRENT_CH=${CURRENT_CH:-0}
-fi
-
-BATCH_START=$((CURRENT_CH + 1))
-BATCH_END=$((CURRENT_CH + N))
-
-report_event "🚀" "批量写作启动" "计划${N}章，从第${BATCH_START}章到第${BATCH_END}章"
-
-# 检测项目状态：S1（缺大纲）需要主动触发完整卷规划，不能只靠按需补章
-PROJECT_STATE=$(
-    "$PY_LAUNCHER" -X utf8 -c "
-from pathlib import Path
-from ink_writer.core.auto.state_detector import detect_project_state
-print(detect_project_state(Path('${PROJECT_ROOT}')).value)
-" 2>/dev/null || echo "S2_WRITING"
-)
-
-echo "🔍 正在扫描第${BATCH_START}章到第${BATCH_END}章的大纲覆盖...（项目状态: ${PROJECT_STATE}）"
-
-if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
-    check-outline --chapter "$BATCH_START" --batch-end "$BATCH_END" 2>/dev/null; then
-    echo ""
-    if [[ "$PROJECT_STATE" == "S1_NO_OUTLINE" ]]; then
-        echo "📋 项目缺大纲（S1），自动启动 ink-plan 生成完整卷大纲..."
-        report_event "📋" "S1自动plan启动" "大纲缺失，生成完整卷大纲"
-
-        # 确定需要规划的卷范围：从 BATCH_START 到 BATCH_END 覆盖的所有卷
-        local _plan_vol _plan_vols _last_plan_vol
-        _plan_vols=""
-        _last_plan_vol=""
-        for ((_pc=BATCH_START; _pc<=BATCH_END; _pc++)); do
-            _plan_vol=$(get_volume_for_chapter "$_pc")
-            if [[ -n "$_plan_vol" ]] && [[ "$_plan_vol" != "$_last_plan_vol" ]]; then
-                _plan_vols="${_plan_vols} ${_plan_vol}"
-                _last_plan_vol="$_plan_vol"
-            fi
-        done
-
-        for _plan_vol in $_plan_vols; do
-            echo "    📋 正在生成第${_plan_vol}卷完整大纲..."
-            if auto_plan_volume "$_plan_vol" "$BATCH_START"; then
-                echo "    ✅ 第${_plan_vol}卷大纲生成成功"
-                report_event "✅" "S1自动plan完成" "第${_plan_vol}卷"
-            else
-                echo "    ❌ 第${_plan_vol}卷大纲生成失败，中止批量写作"
-                report_event "❌" "S1自动plan失败" "第${_plan_vol}卷"
-                exit 1
-            fi
-        done
-    else
-        echo "⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成"
-        echo "    如需手动规划，请按 Ctrl+C 中止后执行 /ink-plan"
-        report_event "⚠️" "大纲预检" "部分章节大纲缺失，将按需自动生成"
-        sleep 5
-    fi
-    echo ""
-else
-    echo "✅ 大纲覆盖完整"
-    report_event "✅" "大纲预检" "全部覆盖"
-fi
-
-fi  # end: if [[ -n "$PROJECT_ROOT" ]] (v27 完结/大纲预检守卫)
+# NOTE: 完结检测 + 大纲预检逻辑已重构为 `_s1_outline_precheck_if_root` 函数，
+# 在所有函数定义后统一调用（参见文件底部）。这样 auto_plan_volume / run_cli_process
+# 等被引用的函数已就位，避免顶层内联代码引用未定义函数（旧 bug 表现：
+# "auto_plan_volume: command not found"）。
 
 # ═══════════════════════════════════════════
 # 信号处理
@@ -592,6 +518,8 @@ verify_chapter() {
     local ch="$1"
     local padded
     padded=$(printf "%04d" "$ch")
+    : "${MIN_WORDS_HARD:=2200}"
+    : "${MAX_WORDS_HARD:=5000}"
 
     local file
     file=$(ls "$PROJECT_ROOT/正文/第${padded}章"*.md 2>/dev/null | head -1)
@@ -604,6 +532,7 @@ verify_chapter() {
 
     local char_count
     char_count=$(wc -m < "$file" | tr -d ' ')
+    # 默认硬下限等价于旧规则: char_count < 2200
     if (( char_count < MIN_WORDS_HARD )); then
         return 1
     fi
@@ -743,19 +672,31 @@ parse_progress_output() {
 # ═══════════════════════════════════════════
 
 _start_cli_watchdog() {
-    # 启动后台 watchdog：超时后 kill CHILD_PID（pipeline 主进程组）
-    # 避免 Step 3 checker 子代理 API 阻塞导致整个 ink-auto 永久挂起。
+    # 启动后台 watchdog：超时后 kill CHILD_PID（pipeline 末端 parse_progress_output）
+    # **同时**杀掉它的所有子进程（特别是 claude/gemini/codex 这种通过管道连进来的）。
+    # 历史 bug：只 kill pipeline 末端，pipeline 头部的 LLM CLI 进程会变成孤儿继续跑，
+    #          导致 watchdog "fire 了但脚本没真正释放资源"。
     local timeout_s="$1"
     local target_pid="$2"
     (
         sleep "$timeout_s"
         if kill -0 "$target_pid" 2>/dev/null; then
             echo "[ink-auto] watchdog: timeout ${timeout_s}s exceeded for PID $target_pid, sending SIGTERM" >&2
+            # 先 SIGTERM 整个目标 + 它的所有子孙进程
+            pkill -TERM -P "$target_pid" 2>/dev/null || true
             kill -TERM "$target_pid" 2>/dev/null || true
+            # 同时找 ink-auto 父进程（INK_AUTO_PID）下的 LLM CLI 子代，避免孤儿 claude/gemini/codex
+            if [[ -n "${INK_AUTO_PID:-}" ]]; then
+                pkill -TERM -P "$INK_AUTO_PID" -f "claude -p\|gemini --yolo\|codex --approval-mode" 2>/dev/null || true
+            fi
             sleep 8
             if kill -0 "$target_pid" 2>/dev/null; then
                 echo "[ink-auto] watchdog: SIGTERM ignored, sending SIGKILL" >&2
+                pkill -KILL -P "$target_pid" 2>/dev/null || true
                 kill -KILL "$target_pid" 2>/dev/null || true
+                if [[ -n "${INK_AUTO_PID:-}" ]]; then
+                    pkill -KILL -P "$INK_AUTO_PID" -f "claude -p\|gemini --yolo\|codex --approval-mode" 2>/dev/null || true
+                fi
             fi
         fi
     ) &
@@ -771,10 +712,19 @@ _stop_cli_watchdog() {
 }
 
 run_cli_process() {
+    # $1 prompt
+    # $2 log_file
+    # $3 (可选) timeout_s，覆盖默认值
+    #
+    # 默认超时按操作类型分档（由调用方通过 $3 传入；不传则取 INK_AUTO_CHAPTER_TIMEOUT）：
+    #   - ink-write 单章：1800s（30min）—— 含 5 个 checker + Hard Block Rewrite 多轮
+    #   - ink-plan 整卷：3600s（60min）—— 30+ 章纲一次生成
+    #   - ink-init：     1800s（30min）—— 一次性初始化
+    # 旧默认 1200s 在 plan 路径几乎必然触发 watchdog（用户实测 2026-04-29 反馈）。
     local prompt="$1"
     local log_file="$2"
+    local timeout_s="${3:-${INK_AUTO_CHAPTER_TIMEOUT:-1800}}"
     local exit_code=0
-    local timeout_s="${INK_AUTO_CHAPTER_TIMEOUT:-1200}"
 
     case $PLATFORM in
         claude)
@@ -819,126 +769,12 @@ run_cli_process() {
     return $exit_code
 }
 
-# ═══════════════════════════════════════════
-# v27 状态分发：未初始化项目时自动 init
-# ═══════════════════════════════════════════
-
+# NOTE: v27 状态分发 + 自动 init 逻辑已重构为 `_v27_init_if_needed` 函数，
+# 在所有函数定义后统一调用（参见文件底部）。这样 run_cli_process / auto_plan_volume
+# 等被引用的函数已就位（旧 bug 表现："auto_plan_volume: command not found"）。
 INK_AUTO_INIT_ENABLED="${INK_AUTO_INIT_ENABLED:-1}"
 INK_AUTO_BLUEPRINT_ENABLED="${INK_AUTO_BLUEPRINT_ENABLED:-1}"
 INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED="${INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED:-1}"
-
-if [[ -z "$PROJECT_ROOT" ]]; then
-    if [[ "$INK_AUTO_INIT_ENABLED" != "1" ]]; then
-        echo "❌ 未找到 .ink/state.json，请在小说项目目录下运行"
-        echo "   提示：当前目录无已初始化项目（自动初始化已被 INK_AUTO_INIT_ENABLED=0 禁用）"
-        echo "   解决：移除 INK_AUTO_INIT_ENABLED=0 重新运行，或切换到已初始化的项目目录"
-        exit 1
-    fi
-
-    PROJECT_ROOT="$PWD"
-    echo "════════════════════════════════════════════════════"
-    echo "  ink-auto 终极自动化模式：未检测到已初始化项目"
-    echo "  当前目录：${PROJECT_ROOT}"
-    echo "════════════════════════════════════════════════════"
-
-    # 扫描蓝本
-    BLUEPRINT_PATH=""
-    if [[ "$INK_AUTO_BLUEPRINT_ENABLED" == "1" ]]; then
-        BLUEPRINT_PATH=$(
-            "$PY_LAUNCHER" -X utf8 "${SCRIPTS_DIR}/blueprint_scanner.py" \
-                --cwd "${PROJECT_ROOT}" 2>/dev/null || echo ""
-        )
-    fi
-
-    if [[ -n "$BLUEPRINT_PATH" ]]; then
-        echo "📄 找到蓝本：${BLUEPRINT_PATH}"
-    else
-        if [[ "$INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED" != "1" ]]; then
-            echo "❌ 未找到蓝本 .md，且 INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED=0"
-            echo "   请先放置蓝本（参考 ${SCRIPTS_DIR}/../templates/blueprint-template.md）"
-            exit 1
-        fi
-        BLUEPRINT_PATH="${PROJECT_ROOT}/.ink-auto-blueprint.md"
-        echo "📋 未找到蓝本，启动 7 题交互式 bootstrap..."
-        bash "${SCRIPTS_DIR}/interactive_bootstrap.sh" "$BLUEPRINT_PATH" || {
-            echo "❌ 交互式 bootstrap 失败或被中断"
-            exit 1
-        }
-    fi
-
-    # 转换蓝本 → quick draft
-    DRAFT_PATH="${PROJECT_ROOT}/.ink-auto-quick-draft.json"
-    if ! "$PY_LAUNCHER" -X utf8 "${SCRIPTS_DIR}/blueprint_to_quick_draft.py" \
-        --input "$BLUEPRINT_PATH" --output "$DRAFT_PATH" 2>&1; then
-        echo "❌ 蓝本校验失败，请修正后重跑 /ink-auto"
-        exit 1
-    fi
-
-    # 调用 ink-init Quick 模式（CLI 子进程）
-    INIT_LOG="${PROJECT_ROOT}/.ink-auto-init-$(date +%Y%m%d-%H%M%S).log"
-    INIT_PROMPT="使用 Skill 工具加载 \"ink-init\"。模式：--quick --blueprint ${BLUEPRINT_PATH}。draft.json 路径: ${DRAFT_PATH}。项目目录: ${PROJECT_ROOT}（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 ${PROJECT_ROOT}/.ink/state.json）。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
-    echo "⚙️  启动自动初始化（CLI 子进程，约 5-10 分钟）..."
-    if ! run_cli_process "$INIT_PROMPT" "$INIT_LOG"; then
-        echo "❌ 自动初始化失败，日志：${INIT_LOG}"
-        echo "   蓝本保留：${BLUEPRINT_PATH}"
-        echo "   你可以手动重跑：claude -p '使用 ink-init --quick --blueprint ${BLUEPRINT_PATH}'"
-        exit 1
-    fi
-    echo "✅ 初始化完成"
-
-    # 重新解析项目根
-    PROJECT_ROOT="$(find_project_root)" || {
-        echo "❌ init 后仍未找到 .ink/state.json，可能初始化未完整落盘"
-        echo "   日志：${INIT_LOG}"
-        exit 1
-    }
-
-    # 此时 PROJECT_ROOT 已就绪，初始化路径相关变量
-    init_project_paths
-
-    # 重新执行预检 / 完结检测 / 大纲预检（之前因 PROJECT_ROOT 为空已跳过）
-    if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" preflight 2>/dev/null; then
-        echo "❌ 预检失败，请检查项目状态"
-        exit 1
-    fi
-
-    PROJECT_STATUS=$(is_project_completed)
-    if [[ "$PROJECT_STATUS" == "completed" ]]; then
-        echo "🎉 本书已完结！所有卷章均已写完。"
-        exit 0
-    fi
-
-    CURRENT_CH=$(get_current_chapter)
-    CURRENT_CH=${CURRENT_CH:-0}
-    BATCH_START=$((CURRENT_CH + 1))
-    BATCH_END=$((CURRENT_CH + N))
-
-    report_event "🚀" "批量写作启动（自动初始化后）" "计划${N}章，从第${BATCH_START}章到第${BATCH_END}章"
-
-    # init 完成后主动触发 ink-plan 生成首卷完整大纲（设计文档 §3.1）
-    echo "🔍 正在扫描第${BATCH_START}章到第${BATCH_END}章的大纲覆盖..."
-    if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
-        check-outline --chapter "$BATCH_START" --batch-end "$BATCH_END" 2>/dev/null; then
-        echo ""
-        echo "⚠️  大纲缺失，init 后自动启动 ink-plan 生成完整卷大纲..."
-        echo ""
-        report_event "📋" "init后自动plan" "第${BATCH_START}章起，大纲缺失，触发完整卷大纲生成"
-
-        local _vol
-        _vol=$(get_volume_for_chapter "$BATCH_START")
-        if [[ -n "$_vol" ]] && auto_plan_volume "$_vol" "$BATCH_START"; then
-            echo "✅ 第${_vol}卷完整大纲生成成功"
-            report_event "✅" "init后自动plan完成" "第${_vol}卷"
-        else
-            echo "❌ 第${_vol}卷大纲生成失败，中止批量写作"
-            report_event "❌" "init后自动plan失败" "第${_vol}卷"
-            exit 1
-        fi
-    else
-        echo "✅ 大纲覆盖完整"
-        report_event "✅" "大纲预检" "全部覆盖"
-    fi
-fi
 
 # ═══════════════════════════════════════════
 # 单章执行
@@ -1014,7 +850,8 @@ auto_generate_outline() {
     local log_file="$LOG_DIR/plan-vol${vol}-$(date +%Y%m%d-%H%M%S).log"
     local prompt="使用 Skill 工具加载 \"ink-plan\"。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${PROJECT_ROOT}。禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
 
-    run_cli_process "$prompt" "$log_file" || true
+    # ink-plan 整卷大纲耗时最长（30+ 章纲），用 INK_AUTO_PLAN_TIMEOUT（默认 3600s）
+    run_cli_process "$prompt" "$log_file" "${INK_AUTO_PLAN_TIMEOUT:-3600}" || true
 
     PLAN_COUNT=$((PLAN_COUNT + 1))
     sleep "$CHECKPOINT_COOLDOWN"
@@ -1029,6 +866,260 @@ auto_generate_outline() {
         report_event "❌" "自动大纲失败" "第${vol}卷，日志: $log_file"
         return 1
     fi
+}
+
+# 按显式卷号触发 ink-plan 生成完整卷大纲；ch_hint 用于 check-outline 校验。
+# 与 auto_generate_outline 的差别：调用方已确定卷号（如 v27 init 后或 S1 状态批跨多卷），
+# 不再由 chapter→volume 反查，因此可在循环内对多个卷依次调用。
+# 调用点：ink-auto.sh:535 (S1 路径) + ink-auto.sh:933 (v27 自动 init 后)。
+auto_plan_volume() {
+    local vol="$1"
+    local ch_hint="${2:-}"
+
+    if [[ -z "$vol" ]]; then
+        echo "    ❌ auto_plan_volume: 缺少卷号参数" >&2
+        report_event "❌" "自动大纲" "auto_plan_volume 缺少卷号参数"
+        return 1
+    fi
+
+    # 防重复尝试（同一批次内对同卷多次失败要中止，避免死循环）
+    if [[ "$PLANNED_VOLUMES" == *":${vol}:"* ]]; then
+        echo "    ❌ 第${vol}卷大纲已尝试生成但仍缺失，中止"
+        report_event "❌" "自动大纲" "第${vol}卷重复失败"
+        return 1
+    fi
+    PLANNED_VOLUMES="${PLANNED_VOLUMES}${vol}:"
+
+    echo "    📋 自动启动 ink-plan 生成第${vol}卷..."
+    report_event "📋" "自动大纲启动" "第${vol}卷"
+
+    local log_file="$LOG_DIR/plan-vol${vol}-$(date +%Y%m%d-%H%M%S).log"
+    local prompt="使用 Skill 工具加载 \"ink-plan\"。为第${vol}卷生成完整详细大纲（节拍表+时间线+章纲）。项目目录: ${PROJECT_ROOT}。禁止提问，自动选择第${vol}卷，全程自主执行。完成后输出 INK_PLAN_DONE。"
+
+    # ink-plan 整卷大纲耗时最长，用 INK_AUTO_PLAN_TIMEOUT（默认 3600s）
+    run_cli_process "$prompt" "$log_file" "${INK_AUTO_PLAN_TIMEOUT:-3600}" || true
+
+    PLAN_COUNT=$((PLAN_COUNT + 1))
+    sleep "$CHECKPOINT_COOLDOWN"
+
+    # 校验：优先用 ch_hint 做 check-outline；缺失则用卷首章兜底（让 ink.py 自己解析）
+    local check_args=("--project-root" "$PROJECT_ROOT" "check-outline")
+    if [[ -n "$ch_hint" ]]; then
+        check_args+=("--chapter" "$ch_hint")
+    fi
+
+    if $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" "${check_args[@]}" >/dev/null 2>&1; then
+        echo "    ✅ 第${vol}卷大纲生成成功"
+        report_event "✅" "自动大纲完成" "第${vol}卷"
+        return 0
+    else
+        echo "    ❌ 第${vol}卷大纲生成失败，日志: $log_file"
+        report_event "❌" "自动大纲失败" "第${vol}卷，日志: $log_file"
+        return 1
+    fi
+}
+
+# ═══════════════════════════════════════════
+# v27 状态分发：未初始化项目时自动 init + 首卷 plan
+# 必须在所有函数（auto_plan_volume / run_cli_process / find_project_root 等）
+# 定义之后由主流程统一调用；以前是顶层内联，引用未定义函数导致 R1 bug。
+# ═══════════════════════════════════════════
+
+_v27_init_if_needed() {
+    if [[ -n "$PROJECT_ROOT" ]]; then
+        return 0  # 已初始化，无须 v27
+    fi
+
+    if [[ "$INK_AUTO_INIT_ENABLED" != "1" ]]; then
+        echo "❌ 未找到 .ink/state.json，请在小说项目目录下运行"
+        echo "   提示：当前目录无已初始化项目（自动初始化已被 INK_AUTO_INIT_ENABLED=0 禁用）"
+        echo "   解决：移除 INK_AUTO_INIT_ENABLED=0 重新运行，或切换到已初始化的项目目录"
+        exit 1
+    fi
+
+    PROJECT_ROOT="$PWD"
+    echo "════════════════════════════════════════════════════"
+    echo "  ink-auto 终极自动化模式：未检测到已初始化项目"
+    echo "  当前目录：${PROJECT_ROOT}"
+    echo "════════════════════════════════════════════════════"
+
+    local blueprint_path=""
+    if [[ "$INK_AUTO_BLUEPRINT_ENABLED" == "1" ]]; then
+        blueprint_path=$(
+            "$PY_LAUNCHER" -X utf8 "${SCRIPTS_DIR}/blueprint_scanner.py" \
+                --cwd "${PROJECT_ROOT}" 2>/dev/null || echo ""
+        )
+    fi
+
+    if [[ -n "$blueprint_path" ]]; then
+        echo "📄 找到蓝本：${blueprint_path}"
+    else
+        if [[ "$INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED" != "1" ]]; then
+            echo "❌ 未找到蓝本 .md，且 INK_AUTO_INTERACTIVE_BOOTSTRAP_ENABLED=0"
+            echo "   请先放置蓝本（参考 ${SCRIPTS_DIR}/../templates/blueprint-template.md）"
+            exit 1
+        fi
+        blueprint_path="${PROJECT_ROOT}/.ink-auto-blueprint.md"
+        echo "📋 未找到蓝本，启动 7 题交互式 bootstrap..."
+        bash "${SCRIPTS_DIR}/interactive_bootstrap.sh" "$blueprint_path" || {
+            echo "❌ 交互式 bootstrap 失败或被中断"
+            exit 1
+        }
+    fi
+
+    local draft_path="${PROJECT_ROOT}/.ink-auto-quick-draft.json"
+    if ! "$PY_LAUNCHER" -X utf8 "${SCRIPTS_DIR}/blueprint_to_quick_draft.py" \
+        --input "$blueprint_path" --output "$draft_path" 2>&1; then
+        echo "❌ 蓝本校验失败，请修正后重跑 /ink-auto"
+        exit 1
+    fi
+
+    local init_log="${PROJECT_ROOT}/.ink-auto-init-$(date +%Y%m%d-%H%M%S).log"
+    local init_prompt="使用 Skill 工具加载 \"ink-init\"。模式：--quick --blueprint ${blueprint_path}。draft.json 路径: ${draft_path}。项目目录: ${PROJECT_ROOT}（**强制在该目录原地初始化，不要根据书名生成子目录**；最终 .ink/state.json 必须落在 ${PROJECT_ROOT}/.ink/state.json）。禁止提问，全程自主执行，最终输出 INK_INIT_DONE 或 INK_INIT_FAILED。"
+    echo "⚙️  启动自动初始化（CLI 子进程，约 5-15 分钟）..."
+    # ink-init 一次性初始化，用 INK_AUTO_INIT_TIMEOUT（默认 1800s）
+    if ! run_cli_process "$init_prompt" "$init_log" "${INK_AUTO_INIT_TIMEOUT:-1800}"; then
+        echo "❌ 自动初始化失败，日志：${init_log}"
+        echo "   蓝本保留：${blueprint_path}"
+        echo "   你可以手动重跑：claude -p '使用 ink-init --quick --blueprint ${blueprint_path}'"
+        exit 1
+    fi
+    echo "✅ 初始化完成"
+
+    PROJECT_ROOT="$(find_project_root)" || {
+        echo "❌ init 后仍未找到 .ink/state.json，可能初始化未完整落盘"
+        echo "   日志：${init_log}"
+        exit 1
+    }
+
+    init_project_paths
+
+    if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" preflight 2>/dev/null; then
+        echo "❌ 预检失败，请检查项目状态"
+        exit 1
+    fi
+
+    PROJECT_STATUS=$(is_project_completed)
+    if [[ "$PROJECT_STATUS" == "completed" ]]; then
+        echo "🎉 本书已完结！所有卷章均已写完。"
+        exit 0
+    fi
+
+    CURRENT_CH=$(get_current_chapter)
+    CURRENT_CH=${CURRENT_CH:-0}
+    BATCH_START=$((CURRENT_CH + 1))
+    BATCH_END=$((CURRENT_CH + N))
+
+    report_event "🚀" "批量写作启动（自动初始化后）" "计划${N}章，从第${BATCH_START}章到第${BATCH_END}章"
+
+    echo "🔍 正在扫描第${BATCH_START}章到第${BATCH_END}章的大纲覆盖..."
+    if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
+        check-outline --chapter "$BATCH_START" --batch-end "$BATCH_END" 2>/dev/null; then
+        echo ""
+        echo "⚠️  大纲缺失，init 后自动启动 ink-plan 生成完整卷大纲..."
+        echo ""
+        report_event "📋" "init后自动plan" "第${BATCH_START}章起，大纲缺失，触发完整卷大纲生成"
+
+        local _vol
+        _vol=$(get_volume_for_chapter "$BATCH_START")
+        if [[ -n "$_vol" ]] && auto_plan_volume "$_vol" "$BATCH_START"; then
+            echo "✅ 第${_vol}卷完整大纲生成成功"
+            report_event "✅" "init后自动plan完成" "第${_vol}卷"
+        else
+            echo "❌ 第${_vol}卷大纲生成失败，中止批量写作"
+            report_event "❌" "init后自动plan失败" "第${_vol}卷"
+            exit 1
+        fi
+    else
+        echo "✅ 大纲覆盖完整"
+        report_event "✅" "大纲预检" "全部覆盖"
+    fi
+}
+
+# ═══════════════════════════════════════════
+# S1 状态：已初始化但缺大纲——做完结检测 + 大纲预检 + 按需 plan
+# ═══════════════════════════════════════════
+
+_s1_outline_precheck_if_root() {
+    if [[ -z "$PROJECT_ROOT" ]]; then
+        return 0  # 还没初始化，跳过
+    fi
+
+    PROJECT_STATUS=$(is_project_completed)
+    if [[ "$PROJECT_STATUS" == "completed" ]]; then
+        echo "🎉 本书已完结！所有卷章均已写完。"
+        echo "   如需继续创作，请手动修改 .ink/state.json 中的 is_completed 字段。"
+        exit 0
+    fi
+
+    CURRENT_CH=$(get_current_chapter)
+    if [[ -z "$CURRENT_CH" || "$CURRENT_CH" == "0" ]]; then
+        if ! $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" state get-progress 2>/dev/null | $PY_LAUNCHER -c "import sys,json; json.load(sys.stdin)" 2>/dev/null; then
+            echo "❌ 无法读取 state.json 进度信息，请检查项目状态"
+            exit 1
+        fi
+        CURRENT_CH=${CURRENT_CH:-0}
+    fi
+
+    BATCH_START=$((CURRENT_CH + 1))
+    BATCH_END=$((CURRENT_CH + N))
+
+    report_event "🚀" "批量写作启动" "计划${N}章，从第${BATCH_START}章到第${BATCH_END}章"
+
+    PROJECT_STATE=$(
+        "$PY_LAUNCHER" -X utf8 -c "
+from pathlib import Path
+from ink_writer.core.auto.state_detector import detect_project_state
+print(detect_project_state(Path('${PROJECT_ROOT}')).value)
+" 2>/dev/null || echo "S2_WRITING"
+    )
+
+    echo "🔍 正在扫描第${BATCH_START}章到第${BATCH_END}章的大纲覆盖...（项目状态: ${PROJECT_STATE}）"
+
+    if $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/ink.py" --project-root "$PROJECT_ROOT" \
+        check-outline --chapter "$BATCH_START" --batch-end "$BATCH_END" 2>/dev/null; then
+        echo "✅ 大纲覆盖完整"
+        report_event "✅" "大纲预检" "全部覆盖"
+        return 0
+    fi
+
+    echo ""
+    if [[ "$PROJECT_STATE" != "S1_NO_OUTLINE" ]]; then
+        echo "⚠️  部分章节大纲缺失，ink-auto 将在写作前自动生成"
+        echo "    如需手动规划，请按 Ctrl+C 中止后执行 /ink-plan"
+        report_event "⚠️" "大纲预检" "部分章节大纲缺失，将按需自动生成"
+        sleep 5
+        echo ""
+        return 0
+    fi
+
+    echo "📋 项目缺大纲（S1），自动启动 ink-plan 生成完整卷大纲..."
+    report_event "📋" "S1自动plan启动" "大纲缺失，生成完整卷大纲"
+
+    # 确定需要规划的卷范围：从 BATCH_START 到 BATCH_END 覆盖的所有卷
+    local _plan_vol _plan_vols _last_plan_vol _pc
+    _plan_vols=""
+    _last_plan_vol=""
+    for ((_pc=BATCH_START; _pc<=BATCH_END; _pc++)); do
+        _plan_vol=$(get_volume_for_chapter "$_pc")
+        if [[ -n "$_plan_vol" ]] && [[ "$_plan_vol" != "$_last_plan_vol" ]]; then
+            _plan_vols="${_plan_vols} ${_plan_vol}"
+            _last_plan_vol="$_plan_vol"
+        fi
+    done
+
+    for _plan_vol in $_plan_vols; do
+        echo "    📋 正在生成第${_plan_vol}卷完整大纲..."
+        if auto_plan_volume "$_plan_vol" "$BATCH_START"; then
+            echo "    ✅ 第${_plan_vol}卷大纲生成成功"
+            report_event "✅" "S1自动plan完成" "第${_plan_vol}卷"
+        else
+            echo "    ❌ 第${_plan_vol}卷大纲生成失败，中止批量写作"
+            report_event "❌" "S1自动plan失败" "第${_plan_vol}卷"
+            exit 1
+        fi
+    done
+    echo ""
 }
 
 # ═══════════════════════════════════════════
@@ -1384,6 +1475,16 @@ print_summary() {
     echo "  推荐下一步：ink-auto ${N}"
     echo "═══════════════════════════════════════"
 }
+
+# ═══════════════════════════════════════════
+# 主流程启动：状态分发 + 大纲预检（必须在所有函数定义后调用）
+# ═══════════════════════════════════════════
+
+# v27 路径：PROJECT_ROOT 为空则自动 init + 首卷 plan，落盘后 PROJECT_ROOT 就绪
+_v27_init_if_needed
+
+# 已初始化路径：完结检测 + 大纲覆盖预检（可能再触发 S1 自动 plan）
+_s1_outline_precheck_if_root
 
 # ═══════════════════════════════════════════
 # 并发模式：委托给 Python asyncio 编排器

@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -27,7 +28,7 @@ from ink_writer.core.index.review_report_sync import (
 
 def _seed_db(db_path: Path, rows: list[dict]) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(str(db_path)) as conn:
+    with closing(sqlite3.connect(str(db_path))) as conn:
         conn.execute(
             """
             CREATE TABLE review_metrics (

@@ -4,8 +4,8 @@
   1. ``should_skip_sensory_immersion`` 的场景判定矩阵（7 种 scene_mode + 黄金三章兜底）
   2. agent spec 文件 (writer-agent.md / sensory-immersion-checker.md) 的关键门控文本锁定
   3. ``arbitration.collect_issues_from_review_metrics`` 在直白模式下过滤 sensory-immersion
-     issues（scene_mode=combat → 不产生 Red），非直白模式下保留（scene_mode=slow_build
-     正常触发）——零退化硬约束
+     issues（combat/slow_build/emotional/other 均不产生 Red），确保 US-006 全场景激活
+     与 US-007 sensory skipped 对齐
 """
 
 from __future__ import annotations
@@ -63,14 +63,14 @@ def test_should_skip_sensory_immersion_checker_name_constant():
 
 
 def test_should_skip_sensory_immersion_handles_string_chapter_fallback():
-    # chapter_no=0 应 fallback 到 False（非黄金三章）
+    # US-006 全场景激活；chapter_no=0 也按默认直白模式跳过 sensory。
     assert should_skip_sensory_immersion(None, 0) is True
 
 
 # ---------------- Section 2: agent spec gating text ----------------
 
 
-def test_writer_agent_l10b_marks_non_directness_only():
+def test_writer_agent_l10b_marks_colloquial_gate():
     text = _WRITER_AGENT_SPEC.read_text(encoding="utf-8")
     assert "L10b 感官锚点法则" in text
     # US-009: L10b 段改为标注"仅在 colloquial-checker 非 red 时生效"
@@ -79,7 +79,7 @@ def test_writer_agent_l10b_marks_non_directness_only():
     assert "colloquial-checker" in l10b_slice
 
 
-def test_writer_agent_l10e_marks_non_directness_only():
+def test_writer_agent_l10e_marks_colloquial_gate():
     text = _WRITER_AGENT_SPEC.read_text(encoding="utf-8")
     assert "L10e 感官主导模态法则" in text
     l10e_idx = text.index("L10e 感官主导模态法则")

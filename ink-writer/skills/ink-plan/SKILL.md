@@ -548,7 +548,7 @@ For each chapter, determine:
 Chapter format (include 反派层级 for context-agent):
 
 ```markdown
-### 第 {N} 章：{标题}
+## 第 {N} 章：{标题}
 - 目标: {20字以内}
 - 阻力: {20字以内}
 - 代价: {20字以内}

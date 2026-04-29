@@ -1,16 +1,18 @@
 """US-005: Directness checker 程序化打分核心。
 
-提供 5 维度（D1-D5）直白度评分：
+提供 7 维度（D1-D7）直白度评分：
   - D1 rhetoric_density  —— 比喻 + 排比 / 总句数
   - D2 adj_verb_ratio    —— 形容词 / 动词
   - D3 abstract_per_100_chars —— 抽象词命中 / 每 100 字
   - D4 sent_len_median   —— 句长中位数（mid_is_better）
   - D5 empty_paragraphs  —— 空描写段数
+  - D6 nesting_depth      —— 句内嵌套深度
+  - D7 modifier_chain_length —— 修饰链长度
 
 评级：任一维度 <6 → RED；均 ≥8 → GREEN；否则 YELLOW。
 
-激活条件（由调用方决定）：scene_mode ∈ {golden_three, combat, climax, high_point}
-或 chapter_no ∈ [1,3]（等同 golden_three）。其他场景应跳过。
+激活条件：US-006 起全场景执行；仅当调用方显式传入
+``directness_skip=True`` 时跳过。
 
 阈值来源：``reports/seed_thresholds.yaml``（US-002 产出），按 scene 选 bucket；
 YAML 不可用时 fallback 到 ``_DEFAULT_THRESHOLDS``（golden_three 固化副本）。
@@ -26,6 +28,9 @@ from typing import Any
 
 logger = logging.getLogger(__name__)
 
+# Legacy scene buckets retained for threshold/spec compatibility. The
+# authoritative activation gate is is_activated(), which is full-scene by
+# default after US-006.
 ACTIVATION_SCENE_MODES = frozenset(
     {"golden_three", "combat", "climax", "high_point"}
 )

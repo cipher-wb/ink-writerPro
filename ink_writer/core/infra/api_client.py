@@ -281,6 +281,13 @@ class RerankAPIClient:
     def _build_url(self) -> str:
         """构建请求 URL"""
         base_url = self.config.rerank_base_url.rstrip("/")
+        if self.config.rerank_api_type == "dashscope":
+            # 阿里 DashScope native rerank：固定路径，不再追加 /rerank
+            # 用户在 base_url 提供的是带完整路径或仅 /api/v1 都接受。
+            if base_url.endswith("/text-rerank"):
+                return base_url
+            # 兜底：base_url=https://dashscope.aliyuncs.com/api/v1 → 自动补完整路径
+            return f"{base_url}/services/rerank/text-rerank/text-rerank"
         if self.config.rerank_api_type == "openai":
             # Jina/Cohere 兼容: /v1/rerank
             if not base_url.endswith("/rerank"):
@@ -288,15 +295,24 @@ class RerankAPIClient:
                     return f"{base_url}/rerank"
                 return f"{base_url}/v1/rerank"
             return base_url
-        else:
-            # Modal 自定义接口
-            return base_url
+        # Modal 自定义接口
+        return base_url
 
     def _build_payload(self, query: str, documents: List[str], top_n: Optional[int]) -> Dict[str, Any]:
         """构建请求体"""
+        if self.config.rerank_api_type == "dashscope":
+            # 阿里 DashScope native 格式：input 和 parameters 嵌套
+            payload: Dict[str, Any] = {
+                "model": self.config.rerank_model,
+                "input": {"query": query, "documents": documents},
+                "parameters": {"return_documents": False},
+            }
+            if top_n:
+                payload["parameters"]["top_n"] = top_n
+            return payload
         if self.config.rerank_api_type == "openai":
             # Jina/Cohere 格式
-            payload: Dict[str, Any] = {
+            payload = {
                 "query": query,
                 "documents": documents,
                 "model": self.config.rerank_model
@@ -304,21 +320,19 @@ class RerankAPIClient:
             if top_n:
                 payload["top_n"] = top_n
             return payload
-        else:
-            # Modal 格式
-            payload = {"query": query, "documents": documents}
-            if top_n:
-                payload["top_n"] = top_n
-            return payload
+        # Modal 格式
+        payload = {"query": query, "documents": documents}
+        if top_n:
+            payload["top_n"] = top_n
+        return payload
 
     def _parse_response(self, data: Dict[str, Any]) -> List[Dict[str, Any]]:
         """解析响应"""
-        if self.config.rerank_api_type == "openai":
-            # Jina/Cohere 格式: {"results": [{"index": 0, "relevance_score": 0.9}, ...]}
-            return data.get("results", [])
-        else:
-            # Modal 格式: {"results": [...]}
-            return data.get("results", [])
+        if self.config.rerank_api_type == "dashscope":
+            # 阿里 DashScope 格式: {"output": {"results": [{"index": 0, "relevance_score": 0.9}, ...]}}
+            return data.get("output", {}).get("results", [])
+        # OpenAI / Modal 格式同样在顶层 "results"
+        return data.get("results", [])
 
     async def rerank(
         self,

@@ -33,6 +33,7 @@ import os
 import sys
 import time
 from collections.abc import Callable
+from contextlib import closing
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -487,7 +488,7 @@ def _persist_result_to_db(result: Step3Result, state_dir: Path) -> None:
             "hard": len(result.hard_fails),
             "soft": len(result.soft_fails),
         }
-        with sqlite3.connect(str(db_path)) as conn:
+        with closing(sqlite3.connect(str(db_path))) as conn:
             conn.execute(
                 """
                 INSERT INTO review_metrics
@@ -562,7 +563,7 @@ async def run_step3(
     runner.add(GateSpec(name="anti_detection", fn=_make_anti_detection_adapter(bundle), is_hard_gate=True))
     runner.add(GateSpec(name="voice", fn=_make_voice_adapter(bundle), is_hard_gate=False))
     runner.add(GateSpec(name="plotline", fn=_make_plotline_adapter(bundle), is_hard_gate=True))
-    # v22 US-005: directness gate——仅黄金三章/战斗/高潮/爽点场景激活；其他场景透明返回 PASS。
+    # v22 US-006: directness gate——全场景激活；仅 directness_skip=true 透明返回 PASS。
     # is_hard_gate=False：即便评分 Red，也不会 cancel 其他 gate；shadow/enforce 都先观察后阻断。
     runner.add(GateSpec(name="directness", fn=_make_directness_adapter(bundle), is_hard_gate=False))
     # US-005 prose anti-AI overhaul: colloquial gate——全场景激活，5 维度白话度门禁。

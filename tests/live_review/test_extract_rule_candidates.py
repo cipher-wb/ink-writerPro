@@ -116,6 +116,7 @@ def candidates_file(tmp_path_factory, jsonl_dir) -> Path:
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=False,
         cwd=str(REPO_ROOT),
     )
@@ -205,6 +206,7 @@ def test_fail_loud_on_non_json_llm_output(tmp_path, jsonl_dir):
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=False,
         cwd=str(REPO_ROOT),
     )
@@ -235,6 +237,7 @@ def test_fail_loud_on_missing_required_field(tmp_path, jsonl_dir):
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=False,
         cwd=str(REPO_ROOT),
     )
@@ -262,6 +265,7 @@ def test_threshold_zero_marks_everything_as_dup(tmp_path, jsonl_dir):
         ],
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=False,
         cwd=str(REPO_ROOT),
     )

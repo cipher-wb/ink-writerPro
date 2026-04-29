@@ -16,6 +16,7 @@ import random
 import sqlite3
 import subprocess
 import sys
+from contextlib import closing
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Sequence
@@ -214,7 +215,7 @@ class StyleRAGRetriever:
             LIMIT ?
         """
         params.append(sample_pool)
-        with sqlite3.connect(str(self._db_path)) as conn:
+        with closing(sqlite3.connect(str(self._db_path))) as conn:
             conn.row_factory = sqlite3.Row
             rows = conn.execute(sql, params).fetchall()
         if not rows:

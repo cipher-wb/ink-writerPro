@@ -40,6 +40,7 @@ def _run(args: list[str], **kwargs) -> subprocess.CompletedProcess:
         cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
+        encoding="utf-8",
         **kwargs,
     )
 
@@ -114,6 +115,7 @@ def test_smoke_no_api_key_does_not_import_anthropic(
         cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
+        encoding="utf-8",
         env=env,
     )
     assert proc.returncode == 0, f"stderr: {proc.stderr}\nstdout: {proc.stdout}"

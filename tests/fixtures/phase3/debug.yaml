@@ -1,0 +1,26 @@
+master_enabled: true
+layers:
+  layer_a_hooks: true
+  layer_b_checker_router: true
+  layer_c_invariants: true
+  layer_d_adversarial: false
+severity:
+  jsonl_threshold: info
+  sqlite_threshold: warn
+  alert_threshold: warn
+  stderr_threshold: error
+storage:
+  base_dir: .ink-debug
+  events_max_mb: 100
+  archive_keep: 5
+alerts:
+  per_chapter_summary: true
+  per_batch_report: true
+  warn_window_days: 7
+  warn_window_threshold: 5
+invariants:
+  writer_word_count:
+    enabled: true
+    min_words_by_platform:
+      qidian: 2200
+      fanqie: 1500

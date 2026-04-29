@@ -15,7 +15,7 @@ $RepoRoot = Split-Path -Parent (Split-Path -Parent $ThisDir)
 $Script = Join-Path $ThisDir 'check_plugin_version_consistency.py'
 
 function Find-PythonLauncher {
-    $candidates = @('py -3', 'python3', 'python')
+    $candidates = @('py -3', 'python3', 'python') # c8-ok: detector primitive
     foreach ($cand in $candidates) {
         $exe = ($cand -split ' ')[0]
         if (Get-Command $exe -ErrorAction SilentlyContinue) {

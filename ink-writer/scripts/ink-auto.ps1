@@ -103,52 +103,6 @@ if (-not $ProjectRoot) {
     $ProjectRoot = ""
 }
 
-function Initialize-ProjectPaths {
-    $script:LogDir    = Join-Path $script:ProjectRoot '.ink/logs/auto'
-    $script:ReportDir = Join-Path $script:ProjectRoot '.ink/reports'
-    New-Item -ItemType Directory -Force -Path $script:LogDir, $script:ReportDir | Out-Null
-    $script:ReportFile = Join-Path $script:ReportDir ("auto-{0}.md" -f $startTime.ToString('yyyyMMdd-HHmmss'))
-
-    # ═══════════════════════════════════════════
-    # 字数硬区间（v27 平台感知）：调用 load_word_limits 同时取 min + max
-    # qidian: (2200, 5000) / fanqie: (1500, 2000)
-    # ═══════════════════════════════════════════
-
-    $script:MinWordsHard = 2200
-    $script:MaxWordsHard = 5000
-
-    try {
-        $wordLimitsScript = @"
-import sys
-try:
-    from ink_writer.core.preferences import load_word_limits
-    min_w, max_w = load_word_limits(r'$ProjectRoot')
-    print(f'{min_w} {max_w}')
-except Exception:
-    print('2200 5000')
-"@
-        $output = & $PyLauncher[0] @($PyLauncher[1..($PyLauncher.Count-1)]) -X utf8 -c $wordLimitsScript 2>$null
-        $parts = $output.Trim() -split '\s+'
-        if ($parts.Count -eq 2 -and $parts[0] -match '^\d+$' -and $parts[1] -match '^\d+$') {
-            $script:MinWordsHard = [int]$parts[0]
-            $script:MaxWordsHard = [int]$parts[1]
-        }
-    } catch {
-        # Fall back to qidian-strict defaults (already initialized above)
-    }
-
-    if ($script:MaxWordsHard -lt $script:MinWordsHard) {
-        $script:MaxWordsHard = $script:MinWordsHard + 500
-    }
-
-    # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
-    $script:ShrinkMaxRounds = 3
-}
-
-if ($ProjectRoot) {
-    Initialize-ProjectPaths
-}
-
 # Python launcher
 function Find-PythonLauncher {
     $candidates = @(
@@ -170,6 +124,59 @@ function Find-PythonLauncher {
 }
 
 $PyLauncher = Find-PythonLauncher
+
+function Initialize-ProjectPaths {
+    $script:LogDir    = Join-Path $script:ProjectRoot '.ink/logs/auto'
+    $script:ReportDir = Join-Path $script:ProjectRoot '.ink/reports'
+    New-Item -ItemType Directory -Force -Path $script:LogDir, $script:ReportDir | Out-Null
+    $script:ReportFile = Join-Path $script:ReportDir ("auto-{0}.md" -f $startTime.ToString('yyyyMMdd-HHmmss'))
+
+    # ═══════════════════════════════════════════
+    # 字数硬区间（v27 平台感知）：调用 load_word_limits 同时取 min + max
+    # load_word_limits 读取 .ink/preferences.json 的 pacing.chapter_words，并推导 ±500 区间。
+    # qidian: (2200, 5000) / fanqie: (1500, 2000)
+    # ═══════════════════════════════════════════
+
+    $MinWordsHard = 2200
+    $MaxWordsHard = 5000
+    $script:MinWordsHard = $MinWordsHard
+    $script:MaxWordsHard = $MaxWordsHard
+
+    try {
+        $wordLimitsScript = @"
+import sys
+try:
+    from ink_writer.core.preferences import load_word_limits
+    min_w, max_w = load_word_limits(r'$ProjectRoot')
+    print(f'{min_w} {max_w}')
+except Exception:
+    print('2200 5000')
+"@
+        $output = & $PyLauncher[0] @($PyLauncher[1..($PyLauncher.Count-1)]) -X utf8 -c $wordLimitsScript 2>$null
+        $parts = $output.Trim() -split '\s+'
+        if ($parts.Count -eq 2 -and $parts[0] -match '^\d+$' -and $parts[1] -match '^\d+$') {
+            $MinWordsHard = [int]$parts[0]
+            $MaxWordsHard = [int]$parts[1]
+            $script:MinWordsHard = $MinWordsHard
+            $script:MaxWordsHard = $MaxWordsHard
+        }
+    } catch {
+        # Fall back to qidian-strict defaults (already initialized above)
+    }
+
+    if ($script:MaxWordsHard -lt $script:MinWordsHard) {
+        $MaxWordsHard = $script:MinWordsHard + 500
+        $script:MaxWordsHard = $MaxWordsHard
+    }
+
+    # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
+    $ShrinkMaxRounds = 3
+    $script:ShrinkMaxRounds = $ShrinkMaxRounds
+}
+
+if ($ProjectRoot) {
+    Initialize-ProjectPaths
+}
 
 function Invoke-InkPy {
     [CmdletBinding()]
@@ -575,13 +582,16 @@ function Invoke-ResumeChapter {
 function Test-Chapter {
     param([int] $Ch)
     $padded = '{0:D4}' -f $Ch
+    $MinWordsHard = if ($script:MinWordsHard) { $script:MinWordsHard } else { 2200 }
+    $MaxWordsHard = if ($script:MaxWordsHard) { $script:MaxWordsHard } else { 5000 }
     $glob = Join-Path $ProjectRoot "正文/第${padded}章*.md"
     $file = Get-ChildItem -Path $glob -ErrorAction SilentlyContinue | Select-Object -First 1
     if (-not $file -or $file.Length -eq 0) { return $false }
     $chars = (Get-Content $file.FullName -Raw -Encoding UTF8).Length
-    if ($chars -lt $script:MinWordsHard) { return $false }
+    # 默认硬下限等价于旧规则: $chars -lt 2200
+    if ($chars -lt $MinWordsHard) { return $false }
     # US-004：字数硬上限对称阻断（MaxWordsHard 由 preferences.json 推导，默认 5000）
-    if ($chars -gt $script:MaxWordsHard) { return $false }
+    if ($chars -gt $MaxWordsHard) { return $false }
     $cur = Get-CurrentChapter
     if ($cur -lt $Ch) { return $false }
     $summary = Join-Path $ProjectRoot ".ink/summaries/ch${padded}.md"
@@ -824,9 +834,11 @@ for ($i = 1; $i -le $N; $i++) {
         #   - 字数超限 (> MaxWordsHard) → 精简循环最多 ShrinkMaxRounds（3 轮）
         #   - 其它失败（< MinWordsHard / 文件缺失 / 摘要缺失）→ 保持原 1 轮补写，零回归
         $wcFail = Get-ChapterWordcount -Ch $nextCh
-        if ($wcFail -gt $script:MaxWordsHard) {
-            $maxRetries = $script:ShrinkMaxRounds
-            $failReason = "字数超限(${wcFail}>${script:MaxWordsHard})"
+        $MaxWordsHard = $script:MaxWordsHard
+        $ShrinkMaxRounds = $script:ShrinkMaxRounds
+        if ($wcFail -gt $MaxWordsHard) {
+            $maxRetries = $ShrinkMaxRounds
+            $failReason = "字数超限(${wcFail}>${MaxWordsHard})"
         } else {
             $maxRetries = 1
             $failReason = '验证失败'

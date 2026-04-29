@@ -4,9 +4,9 @@
 
 ## Summary
 
-- **Python modules scanned**: 278
+- **Python modules scanned**: 309
 - **Import cycles found**: 0
-- **Unused module candidates**: 4
+- **Unused module candidates**: 19
 - **Agents scanned**: 35
 - **Agent overlap pairs**: 20
 - **Repeated prompt fragments**: 50
@@ -17,10 +17,25 @@ No import cycles detected. ✓
 
 ## 2. Unused Module Candidates
 
+- `_pyshim.ink_writer` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/__init__.py)
+- `_pyshim.ink_writer.debug` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/__init__.py)
+- `_pyshim.ink_writer.debug.alerter` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/alerter.py)
+- `_pyshim.ink_writer.debug.checker_router` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/checker_router.py)
+- `_pyshim.ink_writer.debug.cli` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/cli.py)
+- `_pyshim.ink_writer.debug.collector` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/collector.py)
+- `_pyshim.ink_writer.debug.config` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/config.py)
+- `_pyshim.ink_writer.debug.indexer` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/indexer.py)
+- `_pyshim.ink_writer.debug.reporter` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/reporter.py)
+- `_pyshim.ink_writer.debug.rotate` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/rotate.py)
+- `_pyshim.ink_writer.debug.schema` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/_pyshim/ink_writer/debug/schema.py)
+- `blueprint_scanner` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/blueprint_scanner.py)
+- `blueprint_to_quick_draft` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/blueprint_to_quick_draft.py)
 - `creativity.__main__` (/Users/cipher/AI/小说/ink/ink-writer/ink_writer/creativity/__main__.py)
 - `ink` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/ink.py)
 - `meta_rule_emergence.__main__` (/Users/cipher/AI/小说/ink/ink-writer/ink_writer/meta_rule_emergence/__main__.py)
+- `post_polish_zt_check` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/post_polish_zt_check.py)
 - `regression_tracker.__main__` (/Users/cipher/AI/小说/ink/ink-writer/ink_writer/regression_tracker/__main__.py)
+- `verify_golden_three` (/Users/cipher/AI/小说/ink/ink-writer/ink-writer/scripts/verify_golden_three.py)
 
 ## 3. Agent IO Contract Table
 
@@ -127,23 +142,25 @@ Fragments appearing in 2+ agent specs (top 50):
 - **7x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `prd tasks prd m4 p0 planning`
 - **7x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `cases_hit list str 由 planning_review 在阻断时按`
 - **7x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `to_dict 写入 base_dir book planning_evidence_chain json`
+- **7x** in [colloquial-checker, context-agent, flow-naturalness-checker, polish-agent, prose-impact-checker, sensory-immersion-checker, writer-agent]: `golden_three combat climax high_point slow_build emotional`
 - **7x** in [conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-checker, protagonist-motive-checker, writer-self-check]: `txt 输入 python 调用 python from`
 - **6x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `llm_client 兼容 messages create 的对象 block_threshold`
 - **6x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `planning_review 在阻断时按 config case_ids 注入 本`
 - **6x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `0 blocked true notes checker_failed err`
 - **6x** in [conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-agency-checker, protagonist-motive-checker]: `prompts check txt 输入 python 调用`
 - **6x** in [conflict-skeleton-checker, genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `ink_writer checker_pipeline thresholds_loader load_thresholds 加载 与下游的衔接`
+- **6x** in [context-agent, flow-naturalness-checker, polish-agent, prose-impact-checker, sensory-immersion-checker, writer-agent]: `combat climax high_point slow_build emotional other`
 - **5x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `兼容 messages create 的对象 block_threshold 0`
 - **5x** in [chapter-hook-density-checker, genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `true notes checker_failed err 保守降级 让`
 - **4x** in [chapter-hook-density-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `直接返回 score 0 0 blocked true`
 - **4x** in [conflict-skeleton-checker, golden-finger-spec-checker, protagonist-agency-checker, protagonist-motive-checker]: `本 agent 不主动填充 notes str llm`
 - **4x** in [context-agent, high-point-checker, reader-pull-checker, reader-simulator]: `claude_plugin_root references reading power taxonomy md`
+- **4x** in [flow-naturalness-checker, polish-agent, prose-impact-checker, sensory-immersion-checker]: `scene_mode golden_three combat climax high_point slow_build`
 - **4x** in [genre-novelty-checker, golden-finger-spec-checker, golden-finger-timing-checker, protagonist-motive-checker]: `由 thresholds_loader 注入 model glm 4`
 - **4x** in [genre-novelty-checker, golden-finger-spec-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `checker_pipeline thresholds_loader load_thresholds 加载 与下游的衔接 ink_writer`
 - **4x** in [genre-novelty-checker, golden-finger-spec-checker, naming-style-checker, protagonist-motive-checker]: `与下游的衔接 ink_writer planning_review ink_init_review run_ink_init_review 把`
 - **4x** in [golden-finger-spec-checker, naming-style-checker, protagonist-agency-skeleton-checker, protagonist-motive-checker]: `字段 类型 说明 score float mean`
 - **3x** in [chapter-hook-density-checker, golden-finger-timing-checker, protagonist-agency-skeleton-checker]: `与下游的衔接 ink_writer planning_review ink_plan_review run_ink_plan_review 把`
-- **3x** in [colloquial-checker, context-agent, writer-agent]: `golden_three combat climax high_point slow_build emotional`
 - **3x** in [colloquial-checker, directness-checker, writer-agent]: `ink writer assets prose blacklist yaml`
 - **3x** in [conflict-skeleton-checker, protagonist-agency-checker, writer-self-check]: `superpowers specs 2026 04 25 m3`
 - **3x** in [conflict-skeleton-checker, protagonist-agency-checker, writer-self-check]: `prd tasks prd m3 p1 loop`
@@ -154,8 +171,6 @@ Fragments appearing in 2+ agent specs (top 50):
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `本 agent 默认数据源 审查包中的正文 章纲 含`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, writer-agent]: `skills ink review references pacing control`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `review_bundle scene_mode golden_three combat climax high_point`
-- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `缺省且 chapter_no 1 2 3 黄金三章兜底`
+- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `slow_build emotional other 与 chapter_no 1`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `段落定位 修复建议 执行流程 第一步 加载目标章节与锚定数据 从`
 - **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `黄金三章加严 章节范围 规则 加严处置 ch1 3`
-- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `结论 通过 预警 未通过 简要说明 禁止事项`
-- **3x** in [flow-naturalness-checker, prose-impact-checker, sensory-immersion-checker]: `黄金三章无任何 critical 命中 报告包含可执行的段落级修复建议 输出格式增强 json`

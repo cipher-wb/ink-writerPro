@@ -14,6 +14,7 @@ import os
 import sqlite3
 import subprocess
 import sys
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -32,7 +33,7 @@ def _make_project(tmp_path: Path) -> Path:
     (text_dir / "第0001章-测试章.md").write_text("测试章节文本。" * 50, encoding="utf-8")
 
     db_path = ink_dir / "index.db"
-    with sqlite3.connect(str(db_path)) as conn:
+    with closing(sqlite3.connect(str(db_path))) as conn:
         conn.execute("""
             CREATE TABLE review_metrics (
                 start_chapter INTEGER NOT NULL,
@@ -140,7 +141,7 @@ def test_persist_writes_review_metrics(tmp_path):
     asyncio.run(run_step3(
         chapter_id=1, state_dir=project / ".ink", mode="shadow", dry_run=False
     ))
-    with sqlite3.connect(str(project / ".ink" / "index.db")) as conn:
+    with closing(sqlite3.connect(str(project / ".ink" / "index.db"))) as conn:
         rows = conn.execute("SELECT start_chapter, mode FROM review_metrics").fetchall() \
             if False else conn.execute(
                 "SELECT start_chapter, notes FROM review_metrics"

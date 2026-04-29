@@ -74,10 +74,10 @@ prose_categories:
   - prose_density
   - simplicity
 
-# v22 US-004：writer-injection 分类别召回下限（黄金三章 + 战斗/高潮/爽点场景激活）
-# writer_injection.py 通过 scene_mode 入参激活 directness 场景；激活后 simplicity 类 ≥5 条。
-# 非激活章节维持 golden_three 既有下限（opening/taboo/hook）。
+# v22 US-004 / US-006：writer-injection 分类别召回下限默认全场景激活。
+# writer_injection.py 通过 scene_mode 入参激活 directness 场景；缺失 scene_mode 时按 other 兜底。
+# 激活后 simplicity 类 ≥5 条，与 directness-checker / polish-agent 保持一致。
 directness_recall:
-  scene_modes: ["combat", "climax", "high_point"]
+  scene_modes: ["golden_three", "combat", "climax", "high_point", "slow_build", "emotional", "other"]
   floor_categories: ["simplicity"]
   floor_per_category: 5

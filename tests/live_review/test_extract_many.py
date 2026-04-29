@@ -55,6 +55,7 @@ def _run_many(tmp_out: Path, raw_dir: Path, mock_dir: Path) -> subprocess.Comple
         cwd=str(REPO_ROOT),
         capture_output=True,
         text=True,
+        encoding="utf-8",
     )
 
 

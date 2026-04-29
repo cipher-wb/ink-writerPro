@@ -22,6 +22,29 @@ KEY_TO_PATH = {
 }
 
 
+def _enable_cli_utf8_stdio() -> None:
+    """Enable UTF-8 stdio for Windows CLI launches; no-op elsewhere."""
+    here = Path(__file__).resolve()
+    candidates = (
+        here.parents[2] / "ink-writer" / "scripts",
+        here.parents[3],
+    )
+    for scripts_dir in candidates:
+        if scripts_dir.is_dir():
+            import sys
+
+            scripts_path = str(scripts_dir)
+            if scripts_path not in sys.path:
+                sys.path.insert(0, scripts_path)
+            try:
+                from runtime_compat import enable_windows_utf8_stdio
+
+                enable_windows_utf8_stdio()
+                return
+            except Exception:
+                continue
+
+
 def cmd_status(*, project_root: Path, global_yaml: Path) -> None:
     cfg = load_config(global_yaml_path=global_yaml, project_root=project_root)
     Indexer(cfg).sync()
@@ -126,4 +149,5 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
+    _enable_cli_utf8_stdio()
     raise SystemExit(main())

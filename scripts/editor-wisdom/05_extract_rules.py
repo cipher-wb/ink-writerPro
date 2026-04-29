@@ -53,6 +53,9 @@ VALID_APPLIES_TO = frozenset({
     "combat",
     "climax",
     "high_point",
+    "slow_build",
+    "emotional",
+    "other",
 })
 
 SYSTEM_PROMPT = """\

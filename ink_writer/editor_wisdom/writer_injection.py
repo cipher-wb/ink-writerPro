@@ -24,9 +24,19 @@ __all__ = [
     "DIRECTNESS_SCENE_MODES",
 ]
 
-# v22 US-004：directness 模式 scene_mode 取值。golden_three（chapter ∈ [1,3]）在
-# build_writer_constraints 里按 chapter_no 直接判；这里仅列明显式的 scene_mode 值。
-DIRECTNESS_SCENE_MODES: frozenset[str] = frozenset({"combat", "climax", "high_point"})
+# v22 US-004 / US-006：writer 端默认全场景注入直白约束，与 directness-checker
+# 和 polish-agent 的激活矩阵保持一致。chapter ∈ [1,3] 仍按黄金三章兜底。
+DIRECTNESS_SCENE_MODES: frozenset[str] = frozenset(
+    {
+        "golden_three",
+        "combat",
+        "climax",
+        "high_point",
+        "slow_build",
+        "emotional",
+        "other",
+    }
+)
 
 
 @dataclass
@@ -74,10 +84,11 @@ def build_writer_constraints(
     When chapter_no <= 3, additionally injects rules whose applies_to includes 'golden_three'
     AND enforces a per-category floor (opening/taboo/hook each ≥3 rules) — v18 US-002.
 
-    v22 US-004: when chapter_no ∈ [1,3] OR scene_mode ∈ {combat, climax, high_point},
+    v22 US-004 / US-006: when chapter_no ∈ [1,3] OR scene_mode matches the
+    configured directness_recall scene modes (default: all 7 scene_mode values),
     additionally enforce a per-category floor for simplicity rules (default ≥5) so the
-    writer-agent prompt always carries directness-mode constraints for those scenes.
-    Non-directness scenes are unaffected — 零退化硬约束保留 sensory-immersion 流程。
+    writer-agent prompt carries directness-mode constraints before checker gating.
+    Missing scene_mode falls back to the configured "other" bucket when enabled.
     """
     if config is None:
         config = load_config()
@@ -100,10 +111,13 @@ def build_writer_constraints(
     k = config.retrieval_top_k
     rules = retriever.retrieve(query=chapter_outline, k=k)
 
-    # v22 US-004：directness 激活判定——黄金三章 chapter∈[1,3] 或显式 scene_mode 命中
+    # v22 US-004 / US-006：directness writer 约束默认全场景激活；scene_mode 缺失
+    # 时按 other 桶处理，避免写作端漏注入、审查端事后才拦。
     directness_scene_modes = frozenset(config.directness_recall.scene_modes)
     directness_active = (chapter_no <= 3) or (
         scene_mode is not None and scene_mode in directness_scene_modes
+    ) or (
+        scene_mode is None and "other" in directness_scene_modes
     )
 
     if chapter_no <= 3:
@@ -128,7 +142,6 @@ def build_writer_constraints(
 
     if directness_active:
         # v22 US-004：simplicity 类分类别下限（默认 ≥5），独立于 golden-three 的 opening/taboo/hook 下限。
-        # 非 directness 场景（scene_mode in {slow_build, emotional, other}, chapter>3）完全不进入。
         rules = _enforce_category_floor(
             rules=rules,
             retriever=retriever,

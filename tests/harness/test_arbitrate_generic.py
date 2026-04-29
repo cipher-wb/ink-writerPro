@@ -163,7 +163,12 @@ def test_arbitrate_p4_info_still_filtered_in_generic() -> None:
 
 
 def test_collect_issues_normalizes_type_to_symptom_key() -> None:
-    """Different ``type`` spellings across checkers collide after normalization."""
+    """Different surviving ``type`` spellings collide after normalization.
+
+    US-006 后默认全场景直白模式会过滤 sensory-immersion，并豁免
+    prose-impact / flow-naturalness 的镜头/感官软规则；这里使用非豁免的
+    sentence rhythm 类型来锁定 collector 的归一化行为。
+    """
     metrics = {
         "critical_issues": [],
         "review_payload_json": {
@@ -171,25 +176,16 @@ def test_collect_issues_normalizes_type_to_symptom_key() -> None:
                 "prose-impact-checker": {
                     "violations": [
                         {
-                            "type": "SHOT_MONOTONY",
+                            "type": "SENTENCE_RHYTHM_FLAT",
                             "severity": "high",
                             "suggestion": "A",
-                        }
-                    ]
-                },
-                "sensory-immersion-checker": {
-                    "violations": [
-                        {
-                            "type": "shot.monotony",
-                            "severity": "medium",
-                            "suggestion": "B",
                         }
                     ]
                 },
                 "flow-naturalness-checker": {
                     "issues": [
                         {
-                            "type": "Shot-Monotony",
+                            "type": "sentence.rhythm-flat",
                             "severity": "low",
                             "suggestion": "C",
                         }
@@ -199,8 +195,8 @@ def test_collect_issues_normalizes_type_to_symptom_key() -> None:
         },
     }
     issues = collect_issues_from_review_metrics(metrics)
-    assert len(issues) == 3
-    # all three should share a single normalized symptom_key
+    assert len(issues) == 2
+    # both surviving issues should share a single normalized symptom_key
     keys = {it.symptom_key for it in issues}
     assert len(keys) == 1, f"expected 1 normalized key, got {keys}"
 
@@ -284,25 +280,16 @@ def _seed_review_metrics(db_path: Path, chapter: int) -> None:
                 "prose-impact-checker": {
                     "violations": [
                         {
-                            "type": "SHOT_MONOTONY",
+                            "type": "SENTENCE_RHYTHM_FLAT",
                             "severity": "high",
-                            "suggestion": "切换远景/特写",
-                        }
-                    ]
-                },
-                "sensory-immersion-checker": {
-                    "violations": [
-                        {
-                            "type": "SHOT_MONOTONY",
-                            "severity": "medium",
-                            "suggestion": "多感官层次",
+                            "suggestion": "句式节奏增加顿挫",
                         }
                     ]
                 },
                 "flow-naturalness-checker": {
                     "violations": [
                         {
-                            "type": "SHOT_MONOTONY",
+                            "type": "sentence.rhythm-flat",
                             "severity": "low",
                             "suggestion": "节奏更自然",
                         }
@@ -360,7 +347,7 @@ def test_pipeline_manager_arbitrate_chapter_issues_ch50(tmp_path: Path) -> None:
     assert result["chapter_id"] == 50
     assert len(result["merged_fixes"]) == 1
     merged = result["merged_fixes"][0]
-    assert len(merged["sources"]) == 3
+    assert len(merged["sources"]) == 2
 
     out_path = project_root / ".ink" / "arbitration" / "ch0050.json"
     assert out_path.exists(), "arbitration payload must be persisted for polish-agent"

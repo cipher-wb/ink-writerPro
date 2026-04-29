@@ -34,14 +34,15 @@ agents/ink-writer/ (1 agent) ← ELIMINATED in US-402
 - foreshadow-tracker ↔ plotline-tracker: identical state machine, scoring model, ink-plan interaction
 - Missing IO schema for 6 agents in checker-output-schema.md
 
-## After (v25.0): 33 Agents, Single Directory
+## After (v26.3): 35 Agents, Single Directory
 
 (M3 / 2026-04-25 起新增 writer-self-check / conflict-skeleton-checker / protagonist-agency-checker，23 → 26；
 M4 / 2026-04-25 起新增 7 个策划期 checker：genre-novelty / golden-finger-spec / naming-style /
-protagonist-motive / golden-finger-timing / protagonist-agency-skeleton / chapter-hook-density，26 → 33)
+protagonist-motive / golden-finger-timing / protagonist-agency-skeleton / chapter-hook-density，26 → 33；
+v26.x 新增 colloquial-checker 等质量守卫，当前实际为 35)
 
 ```
-ink-writer/agents/ (23 agents, v13 US-016 删除 2 僵尸, v13.2-v13.7 新增 5 checker, v22 新增 directness-checker)
+ink-writer/agents/ (35 agents, v13 US-016 删除 2 僵尸, v13.2-v13.7 新增 5 checker, v22+ 持续新增质量/策划 checker)
 ├── writer-agent.md                [Writing]
 ├── context-agent.md               [Context]
 ├── data-agent.md                  [Data]

@@ -8,8 +8,8 @@ Covers:
   - EditorWisdomConfig.categories 从 YAML 加载正确
   - EditorWisdomConfig.directness_recall 从 YAML 加载正确
   - writer-injection 在黄金三章 (chapter_no <= 3) 时 simplicity 类 ≥5 条
-  - writer-injection 在 scene_mode in {combat, climax, high_point} 时 simplicity 类 ≥5 条
-  - writer-injection 在 scene_mode=slow_build / chapter_no=10 时不触发 simplicity 下限
+  - writer-injection 默认在 7 种 scene_mode 与缺省 scene_mode 下 simplicity 类 ≥5 条
+  - writer-injection 的 directness_recall 配置仍可收窄触发场景
   - 默认 EditorWisdomConfig 含 simplicity category
 """
 
@@ -85,7 +85,7 @@ class TestRulesGate:
 
         extract_mod = import_module("05_extract_rules")
         valid = extract_mod.VALID_APPLIES_TO
-        for scene in ("combat", "climax", "high_point"):
+        for scene in DIRECTNESS_SCENE_MODES:
             assert scene in valid, f"{scene} must be in VALID_APPLIES_TO"
         for r in simplicity_rules:
             for v in r["applies_to"]:
@@ -94,12 +94,13 @@ class TestRulesGate:
     def test_simplicity_rules_cover_directness_scenes(
         self, simplicity_rules: list[dict]
     ) -> None:
-        """简化规则整体上必须覆盖 golden_three/combat/climax/high_point 四类场景."""
+        """简化规则须覆盖重点场景；其他场景由 all_chapters 兜底。"""
         seen: set[str] = set()
         for r in simplicity_rules:
             seen.update(r["applies_to"])
         for scene in ("golden_three", "combat", "climax", "high_point"):
             assert scene in seen, f"No simplicity rule applies to {scene}"
+        assert "all_chapters" in seen, "Full-scene directness recall needs all_chapters fallback"
 
     def test_rule_ids_unique(self, all_rules: list[dict]) -> None:
         ids = [r["id"] for r in all_rules]
@@ -126,13 +127,13 @@ class TestConfigLoading:
         cfg = EditorWisdomConfig()
         assert cfg.directness_recall.floor_per_category == 5
         assert "simplicity" in cfg.directness_recall.floor_categories
-        assert set(cfg.directness_recall.scene_modes) == {"combat", "climax", "high_point"}
+        assert set(cfg.directness_recall.scene_modes) == DIRECTNESS_SCENE_MODES
 
     def test_yaml_directness_recall_loaded(self) -> None:
         cfg = load_config(CONFIG_PATH)
         assert cfg.directness_recall.floor_per_category == 5
         assert "simplicity" in cfg.directness_recall.floor_categories
-        assert set(cfg.directness_recall.scene_modes) == {"combat", "climax", "high_point"}
+        assert set(cfg.directness_recall.scene_modes) == DIRECTNESS_SCENE_MODES
 
     def test_load_config_missing_directness_recall_uses_defaults(
         self, tmp_path: Path
@@ -266,10 +267,10 @@ class TestWriterInjectionSceneAwareRecall:
         )
 
     @pytest.mark.parametrize("scene_mode", ["slow_build", "emotional", "other", None])
-    def test_non_directness_scenes_skip_simplicity_floor(
+    def test_full_scene_defaults_inject_simplicity_floor(
         self, scene_mode: str | None
     ) -> None:
-        """非 directness 场景（chapter>3, scene_mode 非 {combat/climax/high_point}) 不触发 simplicity 下限."""
+        """默认全场景 directness；缺失 scene_mode 走 other 兜底。"""
         retriever = MockSceneRetriever(all_rules=_build_mixed_pool())
         cfg = _enabled_config()
         section = build_writer_constraints(
@@ -279,11 +280,33 @@ class TestWriterInjectionSceneAwareRecall:
             retriever=retriever,
             scene_mode=scene_mode,
         )
-        # retrieve(k=5) 返回前 5 条 = pacing + 4 simplicity；无下限补召回
         simplicity_ids = {r.id for r in section.rules if r.category == "simplicity"}
-        # 只要没补到 5 条，就说明 directness floor 未触发（4 条不等于 0，但 <5 即可）
+        assert len(simplicity_ids) >= 5, (
+            f"Expected full-scene directness floor for scene_mode={scene_mode}, got {len(simplicity_ids)}"
+        )
+
+    @pytest.mark.parametrize("scene_mode", ["slow_build", "emotional", "other", None])
+    def test_custom_scene_modes_can_narrow_simplicity_floor(
+        self, scene_mode: str | None
+    ) -> None:
+        """配置可收窄 writer 端补召回，默认值才代表全场景策略。"""
+        retriever = MockSceneRetriever(all_rules=_build_mixed_pool())
+        cfg = _enabled_config()
+        cfg.directness_recall = DirectnessRecall(
+            scene_modes=("combat",),
+            floor_categories=("simplicity",),
+            floor_per_category=5,
+        )
+        section = build_writer_constraints(
+            "抒情铺垫章节",
+            chapter_no=10,
+            config=cfg,
+            retriever=retriever,
+            scene_mode=scene_mode,
+        )
+        simplicity_ids = {r.id for r in section.rules if r.category == "simplicity"}
         assert len(simplicity_ids) < 5, (
-            f"Non-directness scenes should not enforce simplicity floor, got {len(simplicity_ids)} rules"
+            f"Custom narrowed scene_modes should not enforce floor for {scene_mode}, got {len(simplicity_ids)}"
         )
 
     def test_custom_floor_per_category_respected(self) -> None:

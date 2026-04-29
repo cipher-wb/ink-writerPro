@@ -25,7 +25,7 @@ class TestExplosiveHitIndexScript:
     def test_script_is_valid_python(self) -> None:
         result = subprocess.run(
             [sys.executable, "-c", f"compile(open({str(_SCRIPT)!r}).read(), {str(_SCRIPT)!r}, 'exec')"],
-            capture_output=True, text=True,
+            capture_output=True, text=True, encoding="utf-8",
         )
         assert result.returncode == 0, f"Script has syntax errors: {result.stderr}"
 
@@ -47,7 +47,7 @@ class TestExplosiveHitIndexScript:
             _OUTPUT.unlink()
         result = subprocess.run(
             [sys.executable, str(_SCRIPT), "--dry-run", "--books", "1"],
-            capture_output=True, text=True, timeout=60,
+            capture_output=True, text=True, encoding="utf-8", timeout=60,
         )
         # dry-run should succeed (or gracefully handle missing corpus)
         assert result.returncode in (0, 1), f"dry-run should not crash: {result.stderr[:200]}"

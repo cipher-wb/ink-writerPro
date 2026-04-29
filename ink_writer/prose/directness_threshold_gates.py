@@ -1,7 +1,6 @@
 """US-010: prose-impact / flow-naturalness 阈值微调的激活门控。
 
-零退化硬约束：非直白场景（``slow_build`` / ``emotional`` / ``other``）规则完全保持
-原状；直白模式（``golden_three`` / ``combat`` / ``climax`` / ``high_point``）下把
+US-006 起直白模式全场景激活；所有自动场景下把
 "感官丰富度 / 镜头多样性 / 对话比例" 相关的软规则豁免，避免与 directness-checker
 + simplification-pass 的直白目标冲突。
 
@@ -81,7 +80,7 @@ def should_relax_prose_impact(
 
     返回 ``True`` 时 :data:`PROSE_IMPACT_RELAXED_RULES` 内的规则代码被 arbitration
     过滤（不升级为 Red），其他维度（句式节奏 / 动词锐度 / 环境情绪 / 特写覆盖）
-    保持 v21 行为。返回 ``False`` 则 checker 完整跑六维（零退化）。
+    保持 v21 行为。US-006 起默认返回 ``True``；仅历史 skip 入口会关闭。
     """
     return _directness_is_activated(scene_mode, int(chapter_no or 0))
 
@@ -94,7 +93,7 @@ def should_relax_flow_naturalness(
 
     返回 ``True`` 时 :data:`FLOW_NATURALNESS_RELAXED_RULES` 内的规则代码被
     arbitration 过滤；其他六维（信息密度 / 融入方式 / 过渡 / 对话辨识 / 语气 /
-    voice）保持 v21 行为——零退化硬约束。
+    voice）保持 v21 行为。
     """
     return _directness_is_activated(scene_mode, int(chapter_no or 0))
 
@@ -113,7 +112,7 @@ def is_relaxed_issue(
 
     - ``rule_code`` 可能为空/``None`` → 返回 ``False``（保守不豁免）
     - 未命中本模块维护的 checker 白名单 → 返回 ``False``
-    - ``relax_*`` 为 ``False`` → 直接返回 ``False``（非激活场景保持原规则链路）
+    - ``relax_*`` 为 ``False`` → 直接返回 ``False``（兼容历史显式 skip）
     """
     if not rule_code or not checker_name:
         return False

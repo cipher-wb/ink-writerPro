@@ -32,6 +32,7 @@ def _run(candidates_path: Path, stdin_input: str) -> subprocess.CompletedProcess
         input=stdin_input,
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=False,
         cwd=str(REPO_ROOT),
     )

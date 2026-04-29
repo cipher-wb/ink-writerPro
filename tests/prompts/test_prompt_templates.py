@@ -176,7 +176,8 @@ class TestABPrompts:
         # M4 (2026-04-25)：新增 7 个策划期 checker（genre-novelty / golden-finger-spec /
         # naming-style / protagonist-motive / golden-finger-timing /
         # protagonist-agency-skeleton / chapter-hook-density）(26→33)
-        assert len(results) == 33
+        # v26.3：live-review / debug 系列 agent 补入统一 agent 目录（33→35）
+        assert len(results) == 35
         for r in results:
             assert "agent" in r
             assert "template_refs" in r

@@ -12,6 +12,7 @@ import os
 import sqlite3
 import subprocess
 import sys
+from contextlib import closing
 from pathlib import Path
 
 import pytest
@@ -37,7 +38,7 @@ def _make_project(tmp_path: Path) -> Path:
     (text_dir / "第0001章-干净章.md").write_text(_CLEAN_CHAPTER * 20, encoding="utf-8")
 
     db_path = ink_dir / "index.db"
-    with sqlite3.connect(str(db_path)) as conn:
+    with closing(sqlite3.connect(str(db_path))) as conn:
         conn.execute("""
             CREATE TABLE review_metrics (
                 start_chapter INTEGER NOT NULL,

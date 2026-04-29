@@ -25,7 +25,7 @@ def test_s0a_pipeline_produces_valid_quick_draft(tmp_path: Path) -> None:
     result = subprocess.run(
         [sys.executable, "-m", "ink_writer.core.auto.blueprint_to_quick_draft",
          "--input", str(bp), "--output", str(out)],
-        capture_output=True, text=True,
+        capture_output=True, text=True, encoding="utf-8",
     )
     assert result.returncode == 0, result.stderr
 

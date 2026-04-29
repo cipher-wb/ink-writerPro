@@ -364,21 +364,18 @@ Layer 9 完成后执行 proofreading-checker Layer 6A+6B 等价自检：
 
 ## Simplification Pass (直白模式场景)
 
-> **US-008**：polish-agent 在直白模式场景（黄金三章 + 战斗/高潮/爽点）完成
+> **US-008/US-006**：polish-agent 在全场景直白模式下完成
 > Layer 9 之后、No-Poison 毒点规避之前额外执行一次精简 pass，自动删冗余 /
 > 拆长句 / 替抽象词。与 writer-agent `## Directness Mode` (US-006) + directness-checker
 > (US-005) + sensory-immersion-checker 直白模式门控 (US-007) 共享同一激活判定单源。
 
 **激活判定（与 directness-checker 同源）**：
 
-激活条件 = `chapter_no ∈ [1, 2, 3]`（黄金三章兜底） OR `scene_mode ∈ {combat, climax, high_point}`
-（context-agent 装填；US-009 上线后显式优先）。程序化对等：
+默认全场景激活；`chapter_no ∈ [1, 2, 3]` 与 7 值 `scene_mode`
+（golden_three / combat / climax / high_point / slow_build / emotional / other）
+仅作为历史重点场景、普通场景兜底和阈值桶解释保留。程序化对等：
 `ink_writer.prose.simplification_pass.should_activate_simplification(scene_mode, chapter_no)` —
-返回 `True` 才执行本章节；否则直接跳过（透明 PASS，不产生 diff）。
-
-非激活场景（`slow_build` / `emotional` / `other` + ch≥4）：Simplification Pass 全段
-skipped，L10b/L10e 感官丰富度约束照常生效，sensory-immersion-checker 正常审查 ——
-与 US-007 门控行为严格对齐。
+返回 `True` 执行本章节；仅兼容历史显式 skip 时才跳过（透明 PASS，不产生 diff）。
 
 **精简规则（5 条，逐步执行）**：
 

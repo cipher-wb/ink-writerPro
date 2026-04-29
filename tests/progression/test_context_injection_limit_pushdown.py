@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import sqlite3
 import time
+from contextlib import closing
 
 import pytest
 
@@ -39,7 +40,7 @@ def _bulk_insert_progressions(idx, char_id: str, n: int) -> None:
 
     n 对应 1 万章，每章 1 dimension。测试独占临时 DB，无 WAL 竞争。
     """
-    with sqlite3.connect(str(idx.config.index_db)) as conn:
+    with closing(sqlite3.connect(str(idx.config.index_db))) as conn:
         rows = [
             (char_id, ch, "dim_a", f"v{ch-1}", f"v{ch}", f"cause_{ch}")
             for ch in range(1, n + 1)
@@ -98,7 +99,7 @@ def test_get_recent_invalid_args_raise(tmp_path, monkeypatch):
 
 def test_composite_index_exists(tmp_path, monkeypatch):
     idx = _make_idx(tmp_path, monkeypatch)
-    with sqlite3.connect(str(idx.config.index_db)) as conn:
+    with closing(sqlite3.connect(str(idx.config.index_db))) as conn:
         rows = conn.execute(
             "SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='character_progressions'"
         ).fetchall()

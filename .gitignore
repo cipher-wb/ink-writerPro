@@ -1,6 +1,13 @@
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 
+# 用户 API key / 已填值的 .env 不进 git（防泄漏）
+.env
+*.env
+.env-*
+templates/.env-*
+!templates/dotenv-template.env
+
 # Python caches & virtualenv
 __pycache__/
 *.py[cod]

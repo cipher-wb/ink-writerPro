@@ -23,6 +23,16 @@ REPO = Path(__file__).resolve().parents[1]
 CORPUS = REPO / "benchmark" / "reference_corpus"
 OUTPUT = REPO / "data" / "explosive_hit_index.json"
 
+_RUNTIME_COMPAT_DIR = REPO / "ink-writer" / "scripts"
+if str(_RUNTIME_COMPAT_DIR) not in sys.path:
+    sys.path.insert(0, str(_RUNTIME_COMPAT_DIR))
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+
+    _enable_utf8_stdio()
+except Exception:
+    pass
+
 # 场景类型启发式关键词
 _SCENE_HEURISTICS: list[tuple[str, list[str]]] = [
     ("combat", ["战斗", "出手", "杀", "剑", "刀", "拳", "掌", "轰", "攻", "战", "刺", "劈", "斩"]),

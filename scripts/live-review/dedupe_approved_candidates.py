@@ -31,6 +31,15 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
+_RUNTIME_COMPAT_DIR = _REPO_ROOT / "ink-writer" / "scripts"
+if str(_RUNTIME_COMPAT_DIR) not in sys.path:
+    sys.path.insert(0, str(_RUNTIME_COMPAT_DIR))
+try:
+    from runtime_compat import enable_windows_utf8_stdio as _enable_utf8_stdio
+
+    _enable_utf8_stdio()
+except Exception:
+    pass
 
 _DEFAULT_CANDIDATES = _REPO_ROOT / "data" / "live-review" / "rule_candidates.json"
 _BGE_MODEL_NAME = "BAAI/bge-small-zh-v1.5"
