@@ -1341,7 +1341,14 @@ cat "${SKILL_ROOT}/references/step-3-review-gate.md"
 调用约束：
 - 必须用 `Task` 调用审查 subagent，禁止主流程伪造审查结论。
 - Step 3 开始前必须先生成 `review_bundle_file`，所有 checker 统一消费这份审查包。
-- 最大并发数为 2；核心 checker 可两两并发，条件 checker 顺序执行，统一汇总 `issues/severity/overall_score`。
+- **并发策略**（v26.x 优化 A，2026-04-29）：
+  - 默认并发数 8，受 `INK_AUTO_REVIEW_CONCURRENCY` 环境变量控制（外层 ink-auto.sh
+    会在 prompt 里提示当前并发上限；遇 API rate-limit 可降到 4 或 2）。
+  - 核心 8 个 checker：**一波全部并发**，不再分 3 阶段。
+  - 条件 checker：触发的全部并发，受同一并发上限约束。
+  - 等所有 checker 完成后统一汇总 `issues/severity/overall_score`。
+- **历史**：旧版本核心分 3 阶段 max=2 + 条件完全串行，单章 13min；改为全并发后 3min。
+  每个 checker 独立工作，不存在数据依赖，并发不影响审查质量。
 - 默认使用 `auto` 路由：根据“本章执行合同 + 正文信号 + 大纲标签”动态选择审查器。
 
 先生成审查包（必做）：
@@ -1420,13 +1427,55 @@ Task 传参硬约束：
 
 审查汇总时，金丝雀约束违规的 issue 标记来源为 `canary_constraint`，与常规审查 issue 合并计入 `severity_counts`。
 
-推荐调度顺序：
-1. `consistency-checker` + `continuity-checker` 并发（最多 2 个）
-2. `ooc-checker` + `logic-checker` 并发（最多 2 个）
-3. `outline-compliance-checker` + `anti-detection-checker` 并发（最多 2 个）
-4. `reader-simulator`（快速模式，核心裁判）
-5. `flow-naturalness-checker`（核心文笔层，US-014）
-6. 条件审查器按命中顺序串行：`golden-three-checker` → `reader-pull-checker` → `high-point-checker` → `pacing-checker` → `proofreading-checker` → `prose-impact-checker`（US-014）→ `sensory-immersion-checker`（US-014）
+**调度顺序（v26.x 优化 A：全并发）**：
+
+设并发上限 `K = ${INK_AUTO_REVIEW_CONCURRENCY:-8}`（默认 8，外层 ink-auto.sh 在 prompt 里告知当前值）。
+
+**第 1 波（核心 8 并发）**：以下 8 个 checker 一次性 Task 调起，遵守并发上限 K：
+- `consistency-checker`
+- `continuity-checker`
+- `ooc-checker`
+- `logic-checker`
+- `outline-compliance-checker`
+- `anti-detection-checker`
+- `reader-simulator`（核心裁判）
+- `flow-naturalness-checker`（核心文笔层，US-014）
+
+如果 K < 8，按上述顺序前 K 个并发，等任一完成后再启下一个，直到 8 个全部完成。
+
+**第 2 波（条件 max=K 并发）**：触发的条件 checker 一次性并发：
+- `golden-three-checker`（仅 ch 1-3）
+- `reader-pull-checker`
+- `high-point-checker`
+- `pacing-checker`
+- `proofreading-checker`
+- `prose-impact-checker`（ch 1-3 强制；战斗/情感/转折章命中）
+- `sensory-immersion-checker`（ch 1-3 强制；情感/悬疑/战斗章命中）
+
+**重要**：旧版"条件 checker 按命中顺序串行"已废弃。每个条件 checker 独立工作，无数据依赖。
+
+**异常降级**：如收到 API rate-limit 错误（429），将本次 Step 3 的并发数临时降为 K/2（最低 2），重新调起未完成的 checker。重试 3 次仍失败 → 报告 `step-3-rate-limited`，进入下一章前 cooldown 60s。
+
+**进度透出（hard constraint）**：每个 checker 调用前后必须 echo 一行 `[INK-PROGRESS]` 标记，让外层 ink-auto.sh 终端能展示给用户看（避免单章 30-60 分钟黑屏）。
+
+格式：
+```bash
+# 调用 checker 前：
+echo "[INK-PROGRESS] checker_started consistency-checker"
+# 调用完成后（severity 来自 checker 报告：pass/low/medium/high/critical）：
+echo "[INK-PROGRESS] checker_completed consistency-checker 45 pass"
+# 命中条件没启用的：
+echo "[INK-PROGRESS] checker_skipped golden-three-checker (非 ch1-3)"
+```
+
+外层会渲染为：
+```
+🔍 consistency-checker ← 审查中...
+✓ consistency-checker (45s, pass)
+🟠 logic-checker (62s, high)        # 颜色按 severity：🔴critical 🟠high 🟡medium ✓低/通过
+```
+
+调用方式（在 Task 工具调起每个 checker 前后用 Bash echo 即可，命令失败不阻断主流程）。这是 Step 3 内部的子粒度进度，是顶层 13 步进度（`step_started Step 3` / `step_completed Step 3`）的细化补充——两者都要打。
 
 审查指标落库（必做）：
 ```bash

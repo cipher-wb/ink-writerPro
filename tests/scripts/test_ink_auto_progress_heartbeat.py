@@ -322,6 +322,141 @@ def test_init_plan_prompts_also_force_progress_markers():
     )
 
 
+def test_parse_progress_handles_checker_started_completed():
+    """parse_progress_output 必须解析 checker_started / checker_completed / checker_skipped 事件。
+
+    这是 Step 3 内部 14 个 checker 的细粒度进度（task #22 新增）。
+    没有这层，单章 30-60 分钟期间用户只看到"Step 3 审查"一直挂着。
+    """
+    src = _read(INK_AUTO_SH)
+    m = re.search(
+        r"^parse_progress_output\s*\(\s*\)\s*\{(.*?)^\}",
+        src, re.MULTILINE | re.DOTALL,
+    )
+    assert m, "parse_progress_output 函数体应可解析"
+    body = m.group(1)
+    for event in ("checker_started", "checker_completed", "checker_skipped"):
+        assert event in body, f"parse_progress_output 必须解析 {event} 事件"
+    # 必须按 severity 着色
+    assert "critical" in body and "🔴" in body, (
+        "checker_completed 解析必须按 severity (critical/high/medium) 着色"
+    )
+
+
+def test_run_chapter_prompt_requires_two_layer_progress():
+    """run_chapter prompt 必须命令 LLM 同时打 step 级 + checker 级进度（两层）。"""
+    src = _read(INK_AUTO_SH)
+    m = re.search(
+        r"^run_chapter\s*\(\s*\)\s*\{(.*?)^\}",
+        src, re.MULTILINE | re.DOTALL,
+    )
+    assert m
+    body = m.group(1)
+    assert "step_started" in body, "prompt 必须含 step_started 要求"
+    assert "checker_started" in body, "prompt 必须含 checker_started 要求"
+    assert "checker_completed" in body, "prompt 必须含 checker_completed 要求"
+    assert "severity" in body, "prompt 必须说明 checker_completed 的 severity 字段"
+
+
+def test_run_chapter_supports_fast_review_mode():
+    """INK_AUTO_FAST_REVIEW=1 时跳过条件 checker（黄金三章除外）。"""
+    src = _read(INK_AUTO_SH)
+    assert "INK_AUTO_FAST_REVIEW" in src, (
+        "ink-auto.sh 必须支持 INK_AUTO_FAST_REVIEW 环境变量"
+    )
+    # 黄金三章保护：ch > 3 才生效
+    m = re.search(
+        r"^run_chapter\s*\(\s*\)\s*\{(.*?)^\}",
+        src, re.MULTILINE | re.DOTALL,
+    )
+    assert m
+    body = m.group(1)
+    assert re.search(r'INK_AUTO_FAST_REVIEW.*?ch\s*>\s*3', body, re.DOTALL), (
+        "FAST_REVIEW 模式必须保护黄金三章（ch > 3 才跳过条件 checker）"
+    )
+
+
+def test_ink_write_skill_documents_checker_progress_protocol():
+    """ink-write SKILL.md Step 3 章节必须文档化 checker 级 [INK-PROGRESS] 协议。"""
+    skill_path = REPO_ROOT / "ink-writer" / "skills" / "ink-write" / "SKILL.md"
+    src = skill_path.read_text(encoding="utf-8")
+    assert "[INK-PROGRESS] checker_started" in src
+    assert "[INK-PROGRESS] checker_completed" in src
+    assert "[INK-PROGRESS] checker_skipped" in src
+
+
+def test_heartbeat_includes_llm_process_metrics():
+    """心跳必须含 LLM 子进程的 CPU%/RSS/ELAPSED 实时指标。
+
+    cipher 实测 2026-04-29：claude -p 在 inline tool 调用期间不 flush stdout，
+    log 末行/workflow step 都为空。但 LLM 进程 CPU/内存仍在变化，是最权威的
+    "还活着"信号。
+    """
+    src = _read(INK_AUTO_SH)
+    m = re.search(
+        r"^_start_progress_heartbeat\s*\(\s*\)\s*\{(.*?)^\}",
+        src, re.MULTILINE | re.DOTALL,
+    )
+    assert m
+    body = m.group(1)
+    # 必须用 ps + grep -E 组合找 LLM 进程（macOS BSD pgrep -f ERE 不接受 \| 转义）
+    assert re.search(r'ps\s+-eo\s+pid,command', body), (
+        "心跳必须用 ps -eo pid,command 列进程（跨 mac/linux 最可靠）"
+    )
+    assert 'grep -E "claude -p' in body, (
+        "心跳必须用 grep -E + alternation 找 LLM CLI 进程；不能用 pgrep -f BRE 转义"
+        "（macOS BSD pgrep 默认 ERE 但 \\| 在 ERE 下是字面字符，找不到进程）"
+    )
+    # 必须 ps 读 CPU/RSS/ELAPSED
+    assert re.search(r'ps\s+-p.*?pcpu.*?rss.*?etime', body), (
+        "心跳必须 ps 读 LLM 进程的 pcpu/rss/etime"
+    )
+    # 必须输出到心跳行
+    assert "llm_status" in body or "%CPU" in body, (
+        "心跳必须把进程指标输出到屏幕"
+    )
+
+
+def test_ink_auto_detects_linebuf_cmd():
+    """ink-auto.sh 必须检测 stdbuf/gstdbuf/unbuffer 中至少一个，并用之包裹 LLM CLI。
+
+    没行缓冲，claude -p 输出延迟到 step 完成才出现；用户体验黑屏 5-15 分钟。
+    """
+    src = _read(INK_AUTO_SH)
+    assert "detect_linebuf_cmd" in src, (
+        "必须有 detect_linebuf_cmd 函数检测行缓冲工具"
+    )
+    # 必须探测 3 种工具
+    for tool in ("stdbuf", "gstdbuf", "unbuffer"):
+        assert tool in src, f"detect_linebuf_cmd 必须探测 {tool}"
+    # 必须传 LINEBUF_CMD 给 claude/gemini/codex
+    assert "${LINEBUF_CMD:-} claude" in src, (
+        "claude 调用必须用 ${LINEBUF_CMD} 包裹"
+    )
+    assert "${LINEBUF_CMD:-} gemini" in src, (
+        "gemini 调用必须用 ${LINEBUF_CMD} 包裹"
+    )
+    assert "${LINEBUF_CMD:-} codex" in src, (
+        "codex 调用必须用 ${LINEBUF_CMD} 包裹"
+    )
+
+
+def test_linebuf_fallback_when_unavailable():
+    """三个 buf 工具都没装时必须能 fallback 裸跑（不 fail）。"""
+    src = _read(INK_AUTO_SH)
+    # 在 detect_linebuf_cmd 函数末尾必须有 echo "" fallback
+    m = re.search(r"detect_linebuf_cmd\s*\(\s*\)\s*\{(.*?)\}", src, re.DOTALL)
+    assert m
+    body = m.group(1)
+    assert 'echo ""' in body, (
+        "三个 buf 工具都没装时必须 echo \"\"（让 LLM 裸跑），不能 exit"
+    )
+    # 用户提示信息必须告诉用户怎么装
+    assert "brew install coreutils" in src or "gstdbuf" in src, (
+        "必须告诉 macOS 用户怎么装 coreutils 拿 gstdbuf"
+    )
+
+
 def test_bash_syntax_check():
     """语法守护——心跳函数等不能引入 bash 解析错误。"""
     import shutil

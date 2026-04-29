@@ -30,6 +30,28 @@ REPORT_EVENTS=""
 INK_AUTO_PID=$$
 export INK_AUTO_PID
 
+# 行缓冲检测：claude -p 在 inline tool 调用期间不主动 flush stdout，
+# 心跳读 log 末行/parse_progress_output 收 [INK-PROGRESS] 都因此失明。
+# 用 stdbuf/gstdbuf/unbuffer 强制行缓冲后，LLM 输出能实时透传。
+# macOS 默认无 stdbuf；用户装 coreutils（brew install coreutils）后会得到 gstdbuf。
+detect_linebuf_cmd() {
+    if command -v stdbuf >/dev/null 2>&1; then
+        echo "stdbuf -oL -eL"
+    elif command -v gstdbuf >/dev/null 2>&1; then
+        echo "gstdbuf -oL -eL"
+    elif command -v unbuffer >/dev/null 2>&1; then
+        echo "unbuffer"
+    else
+        echo ""  # 都没装就裸跑（fallback，进度延迟到 step 完成才出现）
+    fi
+}
+LINEBUF_CMD=$(detect_linebuf_cmd)
+if [[ -z "$LINEBUF_CMD" ]] && [[ "${INK_AUTO_QUIET_LINEBUF:-0}" != "1" ]]; then
+    echo "[ink-auto] 提示：未检测到 stdbuf/gstdbuf/unbuffer，LLM 输出无法实时透出。" >&2
+    echo "         macOS 用户可 brew install coreutils 装 gstdbuf；之后心跳能秒级看到 [INK-PROGRESS] 标记。" >&2
+    echo "         不影响功能，只影响进度可观测性。设 INK_AUTO_QUIET_LINEBUF=1 可静默此提示。" >&2
+fi
+
 # ═══════════════════════════════════════════
 # 参数解析：支持 --parallel N
 # ═══════════════════════════════════════════
@@ -735,6 +757,33 @@ parse_progress_output() {
                         echo ""
                         echo "    ✅ 第${ch_num}章完成 | ${ch_wc}字 | 总耗时 ${ch_dur} | 审查分 ${ch_score}"
                         ;;
+                    checker_started)
+                        # 格式: checker_started <checker_name>
+                        # Step 3 内部 14 个 checker 的细粒度进度（让用户看到当前在审什么）
+                        local checker_name="${event_rest#checker_started }"
+                        echo "        🔍 ${checker_name} ← 审查中..."
+                        ;;
+                    checker_completed)
+                        # 格式: checker_completed <checker_name> <耗时秒数> [严重度]
+                        local cargs="${event_rest#checker_completed }"
+                        local cname="${cargs%% *}"; cargs="${cargs#* }"
+                        local csec="${cargs%% *}"; cargs="${cargs#* }"
+                        local cseverity="${cargs}"  # 可选: pass/critical/high/medium/low/(空)
+                        local cicon="✓"
+                        case "$cseverity" in
+                            critical) cicon="🔴" ;;
+                            high)     cicon="🟠" ;;
+                            medium)   cicon="🟡" ;;
+                            low|pass|"") cicon="✓" ;;
+                        esac
+                        echo "        ${cicon} ${cname} (${csec}s${cseverity:+, ${cseverity}})"
+                        ;;
+                    checker_skipped)
+                        # 格式: checker_skipped <checker_name> [原因]
+                        local sargs="${event_rest#checker_skipped }"
+                        local sname="${sargs%% *}"; sargs="${sargs#* }"
+                        echo "        ⏭ ${sname} (跳过${sargs:+: ${sargs}})"
+                        ;;
                     *)
                         # 未知事件类型，静默忽略（不影响流程）
                         ;;
@@ -1026,7 +1075,40 @@ except Exception:
                 *)     op_label="$op" ;;
             esac
 
-            echo "    ⏱️  [心跳 ${elapsed_str}] ${op_label} 进行中｜${observation}" >&2
+            # 进程活跃指标：直接看 claude/gemini/codex LLM 子进程的 CPU/RSS/ELAPSED
+            # 这是最权威的"LLM 还在干活"证据——比 log/产物文件更快反应。
+            # claude -p 在 inline tool 调用期间不 flush stdout，但 CPU/内存一直在用。
+            #
+            # 实现选择：用 ps + grep -E 组合而非 pgrep -f，因为：
+            # - macOS BSD pgrep 默认 ERE 但不接受 -E flag；BRE 转义 \| 在 ERE 下变成
+            #   字面字符，找不到任何东西（cipher 实测 2026-04-29）。
+            # - ps + grep -E 是跨 mac/linux 最可靠的写法。
+            local llm_status=""
+            local llm_pid
+            llm_pid=$(ps -eo pid,command 2>/dev/null \
+                | grep -E "claude -p|gemini --yolo|codex --approval-mode" \
+                | grep -v grep \
+                | awk '{print $1}' \
+                | head -1)
+            if [[ -n "$llm_pid" ]]; then
+                local pinfo
+                pinfo=$(ps -p "$llm_pid" -o pcpu=,rss=,etime= 2>/dev/null | sed -E 's/^ +//;s/ +/ /g')
+                if [[ -n "$pinfo" ]]; then
+                    # pinfo 形如 "12.5 437488 07:53"
+                    local cpu_pct rss_kb etime
+                    cpu_pct=$(echo "$pinfo" | awk '{print $1}')
+                    rss_kb=$(echo "$pinfo" | awk '{print $2}')
+                    etime=$(echo "$pinfo" | awk '{print $3}')
+                    local rss_mb=$((rss_kb / 1024))
+                    llm_status="LLM ${cpu_pct}%CPU/${rss_mb}MB/${etime}"
+                fi
+            fi
+
+            local hb_msg="    ⏱️  [心跳 ${elapsed_str}] ${op_label} 进行中｜${observation}"
+            if [[ -n "$llm_status" ]]; then
+                hb_msg="${hb_msg}｜${llm_status}"
+            fi
+            echo "$hb_msg" >&2
         done
     ) &
     HEARTBEAT_PID=$!
@@ -1108,7 +1190,7 @@ run_cli_process() {
 
     case $PLATFORM in
         claude)
-            claude -p "$prompt" \
+            ${LINEBUF_CMD:-} claude -p "$prompt" \
                 --permission-mode bypassPermissions \
                 --no-session-persistence \
                 2>&1 | parse_progress_output "$log_file" &
@@ -1120,7 +1202,7 @@ run_cli_process() {
             CHILD_PID=""
             ;;
         gemini)
-            echo "$prompt" | gemini --yolo \
+            echo "$prompt" | ${LINEBUF_CMD:-} gemini --yolo \
                 2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             (( timeout_s > 0 )) && _start_cli_watchdog "$timeout_s" "$CHILD_PID"
@@ -1130,7 +1212,7 @@ run_cli_process() {
             CHILD_PID=""
             ;;
         codex)
-            codex --approval-mode full-auto "$prompt" \
+            ${LINEBUF_CMD:-} codex --approval-mode full-auto "$prompt" \
                 2>&1 | parse_progress_output "$log_file" &
             CHILD_PID=$!
             (( timeout_s > 0 )) && _start_cli_watchdog "$timeout_s" "$CHILD_PID"
@@ -1191,25 +1273,49 @@ run_chapter() {
     local padded
     padded=$(printf "%04d" "$ch")
     local log_file="$LOG_DIR/ch${padded}-$(date +%Y%m%d-%H%M%S).log"
+
+    # 快速审查模式（INK_AUTO_FAST_REVIEW=1）：跳过 Step 3 的 6 个条件 checker。
+    # 单章 Step 3 从 14 个 checker 降到 8 个，缩短 7-15 分钟。
+    # 黄金三章（ch 1-3）不建议开启——SKILL.md 明确条件 checker 在前 3 章是强制的。
+    local fast_review_clause=""
+    if [[ "${INK_AUTO_FAST_REVIEW:-0}" == "1" ]] && (( ch > 3 )); then
+        fast_review_clause="
+
+【快速审查模式（INK_AUTO_FAST_REVIEW=1）】
+本章跳过条件审查器（golden-three / reader-pull / high-point / pacing /
+proofreading / prose-impact / sensory-immersion），只跑 8 个核心审查器
+（consistency / continuity / ooc / logic / outline-compliance /
+anti-detection / reader-simulator / flow-naturalness）。
+跳过的 checker 必须 echo \"[INK-PROGRESS] checker_skipped <name> (FAST_REVIEW)\"。"
+    fi
+
+    # 优化 A：把审查并发数透传给 LLM；默认 8，可按需在 ink-auto 启动时调整
+    local review_concurrency="${INK_AUTO_REVIEW_CONCURRENCY:-8}"
+
     # 进度强约束：在 prompt 里直接命令 LLM 在每个 Step 进入/完成时打 [INK-PROGRESS] 标记。
-    # 这是必读章节级硬要求——LLM 不打这些标记，外层 ink-auto.sh 进度条会失明。
     local prompt="使用 Skill 工具加载 \"ink-write\" 并完整执行所有步骤（Step 0 到 Step 6 共 13 步）。项目目录: ${PROJECT_ROOT}。
 
-【硬要求：进度透出】
-你必须在每个 Step 开始前 + 完成后用 Bash 工具 echo 一行 [INK-PROGRESS] 标记，
-让外层 ink-auto.sh 终端能展示给用户看。漏打用户体验极差。
+【Step 3 审查并发上限】
+INK_AUTO_REVIEW_CONCURRENCY = ${review_concurrency}
+按此并发数调度核心 8 个 checker + 条件 checker。详见 ink-write SKILL.md
+'Step 3：审查' 章节'调度顺序（v26.x 优化 A：全并发）'子节。
 
-具体格式：
-  - 进入 Step 前：echo \"[INK-PROGRESS] step_started <step_id>\"
-  - Step 完成后：echo \"[INK-PROGRESS] step_completed <step_id> <耗时秒数>\"
-  - Step 跳过：echo \"[INK-PROGRESS] step_skipped <step_id>\"
-  - 回退重写：echo \"[INK-PROGRESS] step_retry <from_step> <to_step>\"
+【硬要求：进度透出（两层，都要打）】
+1) Step 级（每个 Step 1 次开始 + 1 次完成）：
+   - echo \"[INK-PROGRESS] step_started <step_id>\"
+   - echo \"[INK-PROGRESS] step_completed <step_id> <耗时秒数>\"
+   step_id 必须用：Step 0, Step 0.7, Step 0.8, Step 1, Step 2A, Step 2A.1,
+   Step 2A.5, Step 2B, Step 2C, Step 3, Step 4, Step 5, Step 6（共 13 个）。
 
-step_id 必须用：Step 0, Step 0.7, Step 0.8, Step 1, Step 2A, Step 2A.1,
-Step 2A.5, Step 2B, Step 2C, Step 3, Step 4, Step 5, Step 6（共 13 个）。
+2) Checker 级（Step 3 内部，每个 checker 1 次开始 + 1 次完成）：
+   - echo \"[INK-PROGRESS] checker_started <checker_name>\"
+   - echo \"[INK-PROGRESS] checker_completed <checker_name> <耗时秒数> <severity>\"
+     severity 取 pass / low / medium / high / critical 之一。
+   - 跳过的 checker：echo \"[INK-PROGRESS] checker_skipped <checker_name>\"
+   checker_name 例：consistency-checker / logic-checker / reader-simulator 等
+   （详见 ink-write SKILL.md 'Step 3：审查' 一节）。
 
-例：进入 Step 2A 起草前先 \`echo \"[INK-PROGRESS] step_started Step 2A\"\`，
-   起草完成后 \`echo \"[INK-PROGRESS] step_completed Step 2A 65\"\`。
+漏打两层中任一层用户都会看不到进度。${fast_review_clause}
 
 禁止省略任何步骤，禁止提问，全程自主执行。完成后输出 INK_DONE。失败则输出 INK_FAILED。"
 
