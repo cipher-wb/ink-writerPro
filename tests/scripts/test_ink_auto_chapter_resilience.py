@@ -153,19 +153,44 @@ def test_stall_detection_uses_dual_signal():
     )
 
 
-def test_stall_default_threshold_reasonable():
-    """卡住阈值默认值必须在 1200-3600 秒之间（20-60 分钟）。
+def test_stall_default_is_disabled():
+    """卡住主动 SIGTERM 默认必须关闭（INK_AUTO_STALL_THRESHOLD=0）。
 
-    太短易误杀正常 LLM 思考——cipher 实测 2026-04-29，600s 在 Step 0-2A
-    起草阶段就误杀第 1 章。太长起不到提前救援作用。
+    历史教训（2026-04-29 cipher 实测）：
+      - 600s 阈值在 Step 0-2A 起草阶段误杀第 1 章
+      - 1500s 阈值在 Step 3 审查阶段（LLM 调 5 个 sub-agent task）仍误杀
+      - LLM 调 sub-agent 时主进程 stdout 必然 25-30min 静默，
+        任何固定阈值都会误判
+    决策：默认关闭主动 SIGTERM，让 watchdog（INK_AUTO_CHAPTER_TIMEOUT）兜底。
+    心跳保留"已停滞 X 秒"作为可观测信息（不杀），用户主动启用可手动设置。
     """
     src = _read()
     m = re.search(r"INK_AUTO_STALL_THRESHOLD:-(\d+)", src)
     assert m, "INK_AUTO_STALL_THRESHOLD 必须有默认值"
     threshold = int(m.group(1))
-    assert 1200 <= threshold <= 3600, (
-        f"卡住阈值 {threshold}s 不在合理范围 [1200, 3600]"
+    assert threshold == 0, (
+        f"INK_AUTO_STALL_THRESHOLD 默认必须为 0（关闭主动 SIGTERM）。"
+        f"当前 {threshold}s 会在 Step 3 审查时误杀。"
     )
+
+
+def test_stall_info_shown_even_when_disabled():
+    """即使 SIGTERM 关闭，三信号停滞时也必须有'已停滞'信息显示。
+
+    观测层（信息）和行动层（SIGTERM）必须分离：
+    - 信息层始终开启：让用户知道'软件还活着但没新进展'
+    - 行动层用户主动启用才 SIGTERM
+    """
+    src = _read()
+    # 信息层：'三信号已停滞'字样 不依赖 stall_threshold > 0
+    assert "三信号已停滞" in src or "停滞" in src, (
+        "三信号都不变时必须显示停滞时长作为可观测信息"
+    )
+    # 行动层：SIGTERM 必须有 stall_threshold > 0 守卫
+    assert re.search(
+        r'stall_threshold\s*>\s*0\s*\)\)\s*&&\s*\(\(\s*stall_dur\s*>=\s*stall_threshold',
+        src,
+    ), "SIGTERM 必须有双层守卫：stall_threshold > 0 + stall_dur >= threshold"
 
 
 def test_stall_triggers_sigterm_via_parent_pid():

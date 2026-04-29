@@ -768,9 +768,14 @@ _start_progress_heartbeat() {
     local parent_pid="${4:-}"
     local interval="${INK_AUTO_HEARTBEAT_INTERVAL:-30}"
     # 卡住阈值：连续 N 秒"产物文件 + workflow step + log 文件大小"三信号都不变即视为卡住。
-    # 默认 1500s（25min）—— Step 0-2A 起草阶段 LLM 常 5-15 分钟不写章节文件（内存中思考），
-    # 旧默认 600s 误杀（cipher 实测 2026-04-29，第 1 章被误判卡住）。设为 0 关闭。
-    local stall_threshold="${INK_AUTO_STALL_THRESHOLD:-1500}"
+    # 默认 0（关闭）。理由：
+    #   - LLM 在 Step 3 审查阶段调 5 个 sub-agent task，主进程 stdout 25-30 分钟
+    #     不输出是常态（非卡住）。任何固定阈值都会在该阶段误杀。
+    #   - 顶层 watchdog（INK_AUTO_CHAPTER_TIMEOUT 默认 3600s = 60min）已经能兜底
+    #     强制中止，不需要心跳重复造轮子。
+    # 心跳仍会显示"已停滞 X 秒"作为可观测信息，只是不主动 SIGTERM。
+    # 用户怀疑系统卡死想加速救援时可手动启用：export INK_AUTO_STALL_THRESHOLD=1800
+    local stall_threshold="${INK_AUTO_STALL_THRESHOLD:-0}"
 
     (
         # 子 shell 退出时清理（防止心跳成为孤儿）
@@ -959,48 +964,56 @@ except Exception:
                         fi
                     fi
 
-                    # 卡住检测（write 模式）：三信号都不变才算卡住。
+                    # 三信号活跃追踪（write 模式）：
                     #   1. 字数（章节文件）—— Step 5+ 才会变
                     #   2. workflow step —— 依赖 LLM 调 workflow start-step
-                    #   3. log 文件大小 —— claude -p 持续 dump stdout，最稳的活跃信号
-                    # 任一信号在变 = LLM 在工作；三个都不变 = 真卡住。
-                    if (( stall_threshold > 0 )); then
-                        local step_changed=0
-                        if [[ "$cur_step" != "$last_step" ]]; then
-                            step_changed=1
-                        fi
-                        last_step="$cur_step"
+                    #   3. log 文件大小 —— claude -p stdout 持续 dump，最稳的活跃信号
+                    # 用途分两层：
+                    #   - 信息层（始终开启）：三信号都不变时显示"已停滞 X 秒"让用户感知
+                    #   - 行动层（INK_AUTO_STALL_THRESHOLD>0 才启用）：超阈值 SIGTERM
+                    # 默认行动层关闭——Step 3 审查阶段三信号常态静止 25-30min 不是卡住，
+                    # 让 watchdog 60min 兜底强制中止已足够。
+                    local step_changed=0
+                    if [[ "$cur_step" != "$last_step" ]]; then
+                        step_changed=1
+                    fi
+                    last_step="$cur_step"
 
-                        # log 文件 size 变化（claude -p stdout 持续输出，最可靠的活跃信号）
-                        local log_changed=0
-                        if [[ -f "$log_file" ]]; then
-                            local cur_log_size
-                            cur_log_size=$(wc -c <"$log_file" 2>/dev/null | tr -d ' ' || echo 0)
-                            if (( cur_log_size > last_log_size )); then
-                                log_changed=1
-                            fi
-                            last_log_size=$cur_log_size
+                    local log_changed=0
+                    if [[ -f "$log_file" ]]; then
+                        local cur_log_size
+                        cur_log_size=$(wc -c <"$log_file" 2>/dev/null | tr -d ' ' || echo 0)
+                        if (( cur_log_size > last_log_size )); then
+                            log_changed=1
                         fi
+                        last_log_size=$cur_log_size
+                    fi
 
-                        if (( size_changed == 0 && step_changed == 0 && log_changed == 0 )); then
-                            if (( stall_since == 0 )); then
-                                stall_since=$now
-                            fi
-                            local stall_dur=$((now - stall_since))
-                            if (( stall_dur >= stall_threshold )) && [[ -n "$parent_pid" ]]; then
-                                echo "    🚨 [心跳 ${elapsed_str}] 检测到卡住：${stall_dur}s 内字数/step/log 三信号全无变化 → 终止子进程进入重试" >&2
-                                kill -TERM "$parent_pid" 2>/dev/null || true
-                                pkill -TERM -P "$parent_pid" 2>/dev/null || true
-                                if [[ -n "${INK_AUTO_PID:-}" ]]; then
-                                    pkill -TERM -P "$INK_AUTO_PID" -f "claude -p\|gemini --yolo\|codex --approval-mode" 2>/dev/null || true
-                                fi
-                                exit 0
-                            elif (( stall_dur >= stall_threshold / 2 )); then
-                                echo "    ⚠️  [心跳 ${elapsed_str}] 已停滞 ${stall_dur}s（阈值 ${stall_threshold}s）：三信号都不变，再无进展将终止" >&2
-                            fi
-                        else
-                            stall_since=0  # 任一信号变化即重置（LLM 还在工作）
+                    if (( size_changed == 0 && step_changed == 0 && log_changed == 0 )); then
+                        if (( stall_since == 0 )); then
+                            stall_since=$now
                         fi
+                        local stall_dur=$((now - stall_since))
+                        # 信息层：每隔一段时间显示一次"已停滞"（不刷屏，每 2 分钟一次）
+                        if (( stall_dur >= 120 )) && (( stall_dur % 120 < interval )); then
+                            local stall_dur_str
+                            stall_dur_str=$(format_duration "$stall_dur" 2>/dev/null || echo "${stall_dur}s")
+                            echo "    💤 [心跳 ${elapsed_str}] 三信号已停滞 ${stall_dur_str}（LLM 在 Step 3 调 sub-agent 时常见，watchdog 60min 兜底）" >&2
+                        fi
+                        # 行动层：仅当用户主动启用 stall_threshold 时才 SIGTERM
+                        if (( stall_threshold > 0 )) && (( stall_dur >= stall_threshold )) && [[ -n "$parent_pid" ]]; then
+                            echo "    🚨 [心跳 ${elapsed_str}] 用户启用的 INK_AUTO_STALL_THRESHOLD=${stall_threshold}s 触发 → 终止子进程" >&2
+                            kill -TERM "$parent_pid" 2>/dev/null || true
+                            pkill -TERM -P "$parent_pid" 2>/dev/null || true
+                            if [[ -n "${INK_AUTO_PID:-}" ]]; then
+                                pkill -TERM -P "$INK_AUTO_PID" -f "claude -p\|gemini --yolo\|codex --approval-mode" 2>/dev/null || true
+                            fi
+                            exit 0
+                        elif (( stall_threshold > 0 )) && (( stall_dur >= stall_threshold / 2 )); then
+                            echo "    ⚠️  [心跳 ${elapsed_str}] 已停滞 ${stall_dur}s（用户阈值 ${stall_threshold}s）：再无进展将终止" >&2
+                        fi
+                    else
+                        stall_since=0  # 任一信号变化即重置
                     fi
                     ;;
             esac
