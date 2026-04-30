@@ -495,6 +495,35 @@ def test_data_agent_timing_filters_stale_records():
     )
 
 
+def test_step_inference_does_not_use_fresh_for_one_shot_artifacts():
+    """review_bundle / data_agent_payload 不能用 fresh() 判断——
+    它们是 Step 3/5 启动时一次性生成，整个 step 期间不再修改。
+    用 fresh(600s) 会让心跳在长 step（如 25-30 分钟的 Step 3 审查）后期失明。
+
+    cipher 实测 2026-04-30：Step 3 跑 30 分钟时心跳从'Step 3 审查中'
+    跳回'Step 0-1'——因为 fresh(600s) 已超时。
+    修：改用文件存在性 + 章号锁定（chXXXX 已包含在文件名中）。
+    """
+    src = _read(INK_AUTO_SH)
+    m = re.search(
+        r"^_start_progress_heartbeat\s*\(\s*\)\s*\{(.*?)^\}",
+        src, re.MULTILINE | re.DOTALL,
+    )
+    assert m
+    body = m.group(1)
+    # review_bundle 必须用 .exists() 不能用 fresh()
+    assert re.search(r"bundle_file\.exists\(\)", body), (
+        "review_bundle 推断必须用 .exists()，不能用 fresh()"
+        "（cipher 实测 fresh(600s) 在 Step 3 长审查后期失明）"
+    )
+    assert re.search(r"payload_file\.exists\(\)", body), (
+        "data_agent_payload 推断同样不能用 fresh()"
+    )
+    # 不能再有 fresh(bundle_file) 这种调用
+    assert "fresh(bundle_file)" not in body, "bundle_file 不能再走 fresh"
+    assert "fresh(payload_file)" not in body, "payload_file 不能再走 fresh"
+
+
 def test_step2b_skip_env_var_supported():
     """INK_AUTO_SKIP_STEP2B=1 必须能让 LLM 跳过 Step 2B 风格适配。
 

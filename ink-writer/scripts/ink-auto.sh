@@ -1060,19 +1060,23 @@ if da_timing.exists():
         pass
 
 if not in_step5:
-    # Step 4: data_agent_payload 已生成（Step 5 准备）
+    # 修订（2026-04-30）：Step 3/Step 5 准备阶段的产物是**一次性生成**，
+    # 审查/数据回写期间不再修改 → 不能用 fresh()，否则长 step 后期会失明。
+    # 改为"文件存在 + 章号匹配 = 本轮产物"。章号已通过 padded 锁定到当前章。
+
+    # Step 4 -> Step 5: data_agent_payload 已生成（章号锁定）
     payload_file = proj / '.ink' / 'tmp' / f'data_agent_payload_ch{padded}.json'
-    if fresh(payload_file):
-        indicators.append('Step 5 准备')
+    if payload_file.exists():
+        indicators.append('Step 5 准备/进行')
     else:
-        # Step 3: review_bundle 已生成
+        # Step 3: review_bundle 已生成（章号锁定，本章一定是本轮）
         bundle_file = proj / '.ink' / 'tmp' / f'review_bundle_ch{padded}.json'
-        if fresh(bundle_file):
+        if bundle_file.exists():
             indicators.append('Step 3 审查中')
         else:
             # Step 2A 完成: 章节文件存在
             body_files = list((proj / '正文').glob(f'第{padded}章*.md'))
-            if body_files and fresh(body_files[0]):
+            if body_files:
                 # 看是不是刚出现（< 60s）→ 刚完成 Step 2A
                 age = now - body_files[0].stat().st_mtime
                 if age < 60:
@@ -1081,7 +1085,8 @@ if not in_step5:
                     indicators.append('Step 2A/2B/2C 中（章节文件已存在）')
             else:
                 # 还没产物——Step 0/0.7/0.8/1 期间
-                # 看 .ink/tmp/ 下其他临时文件来缩小范围
+                # 看 .ink/tmp/ 下其他临时文件来缩小范围（这里 fresh 仍合理，
+                # 因为 Step 0-1 期间 tmp 文件会持续写入）
                 tmp = proj / '.ink' / 'tmp'
                 if tmp.exists():
                     recent_tmp = [p for p in tmp.iterdir() if fresh(p, 120)]
