@@ -278,8 +278,21 @@ except Exception:
     if ! [[ "$MAX_WORDS_HARD" =~ ^[0-9]+$ ]]; then MAX_WORDS_HARD=5000; fi
     if (( MAX_WORDS_HARD < MIN_WORDS_HARD )); then MAX_WORDS_HARD=$((MIN_WORDS_HARD + 500)); fi
 
-    # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
+    # 用户 env var override（cipher 实测 2026-04-30：fanqie 默认 2000 上限太严，
+    # 2191 字章节就触发整个 ink-write 重跑浪费 30+ min。让用户能放宽）
+    if [[ -n "${INK_AUTO_MIN_WORDS_HARD:-}" ]] && [[ "$INK_AUTO_MIN_WORDS_HARD" =~ ^[0-9]+$ ]]; then
+        MIN_WORDS_HARD="$INK_AUTO_MIN_WORDS_HARD"
+        echo "[ink-auto] 字数下限被 INK_AUTO_MIN_WORDS_HARD 覆盖为 $MIN_WORDS_HARD" >&2
+    fi
+    if [[ -n "${INK_AUTO_MAX_WORDS_HARD:-}" ]] && [[ "$INK_AUTO_MAX_WORDS_HARD" =~ ^[0-9]+$ ]]; then
+        MAX_WORDS_HARD="$INK_AUTO_MAX_WORDS_HARD"
+        echo "[ink-auto] 字数上限被 INK_AUTO_MAX_WORDS_HARD 覆盖为 $MAX_WORDS_HARD" >&2
+    fi
+
+    # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐）
     SHRINK_MAX_ROUNDS=3
+    # 扩写循环最大轮次（task #11，2026-04-30：与 shrink 对称——下限失败也走轻量通道）
+    GROW_MAX_ROUNDS=3
 }
 
 # S1/S2/S3 路径：PROJECT_ROOT 已就绪，立即初始化路径变量
@@ -1520,6 +1533,157 @@ retry_chapter() {
 }
 
 # ═══════════════════════════════════════════
+# 字数超限轻量级裁切（shrink-only 模式）—— task #10
+# cipher 实测 2026-04-30：fanqie 章节 2191 字超 2000 上限 9% → 旧 retry_chapter
+# 触发整个 ink-resume 13 步重跑（30+ 分钟浪费）。
+# 改用专门的 shrink prompt：只让 LLM 删字（不能加），不重跑 RAG/审查/数据回写。
+# 单次耗时 1-3 min，极轻量。
+# ═══════════════════════════════════════════
+shrink_chapter() {
+    local ch="$1"
+    local target_max="$2"  # 目标字数上限
+    local padded
+    padded=$(printf "%04d" "$ch")
+    local log_file="$LOG_DIR/ch${padded}-shrink-$(date +%Y%m%d-%H%M%S).log"
+    local watch_file
+    watch_file=$(ls "$PROJECT_ROOT/正文/第${padded}章"*.md 2>/dev/null | head -1)
+    if [[ -z "$watch_file" || ! -f "$watch_file" ]]; then
+        echo "    ❌ 第${ch}章文件不存在，无法 shrink"
+        return 1
+    fi
+
+    local cur_count
+    cur_count=$(wc -m < "$watch_file" | tr -d ' ')
+    local need_cut=$((cur_count - target_max))
+    if (( need_cut <= 0 )); then
+        return 0  # 已经合规，不用裁
+    fi
+
+    echo "    ✂️  第${ch}章字数 ${cur_count} 超上限 ${target_max}，启动轻量裁切（需删 ${need_cut} 字）..."
+
+    local prompt="对项目 ${PROJECT_ROOT} 第${ch}章正文执行**轻量裁切**：
+
+文件：${watch_file}
+当前字数：${cur_count}
+目标上限：${target_max}
+需删减：约 ${need_cut} 字
+
+【硬约束（不可违反）】
+1. **只能删字，绝对不能加字**——任何形式的扩写、补充、新增句子都禁止
+2. **不能改剧情、人物行为、关键台词**——保留原章核心叙事和钩子
+3. 优先删：冗余形容词、重复修饰、可省略的过渡句、感官描写堆叠
+4. 不要删：对话主体、关键动作、章末钩子、情感高点
+5. 用 Edit 工具修改文件（不要新写一份覆盖）
+6. 完成后用 wc -m 确认字数 ≤ ${target_max} 并输出最终字数
+7. 不需要走 ink-write 13 步流程，不需要 RAG/审查/数据回写
+8. 保留所有 Markdown 格式（章节标题、空行）
+
+完成后输出 INK_SHRINK_DONE 和最终字数；失败输出 INK_SHRINK_FAILED。"
+
+    # shrink 是轻量任务，超时设短（10 min 足够）
+    if ! run_cli_process "$prompt" "$log_file" 600 "write" "$watch_file"; then
+        echo "    ❌ shrink 进程异常退出"
+        return 1
+    fi
+
+    # 验证字数
+    local final_count
+    final_count=$(wc -m < "$watch_file" | tr -d ' ')
+    if (( final_count > target_max + 100 )); then
+        # 还超过目标 100+ 字，认为 shrink 没成功
+        echo "    ⚠️  shrink 后仍 ${final_count} 字超上限 ${target_max}（容差 100），需再次精简"
+        return 1
+    fi
+    echo "    ✅ shrink 完成：${cur_count} → ${final_count} 字"
+    return 0
+}
+
+# ═══════════════════════════════════════════
+# 第 X 章字数下限轻量扩写（task #11，2026-04-30：shrink 对称设计）
+# ═══════════════════════════════════════════
+# cipher 实测 2026-04-30：第 6 章 2009 字 < 2200 下限 → 触发完整 retry_chapter
+# （30+ min 重跑 13 步）+ 重写又只写出 2009 字 → 中止。
+# 改用专门的 grow prompt：只让 LLM 加段落（不能删、不能改剧情节拍），
+# 不重跑 RAG/审查/数据回写。单次耗时 1-3 min，与 shrink_chapter 对称。
+#
+# 与 shrink 的差异：
+#   - 提示词不是「只删」而是「只加」，且必须保留**所有**原段落顺序与剧情
+#   - 验证阈值是 ≥ target_min（容差 -100 字，避免微小不达标 false-fail）
+#   - LLM 倾向是过度扩写到超 MAX，所以提示词里同时显式给出 MAX 上限
+# ═══════════════════════════════════════════
+grow_chapter() {
+    local ch="$1"
+    local target_min="$2"  # 目标字数下限
+    local target_max="$3"  # 目标字数上限（防止扩过头）
+    local padded
+    padded=$(printf "%04d" "$ch")
+    local log_file="$LOG_DIR/ch${padded}-grow-$(date +%Y%m%d-%H%M%S).log"
+    local watch_file
+    watch_file=$(ls "$PROJECT_ROOT/正文/第${padded}章"*.md 2>/dev/null | head -1)
+    if [[ -z "$watch_file" || ! -f "$watch_file" ]]; then
+        echo "    ❌ 第${ch}章文件不存在，无法 grow"
+        return 1
+    fi
+
+    local cur_count
+    cur_count=$(wc -m < "$watch_file" | tr -d ' ')
+    local need_add=$((target_min - cur_count))
+    if (( need_add <= 0 )); then
+        return 0  # 已经合规，不用扩
+    fi
+
+    echo "    📝 第${ch}章字数 ${cur_count} 不足下限 ${target_min}，启动轻量扩写（需加 ${need_add} 字）..."
+
+    local prompt="对项目 ${PROJECT_ROOT} 第${ch}章正文执行**轻量扩写**：
+
+文件：${watch_file}
+当前字数：${cur_count}
+目标下限：${target_min}
+目标上限：${target_max}（不能超）
+需扩写：约 ${need_add} 字
+
+【硬约束（不可违反）】
+1. **只能加字，绝对不能删字**——任何形式的删减、合并、改写都禁止
+2. **不能改剧情、人物行为、关键台词、章节顺序**——保留原章所有段落与节拍
+3. **不能超过目标上限 ${target_max} 字**——扩写后用 wc -m 校验，超了要回退
+4. 优先在已有段落里加：
+   - 感官细节（视觉/听觉/嗅觉/触觉，**禁止心理活动堆叠**）
+   - 关键动作的微观分解（一个动作分解成 2-3 步具体描写）
+   - 环境锚点（屋外声音、天色变化、灯光阴影）
+   - 物品质感（旧棉袄、铁皮、稻草等）
+   - 人物对话的反应动作（点头/摇头/沉默等的具体表现）
+5. 不要加：纯心理独白、上帝视角议论、剧情反转、新人物
+6. 用 Edit 工具修改文件（不要新写一份覆盖）
+7. 保留所有 Markdown 格式（章节标题、空行）
+8. **完成后用 wc -m 确认字数 ${target_min} ≤ 字数 ≤ ${target_max} 并输出最终字数**
+9. 不需要走 ink-write 13 步流程，不需要 RAG/审查/数据回写
+
+完成后输出 INK_GROW_DONE 和最终字数；失败输出 INK_GROW_FAILED。"
+
+    # grow 是轻量任务，超时设短（10 min 足够，与 shrink 对称）
+    if ! run_cli_process "$prompt" "$log_file" 600 "write" "$watch_file"; then
+        echo "    ❌ grow 进程异常退出"
+        return 1
+    fi
+
+    # 验证字数
+    local final_count
+    final_count=$(wc -m < "$watch_file" | tr -d ' ')
+    # 容差 100 字：扩写后字数 ≥ target_min - 100 即视为成功
+    # 同时检查别扩过头超过 target_max（容差 100 字）
+    if (( final_count < target_min - 100 )); then
+        echo "    ⚠️  grow 后仍 ${final_count} 字不足下限 ${target_min}（容差 100），需再次扩写"
+        return 1
+    fi
+    if (( final_count > target_max + 100 )); then
+        echo "    ⚠️  grow 后 ${final_count} 字过上限 ${target_max}（扩写过头）"
+        return 1
+    fi
+    echo "    ✅ grow 完成：${cur_count} → ${final_count} 字"
+    return 0
+}
+
+# ═══════════════════════════════════════════
 # 自动大纲生成
 # ═══════════════════════════════════════════
 
@@ -2356,40 +2520,85 @@ for i in $(seq 1 "$N"); do
             exit 0
         fi
     else
-        # US-004：根据失败原因分流
-        #   - 字数超限 (> MAX_WORDS_HARD) → 精简循环最多 SHRINK_MAX_ROUNDS（3 轮）
-        #   - 其它失败（含 < MIN_WORDS_HARD / 文件缺失 / 摘要缺失）→ 保持原 1 轮补写，零回归
+        # US-004 + task #10/#11（2026-04-30）：根据失败原因分流（三路）
+        #   - **字数超限**（> MAX_WORDS_HARD）→ shrink_chapter 轻量裁切（不重跑 13 步）
+        #   - **字数不足**（< MIN_WORDS_HARD 但章节文件存在）→ grow_chapter 轻量扩写（不重跑 13 步）
+        #   - 其它失败（文件缺失 / 摘要缺失）→ retry_chapter 全章重写
         WC_FAIL=$(get_chapter_wordcount "$NEXT_CH")
+        # 章节文件存在性：grow_chapter 只对"已落盘但字数不足"有意义
+        _padded=$(printf "%04d" "$NEXT_CH")
+        _ch_file=$(ls "$PROJECT_ROOT/正文/第${_padded}章"*.md 2>/dev/null | head -1)
         if (( WC_FAIL > MAX_WORDS_HARD )); then
-            MAX_RETRIES=$SHRINK_MAX_ROUNDS
+            # 字数超限分支：用 shrink-only 模式，不触发完整 ink-resume
             FAIL_REASON="字数超限(${WC_FAIL}>${MAX_WORDS_HARD})"
+            echo "[$i/$N] ⚠️  ${FAIL_REASON}，启动**轻量裁切**（不重跑 13 步）..."
+            report_event "⚠️" "字数超限轻量裁切" "第${NEXT_CH}章 ${FAIL_REASON}"
+
+            RETRY_ROUND=0
+            RETRY_VERIFIED=0
+            while (( RETRY_ROUND < SHRINK_MAX_ROUNDS )); do
+                RETRY_ROUND=$((RETRY_ROUND + 1))
+                echo "[$i/$N] ✂️  第${RETRY_ROUND}/${SHRINK_MAX_ROUNDS}轮 shrink..."
+                if ! shrink_chapter "$NEXT_CH" "$MAX_WORDS_HARD"; then
+                    echo "[$i/$N] ⚠️  shrink 失败"
+                fi
+                sleep "$COOLDOWN"
+
+                if verify_chapter "$NEXT_CH"; then
+                    RETRY_VERIFIED=1
+                    break
+                fi
+            done
+            MAX_RETRIES=$SHRINK_MAX_ROUNDS  # 维持后续 if-else 兼容
+        elif (( WC_FAIL > 0 )) && (( WC_FAIL < MIN_WORDS_HARD )) && [[ -n "$_ch_file" && -f "$_ch_file" ]]; then
+            # 字数不足且章节文件存在分支（task #11）：用 grow-only 模式
+            FAIL_REASON="字数不足(${WC_FAIL}<${MIN_WORDS_HARD})"
+            echo "[$i/$N] ⚠️  ${FAIL_REASON}，启动**轻量扩写**（不重跑 13 步）..."
+            report_event "⚠️" "字数不足轻量扩写" "第${NEXT_CH}章 ${FAIL_REASON}"
+
+            RETRY_ROUND=0
+            RETRY_VERIFIED=0
+            while (( RETRY_ROUND < GROW_MAX_ROUNDS )); do
+                RETRY_ROUND=$((RETRY_ROUND + 1))
+                echo "[$i/$N] 📝 第${RETRY_ROUND}/${GROW_MAX_ROUNDS}轮 grow..."
+                if ! grow_chapter "$NEXT_CH" "$MIN_WORDS_HARD" "$MAX_WORDS_HARD"; then
+                    echo "[$i/$N] ⚠️  grow 失败"
+                fi
+                sleep "$COOLDOWN"
+
+                if verify_chapter "$NEXT_CH"; then
+                    RETRY_VERIFIED=1
+                    break
+                fi
+            done
+            MAX_RETRIES=$GROW_MAX_ROUNDS  # 维持后续 if-else 兼容
         else
+            # 其它失败（文件缺失 / 摘要缺失 / 字数 0）：走完整 retry_chapter
             MAX_RETRIES=1
             FAIL_REASON="验证失败"
-        fi
-        echo "[$i/$N] ⚠️  ${FAIL_REASON}，启动重试（最多 ${MAX_RETRIES} 轮）..."
-        report_event "⚠️" "写作验证失败" "第${NEXT_CH}章 ${FAIL_REASON}，最多 ${MAX_RETRIES} 轮"
+            echo "[$i/$N] ⚠️  ${FAIL_REASON}，启动重试（最多 ${MAX_RETRIES} 轮）..."
+            report_event "⚠️" "写作验证失败" "第${NEXT_CH}章 ${FAIL_REASON}，最多 ${MAX_RETRIES} 轮"
 
-        # 重试前归档当前不完整草稿，避免 retry_chapter 误判为已存在
-        _archive_partial_chapter "$NEXT_CH"
-
-        RETRY_ROUND=0
-        RETRY_VERIFIED=0
-        while (( RETRY_ROUND < MAX_RETRIES )); do
-            RETRY_ROUND=$((RETRY_ROUND + 1))
-            echo "[$i/$N] 🔄 第${RETRY_ROUND}/${MAX_RETRIES}轮重试..."
-            if ! retry_chapter "$NEXT_CH"; then
-                echo "[$i/$N] ⚠️  重试进程也异常退出"
-            fi
-            sleep "$COOLDOWN"
-
-            if verify_chapter "$NEXT_CH"; then
-                RETRY_VERIFIED=1
-                break
-            fi
-            # 本轮失败：归档半成品再进入下一轮
+            # 重试前归档当前不完整草稿
             _archive_partial_chapter "$NEXT_CH"
-        done
+
+            RETRY_ROUND=0
+            RETRY_VERIFIED=0
+            while (( RETRY_ROUND < MAX_RETRIES )); do
+                RETRY_ROUND=$((RETRY_ROUND + 1))
+                echo "[$i/$N] 🔄 第${RETRY_ROUND}/${MAX_RETRIES}轮重试..."
+                if ! retry_chapter "$NEXT_CH"; then
+                    echo "[$i/$N] ⚠️  重试进程也异常退出"
+                fi
+                sleep "$COOLDOWN"
+
+                if verify_chapter "$NEXT_CH"; then
+                    RETRY_VERIFIED=1
+                    break
+                fi
+                _archive_partial_chapter "$NEXT_CH"
+            done
+        fi
 
         if (( RETRY_VERIFIED == 1 )); then
             WC=$(get_chapter_wordcount "$NEXT_CH")

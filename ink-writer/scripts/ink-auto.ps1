@@ -169,9 +169,12 @@ except Exception:
         $script:MaxWordsHard = $MaxWordsHard
     }
 
-    # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐；下限补写循环保持 1 轮零回归）
+    # 精简循环最大轮次（US-004：3 轮，与 SKILL.md 2A.5 对齐）
     $ShrinkMaxRounds = 3
     $script:ShrinkMaxRounds = $ShrinkMaxRounds
+    # 扩写循环最大轮次（task #11，2026-04-30：与 shrink 对称）
+    $GrowMaxRounds = 3
+    $script:GrowMaxRounds = $GrowMaxRounds
 }
 
 if ($ProjectRoot) {
@@ -830,15 +833,23 @@ for ($i = 1; $i -le $N; $i++) {
             exit 0
         }
     } else {
-        # US-004：根据失败原因分流
+        # US-004 + task #10/#11：根据失败原因分流（三路）
         #   - 字数超限 (> MaxWordsHard) → 精简循环最多 ShrinkMaxRounds（3 轮）
-        #   - 其它失败（< MinWordsHard / 文件缺失 / 摘要缺失）→ 保持原 1 轮补写，零回归
+        #   - 字数不足 (< MinWordsHard) 且章节文件存在 → 扩写循环最多 GrowMaxRounds（3 轮）
+        #   - 其它失败（文件缺失 / 摘要缺失）→ 保持原 1 轮补写，零回归
         $wcFail = Get-ChapterWordcount -Ch $nextCh
         $MaxWordsHard = $script:MaxWordsHard
+        $MinWordsHard = $script:MinWordsHard
         $ShrinkMaxRounds = $script:ShrinkMaxRounds
+        $GrowMaxRounds = $script:GrowMaxRounds
+        $padded = '{0:D4}' -f $nextCh
+        $chFile = Get-ChildItem -Path (Join-Path $script:ProjectRoot '正文') -Filter "第${padded}章*.md" -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($wcFail -gt $MaxWordsHard) {
             $maxRetries = $ShrinkMaxRounds
             $failReason = "字数超限(${wcFail}>${MaxWordsHard})"
+        } elseif ($wcFail -gt 0 -and $wcFail -lt $MinWordsHard -and $chFile) {
+            $maxRetries = $GrowMaxRounds
+            $failReason = "字数不足(${wcFail}<${MinWordsHard})"
         } else {
             $maxRetries = 1
             $failReason = '验证失败'
