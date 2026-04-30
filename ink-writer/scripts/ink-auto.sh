@@ -1013,6 +1013,47 @@ except Exception:
                         fi
                     fi
 
+                    # Data Agent 调用追踪（Step 5 期间最重要的活跃信号）
+                    # cipher 实测 2026-04-30：Step 5 跑 16 分钟 + log 文件空白 →
+                    # 用户误判挂了 ⌃C → state.json 不一致循环。
+                    # 用 data_agent_timing.jsonl 末行兜底，让用户看到"刚调了什么工具"。
+                    local da_timing_file="${PROJECT_ROOT:-}/.ink/observability/data_agent_timing.jsonl"
+                    if [[ -f "$da_timing_file" ]]; then
+                        local da_last_line
+                        da_last_line=$(awk 'NF{last=$0} END{print last}' "$da_timing_file" 2>/dev/null)
+                        if [[ -n "$da_last_line" ]]; then
+                            local da_info
+                            da_info=$($PY_LAUNCHER -c "
+import json, sys
+from datetime import datetime, timezone
+try:
+    d = json.loads('''$da_last_line''')
+    tool = d.get('tool_name', '?')
+    ok = '✓' if d.get('success') else '✗'
+    elapsed = d.get('elapsed_ms', 0)
+    ts = d.get('timestamp', '')
+    if ts:
+        # 计算距今多少秒
+        try:
+            t = datetime.fromisoformat(ts.replace('Z', '+00:00'))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=timezone.utc)
+            now_utc = datetime.now(timezone.utc)
+            ago_s = int((now_utc - t).total_seconds())
+            print(f'DataAgent: {ok} {tool} ({elapsed}ms, {ago_s}s ago)')
+        except Exception:
+            print(f'DataAgent: {ok} {tool} ({elapsed}ms)')
+    else:
+        print(f'DataAgent: {ok} {tool} ({elapsed}ms)')
+except Exception:
+    pass
+" 2>/dev/null)
+                            if [[ -n "$da_info" ]]; then
+                                observation="${observation}｜${da_info}"
+                            fi
+                        fi
+                    fi
+
                     # 三信号活跃追踪（write 模式）：
                     #   1. 字数（章节文件）—— Step 5+ 才会变
                     #   2. workflow step —— 依赖 LLM 调 workflow start-step
@@ -1273,6 +1314,13 @@ run_chapter() {
     local padded
     padded=$(printf "%04d" "$ch")
     local log_file="$LOG_DIR/ch${padded}-$(date +%Y%m%d-%H%M%S).log"
+
+    # state-db 一致性自动修复（task #3，治 Bug C 第二处）
+    # 每章写作前再校一次，防止上一章 Step 5 中断后下一章基于错误的 current_chapter 启动。
+    if [[ -f "$SCRIPTS_DIR/state_consistency_check.py" ]]; then
+        $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/state_consistency_check.py" \
+            --project-root "$PROJECT_ROOT" --quiet 2>/dev/null || true
+    fi
 
     # 快速审查模式（INK_AUTO_FAST_REVIEW=1）：跳过 Step 3 的 6 个条件 checker。
     # 单章 Step 3 从 14 个 checker 降到 8 个，缩短 7-15 分钟。
@@ -1594,6 +1642,14 @@ _v27_init_if_needed() {
 _s1_outline_precheck_if_root() {
     if [[ -z "$PROJECT_ROOT" ]]; then
         return 0  # 还没初始化，跳过
+    fi
+
+    # state-db 一致性自动修复（task #3，治 Bug C）
+    # cipher 实测 2026-04-30：Step 5 被中断后 state.json.current_chapter 滞后，
+    # 重启会重写已完成章。这里在主循环开始前自动校正。
+    if [[ -f "$SCRIPTS_DIR/state_consistency_check.py" ]]; then
+        $PY_LAUNCHER -X utf8 "$SCRIPTS_DIR/state_consistency_check.py" \
+            --project-root "$PROJECT_ROOT" --quiet 2>/dev/null || true
     fi
 
     PROJECT_STATUS=$(is_project_completed)

@@ -1970,6 +1970,23 @@ Data Agent 默认子步骤（全部执行）：
 
 Step 5 强约束：
 - 禁止用手工整体重写 `.ink/state.json` 代替 `state process-chapter`。
+- **`state process-chapter` 全章只能调用 1 次（hard constraint）**。cipher 实测 2026-04-30
+  Step 5 期间 LLM 重复调用了 3 次 process-chapter（00:18 / 00:21 / 00:22，间隔 2.5min），
+  每次都成功但浪费 5+ 分钟。**调用前必须**先用 Bash 工具检查 data_agent_timing.jsonl 是否
+  本章已有成功记录，已有则跳过：
+  ```bash
+  if grep -q "\"tool_name\": \"state_manager:process-chapter\"" \
+       "${PROJECT_ROOT}/.ink/observability/data_agent_timing.jsonl" 2>/dev/null && \
+     grep -q "\"chapter\": ${chapter_num}" \
+       "${PROJECT_ROOT}/.ink/observability/data_agent_timing.jsonl" 2>/dev/null; then
+      echo "[Step 5] process-chapter for ch${chapter_num} 已调用过，跳过重复调用"
+  else
+      python3 -X utf8 "${SCRIPTS_DIR}/ink.py" --project-root "${PROJECT_ROOT}" \
+        state process-chapter --chapter ${chapter_num} \
+        --data @"${PROJECT_ROOT}/.ink/tmp/data_agent_payload_ch${chapter_padded}.json"
+  fi
+  ```
+  这是历史 bug 兜底——LLM 健忘症 + 中断重试场景下会自然产生重复调用。
 - 必须先生成完整 Data Agent payload，再执行：
 
 ```bash
