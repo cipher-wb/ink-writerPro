@@ -457,6 +457,89 @@ def test_linebuf_fallback_when_unavailable():
     )
 
 
+def test_step_inference_from_artifacts():
+    """心跳必须基于产物文件**主动推断**当前 step（不依赖 LLM 调 workflow start-step）。
+
+    历史教训（cipher 实测 2026-04-30）：仅靠 workflow_state.json 的 current_task 显示
+    step 不可靠——LLM 可能不调 workflow start-task。改为读产物文件兜底：
+      - data_agent_timing 最近有 process-chapter ch=N → Step 5
+      - .ink/tmp/data_agent_payload_chXXXX.json → Step 5 准备
+      - .ink/tmp/review_bundle_chXXXX.json → Step 3
+      - 正文/第NNNN章*.md → Step 2A 完成
+      - 都没有 → Step 0-1
+    """
+    src = _read(INK_AUTO_SH)
+    # 必须有"基于产物推断"标记
+    assert "基于产物推断" in src or "[推断]" in src, (
+        "心跳必须有 step 主动推断逻辑，不能只靠 workflow_state.json"
+    )
+    # 必须探测多种产物文件
+    indicators = ["data_agent_payload", "review_bundle", "正文"]
+    for kw in indicators:
+        assert kw in src, f"step 推断必须检查产物 {kw}"
+
+
+def test_data_agent_timing_filters_stale_records():
+    """DataAgent timing 显示必须过滤陈旧记录（>5分钟前的不显示）。
+
+    cipher 实测 2026-04-30 看到 '-28287s ago' 是上次跑（昨晚）留下的 timing，
+    被错误展示成"刚才调的"。修：max_age 限制 5 分钟（300s）。
+    """
+    src = _read(INK_AUTO_SH)
+    # 必须有 5 分钟过滤逻辑（300 秒）
+    assert "300" in src, "DataAgent 显示必须过滤 >300s 的陈旧记录"
+    # 不能用 timezone.utc（data_agent_timing 是本地时间无 tz）
+    assert "datetime.now()" in src, (
+        "DataAgent timing 时区计算必须用 datetime.now() 本地时间，"
+        "不能强加 UTC（cipher 实测 -8h 偏移）"
+    )
+
+
+def test_step2b_skip_env_var_supported():
+    """INK_AUTO_SKIP_STEP2B=1 必须能让 LLM 跳过 Step 2B 风格适配。
+
+    cipher 实测 Step 2B 单次耗时 2-5min，但因 Step 2A 起草已含 style 规则，
+    多数情况是空操作。开关让追求速度的用户可关。
+    """
+    src = _read(INK_AUTO_SH)
+    assert "INK_AUTO_SKIP_STEP2B" in src, (
+        "ink-auto.sh 必须支持 INK_AUTO_SKIP_STEP2B 环境变量"
+    )
+    assert "skip_step2b_clause" in src or "Step 2B 跳过模式" in src, (
+        "run_chapter prompt 必须含 Step 2B 跳过指令分支"
+    )
+
+    # SKILL.md 也必须文档化跳过条件
+    skill = REPO_ROOT / "ink-writer" / "skills" / "ink-write" / "SKILL.md"
+    skill_src = skill.read_text(encoding="utf-8")
+    assert "Step 2B 跳过条件" in skill_src or "INK_AUTO_SKIP_STEP2B" in skill_src, (
+        "SKILL.md Step 2B 章节必须文档化跳过条件"
+    )
+
+
+def test_step4_incremental_polish_documented():
+    """ink-write SKILL.md Step 4 必须明确"增量润色"指令——只改 critical/high 段落。"""
+    skill = REPO_ROOT / "ink-writer" / "skills" / "ink-write" / "SKILL.md"
+    src = skill.read_text(encoding="utf-8")
+    # 找到 Step 4 章节
+    m = re.search(r"### Step 4.*?(?=###\s|\Z)", src, re.DOTALL)
+    assert m, "Step 4 章节应可定位"
+    step4 = m.group(0)
+
+    # 必须有"增量润色"或同义说法
+    assert "增量润色" in step4 or "不要全章重写" in step4, (
+        "Step 4 必须明确要求增量润色（不全章重写）"
+    )
+    # 必须提到 target_segments / line range
+    assert "target_segments" in step4 or "line range" in step4, (
+        "Step 4 必须要求 polish-agent 接收 target_segments 而不是整章"
+    )
+    # 必须有回退兜底说明（向后兼容）
+    assert "回退兜底" in step4 or "向后兼容" in step4, (
+        "Step 4 必须保留全章 polish 的兜底路径（向后兼容）"
+    )
+
+
 def test_bash_syntax_check():
     """语法守护——心跳函数等不能引入 bash 解析错误。"""
     import shutil

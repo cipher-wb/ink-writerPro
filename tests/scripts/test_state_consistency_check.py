@@ -91,25 +91,61 @@ def test_module_importable():
     import state_consistency_check  # noqa: F401
 
 
-def test_detect_truth_picks_min_of_all_sources(tmp_path):
-    """4 个来源不一致时取最小值（保守策略）。"""
+def test_detect_truth_uses_chapter_files_as_authority(tmp_path):
+    """v2 策略：章节文件最大数 = 权威，不取最小值。
+
+    这是 cipher 实测 2026-04-30 撞墙后修订的策略。v1 取最小值会让
+    chapters 表只有 ch1 但章节文件 ch1-4 齐全时把 state.current 改回 1。
+    """
     import state_consistency_check as scc
 
     proj = tmp_path / "novel"
     _make_project(
         proj,
-        db_max_chapter=5,             # chapters 表说写到 5
-        appearances_max=4,             # appearances 说写到 4
-        summaries_chapters=[1, 2, 3],  # 摘要只到 3
-        body_chapters=[1, 2, 3, 4, 5],  # 正文文件到 5
-        state_current=2,
+        db_max_chapter=1,              # chapters 表只到 1（Step 5 中断）
+        appearances_max=2,              # appearances 到 2
+        summaries_chapters=[1, 2, 3],  # summaries 到 3
+        body_chapters=[1, 2, 3, 4],     # 章节文件到 4 ← 这才是真相
+        state_current=1,
     )
     truth, sources = scc.detect_truth(proj)
-    assert truth == 3, f"应取最小值（保守），实际 {truth}"
-    assert sources["chapters_table"] == 5
-    assert sources["appearances"] == 4
+    assert truth == 4, f"应以章节文件为权威 = 4，实际 {truth}"
+    # 4 个来源都被正确探测
+    assert sources["chapters_table"] == 1
+    assert sources["appearances"] == 2
     assert sources["summaries"] == 3
-    assert sources["chapter_files"] == 5
+    assert sources["chapter_files"] == 4
+
+
+def test_detect_truth_falls_back_to_summaries_when_no_chapter_files(tmp_path):
+    """章节文件全没时，回退到 summaries。"""
+    import state_consistency_check as scc
+
+    proj = tmp_path / "novel"
+    _make_project(
+        proj,
+        db_max_chapter=2, appearances_max=2,
+        summaries_chapters=[1, 2, 3],   # summaries 到 3
+        body_chapters=None,              # 章节文件不存在
+        state_current=1,
+    )
+    truth, sources = scc.detect_truth(proj)
+    assert truth == 3, f"无章节文件时应用 summaries=3，实际 {truth}"
+
+
+def test_detect_truth_falls_back_to_chapters_table_when_no_files_no_summaries(tmp_path):
+    """章节文件 + summaries 都没时，回退到 db.chapters。"""
+    import state_consistency_check as scc
+
+    proj = tmp_path / "novel"
+    _make_project(
+        proj,
+        db_max_chapter=2, appearances_max=3,
+        summaries_chapters=None, body_chapters=None,
+        state_current=0,
+    )
+    truth, sources = scc.detect_truth(proj)
+    assert truth == 2, f"应回退到 chapters_table=2，实际 {truth}"
 
 
 def test_detect_truth_returns_none_for_empty_project(tmp_path):

@@ -13,14 +13,17 @@
   以 db 实际章节数为权威，自动修正 state.json.progress.current_chapter。
   在 ink-auto.sh 启动时和每次 ink-write 进入前调用，防止状态漂移循环。
 
-判断"db 实际写到第几章"的真相来源（按可信度降序）：
-  1. db.chapters 表里最大 chapter（最权威）
-  2. db.appearances 表里最大 chapter
-  3. .ink/summaries/ 里最大 chXXXX.md
-  4. 正文/ 里最大 第NNNN章*.md
-  ↓
-  如果它们一致 → 用这个数字
-  如果不一致 → 取**最小值**（保守策略，宁可重写一章也不漏）
+策略（v2，2026-04-30 修订）：
+  - **优先用章节文件**作为权威源——文件存在 = 至少 Step 2A 落盘了，是最直接
+    的"已完成"证据。db 表可能因 Step 5 中断没写入，但文件不会无故消失。
+  - 文件不存在时，再退到 summaries（Step 5 早期产物）
+  - 都没有再退到 db.chapters 表（最不可靠，Step 5 收尾才写）
+  - 最后才用 db.appearances 兜底
+
+历史教训（v1 bug）：
+  v1 取 4 来源**最小值**，cipher 实测撞墙：chapters 表只有 ch1 但章节文件
+  ch1-4 齐全 → state.current 被改成 1 → ink-auto 反复重写 ch2/3/4。
+  v2 改为"章节文件作权威"——文件比表更可信。
 
 退出码：
   0 - 一致或修复成功
@@ -101,7 +104,15 @@ def _max_chapter_from_chapter_files(project_root: Path) -> int | None:
 def detect_truth(project_root: Path) -> tuple[int | None, dict[str, int | None]]:
     """探测项目里"实际写到第几章"。返回 (truth, sources_dict)。
 
-    保守策略：四个来源取最小值（防止有源滞后导致谎报已完成）。
+    策略（v2，2026-04-30）：**章节文件最大数 = 权威**。
+    理由：
+      - Step 2A 起草成功 → 章节文件落盘（最直接的"已完成"证据）
+      - Step 3-5 可能中断 → db 表 / summaries 滞后
+      - 章节文件不会无故消失，是最稳定的真相源
+    回退顺序（章节文件不可用时）：summaries → chapters → appearances。
+
+    历史教训（v1 bug）：v1 取最小值导致 chapters 表只有 ch1 但章节文件 ch1-4
+    齐全时把 state.current 改回 1，ink-auto 重写 ch2/3/4 循环。
     """
     db_path = project_root / ".ink" / "index.db"
     sources = {
@@ -110,11 +121,11 @@ def detect_truth(project_root: Path) -> tuple[int | None, dict[str, int | None]]
         "summaries": _max_chapter_from_summaries(project_root),
         "chapter_files": _max_chapter_from_chapter_files(project_root),
     }
-    valid = [v for v in sources.values() if v is not None]
-    if not valid:
-        return None, sources
-    # 保守取最小值
-    return min(valid), sources
+    # 按权威性优先级递减选取——章节文件最权威
+    for key in ("chapter_files", "summaries", "chapters_table", "appearances"):
+        if sources[key] is not None:
+            return sources[key], sources
+    return None, sources
 
 
 def repair_state(project_root: Path, *, dry_run: bool = False) -> tuple[bool, str]:

@@ -1213,6 +1213,26 @@ echo "当前章节字数: ${WORD_COUNT}"
 
 ### Step 2B：风格适配
 
+#### Step 2B 跳过条件（v26.x 优化，2026-04-30）
+
+**优先检查**：如果 `INK_AUTO_SKIP_STEP2B=1` 环境变量被设置（外层 ink-auto.sh
+通过 prompt 透传），整个 Step 2B 跳过，直接进入 Step 2C。
+
+**理由**：
+- Step 2A 的 writer-agent prompt 已内置 anti-detection + editor-wisdom + 288 条
+  起点编辑建议 + 直白模式 + 反 AI 规则；
+- 因此 Step 2A 产出的草稿 80% 情况下已经是 style-compliant 的；
+- Step 2B 二次风格转译成本高（2-5 min/章）但收益有限，**对追求速度的用户可关**。
+
+**跳过时必须执行**：
+```bash
+echo "[INK-PROGRESS] step_skipped Step 2B"
+```
+让外层 ink-auto.sh 渲染 `⏭ Step 2B 风格适配 (跳过: INK_AUTO_SKIP_STEP2B)`。
+跳过后直接进 Step 2C。
+
+**默认行为**：环境变量不设置或 = 0 时，按下方原有流程执行。
+
 #### Step 2B 前置指标计算（必做，决定执行模式）
 
 ```bash
@@ -1822,6 +1842,44 @@ if anti_detection_result.overall_score < threshold:
 **Python 模块**：`ink_writer.plotline.tracker.scan_plotlines()`
 
 ### Step 4：润色（问题修复优先）
+
+**核心原则（v26.x 优化，2026-04-30）：增量润色，不要全章重写**
+
+cipher 实测 2026-04-30 反馈：Step 4 全章 polish 单次耗时 5-10 min，主要因为
+polish-agent 输入了完整章节（2200-3000 字）并做整体改写。**绝大多数情况**
+Step 3 报的 critical/high 问题集中在少数几段（如某段破折号过多、某段对话呆板），
+**没必要把整章都重写一遍**。
+
+**新约束**：
+1. **只针对 Step 3 报告的 critical / high 段落做精准修改**——其余段落原样保留。
+2. polish-agent 调用时**必须**传入 `target_segments`（来自 Step 3 各 checker 的
+   issues 列表 + line range），不能传整章。
+3. 改完后**逐段比对**改前/改后，确认其他段落字节级一致（diff 应为空）。
+4. 例外：当 `reader_verdict.verdict == "rewrite"` 时退回 Step 2A 重写（不是 Step 4
+   的事），不在本节范围。
+
+**为什么这样不损质量**：
+- critical/high 的问题已经被 Step 3 精确定位（issues 列表含 line range）；
+- 其他段落 Step 3 已经审过 pass，改它反而引入新风险；
+- 增量改 = 单次 polish 输入从 3000 字降到 200-500 字，节省 token + 加速。
+
+**实现方式**：调用 polish-agent 前先聚合 issues：
+```bash
+# 从 Step 3 报告里提取所有 critical/high 的 line range
+TARGET_SEGMENTS=$(python3 -X utf8 -c "
+import json
+report = json.load(open('${PROJECT_ROOT}/.ink/tmp/review_metrics.json'))
+crits = [i for c in report.get('critical_issues', [])
+         for i in c.get('locations', []) if c.get('severity') in ('critical', 'high')]
+print(json.dumps(crits))
+")
+```
+然后只把 `TARGET_SEGMENTS` 对应的章节段落传给 polish-agent，不传整章。
+
+**回退兜底**：如果 Step 3 报告里没有 line range（早期版本），退回旧的全章 polish
+模式（保持向后兼容，不阻断流程）。
+
+---
 
 执行前必须加载（静态优先，最大化 cache 命中）：
 ```bash

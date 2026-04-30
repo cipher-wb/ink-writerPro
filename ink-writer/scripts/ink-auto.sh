@@ -978,26 +978,123 @@ _start_progress_heartbeat() {
                         observation="$(basename "$watch_target"): ${char_count}字${growth}"
                         last_size=$size
                     fi
-                    # 看 workflow_state.json 当前 step + 已完成 step 数
-                    if [[ -n "${PROJECT_ROOT:-}" ]] && [[ -f "$PROJECT_ROOT/.ink/workflow_state.json" ]]; then
-                        local step_info
+                    # 当前 step 显示（双重路径 fallback）：
+                    #   路径 A：workflow_state.json.current_task.current_step（最准）
+                    #          —— 但依赖 LLM 主动调 workflow start-step，不可靠
+                    #   路径 B：基于产物文件 + data_agent_timing **主动推断**（永远工作）
+                    # 任一路径有结果就显示，A 优先。
+                    local step_info=""
+                    if [[ -n "${PROJECT_ROOT:-}" ]]; then
                         step_info=$($PY_LAUNCHER -c "
-import json, sys
-try:
-    d = json.load(open('$PROJECT_ROOT/.ink/workflow_state.json'))
-    task = d.get('current_task') or {}
-    cs = task.get('current_step') or {}
-    sid = cs.get('id', '')
-    sname = cs.get('name', '')
-    completed = len(task.get('completed_steps', []) or [])
-    parts = []
-    if sid:
-        parts.append(f'当前 {sid} {sname}'.strip())
-    if completed > 0:
-        parts.append(f'{completed}/13 已完成')
-    print(' | '.join(parts))
-except Exception:
-    pass
+import json, os, re, sys, time
+from pathlib import Path
+
+proj = Path('$PROJECT_ROOT')
+# 从 watch_target 路径反解章号（不依赖 \$ch 变量，因为子 shell scope 没它）
+wt = '$watch_target'
+m = re.search(r'第(\d+)章', os.path.basename(wt) if wt else '')
+if not m:
+    sys.exit(0)
+ch = int(m.group(1))
+padded = m.group(1).zfill(4)
+
+# ── 路径 A：workflow_state.json（LLM 主动报告）
+wf = proj / '.ink' / 'workflow_state.json'
+if wf.exists():
+    try:
+        d = json.load(wf.open())
+        task = d.get('current_task') or {}
+        cs = task.get('current_step') or {}
+        sid = cs.get('id', '')
+        sname = cs.get('name', '')
+        completed = len(task.get('completed_steps', []) or [])
+        if sid or completed > 0:
+            parts = []
+            if sid:
+                parts.append(f'当前 {sid} {sname}'.strip())
+            if completed > 0:
+                parts.append(f'{completed}/13 已完成')
+            print(' | '.join(parts))
+            sys.exit(0)
+    except Exception:
+        pass
+
+# ── 路径 B：基于产物推断（不依赖 LLM）
+# 从最晚 step 反推最早 step，遇到匹配的产物即返回该 step。
+indicators = []  # 用列表收集匹配的指示，用于显示已推进到哪
+now = time.time()
+
+def fresh(p, max_age_s=600):
+    \"\"\"文件是否在 max_age_s 秒内被修改过。\"\"\"
+    try:
+        return p.exists() and (now - p.stat().st_mtime) < max_age_s
+    except Exception:
+        return False
+
+# Step 6: Git 备份完成 → summary 已生成 + 章节文件 + commit（不容易测，跳过）
+# Step 5: data_agent_timing 最近有 process-chapter for ch
+da_timing = proj / '.ink' / 'observability' / 'data_agent_timing.jsonl'
+in_step5 = False
+if da_timing.exists():
+    try:
+        # 看最后 20 行
+        with da_timing.open() as f:
+            tail_lines = f.readlines()[-20:]
+        for line in reversed(tail_lines):
+            try:
+                e = json.loads(line)
+                if e.get('chapter') == ch:
+                    ts = e.get('timestamp', '')
+                    from datetime import datetime
+                    t = datetime.fromisoformat(ts.replace('Z', ''))
+                    if t.tzinfo is not None:
+                        t = t.replace(tzinfo=None)
+                    age = (datetime.now() - t).total_seconds()
+                    if 0 < age < 600:
+                        indicators.append(f'Step 5 数据回写中（刚调 {e.get(\"tool_name\", \"?\").split(\":\")[-1]}）')
+                        in_step5 = True
+                        break
+            except Exception:
+                continue
+    except Exception:
+        pass
+
+if not in_step5:
+    # Step 4: data_agent_payload 已生成（Step 5 准备）
+    payload_file = proj / '.ink' / 'tmp' / f'data_agent_payload_ch{padded}.json'
+    if fresh(payload_file):
+        indicators.append('Step 5 准备')
+    else:
+        # Step 3: review_bundle 已生成
+        bundle_file = proj / '.ink' / 'tmp' / f'review_bundle_ch{padded}.json'
+        if fresh(bundle_file):
+            indicators.append('Step 3 审查中')
+        else:
+            # Step 2A 完成: 章节文件存在
+            body_files = list((proj / '正文').glob(f'第{padded}章*.md'))
+            if body_files and fresh(body_files[0]):
+                # 看是不是刚出现（< 60s）→ 刚完成 Step 2A
+                age = now - body_files[0].stat().st_mtime
+                if age < 60:
+                    indicators.append('Step 2A 起草刚完成')
+                else:
+                    indicators.append('Step 2A/2B/2C 中（章节文件已存在）')
+            else:
+                # 还没产物——Step 0/0.7/0.8/1 期间
+                # 看 .ink/tmp/ 下其他临时文件来缩小范围
+                tmp = proj / '.ink' / 'tmp'
+                if tmp.exists():
+                    recent_tmp = [p for p in tmp.iterdir() if fresh(p, 120)]
+                    if recent_tmp:
+                        latest = max(recent_tmp, key=lambda p: p.stat().st_mtime)
+                        indicators.append(f'Step 0-1 准备（最新 tmp: {latest.name[:40]}）')
+                    else:
+                        indicators.append('Step 0-1 上下文构建中（无新产物）')
+                else:
+                    indicators.append('Step 0 预检中')
+
+if indicators:
+    print(' | '.join(indicators) + ' [推断]')
 " 2>/dev/null)
                         cur_step=$(echo "$step_info" | sed -n 's/^当前 \([^|]*\).*$/\1/p' | xargs 2>/dev/null)
                         if [[ -n "$step_info" ]]; then
@@ -1017,6 +1114,9 @@ except Exception:
                     # cipher 实测 2026-04-30：Step 5 跑 16 分钟 + log 文件空白 →
                     # 用户误判挂了 ⌃C → state.json 不一致循环。
                     # 用 data_agent_timing.jsonl 末行兜底，让用户看到"刚调了什么工具"。
+                    # 修订：data_agent_timing 时间戳是**本地时间无 timezone**，必须用
+                    # datetime.now() 而非 now(timezone.utc)，否则 -8h 偏移；
+                    # 且只显示 5 分钟内的记录（陈旧记录会误导，是上次跑留下的）。
                     local da_timing_file="${PROJECT_ROOT:-}/.ink/observability/data_agent_timing.jsonl"
                     if [[ -f "$da_timing_file" ]]; then
                         local da_last_line
@@ -1025,7 +1125,7 @@ except Exception:
                             local da_info
                             da_info=$($PY_LAUNCHER -c "
 import json, sys
-from datetime import datetime, timezone
+from datetime import datetime
 try:
     d = json.loads('''$da_last_line''')
     tool = d.get('tool_name', '?')
@@ -1033,18 +1133,20 @@ try:
     elapsed = d.get('elapsed_ms', 0)
     ts = d.get('timestamp', '')
     if ts:
-        # 计算距今多少秒
         try:
-            t = datetime.fromisoformat(ts.replace('Z', '+00:00'))
-            if t.tzinfo is None:
-                t = t.replace(tzinfo=timezone.utc)
-            now_utc = datetime.now(timezone.utc)
-            ago_s = int((now_utc - t).total_seconds())
-            print(f'DataAgent: {ok} {tool} ({elapsed}ms, {ago_s}s ago)')
+            # data_agent_timing 写的是 datetime.now().isoformat()——本地时间无 tz。
+            # fromisoformat 解析后是 naive datetime；与 now() 比较即可。
+            t = datetime.fromisoformat(ts.replace('Z', ''))
+            if t.tzinfo is not None:
+                t = t.replace(tzinfo=None)
+            ago_s = int((datetime.now() - t).total_seconds())
+            # 只显示 5 分钟（300s）内的记录；超过则是上次跑留下的陈旧记录
+            if ago_s < 0 or ago_s > 300:
+                pass  # 不显示
+            else:
+                print(f'DataAgent: {ok} {tool} ({elapsed}ms, {ago_s}s ago)')
         except Exception:
-            print(f'DataAgent: {ok} {tool} ({elapsed}ms)')
-    else:
-        print(f'DataAgent: {ok} {tool} ({elapsed}ms)')
+            pass  # 解析失败也不显示
 except Exception:
     pass
 " 2>/dev/null)
@@ -1340,6 +1442,17 @@ anti-detection / reader-simulator / flow-naturalness）。
     # 优化 A：把审查并发数透传给 LLM；默认 8，可按需在 ink-auto 启动时调整
     local review_concurrency="${INK_AUTO_REVIEW_CONCURRENCY:-8}"
 
+    # 优化 #2（2026-04-30）：透传 Step 2B 跳过开关
+    local skip_step2b_clause=""
+    if [[ "${INK_AUTO_SKIP_STEP2B:-0}" == "1" ]]; then
+        skip_step2b_clause="
+
+【Step 2B 跳过模式（INK_AUTO_SKIP_STEP2B=1）】
+本章跳过 Step 2B 风格适配（Step 2A 已含 style 规则，二次适配收益有限）。
+跳过时必须 echo \"[INK-PROGRESS] step_skipped Step 2B\"。
+跳过后直接进 Step 2C。"
+    fi
+
     # 进度强约束：在 prompt 里直接命令 LLM 在每个 Step 进入/完成时打 [INK-PROGRESS] 标记。
     local prompt="使用 Skill 工具加载 \"ink-write\" 并完整执行所有步骤（Step 0 到 Step 6 共 13 步）。项目目录: ${PROJECT_ROOT}。
 
@@ -1363,7 +1476,7 @@ INK_AUTO_REVIEW_CONCURRENCY = ${review_concurrency}
    checker_name 例：consistency-checker / logic-checker / reader-simulator 等
    （详见 ink-write SKILL.md 'Step 3：审查' 一节）。
 
-漏打两层中任一层用户都会看不到进度。${fast_review_clause}
+漏打两层中任一层用户都会看不到进度。${fast_review_clause}${skip_step2b_clause}
 
 禁止省略任何步骤，禁止提问，全程自主执行。完成后输出 INK_DONE。失败则输出 INK_FAILED。"
 
